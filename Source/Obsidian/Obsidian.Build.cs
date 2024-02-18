@@ -15,12 +15,13 @@ public class Obsidian : ModuleRules
 				"Engine", 
 				"InputCore", 
 				"ModularGameplay",
-				"GameFeatures"
+				"GameFeatures",
+				"EnhancedInput",
+				"GameplayTags"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			"EnhancedInput",
 			"CommonUI"
 		});
 
