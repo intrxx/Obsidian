@@ -2,3 +2,10 @@
 
 #include "Characters/Enemies/ObsidianEnemy.h"
 
+void AObsidianEnemy::StartHighlight()
+{
+}
+
+void AObsidianEnemy::StopHighlight()
+{
+}
