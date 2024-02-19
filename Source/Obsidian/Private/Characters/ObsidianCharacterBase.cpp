@@ -1,7 +1,6 @@
 // Copyright 2024 Michał Ogiński
 
 #include "Characters/ObsidianCharacterBase.h"
-
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 
 AObsidianCharacterBase::AObsidianCharacterBase()
