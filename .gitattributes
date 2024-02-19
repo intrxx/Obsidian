@@ -1,5 +1,5 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-working-tree-encoding
-*.cpp crlf diff
+*.cpp text
+*.h text
 
