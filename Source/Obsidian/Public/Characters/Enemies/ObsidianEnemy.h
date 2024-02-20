@@ -16,6 +16,8 @@ class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsid
 	GENERATED_BODY()
 
 public:
+	AObsidianEnemy();
+	
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
 };

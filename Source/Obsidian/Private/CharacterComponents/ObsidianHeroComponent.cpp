@@ -76,14 +76,6 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 			}
 		}
 	}
-	
-	PC->bShowMouseCursor;
-	PC->CurrentMouseCursor = EMouseCursor::Hand;
-	
-	FInputModeGameAndUI InputModeData;
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	InputModeData.SetHideCursorDuringCapture(false);
-	PC->SetInputMode(InputModeData);
 }
 
 void UObsidianHeroComponent::Input_Move(const FInputActionValue& InputActionValue)
