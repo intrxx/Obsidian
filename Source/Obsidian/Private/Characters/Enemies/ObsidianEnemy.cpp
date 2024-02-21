@@ -14,11 +14,9 @@ AObsidianEnemy::AObsidianEnemy()
 void AObsidianEnemy::StartHighlight()
 {
 	GetMesh()->SetRenderCustomDepth(true);
-	UE_LOG(LogTemp, Warning, TEXT("Starting Highlight"));
 }
 
 void AObsidianEnemy::StopHighlight()
 {
 	GetMesh()->SetRenderCustomDepth(false);
-	UE_LOG(LogTemp, Warning, TEXT("Stoping Highlight"));
 }

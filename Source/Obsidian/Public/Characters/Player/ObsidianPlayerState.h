@@ -13,5 +13,7 @@ UCLASS()
 class OBSIDIAN_API AObsidianPlayerState : public APlayerState
 {
 	GENERATED_BODY()
-	
+
+public:
+	AObsidianPlayerState();
 };

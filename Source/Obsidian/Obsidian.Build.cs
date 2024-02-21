@@ -22,7 +22,9 @@ public class Obsidian : ModuleRules
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			"CommonUI"
+			"CommonUI",
+			"GameplayAbilities",
+			"GameplayTasks"
 		});
 
 		// Uncomment if you are using Slate UI

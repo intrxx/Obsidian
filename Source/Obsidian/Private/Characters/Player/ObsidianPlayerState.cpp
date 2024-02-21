@@ -3,3 +3,8 @@
 
 #include "Characters/Player/ObsidianPlayerState.h"
 
+AObsidianPlayerState::AObsidianPlayerState()
+{
+	// GAS needs higher NetUpdateFrequency
+	NetUpdateFrequency = 100.f;
+}
