@@ -6,6 +6,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianHero.generated.h"
 
+class AObsidianPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
 class UObsidianHeroComponent;
@@ -18,10 +19,16 @@ class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase
 	GENERATED_BODY()
 public:
 	AObsidianHero();
+	
+	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
+	virtual void PossessedBy(AController* NewController) override;
+	virtual void OnRep_PlayerState() override;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
+	AObsidianPlayerState* GetObsidianPlayerState() const;
 
 protected:
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	
+
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianHeroComponent> HeroComponent;

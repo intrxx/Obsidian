@@ -23,6 +23,9 @@ public:
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
 
+protected:
+	virtual void BeginPlay() override;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;

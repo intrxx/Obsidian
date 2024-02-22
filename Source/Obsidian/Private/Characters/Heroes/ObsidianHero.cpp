@@ -3,6 +3,8 @@
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Camera/CameraComponent.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
+#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
@@ -41,4 +43,33 @@ void AObsidianHero::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
 	HeroComponent->InitializePlayerInput(PlayerInputComponent);
+}
+
+void AObsidianHero::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	// Init for the server
+	if(AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
+	{
+		check(PawnExtComp);
+		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
+	}
+}
+
+void AObsidianHero::OnRep_PlayerState()
+{
+	Super::OnRep_PlayerState();
+
+	// Init for the client
+	if(AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
+	{
+		check(PawnExtComp);
+		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
+	}
+}
+
+AObsidianPlayerState* AObsidianHero::GetObsidianPlayerState() const
+{
+	return CastChecked<AObsidianPlayerState>(GetPlayerState(), ECastCheckedType::NullAllowed);
 }

@@ -29,6 +29,8 @@ public:
 	static UObsidianPawnExtensionComponent* FindPawnExtComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianPawnExtensionComponent>() : nullptr);}
 	
 	const UObsidianPawnData* GetPawnData() const {return PawnData;}
+
+	void InitializeAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* InOwnerActor);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Pawn")

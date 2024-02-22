@@ -4,6 +4,7 @@
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
+#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "ObsidianTypes/ObsidianChannels.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 
@@ -11,7 +12,7 @@ AObsidianEnemy::AObsidianEnemy()
 {
 	ObsidianAbilitySystemComponent = CreateDefaultSubobject<UObsidianAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	ObsidianAbilitySystemComponent->SetIsReplicated(true);
-	ObsidianAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	ObsidianAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	CommonAttributeSet = CreateDefaultSubobject<UObsidianCommonAttributeSet>(TEXT("AttributeSet"));
 	
@@ -28,4 +29,12 @@ void AObsidianEnemy::StartHighlight()
 void AObsidianEnemy::StopHighlight()
 {
 	GetMesh()->SetRenderCustomDepth(false);
+}
+
+void AObsidianEnemy::BeginPlay()
+{
+	Super::BeginPlay();
+
+	check(PawnExtComp);
+	PawnExtComp->InitializeAbilitySystem(ObsidianAbilitySystemComponent, this);
 }
