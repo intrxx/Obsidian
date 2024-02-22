@@ -7,6 +7,8 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianEnemy.generated.h"
 
+class UObsidianCommonAttributeSet;
+class UObsidianAbilitySystemComponent;
 /**
  * 
  */
@@ -20,4 +22,10 @@ public:
 	
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
+	UPROPERTY()
+	TObjectPtr<UObsidianCommonAttributeSet> CommonAttributeSet;
 };

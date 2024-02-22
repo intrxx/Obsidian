@@ -1,11 +1,20 @@
 // Copyright 2024 Michał Ogiński
 
 #include "Characters/Enemies/ObsidianEnemy.h"
+
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "ObsidianTypes/ObsidianChannels.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 
 AObsidianEnemy::AObsidianEnemy()
 {
+	ObsidianAbilitySystemComponent = CreateDefaultSubobject<UObsidianAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	ObsidianAbilitySystemComponent->SetIsReplicated(true);
+	ObsidianAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
+	
+	CommonAttributeSet = CreateDefaultSubobject<UObsidianCommonAttributeSet>(TEXT("AttributeSet"));
+	
 	GetMesh()->SetCollisionResponseToChannel(Obsidian_TraceChannel_Highlight, ECR_Block);
 	GetMesh()->SetCustomDepthStencilValue(ObsidianHighlight::Red);
 	GetMesh()->SetRenderCustomDepth(false);

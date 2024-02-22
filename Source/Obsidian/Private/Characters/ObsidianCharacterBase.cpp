@@ -1,11 +1,14 @@
 // Copyright 2024 Michał Ogiński
 
 #include "Characters/ObsidianCharacterBase.h"
+
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 
 AObsidianCharacterBase::AObsidianCharacterBase()
 {
 	PrimaryActorTick.bCanEverTick = false;
+	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	check(MeshComp);
@@ -22,10 +25,24 @@ AObsidianCharacterBase::AObsidianCharacterBase()
 	PawnExtComp = CreateDefaultSubobject<UObsidianPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 }
 
+UObsidianAbilitySystemComponent* AObsidianCharacterBase::GetObsidianAbilitySystemComponent() const
+{
+	return Cast<UObsidianAbilitySystemComponent>(GetAbilitySystemComponent());
+}
+
+UAbilitySystemComponent* AObsidianCharacterBase::GetAbilitySystemComponent() const
+{
+	if(PawnExtComp == nullptr)
+	{
+		return nullptr;
+	}
+
+	return  PawnExtComp->GetObsidianAbilitySystemComponent();
+}
+
 void AObsidianCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 

@@ -6,6 +6,7 @@
 #include "Components/PawnComponent.h"
 #include "ObsidianPawnExtensionComponent.generated.h"
 
+class UObsidianAbilitySystemComponent;
 class UObsidianPawnData;
 
 /**
@@ -20,6 +21,9 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	UFUNCTION(BlueprintPure, Category = "Obsidian|Pawn")
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const {return AbilitySystemComponent;}
+
 	/** Returns the hero component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|ExtComp")
 	static UObsidianPawnExtensionComponent* FindPawnExtComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianPawnExtensionComponent>() : nullptr);}
@@ -29,4 +33,7 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Pawn")
 	TObjectPtr<const UObsidianPawnData> PawnData;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianAbilitySystemComponent> AbilitySystemComponent;
 };
