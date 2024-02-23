@@ -6,6 +6,7 @@
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Input/OEnhancedInputUserSettings.h"
 #include "InputMappingContext.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
 #include "GameFramework/PlayerController.h"
@@ -69,10 +70,39 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 			if(ensureMsgf(ObsidianInputComponent, TEXT("Unexpected Input Component")))
 			{
 				TArray<uint32> BindHandles;
-				// TODO Bind ability input here
+				ObsidianInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed,
+					&ThisClass::Input_AbilityInputTagReleased, /*OUT*/ BindHandles);
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move,
 					ETriggerEvent::Triggered,this, &ThisClass::Input_Move, true);
+			}
+		}
+	}
+}
+
+void UObsidianHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+{
+	if(const APawn* Pawn = GetPawn<APawn>())
+	{
+		if(const UObsidianPawnExtensionComponent* PawnExtComp = UObsidianPawnExtensionComponent::FindPawnExtComponent(Pawn))
+		{
+			if(UObsidianAbilitySystemComponent* ObsidianASC = PawnExtComp->GetObsidianAbilitySystemComponent())
+			{
+				ObsidianASC->AbilityInputTagPressed(InputTag);
+			}
+		}
+	}
+}
+
+void UObsidianHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+{
+	if(const APawn* Pawn = GetPawn<APawn>())
+	{
+		if(const UObsidianPawnExtensionComponent* PawnExtComp = UObsidianPawnExtensionComponent::FindPawnExtComponent(Pawn))
+		{
+			if(UObsidianAbilitySystemComponent* ObsidianASC = PawnExtComp->GetObsidianAbilitySystemComponent())
+			{
+				ObsidianASC->AbilityInputTagReleased(InputTag);
 			}
 		}
 	}

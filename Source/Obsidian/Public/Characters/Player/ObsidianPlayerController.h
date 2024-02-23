@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class UObsidianAbilitySystemComponent;
+class AObsidianPlayerState;
 class IObsidianHighlightInterface;
 /**
  * 
@@ -18,6 +20,13 @@ public:
 	AObsidianPlayerController();
 
 	virtual void PlayerTick(float DeltaTime) override;
+	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
+	AObsidianPlayerState* GetObsidianPlayerState() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	
 protected:
 	virtual void BeginPlay() override;

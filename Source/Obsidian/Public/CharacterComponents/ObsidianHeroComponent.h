@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Components/PawnComponent.h"
 #include "ObsidianHeroComponent.generated.h"
 
@@ -25,6 +26,10 @@ public:
 	static UObsidianHeroComponent* FindHeroComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);}
 
 protected:
+	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
+	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+	
 	void Input_Move(const FInputActionValue& InputActionValue);
+	
 	
 };

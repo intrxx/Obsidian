@@ -2,6 +2,8 @@
 
 #include "Characters/Player/ObsidianPlayerController.h"
 
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianChannels.h"
 
@@ -15,6 +17,27 @@ void AObsidianPlayerController::PlayerTick(float DeltaTime)
 	Super::PlayerTick(DeltaTime);
 	
 	CursorTrace();
+}
+
+void AObsidianPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
+{
+	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
+	{
+		ObsidianASC->ProcessAbilityInput(DeltaTime, bGamePaused);
+	}
+	
+	Super::PostProcessInput(DeltaTime, bGamePaused);
+}
+
+AObsidianPlayerState* AObsidianPlayerController::GetObsidianPlayerState() const
+{
+	return CastChecked<AObsidianPlayerState>(PlayerState, ECastCheckedType::NullAllowed);
+}
+
+UObsidianAbilitySystemComponent* AObsidianPlayerController::GetObsidianAbilitySystemComponent() const
+{
+	const AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState();
+	return (ObsidianPS ? ObsidianPS->GetObsidianAbilitySystemComponent() : nullptr);
 }
 
 void AObsidianPlayerController::CursorTrace()
