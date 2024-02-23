@@ -30,7 +30,7 @@ struct FInputMappingContextAndPriority
  * Non-mutable data asset that contains properties used to define a pawn.
  */
 UCLASS(BlueprintType, Const, meta = (DisplayName = "Obsidian Pawn Data", ShortToolTip = "Data asset used to define a Pawn"))
-class OBSIDIAN_API UObsidianPawnData : public UDataAsset
+class OBSIDIAN_API UObsidianPawnData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
 

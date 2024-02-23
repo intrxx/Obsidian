@@ -17,14 +17,14 @@ public class Obsidian : ModuleRules
 				"ModularGameplay",
 				"GameFeatures",
 				"EnhancedInput",
-				"GameplayTags"
+				"GameplayTags",
+				"GameplayAbilities",
+				"GameplayTasks"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			"CommonUI",
-			"GameplayAbilities",
-			"GameplayTasks"
+			"CommonUI"
 		});
 
 		// Uncomment if you are using Slate UI
