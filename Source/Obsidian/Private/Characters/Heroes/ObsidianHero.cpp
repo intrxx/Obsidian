@@ -4,14 +4,13 @@
 #include "Camera/CameraComponent.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 
 AObsidianHero::AObsidianHero()
 {
-	HeroComponent = CreateDefaultSubobject<UObsidianHeroComponent>(TEXT("HeroComponent"));
-	
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
 	SpringArmComponent->SetRelativeRotation(FRotator(-52.5f, 0.0f, 0.0f));
@@ -27,6 +26,10 @@ AObsidianHero::AObsidianHero()
 	
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
+
+	HeroComponent = CreateDefaultSubobject<UObsidianHeroComponent>(TEXT("HeroComponent"));
+
+	HeroAttributesComponent = CreateDefaultSubobject<UObsidianHeroAttributesComponent>(TEXT("HeroAttributesComponent"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 400.f, 0.f);

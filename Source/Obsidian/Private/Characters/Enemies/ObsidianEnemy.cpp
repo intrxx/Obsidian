@@ -5,6 +5,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "ObsidianTypes/ObsidianChannels.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 
@@ -15,6 +16,8 @@ AObsidianEnemy::AObsidianEnemy()
 	ObsidianAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
 	CommonAttributeSet = CreateDefaultSubobject<UObsidianCommonAttributeSet>(TEXT("AttributeSet"));
+	
+	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
 	
 	GetMesh()->SetCollisionResponseToChannel(Obsidian_TraceChannel_Highlight, ECR_Block);
 	GetMesh()->SetCustomDepthStencilValue(ObsidianHighlight::Red);

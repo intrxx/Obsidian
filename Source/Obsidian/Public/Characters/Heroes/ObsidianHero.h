@@ -6,6 +6,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianHero.generated.h"
 
+class UObsidianHeroAttributesComponent;
 class AObsidianPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
@@ -32,6 +33,9 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianHeroComponent> HeroComponent;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianHeroAttributesComponent> HeroAttributesComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCameraComponent> CameraComponent;
