@@ -1,8 +1,8 @@
 // Copyright 2024 Michał Ogiński
 
-#include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
 
 UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

@@ -7,6 +7,7 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianEnemy.generated.h"
 
+class UObsidianEnemyAttributeSet;
 class UObsidianEnemyAttributesComponent;
 class UObsidianCommonAttributeSet;
 class UObsidianAbilitySystemComponent;
@@ -32,6 +33,8 @@ private:
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UObsidianCommonAttributeSet> CommonAttributeSet;
+	UPROPERTY()
+	TObjectPtr<UObsidianEnemyAttributeSet> EnemyAttributeSet;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;

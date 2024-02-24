@@ -4,6 +4,7 @@
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
+#include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "ObsidianTypes/ObsidianChannels.h"
@@ -11,17 +12,18 @@
 
 AObsidianEnemy::AObsidianEnemy()
 {
+	GetMesh()->SetCollisionResponseToChannel(Obsidian_TraceChannel_Highlight, ECR_Block);
+	GetMesh()->SetCustomDepthStencilValue(ObsidianHighlight::Red);
+	GetMesh()->SetRenderCustomDepth(false);
+	
 	ObsidianAbilitySystemComponent = CreateDefaultSubobject<UObsidianAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	ObsidianAbilitySystemComponent->SetIsReplicated(true);
 	ObsidianAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
 	
-	CommonAttributeSet = CreateDefaultSubobject<UObsidianCommonAttributeSet>(TEXT("AttributeSet"));
+	CommonAttributeSet = CreateDefaultSubobject<UObsidianCommonAttributeSet>(TEXT("CommonAttributeSet"));
+	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
 	
 	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
-	
-	GetMesh()->SetCollisionResponseToChannel(Obsidian_TraceChannel_Highlight, ECR_Block);
-	GetMesh()->SetCustomDepthStencilValue(ObsidianHighlight::Red);
-	GetMesh()->SetRenderCustomDepth(false);
 }
 
 void AObsidianEnemy::StartHighlight()
