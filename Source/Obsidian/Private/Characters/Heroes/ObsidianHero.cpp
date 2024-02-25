@@ -76,3 +76,20 @@ AObsidianPlayerState* AObsidianHero::GetObsidianPlayerState() const
 {
 	return CastChecked<AObsidianPlayerState>(GetPlayerState(), ECastCheckedType::NullAllowed);
 }
+
+void AObsidianHero::OnAbilitySystemInitialized()
+{
+	Super::OnAbilitySystemInitialized();
+
+	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
+	check(ObsidianASC);
+
+	HeroAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
+}
+
+void AObsidianHero::OnAbilitySystemUninitialized()
+{
+	Super::OnAbilitySystemUninitialized();
+
+	HeroAttributesComponent->UninitializeFromAbilitySystem();
+}

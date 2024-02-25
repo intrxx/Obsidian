@@ -26,6 +26,13 @@ protected:
 	virtual void BeginPlay() override;
 
 protected:
+	/** Fired when this actor is initialized as the avatar of the Ability System - Should be overridden by the child classes */
+	virtual void OnAbilitySystemInitialized();
+
+	/** Fired when this actor is removed as the avatar of the Ability System - Should be overridden by the child classes */
+	virtual void OnAbilitySystemUninitialized();
+	
+protected:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
 	TObjectPtr<UObsidianPawnExtensionComponent> PawnExtComp;
 	

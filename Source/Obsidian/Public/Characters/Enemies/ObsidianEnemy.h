@@ -28,6 +28,11 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	//~ Start of AObsidianCharacterBase
+	virtual void OnAbilitySystemInitialized() override;
+	virtual void OnAbilitySystemUninitialized() override;
+	//~ End of AObsidianCharacterBase
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;

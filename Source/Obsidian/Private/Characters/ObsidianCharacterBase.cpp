@@ -23,6 +23,8 @@ AObsidianCharacterBase::AObsidianCharacterBase()
 	LeftHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	PawnExtComp = CreateDefaultSubobject<UObsidianPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
+	PawnExtComp->OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized));
+	PawnExtComp->OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemUninitialized));
 }
 
 UObsidianAbilitySystemComponent* AObsidianCharacterBase::GetObsidianAbilitySystemComponent() const
@@ -43,6 +45,14 @@ UAbilitySystemComponent* AObsidianCharacterBase::GetAbilitySystemComponent() con
 void AObsidianCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AObsidianCharacterBase::OnAbilitySystemInitialized()
+{
+}
+
+void AObsidianCharacterBase::OnAbilitySystemUninitialized()
+{
 }
 
 

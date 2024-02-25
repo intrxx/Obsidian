@@ -17,6 +17,11 @@ UObsidianPawnExtensionComponent::UObsidianPawnExtensionComponent(const FObjectIn
 	AbilitySystemComponent = nullptr;
 }
 
+void UObsidianPawnExtensionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+}
+
 void UObsidianPawnExtensionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -49,5 +54,59 @@ void UObsidianPawnExtensionComponent::InitializeAbilitySystem(UObsidianAbilitySy
 
 	// TODO Create Tag Relationship Mapping and set it here
 
-	// TODO Broadcast the OnAbilitySystemInitialized delegate here
+	OnAbilitySystemInitialized.Broadcast();
 }
+
+void UObsidianPawnExtensionComponent::UninitializeAbilitySystem()
+{
+	if(AbilitySystemComponent == nullptr)
+	{
+		return;
+	}
+
+	// We need to check if we are still the owner, otherwise other pawn already uninitialized us when the become the avatar actor
+	if(AbilitySystemComponent->GetAvatarActor() == GetOwner())
+	{
+		AbilitySystemComponent->CancelAbilities();
+		AbilitySystemComponent->ClearAbilityInput();
+		AbilitySystemComponent->RemoveAllGameplayCues();
+
+		if(AbilitySystemComponent->GetOwnerActor() != nullptr)
+		{
+			AbilitySystemComponent->SetAvatarActor(nullptr);
+		}
+		else
+		{
+			// If the ASC doesn't have a valid owner, we need to clear *all* actor info, not just the avatar pairing ~ LYRA
+			AbilitySystemComponent->ClearActorInfo();
+		}
+
+		OnAbilitySystemUninitialized.Broadcast();
+	}
+	AbilitySystemComponent = nullptr;
+}
+
+void UObsidianPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(
+	FSimpleMulticastDelegate::FDelegate Delegate)
+{
+	if(!OnAbilitySystemInitialized.IsBoundToObject(Delegate.GetUObject()))
+	{
+		OnAbilitySystemInitialized.Add(Delegate);
+	}
+
+	// If we already have valid ASC we should fire the delegate
+	if(AbilitySystemComponent)
+	{
+		Delegate.Execute();
+	}
+}
+
+void UObsidianPawnExtensionComponent::OnAbilitySystemUninitialized_Register(
+	FSimpleMulticastDelegate::FDelegate Delegate)
+{
+	if(!OnAbilitySystemUninitialized.IsBoundToObject(Delegate.GetUObject()))
+	{
+		OnAbilitySystemUninitialized.Add(Delegate);
+	}
+}
+

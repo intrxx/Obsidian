@@ -43,3 +43,20 @@ void AObsidianEnemy::BeginPlay()
 	check(PawnExtComp);
 	PawnExtComp->InitializeAbilitySystem(ObsidianAbilitySystemComponent, this);
 }
+
+void AObsidianEnemy::OnAbilitySystemInitialized()
+{
+	Super::OnAbilitySystemInitialized();
+
+	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
+	check(ObsidianASC);
+	
+	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
+}
+
+void AObsidianEnemy::OnAbilitySystemUninitialized()
+{
+	Super::OnAbilitySystemUninitialized();
+
+	EnemyAttributesComponent->UninitializeFromAbilitySystem();
+}

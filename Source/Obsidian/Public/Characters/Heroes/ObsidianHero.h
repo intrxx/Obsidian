@@ -29,7 +29,11 @@ public:
 	AObsidianPlayerState* GetObsidianPlayerState() const;
 
 protected:
-
+	//~ Start of AObsidianCharacterBase
+	virtual void OnAbilitySystemInitialized() override;
+	virtual void OnAbilitySystemUninitialized() override;
+	//~ End of AObsidianCharacterBase
+	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianHeroComponent> HeroComponent;
