@@ -63,7 +63,7 @@ struct FObsidianAbilitySet_AttributeSet
 	GENERATED_BODY()
 
 public:
-	// Gameplay Effect to grant.
+	// Attribute Set to grant.
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UAttributeSet> AttributeSet;
 };

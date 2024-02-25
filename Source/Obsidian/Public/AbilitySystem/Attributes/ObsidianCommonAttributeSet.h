@@ -31,7 +31,7 @@ protected:
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
 	
 private:
-	/** The current Health attribute. The health will be capped by the max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
+	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Obsidian|CAttributes|Health", Meta = (HideFromModifiers, AllowPrivateAccess = true))
 	FGameplayAttributeData Health;
 

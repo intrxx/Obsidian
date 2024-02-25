@@ -6,6 +6,7 @@
 #include "Engine/DataAsset.h"
 #include "ObsidianPawnData.generated.h"
 
+class UObsidianAbilitySet;
 class UObsidianInputConfig;
 class  UInputMappingContext;
 
@@ -38,13 +39,16 @@ public:
 	UObsidianPawnData(const FObjectInitializer& ObjectInitializer);
 
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Pawn")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Pawn")
 	TSubclassOf<APawn> PawnClass;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Abilities")
+	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySets;
+	
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Input")
 	TArray<FInputMappingContextAndPriority> DefaultMappingContext;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Input")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Input")
 	TObjectPtr<UObsidianInputConfig> InputConfig;
 	
 };

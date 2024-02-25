@@ -25,21 +25,72 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 		return;
 	}
 
+	ManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
+	MaxManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
 	StrengthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetStrengthAttribute()).AddUObject(this, &ThisClass::StrengthChanged);
+	IntelligenceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetIntelligenceAttribute()).AddUObject(this, &ThisClass::IntelligenceChanged);
+	DexterityChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetDexterityAttribute()).AddUObject(this, &ThisClass::DexterityChanged);
+
+	// Set the Mana value to the MaxMana
+	AbilitySystemComponent->SetNumericAttributeBase(GetManaAttribute(), GetMaxMana());
 }
 
 void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
 {
+	ManaChangedDelegateHandle.Reset();
+	MaxManaChangedDelegateHandle.Reset();
 	StrengthChangedDelegateHandle.Reset();
+	IntelligenceChangedDelegateHandle.Reset();
+	DexterityChangedDelegateHandle.Reset();
 	
 	HeroAttributeSet = nullptr;
 	
 	Super::UninitializeFromAbilitySystem();
 }
 
+void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Mana Changed!"));
+}
+
+void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Max Mana Changed!"));
+}
+
 void UObsidianHeroAttributesComponent::StrengthChanged(const FOnAttributeChangeData& Data)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Implement Strength Changed!"));
+}
+
+void UObsidianHeroAttributesComponent::IntelligenceChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Intelligence Changed!"));
+}
+
+void UObsidianHeroAttributesComponent::DexterityChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Dexterity Changed!"));
+}
+
+float UObsidianHeroAttributesComponent::GetMana() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMana() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetManaAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetManaAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetMaxMana() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxMana() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxManaAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxManaAttribute() : nullptr);
 }
 
 float UObsidianHeroAttributesComponent::GetStrength() const
@@ -51,5 +102,26 @@ FGameplayAttribute UObsidianHeroAttributesComponent::GetStrengthAttribute() cons
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetStrengthAttribute() : nullptr);
 }
+
+float UObsidianHeroAttributesComponent::GetIntelligence() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetIntelligence() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetIntelligenceAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetIntelligenceAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetDexterity() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetDexterity() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetDexterityAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetDexterityAttribute() : nullptr);
+}
+
 
 
