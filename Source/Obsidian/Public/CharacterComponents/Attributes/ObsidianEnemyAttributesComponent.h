@@ -31,10 +31,8 @@ public:
 	 * Getters for Gameplay Attributes.
 	 */
 	
-	/** Return the current Strength value. */
+	/** Getters for EnemySpecificAttribute Value and Attribute from UObsidianEnemyAttributeSet. */
 	float GetEnemySpecificAttribute() const;
-
-	/** Return the Strength Attribute from UObsidianHeroAttributeSet. */
 	FGameplayAttribute GetEnemySpecificAttributeAttribute() const;
 
 	/**

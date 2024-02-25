@@ -43,6 +43,13 @@ void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilityS
 	/** Register to listen for attribute changes */
 	HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
 	MaxHealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
+	ArmorChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
+	EvasionChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEvasionAttribute()).AddUObject(this, &ThisClass::EvasionChanged);
+	EnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
+	FireResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetFireResistanceAttribute()).AddUObject(this, &ThisClass::FireResistanceChanged);
+	ColdResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetColdResistanceAttribute()).AddUObject(this, &ThisClass::ColdResistanceChanged);
+	LightningResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetLightningResistanceAttribute()).AddUObject(this, &ThisClass::LightningResistanceChanged);
+	ChaosResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
 	
 	// Set the Health value to the MaxHealth
 	AbilitySystemComponent->SetNumericAttributeBase(GetHealthAttribute(), GetMaxHealth());
@@ -54,6 +61,13 @@ void UObsidianAttributesComponent::UninitializeFromAbilitySystem()
 	
 	HealthChangedDelegateHandle.Reset();
 	MaxHealthChangedDelegateHandle.Reset();
+	ArmorChangedDelegateHandle.Reset();
+	EvasionChangedDelegateHandle.Reset();
+	EnergyShieldChangedDelegateHandle.Reset();
+	FireResistanceChangedDelegateHandle.Reset();
+	ColdResistanceChangedDelegateHandle.Reset();
+	LightningResistanceChangedDelegateHandle.Reset();
+	ChaosResistanceChangedDelegateHandle.Reset();
 	
 	CommonAttributeSet = nullptr;
 	AbilitySystemComponent = nullptr;
@@ -76,6 +90,41 @@ void UObsidianAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData
 	UE_LOG(LogTemp, Warning, TEXT("Implement Max Health Changed!"));
 }
 
+void UObsidianAttributesComponent::ArmorChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Armor Changed!"));
+}
+
+void UObsidianAttributesComponent::EvasionChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Evasion Changed!"));
+}
+
+void UObsidianAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Energy Shield Changed!"));
+}
+
+void UObsidianAttributesComponent::FireResistanceChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Fire Resistance Changed!"));
+}
+
+void UObsidianAttributesComponent::ColdResistanceChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Cold Resistance Changed!"));
+}
+
+void UObsidianAttributesComponent::LightningResistanceChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Lightning Resistance Changed!"));
+}
+
+void UObsidianAttributesComponent::ChaosResistanceChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Chaos Resistance Changed!"));
+}
+
 float UObsidianAttributesComponent::GetHealth() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetHealth() : 0.0f);
@@ -95,6 +144,77 @@ FGameplayAttribute UObsidianAttributesComponent::GetMaxHealthAttribute() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetMaxHealthAttribute() : nullptr);
 }
+
+float UObsidianAttributesComponent::GetArmor() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetArmor() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetArmorAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetArmorAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetEvasion() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetEvasion() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetEvasionAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetEvasionAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetEnergyShield() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetEnergyShield() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetEnergyShieldAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetEnergyShieldAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetFireResistance() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetFireResistance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetFireResistanceAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetFireResistanceAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetColdResistance() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetColdResistance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetColdResistanceAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetColdResistanceAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetLightningResistance() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetLightningResistance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetLightningResistanceAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetLightningResistanceAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetChaosResistance() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetChaosResistance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetChaosResistanceAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetChaosResistanceAttribute() : nullptr);
+}
+
 
 
 
