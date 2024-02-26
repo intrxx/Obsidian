@@ -1,10 +1,13 @@
 // Copyright 2024 Michał Ogiński
 
 #include "Characters/Heroes/ObsidianHero.h"
+
+#include "AbilitySystem/ObsidianAbilitySet.h"
 #include "Camera/CameraComponent.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+#include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -85,6 +88,17 @@ void AObsidianHero::OnAbilitySystemInitialized()
 	check(ObsidianASC);
 
 	HeroAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
+	
+	if(const UObsidianPawnExtensionComponent* PawnExt = UObsidianPawnExtensionComponent::FindPawnExtComponent(this))
+	{
+		if(const UObsidianPawnData* PawnData = PawnExt->GetPawnData())
+		{
+			for(const UObsidianAbilitySet* AbilitySet : PawnData->AbilitySets)
+			{
+				AbilitySet->GiveToAbilitySystem(ObsidianASC, nullptr, this);
+			}
+		}
+	}
 }
 
 void AObsidianHero::OnAbilitySystemUninitialized()
