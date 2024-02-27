@@ -2,12 +2,14 @@
 
 #include "Characters/Enemies/ObsidianEnemy.h"
 
+#include "AbilitySystem/ObsidianAbilitySet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "ObsidianTypes/ObsidianChannels.h"
+#include "Characters/ObsidianPawnData.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 
 AObsidianEnemy::AObsidianEnemy()
@@ -52,6 +54,17 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	check(ObsidianASC);
 	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
+
+	if(const UObsidianPawnExtensionComponent* PawnExt = UObsidianPawnExtensionComponent::FindPawnExtComponent(this))
+	{
+		if(const UObsidianPawnData* PawnData = PawnExt->GetPawnData())
+		{
+			for(const UObsidianAbilitySet* AbilitySet : PawnData->AbilitySets)
+			{
+				AbilitySet->GiveToAbilitySystem(ObsidianASC, nullptr, this);
+			}
+		}
+	}
 }
 
 void AObsidianEnemy::OnAbilitySystemUninitialized()
