@@ -12,7 +12,9 @@
 				"Engine",
 				"EnhancedInput",
 				"ModularGameplay",
-				"GameplayAbilities"
+				"GameplayAbilities",
+				"UMG",
+				"CoreUObject"
 			]
 		}
 	],
