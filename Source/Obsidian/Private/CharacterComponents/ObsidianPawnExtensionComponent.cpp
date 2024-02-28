@@ -4,6 +4,7 @@
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/ObsidianPawnData.h"
 #include "Net/UnrealNetwork.h"
 
 UObsidianPawnExtensionComponent::UObsidianPawnExtensionComponent(const FObjectInitializer& ObjectInitializer)
@@ -52,7 +53,10 @@ void UObsidianPawnExtensionComponent::InitializeAbilitySystem(UObsidianAbilitySy
 	AbilitySystemComponent = InASC;
 	AbilitySystemComponent->InitAbilityActorInfo(InOwnerActor, Pawn);
 
-	// TODO Create Tag Relationship Mapping and set it here
+	if(ensure(PawnData))
+	{
+		InASC->SetTagRelationshipMapping(PawnData->TagRelationshipMapping);
+	}
 
 	OnAbilitySystemInitialized.Broadcast();
 }

@@ -4,6 +4,12 @@
 
 namespace ObsidianGameplayTags
 {
+	// Abilities
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivationFail_IsDead);
+
+	// Statuses
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death);
+	
 	// Native Input
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move);
 

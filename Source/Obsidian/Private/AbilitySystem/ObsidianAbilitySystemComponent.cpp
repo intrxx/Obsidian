@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-
+#include "AbilitySystem/OAbilityTagRelationshipMapping.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 
 
@@ -139,7 +139,6 @@ void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool 
 			}
 		}
 	}
-
 	
 	// Clear the cached ability handles.
 	InputPressedSpecHandles.Reset();
@@ -151,4 +150,18 @@ void UObsidianAbilitySystemComponent::ClearAbilityInput()
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
+}
+
+void UObsidianAbilitySystemComponent::SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* MappingToSet)
+{
+	TagRelationshipMapping = MappingToSet;
+}
+
+void UObsidianAbilitySystemComponent::GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags,
+                                                                             FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const
+{
+	if (TagRelationshipMapping)
+	{
+		TagRelationshipMapping->GetRequiredAndBlockedActivationTags(AbilityTags, &OutActivationRequired, &OutActivationBlocked);
+	}
 }

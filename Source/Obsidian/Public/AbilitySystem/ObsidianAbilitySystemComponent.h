@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "ObsidianAbilitySystemComponent.generated.h"
 
+class UOAbilityTagRelationshipMapping;
 /**
  * The base Ability System Component class used in this project.
  */
@@ -23,6 +24,10 @@ public:
 	void ProcessAbilityInput(float DeltaTime, bool bPauseGame);
 	void ClearAbilityInput();
 
+	void SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* MappingToSet);
+
+	void GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const;
+
 protected:
 	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
 	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
@@ -31,5 +36,8 @@ protected:
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
 	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
 	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
+
+	UPROPERTY()
+	TObjectPtr<UOAbilityTagRelationshipMapping> TagRelationshipMapping;
 	
 };

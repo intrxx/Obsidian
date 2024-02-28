@@ -9,6 +9,7 @@
 class UObsidianAbilitySet;
 class UObsidianInputConfig;
 class  UInputMappingContext;
+class UOAbilityTagRelationshipMapping;
 
 USTRUCT()
 struct FInputMappingContextAndPriority
@@ -42,13 +43,21 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Pawn")
 	TSubclassOf<APawn> PawnClass;
 
+	/** Ability sets to grant to this pawn's ability system. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Abilities")
 	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySets;
-	
+
+	/** What mapping of ability tags to use for actions taking by this pawn. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Lyra|Abilities")
+	TObjectPtr<UOAbilityTagRelationshipMapping> TagRelationshipMapping;
+
+	/** Input Mappings used by player controlled pawns map the input. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Input")
 	TArray<FInputMappingContextAndPriority> DefaultMappingContext;
-	
+
+	/** Input configuration used by player controlled pawns to create input mappings and bind input actions. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Input")
 	TObjectPtr<UObsidianInputConfig> InputConfig;
+	
 	
 };

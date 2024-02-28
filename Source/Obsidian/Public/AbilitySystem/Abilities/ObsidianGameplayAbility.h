@@ -40,6 +40,10 @@ public:
 	EObsidianGameplayAbility_ActivationPolicy GetAbilityActivationPolicy() const {return ActivationPolicy;}
 
 protected:
+	//~UGameplayAbility interface
+	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
+	//~End of UGameplayAbility interface
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")
 	EObsidianGameplayAbility_ActivationPolicy ActivationPolicy;
 	
