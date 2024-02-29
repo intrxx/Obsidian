@@ -56,18 +56,34 @@ public:
 	/** Getters for Fire Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetFireResistance() const;
 	FGameplayAttribute GetFireResistanceAttribute() const;
+	
+	/** Getters for Max Fire Resistance Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMaxFireResistance() const;
+	FGameplayAttribute GetMaxFireResistanceAttribute() const;
 
 	/** Getters for Cold Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetColdResistance() const;
 	FGameplayAttribute GetColdResistanceAttribute() const;
 
+	/** Getters for Max Cold Resistance Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMaxColdResistance() const;
+	FGameplayAttribute GetMaxColdResistanceAttribute() const;
+
 	/** Getters for Lightning Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetLightningResistance() const;
 	FGameplayAttribute GetLightningResistanceAttribute() const;
 
+	/** Getters for Max Lightning Resistance Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMaxLightningResistance() const;
+	FGameplayAttribute GetMaxLightningResistanceAttribute() const;
+
 	/** Getters for Chaos Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetChaosResistance() const;
 	FGameplayAttribute GetChaosResistanceAttribute() const;
+
+	/** Getters for Max Chaos Resistance Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMaxChaosResistance() const;
+	FGameplayAttribute GetMaxChaosResistanceAttribute() const;
 	
 	/**
 	 *
@@ -86,9 +102,13 @@ protected:
 	virtual void EvasionChanged(const FOnAttributeChangeData& Data);
 	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data);
 	virtual void FireResistanceChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxFireResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void ColdResistanceChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxColdResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void LightningResistanceChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxLightningResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void ChaosResistanceChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data);
 	
 	/**
 	 * 
@@ -116,9 +136,13 @@ protected:
 	FDelegateHandle EvasionChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle FireResistanceChangedDelegateHandle;
+	FDelegateHandle MaxFireResistanceChangedDelegateHandle;
 	FDelegateHandle ColdResistanceChangedDelegateHandle;
+	FDelegateHandle MaxColdResistanceChangedDelegateHandle;
 	FDelegateHandle LightningResistanceChangedDelegateHandle;
+	FDelegateHandle MaxLightningResistanceChangedDelegateHandle;
 	FDelegateHandle ChaosResistanceChangedDelegateHandle;
+	FDelegateHandle MaxChaosResistanceChangedDelegateHandle;
 	
 	/**
 	 *

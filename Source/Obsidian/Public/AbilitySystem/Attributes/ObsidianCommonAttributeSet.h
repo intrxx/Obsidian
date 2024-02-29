@@ -24,9 +24,13 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShield);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireResistance);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFireResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdResistance);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxColdResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, LightningResistance);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxLightningResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosResistance);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxChaosResistance);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -44,11 +48,19 @@ protected:
 	UFUNCTION()
 	void OnRep_FireResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
+	void OnRep_MaxFireResistance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
 	void OnRep_ColdResistance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxColdResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_LightningResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
+	void OnRep_MaxLightningResistance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
 	void OnRep_ChaosResistance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue);
 
 private:
 	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
@@ -75,15 +87,31 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Obsidian|CAttributes|FireResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FireResistance;
 
+	/** The current Max Fire Resistance attribute. Max Fire Resistance is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFireResistance, Category = "Obsidian|CAttributes|MaxFireResistance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxFireResistance;
+
 	/** The current Cold Resistance attribute. Cold Resistance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ColdResistance, Category = "Obsidian|CAttributes|ColdResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ColdResistance;
 
+	/** The current Max Cold Resistance attribute. Max Cold Resistance is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxColdResistance, Category = "Obsidian|CAttributes|MaxColdResistance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxColdResistance;
+
 	/** The current Lightning Resistance attribute. Lightning Resistance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Obsidian|CAttributes|LightningResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData LightningResistance;
-
+	
+	/** The current Max Lightning Resistance attribute. Max Lightning Resistance is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxLightningResistance, Category = "Obsidian|CAttributes|MaxLightningResistance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxLightningResistance;
+	
 	/** The current Chaos Resistance attribute. Chaos Resistance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosResistance, Category = "Obsidian|CAttributes|ChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosResistance;
+	
+	/** The current Max Chaos Resistance attribute. Max Chaos Resistance is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|MaxChaosResistance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxChaosResistance;
 };
