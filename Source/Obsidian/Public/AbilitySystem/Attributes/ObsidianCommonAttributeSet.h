@@ -20,9 +20,10 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShield);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxEnergyShield);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Armor);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
-	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShield);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFireResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdResistance);
@@ -31,6 +32,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxLightningResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxChaosResistance);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeChance);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeMultiplier);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -40,11 +43,13 @@ protected:
 	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
+	void OnRep_EnergyShield(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxEnergyShield(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
 	void OnRep_Armor(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_Evasion(const FGameplayAttributeData& OldValue);
-	UFUNCTION()
-	void OnRep_EnergyShield(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_FireResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -61,6 +66,10 @@ protected:
 	void OnRep_ChaosResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_CriticalStrikeMultiplier(const FGameplayAttributeData& OldValue);
 
 private:
 	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
@@ -71,6 +80,14 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
 
+	/** The current Energy Shield attribute. The Energy Shield will be capped by the Max Energy Shield attribute. Energy Shield is hidden from modifiers so only Executions can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	FGameplayAttributeData EnergyShield;
+
+	/** The current Max Energy Shield attribute. MaxEnergy Shield is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergyShield, Category = "Obsidian|CAttributes|MaxEnergyShield", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxEnergyShield;
+
 	/** The current Armor attribute. Armor is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor, Category = "Obsidian|CAttributes|Armor", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Armor;
@@ -78,10 +95,6 @@ private:
 	/** The current Evasion attribute. Evasion is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Evasion, Category = "Obsidian|CAttributes|Evasion", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Evasion;
-
-	/** The current Energy Shield attribute. Energy Shield is an attribute since Gameplay Effects can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData EnergyShield;
 	
 	/** The current Fire Resistance attribute. Fire Resistance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Obsidian|CAttributes|FireResistance", Meta = (AllowPrivateAccess = true))
@@ -114,4 +127,12 @@ private:
 	/** The current Max Chaos Resistance attribute. Max Chaos Resistance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|MaxChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxChaosResistance;
+
+	/** The current Critical Strike Chance attribute [0, 100], treating it like a percentage. Critical Strike Chance is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeChance, Category = "Obsidian|CAttributes|CriticalStrikeChance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CriticalStrikeChance;
+
+	/** The current Critical Strike Multiplier attribute. Critical Strike Multiplier is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeMultiplier, Category = "Obsidian|CAttributes|CriticalStrikeMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CriticalStrikeMultiplier;
 };

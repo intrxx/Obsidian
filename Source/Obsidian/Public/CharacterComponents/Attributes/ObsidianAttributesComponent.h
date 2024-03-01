@@ -40,6 +40,14 @@ public:
 	/** Getters for Max Health Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetMaxHealth() const;
 	FGameplayAttribute GetMaxHealthAttribute() const;
+
+	/** Getters for Energy Shield Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetEnergyShield() const;
+	FGameplayAttribute GetEnergyShieldAttribute() const;
+
+	/** Getters for Max Energy Shield Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMaxEnergyShield() const;
+	FGameplayAttribute GetMaxEnergyShieldAttribute() const;
 	
 	/** Getters for Armor Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetArmor() const;
@@ -48,11 +56,7 @@ public:
 	/** Getters for Evasion Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetEvasion() const;
 	FGameplayAttribute GetEvasionAttribute() const;
-
-	/** Getters for Energy Shield Value and Attribute from UObsidianCommonAttributeSet. */
-	float GetEnergyShield() const;
-	FGameplayAttribute GetEnergyShieldAttribute() const;
-
+	
 	/** Getters for Fire Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetFireResistance() const;
 	FGameplayAttribute GetFireResistanceAttribute() const;
@@ -84,6 +88,14 @@ public:
 	/** Getters for Max Chaos Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetMaxChaosResistance() const;
 	FGameplayAttribute GetMaxChaosResistanceAttribute() const;
+
+	/** Getters for Critical Strike Chance Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetCriticalStrikeChance() const;
+	FGameplayAttribute GetCriticalStrikeChanceAttribute() const;
+
+	/** Getters for Critical Strike Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetCriticalStrikeMultiplier() const;
+	FGameplayAttribute GetCriticalStrikeMultiplierAttribute() const;
 	
 	/**
 	 *
@@ -98,9 +110,10 @@ protected:
 	
 	virtual void HealthChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data);
+	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data);
 	virtual void ArmorChanged(const FOnAttributeChangeData& Data);
 	virtual void EvasionChanged(const FOnAttributeChangeData& Data);
-	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data);
 	virtual void FireResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxFireResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void ColdResistanceChanged(const FOnAttributeChangeData& Data);
@@ -109,6 +122,8 @@ protected:
 	virtual void MaxLightningResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void ChaosResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data);
+	virtual void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data);
+	virtual void CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data);
 	
 	/**
 	 * 
@@ -132,9 +147,10 @@ protected:
 
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle MaxHealthChangedDelegateHandle;
+	FDelegateHandle EnergyShieldChangedDelegateHandle;
+	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
 	FDelegateHandle ArmorChangedDelegateHandle;
 	FDelegateHandle EvasionChangedDelegateHandle;
-	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle FireResistanceChangedDelegateHandle;
 	FDelegateHandle MaxFireResistanceChangedDelegateHandle;
 	FDelegateHandle ColdResistanceChangedDelegateHandle;
@@ -143,8 +159,12 @@ protected:
 	FDelegateHandle MaxLightningResistanceChangedDelegateHandle;
 	FDelegateHandle ChaosResistanceChangedDelegateHandle;
 	FDelegateHandle MaxChaosResistanceChangedDelegateHandle;
+	FDelegateHandle CriticalStrikeChanceChangedDelegateHandle;
+	FDelegateHandle CriticalStrikeMultiplierChangedDelegateHandle;
 	
 	/**
 	 *
 	 */
 };
+
+
