@@ -14,7 +14,8 @@
 				"ModularGameplay",
 				"GameplayAbilities",
 				"UMG",
-				"CoreUObject"
+				"CoreUObject",
+				"CommonUI"
 			]
 		}
 	],
