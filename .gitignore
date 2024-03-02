@@ -92,11 +92,15 @@ Build/Android/res/*/*
 Plugins/**/Binaries/*
 Plugins/**/Intermediate/*
 
+# Ignore whole directories or individual files
 Content/AssetPacks
 Content/StarterContent
 Content/Obsidian/Assets/UI/Globes
+Obsidian.png
+Content/Splash/EdSplash.png
 
 .idea
 Plugins/Developer/Riderlink
 Plugins/Developer/RiderLink/
 .idea/.idea.SNDPG/.idea/workspace.xml
+

@@ -19,10 +19,7 @@ UCLASS()
 class OBSIDIAN_API UObsidianProgressGlobe : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
-public:
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Setup")
-	void SetRootBoxSize(float BoxWidth, float BoxHeight) const;
-
+	
 public:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<USizeBox> RootSizeBox;

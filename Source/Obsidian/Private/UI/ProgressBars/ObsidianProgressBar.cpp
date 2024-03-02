@@ -1,10 +1,3 @@
 // Copyright 2024 Michał Ogiński
 
-#include "UI/ProgressBars/ObsidianProgressGlobe.h"
-#include "Components/SizeBox.h"
 
-void UObsidianProgressGlobe::SetRootBoxSize(float BoxWidth, float BoxHeight) const
-{
-	RootSizeBox->SetWidthOverride(BoxWidth);
-	RootSizeBox->SetHeightOverride(BoxHeight);
-}

@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/NoExportTypes.h"
 #include "ObsidianWidgetController.generated.h"
 
 class UAttributeSet;
