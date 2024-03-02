@@ -3,3 +3,10 @@
 
 #include "UI/ObsidianWidgetController.h"
 
+void UObsidianWidgetController::SetWidgetControllerParams(const FWidgetControllerParams& WidgetControllerParams)
+{
+	PlayerController = WidgetControllerParams.PlayerController;
+	PlayerState = WidgetControllerParams.PlayerState;
+	AbilitySystemComponent = WidgetControllerParams.AbilitySystemComponent;
+	AttributeComponent = WidgetControllerParams.AttributesComponent;
+}

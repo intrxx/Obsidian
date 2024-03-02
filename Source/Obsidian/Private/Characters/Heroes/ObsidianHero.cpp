@@ -1,16 +1,18 @@
 // Copyright 2024 Michał Ogiński
 
 #include "Characters/Heroes/ObsidianHero.h"
-
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/ObsidianAbilitySet.h"
 #include "Camera/CameraComponent.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/ObsidianPawnData.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "UI/ObsidianHUD.h"
 
 AObsidianHero::AObsidianHero()
 {
@@ -80,6 +82,11 @@ AObsidianPlayerState* AObsidianHero::GetObsidianPlayerState() const
 	return CastChecked<AObsidianPlayerState>(GetPlayerState(), ECastCheckedType::NullAllowed);
 }
 
+AObsidianPlayerController* AObsidianHero::GetObsidianPlayerController() const
+{
+	return CastChecked<AObsidianPlayerController>(GetController(), ECastCheckedType::NullAllowed);
+}
+
 void AObsidianHero::OnAbilitySystemInitialized()
 {
 	Super::OnAbilitySystemInitialized();
@@ -99,6 +106,8 @@ void AObsidianHero::OnAbilitySystemInitialized()
 			}
 		}
 	}
+
+	InitializeUI(ObsidianASC);
 }
 
 void AObsidianHero::OnAbilitySystemUninitialized()
@@ -106,4 +115,17 @@ void AObsidianHero::OnAbilitySystemUninitialized()
 	Super::OnAbilitySystemUninitialized();
 
 	HeroAttributesComponent->UninitializeFromAbilitySystem();
+}
+
+void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC)
+{
+	AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState();
+	AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController();
+	if(ObsidianPS && ObsidianPC)
+	{
+		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
+		{
+			ObsidianHUD->InitOverlay(ObsidianPC, ObsidianPS, ObsidianASC, HeroAttributesComponent);
+		}
+	}
 }

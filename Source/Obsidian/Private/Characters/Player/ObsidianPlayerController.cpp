@@ -1,7 +1,7 @@
 // Copyright 2024 Michał Ogiński
 
 #include "Characters/Player/ObsidianPlayerController.h"
-
+#include "UI/ObsidianHUD.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Interaction/ObsidianHighlightInterface.h"
@@ -38,6 +38,11 @@ UObsidianAbilitySystemComponent* AObsidianPlayerController::GetObsidianAbilitySy
 {
 	const AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState();
 	return (ObsidianPS ? ObsidianPS->GetObsidianAbilitySystemComponent() : nullptr);
+}
+
+AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
+{
+	return GetHUD<AObsidianHUD>();
 }
 
 void AObsidianPlayerController::CursorTrace()

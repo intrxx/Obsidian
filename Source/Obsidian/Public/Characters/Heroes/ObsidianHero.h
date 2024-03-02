@@ -6,6 +6,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianHero.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianHeroAttributesComponent;
 class AObsidianPlayerState;
 class USpringArmComponent;
@@ -28,11 +29,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
 	AObsidianPlayerState* GetObsidianPlayerState() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
+	AObsidianPlayerController* GetObsidianPlayerController() const;
+
 protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
 	//~ End of AObsidianCharacterBase
+
+	void InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC);
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
