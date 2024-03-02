@@ -96,9 +96,9 @@ Plugins/**/Intermediate/*
 Content/AssetPacks
 Content/StarterContent
 Content/Obsidian/Assets/UI/Globes
+Content/Obsidian/Assets/Materials/PP_Highlight.uasset
 Obsidian.png
-Content/Splash/EdSplash.png
-
+Content/Splash
 .idea
 Plugins/Developer/Riderlink
 Plugins/Developer/RiderLink/
