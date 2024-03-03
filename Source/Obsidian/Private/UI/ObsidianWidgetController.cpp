@@ -8,5 +8,8 @@ void UObsidianWidgetController::SetWidgetControllerParams(const FWidgetControlle
 	PlayerController = WidgetControllerParams.PlayerController;
 	PlayerState = WidgetControllerParams.PlayerState;
 	AbilitySystemComponent = WidgetControllerParams.AbilitySystemComponent;
-	AttributeComponent = WidgetControllerParams.AttributesComponent;
+}
+
+void UObsidianWidgetController::BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC)
+{
 }

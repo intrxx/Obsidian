@@ -6,6 +6,7 @@
 #include "ObsidianAttributesComponent.h"
 #include "ObsidianHeroAttributesComponent.generated.h"
 
+class UMainOverlayWidgetController;
 /**
  * 
  */
@@ -25,6 +26,8 @@ public:
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
+
+	void SetMainWidgetController(UMainOverlayWidgetController* InWidgetController);
 	
 	/**
 	 * Getters for Gameplay Attributes.
@@ -59,17 +62,39 @@ protected:
 	 * Callbacks for Attribute change delegates.
 	 */
 	
+	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data) override;
+	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) override;
 	virtual void ManaChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxManaChanged(const FOnAttributeChangeData& Data);
 	virtual void StrengthChanged(const FOnAttributeChangeData& Data);
 	virtual void IntelligenceChanged(const FOnAttributeChangeData& Data);
 	virtual void DexterityChanged(const FOnAttributeChangeData& Data);
+	virtual void ArmorChanged(const FOnAttributeChangeData& Data) override;
+	virtual void EvasionChanged(const FOnAttributeChangeData& Data) override;
+	virtual void FireResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxFireResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void ColdResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxColdResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void LightningResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void ChaosResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) override;
+	virtual void CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data) override;
 	
 	/**
 	 * 
 	 */
 
 protected:
+	/**
+	 * Widget controller that will communicate with UI.
+	 */
+	UPROPERTY()
+	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	
 	/**
 	 * Sets used by this component.
 	 */

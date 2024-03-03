@@ -16,11 +16,10 @@ struct FWidgetControllerParams
 
 	FWidgetControllerParams() {}
 
-	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianAttributesComponent* AC)
+	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC)
 	: PlayerController(PC)
 	, PlayerState(PS)
 	, AbilitySystemComponent(ASC)
-	, AttributesComponent(AC)
 	{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -31,15 +30,12 @@ struct FWidgetControllerParams
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UObsidianAttributesComponent> AttributesComponent = nullptr;
 };
 
 /**
  * 
  */
-UCLASS()
+UCLASS(Abstract)
 class OBSIDIAN_API UObsidianWidgetController : public UObject
 {
 	GENERATED_BODY()
@@ -47,6 +43,8 @@ class OBSIDIAN_API UObsidianWidgetController : public UObject
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|WidgetController")
 	void SetWidgetControllerParams(const FWidgetControllerParams& WidgetControllerParams);
+	
+	virtual void BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
@@ -57,8 +55,4 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
-	TObjectPtr<UObsidianAttributesComponent> AttributeComponent;
-	
 };

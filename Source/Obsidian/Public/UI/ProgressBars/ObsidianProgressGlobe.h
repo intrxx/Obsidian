@@ -19,6 +19,10 @@ UCLASS()
 class OBSIDIAN_API UObsidianProgressGlobe : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
+	void SetProgressGlobePercent(float Percent);
 	
 public:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
@@ -51,3 +55,4 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
 	FMargin GlobeMargin;
 };
+

@@ -4,6 +4,7 @@
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -72,14 +73,57 @@ void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
 	Super::UninitializeFromAbilitySystem();
 }
 
+void UObsidianHeroAttributesComponent::SetMainWidgetController(UMainOverlayWidgetController* InWidgetController)
+{
+	MainOverlayWidgetController = InWidgetController;
+
+	// Initial values
+	MainOverlayWidgetController->OnHealthChangedDelegate.Broadcast(GetHealth());
+	MainOverlayWidgetController->OnMaxHealthChangedDelegate.Broadcast(GetMaxHealth());
+	MainOverlayWidgetController->OnManaChangedDelegate.Broadcast(GetMana());
+	MainOverlayWidgetController->OnMaxManaChangedDelegate.Broadcast(GetMaxMana());
+}
+
+void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
+{
+	if(MainOverlayWidgetController)
+	{
+		MainOverlayWidgetController->OnHealthChangedDelegate.Broadcast(Data.NewValue);
+	}
+}
+
+void UObsidianHeroAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
+{
+	if(MainOverlayWidgetController)
+	{
+		MainOverlayWidgetController->OnMaxHealthChangedDelegate.Broadcast(Data.NewValue);
+	}
+}
+
+void UObsidianHeroAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
+{
+	
+}
+
+void UObsidianHeroAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
+{
+	
+}
+
 void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Implement Mana Changed!"));
+	if(MainOverlayWidgetController)
+	{
+		MainOverlayWidgetController->OnManaChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Implement Max Mana Changed!"));
+	if(MainOverlayWidgetController)
+	{
+		MainOverlayWidgetController->OnMaxManaChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::StrengthChanged(const FOnAttributeChangeData& Data)
@@ -95,6 +139,54 @@ void UObsidianHeroAttributesComponent::IntelligenceChanged(const FOnAttributeCha
 void UObsidianHeroAttributesComponent::DexterityChanged(const FOnAttributeChangeData& Data)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Implement Dexterity Changed!"));
+}
+
+void UObsidianHeroAttributesComponent::ArmorChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::EvasionChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::FireResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::MaxFireResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::ColdResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::MaxColdResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::LightningResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::ChaosResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data)
+{
 }
 
 float UObsidianHeroAttributesComponent::GetMana() const
@@ -146,6 +238,7 @@ FGameplayAttribute UObsidianHeroAttributesComponent::GetDexterityAttribute() con
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetDexterityAttribute() : nullptr);
 }
+
 
 
 

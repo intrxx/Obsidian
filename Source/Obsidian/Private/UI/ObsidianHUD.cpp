@@ -13,7 +13,7 @@ UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const
 		{
 			MainOverlayWidgetController = NewObject<UMainOverlayWidgetController>(this, MainOverlayWidgetControllerClass);
 			MainOverlayWidgetController->SetWidgetControllerParams(WidgetControllerParams);
-
+			
 			return MainOverlayWidgetController;
 		}
 	}
@@ -26,10 +26,12 @@ void AObsidianHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbility
 	{
 		OverlayWidget = CreateWidget<UObsidianWidgetBase>(GetWorld(), MainOverlayWidgetClass);
 
-		const FWidgetControllerParams Params(PC, PS, ASC, AC);
+		const FWidgetControllerParams Params(PC, PS, ASC);
 		UMainOverlayWidgetController* WidgetController = GetMainOverlayWidgetController(Params);
 
 		OverlayWidget->SetWidgetController(WidgetController);
+		WidgetController->BroadcastControllerToAttributesComp(AC);
+		
 		OverlayWidget->AddToViewport();
 	}
 }

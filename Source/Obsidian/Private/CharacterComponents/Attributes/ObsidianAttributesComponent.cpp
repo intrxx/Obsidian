@@ -46,7 +46,7 @@ void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilityS
 	EnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
 	MaxEnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
 	
-	// Set the Health value to the MaxHealth
+	// Set the Health value to the MaxHealth // TODO Decide if I actually want to do it this way
 	AbilitySystemComponent->SetNumericAttributeBase(GetHealthAttribute(), GetMaxHealth());
 	AbilitySystemComponent->SetNumericAttributeBase(GetEnergyShieldAttribute(), GetMaxEnergyShield());
 }
