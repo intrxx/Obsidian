@@ -19,12 +19,12 @@ public class Obsidian : ModuleRules
 				"EnhancedInput",
 				"GameplayTags",
 				"GameplayAbilities",
-				"GameplayTasks"
+				"GameplayTasks",
+				"CommonUI"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
-			"CommonUI",
 			"Slate",
 			"SlateCore"
 		});

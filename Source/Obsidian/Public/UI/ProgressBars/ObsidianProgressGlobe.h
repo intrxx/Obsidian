@@ -9,6 +9,7 @@
 #include "ObsidianProgressGlobe.generated.h"
 
 class UProgressBar;
+class UCommonTextBlock;
 class UImage;
 class UOverlay;
 class USizeBox;
@@ -39,7 +40,22 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UProgressBar> ProgressGlobe;
-	
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> FirstAttributeNameText;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> FirstAttributeCountText;
+
+	/*
+	 * Uncomment if using second attribute on the globe
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> FirstAttributeNameText;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> FirstAttributeCountText;
+	*/
+		
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
 	float RootBoxWidth = 0.0f;
 
@@ -54,5 +70,14 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
 	FMargin GlobeMargin;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
+	FText FirstAttributeName;
+
+	/*
+	 * Uncomment if using second attribute on the globe
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
+	FText SecondAttributeName;
+	*/
 };
 
