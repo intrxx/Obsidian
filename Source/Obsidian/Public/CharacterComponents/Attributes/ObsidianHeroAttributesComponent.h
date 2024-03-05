@@ -59,7 +59,7 @@ public:
 
 protected:
 	/**
-	 * Callbacks for Attribute change delegates.
+	 * Callbacks for Attribute change delegates. //TODO Decide what should actually be bind later - check performance
 	 */
 	
 	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;
@@ -83,6 +83,8 @@ protected:
 	virtual void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) override;
 	virtual void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) override;
 	virtual void CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data) override;
+	virtual void AttackSpeedChanged(const FOnAttributeChangeData& Data) override;
+	virtual void CastSpeedChanged(const FOnAttributeChangeData& Data) override;
 	
 	/**
 	 * 

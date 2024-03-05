@@ -151,6 +151,16 @@ void UObsidianAttributesComponent::CriticalStrikeMultiplierChanged(const FOnAttr
 	UE_LOG(LogTemp, Warning, TEXT("Implement Critical Strike Multiplier Changed!"));
 }
 
+void UObsidianAttributesComponent::AttackSpeedChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Attack Speed Changed!"));
+}
+
+void UObsidianAttributesComponent::CastSpeedChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Implement Cast Speed Changed!"));
+}
+
 float UObsidianAttributesComponent::GetHealth() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetHealth() : 0.0f);
@@ -310,6 +320,117 @@ FGameplayAttribute UObsidianAttributesComponent::GetCriticalStrikeMultiplierAttr
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetCriticalStrikeMultiplierAttribute() : nullptr);
 }
+
+float UObsidianAttributesComponent::GetAttackSpeed() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetAttackSpeed() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetAttackSpeedAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetAttackSpeedAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetCastSpeed() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetCastSpeed() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetCastSpeedAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetCastSpeedAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetFirePenetration() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetFirePenetration() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetFirePenetrationAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetFirePenetrationAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetColdPenetration() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetColdPenetration() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetColdPenetrationAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetColdPenetrationAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetLightningPenetration() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetLightningPenetration() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetLightningPenetrationAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetLightningPenetrationAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetChaosPenetration() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetChaosPenetration() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetChaosPenetrationAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetChaosPenetrationAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetFireDamageMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetFireDamageMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetFireDamageMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetFireDamageMultiplierAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetColdDamageMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetColdDamageMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetColdDamageMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetColdDamageMultiplierAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetLightningDamageMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetLightningDamageMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetLightningDamageMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetLightningDamageMultiplierAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetChaosDamageMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetChaosDamageMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetChaosDamageMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetChaosDamageMultiplierAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetPhysicalDamageMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetPhysicalDamageMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetPhysicalDamageMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetPhysicalDamageMultiplierAttribute() : nullptr);
+}
+
 
 
 

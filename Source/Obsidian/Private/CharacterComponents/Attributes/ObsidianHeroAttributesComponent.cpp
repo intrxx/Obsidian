@@ -43,6 +43,8 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 	MaxChaosResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
 	CriticalStrikeChanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
 	CriticalStrikeMultiplierChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCriticalStrikeMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeMultiplierChanged);
+	AttackSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
+	CastSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
 	
 	// Set the Mana value to the MaxMana
 	AbilitySystemComponent->SetNumericAttributeBase(GetManaAttribute(), GetMaxMana());
@@ -67,6 +69,8 @@ void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
 	MaxChaosResistanceChangedDelegateHandle.Reset();
 	CriticalStrikeChanceChangedDelegateHandle.Reset();
 	CriticalStrikeMultiplierChangedDelegateHandle.Reset();
+	AttackSpeedChangedDelegateHandle.Reset();
+	CastSpeedChangedDelegateHandle.Reset();
 	
 	HeroAttributeSet = nullptr;
 	
@@ -186,6 +190,14 @@ void UObsidianHeroAttributesComponent::CriticalStrikeChanceChanged(const FOnAttr
 }
 
 void UObsidianHeroAttributesComponent::CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::AttackSpeedChanged(const FOnAttributeChangeData& Data)
+{
+}
+
+void UObsidianHeroAttributesComponent::CastSpeedChanged(const FOnAttributeChangeData& Data)
 {
 }
 

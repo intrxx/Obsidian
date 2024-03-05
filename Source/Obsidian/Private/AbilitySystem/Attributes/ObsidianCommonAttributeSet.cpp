@@ -30,6 +30,17 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, CriticalStrikeChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, CriticalStrikeMultiplier, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, CastSpeed, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, FirePenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ColdPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, LightningPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChaosPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, FireDamageMultiplier, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ColdDamageMultiplier, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, LightningDamageMultiplier, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChaosDamageMultiplier, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, PhysicalDamageMultiplier, COND_None, REPNOTIFY_Always);
 }
 
 void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
@@ -110,6 +121,62 @@ void UObsidianCommonAttributeSet::OnRep_CriticalStrikeChance(const FGameplayAttr
 void UObsidianCommonAttributeSet::OnRep_CriticalStrikeMultiplier(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CriticalStrikeMultiplier, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AttackSpeed, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_CastSpeed(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CastSpeed, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_FirePenetration(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FirePenetration, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_ColdPenetration(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdPenetration, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_LightningPenetration(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningPenetration, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_ChaosPenetration(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosPenetration, OldValue);
+}
+
+
+void UObsidianCommonAttributeSet::OnRep_FireDamageMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FireDamageMultiplier, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_ColdDamageMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdDamageMultiplier, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_LightningDamageMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningDamageMultiplier, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_ChaosDamageMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosDamageMultiplier, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, PhysicalDamageMultiplier, OldValue);
 }
 
 

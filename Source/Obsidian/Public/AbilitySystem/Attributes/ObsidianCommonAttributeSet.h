@@ -34,6 +34,19 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxChaosResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeChance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeMultiplier);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AttackSpeed);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CastSpeed);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FirePenetration);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdPenetration);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, LightningPenetration);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosPenetration);
+
+	/** Damage scaling Attributes */
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireDamageMultiplier);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdDamageMultiplier);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, LightningDamageMultiplier);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosDamageMultiplier);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, PhysicalDamageMultiplier);
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -70,6 +83,30 @@ protected:
 	void OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_CriticalStrikeMultiplier(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_AttackSpeed(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_CastSpeed(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_FirePenetration(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_ColdPenetration(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_LightningPenetration(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_ChaosPenetration(const FGameplayAttributeData& OldValue);
+
+	/** Damage scaling Attributes */
+	UFUNCTION()
+	void OnRep_FireDamageMultiplier(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_ColdDamageMultiplier(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_LightningDamageMultiplier(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_ChaosDamageMultiplier(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue);
 
 private:
 	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
@@ -135,4 +172,52 @@ private:
 	/** The current Critical Strike Multiplier attribute. Critical Strike Multiplier is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeMultiplier, Category = "Obsidian|CAttributes|CriticalStrikeMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CriticalStrikeMultiplier;
+
+	/** The current Attack Speed attribute. Attack Speed is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackSpeed, Category = "Obsidian|CAttributes|AttackSpeed", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AttackSpeed;
+
+	/** The current Cast Speed attribute. Cast Speed is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CastSpeed, Category = "Obsidian|CAttributes|CastSpeed", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CastSpeed;
+
+	/** The current Fire Penetration attribute. Fire Penetration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FirePenetration, Category = "Obsidian|CAttributes|FirePenetration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData FirePenetration;
+
+	/** The current Cold Penetration attribute. Cold Penetration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ColdPenetration, Category = "Obsidian|CAttributes|ColdPenetration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ColdPenetration;
+
+	/** The current Lightning Penetration attribute. Lightning Penetration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningPenetration, Category = "Obsidian|CAttributes|LightningPenetration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData LightningPenetration;
+
+	/** The current Chaos Penetration attribute. Chaos Penetration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosPenetration, Category = "Obsidian|CAttributes|ChaosPenetration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ChaosPenetration;
+
+	
+	/** Damage scaling Attributes */
+	
+	/** The current Fire Damage Multiplier attribute. Fire Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireDamageMultiplier, Category = "Obsidian|CAttributes|FireDamageMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData FireDamageMultiplier;
+
+	/** The current Cold Damage Multiplier attribute. Cold Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ColdDamageMultiplier, Category = "Obsidian|CAttributes|ColdDamageMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ColdDamageMultiplier;
+
+	/** The current Lightning Damage Multiplier attribute. Lightning Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningDamageMultiplier, Category = "Obsidian|CAttributes|LightningDamageMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData LightningDamageMultiplier;
+
+	/** The current Chaos Damage Multiplier attribute. Chaos Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosDamageMultiplier, Category = "Obsidian|CAttributes|ChaosDamageMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ChaosDamageMultiplier;
+
+	/** The current Physical Damage Multiplier attribute. Physical Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageMultiplier, Category = "Obsidian|CAttributes|PhysicalDamageMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData PhysicalDamageMultiplier;
 };
+

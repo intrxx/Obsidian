@@ -96,6 +96,50 @@ public:
 	/** Getters for Critical Strike Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetCriticalStrikeMultiplier() const;
 	FGameplayAttribute GetCriticalStrikeMultiplierAttribute() const;
+
+	/** Getters for Critical Strike Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetAttackSpeed() const;
+	FGameplayAttribute GetAttackSpeedAttribute() const;
+
+	/** Getters for Critical Strike Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetCastSpeed() const;
+	FGameplayAttribute GetCastSpeedAttribute() const;
+
+	/** Getters for Fire Penetration Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetFirePenetration() const;
+	FGameplayAttribute GetFirePenetrationAttribute() const;
+
+	/** Getters for Cold Penetration Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetColdPenetration() const;
+	FGameplayAttribute GetColdPenetrationAttribute() const;
+
+	/** Getters for Lightning Penetration Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetLightningPenetration() const;
+	FGameplayAttribute GetLightningPenetrationAttribute() const;
+
+	/** Getters for Chaos Penetration Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetChaosPenetration() const;
+	FGameplayAttribute GetChaosPenetrationAttribute() const;
+
+	/** Getters for Fire Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetFireDamageMultiplier() const;
+	FGameplayAttribute GetFireDamageMultiplierAttribute() const;
+
+	/** Getters for Cold Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetColdDamageMultiplier() const;
+	FGameplayAttribute GetColdDamageMultiplierAttribute() const;
+
+	/** Getters for Lightning Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetLightningDamageMultiplier() const;
+	FGameplayAttribute GetLightningDamageMultiplierAttribute() const;
+
+	/** Getters for Chaos Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetChaosDamageMultiplier() const;
+	FGameplayAttribute GetChaosDamageMultiplierAttribute() const;
+
+	/** Getters for Physical Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetPhysicalDamageMultiplier() const;
+	FGameplayAttribute GetPhysicalDamageMultiplierAttribute() const;
 	
 	/**
 	 *
@@ -124,6 +168,8 @@ protected:
 	virtual void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data);
 	virtual void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data);
 	virtual void CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data);
+	virtual void AttackSpeedChanged(const FOnAttributeChangeData& Data);
+	virtual void CastSpeedChanged(const FOnAttributeChangeData& Data);
 	
 	/**
 	 * 
@@ -161,6 +207,8 @@ protected:
 	FDelegateHandle MaxChaosResistanceChangedDelegateHandle;
 	FDelegateHandle CriticalStrikeChanceChangedDelegateHandle;
 	FDelegateHandle CriticalStrikeMultiplierChangedDelegateHandle;
+	FDelegateHandle AttackSpeedChangedDelegateHandle;
+	FDelegateHandle CastSpeedChangedDelegateHandle;
 	
 	/**
 	 *
