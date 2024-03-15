@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "ObsidianGameplayEffectActor.generated.h"
 
-class USphereComponent;
+class UGameplayEffect;
 
 UCLASS()
 class OBSIDIAN_API AObsidianGameplayEffectActor : public AActor
@@ -19,21 +19,12 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UFUNCTION()
-	virtual void OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> EffectClassToApply);
+	
+protected:
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Effects")
+	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 
-	UFUNCTION()
-	virtual void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex);
-
-private:
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<USphereComponent> OverlapSphere;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<UStaticMeshComponent> MeshComp;
-
-
-
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Effects")
+	float EffectLevel;
 };
