@@ -19,12 +19,13 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void ApplyEffectToTarget(AActor* Target, TSubclassOf<UGameplayEffect> EffectClassToApply);
+	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
+	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> EffectClassToApply);
 	
 protected:
-	UPROPERTY(EditAnywhere, Category = "Obsidian|Effects")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effects")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Effects")
-	float EffectLevel;
+	float EffectLevel = 1.f;
 };
