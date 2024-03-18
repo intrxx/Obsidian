@@ -26,6 +26,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effects")
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effects")
+	TSubclassOf<UGameplayEffect> DurationalGameplayEffectClass;
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Effects")
 	float EffectLevel = 1.f;
 };

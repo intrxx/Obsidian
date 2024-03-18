@@ -27,7 +27,6 @@ void AObsidianGameplayEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSub
 
 	if(TargetASC == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("ASC is invalid"));
 		return;
 	}
 
