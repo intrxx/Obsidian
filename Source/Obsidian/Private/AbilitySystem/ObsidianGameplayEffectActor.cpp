@@ -3,9 +3,6 @@
 #include "AbilitySystem/ObsidianGameplayEffectActor.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
-#include "Characters/ObsidianCharacterBase.h"
-#include "Components/SphereComponent.h"
 
 AObsidianGameplayEffectActor::AObsidianGameplayEffectActor()
 {
@@ -38,6 +35,14 @@ void AObsidianGameplayEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSub
 	const FGameplayEffectSpecHandle GESpecHandle = TargetASC->MakeOutgoingSpec(EffectClassToApply, EffectLevel, GEContextHandle);
 		
 	TargetASC->ApplyGameplayEffectSpecToSelf(*GESpecHandle.Data.Get());
+}
+
+void AObsidianGameplayEffectActor::OnOverlap(AActor* TargetActor)
+{
+}
+
+void AObsidianGameplayEffectActor::OnEndOverlap(AActor* TargetActor)
+{
 }
 
 
