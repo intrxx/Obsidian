@@ -34,7 +34,6 @@ void AObsidianGameplayEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSub
 	
 	const FGameplayEffectSpecHandle GESpecHandle = TargetASC->MakeOutgoingSpec(EffectClassToApply, EffectLevel, GEContextHandle);
 	const FActiveGameplayEffectHandle ActiveGameplayEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*GESpecHandle.Data.Get());
-	UE_LOG(LogTemp, Warning, TEXT("Applied in singe"));
 	
 	const bool bIsInfinite = GESpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
 	if(bIsInfinite && InfiniteEffectRemovalPolicy == EObsidianEffectRemovalPolicy::RemovalOnEndOverlap)
@@ -62,7 +61,6 @@ void AObsidianGameplayEffectActor::ApplyMultipleEffectsToTarget(AActor* TargetAc
 
 		const FGameplayEffectSpecHandle GESpecHandle = TargetASC->MakeOutgoingSpec(Effect.GameplayEffectClass, Effect.EffectLevel, GEContextHandle);
 		const FActiveGameplayEffectHandle ActiveGameplayEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*GESpecHandle.Data.Get());
-		UE_LOG(LogTemp, Warning, TEXT("Applied in multiple"));
 
 		if(Effect.bIsInfinite && Effect.EffectRemovalPolicy == EObsidianEffectRemovalPolicy::RemovalOnEndOverlap)
 		{
