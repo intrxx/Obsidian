@@ -74,6 +74,9 @@ protected:
 	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> EffectClassToApply);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
+	void ApplyMultipleEffectsToTarget(AActor* TargetActor, TArray<FObsidianGameplayEffectStack> MultipleGameplayEffectsToApply);
+
+	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
 	void OnOverlap(AActor* TargetActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
@@ -115,6 +118,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	bool bDestroyOnEffectRemoval = false;
 
+private:
+	void RemoveEffectsFromActor(AActor* TargetActor);
+	
 private:
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 };

@@ -33,13 +33,41 @@ void AObsidianGameplayEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSub
 	GEContextHandle.AddSourceObject(this);
 	
 	const FGameplayEffectSpecHandle GESpecHandle = TargetASC->MakeOutgoingSpec(EffectClassToApply, EffectLevel, GEContextHandle);
-		
 	const FActiveGameplayEffectHandle ActiveGameplayEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*GESpecHandle.Data.Get());
-
-	const bool bIsInfinite = GESpecHandle.Data.Get()->Def->DurationPolicy == EGameplayEffectDurationType::Infinite;
+	UE_LOG(LogTemp, Warning, TEXT("Applied in singe"));
+	
+	const bool bIsInfinite = GESpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
 	if(bIsInfinite && InfiniteEffectRemovalPolicy == EObsidianEffectRemovalPolicy::RemovalOnEndOverlap)
 	{
 		ActiveEffectHandles.Add(ActiveGameplayEffectHandle, TargetASC);
+	}
+}
+
+void AObsidianGameplayEffectActor::ApplyMultipleEffectsToTarget(AActor* TargetActor,
+	TArray<FObsidianGameplayEffectStack> MultipleGameplayEffectsToApply)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	if(TargetASC == nullptr)
+	{
+		return;
+	}
+
+	for(const FObsidianGameplayEffectStack& Effect : MultipleGameplayEffectsToApply)
+	{
+		checkf(Effect.GameplayEffectClass, TEXT("No Gameplay Effect Class found in [%s]"), *GetNameSafe(this));
+		
+		FGameplayEffectContextHandle GEContextHandle = TargetASC->MakeEffectContext();
+		GEContextHandle.AddSourceObject(this);
+
+		const FGameplayEffectSpecHandle GESpecHandle = TargetASC->MakeOutgoingSpec(Effect.GameplayEffectClass, Effect.EffectLevel, GEContextHandle);
+		const FActiveGameplayEffectHandle ActiveGameplayEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*GESpecHandle.Data.Get());
+		UE_LOG(LogTemp, Warning, TEXT("Applied in multiple"));
+
+		if(Effect.bIsInfinite && Effect.EffectRemovalPolicy == EObsidianEffectRemovalPolicy::RemovalOnEndOverlap)
+		{
+			ActiveEffectHandles.Add(ActiveGameplayEffectHandle, TargetASC);
+		}
 	}
 }
 
@@ -58,6 +86,11 @@ void AObsidianGameplayEffectActor::OnOverlap(AActor* TargetActor)
 	if(InfiniteEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InfiniteGameplayEffectClass);
+	}
+
+	if(EffectToApply == EObsidianEffectToApply::MultipleEffects)
+	{
+		ApplyMultipleEffectsToTarget(TargetActor, MultipleGameplayEffects);
 	}
 }
 
@@ -80,28 +113,38 @@ void AObsidianGameplayEffectActor::OnEndOverlap(AActor* TargetActor)
 	
 	if(InfiniteEffectRemovalPolicy == EObsidianEffectRemovalPolicy::RemovalOnEndOverlap)
 	{
-		UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+		RemoveEffectsFromActor(TargetActor);
+	}
 
-		if(!IsValid(TargetASC))
-		{
-			return;
-		}
+	if(EffectToApply == EObsidianEffectToApply::MultipleEffects && !ActiveEffectHandles.IsEmpty())
+	{
+		RemoveEffectsFromActor(TargetActor);
+	}
+}
 
-		TArray<FActiveGameplayEffectHandle> HandlesToRemove;
+void AObsidianGameplayEffectActor::RemoveEffectsFromActor(AActor* TargetActor)
+{
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+
+	if(!IsValid(TargetASC))
+	{
+		return;
+	}
+
+	TArray<FActiveGameplayEffectHandle> HandlesToRemove;
 		
-		for(TTuple<FActiveGameplayEffectHandle, UAbilitySystemComponent*> HandlePair : ActiveEffectHandles)
+	for(TTuple<FActiveGameplayEffectHandle, UAbilitySystemComponent*> HandlePair : ActiveEffectHandles)
+	{
+		if(TargetASC == HandlePair.Value)
 		{
-			if(TargetASC == HandlePair.Value)
-			{
-				TargetASC->RemoveActiveGameplayEffect(HandlePair.Key, 1);
-				HandlesToRemove.Add(HandlePair.Key);
-			}
+			TargetASC->RemoveActiveGameplayEffect(HandlePair.Key, 1);
+			HandlesToRemove.Add(HandlePair.Key);
 		}
+	}
 
-		for(FActiveGameplayEffectHandle& Handle : HandlesToRemove)
-		{
-			ActiveEffectHandles.FindAndRemoveChecked(Handle);
-		}
+	for(FActiveGameplayEffectHandle& Handle : HandlesToRemove)
+	{
+		ActiveEffectHandles.FindAndRemoveChecked(Handle);
 	}
 }
 
