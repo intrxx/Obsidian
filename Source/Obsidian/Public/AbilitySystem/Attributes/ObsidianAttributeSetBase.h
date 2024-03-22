@@ -27,6 +27,8 @@ public:
 
 	virtual UWorld* GetWorld() const override;
 
+	virtual void ClampAttribute(const float MaxAttribute, float& Attribute);
+
 	/** Does not perform a check in the Get function so it is a good idea to check it before use */
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 };

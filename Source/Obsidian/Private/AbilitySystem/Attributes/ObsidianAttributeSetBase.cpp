@@ -16,6 +16,11 @@ UWorld* UObsidianAttributeSetBase::GetWorld() const
 	return Outer->GetWorld();
 }
 
+void UObsidianAttributeSetBase::ClampAttribute(const float MaxAttribute, float& Attribute)
+{
+	Attribute = FMath::Clamp(Attribute, 0.0f, MaxAttribute);
+}
+
 UObsidianAbilitySystemComponent* UObsidianAttributeSetBase::GetObsidianAbilitySystemComponent() const
 {
 	return Cast<UObsidianAbilitySystemComponent>(GetOwningAbilitySystemComponent());

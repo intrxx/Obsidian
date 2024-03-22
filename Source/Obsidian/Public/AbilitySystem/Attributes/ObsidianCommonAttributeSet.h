@@ -18,6 +18,8 @@ class OBSIDIAN_API UObsidianCommonAttributeSet : public UObsidianAttributeSetBas
 public:
 	UObsidianCommonAttributeSet();
 
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShield);
@@ -110,7 +112,8 @@ protected:
 
 private:
 	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Obsidian|CAttributes|Health", Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	/** ---------------------------------------------------------------------------------------------------------- HideFromModifiers */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Health;
 
 	/** The current max Health attribute. Max Health is an attribute since Gameplay Effects can modify it. */

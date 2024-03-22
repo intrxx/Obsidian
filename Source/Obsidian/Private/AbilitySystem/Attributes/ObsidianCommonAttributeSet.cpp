@@ -10,6 +10,16 @@ UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
 {
 }
 
+void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if(Attribute == GetHealthAttribute())
+	{
+		ClampAttribute(GetMaxHealth(), NewValue);
+	}
+}
+
 void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
