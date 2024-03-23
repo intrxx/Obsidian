@@ -19,6 +19,7 @@ public:
 	UObsidianCommonAttributeSet();
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxHealth);
@@ -50,7 +51,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosDamageMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, PhysicalDamageMultiplier);
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	/** Base Damage Attributes */
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, BaseDamage);
 
 protected:
 	UFUNCTION()
@@ -109,6 +111,11 @@ protected:
 	void OnRep_ChaosDamageMultiplier(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue);
+
+	/** Base Damage Attributes */
+	
+	UFUNCTION()
+	void OnRep_BaseDamage(const FGameplayAttributeData& OldValue);
 
 private:
 	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
@@ -199,7 +206,6 @@ private:
 	/** The current Chaos Penetration attribute. Chaos Penetration is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosPenetration, Category = "Obsidian|CAttributes|ChaosPenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosPenetration;
-
 	
 	/** Damage scaling Attributes */
 	
@@ -222,5 +228,11 @@ private:
 	/** The current Physical Damage Multiplier attribute. Physical Damage Multiplier is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageMultiplier, Category = "Obsidian|CAttributes|PhysicalDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageMultiplier;
+	
+	/** Base Damage Attributes */
+	
+	/** The current Physical Damage Multiplier attribute. Physical Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BaseDamage, Category = "Obsidian|CAttributes|BaseDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData BaseDamage;
 };
 

@@ -18,9 +18,9 @@ class OBSIDIAN_API UObsidianEnemyAttributeSet : public UObsidianAttributeSetBase
 public:
 	UObsidianEnemyAttributeSet();
 
-	ATTRIBUTE_ACCESSORS(UObsidianEnemyAttributeSet, EnemySpecificAttribute);
-	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	ATTRIBUTE_ACCESSORS(UObsidianEnemyAttributeSet, EnemySpecificAttribute);
 
 protected:
 	UFUNCTION()

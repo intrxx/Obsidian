@@ -18,13 +18,13 @@ class OBSIDIAN_API UObsidianHeroAttributeSet : public UObsidianAttributeSetBase
 public:
 	UObsidianHeroAttributeSet();
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxMana);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Strength);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Intelligence);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Dexterity);
-	
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 protected:
 	UFUNCTION()
