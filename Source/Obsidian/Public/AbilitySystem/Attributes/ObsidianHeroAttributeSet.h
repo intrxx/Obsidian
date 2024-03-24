@@ -19,6 +19,7 @@ public:
 	UObsidianHeroAttributeSet();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxMana);

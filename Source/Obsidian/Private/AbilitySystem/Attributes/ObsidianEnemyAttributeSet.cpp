@@ -17,6 +17,14 @@ void UObsidianEnemyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianEnemyAttributeSet, EnemySpecificAttribute, COND_None, REPNOTIFY_Always);
 }
 
+void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	FObsidianEffectProperties EffectProps;
+	SetEffectProperties(Data, /** OUT */ EffectProps);
+}
+
 void UObsidianEnemyAttributeSet::OnRep_EnemySpecificAttribute(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianEnemyAttributeSet, EnemySpecificAttribute, OldValue);

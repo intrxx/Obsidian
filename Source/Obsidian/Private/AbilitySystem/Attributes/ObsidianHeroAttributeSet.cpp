@@ -25,6 +25,14 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Dexterity, COND_None, REPNOTIFY_Always);
 }
 
+void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
+
+	FObsidianEffectProperties EffectProps;
+	SetEffectProperties(Data, /** OUT */ EffectProps);
+}
+
 void UObsidianHeroAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, Mana, OldValue);
