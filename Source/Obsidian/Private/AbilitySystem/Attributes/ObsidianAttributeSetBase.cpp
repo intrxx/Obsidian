@@ -40,11 +40,11 @@ void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCall
 	UAbilitySystemComponent* SourceASC = EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 	Props.SourceASC = SourceASC;
 	
-	AActor* SourceAvatarActor = nullptr;
-	AController* SourceController = nullptr;
-	
 	if(IsValid(SourceASC) && SourceASC->AbilityActorInfo.IsValid() && SourceASC->AbilityActorInfo->AvatarActor.IsValid())
 	{
+		AActor* SourceAvatarActor = nullptr;
+		AController* SourceController = nullptr;
+		
 		SourceAvatarActor = SourceASC->AbilityActorInfo->AvatarActor.Get();
 		Props.SourceAvatarActor = SourceAvatarActor;
 		
@@ -69,12 +69,12 @@ void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCall
 			Props.SourceCharacter = Cast<AObsidianCharacterBase>(SourceAvatarActor);
 		}
 	}
-
-	AActor* TargetAvatarActor = nullptr;
-	AController* TargetController = nullptr;
-
+	
 	if(Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
+		AActor* TargetAvatarActor = nullptr;
+		AController* TargetController = nullptr;
+		
 		TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
 		Props.TargetAvatarActor = TargetAvatarActor;
 		
