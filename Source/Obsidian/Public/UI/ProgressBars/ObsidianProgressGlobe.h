@@ -64,7 +64,7 @@ public:
 	float RootBoxHeight = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
-	bool bUseEnergyShield = 0.0f;
+	bool bUseEnergyShield = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
 	FSlateBrush GlobeWrapperBrush;
