@@ -41,7 +41,8 @@ protected:
 
 private:
 	/** The current Mana attribute. The Mana will be capped by the Max Mana attribute. Health is hidden from modifiers so only Executions can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Obsidian|HAttributes|Mana", Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	/** ------------------------------------------------------------------------------------------------------ HideFromModifiers */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Obsidian|HAttributes|Mana", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Mana;
 
 	/** The current Max Mana attribute. Max Mana is an attribute since Gameplay Effects can modify it. */

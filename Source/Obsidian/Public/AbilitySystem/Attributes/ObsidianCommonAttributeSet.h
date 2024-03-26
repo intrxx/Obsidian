@@ -133,7 +133,8 @@ private:
 	FGameplayAttributeData MaxHealth;
 
 	/** The current Energy Shield attribute. The Energy Shield will be capped by the Max Energy Shield attribute. Energy Shield is hidden from modifiers so only Executions can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (HideFromModifiers, AllowPrivateAccess = true))
+	/** ---------------------------------------------------------------------------------------------------------------------- HideFromModifiers */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData EnergyShield;
 
 	/** The current Max Energy Shield attribute. MaxEnergy Shield is an attribute since Gameplay Effects can modify it. */
