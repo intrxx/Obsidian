@@ -7,6 +7,7 @@
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
 	: Health(100.0f)
 	, MaxHealth(100.0f)
+	, MaxEnergyShield(50.f)
 {
 }
 

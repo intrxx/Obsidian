@@ -86,6 +86,8 @@ void UObsidianHeroAttributesComponent::SetMainWidgetController(UMainOverlayWidge
 	MainOverlayWidgetController->OnMaxHealthChangedDelegate.Broadcast(GetMaxHealth());
 	MainOverlayWidgetController->OnManaChangedDelegate.Broadcast(GetMana());
 	MainOverlayWidgetController->OnMaxManaChangedDelegate.Broadcast(GetMaxMana());
+	MainOverlayWidgetController->OnEnergyShieldChangedDelegate.Broadcast(GetEnergyShield());
+	MainOverlayWidgetController->OnMaxEnergyShieldChangedDelegate.Broadcast(GetMaxEnergyShield());
 }
 
 void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
@@ -106,12 +108,18 @@ void UObsidianHeroAttributesComponent::MaxHealthChanged(const FOnAttributeChange
 
 void UObsidianHeroAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	
+	if(MainOverlayWidgetController)
+	{
+		MainOverlayWidgetController->OnEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	
+	if(MainOverlayWidgetController)
+	{
+		MainOverlayWidgetController->OnMaxEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& Data)

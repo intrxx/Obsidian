@@ -8,6 +8,7 @@
 #include "Layout/Margin.h"
 #include "ObsidianProgressGlobe.generated.h"
 
+class UHorizontalBox;
 class UProgressBar;
 class UCommonTextBlock;
 class UImage;
@@ -46,21 +47,24 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> FirstAttributeCountText;
-
-	/*
-	 * Uncomment if using second attribute on the globe
+	
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> FirstAttributeNameText;
+	TObjectPtr<UCommonTextBlock> SecondAttributeNameText;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> FirstAttributeCountText;
-	*/
-		
+	TObjectPtr<UCommonTextBlock> SecondAttributeCountText;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UHorizontalBox> EnergyShieldAttributeValueBox;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
 	float RootBoxWidth = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
 	float RootBoxHeight = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
+	bool bUseEnergyShield = 0.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
 	FSlateBrush GlobeWrapperBrush;
@@ -73,11 +77,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
 	FText FirstAttributeName;
-
-	/*
-	 * Uncomment if using second attribute on the globe
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
 	FText SecondAttributeName;
-	*/
+	
 };
 
