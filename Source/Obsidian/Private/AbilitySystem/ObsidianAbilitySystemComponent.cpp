@@ -62,6 +62,12 @@ void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilityS
 	}
 }
 
+void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
+	FActiveGameplayEffectHandle EffectHandle)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Effect Applied")));
+}
+
 void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bPauseGame)
 {
 	//TODO Check for blocking tag here and clear input if this ASC has it
@@ -155,6 +161,11 @@ void UObsidianAbilitySystemComponent::ClearAbilityInput()
 void UObsidianAbilitySystemComponent::SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* MappingToSet)
 {
 	TagRelationshipMapping = MappingToSet;
+}
+
+void UObsidianAbilitySystemComponent::AbilityActorInfoSet()
+{
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::OnEffectApplied);
 }
 
 void UObsidianAbilitySystemComponent::GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags,

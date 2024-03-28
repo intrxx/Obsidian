@@ -25,12 +25,15 @@ public:
 	void ClearAbilityInput();
 
 	void SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* MappingToSet);
+	void AbilityActorInfoSet();
 
 	void GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const;
 
 protected:
 	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
 	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
+
+	void OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle);
 
 protected:
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
