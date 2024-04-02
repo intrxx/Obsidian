@@ -22,6 +22,9 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Ability6, "Input.Ability.Ability6", "Ability6 input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Ability7, "Input.Ability.Ability7", "Ability7 input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Ability8, "Input.Ability.Ability8", "Ability8 input.");
+
+	// Data
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Data_DisplayValue, "Data.DisplayValue", "Tag used for abilities to pass info to UI");
 	
 	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
 	{

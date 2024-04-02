@@ -108,6 +108,7 @@ void AObsidianHero::OnAbilitySystemInitialized()
 	}
 
 	InitializeUI(ObsidianASC);
+	ObsidianASC->AbilityActorInfoSet();
 }
 
 void AObsidianHero::OnAbilitySystemUninitialized()

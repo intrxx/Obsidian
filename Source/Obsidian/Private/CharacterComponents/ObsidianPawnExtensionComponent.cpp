@@ -52,7 +52,6 @@ void UObsidianPawnExtensionComponent::InitializeAbilitySystem(UObsidianAbilitySy
 
 	AbilitySystemComponent = InASC;
 	AbilitySystemComponent->InitAbilityActorInfo(InOwnerActor, Pawn);
-	AbilitySystemComponent->AbilityActorInfoSet();
 
 	if(ensure(PawnData))
 	{

@@ -49,6 +49,7 @@ void AObsidianCharacterBase::BeginPlay()
 
 void AObsidianCharacterBase::OnAbilitySystemInitialized()
 {
+	
 }
 
 void AObsidianCharacterBase::OnAbilitySystemUninitialized()

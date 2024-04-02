@@ -23,6 +23,9 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability7);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability8);
 
+	// Data
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_DisplayValue)
+
 	OBSIDIAN_API FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
 }
 
