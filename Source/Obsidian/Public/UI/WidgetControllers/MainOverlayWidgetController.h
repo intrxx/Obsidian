@@ -22,7 +22,10 @@ class OBSIDIAN_API UMainOverlayWidgetController : public UObsidianWidgetControll
 	GENERATED_BODY()
 
 public:
+	// ~ Start of UObsidianWidgetController
 	virtual void BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC) override;
+	virtual void OnWidgetControllerSetupCompleted() override;
+	// ~ End of UObsidianWidgetController
 
 	UPROPERTY(BlueprintAssignable, Category = "UI|Attributes|Health")
 	FOnHealthChanged OnHealthChangedDelegate;

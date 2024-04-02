@@ -65,15 +65,9 @@ void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilityS
 void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
 	FActiveGameplayEffectHandle EffectHandle)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, FString::Printf(TEXT("Effect Applied")));
-
 	FGameplayTagContainer AssetTags;
 	EffectSpec.GetAllAssetTags(AssetTags);
-
-	for(const FGameplayTag& Tag : AssetTags)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, FString::Printf(TEXT("Tag Name: %s"), *Tag.GetTagName().ToString()));
-	}
+	EffectAppliedAssetTags.Broadcast(AssetTags);
 }
 
 void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bPauseGame)

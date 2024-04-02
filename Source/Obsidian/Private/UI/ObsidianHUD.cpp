@@ -31,6 +31,7 @@ void AObsidianHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbility
 
 		OverlayWidget->SetWidgetController(WidgetController);
 		WidgetController->BroadcastControllerToAttributesComp(AC);
+		WidgetController->OnWidgetControllerSetupCompleted();
 		
 		OverlayWidget->AddToViewport();
 	}

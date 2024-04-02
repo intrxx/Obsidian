@@ -13,3 +13,7 @@ void UObsidianWidgetController::SetWidgetControllerParams(const FWidgetControlle
 void UObsidianWidgetController::BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC)
 {
 }
+
+void UObsidianWidgetController::OnWidgetControllerSetupCompleted()
+{
+}

@@ -6,6 +6,8 @@
 #include "AbilitySystemComponent.h"
 #include "ObsidianAbilitySystemComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAppliedAssetTags, const FGameplayTagContainer& /** Asset Tags */);
+
 class UOAbilityTagRelationshipMapping;
 /**
  * The base Ability System Component class used in this project.
@@ -29,6 +31,9 @@ public:
 
 	void GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const;
 
+public:
+	FEffectAppliedAssetTags EffectAppliedAssetTags;
+	
 protected:
 	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
 	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;

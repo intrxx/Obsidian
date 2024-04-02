@@ -46,6 +46,9 @@ public:
 	
 	virtual void BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC);
 
+	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
+	virtual void OnWidgetControllerSetupCompleted();
+
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
 	TObjectPtr<APlayerController> PlayerController;
