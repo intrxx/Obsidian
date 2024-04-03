@@ -8,6 +8,7 @@
 #include "MainOverlayWidgetController.generated.h"
 
 class UObsidianWidgetBase;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChanged, float, NewMaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChanged, float, NewMana);
@@ -16,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnergyShieldChanged, float, NewEn
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxEnergyShieldChanged, float, MaxNewEnergyShield);
 
 USTRUCT(BlueprintType)
-struct FObsidianUIWidgetRow : public FTableRowBase
+struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 {
 	GENERATED_BODY()
 
@@ -32,6 +33,8 @@ struct FObsidianUIWidgetRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UObsidianWidgetBase> EffectWidget;
 };
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEffectUIDataWidgetRow, FObsidianEffectUIDataWidgetRow, Row);
 
 /**
  * 
@@ -65,12 +68,15 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|MaxEnergyShield")
 	FOnMaxEnergyShieldChanged OnMaxEnergyShieldChangedDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
+
 protected:
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Data")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")
 	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
 };
 

@@ -23,10 +23,12 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 		{
 			for(const FGameplayTag& Tag : AssetTags)
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow,
-					FString::Printf(TEXT("Tag Name: %s"), *Tag.GetTagName().ToString()));
-
-				FObsidianUIWidgetRow* Row = GetDataTableRowByTag<FObsidianUIWidgetRow>(UIEffectDataWidgetTable, Tag);
+				FGameplayTag EffectUIDataTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData"));
+				if(Tag.MatchesTag(EffectUIDataTag))
+				{
+					const FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
+					EffectUIDataWidgetRowDelegate.Broadcast(*Row);
+				}
 			}
 		});
 }
