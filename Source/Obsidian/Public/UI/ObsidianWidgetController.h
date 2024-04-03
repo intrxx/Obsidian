@@ -59,3 +59,4 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 };
+

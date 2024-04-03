@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "UI/ObsidianWidgetController.h"
+#include "GameplayTagContainer.h"
 #include "MainOverlayWidgetController.generated.h"
 
 class UObsidianWidgetBase;
@@ -21,16 +21,16 @@ struct FObsidianUIWidgetRow : public FTableRowBase
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FGameplayTag MessageTag = FGameplayTag();
+	FGameplayTag EffectTag = FGameplayTag();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText Message = FText();
+	FText EffectText = FText();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UTexture2D> Image = nullptr;
+	TObjectPtr<UTexture2D> EffectImage = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UObsidianWidgetBase> MessageWidget;
+	TSubclassOf<UObsidianWidgetBase> EffectWidget;
 };
 
 /**
@@ -66,6 +66,16 @@ public:
 	FOnMaxEnergyShieldChanged OnMaxEnergyShieldChangedDelegate;
 
 protected:
+	template<typename T>
+	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+	
+protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Data")
 	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
 };
+
+template <typename T>
+T* UMainOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+}

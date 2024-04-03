@@ -19,12 +19,14 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	// Might want to do it in Attributes Comp :hmm:
 	
 	ObsidianASC->EffectAppliedAssetTags.AddLambda(
-		[](const FGameplayTagContainer& AssetTags)
+		[this](const FGameplayTagContainer& AssetTags)
 		{
 			for(const FGameplayTag& Tag : AssetTags)
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow,
 					FString::Printf(TEXT("Tag Name: %s"), *Tag.GetTagName().ToString()));
+
+				FObsidianUIWidgetRow* Row = GetDataTableRowByTag<FObsidianUIWidgetRow>(UIEffectDataWidgetTable, Tag);
 			}
 		});
 }
