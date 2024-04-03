@@ -3,15 +3,35 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/ObsidianWidgetController.h"
 #include "MainOverlayWidgetController.generated.h"
 
+class UObsidianWidgetBase;
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChanged, float, NewMaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChanged, float, NewMana);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChanged, float, NewMaxMana);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnergyShieldChanged, float, NewEnergyShield);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxEnergyShieldChanged, float, MaxNewEnergyShield);
+
+USTRUCT(BlueprintType)
+struct FObsidianUIWidgetRow : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FGameplayTag MessageTag = FGameplayTag();
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText Message = FText();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TObjectPtr<UTexture2D> Image = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UObsidianWidgetBase> MessageWidget;
+};
 
 /**
  * 
@@ -27,21 +47,25 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	// ~ End of UObsidianWidgetController
 
-	UPROPERTY(BlueprintAssignable, Category = "UI|Attributes|Health")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnHealthChanged OnHealthChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "UI|Attributes|Health")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnMaxHealthChanged OnMaxHealthChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "UI|Attributes|Mana")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
 	FOnManaChanged OnManaChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "UI|Attributes|Mana")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
 	FOnMaxManaChanged OnMaxManaChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "UI|Attributes|EnergyShield")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
 	FOnEnergyShieldChanged OnEnergyShieldChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "UI|Attributes|MaxEnergyShield")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|MaxEnergyShield")
 	FOnMaxEnergyShieldChanged OnMaxEnergyShieldChangedDelegate;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Data")
+	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
 };
