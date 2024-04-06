@@ -27,6 +27,16 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectText = FText();
 
+	/**
+	 * Uncomment when ready to refactor
+	 *
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText EffectName = FText();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FText EffectDesc = FText();
+	*/
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> EffectImage = nullptr;
 

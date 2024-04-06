@@ -17,7 +17,6 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	check(ObsidianASC);
 
 	// Might want to do it in Attributes Comp :hmm:
-	
 	ObsidianASC->EffectAppliedAssetTags.AddLambda(
 		[this](const FGameplayTagContainer& AssetTags)
 		{
