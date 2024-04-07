@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 #include "MainOverlayWidgetController.generated.h"
 
-class UObsidianWidgetBase;
+class UObsidianEffectInfoBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChanged, float, NewMaxHealth);
@@ -25,23 +25,16 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 	FGameplayTag EffectTag = FGameplayTag();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText EffectText = FText();
-
-	/**
-	 * Uncomment when ready to refactor
-	 *
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectName = FText();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectDesc = FText();
-	*/
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> EffectImage = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TSubclassOf<UObsidianWidgetBase> EffectWidget;
+	TSubclassOf<UObsidianEffectInfoBase> EffectWidget;
 };
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEffectUIDataWidgetRow, FObsidianEffectUIDataWidgetRow, Row);

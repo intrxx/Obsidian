@@ -14,7 +14,7 @@ void UMainOverlayWidgetController::BroadcastControllerToAttributesComp(UObsidian
 void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 {
 	UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(AbilitySystemComponent);
-	check(ObsidianASC);
+	check(ObsidianASC);	
 
 	// Might want to do it in Attributes Comp :hmm:
 	ObsidianASC->EffectAppliedAssetTags.AddLambda(
