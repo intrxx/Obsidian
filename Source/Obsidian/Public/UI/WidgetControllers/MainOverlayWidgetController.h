@@ -9,12 +9,7 @@
 
 class UObsidianEffectInfoBase;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChanged, float, NewHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChanged, float, NewMaxHealth);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnManaChanged, float, NewMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxManaChanged, float, NewMaxMana);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnEnergyShieldChanged, float, NewEnergyShield);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxEnergyShieldChanged, float, MaxNewEnergyShield);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, float, NewValue);
 
 USTRUCT(BlueprintType)
 struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
@@ -23,6 +18,9 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag EffectTag = FGameplayTag();
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	bool bIsEffectDurational = false;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectName = FText();
@@ -37,7 +35,8 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 	TSubclassOf<UObsidianEffectInfoBase> EffectWidget;
 };
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEffectUIDataWidgetRow, FObsidianEffectUIDataWidgetRow, Row);
+// Broadcasts DataTable Row that corresponds to a given asset tag as well as it's duration
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIDataWidgetRow, FObsidianEffectUIDataWidgetRow, Row, const float&, EffectDuration);
 
 /**
  * 
@@ -54,22 +53,22 @@ public:
 	// ~ End of UObsidianWidgetController
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
-	FOnHealthChanged OnHealthChangedDelegate;
+	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
-	FOnMaxHealthChanged OnMaxHealthChangedDelegate;
+	FOnAttributeValueChangedSignature OnMaxHealthChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
-	FOnManaChanged OnManaChangedDelegate;
+	FOnAttributeValueChangedSignature OnManaChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
-	FOnMaxManaChanged OnMaxManaChangedDelegate;
+	FOnAttributeValueChangedSignature OnMaxManaChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
-	FOnEnergyShieldChanged OnEnergyShieldChangedDelegate;
+	FOnAttributeValueChangedSignature OnEnergyShieldChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|MaxEnergyShield")
-	FOnMaxEnergyShieldChanged OnMaxEnergyShieldChangedDelegate;
+	FOnAttributeValueChangedSignature OnMaxEnergyShieldChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
 	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;

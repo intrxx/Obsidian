@@ -67,7 +67,8 @@ void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* A
 {
 	FGameplayTagContainer AssetTags;
 	EffectSpec.GetAllAssetTags(AssetTags);
-	EffectAppliedAssetTags.Broadcast(AssetTags);
+	const float Duration = EffectSpec.GetDuration();
+	EffectAppliedAssetTags.Broadcast(AssetTags, Duration);
 }
 
 void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bPauseGame)

@@ -14,11 +14,11 @@ void UMainOverlayWidgetController::BroadcastControllerToAttributesComp(UObsidian
 void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 {
 	UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(AbilitySystemComponent);
-	check(ObsidianASC);	
-
+	check(ObsidianASC);
+	
 	// Might want to do it in Attributes Comp :hmm:
 	ObsidianASC->EffectAppliedAssetTags.AddLambda(
-		[this](const FGameplayTagContainer& AssetTags)
+		[this](const FGameplayTagContainer& AssetTags, const float& Duration)
 		{
 			for(const FGameplayTag& Tag : AssetTags)
 			{
@@ -26,7 +26,7 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 				if(Tag.MatchesTag(EffectUIDataTag))
 				{
 					const FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
-					EffectUIDataWidgetRowDelegate.Broadcast(*Row);
+					EffectUIDataWidgetRowDelegate.Broadcast(*Row, Duration);
 				}
 			}
 		});

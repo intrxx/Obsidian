@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "ObsidianAbilitySystemComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAppliedAssetTags, const FGameplayTagContainer& /** Asset Tags */);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FEffectAppliedAssetTags, const FGameplayTagContainer& /** Asset Tags */, const float& /** Effect Duration */);
 
 class UOAbilityTagRelationshipMapping;
 /**
@@ -39,6 +39,7 @@ protected:
 	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
 
 	void OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle);
+	
 
 protected:
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
