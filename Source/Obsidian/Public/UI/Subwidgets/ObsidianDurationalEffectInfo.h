@@ -7,6 +7,7 @@
 #include "ObsidianDurationalEffectInfo.generated.h"
 
 class UCommonTextStyle;
+
 /**
  * 
  */
@@ -21,10 +22,6 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|EffectInfo|Style")
 	TSubclassOf<UCommonTextStyle> NormalTimerStyle;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|EffectInfo|Style")
-	TSubclassOf<UCommonTextStyle> ExpiringTimerStyle;
-
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")

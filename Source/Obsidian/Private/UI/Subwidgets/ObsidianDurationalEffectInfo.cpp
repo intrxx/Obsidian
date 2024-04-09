@@ -21,22 +21,15 @@ void UObsidianDurationalEffectInfo::TimerCountDown()
 		
 		const FText Time = FText::FromString(FString::Printf(TEXT("%02d:%02d"), Minutes, Seconds));
 		
-		if(Minutes == 0 && Seconds <= 3)
-		{
-			EffectTimer_TextBlock->SetStyle(ExpiringTimerStyle);
-		}
-		else
-		{
-			EffectTimer_TextBlock->SetStyle(NormalTimerStyle);
-		}
-		
 		EffectTimer_TextBlock->SetText(Time);
 		
 		if(EffectDuration < 0)
 		{
+			if(EffectDurationTimerHandle.IsValid())
+			{
+				GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EffectDurationTimerHandle);
+			}
 			OnEffectUnHovered();
-			GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EffectDurationTimerHandle);
-
 			RemoveFromParent();
 		}
 	}
