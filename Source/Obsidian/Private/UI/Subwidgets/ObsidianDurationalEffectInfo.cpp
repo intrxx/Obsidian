@@ -6,8 +6,16 @@
 
 void UObsidianDurationalEffectInfo::StartEffectTimer()
 {
+	GetOwningPlayer()->GetWorldTimerManager().SetTimer(EffectDurationTimerHandle, this, &ThisClass::TimerCountDown,
+		1.f, true, 0.f);
+}
+
+void UObsidianDurationalEffectInfo::TimerCountDown()
+{
 	if(EffectTimer_TextBlock)
 	{
+		EffectDuration--;
+		
 		const int32 Minutes = FMath::FloorToInt(EffectDuration / 60.f);
 		const int32 Seconds = EffectDuration - Minutes * 60.f;
 		
@@ -23,5 +31,13 @@ void UObsidianDurationalEffectInfo::StartEffectTimer()
 		}
 		
 		EffectTimer_TextBlock->SetText(Time);
+		
+		if(EffectDuration < 0)
+		{
+			OnEffectUnHovered();
+			GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EffectDurationTimerHandle);
+
+			RemoveFromParent();
+		}
 	}
 }

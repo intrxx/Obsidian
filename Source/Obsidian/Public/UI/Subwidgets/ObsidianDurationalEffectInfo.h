@@ -25,7 +25,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|EffectInfo|Style")
 	TSubclassOf<UCommonTextStyle> ExpiringTimerStyle;
 
+
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void StartEffectTimer();
+
+private:
+	void TimerCountDown();
+
+private:
+	FTimerHandle EffectDurationTimerHandle;
 };
