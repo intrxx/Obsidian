@@ -26,6 +26,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
 	void SetProgressGlobePercent(float Percent);
 	
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	
 public:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<USizeBox> RootSizeBox;
@@ -43,6 +45,9 @@ public:
 	TObjectPtr<UProgressBar> ProgressGlobe;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UProgressBar> GhostProgressGlobe;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> FirstAttributeNameText;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
@@ -57,15 +62,16 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> EnergyShieldAttributeValueBox;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
-	float RootBoxWidth = 0.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
-	float RootBoxHeight = 0.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	bool bUseEnergyShield = false;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
+	bool bShouldSetGhostGlobe = false;
+
+	/**
+	 * Set up
+	 */
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
 	FSlateBrush GlobeWrapperBrush;
 
@@ -73,13 +79,32 @@ public:
 	FSlateBrush GlobeFillImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
+	FSlateBrush GhostGlobeFillImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
 	FMargin GlobeMargin;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
+	float RootBoxWidth = 0.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
+	float RootBoxHeight = 0.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
 	FText FirstAttributeName;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
 	FText SecondAttributeName;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float CurrentPercentage;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	float NewPercentage;
+
+private:
+	void SetGhostGlobeDecreasing(float CurrentPercent, float NewPercent, float DeltaTime);
 	
 };
 
