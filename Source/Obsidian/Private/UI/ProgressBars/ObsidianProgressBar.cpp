@@ -10,8 +10,7 @@ void UObsidianProgressGlobe::SetProgressGlobePercent(float Percent)
 
 void UObsidianProgressGlobe::SetGhostGlobeDecreasing(float CurrentPercent, float NewPercent, float DeltaTime)
 {
-	CurrentPercentage = FMath::FInterpTo(CurrentPercent, NewPercent, DeltaTime, 5.f);
-	//UE_LOG(LogTemp, Warning, TEXT("Result of interp: %f"), CurrentPercent);
+	CurrentPercentage = FMath::FInterpTo(CurrentPercent, NewPercent, DeltaTime, GhostGlobeFollowingSpeed);
 	GhostProgressGlobe->SetPercent(CurrentPercentage);
 
 	if(CurrentPercent <= NewPercent)
@@ -26,7 +25,6 @@ void UObsidianProgressGlobe::NativeTick(const FGeometry& MyGeometry, float InDel
 
 	if(bShouldSetGhostGlobe && GhostProgressGlobe)
 	{
-		//UE_LOG(LogTemp, Warning, TEXT("Decresing, CurrentPerc: %f NewPerc: %f"), CurrentPercentage, NewPercentage);
 		SetGhostGlobeDecreasing(CurrentPercentage, NewPercentage, InDeltaTime);
 	}
 }

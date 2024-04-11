@@ -29,6 +29,10 @@ public:
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
 public:
+	/**
+	 *  Widget build blocks
+	 */
+	
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<USizeBox> RootSizeBox;
 
@@ -64,10 +68,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	bool bUseEnergyShield = false;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
-	bool bShouldSetGhostGlobe = false;
-
+	
 	/**
 	 * Set up
 	 */
@@ -95,6 +96,12 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
 	FText SecondAttributeName;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Obsidian")
+	bool bShouldSetGhostGlobe = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
+	float GhostGlobeFollowingSpeed = 5.f;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
