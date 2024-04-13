@@ -22,10 +22,19 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
+	/**
+	 * Vital
+	 */
+	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShield);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxEnergyShield);
+
+	/**
+	 * Defence attributes
+	 */
+	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Armor);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireResistance);
@@ -36,6 +45,11 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxLightningResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxChaosResistance);
+
+	/**
+	 * Resistances
+	 */
+	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeChance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AttackSpeed);
@@ -44,9 +58,10 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdPenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, LightningPenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosPenetration);
-
 	
-	// Damage scaling Attributes
+	/**
+	 * Damage scaling attributes
+	 */
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireDamageMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdDamageMultiplier);
@@ -54,11 +69,17 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosDamageMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, PhysicalDamageMultiplier);
 
-	// Base Damage Attributes
+	/**
+	 * Base Damage Attributes
+	 */
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, BaseDamage);
 
 protected:
+	/**
+	 * Vital
+	 */
+	
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -67,10 +88,20 @@ protected:
 	void OnRep_EnergyShield(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxEnergyShield(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Defence attributes
+	 */
+	
 	UFUNCTION()
 	void OnRep_Armor(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_Evasion(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Resistances
+	 */
+	
 	UFUNCTION()
 	void OnRep_FireResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -87,6 +118,11 @@ protected:
 	void OnRep_ChaosResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Damage scaling attributes
+	 */
+	
 	UFUNCTION()
 	void OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -103,9 +139,6 @@ protected:
 	void OnRep_LightningPenetration(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_ChaosPenetration(const FGameplayAttributeData& OldValue);
-
-	// Damage scaling Attributes
-	
 	UFUNCTION()
 	void OnRep_FireDamageMultiplier(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -117,12 +150,18 @@ protected:
 	UFUNCTION()
 	void OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue);
 
-	// Base Damage Attributes
+	/**
+	 * Base Damage Attributes
+	 */
 	
 	UFUNCTION()
 	void OnRep_BaseDamage(const FGameplayAttributeData& OldValue);
 
 private:
+	/**
+	 * Vital
+	 */
+	
 	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
 	/** ---------------------------------------------------------------------------------------------------------- HideFromModifiers */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
@@ -141,6 +180,10 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergyShield, Category = "Obsidian|CAttributes|MaxEnergyShield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxEnergyShield;
 
+	/**
+	 * Defence attributes
+	 */
+
 	/** The current Armor attribute. Armor is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor, Category = "Obsidian|CAttributes|Armor", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Armor;
@@ -148,6 +191,10 @@ private:
 	/** The current Evasion attribute. Evasion is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Evasion, Category = "Obsidian|CAttributes|Evasion", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Evasion;
+
+	/**
+	 * Resistances
+	 */
 	
 	/** The current Fire Resistance attribute. Fire Resistance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Obsidian|CAttributes|FireResistance", Meta = (AllowPrivateAccess = true))
@@ -181,6 +228,10 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|MaxChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxChaosResistance;
 
+	/**
+	 * Damage scaling attributes
+	 */
+
 	/** The current Critical Strike Chance attribute [0, 100], treating it like a percentage. Critical Strike Chance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeChance, Category = "Obsidian|CAttributes|CriticalStrikeChance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CriticalStrikeChance;
@@ -213,8 +264,6 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosPenetration, Category = "Obsidian|CAttributes|ChaosPenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosPenetration;
 	
-	// Damage scaling Attributes
-	
 	/** The current Fire Damage Multiplier attribute. Fire Damage Multiplier is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireDamageMultiplier, Category = "Obsidian|CAttributes|FireDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FireDamageMultiplier;
@@ -235,7 +284,9 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageMultiplier, Category = "Obsidian|CAttributes|PhysicalDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageMultiplier;
 	
-	// Base Damage Attributes
+	/**
+	 * Base Damage Attributes
+	 */
 	
 	/** The current Physical Damage Multiplier attribute. Physical Damage Multiplier is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BaseDamage, Category = "Obsidian|CAttributes|BaseDamage", Meta = (AllowPrivateAccess = true))
