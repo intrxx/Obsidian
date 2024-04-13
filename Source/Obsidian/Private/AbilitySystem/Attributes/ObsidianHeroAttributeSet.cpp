@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 UObsidianHeroAttributeSet::UObsidianHeroAttributeSet()
@@ -12,6 +13,16 @@ UObsidianHeroAttributeSet::UObsidianHeroAttributeSet()
 	, Intelligence(2.0f)
 	, Dexterity(3.0f)
 {
+}
+
+void UObsidianHeroAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
+
+	if(Attribute == GetManaAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxMana());
+	}
 }
 
 void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -31,6 +42,11 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 
 	FObsidianEffectProperties EffectProps;
 	SetEffectProperties(Data, /** OUT */ EffectProps);
+
+	if(Data.EvaluatedData.Attribute == GetManaAttribute())
+	{
+		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
+	}
 }
 
 void UObsidianHeroAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldValue)

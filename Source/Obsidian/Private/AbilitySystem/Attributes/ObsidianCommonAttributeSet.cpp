@@ -2,6 +2,8 @@
 
 
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
+
+#include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
@@ -55,7 +57,11 @@ void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& A
 
 	if(Attribute == GetHealthAttribute())
 	{
-		ClampAttribute(GetMaxHealth(), NewValue);
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+	}
+	else if(Attribute == GetEnergyShieldAttribute())
+	{
+		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxEnergyShield());
 	}
 }
 
@@ -65,6 +71,15 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 
 	FObsidianEffectProperties EffectProps;
 	SetEffectProperties(Data, /** OUT */ EffectProps);
+	
+	if(Data.EvaluatedData.Attribute == GetHealthAttribute())
+	{
+		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
+	}
+	else if(Data.EvaluatedData.Attribute == GetEnergyShieldAttribute())
+	{
+		SetEnergyShield(FMath::Clamp(GetEnergyShield(), 0.0f, GetMaxEnergyShield()));
+	}
 }
 
 void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
