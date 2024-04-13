@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/Subwidgets/ObsidianEffectInfoBase.h"
+#include "UI/OverlaysSubwidgets/ObsidianEffectInfoBase.h"
 #include "ObsidianDurationalEffectInfo.generated.h"
 
 class UCommonTextStyle;

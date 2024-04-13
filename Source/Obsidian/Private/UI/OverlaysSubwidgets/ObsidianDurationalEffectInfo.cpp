@@ -1,7 +1,7 @@
 // Copyright 2024 Michał Ogiński
 
 
-#include "UI/Subwidgets/ObsidianDurationalEffectInfo.h"
+#include "UI/OverlaysSubwidgets/ObsidianDurationalEffectInfo.h"
 #include "CommonTextBlock.h"
 
 void UObsidianDurationalEffectInfo::StartEffectTimer()

@@ -1,8 +1,8 @@
 // Copyright 2024 Michał Ogiński
 
 
-#include "UI/Subwidgets/ObsidianEffectInfoBase.h"
-#include "UI/Subwidgets/ObsidianEffectDescription.h"
+#include "UI/OverlaysSubwidgets/ObsidianEffectInfoBase.h"
+#include "UI/OverlaysSubwidgets/ObsidianEffectDescription.h"
 
 
 void UObsidianEffectInfoBase::OnEffectHovered()

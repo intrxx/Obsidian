@@ -1,6 +1,6 @@
 // Copyright 2024 Michał Ogiński
 
-#include "UI/Subwidgets/ObsidianEffectDescription.h"
+#include "UI/OverlaysSubwidgets/ObsidianEffectDescription.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
 FVector2D UObsidianEffectDescription::GetDescriptionDesiredPosition()
