@@ -115,6 +115,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply != EObsidianEffectToApply::MultipleEffects", EditConditionHides))
 	float EffectLevel = 1.f;
 
+	/** Should this actor be destroyed on effect removal */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	bool bDestroyOnEffectRemoval = false;
 

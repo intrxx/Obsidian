@@ -65,10 +65,45 @@ void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilityS
 void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
 	FActiveGameplayEffectHandle EffectHandle)
 {
+	FObsidianEffectUIData EffectUIData;
+	
 	FGameplayTagContainer AssetTags;
 	EffectSpec.GetAllAssetTags(AssetTags);
+	
+	EffectUIData.AssetTags = AssetTags;
+	EffectUIData.EffectDurationPolicy = EffectSpec.Def->DurationPolicy;
+	EffectUIData.EffectDuration = EffectSpec.GetDuration();
+	EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec);
+	
+	EffectAppliedAssetTags.Broadcast(EffectUIData);
+}
+
+float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGameplayEffectSpec& EffectSpec)
+{
+	const float Magnitude = EffectSpec.GetModifierMagnitude(0, false);
+	
+	if(EffectSpec.Def->DurationPolicy != EGameplayEffectDurationType::HasDuration)
+	{
+		//TODO come back here in case I need to include stacking
+		return Magnitude;
+	}
+	
 	const float Duration = EffectSpec.GetDuration();
-	EffectAppliedAssetTags.Broadcast(AssetTags, Duration);
+	const float Period = EffectSpec.GetPeriod();
+	
+	float FullMagnitude = Duration / Period * Magnitude;
+	
+	if(EffectSpec.Def->bExecutePeriodicEffectOnApplication)
+	{
+		FullMagnitude += Magnitude;
+		UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f + %f = %f"),Duration, Period, Magnitude, Magnitude, FullMagnitude);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f = %f"),Duration, Period, Magnitude, FullMagnitude);
+	}
+	
+	return FullMagnitude;
 }
 
 void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bPauseGame)

@@ -24,7 +24,7 @@ class OBSIDIAN_API UObsidianProgressGlobe : public UObsidianWidgetBase
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void SetProgressGlobePercent(float Percent);
+	void SetInfoGlobeVisibility(bool bShouldBeVisible);
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 	
@@ -50,6 +50,9 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UProgressBar> GhostProgressGlobe;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UProgressBar> InfoProgressGlobe;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> FirstAttributeNameText;
@@ -83,6 +86,9 @@ public:
 	FSlateBrush GhostGlobeFillImage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
+	FSlateBrush InfoGlobeFillImage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
 	FMargin GlobeMargin;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
@@ -99,6 +105,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	bool bShouldSetGhostGlobe = false;
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Obsidian")
+	bool bShouldShowInfoGlobe = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	float GhostGlobeFollowingSpeed = 5.f;

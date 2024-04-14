@@ -35,8 +35,11 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 	TSubclassOf<UObsidianEffectInfoBase> EffectWidget;
 };
 
-// Broadcasts DataTable Row that corresponds to a given asset tag as well as it's duration
+/** Broadcasts DataTable Row that corresponds to a given asset tag as well as it's duration */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIDataWidgetRow, FObsidianEffectUIDataWidgetRow, Row, const float&, EffectDuration);
+
+/** Delegate used for notifying Progress Globes to display the healing/replenish amount */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIGlobeData, const float&, EffectDuration, const float&, EffectMagnitude);
 
 /**
  * 
@@ -72,6 +75,12 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
 	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	FEffectUIGlobeData EffectUIHealthGlobeDataDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	FEffectUIGlobeData EffectUIManaGlobeDataDelegate;
 
 protected:
 	template<typename T>

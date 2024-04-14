@@ -3,9 +3,21 @@
 #include "Components/ProgressBar.h"
 #include "UI/ProgressBars/ObsidianProgressGlobe.h"
 
-void UObsidianProgressGlobe::SetProgressGlobePercent(float Percent)
+void UObsidianProgressGlobe::SetInfoGlobeVisibility(bool bShouldBeVisible)
 {
-	ProgressGlobe->SetPercent(Percent);
+	if(InfoProgressGlobe == nullptr)
+	{
+		return;
+	}
+
+	if(bShouldBeVisible)
+	{
+		InfoProgressGlobe->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		InfoProgressGlobe->SetVisibility(ESlateVisibility::Hidden);
+	}
 }
 
 void UObsidianProgressGlobe::SetGhostGlobeDecreasing(float CurrentPercent, float NewPercent, float DeltaTime)
