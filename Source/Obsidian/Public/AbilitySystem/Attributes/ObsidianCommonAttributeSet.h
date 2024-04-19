@@ -32,6 +32,14 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxEnergyShield);
 
 	/**
+	 * Status
+	 */
+
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, HealthRegeneration);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ManaRegeneration);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShieldRegeneration);
+
+	/**
 	 * Defence attributes
 	 */
 	
@@ -88,6 +96,17 @@ protected:
 	void OnRep_EnergyShield(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxEnergyShield(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Status
+	 */
+
+	UFUNCTION()
+	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Defence attributes
@@ -179,6 +198,22 @@ private:
 	/** The current Max Energy Shield attribute. MaxEnergy Shield is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergyShield, Category = "Obsidian|CAttributes|MaxEnergyShield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxEnergyShield;
+
+	/**
+	 * Status
+	 */
+
+	/** The current Health Regeneration attribute. Health Regeneration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegeneration, Category = "Obsidian|CAttributes|HealthRegeneration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData HealthRegeneration;
+
+	/** The current Mana Regeneration attribute. Mana Regeneration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ManaRegeneration;
+
+	/** The current Energy Shield Regeneration attribute. Energy Shield Regeneration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShieldRegeneration, Category = "Obsidian|CAttributes|EnergyShieldRegeneration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData EnergyShieldRegeneration;
 
 	/**
 	 * Defence attributes

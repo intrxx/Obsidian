@@ -160,7 +160,7 @@ void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool 
 	//FROM LYRA
 	// Try to activate all the abilities that are from presses and holds.
 	// We do it all at once so that held inputs don't activate the ability
-	// and then also send a input event to the ability because of the press.
+	// and then also send an input event to the ability because of the press.
 	for(const FGameplayAbilitySpecHandle& AbilitySpecHandle : AbilitiesToActivate)
 	{
 		TryActivateAbility(AbilitySpecHandle);

@@ -27,6 +27,7 @@ struct FObsidianEffectUIData
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAppliedAssetTags, const FObsidianEffectUIData& /** Asset Tags */);
 
 class UOAbilityTagRelationshipMapping;
+
 /**
  * The base Ability System Component class used in this project.
  */

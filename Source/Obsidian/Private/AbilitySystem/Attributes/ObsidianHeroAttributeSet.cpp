@@ -2,7 +2,6 @@
 
 
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
-
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
@@ -12,6 +11,7 @@ UObsidianHeroAttributeSet::UObsidianHeroAttributeSet()
 	, Strength(1.0f)
 	, Intelligence(2.0f)
 	, Dexterity(3.0f)
+	, Faith(2.f)
 {
 }
 
@@ -34,6 +34,7 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Dexterity, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Faith, COND_None, REPNOTIFY_Always);
 }
 
 void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -72,4 +73,9 @@ void UObsidianHeroAttributeSet::OnRep_Intelligence(const FGameplayAttributeData&
 void UObsidianHeroAttributeSet::OnRep_Dexterity(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, Dexterity, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_Faith(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, Faith, OldValue);
 }

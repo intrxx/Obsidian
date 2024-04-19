@@ -36,6 +36,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Strength);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Intelligence);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Dexterity);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Faith);
 
 protected:
 	
@@ -58,6 +59,8 @@ protected:
 	void OnRep_Intelligence(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_Dexterity(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_Faith(const FGameplayAttributeData& OldValue);
 
 private:
 	/**
@@ -88,4 +91,8 @@ private:
 	/** The current Dexterity attribute. Dexterity is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Dexterity, Category = "Obsidian|HAttributes|Dexterity", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Dexterity;
+
+	/** The current Faith attribute. Faith is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Faith, Category = "Obsidian|HAttributes|Faith", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Faith;
 };
