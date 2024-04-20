@@ -40,6 +40,10 @@ public:
 	/** Getters for Max Mana Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetMaxMana() const;
 	FGameplayAttribute GetMaxManaAttribute() const;
+
+	/** Getters for Mana Regeneration Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetManaRegeneration() const;
+	FGameplayAttribute GetManaRegenerationAttribute() const;
 	
 	/** Getters for Strength Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetStrength() const;
@@ -52,6 +56,10 @@ public:
 	/** Getters for Dexterity Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetDexterity() const;
 	FGameplayAttribute GetDexterityAttribute() const;
+
+	/** Getters for Faith Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetFaith() const;
+	FGameplayAttribute GetFaithAttribute() const;
 
 	/**
 	 * 
@@ -68,9 +76,13 @@ protected:
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) override;
 	virtual void ManaChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxManaChanged(const FOnAttributeChangeData& Data);
+	virtual void HealthRegenerationChanged(const FOnAttributeChangeData& Data) override;
+	virtual void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) override;
+	virtual void ManaRegenerationChanged(const FOnAttributeChangeData& Data);
 	virtual void StrengthChanged(const FOnAttributeChangeData& Data);
 	virtual void IntelligenceChanged(const FOnAttributeChangeData& Data);
 	virtual void DexterityChanged(const FOnAttributeChangeData& Data);
+	virtual void FaithChanged(const FOnAttributeChangeData& Data);
 	virtual void ArmorChanged(const FOnAttributeChangeData& Data) override;
 	virtual void EvasionChanged(const FOnAttributeChangeData& Data) override;
 	virtual void FireResistanceChanged(const FOnAttributeChangeData& Data) override;
@@ -110,9 +122,11 @@ protected:
 
 	FDelegateHandle ManaChangedDelegateHandle;
 	FDelegateHandle MaxManaChangedDelegateHandle;
+	FDelegateHandle ManaRegenerationChangedDelegateHandle;
 	FDelegateHandle StrengthChangedDelegateHandle;
 	FDelegateHandle IntelligenceChangedDelegateHandle;
 	FDelegateHandle DexterityChangedDelegateHandle;
+	FDelegateHandle FaithChangedDelegateHandle;
 
 	/**
 	 * 

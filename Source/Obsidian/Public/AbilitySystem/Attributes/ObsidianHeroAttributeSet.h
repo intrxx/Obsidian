@@ -30,6 +30,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxMana);
 
 	/**
+	 * Status
+	 */
+	
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, ManaRegeneration);
+
+	/**
 	 * "RPG Attributes"
 	 */
 	
@@ -48,6 +54,13 @@ protected:
 	void OnRep_Mana(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Status
+	 */
+
+	UFUNCTION()
+	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue);
 	
 	/**
 	 * "RPG Attributes"
@@ -75,6 +88,14 @@ private:
 	/** The current Max Mana attribute. Max Mana is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Obsidian|HAttributes|MaxMana", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxMana;
+
+	/**
+	 * Status
+	 */
+
+	/** The current Mana Regeneration attribute. Mana Regeneration is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ManaRegeneration;
 
 	/**
 	 * "RPG Attributes"

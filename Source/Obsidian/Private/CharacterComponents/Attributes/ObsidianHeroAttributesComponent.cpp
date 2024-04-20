@@ -28,23 +28,11 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 
 	ManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
 	MaxManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+	ManaRegenerationChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetManaRegenerationAttribute()).AddUObject(this, &ThisClass::ManaRegenerationChanged);
 	StrengthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetStrengthAttribute()).AddUObject(this, &ThisClass::StrengthChanged);
 	IntelligenceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetIntelligenceAttribute()).AddUObject(this, &ThisClass::IntelligenceChanged);
 	DexterityChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetDexterityAttribute()).AddUObject(this, &ThisClass::DexterityChanged);
-	ArmorChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
-	EvasionChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEvasionAttribute()).AddUObject(this, &ThisClass::EvasionChanged);
-	FireResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetFireResistanceAttribute()).AddUObject(this, &ThisClass::FireResistanceChanged);
-	MaxFireResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxFireResistanceAttribute()).AddUObject(this, &ThisClass::MaxFireResistanceChanged);
-	ColdResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetColdResistanceAttribute()).AddUObject(this, &ThisClass::ColdResistanceChanged);
-	MaxColdResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxColdResistanceAttribute()).AddUObject(this, &ThisClass::MaxColdResistanceChanged);
-	LightningResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetLightningResistanceAttribute()).AddUObject(this, &ThisClass::LightningResistanceChanged);
-	MaxLightningResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxLightningResistanceAttribute()).AddUObject(this, &ThisClass::MaxLightningResistanceChanged);
-	ChaosResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
-	MaxChaosResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
-	CriticalStrikeChanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
-	CriticalStrikeMultiplierChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCriticalStrikeMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeMultiplierChanged);
-	AttackSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
-	CastSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
+	FaithChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetFaithAttribute()).AddUObject(this, &ThisClass::FaithChanged);
 	
 	// Set the Mana value to the MaxMana
 	AbilitySystemComponent->SetNumericAttributeBase(GetManaAttribute(), GetMaxMana());
@@ -57,20 +45,7 @@ void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
 	StrengthChangedDelegateHandle.Reset();
 	IntelligenceChangedDelegateHandle.Reset();
 	DexterityChangedDelegateHandle.Reset();
-	ArmorChangedDelegateHandle.Reset();
-	EvasionChangedDelegateHandle.Reset();
-	FireResistanceChangedDelegateHandle.Reset();
-	MaxFireResistanceChangedDelegateHandle.Reset();
-	ColdResistanceChangedDelegateHandle.Reset();
-	MaxColdResistanceChangedDelegateHandle.Reset();
-	LightningResistanceChangedDelegateHandle.Reset();
-	MaxLightningResistanceChangedDelegateHandle.Reset();
-	ChaosResistanceChangedDelegateHandle.Reset();
-	MaxChaosResistanceChangedDelegateHandle.Reset();
-	CriticalStrikeChanceChangedDelegateHandle.Reset();
-	CriticalStrikeMultiplierChangedDelegateHandle.Reset();
-	AttackSpeedChangedDelegateHandle.Reset();
-	CastSpeedChangedDelegateHandle.Reset();
+	FaithChangedDelegateHandle.Reset();
 	
 	HeroAttributeSet = nullptr;
 	
@@ -81,13 +56,20 @@ void UObsidianHeroAttributesComponent::SetMainWidgetController(UMainOverlayWidge
 {
 	MainOverlayWidgetController = InWidgetController;
 
-	// Initial values
+	/**
+	 * Initial values
+	 */
+	 
 	MainOverlayWidgetController->OnHealthChangedDelegate.Broadcast(GetHealth());
 	MainOverlayWidgetController->OnMaxHealthChangedDelegate.Broadcast(GetMaxHealth());
 	MainOverlayWidgetController->OnManaChangedDelegate.Broadcast(GetMana());
 	MainOverlayWidgetController->OnMaxManaChangedDelegate.Broadcast(GetMaxMana());
 	MainOverlayWidgetController->OnEnergyShieldChangedDelegate.Broadcast(GetEnergyShield());
 	MainOverlayWidgetController->OnMaxEnergyShieldChangedDelegate.Broadcast(GetMaxEnergyShield());
+	
+	/**
+	 *
+	 */
 }
 
 void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
@@ -138,75 +120,109 @@ void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeDa
 	}
 }
 
+void UObsidianHeroAttributesComponent::HealthRegenerationChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Health Regeneration Changed! - For %s"), *GetNameSafe(GetOwner()));
+}
+
+void UObsidianHeroAttributesComponent::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Energy Shield Regeneration Changed! - For %s"), *GetNameSafe(GetOwner()));
+}
+
+void UObsidianHeroAttributesComponent::ManaRegenerationChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Mana Regeneration Changed! - For %s"), *GetNameSafe(GetOwner()));
+}
+
 void UObsidianHeroAttributesComponent::StrengthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Implement Strength Changed!"));
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Strength Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::IntelligenceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Implement Intelligence Changed!"));
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Intelligence Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::DexterityChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Implement Dexterity Changed!"));
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Dexterity Changed! - For %s"), *GetNameSafe(GetOwner()));
+}
+
+void UObsidianHeroAttributesComponent::FaithChanged(const FOnAttributeChangeData& Data)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Faith Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::ArmorChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Armor Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::EvasionChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Evasion Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::FireResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Fire Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxFireResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Fire Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::ColdResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Cold Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxColdResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Cold Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::LightningResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Lightning Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Lightning Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::ChaosResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Cold Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Chaos Res Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Critical Strike Chance Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Crit Strike Multiplier Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::AttackSpeedChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Attack Speed Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::CastSpeedChanged(const FOnAttributeChangeData& Data)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Cast Speed Changed! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 float UObsidianHeroAttributesComponent::GetMana() const
@@ -227,6 +243,16 @@ float UObsidianHeroAttributesComponent::GetMaxMana() const
 FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxManaAttribute() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetMaxManaAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetManaRegeneration() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetManaRegeneration() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetManaRegenerationAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetManaRegenerationAttribute() : nullptr);
 }
 
 float UObsidianHeroAttributesComponent::GetStrength() const
@@ -257,6 +283,16 @@ float UObsidianHeroAttributesComponent::GetDexterity() const
 FGameplayAttribute UObsidianHeroAttributesComponent::GetDexterityAttribute() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetDexterityAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetFaith() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetFaith() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetFaithAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetFaithAttribute() : nullptr);
 }
 
 

@@ -36,7 +36,6 @@ public:
 	 */
 
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, HealthRegeneration);
-	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ManaRegeneration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShieldRegeneration);
 
 	/**
@@ -103,8 +102,6 @@ protected:
 
 	UFUNCTION()
 	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldValue);
-	UFUNCTION()
-	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& OldValue);
 
@@ -206,11 +203,7 @@ private:
 	/** The current Health Regeneration attribute. Health Regeneration is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegeneration, Category = "Obsidian|CAttributes|HealthRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData HealthRegeneration;
-
-	/** The current Mana Regeneration attribute. Mana Regeneration is an attribute since Gameplay Effects can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData ManaRegeneration;
-
+	
 	/** The current Energy Shield Regeneration attribute. Energy Shield Regeneration is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShieldRegeneration, Category = "Obsidian|CAttributes|EnergyShieldRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData EnergyShieldRegeneration;

@@ -48,6 +48,14 @@ public:
 	/** Getters for Max Energy Shield Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetMaxEnergyShield() const;
 	FGameplayAttribute GetMaxEnergyShieldAttribute() const;
+
+	/** Getters for Health Regeneration Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetHealthRegeneration() const;
+	FGameplayAttribute GetHealthRegenerationAttribute() const;
+
+	/** Getters for Energy Shield Regeneration Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetEnergyShieldRegeneration() const;
+	FGameplayAttribute GetEnergyShieldRegenerationAttribute() const;
 	
 	/** Getters for Armor Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetArmor() const;
@@ -156,6 +164,8 @@ protected:
 	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data);
 	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void HealthRegenerationChanged(const FOnAttributeChangeData& Data);
+	virtual void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data);
 	virtual void ArmorChanged(const FOnAttributeChangeData& Data);
 	virtual void EvasionChanged(const FOnAttributeChangeData& Data);
 	virtual void FireResistanceChanged(const FOnAttributeChangeData& Data);
@@ -195,6 +205,8 @@ protected:
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
+	FDelegateHandle HealthRegenerationChangedDelegateHandle;
+	FDelegateHandle EnergyShieldRegenerationChangedDelegateHandle;
 	FDelegateHandle ArmorChangedDelegateHandle;
 	FDelegateHandle EvasionChangedDelegateHandle;
 	FDelegateHandle FireResistanceChangedDelegateHandle;
