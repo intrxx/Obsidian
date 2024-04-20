@@ -1,4 +1,6 @@
-﻿#include "ObsidianGameplayTags.h"
+﻿// Copyright 2024 out of sCope team - Michał Ogiński
+
+#include "ObsidianGameplayTags.h"
 #include "Engine/EngineTypes.h"
 #include "GameplayTagsManager.h"
 

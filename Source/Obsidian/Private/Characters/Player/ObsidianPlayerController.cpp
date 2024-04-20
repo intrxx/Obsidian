@@ -1,4 +1,4 @@
-// Copyright 2024 Michał Ogiński
+// Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "UI/ObsidianHUD.h"

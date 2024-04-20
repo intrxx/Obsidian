@@ -1,4 +1,4 @@
-// Copyright 2024 Michał Ogiński
+// Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
