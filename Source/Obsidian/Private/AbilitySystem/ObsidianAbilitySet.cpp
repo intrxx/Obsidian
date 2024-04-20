@@ -106,7 +106,9 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 			GrantedHandles->AddAbilitySpecHandle(AbilitySpecHandle);
 		}
 	}
-
+	
+	TArray<FObsidianAbilitySet_GameplayEffect> LatentGameplayEffects;
+	
 	// Granting Gameplay Effects
 	for(int32 EffectIndex = 0; EffectIndex < GrantedGameplayEffects.Num(); ++EffectIndex)
 	{
@@ -117,6 +119,12 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 			UE_LOG(LogTemp, Error, TEXT("Granted Gameplay Effect [%d] on Ablity Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
 			continue;	
 		}
+		
+		if(EffectToGrant.bIsDependentOnOtherAttributes == true)
+		{
+			LatentGameplayEffects.Add(EffectToGrant);
+			continue;
+		}
 
 		const UGameplayEffect* EffectCDO = EffectToGrant.GameplayEffect->GetDefaultObject<UGameplayEffect>();
 		const FActiveGameplayEffectHandle GameplayEffectHandle = ObsidianASC->ApplyGameplayEffectToSelf(EffectCDO, EffectToGrant.EffectLevel, ObsidianASC->MakeEffectContext());
@@ -126,6 +134,19 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 			GrantedHandles->AddActiveGameplayEffectSpecHandle(GameplayEffectHandle);
 		}
 	}
+
+	// Add Latent Gameplay Effects
+	for(const FObsidianAbilitySet_GameplayEffect& Effect : LatentGameplayEffects)
+	{
+		const UGameplayEffect* EffectCDO = Effect.GameplayEffect->GetDefaultObject<UGameplayEffect>();
+		const FActiveGameplayEffectHandle GameplayEffectHandle = ObsidianASC->ApplyGameplayEffectToSelf(EffectCDO, Effect.EffectLevel, ObsidianASC->MakeEffectContext());
+
+		if(GrantedHandles)
+		{
+			GrantedHandles->AddActiveGameplayEffectSpecHandle(GameplayEffectHandle);
+		}
+	}
+	
 
 	// Granting Attribute Sets.
 	for(int32 SetIndex = 0; SetIndex < GrantedAttributeSets.Num(); ++SetIndex)
@@ -147,3 +168,4 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 		}
 	}
 }
+

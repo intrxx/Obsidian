@@ -6,12 +6,6 @@
 #include "Net/UnrealNetwork.h"
 
 UObsidianHeroAttributeSet::UObsidianHeroAttributeSet()
-	: Mana(100.0f)
-	, MaxMana(100.0f)
-	, Strength(1.0f)
-	, Intelligence(2.0f)
-	, Dexterity(3.0f)
-	, Faith(2.f)
 {
 }
 

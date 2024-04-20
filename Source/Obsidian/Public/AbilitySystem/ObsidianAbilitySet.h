@@ -48,10 +48,14 @@ public:
 	// Gameplay Effect to grant.
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> GameplayEffect = nullptr;
-
+	
 	// Level of the granted Gameplay Effect.
 	UPROPERTY(EditDefaultsOnly)
 	float EffectLevel = 1.0f;
+
+	// If this is set to true, this Gameplay effect will be given as the last one
+	UPROPERTY(EditDefaultsOnly)
+	bool bIsDependentOnOtherAttributes = false;
 };
 
 /**
@@ -128,5 +132,4 @@ protected:
 	// Attribute Sets to grant when this Ability Set is granted.
 	UPROPERTY(EditDefaultsOnly, Category = "Attribute Sets")
 	TArray<FObsidianAbilitySet_AttributeSet> GrantedAttributeSets;
-	
 };
