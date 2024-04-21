@@ -4,19 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameplayModMagnitudeCalculation.h"
-#include "ObsidianMMC_MaxHealth.generated.h"
+#include "ObsidianMMC_Evasion.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianMMC_MaxHealth : public UGameplayModMagnitudeCalculation
+class OBSIDIAN_API UObsidianMMC_Evasion : public UGameplayModMagnitudeCalculation
 {
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_MaxHealth();
+	UObsidianMMC_Evasion();
 
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
-	
 };
