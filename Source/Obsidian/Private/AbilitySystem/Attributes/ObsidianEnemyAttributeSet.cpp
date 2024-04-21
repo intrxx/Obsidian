@@ -6,7 +6,6 @@
 #include "Net/UnrealNetwork.h"
 
 UObsidianEnemyAttributeSet::UObsidianEnemyAttributeSet()
-	: EnemySpecificAttribute(10.0f)
 {
 }
 
