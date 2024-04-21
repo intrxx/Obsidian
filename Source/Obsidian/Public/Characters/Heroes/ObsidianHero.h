@@ -32,6 +32,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
 	AObsidianPlayerController* GetObsidianPlayerController() const;
 
+	//~ Start of CombatInterface
+	virtual int32 GetCharacterLevel() override;
+	//~ End of CombatInterface
+
 protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;

@@ -6,6 +6,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "Net/UnrealNetwork.h"
 
 AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -21,7 +22,22 @@ AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& ObjectIniti
 	CommonAttributeSet = CreateDefaultSubobject<UObsidianCommonAttributeSet>(TEXT("CommonAttributeSet"));
 }
 
+void AObsidianPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AObsidianPlayerState, HeroLevel);
+}
+
 UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const
 {
 	return GetObsidianAbilitySystemComponent();
 }
+
+void AObsidianPlayerState::OnRep_HeroLevel()
+{
+}
+
+
+
+

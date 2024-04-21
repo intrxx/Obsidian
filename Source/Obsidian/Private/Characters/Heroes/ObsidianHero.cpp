@@ -87,6 +87,11 @@ AObsidianPlayerController* AObsidianHero::GetObsidianPlayerController() const
 	return CastChecked<AObsidianPlayerController>(GetController(), ECastCheckedType::NullAllowed);
 }
 
+int32 AObsidianHero::GetCharacterLevel()
+{
+	return GetObsidianPlayerState() == nullptr ? GetObsidianPlayerState()->GetHeroLevel() : 1;
+}
+
 void AObsidianHero::OnAbilitySystemInitialized()
 {
 	Super::OnAbilitySystemInitialized();

@@ -20,11 +20,19 @@ class OBSIDIAN_API AObsidianPlayerState : public APlayerState, public IAbilitySy
 
 public:
 	AObsidianPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerState")
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const { return AbilitySystemComponent; }
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
+	FORCEINLINE int32 GetHeroLevel() const {return HeroLevel;}
 
+private:
+	UFUNCTION()
+	void OnRep_HeroLevel();
+	
 private:
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UObsidianAbilitySystemComponent> AbilitySystemComponent;
@@ -32,4 +40,8 @@ private:
 	TObjectPtr<UObsidianHeroAttributeSet> HeroAttributeSet;
 	UPROPERTY()
 	TObjectPtr<UObsidianCommonAttributeSet> CommonAttributeSet;
+
+	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_HeroLevel)
+	int32 HeroLevel = 1;
+
 };

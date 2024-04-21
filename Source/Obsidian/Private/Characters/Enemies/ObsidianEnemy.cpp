@@ -73,3 +73,8 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 
 	EnemyAttributesComponent->UninitializeFromAbilitySystem();
 }
+
+int32 AObsidianEnemy::GetCharacterLevel()
+{
+	return EnemyLevel;
+}

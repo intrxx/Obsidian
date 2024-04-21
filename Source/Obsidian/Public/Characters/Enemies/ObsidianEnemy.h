@@ -33,6 +33,10 @@ protected:
 	virtual void OnAbilitySystemUninitialized() override;
 	//~ End of AObsidianCharacterBase
 
+	//~ Start of CombatInterface
+	virtual int32 GetCharacterLevel() override;
+	//~ End of CombatInterface
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
@@ -41,6 +45,9 @@ private:
 	UPROPERTY()
 	TObjectPtr<UObsidianEnemyAttributeSet> EnemyAttributeSet;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")
+	int32 EnemyLevel = 1;
 };
