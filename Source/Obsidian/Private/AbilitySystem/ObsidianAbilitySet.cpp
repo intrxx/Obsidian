@@ -127,7 +127,9 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 		}
 
 		const UGameplayEffect* EffectCDO = EffectToGrant.GameplayEffect->GetDefaultObject<UGameplayEffect>();
-		const FActiveGameplayEffectHandle GameplayEffectHandle = ObsidianASC->ApplyGameplayEffectToSelf(EffectCDO, EffectToGrant.EffectLevel, ObsidianASC->MakeEffectContext());
+		FGameplayEffectContextHandle ContextHandle = ObsidianASC->MakeEffectContext();
+		ContextHandle.AddSourceObject(SourceObject);
+		const FActiveGameplayEffectHandle GameplayEffectHandle = ObsidianASC->ApplyGameplayEffectToSelf(EffectCDO, EffectToGrant.EffectLevel, ContextHandle);
 
 		if(GrantedHandles)
 		{
@@ -139,7 +141,9 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 	for(const FObsidianAbilitySet_GameplayEffect& Effect : LatentGameplayEffects)
 	{
 		const UGameplayEffect* EffectCDO = Effect.GameplayEffect->GetDefaultObject<UGameplayEffect>();
-		const FActiveGameplayEffectHandle GameplayEffectHandle = ObsidianASC->ApplyGameplayEffectToSelf(EffectCDO, Effect.EffectLevel, ObsidianASC->MakeEffectContext());
+		FGameplayEffectContextHandle ContextHandle = ObsidianASC->MakeEffectContext();
+		ContextHandle.AddSourceObject(SourceObject);
+		const FActiveGameplayEffectHandle GameplayEffectHandle = ObsidianASC->ApplyGameplayEffectToSelf(EffectCDO, Effect.EffectLevel, ContextHandle);
 
 		if(GrantedHandles)
 		{
