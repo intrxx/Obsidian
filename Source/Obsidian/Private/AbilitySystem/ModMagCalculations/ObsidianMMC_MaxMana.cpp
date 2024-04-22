@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_MaxMana.h"
-
+#include "Engine/CurveTable.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Combat/ObsidianCombatInterface.h"
 
@@ -62,7 +62,17 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 	float Dexterity = 0.f;
 	GetCapturedAttributeMagnitude(MaxManaStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
-
-	const float NewMaxMana = MaxMana + Dexterity + (2 * Faith) + (CharacterLevel * /** This value should be a curve table in the future */ 3);
+	
+	float LevelAddedManaValue = 0.f;
+	if(ManaAwardCurveTable)
+	{
+		const FRealCurve* Curve = ManaAwardCurveTable->FindCurve(FName("Curve"), FString(""));
+		if(Curve)
+		{
+			LevelAddedManaValue = Curve->Eval(CharacterLevel);
+		}
+	}
+	
+	const float NewMaxMana = MaxMana + Dexterity + (2 * Faith) + (CharacterLevel * LevelAddedManaValue);
 	return NewMaxMana;
 }

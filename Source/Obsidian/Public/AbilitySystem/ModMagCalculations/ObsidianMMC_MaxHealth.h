@@ -18,5 +18,8 @@ public:
 	UObsidianMMC_MaxHealth();
 
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
-	
+
+private:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")
+	TObjectPtr<UCurveTable> HealthAwardCurveTable;
 };

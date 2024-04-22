@@ -4,6 +4,7 @@
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_MaxHealth.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "Engine/CurveTable.h"
 #include "Combat/ObsidianCombatInterface.h"
 
 struct SObsidian_MaxHealthStatics
@@ -64,6 +65,16 @@ float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGamep
 	GetCapturedAttributeMagnitude(MaxHealthStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 	
-	const float NewMaxHealth = MaxHealth + Dexterity + (2 * Strength) + (CharacterLevel * /** This value should be a curve table in the future */ 5);
+	float LevelAddedHealthValue = 0.f;
+	if(HealthAwardCurveTable)
+	{
+		const FRealCurve* Curve = HealthAwardCurveTable->FindCurve(FName("Curve"), FString(""));
+		if(Curve)
+		{
+			LevelAddedHealthValue = Curve->Eval(CharacterLevel);
+		}
+	}
+	
+	const float NewMaxHealth = MaxHealth + Dexterity + (2 * Strength) + (CharacterLevel * LevelAddedHealthValue);
 	return NewMaxHealth;
 }
