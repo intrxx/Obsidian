@@ -11,7 +11,7 @@ class UAbilitySystemComponent;
 class UGameplayEffect;
 
 UENUM(BlueprintType)
-enum class EObsidianEffectToApply : uint8
+enum class EObsidianEffectToApply
 {
 	Instant,
 	HasDuration,
@@ -20,7 +20,7 @@ enum class EObsidianEffectToApply : uint8
 };
 
 UENUM(BlueprintType)
-enum class EObsidianEffectApplicationPolicy : uint8
+enum class EObsidianEffectApplicationPolicy
 {
 	ApplyOnOverlap,
 	ApplyOnEndOverlap,
@@ -28,7 +28,7 @@ enum class EObsidianEffectApplicationPolicy : uint8
 };
 
 UENUM(BlueprintType)
-enum class EObsidianEffectRemovalPolicy : uint8
+enum class EObsidianEffectRemovalPolicy
 {
 	RemovalOnEndOverlap,
 	DoNotRemove
