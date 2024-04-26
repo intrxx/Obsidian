@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetController.h"
 #include "GameplayTagContainer.h"
+#include "ObsidianTypes/ObsidianUIEffectClassification.h"
 #include "MainOverlayWidgetController.generated.h"
 
 class UObsidianEffectInfoBase;
@@ -21,6 +22,9 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	bool bIsEffectDurational = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::NoClassification;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectName = FText();
