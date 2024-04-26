@@ -55,6 +55,13 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	// ~ End of UObsidianWidgetController
 
+	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Health")
+	void UpdateHealthInfoGlobe(const float& Magnitude) const;
+	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Mana")
+	void UpdateManaInfoGlobe(const float& Magnitude) const;
+
+public:
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
 

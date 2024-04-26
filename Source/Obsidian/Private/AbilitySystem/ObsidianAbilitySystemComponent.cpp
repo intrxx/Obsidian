@@ -73,7 +73,7 @@ void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* A
 	EffectUIData.AssetTags = AssetTags;
 	EffectUIData.EffectDurationPolicy = EffectSpec.Def->DurationPolicy;
 	EffectUIData.EffectDuration = EffectSpec.GetDuration();
-	EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec);
+	EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec); 
 	
 	EffectAppliedAssetTags.Broadcast(EffectUIData);
 }

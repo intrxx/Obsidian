@@ -8,6 +8,7 @@
 #include "Layout/Margin.h"
 #include "ObsidianProgressGlobe.generated.h"
 
+class UMainOverlayWidgetController;
 class UHorizontalBox;
 class UProgressBar;
 class UCommonTextBlock;
@@ -27,7 +28,7 @@ public:
 	void SetInfoGlobeVisibility(bool bShouldBeVisible);
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
-	
+
 public:
 	/**
 	 *  Widget build blocks
@@ -68,9 +69,6 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> EnergyShieldAttributeValueBox;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
-	bool bUseEnergyShield = false;
 	
 	/**
 	 * Set up
@@ -118,6 +116,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float NewPercentage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
+	bool bUseEnergyShield = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
+	bool bInfoGlobeActive = false;
 
 private:
 	void SetGhostGlobeDecreasing(float CurrentPercent, float NewPercent, float DeltaTime);
