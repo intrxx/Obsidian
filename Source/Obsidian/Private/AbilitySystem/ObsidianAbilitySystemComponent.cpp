@@ -69,11 +69,31 @@ void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* A
 	
 	FGameplayTagContainer AssetTags;
 	EffectSpec.GetAllAssetTags(AssetTags);
-	
 	EffectUIData.AssetTags = AssetTags;
-	EffectUIData.EffectDurationPolicy = EffectSpec.Def->DurationPolicy;
-	EffectUIData.EffectDuration = EffectSpec.GetDuration();
-	EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec); 
+
+	const EGameplayEffectDurationType GameplayEffectType = EffectSpec.Def->DurationPolicy;
+	EffectUIData.EffectDurationPolicy = GameplayEffectType;
+
+	if(GameplayEffectType == EGameplayEffectDurationType::HasDuration)
+	{
+		EffectUIData.EffectDuration = EffectSpec.GetDuration();
+		EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec);
+	}
+	
+	if(EffectSpec.Def->StackingType != EGameplayEffectStackingType::None)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Passing in Stacking effect"));
+		EffectUIData.bStackingEffect = true;
+		
+		FObsidianEffectUIStackingData StackingData;
+		
+		StackingData.EffectStackCount = EffectSpec.GetStackCount();
+		StackingData.EffectExpirationDurationPolicy = EffectSpec.Def->GetStackExpirationPolicy();
+		StackingData.EffectStackingDurationPolicy = EffectSpec.Def->StackDurationRefreshPolicy;
+		
+		EffectUIData.StackingData = StackingData;
+		
+	}
 	
 	EffectAppliedAssetTags.Broadcast(EffectUIData);
 }
@@ -81,12 +101,6 @@ void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* A
 float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGameplayEffectSpec& EffectSpec)
 {
 	const float Magnitude = EffectSpec.GetModifierMagnitude(0, false);
-	
-	if(EffectSpec.Def->DurationPolicy != EGameplayEffectDurationType::HasDuration)
-	{
-		//TODO come back here in case I need to include stacking
-		return Magnitude;
-	}
 	
 	const float Duration = EffectSpec.GetDuration();
 	const float Period = EffectSpec.GetPeriod();
@@ -96,12 +110,9 @@ float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGamep
 	if(EffectSpec.Def->bExecutePeriodicEffectOnApplication)
 	{
 		FullMagnitude += Magnitude;
-		UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f + %f = %f"),Duration, Period, Magnitude, Magnitude, FullMagnitude);
+		//UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f + %f = %f"),Duration, Period, Magnitude, Magnitude, FullMagnitude);
 	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f = %f"),Duration, Period, Magnitude, FullMagnitude);
-	}
+	//UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f = %f"),Duration, Period, Magnitude, FullMagnitude);
 	
 	return FullMagnitude;
 }

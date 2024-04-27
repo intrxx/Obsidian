@@ -20,9 +20,6 @@ public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Obsidian|EffectInfo")
 	TObjectPtr<UCommonTextBlock> EffectTimer_TextBlock;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|EffectInfo|Style")
-	TSubclassOf<UCommonTextStyle> NormalTimerStyle;
-
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void StartEffectTimer();
@@ -31,5 +28,8 @@ private:
 	void TimerCountDown();
 
 private:
+	UPROPERTY()
+	APlayerController* OwningPlayer = nullptr;
+	
 	FTimerHandle EffectDurationTimerHandle;
 };

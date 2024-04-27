@@ -23,7 +23,7 @@ public:
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|EffectDescSetup")
-	FVector2D DescPositionOffset;
+	FVector2D DescPositionOffset{0, 0};
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|EffectDescSetup")
 	int32 WrapTextAtNumber = 200;

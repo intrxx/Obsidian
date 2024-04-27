@@ -49,4 +49,5 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianEffectDescription> EffectDescWidget;
+	
 };

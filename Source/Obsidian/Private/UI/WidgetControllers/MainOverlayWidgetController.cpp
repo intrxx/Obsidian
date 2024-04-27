@@ -24,8 +24,17 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 				const FGameplayTag EffectUIDataTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData"));
 				if(Tag.MatchesTag(EffectUIDataTag))
 				{
-					const FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
-					EffectUIDataWidgetRowDelegate.Broadcast(*Row, UIData.EffectDuration);
+					FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
+					Row->SetEffectDuration(UIData.EffectDuration);
+					
+					if(UIData.bStackingEffect)
+					{
+						EffectStackingUIDataDelegate.Broadcast(*Row, UIData.StackingData);
+					}
+					else
+					{
+						EffectUIDataWidgetRowDelegate.Broadcast(*Row);
+					}
 				}
 
 				if(UIData.EffectDurationPolicy == EGameplayEffectDurationType::HasDuration)

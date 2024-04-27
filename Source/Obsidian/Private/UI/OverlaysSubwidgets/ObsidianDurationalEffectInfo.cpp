@@ -6,7 +6,8 @@
 
 void UObsidianDurationalEffectInfo::StartEffectTimer()
 {
-	GetOwningPlayer()->GetWorldTimerManager().SetTimer(EffectDurationTimerHandle, this, &ThisClass::TimerCountDown,
+	OwningPlayer = OwningPlayer == nullptr ? GetOwningPlayer() : OwningPlayer;
+	OwningPlayer->GetWorldTimerManager().SetTimer(EffectDurationTimerHandle, this, &ThisClass::TimerCountDown,
 		1.f, true, 0.f);
 }
 
@@ -27,7 +28,7 @@ void UObsidianDurationalEffectInfo::TimerCountDown()
 		{
 			if(EffectDurationTimerHandle.IsValid())
 			{
-				GetOwningPlayer()->GetWorldTimerManager().ClearTimer(EffectDurationTimerHandle);
+				OwningPlayer->GetWorldTimerManager().ClearTimer(EffectDurationTimerHandle);
 			}
 			OnEffectUnHovered();
 			RemoveFromParent();

@@ -6,6 +6,21 @@
 #include "AbilitySystemComponent.h"
 #include "ObsidianAbilitySystemComponent.generated.h"
 
+USTRUCT(BlueprintType)
+struct FObsidianEffectUIStackingData
+{
+	GENERATED_BODY()
+	
+	UPROPERTY()
+	int32 EffectStackCount = 0;
+
+	UPROPERTY()
+	EGameplayEffectStackingExpirationPolicy EffectExpirationDurationPolicy;
+
+	UPROPERTY()
+	EGameplayEffectStackingDurationPolicy EffectStackingDurationPolicy;
+};
+
 USTRUCT()
 struct FObsidianEffectUIData
 {
@@ -22,6 +37,12 @@ struct FObsidianEffectUIData
 
 	UPROPERTY()
 	float EffectDuration = 0.f;
+	
+	UPROPERTY()
+	FObsidianEffectUIStackingData StackingData;
+	
+	UPROPERTY()
+	bool bStackingEffect = false;
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAppliedAssetTags, const FObsidianEffectUIData& /** Asset Tags */);
