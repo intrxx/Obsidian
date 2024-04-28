@@ -4,22 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
+#include "ObsidianTypes/ObsidianUIData.h"
 #include "ObsidianAbilitySystemComponent.generated.h"
-
-USTRUCT(BlueprintType)
-struct FObsidianEffectUIStackingData
-{
-	GENERATED_BODY()
-	
-	UPROPERTY()
-	int32 EffectStackCount = 0;
-
-	UPROPERTY()
-	EGameplayEffectStackingExpirationPolicy EffectExpirationDurationPolicy = EGameplayEffectStackingExpirationPolicy();
-
-	UPROPERTY()
-	EGameplayEffectStackingDurationPolicy EffectStackingDurationPolicy = EGameplayEffectStackingDurationPolicy();
-};
 
 USTRUCT()
 struct FObsidianEffectUIData

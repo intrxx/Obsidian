@@ -90,7 +90,6 @@ void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* A
 		StackingData.EffectExpirationDurationPolicy = EffectSpec.Def->GetStackExpirationPolicy();
 		StackingData.EffectStackingDurationPolicy = EffectSpec.Def->StackDurationRefreshPolicy;
 		EffectUIData.StackingData = StackingData;
-		
 	}
 	
 	EffectAppliedAssetTags.Broadcast(EffectUIData);

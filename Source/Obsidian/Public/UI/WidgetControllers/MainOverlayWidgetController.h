@@ -6,7 +6,7 @@
 #include "UI/ObsidianWidgetController.h"
 #include "GameplayTagContainer.h"
 #include "ObsidianTypes/ObsidianUIEffectClassification.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "ObsidianTypes/ObsidianUIData.h"
 #include "MainOverlayWidgetController.generated.h"
 
 class UOStackingDurationalEffectInfo;
