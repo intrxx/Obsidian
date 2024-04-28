@@ -15,10 +15,10 @@ struct FObsidianEffectUIStackingData
 	int32 EffectStackCount = 0;
 
 	UPROPERTY()
-	EGameplayEffectStackingExpirationPolicy EffectExpirationDurationPolicy;
+	EGameplayEffectStackingExpirationPolicy EffectExpirationDurationPolicy = EGameplayEffectStackingExpirationPolicy();
 
 	UPROPERTY()
-	EGameplayEffectStackingDurationPolicy EffectStackingDurationPolicy;
+	EGameplayEffectStackingDurationPolicy EffectStackingDurationPolicy = EGameplayEffectStackingDurationPolicy();
 };
 
 USTRUCT()
@@ -30,7 +30,7 @@ struct FObsidianEffectUIData
 	FGameplayTagContainer AssetTags;
 
 	UPROPERTY()
-	EGameplayEffectDurationType EffectDurationPolicy;
+	EGameplayEffectDurationType EffectDurationPolicy = EGameplayEffectDurationType();
 
 	UPROPERTY()
 	float EffectMagnitude = 0.f;

@@ -18,7 +18,7 @@ class OBSIDIAN_API UObsidianEffectInfoBase : public UObsidianWidgetBase
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, bool bIsDurational, const float& Duration);
+	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float& Duration);
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|EffectInfo")

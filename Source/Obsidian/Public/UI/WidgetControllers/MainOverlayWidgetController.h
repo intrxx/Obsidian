@@ -37,11 +37,7 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag EffectTag = FGameplayTag();
-
-	//TODO Delete this
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	bool bIsEffectDurational = false;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::NoClassification;
 	

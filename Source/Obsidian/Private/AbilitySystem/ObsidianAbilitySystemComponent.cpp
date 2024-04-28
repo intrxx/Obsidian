@@ -82,7 +82,6 @@ void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* A
 	
 	if(EffectSpec.Def->StackingType != EGameplayEffectStackingType::None)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Passing in Stacking effect"));
 		EffectUIData.bStackingEffect = true;
 		
 		FObsidianEffectUIStackingData StackingData;
@@ -90,7 +89,6 @@ void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* A
 		StackingData.EffectStackCount = EffectSpec.GetStackCount();
 		StackingData.EffectExpirationDurationPolicy = EffectSpec.Def->GetStackExpirationPolicy();
 		StackingData.EffectStackingDurationPolicy = EffectSpec.Def->StackDurationRefreshPolicy;
-		
 		EffectUIData.StackingData = StackingData;
 		
 	}
