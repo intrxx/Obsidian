@@ -28,9 +28,7 @@ USTRUCT(BlueprintType)
 struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 {
 	GENERATED_BODY()
-public:
-	void SetEffectDuration(const float Duration) {EffectDuration = Duration;};
-	
+
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	EObsidianInfoWidgetType InfoWidgetType = EObsidianInfoWidgetType::SimpleEffectInfo;
@@ -61,11 +59,9 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::StackingDurationalEffectInfo", EditConditionHides))
 	TSubclassOf<UOStackingDurationalEffectInfo> StackingDurationalEffectWidget;
-
-private:
+	
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float EffectDuration = 0.f;
-	
 };
 
 /** Broadcasts DataTable Row that corresponds to a given asset tag */

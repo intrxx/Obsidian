@@ -25,7 +25,7 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 				if(Tag.MatchesTag(EffectUIDataTag))
 				{
 					FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
-					Row->SetEffectDuration(UIData.EffectDuration);
+					Row->EffectDuration = UIData.EffectDuration;
 					
 					if(UIData.bStackingEffect)
 					{
