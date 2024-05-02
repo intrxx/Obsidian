@@ -2,8 +2,8 @@
 
 
 #include "UI/OverlaysSubwidgets/OStackingDurationalEffectInfo.h"
-
 #include "CommonTextBlock.h"
+
 
 void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)
 {
@@ -12,6 +12,8 @@ void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)
 	{
 		StackCount_TextBlock->SetText(FText::FromString(FString::Printf(TEXT("%d"), Count)));
 	}
+
+	
 }
 
 void UOStackingDurationalEffectInfo::UpdateStackingInfoWidget(const int32 NewCount)
@@ -97,7 +99,9 @@ void UOStackingDurationalEffectInfo::TerminateTheEffect()
 {
 	OnEffectUnHovered();
 	RemoveFromParent();
-		
+
+	OnStackingInfoWidgetTerminatedDelegate.Broadcast(this);
+	
 	OwningPlayer = OwningPlayer == nullptr ? GetOwningPlayer() : OwningPlayer;
 	if(EffectDurationTimerHandle.IsValid())
 	{

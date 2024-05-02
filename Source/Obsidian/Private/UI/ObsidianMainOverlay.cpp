@@ -3,6 +3,7 @@
 
 #include "UI/ObsidianMainOverlay.h"
 #include "Components/WrapBox.h"
+#include "UI/OverlaysSubwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/OverlaysSubwidgets/OStackingDurationalEffectInfo.h"
 
 void UObsidianMainOverlay::NativeConstruct()
@@ -24,6 +25,7 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 	StackingInfoWidgetsMap.Add(Row.EffectTag, StackingInfoWidget);
 	
 	StackingInfoWidget->InitDurationalStackingEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration, StackingData);
+	StackingInfoWidget->OnStackingInfoWidgetTerminatedDelegate.AddUObject(this, &ThisClass::DestroyStackingInfoWidget);
 
 	switch(Row.EffectClassification)
 	{
@@ -38,4 +40,56 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 		break;
 	}
 }
+
+void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row)
+{
+	if(Row.InfoWidgetType == EObsidianInfoWidgetType::SimpleEffectInfo)
+	{
+		UObsidianEffectInfoBase* InfoWidget = CreateWidget<UObsidianEffectInfoBase>(OwningPlayerController, Row.SimpleEffectWidget);
+		InfoWidget->InitEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage);
+
+		switch(Row.EffectClassification)
+		{
+		case EObsidianUIEffectClassification::Buff:
+			BuffsEffectInfo_WrapBox->AddChild(InfoWidget);
+			break;
+		case EObsidianUIEffectClassification::Debuff:
+			DeBuffsEffectInfo_WrapBox->AddChild(InfoWidget);
+			break;
+		default:
+			BuffsEffectInfo_WrapBox->AddChild(InfoWidget);
+			break;
+		}
+
+		return;
+	}
+	
+	if(Row.InfoWidgetType == EObsidianInfoWidgetType::DurationalEffectInfo)
+	{
+		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
+		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
+
+		switch(Row.EffectClassification)
+		{
+		case EObsidianUIEffectClassification::Buff:
+			BuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
+			break;
+		case EObsidianUIEffectClassification::Debuff:
+			DeBuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
+			break;
+		default:
+			BuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
+			break;
+		}
+	}
+}
+
+void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy)
+{
+	if(const FGameplayTag* Key = StackingInfoWidgetsMap.FindKey(WidgetToDestroy))
+	{
+		StackingInfoWidgetsMap.Remove(*Key);
+	}
+}
+
 

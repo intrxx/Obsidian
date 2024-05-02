@@ -21,9 +21,6 @@ class OBSIDIAN_API UObsidianMainOverlay : public UObsidianWidgetBase
 
 public:
 	virtual void NativeConstruct() override;
-	
-	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
-	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
 
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|MainOverlay")
@@ -37,4 +34,14 @@ public:
 
 	UPROPERTY()
 	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
+
+protected:
+	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
+	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
+
+	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
+	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
+
+private:
+	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
 };

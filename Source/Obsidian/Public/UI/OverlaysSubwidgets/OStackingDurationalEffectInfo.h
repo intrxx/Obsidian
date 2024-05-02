@@ -7,6 +7,10 @@
 #include "ObsidianTypes/ObsidianUIData.h"
 #include "OStackingDurationalEffectInfo.generated.h"
 
+class UOStackingDurationalEffectInfo;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnStackingInfoWidgetTerminated, UOStackingDurationalEffectInfo* /** Stacking Info Widget */);
+
 /**
  * 
  */
@@ -18,10 +22,7 @@ class OBSIDIAN_API UOStackingDurationalEffectInfo : public UObsidianEffectInfoBa
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void InitDurationalStackingEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float& Duration, const FObsidianEffectUIStackingData& InData);
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void SetStackCount(const int32 Count);
-
+	
 	void UpdateStackingInfoWidget(const int32 NewCount);
 
 public:
@@ -39,10 +40,15 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	FObsidianEffectUIStackingData StackingData;
+	
+	FOnStackingInfoWidgetTerminated OnStackingInfoWidgetTerminatedDelegate;
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void StartEffectTimer();
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
+	void SetStackCount(const int32 Count);
 
 private:
 	void TimerCountDown();
