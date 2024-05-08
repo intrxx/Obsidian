@@ -4,13 +4,6 @@
 #include "UI/ObsidianCharacterStatus.h"
 #include "Components/ScrollBox.h"
 
-void UObsidianCharacterStatus::NativeConstruct()
-{
-	Super::NativeConstruct();
-	
-	CurrentlyShownTab = Offence_ScrollBox;
-}
-
 void UObsidianCharacterStatus::SwitchToTab(UScrollBox* Tab)
 {
 	if(Tab == nullptr)

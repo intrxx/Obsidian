@@ -20,7 +20,6 @@ class OBSIDIAN_API UObsidianCharacterStatus : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	virtual void NativeConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatus")
 	void SwitchToTab(UScrollBox* Tab);
@@ -177,5 +176,5 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UScrollBox> CurrentlyShownTab;
+	TObjectPtr<UScrollBox> CurrentlyShownTab = Offence_ScrollBox;
 };

@@ -19,6 +19,8 @@ class OBSIDIAN_API UOCharacterStatusAttributeRow : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
+	virtual void NativePreConstruct() override;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetAttributeValue(const float Value) const;
 	

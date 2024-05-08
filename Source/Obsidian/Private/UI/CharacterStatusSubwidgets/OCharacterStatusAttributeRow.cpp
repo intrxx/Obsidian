@@ -6,6 +6,13 @@
 #include "Components/SizeBox.h"
 #include "Components/Spacer.h"
 
+void UOCharacterStatusAttributeRow::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	InitialSetup();
+}
+
 void UOCharacterStatusAttributeRow::InitialSetup()
 {
 	Root_SizeBox->SetWidthOverride(SizeBoxWidth);
