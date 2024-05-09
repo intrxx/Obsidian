@@ -3,7 +3,7 @@
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 
-FVector2D UObsidianEffectDescription::GetDescriptionDesiredPosition()
+FVector2D UObsidianEffectDescription::GetDescriptionDesiredPosition() const
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)

@@ -19,7 +19,7 @@ public:
 	void InitEffectDesc(const FText& InEffectName, const FText& InEffectDesc);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectDesc")
-	FVector2D GetDescriptionDesiredPosition();
+	FVector2D GetDescriptionDesiredPosition() const;
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|EffectDescSetup")
