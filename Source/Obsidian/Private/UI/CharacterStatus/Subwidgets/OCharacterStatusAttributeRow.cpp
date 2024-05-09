@@ -1,7 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "UI/CharacterStatusSubwidgets/OCharacterStatusAttributeRow.h"
+#include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow.h"
 #include "CommonTextBlock.h"
 #include "Components/SizeBox.h"
 #include "Components/Spacer.h"

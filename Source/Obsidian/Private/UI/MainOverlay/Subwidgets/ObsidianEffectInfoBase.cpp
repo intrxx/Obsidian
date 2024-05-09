@@ -1,8 +1,8 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "UI/OverlaysSubwidgets/ObsidianEffectInfoBase.h"
-#include "UI/OverlaysSubwidgets/ObsidianEffectDescription.h"
+#include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
+#include "UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h"
 
 
 void UObsidianEffectInfoBase::OnEffectHovered()

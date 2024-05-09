@@ -6,7 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "ObsidianTypes/ObsidianUIData.h"
 #include "UI/ObsidianWidgetBase.h"
-#include "WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
 class UWrapBox;

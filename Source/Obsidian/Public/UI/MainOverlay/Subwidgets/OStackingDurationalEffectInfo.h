@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/OverlaysSubwidgets/ObsidianEffectInfoBase.h"
+#include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
 #include "ObsidianTypes/ObsidianUIData.h"
 #include "OStackingDurationalEffectInfo.generated.h"
 

@@ -1,10 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "UI/ObsidianMainOverlay.h"
+#include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "Components/WrapBox.h"
-#include "UI/OverlaysSubwidgets/ObsidianDurationalEffectInfo.h"
-#include "UI/OverlaysSubwidgets/OStackingDurationalEffectInfo.h"
+#include "ObsidianTypes/ObsidianUIEffectClassification.h"
+#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
+#include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 
 void UObsidianMainOverlay::NativeConstruct()
 {

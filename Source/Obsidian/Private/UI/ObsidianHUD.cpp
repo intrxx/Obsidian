@@ -2,7 +2,7 @@
 
 
 #include "UI/ObsidianHUD.h"
-#include "UI/ObsidianMainOverlay.h"
+#include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FWidgetControllerParams& WidgetControllerParams)

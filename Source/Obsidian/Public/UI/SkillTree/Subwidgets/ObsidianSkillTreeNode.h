@@ -30,7 +30,10 @@ public:
 	float SizeBoxHeight = 0;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
-	FButtonStyle SkillButtonStyle;
+	FButtonStyle SkillButtonStyle = FButtonStyle();
+
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
+	FSlateBrush BorderBrush = FSlateBrush();
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

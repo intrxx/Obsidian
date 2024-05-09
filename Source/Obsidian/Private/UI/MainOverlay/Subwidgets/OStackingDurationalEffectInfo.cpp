@@ -1,7 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "UI/OverlaysSubwidgets/OStackingDurationalEffectInfo.h"
+#include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "CommonTextBlock.h"
 
 
