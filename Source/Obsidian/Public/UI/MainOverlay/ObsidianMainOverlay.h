@@ -9,8 +9,11 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UOverlay;
+class UObsidianOverlayGameTabsMenu;
 class UWrapBox;
 class UOStackingDurationalEffectInfo;
+class UObsidianCharacterStatus;
 /**
  * 
  */
@@ -22,6 +25,9 @@ class OBSIDIAN_API UObsidianMainOverlay : public UObsidianWidgetBase
 public:
 	virtual void NativeConstruct() override;
 
+	UFUNCTION()
+	void ToggleCharacterStatus();
+	
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|MainOverlay")
 	APlayerController* OwningPlayerController = nullptr;
@@ -31,6 +37,9 @@ public:
 	
 	UPROPERTY(meta=(BindWidget), BlueprintReadWrite, Category = "Obisidian|MainOverlay")
 	TObjectPtr<UWrapBox> DeBuffsEffectInfo_WrapBox;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
+	TSubclassOf<UObsidianCharacterStatus> CharacterStatusClass;
 
 	UPROPERTY()
 	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
@@ -42,6 +51,17 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
 
+protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianOverlayGameTabsMenu> Overlay_GameTabsMenu;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOverlay> CharacterStatus_Overlay;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UObsidianCharacterStatus> CharacterStatus;
+	
 private:
 	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
 };

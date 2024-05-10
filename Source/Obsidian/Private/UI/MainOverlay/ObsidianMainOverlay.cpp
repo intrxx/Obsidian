@@ -2,8 +2,11 @@
 
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
+#include "Components/Overlay.h"
 #include "Components/WrapBox.h"
 #include "ObsidianTypes/ObsidianUIEffectClassification.h"
+#include "UI/CharacterStatus/ObsidianCharacterStatus.h"
+#include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
@@ -13,6 +16,29 @@ void UObsidianMainOverlay::NativeConstruct()
 	Super::NativeConstruct();
 
 	OwningPlayerController = GetOwningPlayer();
+
+	if(Overlay_GameTabsMenu)
+	{
+		Overlay_GameTabsMenu->OnCharacterStatusButtonClickedDelegate.AddUObject(this, &UObsidianMainOverlay::ToggleCharacterStatus);
+	}
+}
+
+void UObsidianMainOverlay::ToggleCharacterStatus()
+{
+	if(!CharacterStatus)
+	{
+		CharacterStatus = CreateWidget<UObsidianCharacterStatus>(this, CharacterStatusClass);
+		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
+		CharacterStatus->OnCharacterStatusDestroyedDelegate.AddLambda([this]()
+		{
+			CharacterStatus = nullptr;
+		});
+	}
+	else
+	{
+		CharacterStatus->RemoveFromParent();
+		CharacterStatus = nullptr;
+	}
 }
 
 void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData)

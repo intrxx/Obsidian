@@ -14,6 +14,7 @@ namespace ObsidianGameplayTags
 	
 	// Native Input
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Move, "Input.Native.Move", "Move input.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_CharacterStatus, "Input.Native.CharacterStatus", "Character Status toggle input.");
 
 	// Ability Input
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Ability1, "Input.Ability.Ability1", "Ability1 input.");

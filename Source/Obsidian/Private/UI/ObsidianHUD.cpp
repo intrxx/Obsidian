@@ -24,15 +24,23 @@ void AObsidianHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbility
 {
 	if(ensureMsgf(MainOverlayWidgetClass, TEXT("Main Overlay Widget Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 	{
-		OverlayWidget = CreateWidget<UObsidianWidgetBase>(GetWorld(), MainOverlayWidgetClass);
+		MainOverlayWidget = CreateWidget<UObsidianMainOverlay>(GetWorld(), MainOverlayWidgetClass);
 
 		const FWidgetControllerParams Params(PC, PS, ASC);
 		UMainOverlayWidgetController* WidgetController = GetMainOverlayWidgetController(Params);
 
-		OverlayWidget->SetWidgetController(WidgetController);
+		MainOverlayWidget->SetWidgetController(WidgetController);
 		WidgetController->BroadcastControllerToAttributesComp(AC);
 		WidgetController->OnWidgetControllerSetupCompleted();
 		
-		OverlayWidget->AddToViewport();
+		MainOverlayWidget->AddToViewport();
+	}
+}
+
+void AObsidianHUD::ToggleCharacterStatus() const
+{
+	if(MainOverlayWidget)
+	{
+		MainOverlayWidget->ToggleCharacterStatus();
 	}
 }

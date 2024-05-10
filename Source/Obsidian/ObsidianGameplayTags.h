@@ -14,6 +14,7 @@ namespace ObsidianGameplayTags
 	
 	// Native Input
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_CharacterStatus);
 
 	// Ability Input
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability1);

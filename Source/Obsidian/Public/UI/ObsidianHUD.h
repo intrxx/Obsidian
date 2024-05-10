@@ -24,10 +24,12 @@ public:
 	UMainOverlayWidgetController* GetMainOverlayWidgetController(const FWidgetControllerParams& WidgetControllerParams);
 
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianAttributesComponent* AC);
+
+	void ToggleCharacterStatus() const;
 	
 public:
 	UPROPERTY()
-	TObjectPtr<UObsidianWidgetBase> OverlayWidget;
+	TObjectPtr<UObsidianMainOverlay> MainOverlayWidget;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")

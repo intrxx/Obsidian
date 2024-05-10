@@ -11,6 +11,9 @@ class UScrollBox;
 class UOCharacterStatusAttributeRow;
 class UImage;
 class UCommonTextBlock;
+
+DECLARE_MULTICAST_DELEGATE(FOnCharacterStatusDestroyed);
+
 /**
  * 
  */
@@ -20,11 +23,18 @@ class OBSIDIAN_API UObsidianCharacterStatus : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void NativeConstruct() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatus")
 	void SwitchToTab(UScrollBox* Tab);
 
+	FOnCharacterStatusDestroyed OnCharacterStatusDestroyedDelegate;
+	
+protected:
+	UFUNCTION()
+	void OnCloseButtonClicked();
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> HeroLevel_TextBlock;
@@ -37,6 +47,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Hero_Image;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UButton> Close_Button;
 
 	/**
 	 * Main Attributes

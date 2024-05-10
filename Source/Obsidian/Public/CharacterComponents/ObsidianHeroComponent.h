@@ -7,6 +7,7 @@
 #include "Components/PawnComponent.h"
 #include "ObsidianHeroComponent.generated.h"
 
+class AObsidianHUD;
 struct FInputActionValue;
 
 /**
@@ -25,11 +26,15 @@ public:
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroComp")
 	static UObsidianHeroComponent* FindHeroComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);}
 
+	AObsidianHUD* GetObsidianHUD() const;
+
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 	
 	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_ToggleCharacterStatus();
 	
 	
 };
+

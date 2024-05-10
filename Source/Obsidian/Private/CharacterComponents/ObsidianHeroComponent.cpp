@@ -9,9 +9,11 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "GameFramework/PlayerController.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "UI/ObsidianHUD.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -75,6 +77,8 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move,
 					ETriggerEvent::Triggered,this, &ThisClass::Input_Move, true);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_CharacterStatus,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleCharacterStatus, true);
 			}
 		}
 	}
@@ -130,4 +134,21 @@ void UObsidianHeroComponent::Input_Move(const FInputActionValue& InputActionValu
 			 Pawn->AddMovementInput(MovementDirection, InputAxisVector.Y);
 		}
 	}
+}
+
+void UObsidianHeroComponent::Input_ToggleCharacterStatus()
+{
+	if(AObsidianHUD* ObsidianHUD = GetObsidianHUD())
+	{
+		ObsidianHUD->ToggleCharacterStatus();
+	}
+}
+
+AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
+{
+	if(AObsidianPlayerController* OPC = GetController<AObsidianPlayerController>())
+	{
+		return OPC->GetObsidianHUD();
+	}
+	return nullptr;
 }
