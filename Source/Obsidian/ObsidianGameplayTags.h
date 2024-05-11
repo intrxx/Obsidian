@@ -36,6 +36,9 @@ namespace ObsidianGameplayTags
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_HealingHealth);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_RepleanishingMana);
+
+	// Attributes UI Data
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Armor);
 	
 	OBSIDIAN_API FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
 }

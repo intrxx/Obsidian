@@ -4,6 +4,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 void UMainOverlayWidgetController::BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC)
 {
@@ -39,8 +40,8 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 
 				if(UIData.EffectDurationPolicy == EGameplayEffectDurationType::HasDuration)
 				{
-					const FGameplayTag HealthGlobeDataTag = FGameplayTag::RequestGameplayTag(FName("UI.GlobeData.HealingHealth"));
-					const FGameplayTag ManaGlobeDataTag = FGameplayTag::RequestGameplayTag(FName("UI.GlobeData.ReplenishingMana"));
+					const FGameplayTag HealthGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_HealingHealth;
+					const FGameplayTag ManaGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_RepleanishingMana;
 					if(Tag.MatchesTag(HealthGlobeDataTag))
 					{
 						EffectUIHealthGlobeDataDelegate.Broadcast(UIData.EffectDuration, UIData.EffectMagnitude);

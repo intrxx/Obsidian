@@ -8,6 +8,8 @@
 
 class UCommonTextBlock;
 class UObsidianEffectDescription;
+class UButton;
+
 /**
  * 
  */
@@ -17,6 +19,9 @@ class OBSIDIAN_API UObsidianEffectInfoBase : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage);
 	
@@ -37,10 +42,10 @@ public:
 	bool bIsEffectDurational;
 
 protected:
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
+	UFUNCTION()
 	void OnEffectHovered();
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
+	UFUNCTION()
 	void OnEffectUnHovered();
 
 protected:
@@ -49,5 +54,8 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianEffectDescription> EffectDescWidget;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UButton> Interact_Button;
 	
 };

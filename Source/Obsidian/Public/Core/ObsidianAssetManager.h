@@ -15,5 +15,7 @@ class OBSIDIAN_API UObsidianAssetManager : public UAssetManager
 	GENERATED_BODY()
 
 public:
+	static UObsidianAssetManager& Get();
+	
 	virtual void StartInitialLoading() override;
 };
