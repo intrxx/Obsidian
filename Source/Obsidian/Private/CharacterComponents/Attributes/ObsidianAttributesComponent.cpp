@@ -105,102 +105,102 @@ void UObsidianAttributesComponent::OnUnregister()
 
 void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Health Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Health Changed or remove the bindingc! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Health Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Energy Shield Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Energy Shield Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::HealthRegenerationChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Health Regeneration Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Health Regeneration Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Energy Shield Regeneration Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Energy Shield Regeneration Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::ArmorChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Armor Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Armor Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::EvasionChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Evasion Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Evasion Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::FireResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Fire Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Fire Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxFireResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Fire Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Fire Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::ColdResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Cold Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Cold Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxColdResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Cold Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Cold Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::LightningResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Lightning Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Lightning Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Lightning Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Lightning Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::ChaosResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Chaos Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Chaos Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Chaos Resistance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Chaos Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Critical Strike Chance Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Critical Strike Chance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Critical Strike Multiplier Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Critical Strike Multiplier Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::AttackSpeedChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Attack Speed Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Attack Speed Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::CastSpeedChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Cast Speed Changed! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Cast Speed Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 float UObsidianAttributesComponent::GetHealth() const

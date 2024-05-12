@@ -11,6 +11,7 @@
 
 class UOStackingDurationalEffectInfo;
 class UObsidianDurationalEffectInfo;
+class UObsidianAbilitySystemComponent;
 class UObsidianEffectInfoBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, float, NewValue);
@@ -83,7 +84,6 @@ class OBSIDIAN_API UMainOverlayWidgetController : public UObsidianWidgetControll
 
 public:
 	// ~ Start of UObsidianWidgetController
-	virtual void BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC) override;
 	virtual void OnWidgetControllerSetupCompleted() override;
 	// ~ End of UObsidianWidgetController
 
@@ -93,7 +93,6 @@ public:
 	void UpdateManaInfoGlobe(const float& Magnitude) const;
 
 public:
-
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
 
@@ -127,10 +126,31 @@ public:
 protected:
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+	void HealthChanged(const FOnAttributeChangeData& Data) const;
+	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
+	void EnergyShieldChanged(const FOnAttributeChangeData& Data) const;
+	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
+	void ManaChanged(const FOnAttributeChangeData& Data) const;
+	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")
 	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
+
+	/** Hero Set */
+	FDelegateHandle ManaChangedDelegateHandle;
+	FDelegateHandle MaxManaChangedDelegateHandle;
+
+	/** Common Set */
+	FDelegateHandle HealthChangedDelegateHandle;
+	FDelegateHandle MaxHealthChangedDelegateHandle;
+	FDelegateHandle EnergyShieldChangedDelegateHandle;
+	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
+
+private:
+	void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
+	void SetInitialAttributeValues() const;
 };
 
 template <typename T>

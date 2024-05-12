@@ -26,8 +26,6 @@ public:
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
-
-	void SetMainWidgetController(UMainOverlayWidgetController* InWidgetController);
 	
 	/**
 	 * Getters for Gameplay Attributes.

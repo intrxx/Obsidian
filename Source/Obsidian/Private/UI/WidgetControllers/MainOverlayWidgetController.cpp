@@ -6,16 +6,13 @@
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
-void UMainOverlayWidgetController::BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC)
-{
-	UObsidianHeroAttributesComponent* HeroAttributesComp = CastChecked<UObsidianHeroAttributesComponent>(AC);
-	HeroAttributesComp->SetMainWidgetController(this);
-}
-
 void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 {
 	UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(AbilitySystemComponent);
 	check(ObsidianASC);
+	check(AttributesComponent);
+
+	HandleBindingCallbacks(ObsidianASC);
 	
 	ObsidianASC->EffectAppliedAssetTags.AddLambda(
 		[this](const FObsidianEffectUIData& UIData)
@@ -53,6 +50,61 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 				}
 			}
 		});
+
+	SetInitialAttributeValues();
+}
+
+void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
+{
+	/** Hero Set */
+	ManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
+	MaxManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+
+	/** Common Set */
+	HealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
+	MaxHealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
+	EnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
+	MaxEnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
+}
+
+void UMainOverlayWidgetController::SetInitialAttributeValues() const
+{
+	OnHealthChangedDelegate.Broadcast(AttributesComponent->GetHealth());
+	OnMaxHealthChangedDelegate.Broadcast(AttributesComponent->GetMaxHealth());
+	OnManaChangedDelegate.Broadcast(AttributesComponent->GetMana());
+	OnMaxManaChangedDelegate.Broadcast(AttributesComponent->GetMaxMana());
+	OnEnergyShieldChangedDelegate.Broadcast(AttributesComponent->GetEnergyShield());
+	OnMaxEnergyShieldChangedDelegate.Broadcast(AttributesComponent->GetMaxEnergyShield());
+}
+
+void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
+{
+	OnHealthChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxHealthChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::EnergyShieldChanged(const FOnAttributeChangeData& Data) const
+{
+	OnEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
+{
+	OnManaChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxManaChangedDelegate.Broadcast(Data.NewValue);
 }
 
 void UMainOverlayWidgetController::UpdateHealthInfoGlobe(const float& Magnitude) const
@@ -64,4 +116,6 @@ void UMainOverlayWidgetController::UpdateManaInfoGlobe(const float& Magnitude) c
 {
 	EffectUIManaGlobeDataDelegate.Broadcast(0, Magnitude);
 }
+
+
 

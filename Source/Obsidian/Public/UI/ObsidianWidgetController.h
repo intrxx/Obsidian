@@ -3,8 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AttributeSet.h"
 #include "ObsidianWidgetController.generated.h"
 
+class UObsidianHeroAttributesComponent;
 class UObsidianAttributesComponent;
 class APlayerState;
 class UAbilitySystemComponent;
@@ -16,10 +18,11 @@ struct FWidgetControllerParams
 
 	FWidgetControllerParams() {}
 
-	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC)
+	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)
 	: PlayerController(PC)
 	, PlayerState(PS)
 	, AbilitySystemComponent(ASC)
+	, AttributesComponent(AC)
 	{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -30,6 +33,9 @@ struct FWidgetControllerParams
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UObsidianHeroAttributesComponent> AttributesComponent = nullptr;
 };
 
 /**
@@ -44,8 +50,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|WidgetController")
 	void SetWidgetControllerParams(const FWidgetControllerParams& WidgetControllerParams);
 	
-	virtual void BroadcastControllerToAttributesComp(UObsidianAttributesComponent* AC);
-
 	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
 	virtual void OnWidgetControllerSetupCompleted();
 
@@ -58,5 +62,8 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|WidgetController")
+	TObjectPtr<UObsidianHeroAttributesComponent> AttributesComponent;
 };
 

@@ -6,7 +6,7 @@
 #include "GameFramework/HUD.h"
 #include "ObsidianHUD.generated.h"
 
-class UObsidianAttributesComponent;
+class UObsidianHeroAttributesComponent;
 class UAbilitySystemComponent;
 struct FWidgetControllerParams;
 class UMainOverlayWidgetController;
@@ -23,7 +23,7 @@ class OBSIDIAN_API AObsidianHUD : public AHUD
 public:
 	UMainOverlayWidgetController* GetMainOverlayWidgetController(const FWidgetControllerParams& WidgetControllerParams);
 
-	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianAttributesComponent* AC);
+	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
 
 	void ToggleCharacterStatus() const;
 	
