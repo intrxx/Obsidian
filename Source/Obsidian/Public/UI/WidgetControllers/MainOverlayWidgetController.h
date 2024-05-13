@@ -124,6 +124,9 @@ public:
 	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
 
 protected:
+	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
+	virtual void SetInitialAttributeValues() const override;
+	
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 
@@ -147,10 +150,6 @@ protected:
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
-
-private:
-	void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
-	void SetInitialAttributeValues() const;
 };
 
 template <typename T>

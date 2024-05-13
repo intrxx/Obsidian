@@ -34,10 +34,12 @@ public:
 private:
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")
 	TSubclassOf<UObsidianMainOverlay> MainOverlayWidgetClass;
-
+	
 	UPROPERTY()
 	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
 
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")
 	TSubclassOf<UMainOverlayWidgetController> MainOverlayWidgetControllerClass;
+
+	
 };

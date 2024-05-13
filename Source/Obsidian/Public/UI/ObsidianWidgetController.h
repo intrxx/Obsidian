@@ -7,6 +7,7 @@
 #include "ObsidianWidgetController.generated.h"
 
 class UObsidianHeroAttributesComponent;
+class UObsidianAbilitySystemComponent;
 class UObsidianAttributesComponent;
 class APlayerState;
 class UAbilitySystemComponent;
@@ -52,6 +53,10 @@ public:
 	
 	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
 	virtual void OnWidgetControllerSetupCompleted();
+
+protected:
+	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
+	virtual void SetInitialAttributeValues() const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")

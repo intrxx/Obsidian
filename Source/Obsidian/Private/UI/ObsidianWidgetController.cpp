@@ -14,3 +14,11 @@ void UObsidianWidgetController::SetWidgetControllerParams(const FWidgetControlle
 void UObsidianWidgetController::OnWidgetControllerSetupCompleted()
 {
 }
+
+void UObsidianWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
+{
+}
+
+void UObsidianWidgetController::SetInitialAttributeValues() const
+{
+}
