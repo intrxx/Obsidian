@@ -31,6 +31,7 @@ UOCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetControl
 		{
 			CharacterStatusWidgetController = NewObject<UOCharacterStatusWidgetController>(this, CharacterStatusWidgetControllerClass);
 			CharacterStatusWidgetController->SetWidgetControllerParams(WidgetControllerParams);
+			CharacterStatusWidgetController->OnWidgetControllerSetupCompleted();
 
 			return CharacterStatusWidgetController;
 		}

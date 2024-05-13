@@ -30,7 +30,10 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 	if(!CharacterStatus)
 	{
 		CharacterStatus = CreateWidget<UObsidianCharacterStatus>(this, CharacterStatusClass);
-		CharacterStatus->SetWidgetController(UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this));
+		UOCharacterStatusWidgetController* CharacterStatusWidgetController = UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this);
+		CharacterStatus->SetWidgetController(CharacterStatusWidgetController);
+		CharacterStatusWidgetController->SetInitialAttributeValues();
+		
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
 		CharacterStatus->OnCharacterStatusDestroyedDelegate.AddLambda([this]()
 		{
