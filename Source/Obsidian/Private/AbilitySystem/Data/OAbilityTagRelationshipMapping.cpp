@@ -1,7 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "AbilitySystem/OAbilityTagRelationshipMapping.h"
+#include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
 
 void UOAbilityTagRelationshipMapping::GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& AbilityTags,
 	FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagToCancel) const

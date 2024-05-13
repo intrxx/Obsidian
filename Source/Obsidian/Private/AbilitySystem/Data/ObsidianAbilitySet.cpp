@@ -1,7 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "AbilitySystem/ObsidianAbilitySet.h"
+#include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
