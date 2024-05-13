@@ -37,7 +37,8 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_HealingHealth);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_RepleanishingMana);
 
-	// Attributes UI Data
+	// Attributes UI Data - I will leave it here for now in case I would need it in the future
+	/**
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Health);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxHealth);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_EnergyShield);
@@ -75,6 +76,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Intelligence);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Dexterity);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Faith);
+	*/
 	
 	OBSIDIAN_API FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
 }

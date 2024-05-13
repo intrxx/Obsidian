@@ -37,7 +37,8 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_HealingHealth, "UI.GlobeData.HealingHealth", "Tag used for displaying the healing amount on the globe.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_RepleanishingMana, "UI.GlobeData.ReplenishingMana", "Tag used for displaying the repleanish amount on the globe.");
 
-	// Attributes UI Data
+	// Attributes UI Data - I will leave it here for now in case I would need it in the future
+	/**
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Health, "Attribute.Health", "Tag used for identifying the attribute.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxHealth, "Attribute.MaxHealth", "Tag used for identifying the attribute.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_EnergyShield, "Attribute.EnergyShield", "Tag used for identifying the attribute.");
@@ -74,6 +75,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Intelligence, "Attribute.Intelligence", "Tag used for identifying the attribute.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Dexterity, "Attribute.Dexterity", "Tag used for identifying the attribute.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Faith, "Attribute.Faith", "Tag used for identifying the attribute.");
+	*/
 	
 	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
 	{

@@ -3,10 +3,6 @@
 
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 
-#include "AbilitySystem/Data/ObsidianAttributeInfo.h"
-#include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
-#include "Obsidian/ObsidianGameplayTags.h"
-
 void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
 }
@@ -17,10 +13,5 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 
 void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 {
-	check(AttributeInfo);
-
-	FOAttributeInfo Info = AttributeInfo->FindAttributeInfoForTag(ObsidianGameplayTags::Attribute_Strength);
-	Info.AttributeValue = AttributesComponent->GetStrength();
-
-	AttributeInfoDelegate.Broadcast(Info);
+	
 }

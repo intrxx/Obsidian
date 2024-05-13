@@ -6,11 +6,6 @@
 #include "UI/ObsidianWidgetController.h"
 #include "OCharacterStatusWidgetController.generated.h"
 
-class UObsidianAttributeInfo;
-struct FOAttributeInfo;
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FAttributeInfoSignature, const FOAttributeInfo& /** Attribute Info */);
-
 /**
  * 
  */
@@ -24,13 +19,6 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	virtual void SetInitialAttributeValues() const override;
 	// ~ End of UObsidianWidgetController
-
-public:
-	FAttributeInfoSignature AttributeInfoDelegate;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TObjectPtr<UObsidianAttributeInfo> AttributeInfo;
 	
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
