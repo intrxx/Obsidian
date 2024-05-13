@@ -3,11 +3,12 @@
 
 #include "UI/ObsidianHUD.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
+#include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FWidgetControllerParams& WidgetControllerParams)
 {
-	// If the main controller is a nullptr we need to construct one
+	// If the overlay controller is a nullptr we need to construct one
 	if(MainOverlayWidgetController == nullptr)
 	{
 		if(ensureMsgf(MainOverlayWidgetControllerClass, TEXT("Main Overlay Widget Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
@@ -19,6 +20,22 @@ UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const
 		}
 	}
 	return MainOverlayWidgetController;
+}
+
+UOCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetController(const FWidgetControllerParams& WidgetControllerParams)
+{
+	// If the character status controller is a nullptr we need to construct one
+	if(CharacterStatusWidgetController == nullptr)
+	{
+		if(ensureMsgf(CharacterStatusWidgetControllerClass, TEXT("Character Status Widget Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
+		{
+			CharacterStatusWidgetController = NewObject<UOCharacterStatusWidgetController>(this, CharacterStatusWidgetControllerClass);
+			CharacterStatusWidgetController->SetWidgetControllerParams(WidgetControllerParams);
+
+			return CharacterStatusWidgetController;
+		}
+	}
+	return CharacterStatusWidgetController;
 }
 
 void AObsidianHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)

@@ -4,6 +4,8 @@
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "Components/Overlay.h"
 #include "Components/WrapBox.h"
+#include "Core/ObsidianUIFunctionLibrary.h"
+#include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUIEffectClassification.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
@@ -28,6 +30,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 	if(!CharacterStatus)
 	{
 		CharacterStatus = CreateWidget<UObsidianCharacterStatus>(this, CharacterStatusClass);
+		CharacterStatus->SetWidgetController(UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this));
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
 		CharacterStatus->OnCharacterStatusDestroyedDelegate.AddLambda([this]()
 		{

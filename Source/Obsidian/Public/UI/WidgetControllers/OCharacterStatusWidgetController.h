@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class OBSIDIAN_API UOCharacterStatusWidgetController : public UObsidianWidgetController
 {
 	GENERATED_BODY()
