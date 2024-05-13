@@ -27,15 +27,53 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Ability8, "Input.Ability.Ability8", "Ability8 input.");
 
 	// UI Data
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_HealthHealing, "UI.EffectData.Flask.HealthHealing", "Tag used for displaying Health healing from Flasks Info on the UI");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_ManaHealing, "UI.EffectData.Flask.ManaHealing", "Tag used for displaying Mana healing from Flasks Info on the UI");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_HealthHealing, "UI.EffectData.Flask.HealthHealing", "Tag used for displaying Health healing from Flasks Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_ManaHealing, "UI.EffectData.Flask.ManaHealing", "Tag used for displaying Mana healing from Flasks Info on the UI.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Defiance, "UI.EffectData.Aura.Defiance", "Tag used for displaying Defiance Aura Info on the UI");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Defiance, "UI.EffectData.Aura.Defiance", "Tag used for displaying Defiance Aura Info on the UI.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Effect_Poison, "UI.EffectData.Effect.Poison", "Tag used for displaying Poison Effect Info on the UI");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Effect_Poison, "UI.EffectData.Effect.Poison", "Tag used for displaying Poison Effect Info on the UI.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_HealingHealth, "UI.GlobeData.HealingHealth", "Tag used for displaying the healing amount on the globe");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_RepleanishingMana, "UI.GlobeData.ReplenishingMana", "Tag used for displaying the repleanish amount on the globe");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_HealingHealth, "UI.GlobeData.HealingHealth", "Tag used for displaying the healing amount on the globe.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_RepleanishingMana, "UI.GlobeData.ReplenishingMana", "Tag used for displaying the repleanish amount on the globe.");
+
+	// Attributes UI Data
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Health, "Attribute.Health", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxHealth, "Attribute.MaxHealth", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_EnergyShield, "Attribute.EnergyShield", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxEnergyShield, "Attribute.MaxEnergyShield", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_HealthRegeneration, "Attribute.HealthRegeneration", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_EnergyShieldRegeneration, "Attribute.EnergyShieldRegeneration", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Armor, "Attribute.Armor", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Evasion, "Attribute.Evasion", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_FireResistance, "Attribute.FireResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxFireResistance, "Attribute.MaxFireResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ColdResistance, "Attribute.ColdResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxColdResistance, "Attribute.MaxColdResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_LightningResistance, "Attribute.LightningResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxLightningResistance, "Attribute.MaxLightningResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ChaosResistance, "Attribute.ChaosResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxChaosResistance, "Attribute.MaxChaosResistance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_CriticalStrikeChance, "Attribute.CriticalStrikeChance", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_CriticalStrikeMultiplier, "Attribute.CriticalStrikeMultiplier", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_AttackSpeed, "Attribute.AttackSpeed", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_CastSpeed, "Attribute.CastSpeed", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_FirePenetration, "Attribute.FirePenetration", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ColdPenetration, "Attribute.ColdPenetration", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_LightningPenetration, "Attribute.LightningPenetration", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ChaosPenetration, "Attribute.ChaosPenetration", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_FireDamageMultiplier, "Attribute.FireDamageMultiplier", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ColdDamageMultiplier, "Attribute.ColdDamageMultiplier", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_LightningDamageMultiplier, "Attribute.LightningDamageMultiplier", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_PhysicalDamageMultiplier, "Attribute.PhysicalDamageMultiplier", "Tag used for identifying the attribute.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Mana, "Attribute.Mana", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxMana, "Attribute.MaxMana", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ManaRegeneration, "Attribute.ManaRegeneration", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Strength, "Attribute.Strength", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Intelligence, "Attribute.Intelligence", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Dexterity, "Attribute.Dexterity", "Tag used for identifying the attribute.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Faith, "Attribute.Faith", "Tag used for identifying the attribute.");
 	
 	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
 	{
