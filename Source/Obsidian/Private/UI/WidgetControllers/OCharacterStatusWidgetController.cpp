@@ -5,6 +5,7 @@
 
 void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
+	UE_LOG(LogTemp, Error, TEXT("Set up completed"));
 }
 
 void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)

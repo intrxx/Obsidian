@@ -2,7 +2,7 @@
 
 #include "Characters/Heroes/ObsidianHero.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "AbilitySystem/ObsidianAbilitySet.h"
+#include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "Camera/CameraComponent.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"

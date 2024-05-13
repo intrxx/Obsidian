@@ -2,7 +2,7 @@
 
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "AbilitySystem/OAbilityTagRelationshipMapping.h"
+#include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 
 
