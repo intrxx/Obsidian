@@ -22,7 +22,13 @@ public:
 	virtual void NativePreConstruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetAttributeValue(const float Value) const;
+	void SetAttributeValue(const float& Value) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
+	void SetAttributeValueWithPercentage(const float& Value) const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
+	void SetResistanceAttributeValue(const float& Value, const float& MaxValue) const;
 	
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")

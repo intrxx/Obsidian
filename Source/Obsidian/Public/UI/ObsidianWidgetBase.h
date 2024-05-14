@@ -27,5 +27,6 @@ public:
 protected:
 	/** Function that gets called after WidgetController has been set */
 	UFUNCTION(BlueprintImplementableEvent, Category = "Obsidian|UI")
-	void HandleWidgetControllerSet();
+	void Blueprint_HandleWidgetControllerSet();
+	virtual void HandleWidgetControllerSet();
 };

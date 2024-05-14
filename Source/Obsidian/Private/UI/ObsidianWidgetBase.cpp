@@ -6,5 +6,10 @@
 void UObsidianWidgetBase::SetWidgetController(UObject* InWidgetController)
 {
 	WidgetController = InWidgetController;
+	Blueprint_HandleWidgetControllerSet();
 	HandleWidgetControllerSet();
+}
+
+void UObsidianWidgetBase::HandleWidgetControllerSet()
+{
 }

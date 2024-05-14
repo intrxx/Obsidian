@@ -11,6 +11,7 @@ class UScrollBox;
 class UOCharacterStatusAttributeRow;
 class UImage;
 class UCommonTextBlock;
+class UOCharacterStatusWidgetController;
 
 DECLARE_MULTICAST_DELEGATE(FOnCharacterStatusDestroyed);
 
@@ -29,11 +30,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatus")
 	void SwitchToTab(UScrollBox* Tab);
 
+public:
 	FOnCharacterStatusDestroyed OnCharacterStatusDestroyedDelegate;
 	
 protected:
 	UFUNCTION()
 	void OnCloseButtonClicked();
+
+	// ~ Start of Obsidian Widget Base
+	virtual void HandleWidgetControllerSet() override;
+	// ~ End of Obsidian Widget Base
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -191,4 +197,7 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<UScrollBox> CurrentlyShownTab;
+
+	UPROPERTY()
+	TObjectPtr<UOCharacterStatusWidgetController> CharacterStatusWidgetController;
 };
