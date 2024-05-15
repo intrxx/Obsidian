@@ -45,22 +45,6 @@ void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilityS
 	MaxHealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
 	EnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
 	MaxEnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
-	HealthRegenerationChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetHealthRegenerationAttribute()).AddUObject(this, &ThisClass::HealthRegenerationChanged);
-	EnergyShieldRegenerationChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEnergyShieldRegenerationAttribute()).AddUObject(this, &ThisClass::EnergyShieldRegenerationChanged);
-	ArmorChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
-	EvasionChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEvasionAttribute()).AddUObject(this, &ThisClass::EvasionChanged);
-	FireResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetFireResistanceAttribute()).AddUObject(this, &ThisClass::FireResistanceChanged);
-	MaxFireResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxFireResistanceAttribute()).AddUObject(this, &ThisClass::MaxFireResistanceChanged);
-	ColdResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetColdResistanceAttribute()).AddUObject(this, &ThisClass::ColdResistanceChanged);
-	MaxColdResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxColdResistanceAttribute()).AddUObject(this, &ThisClass::MaxColdResistanceChanged);
-	LightningResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetLightningResistanceAttribute()).AddUObject(this, &ThisClass::LightningResistanceChanged);
-	MaxLightningResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxLightningResistanceAttribute()).AddUObject(this, &ThisClass::MaxLightningResistanceChanged);
-	ChaosResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
-	MaxChaosResistanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
-	CriticalStrikeChanceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
-	CriticalStrikeMultiplierChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCriticalStrikeMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeMultiplierChanged);
-	AttackSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
-	CastSpeedChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
 	
 	// Set the Health value to the MaxHealth // TODO Decide if I actually want to do it this way
 	AbilitySystemComponent->SetNumericAttributeBase(GetHealthAttribute(), GetMaxHealth());
@@ -75,22 +59,6 @@ void UObsidianAttributesComponent::UninitializeFromAbilitySystem()
 	MaxHealthChangedDelegateHandle.Reset();
 	EnergyShieldChangedDelegateHandle.Reset();
 	MaxEnergyShieldChangedDelegateHandle.Reset();
-	HealthRegenerationChangedDelegateHandle.Reset();
-	EnergyShieldRegenerationChangedDelegateHandle.Reset();
-	ArmorChangedDelegateHandle.Reset();
-	EvasionChangedDelegateHandle.Reset();
-	FireResistanceChangedDelegateHandle.Reset();
-	MaxFireResistanceChangedDelegateHandle.Reset();
-	ColdResistanceChangedDelegateHandle.Reset();
-	MaxColdResistanceChangedDelegateHandle.Reset();
-	LightningResistanceChangedDelegateHandle.Reset();
-	MaxLightningResistanceChangedDelegateHandle.Reset();
-	ChaosResistanceChangedDelegateHandle.Reset();
-	MaxChaosResistanceChangedDelegateHandle.Reset();
-	CriticalStrikeChanceChangedDelegateHandle.Reset();
-	CriticalStrikeMultiplierChangedDelegateHandle.Reset();
-	AttackSpeedChangedDelegateHandle.Reset();
-	CastSpeedChangedDelegateHandle.Reset();
 	
 	CommonAttributeSet = nullptr;
 	AbilitySystemComponent = nullptr;
@@ -121,86 +89,6 @@ void UObsidianAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeD
 void UObsidianAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::HealthRegenerationChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Health Regeneration Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Energy Shield Regeneration Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::ArmorChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Armor Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::EvasionChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Evasion Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::FireResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Fire Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::MaxFireResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Fire Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::ColdResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Cold Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::MaxColdResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Cold Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::LightningResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Lightning Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Lightning Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::ChaosResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Chaos Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Chaos Resistance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Critical Strike Chance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Critical Strike Multiplier Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::AttackSpeedChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Attack Speed Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianAttributesComponent::CastSpeedChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Cast Speed Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 float UObsidianAttributesComponent::GetHealth() const

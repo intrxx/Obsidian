@@ -172,22 +172,6 @@ protected:
 	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data);
 	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data);
-	virtual void HealthRegenerationChanged(const FOnAttributeChangeData& Data);
-	virtual void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data);
-	virtual void ArmorChanged(const FOnAttributeChangeData& Data);
-	virtual void EvasionChanged(const FOnAttributeChangeData& Data);
-	virtual void FireResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxFireResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void ColdResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxColdResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void LightningResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxLightningResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void ChaosResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data);
-	virtual void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data);
-	virtual void CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data);
-	virtual void AttackSpeedChanged(const FOnAttributeChangeData& Data);
-	virtual void CastSpeedChanged(const FOnAttributeChangeData& Data);
 	
 	/**
 	 * 
@@ -213,22 +197,6 @@ protected:
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
-	FDelegateHandle HealthRegenerationChangedDelegateHandle;
-	FDelegateHandle EnergyShieldRegenerationChangedDelegateHandle;
-	FDelegateHandle ArmorChangedDelegateHandle;
-	FDelegateHandle EvasionChangedDelegateHandle;
-	FDelegateHandle FireResistanceChangedDelegateHandle;
-	FDelegateHandle MaxFireResistanceChangedDelegateHandle;
-	FDelegateHandle ColdResistanceChangedDelegateHandle;
-	FDelegateHandle MaxColdResistanceChangedDelegateHandle;
-	FDelegateHandle LightningResistanceChangedDelegateHandle;
-	FDelegateHandle MaxLightningResistanceChangedDelegateHandle;
-	FDelegateHandle ChaosResistanceChangedDelegateHandle;
-	FDelegateHandle MaxChaosResistanceChangedDelegateHandle;
-	FDelegateHandle CriticalStrikeChanceChangedDelegateHandle;
-	FDelegateHandle CriticalStrikeMultiplierChangedDelegateHandle;
-	FDelegateHandle AttackSpeedChangedDelegateHandle;
-	FDelegateHandle CastSpeedChangedDelegateHandle;
 	
 	/**
 	 *

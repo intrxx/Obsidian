@@ -74,27 +74,6 @@ protected:
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) override;
 	virtual void ManaChanged(const FOnAttributeChangeData& Data);
 	virtual void MaxManaChanged(const FOnAttributeChangeData& Data);
-	virtual void HealthRegenerationChanged(const FOnAttributeChangeData& Data) override;
-	virtual void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) override;
-	virtual void ManaRegenerationChanged(const FOnAttributeChangeData& Data);
-	virtual void StrengthChanged(const FOnAttributeChangeData& Data);
-	virtual void IntelligenceChanged(const FOnAttributeChangeData& Data);
-	virtual void DexterityChanged(const FOnAttributeChangeData& Data);
-	virtual void FaithChanged(const FOnAttributeChangeData& Data);
-	virtual void ArmorChanged(const FOnAttributeChangeData& Data) override;
-	virtual void EvasionChanged(const FOnAttributeChangeData& Data) override;
-	virtual void FireResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxFireResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void ColdResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxColdResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void LightningResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void ChaosResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) override;
-	virtual void CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data) override;
-	virtual void AttackSpeedChanged(const FOnAttributeChangeData& Data) override;
-	virtual void CastSpeedChanged(const FOnAttributeChangeData& Data) override;
 	
 	/**
 	 * 
@@ -120,11 +99,6 @@ protected:
 
 	FDelegateHandle ManaChangedDelegateHandle;
 	FDelegateHandle MaxManaChangedDelegateHandle;
-	FDelegateHandle ManaRegenerationChangedDelegateHandle;
-	FDelegateHandle StrengthChangedDelegateHandle;
-	FDelegateHandle IntelligenceChangedDelegateHandle;
-	FDelegateHandle DexterityChangedDelegateHandle;
-	FDelegateHandle FaithChangedDelegateHandle;
 
 	/**
 	 * 

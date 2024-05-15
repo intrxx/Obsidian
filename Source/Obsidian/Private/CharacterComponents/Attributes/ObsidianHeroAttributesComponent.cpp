@@ -28,11 +28,6 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 
 	ManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
 	MaxManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
-	ManaRegenerationChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetManaRegenerationAttribute()).AddUObject(this, &ThisClass::ManaRegenerationChanged);
-	StrengthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetStrengthAttribute()).AddUObject(this, &ThisClass::StrengthChanged);
-	IntelligenceChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetIntelligenceAttribute()).AddUObject(this, &ThisClass::IntelligenceChanged);
-	DexterityChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetDexterityAttribute()).AddUObject(this, &ThisClass::DexterityChanged);
-	FaithChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetFaithAttribute()).AddUObject(this, &ThisClass::FaithChanged);
 	
 	// Set the Mana value to the MaxMana
 	AbilitySystemComponent->SetNumericAttributeBase(GetManaAttribute(), GetMaxMana());
@@ -42,10 +37,6 @@ void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
 {
 	ManaChangedDelegateHandle.Reset();
 	MaxManaChangedDelegateHandle.Reset();
-	StrengthChangedDelegateHandle.Reset();
-	IntelligenceChangedDelegateHandle.Reset();
-	DexterityChangedDelegateHandle.Reset();
-	FaithChangedDelegateHandle.Reset();
 	
 	HeroAttributeSet = nullptr;
 	
@@ -80,111 +71,6 @@ void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData&
 void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::HealthRegenerationChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Health Regeneration Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Energy Shield Regeneration Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::ManaRegenerationChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Mana Regeneration Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::StrengthChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Strength Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::IntelligenceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Intelligence Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::DexterityChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Dexterity Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::FaithChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Faith Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::ArmorChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Armor Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::EvasionChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Evasion Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::FireResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Fire Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::MaxFireResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Fire Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::ColdResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Cold Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::MaxColdResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Cold Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::LightningResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Lightning Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Lightning Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::ChaosResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Cold Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Chaos Res Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Critical Strike Chance Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Crit Strike Multiplier Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::AttackSpeedChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Attack Speed Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
-}
-
-void UObsidianHeroAttributesComponent::CastSpeedChanged(const FOnAttributeChangeData& Data)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Cast Speed Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 float UObsidianHeroAttributesComponent::GetMana() const
