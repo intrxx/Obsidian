@@ -35,6 +35,16 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	CastSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
 	CriticalStrikeChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
 	CriticalStrikeMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeMultiplierChanged);
+	PhysicalDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetPhysicalDamageMultiplierAttribute()).AddUObject(this, &ThisClass::PhysicalDamageMultiplierChanged);
+	FireDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFireDamageMultiplierAttribute()).AddUObject(this, &ThisClass::FireDamageMultiplierChanged);
+	LightningDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningDamageMultiplierAttribute()).AddUObject(this, &ThisClass::LightningDamageMultiplierChanged);
+	ColdDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ColdDamageMultiplierChanged);
+	ElementalDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetElementalDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ElementalDamageMultiplierChanged);
+	ChaosDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetChaosDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ChaosDamageMultiplierChanged);
+	FirePenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFirePenetrationAttribute()).AddUObject(this, &ThisClass::FirePenetrationChanged);
+	LightningPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningPenetrationAttribute()).AddUObject(this, &ThisClass::LightningPenetrationChanged);
+	ColdPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdPenetrationAttribute()).AddUObject(this, &ThisClass::ColdPenetrationChanged);
+	ElementalPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetElementalPenetrationAttribute()).AddUObject(this, &ThisClass::ElementalPenetrationChanged);
 	
 	/** Defence */
 	ArmorChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
@@ -75,10 +85,12 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	FireDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetFireDamageMultiplier());
 	LightningDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetLightningDamageMultiplier());
 	ColdDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetColdDamageMultiplier());
+	ElementalDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetElementalDamageMultiplier());
 	ChaosDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetChaosDamageMultiplier());
 	FirePenetrationChangedDelegate.Execute(AttributesComponent->GetFirePenetration());
 	LightningPenetrationChangedDelegate.Execute(AttributesComponent->GetLightningPenetration());
 	ColdPenetrationChangedDelegate.Execute(AttributesComponent->GetColdPenetration());
+	ElementalPenetrationChangedDelegate.Execute(AttributesComponent->GetElementalPenetration());
 
 	/** Defence */
 	ArmorChangedDelegate.Execute(AttributesComponent->GetArmor());
@@ -195,6 +207,13 @@ void UOCharacterStatusWidgetController::ColdDamageMultiplierChanged(const FOnAtt
 	const float NewValue = Data.NewValue;
 	
 	ColdDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::ElementalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+	
+	ElementalDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const

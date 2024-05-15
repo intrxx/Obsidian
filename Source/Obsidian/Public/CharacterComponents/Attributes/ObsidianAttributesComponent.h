@@ -125,6 +125,10 @@ public:
 	float GetLightningPenetration() const;
 	FGameplayAttribute GetLightningPenetrationAttribute() const;
 
+	/** Getters for Elemental Penetration Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetElementalPenetration() const;
+	FGameplayAttribute GetElementalPenetrationAttribute() const;
+
 	/** Getters for Chaos Penetration Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetChaosPenetration() const;
 	FGameplayAttribute GetChaosPenetrationAttribute() const;
@@ -140,6 +144,10 @@ public:
 	/** Getters for Lightning Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetLightningDamageMultiplier() const;
 	FGameplayAttribute GetLightningDamageMultiplierAttribute() const;
+
+	/** Getters for Elemental Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetElementalDamageMultiplier() const;
+	FGameplayAttribute GetElementalDamageMultiplierAttribute() const;
 
 	/** Getters for Chaos Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetChaosDamageMultiplier() const;

@@ -433,6 +433,16 @@ FGameplayAttribute UObsidianAttributesComponent::GetLightningPenetrationAttribut
 	return (CommonAttributeSet ? CommonAttributeSet->GetLightningPenetrationAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetElementalPenetration() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetElementalPenetration() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetElementalPenetrationAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetElementalPenetrationAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetChaosPenetration() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetChaosPenetration() : 0.0f);
@@ -471,6 +481,16 @@ float UObsidianAttributesComponent::GetLightningDamageMultiplier() const
 FGameplayAttribute UObsidianAttributesComponent::GetLightningDamageMultiplierAttribute() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetLightningDamageMultiplierAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetElementalDamageMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetElementalDamageMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetElementalDamageMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetElementalDamageMultiplierAttribute() : nullptr);
 }
 
 float UObsidianAttributesComponent::GetChaosDamageMultiplier() const

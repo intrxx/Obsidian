@@ -47,6 +47,7 @@ public:
 	FOnAttributeValueChangedOneParam FireDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam LightningDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam ColdDamageMultiplierChangedDelegate;
+	FOnAttributeValueChangedOneParam ElementalDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam ChaosDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam FirePenetrationChangedDelegate;
 	FOnAttributeValueChangedOneParam LightningPenetrationChangedDelegate;
@@ -93,6 +94,7 @@ protected:
 	void FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void ColdDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
+	void ElementalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void FirePenetrationChanged(const FOnAttributeChangeData& Data) const;
 	void LightningPenetrationChanged(const FOnAttributeChangeData& Data) const;
