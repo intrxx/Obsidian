@@ -9,9 +9,14 @@ void UObsidianOverlayGameTabsMenu::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if(CharacterStatus_GameTabButton->Tab_Button)
+	if(CharacterStatus_GameTabButton && CharacterStatus_GameTabButton->Tab_Button)
 	{
 		CharacterStatus_GameTabButton->Tab_Button->OnClicked.AddDynamic(this, &ThisClass::OnCharacterStatusButtonClicked);
+		
+		OnCharacterStatusTabStatusChangeDelegate.AddLambda([this](bool bIsConstructed)
+		{
+			CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
+		});
 	}
 }
 

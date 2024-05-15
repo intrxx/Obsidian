@@ -39,11 +39,14 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		{
 			CharacterStatus = nullptr;
 		});
+
+		Overlay_GameTabsMenu->OnCharacterStatusTabStatusChangeDelegate.Broadcast(true);
 	}
 	else
 	{
 		CharacterStatus->RemoveFromParent();
 		CharacterStatus = nullptr;
+		Overlay_GameTabsMenu->OnCharacterStatusTabStatusChangeDelegate.Broadcast(false);
 	}
 }
 

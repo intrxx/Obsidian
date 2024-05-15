@@ -8,6 +8,8 @@
 
 DECLARE_MULTICAST_DELEGATE(FOnTabButtonClicked);
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnTabStatusChange, bool /** bIsConstructed */);
+
 class UObsidianGameTabButton;
 class UOverlay;
 /**
@@ -25,10 +27,20 @@ public:
 	void OnCharacterStatusButtonClicked();
 
 public:
+	/**
+	 * Character Status
+	 */
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGameTabButton> CharacterStatus_GameTabButton;
 
 	FOnTabButtonClicked OnCharacterStatusButtonClickedDelegate;
+	FOnTabStatusChange OnCharacterStatusTabStatusChangeDelegate;
+
+	/**
+	 * 
+	 */
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> Root_Overlay;
