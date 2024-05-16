@@ -23,6 +23,10 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
 	FGameplayTag InputTag;
+
+#if WITH_EDITOR
+	EDataValidationResult IsDataValid(FDataValidationContext& Context, const int Index, const FString& InputActionsName) const;
+#endif
 };
 /**
  * 
@@ -41,6 +45,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Input")
 	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;
 
+#if WITH_EDITOR
+	EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+#endif
+	
 public:
 	/** List of input actions used by the owner.  These input actions are mapped to a gameplay tag and must be manually bound. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (TitleProperty = "InputAction"))
