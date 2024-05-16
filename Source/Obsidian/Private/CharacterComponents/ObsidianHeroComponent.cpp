@@ -6,6 +6,7 @@
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Input/OEnhancedInputUserSettings.h"
 #include "InputMappingContext.h"
+#include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
@@ -75,8 +76,18 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 				ObsidianInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed,
 					&ThisClass::Input_AbilityInputTagReleased, /*OUT*/ BindHandles);
 
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move,
-					ETriggerEvent::Triggered,this, &ThisClass::Input_Move, true);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Keyboard,
+					ETriggerEvent::Triggered,this, &ThisClass::Input_MoveKeyboard, true);
+				
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+					ETriggerEvent::Started, this, &ThisClass::Input_MoveStartedMouse, true);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_MoveTriggeredMouse, true);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+					ETriggerEvent::Completed, this, &ThisClass::Input_MoveReleasedMouse, true);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+					ETriggerEvent::Canceled, this, &ThisClass::Input_MoveReleasedMouse, true);
+				
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_CharacterStatus,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleCharacterStatus, true);
 			}
@@ -112,7 +123,7 @@ void UObsidianHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag
 	}
 }
 
-void UObsidianHeroComponent::Input_Move(const FInputActionValue& InputActionValue)
+void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputActionValue)
 {
 	APawn* Pawn = GetPawn<APawn>();
 	AController* Controller = Pawn ? Pawn->GetController() : nullptr;
@@ -134,6 +145,54 @@ void UObsidianHeroComponent::Input_Move(const FInputActionValue& InputActionValu
 			 Pawn->AddMovementInput(MovementDirection, InputAxisVector.Y);
 		}
 	}
+}
+
+void UObsidianHeroComponent::Input_MoveStartedMouse()
+{
+	if(APlayerController* PC = GetController<APlayerController>())
+	{
+		PC->StopMovement();
+	}
+}
+
+void UObsidianHeroComponent::Input_MoveTriggeredMouse()
+{
+	APlayerController* PC = GetController<APlayerController>();
+	if(PC == nullptr)
+	{
+		return;
+	}
+
+	FollowTime += GetWorld()->GetDeltaSeconds();
+		
+	FHitResult Hit;
+	bool bHitSuccessful = PC->GetHitResultUnderCursor(ECC_Visibility, true, Hit);
+
+	if(bHitSuccessful)
+	{
+		CachedDestination = Hit.Location;
+	}
+	
+	if(APawn* Pawn = GetPawn<APawn>())
+	{
+		const FVector WorldDirection = (CachedDestination - Pawn->GetActorLocation()).GetSafeNormal();
+		Pawn->AddMovementInput(WorldDirection, 1.0, false);
+	}
+}
+
+void UObsidianHeroComponent::Input_MoveReleasedMouse()
+{
+	APlayerController* PC = GetController<APlayerController>();
+	if(PC == nullptr)
+	{
+		return;
+	}
+	
+	if(FollowTime <= ShortPressThreshold)
+	{
+		UAIBlueprintHelperLibrary::SimpleMoveToLocation(PC, CachedDestination);
+	}
+	FollowTime = 0.f;
 }
 
 void UObsidianHeroComponent::Input_ToggleCharacterStatus()

@@ -28,13 +28,24 @@ public:
 
 	AObsidianHUD* GetObsidianHUD() const;
 
+public:
+	/** Time Threshold to know if it was a short press */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	float ShortPressThreshold = 0.3f;
+
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 	
-	void Input_Move(const FInputActionValue& InputActionValue);
+	void Input_MoveKeyboard(const FInputActionValue& InputActionValue);
+	void Input_MoveStartedMouse();
+	void Input_MoveTriggeredMouse();
+	void Input_MoveReleasedMouse();
 	void Input_ToggleCharacterStatus();
-	
+
+private:
+	FVector CachedDestination;
+	float FollowTime;
 	
 };
 

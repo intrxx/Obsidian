@@ -26,7 +26,8 @@ public class Obsidian : ModuleRules
 		PrivateDependencyModuleNames.AddRange(new string[]
 		{
 			"Slate",
-			"SlateCore"
+			"SlateCore", 
+			"AIModule"
 		});
 
 		// Uncomment if you are using Slate UI
