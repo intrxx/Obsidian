@@ -4,6 +4,7 @@
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "Obsidian/Obsidian.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
@@ -22,7 +23,7 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 	HeroAttributeSet = AbilitySystemComponent->GetSet<UObsidianHeroAttributeSet>();
 	if (!HeroAttributeSet)
 	{
-		UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), *GetNameSafe(Owner));
 		return;
 	}
 
@@ -70,7 +71,7 @@ void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData&
 
 void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Max Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 float UObsidianHeroAttributesComponent::GetMana() const

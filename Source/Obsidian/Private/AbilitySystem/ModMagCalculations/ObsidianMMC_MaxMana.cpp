@@ -5,6 +5,7 @@
 #include "Engine/CurveTable.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Combat/ObsidianCombatInterface.h"
+#include "Obsidian/Obsidian.h"
 
 struct SObsidian_MaxManaStatics
 {
@@ -38,7 +39,7 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());
 	if (CombatInterface == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
+		UE_LOG(LogObsidian, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
 		return Super::CalculateBaseMagnitude_Implementation(Spec);
 	}
 	

@@ -3,6 +3,8 @@
 
 #include "Input/ObsidianInputConfig.h"
 
+#include "Obsidian/Obsidian.h"
+
 UObsidianInputConfig::UObsidianInputConfig(const FObjectInitializer& ObjectInitializer)
 {
 }
@@ -19,7 +21,7 @@ const UInputAction* UObsidianInputConfig::FindNativeInputActionForTag(const FGam
 
 	if(bLogNotFound)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Could not find NativeInputAction for [%s] on ObsidianInputConfig [%s]"),
+		UE_LOG(LogObsidian, Display, TEXT("Could not find NativeInputAction for [%s] on ObsidianInputConfig [%s]"),
 			*InputTag.ToString(), *GetNameSafe(this));
 	}
 	
@@ -38,7 +40,7 @@ const UInputAction* UObsidianInputConfig::FindAbilityInputActionForTag(const FGa
 
 	if(bLogNotFound)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Could not find AbilityInputAction for [%s] on ObsidianInputConfig [%s]"),
+		UE_LOG(LogObsidian, Display, TEXT("Could not find AbilityInputAction for [%s] on ObsidianInputConfig [%s]"),
 			*InputTag.ToString(), *GetNameSafe(this));
 	}
 	

@@ -44,8 +44,8 @@ protected:
 	void Input_ToggleCharacterStatus();
 
 private:
-	FVector CachedDestination;
-	float FollowTime;
+	FVector CachedDestination = FVector::ZeroVector;
+	float FollowTime = 0.f;
 	
 };
 

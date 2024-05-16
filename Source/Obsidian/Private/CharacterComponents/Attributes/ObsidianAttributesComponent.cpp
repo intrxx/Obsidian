@@ -4,6 +4,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Obsidian/Obsidian.h"
 
 
 UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitializer& ObjectInitializer)
@@ -22,21 +23,21 @@ void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilityS
 {
 	if(AbilitySystemComponent)
 	{
-		UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *GetNameSafe(Owner));
 		return;
 	}
 
 	AbilitySystemComponent = InASC;
 	if (!AbilitySystemComponent)
 	{
-		UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *GetNameSafe(Owner));
 		return;
 	}
 	
 	CommonAttributeSet = AbilitySystemComponent->GetSet<UObsidianCommonAttributeSet>();
 	if (!CommonAttributeSet)
 	{
-		UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *GetNameSafe(Owner));
 		return;
 	}
 	

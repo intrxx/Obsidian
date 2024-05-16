@@ -3,6 +3,7 @@
 #include "ObsidianGameplayTags.h"
 #include "Engine/EngineTypes.h"
 #include "GameplayTagsManager.h"
+#include "Obsidian.h"
 
 namespace ObsidianGameplayTags
 {
@@ -92,7 +93,7 @@ namespace ObsidianGameplayTags
 			{
 				if(Tag.ToString().Contains(TagString))
 				{
-					UE_LOG(LogTemp, Display, TEXT("Did not find exact match for [%s] but found partial match on tag [%s]."), *TagString, *Tag.ToString());
+					UE_LOG(LogObsidian, Display, TEXT("Did not find exact match for [%s] but found partial match on tag [%s]."), *TagString, *Tag.ToString());
 					ReturnTag = Tag;
 					break;
 				}	

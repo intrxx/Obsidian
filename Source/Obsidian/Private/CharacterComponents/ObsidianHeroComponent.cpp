@@ -167,7 +167,6 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 		
 	FHitResult Hit;
 	bool bHitSuccessful = PC->GetHitResultUnderCursor(ECC_Visibility, true, Hit);
-
 	if(bHitSuccessful)
 	{
 		CachedDestination = Hit.Location;
@@ -187,7 +186,8 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 	{
 		return;
 	}
-	
+
+	//TODO Implement my own move to location, interrupt the MoveTo function when pressing wsad
 	if(FollowTime <= ShortPressThreshold)
 	{
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(PC, CachedDestination);
