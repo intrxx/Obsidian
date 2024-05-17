@@ -34,6 +34,10 @@ public:
 	// Gameplay Tag used to process input for the ability.
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTag InputTag;
+	
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+#endif
 };
 
 /**
@@ -56,6 +60,10 @@ public:
 	// If this is set to true, this Gameplay effect will be given as the last one
 	UPROPERTY(EditDefaultsOnly)
 	bool bIsDependentOnOtherAttributes = false;
+
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+#endif
 };
 
 /**
@@ -70,6 +78,10 @@ public:
 	// Attribute Set to grant.
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UAttributeSet> AttributeSet;
+	
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+#endif
 };
 
 /**
@@ -119,6 +131,10 @@ public:
 	 * @param SourceObject Used for Gameplay Ability Spec Handle to specify its Source Object
 	 */
 	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
+
+#if WITH_EDITOR
+	EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+#endif
 
 protected:
 	// Gameplay Abilities to grant when this Ability Set is granted.

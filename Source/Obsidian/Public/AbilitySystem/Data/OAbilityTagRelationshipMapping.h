@@ -33,6 +33,10 @@ struct FObsidianAbilityTagRelationship
 	/** Tags that will prevent this Ability from being used. */
 	UPROPERTY(EditAnywhere, Category = "Ability")
 	FGameplayTagContainer ActivationBlockedTags;
+
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+#endif
 };
 
 /**
@@ -52,6 +56,10 @@ public:
 
 	/** Returns true if the specified ability tags are canceled by the passed in action tag */
 	bool IsAbilityCanceledByTag(const FGameplayTagContainer& AbilityTags, const FGameplayTag& ActionTag) const;
+
+#if WITH_EDITOR
+	EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+#endif
 
 private:
 	/** The list of relationships between different gameplay tags (which ones block or cancel others) */

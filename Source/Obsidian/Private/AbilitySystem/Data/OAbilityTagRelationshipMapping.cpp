@@ -2,9 +2,12 @@
 
 
 #include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif // ~ With Editor
 
 void UOAbilityTagRelationshipMapping::GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& AbilityTags,
-	FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagToCancel) const
+                                                                     FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagToCancel) const
 {
 	for(int32 i = 0; i < AbilityTagRelationships.Num(); i++)
 	{
@@ -59,3 +62,36 @@ bool UOAbilityTagRelationshipMapping::IsAbilityCanceledByTag(const FGameplayTagC
 	}
 	return false;
 }
+
+#if WITH_EDITOR
+EDataValidationResult FObsidianAbilityTagRelationship::ValidateData(FDataValidationContext& Context, const int Index) const
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+
+	if(!AbilityTag.IsValid())
+	{
+		Result = EDataValidationResult::Invalid;
+
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Ability Tag at index [%i] is invalid! \n"
+			"Please set a valid Ability Tag or delete this index entry in the Ability Tag Relationships array"), Index));
+
+		Context.AddError(ErrorMessage);
+	}
+
+	return Result;
+}
+
+EDataValidationResult UOAbilityTagRelationshipMapping::IsDataValid(FDataValidationContext& Context) const
+{
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+
+	unsigned int TagRelationshipIndex = 0;
+	for(const FObsidianAbilityTagRelationship& TagRelationship : AbilityTagRelationships)
+	{
+		Result =  CombineDataValidationResults(Result, TagRelationship.ValidateData(Context, TagRelationshipIndex));
+		TagRelationshipIndex++;
+	}
+	
+	return Result;
+}
+#endif // ~ With Editor

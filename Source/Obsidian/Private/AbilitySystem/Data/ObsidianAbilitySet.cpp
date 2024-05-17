@@ -3,9 +3,11 @@
 
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
-
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/Obsidian.h"
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif // ~ With Editor
 
 void FObsidianAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle)
 {
@@ -173,4 +175,95 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 		}
 	}
 }
+
+#if WITH_EDITOR
+EDataValidationResult FObsidianAbilitySet_GameplayAbility::ValidateData(FDataValidationContext& Context, const int Index) const
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+
+	if(Ability == nullptr)
+	{
+		Result = EDataValidationResult::Invalid;
+
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Abilty at index [%i] is null! \n"
+			"Please set a valid Ability class or delete this index entry in the Granted Gameplay Abilities array"), Index));
+
+		Context.AddError(ErrorMessage);
+	}
+
+	if(!InputTag.IsValid())
+	{
+		Result = EDataValidationResult::Invalid;
+
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Input Tag at index [%i] is invalid! \n"
+			"Please set a valid Input Tag or delete this index entry in the Granted Gameplay Abilities array"), Index));
+
+		Context.AddError(ErrorMessage);
+	}
+
+	return Result;
+}
+
+EDataValidationResult FObsidianAbilitySet_GameplayEffect::ValidateData(FDataValidationContext& Context, const int Index) const
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+
+	if(GameplayEffect == nullptr)
+	{
+		Result = EDataValidationResult::Invalid;
+
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Gameplay Effect at index [%i] is null! \n"
+			"Please set a valid Gameplay Effect class or delete this index entry in the Granted Gameplay Effects array"), Index));
+
+		Context.AddError(ErrorMessage);
+	}
+
+	return Result;
+}
+
+EDataValidationResult FObsidianAbilitySet_AttributeSet::ValidateData(FDataValidationContext& Context, const int Index) const
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+
+	if(AttributeSet == nullptr)
+	{
+		Result = EDataValidationResult::Invalid;
+
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Attribute Set at index [%i] is null! \n"
+			"Please set a valid Attribute Set class or delete this index entry in the Granted Attribute Sets array"), Index));
+
+		Context.AddError(ErrorMessage);
+	}
+
+	return Result;
+}
+
+EDataValidationResult UObsidianAbilitySet::IsDataValid(FDataValidationContext& Context) const
+{
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+
+	unsigned int AbilityIndex = 0;
+	for(const FObsidianAbilitySet_GameplayAbility& Ability : GrantedGameplayAbilities)
+	{
+		Result =  CombineDataValidationResults(Result, Ability.ValidateData(Context, AbilityIndex));
+		AbilityIndex++;
+	}
+	
+	unsigned int EffectIndex = 0;
+	for(const FObsidianAbilitySet_GameplayEffect& Effect : GrantedGameplayEffects)
+	{
+		Result =  CombineDataValidationResults(Result, Effect.ValidateData(Context, EffectIndex));
+		EffectIndex++;
+	}
+
+	unsigned int SetIndex = 0;
+	for(const FObsidianAbilitySet_AttributeSet& Set : GrantedAttributeSets)
+	{
+		Result =  CombineDataValidationResults(Result, Set.ValidateData(Context, SetIndex));
+		SetIndex++;
+	}
+
+	return Result;
+}
+#endif // ~ With Editor
 

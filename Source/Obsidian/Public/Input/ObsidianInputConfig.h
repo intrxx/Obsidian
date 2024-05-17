@@ -25,7 +25,7 @@ public:
 	FGameplayTag InputTag;
 
 #if WITH_EDITOR
-	EDataValidationResult IsDataValid(FDataValidationContext& Context, const int Index, const FString& InputActionsName) const;
+	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index, const FString& InputActionsName) const;
 #endif
 };
 /**
