@@ -18,8 +18,8 @@ AObsidianHero::AObsidianHero()
 {
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeRotation(FRotator(-52.5f, 0.0f, 0.0f));
-	SpringArmComponent->TargetArmLength = 920.f;
+	SpringArmComponent->SetRelativeRotation(FRotator(-43.0f, 0.0f, 0.0f));
+	SpringArmComponent->TargetArmLength = 1100.0f;
 	SpringArmComponent->bInheritPitch = false;
 	SpringArmComponent->bInheritPitch = false;
 	SpringArmComponent->bInheritYaw = false;
@@ -37,7 +37,7 @@ AObsidianHero::AObsidianHero()
 	HeroAttributesComponent = CreateDefaultSubobject<UObsidianHeroAttributesComponent>(TEXT("HeroAttributesComponent"));
 
 	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 600.f, 0.f);
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 800.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 

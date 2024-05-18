@@ -69,7 +69,6 @@ protected:
 
 	float CalculateFullEffectMagnitude(const FGameplayEffectSpec& EffectSpec);
 	
-
 protected:
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
 	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
