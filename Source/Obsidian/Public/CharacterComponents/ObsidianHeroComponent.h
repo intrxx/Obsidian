@@ -7,6 +7,7 @@
 #include "Components/PawnComponent.h"
 #include "ObsidianHeroComponent.generated.h"
 
+class USplineComponent;
 class AObsidianHUD;
 struct FInputActionValue;
 
@@ -19,6 +20,8 @@ class OBSIDIAN_API UObsidianHeroComponent : public UPawnComponent
 	GENERATED_BODY()
 public:
 	UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer);
+
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 	void InitializePlayerInput(UInputComponent* InputComponent);
 
@@ -27,11 +30,6 @@ public:
 	static UObsidianHeroComponent* FindHeroComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);}
 
 	AObsidianHUD* GetObsidianHUD() const;
-
-public:
-	/** Time Threshold to know if it was a short press */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	float ShortPressThreshold = 0.3f;
 
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
@@ -43,9 +41,23 @@ protected:
 	void Input_MoveReleasedMouse();
 	void Input_ToggleCharacterStatus();
 
-private:
+protected:
+	/** Time Threshold to know if it was a short press */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	float ShortPressThreshold = 0.3f;
+
+	/** Acceptable radius to the destination of autorun */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	float AutoRunAcceptanceRadius = 50.f;
+	
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<USplineComponent> AutoRunSplineComp;
+	
+private:	
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
+	bool bAutoRunning = false;
+
 	
 };
 

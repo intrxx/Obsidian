@@ -6,11 +6,13 @@
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Input/OEnhancedInputUserSettings.h"
 #include "InputMappingContext.h"
-#include "Blueprint/AIBlueprintHelperLibrary.h"
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Components/SplineComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -20,6 +22,15 @@ UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectI
 	: Super(ObjectInitializer)
 {
 	SetIsReplicatedByDefault(true);
+
+	AutoRunSplineComp = CreateDefaultSubobject<USplineComponent>(TEXT("AutoRunSplineComponent"));
+}
+
+void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	
 }
 
 void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputComponent)
@@ -166,8 +177,7 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 	FollowTime += GetWorld()->GetDeltaSeconds();
 		
 	FHitResult Hit;
-	bool bHitSuccessful = PC->GetHitResultUnderCursor(ECC_Visibility, true, Hit);
-	if(bHitSuccessful)
+	if(PC->GetHitResultUnderCursor(ECC_Visibility, false, Hit))
 	{
 		CachedDestination = Hit.Location;
 	}
@@ -175,7 +185,7 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 	if(APawn* Pawn = GetPawn<APawn>())
 	{
 		const FVector WorldDirection = (CachedDestination - Pawn->GetActorLocation()).GetSafeNormal();
-		Pawn->AddMovementInput(WorldDirection, 1.0, false);
+		Pawn->AddMovementInput(WorldDirection);
 	}
 }
 
@@ -188,9 +198,21 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 	}
 
 	//TODO Implement my own move to location, interrupt the MoveTo function when pressing wsad
-	if(FollowTime <= ShortPressThreshold)
+	APawn* Pawn = GetPawn<APawn>();
+	if(FollowTime <= ShortPressThreshold && Pawn)
 	{
-		UAIBlueprintHelperLibrary::SimpleMoveToLocation(PC, CachedDestination);
+		UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this,
+			Pawn->GetActorLocation(), CachedDestination);
+		if(NavigationPath)
+		{
+			AutoRunSplineComp->ClearSplinePoints();
+			for(const FVector& PointLocation : NavigationPath->PathPoints)
+			{
+				AutoRunSplineComp->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
+				DrawDebugSphere(GetWorld(), PointLocation, 5.f, 8, FColor::Red, false, 5.f);
+			}
+			bAutoRunning = true;
+		}
 	}
 	FollowTime = 0.f;
 }

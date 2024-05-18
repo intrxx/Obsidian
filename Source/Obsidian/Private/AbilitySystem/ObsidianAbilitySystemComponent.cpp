@@ -18,7 +18,7 @@ void UObsidianAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag&
 {
 	if(InputTag.IsValid())
 	{
-		for(const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
+		for(const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 		{
 			if(AbilitySpec.Ability && (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag)))
 			{
@@ -33,7 +33,7 @@ void UObsidianAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag
 {
 	if (InputTag.IsValid())
 	{
-		for (const FGameplayAbilitySpec& AbilitySpec : ActivatableAbilities.Items)
+		for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 		{
 			if (AbilitySpec.Ability && (AbilitySpec.DynamicAbilityTags.HasTagExact(InputTag)))
 			{

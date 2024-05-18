@@ -27,7 +27,8 @@ public class Obsidian : ModuleRules
 		{
 			"Slate",
 			"SlateCore", 
-			"AIModule"
+			"AIModule",
+			"NavigationSystem"
 		});
 
 		// Uncomment if you are using Slate UI
