@@ -48,10 +48,13 @@ protected:
 
 	/** Acceptable radius to the destination of autorun */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
-	float AutoRunAcceptanceRadius = 50.f;
+	float AutoRunAcceptanceRadius = 30.f;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> AutoRunSplineComp;
+
+private:
+	void AutoRun();
 	
 private:	
 	FVector CachedDestination = FVector::ZeroVector;

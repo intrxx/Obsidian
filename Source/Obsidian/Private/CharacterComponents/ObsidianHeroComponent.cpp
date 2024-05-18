@@ -16,21 +16,45 @@
 #include "GameFramework/PlayerController.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianChannels.h"
 #include "UI/ObsidianHUD.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	SetIsReplicatedByDefault(true);
-
+	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bStartWithTickEnabled = true;
+	
 	AutoRunSplineComp = CreateDefaultSubobject<USplineComponent>(TEXT("AutoRunSplineComponent"));
 }
 
 void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
 	
+	AutoRun();
+}
+
+void UObsidianHeroComponent::AutoRun()
+{
+	if(!bAutoRunning)
+	{
+		return;
+	}
+	
+	if(APawn* Pawn = GetPawn<APawn>())
+	{
+		const FVector LocationOnSpline = AutoRunSplineComp->FindLocationClosestToWorldLocation(Pawn->GetActorLocation(), ESplineCoordinateSpace::World);
+		const FVector Direction = AutoRunSplineComp->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		Pawn->AddMovementInput(Direction);
+
+		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
+		if(DistanceToDestination <= AutoRunAcceptanceRadius)
+		{
+			bAutoRunning = false;
+		}
+	}
 }
 
 void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputComponent)
@@ -141,6 +165,8 @@ void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputAc
 	
 	if(Controller)
 	{
+		bAutoRunning = false;
+		
 		const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
 		const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
 
@@ -160,10 +186,7 @@ void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputAc
 
 void UObsidianHeroComponent::Input_MoveStartedMouse()
 {
-	if(APlayerController* PC = GetController<APlayerController>())
-	{
-		PC->StopMovement();
-	}
+	bAutoRunning = false;
 }
 
 void UObsidianHeroComponent::Input_MoveTriggeredMouse()
@@ -177,7 +200,7 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 	FollowTime += GetWorld()->GetDeltaSeconds();
 		
 	FHitResult Hit;
-	if(PC->GetHitResultUnderCursor(ECC_Visibility, false, Hit))
+	if(PC->GetHitResultUnderCursor(Obsidian_TraceChannel_HeroNavigation, false, Hit))
 	{
 		CachedDestination = Hit.Location;
 	}
@@ -196,8 +219,7 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 	{
 		return;
 	}
-
-	//TODO Implement my own move to location, interrupt the MoveTo function when pressing wsad
+	
 	APawn* Pawn = GetPawn<APawn>();
 	if(FollowTime <= ShortPressThreshold && Pawn)
 	{
@@ -210,6 +232,10 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 			{
 				AutoRunSplineComp->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
 				DrawDebugSphere(GetWorld(), PointLocation, 5.f, 8, FColor::Red, false, 5.f);
+			}
+			if(!NavigationPath->PathPoints.IsEmpty())
+			{
+				CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
 			}
 			bAutoRunning = true;
 		}
