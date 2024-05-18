@@ -9,7 +9,6 @@
 class AObsidianHUD;
 class UObsidianAbilitySystemComponent;
 class AObsidianPlayerState;
-class IObsidianHighlightInterface;
 /**
  * 
  */
@@ -19,8 +18,7 @@ class OBSIDIAN_API AObsidianPlayerController : public APlayerController
 	GENERATED_BODY()
 public:
 	AObsidianPlayerController();
-
-	virtual void PlayerTick(float DeltaTime) override;
+	
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
@@ -38,10 +36,5 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Cursor")
 	TObjectPtr<UUserWidget> DefaultCursor;
-
-private:
-	void CursorTrace();
 	
-	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
-	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
 };

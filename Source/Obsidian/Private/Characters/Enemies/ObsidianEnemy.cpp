@@ -14,7 +14,7 @@
 
 AObsidianEnemy::AObsidianEnemy()
 {
-	GetMesh()->SetCollisionResponseToChannel(Obsidian_TraceChannel_Highlight, ECR_Block);
+	GetMesh()->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
 	GetMesh()->SetCustomDepthStencilValue(ObsidianHighlight::Red);
 	GetMesh()->SetRenderCustomDepth(false);
 	

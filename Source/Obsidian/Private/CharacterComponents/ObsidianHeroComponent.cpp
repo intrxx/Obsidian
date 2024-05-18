@@ -11,12 +11,13 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
+#include "Interaction/ObsidianHighlightInterface.h"
+#include "ObsidianTypes/ObsidianChannels.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "ObsidianTypes/ObsidianChannels.h"
 #include "UI/ObsidianHUD.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
@@ -32,7 +33,8 @@ UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectI
 void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	
+
+	CursorTrace();
 	AutoRun();
 }
 
@@ -53,6 +55,38 @@ void UObsidianHeroComponent::AutoRun()
 		if(DistanceToDestination <= AutoRunAcceptanceRadius)
 		{
 			bAutoRunning = false;
+		}
+	}
+}
+
+void UObsidianHeroComponent::CursorTrace()
+{
+	APlayerController* PC = GetController<APlayerController>();
+	if(PC == nullptr)
+	{
+		return;
+	}
+	
+	PC->GetHitResultUnderCursor(Obsidian_TraceChannel_PlayerCursorTrace, false, CursorHit);
+
+	if(!CursorHit.bBlockingHit)
+	{
+		return;
+	}
+
+	LastHighlightedActor = CurrentHighlightedActor;
+	CurrentHighlightedActor = Cast<IObsidianHighlightInterface>(CursorHit.GetActor());
+
+	if(LastHighlightedActor != CurrentHighlightedActor)
+	{
+		if(LastHighlightedActor)
+		{
+			LastHighlightedActor->StopHighlight();
+		}
+
+		if(CurrentHighlightedActor)
+		{
+			CurrentHighlightedActor->StartHighlight();
 		}
 	}
 }
@@ -191,18 +225,11 @@ void UObsidianHeroComponent::Input_MoveStartedMouse()
 
 void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 {
-	APlayerController* PC = GetController<APlayerController>();
-	if(PC == nullptr)
-	{
-		return;
-	}
-
 	FollowTime += GetWorld()->GetDeltaSeconds();
-		
-	FHitResult Hit;
-	if(PC->GetHitResultUnderCursor(Obsidian_TraceChannel_HeroNavigation, false, Hit))
+	
+	if(CursorHit.bBlockingHit)
 	{
-		CachedDestination = Hit.Location;
+		CachedDestination = CursorHit.Location;
 	}
 	
 	if(APawn* Pawn = GetPawn<APawn>())
@@ -231,8 +258,8 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 			for(const FVector& PointLocation : NavigationPath->PathPoints)
 			{
 				AutoRunSplineComp->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
-				DrawDebugSphere(GetWorld(), PointLocation, 5.f, 8, FColor::Red, false, 5.f);
 			}
+			
 			if(!NavigationPath->PathPoints.IsEmpty())
 			{
 				CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];

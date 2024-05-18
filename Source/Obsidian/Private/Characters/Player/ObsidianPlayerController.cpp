@@ -3,21 +3,25 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "UI/ObsidianHUD.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Blueprint/UserWidget.h"
 #include "Characters/Player/ObsidianPlayerState.h"
-#include "Interaction/ObsidianHighlightInterface.h"
-#include "ObsidianTypes/ObsidianChannels.h"
 
 AObsidianPlayerController::AObsidianPlayerController()
 {
 	bReplicates = true;
 }
 
-void AObsidianPlayerController::PlayerTick(float DeltaTime)
+void AObsidianPlayerController::BeginPlay()
 {
-	Super::PlayerTick(DeltaTime);
+	Super::BeginPlay();
+
+	bShowMouseCursor = true;
+	SetMouseCursorWidget(EMouseCursor::Default, DefaultCursor);
+	CurrentMouseCursor = EMouseCursor::Default;
 	
-	CursorTrace();
+	FInputModeGameAndUI InputModeData;
+	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+	InputModeData.SetHideCursorDuringCapture(false);
+	SetInputMode(InputModeData);
 }
 
 void AObsidianPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
@@ -46,55 +50,5 @@ AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 	return GetHUD<AObsidianHUD>();
 }
 
-void AObsidianPlayerController::CursorTrace()
-{
-	FHitResult CursorHit;
-	GetHitResultUnderCursor(Obsidian_TraceChannel_Highlight, false, CursorHit);
-
-	if(!CursorHit.bBlockingHit)
-	{
-		return;
-	}
-
-	LastHighlightedActor = CurrentHighlightedActor;
-	CurrentHighlightedActor = Cast<IObsidianHighlightInterface>(CursorHit.GetActor());
-
-	if(LastHighlightedActor == nullptr)
-	{
-		if(CurrentHighlightedActor)
-		{
-			CurrentHighlightedActor->StartHighlight();
-		}
-	}
-	else // Last valid
-	{
-		if(CurrentHighlightedActor == nullptr)
-		{
-			LastHighlightedActor->StopHighlight();
-		}
-		else // Both valid
-		{
-			if(LastHighlightedActor != CurrentHighlightedActor)
-			{
-				LastHighlightedActor->StopHighlight();
-				CurrentHighlightedActor->StartHighlight();
-			}
-		}
-	}
-}
-
-void AObsidianPlayerController::BeginPlay()
-{
-	Super::BeginPlay();
-
-	bShowMouseCursor = true;
-	SetMouseCursorWidget(EMouseCursor::Default, DefaultCursor);
-	CurrentMouseCursor = EMouseCursor::Default;
-	
-	FInputModeGameAndUI InputModeData;
-	InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-	InputModeData.SetHideCursorDuringCapture(false);
-	SetInputMode(InputModeData);
-}
 
 

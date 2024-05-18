@@ -62,7 +62,7 @@ void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilityS
 	}
 }
 
-void UObsidianAbilitySystemComponent::OnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
+void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
 	FActiveGameplayEffectHandle EffectHandle)
 {
 	FObsidianEffectUIData EffectUIData;
@@ -211,7 +211,7 @@ void UObsidianAbilitySystemComponent::SetTagRelationshipMapping(UOAbilityTagRela
 
 void UObsidianAbilitySystemComponent::AbilityActorInfoSet()
 {
-	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::OnEffectApplied);
+	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::ClientOnEffectApplied);
 }
 
 void UObsidianAbilitySystemComponent::GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags,

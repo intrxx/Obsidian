@@ -10,6 +10,7 @@
 class USplineComponent;
 class AObsidianHUD;
 struct FInputActionValue;
+class IObsidianHighlightInterface;
 
 /**
  * Component that manages hero related things like input
@@ -55,11 +56,18 @@ protected:
 
 private:
 	void AutoRun();
+	void CursorTrace();
 	
-private:	
+private:
+	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
+	FHitResult CursorHit;
+	
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	bool bAutoRunning = false;
+	
+	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
+	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
 
 	
 };
