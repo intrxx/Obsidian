@@ -35,6 +35,10 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Cursor")
+	TObjectPtr<UUserWidget> DefaultCursor;
+
 private:
 	void CursorTrace();
 	

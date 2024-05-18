@@ -93,15 +93,14 @@ Plugins/**/Binaries/*
 Plugins/**/Intermediate/*
 
 # Ignore whole directories or individual files
-Content/AssetPacks
-Content/StarterContent
-Content/Obsidian/Assets/UI/Globes
-Content/Obsidian/Assets/Materials/PP_Highlight.uasset
-Obsidian.png
-Content/Splash
-Content/Obsidian/Assets/UI/Fonts/*
 .idea
 Plugins/Developer/Riderlink
 Plugins/Developer/RiderLink/
 .idea/.idea.SNDPG/.idea/workspace.xml
 
+# Ignore Assets
+Content/AssetPacks
+Content/StarterContent
+Content/Obsidian/Assets
+Obsidian.png
+Content/Splash

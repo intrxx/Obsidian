@@ -3,6 +3,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "UI/ObsidianHUD.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Blueprint/UserWidget.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianChannels.h"
@@ -87,6 +88,7 @@ void AObsidianPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	bShowMouseCursor = true;
+	SetMouseCursorWidget(EMouseCursor::Default, DefaultCursor);
 	CurrentMouseCursor = EMouseCursor::Default;
 	
 	FInputModeGameAndUI InputModeData;
