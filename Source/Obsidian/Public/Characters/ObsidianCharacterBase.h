@@ -32,6 +32,8 @@ protected:
 
 	/** Fired when this actor is removed as the avatar of the Ability System - Should be overridden by the child classes */
 	virtual void OnAbilitySystemUninitialized();
+
+	virtual FVector GetCombatSocketLocationFromWeapon() override;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
@@ -42,4 +44,8 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
+
+	/** Socket used mostly for combat reasons, spawning projectiles */
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
+	FName WeaponTipSocketName;
 };

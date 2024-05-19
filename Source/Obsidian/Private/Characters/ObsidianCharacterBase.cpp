@@ -56,4 +56,14 @@ void AObsidianCharacterBase::OnAbilitySystemUninitialized()
 {
 }
 
+FVector AObsidianCharacterBase::GetCombatSocketLocationFromWeapon()
+{
+	//TODO Decide later from which on how to handle using this with different hands (RightHandEquipmentMesh, LeftHandEquipmentMesh)
+	if(RightHandEquipmentMesh == nullptr)
+	{
+		return FVector::ZeroVector;
+	}
+	return RightHandEquipmentMesh->GetSocketLocation(WeaponTipSocketName);
+}
+
 

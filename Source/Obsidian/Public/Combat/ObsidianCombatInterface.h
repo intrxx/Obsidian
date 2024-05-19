@@ -21,4 +21,5 @@ class OBSIDIAN_API IObsidianCombatInterface
 
 public:
 	virtual int32 GetCharacterLevel();
+	virtual FVector GetCombatSocketLocationFromWeapon();
 };

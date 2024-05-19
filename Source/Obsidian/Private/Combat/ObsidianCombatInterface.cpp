@@ -7,3 +7,8 @@ int32 IObsidianCombatInterface::GetCharacterLevel()
 {
 	return 1;
 }
+
+FVector IObsidianCombatInterface::GetCombatSocketLocationFromWeapon()
+{
+	return FVector();
+}
