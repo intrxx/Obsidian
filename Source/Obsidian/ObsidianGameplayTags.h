@@ -40,6 +40,9 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_HealingHealth);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_RepleanishingMana);
 
+	// Events
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Firebolt)
+
 	// Attributes UI Data - I will leave it here for now in case I would need it in the future
 	/**
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Health);

@@ -40,6 +40,9 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_HealingHealth, "UI.GlobeData.HealingHealth", "Tag used for displaying the healing amount on the globe.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_RepleanishingMana, "UI.GlobeData.ReplenishingMana", "Tag used for displaying the repleanish amount on the globe.");
 
+	// Events
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Firebolt, "Event.Montage.Firebolt", "Tag used for triggering gameplay event for spawning firebolt");
+
 	// Attributes UI Data - I will leave it here for now in case I would need it in the future
 	/**
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Health, "Attribute.Health", "Tag used for identifying the attribute.");
