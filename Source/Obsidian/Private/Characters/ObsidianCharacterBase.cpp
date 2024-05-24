@@ -4,6 +4,7 @@
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "Components/CapsuleComponent.h"
 
 AObsidianCharacterBase::AObsidianCharacterBase()
 {
@@ -13,6 +14,10 @@ AObsidianCharacterBase::AObsidianCharacterBase()
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	check(MeshComp);
 	MeshComp->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	MeshComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	CapsuleComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 
 	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");
 	RightHandEquipmentMesh->SetupAttachment(GetMesh(), FName("EquipmentRightHandSocket"));
