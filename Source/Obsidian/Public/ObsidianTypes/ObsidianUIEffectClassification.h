@@ -2,11 +2,12 @@
 
 #pragma once
 
-//TODO: Change this enum to match the coding standard (like EObsidianAbilitySpawnLocation)
 UENUM(BlueprintType)
 enum class EObsidianUIEffectClassification : uint8
 {
-	NoClassification,
-	Buff,
-	Debuff
+	UEC_NoClassification UMETA(DisplayName = "No Classification"), 
+	UEC_Buff UMETA(DisplayName = "Buff"), 
+	UEC_Debuff UMETA(DisplayName = "Debuff"), 
+
+	UEC_MAX UMETA(DisplayName = "Default MAX") 
 };

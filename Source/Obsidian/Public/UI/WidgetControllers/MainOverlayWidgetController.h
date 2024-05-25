@@ -38,7 +38,7 @@ public:
 	FGameplayTag EffectTag = FGameplayTag();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::NoClassification;
+	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::UEC_NoClassification;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectName = FText();

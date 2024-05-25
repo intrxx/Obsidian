@@ -66,10 +66,10 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 
 	switch(Row.EffectClassification)
 	{
-	case EObsidianUIEffectClassification::Buff:
+	case EObsidianUIEffectClassification::UEC_Buff:
 		BuffsEffectInfo_WrapBox->AddChild(StackingInfoWidget);
 		break;
-	case EObsidianUIEffectClassification::Debuff:
+	case EObsidianUIEffectClassification::UEC_Debuff:
 		DeBuffsEffectInfo_WrapBox->AddChild(StackingInfoWidget);
 		break;
 	default:
@@ -87,10 +87,10 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 
 		switch(Row.EffectClassification)
 		{
-		case EObsidianUIEffectClassification::Buff:
+		case EObsidianUIEffectClassification::UEC_Buff:
 			BuffsEffectInfo_WrapBox->AddChild(InfoWidget);
 			break;
-		case EObsidianUIEffectClassification::Debuff:
+		case EObsidianUIEffectClassification::UEC_Debuff:
 			DeBuffsEffectInfo_WrapBox->AddChild(InfoWidget);
 			break;
 		default:
@@ -108,10 +108,10 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 
 		switch(Row.EffectClassification)
 		{
-		case EObsidianUIEffectClassification::Buff:
+		case EObsidianUIEffectClassification::UEC_Buff:
 			BuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
 			break;
-		case EObsidianUIEffectClassification::Debuff:
+		case EObsidianUIEffectClassification::UEC_Debuff:
 			DeBuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
 			break;
 		default:
