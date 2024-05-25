@@ -21,5 +21,24 @@ class OBSIDIAN_API IObsidianCombatInterface
 
 public:
 	virtual int32 GetCharacterLevel();
-	virtual FVector GetCombatSocketLocationFromWeapon();
+
+	/*
+	 * Socket Locations for spawning abilities.
+	 */
+
+	/** Gets the socket location from left hand weapon. */
+	virtual FVector GetAbilitySocketLocationFromLHWeapon();
+
+	/** Gets the socket location from right hand weapon. */
+	virtual FVector GetAbilitySocketLocationFromRHWeapon();
+
+	virtual FVector GetAbilitySocketLocationFromLeftHand();
+	virtual FVector GetAbilitySocketLocationFromRightHand();
+
+	/** Gets the default location for spawning ability which is slightly ahead the player character. */
+	virtual FVector GetAbilityDefaultLocation();
+
+	/*
+	 * 
+	 */
 };

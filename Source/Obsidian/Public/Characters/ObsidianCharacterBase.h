@@ -33,8 +33,14 @@ protected:
 	/** Fired when this actor is removed as the avatar of the Ability System - Should be overridden by the child classes */
 	virtual void OnAbilitySystemUninitialized();
 
-	virtual FVector GetCombatSocketLocationFromWeapon() override;
-	
+	//~ Start of CombatInterface
+	virtual FVector GetAbilitySocketLocationFromLHWeapon() override;
+	virtual FVector GetAbilitySocketLocationFromRHWeapon() override;
+	virtual FVector GetAbilitySocketLocationFromLeftHand() override;
+	virtual FVector GetAbilitySocketLocationFromRightHand() override;
+	virtual FVector GetAbilityDefaultLocation() override;
+	//~ End of CombatInterface
+
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
 	TObjectPtr<UObsidianPawnExtensionComponent> PawnExtComp;
@@ -45,7 +51,27 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
 
-	/** Socket used mostly for combat reasons, spawning projectiles */
-	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
-	FName WeaponTipSocketName;
+	/**
+	 * Sockets used mostly for combat reasons, spawning projectiles
+	 */
+	
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
+	FName WeaponSocketName = FName();
+	
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
+	FName RightHandSocketName = FName();
+	
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
+	FName LeftHandSocketName = FName();
+
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
+	FName DefaultSocketName = FName();
+
+	/**
+	 *
+	 */
+
+	/** Offset for how much the ability spawn location is moved from the player character */ 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
+	float DefaultAbilitySocketLocationOffset = 0.f;
 };

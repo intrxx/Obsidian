@@ -1,7 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/ObsidianCharacterBase.h"
-
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -61,14 +60,53 @@ void AObsidianCharacterBase::OnAbilitySystemUninitialized()
 {
 }
 
-FVector AObsidianCharacterBase::GetCombatSocketLocationFromWeapon()
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon()
 {
-	//TODO Decide later from which on how to handle using this with different hands (RightHandEquipmentMesh, LeftHandEquipmentMesh)
-	if(RightHandEquipmentMesh == nullptr)
+	if(LeftHandEquipmentMesh)
 	{
-		return FVector::ZeroVector;
+		return LeftHandEquipmentMesh->GetSocketLocation(WeaponSocketName);
 	}
-	return RightHandEquipmentMesh->GetSocketLocation(WeaponTipSocketName);
+	return FVector::ZeroVector;
 }
+
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRHWeapon()
+{
+	if(RightHandEquipmentMesh)
+	{
+		return RightHandEquipmentMesh->GetSocketLocation(WeaponSocketName);
+	}
+	return FVector::ZeroVector;
+}
+
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLeftHand()
+{
+	if(const USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		return MeshComp->GetSocketLocation(LeftHandSocketName);
+	}
+	return FVector::ZeroVector;
+}
+
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRightHand()
+{
+	if(const USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		return MeshComp->GetSocketLocation(RightHandSocketName);
+	}
+	return FVector::ZeroVector;
+}
+
+FVector AObsidianCharacterBase::GetAbilityDefaultLocation()
+{
+	if(const USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		FVector SocketLocation = MeshComp->GetSocketLocation(DefaultSocketName);
+		SocketLocation.X += DefaultAbilitySocketLocationOffset;
+
+		return SocketLocation;
+	}
+	return FVector::ZeroVector;
+}
+
 
 
