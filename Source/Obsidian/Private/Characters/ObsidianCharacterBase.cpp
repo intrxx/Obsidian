@@ -101,7 +101,7 @@ FVector AObsidianCharacterBase::GetAbilityDefaultLocation()
 	if(const USkeletalMeshComponent* MeshComp = GetMesh())
 	{
 		FVector SocketLocation = MeshComp->GetSocketLocation(DefaultSocketName);
-		SocketLocation.X += DefaultAbilitySocketLocationOffset;
+		SocketLocation = SocketLocation + (GetActorForwardVector() * DefaultAbilitySocketLocationOffset);
 
 		return SocketLocation;
 	}
