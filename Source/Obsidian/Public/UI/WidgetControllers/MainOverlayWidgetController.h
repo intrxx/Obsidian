@@ -19,10 +19,10 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, f
 UENUM(BlueprintType)
 enum class EObsidianInfoWidgetType : uint8
 {
-	SimpleEffectInfo,
-	DurationalEffectInfo,
-	StackingEffectInfo,
-	StackingDurationalEffectInfo
+	IWT_SimpleEffectInfo,
+	IWT_DurationalEffectInfo,
+	IWT_StackingEffectInfo,
+	IWT_StackingDurationalEffectInfo
 };
 
 USTRUCT(BlueprintType)
@@ -32,7 +32,7 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	EObsidianInfoWidgetType InfoWidgetType = EObsidianInfoWidgetType::SimpleEffectInfo;
+	EObsidianInfoWidgetType InfoWidgetType = EObsidianInfoWidgetType::IWT_SimpleEffectInfo;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag EffectTag = FGameplayTag();
@@ -89,6 +89,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Health")
 	void UpdateHealthInfoGlobe(const float& Magnitude) const;
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Mana")
 	void UpdateManaInfoGlobe(const float& Magnitude) const;
 
@@ -140,7 +141,7 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")
 	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
-
+	
 	/** Hero Set */
 	FDelegateHandle ManaChangedDelegateHandle;
 	FDelegateHandle MaxManaChangedDelegateHandle;

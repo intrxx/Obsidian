@@ -3,6 +3,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "MotionWarpingComponent.h"
 #include "Components/CapsuleComponent.h"
 
 AObsidianCharacterBase::AObsidianCharacterBase()
@@ -25,6 +26,8 @@ AObsidianCharacterBase::AObsidianCharacterBase()
 	LeftHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("LeftHandEquipmentMesh");
 	LeftHandEquipmentMesh->SetupAttachment(GetMesh(), FName("EquipmentLeftHandSocket"));
 	LeftHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	
 	PawnExtComp = CreateDefaultSubobject<UObsidianPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 	PawnExtComp->OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized));
@@ -42,7 +45,6 @@ UAbilitySystemComponent* AObsidianCharacterBase::GetAbilitySystemComponent() con
 	{
 		return nullptr;
 	}
-
 	return  PawnExtComp->GetObsidianAbilitySystemComponent();
 }
 
@@ -53,7 +55,6 @@ void AObsidianCharacterBase::BeginPlay()
 
 void AObsidianCharacterBase::OnAbilitySystemInitialized()
 {
-	
 }
 
 void AObsidianCharacterBase::OnAbilitySystemUninitialized()

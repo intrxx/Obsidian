@@ -20,7 +20,8 @@ public class Obsidian : ModuleRules
 				"GameplayTags",
 				"GameplayAbilities",
 				"GameplayTasks",
-				"CommonUI"
+				"CommonUI",
+				"MotionWarping"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

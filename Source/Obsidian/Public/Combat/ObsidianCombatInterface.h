@@ -22,6 +22,9 @@ class OBSIDIAN_API IObsidianCombatInterface
 public:
 	virtual int32 GetCharacterLevel();
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|Hero")
+	void SetMotionWarpingFacingTarget(const FName MotionWarpName, const FVector& FacingTarget);
+
 	/*
 	 * Socket Locations for spawning abilities.
 	 */

@@ -2,7 +2,6 @@
 
 
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
-
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Net/UnrealNetwork.h"

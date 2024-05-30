@@ -25,7 +25,7 @@ void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySp
 
 void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
 {
-	const FVector StartLocation = GetSpawnLocation(); 
+	const FVector StartLocation = GetSpawnLocation();
 	FRotator Rotation = (TargetLocation - StartLocation).Rotation();
 	Rotation.Pitch = 0.f;
 	

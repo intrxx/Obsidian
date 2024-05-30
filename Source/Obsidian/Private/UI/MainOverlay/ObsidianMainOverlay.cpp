@@ -80,7 +80,7 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 
 void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row)
 {
-	if(Row.InfoWidgetType == EObsidianInfoWidgetType::SimpleEffectInfo)
+	if(Row.InfoWidgetType == EObsidianInfoWidgetType::IWT_SimpleEffectInfo)
 	{
 		UObsidianEffectInfoBase* InfoWidget = CreateWidget<UObsidianEffectInfoBase>(OwningPlayerController, Row.SimpleEffectWidget);
 		InfoWidget->InitEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage);
@@ -101,7 +101,7 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		return;
 	}
 	
-	if(Row.InfoWidgetType == EObsidianInfoWidgetType::DurationalEffectInfo)
+	if(Row.InfoWidgetType == EObsidianInfoWidgetType::IWT_DurationalEffectInfo)
 	{
 		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
 		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);

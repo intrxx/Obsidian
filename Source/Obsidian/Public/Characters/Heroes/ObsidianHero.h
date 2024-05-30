@@ -25,7 +25,7 @@ public:
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
 	AObsidianPlayerState* GetObsidianPlayerState() const;
 

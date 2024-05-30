@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "ObsidianCharacterBase.generated.h"
 
+class UMotionWarpingComponent;
 class UObsidianAbilitySystemComponent;
 class UObsidianPawnExtensionComponent;
 
@@ -50,6 +51,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UMotionWarpingComponent> MotionWarpingComp;
 
 	/**
 	 * Sockets used mostly for combat reasons, spawning projectiles

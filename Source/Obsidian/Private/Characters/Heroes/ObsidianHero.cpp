@@ -35,7 +35,7 @@ AObsidianHero::AObsidianHero()
 	HeroComponent = CreateDefaultSubobject<UObsidianHeroComponent>(TEXT("HeroComponent"));
 
 	HeroAttributesComponent = CreateDefaultSubobject<UObsidianHeroAttributesComponent>(TEXT("HeroAttributesComponent"));
-
+	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 800.f, 0.f);
 	GetCharacterMovement()->bConstrainToPlane = true;

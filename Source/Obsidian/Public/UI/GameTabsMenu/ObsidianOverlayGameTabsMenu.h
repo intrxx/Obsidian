@@ -44,6 +44,4 @@ public:
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> Root_Overlay;
-
-	
 };
