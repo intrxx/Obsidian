@@ -8,6 +8,11 @@ int32 IObsidianCombatInterface::GetCharacterLevel()
 	return 1;
 }
 
+void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget)
+{
+	
+}
+
 FVector IObsidianCombatInterface::GetAbilitySocketLocationFromLHWeapon()
 {
 	return FVector();

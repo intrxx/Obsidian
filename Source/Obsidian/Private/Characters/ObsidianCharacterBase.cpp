@@ -109,5 +109,13 @@ FVector AObsidianCharacterBase::GetAbilityDefaultLocation()
 	return FVector::ZeroVector;
 }
 
+void AObsidianCharacterBase::SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget)
+{
+	if(MotionWarpingComp)
+	{
+		MotionWarpingComp->AddOrUpdateWarpTargetFromLocation(MotionWarpName, FacingTarget);
+	}
+}
+
 
 

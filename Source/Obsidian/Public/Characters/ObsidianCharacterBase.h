@@ -40,6 +40,7 @@ protected:
 	virtual FVector GetAbilitySocketLocationFromLeftHand() override;
 	virtual FVector GetAbilitySocketLocationFromRightHand() override;
 	virtual FVector GetAbilityDefaultLocation() override;
+	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget) override;
 	//~ End of CombatInterface
 
 protected:
