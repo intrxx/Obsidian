@@ -3,3 +3,5 @@
 #pragma once
 
 #define Obsidian_TraceChannel_PlayerCursorTrace	ECC_GameTraceChannel1
+
+#define Obsidian_ObjectChannel_Projectile ECC_GameTraceChannel2

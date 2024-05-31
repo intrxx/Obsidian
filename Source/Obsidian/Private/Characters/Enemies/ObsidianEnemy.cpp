@@ -10,6 +10,7 @@
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "ObsidianTypes/ObsidianChannels.h"
 #include "Characters/ObsidianPawnData.h"
+#include "Components/CapsuleComponent.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 
 AObsidianEnemy::AObsidianEnemy()
@@ -26,6 +27,12 @@ AObsidianEnemy::AObsidianEnemy()
 	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
 	
 	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
+
+	USkeletalMeshComponent* MeshComp = GetMesh();
+	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
+	
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
 }
 
 void AObsidianEnemy::StartHighlight()

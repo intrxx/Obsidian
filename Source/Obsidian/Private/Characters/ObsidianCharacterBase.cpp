@@ -12,9 +12,9 @@ AObsidianCharacterBase::AObsidianCharacterBase()
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
 	USkeletalMeshComponent* MeshComp = GetMesh();
-	check(MeshComp);
 	MeshComp->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	MeshComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	MeshComp->SetGenerateOverlapEvents(true);
 
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
