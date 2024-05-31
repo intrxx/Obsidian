@@ -29,7 +29,8 @@ public class Obsidian : ModuleRules
 			"Slate",
 			"SlateCore", 
 			"AIModule",
-			"NavigationSystem"
+			"NavigationSystem",
+			"Niagara"
 		});
 
 		// Uncomment if you are using Slate UI
