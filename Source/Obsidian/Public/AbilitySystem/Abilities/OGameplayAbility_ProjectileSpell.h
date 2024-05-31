@@ -7,8 +7,6 @@
 #include "ObsidianTypes/ObsidianAbilitySpawnLocation.h"
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
-
-
 class AObsidianProjectile;
 /**
  * 
@@ -35,5 +33,8 @@ protected:
 	/** Projectile class to spawn by this ability */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<AObsidianProjectile> ProjectileClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };
 

@@ -44,7 +44,7 @@ void UObsidianGameTabButton::OnTabButtonHovered()
 
 void UObsidianGameTabButton::OnTabButtonUnhovered()
 {
-	if(TabToolTipWidget->IsConstructed())
+	if(TabToolTipWidget && TabToolTipWidget->IsConstructed())
 	{
 		TabToolTipWidget->RemoveFromParent();
 	}

@@ -75,6 +75,7 @@ void UObsidianAttributesComponent::OnUnregister()
 void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Health Changed or remove the bindingc! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogTemp, Warning, TEXT("New life: %f"), Data.NewValue);
 }
 
 void UObsidianAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)

@@ -2,29 +2,24 @@
 
 
 #include "AbilitySystem/Abilities/OGameplayAbility_ProjectileSpell.h"
+#include "AbilitySystemComponent.h"
 #include "Combat/ObsidianCombatInterface.h"
-#include "GameFramework/Character.h"
 #include "Combat/Projectile/ObsidianProjectile.h"
 
 void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                                         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	
-	const bool bHasAuthority = HasAuthority(&ActivationInfo);
+}
+
+void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
+{
+	const bool bHasAuthority = GetAvatarActorFromActorInfo()->HasAuthority();
 	if(!bHasAuthority)
 	{
 		return;
 	}
 	
-	if(AController* Controller = CastChecked<ACharacter>(GetAvatarActorFromActorInfo())->GetController())
-	{
-		Controller->StopMovement();
-	}
-}
-
-void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
-{
 	const FVector StartLocation = GetSpawnLocation();
 	FRotator Rotation = (TargetLocation - StartLocation).Rotation();
 	Rotation.Pitch = 0.f;
@@ -35,8 +30,11 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 	
 	AObsidianProjectile* Projectile = GetWorld()->SpawnActorDeferred<AObsidianProjectile>(ProjectileClass, SpawnTransform,
 		GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+	
+	const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo();
+	const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), OwningASC->MakeEffectContext());
 
-	//TODO: Give a projectile a Gameplay Effect Spec for causing Damage
+	Projectile->DamageEffectSpecHandle = SpecHandle;
 	
 	Projectile->FinishSpawning(SpawnTransform);
 }
