@@ -54,9 +54,10 @@ public:
 	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
 	virtual void OnWidgetControllerSetupCompleted();
 
+	virtual void SetInitialAttributeValues() const;
+
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
-	virtual void SetInitialAttributeValues() const;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")

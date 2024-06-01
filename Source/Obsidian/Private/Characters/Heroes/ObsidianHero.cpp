@@ -10,9 +10,11 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "UI/ObsidianHUD.h"
+#include "UI/ObsidianWidgetBase.h"
 
 AObsidianHero::AObsidianHero()
 {
@@ -35,6 +37,9 @@ AObsidianHero::AObsidianHero()
 	HeroComponent = CreateDefaultSubobject<UObsidianHeroComponent>(TEXT("HeroComponent"));
 
 	HeroAttributesComponent = CreateDefaultSubobject<UObsidianHeroAttributesComponent>(TEXT("HeroAttributesComponent"));
+
+	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
+	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
 	
 	GetCharacterMovement()->bOrientRotationToMovement = true;
 	GetCharacterMovement()->RotationRate = FRotator(0.f, 800.f, 0.f);
@@ -85,6 +90,21 @@ AObsidianPlayerState* AObsidianHero::GetObsidianPlayerState() const
 AObsidianPlayerController* AObsidianHero::GetObsidianPlayerController() const
 {
 	return CastChecked<AObsidianPlayerController>(GetController(), ECastCheckedType::NullAllowed);
+}
+
+UObsidianWidgetBase* AObsidianHero::GetHealthBarWidget() const
+{
+	if(HealthBarWidgetComp)
+	{
+		UObsidianWidgetBase* WidgetBase = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject());
+		if(WidgetBase == nullptr)
+		{
+			HealthBarWidgetComp->InitWidget();
+			WidgetBase = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject());
+		}
+		return WidgetBase;
+	}
+	return nullptr;
 }
 
 int32 AObsidianHero::GetCharacterLevel()

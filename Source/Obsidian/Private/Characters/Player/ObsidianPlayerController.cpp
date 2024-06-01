@@ -50,5 +50,9 @@ AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 	return GetHUD<AObsidianHUD>();
 }
 
+void AObsidianPlayerController::SetupHeroHealthBarWidget()
+{
+}
+
 
 

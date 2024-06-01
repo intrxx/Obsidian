@@ -95,6 +95,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Mana")
 	void UpdateManaInfoGlobe(const float& Magnitude) const;
 
+	virtual void SetInitialAttributeValues() const override;
+
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
@@ -128,7 +130,6 @@ public:
 
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
-	virtual void SetInitialAttributeValues() const override;
 	
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);

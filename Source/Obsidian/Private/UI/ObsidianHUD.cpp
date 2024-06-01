@@ -2,7 +2,9 @@
 
 
 #include "UI/ObsidianHUD.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
+#include "UI/ProgressBars/ObsidianHeroHealthBar.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
@@ -50,6 +52,14 @@ void AObsidianHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbility
 
 		MainOverlayWidget->SetWidgetController(WidgetController);
 		WidgetController->OnWidgetControllerSetupCompleted();
+
+		if(const AObsidianHero* Hero = Cast<AObsidianHero>(GetOwningPawn()))
+		{
+			if(UObsidianWidgetBase* Widget = Hero->GetHealthBarWidget())
+			{
+				Widget->SetWidgetController(WidgetController);
+			}
+		}
 		
 		MainOverlayWidget->AddToViewport();
 	}
@@ -62,3 +72,4 @@ void AObsidianHUD::ToggleCharacterStatus() const
 		MainOverlayWidget->ToggleCharacterStatus();
 	}
 }
+

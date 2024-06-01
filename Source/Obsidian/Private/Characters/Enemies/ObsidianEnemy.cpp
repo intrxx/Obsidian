@@ -69,6 +69,12 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	{
 		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
 	}
+	else
+	{
+		HealthBarWidgetComp->InitWidget();
+		HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject());
+		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
+	}
 	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
 

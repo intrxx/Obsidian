@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianEnemyAttributesComponent.generated.h"
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnEnemyAttributeValueChangedSignature, const float /** New Value */);
 
 class UObsidianEnemyAttributeSet;
 /**
@@ -39,18 +40,11 @@ public:
 	/**
 	 * Delegates for enemy health bar
 	 */
-
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeValueChangedSignature HealthChangedDelegate;
 	
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeValueChangedSignature MaxHealthChangedDelegate;
-	
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeValueChangedSignature EnergyShieldChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable)
-	FOnAttributeValueChangedSignature MaxEnergyShieldChangedDelegate;
+	FOnEnemyAttributeValueChangedSignature HealthChangedDelegate;
+	FOnEnemyAttributeValueChangedSignature MaxHealthChangedDelegate;
+	FOnEnemyAttributeValueChangedSignature EnergyShieldChangedDelegate;
+	FOnEnemyAttributeValueChangedSignature MaxEnergyShieldChangedDelegate;
 
 protected:
 	/**

@@ -33,7 +33,7 @@ public:
 public:
 	UPROPERTY()
 	TObjectPtr<UObsidianMainOverlay> MainOverlayWidget;
-
+	
 private:
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")
 	TSubclassOf<UObsidianMainOverlay> MainOverlayWidgetClass;
@@ -53,8 +53,4 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|CharacterStatus")
 	TSubclassOf<UOCharacterStatusWidgetController> CharacterStatusWidgetControllerClass;
-
-	
-
-	
 };

@@ -29,6 +29,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianHUD* GetObsidianHUD() const;
+
+	void SetupHeroHealthBarWidget();
 	
 protected:
 	virtual void BeginPlay() override;

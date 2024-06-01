@@ -6,6 +6,8 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianHero.generated.h"
 
+class UObsidianWidgetBase;
+class UWidgetComponent;
 class AObsidianPlayerController;
 class UObsidianHeroAttributesComponent;
 class AObsidianPlayerState;
@@ -32,6 +34,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
 	AObsidianPlayerController* GetObsidianPlayerController() const;
 
+	UObsidianWidgetBase* GetHealthBarWidget() const;
+	
 	//~ Start of CombatInterface
 	virtual int32 GetCharacterLevel() override;
 	//~ End of CombatInterface
@@ -56,4 +60,7 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
 };
