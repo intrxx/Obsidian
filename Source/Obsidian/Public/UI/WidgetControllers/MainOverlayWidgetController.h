@@ -19,10 +19,12 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, f
 UENUM(BlueprintType)
 enum class EObsidianInfoWidgetType : uint8
 {
-	IWT_SimpleEffectInfo,
-	IWT_DurationalEffectInfo,
-	IWT_StackingEffectInfo,
-	IWT_StackingDurationalEffectInfo
+	EIWT_SimpleEffectInfo UMETA(DisplayName = "Simple Effect Info"),
+	EIWT_DurationalEffectInfo UMETA(DisplayName = "Durational Effect Info"),
+	EIWT_StackingEffectInfo UMETA(DisplayName = "Stacking Effect Info"),
+	EIWT_StackingDurationalEffectInfo UMETA(DisplayName = "Stacking Durational Effect Info"),
+
+	EIWT_MAX UMETA(DisplayName = "Default MAX") 
 };
 
 USTRUCT(BlueprintType)
@@ -32,13 +34,13 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	EObsidianInfoWidgetType InfoWidgetType = EObsidianInfoWidgetType::IWT_SimpleEffectInfo;
+	EObsidianInfoWidgetType InfoWidgetType = EObsidianInfoWidgetType::EIWT_SimpleEffectInfo;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag EffectTag = FGameplayTag();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::UEC_NoClassification;
+	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::EUEC_NoClassification;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectName = FText();

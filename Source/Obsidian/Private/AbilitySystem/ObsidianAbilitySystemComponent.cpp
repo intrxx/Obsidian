@@ -130,7 +130,7 @@ void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool 
 			{
 				const UObsidianGameplayAbility* AbilityCDO = CastChecked<UObsidianGameplayAbility>(AbilitySpec->Ability);
 
-				if(AbilityCDO->GetAbilityActivationPolicy() == EObsidianGameplayAbility_ActivationPolicy::WhileInputActive)
+				if(AbilityCDO->GetAbilityActivationPolicy() == EObsidianGameplayAbility_ActivationPolicy::EAP_WhileInputActive)
 				{
 					AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
 				}
@@ -156,7 +156,7 @@ void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool 
 				{
 					const UObsidianGameplayAbility* AbilityCDO = CastChecked<UObsidianGameplayAbility>(AbilitySpec->Ability);
 
-					if (AbilityCDO->GetAbilityActivationPolicy() == EObsidianGameplayAbility_ActivationPolicy::OnInputTriggered)
+					if (AbilityCDO->GetAbilityActivationPolicy() == EObsidianGameplayAbility_ActivationPolicy::EAP_OnInputTriggered)
 					{
 						AbilitiesToActivate.AddUnique(AbilitySpec->Handle);
 					}

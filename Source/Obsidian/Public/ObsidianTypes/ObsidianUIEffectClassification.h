@@ -5,9 +5,9 @@
 UENUM(BlueprintType)
 enum class EObsidianUIEffectClassification : uint8
 {
-	UEC_NoClassification UMETA(DisplayName = "No Classification"), 
-	UEC_Buff UMETA(DisplayName = "Buff"), 
-	UEC_Debuff UMETA(DisplayName = "Debuff"), 
+	EUEC_NoClassification UMETA(DisplayName = "No Classification"), 
+	EUEC_Buff UMETA(DisplayName = "Buff"), 
+	EUEC_Debuff UMETA(DisplayName = "Debuff"), 
 
-	UEC_MAX UMETA(DisplayName = "Default MAX") 
+	EUEC_MAX UMETA(DisplayName = "Default MAX") 
 };

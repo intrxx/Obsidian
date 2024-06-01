@@ -18,6 +18,7 @@ AObsidianCharacterBase::AObsidianCharacterBase()
 
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	CapsuleComp->SetGenerateOverlapEvents(false);
 
 	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");
 	RightHandEquipmentMesh->SetupAttachment(GetMesh(), FName("EquipmentRightHandSocket"));

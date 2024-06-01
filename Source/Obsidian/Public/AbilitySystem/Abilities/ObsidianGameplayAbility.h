@@ -13,14 +13,14 @@ class UObsidianAbilitySystemComponent;
 UENUM(BlueprintType)
 enum class EObsidianGameplayAbility_ActivationPolicy : uint8
 {
-	// Try to active the Ability when the input is triggered.
-	OnInputTriggered,
+	// Try to activate the Ability when the input is triggered.
+	EAP_OnInputTriggered UMETA(DisplayName = "On Input Triggered"),
 
 	// Continually try to activate the Ability while the input is active.
-	WhileInputActive,
+	EAP_WhileInputActive UMETA(DisplayName = "While input Active"),
 
-	// Try to active the ability when an avatar is assigned.
-	OnSpawn
+	// Try to activate the ability when an avatar is assigned.
+	EAP_OnSpawn UMETA(DisplayName = "On Spawn")
 };
 
 //TODO Think about Lyra like AbilityActivationGroup

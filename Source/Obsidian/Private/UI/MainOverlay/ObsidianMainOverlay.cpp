@@ -66,10 +66,10 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 
 	switch(Row.EffectClassification)
 	{
-	case EObsidianUIEffectClassification::UEC_Buff:
+	case EObsidianUIEffectClassification::EUEC_Buff:
 		BuffsEffectInfo_WrapBox->AddChild(StackingInfoWidget);
 		break;
-	case EObsidianUIEffectClassification::UEC_Debuff:
+	case EObsidianUIEffectClassification::EUEC_Debuff:
 		DeBuffsEffectInfo_WrapBox->AddChild(StackingInfoWidget);
 		break;
 	default:
@@ -80,17 +80,17 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 
 void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row)
 {
-	if(Row.InfoWidgetType == EObsidianInfoWidgetType::IWT_SimpleEffectInfo)
+	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo)
 	{
 		UObsidianEffectInfoBase* InfoWidget = CreateWidget<UObsidianEffectInfoBase>(OwningPlayerController, Row.SimpleEffectWidget);
 		InfoWidget->InitEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage);
 
 		switch(Row.EffectClassification)
 		{
-		case EObsidianUIEffectClassification::UEC_Buff:
+		case EObsidianUIEffectClassification::EUEC_Buff:
 			BuffsEffectInfo_WrapBox->AddChild(InfoWidget);
 			break;
-		case EObsidianUIEffectClassification::UEC_Debuff:
+		case EObsidianUIEffectClassification::EUEC_Debuff:
 			DeBuffsEffectInfo_WrapBox->AddChild(InfoWidget);
 			break;
 		default:
@@ -101,17 +101,17 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		return;
 	}
 	
-	if(Row.InfoWidgetType == EObsidianInfoWidgetType::IWT_DurationalEffectInfo)
+	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo)
 	{
 		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
 		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
 
 		switch(Row.EffectClassification)
 		{
-		case EObsidianUIEffectClassification::UEC_Buff:
+		case EObsidianUIEffectClassification::EUEC_Buff:
 			BuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
 			break;
-		case EObsidianUIEffectClassification::UEC_Debuff:
+		case EObsidianUIEffectClassification::EUEC_Debuff:
 			DeBuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
 			break;
 		default:
