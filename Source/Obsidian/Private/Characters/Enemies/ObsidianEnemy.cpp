@@ -11,7 +11,9 @@
 #include "ObsidianTypes/ObsidianChannels.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/WidgetComponent.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
+#include "UI/ObsidianWidgetBase.h"
 
 AObsidianEnemy::AObsidianEnemy()
 {
@@ -27,6 +29,9 @@ AObsidianEnemy::AObsidianEnemy()
 	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
 	
 	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
+
+	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComponent"));
+	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
 
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
@@ -59,6 +64,11 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 
 	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
 	check(ObsidianASC);
+	
+	if(UObsidianWidgetBase* HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject()))
+	{
+		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
+	}
 	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
 

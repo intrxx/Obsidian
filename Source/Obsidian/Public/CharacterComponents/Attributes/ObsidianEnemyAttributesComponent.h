@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
+#include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianEnemyAttributesComponent.generated.h"
 
 class UObsidianEnemyAttributeSet;
@@ -36,8 +37,20 @@ public:
 	FGameplayAttribute GetEnemySpecificAttributeAttribute() const;
 
 	/**
-	 * 
+	 * Delegates for enemy health bar
 	 */
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeValueChangedSignature HealthChangedDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeValueChangedSignature MaxHealthChangedDelegate;
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeValueChangedSignature EnergyShieldChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnAttributeValueChangedSignature MaxEnergyShieldChangedDelegate;
 
 protected:
 	/**
@@ -45,6 +58,10 @@ protected:
 	 */
 	
 	virtual void EnemySpecificAttributeChanged(const FOnAttributeChangeData& Data);
+	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data) override;
+	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data) override;
+	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) override;
 
 	/**
 	 * 
@@ -67,4 +84,8 @@ protected:
 	/**
 	 * 
 	 */
+
+private:
+	void BroadcastInitialValues() const;
+	
 };

@@ -7,6 +7,7 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianEnemy.generated.h"
 
+class UWidgetComponent;
 class UObsidianEnemyAttributeSet;
 class UObsidianEnemyAttributesComponent;
 class UObsidianCommonAttributeSet;
@@ -47,6 +48,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")
 	int32 EnemyLevel = 1;
