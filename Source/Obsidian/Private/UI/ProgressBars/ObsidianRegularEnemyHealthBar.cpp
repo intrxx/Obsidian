@@ -44,6 +44,11 @@ void UObsidianRegularEnemyHealthBar::HandleWidgetControllerSet()
 //TODO: This should probably be an option in the future
 void UObsidianRegularEnemyHealthBar::StartWidgetHideTimer()
 {
+   if(!bShouldHideWidget)
+   {
+      return;
+   }
+   
    SetVisibility(ESlateVisibility::Visible);
    
    const UWorld* World = GetWorld();

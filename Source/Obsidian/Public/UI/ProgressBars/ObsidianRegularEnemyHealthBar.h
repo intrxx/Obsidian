@@ -25,6 +25,9 @@ private:
     /** Time after which this health bar will become hidden */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian")
     float HideTime = 10.f;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian")
+    bool bShouldHideWidget = true;
     
     FTimerHandle HideTimerHandle;
     
