@@ -1,7 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/Enemies/ObsidianEnemy.h"
-
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"

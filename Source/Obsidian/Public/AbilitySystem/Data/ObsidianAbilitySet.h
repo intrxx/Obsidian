@@ -23,15 +23,15 @@ struct FObsidianAbilitySet_GameplayAbility
 	GENERATED_BODY()
 
 public:
-	// Gameplay Ability to grant.
+	/** Gameplay Ability to grant. */
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UObsidianGameplayAbility> Ability = nullptr;
 
-	// Level of the granted ability.
+	/** Level of the granted ability. */
 	UPROPERTY(EditDefaultsOnly)
 	int32 AbilityLevel = 1;
 
-	// Gameplay Tag used to process input for the ability.
+	/** Gameplay Tag used to process input for the ability. */
 	UPROPERTY(EditDefaultsOnly)
 	FGameplayTag InputTag;
 	
@@ -49,15 +49,15 @@ struct FObsidianAbilitySet_GameplayEffect
 	GENERATED_BODY()
 
 public:
-	// Gameplay Effect to grant.
+	/** Gameplay Effect to grant. */
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> GameplayEffect = nullptr;
 	
-	// Level of the granted Gameplay Effect.
+	/** Level of the granted Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly)
 	float EffectLevel = 1.0f;
 
-	// If this is set to true, this Gameplay effect will be given as the last one
+	/** If this is set to true, this Gameplay effect will be given as the last one. */
 	UPROPERTY(EditDefaultsOnly)
 	bool bIsDependentOnOtherAttributes = false;
 
@@ -75,7 +75,7 @@ struct FObsidianAbilitySet_AttributeSet
 	GENERATED_BODY()
 
 public:
-	// Attribute Set to grant.
+	/** Attribute Set to grant. */
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UAttributeSet> AttributeSet;
 	
@@ -100,15 +100,15 @@ public:
 	void TakeFromAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC);
 
 protected:
-	// Handles to granted Gameplay Abilities.
+	/** Handles to granted Gameplay Abilities. */
 	UPROPERTY()
 	TArray<FGameplayAbilitySpecHandle> GameplayAbilitySpecHandles;
 
-	// Handles to granted Gameplay Effects.
+	/** Handles to granted Gameplay Effects. */
 	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> GameplayEffectHandles;
 
-	// Pointers to granted Attribute Sets.
+	/** Pointers to granted Attribute Sets. */
 	UPROPERTY()
 	TArray<TObjectPtr<UAttributeSet>> GrantedAttributeSets;
 };
@@ -131,21 +131,22 @@ public:
 	 * @param SourceObject Used for Gameplay Ability Spec Handle to specify its Source Object
 	 */
 	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
+	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAbilitySet_GrantedHandles* GrantedHandles, const float LevelOverride, UObject* SourceObject = nullptr) const;
 
 #if WITH_EDITOR
 	EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
 #endif
 
 protected:
-	// Gameplay Abilities to grant when this Ability Set is granted.
+	/** Gameplay Abilities to grant when this Ability Set is granted. */
 	UPROPERTY(EditDefaultsOnly, Category = "Abilities", meta = (TitleProperty = Ability))
 	TArray<FObsidianAbilitySet_GameplayAbility> GrantedGameplayAbilities;
 
-	// Gameplay Effects to grant when this Ability Set is granted.
+	/** Gameplay Effects to grant when this Ability Set is granted. */
 	UPROPERTY(EditDefaultsOnly, Category = "Effects")
 	TArray<FObsidianAbilitySet_GameplayEffect> GrantedGameplayEffects;
 
-	// Attribute Sets to grant when this Ability Set is granted.
+	/** Attribute Sets to grant when this Ability Set is granted. */
 	UPROPERTY(EditDefaultsOnly, Category = "Attribute Sets")
 	TArray<FObsidianAbilitySet_AttributeSet> GrantedAttributeSets;
 };
