@@ -200,4 +200,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UOCharacterStatusWidgetController> CharacterStatusWidgetController;
+
+	
 };

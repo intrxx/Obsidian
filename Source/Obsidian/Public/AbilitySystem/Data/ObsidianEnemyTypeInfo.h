@@ -30,12 +30,12 @@ struct FObsidianEnemyTypeDefaultInfo
 /**
  * 
  */
-UCLASS(BlueprintType, Const)
+UCLASS(BlueprintType)
 class OBSIDIAN_API UObsidianEnemyTypeInfo : public UDataAsset
 {
 	GENERATED_BODY()
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Player Defaults")
+	UPROPERTY(EditDefaultsOnly, Category = "Enemy Types Info")
 	TMap<EObsidianEnemyClass, FObsidianEnemyTypeDefaultInfo> EnemyTypeDefaultInfoMap;
 
 	FObsidianEnemyTypeDefaultInfo GetEnemyTypeDefaultInfo(const EObsidianEnemyClass EnemyClass);

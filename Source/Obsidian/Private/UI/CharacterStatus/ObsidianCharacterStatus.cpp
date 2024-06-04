@@ -185,6 +185,13 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 		EnergyShieldRegeneration_AttributeRow->SetAttributeValue(Value);
 	});
 
+	CharacterStatusWidgetController->AllElementalResistancesChangedDelegate.BindLambda([this](const float Value)
+	{
+		FireResistance_AttributeRow->UpdateResistanceAttributeValue(Value);
+		ColdResistance_AttributeRow->UpdateResistanceAttributeValue(Value);
+		LightningResistance_AttributeRow->UpdateResistanceAttributeValue(Value);
+	});
+
 	CharacterStatusWidgetController->FireResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
 		FireResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);

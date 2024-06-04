@@ -173,6 +173,16 @@ FGameplayAttribute UObsidianAttributesComponent::GetEvasionAttribute() const
 	return (CommonAttributeSet ? CommonAttributeSet->GetEvasionAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetAllElementalResistances() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalResistances() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetAllElementalResistancesAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalResistancesAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetFireResistance() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetFireResistance() : 0.0f);

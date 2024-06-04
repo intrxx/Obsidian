@@ -22,13 +22,19 @@ public:
 	virtual void NativePreConstruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetAttributeValue(const float& Value) const;
+	void SetAttributeValue(const float& Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetAttributeValueWithPercentage(const float& Value) const;
+	void SetAttributeValueWithPercentage(const float& Value);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetResistanceAttributeValue(const float& Value, const float& MaxValue) const;
+	void SetResistanceAttributeValue(const float& Value, const float& MaxValue);
+
+	/** Updates the resistance value by a modifier */
+	void UpdateResistanceAttributeValue(const float& Value = 0, const float& MaxValue = 0);
+	
+	float GetCurrentAttributeValue() const { return CurrentAttributeValue; }
+	float GetCurrentMaxAttributeValue() const { return CurrentMaxAttributeValue; }
 	
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
@@ -69,4 +75,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
 	FText AttributeName = {};
+
+	/**
+	 * Cashed attributes
+	 */
+	
+	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian")
+	float CurrentAttributeValue = 0.f;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian")
+	float CurrentMaxAttributeValue = 0.f;
 };

@@ -51,6 +51,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	EvasionChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetEvasionAttribute()).AddUObject(this, &ThisClass::EvasionChanged);
 	HealthRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHealthRegenerationAttribute()).AddUObject(this, &ThisClass::HealthRegenerationChanged);
 	EnergyShieldRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetEnergyShieldRegenerationAttribute()).AddUObject(this, &ThisClass::EnergyShieldRegenerationChanged);
+	AllElementalResistancesChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAllElementalResistancesAttribute()).AddUObject(this, &ThisClass::AllElementalResistancesChanged);
 	FireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFireResistanceAttribute()).AddUObject(this, &ThisClass::FireResistanceChanged);
 	MaxFireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxFireResistanceAttribute()).AddUObject(this, &ThisClass::MaxFireResistanceChanged);
 	ColdResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdResistanceAttribute()).AddUObject(this, &ThisClass::ColdResistanceChanged);
@@ -102,6 +103,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	ColdResistanceChangedDelegate.Execute(AttributesComponent->GetColdResistance(), AttributesComponent->GetMaxColdResistance());
 	LightningResistanceChangedDelegate.Execute(AttributesComponent->GetLightningResistance(), AttributesComponent->GetMaxLightningResistance());
 	ChaosResistanceChangedDelegate.Execute(AttributesComponent->GetChaosResistance(), AttributesComponent->GetMaxChaosResistance());
+	AllElementalResistancesChangedDelegate.Execute(AttributesComponent->GetAllElementalResistances());
 }
 
 void UOCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const
@@ -274,6 +276,13 @@ void UOCharacterStatusWidgetController::EnergyShieldRegenerationChanged(const FO
 	const float NewValue = Data.NewValue;
 	
 	EnergyShieldRegenerationChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::AllElementalResistancesChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+	
+	AllElementalResistancesChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::FireResistanceChanged(const FOnAttributeChangeData& Data) const

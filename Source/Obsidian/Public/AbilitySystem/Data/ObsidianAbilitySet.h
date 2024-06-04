@@ -134,7 +134,7 @@ public:
 	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAbilitySet_GrantedHandles* GrantedHandles, const float LevelOverride, UObject* SourceObject = nullptr) const;
 
 #if WITH_EDITOR
-	EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
 #endif
 
 protected:
@@ -143,7 +143,7 @@ protected:
 	TArray<FObsidianAbilitySet_GameplayAbility> GrantedGameplayAbilities;
 
 	/** Gameplay Effects to grant when this Ability Set is granted. */
-	UPROPERTY(EditDefaultsOnly, Category = "Effects")
+	UPROPERTY(EditDefaultsOnly, Category = "Effects", meta = (TitleProperty = GameplayEffect))
 	TArray<FObsidianAbilitySet_GameplayEffect> GrantedGameplayEffects;
 
 	/** Attribute Sets to grant when this Ability Set is granted. */

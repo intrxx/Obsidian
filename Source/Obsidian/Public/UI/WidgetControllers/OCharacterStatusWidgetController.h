@@ -59,6 +59,7 @@ public:
 	FOnAttributeValueChangedOneParam EvasionChangedDelegate;
 	FOnAttributeValueChangedOneParam HealthRegenerationChangedDelegate;
 	FOnAttributeValueChangedOneParam EnergyShieldRegenerationChangedDelegate;
+	FOnAttributeValueChangedOneParam AllElementalResistancesChangedDelegate;
 	FOnAttributeValueChangedTwoParams FireResistanceChangedDelegate;
 	FOnAttributeValueChangedTwoParams MaxFireResistanceChangedDelegate;
 	FOnAttributeValueChangedTwoParams ColdResistanceChangedDelegate;
@@ -106,6 +107,7 @@ protected:
 	void EvasionChanged(const FOnAttributeChangeData& Data) const;
 	void HealthRegenerationChanged(const FOnAttributeChangeData& Data) const;
 	void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) const;
+	void AllElementalResistancesChanged(const FOnAttributeChangeData& Data) const;
 	void FireResistanceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxFireResistanceChanged(const FOnAttributeChangeData& Data) const;
 	void ColdResistanceChanged(const FOnAttributeChangeData& Data) const;
@@ -154,6 +156,7 @@ protected:
 	FDelegateHandle HealthRegenerationChangedDelegateHandle;
 	FDelegateHandle EnergyShieldRegenerationChangedDelegateHandle;
 	FDelegateHandle FireResistanceChangedDelegateHandle;
+	FDelegateHandle AllElementalResistancesChangedDelegateHandle;
 	FDelegateHandle MaxFireResistanceChangedDelegateHandle;
 	FDelegateHandle LightningResistanceChangedDelegateHandle;
 	FDelegateHandle MaxLightningResistanceChangedDelegateHandle;

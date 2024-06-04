@@ -64,6 +64,10 @@ public:
 	/** Getters for Evasion Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetEvasion() const;
 	FGameplayAttribute GetEvasionAttribute() const;
+
+	/** Getters for All Elemental Resistances Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetAllElementalResistances() const;
+	FGameplayAttribute GetAllElementalResistancesAttribute() const;
 	
 	/** Getters for Fire Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetFireResistance() const;

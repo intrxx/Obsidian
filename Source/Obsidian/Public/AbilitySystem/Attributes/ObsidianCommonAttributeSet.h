@@ -44,6 +44,12 @@ public:
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Armor);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
+	
+	/**
+	 * Resistances
+	 */
+	
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AllElementalResistances);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFireResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdResistance);
@@ -52,9 +58,9 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxLightningResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxChaosResistance);
-
+	
 	/**
-	 * Resistances
+	 * Damage scaling attributes
 	 */
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeChance);
@@ -66,11 +72,6 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, LightningPenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ElementalPenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosPenetration);
-	
-	/**
-	 * Damage scaling attributes
-	 */
-	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireDamageMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdDamageMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, LightningDamageMultiplier);
@@ -120,6 +121,8 @@ protected:
 	 * Resistances
 	 */
 	
+	UFUNCTION()
+	void OnRep_AllElementalResistances(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_FireResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -229,6 +232,15 @@ private:
 	/**
 	 * Resistances
 	 */
+
+	/**
+	 * The current All Elemental Resistances attribute. All Elemental Resistances is an attribute since Gameplay Effects can modify it.
+	 * This is all elemental resistances put together for convenience (mainly scaling enemy's resistances) and we can have additional stat on items.
+	 * 
+	 * THIS DOES NOT MEAN THAT THIS VALUE HOLDS ALL ELEMENTAL RESISTANCES, BUT IT IS RATHER A WAY TO SCALE ALL OF THEM WITH ONE ATTRIBUTE.
+	 */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllElementalResistances, Category = "Obsidian|CAttributes|AllElementalResistances", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AllElementalResistances;
 	
 	/** The current Fire Resistance attribute. Fire Resistance is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Obsidian|CAttributes|FireResistance", Meta = (AllowPrivateAccess = true))
