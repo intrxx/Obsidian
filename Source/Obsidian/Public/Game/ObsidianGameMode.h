@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "ObsidianGameMode.generated.h"
 
+class UObsidianEnemyTypeInfo;
 /**
  * 
  */
@@ -16,4 +17,10 @@ class OBSIDIAN_API AObsidianGameMode : public AGameModeBase
 	
 	//~AGameModeBase interface
 	//~End of AGameModeBase interface
+public:
+	UObsidianEnemyTypeInfo* GetEnemyTypeInfo() const {return EnemyTypeInfo;}
+	
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
+	TObjectPtr<UObsidianEnemyTypeInfo> EnemyTypeInfo;
 };

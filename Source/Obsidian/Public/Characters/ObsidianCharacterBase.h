@@ -27,7 +27,6 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-protected:
 	/** Fired when this actor is initialized as the avatar of the Ability System - Should be overridden by the child classes */
 	virtual void OnAbilitySystemInitialized();
 
@@ -53,7 +52,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Combat", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComp;
 
 	/**

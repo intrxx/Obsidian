@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "Interaction/ObsidianHighlightInterface.h"
+#include "ObsidianTypes/ObsidianEnemyType.h"
 #include "ObsidianEnemy.generated.h"
 
 class UWidgetComponent;
@@ -37,6 +38,10 @@ protected:
 	//~ Start of CombatInterface
 	virtual int32 GetCharacterLevel() override;
 	//~ End of CombatInterface
+
+protected:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
+	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::EEC_MAX;
 
 private:
 	UPROPERTY()

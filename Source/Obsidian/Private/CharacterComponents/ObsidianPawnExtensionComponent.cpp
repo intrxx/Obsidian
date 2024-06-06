@@ -89,8 +89,7 @@ void UObsidianPawnExtensionComponent::UninitializeAbilitySystem()
 	AbilitySystemComponent = nullptr;
 }
 
-void UObsidianPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(
-	FSimpleMulticastDelegate::FDelegate Delegate)
+void UObsidianPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate)
 {
 	if(!OnAbilitySystemInitialized.IsBoundToObject(Delegate.GetUObject()))
 	{
@@ -104,8 +103,7 @@ void UObsidianPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall
 	}
 }
 
-void UObsidianPawnExtensionComponent::OnAbilitySystemUninitialized_Register(
-	FSimpleMulticastDelegate::FDelegate Delegate)
+void UObsidianPawnExtensionComponent::OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate)
 {
 	if(!OnAbilitySystemUninitialized.IsBoundToObject(Delegate.GetUObject()))
 	{

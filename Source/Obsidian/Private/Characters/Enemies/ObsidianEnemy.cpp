@@ -11,6 +11,7 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Core/ObsidianASCFunctionLibrary.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
 
@@ -76,14 +77,14 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	}
 	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
-
+	
 	if(const UObsidianPawnExtensionComponent* PawnExt = UObsidianPawnExtensionComponent::FindPawnExtComponent(this))
 	{
 		if(const UObsidianPawnData* PawnData = PawnExt->GetPawnData())
 		{
 			for(const UObsidianAbilitySet* AbilitySet : PawnData->AbilitySets)
 			{
-				AbilitySet->GiveToAbilitySystem(ObsidianASC, nullptr, this);
+				AbilitySet->GiveToAbilitySystem(ObsidianASC, nullptr, EnemyLevel, this);
 			}
 		}
 	}

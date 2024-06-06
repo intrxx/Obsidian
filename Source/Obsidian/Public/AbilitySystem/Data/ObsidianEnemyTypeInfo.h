@@ -4,19 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
+#include "ObsidianTypes/ObsidianEnemyType.h"
 #include "ObsidianEnemyTypeInfo.generated.h"
 
 class UObsidianAbilitySet;
-
-UENUM(BlueprintType)
-enum class EObsidianEnemyClass : uint8
-{
-	EEC_Zombie UMETA(DisplayName = "Zombie"),
-	EEC_Goblin UMETA(DisplayName = "Goblin"),
-
-	EEC_MAX UMETA(DisplayName = "Default MAX")
-	
-};
 
 USTRUCT(BlueprintType)
 struct FObsidianEnemyTypeDefaultInfo
@@ -34,9 +25,12 @@ UCLASS(BlueprintType)
 class OBSIDIAN_API UObsidianEnemyTypeInfo : public UDataAsset
 {
 	GENERATED_BODY()
-	
+public:
+	FObsidianEnemyTypeDefaultInfo GetEnemyTypeDefaultInfo(const EObsidianEnemyClass EnemyClass);
+
+private:
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy Types Info")
 	TMap<EObsidianEnemyClass, FObsidianEnemyTypeDefaultInfo> EnemyTypeDefaultInfoMap;
 
-	FObsidianEnemyTypeDefaultInfo GetEnemyTypeDefaultInfo(const EObsidianEnemyClass EnemyClass);
+
 };
