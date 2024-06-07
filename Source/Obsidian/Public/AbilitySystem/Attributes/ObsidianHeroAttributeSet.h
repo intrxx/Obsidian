@@ -44,6 +44,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Dexterity);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Faith);
 
+	/**
+	 * Meta Attributes
+	 */
+
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, IncomingManaReplenishing);
+
 protected:
 	
 	/**
@@ -116,4 +122,11 @@ private:
 	/** The current Faith attribute. Faith is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Faith, Category = "Obsidian|HAttributes|Faith", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Faith;
+
+	/**
+	 * Meta Attributes
+	 */
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HAttributes|Meta", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncomingManaReplenishing;
 };

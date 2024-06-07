@@ -79,6 +79,46 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	{
 		SetEnergyShield(FMath::Clamp(GetEnergyShield(), 0.0f, GetMaxEnergyShield()));
 	}
+	else if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	{
+		const float LocalIncomingDamage = GetIncomingDamage();
+		SetIncomingDamage(0.f);
+		
+		if(LocalIncomingDamage > 0.f)
+		{
+			const float NewHealth = GetHealth() - LocalIncomingDamage;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+
+			const bool bDead = NewHealth <= 0.f;
+			if(bDead)
+			{
+				UE_LOG(LogTemp, Error, TEXT("[%s] Died!"), *GetNameSafe(GetOwningActor()));
+			}
+		}
+	}
+	else if(Data.EvaluatedData.Attribute == GetIncomingHealthHealingAttribute())
+	{
+		const float LocalIncomingHealthHealing = GetIncomingHealthHealing();
+		SetIncomingHealthHealing(0.f);
+		
+		if(LocalIncomingHealthHealing > 0.f)
+		{
+			//TODO Handle Energy Shield based on some conditions in the future
+			const float NewHealth = GetHealth() + LocalIncomingHealthHealing;
+			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+		}
+	}
+	else if(Data.EvaluatedData.Attribute == GetIncomingEnergyShieldHealingAttribute())
+	{
+		const float LocalIncomingEnergyShieldHealing = GetIncomingEnergyShieldHealing();
+		SetIncomingEnergyShieldHealing(0.f);
+		
+		if(LocalIncomingEnergyShieldHealing > 0.f)
+		{
+			const float NewEnergyShield = GetEnergyShield() + LocalIncomingEnergyShieldHealing;
+			SetEnergyShield(FMath::Clamp(NewEnergyShield, 0.f, GetMaxEnergyShield()));
+		}
+	}
 }
 
 void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)

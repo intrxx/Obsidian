@@ -80,10 +80,18 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, PhysicalDamageMultiplier);
 
 	/**
-	 * Base Damage Attributes
+	 * Base Attributes
 	 */
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, BaseDamage);
+	
+	/**
+	 * Meta Attributes
+	 */
+
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingHealthHealing);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingEnergyShieldHealing);
 
 protected:
 	/**
@@ -176,7 +184,7 @@ protected:
 	void OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue);
 
 	/**
-	 * Base Damage Attributes
+	 * Base Attributes
 	 */
 	
 	UFUNCTION()
@@ -339,11 +347,25 @@ private:
 	FGameplayAttributeData PhysicalDamageMultiplier;
 	
 	/**
-	 * Base Damage Attributes
+	 * Base Attributes
 	 */
 	
 	/** The current Physical Damage Multiplier attribute. Physical Damage Multiplier is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BaseDamage, Category = "Obsidian|CAttributes|BaseDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData BaseDamage;
+
+
+	/**
+	 * Meta Attributes
+	 */
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|CAttributes|Meta", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncomingDamage;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|CAttributes|Meta", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncomingHealthHealing;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|CAttributes|Meta", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncomingEnergyShieldHealing;
 };
 

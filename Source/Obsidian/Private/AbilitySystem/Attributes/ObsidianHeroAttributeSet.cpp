@@ -43,6 +43,17 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 	{
 		SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
 	}
+	else if(Data.EvaluatedData.Attribute == GetIncomingManaReplenishingAttribute())
+	{
+		const float LocalIncomingManaReplenishing = GetIncomingManaReplenishing();
+		SetIncomingManaReplenishing(0.f);
+		
+		if(LocalIncomingManaReplenishing > 0.f)
+		{
+			const float NewMana = GetMana() + LocalIncomingManaReplenishing;
+			SetMana(FMath::Clamp(NewMana, 0.f, GetMaxMana()));
+		}
+	}
 }
 
 void UObsidianHeroAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldValue)
