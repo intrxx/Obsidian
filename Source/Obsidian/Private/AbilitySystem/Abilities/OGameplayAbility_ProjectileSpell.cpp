@@ -2,9 +2,12 @@
 
 
 #include "AbilitySystem/Abilities/OGameplayAbility_ProjectileSpell.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "Combat/ObsidianCombatInterface.h"
 #include "Combat/Projectile/ObsidianProjectile.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                                         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
@@ -34,7 +37,9 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 	const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo();
 	const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), OwningASC->MakeEffectContext());
 
-	Projectile->DamageEffectSpecHandle = SpecHandle;
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, ObsidianGameplayTags::Ability_Damage, 20.f);
+	
+	Projectile->SetProjectileDamageSpecHandle(SpecHandle);
 	
 	Projectile->FinishSpawning(SpawnTransform);
 }
