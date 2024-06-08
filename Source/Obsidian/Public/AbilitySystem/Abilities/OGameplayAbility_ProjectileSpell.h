@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
+#include "ObsidianDamageGameplayAbility.h"
 #include "ObsidianTypes/ObsidianAbilitySpawnLocation.h"
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
@@ -12,7 +12,7 @@ class AObsidianProjectile;
  * 
  */
 UCLASS()
-class OBSIDIAN_API UOGameplayAbility_ProjectileSpell : public UObsidianGameplayAbility
+class OBSIDIAN_API UOGameplayAbility_ProjectileSpell : public UObsidianDamageGameplayAbility
 {
 	GENERATED_BODY()
 public:
