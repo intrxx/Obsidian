@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianEnemyType.h"
@@ -26,6 +27,12 @@ public:
 	
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
+	
+	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+
+public:
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Enemy")
+	bool bHitReacting = false;
 
 protected:
 	virtual void BeginPlay() override;
@@ -43,6 +50,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::EEC_MAX;
 
+private:
+	void CreateHealthBarWidget();
+	
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;

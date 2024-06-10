@@ -49,6 +49,8 @@ AObsidianHero::AObsidianHero()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+
+	bIsPlayer = true;
 }
 
 void AObsidianHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

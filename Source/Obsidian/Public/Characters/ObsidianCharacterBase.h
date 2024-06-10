@@ -24,6 +24,8 @@ public:
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	bool bIsPlayer = false;
+
 protected:
 	virtual void BeginPlay() override;
 

@@ -11,7 +11,8 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Core/ObsidianASCFunctionLibrary.h"
+#include "Obsidian/ObsidianGameplayTags.h"
+#include "GameplayEffectTypes.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
 
@@ -65,16 +66,7 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
 	check(ObsidianASC);
 	
-	if(UObsidianWidgetBase* HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject()))
-	{
-		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
-	}
-	else
-	{
-		HealthBarWidgetComp->InitWidget();
-		HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject());
-		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
-	}
+	CreateHealthBarWidget();
 	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
 	
@@ -88,6 +80,9 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 			}
 		}
 	}
+	
+	ObsidianASC->RegisterGameplayTagEvent(ObsidianGameplayTags::Effect_Ability_HitReact,
+		EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 }
 
 void AObsidianEnemy::OnAbilitySystemUninitialized()
@@ -100,4 +95,26 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 int32 AObsidianEnemy::GetCharacterLevel()
 {
 	return EnemyLevel;
+}
+
+void AObsidianEnemy::CreateHealthBarWidget()
+{
+	if(UObsidianWidgetBase* HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject()))
+	{
+		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
+	}
+	else
+	{
+		HealthBarWidgetComp->InitWidget();
+		HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject());
+		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
+	}
+}
+
+void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	bHitReacting = NewCount > 0;
+
+	//TODO Maybe change walk speed here
+	// That might not actually be used in the future
 }

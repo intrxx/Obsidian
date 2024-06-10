@@ -10,7 +10,15 @@ namespace ObsidianGameplayTags
 	// Abilities
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_ActivationFail_IsDead, "Ability.ActivationFail.IsDead", "Ability failed to activate because its owner is dead.");
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Damage, "Ability.Damage", "Tag used for passing damage with set by caller magnitude");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Damage, "Ability.Damage", "Tag used for passing damage with set by caller magnitude.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_HitReact, "Ability.HitReact", "Tag used for activating hit react.");
+
+	// Cooldowns
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_HitReact, "Ability.Cooldown.HitReact", "Tag used for Hit React Ability cooldown.")
+
+	// Effects
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_Ability_HitReact, "Effect.Ability.HitReact", "Tag used for activating the Hit React ability.");
 
 	// Statuses
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Death, "Status.Death", "Target has the death status.");

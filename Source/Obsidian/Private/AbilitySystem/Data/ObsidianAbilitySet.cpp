@@ -293,6 +293,9 @@ EDataValidationResult FObsidianAbilitySet_GameplayAbility::ValidateData(FDataVal
 		Context.AddError(ErrorMessage);
 	}
 
+	/*
+	 * This is actually bad, I don't want to be forced to specify input tag for some abilties
+	 *
 	if(!InputTag.IsValid())
 	{
 		Result = EDataValidationResult::Invalid;
@@ -302,6 +305,7 @@ EDataValidationResult FObsidianAbilitySet_GameplayAbility::ValidateData(FDataVal
 
 		Context.AddError(ErrorMessage);
 	}
+	*/
 
 	return Result;
 }

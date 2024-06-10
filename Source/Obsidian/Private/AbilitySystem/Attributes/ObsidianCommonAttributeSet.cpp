@@ -4,7 +4,9 @@
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
+#include "Characters/ObsidianCharacterBase.h"
 #include "Net/UnrealNetwork.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
 {
@@ -93,6 +95,15 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			if(bDead)
 			{
 				UE_LOG(LogTemp, Error, TEXT("[%s] Died!"), *GetNameSafe(GetOwningActor()));
+			}
+			else
+			{
+				if(!EffectProps.TargetCharacter->bIsPlayer)
+				{
+					FGameplayTagContainer ActivateTag;
+					ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
+					EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
+				}
 			}
 		}
 	}
