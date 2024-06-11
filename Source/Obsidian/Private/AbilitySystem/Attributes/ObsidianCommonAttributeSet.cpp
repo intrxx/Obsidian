@@ -100,11 +100,13 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			{
 				if(!EffectProps.TargetCharacter->bIsPlayer)
 				{
-					// TODO Check if should hit react 
-					// for example if a hit was 30% or less of current health, we shouldn't hit react
-					FGameplayTagContainer ActivateTag;
-					ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
-					EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
+					// Check if we should hit react, small hits shouldn't cause hit reacting
+					if((LocalIncomingDamage / GetMaxHealth()) * 100.f > ObsidianAttributeConstants::HitReactThreshold)
+					{
+						FGameplayTagContainer ActivateTag;
+						ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
+						EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
+					}
 				}
 			}
 		}

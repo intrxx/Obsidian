@@ -7,6 +7,11 @@
 #include "AbilitySystem/Attributes/ObsidianAttributeSetBase.h"
 #include "ObsidianCommonAttributeSet.generated.h"
 
+namespace ObsidianAttributeConstants
+{
+	constexpr float HitReactThreshold = (30.f/100.f) * 100.f;
+}
+
 /**
  * Attribute set that holds all the shared attributes between enemies and the player character
  */
