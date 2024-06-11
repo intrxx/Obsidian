@@ -24,15 +24,17 @@ public:
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
+	/** Set to true on hero characters, false by default. Indicates if ObsidianCharacter is a Player Character (Hero) or AI (Enemy). */
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Character")
 	bool bIsPlayer = false;
 
 protected:
 	virtual void BeginPlay() override;
 
-	/** Fired when this actor is initialized as the avatar of the Ability System - Should be overridden by the child classes */
+	/** Fired when this actor is initialized as the avatar of the Ability System - Should be overridden by the child classes. */
 	virtual void OnAbilitySystemInitialized();
 
-	/** Fired when this actor is removed as the avatar of the Ability System - Should be overridden by the child classes */
+	/** Fired when this actor is removed as the avatar of the Ability System - Should be overridden by the child classes. */
 	virtual void OnAbilitySystemUninitialized();
 
 	//~ Start of CombatInterface
@@ -58,7 +60,7 @@ protected:
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComp;
 
 	/**
-	 * Sockets used mostly for combat reasons, spawning projectiles
+	 * Sockets used mostly for combat reasons, spawning projectiles.
 	 */
 	
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
@@ -77,7 +79,7 @@ protected:
 	 *
 	 */
 
-	/** Offset for how much the ability spawn location is moved from the player character */ 
+	/** Offset for how much the ability spawn location is moved from the player character. */ 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
 	float DefaultAbilitySocketLocationOffset = 0.f;
 };

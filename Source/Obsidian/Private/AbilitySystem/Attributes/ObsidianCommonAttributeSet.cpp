@@ -100,6 +100,8 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			{
 				if(!EffectProps.TargetCharacter->bIsPlayer)
 				{
+					// TODO Check if should hit react 
+					// for example if a hit was 30% or less of current health, we shouldn't hit react
 					FGameplayTagContainer ActivateTag;
 					ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
 					EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
