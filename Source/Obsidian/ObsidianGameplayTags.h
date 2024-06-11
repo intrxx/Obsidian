@@ -17,7 +17,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_HitReact)
 	
 	// Effects
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_Ability_HitReact)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact)
 	
 	// Statuses
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death);

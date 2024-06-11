@@ -81,7 +81,7 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 		}
 	}
 	
-	ObsidianASC->RegisterGameplayTagEvent(ObsidianGameplayTags::Effect_Ability_HitReact,
+	ObsidianASC->RegisterGameplayTagEvent(ObsidianGameplayTags::Effect_HitReact,
 		EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 }
 
@@ -114,7 +114,7 @@ void AObsidianEnemy::CreateHealthBarWidget()
 void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
-
+	
 	//TODO Maybe change walk speed here
 	// That might not actually be used in the future
 }
