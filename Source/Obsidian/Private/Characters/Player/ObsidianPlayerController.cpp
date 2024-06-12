@@ -15,7 +15,7 @@ void AObsidianPlayerController::BeginPlay()
 	Super::BeginPlay();
 
 	bShowMouseCursor = true;
-	SetMouseCursorWidget(EMouseCursor::Default, DefaultCursor);
+	//SetMouseCursorWidget(EMouseCursor::Default, DefaultCursor);
 	CurrentMouseCursor = EMouseCursor::Default;
 	
 	FInputModeGameAndUI InputModeData;

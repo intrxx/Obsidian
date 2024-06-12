@@ -4,6 +4,8 @@
 #include "AbilitySystem/AbilityTasks/UOAbilityTask_TargetDataUnderCursor.h"
 
 #include "AbilitySystemComponent.h"
+#include "DrawDebugHelpers.h"
+#include "ObsidianTypes/ObsidianChannels.h"
 
 UOAbilityTask_TargetDataUnderCursor* UOAbilityTask_TargetDataUnderCursor::CreateTargetDataUnderCursorProxy(UGameplayAbility* OwningAbility)
 {
@@ -42,7 +44,7 @@ void UOAbilityTask_TargetDataUnderCursor::BroadcastTargetDataToServer()
 	}
 	
 	FHitResult HitResult;
-	PC->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+	PC->GetHitResultUnderCursor(Obsidian_TraceChannel_PlayerCursorTrace, false, HitResult);
 	
 	FGameplayAbilityTargetData_SingleTargetHit* Data = new FGameplayAbilityTargetData_SingleTargetHit();
 	Data->HitResult = HitResult;
