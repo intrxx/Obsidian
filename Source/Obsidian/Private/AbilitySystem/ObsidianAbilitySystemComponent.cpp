@@ -4,6 +4,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 
 UObsidianAbilitySystemComponent::UObsidianAbilitySystemComponent(const FObjectInitializer& ObjectInitializer)
@@ -65,34 +66,38 @@ void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilityS
 void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
 	FActiveGameplayEffectHandle EffectHandle)
 {
-	FObsidianEffectUIData EffectUIData;
-	
 	FGameplayTagContainer AssetTags;
 	EffectSpec.GetAllAssetTags(AssetTags);
-	EffectUIData.AssetTags = AssetTags;
-
-	const EGameplayEffectDurationType GameplayEffectType = EffectSpec.Def->DurationPolicy;
-	EffectUIData.EffectDurationPolicy = GameplayEffectType;
-
-	if(GameplayEffectType == EGameplayEffectDurationType::HasDuration)
-	{
-		EffectUIData.EffectDuration = EffectSpec.GetDuration();
-		EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec);
-	}
 	
-	if(EffectSpec.Def->StackingType != EGameplayEffectStackingType::None)
+	if(AssetTags.HasTagExact(ObsidianGameplayTags::Data_EffectUIInfo))
 	{
-		EffectUIData.bStackingEffect = true;
+		FObsidianEffectUIData EffectUIData;
 		
-		FObsidianEffectUIStackingData StackingData;
-		
-		StackingData.EffectStackCount = EffectSpec.GetStackCount();
-		StackingData.EffectExpirationDurationPolicy = EffectSpec.Def->GetStackExpirationPolicy();
-		StackingData.EffectStackingDurationPolicy = EffectSpec.Def->StackDurationRefreshPolicy;
-		EffectUIData.StackingData = StackingData;
-	}
+		EffectUIData.AssetTags = AssetTags;
+
+		const EGameplayEffectDurationType GameplayEffectType = EffectSpec.Def->DurationPolicy;
+		EffectUIData.EffectDurationPolicy = GameplayEffectType;
+
+		if(GameplayEffectType == EGameplayEffectDurationType::HasDuration)
+		{
+			EffectUIData.EffectDuration = EffectSpec.GetDuration();
+			EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec);
+		}
 	
-	EffectAppliedAssetTags.Broadcast(EffectUIData);
+		if(EffectSpec.Def->StackingType != EGameplayEffectStackingType::None)
+		{
+			EffectUIData.bStackingEffect = true;
+		
+			FObsidianEffectUIStackingData StackingData;
+		
+			StackingData.EffectStackCount = EffectSpec.GetStackCount();
+			StackingData.EffectExpirationDurationPolicy = EffectSpec.Def->GetStackExpirationPolicy();
+			StackingData.EffectStackingDurationPolicy = EffectSpec.Def->StackDurationRefreshPolicy;
+			EffectUIData.StackingData = StackingData;
+		}
+	
+		EffectAppliedAssetTags.Broadcast(EffectUIData);
+	}
 }
 
 float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGameplayEffectSpec& EffectSpec)
