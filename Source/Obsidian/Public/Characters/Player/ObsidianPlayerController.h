@@ -9,8 +9,9 @@
 class AObsidianHUD;
 class UObsidianAbilitySystemComponent;
 class AObsidianPlayerState;
+
 /**
- * 
+ * Base class for Obsidian player characters player controller.
  */
 UCLASS()
 class OBSIDIAN_API AObsidianPlayerController : public APlayerController

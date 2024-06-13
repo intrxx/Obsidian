@@ -37,6 +37,8 @@ AObsidianHero::AObsidianHero()
 	HeroComponent = CreateDefaultSubobject<UObsidianHeroComponent>(TEXT("HeroComponent"));
 
 	HeroAttributesComponent = CreateDefaultSubobject<UObsidianHeroAttributesComponent>(TEXT("HeroAttributesComponent"));
+	HeroAttributesComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
+	HeroAttributesComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathFinished);
 
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
@@ -143,6 +145,16 @@ void AObsidianHero::OnAbilitySystemUninitialized()
 	Super::OnAbilitySystemUninitialized();
 
 	HeroAttributesComponent->UninitializeFromAbilitySystem();
+}
+
+void AObsidianHero::OnDeathStarted(AActor* OwningActor)
+{
+	Super::OnDeathStarted(OwningActor);
+}
+
+void AObsidianHero::OnDeathFinished(AActor* OwningActor)
+{
+	Super::OnDeathFinished(OwningActor);
 }
 
 void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC)

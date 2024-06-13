@@ -62,6 +62,14 @@ void AObsidianCharacterBase::OnAbilitySystemUninitialized()
 {
 }
 
+void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
+{
+}
+
+void AObsidianCharacterBase::OnDeathFinished(AActor* OwningActor)
+{
+}
+
 FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon()
 {
 	if(LeftHandEquipmentMesh)

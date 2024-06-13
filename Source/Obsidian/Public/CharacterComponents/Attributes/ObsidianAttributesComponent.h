@@ -10,6 +10,21 @@
 class UObsidianHeroAttributeSet;
 class UObsidianCommonAttributeSet;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FObsidianAttrComp_DeathEvent, AActor*, OwningActor);
+
+/**
+ * EObsidianDeathState
+ *
+ * Defines the state of death.
+ */
+UENUM(BlueprintType)
+enum class EObsidianDeathState : uint8
+{
+	EDS_Alive = 0 UMETA(DisplayName = "Alive"),
+	EDS_DeathStarted UMETA(DisplayName = "Death Started"),
+	EDS_DeathFinished UMETA(DisplayName = "Death Finished")
+};
+
 /**
  * Base Attributes Component class for this project - Hero and Enemy Attributes Component classes should derive from this.
  */
@@ -29,6 +44,18 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
 	virtual void UninitializeFromAbilitySystem();
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
+	EObsidianDeathState GetDeathState() const { return DeathState; }
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (ExpandBoolAsExecs), Category = "Obsidian|Attributes")
+	bool IsDeadOrDying() const { return DeathState > EObsidianDeathState::EDS_Alive; }
+
+	/** Start the death sequence for the owner. */
+	virtual void StartDeath();
+
+	/** Ends the death sequence for the owner. */
+	virtual void FinishDeath();
+	
 	/**
 	 * Getters for Gameplay Attributes.
 	 */
@@ -165,6 +192,15 @@ public:
 	 *
 	 */
 
+public:
+	/** Delegate fired when the death sequence has started. */
+	UPROPERTY(BlueprintAssignable)
+	FObsidianAttrComp_DeathEvent OnDeathStarted;
+
+	/** Delegate fired when the death sequence has finished. */ 
+	UPROPERTY(BlueprintAssignable)
+	FObsidianAttrComp_DeathEvent OnDeathFinished;
+
 protected:
 	virtual void OnUnregister() override;
 	
@@ -180,6 +216,11 @@ protected:
 	/**
 	 * 
 	 */
+
+	UFUNCTION()
+	virtual void OnRep_DeathState(EObsidianDeathState OldDeathState);
+
+	virtual void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue);
 	
 protected:
 	/** Ability System used by this component. */
@@ -205,6 +246,9 @@ protected:
 	/**
 	 *
 	 */
+
+	UPROPERTY(ReplicatedUsing = OnRep_DeathState)
+	EObsidianDeathState DeathState;
 };
 
 

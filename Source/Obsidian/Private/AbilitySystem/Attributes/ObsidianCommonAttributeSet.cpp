@@ -10,6 +10,7 @@
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
 {
+	bOutOfHealth = false;
 }
 
 void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -46,6 +46,8 @@ void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilityS
 	MaxHealthChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
 	EnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
 	MaxEnergyShieldChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
+
+	CommonAttributeSet->OnOutOfHealth.AddUObject(this, &ThisClass::HandleOutOfHealth);
 	
 	// Set the Health value to the MaxHealth // TODO Decide if I actually want to do it this way
 	AbilitySystemComponent->SetNumericAttributeBase(GetHealthAttribute(), GetMaxHealth());
@@ -60,6 +62,11 @@ void UObsidianAttributesComponent::UninitializeFromAbilitySystem()
 	MaxHealthChangedDelegateHandle.Reset();
 	EnergyShieldChangedDelegateHandle.Reset();
 	MaxEnergyShieldChangedDelegateHandle.Reset();
+
+	if(CommonAttributeSet)
+	{
+		CommonAttributeSet->OnOutOfHealth.RemoveAll(this);
+	}
 	
 	CommonAttributeSet = nullptr;
 	AbilitySystemComponent = nullptr;
@@ -70,6 +77,24 @@ void UObsidianAttributesComponent::OnUnregister()
 	UninitializeFromAbilitySystem();
 	
 	Super::OnUnregister();
+}
+
+void UObsidianAttributesComponent::StartDeath()
+{
+}
+
+void UObsidianAttributesComponent::FinishDeath()
+{
+}
+
+void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeathState)
+{
+}
+
+void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser,
+	const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue)
+{
+	
 }
 
 void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)

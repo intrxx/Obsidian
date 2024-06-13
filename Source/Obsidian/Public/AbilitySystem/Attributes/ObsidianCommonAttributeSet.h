@@ -98,6 +98,10 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingHealthHealing);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingEnergyShieldHealing);
 
+public:
+	/** Delegate fired when the health reaches zero */
+	mutable FObsidianAttributeEvent OnOutOfHealth;
+	
 protected:
 	/**
 	 * Vital
@@ -196,6 +200,8 @@ protected:
 	void OnRep_BaseDamage(const FGameplayAttributeData& OldValue);
 
 private:
+	bool bOutOfHealth;
+	
 	/**
 	 * Vital
 	 */

@@ -37,6 +37,14 @@ protected:
 	/** Fired when this actor is removed as the avatar of the Ability System - Should be overridden by the child classes. */
 	virtual void OnAbilitySystemUninitialized();
 
+	/** Begins the death sequence for the character (disables collision, disables movement, etc...) */
+	UFUNCTION()
+	virtual void OnDeathStarted(AActor* OwningActor);
+
+	/** Ends the death sequence for the character (detaches controller, destroys pawn, etc...) */
+	UFUNCTION()
+	virtual void OnDeathFinished(AActor* OwningActor);
+
 	//~ Start of CombatInterface
 	virtual FVector GetAbilitySocketLocationFromLHWeapon() override;
 	virtual FVector GetAbilitySocketLocationFromRHWeapon() override;

@@ -30,6 +30,8 @@ AObsidianEnemy::AObsidianEnemy()
 	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
 	
 	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
+	EnemyAttributesComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
+	EnemyAttributesComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
 
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComponent"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
@@ -90,6 +92,16 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 	Super::OnAbilitySystemUninitialized();
 
 	EnemyAttributesComponent->UninitializeFromAbilitySystem();
+}
+
+void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
+{
+	Super::OnDeathStarted(OwningActor);
+}
+
+void AObsidianEnemy::OnDeathFinished(AActor* OwningActor)
+{
+	Super::OnDeathFinished(OwningActor);
 }
 
 int32 AObsidianEnemy::GetCharacterLevel()

@@ -40,6 +40,12 @@ protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
+
+	UFUNCTION()
+	virtual void OnDeathStarted(AActor* OwningActor) override;
+
+	UFUNCTION()
+	virtual void OnDeathFinished(AActor* OwningActor) override;
 	//~ End of AObsidianCharacterBase
 
 	//~ Start of CombatInterface
