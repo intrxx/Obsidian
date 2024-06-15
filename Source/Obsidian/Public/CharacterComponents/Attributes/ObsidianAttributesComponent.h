@@ -39,7 +39,9 @@ public:
 	/** Initializes this component using ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr);
-
+	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	
 	/** Uninitialize this component, clearing any references to the ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
 	virtual void UninitializeFromAbilitySystem();

@@ -4,6 +4,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "Obsidian/Obsidian.h"
 
 
@@ -52,6 +53,13 @@ void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilityS
 	// Set the Health value to the MaxHealth // TODO Decide if I actually want to do it this way
 	AbilitySystemComponent->SetNumericAttributeBase(GetHealthAttribute(), GetMaxHealth());
 	AbilitySystemComponent->SetNumericAttributeBase(GetEnergyShieldAttribute(), GetMaxEnergyShield());
+}
+
+void UObsidianAttributesComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(UObsidianAttributesComponent, DeathState);
 }
 
 void UObsidianAttributesComponent::UninitializeFromAbilitySystem()

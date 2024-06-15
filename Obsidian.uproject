@@ -54,11 +54,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "FreeBoneSnapper",
-			"Enabled": true,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/12fcc1d822204c5c94c56899bf3a04bd"
-		},
-		{
 			"Name": "MotionWarping",
 			"Enabled": true
 		}

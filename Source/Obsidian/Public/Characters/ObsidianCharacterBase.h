@@ -38,11 +38,9 @@ protected:
 	virtual void OnAbilitySystemUninitialized();
 
 	/** Begins the death sequence for the character (disables collision, disables movement, etc...) */
-	UFUNCTION()
 	virtual void OnDeathStarted(AActor* OwningActor);
 
 	/** Ends the death sequence for the character (detaches controller, destroys pawn, etc...) */
-	UFUNCTION()
 	virtual void OnDeathFinished(AActor* OwningActor);
 
 	//~ Start of CombatInterface

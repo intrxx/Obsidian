@@ -18,9 +18,11 @@
 
 AObsidianEnemy::AObsidianEnemy()
 {
-	GetMesh()->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
-	GetMesh()->SetCustomDepthStencilValue(ObsidianHighlight::Red);
-	GetMesh()->SetRenderCustomDepth(false);
+	USkeletalMeshComponent* MeshComp = GetMesh();
+	MeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
+	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
+	MeshComp->SetCustomDepthStencilValue(ObsidianHighlight::Red);
+	MeshComp->SetRenderCustomDepth(false);
 	
 	ObsidianAbilitySystemComponent = CreateDefaultSubobject<UObsidianAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
 	ObsidianAbilitySystemComponent->SetIsReplicated(true);
@@ -35,9 +37,6 @@ AObsidianEnemy::AObsidianEnemy()
 
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComponent"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
-
-	USkeletalMeshComponent* MeshComp = GetMesh();
-	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
 	
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
