@@ -6,6 +6,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 
 UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitializer& ObjectInitializer)
@@ -18,6 +19,8 @@ UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitiali
 
 	AbilitySystemComponent = nullptr;
 	CommonAttributeSet = nullptr;
+
+	DeathState = EObsidianDeathState::EDS_Alive;
 }
 
 void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner)
@@ -64,8 +67,6 @@ void UObsidianAttributesComponent::GetLifetimeReplicatedProps(TArray<FLifetimePr
 
 void UObsidianAttributesComponent::UninitializeFromAbilitySystem()
 {
-	//TODO Clear any loose gameplay tags here
-	
 	HealthChangedDelegateHandle.Reset();
 	MaxHealthChangedDelegateHandle.Reset();
 	EnergyShieldChangedDelegateHandle.Reset();
@@ -87,22 +88,126 @@ void UObsidianAttributesComponent::OnUnregister()
 	Super::OnUnregister();
 }
 
+void UObsidianAttributesComponent::ClearGameplayTags()
+{
+	if(AbilitySystemComponent)
+	{
+		AbilitySystemComponent->RemoveLooseGameplayTag(ObsidianGameplayTags::Status_Death_Dying, 0);
+		AbilitySystemComponent->RemoveLooseGameplayTag(ObsidianGameplayTags::Status_Death_Dead, 0);
+	}
+}
+
 void UObsidianAttributesComponent::StartDeath()
 {
+	if(DeathState != EObsidianDeathState::EDS_Alive)
+	{
+		return;
+	}
+
+	DeathState = EObsidianDeathState::EDS_DeathStarted;
+
+	if(AbilitySystemComponent)
+	{
+		AbilitySystemComponent->SetLooseGameplayTagCount(ObsidianGameplayTags::Status_Death_Dying, 1);
+	}
+
+	AActor* Owner = GetOwner();
+	check(Owner);
+	
+	OnDeathStarted.Broadcast(Owner);
+
+	Owner->ForceNetUpdate();
 }
 
 void UObsidianAttributesComponent::FinishDeath()
 {
+	if(DeathState != EObsidianDeathState::EDS_DeathStarted)
+	{
+		return;
+	}
+
+	DeathState = EObsidianDeathState::EDS_DeathFinished;
+
+	if(AbilitySystemComponent)
+	{
+		AbilitySystemComponent->SetLooseGameplayTagCount(ObsidianGameplayTags::Status_Death_Dead, 1);
+	}
+
+	AActor* Owner = GetOwner();
+	check(Owner);
+
+	OnDeathFinished.Broadcast(Owner);
+
+	Owner->ForceNetUpdate();
 }
 
 void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeathState)
 {
+	const EObsidianDeathState NewDeathState = DeathState;
+
+	// Revert the death state for now since we rely on StartDeath and FinishDeath to change it.
+	DeathState = OldDeathState;
+
+	if (OldDeathState > NewDeathState)
+	{
+		// The server is trying to set us back but we've already predicted past the server state.
+		UE_LOG(LogTemp, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+		return;
+	}
+
+	if (OldDeathState == EObsidianDeathState::EDS_Alive)
+	{
+		if (NewDeathState == EObsidianDeathState::EDS_DeathStarted)
+		{
+			StartDeath();
+		}
+		else if (NewDeathState == EObsidianDeathState::EDS_DeathFinished)
+		{
+			StartDeath();
+			FinishDeath();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+		}
+	}
+	else if (OldDeathState == EObsidianDeathState::EDS_DeathStarted)
+	{
+		if (NewDeathState == EObsidianDeathState::EDS_DeathFinished)
+		{
+			FinishDeath();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+		}
+	}
+
+	ensureMsgf((DeathState == NewDeathState), TEXT("ObsidianAttributesComp: Death transition failed [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser,
 	const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue)
 {
-	
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Out of health"));
+
+#if WITH_SERVER_CODE
+	if(AbilitySystemComponent && DamageEffectSpec)
+	{
+		FGameplayEventData Payload;
+		Payload.EventTag = ObsidianGameplayTags::GameplayEvent_Death;
+		Payload.Instigator = DamageInstigator;
+		Payload.Target = AbilitySystemComponent->GetAvatarActor();
+		Payload.OptionalObject = DamageEffectSpec->Def;
+		Payload.ContextHandle = DamageEffectSpec->GetEffectContext();
+		Payload.InstigatorTags = *DamageEffectSpec->CapturedSourceTags.GetAggregatedTags();
+		Payload.TargetTags = *DamageEffectSpec->CapturedTargetTags.GetAggregatedTags();
+		Payload.EventMagnitude = DamageMagnitude;
+
+		FScopedPredictionWindow NewScopedWindow(AbilitySystemComponent, true);
+		AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
+	}
+#endif 
 }
 
 void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)

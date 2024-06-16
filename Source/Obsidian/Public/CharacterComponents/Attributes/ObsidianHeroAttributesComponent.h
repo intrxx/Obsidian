@@ -64,6 +64,8 @@ public:
 	 */
 
 protected:
+	virtual void ClearGameplayTags() override;
+	
 	/**
 	 * Callbacks for Attribute change delegates. //TODO Decide what should actually be bind later - check performance
 	 */

@@ -205,6 +205,7 @@ public:
 
 protected:
 	virtual void OnUnregister() override;
+	virtual void ClearGameplayTags();
 	
 	/**
 	 * Callbacks for Attribute change delegates.
@@ -216,7 +217,7 @@ protected:
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data);
 	
 	/**
-	 * 
+	 *  Death Sequence
 	 */
 
 	UFUNCTION()

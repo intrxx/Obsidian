@@ -65,6 +65,11 @@ void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& A
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxEnergyShield());
 	}
+
+	if(bOutOfHealth && (GetHealth() > 0.0f))
+	{
+		bOutOfHealth = false;
+	}
 }
 
 void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -89,13 +94,14 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 		
 		if(LocalIncomingDamage > 0.f)
 		{
+			const float OldHealth = GetHealth();
 			const float NewHealth = GetHealth() - LocalIncomingDamage;
 			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
-
-			const bool bDead = NewHealth <= 0.f;
-			if(bDead)
+			
+			if(!bOutOfHealth && (GetHealth() <= 0.0f))
 			{
 				UE_LOG(LogTemp, Error, TEXT("[%s] Died!"), *GetNameSafe(GetOwningActor()));
+				OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
 			}
 			else
 			{
@@ -135,11 +141,23 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			SetEnergyShield(FMath::Clamp(NewEnergyShield, 0.f, GetMaxEnergyShield()));
 		}
 	}
+
+	bOutOfHealth = (GetHealth() <= 0.0f);
 }
 
 void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Health, OldValue);
+
+	const float CurrentHealth = GetHealth();
+	const float Magnitude = CurrentHealth - OldValue.GetCurrentValue();
+
+	if(!bOutOfHealth && CurrentHealth <= 0.0f)
+	{
+		OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, Magnitude, OldValue.GetCurrentValue(), CurrentHealth);
+	}
+
+	bOutOfHealth = (CurrentHealth <= 0.0f);
 }
 
 void UObsidianCommonAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)

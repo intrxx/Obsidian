@@ -62,6 +62,12 @@ public:
 
 	UPROPERTY()
 	AObsidianCharacterBase* TargetCharacter = nullptr;
+
+	UPROPERTY()
+	AActor* Instigator = nullptr;
+
+	UPROPERTY()
+	AActor* EffectCauser = nullptr;
 };
 
 /**

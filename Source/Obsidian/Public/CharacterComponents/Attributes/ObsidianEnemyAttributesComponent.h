@@ -47,6 +47,8 @@ public:
 	FOnEnemyAttributeValueChangedSignature MaxEnergyShieldChangedDelegate;
 
 protected:
+	virtual void ClearGameplayTags() override;
+	
 	/**
 	 * Callbacks for Attribute change delegates.
 	 */

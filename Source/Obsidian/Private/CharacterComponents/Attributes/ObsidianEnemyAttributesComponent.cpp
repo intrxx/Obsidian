@@ -32,6 +32,8 @@ void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbi
 
 void UObsidianEnemyAttributesComponent::UninitializeFromAbilitySystem()
 {
+	ClearGameplayTags();
+	
 	EnemySpecificAttributeChangedDelegateHandle.Reset();
 	
 	EnemyAttributeSet = nullptr;
@@ -45,6 +47,11 @@ void UObsidianEnemyAttributesComponent::BroadcastInitialValues() const
 	MaxHealthChangedDelegate.Broadcast(GetMaxHealth());
 	EnergyShieldChangedDelegate.Broadcast(GetEnergyShield());
 	MaxEnergyShieldChangedDelegate.Broadcast(GetMaxEnergyShield());
+}
+
+void UObsidianEnemyAttributesComponent::ClearGameplayTags()
+{
+	Super::ClearGameplayTags();
 }
 
 void UObsidianEnemyAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)

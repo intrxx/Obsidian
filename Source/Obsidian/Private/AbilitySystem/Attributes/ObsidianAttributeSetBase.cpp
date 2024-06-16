@@ -29,8 +29,11 @@ void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCall
 {
 	// Source = causer of the effect, Target = target of the effect (owner of THIS Attribute Set)
 	
-	FGameplayEffectContextHandle EffectContextHandle = Data.EffectSpec.GetContext();
+	const FGameplayEffectContextHandle& EffectContextHandle = Data.EffectSpec.GetContext();
 	Props.EffectContextHandle = EffectContextHandle;
+
+	Props.Instigator = EffectContextHandle.GetOriginalInstigator();
+	Props.EffectCauser = EffectContextHandle.GetEffectCauser();
 
 	UAbilitySystemComponent* SourceASC = EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
 	Props.SourceASC = SourceASC;

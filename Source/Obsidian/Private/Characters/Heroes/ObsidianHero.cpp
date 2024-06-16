@@ -149,6 +149,11 @@ void AObsidianHero::OnAbilitySystemUninitialized()
 
 void AObsidianHero::OnDeathStarted(AActor* OwningActor)
 {
+	if(Controller)
+	{
+		Controller->SetIgnoreMoveInput(true);
+	}
+	
 	Super::OnDeathStarted(OwningActor);
 }
 

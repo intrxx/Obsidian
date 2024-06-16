@@ -64,10 +64,40 @@ void AObsidianCharacterBase::OnAbilitySystemUninitialized()
 
 void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
 {
+	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
+	check(CapsuleComp);
+	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 }
 
 void AObsidianCharacterBase::OnDeathFinished(AActor* OwningActor)
 {
+	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ThisClass::DestroyDueToDeath);
+}
+
+void AObsidianCharacterBase::DestroyDueToDeath()
+{
+	BP_OnDeathFinished();
+	UninitAndDestroy();
+}
+
+void AObsidianCharacterBase::UninitAndDestroy()
+{
+	if(GetLocalRole() == ROLE_Authority)
+	{
+		DetachFromControllerPendingDestroy();
+		SetLifeSpan(0.1f);
+	}
+
+	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
+	{
+		if(ObsidianASC->GetAvatarActor() == this)
+		{
+			PawnExtComp->UninitializeAbilitySystem();
+		}
+	}
+
+	SetActorHiddenInGame(true);
 }
 
 FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon()

@@ -43,6 +43,12 @@ protected:
 	/** Ends the death sequence for the character (detaches controller, destroys pawn, etc...) */
 	virtual void OnDeathFinished(AActor* OwningActor);
 
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName="On Death Finished"))
+	void BP_OnDeathFinished();
+
+	void DestroyDueToDeath();
+	void UninitAndDestroy();
+
 	//~ Start of CombatInterface
 	virtual FVector GetAbilitySocketLocationFromLHWeapon() override;
 	virtual FVector GetAbilitySocketLocationFromRHWeapon() override;

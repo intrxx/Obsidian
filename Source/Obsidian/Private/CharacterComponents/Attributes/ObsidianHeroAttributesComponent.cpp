@@ -36,12 +36,20 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 
 void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
 {
+	ClearGameplayTags();
+	
 	ManaChangedDelegateHandle.Reset();
 	MaxManaChangedDelegateHandle.Reset();
 	
 	HeroAttributeSet = nullptr;
 	
 	Super::UninitializeFromAbilitySystem();
+}
+
+
+void UObsidianHeroAttributesComponent::ClearGameplayTags()
+{
+	Super::ClearGameplayTags();
 }
 
 void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
@@ -143,6 +151,7 @@ FGameplayAttribute UObsidianHeroAttributesComponent::GetFaithAttribute() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetFaithAttribute() : nullptr);
 }
+
 
 
 
