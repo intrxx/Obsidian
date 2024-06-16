@@ -16,6 +16,8 @@ class OBSIDIAN_API UOGameplayAbility_ProjectileSpell : public UObsidianDamageGam
 {
 	GENERATED_BODY()
 public:
+	UOGameplayAbility_ProjectileSpell();
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProjectileSpell")
 	void SpawnProjectile(const FVector& TargetLocation);
 	
@@ -28,7 +30,7 @@ protected:
 protected:
 	/** Enum to decide at what location the projectile will be spawned */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
-	EObsidianAbilitySpawnLocation AbilitySpawnLocation;
+	EObsidianAbilitySpawnLocation AbilitySpawnLocation = EObsidianAbilitySpawnLocation::ASL_DefaultLocation;
 	
 	/** Projectile class to spawn by this ability */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")

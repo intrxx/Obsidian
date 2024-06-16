@@ -41,6 +41,9 @@ public:
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr);
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
+	static UObsidianAttributesComponent* FindCommonAttributesComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianAttributesComponent>() : nullptr);}
 	
 	/** Uninitialize this component, clearing any references to the ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")

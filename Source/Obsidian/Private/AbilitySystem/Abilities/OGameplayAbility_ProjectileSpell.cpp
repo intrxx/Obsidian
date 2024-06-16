@@ -8,6 +8,11 @@
 #include "Combat/Projectile/ObsidianProjectile.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
+UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell()
+{
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+}
+
 void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                                         const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
