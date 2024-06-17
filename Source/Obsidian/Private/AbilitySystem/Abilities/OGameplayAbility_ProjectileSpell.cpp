@@ -42,7 +42,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 	const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), OwningASC->MakeEffectContext());
 
 	const float Damage = AbilityDamageRange.RollForDamageNumberAtLevel(GetAbilityLevel());
-	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, ObsidianGameplayTags::Ability_Damage, Damage);
+	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, ObsidianGameplayTags::SetByCaller_Damage, Damage);
 	
 	Projectile->SetProjectileDamageSpecHandle(SpecHandle);
 	

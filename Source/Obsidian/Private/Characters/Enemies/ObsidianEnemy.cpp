@@ -96,6 +96,11 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 {
 	Super::OnDeathStarted(OwningActor);
+
+	if(HealthBarWidgetComp)
+	{
+		HealthBarWidgetComp->DestroyComponent();
+	}
 }
 
 void AObsidianEnemy::OnDeathFinished(AActor* OwningActor)

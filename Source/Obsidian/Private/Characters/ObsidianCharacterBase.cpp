@@ -5,6 +5,7 @@
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "MotionWarpingComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 AObsidianCharacterBase::AObsidianCharacterBase()
 {
@@ -98,6 +99,25 @@ void AObsidianCharacterBase::UninitAndDestroy()
 	}
 
 	SetActorHiddenInGame(true);
+}
+
+void AObsidianCharacterBase::Ragdoll() const
+{
+	USkeletalMeshComponent* CharacterMesh = GetMesh();
+	check(CharacterMesh);
+
+	CharacterMesh->SetCollisionProfileName(FName("Ragdoll"), true);
+	CharacterMesh->SetAllBodiesBelowSimulatePhysics(RagdollImpulseBone, true, true);
+
+	if(bRagdollWithImpulse)
+	{
+		const UCharacterMovementComponent* CharacterMoveComp = GetCharacterMovement();
+		check(CharacterMoveComp);
+
+		const FVector LastUpdateVelocity = CharacterMoveComp->GetLastUpdateVelocity();
+		const FVector Impulse = LastUpdateVelocity.GetSafeNormal() * RagdollImpulseStrength + LastUpdateVelocity;
+		CharacterMesh->AddImpulse(Impulse, RagdollImpulseBone, true);
+	}
 }
 
 FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon()

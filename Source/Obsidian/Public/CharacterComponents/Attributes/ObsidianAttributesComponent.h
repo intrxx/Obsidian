@@ -26,6 +26,8 @@ enum class EObsidianDeathState : uint8
 };
 
 /**
+ * UObsidianAttributesComponent
+ *
  * Base Attributes Component class for this project - Hero and Enemy Attributes Component classes should derive from this.
  */
 UCLASS(Abstract, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))

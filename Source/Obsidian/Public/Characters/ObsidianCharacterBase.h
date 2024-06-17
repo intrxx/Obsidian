@@ -43,8 +43,11 @@ protected:
 	/** Ends the death sequence for the character (detaches controller, destroys pawn, etc...) */
 	virtual void OnDeathFinished(AActor* OwningActor);
 
-	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName="On Death Finished"))
+	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName="On Death Finished"), Category = "Obsidian|Character")
 	void BP_OnDeathFinished();
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
+	void Ragdoll() const;
 
 	void DestroyDueToDeath();
 	void UninitAndDestroy();
@@ -87,11 +90,23 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
 	FName DefaultSocketName = FName();
 
-	/**
-	 *
-	 */
-
 	/** Offset for how much the ability spawn location is moved from the player character. */ 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
 	float DefaultAbilitySocketLocationOffset = 0.f;
+
+	/**
+	 * Death
+	 */
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	TArray<TObjectPtr<UAnimMontage>> DeathMontages;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	FName RagdollImpulseBone = FName();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	float RagdollImpulseStrength = 0.f;
+	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	bool bRagdollWithImpulse = true;
 };
