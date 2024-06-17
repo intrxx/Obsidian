@@ -18,7 +18,7 @@ class OBSIDIAN_API AObsidianCharacterBase : public ACharacter, public IAbilitySy
 	GENERATED_BODY()
 
 public:
-	AObsidianCharacterBase();
+	AObsidianCharacterBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;

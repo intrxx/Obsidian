@@ -22,7 +22,7 @@ class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase
 {
 	GENERATED_BODY()
 public:
-	AObsidianHero();
+	AObsidianHero(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(AController* NewController) override;

@@ -195,9 +195,10 @@ public:
 	float GetPhysicalDamageMultiplier() const;
 	FGameplayAttribute GetPhysicalDamageMultiplierAttribute() const;
 	
-	/**
-	 *
-	 */
+	/** Getters for Movement Speed Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMovementSpeed() const;
+	FGameplayAttribute GetMovementSpeedAttribute() const;
+	
 
 public:
 	/** Delegate fired when the death sequence has started. */

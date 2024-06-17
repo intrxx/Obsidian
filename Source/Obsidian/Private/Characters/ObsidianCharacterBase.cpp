@@ -4,10 +4,12 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "MotionWarpingComponent.h"
+#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-AObsidianCharacterBase::AObsidianCharacterBase()
+AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectInitializer) :
+	Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -69,6 +71,11 @@ void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
 	check(CapsuleComp);
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	UCharacterMovementComponent* CharacterMoveComp = GetCharacterMovement();
+	check(CharacterMoveComp);
+	CharacterMoveComp->StopMovementImmediately();
+	CharacterMoveComp->DisableMovement();
 }
 
 void AObsidianCharacterBase::OnDeathFinished(AActor* OwningActor)

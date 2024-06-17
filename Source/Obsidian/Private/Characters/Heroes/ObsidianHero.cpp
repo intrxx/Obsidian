@@ -4,6 +4,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "Camera/CameraComponent.h"
+#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
@@ -16,7 +17,8 @@
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetBase.h"
 
-AObsidianHero::AObsidianHero()
+AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer) :
+	Super(ObjectInitializer)
 {
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);
@@ -42,11 +44,12 @@ AObsidianHero::AObsidianHero()
 
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
-	
-	GetCharacterMovement()->bOrientRotationToMovement = true;
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 800.f, 0.f);
-	GetCharacterMovement()->bConstrainToPlane = true;
-	GetCharacterMovement()->bSnapToPlaneAtStart = true;
+
+	UObsidianCharacterMovementComponent* ObsidianMovementComp = CastChecked<UObsidianCharacterMovementComponent>(GetCharacterMovement());
+	ObsidianMovementComp->bOrientRotationToMovement = true;
+	ObsidianMovementComp->RotationRate = FRotator(0.f, 800.f, 0.f);
+	ObsidianMovementComp->bConstrainToPlane = true;
+	ObsidianMovementComp->bSnapToPlaneAtStart = true;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;

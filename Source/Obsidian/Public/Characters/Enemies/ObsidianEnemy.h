@@ -23,7 +23,7 @@ class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsid
 	GENERATED_BODY()
 
 public:
-	AObsidianEnemy();
+	AObsidianEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;

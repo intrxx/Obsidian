@@ -16,7 +16,8 @@
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
 
-AObsidianEnemy::AObsidianEnemy()
+AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
+	Super(ObjectInitializer)
 {
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	MeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);

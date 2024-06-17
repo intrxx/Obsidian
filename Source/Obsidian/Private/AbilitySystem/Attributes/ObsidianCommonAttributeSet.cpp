@@ -17,12 +17,21 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	// Vital
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxHealth, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, EnergyShield, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxEnergyShield, COND_None, REPNOTIFY_Always);
+
+	// Statuses
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, HealthRegeneration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, COND_None, REPNOTIFY_Always);
+
+	// Defence Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Armor, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Evasion, COND_None, REPNOTIFY_Always);
+
+	// Resistances
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxFireResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ColdResistance, COND_None, REPNOTIFY_Always);
@@ -31,6 +40,8 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxLightningResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChaosResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, COND_None, REPNOTIFY_Always);
+
+	// Damage Scaling Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, CriticalStrikeChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, CriticalStrikeMultiplier, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
@@ -46,11 +57,12 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ElementalDamageMultiplier, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChaosDamageMultiplier, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, PhysicalDamageMultiplier, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, HealthRegeneration, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, COND_None, REPNOTIFY_Always);
-
+	
 	// Base Damage Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, BaseDamage, COND_OwnerOnly, REPNOTIFY_Always);
+
+	// Character
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MovementSpeed, COND_None, REPNOTIFY_Always);
 }
 
 void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -100,7 +112,6 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			
 			if(!bOutOfHealth && (GetHealth() <= 0.0f))
 			{
-				UE_LOG(LogTemp, Error, TEXT("[%s] Died!"), *GetNameSafe(GetOwningActor()));
 				OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
 			}
 			else
@@ -318,6 +329,11 @@ void UObsidianCommonAttributeSet::OnRep_PhysicalDamageMultiplier(const FGameplay
 void UObsidianCommonAttributeSet::OnRep_BaseDamage(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, BaseDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MovementSpeed, OldValue);
 }
 
 

@@ -98,6 +98,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingHealthHealing);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingEnergyShieldHealing);
 
+	/**
+	 * Character
+	 */
+
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MovementSpeed);
+
 public:
 	/** Delegate fired when the health reaches zero */
 	mutable FObsidianAttributeEvent OnOutOfHealth;
@@ -198,6 +204,13 @@ protected:
 	
 	UFUNCTION()
 	void OnRep_BaseDamage(const FGameplayAttributeData& OldValue);
+	
+	/**
+	 * Base Attributes
+	 */
+
+	UFUNCTION()
+	void OnRep_MovementSpeed(const FGameplayAttributeData& OldValue);
 
 private:
 	bool bOutOfHealth;
@@ -365,6 +378,13 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BaseDamage, Category = "Obsidian|CAttributes|BaseDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData BaseDamage;
 
+	/**
+	 * Character
+	 */
+
+	/** The current Movement Speed attribute. Movement Speed is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MovementSpeed, Category = "Obsidian|CAttributes|MovementSpeed", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MovementSpeed;
 
 	/**
 	 * Meta Attributes

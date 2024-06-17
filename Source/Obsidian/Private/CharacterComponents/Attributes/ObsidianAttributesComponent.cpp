@@ -150,7 +150,7 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 
 	if (OldDeathState > NewDeathState)
 	{
-		// The server is trying to set us back but we've already predicted past the server state.
+		// The server is trying to set us back, but we've already predicted past the server state.
 		UE_LOG(LogTemp, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		return;
 	}
@@ -189,8 +189,6 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser,
 	const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("Out of health"));
-
 #if WITH_SERVER_CODE
 	if(AbilitySystemComponent && DamageEffectSpec)
 	{
@@ -549,6 +547,16 @@ float UObsidianAttributesComponent::GetPhysicalDamageMultiplier() const
 FGameplayAttribute UObsidianAttributesComponent::GetPhysicalDamageMultiplierAttribute() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetPhysicalDamageMultiplierAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMovementSpeed() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMovementSpeed() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMovementSpeedAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMovementSpeedAttribute() : nullptr);
 }
 
 
