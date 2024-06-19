@@ -33,6 +33,8 @@ struct FObsidianEffectUIData
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAppliedAssetTags, const FObsidianEffectUIData& /** Asset Tags */);
 
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraDisabled, FGameplayTag, EffectUIInfoTag);
+
 class UOAbilityTagRelationshipMapping;
 
 /**
@@ -59,6 +61,7 @@ public:
 
 public:
 	FEffectAppliedAssetTags EffectAppliedAssetTags;
+	FOnAuraDisabled OnAuraDisabledDelegate;
 	
 protected:
 	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;

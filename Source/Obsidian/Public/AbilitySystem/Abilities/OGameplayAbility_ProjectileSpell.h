@@ -22,8 +22,7 @@ public:
 	void SpawnProjectile(const FVector& TargetLocation);
 	
 protected:
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-		const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 	FVector GetSpawnLocation() const; 
 
@@ -36,6 +35,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<AObsidianProjectile> ProjectileClass;
 
+	/** Damage effect that will be applied on projectile overlap */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

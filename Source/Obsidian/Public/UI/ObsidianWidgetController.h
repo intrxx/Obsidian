@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AttributeSet.h"
 #include "ObsidianWidgetController.generated.h"
 
 class UObsidianHeroAttributesComponent;
