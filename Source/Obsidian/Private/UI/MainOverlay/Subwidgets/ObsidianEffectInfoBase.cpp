@@ -32,6 +32,12 @@ void UObsidianEffectInfoBase::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+void UObsidianEffectInfoBase::RemoveAuraInfoWidget()
+{
+	OnEffectUnHovered();
+	RemoveFromParent();
+}
+
 void UObsidianEffectInfoBase::OnEffectHovered()
 {
 	if(EffectDescWidgetClass == nullptr)

@@ -33,7 +33,7 @@ struct FObsidianEffectUIData
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FEffectAppliedAssetTags, const FObsidianEffectUIData& /** Asset Tags */);
 
-DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraDisabled, FGameplayTag, EffectUIInfoTag);
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraDisabled, const FGameplayTag, EffectUIInfoTag);
 
 class UOAbilityTagRelationshipMapping;
 

@@ -51,16 +51,20 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> EffectImage = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::SimpleEffectInfo", EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo", EditConditionHides))
 	TSubclassOf<UObsidianEffectInfoBase> SimpleEffectWidget;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::DurationalEffectInfo", EditConditionHides))
+	/** Indicates that this effect is an Aura Gameplay Ability that will be cleared manually */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo", EditConditionHides))
+	bool bAuraEffect = false;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo", EditConditionHides))
 	TSubclassOf<UObsidianDurationalEffectInfo> DurationalEffectWidget;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::StackingEffectInfo", EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_StackingEffectInfo", EditConditionHides))
 	TSubclassOf<UObsidianEffectInfoBase> StackingEffectWidget;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::StackingDurationalEffectInfo", EditConditionHides))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_StackingDurationalEffectInfo", EditConditionHides))
 	TSubclassOf<UOStackingDurationalEffectInfo> StackingDurationalEffectWidget;
 	
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
@@ -75,6 +79,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStackingEffectUIDataWidgetRow, FOb
 
 /** Delegate used for notifying Progress Globes to display the healing/replenish amount */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIGlobeData, const float&, EffectDuration, const float&, EffectMagnitude);
+
+DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraWidgetDestructionInfoReceived, const FGameplayTag, WidgetTag);
 
 /**
  * 
@@ -128,6 +134,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
 	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
 
+	FOnAuraWidgetDestructionInfoReceived OnAuraWidgetDestructionInfoReceivedDelegate;
+
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
 	
@@ -154,6 +162,10 @@ protected:
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
+
+private:
+	UFUNCTION()
+	void DestroyAuraWidget(const FGameplayTag AuraWidgetTag);
 };
 
 template <typename T>

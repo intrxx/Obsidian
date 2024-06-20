@@ -52,6 +52,8 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 		});
 
 	SetInitialAttributeValues();
+
+	ObsidianASC->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
 }
 
 void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
@@ -105,6 +107,11 @@ void UMainOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Dat
 void UMainOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxManaChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidgetTag)
+{
+	OnAuraWidgetDestructionInfoReceivedDelegate.ExecuteIfBound(AuraWidgetTag);
 }
 
 void UMainOverlayWidgetController::UpdateHealthInfoGlobe(const float& Magnitude) const

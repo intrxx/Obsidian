@@ -51,12 +51,20 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
 
+	virtual void HandleWidgetControllerSet() override;
+
 protected:
+	UPROPERTY()
+	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianOverlayGameTabsMenu> Overlay_GameTabsMenu;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> CharacterStatus_Overlay;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;
 
 private:
 	UPROPERTY()
@@ -64,4 +72,7 @@ private:
 	
 private:
 	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
+
+	UFUNCTION()
+	void DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag);
 };

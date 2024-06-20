@@ -83,8 +83,8 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo)
 	{
 		UObsidianEffectInfoBase* InfoWidget = CreateWidget<UObsidianEffectInfoBase>(OwningPlayerController, Row.SimpleEffectWidget);
-		InfoWidget->InitEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage);
-
+		InfoWidget->InitEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectTag);
+		
 		switch(Row.EffectClassification)
 		{
 		case EObsidianUIEffectClassification::EUEC_Buff:
@@ -96,6 +96,11 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		default:
 			BuffsEffectInfo_WrapBox->AddChild(InfoWidget);
 			break;
+		}
+
+		if(Row.bAuraEffect)
+		{
+			AuraUIInfoArray.AddUnique(InfoWidget);
 		}
 
 		return;
@@ -121,11 +126,34 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 	}
 }
 
+void UObsidianMainOverlay::HandleWidgetControllerSet()
+{
+	MainOverlayWidgetController = CastChecked<UMainOverlayWidgetController>(WidgetController);
+
+	MainOverlayWidgetController->OnAuraWidgetDestructionInfoReceivedDelegate.BindDynamic(this, &ThisClass::DestroyAuraInfoWidget);
+}
+
 void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy)
 {
 	if(const FGameplayTag* Key = StackingInfoWidgetsMap.FindKey(WidgetToDestroy))
 	{
 		StackingInfoWidgetsMap.Remove(*Key);
+	}
+}
+
+void UObsidianMainOverlay::DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag)
+{
+	if(AuraUIInfoArray.IsEmpty())
+	{
+		return;
+	}
+
+	for(UObsidianEffectInfoBase* Widget : AuraUIInfoArray)
+	{
+		if(Widget->UIEffectTag == WidgetToDestroyWithTag)
+		{
+			Widget->RemoveAuraInfoWidget();
+		}
 	}
 }
 

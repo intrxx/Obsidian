@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianEffectInfoBase.generated.h"
 
@@ -23,7 +24,9 @@ public:
 	virtual void NativeDestruct() override;
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage);
+	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const FGameplayTag EffectTag);
+
+	void RemoveAuraInfoWidget();
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|EffectInfo")
@@ -36,10 +39,13 @@ public:
 	FText EffectName;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
-	float EffectDuration;
+	float EffectDuration = 0.f;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
-	bool bIsEffectDurational;
+	bool bIsEffectDurational = 0.f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffecInfo")
+	FGameplayTag UIEffectTag = FGameplayTag();
 
 protected:
 	UFUNCTION()
