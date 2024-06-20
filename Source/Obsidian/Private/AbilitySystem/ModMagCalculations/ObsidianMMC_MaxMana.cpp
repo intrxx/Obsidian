@@ -67,8 +67,7 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 	float LevelAddedManaValue = 0.f;
 	if(ManaAwardCurveTable)
 	{
-		const FRealCurve* Curve = ManaAwardCurveTable->FindCurve(FName("Curve"), FString(""));
-		if(Curve)
+		if(const FRealCurve* Curve = ManaAwardCurveTable->FindCurve(FName("Curve"), FString("")))
 		{
 			LevelAddedManaValue = Curve->Eval(CharacterLevel);
 		}

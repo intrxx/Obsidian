@@ -25,6 +25,8 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, SpecialResource, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, MaxSpecialResource, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, ManaRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
@@ -64,6 +66,16 @@ void UObsidianHeroAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldValu
 void UObsidianHeroAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxMana, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_SpecialResource(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, SpecialResource, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_MaxSpecialResource(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxSpecialResource, OldValue);
 }
 
 void UObsidianHeroAttributeSet::OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue)

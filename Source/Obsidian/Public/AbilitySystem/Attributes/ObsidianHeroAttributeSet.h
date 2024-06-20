@@ -28,6 +28,8 @@ public:
 	
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxMana);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, SpecialResource);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxSpecialResource);
 
 	/**
 	 * Status
@@ -60,6 +62,10 @@ protected:
 	void OnRep_Mana(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_SpecialResource(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxSpecialResource(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Status
@@ -94,6 +100,15 @@ private:
 	/** The current Max Mana attribute. Max Mana is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Obsidian|HAttributes|MaxMana", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxMana;
+
+	/** The current Special Resource attribute. The Special Resource will be capped by the Max Special Resource attribute. Special Resource is hidden from modifiers so only Executions can modify it. */
+	/** ------------------------------------------------------------------------------------------------------ HideFromModifiers */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpecialResource, Category = "Obsidian|HAttributes|Mana", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SpecialResource;
+	
+	/** The current Max Special Resource. Max Special Resource is an attribute since Gameplay Effects can modify it. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxSpecialResource, Category = "Obsidian|HAttributes|MaxMana", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxSpecialResource;
 
 	/**
 	 * Status
