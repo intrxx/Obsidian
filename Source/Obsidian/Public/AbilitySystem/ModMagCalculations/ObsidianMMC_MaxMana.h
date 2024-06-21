@@ -21,5 +21,5 @@ public:
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")
-	TObjectPtr<UCurveTable> ManaAwardCurveTable;
+	TObjectPtr<UCurveTable> MaxManaAwardCurveTable;
 };
