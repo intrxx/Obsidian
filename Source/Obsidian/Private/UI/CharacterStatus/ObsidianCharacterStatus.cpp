@@ -84,6 +84,11 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 		Mana_AttributeRow->SetAttributeValue(Value);
 	});
 
+	CharacterStatusWidgetController->MaxSpecialResourceChangedDelegate.BindLambda([this](const float Value)
+	{
+		SpecialResource_AttributeRow->SetAttributeValue(Value);
+	});
+
 	CharacterStatusWidgetController->MaxEnergyShieldChangedDelegate.BindLambda([this](const float Value)
 	{
 		EnergyShield_AttributeRow->SetAttributeValue(Value);

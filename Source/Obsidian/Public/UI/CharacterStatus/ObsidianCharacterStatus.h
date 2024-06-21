@@ -80,6 +80,9 @@ protected:
 	TObjectPtr<UOCharacterStatusAttributeRow> Mana_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> SpecialResource_AttributeRow;
+
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> EnergyShield_AttributeRow;
 
 	/**

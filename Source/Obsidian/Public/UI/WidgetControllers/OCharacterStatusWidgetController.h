@@ -36,6 +36,7 @@ public:
 	/** Vital Attributes */
 	FOnAttributeValueChangedOneParam MaxHealthChangedDelegate;
 	FOnAttributeValueChangedOneParam MaxManaChangedDelegate;
+	FOnAttributeValueChangedOneParam MaxSpecialResourceChangedDelegate;
 	FOnAttributeValueChangedOneParam MaxEnergyShieldChangedDelegate;
 
 	/** Offence */
@@ -84,6 +85,7 @@ protected:
 	/** Vital Attributes */
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
+	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
 	
 	/** Offence */
@@ -132,6 +134,7 @@ protected:
 	/** Vital Attributes */
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle MaxManaChangedDelegateHandle;
+	FDelegateHandle MaxSpecialResourceChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
 	
 	/** Offence */

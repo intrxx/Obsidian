@@ -28,6 +28,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	/** Vital Attributes */
 	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
 	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
+	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpecialResourceAttribute()).AddUObject(this,  &ThisClass::MaxSpecialResourceChanged);
 	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
 	
 	/** Offence */
@@ -75,6 +76,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	/** Vital Attributes */
 	MaxHealthChangedDelegate.Execute(AttributesComponent->GetMaxHealth());
 	MaxManaChangedDelegate.Execute(AttributesComponent->GetMaxMana());
+	MaxSpecialResourceChangedDelegate.Execute(AttributesComponent->GetMaxSpecialResource());
 	MaxEnergyShieldChangedDelegate.Execute(AttributesComponent->GetMaxEnergyShield());
 
 	/** Offence */
@@ -146,6 +148,13 @@ void UOCharacterStatusWidgetController::MaxManaChanged(const FOnAttributeChangeD
 	const float NewValue = Data.NewValue;
 	
 	MaxManaChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	MaxSpecialResourceChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
@@ -248,6 +257,9 @@ void UOCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttribut
 
 void UOCharacterStatusWidgetController::ElementalPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
+	const float NewValue = Data.NewValue;
+
+	ElementalPenetrationChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& Data) const
