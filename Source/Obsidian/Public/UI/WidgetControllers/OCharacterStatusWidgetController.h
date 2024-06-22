@@ -53,7 +53,7 @@ public:
 	FOnAttributeValueChangedOneParam FirePenetrationChangedDelegate;
 	FOnAttributeValueChangedOneParam LightningPenetrationChangedDelegate;
 	FOnAttributeValueChangedOneParam ColdPenetrationChangedDelegate;
-	FOnAttributeValueChangedOneParam ElementalPenetrationChangedDelegate;
+	FOnAttributeValueChangedOneParam AllElementalPenetrationChangedDelegate;
 	
 	/** Defence */
 	FOnAttributeValueChangedOneParam ArmorChangedDelegate;
@@ -102,7 +102,7 @@ protected:
 	void FirePenetrationChanged(const FOnAttributeChangeData& Data) const;
 	void LightningPenetrationChanged(const FOnAttributeChangeData& Data) const;
 	void ColdPenetrationChanged(const FOnAttributeChangeData& Data) const;
-	void ElementalPenetrationChanged(const FOnAttributeChangeData& Data) const;
+	void AllElementalPenetrationChanged(const FOnAttributeChangeData& Data) const;
 	
 	/** Defence */
 	void ArmorChanged(const FOnAttributeChangeData& Data) const;
@@ -151,7 +151,7 @@ protected:
 	FDelegateHandle FirePenetrationChangedDelegateHandle;
 	FDelegateHandle LightningPenetrationChangedDelegateHandle;
 	FDelegateHandle ColdPenetrationChangedDelegateHandle;
-	FDelegateHandle ElementalPenetrationChangedDelegateHandle;
+	FDelegateHandle AllElementalPenetrationChangedDelegateHandle;
 
 	/** Defence */
 	FDelegateHandle ArmorChangedDelegateHandle;

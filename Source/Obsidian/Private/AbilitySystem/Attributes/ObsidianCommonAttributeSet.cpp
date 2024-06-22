@@ -49,7 +49,7 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, FirePenetration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ColdPenetration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, LightningPenetration, COND_None, REPNOTIFY_Always);
-	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ElementalPenetration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AllElementalPenetration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChaosPenetration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, FireDamageMultiplier, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ColdDamageMultiplier, COND_None, REPNOTIFY_Always);
@@ -286,9 +286,9 @@ void UObsidianCommonAttributeSet::OnRep_LightningPenetration(const FGameplayAttr
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningPenetration, OldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ElementalPenetration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_AllElementalPenetration(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ElementalPenetration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalPenetration, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_ChaosPenetration(const FGameplayAttributeData& OldValue)

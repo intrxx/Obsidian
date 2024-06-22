@@ -75,7 +75,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FirePenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdPenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, LightningPenetration);
-	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ElementalPenetration);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AllElementalPenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosPenetration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireDamageMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ColdDamageMultiplier);
@@ -182,7 +182,7 @@ protected:
 	UFUNCTION()
 	void OnRep_LightningPenetration(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
-	void OnRep_ElementalPenetration(const FGameplayAttributeData& OldValue);
+	void OnRep_AllElementalPenetration(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_ChaosPenetration(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -339,8 +339,8 @@ private:
 	FGameplayAttributeData LightningPenetration;
 
 	/** The current Elemental Penetration attribute. Elemental Penetration is an attribute since Gameplay Effects can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ElementalPenetration, Category = "Obsidian|CAttributes|ElementalPenetration", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData ElementalPenetration;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllElementalPenetration, Category = "Obsidian|CAttributes|ElementalPenetration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AllElementalPenetration;
 
 	/** The current Chaos Penetration attribute. Chaos Penetration is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosPenetration, Category = "Obsidian|CAttributes|ChaosPenetration", Meta = (AllowPrivateAccess = true))

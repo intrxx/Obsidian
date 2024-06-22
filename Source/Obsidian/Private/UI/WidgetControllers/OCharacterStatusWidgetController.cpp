@@ -45,7 +45,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	FirePenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFirePenetrationAttribute()).AddUObject(this, &ThisClass::FirePenetrationChanged);
 	LightningPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningPenetrationAttribute()).AddUObject(this, &ThisClass::LightningPenetrationChanged);
 	ColdPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdPenetrationAttribute()).AddUObject(this, &ThisClass::ColdPenetrationChanged);
-	ElementalPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetElementalPenetrationAttribute()).AddUObject(this, &ThisClass::ElementalPenetrationChanged);
+	AllElementalPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAllElementalPenetrationAttribute()).AddUObject(this, &ThisClass::AllElementalPenetrationChanged);
 	
 	/** Defence */
 	ArmorChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
@@ -93,7 +93,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	FirePenetrationChangedDelegate.Execute(AttributesComponent->GetFirePenetration());
 	LightningPenetrationChangedDelegate.Execute(AttributesComponent->GetLightningPenetration());
 	ColdPenetrationChangedDelegate.Execute(AttributesComponent->GetColdPenetration());
-	ElementalPenetrationChangedDelegate.Execute(AttributesComponent->GetElementalPenetration());
+	AllElementalPenetrationChangedDelegate.Execute(AttributesComponent->GetAllElementalPenetration());
 
 	/** Defence */
 	ArmorChangedDelegate.Execute(AttributesComponent->GetArmor());
@@ -255,11 +255,11 @@ void UOCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttribut
 	ColdPenetrationChangedDelegate.ExecuteIfBound(NewValue);
 }
 
-void UOCharacterStatusWidgetController::ElementalPenetrationChanged(const FOnAttributeChangeData& Data) const
+void UOCharacterStatusWidgetController::AllElementalPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
 	const float NewValue = Data.NewValue;
 
-	ElementalPenetrationChangedDelegate.ExecuteIfBound(NewValue);
+	AllElementalPenetrationChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& Data) const

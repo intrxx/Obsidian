@@ -20,18 +20,36 @@ class OBSIDIAN_API UOCharacterStatusAttributeRow : public UObsidianWidgetBase
 
 public:
 	virtual void NativePreConstruct() override;
-	
+
+	/** Sets the Attribute Value on the widget and the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetAttributeValue(const float& Value);
 
+	/** Sets the Attribute Value on the widget, adds a "%" to the end and sets the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetAttributeValueWithPercentage(const float& Value);
 
+	/**
+	 * Sets both the current Attribute Value and the Max Attribute Value on the widget, adds a "%" to the end and sets the private attribute variables in OCharacterStatusAttributeRow
+	 * For now used exclusively for Resistances.
+	 */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetResistanceAttributeValue(const float& Value, const float& MaxValue);
 
-	/** Updates the resistance value by a modifier */
-	void UpdateResistanceAttributeValue(const float& Value = 0, const float& MaxValue = 0);
+	/**
+	 * Updates the value on the widget, designed to take "All*" attributes and update all components of it.
+	 * Example:
+	 * It takes the value of "AllElementalPenetration" and only updates the value of "FirePenetration" value on the widget, without setting the value on the class.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
+	void UpdateAttributeValueWithPercentage(const float& Value) const;
+	
+	/**
+	 * Updates both the current and max values on the widget, designed to take "All*" attributes and update all components of it.
+	 * Example:
+	 * It takes the value of "AllElementalResistances" and only updates the value of "FireResistance" and "MaxFireResistance" on the widget, without setting values on the class.
+	 */
+	void UpdateResistanceAttributeValue(const float& Value = 0, const float& MaxValue = 0) const;
 	
 	float GetCurrentAttributeValue() const { return CurrentAttributeValue; }
 	float GetCurrentMaxAttributeValue() const { return CurrentMaxAttributeValue; }

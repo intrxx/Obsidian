@@ -164,8 +164,8 @@ public:
 	FGameplayAttribute GetLightningPenetrationAttribute() const;
 
 	/** Getters for Elemental Penetration Value and Attribute from UObsidianCommonAttributeSet. */
-	float GetElementalPenetration() const;
-	FGameplayAttribute GetElementalPenetrationAttribute() const;
+	float GetAllElementalPenetration() const;
+	FGameplayAttribute GetAllElementalPenetrationAttribute() const;
 
 	/** Getters for Chaos Penetration Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetChaosPenetration() const;

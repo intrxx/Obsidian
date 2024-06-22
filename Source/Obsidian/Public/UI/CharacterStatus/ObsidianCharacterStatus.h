@@ -149,9 +149,6 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ColdPenetration_AttributeRow;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOCharacterStatusAttributeRow> ElementalPenetration_AttributeRow;
 	
 	/**
 	 * Attributes - Defence

@@ -469,14 +469,14 @@ FGameplayAttribute UObsidianAttributesComponent::GetLightningPenetrationAttribut
 	return (CommonAttributeSet ? CommonAttributeSet->GetLightningPenetrationAttribute() : nullptr);
 }
 
-float UObsidianAttributesComponent::GetElementalPenetration() const
+float UObsidianAttributesComponent::GetAllElementalPenetration() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetElementalPenetration() : 0.0f);
+	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalPenetration() : 0.0f);
 }
 
-FGameplayAttribute UObsidianAttributesComponent::GetElementalPenetrationAttribute() const
+FGameplayAttribute UObsidianAttributesComponent::GetAllElementalPenetrationAttribute() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetElementalPenetrationAttribute() : nullptr);
+	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalPenetrationAttribute() : nullptr);
 }
 
 float UObsidianAttributesComponent::GetChaosPenetration() const

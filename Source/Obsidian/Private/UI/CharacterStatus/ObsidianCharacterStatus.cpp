@@ -162,9 +162,11 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 		ColdPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
 	});
 
-	CharacterStatusWidgetController->ElementalPenetrationChangedDelegate.BindLambda([this](const float Value)
+	CharacterStatusWidgetController->AllElementalPenetrationChangedDelegate.BindLambda([this](const float Value)
 	{
-		ElementalPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
+		FirePenetration_AttributeRow->UpdateAttributeValueWithPercentage(Value);
+		LightningPenetration_AttributeRow->UpdateAttributeValueWithPercentage(Value);
+		ColdPenetration_AttributeRow->UpdateAttributeValueWithPercentage(Value);
 	});
 
 	/**
