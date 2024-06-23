@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "ObsidianTypes/ObsidianEnemyType.h"
+#include "ObsidianTypes/Character/ObsidianEnemyType.h"
 #include "ObsidianEnemyTypeInfo.generated.h"
 
 class UObsidianAbilitySet;

@@ -25,7 +25,10 @@ class OBSIDIAN_API UObsidianProgressGlobe : public UObsidianWidgetBase
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void SetInfoGlobeVisibility(bool bShouldBeVisible);
+	void SetInfoGlobeVisibility(const bool bShouldBeVisible);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
+	void SetSecondAttributeName(const FText SecondAttributeNameToSet);
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
@@ -116,10 +119,7 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float NewPercentage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
-	bool bUseEnergyShield = false;
-
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	bool bInfoGlobeActive = false;
 

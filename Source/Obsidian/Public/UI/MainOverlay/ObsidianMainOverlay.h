@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "ObsidianTypes/ObsidianUIData.h"
+#include "ObsidianTypes/UserIterface/ObsidianUIData.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"

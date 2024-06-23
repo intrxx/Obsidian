@@ -6,7 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "Interaction/ObsidianHighlightInterface.h"
-#include "ObsidianTypes/ObsidianEnemyType.h"
+#include "ObsidianTypes/Character/ObsidianEnemyType.h"
 #include "ObsidianEnemy.generated.h"
 
 class UWidgetComponent;

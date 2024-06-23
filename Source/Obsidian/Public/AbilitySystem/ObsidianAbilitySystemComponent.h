@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-#include "ObsidianTypes/ObsidianUIData.h"
+#include "ObsidianTypes/UserIterface/ObsidianUIData.h"
 #include "ObsidianAbilitySystemComponent.generated.h"
 
 USTRUCT()

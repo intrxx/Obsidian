@@ -43,6 +43,10 @@ public:
 	UObsidianPawnData(const FObjectInitializer& ObjectInitializer);
 
 public:
+	/** Determines if the Pawn is a Player */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Pawn")
+	bool bPlayer = false;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Pawn")
 	TSubclassOf<APawn> PawnClass;
 

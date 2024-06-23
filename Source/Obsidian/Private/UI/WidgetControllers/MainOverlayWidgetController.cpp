@@ -61,6 +61,8 @@ void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystem
 	/** Hero Set */
 	ManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
 	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+	SpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpecialResourceAttribute()).AddUObject(this, &ThisClass::SpecialResourceChanged);
+	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
 
 	/** Common Set */
 	HealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
@@ -77,6 +79,8 @@ void UMainOverlayWidgetController::SetInitialAttributeValues() const
 	OnMaxManaChangedDelegate.Broadcast(AttributesComponent->GetMaxMana());
 	OnEnergyShieldChangedDelegate.Broadcast(AttributesComponent->GetEnergyShield());
 	OnMaxEnergyShieldChangedDelegate.Broadcast(AttributesComponent->GetMaxEnergyShield());
+	OnSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetSpecialResource());
+	OnMaxSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetMaxSpecialResource());
 }
 
 void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
@@ -107,6 +111,16 @@ void UMainOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Dat
 void UMainOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxManaChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::SpecialResourceChanged(const FOnAttributeChangeData& Data) const
+{
+	OnSpecialResourceChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxSpecialResourceChangedDelegate.Broadcast(Data.NewValue);
 }
 
 void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidgetTag)

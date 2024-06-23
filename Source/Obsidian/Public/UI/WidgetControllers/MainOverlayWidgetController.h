@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetController.h"
 #include "GameplayTagContainer.h"
-#include "ObsidianTypes/ObsidianUIEffectClassification.h"
-#include "ObsidianTypes/ObsidianUIData.h"
+#include "ObsidianTypes/UserIterface/ObsidianUIEffectClassification.h"
+#include "ObsidianTypes/UserIterface/ObsidianUIData.h"
 #include "MainOverlayWidgetController.generated.h"
 
 class UOStackingDurationalEffectInfo;
@@ -122,6 +122,12 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|MaxEnergyShield")
 	FOnAttributeValueChangedSignature OnMaxEnergyShieldChangedDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
+	FOnAttributeValueChangedSignature OnSpecialResourceChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|MaxEnergyShield")
+	FOnAttributeValueChangedSignature OnMaxSpecialResourceChangedDelegate;
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
 	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
 
@@ -148,6 +154,8 @@ protected:
 	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
+	void SpecialResourceChanged(const FOnAttributeChangeData& Data) const;
+	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")
@@ -156,6 +164,8 @@ protected:
 	/** Hero Set */
 	FDelegateHandle ManaChangedDelegateHandle;
 	FDelegateHandle MaxManaChangedDelegateHandle;
+	FDelegateHandle SpecialResourceChangedDelegateHandle;
+	FDelegateHandle MaxSpecialResourceChangedDelegateHandle;
 
 	/** Common Set */
 	FDelegateHandle HealthChangedDelegateHandle;

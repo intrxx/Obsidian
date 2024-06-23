@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
+
+#include "CommonTextBlock.h"
 #include "Components/ProgressBar.h"
 #include "UI/ProgressBars/ObsidianProgressGlobe.h"
 
-void UObsidianProgressGlobe::SetInfoGlobeVisibility(bool bShouldBeVisible)
+void UObsidianProgressGlobe::SetInfoGlobeVisibility(const bool bShouldBeVisible)
 {
 	if(InfoProgressGlobe == nullptr)
 	{
@@ -17,6 +19,14 @@ void UObsidianProgressGlobe::SetInfoGlobeVisibility(bool bShouldBeVisible)
 	else
 	{
 		InfoProgressGlobe->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
+void UObsidianProgressGlobe::SetSecondAttributeName(const FText SecondAttributeNameToSet)
+{
+	if(SecondAttributeNameText)
+	{
+		SecondAttributeNameText->SetText(SecondAttributeNameToSet);
 	}
 }
 

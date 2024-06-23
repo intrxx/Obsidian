@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "ObsidianTypes/ObsidianEnemyType.h"
+#include "ObsidianTypes/Character/ObsidianEnemyType.h"
 #include "ObsidianASCFunctionLibrary.generated.h"
 
 class UObsidianAbilitySystemComponent;
