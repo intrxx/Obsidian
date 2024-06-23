@@ -137,9 +137,11 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 		ColdDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
 	});
 
-	CharacterStatusWidgetController->ElementalDamageMultiplierChangedDelegate.BindLambda([this](const float Value)
+	CharacterStatusWidgetController->AllElementalDamageMultiplierChangedDelegate.BindLambda([this](const float Value)
 	{
-		ElementalDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
+		FireDamageMultiplier_AttributeRow->UpdateAttributeValueWithPercentage(Value);
+		LightningDamageMultiplier_AttributeRow->UpdateAttributeValueWithPercentage(Value);
+		ColdDamageMultiplier_AttributeRow->UpdateAttributeValueWithPercentage(Value);
 	});
 
 	CharacterStatusWidgetController->ChaosDamageMultiplierChangedDelegate.BindLambda([this](const float Value)

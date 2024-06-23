@@ -183,9 +183,9 @@ public:
 	float GetLightningDamageMultiplier() const;
 	FGameplayAttribute GetLightningDamageMultiplierAttribute() const;
 
-	/** Getters for Elemental Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
-	float GetElementalDamageMultiplier() const;
-	FGameplayAttribute GetElementalDamageMultiplierAttribute() const;
+	/** Getters for All Elemental Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetAllElementalDamageMultiplier() const;
+	FGameplayAttribute GetAllElementalDamageMultiplierAttribute() const;
 
 	/** Getters for Chaos Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetChaosDamageMultiplier() const;

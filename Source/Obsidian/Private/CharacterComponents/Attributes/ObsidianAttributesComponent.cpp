@@ -519,14 +519,14 @@ FGameplayAttribute UObsidianAttributesComponent::GetLightningDamageMultiplierAtt
 	return (CommonAttributeSet ? CommonAttributeSet->GetLightningDamageMultiplierAttribute() : nullptr);
 }
 
-float UObsidianAttributesComponent::GetElementalDamageMultiplier() const
+float UObsidianAttributesComponent::GetAllElementalDamageMultiplier() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetElementalDamageMultiplier() : 0.0f);
+	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalDamageMultiplier() : 0.0f);
 }
 
-FGameplayAttribute UObsidianAttributesComponent::GetElementalDamageMultiplierAttribute() const
+FGameplayAttribute UObsidianAttributesComponent::GetAllElementalDamageMultiplierAttribute() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetElementalDamageMultiplierAttribute() : nullptr);
+	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalDamageMultiplierAttribute() : nullptr);
 }
 
 float UObsidianAttributesComponent::GetChaosDamageMultiplier() const

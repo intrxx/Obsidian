@@ -134,10 +134,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ColdDamageMultiplier_AttributeRow;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOCharacterStatusAttributeRow> ElementalDamageMultiplier_AttributeRow;
-
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ChaosDamageMultiplier_AttributeRow;
 	
