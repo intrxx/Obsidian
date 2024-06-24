@@ -9,13 +9,11 @@
 
 struct SObsidian_MaxManaStatics
 {
-	FGameplayEffectAttributeCaptureDefinition MaxManaDef;
 	FGameplayEffectAttributeCaptureDefinition FaithDef;
 	FGameplayEffectAttributeCaptureDefinition DexterityDef;
 	
 	SObsidian_MaxManaStatics()
 	{
-		MaxManaDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetMaxManaAttribute(), EGameplayEffectAttributeCaptureSource::Target, true);
 		FaithDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetFaithAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		DexterityDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetDexterityAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
@@ -29,7 +27,6 @@ static const SObsidian_MaxManaStatics& MaxManaStatics()
 
 UObsidianMMC_MaxMana::UObsidianMMC_MaxMana()
 {
-	RelevantAttributesToCapture.Add(MaxManaStatics().MaxManaDef);
 	RelevantAttributesToCapture.Add(MaxManaStatics().FaithDef);
 	RelevantAttributesToCapture.Add(MaxManaStatics().DexterityDef);
 }
@@ -51,11 +48,7 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 	FAggregatorEvaluateParameters EvaluationParameters;
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
-
-	float MaxMana = 0.f;
-	GetCapturedAttributeMagnitude(MaxManaStatics().MaxManaDef, Spec, EvaluationParameters, MaxMana);
-	MaxMana = FMath::Max<float>(MaxMana, 0.f);
-
+	
 	float Faith = 0.f;
 	GetCapturedAttributeMagnitude(MaxManaStatics().FaithDef, Spec, EvaluationParameters, Faith);
 	Faith = FMath::Max<float>(Faith, 0.f);
@@ -73,6 +66,6 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 		}
 	}
 	
-	const float NewMaxMana = MaxMana + Dexterity + (2 * Faith) + LevelAddedMaxManaValue;
-	return NewMaxMana;
+	const float MaxManaBonus = Dexterity + (2 * Faith) + LevelAddedMaxManaValue;
+	return MaxManaBonus;
 }

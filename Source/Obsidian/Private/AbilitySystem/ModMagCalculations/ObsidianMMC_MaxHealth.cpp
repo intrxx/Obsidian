@@ -10,13 +10,11 @@
 
 struct SObsidian_MaxHealthStatics
 {
-	FGameplayEffectAttributeCaptureDefinition MaxHealthDef;
 	FGameplayEffectAttributeCaptureDefinition StrengthDef;
 	FGameplayEffectAttributeCaptureDefinition DexterityDef;
 	
 	SObsidian_MaxHealthStatics()
 	{
-		MaxHealthDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetMaxHealthAttribute(), EGameplayEffectAttributeCaptureSource::Target, true);
 		StrengthDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetStrengthAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		DexterityDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetDexterityAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
@@ -30,7 +28,6 @@ static const SObsidian_MaxHealthStatics& MaxHealthStatics()
 
 UObsidianMMC_MaxHealth::UObsidianMMC_MaxHealth()
 {
-	RelevantAttributesToCapture.Add(MaxHealthStatics().MaxHealthDef);
 	RelevantAttributesToCapture.Add(MaxHealthStatics().StrengthDef);
 	RelevantAttributesToCapture.Add(MaxHealthStatics().DexterityDef);
 }
@@ -54,10 +51,6 @@ float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGamep
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 	
-	float MaxHealth = 0.f;
-	GetCapturedAttributeMagnitude(MaxHealthStatics().MaxHealthDef, Spec, EvaluationParameters, MaxHealth);
-	MaxHealth = FMath::Max<float>(MaxHealth, 0.f);
-
 	float Strength = 0.f;
 	GetCapturedAttributeMagnitude(MaxHealthStatics().StrengthDef, Spec, EvaluationParameters, Strength);
 	Strength = FMath::Max<float>(Strength, 0.f);
@@ -75,6 +68,6 @@ float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGamep
 		}
 	}
 	
-	const float NewMaxHealth = MaxHealth + Dexterity + (2 * Strength) + LevelAddedMaxHealthValue;
-	return NewMaxHealth;
+	const float MaxHealthBonus = Dexterity + (2 * Strength) + LevelAddedMaxHealthValue;
+	return MaxHealthBonus;
 }
