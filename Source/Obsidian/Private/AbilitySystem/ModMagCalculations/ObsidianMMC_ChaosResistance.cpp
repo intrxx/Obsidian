@@ -2,7 +2,6 @@
 
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_ChaosResistance.h"
-#include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 struct SObsidian_ChaosResistanceStatics

@@ -118,9 +118,9 @@ float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGamep
 	if(EffectSpec.Def->bExecutePeriodicEffectOnApplication)
 	{
 		FullMagnitude += Magnitude;
-		//UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f + %f = %f"),Duration, Period, Magnitude, Magnitude, FullMagnitude);
+		//UE_LOG(LogObsidian, Warning, TEXT("%f / %f * %f + %f = %f"),Duration, Period, Magnitude, Magnitude, FullMagnitude);
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("%f / %f * %f = %f"),Duration, Period, Magnitude, FullMagnitude);
+	//UE_LOG(LogObsidian, Warning, TEXT("%f / %f * %f = %f"),Duration, Period, Magnitude, FullMagnitude);
 	
 	return FullMagnitude;
 }

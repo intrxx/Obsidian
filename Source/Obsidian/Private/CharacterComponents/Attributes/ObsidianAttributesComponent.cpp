@@ -151,7 +151,7 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 	if (OldDeathState > NewDeathState)
 	{
 		// The server is trying to set us back, but we've already predicted past the server state.
-		UE_LOG(LogTemp, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+		UE_LOG(LogObsidian, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		return;
 	}
 
@@ -168,7 +168,7 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+			UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		}
 	}
 	else if (OldDeathState == EObsidianDeathState::EDS_DeathStarted)
@@ -179,7 +179,7 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+			UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		}
 	}
 
@@ -210,23 +210,23 @@ void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, A
 
 void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Health Changed or remove the bindingc! - For %s"), *GetNameSafe(GetOwner()));
-	UE_LOG(LogTemp, Warning, TEXT("New life: %f"), Data.NewValue);
+	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Health Changed or remove the bindingc! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("New life: %f"), Data.NewValue);
 }
 
 void UObsidianAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Base Class - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 float UObsidianAttributesComponent::GetHealth() const

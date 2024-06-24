@@ -54,27 +54,27 @@ void UObsidianHeroAttributesComponent::ClearGameplayTags()
 
 void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hero - Implement Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)

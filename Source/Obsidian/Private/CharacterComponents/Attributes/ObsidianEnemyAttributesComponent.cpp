@@ -84,7 +84,7 @@ void UObsidianEnemyAttributesComponent::MaxEnergyShieldChanged(const FOnAttribut
 
 void UObsidianEnemyAttributesComponent::EnemySpecificAttributeChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Implement Enemy Specific Attribute Changed!"));
+	UE_LOG(LogObsidian, Warning, TEXT("Implement Enemy Specific Attribute Changed!"));
 }
 
 float UObsidianEnemyAttributesComponent::GetEnemySpecificAttribute() const

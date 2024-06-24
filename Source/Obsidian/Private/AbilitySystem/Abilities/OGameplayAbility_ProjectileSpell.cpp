@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "Combat/ObsidianCombatInterface.h"
 #include "Combat/Projectile/ObsidianProjectile.h"
+#include "Obsidian/Obsidian.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell()
@@ -56,7 +57,7 @@ FVector UOGameplayAbility_ProjectileSpell::GetSpawnLocation() const
 	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(GetAvatarActorFromActorInfo());
 	if(CombatInterface == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Combat Interface is nullptr on [%s] for Avatar Actor [%s]"), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
+		UE_LOG(LogObsidian, Error, TEXT("Combat Interface is nullptr on [%s] for Avatar Actor [%s]"), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
 		return SpawnLocation;
 	}
 	
