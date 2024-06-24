@@ -4,18 +4,18 @@
 
 #include "CoreMinimal.h"
 #include "GameplayModMagnitudeCalculation.h"
-#include "ObsidianMMC_MaxChaosResistance.generated.h"
+#include "ObsidianMMC_ChaosResistance.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianMMC_MaxChaosResistance : public UGameplayModMagnitudeCalculation
+class OBSIDIAN_API UObsidianMMC_ChaosResistance : public UGameplayModMagnitudeCalculation
 {
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_MaxChaosResistance();
+	UObsidianMMC_ChaosResistance();
 	
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
 	
