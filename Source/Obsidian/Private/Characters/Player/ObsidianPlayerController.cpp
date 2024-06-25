@@ -2,6 +2,8 @@
 
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "UI/ObsidianHUD.h"
+#include "Characters/ObsidianCharacterBase.h"
+#include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 
@@ -52,6 +54,21 @@ AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 
 void AObsidianPlayerController::SetupHeroHealthBarWidget()
 {
+}
+
+void AObsidianPlayerController::ClientShowDamageNumber_Implementation(const float DamageAmount, AObsidianCharacterBase* TargetCharacter)
+{
+	// I use IsValid on the character to also check if the character is currently pending kill
+	if(IsValid(TargetCharacter) && DamageNumberWidgetCompClass)
+	{
+		UObsidianDamageNumberWidgetComp* DamageNumberWidgetComp = NewObject<UObsidianDamageNumberWidgetComp>(TargetCharacter, DamageNumberWidgetCompClass);
+		DamageNumberWidgetComp->RegisterComponent();
+		DamageNumberWidgetComp->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
+		// After attaching the component its widget will play animation right away, so we don't want the widget to follow the Target Character around
+		DamageNumberWidgetComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+		DamageNumberWidgetComp->SetDamageText(DamageAmount);
+	}
 }
 
 

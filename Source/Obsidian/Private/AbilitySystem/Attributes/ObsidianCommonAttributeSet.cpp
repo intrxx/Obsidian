@@ -5,6 +5,7 @@
 
 #include "GameplayEffectExtension.h"
 #include "Characters/ObsidianCharacterBase.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -125,6 +126,15 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 						ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
 						EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
 					}
+				}
+			}
+
+			// Show floating text
+			if(EffectProps.SourceCharacter != EffectProps.TargetCharacter)
+			{
+				if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
+				{
+					ObsidianPC->ClientShowDamageNumber(LocalIncomingDamage, EffectProps.TargetCharacter);
 				}
 			}
 		}

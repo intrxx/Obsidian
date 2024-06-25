@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class AObsidianCharacterBase;
+class UObsidianDamageNumberWidgetComp;
 class AObsidianHUD;
 class UObsidianAbilitySystemComponent;
 class AObsidianPlayerState;
@@ -32,6 +34,9 @@ public:
 	AObsidianHUD* GetObsidianHUD() const;
 
 	void SetupHeroHealthBarWidget();
+
+	UFUNCTION(Client, Reliable)
+	void ClientShowDamageNumber(const float DamageAmount, AObsidianCharacterBase* TargetCharacter);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -39,5 +44,10 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Cursor")
 	TObjectPtr<UUserWidget> DefaultCursor;
+
+
+private:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DamageNumber")
+	TSubclassOf<UObsidianDamageNumberWidgetComp> DamageNumberWidgetCompClass;
 	
 };
