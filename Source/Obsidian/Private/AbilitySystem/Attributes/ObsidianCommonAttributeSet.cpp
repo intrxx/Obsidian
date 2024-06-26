@@ -103,34 +103,46 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	else if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
-		SetIncomingDamage(0.f);
+		SetIncomingDamage(0.0f);
 		
-		if(LocalIncomingDamage > 0.f)
+		if(LocalIncomingDamage > 0.0f)
 		{
-			const float OldHealth = GetHealth();
-			const float NewHealth = GetHealth() - LocalIncomingDamage;
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+			const float OldEnergyShield = GetEnergyShield();
+			const float NewEnergyShield = OldEnergyShield - LocalIncomingDamage;
+			SetEnergyShield(FMath::Clamp(NewEnergyShield, 0.0f, GetMaxEnergyShield()));
 			
-			if(!bOutOfHealth && (GetHealth() <= 0.0f))
+			if(NewEnergyShield < 0.0f)
 			{
-				OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
-			}
-			else
-			{
-				if(!EffectProps.TargetCharacter->bIsPlayer)
+				// Damage that went through Energy Shield
+				const float LocalRestOfDamage = NewEnergyShield;
+				
+				const float OldHealth = GetHealth();
+				const float NewHealth = OldHealth + LocalRestOfDamage;
+				SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
+
+				if(!bOutOfHealth && (GetHealth() <= 0.0f))
 				{
-					// Check if we should hit react, small hits shouldn't cause hit reacting
-					if((LocalIncomingDamage / GetMaxHealth()) * 100.f > ObsidianAttributeConstants::HitReactThreshold)
+					OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
+				}
+				else
+				{
+					//TODO As it stands now only damage that damages health will cause a hit react - decide if its okay, I like it for now
+					if(!EffectProps.TargetCharacter->bIsPlayer)
 					{
-						FGameplayTagContainer ActivateTag;
-						ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
-						EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
+						// Check if we should hit react, small hits shouldn't cause hit reacting
+						const float CombinedHealthPool = GetMaxHealth() + GetMaxEnergyShield();
+						if((LocalIncomingDamage / CombinedHealthPool) * 100.f > ObsidianAttributeConstants::HitReactThreshold)
+						{
+							FGameplayTagContainer ActivateTag;
+							ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
+							EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
+						}
 					}
 				}
 			}
-
+			
 			// Show floating text
-			if(EffectProps.SourceCharacter != EffectProps.TargetCharacter)
+			if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.TargetCharacter->bIsPlayer)
 			{
 				if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
 				{
@@ -142,24 +154,24 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	else if(Data.EvaluatedData.Attribute == GetIncomingHealthHealingAttribute())
 	{
 		const float LocalIncomingHealthHealing = GetIncomingHealthHealing();
-		SetIncomingHealthHealing(0.f);
+		SetIncomingHealthHealing(0.0f);
 		
-		if(LocalIncomingHealthHealing > 0.f)
+		if(LocalIncomingHealthHealing > 0.0f)
 		{
 			//TODO Handle Energy Shield based on some conditions in the future
 			const float NewHealth = GetHealth() + LocalIncomingHealthHealing;
-			SetHealth(FMath::Clamp(NewHealth, 0.f, GetMaxHealth()));
+			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 		}
 	}
 	else if(Data.EvaluatedData.Attribute == GetIncomingEnergyShieldHealingAttribute())
 	{
 		const float LocalIncomingEnergyShieldHealing = GetIncomingEnergyShieldHealing();
-		SetIncomingEnergyShieldHealing(0.f);
+		SetIncomingEnergyShieldHealing(0.0f);
 		
-		if(LocalIncomingEnergyShieldHealing > 0.f)
+		if(LocalIncomingEnergyShieldHealing > 0.0f)
 		{
 			const float NewEnergyShield = GetEnergyShield() + LocalIncomingEnergyShieldHealing;
-			SetEnergyShield(FMath::Clamp(NewEnergyShield, 0.f, GetMaxEnergyShield()));
+			SetEnergyShield(FMath::Clamp(NewEnergyShield, 0.0f, GetMaxEnergyShield()));
 		}
 	}
 

@@ -212,6 +212,7 @@ protected:
 	UFUNCTION()
 	void OnRep_MovementSpeed(const FGameplayAttributeData& OldValue);
 
+protected:
 private:
 	bool bOutOfHealth;
 	
