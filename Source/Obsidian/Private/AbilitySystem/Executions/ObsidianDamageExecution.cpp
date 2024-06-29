@@ -8,10 +8,14 @@
 struct FObsidianDamageStatics
 {
 	FGameplayEffectAttributeCaptureDefinition ArmorDef;
+	FGameplayEffectAttributeCaptureDefinition SpellSuppressionChanceDef;
+	FGameplayEffectAttributeCaptureDefinition SpellSuppressionMagnitudeDef;
 
 	FObsidianDamageStatics()
 	{
 		ArmorDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetArmorAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
+		SpellSuppressionChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionChanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
+		SpellSuppressionMagnitudeDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionMagnitudeAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
 };
 
@@ -24,6 +28,8 @@ static const FObsidianDamageStatics& ObsidianDamageStatics()
 UObsidianDamageExecution::UObsidianDamageExecution()
 {
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ArmorDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionChanceDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionMagnitudeDef);
 }
 
 void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
@@ -46,11 +52,31 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
 
+	const float FullDamage = 0.0f;
+	
+	float MitigatedDamage = FullDamage;
+	
 	float Armor = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
 	Armor = FMath::Max<float>(Armor, 0.0f);
 
 	++Armor;
+
+	float SpellSuppressionChance = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
+	SpellSuppressionChance = FMath::Max<float>(SpellSuppressionChance, 0.0f);
+
+	
+	if(SpellSuppressionChance > FMath::RandRange(0.0f, 100.0f))
+	{
+		//TODO Attempt to suppress spell damage // All damage for now
+
+		float SpellSuppressionMagnitude = 0.0f;
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
+		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);
+
+		MitigatedDamage = MitigatedDamage * SpellSuppressionMagnitude / 100.0f;
+	}
 
 	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetArmorAttribute(), EGameplayModOp::Additive, Armor);
 	OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
