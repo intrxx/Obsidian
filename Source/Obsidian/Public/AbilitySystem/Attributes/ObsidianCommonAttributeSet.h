@@ -49,6 +49,8 @@ public:
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Armor);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, SpellSuppressionChance);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, SpellSuppressionMagnitude);
 	
 	/**
 	 * Resistances
@@ -139,6 +141,10 @@ protected:
 	void OnRep_Armor(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_Evasion(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_SpellSuppressionChance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_SpellSuppressionMagnitude(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Resistances
@@ -225,7 +231,7 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Health;
 
-	/** The current max Health attribute. Max Health is an attribute since Gameplay Effects can modify it. */
+	/** The current max Health attribute. Defines cap for health, Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
 
@@ -234,7 +240,7 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData EnergyShield;
 
-	/** The current Max Energy Shield attribute. MaxEnergy Shield is an attribute since Gameplay Effects can modify it. */
+	/** The current Max Energy Shield attribute. Defines cap for Energy Shield, Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergyShield, Category = "Obsidian|CAttributes|MaxEnergyShield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxEnergyShield;
 
@@ -242,11 +248,11 @@ private:
 	 * Status
 	 */
 
-	/** The current Health Regeneration attribute. Health Regeneration is an attribute since Gameplay Effects can modify it. */
+	/** The current Health Regeneration attribute. Defines value of Health that is regenerated per second. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegeneration, Category = "Obsidian|CAttributes|HealthRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData HealthRegeneration;
 	
-	/** The current Energy Shield Regeneration attribute. Energy Shield Regeneration is an attribute since Gameplay Effects can modify it. */
+	/** The current Energy Shield Regeneration attribute. Defines value of Energy Shield that is regenerated per second. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShieldRegeneration, Category = "Obsidian|CAttributes|EnergyShieldRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData EnergyShieldRegeneration;
 
@@ -254,56 +260,64 @@ private:
 	 * Defence attributes
 	 */
 
-	/** The current Armor attribute. Armor is an attribute since Gameplay Effects can modify it. */
+	/** The current Armor attribute. Armor negates physical damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor, Category = "Obsidian|CAttributes|Armor", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Armor;
 
-	/** The current Evasion attribute. Evasion is an attribute since Gameplay Effects can modify it. */
+	/** The current Evasion attribute. Evasion grants a chance to evade attacks. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Evasion, Category = "Obsidian|CAttributes|Evasion", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Evasion;
+
+	/** The current Armor Spell Suppression Chance Attribute [0% - 100%]. Chance to suppress Spell Damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpellSuppressionChance, Category = "Obsidian|CAttributes|SpellSuppressionChance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SpellSuppressionChance;
+
+	/** The current Spell Suppression Magnitude [0% - 100%]. Percentage of Spell Damage to suppress (negate) */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpellSuppressionMagnitude, Category = "Obsidian|CAttributes|SpellSuppressionMagnitude", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SpellSuppressionMagnitude;
 
 	/**
 	 * Resistances
 	 */
 
 	/**
-	 * The current All Elemental Resistances attribute. All Elemental Resistances is an attribute since Gameplay Effects can modify it.
-	 * This is all elemental resistances put together for convenience (mainly scaling enemy's resistances) and we can have additional stat on items.
+	 * The current All Elemental Resistances attribute.
 	 * 
-	 * THIS DOES NOT MEAN THAT THIS VALUE HOLDS ALL ELEMENTAL RESISTANCES, BUT IT IS RATHER A WAY TO SCALE ALL OF THEM WITH ONE ATTRIBUTE.
+	 * This is all elemental resistances put together for convenience (mainly scaling enemy's resistances) and I can have additional stat on items.
+	 * This does not mean that this value holds all elemental resistances, but it is rather a way to scale all of them with one attribute.
 	 */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllElementalResistances, Category = "Obsidian|CAttributes|AllElementalResistances", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AllElementalResistances;
 	
-	/** The current Fire Resistance attribute. Fire Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Fire Resistance attribute. Fire Resistance negates fire damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Obsidian|CAttributes|FireResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FireResistance;
 
-	/** The current Max Fire Resistance attribute. Max Fire Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Max Fire Resistance attribute. Defines cap for Fire Resistance. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFireResistance, Category = "Obsidian|CAttributes|MaxFireResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxFireResistance;
 
-	/** The current Cold Resistance attribute. Cold Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Cold Resistance attribute. Cold Resistance negates cold damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ColdResistance, Category = "Obsidian|CAttributes|ColdResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ColdResistance;
 
-	/** The current Max Cold Resistance attribute. Max Cold Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Max Cold Resistance attribute. Defines cap for Cold Resistance */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxColdResistance, Category = "Obsidian|CAttributes|MaxColdResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxColdResistance;
 
-	/** The current Lightning Resistance attribute. Lightning Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Lightning Resistance attribute. Lightning Resistance negates lightning damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Obsidian|CAttributes|LightningResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData LightningResistance;
 	
-	/** The current Max Lightning Resistance attribute. Max Lightning Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Max Lightning Resistance attribute. Defines cap for Lightning Resistance. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxLightningResistance, Category = "Obsidian|CAttributes|MaxLightningResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxLightningResistance;
 	
-	/** The current Chaos Resistance attribute. Chaos Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Chaos Resistance attribute. Chaos resistance negates chaos damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosResistance, Category = "Obsidian|CAttributes|ChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosResistance;
 	
-	/** The current Max Chaos Resistance attribute. Max Chaos Resistance is an attribute since Gameplay Effects can modify it. */
+	/** The current Max Chaos Resistance attribute. Defines cap for Chaos Resistance. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|MaxChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxChaosResistance;
 
@@ -311,63 +325,66 @@ private:
 	 * Damage scaling attributes
 	 */
 
-	/** The current Critical Strike Chance attribute [0, 100], treating it like a percentage. Critical Strike Chance is an attribute since Gameplay Effects can modify it. */
+	/**
+	 * The current Critical Strike Chance attribute [0% - 100%]. Defines a chance to critical strike.
+	 * We can critically strike with every instant damage.
+	 */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeChance, Category = "Obsidian|CAttributes|CriticalStrikeChance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CriticalStrikeChance;
 
-	/** The current Critical Strike Multiplier attribute. Critical Strike Multiplier is an attribute since Gameplay Effects can modify it. */
+	/** The current Critical Strike Multiplier attribute [x%]. While successfully critically striking we will treat the damage as Damage * x/100 */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeMultiplier, Category = "Obsidian|CAttributes|CriticalStrikeMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CriticalStrikeMultiplier;
 
-	/** The current Attack Speed attribute. Attack Speed is an attribute since Gameplay Effects can modify it. */
+	/** The current Attack Speed attribute. Attask speed increases the speed of attacks. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackSpeed, Category = "Obsidian|CAttributes|AttackSpeed", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AttackSpeed;
 
-	/** The current Cast Speed attribute. Cast Speed is an attribute since Gameplay Effects can modify it. */
+	/** The current Cast Speed attribute. Cast Speed increases the speed of spells. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CastSpeed, Category = "Obsidian|CAttributes|CastSpeed", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CastSpeed;
 
-	/** The current Fire Penetration attribute. Fire Penetration is an attribute since Gameplay Effects can modify it. */
+	/** The current Fire Penetration attribute. Percentage of Fire Resistance that will be ignored. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FirePenetration, Category = "Obsidian|CAttributes|FirePenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FirePenetration;
 
-	/** The current Cold Penetration attribute. Cold Penetration is an attribute since Gameplay Effects can modify it. */
+	/** The current Cold Penetration attribute. Percentage of Cold Resistance that will be ignored. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ColdPenetration, Category = "Obsidian|CAttributes|ColdPenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ColdPenetration;
 
-	/** The current Lightning Penetration attribute. Lightning Penetration is an attribute since Gameplay Effects can modify it. */
+	/** The current Lightning Penetration attribute. Percentage of Lightning Resistance that will be ignored. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningPenetration, Category = "Obsidian|CAttributes|LightningPenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData LightningPenetration;
 
-	/** The current Elemental Penetration attribute. Elemental Penetration is an attribute since Gameplay Effects can modify it. */
+	/** The current Elemental Penetration attribute. Percentage of all elemental resistances that will be ignored. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllElementalPenetration, Category = "Obsidian|CAttributes|AllElementalPenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AllElementalPenetration;
 
-	/** The current Chaos Penetration attribute. Chaos Penetration is an attribute since Gameplay Effects can modify it. */
+	/** The current Chaos Penetration attribute. Percentage of Chaos Resistance that will be ignored. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosPenetration, Category = "Obsidian|CAttributes|ChaosPenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosPenetration;
 	
-	/** The current Fire Damage Multiplier attribute. Fire Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	/** The current Fire Damage Multiplier attribute. Multiplier for fire damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireDamageMultiplier, Category = "Obsidian|CAttributes|FireDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FireDamageMultiplier;
 
-	/** The current Cold Damage Multiplier attribute. Cold Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	/** The current Cold Damage Multiplier attribute. Multiplier for cold damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ColdDamageMultiplier, Category = "Obsidian|CAttributes|ColdDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ColdDamageMultiplier;
 
-	/** The current Lightning Damage Multiplier attribute. Lightning Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	/** The current Lightning Damage Multiplier attribute. Multiplier for lightning damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningDamageMultiplier, Category = "Obsidian|CAttributes|LightningDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData LightningDamageMultiplier;
 
-	/** The current All Elemental Damage Multiplier attribute. All Elemental Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	/** The current All Elemental Damage Multiplier attribute. Multiplier for all elemental damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllElementalDamageMultiplier, Category = "Obsidian|CAttributes|AllElementalDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AllElementalDamageMultiplier;
 
-	/** The current Chaos Damage Multiplier attribute. Chaos Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	/** The current Chaos Damage Multiplier attribute. Multiplier for chaos damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosDamageMultiplier, Category = "Obsidian|CAttributes|ChaosDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosDamageMultiplier;
 
-	/** The current Physical Damage Multiplier attribute. Physical Damage Multiplier is an attribute since Gameplay Effects can modify it. */
+	/** The current Physical Damage Multiplier attribute. Multiplier for physical damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageMultiplier, Category = "Obsidian|CAttributes|PhysicalDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageMultiplier;
 	
@@ -375,7 +392,6 @@ private:
 	 * Base Attributes
 	 */
 	
-	/** The current Physical Damage Multiplier attribute. Physical Damage Multiplier is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BaseDamage, Category = "Obsidian|CAttributes|BaseDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData BaseDamage;
 
@@ -383,7 +399,7 @@ private:
 	 * Character
 	 */
 
-	/** The current Movement Speed attribute. Movement Speed is an attribute since Gameplay Effects can modify it. */
+	/** The current Movement Speed attribute. Defines how fast the character is moving. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MovementSpeed, Category = "Obsidian|CAttributes|MovementSpeed", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MovementSpeed;
 

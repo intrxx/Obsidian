@@ -309,6 +309,26 @@ FGameplayAttribute UObsidianAttributesComponent::GetEvasionAttribute() const
 	return (CommonAttributeSet ? CommonAttributeSet->GetEvasionAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetSpellSuppressionChance() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetSpellSuppressionChance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetSpellSuppressionChanceAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetSpellSuppressionChanceAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetSpellSuppressionMagnitude() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetSpellSuppressionMagnitude() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetSpellSuppressionMagnitudeAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetSpellSuppressionMagnitudeAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetAllElementalResistances() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalResistances() : 0.0f);
