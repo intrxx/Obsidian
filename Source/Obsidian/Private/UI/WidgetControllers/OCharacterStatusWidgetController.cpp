@@ -61,6 +61,9 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	MaxLightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxLightningResistanceAttribute()).AddUObject(this, &ThisClass::MaxLightningResistanceChanged);
 	ChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
 	MaxChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
+
+	SpellSuppressionChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellSuppressionChanceAttribute()).AddUObject(this, &ThisClass::SpellSuppressionChanceChanged);
+	SpellSuppressionMagnitudeChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellSuppressionMagnitudeAttribute()).AddUObject(this, &ThisClass::SpellSuppressionMagnitudeChanged);
 }
 
 void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
@@ -106,6 +109,9 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	LightningResistanceChangedDelegate.Execute(AttributesComponent->GetLightningResistance(), AttributesComponent->GetMaxLightningResistance());
 	ChaosResistanceChangedDelegate.Execute(AttributesComponent->GetChaosResistance(), AttributesComponent->GetMaxChaosResistance());
 	AllElementalResistancesChangedDelegate.Execute(AttributesComponent->GetAllElementalResistances());
+
+	SpellSuppressionChanceChangedDelegate.Execute(AttributesComponent->GetSpellSuppressionChance());
+	SpellSuppressionMagnitudeChangedDelegate.Execute(AttributesComponent->GetSpellSuppressionMagnitude());
 }
 
 void UOCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const
@@ -351,6 +357,20 @@ void UOCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttri
 	const float NewValue = Data.NewValue;
 	
 	MaxChaosResistanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetChaosResistance(), NewValue);
+}
+
+void UOCharacterStatusWidgetController::SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	SpellSuppressionChanceChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	SpellSuppressionMagnitudeChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 

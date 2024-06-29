@@ -240,6 +240,16 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	{
 		ChaosResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
 	});
+
+	CharacterStatusWidgetController->SpellSuppressionChanceChangedDelegate.BindLambda([this](const float Value)
+	{
+		SpellSuppressionChance_AttributeRow->SetAttributeValueWithPercentage(Value);
+	});
+
+	CharacterStatusWidgetController->SpellSuppressionMagnitudeChangedDelegate.BindLambda([this](const float Value)
+	{
+		SpellSuppressionMagnitude_AttributeRow->SetAttributeValueWithPercentage(Value);
+	});
 }
 
 

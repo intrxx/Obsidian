@@ -184,6 +184,12 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ChaosResistance_AttributeRow;
 	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> SpellSuppressionChance_AttributeRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> SpellSuppressionMagnitude_AttributeRow;
+	
 	/**
 	 * Attributes - Misc
 	 */

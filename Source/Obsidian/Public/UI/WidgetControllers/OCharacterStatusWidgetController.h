@@ -69,6 +69,8 @@ public:
 	FOnAttributeValueChangedTwoParams MaxLightningResistanceChangedDelegate;
 	FOnAttributeValueChangedTwoParams ChaosResistanceChangedDelegate;
 	FOnAttributeValueChangedTwoParams MaxChaosResistanceChangedDelegate;
+	FOnAttributeValueChangedOneParam SpellSuppressionChanceChangedDelegate;
+	FOnAttributeValueChangedOneParam SpellSuppressionMagnitudeChangedDelegate;
 
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
@@ -118,6 +120,8 @@ protected:
 	void MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) const;
 	void ChaosResistanceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) const;
+	void SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const;
+	void SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const;
 	
 protected:
 	/** Character */
@@ -167,4 +171,6 @@ protected:
 	FDelegateHandle MaxColdResistanceChangedDelegateHandle;
 	FDelegateHandle ChaosResistanceChangedDelegateHandle;
 	FDelegateHandle MaxChaosResistanceChangedDelegateHandle;
+	FDelegateHandle SpellSuppressionChanceChangedDelegateHandle;
+	FDelegateHandle SpellSuppressionMagnitudeChangedDelegateHandle;
 };
