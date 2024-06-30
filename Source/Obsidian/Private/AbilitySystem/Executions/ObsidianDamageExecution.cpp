@@ -4,6 +4,7 @@
 #include "AbilitySystem/Executions/ObsidianDamageExecution.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 struct FObsidianDamageStatics
 {
@@ -51,8 +52,8 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	FAggregatorEvaluateParameters EvaluationParameters;
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
-
-	const float FullDamage = 0.0f;
+	
+	const float FullDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_Damage);
 	
 	float MitigatedDamage = FullDamage;
 	
@@ -60,25 +61,28 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
 	Armor = FMath::Max<float>(Armor, 0.0f);
 
-	++Armor;
-
 	float SpellSuppressionChance = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
 	SpellSuppressionChance = FMath::Max<float>(SpellSuppressionChance, 0.0f);
 
-	
+
+	//TODO Only attempt to suppress spell damage
 	if(SpellSuppressionChance > FMath::RandRange(0.0f, 100.0f))
 	{
-		//TODO Attempt to suppress spell damage // All damage for now
-
 		float SpellSuppressionMagnitude = 0.0f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
 		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);
 
-		MitigatedDamage = MitigatedDamage * SpellSuppressionMagnitude / 100.0f;
+		const float MitigateBy = FMath::FloorToFloat(MitigatedDamage * SpellSuppressionMagnitude / 100.0f);
+		MitigatedDamage -= MitigateBy;
+
+#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
+			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: %f. New damage: %f."), MitigateBy, MitigatedDamage));
+#endif // WITH_EDITOR or UE_BUILD_DEVELOPMENT
 	}
 
-	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetArmorAttribute(), EGameplayModOp::Additive, Armor);
+	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, MitigatedDamage);
 	OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 	
 #endif // WITH_SERVER_CODE
