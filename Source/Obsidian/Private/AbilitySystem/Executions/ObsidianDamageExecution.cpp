@@ -8,12 +8,22 @@
 
 struct FObsidianDamageStatics
 {
+	// Source
+	FGameplayEffectAttributeCaptureDefinition AccuracyDef;
+	
+	// Target
+	FGameplayEffectAttributeCaptureDefinition EvasionDef;
 	FGameplayEffectAttributeCaptureDefinition ArmorDef;
 	FGameplayEffectAttributeCaptureDefinition SpellSuppressionChanceDef;
 	FGameplayEffectAttributeCaptureDefinition SpellSuppressionMagnitudeDef;
 
 	FObsidianDamageStatics()
 	{
+		// Source
+		AccuracyDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAccuracyAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
+		
+		// Target
+		EvasionDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetEvasionAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		ArmorDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetArmorAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		SpellSuppressionChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionChanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		SpellSuppressionMagnitudeDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionMagnitudeAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -28,6 +38,11 @@ static const FObsidianDamageStatics& ObsidianDamageStatics()
 
 UObsidianDamageExecution::UObsidianDamageExecution()
 {
+	// Source
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AccuracyDef);
+	
+	// Target
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().EvasionDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ArmorDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionChanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionMagnitudeDef);
@@ -54,28 +69,58 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	EvaluationParameters.TargetTags = TargetTags;
 	
 	const float FullDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_Damage);
-	
 	float MitigatedDamage = FullDamage;
+
+	//TODO Only evade Hits
+	// ~ Start of Hit Evasion Calculation
+	float Evasion = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().EvasionDef, EvaluationParameters, Evasion);
+	Evasion = FMath::Max<float>(Evasion, 0.0f);
+
+	float Accuracy = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AccuracyDef, EvaluationParameters, Accuracy);
+	Accuracy = FMath::Max<float>(Accuracy, 0.0f);
+
+	//TODO Read about entropy hit here: https://pathofexile.fandom.com/wiki/Evasion#cite_note-cite4-2, https://www.pathofexile.com/forum/view-thread/11707#p216024 and maybe implement it
+	float ChanceToHit = ((Accuracy * 1.25f) / ((Accuracy + FMath::Pow((Evasion * 0.25f), 0.8f)))) * 100.0f;
+	ChanceToHit = FMath::Clamp<float>(ChanceToHit, 5.0f, 100.0f);
 	
+	if(!(ChanceToHit >= FMath::RandRange(1.0f, 100.0f))) // We did not hit return 0 damage
+	{
+		const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
+		OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
+		
+#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+			FString::Printf(TEXT("The hit was evaded. Chance to hit was: %f. New damage: 0"), ChanceToHit));
+#endif
+		
+		return;
+	}
+	// ~ End of Evasion Calculation Hit
+
+	//TODO Only mitigate raw physical damage
+	// ~ Start of Armor Raw Physical Damage Mitigation
 	float Armor = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
 	Armor = FMath::Max<float>(Armor, 0.0f);
-
-	//TODO Only mitigate raw physical damage
+	
 	const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * MitigatedDamage);
 	MitigatedDamage -= RawPhysicalDamageMitigation;
 	
 #if WITH_EDITOR || UE_BUILD_DEVELOPMENT
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
 		FString::Printf(TEXT("Reducing raw physical damage. Damage reduced: %f. New damage: %f."), RawPhysicalDamageMitigation, MitigatedDamage));
-#endif // WITH_EDITOR or UE_BUILD_DEVELOPMENT
-	
+#endif
+	// ~ End of Armor Raw Physical Damage Mitigation
+
+	//TODO Only attempt to suppress spell damage
+	// ~ Start of Suppression Spell Damage Mitigation
 	float SpellSuppressionChance = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
 	SpellSuppressionChance = FMath::Max<float>(SpellSuppressionChance, 0.0f);
-
-	//TODO Only attempt to suppress spell damage
-	if(SpellSuppressionChance > FMath::RandRange(1.0f, 100.0f))
+	
+	if(SpellSuppressionChance >= FMath::RandRange(1.0f, 100.0f))
 	{
 		float SpellSuppressionMagnitude = 0.0f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
@@ -87,8 +132,9 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 #if WITH_EDITOR || UE_BUILD_DEVELOPMENT
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
 			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: %f. New damage: %f."), SpellSuppressionMitigation, MitigatedDamage));
-#endif // WITH_EDITOR or UE_BUILD_DEVELOPMENT
+#endif
 	}
+	// ~ End of Suppression Spell Damage Mitigation
 
 	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, MitigatedDamage);
 	OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
