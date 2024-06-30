@@ -43,6 +43,7 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, COND_None, REPNOTIFY_Always);
 
 	// Damage Scaling Attributes
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Accuracy, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, CriticalStrikeChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, CriticalStrikeMultiplier, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AttackSpeed, COND_None, REPNOTIFY_Always);
@@ -281,6 +282,11 @@ void UObsidianCommonAttributeSet::OnRep_ChaosResistance(const FGameplayAttribute
 void UObsidianCommonAttributeSet::OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_Accuracy(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Accuracy, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue)

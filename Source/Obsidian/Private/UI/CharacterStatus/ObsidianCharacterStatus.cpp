@@ -97,6 +97,11 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	/**
 	 * Offence
 	 */
+	CharacterStatusWidgetController->AccuracyChangedDelegate.BindLambda([this](const float Value)
+	{
+		Accuracy_AttributeRow->SetAttributeValue(Value);
+	});
+	
 	CharacterStatusWidgetController->AttackSpeedChangedDelegate.BindLambda([this](const float Value)
 	{
 		AttackSpeed_AttributeRow->SetAttributeValueWithPercentage(Value);

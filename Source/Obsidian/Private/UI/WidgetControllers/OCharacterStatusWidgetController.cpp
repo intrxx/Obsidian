@@ -32,6 +32,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
 	
 	/** Offence */
+	AccuracyChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAccuracyAttribute()).AddUObject(this, &ThisClass::AccuracyChanged);
 	AttackSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
 	CastSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
 	CriticalStrikeChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
@@ -83,6 +84,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	MaxEnergyShieldChangedDelegate.Execute(AttributesComponent->GetMaxEnergyShield());
 
 	/** Offence */
+	AccuracyChangedDelegate.Execute(AttributesComponent->GetAccuracy());
 	AttackSpeedChangedDelegate.Execute(AttributesComponent->GetAttackSpeed());
 	CastSpeedChangedDelegate.Execute(AttributesComponent->GetCastSpeed());
 	CriticalStrikeChanceChangedDelegate.Execute(AttributesComponent->GetCriticalStrikeChance());
@@ -168,6 +170,13 @@ void UOCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttribut
 	const float NewValue = Data.NewValue;
 	
 	MaxEnergyShieldChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	AccuracyChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::AttackSpeedChanged(const FOnAttributeChangeData& Data) const

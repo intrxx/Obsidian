@@ -70,6 +70,7 @@ public:
 	 * Damage scaling attributes
 	 */
 	
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Accuracy);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeChance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AttackSpeed);
@@ -173,6 +174,8 @@ protected:
 	 * Damage scaling attributes
 	 */
 	
+	UFUNCTION()
+	void OnRep_Accuracy(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -322,9 +325,13 @@ private:
 	FGameplayAttributeData MaxChaosResistance;
 
 	/**
-	 * Damage scaling attributes
+	 * Damage related attributes
 	 */
 
+	/** The current Accuracy attribute. Source Accuracy combined with target Evasion determines a chance to hit */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Accuracy, Category = "Obsidian|CAttributes|Accuracy", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Accuracy;
+	
 	/**
 	 * The current Critical Strike Chance attribute [0% - 100%]. Defines a chance to critical strike.
 	 * We can critically strike with every instant damage.

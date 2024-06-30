@@ -40,6 +40,7 @@ public:
 	FOnAttributeValueChangedOneParam MaxEnergyShieldChangedDelegate;
 
 	/** Offence */
+	FOnAttributeValueChangedOneParam AccuracyChangedDelegate;
 	FOnAttributeValueChangedOneParam AttackSpeedChangedDelegate;
 	FOnAttributeValueChangedOneParam CastSpeedChangedDelegate;
 	FOnAttributeValueChangedOneParam CriticalStrikeChanceChangedDelegate;
@@ -91,6 +92,7 @@ protected:
 	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
 	
 	/** Offence */
+	void AccuracyChanged(const FOnAttributeChangeData& Data) const;
 	void AttackSpeedChanged(const FOnAttributeChangeData& Data) const;
 	void CastSpeedChanged(const FOnAttributeChangeData& Data) const;
 	void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) const;
@@ -142,6 +144,7 @@ protected:
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
 	
 	/** Offence */
+	FDelegateHandle AccuracyChangedDelegateHandle;
 	FDelegateHandle AttackSpeedChangedDelegateHandle;
 	FDelegateHandle CastSpeedChangedDelegateHandle;
 	FDelegateHandle CriticalStrikeChanceChangedDelegateHandle;

@@ -419,6 +419,16 @@ FGameplayAttribute UObsidianAttributesComponent::GetMaxChaosResistanceAttribute(
 	return (CommonAttributeSet ? CommonAttributeSet->GetMaxChaosResistanceAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetAccuracy() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetAccuracy() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetAccuracyAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetAccuracyAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetCriticalStrikeChance() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetCriticalStrikeChance() : 0.0f);

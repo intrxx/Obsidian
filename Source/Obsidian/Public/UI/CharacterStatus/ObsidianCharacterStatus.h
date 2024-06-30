@@ -112,6 +112,9 @@ protected:
 	TObjectPtr<UOCharacterStatusAttributeRow> OffHandDamage_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> Accuracy_AttributeRow;
+
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> AttackSpeed_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))

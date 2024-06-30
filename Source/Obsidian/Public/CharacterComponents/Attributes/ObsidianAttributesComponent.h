@@ -144,6 +144,10 @@ public:
 	FGameplayAttribute GetMaxChaosResistanceAttribute() const;
 
 	/** Getters for Critical Strike Chance Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetAccuracy() const;
+	FGameplayAttribute GetAccuracyAttribute() const;
+
+	/** Getters for Critical Strike Chance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetCriticalStrikeChance() const;
 	FGameplayAttribute GetCriticalStrikeChanceAttribute() const;
 
