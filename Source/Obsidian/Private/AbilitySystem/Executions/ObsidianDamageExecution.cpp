@@ -61,24 +61,32 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
 	Armor = FMath::Max<float>(Armor, 0.0f);
 
+	//TODO Only mitigate raw physical damage
+	const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * MitigatedDamage);
+	MitigatedDamage -= RawPhysicalDamageMitigation;
+	
+#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
+		FString::Printf(TEXT("Reducing raw physical damage. Damage reduced: %f. New damage: %f."), RawPhysicalDamageMitigation, MitigatedDamage));
+#endif // WITH_EDITOR or UE_BUILD_DEVELOPMENT
+	
 	float SpellSuppressionChance = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
 	SpellSuppressionChance = FMath::Max<float>(SpellSuppressionChance, 0.0f);
 
-
 	//TODO Only attempt to suppress spell damage
-	if(SpellSuppressionChance > FMath::RandRange(0.0f, 100.0f))
+	if(SpellSuppressionChance > FMath::RandRange(1.0f, 100.0f))
 	{
 		float SpellSuppressionMagnitude = 0.0f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
 		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);
 
-		const float MitigateBy = FMath::FloorToFloat(MitigatedDamage * SpellSuppressionMagnitude / 100.0f);
-		MitigatedDamage -= MitigateBy;
+		const float SpellSuppressionMitigation = MitigatedDamage * SpellSuppressionMagnitude / 100.0f;
+		MitigatedDamage -= SpellSuppressionMitigation;
 
 #if WITH_EDITOR || UE_BUILD_DEVELOPMENT
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
-			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: %f. New damage: %f."), MitigateBy, MitigatedDamage));
+			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: %f. New damage: %f."), SpellSuppressionMitigation, MitigatedDamage));
 #endif // WITH_EDITOR or UE_BUILD_DEVELOPMENT
 	}
 
