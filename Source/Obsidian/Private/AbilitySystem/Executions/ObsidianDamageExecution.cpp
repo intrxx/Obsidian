@@ -10,6 +10,8 @@ struct FObsidianDamageStatics
 {
 	// Source
 	FGameplayEffectAttributeCaptureDefinition AccuracyDef;
+	FGameplayEffectAttributeCaptureDefinition CriticalStrikeChanceDef;
+	FGameplayEffectAttributeCaptureDefinition CriticalStrikeMultiplierDef;
 	
 	// Target
 	FGameplayEffectAttributeCaptureDefinition EvasionDef;
@@ -21,6 +23,8 @@ struct FObsidianDamageStatics
 	{
 		// Source
 		AccuracyDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAccuracyAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
+		CriticalStrikeChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetCriticalStrikeChanceAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
+		CriticalStrikeMultiplierDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetCriticalStrikeMultiplierAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
 		
 		// Target
 		EvasionDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetEvasionAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -40,6 +44,8 @@ UObsidianDamageExecution::UObsidianDamageExecution()
 {
 	// Source
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AccuracyDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeChanceDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeMultiplierDef);
 	
 	// Target
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().EvasionDef);
@@ -69,7 +75,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	EvaluationParameters.TargetTags = TargetTags;
 	
 	const float FullDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_Damage);
-	float MitigatedDamage = FullDamage;
+	float ModifiedDamage = FullDamage;
 
 	//TODO Only evade Hits
 	// ~ Start of Hit Evasion Calculation
@@ -99,18 +105,37 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	}
 	// ~ End of Evasion Calculation Hit
 
+	// ~ Start of Critical Strikes Calculation
+	float CriticalStrikeChance = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeChanceDef, EvaluationParameters, CriticalStrikeChance);
+	CriticalStrikeChance = FMath::Max<float>(CriticalStrikeChance, 0.0f);
+
+	float CriticalStrikeMultiplier = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeMultiplierDef, EvaluationParameters, CriticalStrikeMultiplier);
+	CriticalStrikeMultiplier = FMath::Max<float>(CriticalStrikeMultiplier, 0.0f);
+
+	if(CriticalStrikeChance >= FMath::RandRange(1.0f, 100.0f))
+	{
+		ModifiedDamage = ModifiedDamage * (CriticalStrikeMultiplier / 100.0f);
+#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue,
+			FString::Printf(TEXT("Critical Strike! New damage: %f."), ModifiedDamage));
+#endif
+	}
+	// ~ End of Critical Strikes Calculation
+
 	//TODO Only mitigate raw physical damage
 	// ~ Start of Armor Raw Physical Damage Mitigation
 	float Armor = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
 	Armor = FMath::Max<float>(Armor, 0.0f);
 	
-	const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * MitigatedDamage);
-	MitigatedDamage -= RawPhysicalDamageMitigation;
+	const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * ModifiedDamage);
+	ModifiedDamage -= RawPhysicalDamageMitigation;
 	
 #if WITH_EDITOR || UE_BUILD_DEVELOPMENT
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-		FString::Printf(TEXT("Reducing raw physical damage. Damage reduced: %f. New damage: %f."), RawPhysicalDamageMitigation, MitigatedDamage));
+		FString::Printf(TEXT("Reducing raw physical damage. Damage reduced: %f. New damage: %f."), RawPhysicalDamageMitigation, ModifiedDamage));
 #endif
 	// ~ End of Armor Raw Physical Damage Mitigation
 
@@ -126,17 +151,17 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
 		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);
 
-		const float SpellSuppressionMitigation = MitigatedDamage * SpellSuppressionMagnitude / 100.0f;
-		MitigatedDamage -= SpellSuppressionMitigation;
+		const float SpellSuppressionMitigation = ModifiedDamage * SpellSuppressionMagnitude / 100.0f;
+		ModifiedDamage -= SpellSuppressionMitigation;
 
 #if WITH_EDITOR || UE_BUILD_DEVELOPMENT
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
-			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: %f. New damage: %f."), SpellSuppressionMitigation, MitigatedDamage));
+			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: %f. New damage: %f."), SpellSuppressionMitigation, ModifiedDamage));
 #endif
 	}
 	// ~ End of Suppression Spell Damage Mitigation
 
-	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, MitigatedDamage);
+	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, ModifiedDamage);
 	OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 	
 #endif // WITH_SERVER_CODE
