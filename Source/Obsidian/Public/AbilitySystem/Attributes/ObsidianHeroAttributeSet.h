@@ -47,6 +47,15 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Faith);
 
 	/**
+	 * Defence Attributes
+	 */
+
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, HitBlockChance);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxHitBlockChance);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, SpellBlockChance);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxSpellBlockChance);
+
+	/**
 	 * Meta Attributes
 	 */
 
@@ -73,6 +82,19 @@ protected:
 
 	UFUNCTION()
 	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Defence Attributes
+	 */
+
+	UFUNCTION()
+	void OnRep_HitBlockChance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxHitBlockChance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_SpellBlockChance(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxSpellBlockChance(const FGameplayAttributeData& OldValue);
 	
 	/**
 	 * "RPG Attributes"
@@ -98,23 +120,23 @@ private:
 	FGameplayAttributeData Mana;
 	
 	/** The current Max Mana attribute. Max Mana is an attribute since Gameplay Effects can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Obsidian|HAttributes|MaxMana", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Obsidian|HAttributes|Mana", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxMana;
 
 	/** The current Special Resource attribute. The Special Resource will be capped by the Max Special Resource attribute. Special Resource is hidden from modifiers so only Executions can modify it. */
 	/** ------------------------------------------------------------------------------------------------------ HideFromModifiers */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpecialResource, Category = "Obsidian|HAttributes|Mana", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpecialResource, Category = "Obsidian|HAttributes|SpecialResource", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SpecialResource;
 	
 	/** The current Max Special Resource. Max Special Resource is an attribute since Gameplay Effects can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxSpecialResource, Category = "Obsidian|HAttributes|MaxMana", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxSpecialResource, Category = "Obsidian|HAttributes|SpecialResource", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxSpecialResource;
 
 	/**
 	 * Status
 	 */
 
-	/** The current Mana Regeneration attribute. Mana Regeneration is an attribute since Gameplay Effects can modify it. */
+	/** The current Mana Regeneration attribute. Mana Regeneration defines value of mana that will be regenerated per second */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ManaRegeneration;
 
@@ -138,6 +160,26 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Faith, Category = "Obsidian|HAttributes|Faith", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Faith;
 
+	/**
+	 * Defence Attributes
+	 */
+
+	/** The current Hit Block Chance attribute. Hit Block Chance determines a chance to block hit damage (e.g. attacks, non-spell projectiles) */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HitBlockChance, Category = "Obsidian|HAttributes|HitBlockChance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData HitBlockChance;
+
+	/** The current Max Hit Block Chance attribute. Max Hit Block Chance determines a cap for Hit Block Chance */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHitBlockChance, Category = "Obsidian|HAttributes|HitBlockChance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxHitBlockChance;
+
+	/** The current Spell Block Chance attribute. Spell Block Chance determines a chance to block spell damage */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpellBlockChance, Category = "Obsidian|HAttributes|SpellBlockChance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SpellBlockChance;
+	
+	/** The current Max Spell Block Chance attribute. Max Spell Block Chance determines a cap for Spell Block Chance */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxSpellBlockChance, Category = "Obsidian|HAttributes|SpellBlockChance", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxSpellBlockChance;
+	
 	/**
 	 * Meta Attributes
 	 */

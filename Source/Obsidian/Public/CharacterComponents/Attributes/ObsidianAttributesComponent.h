@@ -151,7 +151,7 @@ public:
 	float GetCriticalStrikeChance() const;
 	FGameplayAttribute GetCriticalStrikeChanceAttribute() const;
 
-	/** Getters for Critical Strike Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	/** Getters for Critical Strike Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetCriticalStrikeDamageMultiplier() const;
 	FGameplayAttribute GetCriticalStrikeDamageMultiplierAttribute() const;
 

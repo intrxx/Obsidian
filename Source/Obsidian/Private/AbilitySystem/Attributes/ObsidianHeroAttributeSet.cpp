@@ -23,15 +23,38 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	/**
+	 * Spending attributes
+	 */
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, MaxMana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, SpecialResource, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, MaxSpecialResource, COND_None, REPNOTIFY_Always);
+
+	/**
+	 * Status
+	 */
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, ManaRegeneration, COND_None, REPNOTIFY_Always);
+
+	/**
+	 * "RPG Attributes"
+	 */
+	
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Strength, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Intelligence, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Dexterity, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Faith, COND_None, REPNOTIFY_Always);
+
+	/**
+	 * Defence Attributes
+	 */
+
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, HitBlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, MaxHitBlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, SpellBlockChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, MaxSpellBlockChance, COND_None, REPNOTIFY_Always);
 }
 
 void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
@@ -81,6 +104,26 @@ void UObsidianHeroAttributeSet::OnRep_MaxSpecialResource(const FGameplayAttribut
 void UObsidianHeroAttributeSet::OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, ManaRegeneration, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_HitBlockChance(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, HitBlockChance, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_MaxHitBlockChance(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxHitBlockChance, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_SpellBlockChance(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, SpellBlockChance, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_MaxSpellBlockChance(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxSpellBlockChance, OldValue);
 }
 
 void UObsidianHeroAttributeSet::OnRep_Strength(const FGameplayAttributeData& OldValue)

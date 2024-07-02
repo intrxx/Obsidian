@@ -5,7 +5,6 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Obsidian/Obsidian.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -170,6 +169,46 @@ float UObsidianHeroAttributesComponent::GetFaith() const
 FGameplayAttribute UObsidianHeroAttributesComponent::GetFaithAttribute() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetFaithAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetHitBlockChance() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetHitBlockChance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetHitBlockChanceAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetHitBlockChanceAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetMaxHitBlockChance() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxHitBlockChance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxHitBlockChanceAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxHitBlockChanceAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetSpellBlockChance() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetSpellBlockChance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetSpellBlockChanceAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetSpellBlockChanceAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetMaxSpellBlockChance() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxSpellBlockChance() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxSpellBlockChanceAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxSpellBlockChanceAttribute() : nullptr);
 }
 
 

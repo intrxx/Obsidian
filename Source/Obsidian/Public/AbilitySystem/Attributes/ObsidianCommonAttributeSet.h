@@ -244,7 +244,7 @@ private:
 	FGameplayAttributeData EnergyShield;
 
 	/** The current Max Energy Shield attribute. Defines cap for Energy Shield, Gameplay Effects can modify it. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergyShield, Category = "Obsidian|CAttributes|MaxEnergyShield", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxEnergyShield;
 
 	/**
@@ -297,7 +297,7 @@ private:
 	FGameplayAttributeData FireResistance;
 
 	/** The current Max Fire Resistance attribute. Defines cap for Fire Resistance. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFireResistance, Category = "Obsidian|CAttributes|MaxFireResistance", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFireResistance, Category = "Obsidian|CAttributes|FireResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxFireResistance;
 
 	/** The current Cold Resistance attribute. Cold Resistance negates cold damage taken. */
@@ -305,7 +305,7 @@ private:
 	FGameplayAttributeData ColdResistance;
 
 	/** The current Max Cold Resistance attribute. Defines cap for Cold Resistance */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxColdResistance, Category = "Obsidian|CAttributes|MaxColdResistance", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxColdResistance, Category = "Obsidian|CAttributes|ColdResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxColdResistance;
 
 	/** The current Lightning Resistance attribute. Lightning Resistance negates lightning damage taken. */
@@ -313,7 +313,7 @@ private:
 	FGameplayAttributeData LightningResistance;
 	
 	/** The current Max Lightning Resistance attribute. Defines cap for Lightning Resistance. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxLightningResistance, Category = "Obsidian|CAttributes|MaxLightningResistance", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxLightningResistance, Category = "Obsidian|CAttributes|LightningResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxLightningResistance;
 	
 	/** The current Chaos Resistance attribute. Chaos resistance negates chaos damage taken. */
@@ -321,7 +321,7 @@ private:
 	FGameplayAttributeData ChaosResistance;
 	
 	/** The current Max Chaos Resistance attribute. Defines cap for Chaos Resistance. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|MaxChaosResistance", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|ChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxChaosResistance;
 
 	/**

@@ -67,6 +67,22 @@ public:
 	float GetFaith() const;
 	FGameplayAttribute GetFaithAttribute() const;
 
+	/** Getters for Hit Block Chance Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetHitBlockChance() const;
+	FGameplayAttribute GetHitBlockChanceAttribute() const;
+
+	/** Getters for Max Hit Block Chance Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetMaxHitBlockChance() const;
+	FGameplayAttribute GetMaxHitBlockChanceAttribute() const;
+
+	/** Getters for Spell Block Chance Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetSpellBlockChance() const;
+	FGameplayAttribute GetSpellBlockChanceAttribute() const;
+
+	/** Getters for Max Spell Block Chance Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetMaxSpellBlockChance() const;
+	FGameplayAttribute GetMaxSpellBlockChanceAttribute() const;
+
 	/**
 	 * 
 	 */
