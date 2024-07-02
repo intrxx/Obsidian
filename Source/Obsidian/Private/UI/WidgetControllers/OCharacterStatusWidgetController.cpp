@@ -36,7 +36,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	AttackSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
 	CastSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
 	CriticalStrikeChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
-	CriticalStrikeMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeMultiplierChanged);
+	CriticalStrikeDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeDamageMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeDamageMultiplierChanged);
 	PhysicalDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetPhysicalDamageMultiplierAttribute()).AddUObject(this, &ThisClass::PhysicalDamageMultiplierChanged);
 	FireDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFireDamageMultiplierAttribute()).AddUObject(this, &ThisClass::FireDamageMultiplierChanged);
 	LightningDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningDamageMultiplierAttribute()).AddUObject(this, &ThisClass::LightningDamageMultiplierChanged);
@@ -88,7 +88,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	AttackSpeedChangedDelegate.Execute(AttributesComponent->GetAttackSpeed());
 	CastSpeedChangedDelegate.Execute(AttributesComponent->GetCastSpeed());
 	CriticalStrikeChanceChangedDelegate.Execute(AttributesComponent->GetCriticalStrikeChance());
-	CriticalStrikeMultiplierChangedDelegate.Execute(AttributesComponent->GetCriticalStrikeMultiplier());
+	CriticalStrikeDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetCriticalStrikeDamageMultiplier());
 	PhysicalDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetPhysicalDamageMultiplier());
 	FireDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetFireDamageMultiplier());
 	LightningDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetLightningDamageMultiplier());
@@ -200,11 +200,11 @@ void UOCharacterStatusWidgetController::CriticalStrikeChanceChanged(const FOnAtt
 	CriticalStrikeChanceChangedDelegate.ExecuteIfBound(NewValue);
 }
 
-void UOCharacterStatusWidgetController::CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UOCharacterStatusWidgetController::CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
 	const float NewValue = Data.NewValue;
 	
-	CriticalStrikeMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+	CriticalStrikeDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const

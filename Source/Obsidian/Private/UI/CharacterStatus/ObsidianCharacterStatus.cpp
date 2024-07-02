@@ -117,7 +117,7 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 		CriticalStrikeChance_AttributeRow->SetAttributeValueWithPercentage(Value);
 	});
 
-	CharacterStatusWidgetController->CriticalStrikeMultiplierChangedDelegate.BindLambda([this](const float Value)
+	CharacterStatusWidgetController->CriticalStrikeDamageMultiplierChangedDelegate.BindLambda([this](const float Value)
 	{
 		CriticalStrikeMulti_AttributeRow->SetAttributeValueWithPercentage(Value);
 	});

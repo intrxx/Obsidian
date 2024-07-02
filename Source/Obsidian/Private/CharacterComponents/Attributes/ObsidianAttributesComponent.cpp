@@ -439,14 +439,14 @@ FGameplayAttribute UObsidianAttributesComponent::GetCriticalStrikeChanceAttribut
 	return (CommonAttributeSet ? CommonAttributeSet->GetCriticalStrikeChanceAttribute() : nullptr);
 }
 
-float UObsidianAttributesComponent::GetCriticalStrikeMultiplier() const
+float UObsidianAttributesComponent::GetCriticalStrikeDamageMultiplier() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetCriticalStrikeMultiplier() : 0.0f);
+	return (CommonAttributeSet ? CommonAttributeSet->GetCriticalStrikeDamageMultiplier() : 0.0f);
 }
 
-FGameplayAttribute UObsidianAttributesComponent::GetCriticalStrikeMultiplierAttribute() const
+FGameplayAttribute UObsidianAttributesComponent::GetCriticalStrikeDamageMultiplierAttribute() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetCriticalStrikeMultiplierAttribute() : nullptr);
+	return (CommonAttributeSet ? CommonAttributeSet->GetCriticalStrikeDamageMultiplierAttribute() : nullptr);
 }
 
 float UObsidianAttributesComponent::GetAttackSpeed() const

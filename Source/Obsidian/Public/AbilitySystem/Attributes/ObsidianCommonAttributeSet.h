@@ -72,7 +72,7 @@ public:
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Accuracy);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeChance);
-	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeMultiplier);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeDamageMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AttackSpeed);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CastSpeed);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FirePenetration);
@@ -179,7 +179,7 @@ protected:
 	UFUNCTION()
 	void OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
-	void OnRep_CriticalStrikeMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_CriticalStrikeDamageMultiplier(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_AttackSpeed(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -340,8 +340,8 @@ private:
 	FGameplayAttributeData CriticalStrikeChance;
 
 	/** The current Critical Strike Multiplier attribute [x%]. While successfully critically striking we will treat the damage as Damage * x/100 */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeMultiplier, Category = "Obsidian|CAttributes|CriticalStrikeMultiplier", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData CriticalStrikeMultiplier;
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_CriticalStrikeDamageMultiplier, Category = "Obsidian|CAttributes|CriticalStrikeDamageMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CriticalStrikeDamageMultiplier;
 
 	/** The current Attack Speed attribute. Attask speed increases the speed of attacks. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AttackSpeed, Category = "Obsidian|CAttributes|AttackSpeed", Meta = (AllowPrivateAccess = true))

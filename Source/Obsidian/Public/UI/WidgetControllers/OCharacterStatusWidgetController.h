@@ -44,7 +44,7 @@ public:
 	FOnAttributeValueChangedOneParam AttackSpeedChangedDelegate;
 	FOnAttributeValueChangedOneParam CastSpeedChangedDelegate;
 	FOnAttributeValueChangedOneParam CriticalStrikeChanceChangedDelegate;
-	FOnAttributeValueChangedOneParam CriticalStrikeMultiplierChangedDelegate;
+	FOnAttributeValueChangedOneParam CriticalStrikeDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam PhysicalDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam FireDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam LightningDamageMultiplierChangedDelegate;
@@ -96,7 +96,7 @@ protected:
 	void AttackSpeedChanged(const FOnAttributeChangeData& Data) const;
 	void CastSpeedChanged(const FOnAttributeChangeData& Data) const;
 	void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) const;
-	void CriticalStrikeMultiplierChanged(const FOnAttributeChangeData& Data) const;
+	void CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
@@ -148,7 +148,7 @@ protected:
 	FDelegateHandle AttackSpeedChangedDelegateHandle;
 	FDelegateHandle CastSpeedChangedDelegateHandle;
 	FDelegateHandle CriticalStrikeChanceChangedDelegateHandle;
-	FDelegateHandle CriticalStrikeMultiplierChangedDelegateHandle;
+	FDelegateHandle CriticalStrikeDamageMultiplierChangedDelegateHandle;
 	FDelegateHandle PhysicalDamageMultiplierChangedDelegateHandle;
 	FDelegateHandle FireDamageMultiplierChangedDelegateHandle;
 	FDelegateHandle LightningDamageMultiplierChangedDelegateHandle;

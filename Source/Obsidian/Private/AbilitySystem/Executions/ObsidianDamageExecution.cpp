@@ -11,7 +11,7 @@ struct FObsidianDamageStatics
 	// Source
 	FGameplayEffectAttributeCaptureDefinition AccuracyDef;
 	FGameplayEffectAttributeCaptureDefinition CriticalStrikeChanceDef;
-	FGameplayEffectAttributeCaptureDefinition CriticalStrikeMultiplierDef;
+	FGameplayEffectAttributeCaptureDefinition CriticalStrikeDamageMultiplierDef;
 	
 	// Target
 	FGameplayEffectAttributeCaptureDefinition EvasionDef;
@@ -24,7 +24,7 @@ struct FObsidianDamageStatics
 		// Source
 		AccuracyDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAccuracyAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
 		CriticalStrikeChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetCriticalStrikeChanceAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
-		CriticalStrikeMultiplierDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetCriticalStrikeMultiplierAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
+		CriticalStrikeDamageMultiplierDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetCriticalStrikeDamageMultiplierAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
 		
 		// Target
 		EvasionDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetEvasionAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -45,7 +45,7 @@ UObsidianDamageExecution::UObsidianDamageExecution()
 	// Source
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AccuracyDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeChanceDef);
-	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeMultiplierDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef);
 	
 	// Target
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().EvasionDef);
@@ -110,13 +110,13 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeChanceDef, EvaluationParameters, CriticalStrikeChance);
 	CriticalStrikeChance = FMath::Max<float>(CriticalStrikeChance, 0.0f);
 
-	float CriticalStrikeMultiplier = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeMultiplierDef, EvaluationParameters, CriticalStrikeMultiplier);
-	CriticalStrikeMultiplier = FMath::Max<float>(CriticalStrikeMultiplier, 0.0f);
+	float CriticalStrikeDamageMultiplier = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef, EvaluationParameters, CriticalStrikeDamageMultiplier);
+	CriticalStrikeDamageMultiplier = FMath::Max<float>(CriticalStrikeDamageMultiplier, 0.0f);
 
 	if(CriticalStrikeChance >= FMath::RandRange(1.0f, 100.0f))
 	{
-		ModifiedDamage = ModifiedDamage * (CriticalStrikeMultiplier / 100.0f);
+		ModifiedDamage = ModifiedDamage * (CriticalStrikeDamageMultiplier / 100.0f);
 #if WITH_EDITOR || UE_BUILD_DEVELOPMENT
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue,
 			FString::Printf(TEXT("Critical Strike! New damage: %f."), ModifiedDamage));
