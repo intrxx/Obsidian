@@ -72,6 +72,10 @@ public:
 	FOnAttributeValueChangedTwoParams MaxChaosResistanceChangedDelegate;
 	FOnAttributeValueChangedOneParam SpellSuppressionChanceChangedDelegate;
 	FOnAttributeValueChangedOneParam SpellSuppressionMagnitudeChangedDelegate;
+	FOnAttributeValueChangedTwoParams HitBlockChanceChangedDelegate;
+	FOnAttributeValueChangedTwoParams MaxHitBlockChanceChangedDelegate;
+	FOnAttributeValueChangedTwoParams SpellBlockChanceChangedDelegate;
+	FOnAttributeValueChangedTwoParams MaxSpellBlockChanceChangedDelegate;
 
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
@@ -124,6 +128,10 @@ protected:
 	void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) const;
 	void SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const;
 	void SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const;
+	void HitBlockChanceChanged(const FOnAttributeChangeData& Data) const;
+	void MaxHitBlockChanceChanged(const FOnAttributeChangeData& Data) const;
+	void SpellBlockChanceChanged(const FOnAttributeChangeData& Data) const;
+	void MaxSpellBlockChanceChanged(const FOnAttributeChangeData& Data) const;
 	
 protected:
 	/** Character */
@@ -176,4 +184,8 @@ protected:
 	FDelegateHandle MaxChaosResistanceChangedDelegateHandle;
 	FDelegateHandle SpellSuppressionChanceChangedDelegateHandle;
 	FDelegateHandle SpellSuppressionMagnitudeChangedDelegateHandle;
+	FDelegateHandle HitBlockChanceChangedDelegateHandle;
+	FDelegateHandle MaxHitBlockChanceChangedDelegateHandle;
+	FDelegateHandle SpellBlockChanceChangedDelegateHandle;
+	FDelegateHandle MaxSpellBlockChanceChangedDelegateHandle;
 };

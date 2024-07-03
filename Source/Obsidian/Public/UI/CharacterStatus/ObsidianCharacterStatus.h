@@ -192,6 +192,12 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> SpellSuppressionMagnitude_AttributeRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> HitBlockChance_AttributeRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> SpellBlockChance_AttributeRow;
 	
 	/**
 	 * Attributes - Misc

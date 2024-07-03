@@ -109,13 +109,13 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float CriticalStrikeChance = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeChanceDef, EvaluationParameters, CriticalStrikeChance);
 	CriticalStrikeChance = FMath::Max<float>(CriticalStrikeChance, 0.0f);
-
-	float CriticalStrikeDamageMultiplier = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef, EvaluationParameters, CriticalStrikeDamageMultiplier);
-	CriticalStrikeDamageMultiplier = FMath::Max<float>(CriticalStrikeDamageMultiplier, 0.0f);
-
+	
 	if(CriticalStrikeChance >= FMath::RandRange(1.0f, 100.0f))
 	{
+		float CriticalStrikeDamageMultiplier = 0.0f;
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef, EvaluationParameters, CriticalStrikeDamageMultiplier);
+		CriticalStrikeDamageMultiplier = FMath::Max<float>(CriticalStrikeDamageMultiplier, 0.0f);
+		
 		ModifiedDamage = ModifiedDamage * (CriticalStrikeDamageMultiplier / 100.0f);
 #if WITH_EDITOR || UE_BUILD_DEVELOPMENT
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue,

@@ -208,42 +208,42 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 
 	CharacterStatusWidgetController->FireResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		FireResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		FireResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->MaxFireResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		FireResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		FireResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->ColdResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		ColdResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		ColdResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->MaxColdResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		ColdResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		ColdResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->LightningResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		LightningResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		LightningResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->MaxLightningResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		LightningResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		LightningResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->ChaosResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		ChaosResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		ChaosResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->MaxChaosResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
 	{
-		ChaosResistance_AttributeRow->SetResistanceAttributeValue(Value, MaxValue);
+		ChaosResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 
 	CharacterStatusWidgetController->SpellSuppressionChanceChangedDelegate.BindLambda([this](const float Value)
@@ -254,6 +254,26 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	CharacterStatusWidgetController->SpellSuppressionMagnitudeChangedDelegate.BindLambda([this](const float Value)
 	{
 		SpellSuppressionMagnitude_AttributeRow->SetAttributeValueWithPercentage(Value);
+	});
+
+	CharacterStatusWidgetController->HitBlockChanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
+	{
+		HitBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	});
+
+	CharacterStatusWidgetController->MaxHitBlockChanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
+	{
+		HitBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	});
+
+	CharacterStatusWidgetController->SpellBlockChanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
+	{
+		SpellBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	});
+
+	CharacterStatusWidgetController->MaxSpellBlockChanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)
+	{
+		SpellBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
 }
 

@@ -62,9 +62,12 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	MaxLightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxLightningResistanceAttribute()).AddUObject(this, &ThisClass::MaxLightningResistanceChanged);
 	ChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
 	MaxChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
-
 	SpellSuppressionChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellSuppressionChanceAttribute()).AddUObject(this, &ThisClass::SpellSuppressionChanceChanged);
 	SpellSuppressionMagnitudeChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellSuppressionMagnitudeAttribute()).AddUObject(this, &ThisClass::SpellSuppressionMagnitudeChanged);
+	HitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHitBlockChanceAttribute()).AddUObject(this, &ThisClass::HitBlockChanceChanged);
+	MaxHitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHitBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxHitBlockChanceChanged);
+	SpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::SpellBlockChanceChanged);
+	MaxSpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxSpellBlockChanceChanged);
 }
 
 void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
@@ -105,15 +108,15 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	EvasionChangedDelegate.Execute(AttributesComponent->GetEvasion());
 	HealthRegenerationChangedDelegate.Execute(AttributesComponent->GetHealthRegeneration());
 	EnergyShieldRegenerationChangedDelegate.Execute(AttributesComponent->GetEnergyShieldRegeneration());
-	
 	FireResistanceChangedDelegate.Execute(AttributesComponent->GetFireResistance(), AttributesComponent->GetMaxFireResistance());
 	ColdResistanceChangedDelegate.Execute(AttributesComponent->GetColdResistance(), AttributesComponent->GetMaxColdResistance());
 	LightningResistanceChangedDelegate.Execute(AttributesComponent->GetLightningResistance(), AttributesComponent->GetMaxLightningResistance());
 	ChaosResistanceChangedDelegate.Execute(AttributesComponent->GetChaosResistance(), AttributesComponent->GetMaxChaosResistance());
 	AllElementalResistancesChangedDelegate.Execute(AttributesComponent->GetAllElementalResistances());
-
 	SpellSuppressionChanceChangedDelegate.Execute(AttributesComponent->GetSpellSuppressionChance());
 	SpellSuppressionMagnitudeChangedDelegate.Execute(AttributesComponent->GetSpellSuppressionMagnitude());
+	HitBlockChanceChangedDelegate.Execute(AttributesComponent->GetHitBlockChance(), AttributesComponent->GetMaxHitBlockChance());
+	SpellBlockChanceChangedDelegate.Execute(AttributesComponent->GetSpellBlockChance(), AttributesComponent->GetMaxSpellBlockChance());
 }
 
 void UOCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const
@@ -380,6 +383,34 @@ void UOCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const F
 	const float NewValue = Data.NewValue;
 
 	SpellSuppressionMagnitudeChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	HitBlockChanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxHitBlockChance());
+}
+
+void UOCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	MaxHitBlockChanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetHitBlockChance(), NewValue);
+}
+
+void UOCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	SpellBlockChanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxSpellBlockChance());
+}
+
+void UOCharacterStatusWidgetController::MaxSpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	MaxSpellBlockChanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetSpellBlockChance(), NewValue);
 }
 
 

@@ -30,11 +30,10 @@ public:
 	void SetAttributeValueWithPercentage(const float& Value);
 
 	/**
-	 * Sets both the current Attribute Value and the Max Attribute Value on the widget, adds a "%" to the end and sets the private attribute variables in OCharacterStatusAttributeRow
-	 * For now used exclusively for Resistances.
+	 * Sets both the current Attribute Value and the Max Attribute Value on the widget, adds a "%" to the end and sets the private attribute variables in OCharacterStatusAttributeRow.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetResistanceAttributeValue(const float& Value, const float& MaxValue);
+	void SetTwoAttributeValuesWithPercent(const float& Value, const float& MaxValue);
 
 	/**
 	 * Updates the value on the widget, designed to take "All*" attributes and update all components of it.

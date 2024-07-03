@@ -56,7 +56,7 @@ void UOCharacterStatusAttributeRow::UpdateAttributeValueWithPercentage(const flo
 	}
 }
 
-void UOCharacterStatusAttributeRow::SetResistanceAttributeValue(const float& Value, const float& MaxValue)
+void UOCharacterStatusAttributeRow::SetTwoAttributeValuesWithPercent(const float& Value, const float& MaxValue)
 {
 	CurrentAttributeValue = Value;
 	CurrentMaxAttributeValue = MaxValue;
