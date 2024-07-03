@@ -203,7 +203,7 @@ public:
 	float GetChaosDamageMultiplier() const;
 	FGameplayAttribute GetChaosDamageMultiplierAttribute() const;
 
-	/** Getters for Physical Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	/** Getters for Physical Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */	
 	float GetPhysicalDamageMultiplier() const;
 	FGameplayAttribute GetPhysicalDamageMultiplierAttribute() const;
 	
