@@ -37,7 +37,10 @@ class OBSIDIAN_API UObsidianGameplayAbility : public UGameplayAbility
 public:
 	UObsidianGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	EObsidianGameplayAbility_ActivationPolicy GetAbilityActivationPolicy() const {return ActivationPolicy;}
+	EObsidianGameplayAbility_ActivationPolicy GetAbilityActivationPolicy() const
+	{
+		return ActivationPolicy;
+	}
 
 protected:
 	//~UGameplayAbility interface

@@ -25,9 +25,15 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerState")
-	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const { return AbilitySystemComponent; }
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const
+	{
+		return AbilitySystemComponent;
+	}
 	
-	FORCEINLINE int32 GetHeroLevel() const {return HeroLevel;}
+	FORCEINLINE int32 GetHeroLevel() const
+	{
+		return HeroLevel;
+	}
 
 private:
 	UFUNCTION()

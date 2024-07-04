@@ -22,13 +22,22 @@ public:
 	virtual void Destroyed() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
-	UOProjectileMovementComponent* GetObsidianProjectileMovementComponent() {return ObsidianProjectileMovementComponent;}
+	UOProjectileMovementComponent* GetObsidianProjectileMovementComponent()
+	{
+		return ObsidianProjectileMovementComponent;
+	}
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
-	FGameplayEffectSpecHandle GetProjectileDamageSpecHandle() const {return DamageEffectSpecHandle;}
+	FGameplayEffectSpecHandle GetProjectileDamageSpecHandle() const
+	{
+		return DamageEffectSpecHandle;
+	}
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
-	void SetProjectileDamageSpecHandle(const FGameplayEffectSpecHandle DamageSpec) {DamageEffectSpecHandle = DamageSpec;}
+	void SetProjectileDamageSpecHandle(const FGameplayEffectSpecHandle DamageSpec)
+	{
+		DamageEffectSpecHandle = DamageSpec;
+	}
 
 protected:
 	virtual void BeginPlay() override;

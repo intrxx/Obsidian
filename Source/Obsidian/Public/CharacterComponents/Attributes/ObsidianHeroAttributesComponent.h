@@ -18,9 +18,12 @@ class OBSIDIAN_API UObsidianHeroAttributesComponent : public UObsidianAttributes
 public:
 	UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer);
 	
-	/** Returns the HERO Attributes Component if one exists on the specified actor. */
+	/** Returns the HERO Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroAttributes")
-	static UObsidianHeroAttributesComponent* FindAttributesComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianHeroAttributesComponent>() : nullptr);}
+	static UObsidianHeroAttributesComponent* FindAttributesComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UObsidianHeroAttributesComponent>() : nullptr);
+	}
 
 	//~ Start of ObsidianAttributesComponent
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;

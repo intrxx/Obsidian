@@ -22,14 +22,17 @@ class OBSIDIAN_API UObsidianHeroComponent : public UPawnComponent
 public:
 	UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer);
 
+	/** Returns the hero component if one exists on the specified actor. */
+	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroComp")
+	static UObsidianHeroComponent* FindHeroComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);
+	}
+	
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 	void InitializePlayerInput(UInputComponent* InputComponent);
-
-	/** Returns the hero component if one exists on the specified actor. */
-	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroComp")
-	static UObsidianHeroComponent* FindHeroComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);}
-
+	
 	AObsidianHUD* GetObsidianHUD() const;
 
 protected:

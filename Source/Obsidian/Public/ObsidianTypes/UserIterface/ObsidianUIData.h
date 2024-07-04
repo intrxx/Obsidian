@@ -1,5 +1,6 @@
 ﻿#pragma once
 
+#include "CoreMinimal.h"
 #include "GameplayEffect.h"
 #include "ObsidianUIData.generated.h"
 

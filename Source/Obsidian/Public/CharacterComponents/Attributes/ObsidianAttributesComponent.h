@@ -37,26 +37,36 @@ class OBSIDIAN_API UObsidianAttributesComponent : public UActorComponent
 
 public:	
 	UObsidianAttributesComponent(const FObjectInitializer& ObjectInitializer);
+
+	/** Returns the COMMON Attributes Component if one exists on the specified actor, will be nullptr otherwise */
+	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
+	static UObsidianAttributesComponent* FindCommonAttributesComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UObsidianAttributesComponent>() : nullptr);
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
+	EObsidianDeathState GetDeathState() const
+	{
+		return DeathState;
+	}
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (ExpandBoolAsExecs), Category = "Obsidian|Attributes")
+	bool IsDeadOrDying() const
+	{
+		return DeathState > EObsidianDeathState::EDS_Alive;
+	}
 	
 	/** Initializes this component using ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr);
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
-	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
-	static UObsidianAttributesComponent* FindCommonAttributesComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianAttributesComponent>() : nullptr);}
 	
 	/** Uninitialize this component, clearing any references to the ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
 	virtual void UninitializeFromAbilitySystem();
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
-	EObsidianDeathState GetDeathState() const { return DeathState; }
-
-	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (ExpandBoolAsExecs), Category = "Obsidian|Attributes")
-	bool IsDeadOrDying() const { return DeathState > EObsidianDeathState::EDS_Alive; }
-
+	
 	/** Start the death sequence for the owner. */
 	virtual void StartDeath();
 

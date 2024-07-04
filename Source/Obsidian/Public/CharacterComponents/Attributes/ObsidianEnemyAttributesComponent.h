@@ -20,9 +20,12 @@ class OBSIDIAN_API UObsidianEnemyAttributesComponent : public UObsidianAttribute
 public:
 	UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer);
 	
-	/** Returns the ENEMY Attributes Component if one exists on the specified actor. */
+	/** Returns the ENEMY Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
-	static UObsidianEnemyAttributesComponent* FindAttributesComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianEnemyAttributesComponent>() : nullptr);}
+	static UObsidianEnemyAttributesComponent* FindAttributesComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UObsidianEnemyAttributesComponent>() : nullptr);
+	}
 
 	//~ Start of ObsidianAttributesComponent
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;

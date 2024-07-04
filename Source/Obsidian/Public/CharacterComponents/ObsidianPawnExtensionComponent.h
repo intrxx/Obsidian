@@ -19,6 +19,24 @@ class OBSIDIAN_API UObsidianPawnExtensionComponent : public UPawnComponent
 public:
 	UObsidianPawnExtensionComponent(const FObjectInitializer& ObjectInitializer);
 
+	UFUNCTION(BlueprintPure, Category = "Obsidian|Pawn")
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const
+	{
+		return AbilitySystemComponent;
+	}
+
+	/** Returns the hero component if one exists on the specified actor. */
+	UFUNCTION(BlueprintPure, Category = "Obsidian|ExtComp")
+	static UObsidianPawnExtensionComponent* FindPawnExtComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UObsidianPawnExtensionComponent>() : nullptr);
+	}
+	
+	const UObsidianPawnData* GetPawnData() const
+	{
+		return PawnData;
+	}
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	/** Should be called by the owning Pawn to become the Ability System's avatar actor. */
@@ -32,15 +50,6 @@ public:
 	
 	/** Register with the OnAbilitySystemInitialized delegate, this is fired when our pawn is removed as the Ability System's avatar actor */
 	void OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate);
-	
-	UFUNCTION(BlueprintPure, Category = "Obsidian|Pawn")
-	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const {return AbilitySystemComponent;}
-
-	/** Returns the hero component if one exists on the specified actor. */
-	UFUNCTION(BlueprintPure, Category = "Obsidian|ExtComp")
-	static UObsidianPawnExtensionComponent* FindPawnExtComponent(const AActor* Actor) {return (Actor ? Actor->FindComponentByClass<UObsidianPawnExtensionComponent>() : nullptr);}
-	
-	const UObsidianPawnData* GetPawnData() const {return PawnData;}
 
 protected:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
