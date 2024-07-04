@@ -96,7 +96,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 		OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		
-#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+#if !UE_BUILD_SHIPPING
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
 			FString::Printf(TEXT("The hit was evaded. Chance to hit was: %f. New damage: 0"), ChanceToHit));
 #endif
@@ -117,7 +117,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		CriticalStrikeDamageMultiplier = FMath::Max<float>(CriticalStrikeDamageMultiplier, 0.0f);
 		
 		ModifiedDamage = ModifiedDamage * (CriticalStrikeDamageMultiplier / 100.0f);
-#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+#if !UE_BUILD_SHIPPING
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue,
 			FString::Printf(TEXT("Critical Strike! New damage: %f."), ModifiedDamage));
 #endif
@@ -133,7 +133,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * ModifiedDamage);
 	ModifiedDamage -= RawPhysicalDamageMitigation;
 	
-#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+#if !UE_BUILD_SHIPPING
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
 		FString::Printf(TEXT("Reducing raw physical damage. Damage reduced: %f. New damage: %f."), RawPhysicalDamageMitigation, ModifiedDamage));
 #endif
@@ -154,7 +154,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		const float SpellSuppressionMitigation = ModifiedDamage * SpellSuppressionMagnitude / 100.0f;
 		ModifiedDamage -= SpellSuppressionMitigation;
 
-#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+#if !UE_BUILD_SHIPPING
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
 			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: %f. New damage: %f."), SpellSuppressionMitigation, ModifiedDamage));
 #endif

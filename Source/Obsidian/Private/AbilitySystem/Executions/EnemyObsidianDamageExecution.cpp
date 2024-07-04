@@ -48,7 +48,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 			const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 			OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		
-#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
+#if !UE_BUILD_SHIPPING
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange,
 				FString::Printf(TEXT("The hit was blocked. Chance to block was: %f. New damage: 0"), HitBlockChance));
 #endif

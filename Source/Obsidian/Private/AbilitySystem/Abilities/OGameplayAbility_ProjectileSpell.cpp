@@ -40,7 +40,11 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 		GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
 	const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo();
-	const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), OwningASC->MakeEffectContext());
+	
+	FGameplayEffectContextHandle ContextHandle = OwningASC->MakeEffectContext();
+	ContextHandle.SetAbility(this);
+	
+	const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ContextHandle);
 
 	const float Damage = AbilityDamageRange.RollForDamageNumberAtLevel(GetAbilityLevel());
 	UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, ObsidianGameplayTags::SetByCaller_Damage, Damage);
