@@ -3,6 +3,7 @@
 
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow.h"
 #include "CommonTextBlock.h"
+#include "Components/Button.h"
 #include "Components/SizeBox.h"
 #include "Components/Spacer.h"
 
@@ -21,6 +22,17 @@ void UOCharacterStatusAttributeRow::InitialSetup()
 	AttributeName_TextBlock->SetText(AttributeName);
 	AttributeValue_TextBlock->SetStyle(AttributeValueStyle);
 	NameAndValue_Spacer->SetSize(FVector2D(NameAndValueSpacing, 1.f));
+	
+	if(!bToolTipButtonEnabled)
+	{
+		//Tooltip_Button->SetIsEnabled(false);
+		Tooltip_Button->SetVisibility(ESlateVisibility::HitTestInvisible);
+	}
+	else
+	{
+		//Tooltip_Button->SetIsEnabled(true);
+		Tooltip_Button->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UOCharacterStatusAttributeRow::SetAttributeValue(const float& Value)

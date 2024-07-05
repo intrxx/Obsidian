@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "OCharacterStatusAttributeRow.generated.h"
 
+class UButton;
 class USpacer;
 class UCommonTextStyle;
 class UCommonTextBlock;
@@ -69,6 +70,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USpacer> NameAndValue_Spacer;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UButton> Tooltip_Button;
 	
 	/**
 	 *  Initial Set up
@@ -94,12 +98,16 @@ protected:
 	FText AttributeName = {};
 
 	/**
+	 * This does not actually disable the button, only makes it un-testable for hits
+	 * The reason is that there is a bug or design flaw in Unreal Engine that automatically greys out every child of disabled buttons.
+	 */
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
+	bool bToolTipButtonEnabled = false;
+
+	/**
 	 * Cashed attributes
 	 */
 	
-	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian")
 	float CurrentAttributeValue = 0.f;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian")
 	float CurrentMaxAttributeValue = 0.f;
 };
