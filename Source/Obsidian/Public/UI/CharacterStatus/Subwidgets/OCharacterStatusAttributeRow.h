@@ -20,8 +20,8 @@ class OBSIDIAN_API UOCharacterStatusAttributeRow : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-
+	virtual void BeginDestroy() override;
+	
 	/** Sets the Attribute Value on the widget and the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetAttributeValue(const float& Value);
@@ -55,8 +55,16 @@ public:
 	float GetCurrentMaxAttributeValue() const { return CurrentMaxAttributeValue; }
 	
 protected:
+	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void InitialSetup();
+
+	UFUNCTION()
+	void OnToolTipButtonHovered();
+	UFUNCTION()
+	void OnToolTipButtonUnHovered();
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -97,10 +105,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
 	FText AttributeName = {};
 
-	/**
-	 * This does not actually disable the button, only makes it un-testable for hits
-	 * The reason is that there is a bug or design flaw in Unreal Engine that automatically greys out every child of disabled buttons.
-	 */
+	/** Whether the button is hit testable. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
 	bool bToolTipButtonEnabled = false;
 

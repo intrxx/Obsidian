@@ -3,45 +3,39 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetBase.h"
+#include "UI/Subwidgets/ObsidianToolTipBase.h"
 #include "ObsidianGameTabTooltip.generated.h"
 
+class USpacer;
 class UCommonTextBlock;
 class UCommonTextStyle;
 class UHorizontalBox;
 class USizeBox;
+
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianGameTabTooltip : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianGameTabTooltip : public UObsidianToolTipBase
 {
 	GENERATED_BODY()
 
 public:
 	virtual void NativePreConstruct() override;
-	
-	FVector2D GetDesiredPosition() const;
-	
-public:
-	UPROPERTY(EditAnywhere, Category = "Obsidian|ToolTip")
-	FText TabName = FText();
 
+public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|ToolTip")
 	FText TabButton = FText();
 
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|ToolTip")
-	FVector2D ToolTipOffset = {0, 0};
-	
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<USizeBox> Root_SizeBox;
+	UPROPERTY(EditAnywhere, Category = "Obsidian|ToolTip")
+	FVector2D TextAndButtonSpacerSize = FVector2D(1.0f, 1.0f);
 
+protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> Main_HorizontalBox;
-
+	
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Name_TextBlock;
+	TObjectPtr<USpacer> TextAndButton_Spacer;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ButtonPrompt_TextBlock;

@@ -2,26 +2,14 @@
 
 
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabTooltip.h"
-
 #include "CommonTextBlock.h"
-#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Components/Spacer.h"
 
 void UObsidianGameTabTooltip::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-
-	Name_TextBlock->SetText(TabName);
-	ButtonPrompt_TextBlock->SetText(TabButton);
-}
-
-FVector2D UObsidianGameTabTooltip::GetDesiredPosition() const
-{
-	UWorld* World = GetWorld();
-	if(World == nullptr)
-	{
-		return FVector2D::Zero();
-	}
 	
-	const FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
-	return MousePosition + ToolTipOffset;
+	ButtonPrompt_TextBlock->SetText(TabButton);
+	TextAndButton_Spacer->SetSize(TextAndButtonSpacerSize);
 }
+

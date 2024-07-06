@@ -14,6 +14,28 @@ void UOCharacterStatusAttributeRow::NativePreConstruct()
 	InitialSetup();
 }
 
+void UOCharacterStatusAttributeRow::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if(Tooltip_Button)
+	{
+		Tooltip_Button->OnHovered.AddDynamic(this, &ThisClass::OnToolTipButtonHovered);
+		Tooltip_Button->OnUnhovered.AddDynamic(this, &ThisClass::OnToolTipButtonUnHovered);
+	}
+}
+
+void UOCharacterStatusAttributeRow::BeginDestroy()
+{
+	if(Tooltip_Button)
+	{
+		Tooltip_Button->OnHovered.Clear();
+		Tooltip_Button->OnUnhovered.Clear();
+	}
+	
+	Super::BeginDestroy();
+}
+
 void UOCharacterStatusAttributeRow::InitialSetup()
 {
 	Root_SizeBox->SetWidthOverride(SizeBoxWidth);
@@ -25,6 +47,11 @@ void UOCharacterStatusAttributeRow::InitialSetup()
 	
 	if(!bToolTipButtonEnabled)
 	{
+		/**
+		* This does not actually disable the button, only makes it un-testable for hits
+		* The reason is that there is a bug or design flaw in Unreal Engine that automatically greys out every child of disabled buttons.
+		*/
+		
 		//Tooltip_Button->SetIsEnabled(false);
 		Tooltip_Button->SetVisibility(ESlateVisibility::HitTestInvisible);
 	}
@@ -33,6 +60,14 @@ void UOCharacterStatusAttributeRow::InitialSetup()
 		//Tooltip_Button->SetIsEnabled(true);
 		Tooltip_Button->SetVisibility(ESlateVisibility::Visible);
 	}
+}
+
+void UOCharacterStatusAttributeRow::OnToolTipButtonHovered()
+{
+}
+
+void UOCharacterStatusAttributeRow::OnToolTipButtonUnHovered()
+{
 }
 
 void UOCharacterStatusAttributeRow::SetAttributeValue(const float& Value)
