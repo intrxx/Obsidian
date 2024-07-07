@@ -1,16 +1,25 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h"
-#include "Blueprint/WidgetLayoutLibrary.h"
 
-FVector2D UObsidianEffectDescription::GetDescriptionDesiredPosition() const
+#include "CommonTextBlock.h"
+
+void UObsidianEffectDescription::NativePreConstruct()
 {
-	UWorld* World = GetWorld();
-	if(World == nullptr)
+	Super::NativePreConstruct();
+
+	if(EffectDesc_TextBlock)
 	{
-		return FVector2D::Zero();
+		EffectDesc_TextBlock->SetWrapTextWidth(WrapTextAtNumber);
 	}
-	
-	const FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
-	return MousePosition + DescPositionOffset;
 }
+
+void UObsidianEffectDescription::InitEffectDesc(const FText& InEffectName, const FText& InEffectDesc)
+{
+	if(EffectName_TextBlock && EffectDesc_TextBlock)
+	{
+		EffectName_TextBlock->SetText(InEffectName);
+		EffectDesc_TextBlock->SetText(InEffectDesc);
+	}
+}
+

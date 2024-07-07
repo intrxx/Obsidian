@@ -3,28 +3,32 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetBase.h"
+#include "UI/Subwidgets/ObsidianToolTipBase.h"
 #include "ObsidianEffectDescription.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianEffectDescription : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianEffectDescription : public UObsidianToolTipBase
 {
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectDesc")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectDesc")
 	void InitEffectDesc(const FText& InEffectName, const FText& InEffectDesc);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectDesc")
-	FVector2D GetDescriptionDesiredPosition() const;
-
 public:
-	UPROPERTY(EditAnywhere, Category = "Obsidian|EffectDescSetup")
-	FVector2D DescPositionOffset{0, 0};
-	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|EffectDescSetup")
 	int32 WrapTextAtNumber = 200;
+
+protected:
+	virtual void NativePreConstruct() override;
+	
+protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> EffectName_TextBlock;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> EffectDesc_TextBlock;
 };

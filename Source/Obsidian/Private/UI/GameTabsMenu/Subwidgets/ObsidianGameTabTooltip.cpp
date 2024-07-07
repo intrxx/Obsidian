@@ -8,7 +8,8 @@
 void UObsidianGameTabTooltip::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-	
+
+	Name_TextBlock->SetText(TabName);
 	ButtonPrompt_TextBlock->SetText(TabButton);
 	TextAndButton_Spacer->SetSize(TextAndButtonSpacerSize);
 }

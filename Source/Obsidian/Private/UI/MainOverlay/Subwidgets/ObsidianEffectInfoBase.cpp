@@ -48,7 +48,7 @@ void UObsidianEffectInfoBase::OnEffectHovered()
 	EffectDescWidget = CreateWidget<UObsidianEffectDescription>(this, EffectDescWidgetClass);
 	EffectDescWidget->InitEffectDesc(EffectName, EffectDesc);
 	
-	const FVector2D DescPosition = EffectDescWidget->GetDescriptionDesiredPosition();
+	const FVector2D DescPosition = EffectDescWidget->GetDesiredPosition();
 	EffectDescWidget->SetPositionInViewport(DescPosition);
 	EffectDescWidget->AddToViewport();
 }
