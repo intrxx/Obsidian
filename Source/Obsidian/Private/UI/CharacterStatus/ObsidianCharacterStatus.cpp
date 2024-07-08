@@ -5,7 +5,7 @@
 #include "Components/Button.h"
 #include "Components/ScrollBox.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
-#include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow.h"
+#include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow_WithToolTip.h"
 
 void UObsidianCharacterStatus::NativeConstruct()
 {
@@ -14,6 +14,8 @@ void UObsidianCharacterStatus::NativeConstruct()
 	CurrentlyShownTab = Offence_ScrollBox;
 
 	Close_Button->OnClicked.AddDynamic(this, &ThisClass::OnCloseButtonClicked);
+
+	Strength_AttributeRow->SetCharacterStatus(this);
 }
 
 void UObsidianCharacterStatus::NativeDestruct()

@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "OCharacterStatusAttributeRow.generated.h"
 
+class UObsidianCharacterStatus;
 class UButton;
 class USpacer;
 class UCommonTextStyle;
@@ -20,8 +21,7 @@ class OBSIDIAN_API UOCharacterStatusAttributeRow : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	virtual void BeginDestroy() override;
-	
+
 	/** Sets the Attribute Value on the widget and the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetAttributeValue(const float& Value);
@@ -51,20 +51,21 @@ public:
 	 */
 	void UpdateResistanceAttributeValue(const float& Value = 0, const float& MaxValue = 0) const;
 	
-	float GetCurrentAttributeValue() const { return CurrentAttributeValue; }
-	float GetCurrentMaxAttributeValue() const { return CurrentMaxAttributeValue; }
+	float GetCurrentAttributeValue() const
+	{
+		return CurrentAttributeValue;
+	}
+	
+	float GetCurrentMaxAttributeValue() const
+	{
+		return CurrentMaxAttributeValue;
+	}
 	
 protected:
 	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void InitialSetup();
-
-	UFUNCTION()
-	void OnToolTipButtonHovered();
-	UFUNCTION()
-	void OnToolTipButtonUnHovered();
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -78,9 +79,6 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USpacer> NameAndValue_Spacer;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> Tooltip_Button;
 	
 	/**
 	 *  Initial Set up
@@ -104,11 +102,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
 	FText AttributeName = {};
-
-	/** Whether the button is hit testable. */
-	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
-	bool bToolTipButtonEnabled = false;
-
+	
 	/**
 	 * Cashed attributes
 	 */

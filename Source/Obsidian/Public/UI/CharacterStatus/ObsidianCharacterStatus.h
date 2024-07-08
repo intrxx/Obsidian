@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianCharacterStatus.generated.h"
 
+class UOCharacterStatusAttributeRow_WithToolTip;
 class UButton;
 class UScrollBox;
 class UOCharacterStatusAttributeRow;
@@ -62,7 +63,7 @@ protected:
 	 */
 	
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOCharacterStatusAttributeRow> Strength_AttributeRow;
+	TObjectPtr<UOCharacterStatusAttributeRow_WithToolTip> Strength_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> Dexterity_AttributeRow;
