@@ -16,6 +16,9 @@ void UObsidianCharacterStatus::NativeConstruct()
 	Close_Button->OnClicked.AddDynamic(this, &ThisClass::OnCloseButtonClicked);
 
 	Strength_AttributeRow->SetCharacterStatus(this);
+	Dexterity_AttributeRow->SetCharacterStatus(this);
+	Intelligence_AttributeRow->SetCharacterStatus(this);
+	Faith_AttributeRow->SetCharacterStatus(this);
 }
 
 void UObsidianCharacterStatus::NativeDestruct()

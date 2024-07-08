@@ -66,13 +66,13 @@ protected:
 	TObjectPtr<UOCharacterStatusAttributeRow_WithToolTip> Strength_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOCharacterStatusAttributeRow> Dexterity_AttributeRow;
+	TObjectPtr<UOCharacterStatusAttributeRow_WithToolTip> Dexterity_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOCharacterStatusAttributeRow> Intelligence_AttributeRow;
+	TObjectPtr<UOCharacterStatusAttributeRow_WithToolTip> Intelligence_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOCharacterStatusAttributeRow> Faith_AttributeRow;
+	TObjectPtr<UOCharacterStatusAttributeRow_WithToolTip> Faith_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> Life_AttributeRow;
