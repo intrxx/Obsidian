@@ -14,7 +14,6 @@ struct FObsidianGameplayEffectContext : public FGameplayEffectContext
 public:
 	FObsidianGameplayEffectContext()
 	{
-		
 	}
 
 	/** Returns true if hit was blocked, it is not determined if it was a spell or hit */
@@ -32,7 +31,7 @@ public:
 	/** Returns the actual struct used for serialization, subclasses must override this! */
 	virtual UScriptStruct* GetScriptStruct() const override
 	{
-		return FGameplayEffectContext::StaticStruct();
+		return StaticStruct();
 	}
 
 	void SetIsBlockedAttack(const bool bInIsBlockedAttack)
@@ -45,6 +44,19 @@ public:
 		bIsCriticalHit = bInIsCriticalHit;
 	}
 
+	/** Creates a copy of this context, used to duplicate for later modifications */ // I'm not sure if override should be here since I changed the return type
+	virtual FObsidianGameplayEffectContext* Duplicate() const override
+	{
+		FObsidianGameplayEffectContext* NewContext = new FObsidianGameplayEffectContext();
+		*NewContext = *this;
+		if (GetHitResult())
+		{
+			// Does a deep copy of the hit result
+			NewContext->AddHitResult(*GetHitResult(), true);
+		}
+		return NewContext;
+	}
+
 	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
 	
 protected:
@@ -53,4 +65,14 @@ protected:
 	
 	UPROPERTY()
 	bool bIsCriticalHit = false;
+};
+
+template<>
+struct TStructOpsTypeTraits<FObsidianGameplayEffectContext> : public TStructOpsTypeTraitsBase2<FObsidianGameplayEffectContext>
+{
+	enum
+	{
+		WithNetSerializer = true,
+		WithCopy = true		// Necessary so that TSharedPtr<FHitResult> Data is copied around
+	};
 };
