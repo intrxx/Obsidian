@@ -13,8 +13,6 @@ struct FObsidianGameplayEffectContext : public FGameplayEffectContext
 
 public:
 	FObsidianGameplayEffectContext()
-		: bIsBlockedAttack(false)
-		, bIsCriticalHit(false)
 	{
 		
 	}
@@ -51,8 +49,8 @@ public:
 	
 protected:
 	UPROPERTY()
-	uint8 bIsBlockedAttack:1;
+	bool bIsBlockedAttack = false;
 	
 	UPROPERTY()
-	uint8 bIsCriticalHit:1;
+	bool bIsCriticalHit = false;
 };
