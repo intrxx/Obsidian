@@ -35,6 +35,7 @@ public:
 	TObjectPtr<UObsidianGameTabButton> CharacterStatus_GameTabButton;
 
 	FOnTabButtonClicked OnCharacterStatusButtonClickedDelegate;
+	
 	FOnTabStatusChange OnCharacterStatusTabStatusChangeDelegate;
 
 	/**

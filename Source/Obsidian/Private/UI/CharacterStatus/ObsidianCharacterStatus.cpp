@@ -24,6 +24,8 @@ void UObsidianCharacterStatus::NativeConstruct()
 void UObsidianCharacterStatus::NativeDestruct()
 {
 	OnCharacterStatusDestroyedDelegate.Broadcast();
+
+	Close_Button->OnClicked.Clear();
 	
 	Super::NativeDestruct();
 }

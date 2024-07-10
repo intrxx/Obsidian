@@ -9,6 +9,7 @@
 #include "ObsidianTypes/UserIterface/ObsidianUIEffectClassification.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
+#include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
@@ -38,6 +39,11 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		CharacterStatus->OnCharacterStatusDestroyedDelegate.AddLambda([this]()
 		{
 			CharacterStatus = nullptr;
+
+			if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->CharacterStatus_GameTabButton)
+			{
+				Overlay_GameTabsMenu->CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = false;
+			}
 		});
 
 		Overlay_GameTabsMenu->OnCharacterStatusTabStatusChangeDelegate.Broadcast(true);
