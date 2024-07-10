@@ -26,6 +26,8 @@ public:
 
 public:
 	/** Character */
+	FOnAttributeValueChangedOneParam ExperienceChangedDelegate;
+	FOnAttributeValueChangedOneParam MaxExperienceChangedDelegate;
 	
 	/** Attributes */
 	FOnAttributeValueChangedOneParam StrengthValueChangedDelegate;
@@ -38,7 +40,7 @@ public:
 	FOnAttributeValueChangedOneParam MaxManaChangedDelegate;
 	FOnAttributeValueChangedOneParam MaxSpecialResourceChangedDelegate;
 	FOnAttributeValueChangedOneParam MaxEnergyShieldChangedDelegate;
-
+	
 	/** Offence */
 	FOnAttributeValueChangedOneParam AccuracyChangedDelegate;
 	FOnAttributeValueChangedOneParam AttackSpeedChangedDelegate;
@@ -81,7 +83,8 @@ protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
 
 	/** Character */
-
+	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
+	void MaxExperienceChanged(const FOnAttributeChangeData& Data) const;
 	
 	/** Attributes */
 	void StrengthChanged(const FOnAttributeChangeData& Data) const;

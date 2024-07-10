@@ -2,7 +2,10 @@
 
 
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
+
+#include "CommonTextBlock.h"
 #include "Components/Button.h"
+#include "Components/ProgressBar.h"
 #include "Components/ScrollBox.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow_WithToolTip.h"
@@ -54,6 +57,25 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	{
 		return;
 	}
+
+	/**
+	 * Character
+	 */
+	CharacterStatusWidgetController->ExperienceChangedDelegate.BindLambda([this](const float Value)
+	{
+		Experience = Value;
+
+		SetExperienceTextBlock();
+		SetExperienceProgressBar();
+	});
+
+	CharacterStatusWidgetController->MaxExperienceChangedDelegate.BindLambda([this](const float Value)
+	{
+		MaxExperience = Value;
+
+		SetExperienceTextBlock();
+		SetExperienceProgressBar();
+	});
 	
 	/**
 	 * Attributes
@@ -282,6 +304,29 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	{
 		SpellBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
 	});
+}
+
+void UObsidianCharacterStatus::SetExperienceTextBlock() const
+{
+	const float Percent = MaxExperience != 0.0f ? Experience / MaxExperience : 0.0f;
+	
+	const FText ExperienceText = FText::FromString(FString::Printf(TEXT("%d of %d / (%d%%)"),
+		FMath::TruncToInt(Experience), FMath::TruncToInt(MaxExperience), FMath::TruncToInt(Percent)));
+	
+	if(HeroExp_TextBlock)
+	{
+		HeroExp_TextBlock->SetText(ExperienceText);
+	}
+}
+
+void UObsidianCharacterStatus::SetExperienceProgressBar() const
+{
+	const float BarPercentage = MaxExperience != 0.0f ? Experience / MaxExperience : 0.0f;
+	
+	if(HeroExp_ProgressBar)
+	{
+		HeroExp_ProgressBar->SetPercent(BarPercentage);
+	}
 }
 
 

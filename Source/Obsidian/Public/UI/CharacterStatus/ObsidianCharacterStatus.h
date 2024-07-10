@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianCharacterStatus.generated.h"
 
+class UProgressBar;
 class UOCharacterStatusAttributeRow_WithToolTip;
 class UButton;
 class UScrollBox;
@@ -44,6 +45,13 @@ protected:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UButton> Close_Button;
+
+	/**
+	 *  Character
+	 */
+	
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> HeroLevel_TextBlock;
 
 	UPROPERTY(meta=(BindWidget))
@@ -56,7 +64,10 @@ protected:
 	TObjectPtr<UImage> Hero_Image;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> Close_Button;
+	TObjectPtr<UCommonTextBlock> HeroExp_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UProgressBar> HeroExp_ProgressBar;;
 
 	/**
 	 * Main Attributes
@@ -208,11 +219,20 @@ protected:
 	TObjectPtr<UScrollBox> Misc_ScrollBox;
 
 private:
+	void SetExperienceTextBlock() const;
+	void SetExperienceProgressBar() const;
+	
+private:
 	UPROPERTY()
 	TObjectPtr<UScrollBox> CurrentlyShownTab;
 
 	UPROPERTY()
 	TObjectPtr<UOCharacterStatusWidgetController> CharacterStatusWidgetController;
 
-	
+	/**
+	 * Cached attributes
+	 */
+
+	float Experience = 0.0f;
+	float MaxExperience = 0.0f;
 };

@@ -17,7 +17,8 @@ void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
 {
 	/** Character */
-	
+	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
+	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
 	
 	/** Attributes */
 	StrengthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetStrengthAttribute()).AddUObject(this, &ThisClass::StrengthChanged);
@@ -73,6 +74,8 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 {
 	/** Character */
+	ExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
+	MaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience());
 	
 	/** Attributes */
 	StrengthValueChangedDelegate.Execute(AttributesComponent->GetStrength());
@@ -85,7 +88,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	MaxManaChangedDelegate.Execute(AttributesComponent->GetMaxMana());
 	MaxSpecialResourceChangedDelegate.Execute(AttributesComponent->GetMaxSpecialResource());
 	MaxEnergyShieldChangedDelegate.Execute(AttributesComponent->GetMaxEnergyShield());
-
+	
 	/** Offence */
 	AccuracyChangedDelegate.Execute(AttributesComponent->GetAccuracy());
 	AttackSpeedChangedDelegate.Execute(AttributesComponent->GetAttackSpeed());
@@ -173,6 +176,20 @@ void UOCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttribut
 	const float NewValue = Data.NewValue;
 	
 	MaxEnergyShieldChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	ExperienceChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+
+	MaxExperienceChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& Data) const

@@ -23,6 +23,13 @@ public:
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	/**
+	 *	Character
+	 */
+
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Experience);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxExperience);
+
+	/**
 	 * Spending attributes
 	 */
 	
@@ -62,6 +69,14 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, IncomingManaReplenishing);
 
 protected:
+	/**
+	 *	Character
+	 */
+	
+	UFUNCTION()
+	void OnRep_Experience(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxExperience(const FGameplayAttributeData& OldValue);
 	
 	/**
 	 * Spending attributes
@@ -111,6 +126,18 @@ protected:
 
 private:
 	/**
+	 * Character
+	 */
+	
+	/** The current Experience attribute. It represents current experience. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Experience, Category = "Obsidian|CAttributes|Experience", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Experience;
+
+	/** The current Max Experience attribute. Defines Experience that we need in order to level up. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxExperience, Category = "Obsidian|CAttributes|Experience", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxExperience;
+	
+	/**
 	 * Spending attributes
 	 */
 	
@@ -139,7 +166,7 @@ private:
 	/** The current Mana Regeneration attribute. Mana Regeneration defines value of mana that will be regenerated per second */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ManaRegeneration;
-
+	
 	/**
 	 * "RPG Attributes"
 	 */

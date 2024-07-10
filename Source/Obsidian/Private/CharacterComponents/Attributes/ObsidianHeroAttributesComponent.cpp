@@ -131,6 +131,26 @@ FGameplayAttribute UObsidianHeroAttributesComponent::GetManaRegenerationAttribut
 	return (HeroAttributeSet ? HeroAttributeSet->GetManaRegenerationAttribute() : nullptr);
 }
 
+float UObsidianHeroAttributesComponent::GetExperience() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetExperience() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetExperienceAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetExperienceAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetMaxExperience() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxExperience() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxExperienceAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxExperienceAttribute() : nullptr);
+}
+
 float UObsidianHeroAttributesComponent::GetStrength() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetStrength() : 0.0f);

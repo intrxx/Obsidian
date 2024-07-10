@@ -24,6 +24,13 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	/**
+	 * Character
+	 */
+	
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, Experience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianHeroAttributeSet, MaxExperience, COND_None, REPNOTIFY_Always);
+	
+	/**
 	 * Spending attributes
 	 */
 	
@@ -104,6 +111,16 @@ void UObsidianHeroAttributeSet::OnRep_MaxSpecialResource(const FGameplayAttribut
 void UObsidianHeroAttributeSet::OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, ManaRegeneration, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_Experience(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, Experience, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_MaxExperience(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxExperience, OldValue);
 }
 
 void UObsidianHeroAttributeSet::OnRep_HitBlockChance(const FGameplayAttributeData& OldValue)

@@ -53,6 +53,14 @@ public:
 	/** Getters for Mana Regeneration Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetManaRegeneration() const;
 	FGameplayAttribute GetManaRegenerationAttribute() const;
+
+	/** Getters for Experience Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetExperience() const;
+	FGameplayAttribute GetExperienceAttribute() const;
+
+	/** Getters for Max Experience Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetMaxExperience() const;
+	FGameplayAttribute GetMaxExperienceAttribute() const;
 	
 	/** Getters for Strength Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetStrength() const;
