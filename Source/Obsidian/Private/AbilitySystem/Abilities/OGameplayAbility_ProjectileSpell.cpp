@@ -43,6 +43,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 	
 	FGameplayEffectContextHandle ContextHandle = OwningASC->MakeEffectContext();
 	ContextHandle.SetAbility(this);
+	ContextHandle.AddSourceObject(Projectile);
 	
 	const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ContextHandle);
 
