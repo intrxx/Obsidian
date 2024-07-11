@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayEffectTypes.h"
-#include "ObsidianAbilityTypes.generated.h"
+#include "ObsidianAbilitySystemEffectTypes.generated.h"
 
 USTRUCT(BlueprintType)
 struct FObsidianGameplayEffectContext : public FGameplayEffectContext

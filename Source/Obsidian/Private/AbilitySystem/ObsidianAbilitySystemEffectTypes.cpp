@@ -1,6 +1,6 @@
 ﻿// Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "ObsidianTypes/AbilitySystem/ObsidianAbilityTypes.h"
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 
 
 bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
