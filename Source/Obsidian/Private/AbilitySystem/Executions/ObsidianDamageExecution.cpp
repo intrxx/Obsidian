@@ -96,6 +96,11 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	if(!(ChanceToHit >= FMath::RandRange(1.0f, 100.0f))) // We did not hit return 0 damage
 	{
+		if(FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
+		{
+			ObsidianEffectContext->SetIsEvadedHit(true);	
+		}
+		
 		const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 		OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		
@@ -108,6 +113,8 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	}
 	// ~ End of Evasion Calculation Hit
 
+	FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext);
+
 	// ~ Start of Critical Strikes Calculation
 	float CriticalStrikeChance = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeChanceDef, EvaluationParameters, CriticalStrikeChance);
@@ -115,9 +122,9 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	if(CriticalStrikeChance >= FMath::RandRange(1.0f, 100.0f))
 	{
-		if(FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
+		if(ObsidianEffectContext)
 		{
-			ObsidianEffectContext->SetIsCriticalHit(true);	
+			ObsidianEffectContext->SetIsCriticalAttack(true);	
 		}
 		
 		float CriticalStrikeDamageMultiplier = 0.0f;
@@ -155,6 +162,11 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	if(SpellSuppressionChance >= FMath::RandRange(1.0f, 100.0f))
 	{
+		if(ObsidianEffectContext)
+		{
+			ObsidianEffectContext->SetIsSuppressedSpell(true);	
+		}
+		
 		float SpellSuppressionMagnitude = 0.0f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
 		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);

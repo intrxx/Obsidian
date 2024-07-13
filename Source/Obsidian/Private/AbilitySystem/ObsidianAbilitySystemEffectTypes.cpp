@@ -41,9 +41,17 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 		{
 			RepBits |= 1 << 7;
 		}
-		if (bIsCriticalHit)
+		if (bIsCriticalAttack)
 		{
 			RepBits |= 1 << 8;
+		}
+		if(bIsEvadedHit)
+		{
+			RepBits |= 1 << 9;
+		}
+		if(bIsSuppressedSpell)
+		{
+			RepBits |= 1 << 10;
 		}
 	}
 
@@ -95,7 +103,15 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 	}
 	if(RepBits & (1 << 8))
 	{
-		Ar << bIsCriticalHit;
+		Ar << bIsCriticalAttack;
+	}
+	if(RepBits & (1 << 9))
+	{
+		Ar << bIsEvadedHit;
+	}
+	if(RepBits & (1 << 10))
+	{
+		Ar << bIsSuppressedSpell;
 	}
 
 	if (Ar.IsLoading())

@@ -11,8 +11,10 @@ struct FObsidianDamageTextProps
 	GENERATED_BODY()
 
 	float DamageMagnitude = 0.0f;
+	
 	bool bIsBlockedAttack = false;
-	bool bIsCriticalHit = false;
+	bool bIsCriticalAttack = false;
 	bool bIsEvadedHit = false;
+	bool bIsSuppressedSpell = false;
 };
 

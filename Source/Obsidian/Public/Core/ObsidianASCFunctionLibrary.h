@@ -26,11 +26,11 @@ public:
 	static bool IsBlockedAttack(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	UFUNCTION(BlueprintPure, Category = "ObsidianASCFunctionLibrary|Combat")
-	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+	static bool IsCriticalAttack(const FGameplayEffectContextHandle& EffectContextHandle);
 
 	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
 	static void SetIsBlockedAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsBlockedAttack);
 
 	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
-	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalHit);
+	static void SetIsCriticalAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalAttack);
 };

@@ -22,10 +22,22 @@ public:
 		return bIsBlockedAttack;
 	}
 
-	/** Returns true if hit was a critical strike */
-	bool IsCriticalHit() const
+	/** Returns true if attack, was a critical strike */
+	bool IsCriticalAttack() const
 	{
-		return bIsCriticalHit;
+		return bIsCriticalAttack;
+	}
+
+	/** Returns true if hit, was evaded or not */
+	bool IsEvadedHit() const
+	{
+		return bIsEvadedHit;
+	}
+
+	/** Returns true if spell, was suppressed or not */
+	bool IsSuppressedSpell() const
+	{
+		return bIsSuppressedSpell;
 	}
 	
 	/** Returns the actual struct used for serialization, subclasses must override this! */
@@ -34,14 +46,28 @@ public:
 		return StaticStruct();
 	}
 
+	/** Set whether the Attack was blocked or not */
 	void SetIsBlockedAttack(const bool bInIsBlockedAttack)
 	{
 		bIsBlockedAttack = bInIsBlockedAttack;
 	}
-	
-	void SetIsCriticalHit(const bool bInIsCriticalHit)
+
+	/** Set whether the Attack was critical or not */
+	void SetIsCriticalAttack(const bool bInIsCriticalAttack)
 	{
-		bIsCriticalHit = bInIsCriticalHit;
+		bIsCriticalAttack = bInIsCriticalAttack;
+	}
+
+	/** Set whether the hit was evaded or not */
+	void SetIsEvadedHit(const bool bInIsEvadedHit)
+	{
+		bIsEvadedHit = bInIsEvadedHit;
+	}
+
+	/** Set whether the spell was suppressed or not */
+	void SetIsSuppressedSpell(const bool bInIsSuppressedSpell)
+	{
+		bIsSuppressedSpell = bInIsSuppressedSpell;
 	}
 
 	/** Creates a copy of this context, used to duplicate for later modifications */ // I'm not sure if override should be here since I changed the return type
@@ -64,7 +90,13 @@ protected:
 	bool bIsBlockedAttack = false;
 	
 	UPROPERTY()
-	bool bIsCriticalHit = false;
+	bool bIsCriticalAttack = false;
+
+	UPROPERTY()
+	bool bIsEvadedHit = false;
+
+	UPROPERTY()
+	bool bIsSuppressedSpell = false;
 };
 
 template<>

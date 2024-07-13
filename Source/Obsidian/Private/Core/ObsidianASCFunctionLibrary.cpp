@@ -37,11 +37,11 @@ bool UObsidianASCFunctionLibrary::IsBlockedAttack(const FGameplayEffectContextHa
     return false;
 }
 
-bool UObsidianASCFunctionLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+bool UObsidianASCFunctionLibrary::IsCriticalAttack(const FGameplayEffectContextHandle& EffectContextHandle)
 {
     if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<const FObsidianGameplayEffectContext*>(EffectContextHandle.Get()))
     {
-        return ObsidianEffectContext->IsCriticalHit();
+        return ObsidianEffectContext->IsCriticalAttack();
     }
     return false;
 }
@@ -54,10 +54,10 @@ void UObsidianASCFunctionLibrary::SetIsBlockedAttack(FGameplayEffectContextHandl
    }
 }
 
-void UObsidianASCFunctionLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalHit)
+void UObsidianASCFunctionLibrary::SetIsCriticalAttack(FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalAttack)
 {
     if(FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContextHandle.Get()))
     {
-        ObsidianEffectContext->SetIsCriticalHit(bInIsCriticalHit);
+        ObsidianEffectContext->SetIsCriticalAttack(bInIsCriticalAttack);
     }
 }

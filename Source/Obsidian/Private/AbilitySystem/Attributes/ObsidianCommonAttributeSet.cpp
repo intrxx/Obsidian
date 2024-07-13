@@ -156,7 +156,9 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 					if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
 					{
 						DamageTextProps.bIsBlockedAttack = ObsidianEffectContext->IsBlockedAttack();
-						DamageTextProps.bIsCriticalHit = ObsidianEffectContext->IsCriticalHit();
+						DamageTextProps.bIsCriticalAttack = ObsidianEffectContext->IsCriticalAttack();
+						DamageTextProps.bIsEvadedHit = ObsidianEffectContext->IsEvadedHit();
+						DamageTextProps.bIsSuppressedSpell = ObsidianEffectContext->IsSuppressedSpell();
 					}
 					
 					ObsidianPC->ClientShowDamageNumber(DamageTextProps, EffectProps.TargetCharacter);
