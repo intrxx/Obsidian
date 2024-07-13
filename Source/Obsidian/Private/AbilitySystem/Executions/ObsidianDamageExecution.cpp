@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Executions/ObsidianDamageExecution.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -66,6 +67,8 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	const AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
 	
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle EffectContextHandle = Spec.GetContext();
+	FGameplayEffectContext* EffectContext = EffectContextHandle.Get();
 	
 	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
 	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
@@ -112,6 +115,11 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	if(CriticalStrikeChance >= FMath::RandRange(1.0f, 100.0f))
 	{
+		if(FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
+		{
+			ObsidianEffectContext->SetIsCriticalHit(true);	
+		}
+		
 		float CriticalStrikeDamageMultiplier = 0.0f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef, EvaluationParameters, CriticalStrikeDamageMultiplier);
 		CriticalStrikeDamageMultiplier = FMath::Max<float>(CriticalStrikeDamageMultiplier, 0.0f);

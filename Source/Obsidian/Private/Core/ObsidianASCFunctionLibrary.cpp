@@ -2,6 +2,8 @@
 
 
 #include "Core/ObsidianASCFunctionLibrary.h"
+
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/Data/ObsidianEnemyTypeInfo.h"
 #include "Game/ObsidianGameMode.h"
@@ -23,5 +25,39 @@ void UObsidianASCFunctionLibrary::InitializeEnemyDefaultAttributesWithClass(cons
         {
             EnemyDefaultInfo.DefaultAbilitySet->GiveToAbilitySystem(ASC, nullptr, Level, SourceObject);
         }
+    }
+}
+
+bool UObsidianASCFunctionLibrary::IsBlockedAttack(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+   if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<const FObsidianGameplayEffectContext*>(EffectContextHandle.Get()))
+   {
+       return ObsidianEffectContext->IsBlockedAttack();
+   }
+    return false;
+}
+
+bool UObsidianASCFunctionLibrary::IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle)
+{
+    if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<const FObsidianGameplayEffectContext*>(EffectContextHandle.Get()))
+    {
+        return ObsidianEffectContext->IsCriticalHit();
+    }
+    return false;
+}
+
+void UObsidianASCFunctionLibrary::SetIsBlockedAttack(FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsBlockedAttack)
+{
+   if(FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContextHandle.Get()))
+   {
+       ObsidianEffectContext->SetIsBlockedAttack(bInIsBlockedAttack);
+   }
+}
+
+void UObsidianASCFunctionLibrary::SetIsCriticalHit(FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalHit)
+{
+    if(FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContextHandle.Get()))
+    {
+        ObsidianEffectContext->SetIsCriticalHit(bInIsCriticalHit);
     }
 }

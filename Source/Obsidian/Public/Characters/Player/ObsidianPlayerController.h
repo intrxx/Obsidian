@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+struct FObsidianDamageTextProps;
 class AObsidianCharacterBase;
 class UObsidianDamageNumberWidgetComp;
 class AObsidianHUD;
@@ -36,7 +37,7 @@ public:
 	void SetupHeroHealthBarWidget();
 
 	UFUNCTION(Client, Reliable)
-	void ClientShowDamageNumber(const float DamageAmount, AObsidianCharacterBase* TargetCharacter);
+	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);
 	
 protected:
 	virtual void BeginPlay() override;

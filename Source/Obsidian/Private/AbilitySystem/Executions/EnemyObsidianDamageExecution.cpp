@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Executions/EnemyObsidianDamageExecution.h"
 
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
@@ -34,6 +35,9 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 #if WITH_SERVER_CODE
+	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
+	FGameplayEffectContext* Context = ContextHandle.Get();
 	
 	const FAggregatorEvaluateParameters EvaluationParameters;
 
@@ -45,6 +49,9 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 
 		if(HitBlockChance >= FMath::RandRange(1.0f, 100.0f))
 		{
+			FObsidianGameplayEffectContext* ObsidianContext = static_cast<FObsidianGameplayEffectContext*>(Context);
+			ObsidianContext->SetIsBlockedAttack(true);
+			
 			const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 			OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		
@@ -65,6 +72,9 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 
 		if(SpellBlockChance >= FMath::RandRange(1.0f, 100.0f))
 		{
+			FObsidianGameplayEffectContext* ObsidianContext = static_cast<FObsidianGameplayEffectContext*>(Context);
+			ObsidianContext->SetIsBlockedAttack(true);
+			
 			const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 			OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		

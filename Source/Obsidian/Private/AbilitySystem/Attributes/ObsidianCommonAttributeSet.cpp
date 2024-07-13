@@ -4,10 +4,12 @@
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/UserIterface/ObsidianDamageTextProps.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
 {
@@ -147,7 +149,17 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			{
 				if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
 				{
-					ObsidianPC->ClientShowDamageNumber(LocalIncomingDamage, EffectProps.TargetCharacter);
+					FObsidianDamageTextProps DamageTextProps;
+					DamageTextProps.DamageMagnitude = LocalIncomingDamage;
+					
+					FGameplayEffectContext* EffectContext = EffectProps.EffectContextHandle.Get();
+					if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
+					{
+						DamageTextProps.bIsBlockedAttack = ObsidianEffectContext->IsBlockedAttack();
+						DamageTextProps.bIsCriticalHit = ObsidianEffectContext->IsCriticalHit();
+					}
+					
+					ObsidianPC->ClientShowDamageNumber(DamageTextProps, EffectProps.TargetCharacter);
 				}
 			}
 		}

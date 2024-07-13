@@ -7,6 +7,7 @@
 #include "ObsidianTypes/Character/ObsidianEnemyType.h"
 #include "ObsidianASCFunctionLibrary.generated.h"
 
+struct FGameplayEffectContextHandle;
 class UObsidianAbilitySystemComponent;
 
 /**
@@ -18,6 +19,18 @@ class OBSIDIAN_API UObsidianASCFunctionLibrary : public UBlueprintFunctionLibrar
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Init")
 	static void InitializeEnemyDefaultAttributesWithClass(const UObject* WorldContextObject, UObsidianAbilitySystemComponent* ASC, const EObsidianEnemyClass EnemyClass, const float Level, UObject* SourceObject = nullptr);
+
+	UFUNCTION(BlueprintPure, Category = "ObsidianASCFunctionLibrary|Combat")
+	static bool IsBlockedAttack(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "ObsidianASCFunctionLibrary|Combat")
+	static bool IsCriticalHit(const FGameplayEffectContextHandle& EffectContextHandle);
+
+	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
+	static void SetIsBlockedAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsBlockedAttack);
+
+	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
+	static void SetIsCriticalHit(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalHit);
 };
