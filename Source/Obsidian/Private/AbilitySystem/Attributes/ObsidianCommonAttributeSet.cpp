@@ -143,26 +143,26 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 					}
 				}
 			}
-			
-			// Show floating text
-			if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.TargetCharacter->bIsPlayer)
+		}
+
+		// Show floating text
+		if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.TargetCharacter->bIsPlayer)
+		{
+			if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
 			{
-				if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
+				FObsidianDamageTextProps DamageTextProps;
+				DamageTextProps.DamageMagnitude = LocalIncomingDamage;
+					
+				FGameplayEffectContext* EffectContext = EffectProps.EffectContextHandle.Get();
+				if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
 				{
-					FObsidianDamageTextProps DamageTextProps;
-					DamageTextProps.DamageMagnitude = LocalIncomingDamage;
-					
-					FGameplayEffectContext* EffectContext = EffectProps.EffectContextHandle.Get();
-					if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
-					{
-						DamageTextProps.bIsBlockedAttack = ObsidianEffectContext->IsBlockedAttack();
-						DamageTextProps.bIsCriticalAttack = ObsidianEffectContext->IsCriticalAttack();
-						DamageTextProps.bIsEvadedHit = ObsidianEffectContext->IsEvadedHit();
-						DamageTextProps.bIsSuppressedSpell = ObsidianEffectContext->IsSuppressedSpell();
-					}
-					
-					ObsidianPC->ClientShowDamageNumber(DamageTextProps, EffectProps.TargetCharacter);
+					DamageTextProps.bIsBlockedAttack = ObsidianEffectContext->IsBlockedAttack();
+					DamageTextProps.bIsCriticalAttack = ObsidianEffectContext->IsCriticalAttack();
+					DamageTextProps.bIsEvadedHit = ObsidianEffectContext->IsEvadedHit();
+					DamageTextProps.bIsSuppressedSpell = ObsidianEffectContext->IsSuppressedSpell();
 				}
+					
+				ObsidianPC->ClientShowDamageNumber(DamageTextProps, EffectProps.TargetCharacter);
 			}
 		}
 	}

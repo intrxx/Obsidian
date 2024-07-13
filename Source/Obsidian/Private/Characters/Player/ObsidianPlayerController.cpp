@@ -53,10 +53,6 @@ AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 	return GetHUD<AObsidianHUD>();
 }
 
-void AObsidianPlayerController::SetupHeroHealthBarWidget()
-{
-}
-
 void AObsidianPlayerController::ClientShowDamageNumber_Implementation(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter)
 {
 	// I use IsValid on the character to also check if the character is currently pending kill
@@ -68,7 +64,7 @@ void AObsidianPlayerController::ClientShowDamageNumber_Implementation(const FObs
 
 		// After attaching the component its widget will play animation right away, so we don't want the widget to follow the Target Character around
 		DamageNumberWidgetComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageNumberWidgetComp->SetDamageText(DamageTextProps.DamageMagnitude);
+		DamageNumberWidgetComp->SetDamageTextProps(DamageTextProps);
 	}
 }
 

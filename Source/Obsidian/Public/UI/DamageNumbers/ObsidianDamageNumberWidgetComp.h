@@ -3,6 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
+#include "ObsidianTypes/UserIterface/ObsidianDamageTextProps.h"
 #include "ObsidianDamageNumberWidgetComp.generated.h"
 
 /**
@@ -15,6 +16,6 @@ class OBSIDIAN_API UObsidianDamageNumberWidgetComp : public UWidgetComponent
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SetDamageText(const float Damage);
+	void SetDamageTextProps(const FObsidianDamageTextProps& DamageTextProps);
 };
 
