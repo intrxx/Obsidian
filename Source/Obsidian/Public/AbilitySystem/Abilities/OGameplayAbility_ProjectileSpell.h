@@ -34,9 +34,5 @@ protected:
 	/** Projectile class to spawn by this ability */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<AObsidianProjectile> ProjectileClass;
-
-	/** Damage effect that will be applied on projectile overlap */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
-	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };
 

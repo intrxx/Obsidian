@@ -10,9 +10,20 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivationFail_IsDead);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_HitReact);
-	
+
+	// Kind of Deprecated - using damage types tags for SetByCaller now //
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Heal);
+
+	// Damage Types
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Physical);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Elemental_Fire);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Elemental_Cold);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Elemental_Lightning);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Chaos);
+	
+	/** All damage Types stored for convenience */
+	OBSIDIAN_API extern const TArray<FGameplayTag> DamageTypes;
 	
 	// Cooldowns
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_HitReact)

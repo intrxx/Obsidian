@@ -13,8 +13,16 @@ struct FObsidianGameplayEffectContext : public FGameplayEffectContext
 
 public:
 	FObsidianGameplayEffectContext()
+		: FGameplayEffectContext()
 	{
 	}
+
+	FObsidianGameplayEffectContext(AActor* InInstigator, AActor* InEffectCauser)
+		: FGameplayEffectContext(InInstigator, InEffectCauser)
+	{
+	}
+
+	static OBSIDIAN_API FObsidianGameplayEffectContext* ExtractEffectContextFromHandle(struct FGameplayEffectContextHandle Handle);
 
 	/** Returns true if hit was blocked, it is not determined if it was a spell or hit */
 	bool IsBlockedAttack() const

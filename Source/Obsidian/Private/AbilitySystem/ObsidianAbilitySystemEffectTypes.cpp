@@ -3,6 +3,17 @@
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 
 
+FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(
+	FGameplayEffectContextHandle Handle)
+{
+	FGameplayEffectContext* BaseEffectContext = Handle.Get();
+	if(((BaseEffectContext != nullptr) && BaseEffectContext->GetScriptStruct()->IsChildOf(StaticStruct())))
+	{
+		return (FObsidianGameplayEffectContext*)BaseEffectContext;
+	}
+	return nullptr;
+}
+
 bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
 	uint16 RepBits = 0;

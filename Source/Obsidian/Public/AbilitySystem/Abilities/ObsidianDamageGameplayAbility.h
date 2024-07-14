@@ -21,7 +21,7 @@ struct FObsidianAbilityDamageRange
 };
 
 /**
- * 
+ * Base class in Obsidian for abilities that wish to cause damage
  */
 UCLASS()
 class OBSIDIAN_API UObsidianDamageGameplayAbility : public UObsidianGameplayAbility
@@ -30,5 +30,9 @@ class OBSIDIAN_API UObsidianDamageGameplayAbility : public UObsidianGameplayAbil
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")
-	FObsidianAbilityDamageRange AbilityDamageRange;
+	TMap<FGameplayTag, FObsidianAbilityDamageRange> DamageTypeMap;
+
+	/** Damage effect that will be applied to target */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
+	TSubclassOf<UGameplayEffect> DamageEffectClass;
 };

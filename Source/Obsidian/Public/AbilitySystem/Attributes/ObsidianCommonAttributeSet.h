@@ -9,7 +9,7 @@
 
 namespace ObsidianAttributeConstants
 {
-	constexpr float HitReactThreshold = (30.f/100.f) * 100.f;
+	constexpr float HitReactThreshold = (20.f/100.f) * 100.f;
 }
 
 /**

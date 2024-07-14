@@ -145,7 +145,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			}
 		}
 
-		// Show floating text
+		// Show floating text - Logic is performed regardless of damage number because we might want to show blocked or evaded hit
 		if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.TargetCharacter->bIsPlayer)
 		{
 			if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
@@ -153,8 +153,8 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 				FObsidianDamageTextProps DamageTextProps;
 				DamageTextProps.DamageMagnitude = LocalIncomingDamage;
 					
-				FGameplayEffectContext* EffectContext = EffectProps.EffectContextHandle.Get();
-				if(const FObsidianGameplayEffectContext* ObsidianEffectContext = static_cast<FObsidianGameplayEffectContext*>(EffectContext))
+				const FGameplayEffectContextHandle EffectHandle = EffectProps.EffectContextHandle;
+				if(const FObsidianGameplayEffectContext* ObsidianEffectContext = FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(EffectHandle))
 				{
 					DamageTextProps.bIsBlockedAttack = ObsidianEffectContext->IsBlockedAttack();
 					DamageTextProps.bIsCriticalAttack = ObsidianEffectContext->IsCriticalAttack();
