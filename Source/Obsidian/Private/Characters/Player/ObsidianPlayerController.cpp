@@ -56,7 +56,7 @@ AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 void AObsidianPlayerController::ClientShowDamageNumber_Implementation(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter)
 {
 	// I use IsValid on the character to also check if the character is currently pending kill
-	if(IsValid(TargetCharacter) && DamageNumberWidgetCompClass)
+	if(IsValid(TargetCharacter) && DamageNumberWidgetCompClass && IsLocalController())
 	{
 		UObsidianDamageNumberWidgetComp* DamageNumberWidgetComp = NewObject<UObsidianDamageNumberWidgetComp>(TargetCharacter, DamageNumberWidgetCompClass);
 		DamageNumberWidgetComp->RegisterComponent();

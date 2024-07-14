@@ -29,6 +29,9 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 	
 	const FVector StartLocation = GetSpawnLocation();
 	FRotator Rotation = (TargetLocation - StartLocation).Rotation();
+
+	// This can actually cause a bug on client, when the socket location would be different on the firing client.
+	// This will need to be addressed later.
 	Rotation.Pitch = 0.f;
 	
 	FTransform SpawnTransform;
