@@ -131,11 +131,11 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float FullDamage = 0.0f;
 
 	//TODO This could be refactored to somehow get the actual DamageTypes of this ability that was used. 
-	for(const FGameplayTag DamageTypes : ObsidianGameplayTags::DamageTypes)
+	for(const FGameplayTag DamageType : ObsidianGameplayTags::DamageTypes)
 	{
-		if(DamageTypes == ObsidianGameplayTags::DamageType_Physical)
+		if(DamageType == ObsidianGameplayTags::DamageType_Physical)
 		{
-			float PhysicalDamageType = Spec.GetSetByCallerMagnitude(DamageTypes, false, 0.0f);
+			float PhysicalDamageType = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
 			if(PhysicalDamageType > 0.0f)
 			{
 				// ~ Start of Armor Raw Physical Damage Mitigation
@@ -156,9 +156,9 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		}
 		else // Capturing the rest of damage types and mitigate it by associated resistance
 		{
-			const FGameplayEffectAttributeCaptureDefinition ResistanceCaptureDef = ObsidianDamageStatics().DamageTypesToResistancesDefMap[DamageTypes];
+			const FGameplayEffectAttributeCaptureDefinition ResistanceCaptureDef = ObsidianDamageStatics().DamageTypesToResistancesDefMap[DamageType];
 			
-			float ResistanceMitigatedDamage = Spec.GetSetByCallerMagnitude(DamageTypes, false, 0.0f);
+			float ResistanceMitigatedDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
 			if(ResistanceMitigatedDamage > 0.0f)
 			{
 				float Resistance = 0.0f;

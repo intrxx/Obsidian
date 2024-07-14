@@ -171,13 +171,6 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 		ColdDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
 	});
 
-	CharacterStatusWidgetController->AllElementalDamageMultiplierChangedDelegate.BindLambda([this](const float Value)
-	{
-		FireDamageMultiplier_AttributeRow->UpdateAttributeValueWithPercentage(Value);
-		LightningDamageMultiplier_AttributeRow->UpdateAttributeValueWithPercentage(Value);
-		ColdDamageMultiplier_AttributeRow->UpdateAttributeValueWithPercentage(Value);
-	});
-
 	CharacterStatusWidgetController->ChaosDamageMultiplierChangedDelegate.BindLambda([this](const float Value)
 	{
 		ChaosDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
@@ -196,13 +189,6 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	CharacterStatusWidgetController->ColdPenetrationChangedDelegate.BindLambda([this](const float Value)
 	{
 		ColdPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
-	});
-
-	CharacterStatusWidgetController->AllElementalPenetrationChangedDelegate.BindLambda([this](const float Value)
-	{
-		FirePenetration_AttributeRow->UpdateAttributeValueWithPercentage(Value);
-		LightningPenetration_AttributeRow->UpdateAttributeValueWithPercentage(Value);
-		ColdPenetration_AttributeRow->UpdateAttributeValueWithPercentage(Value);
 	});
 
 	/**
@@ -226,13 +212,6 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	CharacterStatusWidgetController->EnergyShieldRegenerationChangedDelegate.BindLambda([this](const float Value)
 	{
 		EnergyShieldRegeneration_AttributeRow->SetAttributeValue(Value);
-	});
-
-	CharacterStatusWidgetController->AllElementalResistancesChangedDelegate.BindLambda([this](const float Value)
-	{
-		FireResistance_AttributeRow->UpdateResistanceAttributeValue(Value);
-		ColdResistance_AttributeRow->UpdateResistanceAttributeValue(Value);
-		LightningResistance_AttributeRow->UpdateResistanceAttributeValue(Value);
 	});
 
 	CharacterStatusWidgetController->FireResistanceChangedDelegate.BindLambda([this](const float Value, const float MaxValue)

@@ -24,48 +24,23 @@ public:
 
 	/** Sets the Attribute Value on the widget and the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetAttributeValue(const float& Value);
+	void SetAttributeValue(const float& Value) const;
 
 	/** Sets the Attribute Value on the widget, adds a "%" to the end and sets the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetAttributeValueWithPercentage(const float& Value);
+	void SetAttributeValueWithPercentage(const float& Value) const;
 
 	/**
 	 * Sets both the current Attribute Value and the Max Attribute Value on the widget, adds a "%" to the end and sets the private attribute variables in OCharacterStatusAttributeRow.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetTwoAttributeValuesWithPercent(const float& Value, const float& MaxValue);
-
-	/**
-	 * Updates the value on the widget, designed to take "All*" attributes and update all components of it.
-	 * Example:
-	 * It takes the value of "AllElementalPenetration" and only updates the value of "FirePenetration" value on the widget, without setting the value on the class.
-	 */
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void UpdateAttributeValueWithPercentage(const float& Value) const;
-	
-	/**
-	 * Updates both the current and max values on the widget, designed to take "All*" attributes and update all components of it.
-	 * Example:
-	 * It takes the value of "AllElementalResistances" and only updates the value of "FireResistance" and "MaxFireResistance" on the widget, without setting values on the class.
-	 */
-	void UpdateResistanceAttributeValue(const float& Value = 0, const float& MaxValue = 0) const;
-	
-	float GetCurrentAttributeValue() const
-	{
-		return CurrentAttributeValue;
-	}
-	
-	float GetCurrentMaxAttributeValue() const
-	{
-		return CurrentMaxAttributeValue;
-	}
+	void SetTwoAttributeValuesWithPercent(const float& Value, const float& MaxValue) const;
 	
 protected:
 	virtual void NativePreConstruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void InitialSetup();
+	void InitialSetup() const;
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -102,11 +77,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
 	FText AttributeName = {};
-	
-	/**
-	 * Cashed attributes
-	 */
-	
-	float CurrentAttributeValue = 0.f;
-	float CurrentMaxAttributeValue = 0.f;
 };

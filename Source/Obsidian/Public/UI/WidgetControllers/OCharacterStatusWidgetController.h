@@ -51,19 +51,16 @@ public:
 	FOnAttributeValueChangedOneParam FireDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam LightningDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam ColdDamageMultiplierChangedDelegate;
-	FOnAttributeValueChangedOneParam AllElementalDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam ChaosDamageMultiplierChangedDelegate;
 	FOnAttributeValueChangedOneParam FirePenetrationChangedDelegate;
 	FOnAttributeValueChangedOneParam LightningPenetrationChangedDelegate;
 	FOnAttributeValueChangedOneParam ColdPenetrationChangedDelegate;
-	FOnAttributeValueChangedOneParam AllElementalPenetrationChangedDelegate;
 	
 	/** Defence */
 	FOnAttributeValueChangedOneParam ArmorChangedDelegate;
 	FOnAttributeValueChangedOneParam EvasionChangedDelegate;
 	FOnAttributeValueChangedOneParam HealthRegenerationChangedDelegate;
 	FOnAttributeValueChangedOneParam EnergyShieldRegenerationChangedDelegate;
-	FOnAttributeValueChangedOneParam AllElementalResistancesChangedDelegate;
 	FOnAttributeValueChangedTwoParams FireResistanceChangedDelegate;
 	FOnAttributeValueChangedTwoParams MaxFireResistanceChangedDelegate;
 	FOnAttributeValueChangedTwoParams ColdResistanceChangedDelegate;
@@ -108,19 +105,16 @@ protected:
 	void FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void ColdDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
-	void AllElementalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
 	void FirePenetrationChanged(const FOnAttributeChangeData& Data) const;
 	void LightningPenetrationChanged(const FOnAttributeChangeData& Data) const;
 	void ColdPenetrationChanged(const FOnAttributeChangeData& Data) const;
-	void AllElementalPenetrationChanged(const FOnAttributeChangeData& Data) const;
 	
 	/** Defence */
 	void ArmorChanged(const FOnAttributeChangeData& Data) const;
 	void EvasionChanged(const FOnAttributeChangeData& Data) const;
 	void HealthRegenerationChanged(const FOnAttributeChangeData& Data) const;
 	void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) const;
-	void AllElementalResistancesChanged(const FOnAttributeChangeData& Data) const;
 	void FireResistanceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxFireResistanceChanged(const FOnAttributeChangeData& Data) const;
 	void ColdResistanceChanged(const FOnAttributeChangeData& Data) const;
@@ -164,12 +158,10 @@ protected:
 	FDelegateHandle FireDamageMultiplierChangedDelegateHandle;
 	FDelegateHandle LightningDamageMultiplierChangedDelegateHandle;
 	FDelegateHandle ColdDamageMultiplierChangedDelegateHandle;
-	FDelegateHandle AllElementalDamageMultiplierChangedDelegateHandle;
 	FDelegateHandle ChaosDamageMultiplierChangedDelegateHandle;
 	FDelegateHandle FirePenetrationChangedDelegateHandle;
 	FDelegateHandle LightningPenetrationChangedDelegateHandle;
 	FDelegateHandle ColdPenetrationChangedDelegateHandle;
-	FDelegateHandle AllElementalPenetrationChangedDelegateHandle;
 
 	/** Defence */
 	FDelegateHandle ArmorChangedDelegateHandle;
@@ -177,7 +169,6 @@ protected:
 	FDelegateHandle HealthRegenerationChangedDelegateHandle;
 	FDelegateHandle EnergyShieldRegenerationChangedDelegateHandle;
 	FDelegateHandle FireResistanceChangedDelegateHandle;
-	FDelegateHandle AllElementalResistancesChangedDelegateHandle;
 	FDelegateHandle MaxFireResistanceChangedDelegateHandle;
 	FDelegateHandle LightningResistanceChangedDelegateHandle;
 	FDelegateHandle MaxLightningResistanceChangedDelegateHandle;

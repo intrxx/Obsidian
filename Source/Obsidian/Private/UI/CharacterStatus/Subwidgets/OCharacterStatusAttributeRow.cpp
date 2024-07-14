@@ -14,7 +14,7 @@ void UOCharacterStatusAttributeRow::NativePreConstruct()
 	InitialSetup();
 }
 
-void UOCharacterStatusAttributeRow::InitialSetup()
+void UOCharacterStatusAttributeRow::InitialSetup() const
 {
 	Root_SizeBox->SetWidthOverride(SizeBoxWidth);
 	Root_SizeBox->SetHeightOverride(SizeBoxHeight);
@@ -24,60 +24,28 @@ void UOCharacterStatusAttributeRow::InitialSetup()
 	NameAndValue_Spacer->SetSize(FVector2D(NameAndValueSpacing, 1.f));
 }
 
-void UOCharacterStatusAttributeRow::SetAttributeValue(const float& Value)
+void UOCharacterStatusAttributeRow::SetAttributeValue(const float& Value) const
 {
-	CurrentAttributeValue = Value;
-	
-	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d"), FMath::FloorToInt(CurrentAttributeValue)));
+	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d"), FMath::FloorToInt(Value)));
 	if(AttributeValue_TextBlock)
 	{
 		AttributeValue_TextBlock->SetText(TextValue);
 	}
 }
 
-void UOCharacterStatusAttributeRow::SetAttributeValueWithPercentage(const float& Value)
+void UOCharacterStatusAttributeRow::SetAttributeValueWithPercentage(const float& Value) const
 {
-	CurrentAttributeValue = Value;
-	
-	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%%"), FMath::FloorToInt(CurrentAttributeValue)));
+	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%%"), FMath::FloorToInt(Value)));
 	if(AttributeValue_TextBlock)
 	{
 		AttributeValue_TextBlock->SetText(TextValue);
 	}
 }
 
-void UOCharacterStatusAttributeRow::UpdateAttributeValueWithPercentage(const float& Value) const
+void UOCharacterStatusAttributeRow::SetTwoAttributeValuesWithPercent(const float& Value, const float& MaxValue) const
 {
-	const float TempValue = CurrentAttributeValue + Value;
-
-	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%%"), FMath::FloorToInt(TempValue)));
-	if(AttributeValue_TextBlock)
-	{
-		AttributeValue_TextBlock->SetText(TextValue);
-	}
-}
-
-void UOCharacterStatusAttributeRow::SetTwoAttributeValuesWithPercent(const float& Value, const float& MaxValue)
-{
-	CurrentAttributeValue = Value;
-	CurrentMaxAttributeValue = MaxValue;
-	
 	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%% (%d%%)"),
-		FMath::FloorToInt(CurrentAttributeValue), FMath::FloorToInt(CurrentMaxAttributeValue)));
-	
-	if(AttributeValue_TextBlock)
-	{
-		AttributeValue_TextBlock->SetText(TextValue);
-	}
-}
-
-void UOCharacterStatusAttributeRow::UpdateResistanceAttributeValue(const float& Value, const float& MaxValue) const
-{
-	const float TempValue = CurrentAttributeValue + Value;
-	const float TempMaxValue = CurrentMaxAttributeValue + MaxValue;
-	
-	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%% (%d%%)"),
-		FMath::FloorToInt(TempValue), FMath::FloorToInt(TempMaxValue)));
+		FMath::FloorToInt(Value), FMath::FloorToInt(MaxValue)));
 	
 	if(AttributeValue_TextBlock)
 	{
