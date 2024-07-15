@@ -9,11 +9,13 @@
 #include "ObsidianTypes/Character/ObsidianEnemyType.h"
 #include "ObsidianEnemy.generated.h"
 
+class AObsidianAIController;
 class UWidgetComponent;
 class UObsidianEnemyAttributeSet;
 class UObsidianEnemyAttributesComponent;
 class UObsidianCommonAttributeSet;
 class UObsidianAbilitySystemComponent;
+
 /**
  * 
  */
@@ -24,6 +26,8 @@ class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsid
 
 public:
 	AObsidianEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual void PossessedBy(AController* NewController) override;
 	
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
@@ -66,13 +70,15 @@ private:
 	TObjectPtr<UObsidianCommonAttributeSet> CommonAttributeSet;
 	UPROPERTY()
 	TObjectPtr<UObsidianEnemyAttributeSet> EnemyAttributeSet;
+	UPROPERTY()
+	TObjectPtr<AObsidianAIController> ObsidianAIController;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|Level")
 	int32 EnemyLevel = 1;
 };

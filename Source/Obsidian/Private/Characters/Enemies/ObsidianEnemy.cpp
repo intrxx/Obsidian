@@ -13,6 +13,7 @@
 #include "Components/WidgetComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "GameplayEffectTypes.h"
+#include "AI/ObsidianAIController.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
 
@@ -41,6 +42,17 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
+}
+
+void AObsidianEnemy::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+
+	if(!HasAuthority())
+	{
+		return;
+	}
+	ObsidianAIController = Cast<AObsidianAIController>(NewController);
 }
 
 void AObsidianEnemy::StartHighlight()
