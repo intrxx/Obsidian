@@ -22,8 +22,5 @@ public:
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Enemy", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UBlackboardComponent> BlackboardComp;
-	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Enemy", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComp;
 };

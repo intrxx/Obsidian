@@ -9,6 +9,7 @@
 #include "ObsidianTypes/Character/ObsidianEnemyType.h"
 #include "ObsidianEnemy.generated.h"
 
+class UBehaviorTree;
 class AObsidianAIController;
 class UWidgetComponent;
 class UObsidianEnemyAttributeSet;
@@ -78,6 +79,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|Level")
 	int32 EnemyLevel = 1;

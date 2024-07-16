@@ -14,6 +14,8 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "GameplayEffectTypes.h"
 #include "AI/ObsidianAIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
 
@@ -53,6 +55,8 @@ void AObsidianEnemy::PossessedBy(AController* NewController)
 		return;
 	}
 	ObsidianAIController = Cast<AObsidianAIController>(NewController);
+	ObsidianAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
+	ObsidianAIController->RunBehaviorTree(BehaviorTree);
 }
 
 void AObsidianEnemy::StartHighlight()
