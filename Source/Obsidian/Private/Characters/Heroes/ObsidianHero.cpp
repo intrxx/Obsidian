@@ -14,6 +14,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "ObsidianTypes/ObsidianActorTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetBase.h"
 
@@ -55,7 +56,8 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer) :
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
-	bIsPlayer = true;
+	// Identifies this class as a Player character
+	Tags.Emplace(ObsidianActorTags::Player);
 }
 
 void AObsidianHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)

@@ -16,6 +16,7 @@
 #include "AI/ObsidianAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "ObsidianTypes/ObsidianActorTags.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
 
@@ -44,6 +45,9 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
+
+	// Identifies this class as Enemy character
+	Tags.Emplace(ObsidianActorTags::Enemy);
 }
 
 void AObsidianEnemy::PossessedBy(AController* NewController)

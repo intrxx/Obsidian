@@ -68,6 +68,9 @@ public:
 
 	UPROPERTY()
 	AActor* EffectCauser = nullptr;
+
+	UPROPERTY()
+	bool bIsPlayerCharacter = false;
 };
 
 /**

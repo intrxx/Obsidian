@@ -6,6 +6,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "GameplayEffectExtension.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "ObsidianTypes/ObsidianActorTags.h"
 
 UObsidianAttributeSetBase::UObsidianAttributeSetBase()
 {
@@ -24,8 +25,7 @@ UObsidianAbilitySystemComponent* UObsidianAttributeSetBase::GetObsidianAbilitySy
 	return Cast<UObsidianAbilitySystemComponent>(GetOwningAbilitySystemComponent());
 }
 
-void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCallbackData& Data,
-	FObsidianEffectProperties& Props) const
+void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FObsidianEffectProperties& Props) const
 {
 	// Source = causer of the effect, Target = target of the effect (owner of THIS Attribute Set)
 	
@@ -91,12 +91,13 @@ void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCall
 		if(TargetController)
 		{
 			Props.TargetCharacter = Cast<AObsidianCharacterBase>(TargetController->GetCharacter());
-			
 		}
 		else
 		{
 			Props.TargetCharacter = Cast<AObsidianCharacterBase>(TargetAvatarActor);
 		}
+
+		Props.bIsPlayerCharacter = Props.TargetCharacter->ActorHasTag(ObsidianActorTags::Player);
 
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetAvatarActor);
 	}

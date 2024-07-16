@@ -24,10 +24,6 @@ public:
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	/** Set to true on hero characters, false by default. Indicates if ObsidianCharacter is a Player Character (Hero) or AI (Enemy). */
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Character")
-	bool bIsPlayer = false;
-
 protected:
 	virtual void BeginPlay() override;
 

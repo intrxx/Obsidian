@@ -9,6 +9,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianActorTags.h"
 #include "ObsidianTypes/UserIterface/ObsidianDamageTextProps.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
@@ -130,7 +131,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 				else
 				{
 					//TODO As it stands now only damage that damages health will cause a hit react - decide if its okay, I like it for now
-					if(!EffectProps.TargetCharacter->bIsPlayer)
+					if(!EffectProps.bIsPlayerCharacter)
 					{
 						// Check if we should hit react, small hits shouldn't cause hit reacting
 						const float CombinedHealthPool = GetMaxHealth() + GetMaxEnergyShield();
@@ -146,7 +147,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 		}
 
 		// Show floating text - Logic is performed regardless of damage number because we might want to show blocked or evaded hit
-		if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.TargetCharacter->bIsPlayer)
+		if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.bIsPlayerCharacter)
 		{
 			if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
 			{
