@@ -3,6 +3,7 @@
 #include "AbilitySystem/ObsidianGameplayEffectActor.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "ObsidianTypes/ObsidianActorTags.h"
 
 AObsidianGameplayEffectActor::AObsidianGameplayEffectActor()
 {
@@ -71,9 +72,18 @@ void AObsidianGameplayEffectActor::ApplyMultipleEffectsToTarget(AActor* TargetAc
 
 void AObsidianGameplayEffectActor::OnOverlap(AActor* TargetActor)
 {
+	if(!bApplyEffectToEnemies && TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+	{
+		return;
+	}
+	
 	if(InstantEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
+		if(bDestroyOnEffectApplication)
+		{
+			Destroy();
+		}
 	}
 
 	if(DurationalEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnOverlap)
@@ -94,9 +104,18 @@ void AObsidianGameplayEffectActor::OnOverlap(AActor* TargetActor)
 
 void AObsidianGameplayEffectActor::OnEndOverlap(AActor* TargetActor)
 {
+	if(!bApplyEffectToEnemies && TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+	{
+		return;
+	}
+	
 	if(InstantEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
 		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
+		if(bDestroyOnEffectApplication)
+		{
+			Destroy();
+		}
 	}
 
 	if(DurationalEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnEndOverlap)

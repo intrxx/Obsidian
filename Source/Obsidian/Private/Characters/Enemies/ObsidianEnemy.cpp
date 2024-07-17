@@ -16,6 +16,8 @@
 #include "AI/ObsidianAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "ObsidianTypes/ObsidianActorTags.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
@@ -45,6 +47,14 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
+
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
+
+	UObsidianCharacterMovementComponent* ObsidianMovementComp = CastChecked<UObsidianCharacterMovementComponent>(GetCharacterMovement());
+	ObsidianMovementComp->bUseControllerDesiredRotation = true;
+	ObsidianMovementComp->RotationRate = FRotator(0.f, 360.f, 0.f);;
 
 	// Identifies this class as Enemy character
 	Tags.Emplace(ObsidianActorTags::Enemy);

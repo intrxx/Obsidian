@@ -115,9 +115,16 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply != EObsidianEffectToApply::MultipleEffects", EditConditionHides))
 	float EffectLevel = 1.f;
 
-	/** Should this actor be destroyed on effect removal */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	bool bDestroyOnEffectRemoval = false;
+	/**
+	 * Should this actor be destroyed on effect application.
+	 * This only works for instant gameplay effects.
+	 */
+	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	bool bDestroyOnEffectApplication = false;
+
+	/** Should this actor's effect be applied to enemies */
+	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	bool bApplyEffectToEnemies = false;
 
 private:
 	void RemoveEffectsFromActor(AActor* TargetActor);
