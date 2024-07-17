@@ -71,6 +71,9 @@ void AObsidianEnemy::PossessedBy(AController* NewController)
 	ObsidianAIController = Cast<AObsidianAIController>(NewController);
 	ObsidianAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	ObsidianAIController->RunBehaviorTree(BehaviorTree);
+
+	UBlackboardComponent* BlackboardComponent = ObsidianAIController->GetBlackboardComponent();
+	BlackboardComponent->SetValueAsBool(FName("bHitReacting"), false);
 }
 
 void AObsidianEnemy::StartHighlight()
@@ -161,6 +164,12 @@ void AObsidianEnemy::CreateHealthBarWidget()
 void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
 	bHitReacting = NewCount > 0;
+
+	if(HasAuthority() && ObsidianAIController)
+	{
+		UBlackboardComponent* BlackboardComponent = ObsidianAIController->GetBlackboardComponent();
+		BlackboardComponent->SetValueAsBool(FName("bHitReacting"), bHitReacting);
+	}
 	
 	//TODO Maybe change walk speed here
 	// That might not actually be used in the future
