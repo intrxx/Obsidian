@@ -10,9 +10,9 @@
 
 UObsidianBTService_FindNearestPlayer::UObsidianBTService_FindNearestPlayer()
 {
+	NodeName = FString("Find Nearest Player");
 	INIT_SERVICE_NODE_NOTIFY_FLAGS();
 	
-	NodeName = FString("Find Nearest Player");
 	Interval = 0.5f;
 	RandomDeviation = 0.1f;
 }

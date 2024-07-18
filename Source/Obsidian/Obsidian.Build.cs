@@ -21,7 +21,7 @@ public class Obsidian : ModuleRules
 				"GameplayAbilities",
 				"GameplayTasks",
 				"CommonUI",
-				"MotionWarping"
+				"MotionWarping", "AIModule"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
