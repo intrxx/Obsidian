@@ -2,7 +2,6 @@
 
 
 #include "AI/Tasks/UObsidianBTTask_FindLocationAroundTarget.h"
-#include "AIController.h"
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
