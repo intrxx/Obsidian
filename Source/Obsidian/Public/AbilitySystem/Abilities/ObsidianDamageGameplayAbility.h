@@ -28,6 +28,9 @@ class OBSIDIAN_API UObsidianDamageGameplayAbility : public UObsidianGameplayAbil
 {
 	GENERATED_BODY()
 
+public:
+	UObsidianDamageGameplayAbility();
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")
 	TMap<FGameplayTag, FObsidianAbilityDamageRange> DamageTypeMap;

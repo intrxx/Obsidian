@@ -3,6 +3,11 @@
 
 #include "AbilitySystem/Abilities/ObsidianDamageGameplayAbility.h"
 
+UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility()
+{
+    InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
+}
+
 float FObsidianAbilityDamageRange::RollForDamageNumberAtLevel(const float Level) const
 {
     const float MinValue = MinimalDamage.GetValueAtLevel(Level);
@@ -10,3 +15,5 @@ float FObsidianAbilityDamageRange::RollForDamageNumberAtLevel(const float Level)
     
     return FMath::FloorToFloat(FMath::RandRange(MinValue, MaxValue));
 }
+
+

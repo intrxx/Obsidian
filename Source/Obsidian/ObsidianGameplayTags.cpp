@@ -75,9 +75,11 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_GlobeData_RepleanishingMana, "UI.GlobeData.ReplenishingMana", "Tag used for displaying the repleanish amount on the globe.");
 
 	// Events
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "Event fired on attributes component when character is out of health.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "Event fired on attributes component when character is out of health.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Firebolt, "Event.Montage.Firebolt", "Tag used for triggering gameplay event for spawning firebolt");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Firebolt, "Event.Montage.Firebolt", "Tag used for triggering gameplay event for spawning firebolt.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_Melee, "AbilityActivation.Melee", "Tag used for triggering activation of AI's melee attack.");
 
 	// Attributes UI Data - I will leave it here for now in case I would need it in the future
 	/**

@@ -72,6 +72,8 @@ namespace ObsidianGameplayTags
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Montage_Firebolt)
 
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Melee);
+
 	// Attributes UI Data - I will leave it here for now in case I would need it in the future
 	/**
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Health);
