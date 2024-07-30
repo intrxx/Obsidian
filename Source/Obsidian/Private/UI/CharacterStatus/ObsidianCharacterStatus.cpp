@@ -191,6 +191,11 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 		ColdPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
 	});
 
+	CharacterStatusWidgetController->ChaosPenetrationChangedDelegate.BindLambda([this](const float Value)
+	{
+		ChaosPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
+	});
+
 	/**
 	 * Defence
 	 */

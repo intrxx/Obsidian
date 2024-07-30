@@ -46,6 +46,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	FirePenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFirePenetrationAttribute()).AddUObject(this, &ThisClass::FirePenetrationChanged);
 	LightningPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningPenetrationAttribute()).AddUObject(this, &ThisClass::LightningPenetrationChanged);
 	ColdPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdPenetrationAttribute()).AddUObject(this, &ThisClass::ColdPenetrationChanged);
+	ChaosPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetChaosPenetrationAttribute()).AddUObject(this, &ThisClass::ChaosPenetrationChanged);
 	
 	/** Defence */
 	ArmorChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
@@ -100,6 +101,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	FirePenetrationChangedDelegate.Execute(AttributesComponent->GetFirePenetration());
 	LightningPenetrationChangedDelegate.Execute(AttributesComponent->GetLightningPenetration());
 	ColdPenetrationChangedDelegate.Execute(AttributesComponent->GetColdPenetration());
+	ChaosPenetrationChangedDelegate.Execute(AttributesComponent->GetChaosPenetration());
 
 	/** Defence */
 	ArmorChangedDelegate.Execute(AttributesComponent->GetArmor());
@@ -275,6 +277,13 @@ void UOCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttribut
 	const float NewValue = Data.NewValue;
 	
 	ColdPenetrationChangedDelegate.ExecuteIfBound(NewValue);
+}
+
+void UOCharacterStatusWidgetController::ChaosPenetrationChanged(const FOnAttributeChangeData& Data) const
+{
+	const float NewValue = Data.NewValue;
+	
+	ChaosPenetrationChangedDelegate.ExecuteIfBound(NewValue);
 }
 
 void UOCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& Data) const
