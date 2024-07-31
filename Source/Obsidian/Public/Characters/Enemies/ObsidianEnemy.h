@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "AI/ObsidianEnemyInterface.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/Character/ObsidianEnemyType.h"
@@ -21,7 +22,7 @@ class UObsidianAbilitySystemComponent;
  * 
  */
 UCLASS()
-class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsidianHighlightInterface
+class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsidianHighlightInterface, public IObsidianEnemyInterface
 {
 	GENERATED_BODY()
 
@@ -56,13 +57,21 @@ protected:
 	//~ Start of CombatInterface
 	virtual int32 GetCharacterLevel() override;
 	//~ End of CombatInterface
+	
+	//~ Start of EnemyInterface
+	virtual void SetCombatTarget_Implementation(AActor* InTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
+	//~ End of EnemyInterface
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::EEC_MAX;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Combat")
+	TObjectPtr<AActor> CombatTarget;
+
 private:
-	void CreateHealthBarWidget();
+	void CreateHealthBarWidget() const;
 	
 private:
 	UPROPERTY()

@@ -21,6 +21,7 @@
 #include "ObsidianTypes/ObsidianActorTags.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
 #include "UI/ObsidianWidgetBase.h"
+#include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer)
@@ -147,16 +148,26 @@ int32 AObsidianEnemy::GetCharacterLevel()
 	return EnemyLevel;
 }
 
-void AObsidianEnemy::CreateHealthBarWidget()
+void AObsidianEnemy::SetCombatTarget_Implementation(AActor* InTarget)
 {
-	if(UObsidianWidgetBase* HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject()))
+	CombatTarget = InTarget;
+}
+
+AActor* AObsidianEnemy::GetCombatTarget_Implementation() const
+{
+	return CombatTarget;
+}
+
+void AObsidianEnemy::CreateHealthBarWidget() const
+{
+	if(UObsidianRegularEnemyHealthBar* HealthBarWidget = Cast<UObsidianRegularEnemyHealthBar>(HealthBarWidgetComp->GetUserWidgetObject()))
 	{
 		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
 	}
 	else
 	{
 		HealthBarWidgetComp->InitWidget();
-		HealthBarWidget = Cast<UObsidianWidgetBase>(HealthBarWidgetComp->GetUserWidgetObject());
+		HealthBarWidget = Cast<UObsidianRegularEnemyHealthBar>(HealthBarWidgetComp->GetUserWidgetObject());
 		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
 	}
 }

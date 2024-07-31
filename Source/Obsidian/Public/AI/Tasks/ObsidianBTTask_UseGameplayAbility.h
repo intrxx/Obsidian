@@ -26,4 +26,12 @@ protected:
 	/** Ability tag used for activation. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian")
 	FGameplayTagContainer ActivateAbilityWithTag;
+
+	/** Combat Target to set on EnemyInterface. Make sure to set this or the Combat Target will be nullptr! */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="bSetCombatTargetOnEnemyInterface == true", EditConditionHides), Category = "Obsidian|CombatTarget")
+	FBlackboardKeySelector CombatTarget_Selector;
+
+	/** Should this task set the Combat Target on EnemyInterface. */
+	UPROPERTY(EditAnywhere, Category = "Obsidian|CombatTarget")
+	bool bSetCombatTargetOnEnemyInterface = false;
 };

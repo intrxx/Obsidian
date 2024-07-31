@@ -20,7 +20,7 @@ protected:
 private:
     void StartWidgetHideTimer();
     void HideWidget();
-    
+
 private:
     /** Time after which this health bar will become hidden */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian")

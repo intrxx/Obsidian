@@ -5,6 +5,9 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AIController.h"
+#include "AI/ObsidianEnemyInterface.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include "Obsidian/Obsidian.h"
 
 UObsidianBTTask_UseGameplayAbility::UObsidianBTTask_UseGameplayAbility()
 {
@@ -35,14 +38,31 @@ EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilit
 {
 	EBTNodeResult::Type NodeResult = EBTNodeResult::Failed;
 	
-	AAIController* MyController = OwnerComp.GetAIOwner();
-	AActor* Actor = MyController->GetPawn();
+	AAIController* AIController = OwnerComp.GetAIOwner();
+	AActor* Actor = AIController->GetPawn();
+
 	
-	if(Actor != nullptr)
+	if(bSetCombatTargetOnEnemyInterface)
+	{
+		const UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
+		if(AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject(CombatTarget_Selector.SelectedKeyName)))
+		{
+			IObsidianEnemyInterface::Execute_SetCombatTarget(AIController, TargetActor);
+		}
+		else
+		{
+			UE_LOG(LogObsidian, Error, TEXT("Target Actor Blackboard Key Selector is invalid on [UObsidianBTTask_UseGameplayAbility] for [%s]."
+								   "Make sure to set the TargetActor on the Node!"), *GetNameSafe(AIController));
+		}
+	}
+	
+	if(Actor)
 	{
 		if(UAbilitySystemComponent* OwningASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 		{
+			
 			OwningASC->TryActivateAbilitiesByTag(ActivateAbilityWithTag, true);
+			
 			NodeResult = EBTNodeResult::Succeeded;
 		}
 	}
