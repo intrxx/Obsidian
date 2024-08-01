@@ -30,6 +30,11 @@ class OBSIDIAN_API UObsidianDamageGameplayAbility : public UObsidianGameplayAbil
 
 public:
 	UObsidianDamageGameplayAbility();
+
+protected:
+	/** Randomly chooses the Anim Montage to play. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
+	UAnimMontage* GetAnimMontageToPlay();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")
@@ -38,4 +43,7 @@ protected:
 	/** Damage effect that will be applied to target */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<TObjectPtr<UAnimMontage>> AttackMontages;
 };
