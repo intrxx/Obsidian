@@ -13,28 +13,29 @@ void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const
 	
 }
 
-FVector IObsidianCombatInterface::GetAbilitySocketLocationFromLHWeapon()
+FVector IObsidianCombatInterface::GetAbilitySocketLocationFromLHWeapon_Implementation()
 {
 	return FVector();
 }
 
-FVector IObsidianCombatInterface::GetAbilitySocketLocationFromRHWeapon()
+FVector IObsidianCombatInterface::GetAbilitySocketLocationFromRHWeapon_Implementation()
 {
 	return FVector();
 }
 
-FVector IObsidianCombatInterface::GetAbilitySocketLocationFromLeftHand()
+FVector IObsidianCombatInterface::GetAbilitySocketLocationFromLeftHand_Implementation()
 {
 	return FVector();
 }
 
-FVector IObsidianCombatInterface::GetAbilitySocketLocationFromRightHand()
+FVector IObsidianCombatInterface::GetAbilitySocketLocationFromRightHand_Implementation()
 {
 	return FVector();
 }
 
-FVector IObsidianCombatInterface::GetAbilityDefaultLocation()
+FVector IObsidianCombatInterface::GetAbilityDefaultLocation_Implementation()
 {
 	return FVector();
 }
+
 

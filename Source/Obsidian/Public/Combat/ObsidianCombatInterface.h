@@ -22,7 +22,7 @@ class OBSIDIAN_API IObsidianCombatInterface
 public:
 	virtual int32 GetCharacterLevel();
 
-	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|Hero")
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
 	void SetMotionWarpingFacingTarget(const FName MotionWarpName, const FVector& FacingTarget);
 	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget);
 	
@@ -31,17 +31,28 @@ public:
 	 */
 
 	/** Gets the socket location from left hand weapon. */
-	virtual FVector GetAbilitySocketLocationFromLHWeapon();
-
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	FVector GetAbilitySocketLocationFromLHWeapon();
+	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation();
+	
 	/** Gets the socket location from right hand weapon. */
-	virtual FVector GetAbilitySocketLocationFromRHWeapon();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	FVector GetAbilitySocketLocationFromRHWeapon();
+	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation();
 
-	virtual FVector GetAbilitySocketLocationFromLeftHand();
-	virtual FVector GetAbilitySocketLocationFromRightHand();
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	FVector GetAbilitySocketLocationFromLeftHand();
+	virtual FVector GetAbilitySocketLocationFromLeftHand_Implementation();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	FVector GetAbilitySocketLocationFromRightHand();
+	virtual FVector GetAbilitySocketLocationFromRightHand_Implementation();
 
 	/** Gets the default location for spawning ability which is slightly ahead the player character. */
-	virtual FVector GetAbilityDefaultLocation();
-
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	FVector GetAbilityDefaultLocation();
+	virtual FVector GetAbilityDefaultLocation_Implementation();
+	
 	/*
 	 * 
 	 */

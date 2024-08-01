@@ -36,6 +36,12 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	PawnExtComp = CreateDefaultSubobject<UObsidianPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
 	PawnExtComp->OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemInitialized));
 	PawnExtComp->OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemUninitialized));
+
+	//** These should be the default names for sockets on any Mesh that wish to call Combat Interface's functions for ability socket locations. */
+	LeftHandSocketName = FName("LeftHandAbilitySocket");
+	RightHandSocketName = FName("RightHandAbilitySocket");
+	WeaponSocketName = FName("WeaponAbilitySocket");
+	DefaultSocketName = FName("DefaultAbilitySocket");
 }
 
 UObsidianAbilitySystemComponent* AObsidianCharacterBase::GetObsidianAbilitySystemComponent() const
@@ -127,7 +133,7 @@ void AObsidianCharacterBase::Ragdoll() const
 	}
 }
 
-FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon()
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon_Implementation()
 {
 	if(LeftHandEquipmentMesh)
 	{
@@ -136,7 +142,7 @@ FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon()
 	return FVector::ZeroVector;
 }
 
-FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRHWeapon()
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRHWeapon_Implementation()
 {
 	if(RightHandEquipmentMesh)
 	{
@@ -145,7 +151,7 @@ FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRHWeapon()
 	return FVector::ZeroVector;
 }
 
-FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLeftHand()
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLeftHand_Implementation()
 {
 	if(const USkeletalMeshComponent* MeshComp = GetMesh())
 	{
@@ -154,7 +160,7 @@ FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLeftHand()
 	return FVector::ZeroVector;
 }
 
-FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRightHand()
+FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRightHand_Implementation()
 {
 	if(const USkeletalMeshComponent* MeshComp = GetMesh())
 	{
@@ -163,7 +169,7 @@ FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRightHand()
 	return FVector::ZeroVector;
 }
 
-FVector AObsidianCharacterBase::GetAbilityDefaultLocation()
+FVector AObsidianCharacterBase::GetAbilityDefaultLocation_Implementation()
 {
 	if(const USkeletalMeshComponent* MeshComp = GetMesh())
 	{

@@ -49,11 +49,11 @@ protected:
 	void UninitAndDestroy();
 
 	//~ Start of CombatInterface
-	virtual FVector GetAbilitySocketLocationFromLHWeapon() override;
-	virtual FVector GetAbilitySocketLocationFromRHWeapon() override;
-	virtual FVector GetAbilitySocketLocationFromLeftHand() override;
-	virtual FVector GetAbilitySocketLocationFromRightHand() override;
-	virtual FVector GetAbilityDefaultLocation() override;
+	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromLeftHand_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromRightHand_Implementation() override;
+	virtual FVector GetAbilityDefaultLocation_Implementation() override;
 	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget) override;
 	//~ End of CombatInterface
 

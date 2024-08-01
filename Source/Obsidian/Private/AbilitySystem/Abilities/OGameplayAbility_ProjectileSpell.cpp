@@ -62,31 +62,31 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 
 FVector UOGameplayAbility_ProjectileSpell::GetSpawnLocation() const
 {
-	FVector SpawnLocation = FVector::ZeroVector;
-	
-	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(GetAvatarActorFromActorInfo());
-	if(CombatInterface == nullptr)
+	AActor* OwningActor = GetAvatarActorFromActorInfo();
+	if(OwningActor == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Combat Interface is nullptr on [%s] for Avatar Actor [%s]"), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
-		return SpawnLocation;
+		UE_LOG(LogObsidian, Error, TEXT("Owning Actor is nullptr on [%s]"), *GetNameSafe(this));
+		return FVector::ZeroVector;
 	}
+	
+	FVector SpawnLocation = OwningActor->GetActorLocation();
 	
 	switch(AbilitySpawnLocation)
 	{
 	case EObsidianAbilitySpawnLocation::ASL_DefaultLocation:
-		SpawnLocation = CombatInterface->GetAbilityDefaultLocation();
+		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilityDefaultLocation(OwningActor);
 		break;
 	case EObsidianAbilitySpawnLocation::ASL_LeftHand:
-		SpawnLocation = CombatInterface->GetAbilitySocketLocationFromLeftHand();
+		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromLeftHand(OwningActor);
 		break;
 	case EObsidianAbilitySpawnLocation::ASL_RightHand:
-		SpawnLocation = CombatInterface->GetAbilitySocketLocationFromRightHand();
+		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromRightHand(OwningActor);
 		break;
 	case EObsidianAbilitySpawnLocation::ASL_LeftHandEquipment:
-		SpawnLocation = CombatInterface->GetAbilitySocketLocationFromLHWeapon();
+		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromLHWeapon(OwningActor);
 		break;
 	case EObsidianAbilitySpawnLocation::ASL_RightHandEquipment:
-		SpawnLocation = CombatInterface->GetAbilitySocketLocationFromRHWeapon();
+		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromRHWeapon(OwningActor);
 		break;
 	default:
 		break;
