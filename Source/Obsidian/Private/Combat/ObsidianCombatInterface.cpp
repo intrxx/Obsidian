@@ -8,6 +8,16 @@ int32 IObsidianCombatInterface::GetCharacterLevel()
 	return 1;
 }
 
+bool IObsidianCombatInterface::IsDeadOrDying_Implementation() const
+{
+	return false;
+}
+
+AActor* IObsidianCombatInterface::GetAvatarActor_Implementation()
+{
+	return nullptr;
+}
+
 void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget)
 {
 	

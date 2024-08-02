@@ -121,6 +121,20 @@ int32 AObsidianHero::GetCharacterLevel()
 	return GetObsidianPlayerState() == nullptr ? GetObsidianPlayerState()->GetHeroLevel() : 1;
 }
 
+bool AObsidianHero::IsDeadOrDying_Implementation() const
+{
+	if(HeroAttributesComponent)
+	{
+		return HeroAttributesComponent->IsDeadOrDying();
+	}
+	return false;
+}
+
+AActor* AObsidianHero::GetAvatarActor_Implementation()
+{
+	return this;
+}
+
 void AObsidianHero::OnAbilitySystemInitialized()
 {
 	Super::OnAbilitySystemInitialized();

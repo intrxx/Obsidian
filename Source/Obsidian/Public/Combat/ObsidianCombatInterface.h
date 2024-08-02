@@ -22,6 +22,15 @@ class OBSIDIAN_API IObsidianCombatInterface
 public:
 	virtual int32 GetCharacterLevel();
 
+	/** Returns true if the owning character is dead. */
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	bool IsDeadOrDying() const;	
+	virtual bool IsDeadOrDying_Implementation() const;
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	AActor* GetAvatarActor();
+	virtual AActor* GetAvatarActor_Implementation();
+
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
 	void SetMotionWarpingFacingTarget(const FName MotionWarpName, const FVector& FacingTarget);
 	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget);

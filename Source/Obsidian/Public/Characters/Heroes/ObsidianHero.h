@@ -38,6 +38,8 @@ public:
 	
 	//~ Start of CombatInterface
 	virtual int32 GetCharacterLevel() override;
+	virtual bool IsDeadOrDying_Implementation() const override;
+	virtual AActor* GetAvatarActor_Implementation() override;
 	//~ End of CombatInterface
 
 protected:

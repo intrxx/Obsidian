@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianTypes/Character/ObsidianEnemyType.h"
-#include "ObsidianASCFunctionLibrary.generated.h"
+#include "ObsidianAbilitySystemFunctionLibrary.generated.h"
 
 struct FGameplayEffectContextHandle;
 class UObsidianAbilitySystemComponent;
@@ -14,7 +14,7 @@ class UObsidianAbilitySystemComponent;
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianASCFunctionLibrary : public UBlueprintFunctionLibrary
+class OBSIDIAN_API UObsidianAbilitySystemFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 
@@ -33,4 +33,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
 	static void SetIsCriticalAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalAttack);
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Combat")
+	static void GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug);
 };

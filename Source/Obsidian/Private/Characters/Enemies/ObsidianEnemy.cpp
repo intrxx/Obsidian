@@ -143,6 +143,20 @@ void AObsidianEnemy::OnDeathFinished(AActor* OwningActor)
 	Super::OnDeathFinished(OwningActor);
 }
 
+bool AObsidianEnemy::IsDeadOrDying_Implementation() const
+{
+	if(EnemyAttributesComponent)
+	{
+		return EnemyAttributesComponent->IsDeadOrDying();
+	}
+	return false;
+}
+
+AActor* AObsidianEnemy::GetAvatarActor_Implementation()
+{
+	return this;
+}
+
 int32 AObsidianEnemy::GetCharacterLevel()
 {
 	return EnemyLevel;
