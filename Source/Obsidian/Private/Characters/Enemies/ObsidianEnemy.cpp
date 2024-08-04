@@ -192,8 +192,10 @@ void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 Ne
 
 	if(HasAuthority() && ObsidianAIController)
 	{
-		UBlackboardComponent* BlackboardComponent = ObsidianAIController->GetBlackboardComponent();
-		BlackboardComponent->SetValueAsBool(FName("bHitReacting"), bHitReacting);
+		if(UBlackboardComponent* BlackboardComponent = ObsidianAIController->GetBlackboardComponent())
+		{
+			BlackboardComponent->SetValueAsBool(FName("bHitReacting"), bHitReacting);
+		}
 	}
 	
 	//TODO Maybe change walk speed here
