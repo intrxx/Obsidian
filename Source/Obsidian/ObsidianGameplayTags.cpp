@@ -16,20 +16,20 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_Heal, "SetByCaller.Heal", "Tag used for passing heal with set by caller magnitude.");
 
 	// Damage Types
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(DamageType_Physical, "DamageType.Physical", "Physical Damage Type - also used for SetByCaller.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(DamageType_Elemental_Fire, "DamageType.Elemental.Fire", "Fire Damage Type - also used for SetByCaller.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(DamageType_Elemental_Cold, "DamageType.Elemental.Cold", "Cold Damage Type - also used for SetByCaller.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(DamageType_Elemental_Lightning, "DamageType.Elemental.Lightning", "Lightning Damage Type - also used for SetByCaller.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(DamageType_Chaos, "DamageType.Chaos", "Chaos Damage Type - also used for SetByCaller.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_DamageType_Physical, "DamageType.Physical", "Physical Damage Type - also used for SetByCaller.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_DamageType_Elemental_Fire, "DamageType.Elemental.Fire", "Fire Damage Type - also used for SetByCaller.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_DamageType_Elemental_Cold, "DamageType.Elemental.Cold", "Cold Damage Type - also used for SetByCaller.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_DamageType_Elemental_Lightning, "DamageType.Elemental.Lightning", "Lightning Damage Type - also used for SetByCaller.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_DamageType_Chaos, "DamageType.Chaos", "Chaos Damage Type - also used for SetByCaller.");
 	
 	const TArray<FGameplayTag> DamageTypes =
 	{
 	{
-			DamageType_Physical,
-			DamageType_Elemental_Fire,
-			DamageType_Elemental_Cold,
-			DamageType_Elemental_Lightning,
-			DamageType_Chaos
+			SetByCaller_DamageType_Physical,
+			SetByCaller_DamageType_Elemental_Fire,
+			SetByCaller_DamageType_Elemental_Cold,
+			SetByCaller_DamageType_Elemental_Lightning,
+			SetByCaller_DamageType_Chaos
 		  }
 	};
 	

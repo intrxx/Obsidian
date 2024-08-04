@@ -14,8 +14,4 @@ class OBSIDIAN_API UObsidianGameplayAbility_Melee : public UObsidianDamageGamepl
 {
 	GENERATED_BODY()
 	
-protected:
-	
-private:
-	
 };

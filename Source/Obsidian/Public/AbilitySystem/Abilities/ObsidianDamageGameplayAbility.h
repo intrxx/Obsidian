@@ -35,6 +35,10 @@ protected:
 	/** Randomly chooses the Anim Montage to play. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
 	UAnimMontage* GetAnimMontageToPlay();
+
+	/** Given the Array of Actors, damages all of them with the damage provided in the ability. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
+	void DamageAllCharacters(UPARAM(ref) TArray<AActor*>& ActorsToDamage);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")

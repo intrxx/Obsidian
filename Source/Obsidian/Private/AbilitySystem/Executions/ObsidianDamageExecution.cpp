@@ -44,10 +44,10 @@ struct FObsidianDamageStatics
 		LightningResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetLightningResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		ChaosResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetChaosResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 
-		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::DamageType_Elemental_Fire, FireResistanceDef);
-		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::DamageType_Elemental_Cold, ColdResistanceDef);
-		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::DamageType_Elemental_Lightning, LightningResistanceDef);
-		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::DamageType_Chaos, ChaosResistanceDef);
+		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Fire, FireResistanceDef);
+		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Cold, ColdResistanceDef);
+		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Lightning, LightningResistanceDef);
+		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Chaos, ChaosResistanceDef);
 	}
 };
 
@@ -133,7 +133,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	//TODO This could be refactored to somehow get the actual DamageTypes of this ability that was used. 
 	for(const FGameplayTag DamageType : ObsidianGameplayTags::DamageTypes)
 	{
-		if(DamageType == ObsidianGameplayTags::DamageType_Physical)
+		if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Physical)
 		{
 			float PhysicalDamageType = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
 			if(PhysicalDamageType > 0.0f)

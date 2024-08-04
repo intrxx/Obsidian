@@ -16,11 +16,11 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Heal);
 
 	// Damage Types
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Physical);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Elemental_Fire);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Elemental_Cold);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Elemental_Lightning);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageType_Chaos);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Physical);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Fire);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Cold);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Lightning);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Chaos);
 	
 	/** All damage Types stored for convenience */
 	OBSIDIAN_API extern const TArray<FGameplayTag> DamageTypes;
