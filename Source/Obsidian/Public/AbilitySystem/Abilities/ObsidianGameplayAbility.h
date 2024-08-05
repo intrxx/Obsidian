@@ -25,6 +25,18 @@ enum class EObsidianGameplayAbility_ActivationPolicy : uint8
 
 //TODO Think about Lyra like AbilityActivationGroup
 
+USTRUCT(BlueprintType)
+struct FObsidianTaggedMontage
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	TObjectPtr<UAnimMontage> AbilityMontage = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	FGameplayTag MontageTag = FGameplayTag();
+};
+
 /**
  * The base Gameplay Ability class used in this project.
  */
@@ -46,8 +58,15 @@ protected:
 	//~UGameplayAbility interface
 	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
 	//~End of UGameplayAbility interface
+
+	/** Randomly chooses the Anim Montage to play. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
+	UAnimMontage* GetRandomAnimMontageToPlay();
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")
 	EObsidianGameplayAbility_ActivationPolicy ActivationPolicy;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<FObsidianTaggedMontage> AbilityMontages;
 };

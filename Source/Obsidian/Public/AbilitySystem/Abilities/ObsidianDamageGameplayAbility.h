@@ -32,10 +32,6 @@ public:
 	UObsidianDamageGameplayAbility();
 
 protected:
-	/** Randomly chooses the Anim Montage to play. */
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
-	UAnimMontage* GetAnimMontageToPlay();
-
 	/** Given the Array of Actors, damages all of them with the damage provided in the ability. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
 	void DamageAllCharacters(UPARAM(ref) TArray<AActor*>& ActorsToDamage);
@@ -47,7 +43,4 @@ protected:
 	/** Damage effect that will be applied to target */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<UGameplayEffect> DamageEffectClass;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TArray<TObjectPtr<UAnimMontage>> AttackMontages;
 };

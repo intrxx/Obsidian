@@ -78,7 +78,10 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_Death, "GameplayEvent.Death", "Event fired on attributes component when character is out of health.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Firebolt, "GameplayEvent.AbilityMontage.Player.Firebolt", "Tag used for triggering gameplay event for spawning firebolt.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_ZombieMelee, "GameplayEvent.AbilityMontage.Zombie.Melee", "Tag used for triggering gameplay event for damaging actor with Zombie melee.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Melee_Weapon, "GameplayEvent.AbilityMontage.Melee.Weapon", "Tag used for triggering gameplay event for damaging actor with melee weapon. Used by Montage to retreive correct socket.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Melee_RightHand, "GameplayEvent.AbilityMontage.Melee.RightHand", "Tag used for triggering gameplay event for damaging actor with melee right hand. Used by Montage to retreive correct socket.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Melee_LeftHand, "GameplayEvent.AbilityMontage.Melee.LeftHand", "Tag used for triggering gameplay event for damaging actor with melee left hand. Used by Montage to retreive correct socket.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Event_Montage_Melee_BetweenHands, "GameplayEvent.AbilityMontage.Melee.BetweenHands", "Tag used for triggering gameplay event for damaging actor with melee attack between hands (could be used for slam or something). Used by Montage to retreive correct socket.");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_Melee, "AbilityActivation.Melee", "Tag used for triggering activation of AI's melee attack.");
 

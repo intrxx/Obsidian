@@ -199,5 +199,4 @@ void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 Ne
 	}
 	
 	//TODO Maybe change walk speed here
-	// That might not actually be used in the future
 }
