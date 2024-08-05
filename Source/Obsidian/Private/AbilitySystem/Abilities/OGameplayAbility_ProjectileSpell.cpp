@@ -19,7 +19,7 @@ void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySp
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLocation)
+void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLocation, const FVector& TargetLocation)
 {
 	const bool bHasAuthority = GetAvatarActorFromActorInfo()->HasAuthority();
 	if(!bHasAuthority)
@@ -27,7 +27,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 		return;
 	}
 	
-	const FVector StartLocation = GetSpawnLocation();
+	const FVector StartLocation = SpawnLocation;
 	FRotator Rotation = (TargetLocation - StartLocation).Rotation();
 
 	// This can actually cause a bug on client, when the socket location would be different on the firing client.
