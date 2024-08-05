@@ -7,6 +7,8 @@
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/Animation/ObsidianSocketName.h"
 
 AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))
@@ -38,10 +40,9 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	PawnExtComp->OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate::CreateUObject(this, &ThisClass::OnAbilitySystemUninitialized));
 
 	//** These should be the default names for sockets on any Mesh that wish to call Combat Interface's functions for ability socket locations. */
-	LeftHandSocketName = FName("LeftHandAbilitySocket");
-	RightHandSocketName = FName("RightHandAbilitySocket");
-	WeaponSocketName = FName("WeaponAbilitySocket");
-	DefaultSocketName = FName("DefaultAbilitySocket");
+	WeaponSocketName = ObsidianAbilitySocketNames::Weapon;
+	LeftHandSocketName = ObsidianAbilitySocketNames::LeftHand;
+	RightHandSocketName = ObsidianAbilitySocketNames::RightHand;
 }
 
 UObsidianAbilitySystemComponent* AObsidianCharacterBase::GetObsidianAbilitySystemComponent() const
@@ -133,6 +134,32 @@ void AObsidianCharacterBase::Ragdoll() const
 	}
 }
 
+FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)
+{
+	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_RightHandWeapon)
+	{
+		return GetAbilitySocketLocationFromLHWeapon_Implementation();
+	}
+	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_LeftHandWeapon)
+	{
+		return GetAbilitySocketLocationFromLHWeapon_Implementation();
+	}
+	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_BetweenHands)
+	{
+		return GetAbilityBetweenHandsSocketLocation_Implementation();
+	}
+	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_LeftHand)
+	{
+		return GetAbilitySocketLocationFromLeftHand_Implementation();
+	}
+	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_RightHand)
+	{
+		return GetAbilitySocketLocationFromRightHand_Implementation();
+	}
+	
+	return FVector::ZeroVector;
+}
+
 FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon_Implementation()
 {
 	if(LeftHandEquipmentMesh)
@@ -169,14 +196,16 @@ FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRightHand_Implementa
 	return FVector::ZeroVector;
 }
 
-FVector AObsidianCharacterBase::GetAbilityDefaultLocation_Implementation()
+FVector AObsidianCharacterBase::GetAbilityBetweenHandsSocketLocation_Implementation()
 {
 	if(const USkeletalMeshComponent* MeshComp = GetMesh())
 	{
-		FVector SocketLocation = MeshComp->GetSocketLocation(DefaultSocketName);
-		SocketLocation = SocketLocation + (GetActorForwardVector() * DefaultAbilitySocketLocationOffset);
+		const FVector RightHandSocketLocation = MeshComp->GetSocketLocation(RightHandSocketName);
+		const FVector LeftHandSocketLocation = MeshComp->GetSocketLocation(LeftHandSocketName);
 
-		return SocketLocation;
+		const FVector MiddleVector = ((RightHandSocketLocation + LeftHandSocketLocation) / 2.0f);
+		
+		return MiddleVector;
 	}
 	return FVector::ZeroVector;
 }

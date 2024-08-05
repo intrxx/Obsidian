@@ -6,6 +6,8 @@
 #include "UObject/Interface.h"
 #include "ObsidianCombatInterface.generated.h"
 
+struct FGameplayTag;
+
 UINTERFACE(MinimalAPI)
 class UObsidianCombatInterface : public UInterface
 {
@@ -39,6 +41,10 @@ public:
 	 * Socket Locations for spawning abilities.
 	 */
 
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	FVector GetAbilitySocketLocationForTag(const FGameplayTag& Tag);
+	virtual FVector GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag);
+
 	/** Gets the socket location from left hand weapon. */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
 	FVector GetAbilitySocketLocationFromLHWeapon();
@@ -59,8 +65,8 @@ public:
 
 	/** Gets the default location for spawning ability which is slightly ahead the player character. */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
-	FVector GetAbilityDefaultLocation();
-	virtual FVector GetAbilityDefaultLocation_Implementation();
+	FVector GetAbilityBetweenHandsSocketLocation();
+	virtual FVector GetAbilityBetweenHandsSocketLocation_Implementation();
 	
 	/*
 	 * 

@@ -61,7 +61,7 @@ protected:
 
 	/** Randomly chooses the Anim Montage to play. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
-	UAnimMontage* GetRandomAnimMontageToPlay();
+	FObsidianTaggedMontage GetRandomAnimMontageToPlay();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")

@@ -36,7 +36,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 	
 	FTransform SpawnTransform;
 	SpawnTransform.SetLocation(StartLocation);
-	SpawnTransform.SetRotation(Rotation.Quaternion());
+	SpawnTransform.SetRotation(Rotation.Quaternion()); 
 	
 	AObsidianProjectile* Projectile = GetWorld()->SpawnActorDeferred<AObsidianProjectile>(ProjectileClass, SpawnTransform,
 		GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
@@ -60,6 +60,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& TargetLoc
 	Projectile->FinishSpawning(SpawnTransform);
 }
 
+//TODO Evaluate this, look at ObsidianCharacterBase FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)
 FVector UOGameplayAbility_ProjectileSpell::GetSpawnLocation() const
 {
 	AActor* OwningActor = GetAvatarActorFromActorInfo();
@@ -74,7 +75,7 @@ FVector UOGameplayAbility_ProjectileSpell::GetSpawnLocation() const
 	switch(AbilitySpawnLocation)
 	{
 	case EObsidianAbilitySpawnLocation::ASL_DefaultLocation:
-		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilityDefaultLocation(OwningActor);
+		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilityBetweenHandsSocketLocation(OwningActor);
 		break;
 	case EObsidianAbilitySpawnLocation::ASL_LeftHand:
 		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromLeftHand(OwningActor);

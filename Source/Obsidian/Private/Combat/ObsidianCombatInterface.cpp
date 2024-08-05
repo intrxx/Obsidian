@@ -3,6 +3,8 @@
 
 #include "Combat/ObsidianCombatInterface.h"
 
+#include "GameplayTagContainer.h"
+
 int32 IObsidianCombatInterface::GetCharacterLevel()
 {
 	return 1;
@@ -21,6 +23,11 @@ AActor* IObsidianCombatInterface::GetAvatarActor_Implementation()
 void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget)
 {
 	
+}
+
+FVector IObsidianCombatInterface::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)
+{
+	return FVector();
 }
 
 FVector IObsidianCombatInterface::GetAbilitySocketLocationFromLHWeapon_Implementation()
@@ -43,7 +50,7 @@ FVector IObsidianCombatInterface::GetAbilitySocketLocationFromRightHand_Implemen
 	return FVector();
 }
 
-FVector IObsidianCombatInterface::GetAbilityDefaultLocation_Implementation()
+FVector IObsidianCombatInterface::GetAbilityBetweenHandsSocketLocation_Implementation()
 {
 	return FVector();
 }

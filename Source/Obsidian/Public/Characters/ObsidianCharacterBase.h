@@ -49,11 +49,12 @@ protected:
 	void UninitAndDestroy();
 
 	//~ Start of CombatInterface
+	virtual FVector GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag) override;
 	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromLeftHand_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromRightHand_Implementation() override;
-	virtual FVector GetAbilityDefaultLocation_Implementation() override;
+	virtual FVector GetAbilityBetweenHandsSocketLocation_Implementation() override;
 	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget) override;
 	//~ End of CombatInterface
 
@@ -82,10 +83,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
 	FName LeftHandSocketName = FName();
-
-	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat|Setup")
-	FName DefaultSocketName = FName();
-
+	
 	/** Offset for how much the ability spawn location is moved from the player character. */ 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
 	float DefaultAbilitySocketLocationOffset = 0.f;

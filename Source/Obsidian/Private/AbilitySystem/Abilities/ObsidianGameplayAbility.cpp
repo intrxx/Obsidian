@@ -122,21 +122,21 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 	return true;
 }
 
-UAnimMontage* UObsidianGameplayAbility::GetRandomAnimMontageToPlay()
+FObsidianTaggedMontage UObsidianGameplayAbility::GetRandomAnimMontageToPlay()
 {
 	const uint16 ArrCount = AbilityMontages.Num();
 	if(ArrCount == 0)
 	{
 		UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
-		return nullptr;
+		return FObsidianTaggedMontage();
 	}
 
 	// Handling this case exclusively as this is very probable case
 	if(ArrCount == 1)
 	{
-		return AbilityMontages[0].AbilityMontage;
+		return AbilityMontages[0];
 	}
 
 	const uint16 MontageNumber = FMath::RandRange(0, ArrCount - 1);
-	return AbilityMontages[MontageNumber].AbilityMontage;
+	return AbilityMontages[MontageNumber];
 }
