@@ -29,15 +29,8 @@ UObsidianMMC_Evasion::UObsidianMMC_Evasion()
 
 float UObsidianMMC_Evasion::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
-	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
-	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
-	
-	FAggregatorEvaluateParameters EvaluationParameters;
-	EvaluationParameters.SourceTags = SourceTags;
-	EvaluationParameters.TargetTags = TargetTags;
-
 	float Dexterity = 0.f;
-	GetCapturedAttributeMagnitude(EvasionStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
+	GetCapturedAttributeMagnitude(EvasionStatics().DexterityDef, Spec, FAggregatorEvaluateParameters(), Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 
 	const float EvasionBonus = (FMath::FloorToInt(Dexterity / 2) * 3);

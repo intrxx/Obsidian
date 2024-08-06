@@ -42,12 +42,7 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 	
 	const int32 CharacterLevel = CombatInterface->GetCharacterLevel();
 	
-	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
-	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
-	
-	FAggregatorEvaluateParameters EvaluationParameters;
-	EvaluationParameters.SourceTags = SourceTags;
-	EvaluationParameters.TargetTags = TargetTags;
+	const FAggregatorEvaluateParameters EvaluationParameters;
 	
 	float Faith = 0.f;
 	GetCapturedAttributeMagnitude(MaxManaStatics().FaithDef, Spec, EvaluationParameters, Faith);

@@ -44,12 +44,7 @@ float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGamep
 	
 	const int32 CharacterLevel = CombatInterface->GetCharacterLevel();
 	
-	const FGameplayTagContainer* SourceTags = Spec.CapturedSourceTags.GetAggregatedTags();
-	const FGameplayTagContainer* TargetTags = Spec.CapturedTargetTags.GetAggregatedTags();
-	
-	FAggregatorEvaluateParameters EvaluationParameters;
-	EvaluationParameters.SourceTags = SourceTags;
-	EvaluationParameters.TargetTags = TargetTags;
+	const FAggregatorEvaluateParameters EvaluationParameters;
 	
 	float Strength = 0.f;
 	GetCapturedAttributeMagnitude(MaxHealthStatics().StrengthDef, Spec, EvaluationParameters, Strength);
