@@ -4,14 +4,14 @@
 
 #include "AbilitySystemComponent.h"
 #include "CoreMinimal.h"
-#include "AbilitySystem/Attributes/ObsidianAttributeSetBase.h"
+#include "ObsidianCommonAttributeSet.h"
 #include "ObsidianHeroAttributeSet.generated.h"
 
 /**
  * Attribute set specific to the hero (player character)
  */
 UCLASS()
-class OBSIDIAN_API UObsidianHeroAttributeSet : public UObsidianAttributeSetBase
+class OBSIDIAN_API UObsidianHeroAttributeSet : public UObsidianCommonAttributeSet
 {
 	GENERATED_BODY()
 
@@ -69,6 +69,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, IncomingManaReplenishing);
 
 protected:
+	virtual void ResetMetaAttributes() override;
+	
 	/**
 	 *	Character
 	 */

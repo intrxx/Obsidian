@@ -25,16 +25,12 @@ void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbi
 		return;
 	}
 	
-	EnemySpecificAttributeChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetEnemySpecificAttributeAttribute()).AddUObject(this, &ThisClass::EnemySpecificAttributeChanged);
-
 	BroadcastInitialValues();
 }
 
 void UObsidianEnemyAttributesComponent::UninitializeFromAbilitySystem()
 {
 	ClearGameplayTags();
-	
-	EnemySpecificAttributeChangedDelegateHandle.Reset();
 	
 	EnemyAttributeSet = nullptr;
 	
@@ -82,18 +78,13 @@ void UObsidianEnemyAttributesComponent::MaxEnergyShieldChanged(const FOnAttribut
 	MaxEnergyShieldChangedDelegate.Broadcast(MaxEnergyShield);
 }
 
-void UObsidianEnemyAttributesComponent::EnemySpecificAttributeChanged(const FOnAttributeChangeData& Data)
+float UObsidianEnemyAttributesComponent::GetHitReactThreshold() const
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Implement Enemy Specific Attribute Changed!"));
+	return (EnemyAttributeSet ? EnemyAttributeSet->GetHitReactThreshold() : 0.0f);
 }
 
-float UObsidianEnemyAttributesComponent::GetEnemySpecificAttribute() const
+FGameplayAttribute UObsidianEnemyAttributesComponent::GetHitReactThresholdAttribute() const
 {
-	return (EnemyAttributeSet ? EnemyAttributeSet->GetEnemySpecificAttribute() : 0.0f);
-}
-
-FGameplayAttribute UObsidianEnemyAttributesComponent::GetEnemySpecificAttributeAttribute() const
-{
-	return (EnemyAttributeSet ? EnemyAttributeSet->GetEnemySpecificAttributeAttribute() : nullptr);
+	return (EnemyAttributeSet ? EnemyAttributeSet->GetHitReactThresholdAttribute() : nullptr);
 }
 

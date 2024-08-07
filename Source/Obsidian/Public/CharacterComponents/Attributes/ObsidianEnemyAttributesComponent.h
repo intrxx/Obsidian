@@ -37,8 +37,8 @@ public:
 	 */
 	
 	/** Getters for EnemySpecificAttribute Value and Attribute from UObsidianEnemyAttributeSet. */
-	float GetEnemySpecificAttribute() const;
-	FGameplayAttribute GetEnemySpecificAttributeAttribute() const;
+	float GetHitReactThreshold() const;
+	FGameplayAttribute GetHitReactThresholdAttribute() const;
 
 	/**
 	 * Delegates for enemy health bar
@@ -56,7 +56,6 @@ protected:
 	 * Callbacks for Attribute change delegates.
 	 */
 	
-	virtual void EnemySpecificAttributeChanged(const FOnAttributeChangeData& Data);
 	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;
 	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data) override;
 	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data) override;
@@ -77,8 +76,6 @@ protected:
 	/**
 	 * Attribute change delegate handles.
 	 */
-
-	FDelegateHandle EnemySpecificAttributeChangedDelegateHandle;
 
 	/**
 	 * 

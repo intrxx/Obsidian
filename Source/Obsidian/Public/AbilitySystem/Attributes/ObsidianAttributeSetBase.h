@@ -32,7 +32,9 @@ USTRUCT()
 struct FObsidianEffectProperties
 {
 	GENERATED_BODY()
-
+public:
+	void Reset();
+	
 public:
 	FObsidianEffectProperties(){}
 	

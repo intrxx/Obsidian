@@ -92,8 +92,7 @@ void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& A
 void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
-
-	FObsidianEffectProperties EffectProps;
+	
 	SetEffectProperties(Data, /** OUT */ EffectProps);
 	
 	if(Data.EvaluatedData.Attribute == GetHealthAttribute())
@@ -107,7 +106,6 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	else if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
-		SetIncomingDamage(0.0f);
 		
 		if(LocalIncomingDamage > 0.0f)
 		{
@@ -127,21 +125,6 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 				if(!bOutOfHealth && (GetHealth() <= 0.0f))
 				{
 					OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
-				}
-				else
-				{
-					//TODO As it stands now only damage that damages health will cause a hit react - decide if its okay, I like it for now
-					if(!EffectProps.bIsPlayerCharacter)
-					{
-						// Check if we should hit react, small hits shouldn't cause hit reacting
-						const float CombinedHealthPool = GetMaxHealth() + GetMaxEnergyShield();
-						if((LocalIncomingDamage / CombinedHealthPool) * 100.f > ObsidianAttributeConstants::HitReactThreshold)
-						{
-							FGameplayTagContainer ActivateTag;
-							ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
-							EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
-						}
-					}
 				}
 			}
 		}
@@ -172,7 +155,6 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	else if(Data.EvaluatedData.Attribute == GetIncomingHealthHealingAttribute())
 	{
 		const float LocalIncomingHealthHealing = GetIncomingHealthHealing();
-		SetIncomingHealthHealing(0.0f);
 		
 		if(LocalIncomingHealthHealing > 0.0f)
 		{
@@ -184,7 +166,6 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	else if(Data.EvaluatedData.Attribute == GetIncomingEnergyShieldHealingAttribute())
 	{
 		const float LocalIncomingEnergyShieldHealing = GetIncomingEnergyShieldHealing();
-		SetIncomingEnergyShieldHealing(0.0f);
 		
 		if(LocalIncomingEnergyShieldHealing > 0.0f)
 		{
@@ -194,6 +175,13 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	}
 
 	bOutOfHealth = (GetHealth() <= 0.0f);
+}
+
+void UObsidianCommonAttributeSet::ResetMetaAttributes()
+{
+	SetIncomingDamage(0.0f);
+	SetIncomingHealthHealing(0.0f);
+	SetIncomingEnergyShieldHealing(0.0f);
 }
 
 void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)

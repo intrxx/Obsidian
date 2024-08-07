@@ -44,8 +44,6 @@ private:
 	TObjectPtr<UObsidianAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UObsidianHeroAttributeSet> HeroAttributeSet;
-	UPROPERTY()
-	TObjectPtr<UObsidianCommonAttributeSet> CommonAttributeSet;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_HeroLevel)
 	int32 HeroLevel = 1;

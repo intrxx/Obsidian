@@ -79,8 +79,6 @@ private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
 	UPROPERTY()
-	TObjectPtr<UObsidianCommonAttributeSet> CommonAttributeSet;
-	UPROPERTY()
 	TObjectPtr<UObsidianEnemyAttributeSet> EnemyAttributeSet;
 	UPROPERTY()
 	TObjectPtr<AObsidianAIController> ObsidianAIController;

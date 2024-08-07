@@ -4,14 +4,14 @@
 
 #include "AbilitySystemComponent.h"
 #include "CoreMinimal.h"
-#include "AbilitySystem/Attributes/ObsidianAttributeSetBase.h"
+#include "ObsidianCommonAttributeSet.h"
 #include "ObsidianEnemyAttributeSet.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianEnemyAttributeSet : public UObsidianAttributeSetBase
+class OBSIDIAN_API UObsidianEnemyAttributeSet : public UObsidianCommonAttributeSet
 {
 	GENERATED_BODY()
 
@@ -21,14 +21,14 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
-	ATTRIBUTE_ACCESSORS(UObsidianEnemyAttributeSet, EnemySpecificAttribute);
+	ATTRIBUTE_ACCESSORS(UObsidianEnemyAttributeSet, HitReactThreshold);
 
 protected:
 	UFUNCTION()
-	void OnRep_EnemySpecificAttribute(const FGameplayAttributeData& OldValue);
+	void OnRep_HitReactThreshold(const FGameplayAttributeData& OldValue);
 
 private:
-	/** The current EnemySpecificAttribute attribute. TODO This is just a setup thing for now as I don't have any meaningful Enemy specific Attribute in mind right now */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnemySpecificAttribute, Category = "Obsidian|EAttributes|EnemySpecificAttribute", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData EnemySpecificAttribute;
+	/** The current Hit React Threshold Attribute. Defines a percent threshold for which attacks greater than it will cause hit react. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HitReactThreshold, Category = "Obsidian|EAttributes|HitReactThreshold", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData HitReactThreshold;
 };

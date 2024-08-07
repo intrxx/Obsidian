@@ -111,8 +111,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	//TODO Read about entropy hit here: https://pathofexile.fandom.com/wiki/Evasion#cite_note-cite4-2, https://www.pathofexile.com/forum/view-thread/11707#p216024 and maybe implement it
 	float ChanceToHit = ((Accuracy * 1.25f) / ((Accuracy + FMath::Pow((Evasion * 0.25f), 0.8f)))) * 100.0f;
 	ChanceToHit = FMath::Clamp<float>(ChanceToHit, 5.0f, 100.0f);
-
-	UE_LOG(LogTemp, Warning, TEXT("Chnce to hit: %f"), ChanceToHit);
+	
 	if(!(ChanceToHit >= FMath::RandRange(1.0f, 100.0f))) // We did not hit return 0 damage
 	{
 		ObsidianEffectContext->SetIsEvadedHit(true);	

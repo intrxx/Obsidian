@@ -8,6 +8,22 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "ObsidianTypes/ObsidianActorTags.h"
 
+void FObsidianEffectProperties::Reset()
+{
+	EffectContextHandle.Clear();
+	SourceASC = nullptr;
+	SourceAvatarActor = nullptr;
+	SourceController = nullptr;
+	SourceCharacter = nullptr;
+	TargetASC = nullptr;
+	TargetAvatarActor = nullptr;
+	TargetController = nullptr;
+	TargetCharacter = nullptr;
+	Instigator = nullptr;
+	EffectCauser = nullptr;
+	bIsPlayerCharacter = false;
+}
+
 UObsidianAttributeSetBase::UObsidianAttributeSetBase()
 {
 }
