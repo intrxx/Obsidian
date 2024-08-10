@@ -37,6 +37,8 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, HealthRegeneration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShieldRegeneration);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, StaggerMeter);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxStaggerMeter);
 
 	/**
 	 * Defence attributes
@@ -129,6 +131,10 @@ protected:
 	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_StaggerMeter(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxStaggerMeter(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Defence attributes
@@ -218,6 +224,7 @@ protected:
 	void OnRep_MovementSpeed(const FGameplayAttributeData& OldValue);
 
 protected:
+	UPROPERTY()
 	FObsidianEffectProperties EffectProps = {};
 	
 private:
@@ -256,6 +263,14 @@ private:
 	/** The current Energy Shield Regeneration attribute. Defines value of Energy Shield that is regenerated per second. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShieldRegeneration, Category = "Obsidian|CAttributes|EnergyShieldRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData EnergyShieldRegeneration;
+
+	/** The current Stagger Meter attribute. When the Stagger Meter fills (it reaches Max Stagger Meter) the character will be stunned and unable to move for some time */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaggerMeter, Category = "Obsidian|CAttributes|StaggerMeter", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData StaggerMeter;
+
+	/** The current Max Stagger Meter attribute. Defines the Max amount after which the character will be stunned and unable to move for some time. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStaggerMeter, Category = "Obsidian|CAttributes|MaxStaggerMeter", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxStaggerMeter;
 
 	/**
 	 * Defence attributes

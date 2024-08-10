@@ -289,6 +289,26 @@ FGameplayAttribute UObsidianAttributesComponent::GetEnergyShieldRegenerationAttr
 	return (CommonAttributeSet ? CommonAttributeSet->GetEnergyShieldRegenerationAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetStaggerMeter() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetStaggerMeter() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetStaggerMeterAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetStaggerMeterAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMaxStaggerMeter() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxStaggerMeter() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMaxStaggerMeterAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxStaggerMeterAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetArmor() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetArmor() : 0.0f);

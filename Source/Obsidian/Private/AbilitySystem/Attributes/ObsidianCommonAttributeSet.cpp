@@ -30,6 +30,8 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	// Statuses
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, HealthRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, StaggerMeter, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, COND_None, REPNOTIFY_Always);
 
 	// Defence Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Armor, COND_None, REPNOTIFY_Always);
@@ -222,6 +224,16 @@ void UObsidianCommonAttributeSet::OnRep_HealthRegeneration(const FGameplayAttrib
 void UObsidianCommonAttributeSet::OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_StaggerMeter(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerMeter, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MaxStaggerMeter(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldValue)

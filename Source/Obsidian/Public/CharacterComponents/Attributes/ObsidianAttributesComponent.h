@@ -101,6 +101,14 @@ public:
 	/** Getters for Energy Shield Regeneration Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetEnergyShieldRegeneration() const;
 	FGameplayAttribute GetEnergyShieldRegenerationAttribute() const;
+
+	/** Getters for Stagger Meter Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetStaggerMeter() const;
+	FGameplayAttribute GetStaggerMeterAttribute() const;
+
+	/** Getters for Max Stagger Meter Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMaxStaggerMeter() const;
+	FGameplayAttribute GetMaxStaggerMeterAttribute() const;
 	
 	/** Getters for Armor Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetArmor() const;
