@@ -20,8 +20,9 @@ class OBSIDIAN_API IObsidianHighlightInterface
 {
 	GENERATED_BODY()
 
-	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	virtual AActor* GetHighlightAvatarActor() = 0;
+	
 	virtual void StartHighlight() = 0;
 	virtual void StopHighlight() = 0;
 };

@@ -76,6 +76,11 @@ void AObsidianEnemy::PossessedBy(AController* NewController)
 	BlackboardComponent->SetValueAsBool(FName("bHitReacting"), false);
 }
 
+AActor* AObsidianEnemy::GetHighlightAvatarActor()
+{
+	return this;
+}
+
 void AObsidianEnemy::StartHighlight()
 {
 	GetMesh()->SetRenderCustomDepth(true);

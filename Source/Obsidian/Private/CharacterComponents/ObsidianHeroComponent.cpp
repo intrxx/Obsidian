@@ -18,6 +18,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianActorTags.h"
 #include "UI/ObsidianHUD.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
@@ -82,11 +83,29 @@ void UObsidianHeroComponent::CursorTrace()
 		if(LastHighlightedActor)
 		{
 			LastHighlightedActor->StopHighlight();
+
+			AActor* TargetActor = LastHighlightedActor->GetHighlightAvatarActor();
+			if(TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+			{
+				if(AObsidianPlayerController* OPC = Cast<AObsidianPlayerController>(PC))
+				{
+					OPC->UpdateHoveredEnemyTarget(TargetActor, false);
+				}
+			}
 		}
 
 		if(CurrentHighlightedActor)
 		{
 			CurrentHighlightedActor->StartHighlight();
+			
+			AActor* TargetActor = CurrentHighlightedActor->GetHighlightAvatarActor();
+			if(TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+			{
+				if(AObsidianPlayerController* OPC = Cast<AObsidianPlayerController>(PC))
+				{
+					OPC->UpdateHoveredEnemyTarget(TargetActor, true);
+				}
+			}
 		}
 	}
 }

@@ -6,6 +6,8 @@
 #include "GameFramework/PlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnEnemyActorHovered, AActor*, TargetActor, const bool, bHoveredOver);
+
 struct FObsidianDamageTextProps;
 class AObsidianCharacterBase;
 class UObsidianDamageNumberWidgetComp;
@@ -36,6 +38,11 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);
+
+	void UpdateHoveredEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const;
+
+public:
+	FOnEnemyActorHovered OnEnemyActorHoveredDelegate;
 	
 protected:
 	virtual void BeginPlay() override;

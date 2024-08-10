@@ -80,6 +80,9 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStackingEffectUIDataWidgetRow, FOb
 /** Delegate used for notifying Progress Globes to display the healing/replenish amount */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIGlobeData, const float&, EffectDuration, const float&, EffectMagnitude);
 
+/** Delegate used for updating the target for health bar displayed on player's hud */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateEnemyTargetForHealthBar, AActor*, TargetActor, const bool, bDisplayHealthBar);
+
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraWidgetDestructionInfoReceived, const FGameplayTag, WidgetTag);
 
 /**
@@ -140,6 +143,9 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
 	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	FOnUpdateEnemyTargetForHealthBar OnUpdateEnemyTargetForHealthBarDelegate;
+
 	FOnAuraWidgetDestructionInfoReceived OnAuraWidgetDestructionInfoReceivedDelegate;
 
 protected:
@@ -156,6 +162,9 @@ protected:
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void SpecialResourceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
+
+	UFUNCTION()
+	void UpdateEnemyTargetForHealthBar(AActor* TargetActor, const bool bDisplayHealthBar);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")

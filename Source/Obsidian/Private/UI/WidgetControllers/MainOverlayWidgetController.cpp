@@ -4,6 +4,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
@@ -13,6 +14,11 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	check(AttributesComponent);
 
 	HandleBindingCallbacks(ObsidianASC);
+
+	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(PlayerController);
+	check(ObsidianPC);
+
+	ObsidianPC->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateEnemyTargetForHealthBar);
 	
 	ObsidianASC->EffectAppliedAssetTags.AddLambda(
 		[this](const FObsidianEffectUIData& UIData)
@@ -50,6 +56,8 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 				}
 			}
 		});
+
+	
 
 	SetInitialAttributeValues();
 
@@ -121,6 +129,11 @@ void UMainOverlayWidgetController::SpecialResourceChanged(const FOnAttributeChan
 void UMainOverlayWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxSpecialResourceChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::UpdateEnemyTargetForHealthBar(AActor* TargetActor, const bool bDisplayHealthBar)
+{
+	OnUpdateEnemyTargetForHealthBarDelegate.Broadcast(TargetActor, bDisplayHealthBar);
 }
 
 void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidgetTag)

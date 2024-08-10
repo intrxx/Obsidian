@@ -30,9 +30,12 @@ public:
 	AObsidianEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void PossessedBy(AController* NewController) override;
-	
+
+	//~ Start of HighlightInterface
+	virtual AActor* GetHighlightAvatarActor() override;
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
+	//~ End of HighlightInterface
 	
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
