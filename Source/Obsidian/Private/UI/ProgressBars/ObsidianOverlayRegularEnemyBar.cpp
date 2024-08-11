@@ -2,6 +2,8 @@
 
 
 #include "UI/ProgressBars/ObsidianOverlayRegularEnemyBar.h"
+
+#include "CommonTextBlock.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 
 void UObsidianOverlayRegularEnemyBar::HandleWidgetControllerSet()
@@ -40,13 +42,23 @@ void UObsidianOverlayRegularEnemyBar::HandleWidgetControllerSet()
 	});
 
 	SetInitialValues(EnemyAttributesComp);
+
+	if(EnemyName_TextBlock)
+	{
+		EnemyName_TextBlock->SetText(EnemyAttributesComp->GetEnemyName());
+	}
 }
 
-void UObsidianOverlayRegularEnemyBar::SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp) const
+void UObsidianOverlayRegularEnemyBar::SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp)
 {
 	if(!EnemyAttributesComp->IsDeadOrDying())
 	{
-		SetProgressBarPercent(EnemyAttributesComp->GetHealth(), EnemyAttributesComp->GetMaxHealth(), Health_ProgressBar);
-		SetProgressBarPercent(EnemyAttributesComp->GetEnergyShield(), EnemyAttributesComp->GetMaxEnergyShield(), EnergyShield_ProgressBar);
+		Health = EnemyAttributesComp->GetHealth();
+		MaxHealth = EnemyAttributesComp->GetMaxHealth();
+		EnergyShield = EnemyAttributesComp->GetEnergyShield();
+		MaxEnergyShield = EnemyAttributesComp->GetMaxEnergyShield();
+		
+		SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
+		SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 	}
 }

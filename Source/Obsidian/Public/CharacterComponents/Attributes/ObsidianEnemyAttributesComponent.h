@@ -27,6 +27,11 @@ public:
 		return (Actor ? Actor->FindComponentByClass<UObsidianEnemyAttributesComponent>() : nullptr);
 	}
 
+	void SetEnemyName(const FText& InEnemyName)
+	{
+		EnemyName = InEnemyName;
+	}
+	
 	//~ Start of ObsidianAttributesComponent
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
@@ -35,6 +40,12 @@ public:
 	/**
 	 * Getters for Gameplay Attributes.
 	 */
+
+	FText GetEnemyName() const
+	{
+		return EnemyName;
+	}
+	
 	
 	/** Getters for EnemySpecificAttribute Value and Attribute from UObsidianEnemyAttributeSet. */
 	float GetHitReactThreshold() const;
@@ -80,7 +91,9 @@ protected:
 	/**
 	 * 
 	 */
-
+private:
+	FText EnemyName = FText::FromString("Lorem");
+	
 private:
 	void BroadcastInitialValues() const;
 	

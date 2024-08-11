@@ -75,6 +75,9 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Combat")
 	TObjectPtr<AActor> CombatTarget;
 
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Obsidian|Defaults")
+	FText EnemyName = FText::FromString("Lorem");
+
 private:
 	void CreateHealthBarWidget() const;
 	

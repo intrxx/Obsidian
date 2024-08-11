@@ -109,6 +109,7 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	CreateHealthBarWidget();
 	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
+	EnemyAttributesComponent->SetEnemyName(EnemyName);
 	
 	if(const UObsidianPawnExtensionComponent* PawnExt = UObsidianPawnExtensionComponent::FindPawnExtComponent(this))
 	{

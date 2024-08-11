@@ -6,6 +6,7 @@
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
 #include "ObsidianOverlayRegularEnemyBar.generated.h"
 
+class UCommonTextBlock;
 class UObsidianEnemyAttributesComponent;
 
 /**
@@ -17,7 +18,11 @@ class OBSIDIAN_API UObsidianOverlayRegularEnemyBar : public UObsidianBasicHealth
 	GENERATED_BODY()
 
 protected:
-	virtual void HandleWidgetControllerSet() override;
-	void SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp) const;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> EnemyName_TextBlock;
 	
+protected:
+	virtual void HandleWidgetControllerSet() override;
+	
+	void SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp);
 };

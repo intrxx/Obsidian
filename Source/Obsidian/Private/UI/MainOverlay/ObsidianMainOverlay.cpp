@@ -157,11 +157,9 @@ void UObsidianMainOverlay::HandleOverlayBar(AActor* TargetActor, bool bDisplayBa
 		
 		RegularEnemyHealthBar->SetWidgetController(EnemyAttributesComponent);
 		OverlayBars_VerticalBox->AddChild(RegularEnemyHealthBar);
-		UE_LOG(LogTemp, Warning, TEXT("Should display bar? [true]"));
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Should display bar? [false]"));
 		RegularEnemyHealthBar->RemoveFromParent();
 		RegularEnemyHealthBar = nullptr;
 	}
