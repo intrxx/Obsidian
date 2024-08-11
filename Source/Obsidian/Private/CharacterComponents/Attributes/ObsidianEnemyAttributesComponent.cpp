@@ -24,6 +24,9 @@ void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbi
 		UE_LOG(LogObsidian, Error, TEXT("ObsidianEnemyAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Enemy Set set on the Ability System."), *GetNameSafe(Owner));
 		return;
 	}
+
+	StaggerMeterDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetStaggerMeterAttribute()).AddUObject(this, &ThisClass::StaggerMeterChanged);
+	MaxStaggerMeterDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxStaggerMeterAttribute()).AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
 	
 	BroadcastInitialValues();
 }
@@ -31,6 +34,9 @@ void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbi
 void UObsidianEnemyAttributesComponent::UninitializeFromAbilitySystem()
 {
 	ClearGameplayTags();
+
+	StaggerMeterDelegateHandle.Reset();
+	MaxStaggerMeterDelegateHandle.Reset();
 	
 	EnemyAttributeSet = nullptr;
 	
@@ -43,6 +49,8 @@ void UObsidianEnemyAttributesComponent::BroadcastInitialValues() const
 	MaxHealthChangedDelegate.Broadcast(GetMaxHealth());
 	EnergyShieldChangedDelegate.Broadcast(GetEnergyShield());
 	MaxEnergyShieldChangedDelegate.Broadcast(GetMaxEnergyShield());
+	StaggerMeterChangedDelegate.Broadcast(GetStaggerMeter());
+	MaxStaggerMeterChangedDelegate.Broadcast(GetMaxStaggerMeter());
 }
 
 void UObsidianEnemyAttributesComponent::ClearGameplayTags()
@@ -76,6 +84,20 @@ void UObsidianEnemyAttributesComponent::MaxEnergyShieldChanged(const FOnAttribut
 	const float MaxEnergyShield = Data.NewValue;
 
 	MaxEnergyShieldChangedDelegate.Broadcast(MaxEnergyShield);
+}
+
+void UObsidianEnemyAttributesComponent::StaggerMeterChanged(const FOnAttributeChangeData& Data)
+{
+	const float StaggerMeter = Data.NewValue;
+
+	StaggerMeterChangedDelegate.Broadcast(StaggerMeter);
+}
+
+void UObsidianEnemyAttributesComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data)
+{
+	const float MaxStaggerMeter = Data.NewValue;
+
+	MaxStaggerMeterChangedDelegate.Broadcast(MaxStaggerMeter);
 }
 
 float UObsidianEnemyAttributesComponent::GetHitReactThreshold() const

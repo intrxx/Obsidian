@@ -20,6 +20,12 @@ class OBSIDIAN_API UObsidianOverlayRegularEnemyBar : public UObsidianBasicHealth
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> EnemyName_TextBlock;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UProgressBar> StaggerMeter_ProgressBar;
+
+	float StaggerMeter = 0.0f;
+	float MaxStaggerMeter = 0.0f;
 	
 protected:
 	virtual void HandleWidgetControllerSet() override;

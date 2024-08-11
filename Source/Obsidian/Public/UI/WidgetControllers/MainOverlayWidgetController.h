@@ -122,14 +122,20 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
 	FOnAttributeValueChangedSignature OnEnergyShieldChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|MaxEnergyShield")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
 	FOnAttributeValueChangedSignature OnMaxEnergyShieldChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|SpecialResource")
 	FOnAttributeValueChangedSignature OnSpecialResourceChangedDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|MaxEnergyShield")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|SpecialResource")
 	FOnAttributeValueChangedSignature OnMaxSpecialResourceChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|StaggerMeter")
+	FOnAttributeValueChangedSignature OnStaggerMeterChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|StaggerMeter")
+	FOnAttributeValueChangedSignature OnMaxStaggerMeterChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
 	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
@@ -162,6 +168,8 @@ protected:
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void SpecialResourceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
+	void StaggerMeterChanged(const FOnAttributeChangeData& Data) const;
+	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const;
 
 	UFUNCTION()
 	void UpdateEnemyTargetForHealthBar(AActor* TargetActor, const bool bDisplayHealthBar);
@@ -181,6 +189,8 @@ protected:
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
+	FDelegateHandle StaggerMeterChangedDelegateHandle;
+	FDelegateHandle MaxStaggerMeterChangedDelegateHandle;
 
 private:
 	UFUNCTION()

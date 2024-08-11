@@ -59,6 +59,8 @@ public:
 	FOnEnemyAttributeValueChangedSignature MaxHealthChangedDelegate;
 	FOnEnemyAttributeValueChangedSignature EnergyShieldChangedDelegate;
 	FOnEnemyAttributeValueChangedSignature MaxEnergyShieldChangedDelegate;
+	FOnEnemyAttributeValueChangedSignature StaggerMeterChangedDelegate;
+	FOnEnemyAttributeValueChangedSignature MaxStaggerMeterChangedDelegate;
 
 protected:
 	virtual void ClearGameplayTags() override;
@@ -71,6 +73,8 @@ protected:
 	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data) override;
 	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data) override;
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) override;
+	virtual void StaggerMeterChanged(const FOnAttributeChangeData& Data);
+	virtual void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data);
 
 	/**
 	 * 
@@ -87,6 +91,9 @@ protected:
 	/**
 	 * Attribute change delegate handles.
 	 */
+
+	FDelegateHandle StaggerMeterDelegateHandle;
+	FDelegateHandle MaxStaggerMeterDelegateHandle;
 
 	/**
 	 * 

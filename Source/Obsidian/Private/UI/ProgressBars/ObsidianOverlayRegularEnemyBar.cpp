@@ -41,6 +41,18 @@ void UObsidianOverlayRegularEnemyBar::HandleWidgetControllerSet()
 	    SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 	});
 
+	EnemyAttributesComp->StaggerMeterChangedDelegate.AddLambda([this](const float NewValue)
+	{
+		StaggerMeter = NewValue;
+		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
+	});
+
+	EnemyAttributesComp->MaxStaggerMeterChangedDelegate.AddLambda([this](const float NewValue)
+	{
+		MaxStaggerMeter = NewValue;
+		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
+	});
+
 	SetInitialValues(EnemyAttributesComp);
 
 	if(EnemyName_TextBlock)
@@ -57,8 +69,11 @@ void UObsidianOverlayRegularEnemyBar::SetInitialValues(const UObsidianEnemyAttri
 		MaxHealth = EnemyAttributesComp->GetMaxHealth();
 		EnergyShield = EnemyAttributesComp->GetEnergyShield();
 		MaxEnergyShield = EnemyAttributesComp->GetMaxEnergyShield();
+		StaggerMeter = EnemyAttributesComp->GetStaggerMeter();
+		MaxStaggerMeter = EnemyAttributesComp->GetMaxStaggerMeter();
 		
 		SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 		SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
+		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
 	}
 }

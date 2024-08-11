@@ -77,6 +77,8 @@ void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystem
 	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
 	EnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
 	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
+	StaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetStaggerMeterAttribute()).AddUObject(this, &ThisClass::StaggerMeterChanged);
+	MaxStaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxStaggerMeterAttribute()).AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
 }
 
 void UMainOverlayWidgetController::SetInitialAttributeValues() const
@@ -129,6 +131,16 @@ void UMainOverlayWidgetController::SpecialResourceChanged(const FOnAttributeChan
 void UMainOverlayWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxSpecialResourceChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::StaggerMeterChanged(const FOnAttributeChangeData& Data) const
+{
+	OnStaggerMeterChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxStaggerMeterChangedDelegate.Broadcast(Data.NewValue);
 }
 
 void UMainOverlayWidgetController::UpdateEnemyTargetForHealthBar(AActor* TargetActor, const bool bDisplayHealthBar)
