@@ -6,7 +6,6 @@
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
-#include "ObsidianTypes/UserIterface/ObsidianDamageTextProps.h"
 
 AObsidianPlayerController::AObsidianPlayerController()
 {

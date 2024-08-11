@@ -9,6 +9,10 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class USizeBox;
+class UObsidianBasicHealthBar;
+class UObsidianOverlayRegularEnemyBar;
+class UVerticalBox;
 class UOverlay;
 class UObsidianOverlayGameTabsMenu;
 class UWrapBox;
@@ -38,12 +42,6 @@ public:
 	UPROPERTY(meta=(BindWidget), BlueprintReadWrite, Category = "Obisidian|MainOverlay")
 	TObjectPtr<UWrapBox> DeBuffsEffectInfo_WrapBox;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
-	TSubclassOf<UObsidianCharacterStatus> CharacterStatusClass;
-
-	UPROPERTY()
-	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
-
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
@@ -52,6 +50,9 @@ protected:
 	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
 
 	virtual void HandleWidgetControllerSet() override;
+
+	UFUNCTION()
+	void HandleOverlayBar(AActor* TargetActor, bool bDisplayBar);
 
 protected:
 	UPROPERTY()
@@ -63,8 +64,26 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> CharacterStatus_Overlay;
 
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UVerticalBox> OverlayBars_VerticalBox;
+
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay|HealthBars")
+	TSubclassOf<UObsidianOverlayRegularEnemyBar> RegularEnemyHealthBarClass;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianOverlayRegularEnemyBar> RegularEnemyHealthBar;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay|HealthBars")
+	TSubclassOf<UObsidianBasicHealthBar> BossEnemyHealthBarClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
+	TSubclassOf<UObsidianCharacterStatus> CharacterStatusClass;
+
+	UPROPERTY()
+	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
 
 private:
 	UPROPERTY()

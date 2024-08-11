@@ -2,7 +2,11 @@
 
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
+
+#include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Components/Overlay.h"
+#include "Components/SizeBox.h"
+#include "Components/VerticalBox.h"
 #include "Components/WrapBox.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
@@ -13,6 +17,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
+#include "UI/ProgressBars/ObsidianOverlayRegularEnemyBar.h"
 
 void UObsidianMainOverlay::NativeConstruct()
 {
@@ -137,6 +142,31 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 	MainOverlayWidgetController = CastChecked<UMainOverlayWidgetController>(WidgetController);
 
 	MainOverlayWidgetController->OnAuraWidgetDestructionInfoReceivedDelegate.BindDynamic(this, &ThisClass::DestroyAuraInfoWidget);
+
+	MainOverlayWidgetController->OnUpdateEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleOverlayBar);
+}
+
+void UObsidianMainOverlay::HandleOverlayBar(AActor* TargetActor, bool bDisplayBar)
+{
+	if(bDisplayBar)
+	{
+		RegularEnemyHealthBar = CreateWidget<UObsidianOverlayRegularEnemyBar>(OwningPlayerController, RegularEnemyHealthBarClass);
+		
+		UObsidianEnemyAttributesComponent* EnemyAttributesComponent = UObsidianEnemyAttributesComponent::FindAttributesComponent(TargetActor);
+		check(EnemyAttributesComponent);
+		
+		RegularEnemyHealthBar->SetWidgetController(EnemyAttributesComponent);
+		OverlayBars_VerticalBox->AddChild(RegularEnemyHealthBar);
+		UE_LOG(LogTemp, Warning, TEXT("Should display bar? [true]"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Should display bar? [false]"));
+		RegularEnemyHealthBar->RemoveFromParent();
+		RegularEnemyHealthBar = nullptr;
+	}
+
+	
 }
 
 void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy)
