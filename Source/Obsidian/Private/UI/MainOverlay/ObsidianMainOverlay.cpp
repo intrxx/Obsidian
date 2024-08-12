@@ -122,6 +122,8 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
 		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
 
+		
+
 		switch(Row.EffectClassification)
 		{
 		case EObsidianUIEffectClassification::EUEC_Buff:

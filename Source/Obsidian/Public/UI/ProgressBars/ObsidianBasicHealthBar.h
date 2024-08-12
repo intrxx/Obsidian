@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetBase.h"
+#include "ObsidianProgressBarBase.h"
 #include "ObsidianBasicHealthBar.generated.h"
 
 class UVerticalBox;
@@ -15,7 +15,7 @@ class UProgressBar;
  * Basic Health Bar meant to be used by regular enemies
  */
 UCLASS()
-class OBSIDIAN_API UObsidianBasicHealthBar : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianBasicHealthBar : public UObsidianProgressBarBase
 {
 	GENERATED_BODY()
 

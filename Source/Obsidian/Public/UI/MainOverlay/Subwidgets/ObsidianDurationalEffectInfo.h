@@ -6,7 +6,10 @@
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
 #include "ObsidianDurationalEffectInfo.generated.h"
 
+class UObsidianDurationalEffectInfo;
 class UCommonTextStyle;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnDurationalInfoWidgetTerminated, UObsidianDurationalEffectInfo* /** Durational Info Widget */);
 
 /**
  * 
@@ -23,6 +26,8 @@ public:
 public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Obsidian|EffectInfo")
 	TObjectPtr<UCommonTextBlock> EffectTimer_TextBlock;
+
+	FOnDurationalInfoWidgetTerminated OnDurationalInfoWidgetTerminatedDelegate;
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")

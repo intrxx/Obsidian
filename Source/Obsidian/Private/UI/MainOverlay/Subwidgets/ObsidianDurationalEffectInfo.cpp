@@ -32,6 +32,8 @@ void UObsidianDurationalEffectInfo::TimerCountDown()
 			}
 			OnEffectUnHovered();
 			RemoveFromParent();
+
+			OnDurationalInfoWidgetTerminatedDelegate.Broadcast(this);
 		}
 	}
 }

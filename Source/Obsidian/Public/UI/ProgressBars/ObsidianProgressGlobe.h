@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetBase.h"
+#include "ObsidianProgressBarBase.h"
 #include "Styling/SlateBrush.h"
 #include "Layout/Margin.h"
 #include "ObsidianProgressGlobe.generated.h"
@@ -15,11 +15,12 @@ class UCommonTextBlock;
 class UImage;
 class UOverlay;
 class USizeBox;
+
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianProgressGlobe : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianProgressGlobe : public UObsidianProgressBarBase
 {
 	GENERATED_BODY()
 
@@ -29,6 +30,12 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
 	void SetSecondAttributeName(const FText SecondAttributeNameToSet);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
+	void SetProgressGlobeStyle(const FSlateBrush ProgressGlobeFillImage);
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
+	void ResetStyle();
 	
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
