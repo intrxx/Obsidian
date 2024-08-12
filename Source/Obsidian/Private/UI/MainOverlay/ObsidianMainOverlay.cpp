@@ -76,7 +76,7 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 	StackingInfoWidget->InitDurationalStackingEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration, StackingData);
 
 	FSlateBrush FillImage;
-	if(HealthProgressGlobe->GetEffectFillImageForTag(FillImage, Row.EffectTag))
+	if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
 	{
 		HealthProgressGlobe->SetProgressGlobeStyle(FillImage);
 	}
@@ -131,7 +131,7 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
 
 		FSlateBrush FillImage;
-		if(HealthProgressGlobe->GetEffectFillImageForTag(FillImage, Row.EffectTag))
+		if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
 		{
 			HealthProgressGlobe->SetProgressGlobeStyle(FillImage);
 

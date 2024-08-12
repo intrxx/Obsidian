@@ -31,8 +31,9 @@ class OBSIDIAN_API UObsidianProgressBarBase : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
+	/** Gets the Fill Image for specified effect tag on a particular Progress Bar. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressBars")
-	bool GetEffectFillImageForTag(FSlateBrush& FillImage, const FGameplayTag& EffectTag);
+	bool GetEffectFillImageForTag(FSlateBrush& OutFillImage, const FGameplayTag& EffectTag);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup|Globe")
