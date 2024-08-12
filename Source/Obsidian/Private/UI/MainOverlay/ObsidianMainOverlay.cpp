@@ -18,6 +18,7 @@
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/ObsidianOverlayRegularEnemyBar.h"
+#include "UI/ProgressBars/ObsidianProgressGlobe.h"
 
 void UObsidianMainOverlay::NativeConstruct()
 {
@@ -73,6 +74,13 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 	StackingInfoWidgetsMap.Add(Row.EffectTag, StackingInfoWidget);
 	
 	StackingInfoWidget->InitDurationalStackingEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration, StackingData);
+
+	FSlateBrush FillImage;
+	if(HealthProgressGlobe->GetEffectFillImageForTag(FillImage, Row.EffectTag))
+	{
+		HealthProgressGlobe->SetProgressGlobeStyle(FillImage);
+	}
+	
 	StackingInfoWidget->OnStackingInfoWidgetTerminatedDelegate.AddUObject(this, &ThisClass::DestroyStackingInfoWidget);
 
 	switch(Row.EffectClassification)
@@ -122,7 +130,16 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
 		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
 
-		
+		FSlateBrush FillImage;
+		if(HealthProgressGlobe->GetEffectFillImageForTag(FillImage, Row.EffectTag))
+		{
+			HealthProgressGlobe->SetProgressGlobeStyle(FillImage);
+
+			DurationalInfoWidget->OnDurationalInfoWidgetTerminatedDelegate.AddLambda([this](UObsidianDurationalEffectInfo* WidgetToDestroy)
+			{
+				HealthProgressGlobe->ResetStyle();
+			});
+		}
 
 		switch(Row.EffectClassification)
 		{
@@ -175,6 +192,8 @@ void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectI
 	{
 		StackingInfoWidgetsMap.Remove(*Key);
 	}
+
+	HealthProgressGlobe->ResetStyle();
 }
 
 void UObsidianMainOverlay::DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag)

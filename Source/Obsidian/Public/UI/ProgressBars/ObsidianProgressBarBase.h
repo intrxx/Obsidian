@@ -32,7 +32,7 @@ class OBSIDIAN_API UObsidianProgressBarBase : public UObsidianWidgetBase
 	
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressBars")
-	FSlateBrush GetEffectFillImageForTag(const FGameplayTag& EffectTag, bool bLogNotFound = true);
+	bool GetEffectFillImageForTag(FSlateBrush& FillImage, const FGameplayTag& EffectTag);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup|Globe")

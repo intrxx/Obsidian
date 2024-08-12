@@ -9,6 +9,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianProgressGlobe;
 class USizeBox;
 class UObsidianBasicHealthBar;
 class UObsidianOverlayRegularEnemyBar;
@@ -55,6 +56,14 @@ protected:
 	void HandleOverlayBar(AActor* TargetActor, bool bDisplayBar);
 
 protected:
+	// This should be set in blueprint during initialization ;/ //
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|MainOverlay")
+	TObjectPtr<UObsidianProgressGlobe> HealthProgressGlobe;
+
+	// This should be set in blueprint during initialization ;/ //
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|MainOverlay")
+	TObjectPtr<UObsidianProgressGlobe> ManaProgressGlobe;
+	
 	UPROPERTY()
 	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
 	
