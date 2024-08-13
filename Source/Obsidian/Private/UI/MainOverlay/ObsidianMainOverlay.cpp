@@ -218,6 +218,8 @@ void UObsidianMainOverlay::HandleEffectFillImageRemoval(const FGameplayTag& Effe
 		{
 			HealthProgressGlobe->ResetStyle();
 		}
+		
+		return;
 	}
 	HealthProgressGlobe->ResetStyle();
 }
