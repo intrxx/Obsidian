@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "ObsidianTypes/UserIterface/ObsidianUIData.h"
 #include "UI/ObsidianWidgetBase.h"
+#include "UI/ProgressBars/ObsidianProgressBarBase.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
@@ -98,9 +99,13 @@ private:
 	UPROPERTY()
 	TObjectPtr<UObsidianCharacterStatus> CharacterStatus;
 	
+	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
+	
 private:
 	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
 
 	UFUNCTION()
 	void DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag);
+
+	void HandleEffectFillImageRemoval(const FGameplayTag& EffectTag);
 };

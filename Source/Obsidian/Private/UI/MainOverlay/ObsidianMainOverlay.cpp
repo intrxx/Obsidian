@@ -2,10 +2,8 @@
 
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
-
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Components/Overlay.h"
-#include "Components/SizeBox.h"
 #include "Components/VerticalBox.h"
 #include "Components/WrapBox.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
@@ -75,13 +73,18 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 	
 	StackingInfoWidget->InitDurationalStackingEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration, StackingData);
 
-	FSlateBrush FillImage;
-	if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
+	FObsidianProgressBarEffectFillImage FillImage;
+	if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
 	{
-		HealthProgressGlobe->SetProgressGlobeStyle(FillImage);
+		HealthProgressGlobe->SetProgressGlobeStyle(FillImage.ProgressBarFillImage);
+		EffectFillImages.Add(FillImage);
 	}
 	
-	StackingInfoWidget->OnStackingInfoWidgetTerminatedDelegate.AddUObject(this, &ThisClass::DestroyStackingInfoWidget);
+	StackingInfoWidget->OnStackingInfoWidgetTerminatedDelegate.AddLambda([Row, this](UOStackingDurationalEffectInfo* WidgetToDestroy)
+	{
+		DestroyStackingInfoWidget(WidgetToDestroy);
+		HandleEffectFillImageRemoval(Row.EffectTag);
+	});
 
 	switch(Row.EffectClassification)
 	{
@@ -130,14 +133,15 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
 		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
 
-		FSlateBrush FillImage;
+		FObsidianProgressBarEffectFillImage FillImage;
 		if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
 		{
-			HealthProgressGlobe->SetProgressGlobeStyle(FillImage);
-
-			DurationalInfoWidget->OnDurationalInfoWidgetTerminatedDelegate.AddLambda([this](UObsidianDurationalEffectInfo* WidgetToDestroy)
+			HealthProgressGlobe->SetProgressGlobeStyle(FillImage.ProgressBarFillImage);
+			EffectFillImages.Add(FillImage);
+			
+			DurationalInfoWidget->OnDurationalInfoWidgetTerminatedDelegate.AddLambda([Row, this](UObsidianDurationalEffectInfo* WidgetToDestroy)
 			{
-				HealthProgressGlobe->ResetStyle();
+				HandleEffectFillImageRemoval(Row.EffectTag);
 			});
 		}
 
@@ -192,7 +196,29 @@ void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectI
 	{
 		StackingInfoWidgetsMap.Remove(*Key);
 	}
+}
 
+void UObsidianMainOverlay::HandleEffectFillImageRemoval(const FGameplayTag& EffectTag)
+{
+	if(!EffectFillImages.IsEmpty())
+	{
+		for(int i = 0; i < EffectFillImages.Num(); i++)
+		{
+			if(EffectFillImages[i].EffectTag == EffectTag)
+			{
+				EffectFillImages.RemoveAt(i);
+			}
+		}
+
+		if(EffectFillImages.Num() != 0)
+		{
+			HealthProgressGlobe->SetProgressGlobeStyle(EffectFillImages.Last().ProgressBarFillImage);
+		}
+		else
+		{
+			HealthProgressGlobe->ResetStyle();
+		}
+	}
 	HealthProgressGlobe->ResetStyle();
 }
 
@@ -211,5 +237,6 @@ void UObsidianMainOverlay::DestroyAuraInfoWidget(const FGameplayTag WidgetToDest
 		}
 	}
 }
+
 
 
