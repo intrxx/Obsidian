@@ -48,6 +48,13 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, SpellSuppressionChance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, SpellSuppressionMagnitude);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AilmentThreshold);
+
+	/**
+	 * Damage Taken Multipliers
+	 */
+	
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier);
 	
 	/**
 	 * Resistances
@@ -62,6 +69,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxLightningResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChaosResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxChaosResistance);
+
+	/**
+	 * Status Effects
+	 */
+
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedChanceToShock);
 	
 	/**
 	 * Damage scaling attributes
@@ -148,6 +161,15 @@ protected:
 	void OnRep_SpellSuppressionChance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_SpellSuppressionMagnitude(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_AilmentThreshold(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Damage Taken Multipliers
+	 */
+	
+	UFUNCTION()
+	void OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Resistances
@@ -171,6 +193,13 @@ protected:
 	void OnRep_ChaosResistance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue);
+
+	/**
+	 * Status Effects
+	 */
+
+	UFUNCTION()
+	void OnRep_IncreasedChanceToShock(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Damage scaling attributes
@@ -292,6 +321,18 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpellSuppressionMagnitude, Category = "Obsidian|CAttributes|SpellSuppressionMagnitude", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SpellSuppressionMagnitude;
 
+	/** The current Ailment Threshold. In most cases this will be equal to current Max Health, on enemies with higher Max Health this will be scaled down to ensure that the Player can inflict ailments. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AilmentThreshold, Category = "Obsidian|CAttributes|AilmentThreshold", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AilmentThreshold;
+
+	/**
+	 * Damage Taken Multipliers
+	 */
+
+	/** The current Shock Damage Taken Multiplier attribute. Shock increases damage taken [5 - 50%] from all sources, only lightning damage can shock. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ShockDamageTakenMultiplier, Category = "Obsidian|CAttributes|ShockDamageTakenMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ShockDamageTakenMultiplier;
+
 	/**
 	 * Resistances
 	 */
@@ -337,6 +378,14 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|ChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxChaosResistance;
 
+	/**
+	 * Status Effects
+	 */
+
+	/** The current Increased Chance To Shock attribute. Increases owner's chance to inflict shock on target. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_IncreasedChanceToShock, Category = "Obsidian|CAttributes|IncreasedChanceToShock", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncreasedChanceToShock;
+	
 	/**
 	 * Damage related attributes
 	 */

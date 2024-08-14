@@ -36,6 +36,12 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	// Defence Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Armor, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Evasion, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, SpellSuppressionChance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, SpellSuppressionMagnitude, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AilmentThreshold, COND_None, REPNOTIFY_Always);
+	
+	// Damage Taken
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier, COND_None, REPNOTIFY_Always);
 
 	// Resistances
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
@@ -46,6 +52,9 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxLightningResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChaosResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, COND_None, REPNOTIFY_Always);
+
+	// Status Effects
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, IncreasedChanceToShock, COND_None, REPNOTIFY_Always);
 
 	// Damage Scaling Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Accuracy, COND_None, REPNOTIFY_Always);
@@ -256,6 +265,16 @@ void UObsidianCommonAttributeSet::OnRep_SpellSuppressionMagnitude(const FGamepla
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, SpellSuppressionMagnitude, OldValue);
 }
 
+void UObsidianCommonAttributeSet::OnRep_AilmentThreshold(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AilmentThreshold, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier, OldValue);
+}
+
 void UObsidianCommonAttributeSet::OnRep_AllElementalResistances(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalResistances, OldValue);
@@ -299,6 +318,11 @@ void UObsidianCommonAttributeSet::OnRep_ChaosResistance(const FGameplayAttribute
 void UObsidianCommonAttributeSet::OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_IncreasedChanceToShock(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedChanceToShock, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_Accuracy(const FGameplayAttributeData& OldValue)

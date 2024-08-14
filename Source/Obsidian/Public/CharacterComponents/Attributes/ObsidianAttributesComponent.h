@@ -126,6 +126,14 @@ public:
 	float GetSpellSuppressionMagnitude() const;
 	FGameplayAttribute GetSpellSuppressionMagnitudeAttribute() const;
 
+	/** Getters for Ailment Threshold Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetAilmentThreshold() const;
+	FGameplayAttribute GetAilmentThresholdAttribute() const;
+
+	/** Getters for Shock Damage Taken Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetShockDamageTakenMultiplier() const;
+	FGameplayAttribute GetShockDamageTakenMultiplierAttribute() const;
+
 	/** Getters for All Elemental Resistances Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetAllElementalResistances() const;
 	FGameplayAttribute GetAllElementalResistancesAttribute() const;
@@ -161,6 +169,10 @@ public:
 	/** Getters for Max Chaos Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetMaxChaosResistance() const;
 	FGameplayAttribute GetMaxChaosResistanceAttribute() const;
+
+	/** Getters for Increased Chance To Shock Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetIncreasedChanceToShock() const;
+	FGameplayAttribute GetIncreasedChanceToShockAttribute() const;
 
 	/** Getters for Critical Strike Chance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetAccuracy() const;
@@ -290,5 +302,3 @@ protected:
 	UPROPERTY(ReplicatedUsing = OnRep_DeathState)
 	EObsidianDeathState DeathState;
 };
-
-
