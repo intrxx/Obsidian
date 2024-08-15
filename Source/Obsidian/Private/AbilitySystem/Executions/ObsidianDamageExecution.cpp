@@ -5,6 +5,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
+#include "Obsidian/Obsidian.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 struct FObsidianDamageStatics
@@ -27,6 +28,8 @@ struct FObsidianDamageStatics
 	FGameplayEffectAttributeCaptureDefinition ColdResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition LightningResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition ChaosResistanceDef;
+
+	FGameplayTagContainer UIDataTags;
 
 	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> DamageTypesToResistancesDefMap;
 
@@ -55,6 +58,9 @@ struct FObsidianDamageStatics
 		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Cold, ColdResistanceDef);
 		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Lightning, LightningResistanceDef);
 		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Chaos, ChaosResistanceDef);
+		
+		UIDataTags.AddTag(ObsidianGameplayTags::Data_EffectUIInfo);
+		UIDataTags.AddTag(ObsidianGameplayTags::UI_EffectData_Effect_Shock);
 	}
 };
 
@@ -70,6 +76,7 @@ UObsidianDamageExecution::UObsidianDamageExecution()
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AccuracyDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeChanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ChanceToShockDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().IncreasedEffectOfShockDef);
 	
 	// Target
@@ -95,7 +102,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	checkf(ObsidianEffectContext, TEXT("Obsidian Gameplay Effect Context is invalid in Obsidian Damage Execution"));
 	
 	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
-	const UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
+	UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
 
 	const AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
 	const AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
@@ -192,19 +199,37 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 				{
 					float EnemyAilmentThreshold = 0.0f;
 					ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AilmentThresholdDef, EvaluationParameters, EnemyAilmentThreshold);
-					EnemyAilmentThreshold = FMath::Max<float>(EnemyAilmentThreshold, 0.0f);
+					EnemyAilmentThreshold = FMath::Max<float>(EnemyAilmentThreshold, 1.0f);
 
 					float IncreasedEffectOfShock = 0.0f;
 					ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().IncreasedEffectOfShockDef, EvaluationParameters, IncreasedEffectOfShock);
 					IncreasedEffectOfShock = FMath::Max<float>(IncreasedEffectOfShock, 0.0f);
 
-					float ShockEffect = 0.5f * FMath::Pow((LightningDamage / EnemyAilmentThreshold), 0.4f) * (1 + IncreasedEffectOfShock);
-
+					float ShockEffect = (0.5f * FMath::Pow((LightningDamage / EnemyAilmentThreshold), 0.4f) * (1 + IncreasedEffectOfShock)) * 100.0f;
+					
 					if(ShockEffect > 5.0f)
 					{
 						ShockEffect = FMath::Min(ShockEffect, 50.0f);
+						
+						float ShockDuration = ((LightningDamage / ((EnemyAilmentThreshold * 2.0f) / 100.0f)) * 300.0f) / 1000.0f;
+						ShockDuration = FMath::Clamp(ShockDuration, ShockDuration, ((EnemyAilmentThreshold * 2.0f) / 0.33f));
 
-						//TODO Apply GE with shock
+						UGameplayEffect* GEShock = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Shock")));
+						GEShock->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+						GEShock->DurationMagnitude = FGameplayEffectModifierMagnitude(ShockDuration);
+						GEShock->Modifiers.SetNum(1);
+
+						FGameplayModifierInfo& InfoShockDamageMultiplier = GEShock->Modifiers[0];
+						InfoShockDamageMultiplier.Attribute = UObsidianCommonAttributeSet::GetShockDamageTakenMultiplierAttribute();
+						InfoShockDamageMultiplier.ModifierMagnitude = FGameplayEffectModifierMagnitude(1 + (ShockEffect / 100.0f));
+						InfoShockDamageMultiplier.ModifierOp = EGameplayModOp::Override;
+
+						FGameplayEffectContextHandle Context = SourceASC->MakeEffectContext();
+						FGameplayEffectSpecHandle SpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(GEShock, Context, 1.0f));
+						
+						SpecHandle.Data.Get()->AppendDynamicAssetTags(ObsidianDamageStatics().UIDataTags);
+						
+						TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get(), TargetASC->GetPredictionKeyForNewAction());
 					}
 				}
 				// ~ End of Shock calculation
