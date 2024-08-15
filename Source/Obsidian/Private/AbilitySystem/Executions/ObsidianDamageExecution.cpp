@@ -13,12 +13,16 @@ struct FObsidianDamageStatics
 	FGameplayEffectAttributeCaptureDefinition AccuracyDef;
 	FGameplayEffectAttributeCaptureDefinition CriticalStrikeChanceDef;
 	FGameplayEffectAttributeCaptureDefinition CriticalStrikeDamageMultiplierDef;
+	FGameplayEffectAttributeCaptureDefinition ChanceToShockDef;
+	FGameplayEffectAttributeCaptureDefinition IncreasedEffectOfShockDef;
 	
 	// Target
 	FGameplayEffectAttributeCaptureDefinition EvasionDef;
 	FGameplayEffectAttributeCaptureDefinition ArmorDef;
 	FGameplayEffectAttributeCaptureDefinition SpellSuppressionChanceDef;
 	FGameplayEffectAttributeCaptureDefinition SpellSuppressionMagnitudeDef;
+	FGameplayEffectAttributeCaptureDefinition AilmentThresholdDef;
+	
 	FGameplayEffectAttributeCaptureDefinition FireResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition ColdResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition LightningResistanceDef;
@@ -32,13 +36,16 @@ struct FObsidianDamageStatics
 		AccuracyDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAccuracyAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
 		CriticalStrikeChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetCriticalStrikeChanceAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
 		CriticalStrikeDamageMultiplierDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetCriticalStrikeDamageMultiplierAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
+		ChanceToShockDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetChanceToShockAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
+		IncreasedEffectOfShockDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetIncreasedEffectOfShockAttribute(), EGameplayEffectAttributeCaptureSource::Source, false);
 		
 		// Target
 		EvasionDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetEvasionAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		ArmorDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetArmorAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		SpellSuppressionChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionChanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		SpellSuppressionMagnitudeDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionMagnitudeAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
-
+		AilmentThresholdDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAilmentThresholdAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
+		
 		FireResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetFireResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		ColdResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetColdResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		LightningResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetLightningResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -63,12 +70,14 @@ UObsidianDamageExecution::UObsidianDamageExecution()
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AccuracyDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeChanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().IncreasedEffectOfShockDef);
 	
 	// Target
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().EvasionDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ArmorDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionChanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionMagnitudeDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AilmentThresholdDef);
 
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().FireResistanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ColdResistanceDef);
@@ -127,7 +136,8 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		return;
 	}
 	// ~ End of Evasion Calculation Hit
-	
+
+	// ~ Start of Capturing Damage
 	float FullDamage = 0.0f;
 
 	//TODO This could be refactored to somehow get the actual DamageTypes of this ability that was used. 
@@ -135,17 +145,17 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	{
 		if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Physical)
 		{
-			float PhysicalDamageType = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
-			if(PhysicalDamageType > 0.0f)
+			float PhysicalDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
+			if(PhysicalDamage > 0.0f)
 			{
 				// ~ Start of Armor Raw Physical Damage Mitigation
 				float Armor = 0.0f;
 				ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
 				Armor = FMath::Max<float>(Armor, 0.0f);
 	
-				const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * PhysicalDamageType);
-				PhysicalDamageType -= RawPhysicalDamageMitigation;
-				FullDamage += PhysicalDamageType;
+				const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * PhysicalDamage);
+				PhysicalDamage -= RawPhysicalDamageMitigation;
+				FullDamage += PhysicalDamage;
 	
 #if !UE_BUILD_SHIPPING
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
@@ -154,7 +164,53 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 				// ~ End of Armor Raw Physical Damage Mitigation
 			}
 		}
-		else // Capturing the rest of damage types and mitigate it by associated resistance
+		else if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Lightning)
+		{
+			float LightningDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
+			if(LightningDamage > 0.0f)
+			{
+				// ~ Start of Lightning Damage Mitigation
+				float LightningResistance = 0.0f;
+				ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().LightningResistanceDef, EvaluationParameters, LightningResistance);
+				
+				LightningDamage *= (100.0f - LightningResistance) / 100.0f;
+				FullDamage += LightningDamage;
+	
+#if !UE_BUILD_SHIPPING
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
+					FString::Printf(TEXT("Reducing damage by lightning resistance. Damage reduced: [%f]. New damage: [%f]."),
+						LightningDamage, FullDamage));
+#endif
+				// ~ End of Lightning Damage Mitigation
+
+				// ~ Start of Shock calculation
+				float ChanceToShock = 0.0f;
+				ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ChanceToShockDef, EvaluationParameters, ChanceToShock);
+				ChanceToShock = FMath::Max<float>(ChanceToShock, 0.0f);
+				
+				if(ChanceToShock >= FMath::RandRange(1.0f, 100.0f))
+				{
+					float EnemyAilmentThreshold = 0.0f;
+					ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AilmentThresholdDef, EvaluationParameters, EnemyAilmentThreshold);
+					EnemyAilmentThreshold = FMath::Max<float>(EnemyAilmentThreshold, 0.0f);
+
+					float IncreasedEffectOfShock = 0.0f;
+					ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().IncreasedEffectOfShockDef, EvaluationParameters, IncreasedEffectOfShock);
+					IncreasedEffectOfShock = FMath::Max<float>(IncreasedEffectOfShock, 0.0f);
+
+					float ShockEffect = 0.5f * FMath::Pow((LightningDamage / EnemyAilmentThreshold), 0.4f) * (1 + IncreasedEffectOfShock);
+
+					if(ShockEffect > 5.0f)
+					{
+						ShockEffect = FMath::Min(ShockEffect, 50.0f);
+
+						//TODO Apply GE with shock
+					}
+				}
+				// ~ End of Shock calculation
+			}
+		}
+		else // Capturing the rest of damage types and mitigate it by associated resistance - this will probably be captured one by one in the end
 		{
 			const FGameplayEffectAttributeCaptureDefinition ResistanceCaptureDef = ObsidianDamageStatics().DamageTypesToResistancesDefMap[DamageType];
 			
@@ -179,6 +235,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 			}
 		}
 	}
+	// ~ End of Capturing Damage
 	
 	float ModifiedDamage = FullDamage;
 

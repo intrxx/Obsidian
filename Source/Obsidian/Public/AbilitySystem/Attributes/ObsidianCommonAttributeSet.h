@@ -74,7 +74,8 @@ public:
 	 * Status Effects
 	 */
 
-	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedChanceToShock);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedEffectOfShock);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChanceToShock);
 	
 	/**
 	 * Damage scaling attributes
@@ -199,7 +200,10 @@ protected:
 	 */
 
 	UFUNCTION()
-	void OnRep_IncreasedChanceToShock(const FGameplayAttributeData& OldValue);
+	void OnRep_IncreasedEffectOfShock(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_ChanceToShock(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Damage scaling attributes
@@ -255,7 +259,7 @@ protected:
 protected:
 	UPROPERTY()
 	FObsidianEffectProperties EffectProps = {};
-	
+
 private:
 	bool bOutOfHealth;
 	
@@ -330,7 +334,7 @@ private:
 	 */
 
 	/** The current Shock Damage Taken Multiplier attribute. Shock increases damage taken [5 - 50%] from all sources, only lightning damage can shock. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ShockDamageTakenMultiplier, Category = "Obsidian|CAttributes|ShockDamageTakenMultiplier", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ShockDamageTakenMultiplier, Category = "Obsidian|CAttributes|Shock", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ShockDamageTakenMultiplier;
 
 	/**
@@ -382,9 +386,13 @@ private:
 	 * Status Effects
 	 */
 
-	/** The current Increased Chance To Shock attribute. Increases owner's chance to inflict shock on target. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_IncreasedChanceToShock, Category = "Obsidian|CAttributes|IncreasedChanceToShock", Meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData IncreasedChanceToShock;
+	/** The current Increased Effect Of Shock attribute. Increases owner's Shock Effect */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_IncreasedEffectOfShock, Category = "Obsidian|CAttributes|Shock", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncreasedEffectOfShock;
+
+	/** The current Chance To Shock. Increases owner's Chance To Shock*/
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChanceToShock, Category = "Obsidian|CAttributes|Shock", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ChanceToShock;
 	
 	/**
 	 * Damage related attributes

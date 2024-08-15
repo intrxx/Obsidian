@@ -54,7 +54,8 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, COND_None, REPNOTIFY_Always);
 
 	// Status Effects
-	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, IncreasedChanceToShock, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, IncreasedEffectOfShock, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChanceToShock, COND_None, REPNOTIFY_Always);
 
 	// Damage Scaling Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Accuracy, COND_None, REPNOTIFY_Always);
@@ -320,9 +321,14 @@ void UObsidianCommonAttributeSet::OnRep_MaxChaosResistance(const FGameplayAttrib
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, OldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_IncreasedChanceToShock(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_IncreasedEffectOfShock(const FGameplayAttributeData& OldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedChanceToShock, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEffectOfShock, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_ChanceToShock(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChanceToShock, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_Accuracy(const FGameplayAttributeData& OldValue)
@@ -414,5 +420,6 @@ void UObsidianCommonAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeDa
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MovementSpeed, OldValue);
 }
+
 
 

@@ -459,15 +459,24 @@ FGameplayAttribute UObsidianAttributesComponent::GetMaxChaosResistanceAttribute(
 	return (CommonAttributeSet ? CommonAttributeSet->GetMaxChaosResistanceAttribute() : nullptr);
 }
 
-
-float UObsidianAttributesComponent::GetIncreasedChanceToShock() const
+float UObsidianAttributesComponent::GetChanceToShock() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetIncreasedChanceToShock() : 0.0f);
+	return (CommonAttributeSet ? CommonAttributeSet->GetChanceToShock() : 0.0f);
 }
 
-FGameplayAttribute UObsidianAttributesComponent::GetIncreasedChanceToShockAttribute() const
+FGameplayAttribute UObsidianAttributesComponent::GetChanceToShockAttribute() const
 {
-	return (CommonAttributeSet ? CommonAttributeSet->GetIncreasedChanceToShockAttribute() : nullptr);
+	return (CommonAttributeSet ? CommonAttributeSet->GetChanceToShockAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetIncreasedEffectOfShock() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetIncreasedEffectOfShock() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetIncreasedEffectOfShockAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetIncreasedEffectOfShockAttribute() : nullptr);
 }
 
 float UObsidianAttributesComponent::GetAccuracy() const

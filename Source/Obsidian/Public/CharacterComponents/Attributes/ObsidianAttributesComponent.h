@@ -170,9 +170,13 @@ public:
 	float GetMaxChaosResistance() const;
 	FGameplayAttribute GetMaxChaosResistanceAttribute() const;
 
-	/** Getters for Increased Chance To Shock Value and Attribute from UObsidianCommonAttributeSet. */
-	float GetIncreasedChanceToShock() const;
-	FGameplayAttribute GetIncreasedChanceToShockAttribute() const;
+	/** Getters for Chance To Shock Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetChanceToShock() const;
+	FGameplayAttribute GetChanceToShockAttribute() const;
+
+	/** Getters for Increased Effect Of Shock Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetIncreasedEffectOfShock() const;
+	FGameplayAttribute GetIncreasedEffectOfShockAttribute() const;
 
 	/** Getters for Critical Strike Chance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetAccuracy() const;
