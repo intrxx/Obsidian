@@ -144,15 +144,39 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	}
 	// ~ End of Evasion Calculation Hit
 
+	//TODO Only attempt to suppress spell damage - in other words see if the GA is a spell and not a Hit
+	// ~ Start of Suppression Spell Damage Calculation
+	float SpellSuppressionChance = 0.0f;
+	float SpellSuppressionMagnitude = 0.0f;
+	bool bShouldSuppressDamage = false;
+	
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
+	SpellSuppressionChance = FMath::Max<float>(SpellSuppressionChance, 0.0f);
+	
+	if(SpellSuppressionChance >= FMath::RandRange(1.0f, 100.0f))
+	{
+		ObsidianEffectContext->SetIsSuppressedSpell(true);
+		bShouldSuppressDamage = true;
+		
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
+		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);
+	}
+	// ~ End of Suppression Spell Damage Calculation
+
 	// ~ Start of Capturing Damage
 	float FullDamage = 0.0f;
-
+	float PhysicalDamage = 0.0f;
+	float LightningDamage = 0.0f;
+	float ColdDamage = 0.0f;
+	float FireDamage = 0.0f;
+	float ChaosDamage = 0.0f;
+	
 	//TODO This could be refactored to somehow get the actual DamageTypes of this ability that was used. 
 	for(const FGameplayTag DamageType : ObsidianGameplayTags::DamageTypes)
 	{
 		if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Physical)
 		{
-			float PhysicalDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
+			PhysicalDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
 			if(PhysicalDamage > 0.0f)
 			{
 				// ~ Start of Armor Raw Physical Damage Mitigation
@@ -171,90 +195,54 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 				// ~ End of Armor Raw Physical Damage Mitigation
 			}
 		}
-		else if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Lightning)
-		{
-			float LightningDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
-			if(LightningDamage > 0.0f)
-			{
-				// ~ Start of Lightning Damage Mitigation
-				float LightningResistance = 0.0f;
-				ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().LightningResistanceDef, EvaluationParameters, LightningResistance);
-				
-				LightningDamage *= (100.0f - LightningResistance) / 100.0f;
-				FullDamage += LightningDamage;
-	
-#if !UE_BUILD_SHIPPING
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-					FString::Printf(TEXT("Reducing damage by lightning resistance. Damage reduced: [%f]. New damage: [%f]."),
-						LightningDamage, FullDamage));
-#endif
-				// ~ End of Lightning Damage Mitigation
-
-				// ~ Start of Shock calculation
-				float ChanceToShock = 0.0f;
-				ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ChanceToShockDef, EvaluationParameters, ChanceToShock);
-				ChanceToShock = FMath::Max<float>(ChanceToShock, 0.0f);
-				
-				if(ChanceToShock >= FMath::RandRange(1.0f, 100.0f))
-				{
-					float EnemyAilmentThreshold = 0.0f;
-					ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AilmentThresholdDef, EvaluationParameters, EnemyAilmentThreshold);
-					EnemyAilmentThreshold = FMath::Max<float>(EnemyAilmentThreshold, 1.0f);
-
-					float IncreasedEffectOfShock = 0.0f;
-					ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().IncreasedEffectOfShockDef, EvaluationParameters, IncreasedEffectOfShock);
-					IncreasedEffectOfShock = FMath::Max<float>(IncreasedEffectOfShock, 0.0f);
-
-					float ShockEffect = (0.5f * FMath::Pow((LightningDamage / EnemyAilmentThreshold), 0.4f) * (1 + IncreasedEffectOfShock)) * 100.0f;
-					
-					if(ShockEffect > 5.0f)
-					{
-						ShockEffect = FMath::Min(ShockEffect, 50.0f);
-						
-						float ShockDuration = ((LightningDamage / ((EnemyAilmentThreshold * 2.0f) / 100.0f)) * 300.0f) / 1000.0f;
-						ShockDuration = FMath::Clamp(ShockDuration, ShockDuration, ((EnemyAilmentThreshold * 2.0f) / 0.33f));
-
-						UGameplayEffect* GEShock = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Shock")));
-						GEShock->DurationPolicy = EGameplayEffectDurationType::HasDuration;
-						GEShock->DurationMagnitude = FGameplayEffectModifierMagnitude(ShockDuration);
-						GEShock->Modifiers.SetNum(1);
-
-						FGameplayModifierInfo& InfoShockDamageMultiplier = GEShock->Modifiers[0];
-						InfoShockDamageMultiplier.Attribute = UObsidianCommonAttributeSet::GetShockDamageTakenMultiplierAttribute();
-						InfoShockDamageMultiplier.ModifierMagnitude = FGameplayEffectModifierMagnitude(1 + (ShockEffect / 100.0f));
-						InfoShockDamageMultiplier.ModifierOp = EGameplayModOp::Override;
-
-						FGameplayEffectContextHandle Context = SourceASC->MakeEffectContext();
-						FGameplayEffectSpecHandle SpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(GEShock, Context, 1.0f));
-						
-						SpecHandle.Data.Get()->AppendDynamicAssetTags(ObsidianDamageStatics().UIDataTags);
-						
-						TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get(), TargetASC->GetPredictionKeyForNewAction());
-					}
-				}
-				// ~ End of Shock calculation
-			}
-		}
-		else // Capturing the rest of damage types and mitigate it by associated resistance - this will probably be captured one by one in the end
+		else // Capturing the rest of damage types and mitigate it by associated resistance
 		{
 			const FGameplayEffectAttributeCaptureDefinition ResistanceCaptureDef = ObsidianDamageStatics().DamageTypesToResistancesDefMap[DamageType];
 			
-			float ResistanceMitigatedDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
-			if(ResistanceMitigatedDamage > 0.0f)
+			float ElementalDamage = Spec.GetSetByCallerMagnitude(DamageType, false, 0.0f);
+			if(ElementalDamage > 0.0f)
 			{
 				float Resistance = 0.0f;
 				ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ResistanceCaptureDef, EvaluationParameters, Resistance);
 				
-				ResistanceMitigatedDamage *= (100.0f - Resistance) / 100.0f;
+				ElementalDamage *= (100.0f - Resistance) / 100.0f;
 
-				FullDamage += ResistanceMitigatedDamage;
+				if(bShouldSuppressDamage)
+				{
+					const float SpellSuppressionMitigation = ElementalDamage * SpellSuppressionMagnitude / 100.0f;
+					ElementalDamage -= SpellSuppressionMitigation;
+
+#if !UE_BUILD_SHIPPING
+					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
+						FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: [%f]. New damage: [%f]."), SpellSuppressionMitigation, ElementalDamage));
+#endif
+				}
+				
+				FullDamage += ElementalDamage;
+				
+				if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Fire)
+				{
+					FireDamage = ElementalDamage;
+				}
+				else if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Cold)
+				{
+					ColdDamage = ElementalDamage;
+				}
+				else if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Lightning)
+				{
+					LightningDamage = ElementalDamage;
+				}
+				else if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Chaos)
+				{
+					ChaosDamage = ElementalDamage;
+				}
 
 #if !UE_BUILD_SHIPPING
 				if(Resistance > 0.0f)
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
 					FString::Printf(TEXT("Reducing damage by resistance [%s]. Damage reduced: [%f]. New damage: [%f]."),
-						*ResistanceCaptureDef.AttributeToCapture.AttributeName, ResistanceMitigatedDamage, FullDamage));
+						*ResistanceCaptureDef.AttributeToCapture.AttributeName, ElementalDamage, FullDamage));
 				}
 #endif
 			}
@@ -286,29 +274,50 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	}
 	// ~ End of Critical Strikes Calculation
 	
-	//TODO Only attempt to suppress spell damage - in other words see if the GA is a spell and not a Hit
-	// ~ Start of Suppression Spell Damage Mitigation
-	float SpellSuppressionChance = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
-	SpellSuppressionChance = FMath::Max<float>(SpellSuppressionChance, 0.0f);
-	
-	if(SpellSuppressionChance >= FMath::RandRange(1.0f, 100.0f))
+	// ~ Start of Shock calculation
+	float ChanceToShock = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ChanceToShockDef, EvaluationParameters, ChanceToShock);
+	ChanceToShock = FMath::Max<float>(ChanceToShock, 0.0f);
+					
+	if(ChanceToShock >= FMath::RandRange(1.0f, 100.0f))
 	{
-		ObsidianEffectContext->SetIsSuppressedSpell(true);	
-		
-		float SpellSuppressionMagnitude = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
-		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);
+		float EnemyAilmentThreshold = 0.0f;
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AilmentThresholdDef, EvaluationParameters, EnemyAilmentThreshold);
+		EnemyAilmentThreshold = FMath::Max<float>(EnemyAilmentThreshold, 1.0f);
 
-		const float SpellSuppressionMitigation = ModifiedDamage * SpellSuppressionMagnitude / 100.0f;
-		ModifiedDamage -= SpellSuppressionMitigation;
+		float IncreasedEffectOfShock = 0.0f;
+		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().IncreasedEffectOfShockDef, EvaluationParameters, IncreasedEffectOfShock);
+		IncreasedEffectOfShock = FMath::Max<float>(IncreasedEffectOfShock, 0.0f);
 
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
-			FString::Printf(TEXT("Suppressing spell damage. Damage suppressed: [%f]. New damage: [%f]."), SpellSuppressionMitigation, ModifiedDamage));
-#endif
+		float ShockEffect = (0.5f * FMath::Pow((LightningDamage / EnemyAilmentThreshold), 0.4f) * (1 + IncreasedEffectOfShock)) * 100.0f;
+						
+		if(ShockEffect > 5.0f)
+		{
+			ShockEffect = FMath::Min(ShockEffect, 50.0f);
+
+			// EnemyAilmentThreshold is almost treated like Max Health here
+			float ShockDuration = ((LightningDamage / (EnemyAilmentThreshold / 100.0f)) * 300.0f) / 1000.0f;
+			ShockDuration = FMath::Clamp(ShockDuration, 0.0f, 12.0f);
+
+			UGameplayEffect* GEShock = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Shock")));
+			GEShock->DurationPolicy = EGameplayEffectDurationType::HasDuration;
+			GEShock->DurationMagnitude = FGameplayEffectModifierMagnitude(ShockDuration);
+			GEShock->Modifiers.SetNum(1);
+
+			FGameplayModifierInfo& InfoShockDamageMultiplier = GEShock->Modifiers[0];
+			InfoShockDamageMultiplier.Attribute = UObsidianCommonAttributeSet::GetShockDamageTakenMultiplierAttribute();
+			InfoShockDamageMultiplier.ModifierMagnitude = FGameplayEffectModifierMagnitude(1 + (ShockEffect / 100.0f));
+			InfoShockDamageMultiplier.ModifierOp = EGameplayModOp::Override;
+
+			FGameplayEffectContextHandle Context = SourceASC->MakeEffectContext();
+			FGameplayEffectSpecHandle SpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(GEShock, Context, 1.0f));
+							
+			SpecHandle.Data.Get()->AppendDynamicAssetTags(ObsidianDamageStatics().UIDataTags);
+							
+			TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get(), TargetASC->GetPredictionKeyForNewAction());
+		}
 	}
-	// ~ End of Suppression Spell Damage Mitigation
+	// ~ End of Shock calculation
 
 	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, ModifiedDamage);
 	OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
