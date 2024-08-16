@@ -63,6 +63,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
 	FObsidianTaggedMontage GetRandomAnimMontageToPlay();
 	
+	/** Grabs the first Anim Montage from ability, useful when there is only one. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
+	UAnimMontage* GetAnimMontage();
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")
 	EObsidianGameplayAbility_ActivationPolicy ActivationPolicy;

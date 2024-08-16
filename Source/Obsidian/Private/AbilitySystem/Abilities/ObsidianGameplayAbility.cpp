@@ -140,3 +140,15 @@ FObsidianTaggedMontage UObsidianGameplayAbility::GetRandomAnimMontageToPlay()
 	const uint16 MontageNumber = FMath::RandRange(0, ArrCount - 1);
 	return AbilityMontages[MontageNumber];
 }
+
+UAnimMontage* UObsidianGameplayAbility::GetAnimMontage()
+{
+	const uint16 ArrCount = AbilityMontages.Num();
+	if(ArrCount == 0)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
+		return nullptr;
+	}
+
+	return AbilityMontages[0].AbilityMontage;
+}

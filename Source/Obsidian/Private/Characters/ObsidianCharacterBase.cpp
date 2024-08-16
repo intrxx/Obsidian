@@ -136,23 +136,23 @@ void AObsidianCharacterBase::Ragdoll() const
 
 FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)
 {
-	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_RightHandWeapon)
+	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_RightHandWeapon)
+	{
+		return GetAbilitySocketLocationFromRHWeapon_Implementation();
+	}
+	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_LeftHandWeapon)
 	{
 		return GetAbilitySocketLocationFromLHWeapon_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_LeftHandWeapon)
-	{
-		return GetAbilitySocketLocationFromLHWeapon_Implementation();
-	}
-	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_BetweenHands)
+	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_BetweenHands)
 	{
 		return GetAbilityBetweenHandsSocketLocation_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_LeftHand)
+	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_LeftHand)
 	{
 		return GetAbilitySocketLocationFromLeftHand_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::Event_Montage_Socket_RightHand)
+	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_RightHand)
 	{
 		return GetAbilitySocketLocationFromRightHand_Implementation();
 	}

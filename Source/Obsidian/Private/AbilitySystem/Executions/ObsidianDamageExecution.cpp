@@ -5,7 +5,6 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
-#include "Obsidian/Obsidian.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 struct FObsidianDamageStatics
@@ -207,6 +206,15 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 				
 				ElementalDamage *= (100.0f - Resistance) / 100.0f;
 
+#if !UE_BUILD_SHIPPING
+				if(Resistance > 0.0f)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
+					FString::Printf(TEXT("Reducing damage by resistance [%s]. Damage reduced: [%f]. New damage: [%f]."),
+						*ResistanceCaptureDef.AttributeToCapture.AttributeName, ElementalDamage, FullDamage));
+				}
+#endif
+
 				if(bShouldSuppressDamage)
 				{
 					const float SpellSuppressionMitigation = ElementalDamage * SpellSuppressionMagnitude / 100.0f;
@@ -236,15 +244,6 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 				{
 					ChaosDamage = ElementalDamage;
 				}
-
-#if !UE_BUILD_SHIPPING
-				if(Resistance > 0.0f)
-				{
-					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-					FString::Printf(TEXT("Reducing damage by resistance [%s]. Damage reduced: [%f]. New damage: [%f]."),
-						*ResistanceCaptureDef.AttributeToCapture.AttributeName, ElementalDamage, FullDamage));
-				}
-#endif
 			}
 		}
 	}
@@ -313,12 +312,13 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 			FGameplayEffectSpecHandle SpecHandle = FGameplayEffectSpecHandle(new FGameplayEffectSpec(GEShock, Context, 1.0f));
 							
 			SpecHandle.Data.Get()->AppendDynamicAssetTags(ObsidianDamageStatics().UIDataTags);
-							
-			TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get(), TargetASC->GetPredictionKeyForNewAction());
+
+			//TODO Idk if this is the right way to do it, need research
+			//TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get(), TargetASC->GetPredictionKeyForNewAction());
 		}
 	}
 	// ~ End of Shock calculation
-
+	
 	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, ModifiedDamage);
 	OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 	

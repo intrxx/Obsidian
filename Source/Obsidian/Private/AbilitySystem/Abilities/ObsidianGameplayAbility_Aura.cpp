@@ -35,3 +35,5 @@ void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHa
 		}
 	}
 }
+
+
