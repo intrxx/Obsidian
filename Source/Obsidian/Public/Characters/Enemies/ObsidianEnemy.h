@@ -49,11 +49,7 @@ protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
-
-	UFUNCTION()
 	virtual void OnDeathStarted(AActor* OwningActor) override;
-
-	UFUNCTION()
 	virtual void OnDeathFinished(AActor* OwningActor) override;
 	//~ End of AObsidianCharacterBase
 
@@ -68,7 +64,12 @@ protected:
 	virtual AActor* GetCombatTarget_Implementation() const override;
 	//~ End of EnemyInterface
 
+	virtual void CleanUpUIComps();
+
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::EEC_MAX;
 
@@ -79,22 +80,13 @@ protected:
 	FText EnemyName = FText::FromString("Lorem");
 
 private:
-	void CreateHealthBarWidget() const;
-	
-private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UObsidianEnemyAttributeSet> EnemyAttributeSet;
 	UPROPERTY()
 	TObjectPtr<AObsidianAIController> ObsidianAIController;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
-
-	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
 	TObjectPtr<UBehaviorTree> BehaviorTree;
 	

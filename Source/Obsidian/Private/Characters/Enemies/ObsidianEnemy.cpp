@@ -10,7 +10,6 @@
 #include "ObsidianTypes/ObsidianChannels.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
-#include "Components/WidgetComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "GameplayEffectTypes.h"
 #include "AI/ObsidianAIController.h"
@@ -20,8 +19,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ObsidianTypes/ObsidianActorTags.h"
 #include "ObsidianTypes/ObsidianStencilValues.h"
-#include "UI/ObsidianWidgetBase.h"
-#include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer)
@@ -39,11 +36,6 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
 	
 	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
-	EnemyAttributesComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
-	EnemyAttributesComponent->OnDeathFinished.AddDynamic(this, &ThisClass::OnDeathFinished);
-
-	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComponent"));
-	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
 	
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
@@ -106,8 +98,6 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
 	check(ObsidianASC);
 	
-	CreateHealthBarWidget();
-	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
 	EnemyAttributesComponent->SetEnemyName(EnemyName);
 	
@@ -136,11 +126,8 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 {
 	Super::OnDeathStarted(OwningActor);
-
-	if(HealthBarWidgetComp)
-	{
-		HealthBarWidgetComp->DestroyComponent();
-	}
+	
+	CleanUpUIComps();
 }
 
 void AObsidianEnemy::OnDeathFinished(AActor* OwningActor)
@@ -177,18 +164,8 @@ AActor* AObsidianEnemy::GetCombatTarget_Implementation() const
 	return CombatTarget;
 }
 
-void AObsidianEnemy::CreateHealthBarWidget() const
+void AObsidianEnemy::CleanUpUIComps()
 {
-	if(UObsidianRegularEnemyHealthBar* HealthBarWidget = Cast<UObsidianRegularEnemyHealthBar>(HealthBarWidgetComp->GetUserWidgetObject()))
-	{
-		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
-	}
-	else
-	{
-		HealthBarWidgetComp->InitWidget();
-		HealthBarWidget = Cast<UObsidianRegularEnemyHealthBar>(HealthBarWidgetComp->GetUserWidgetObject());
-		HealthBarWidget->SetWidgetController(EnemyAttributesComponent);
-	}
 }
 
 void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)

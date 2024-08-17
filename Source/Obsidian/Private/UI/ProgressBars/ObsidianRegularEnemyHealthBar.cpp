@@ -39,6 +39,8 @@ void UObsidianRegularEnemyHealthBar::HandleWidgetControllerSet()
       SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
       StartWidgetHideTimer();
    });
+
+   SetInitialValues(EnemyAttributesComp);
 }
 
 //TODO: This should probably be an option in the future
@@ -67,5 +69,19 @@ void UObsidianRegularEnemyHealthBar::StartWidgetHideTimer()
 void UObsidianRegularEnemyHealthBar::HideWidget()
 {
    SetVisibility(ESlateVisibility::Hidden);
+}
+
+void UObsidianRegularEnemyHealthBar::SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp)
+{
+   if(!EnemyAttributesComp->IsDeadOrDying())
+   {
+      Health = EnemyAttributesComp->GetHealth();
+      MaxHealth = EnemyAttributesComp->GetMaxHealth();
+      EnergyShield = EnemyAttributesComp->GetEnergyShield();
+      MaxEnergyShield = EnemyAttributesComp->GetMaxEnergyShield();
+		
+      SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
+      SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
+   }
 }
 

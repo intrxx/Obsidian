@@ -6,6 +6,8 @@
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
 #include "ObsidianRegularEnemyHealthBar.generated.h"
 
+class UObsidianEnemyAttributesComponent;
+
 /**
  * 
  */
@@ -20,6 +22,8 @@ protected:
 private:
     void StartWidgetHideTimer();
     void HideWidget();
+    
+    void SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp);
 
 private:
     /** Time after which this health bar will become hidden */

@@ -17,7 +17,7 @@ void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHa
 	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
+	
 	if(AuraEffectClass)
 	{
 		if(AuraEffectHandle.IsValid())
