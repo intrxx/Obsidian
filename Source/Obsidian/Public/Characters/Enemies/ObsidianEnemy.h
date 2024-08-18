@@ -64,8 +64,6 @@ protected:
 	virtual AActor* GetCombatTarget_Implementation() const override;
 	//~ End of EnemyInterface
 
-	virtual void CleanUpUIComps();
-
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;

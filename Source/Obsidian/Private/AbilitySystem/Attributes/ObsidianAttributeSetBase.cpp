@@ -114,6 +114,7 @@ void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCall
 		}
 
 		Props.bIsPlayerCharacter = Props.TargetCharacter->ActorHasTag(ObsidianActorTags::Player);
+		Props.bCanHitReact = Props.TargetCharacter->CanHitReact();
 
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetAvatarActor);
 	}

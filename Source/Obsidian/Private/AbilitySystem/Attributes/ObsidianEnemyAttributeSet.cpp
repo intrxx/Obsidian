@@ -29,7 +29,7 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
 		
-		if(GetHealth() > 0.0f)
+		if(EffectProps.bCanHitReact && GetHealth() > 0.0f)
 		{
 			//TODO As it stands now only damage that damages health will cause a hit react - decide if its okay, I like it for now
 			// Check if we should hit react, small hits shouldn't cause hit reacting

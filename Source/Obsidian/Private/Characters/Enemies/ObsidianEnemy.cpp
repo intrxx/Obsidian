@@ -126,8 +126,6 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 {
 	Super::OnDeathStarted(OwningActor);
-	
-	CleanUpUIComps();
 }
 
 void AObsidianEnemy::OnDeathFinished(AActor* OwningActor)
@@ -162,10 +160,6 @@ void AObsidianEnemy::SetCombatTarget_Implementation(AActor* InTarget)
 AActor* AObsidianEnemy::GetCombatTarget_Implementation() const
 {
 	return CombatTarget;
-}
-
-void AObsidianEnemy::CleanUpUIComps()
-{
 }
 
 void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)

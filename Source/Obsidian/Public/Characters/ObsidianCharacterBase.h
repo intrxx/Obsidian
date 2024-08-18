@@ -23,6 +23,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	bool CanHitReact() const
+	{
+		return bCanHitReact;
+	}
 
 protected:
 	virtual void BeginPlay() override;
@@ -88,6 +92,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
 	float DefaultAbilitySocketLocationOffset = 0.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Combat")
+	bool bCanHitReact = false;
+
 	/**
 	 * Death
 	 */
@@ -103,4 +110,5 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
 	bool bRagdollWithImpulse = true;
+	
 };
