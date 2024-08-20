@@ -54,7 +54,9 @@ protected:
 	virtual void HandleWidgetControllerSet() override;
 
 	UFUNCTION()
-	void HandleOverlayBar(AActor* TargetActor, bool bDisplayBar);
+	void HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar);
+	UFUNCTION()
+	void HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar);
 
 protected:
 	// This should be set in blueprint during initialization ;/ //

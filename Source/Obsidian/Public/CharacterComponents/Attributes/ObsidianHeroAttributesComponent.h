@@ -7,6 +7,7 @@
 #include "ObsidianHeroAttributesComponent.generated.h"
 
 class UMainOverlayWidgetController;
+
 /**
  * 
  */
@@ -120,12 +121,6 @@ protected:
 	 */
 
 protected:
-	/**
-	 * Widget controller that will communicate with UI.
-	 */
-	UPROPERTY()
-	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
-	
 	/**
 	 * Sets used by this component.
 	 */

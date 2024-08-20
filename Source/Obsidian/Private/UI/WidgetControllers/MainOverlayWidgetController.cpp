@@ -18,7 +18,8 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(PlayerController);
 	check(ObsidianPC);
 
-	ObsidianPC->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateEnemyTargetForHealthBar);
+	ObsidianPC->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateHoveringOverTarget);
+	ObsidianPC->OnBossDetectedPlayerDelegate.BindDynamic(this, &ThisClass::UpdateBossDetectionInfo);
 	
 	ObsidianASC->EffectAppliedAssetTags.AddLambda(
 		[this](const FObsidianEffectUIData& UIData)
@@ -143,9 +144,14 @@ void UMainOverlayWidgetController::MaxStaggerMeterChanged(const FOnAttributeChan
 	OnMaxStaggerMeterChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::UpdateEnemyTargetForHealthBar(AActor* TargetActor, const bool bDisplayHealthBar)
+void UMainOverlayWidgetController::UpdateHoveringOverTarget(AActor* TargetActor, const bool bHoveredOver)
 {
-	OnUpdateEnemyTargetForHealthBarDelegate.Broadcast(TargetActor, bDisplayHealthBar);
+	OnUpdateRegularEnemyTargetForHealthBarDelegate.Broadcast(TargetActor, bHoveredOver);
+}
+
+void UMainOverlayWidgetController::UpdateBossDetectionInfo(AActor* BossActor, const bool bSeen)
+{
+	OnUpdateBossEnemyTargetForHealthBarDelegate.Broadcast(BossActor, bSeen);
 }
 
 void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidgetTag)

@@ -135,6 +135,14 @@ AActor* AObsidianHero::GetAvatarActor_Implementation()
 	return this;
 }
 
+void AObsidianHero::UpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer)
+{
+	if(const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
+	{
+		ObsidianPC->OnBossDetectedPlayerDelegate.ExecuteIfBound(BossActor, bSeenPlayer);
+	}
+}
+
 void AObsidianHero::OnAbilitySystemInitialized()
 {
 	Super::OnAbilitySystemInitialized();

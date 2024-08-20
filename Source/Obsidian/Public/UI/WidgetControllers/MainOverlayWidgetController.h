@@ -150,7 +150,10 @@ public:
 	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
-	FOnUpdateEnemyTargetForHealthBar OnUpdateEnemyTargetForHealthBarDelegate;
+	FOnUpdateEnemyTargetForHealthBar OnUpdateRegularEnemyTargetForHealthBarDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	FOnUpdateEnemyTargetForHealthBar OnUpdateBossEnemyTargetForHealthBarDelegate;
 
 	FOnAuraWidgetDestructionInfoReceived OnAuraWidgetDestructionInfoReceivedDelegate;
 
@@ -172,7 +175,9 @@ protected:
 	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const;
 
 	UFUNCTION()
-	void UpdateEnemyTargetForHealthBar(AActor* TargetActor, const bool bDisplayHealthBar);
+	void UpdateHoveringOverTarget(AActor* TargetActor, const bool bHoveredOver);
+	UFUNCTION()
+	void UpdateBossDetectionInfo(AActor* BossActor, const bool bSeen);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")

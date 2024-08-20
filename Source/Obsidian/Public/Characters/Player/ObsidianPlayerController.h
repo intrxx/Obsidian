@@ -7,6 +7,7 @@
 #include "ObsidianPlayerController.generated.h"
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnEnemyActorHovered, AActor*, TargetActor, const bool, bHoveredOver);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, const bool, bSeen);
 
 struct FObsidianDamageTextProps;
 class AObsidianCharacterBase;
@@ -39,10 +40,12 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);
 
+	/** Updates when Player hovers over Target, TargetActor will be nullptr after removing the mouse from target, this is by design and might change. */
 	void UpdateHoveredEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const;
 
 public:
 	FOnEnemyActorHovered OnEnemyActorHoveredDelegate;
+	FOnBossDetectedPlayer OnBossDetectedPlayerDelegate;
 	
 protected:
 	virtual void BeginPlay() override;

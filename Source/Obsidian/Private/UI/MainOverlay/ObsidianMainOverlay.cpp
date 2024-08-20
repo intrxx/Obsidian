@@ -166,10 +166,11 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 
 	MainOverlayWidgetController->OnAuraWidgetDestructionInfoReceivedDelegate.BindDynamic(this, &ThisClass::DestroyAuraInfoWidget);
 
-	MainOverlayWidgetController->OnUpdateEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleOverlayBar);
+	MainOverlayWidgetController->OnUpdateRegularEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleRegularOverlayBar);
+	MainOverlayWidgetController->OnUpdateBossEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleBossOverlayBar);
 }
 
-void UObsidianMainOverlay::HandleOverlayBar(AActor* TargetActor, bool bDisplayBar)
+void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar)
 {
 	if(bDisplayBar)
 	{
@@ -186,8 +187,11 @@ void UObsidianMainOverlay::HandleOverlayBar(AActor* TargetActor, bool bDisplayBa
 		RegularEnemyHealthBar->RemoveFromParent();
 		RegularEnemyHealthBar = nullptr;
 	}
+}
 
-	
+void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Updating Boss Bar"));
 }
 
 void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy)

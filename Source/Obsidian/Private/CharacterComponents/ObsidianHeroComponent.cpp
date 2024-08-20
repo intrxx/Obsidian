@@ -89,7 +89,7 @@ void UObsidianHeroComponent::CursorTrace()
 			{
 				if(AObsidianPlayerController* OPC = Cast<AObsidianPlayerController>(PC))
 				{
-					OPC->UpdateHoveredEnemyTarget(TargetActor, false);
+					OPC->UpdateHoveredEnemyTarget(nullptr, false);
 				}
 			}
 		}
