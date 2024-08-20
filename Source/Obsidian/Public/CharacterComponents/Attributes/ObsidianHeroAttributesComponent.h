@@ -98,6 +98,9 @@ public:
 	 * 
 	 */
 
+public:
+	
+
 protected:
 	virtual void ClearGameplayTags() override;
 	

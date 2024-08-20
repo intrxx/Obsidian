@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIController.h"
-#include "ObsidianAIController.generated.h"
+#include "AObsidianAIControllerBase.generated.h"
 
 class UBlackboardComponent;
 class UBehaviorTreeComponent;
@@ -13,12 +13,12 @@ class UBehaviorTreeComponent;
  * 
  */
 UCLASS()
-class OBSIDIAN_API AObsidianAIController : public AAIController
+class OBSIDIAN_API AObsidianAIControllerBase : public AAIController
 {
 	GENERATED_BODY()
 
 public:
-	AObsidianAIController();
+	AObsidianAIControllerBase();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Enemy", meta = (AllowPrivateAccess = "true"))

@@ -10,11 +10,6 @@
 #include "ObsidianTypes/ObsidianChannels.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
-#include "Obsidian/ObsidianGameplayTags.h"
-#include "GameplayEffectTypes.h"
-#include "AI/ObsidianAIController.h"
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BlackboardComponent.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "ObsidianTypes/ObsidianActorTags.h"
@@ -50,22 +45,6 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 
 	// Identifies this class as Enemy character
 	Tags.Emplace(ObsidianActorTags::Enemy);
-}
-
-void AObsidianEnemy::PossessedBy(AController* NewController)
-{
-	Super::PossessedBy(NewController);
-
-	if(!HasAuthority())
-	{
-		return;
-	}
-	ObsidianAIController = Cast<AObsidianAIController>(NewController);
-	ObsidianAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
-	ObsidianAIController->RunBehaviorTree(BehaviorTree);
-
-	UBlackboardComponent* BlackboardComponent = ObsidianAIController->GetBlackboardComponent();
-	BlackboardComponent->SetValueAsBool(FName("bHitReacting"), false);
 }
 
 AActor* AObsidianEnemy::GetHighlightAvatarActor()
@@ -111,9 +90,6 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 			}
 		}
 	}
-	
-	ObsidianASC->RegisterGameplayTagEvent(ObsidianGameplayTags::Effect_HitReact,
-		EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 }
 
 void AObsidianEnemy::OnAbilitySystemUninitialized()
@@ -162,17 +138,3 @@ AActor* AObsidianEnemy::GetCombatTarget_Implementation() const
 	return CombatTarget;
 }
 
-void AObsidianEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
-{
-	bHitReacting = NewCount > 0;
-
-	if(HasAuthority() && ObsidianAIController)
-	{
-		if(UBlackboardComponent* BlackboardComponent = ObsidianAIController->GetBlackboardComponent())
-		{
-			BlackboardComponent->SetValueAsBool(FName("bHitReacting"), bHitReacting);
-		}
-	}
-	
-	//TODO Maybe change walk speed here
-}

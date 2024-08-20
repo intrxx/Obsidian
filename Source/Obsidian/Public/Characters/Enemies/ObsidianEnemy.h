@@ -11,7 +11,6 @@
 #include "ObsidianEnemy.generated.h"
 
 class UBehaviorTree;
-class AObsidianAIController;
 class UWidgetComponent;
 class UObsidianEnemyAttributeSet;
 class UObsidianEnemyAttributesComponent;
@@ -28,16 +27,12 @@ class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsid
 
 public:
 	AObsidianEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
-	virtual void PossessedBy(AController* NewController) override;
-
+	
 	//~ Start of HighlightInterface
 	virtual AActor* GetHighlightAvatarActor() override;
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
 	//~ End of HighlightInterface
-	
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 public:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Enemy")
@@ -67,6 +62,9 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
+	TObjectPtr<UBehaviorTree> BehaviorTree;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::EEC_MAX;
@@ -82,11 +80,6 @@ private:
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
 	UPROPERTY()
 	TObjectPtr<UObsidianEnemyAttributeSet> EnemyAttributeSet;
-	UPROPERTY()
-	TObjectPtr<AObsidianAIController> ObsidianAIController;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
-	TObjectPtr<UBehaviorTree> BehaviorTree;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|Level")
 	int32 EnemyLevel = 1;
