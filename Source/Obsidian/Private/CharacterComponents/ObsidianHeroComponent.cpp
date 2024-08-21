@@ -85,11 +85,11 @@ void UObsidianHeroComponent::CursorTrace()
 			LastHighlightedActor->StopHighlight();
 
 			AActor* TargetActor = LastHighlightedActor->GetHighlightAvatarActor();
-			if(TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+			if(TargetActor->ActorHasTag(ObsidianActorTags::RegularEnemy))
 			{
 				if(AObsidianPlayerController* OPC = Cast<AObsidianPlayerController>(PC))
 				{
-					OPC->UpdateHoveredEnemyTarget(nullptr, false);
+					OPC->UpdateHoveredRegularEnemyTarget(nullptr, false);
 				}
 			}
 		}
@@ -99,11 +99,11 @@ void UObsidianHeroComponent::CursorTrace()
 			CurrentHighlightedActor->StartHighlight();
 			
 			AActor* TargetActor = CurrentHighlightedActor->GetHighlightAvatarActor();
-			if(TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+			if(TargetActor->ActorHasTag(ObsidianActorTags::RegularEnemy))
 			{
 				if(AObsidianPlayerController* OPC = Cast<AObsidianPlayerController>(PC))
 				{
-					OPC->UpdateHoveredEnemyTarget(TargetActor, true);
+					OPC->UpdateHoveredRegularEnemyTarget(TargetActor, true);
 				}
 			}
 		}

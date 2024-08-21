@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
-#include "ObsidianOverlayRegularEnemyBar.generated.h"
+#include "UObsidianOverlayEnemyBar.generated.h"
 
 class UCommonTextBlock;
 class UObsidianEnemyAttributesComponent;
@@ -13,7 +13,7 @@ class UObsidianEnemyAttributesComponent;
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianOverlayRegularEnemyBar : public UObsidianBasicHealthBar
+class OBSIDIAN_API UObsidianOverlayEnemyBar : public UObsidianBasicHealthBar
 {
 	GENERATED_BODY()
 

@@ -12,7 +12,7 @@ AObsidianPlayerController::AObsidianPlayerController()
 	bReplicates = true;
 }
 
-void AObsidianPlayerController::UpdateHoveredEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
+void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
 {
 	OnEnemyActorHoveredDelegate.ExecuteIfBound(TargetActor, bHoveredOver);
 }

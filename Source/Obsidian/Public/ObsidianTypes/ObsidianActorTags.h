@@ -7,4 +7,7 @@ namespace ObsidianActorTags
 {
 	static inline FName Player = FName("Player");
 	static inline FName Enemy = FName("Enemy");
+
+	static inline FName RegularEnemy = FName("RegularEnemy");
+	static inline FName BossEnemy = FName("BossEnemy");
 }

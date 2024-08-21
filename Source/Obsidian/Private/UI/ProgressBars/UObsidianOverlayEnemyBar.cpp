@@ -1,12 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "UI/ProgressBars/ObsidianOverlayRegularEnemyBar.h"
-
+#include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "CommonTextBlock.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 
-void UObsidianOverlayRegularEnemyBar::HandleWidgetControllerSet()
+void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 {
 	UObsidianEnemyAttributesComponent* EnemyAttributesComp = Cast<UObsidianEnemyAttributesComponent>(WidgetController);
 	if(EnemyAttributesComp == nullptr)
@@ -61,7 +60,7 @@ void UObsidianOverlayRegularEnemyBar::HandleWidgetControllerSet()
 	}
 }
 
-void UObsidianOverlayRegularEnemyBar::SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp)
+void UObsidianOverlayEnemyBar::SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp)
 {
 	if(!EnemyAttributesComp->IsDeadOrDying())
 	{

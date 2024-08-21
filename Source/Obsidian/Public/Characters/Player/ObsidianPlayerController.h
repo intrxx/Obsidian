@@ -40,8 +40,8 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);
 
-	/** Updates when Player hovers over Target, TargetActor will be nullptr after removing the mouse from target, this is by design and might change. */
-	void UpdateHoveredEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const;
+	/** Updates when Player hovers over Regular Enemy Target, TargetActor will be nullptr after removing the mouse from target, this is by design and might change. */
+	void UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const;
 
 public:
 	FOnEnemyActorHovered OnEnemyActorHoveredDelegate;

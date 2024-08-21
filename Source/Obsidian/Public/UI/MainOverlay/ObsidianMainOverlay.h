@@ -10,10 +10,11 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianOverlayBossEnemyBar;
+class UObsidianOverlayEnemyBar;
 class UObsidianProgressGlobe;
 class USizeBox;
 class UObsidianBasicHealthBar;
-class UObsidianOverlayRegularEnemyBar;
 class UVerticalBox;
 class UOverlay;
 class UObsidianOverlayGameTabsMenu;
@@ -77,19 +78,25 @@ protected:
 	TObjectPtr<UOverlay> CharacterStatus_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UVerticalBox> OverlayBars_VerticalBox;
+	TObjectPtr<UOverlay> OverlayRegularBars_Overlay;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOverlay> OverlayBossBars_Overlay;
 
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay|HealthBars")
-	TSubclassOf<UObsidianOverlayRegularEnemyBar> RegularEnemyHealthBarClass;
+	TSubclassOf<UObsidianOverlayEnemyBar> RegularEnemyOverlayHealthBarClass;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianOverlayRegularEnemyBar> RegularEnemyHealthBar;
+	TObjectPtr<UObsidianOverlayEnemyBar> RegularEnemyOverlayHealthBar;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay|HealthBars")
-	TSubclassOf<UObsidianBasicHealthBar> BossEnemyHealthBarClass;
+	TSubclassOf<UObsidianOverlayBossEnemyBar> BossEnemyOverlayHealthBarClass;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianOverlayBossEnemyBar> BossEnemyOverlayHealthBar;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianCharacterStatus> CharacterStatusClass;

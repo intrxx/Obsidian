@@ -11,11 +11,12 @@
 #include "ObsidianTypes/UserIterface/ObsidianUIEffectClassification.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
+#include "UI/ProgressBars/ObsidianOverlayBossEnemyBar.h"
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
-#include "UI/ProgressBars/ObsidianOverlayRegularEnemyBar.h"
+#include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "UI/ProgressBars/ObsidianProgressGlobe.h"
 
 void UObsidianMainOverlay::NativeConstruct()
@@ -174,24 +175,38 @@ void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDi
 {
 	if(bDisplayBar)
 	{
-		RegularEnemyHealthBar = CreateWidget<UObsidianOverlayRegularEnemyBar>(OwningPlayerController, RegularEnemyHealthBarClass);
+		RegularEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayEnemyBar>(OwningPlayerController, RegularEnemyOverlayHealthBarClass);
 		
 		UObsidianEnemyAttributesComponent* EnemyAttributesComponent = UObsidianEnemyAttributesComponent::FindAttributesComponent(TargetActor);
 		check(EnemyAttributesComponent);
 		
-		RegularEnemyHealthBar->SetWidgetController(EnemyAttributesComponent);
-		OverlayBars_VerticalBox->AddChild(RegularEnemyHealthBar);
+		RegularEnemyOverlayHealthBar->SetWidgetController(EnemyAttributesComponent);
+		OverlayRegularBars_Overlay->AddChildToOverlay(RegularEnemyOverlayHealthBar);
 	}
 	else
 	{
-		RegularEnemyHealthBar->RemoveFromParent();
-		RegularEnemyHealthBar = nullptr;
+		RegularEnemyOverlayHealthBar->RemoveFromParent();
+		RegularEnemyOverlayHealthBar = nullptr;
 	}
 }
 
 void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Updating Boss Bar"));
+	if(bDisplayBar)
+	{
+		BossEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayBossEnemyBar>(OwningPlayerController, BossEnemyOverlayHealthBarClass);
+		
+		UObsidianEnemyAttributesComponent* EnemyAttributesComponent = UObsidianEnemyAttributesComponent::FindAttributesComponent(TargetActor);
+		check(EnemyAttributesComponent);
+		
+		BossEnemyOverlayHealthBar->SetWidgetController(EnemyAttributesComponent);
+		OverlayBossBars_Overlay->AddChildToOverlay(BossEnemyOverlayHealthBar);
+	}
+	else
+	{
+		BossEnemyOverlayHealthBar->RemoveFromParent();
+		BossEnemyOverlayHealthBar = nullptr;
+	}
 }
 
 void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy)
