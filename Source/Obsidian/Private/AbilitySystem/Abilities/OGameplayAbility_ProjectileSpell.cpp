@@ -60,38 +60,3 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 	Projectile->FinishSpawning(SpawnTransform);
 }
 
-//TODO Evaluate this, look at ObsidianCharacterBase FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)
-FVector UOGameplayAbility_ProjectileSpell::GetSpawnLocation() const
-{
-	AActor* OwningActor = GetAvatarActorFromActorInfo();
-	if(OwningActor == nullptr)
-	{
-		UE_LOG(LogObsidian, Error, TEXT("Owning Actor is nullptr on [%s]"), *GetNameSafe(this));
-		return FVector::ZeroVector;
-	}
-	
-	FVector SpawnLocation = OwningActor->GetActorLocation();
-	
-	switch(AbilitySpawnLocation)
-	{
-	case EObsidianAbilitySpawnLocation::ASL_DefaultLocation:
-		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilityBetweenHandsSocketLocation(OwningActor);
-		break;
-	case EObsidianAbilitySpawnLocation::ASL_LeftHand:
-		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromLeftHand(OwningActor);
-		break;
-	case EObsidianAbilitySpawnLocation::ASL_RightHand:
-		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromRightHand(OwningActor);
-		break;
-	case EObsidianAbilitySpawnLocation::ASL_LeftHandEquipment:
-		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromLHWeapon(OwningActor);
-		break;
-	case EObsidianAbilitySpawnLocation::ASL_RightHandEquipment:
-		SpawnLocation = IObsidianCombatInterface::Execute_GetAbilitySocketLocationFromRHWeapon(OwningActor);
-		break;
-	default:
-		break;
-	}
-
-	return SpawnLocation;
-}
