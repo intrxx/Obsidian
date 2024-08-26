@@ -6,6 +6,8 @@
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "ObsidianBossEnemy.generated.h"
 
+class AObsidianHero;
+class UBlackboardComponent;
 class AObsidianAIControllerBase;
 
 /**
@@ -20,11 +22,9 @@ public:
 	AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void PossessedBy(AController* NewController) override;
-
-	UAnimMontage* GetIntroductionMontage()
-	{
-		return IntroductionMontage;
-	}
+	
+	/** Handles the introduction to the Player, plays anim montages or activates sound cues */
+	void HandleIntroduction(UBlackboardComponent* OwningBlackboard, AObsidianHero* TargetActor);
 
 protected:
 	//~ Start of AObsidianCharacterBase
@@ -41,6 +41,8 @@ private:
 	UPROPERTY()
 	TObjectPtr<AObsidianAIControllerBase> ObsidianBossAIController;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian|Setup")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian|Introduction")
 	TObjectPtr<UAnimMontage> IntroductionMontage;
+
+	FTimerHandle IntroductionFinishedTimerHandle;
 };

@@ -53,19 +53,16 @@ void AObsidianBossAIController::OnStimulusChanged(AActor* UpdatedActor, FAIStimu
 	
 	if(Stimulus.IsActive())
 	{
-		Blackboard->SetValueAsBool(FName(TEXT("bIsPlayerSeen")), true);
-		Blackboard->SetValueAsObject(FName(TEXT("HeroTarget")), HeroTarget);
-		
 		HeroTarget->UpdateBossDetectingPlayer(EnemyOwner, true);
-
+		
 		if(bIntroduce)
 		{
-			if(UAnimMontage* IntroductionMontage = EnemyOwner->GetIntroductionMontage())
-			{
-				EnemyOwner->PlayAnimMontage(IntroductionMontage);
-			}
+			EnemyOwner->HandleIntroduction(Blackboard, HeroTarget);
 			bIntroduce = false;
 		}
+		
+		Blackboard->SetValueAsBool(FName(TEXT("bIsPlayerSeen")), true);
+		Blackboard->SetValueAsObject(FName(TEXT("HeroTarget")), HeroTarget);
 	}
 	else
 	{

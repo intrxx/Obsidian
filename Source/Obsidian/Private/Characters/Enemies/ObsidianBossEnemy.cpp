@@ -6,6 +6,7 @@
 #include "AI/ObsidianBossAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "ObsidianTypes/ObsidianActorTags.h"
 
 AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer) :
@@ -25,6 +26,25 @@ void AObsidianBossEnemy::PossessedBy(AController* NewController)
 	ObsidianBossAIController = Cast<AObsidianBossAIController>(NewController);
 	ObsidianBossAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	ObsidianBossAIController->RunBehaviorTree(BehaviorTree);
+}
+
+void AObsidianBossEnemy::HandleIntroduction(UBlackboardComponent* OwningBlackboard, AObsidianHero* TargetActor)
+{
+	float IntroductionLength = 0.0f;
+	if(IntroductionMontage)
+	{
+		IntroductionLength = PlayAnimMontage(IntroductionMontage);
+	}
+
+	UWorld* World = GetWorld();
+	if(World)
+	{
+		World->GetTimerManager().SetTimer(IntroductionFinishedTimerHandle, FTimerDelegate::CreateWeakLambda(this, [OwningBlackboard]()
+		{
+			OwningBlackboard->SetValueAsBool(FName(TEXT("bIntroduced")), true);
+			
+		}), IntroductionLength, false);
+	}
 }
 
 void AObsidianBossEnemy::OnAbilitySystemInitialized()
