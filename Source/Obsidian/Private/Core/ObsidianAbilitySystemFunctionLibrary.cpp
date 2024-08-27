@@ -63,8 +63,8 @@ void UObsidianAbilitySystemFunctionLibrary::SetIsCriticalAttack(FGameplayEffectC
     }
 }
 
-void UObsidianAbilitySystemFunctionLibrary::GetAllCharactersWithinRadius(const UObject* WorldContextObject,TArray<AActor*>& OutOverlappingActors,
-    const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug)
+void UObsidianAbilitySystemFunctionLibrary::GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
+    UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug)
 {
     FCollisionQueryParams SphereParams;
     SphereParams.AddIgnoredActors(ActorsToIgnore);
@@ -78,11 +78,27 @@ void UObsidianAbilitySystemFunctionLibrary::GetAllCharactersWithinRadius(const U
         
         for(FOverlapResult& OverlapResult : Overlaps)
         {
-           UObsidianAttributesComponent* AttributesComponent =  UObsidianAttributesComponent::FindCommonAttributesComponent(OverlapResult.GetActor());
-           if(AttributesComponent && !AttributesComponent->IsDeadOrDying())
-           {
-               OutOverlappingActors.AddUnique(OverlapResult.GetActor());
-           } 
+            UObsidianAttributesComponent* AttributesComponent =  UObsidianAttributesComponent::FindCommonAttributesComponent(OverlapResult.GetActor());
+            if(AttributesComponent && !AttributesComponent->IsDeadOrDying())
+            {
+                OutOverlappingActors.AddUnique(OverlapResult.GetActor());
+            } 
+        }
+
+        if(ActorClassFilter != nullptr)
+        {
+            TArray<AActor*> TempOverlappingActors;
+            TempOverlappingActors.Append(OutOverlappingActors);
+
+            OutOverlappingActors.Empty();
+
+            for(AActor* Actor : TempOverlappingActors)
+            {
+                if(Actor->IsA(ActorClassFilter))
+                {
+                    OutOverlappingActors.AddUnique(Actor);
+                }
+            }
         }
         
 #if ENABLE_DRAW_DEBUG && !UE_BUILD_SHIPPING
@@ -98,3 +114,4 @@ void UObsidianAbilitySystemFunctionLibrary::GetAllCharactersWithinRadius(const U
 #endif
     }
 }
+

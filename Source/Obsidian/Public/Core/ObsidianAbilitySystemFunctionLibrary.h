@@ -35,5 +35,5 @@ public:
 	static void SetIsCriticalAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalAttack);
 
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Combat")
-	static void GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug);
+	static void GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug);
 };
