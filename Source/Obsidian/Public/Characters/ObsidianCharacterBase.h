@@ -46,6 +46,10 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName="On Death Finished"), Category = "Obsidian|Character")
 	void BP_OnDeathFinished();
 
+	/**
+	 * AFTER SOME CONSIDERATION, I'M NOT REALLY SURE, I WANT TO USE RAGDOLLS AT ALL
+	 * will it leave here for now tho
+	 * */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
 	void Ragdoll() const;
 
@@ -102,13 +106,13 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
 	TArray<TObjectPtr<UAnimMontage>> DeathMontages;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death|Ragdoll", meta=(DeprecatedProperty))
 	FName RagdollImpulseBone = FName();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death|Ragdoll", meta=(DeprecatedProperty))
 	float RagdollImpulseStrength = 0.f;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death|Ragdoll", meta=(DeprecatedProperty))
 	bool bRagdollWithImpulse = true;
 	
 };

@@ -4,6 +4,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "MotionWarpingComponent.h"
+#include "Animation/ObsidianAnimInstance.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -83,6 +84,22 @@ void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
 	check(CharacterMoveComp);
 	CharacterMoveComp->StopMovementImmediately();
 	CharacterMoveComp->DisableMovement();
+
+	if(!DeathMontages.IsEmpty())
+	{
+		const float DeathMontagesLength = DeathMontages.Num();
+		const float RandomIndex = FMath::RandRange(0.f, DeathMontagesLength - 1);
+		
+		const float AnimLength = PlayAnimMontage(DeathMontages[RandomIndex]);
+
+		USkeletalMeshComponent* MeshComp = GetMesh();
+		FTimerHandle DeathMontageFinishedHandle;
+		GetWorld()->GetTimerManager().SetTimer(DeathMontageFinishedHandle, FTimerDelegate::CreateWeakLambda(this, [MeshComp]()
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Replace the mesh with dummy mesh, hide and destroy the current one"));
+			
+		}), AnimLength, false);
+	}
 }
 
 void AObsidianCharacterBase::OnDeathFinished(AActor* OwningActor)
