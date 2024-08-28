@@ -185,8 +185,11 @@ void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDi
 	}
 	else
 	{
-		RegularEnemyOverlayHealthBar->RemoveFromParent();
-		RegularEnemyOverlayHealthBar = nullptr;
+		if(RegularEnemyOverlayHealthBar)
+		{
+			RegularEnemyOverlayHealthBar->RemoveFromParent();
+			RegularEnemyOverlayHealthBar = nullptr;
+		}
 	}
 }
 
@@ -204,8 +207,11 @@ void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDispl
 	}
 	else
 	{
-		BossEnemyOverlayHealthBar->RemoveFromParent();
-		BossEnemyOverlayHealthBar = nullptr;
+		if(BossEnemyOverlayHealthBar)
+		{
+			BossEnemyOverlayHealthBar->RemoveFromParent();
+			BossEnemyOverlayHealthBar = nullptr;
+		}
 	}
 }
 

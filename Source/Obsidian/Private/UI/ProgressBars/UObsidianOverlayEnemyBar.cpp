@@ -84,12 +84,12 @@ void UObsidianOverlayEnemyBar::SetInitialValues(const UObsidianEnemyAttributesCo
 
 void UObsidianOverlayEnemyBar::UninitAndHide()
 {
-	SetVisibility(ESlateVisibility::Collapsed);
-
 	HealthChangedDelegateHandle.Reset();
 	MaxHealthChangedDelegateHandle.Reset();
 	EnergyShieldChangedDelegateHandle.Reset();
 	MaxEnergyShieldChangedDelegateHandle.Reset();
 	StaggerMeterChangedDelegateHandle.Reset();
 	MaxStaggerMeterChangedDelegateHandle.Reset();
+
+	RemoveFromParent();
 }

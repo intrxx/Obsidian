@@ -31,7 +31,7 @@ protected:
 	virtual void HandleWidgetControllerSet() override;
 	
 	void SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp);
-	void UninitAndHide();
+	virtual void UninitAndHide();
 
 private:
 	FDelegateHandle HealthChangedDelegateHandle;
