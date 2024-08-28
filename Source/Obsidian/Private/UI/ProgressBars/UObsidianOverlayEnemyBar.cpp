@@ -13,40 +13,45 @@ void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 		return;
 	}
    
-	EnemyAttributesComp->HealthChangedDelegate.AddLambda([this, EnemyAttributesComp](const float NewValue)
+	HealthChangedDelegateHandle = EnemyAttributesComp->HealthChangedDelegate.AddLambda([this, EnemyAttributesComp](const float NewValue)
 	{
 		if(!EnemyAttributesComp->IsDeadOrDying())
 		{
 			Health = NewValue;
 			SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
+
+			if(Health <= 0)
+			{
+				UninitAndHide();
+			}
 		}
 	});
 
-	EnemyAttributesComp->MaxHealthChangedDelegate.AddLambda([this](const float NewValue)
+	MaxHealthChangedDelegateHandle = EnemyAttributesComp->MaxHealthChangedDelegate.AddLambda([this](const float NewValue)
 	{
 	    MaxHealth = NewValue;
 	    SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 	});
 
-	EnemyAttributesComp->EnergyShieldChangedDelegate.AddLambda([this](const float NewValue)
+	EnergyShieldChangedDelegateHandle = EnemyAttributesComp->EnergyShieldChangedDelegate.AddLambda([this](const float NewValue)
 	{
 	    EnergyShield = NewValue;
 	    SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 	});
    
-	EnemyAttributesComp->MaxEnergyShieldChangedDelegate.AddLambda([this](const float NewValue)
+	MaxEnergyShieldChangedDelegateHandle = EnemyAttributesComp->MaxEnergyShieldChangedDelegate.AddLambda([this](const float NewValue)
 	{
 	    MaxEnergyShield = NewValue;
 	    SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 	});
 
-	EnemyAttributesComp->StaggerMeterChangedDelegate.AddLambda([this](const float NewValue)
+	StaggerMeterChangedDelegateHandle = EnemyAttributesComp->StaggerMeterChangedDelegate.AddLambda([this](const float NewValue)
 	{
 		StaggerMeter = NewValue;
 		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
 	});
 
-	EnemyAttributesComp->MaxStaggerMeterChangedDelegate.AddLambda([this](const float NewValue)
+	MaxStaggerMeterChangedDelegateHandle = EnemyAttributesComp->MaxStaggerMeterChangedDelegate.AddLambda([this](const float NewValue)
 	{
 		MaxStaggerMeter = NewValue;
 		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
@@ -75,4 +80,16 @@ void UObsidianOverlayEnemyBar::SetInitialValues(const UObsidianEnemyAttributesCo
 		SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
 	}
+}
+
+void UObsidianOverlayEnemyBar::UninitAndHide()
+{
+	SetVisibility(ESlateVisibility::Collapsed);
+
+	HealthChangedDelegateHandle.Reset();
+	MaxHealthChangedDelegateHandle.Reset();
+	EnergyShieldChangedDelegateHandle.Reset();
+	MaxEnergyShieldChangedDelegateHandle.Reset();
+	StaggerMeterChangedDelegateHandle.Reset();
+	MaxStaggerMeterChangedDelegateHandle.Reset();
 }

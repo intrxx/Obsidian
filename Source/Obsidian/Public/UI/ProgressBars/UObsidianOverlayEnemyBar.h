@@ -31,4 +31,13 @@ protected:
 	virtual void HandleWidgetControllerSet() override;
 	
 	void SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp);
+	void UninitAndHide();
+
+private:
+	FDelegateHandle HealthChangedDelegateHandle;
+	FDelegateHandle MaxHealthChangedDelegateHandle;
+	FDelegateHandle EnergyShieldChangedDelegateHandle;
+	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
+	FDelegateHandle StaggerMeterChangedDelegateHandle;
+	FDelegateHandle MaxStaggerMeterChangedDelegateHandle;
 };
