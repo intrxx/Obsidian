@@ -22,7 +22,7 @@ void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 
 			if(Health <= 0)
 			{
-				UninitAndHide();
+				UninitAndDestroy();
 			}
 		}
 	});
@@ -82,7 +82,7 @@ void UObsidianOverlayEnemyBar::SetInitialValues(const UObsidianEnemyAttributesCo
 	}
 }
 
-void UObsidianOverlayEnemyBar::UninitAndHide()
+void UObsidianOverlayEnemyBar::UninitAndDestroy()
 {
 	HealthChangedDelegateHandle.Reset();
 	MaxHealthChangedDelegateHandle.Reset();

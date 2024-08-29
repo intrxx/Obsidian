@@ -33,10 +33,6 @@ public:
 	TObjectPtr<UProgressBar> EnergyShield_ProgressBar;
 
 protected:
-	/** Helper function to set the percent, this can actually be moved to some helper static class */
-	static void SetProgressBarPercent(const float Value, const float MaxValue, UProgressBar* ProgressBar);
-	
-protected:
 	float Health = 0.f;
 	float MaxHealth = 0.f;
 	float EnergyShield = 0.f;

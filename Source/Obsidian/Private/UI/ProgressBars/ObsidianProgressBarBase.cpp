@@ -2,6 +2,8 @@
 
 
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
+#include "Components/ProgressBar.h"
+#include "Kismet/KismetMathLibrary.h"
 
 bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& EffectTag)
 {
@@ -15,3 +17,12 @@ bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffe
 	}
 	return false;
 }
+
+void UObsidianProgressBarBase::SetProgressBarPercent(const float Value, const float MaxValue, UProgressBar* ProgressBar)
+{
+	if(ProgressBar)
+	{
+		ProgressBar->SetPercent(UKismetMathLibrary::SafeDivide(Value, MaxValue));
+	}
+}
+

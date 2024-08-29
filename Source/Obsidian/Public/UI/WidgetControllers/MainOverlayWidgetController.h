@@ -105,6 +105,7 @@ public:
 	void UpdateManaInfoGlobe(const float& Magnitude) const;
 
 	virtual void SetInitialAttributeValues() const override;
+	virtual void SetInitialStaggerMeter() const;
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")

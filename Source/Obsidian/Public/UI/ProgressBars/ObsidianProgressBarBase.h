@@ -7,6 +7,8 @@
 #include "GameplayTagContainer.h"
 #include "ObsidianProgressBarBase.generated.h"
 
+class UProgressBar;
+
 /*
  * Struct that ties the specific Effect Tag to Fill image so the system can for example replace the Red Progress globe with green one for poison.
  */
@@ -38,4 +40,8 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup|Globe")
 	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
+
+protected:
+	/** Helper function to set the percent, this can actually be moved to some helper static class */
+	static void SetProgressBarPercent(const float Value, const float MaxValue, UProgressBar* ProgressBar);
 };

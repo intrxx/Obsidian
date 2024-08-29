@@ -94,6 +94,12 @@ void UMainOverlayWidgetController::SetInitialAttributeValues() const
 	OnMaxSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetMaxSpecialResource());
 }
 
+void UMainOverlayWidgetController::SetInitialStaggerMeter() const
+{
+	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
+	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
+}
+
 void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnHealthChangedDelegate.Broadcast(Data.NewValue);
