@@ -7,7 +7,7 @@
 #include "BehaviorTree/BehaviorTree.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer)

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "ObsidianTypes/Character/ObsidianEnemyType.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianAbilitySystemFunctionLibrary.generated.h"
 
 struct FGameplayEffectContextHandle;

@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ObsidianDamageGameplayAbility.h"
-#include "ObsidianTypes/Character/ObsidianAbilitySpawnLocation.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
 class AObsidianProjectile;

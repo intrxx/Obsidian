@@ -3,11 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "AI/ObsidianEnemyInterface.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "Interaction/ObsidianHighlightInterface.h"
-#include "ObsidianTypes/Character/ObsidianEnemyType.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianEnemy.generated.h"
 
 class UBehaviorTree;

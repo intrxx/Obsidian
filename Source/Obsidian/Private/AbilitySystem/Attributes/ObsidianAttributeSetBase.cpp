@@ -6,7 +6,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "GameplayEffectExtension.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 void FObsidianEffectProperties::Reset()
 {

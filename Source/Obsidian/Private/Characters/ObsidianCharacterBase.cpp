@@ -4,12 +4,11 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "MotionWarpingComponent.h"
-#include "Animation/ObsidianAnimInstance.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "ObsidianTypes/Animation/ObsidianSocketName.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianCharacterMovementComponent>(ACharacter::CharacterMovementComponentName))

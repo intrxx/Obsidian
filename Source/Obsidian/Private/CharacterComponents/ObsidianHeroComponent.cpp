@@ -12,13 +12,12 @@
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Interaction/ObsidianHighlightInterface.h"
-#include "ObsidianTypes/ObsidianChannels.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
 #include "UI/ObsidianHUD.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)

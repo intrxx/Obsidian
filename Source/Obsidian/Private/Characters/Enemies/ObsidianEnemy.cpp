@@ -7,13 +7,11 @@
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
-#include "ObsidianTypes/ObsidianChannels.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
-#include "ObsidianTypes/ObsidianStencilValues.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer)

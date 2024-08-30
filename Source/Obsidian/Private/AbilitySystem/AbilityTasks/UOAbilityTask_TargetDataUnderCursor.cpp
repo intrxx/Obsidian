@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Obsidian/Obsidian.h"
-#include "ObsidianTypes/ObsidianChannels.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 UOAbilityTask_TargetDataUnderCursor* UOAbilityTask_TargetDataUnderCursor::CreateTargetDataUnderCursorProxy(UGameplayAbility* OwningAbility)
 {

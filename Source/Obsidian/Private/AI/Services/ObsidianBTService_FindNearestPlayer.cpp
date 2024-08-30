@@ -6,7 +6,7 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 UObsidianBTService_FindNearestPlayer::UObsidianBTService_FindNearestPlayer()
 {

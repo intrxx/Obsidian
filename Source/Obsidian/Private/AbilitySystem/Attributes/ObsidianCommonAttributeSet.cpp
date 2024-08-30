@@ -5,12 +5,10 @@
 
 #include "GameplayEffectExtension.h"
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
-#include "Characters/ObsidianCharacterBase.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
-#include "ObsidianTypes/UserIterface/ObsidianDamageTextProps.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
 {

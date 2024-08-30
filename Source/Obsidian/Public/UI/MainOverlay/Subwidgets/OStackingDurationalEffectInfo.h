@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
-#include "ObsidianTypes/UserIterface/ObsidianUIData.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 #include "OStackingDurationalEffectInfo.generated.h"
 
 class UOStackingDurationalEffectInfo;

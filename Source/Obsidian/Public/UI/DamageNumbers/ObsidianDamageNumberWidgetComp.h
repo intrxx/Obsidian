@@ -3,7 +3,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/WidgetComponent.h"
-#include "ObsidianTypes/UserIterface/ObsidianDamageTextProps.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 #include "ObsidianDamageNumberWidgetComp.generated.h"
 
 /**

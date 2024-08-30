@@ -9,7 +9,7 @@
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "ObsidianTypes/ObsidianChannels.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianProjectile::AObsidianProjectile()
 {

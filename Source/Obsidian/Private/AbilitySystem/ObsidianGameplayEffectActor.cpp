@@ -3,7 +3,7 @@
 #include "AbilitySystem/ObsidianGameplayEffectActor.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianGameplayEffectActor::AObsidianGameplayEffectActor()
 {

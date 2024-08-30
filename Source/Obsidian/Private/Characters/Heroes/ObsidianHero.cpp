@@ -14,7 +14,7 @@
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "ObsidianTypes/ObsidianActorTags.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetBase.h"
 
