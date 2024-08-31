@@ -10,6 +10,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivationFail_IsDead);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_HitReact);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Stagger);
 
 	// Kind of Deprecated - using damage types tags for SetByCaller now //
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage);
@@ -30,6 +31,7 @@ namespace ObsidianGameplayTags
 	
 	// Effects
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_Stagger)
 	
 	// Statuses
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death);

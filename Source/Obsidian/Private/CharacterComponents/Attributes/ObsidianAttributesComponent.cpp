@@ -369,6 +369,16 @@ FGameplayAttribute UObsidianAttributesComponent::GetShockDamageTakenMultiplierAt
 	return (CommonAttributeSet ? CommonAttributeSet->GetShockDamageTakenMultiplierAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetStaggerDamageTakenMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetStaggerDamageTakenMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetStaggerDamageTakenMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetStaggerDamageTakenMultiplierAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetAllElementalResistances() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetAllElementalResistances() : 0.0f);

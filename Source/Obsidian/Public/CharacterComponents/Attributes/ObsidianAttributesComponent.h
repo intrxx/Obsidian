@@ -133,6 +133,10 @@ public:
 	/** Getters for Shock Damage Taken Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetShockDamageTakenMultiplier() const;
 	FGameplayAttribute GetShockDamageTakenMultiplierAttribute() const;
+	
+	/** Getters for Stagger Damage Taken Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetStaggerDamageTakenMultiplier() const;
+	FGameplayAttribute GetStaggerDamageTakenMultiplierAttribute() const;
 
 	/** Getters for All Elemental Resistances Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetAllElementalResistances() const;

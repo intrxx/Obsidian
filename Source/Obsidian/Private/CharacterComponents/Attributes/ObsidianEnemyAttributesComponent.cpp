@@ -89,7 +89,7 @@ void UObsidianEnemyAttributesComponent::MaxEnergyShieldChanged(const FOnAttribut
 void UObsidianEnemyAttributesComponent::StaggerMeterChanged(const FOnAttributeChangeData& Data)
 {
 	const float StaggerMeter = Data.NewValue;
-
+	
 	StaggerMeterChangedDelegate.Broadcast(StaggerMeter);
 }
 

@@ -55,6 +55,7 @@ public:
 	 */
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, StaggerDamageTakenMultiplier);
 	
 	/**
 	 * Resistances
@@ -111,6 +112,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingDamage);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingHealthHealing);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingEnergyShieldHealing);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncomingStaggerMagnitude);
 
 	/**
 	 * Character
@@ -171,6 +173,8 @@ protected:
 	
 	UFUNCTION()
 	void OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_StaggerDamageTakenMultiplier(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Resistances
@@ -336,7 +340,11 @@ private:
 	/** The current Shock Damage Taken Multiplier attribute. Shock increases damage taken [5 - 50%] from all sources, only lightning damage can shock. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ShockDamageTakenMultiplier, Category = "Obsidian|CAttributes|Shock", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ShockDamageTakenMultiplier;
-
+	
+	/** The current Stagger Damage Taken Multiplier attribute. While staggered, damage from all sources is increased. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaggerDamageTakenMultiplier, Category = "Obsidian|CAttributes|Stagger", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData StaggerDamageTakenMultiplier;
+	
 	/**
 	 * Resistances
 	 */
@@ -492,5 +500,8 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|CAttributes|Meta", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData IncomingEnergyShieldHealing;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|CAttributes|Meta", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncomingStaggerMagnitude;
 };
 

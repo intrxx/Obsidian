@@ -40,6 +40,7 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	
 	// Damage Taken
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, StaggerDamageTakenMultiplier, COND_None, REPNOTIFY_Always);
 
 	// Resistances
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, FireResistance, COND_None, REPNOTIFY_Always);
@@ -162,6 +163,25 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			}
 		}
 	}
+	else if(Data.EvaluatedData.Attribute == GetIncomingStaggerMagnitudeAttribute())
+	{
+		const float LocalIncomingStaggerMagnitude = GetIncomingStaggerMagnitude();
+		const float CurrentStaggerMeter = GetStaggerMeter();
+		const float NewStaggerMeter = CurrentStaggerMeter + LocalIncomingStaggerMagnitude;
+		
+		if(NewStaggerMeter > GetMaxStaggerMeter())
+		{
+			//TODO Activate Stagger ability
+
+			SetStaggerMeter(0.0f);
+		}
+		else
+		{
+			SetStaggerMeter(NewStaggerMeter);
+		}
+
+		SetIncomingStaggerMagnitude(0.0f);
+	}
 	else if(Data.EvaluatedData.Attribute == GetIncomingHealthHealingAttribute())
 	{
 		const float LocalIncomingHealthHealing = GetIncomingHealthHealing();
@@ -272,6 +292,11 @@ void UObsidianCommonAttributeSet::OnRep_AilmentThreshold(const FGameplayAttribut
 void UObsidianCommonAttributeSet::OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_StaggerDamageTakenMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerDamageTakenMultiplier, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_AllElementalResistances(const FGameplayAttributeData& OldValue)

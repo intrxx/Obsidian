@@ -11,6 +11,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_ActivationFail_IsDead, "Ability.ActivationFail.IsDead", "Ability failed to activate because its owner is dead.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_HitReact, "Ability.HitReact", "Tag used for activating hit react.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Stagger, "Ability.Stagger", "Tag used for activating stagger.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_Damage, "SetByCaller.Damage", "Tag used for passing damage with set by caller magnitude.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_Heal, "SetByCaller.Heal", "Tag used for passing heal with set by caller magnitude.");
@@ -38,6 +39,7 @@ namespace ObsidianGameplayTags
 
 	// Effects
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_HitReact, "Effect.HitReact", "Tag used for activating the Hit React ability.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_Stagger, "Effect.Stagger", "Tag used for activating the Stagger ability.");
 
 	// Statuses
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_Death, "Status.Death", "Death has the death status.");

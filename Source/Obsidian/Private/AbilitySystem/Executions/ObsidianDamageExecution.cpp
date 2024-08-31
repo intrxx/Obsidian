@@ -319,8 +319,16 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	}
 	// ~ End of Shock calculation
 	
-	const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, ModifiedDamage);
-	OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
+	// ~ Start of Stagger calculation
+	//TODO Take Into account the weapon that the Player used to perform the attack
+	float StaggerMagnitude = ((ModifiedDamage / 100.f) * 2.40f) * 100.0f;
+	
+	const FGameplayModifierEvaluatedData& StaggerModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingStaggerMagnitudeAttribute(), EGameplayModOp::Override, StaggerMagnitude);
+	OutExecutionOutput.AddOutputModifier(StaggerModifierEvaluatedData);
+	// ~ End of Stagger calculation
+	
+	const FGameplayModifierEvaluatedData& DamageModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, ModifiedDamage);
+	OutExecutionOutput.AddOutputModifier(DamageModifierEvaluatedData);
 	
 #endif // WITH_SERVER_CODE
 }
