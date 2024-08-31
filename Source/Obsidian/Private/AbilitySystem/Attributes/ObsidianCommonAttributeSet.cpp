@@ -11,6 +11,7 @@
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
+	: StaggerDamageTakenMultiplier(0.0f)
 {
 	bOutOfHealth = false;
 }
@@ -171,7 +172,12 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 		
 		if(NewStaggerMeter > GetMaxStaggerMeter())
 		{
-			//TODO Activate Stagger ability
+			UAbilitySystemComponent* TargetASC = EffectProps.TargetASC;
+			TargetASC->CancelAllAbilities();
+			
+			FGameplayTagContainer ActivateTag;
+			ActivateTag.AddTag(ObsidianGameplayTags::Ability_Stagger);
+			TargetASC->TryActivateAbilitiesByTag(ActivateTag);
 
 			SetStaggerMeter(0.0f);
 		}

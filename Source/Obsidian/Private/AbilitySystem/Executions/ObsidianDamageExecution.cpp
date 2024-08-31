@@ -22,6 +22,7 @@ struct FObsidianDamageStatics
 	FGameplayEffectAttributeCaptureDefinition SpellSuppressionChanceDef;
 	FGameplayEffectAttributeCaptureDefinition SpellSuppressionMagnitudeDef;
 	FGameplayEffectAttributeCaptureDefinition AilmentThresholdDef;
+	FGameplayEffectAttributeCaptureDefinition StaggerDamageTakenMultiplierDef;
 	
 	FGameplayEffectAttributeCaptureDefinition FireResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition ColdResistanceDef;
@@ -47,6 +48,7 @@ struct FObsidianDamageStatics
 		SpellSuppressionChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionChanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		SpellSuppressionMagnitudeDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionMagnitudeAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		AilmentThresholdDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAilmentThresholdAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
+		StaggerDamageTakenMultiplierDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetStaggerDamageTakenMultiplierAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		
 		FireResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetFireResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		ColdResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetColdResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -84,6 +86,7 @@ UObsidianDamageExecution::UObsidianDamageExecution()
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionChanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionMagnitudeDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AilmentThresholdDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().StaggerDamageTakenMultiplierDef);
 
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().FireResistanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ColdResistanceDef);
@@ -320,6 +323,12 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	// ~ End of Shock calculation
 	
 	// ~ Start of Stagger calculation
+	float StaggerDamageTakenMultiplier = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().StaggerDamageTakenMultiplierDef, EvaluationParameters, StaggerDamageTakenMultiplier);
+	StaggerDamageTakenMultiplier = FMath::Max<float>(StaggerDamageTakenMultiplier, 0.0f);
+	
+	ModifiedDamage *= (100.0f + StaggerDamageTakenMultiplier) / 100.0f;
+	
 	//TODO Take Into account the weapon that the Player used to perform the attack
 	float StaggerMagnitude = ((ModifiedDamage / 100.f) * 2.40f) * 100.0f;
 	

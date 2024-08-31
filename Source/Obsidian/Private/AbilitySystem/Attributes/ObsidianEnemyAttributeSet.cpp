@@ -36,9 +36,12 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 			const float CombinedHealthPool = GetMaxHealth() + GetMaxEnergyShield();
 			if((LocalIncomingDamage / CombinedHealthPool) * 100.f > GetHitReactThreshold())
 			{
+				UAbilitySystemComponent* TargetASC = EffectProps.TargetASC;
+				TargetASC->CancelAllAbilities();
+				
 				FGameplayTagContainer ActivateTag;
 				ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
-				EffectProps.TargetASC->TryActivateAbilitiesByTag(ActivateTag);
+				TargetASC->TryActivateAbilitiesByTag(ActivateTag);
 			}	
 		}
 	}
