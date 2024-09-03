@@ -7,6 +7,7 @@
 #include "ObsidianGameplayAbility.generated.h"
 
 class UObsidianAbilitySystemComponent;
+
 /**
  * Defines how the Ability is meant to activate.
  */
@@ -34,7 +35,7 @@ struct FObsidianTaggedMontage
 	TObjectPtr<UAnimMontage> AbilityMontage = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	FGameplayTag MontageTag = FGameplayTag();
+	FGameplayTagContainer MontageTags = FGameplayTagContainer();
 };
 
 /**
