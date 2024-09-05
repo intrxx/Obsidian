@@ -94,6 +94,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Socket_BetweenHands, "GameplayEvent.AbilityMontage.Socket.BetweenHands", "Tag used for triggering gameplay event for damaging actor with melee attack between hands (could be used for slam or something). Used by Montage to retreive correct socket.");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_Melee, "AbilityActivation.Melee", "Tag used for triggering activation of AI's melee attack.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_Ranged, "AbilityActivation.Ranged", "Tag used for triggering activation of AI's ranged attack.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_TreeOrc_UnarmedSwing, "AbilityActivation.TreeOrc.UnarmedSwing", "Tag used for triggering activation of TreeOrcs's swing melee attack.");
 
