@@ -13,3 +13,4 @@ AObsidianAIControllerBase::AObsidianAIControllerBase()
 	bStartAILogicOnPossess = true;
 	bStopAILogicOnUnposses = true;
 }
+

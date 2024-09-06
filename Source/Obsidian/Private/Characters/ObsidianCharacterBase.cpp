@@ -84,6 +84,10 @@ void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
 	CharacterMoveComp->StopMovementImmediately();
 	CharacterMoveComp->DisableMovement();
 
+	UAbilitySystemComponent* AbilitySystemComponent = GetAbilitySystemComponent();
+	check(AbilitySystemComponent);
+	AbilitySystemComponent->CancelAbilities();
+
 	if(!DeathMontages.IsEmpty())
 	{
 		const float DeathMontagesLength = DeathMontages.Num();

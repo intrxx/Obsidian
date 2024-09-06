@@ -100,6 +100,10 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 {
 	Super::OnDeathStarted(OwningActor);
+
+	AController* C = GetController();
+	check(C);
+	C->UnPossess();
 }
 
 void AObsidianEnemy::OnDeathFinished(AActor* OwningActor)

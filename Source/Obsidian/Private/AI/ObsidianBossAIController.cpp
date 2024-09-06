@@ -40,7 +40,6 @@ void AObsidianBossAIController::OnPossess(APawn* InPawn)
 	{
 		PerceptionComp->OnTargetPerceptionUpdated.AddDynamic(this, &ThisClass::OnStimulusChanged);
 	}
-	
 }
 
 void AObsidianBossAIController::OnStimulusChanged(AActor* UpdatedActor, FAIStimulus Stimulus)
