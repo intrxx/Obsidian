@@ -19,10 +19,12 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	MeshComp->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	MeshComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
 	MeshComp->SetGenerateOverlapEvents(true);
 
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
+	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
 	CapsuleComp->SetGenerateOverlapEvents(false);
 
 	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");

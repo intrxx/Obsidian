@@ -69,6 +69,11 @@ void AObsidianProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCompone
 		return;
 	}
 
+	if(ClassToIgnore && OtherActor->IsA(ClassToIgnore))
+	{
+		return;
+	}
+
 	if(!bServerHit)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ProjImpactSound, GetActorLocation(), FRotator::ZeroRotator);

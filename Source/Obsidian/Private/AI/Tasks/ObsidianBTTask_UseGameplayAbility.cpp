@@ -47,7 +47,7 @@ EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilit
 		const UBlackboardComponent* BlackboardComp = AIController->GetBlackboardComponent();
 		if(AActor* TargetActor = Cast<AActor>(BlackboardComp->GetValueAsObject(CombatTarget_Selector.SelectedKeyName)))
 		{
-			IObsidianEnemyInterface::Execute_SetCombatTarget(AIController, TargetActor);
+			IObsidianEnemyInterface::Execute_SetCombatTarget(Actor, TargetActor);
 		}
 		else
 		{

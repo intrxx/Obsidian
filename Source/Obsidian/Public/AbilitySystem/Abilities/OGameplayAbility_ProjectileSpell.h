@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "ObsidianDamageGameplayAbility.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
 class AObsidianProjectile;
@@ -25,12 +24,12 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 protected:
-	/** Enum to decide at what location the projectile will be spawned */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
-	EObsidianAbilitySpawnLocation AbilitySpawnLocation = EObsidianAbilitySpawnLocation::ASL_DefaultLocation;
-	
-	/** Projectile class to spawn by this ability */
+	/** Projectile class to spawn by this ability. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<AObsidianProjectile> ProjectileClass;
+
+	/** This class will be ignored by the projectile. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
+	UClass* ClassToIgnore = nullptr;
 };
 
