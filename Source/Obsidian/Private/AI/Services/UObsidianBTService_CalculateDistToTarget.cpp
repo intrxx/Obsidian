@@ -30,6 +30,6 @@ void UObsidianBTService_CalculateDistToTarget::TickNode(UBehaviorTreeComponent& 
 
 	const AActor* TargetActor = Cast<AActor>(OwnerBlackBoardComp->GetValueAsObject(TargetActor_Selector.SelectedKeyName));
 	const float DistanceToActor = OwningPawn->GetDistanceTo(TargetActor);
-
+	
 	OwnerBlackBoardComp->SetValueAsFloat(DistanceToTargetActor_Selector.SelectedKeyName, DistanceToActor);
 }
