@@ -6,6 +6,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "ObsidianGameplayAbility.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianAbilitySystemComponent;
 
 /**
@@ -56,6 +57,24 @@ public:
 	}
 
 protected:
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	APlayerController* GetPlayerControllerFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	UAbilitySystemComponent* GetAbilitySystemCompFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	USkeletalMeshComponent* GetSkeletalMeshCompFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	UMovementComponent* GetMovementCompFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	AObsidianPlayerController* GetObsidianPlayerControllerFromActorInfo() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemCompFromActorInfo() const;
+	
 	//~UGameplayAbility interface
 	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
 	//~End of UGameplayAbility interface

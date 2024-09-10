@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Obsidian/Obsidian.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -14,8 +15,38 @@ UObsidianGameplayAbility::UObsidianGameplayAbility(const FObjectInitializer& Obj
 {
 }
 
+APlayerController* UObsidianGameplayAbility::GetPlayerControllerFromActorInfo() const
+{
+	return (CurrentActorInfo ? CurrentActorInfo->PlayerController.Get() : nullptr);
+}
+
+UAbilitySystemComponent* UObsidianGameplayAbility::GetAbilitySystemCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? CurrentActorInfo->AbilitySystemComponent.Get() : nullptr);
+}
+
+USkeletalMeshComponent* UObsidianGameplayAbility::GetSkeletalMeshCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? CurrentActorInfo->SkeletalMeshComponent.Get() : nullptr);
+}
+
+UMovementComponent* UObsidianGameplayAbility::GetMovementCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? CurrentActorInfo->MovementComponent.Get() : nullptr);
+}
+
+AObsidianPlayerController* UObsidianGameplayAbility::GetObsidianPlayerControllerFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<AObsidianPlayerController>(CurrentActorInfo->PlayerController.Get()) : nullptr);
+}
+
+UObsidianAbilitySystemComponent* UObsidianGameplayAbility::GetObsidianAbilitySystemCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<UObsidianAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent.Get()) : nullptr);
+}
+
 bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent,
-	const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+                                                                 const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {
 		// Specialized version to handle death exclusion and AbilityTags expansion via ASC
 
