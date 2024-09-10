@@ -2,6 +2,8 @@
 
 
 #include "AI/AObsidianAIControllerBase.h"
+
+#include "AI/NavigationSystemBase.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
@@ -12,5 +14,6 @@ AObsidianAIControllerBase::AObsidianAIControllerBase()
 
 	bStartAILogicOnPossess = true;
 	bStopAILogicOnUnposses = true;
+	
 }
 
