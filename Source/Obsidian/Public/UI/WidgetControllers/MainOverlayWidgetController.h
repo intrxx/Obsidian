@@ -8,6 +8,7 @@
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "MainOverlayWidgetController.generated.h"
 
+struct FObsidianEffectUIData;
 class UOStackingDurationalEffectInfo;
 class UObsidianDurationalEffectInfo;
 class UObsidianAbilitySystemComponent;
@@ -162,6 +163,8 @@ protected:
 	
 	template<typename T>
 	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+
+	void HandleEffectApplied(const FObsidianEffectUIData& UIData);
 
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;

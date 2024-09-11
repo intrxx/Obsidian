@@ -43,6 +43,50 @@ protected:
 	virtual void HandleWidgetControllerSet() override;
 	// ~ End of Obsidian Widget Base
 	
+	void SetExperienceTextBlock() const;
+	void SetExperienceProgressBar() const;
+
+	void OnExperienceChanged(const float Value);
+	void OnMaxExperienceChanged(const float Value);
+	
+	void OnStrengthChanged(const float Value);
+	void OnIntelligenceChanged(const float Value);
+	void OnDexterityChanged(const float Value);
+	void OnFaithChanged(const float Value);
+	
+	void OnMaxHealthChanged(const float Value);
+	void OnMaxManaChanged(const float Value);
+	void OnMaxSpecialResourceChanged(const float Value);
+	void OnMaxEnergyShieldChanged(const float Value);
+	
+	void OnAccuracyChanged(const float Value);
+	void OnAttackSpeedChanged(const float Value);
+	void OnCastSpeedChanged(const float Value);
+	void OnCriticalStrikeChanceChanged(const float Value);
+	void OnCriticalStrikeDamageMultiplierChanged(const float Value);
+	void OnPhysicalDamageMultiplierChanged(const float Value);
+	void OnFireDamageMultiplierChanged(const float Value);
+	void OnLightningDamageMultiplierChanged(const float Value);
+	void OnColdDamageMultiplierChanged(const float Value);
+	void OnChaosDamageMultiplierChanged(const float Value);
+	void OnFirePenetrationChanged(const float Value);
+	void OnLightningPenetrationChanged(const float Value);
+	void OnColdPenetrationChanged(const float Value);
+	void OnChaosPenetrationChanged(const float Value);
+	
+	void OnArmorChanged(const float Value);
+	void OnEvasionChanged(const float Value);
+	void OnHealthRegenerationChanged(const float Value);
+	void OnEnergyShieldRegenerationChanged(const float Value);
+	void OnFireResistanceChanged(const float Value, const float MaxValue);
+	void OnColdResistanceChanged(const float Value, const float MaxValue);
+	void OnLightningResistanceChanged(const float Value, const float MaxValue);
+	void OnChaosResistanceChanged(const float Value, const float MaxValue);
+	void OnSpellSuppressionChanceChanged(const float Value);
+	void OnSpellSuppressionMagnitudeChanged(const float Value);
+	void OnHitBlockChanceChanged(const float Value, const float MaxValue);
+	void OnSpellBlockChanceChanged(const float Value, const float MaxValue);
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Close_Button;
@@ -221,10 +265,6 @@ protected:
 	UPROPERTY(BlueprintReadOnly, meta=(BindWidget), Category = "Obsidian|CharacterStatus|AttributeBoxes")
 	TObjectPtr<UScrollBox> Misc_ScrollBox;
 
-private:
-	void SetExperienceTextBlock() const;
-	void SetExperienceProgressBar() const;
-	
 private:
 	UPROPERTY()
 	TObjectPtr<UScrollBox> CurrentlyShownTab;

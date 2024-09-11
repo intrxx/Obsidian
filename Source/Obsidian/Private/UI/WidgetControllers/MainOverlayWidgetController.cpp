@@ -21,45 +21,8 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	ObsidianPC->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateHoveringOverTarget);
 	ObsidianPC->OnBossDetectedPlayerDelegate.BindDynamic(this, &ThisClass::UpdateBossDetectionInfo);
 	
-	ObsidianASC->EffectAppliedAssetTags.AddLambda(
-		[this](const FObsidianEffectUIData& UIData)
-		{
-			for(const FGameplayTag& Tag : UIData.AssetTags)
-			{
-				const FGameplayTag EffectUIDataTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData"));
-				if(Tag.MatchesTag(EffectUIDataTag))
-				{
-					FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
-					Row->EffectDuration = UIData.EffectDuration;
-					
-					if(UIData.bStackingEffect)
-					{
-						EffectStackingUIDataDelegate.Broadcast(*Row, UIData.StackingData);
-					}
-					else
-					{
-						EffectUIDataWidgetRowDelegate.Broadcast(*Row);
-					}
-				}
-
-				if(UIData.EffectDurationPolicy == EGameplayEffectDurationType::HasDuration)
-				{
-					const FGameplayTag HealthGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_HealingHealth;
-					const FGameplayTag ManaGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_RepleanishingMana;
-					if(Tag.MatchesTag(HealthGlobeDataTag))
-					{
-						EffectUIHealthGlobeDataDelegate.Broadcast(UIData.EffectDuration, UIData.EffectMagnitude);
-					}
-					if(Tag.MatchesTag(ManaGlobeDataTag))
-					{
-						EffectUIManaGlobeDataDelegate.Broadcast(UIData.EffectDuration, UIData.EffectMagnitude);
-					}
-				}
-			}
-		});
-
+	ObsidianASC->OnEffectAppliedAssetTags.AddUObject(this, &ThisClass::HandleEffectApplied);
 	
-
 	SetInitialAttributeValues();
 
 	ObsidianASC->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
@@ -98,6 +61,42 @@ void UMainOverlayWidgetController::SetInitialStaggerMeter() const
 {
 	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
 	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
+}
+
+void UMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIData& UIData)
+{
+	for(const FGameplayTag& Tag : UIData.AssetTags)
+	{
+		const FGameplayTag EffectUIDataTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData"));
+		if(Tag.MatchesTag(EffectUIDataTag))
+		{
+			FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
+			Row->EffectDuration = UIData.EffectDuration;
+					
+			if(UIData.bStackingEffect)
+			{
+				EffectStackingUIDataDelegate.Broadcast(*Row, UIData.StackingData);
+			}
+			else
+			{
+				EffectUIDataWidgetRowDelegate.Broadcast(*Row);
+			}
+		}
+
+		if(UIData.EffectDurationPolicy == EGameplayEffectDurationType::HasDuration)
+		{
+			const FGameplayTag HealthGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_HealingHealth;
+			const FGameplayTag ManaGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_RepleanishingMana;
+			if(Tag.MatchesTag(HealthGlobeDataTag))
+			{
+				EffectUIHealthGlobeDataDelegate.Broadcast(UIData.EffectDuration, UIData.EffectMagnitude);
+			}
+			if(Tag.MatchesTag(ManaGlobeDataTag))
+			{
+				EffectUIManaGlobeDataDelegate.Broadcast(UIData.EffectDuration, UIData.EffectMagnitude);
+			}
+		}
+	}
 }
 
 void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const

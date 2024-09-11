@@ -60,7 +60,7 @@ public:
 	void GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const;
 
 public:
-	FEffectAppliedAssetTags EffectAppliedAssetTags;
+	FEffectAppliedAssetTags OnEffectAppliedAssetTags;
 	FOnAuraDisabled OnAuraDisabledDelegate;
 	
 protected:

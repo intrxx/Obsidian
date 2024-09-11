@@ -96,7 +96,7 @@ void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbil
 			EffectUIData.StackingData = StackingData;
 		}
 	
-		EffectAppliedAssetTags.Broadcast(EffectUIData);
+		OnEffectAppliedAssetTags.Broadcast(EffectUIData);
 	}
 }
 
