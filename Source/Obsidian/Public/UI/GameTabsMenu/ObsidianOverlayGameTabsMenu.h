@@ -41,6 +41,9 @@ public:
 	/**
 	 * 
 	 */
+
+protected:
+	void OnCharacterStatusTabStatusChange(bool bIsConstructed);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

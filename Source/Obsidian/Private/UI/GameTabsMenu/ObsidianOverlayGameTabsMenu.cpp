@@ -13,14 +13,19 @@ void UObsidianOverlayGameTabsMenu::NativeConstruct()
 	{
 		CharacterStatus_GameTabButton->Tab_Button->OnClicked.AddDynamic(this, &ThisClass::OnCharacterStatusButtonClicked);
 		
-		OnCharacterStatusTabStatusChangeDelegate.AddLambda([this](bool bIsConstructed)
-		{
-			CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
-		});
+		OnCharacterStatusTabStatusChangeDelegate.AddUObject(this, &ThisClass::OnCharacterStatusTabStatusChange);
 	}
 }
 
 void UObsidianOverlayGameTabsMenu::OnCharacterStatusButtonClicked()
 {
 	OnCharacterStatusButtonClickedDelegate.Broadcast();
+}
+
+void UObsidianOverlayGameTabsMenu::OnCharacterStatusTabStatusChange(bool bIsConstructed)
+{
+	if(CharacterStatus_GameTabButton)
+	{
+		CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
+	}
 }

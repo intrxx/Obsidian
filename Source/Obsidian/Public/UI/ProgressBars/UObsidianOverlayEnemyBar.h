@@ -18,6 +18,9 @@ class OBSIDIAN_API UObsidianOverlayEnemyBar : public UObsidianBasicHealthBar
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY()
+	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComp;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> EnemyName_TextBlock;
 
@@ -29,10 +32,17 @@ protected:
 	
 protected:
 	virtual void HandleWidgetControllerSet() override;
-	
-	void SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp);
 	virtual void UninitAndDestroy();
-
+	
+	void SetInitialValues();
+	
+	void HealthChanged(const float NewValue);
+	void MaxHealthChanged(const float NewValue);
+	void EnergyShieldChanged(const float NewValue);
+	void MaxEnergyShieldChanged(const float NewValue);
+	void StaggerMeterChanged(const float NewValue);
+	void MaxStaggerMeterChanged(const float NewValue);
+	
 private:
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle MaxHealthChangedDelegateHandle;

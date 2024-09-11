@@ -12,35 +12,40 @@ void UObsidianRegularEnemyHealthBar::HandleWidgetControllerSet()
       return;
    }
    
-   EnemyAttributesComp->HealthChangedDelegate.AddLambda([this](const float NewValue)
-   {
-      Health = NewValue;
-      SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
-      StartWidgetHideTimer();
-   });
-
-   EnemyAttributesComp->MaxHealthChangedDelegate.AddLambda([this](const float NewValue)
-   {
-      MaxHealth = NewValue;
-      SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
-      StartWidgetHideTimer();
-   });
-
-   EnemyAttributesComp->EnergyShieldChangedDelegate.AddLambda([this](const float NewValue)
-   {
-      EnergyShield = NewValue;
-      SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
-      StartWidgetHideTimer();
-   });
-   
-   EnemyAttributesComp->MaxEnergyShieldChangedDelegate.AddLambda([this](const float NewValue)
-   {
-      MaxEnergyShield = NewValue;
-      SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
-      StartWidgetHideTimer();
-   });
+   EnemyAttributesComp->HealthChangedDelegate.AddUObject(this, &ThisClass::HealthChanged);
+   EnemyAttributesComp->MaxHealthChangedDelegate.AddUObject(this, &ThisClass::MaxHealthChanged);
+   EnemyAttributesComp->EnergyShieldChangedDelegate.AddUObject(this, &ThisClass::EnergyShieldChanged);
+   EnemyAttributesComp->MaxEnergyShieldChangedDelegate.AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
 
    SetInitialValues(EnemyAttributesComp);
+}
+
+void UObsidianRegularEnemyHealthBar::HealthChanged(const float NewValue)
+{
+   Health = NewValue;
+   SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
+   StartWidgetHideTimer();
+}
+
+void UObsidianRegularEnemyHealthBar::MaxHealthChanged(const float NewValue)
+{
+   MaxHealth = NewValue;
+   SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
+   StartWidgetHideTimer();
+}
+
+void UObsidianRegularEnemyHealthBar::EnergyShieldChanged(const float NewValue)
+{
+   EnergyShield = NewValue;
+   SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
+   StartWidgetHideTimer();
+}
+
+void UObsidianRegularEnemyHealthBar::MaxEnergyShieldChanged(const float NewValue)
+{
+   MaxEnergyShield = NewValue;
+   SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
+   StartWidgetHideTimer();
 }
 
 //TODO: This should probably be an option in the future
