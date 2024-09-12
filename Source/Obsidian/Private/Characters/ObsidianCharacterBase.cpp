@@ -28,11 +28,11 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	CapsuleComp->SetGenerateOverlapEvents(false);
 
 	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");
-	RightHandEquipmentMesh->SetupAttachment(GetMesh(), FName("EquipmentRightHandSocket"));
+	RightHandEquipmentMesh->SetupAttachment(MeshComp, ObsidianMeshSocketNames::RightHandWeaponSocket);
 	RightHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	LeftHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("LeftHandEquipmentMesh");
-	LeftHandEquipmentMesh->SetupAttachment(GetMesh(), FName("EquipmentLeftHandSocket"));
+	LeftHandEquipmentMesh->SetupAttachment(MeshComp, ObsidianMeshSocketNames::LeftHandWeaponSocket);
 	LeftHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));

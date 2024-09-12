@@ -70,10 +70,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
 	TObjectPtr<UObsidianPawnExtensionComponent> PawnExtComp;
 	
-	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> RightHandEquipmentMesh;
 
-	UPROPERTY(EditAnywhere, Category = "Obsidian|Combat")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Combat", meta = (AllowPrivateAccess = "true"))

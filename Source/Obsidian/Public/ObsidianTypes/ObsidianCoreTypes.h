@@ -34,6 +34,14 @@ namespace ObsidianAbilitySocketNames
 	static inline FName LeftHand = FName("LeftHandAbilitySocket");
 }
 
+/** Collection of FNames socket names stored for convenience and typo avoidance. */
+namespace ObsidianMeshSocketNames
+{
+	static inline FName RightHandWeaponSocket = FName("EquipmentRightHandSocket");
+	static inline FName LeftHandWeaponSocket = FName("EquipmentLeftHandSocket");
+	static inline FName BackWeaponSocket = FName("EquipmentBackSocket");
+}
+
 /** Enum that holds enemy classes. */
 UENUM(BlueprintType)
 enum class EObsidianEnemyClass : uint8
