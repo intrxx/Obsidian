@@ -6,6 +6,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "ObsidianGameplayAbility.generated.h"
 
+class UObsidianCharacterMovementComponent;
+class UCharacterMovementComponent;
 class AObsidianPlayerController;
 class UObsidianAbilitySystemComponent;
 
@@ -68,6 +70,12 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	UMovementComponent* GetMovementCompFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	UCharacterMovementComponent* GetCharacterMovementCompFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	UObsidianCharacterMovementComponent* GetObsidianCharacterMovementCompFromActorInfo() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	AObsidianPlayerController* GetObsidianPlayerControllerFromActorInfo() const;

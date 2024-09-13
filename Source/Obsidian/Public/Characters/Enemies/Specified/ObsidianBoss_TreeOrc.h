@@ -16,9 +16,5 @@ class OBSIDIAN_API AObsidianBoss_TreeOrc : public AObsidianBossEnemy
 
 public:
 	AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectInitializer);
-
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
-	TObjectPtr<USkeletalMeshComponent> BackWeaponSkeletalMeshComp;
 	
 };

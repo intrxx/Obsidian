@@ -2,10 +2,8 @@
 
 
 #include "AbilitySystem/Abilities/AI/ObsidianAIGameplayAbility_Melee.h"
-
 #include "AIController.h"
 #include "AI/ObsidianEnemyInterface.h"
-#include "GameFramework/MovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Navigation/PathFollowingComponent.h"
 
@@ -20,24 +18,26 @@ void UObsidianAIGameplayAbility_Melee::ActivateAbility(const FGameplayAbilitySpe
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 	}
 
-	OwningAIController = GetAIControllerFromActorInfo();
+	OwningAIController = OwningAIController.Get() == nullptr ? GetAIControllerFromActorInfo() : OwningAIController.Get();
 	if(OwningAIController == nullptr)
 	{
 		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
 	}
 
 	CombatTargetActor = IObsidianEnemyInterface::Execute_GetCombatTarget(AvatarActor);
+	if(CombatTargetActor == nullptr)
+	{
+		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+	}
 	
 	if(bShouldStopMovement)
 	{
-		UMovementComponent* MoveComp = GetMovementCompFromActorInfo();
-		MoveComp->Deactivate();
-		/*
+		//UMovementComponent* MoveComp = GetMovementCompFromActorInfo();
+		//MoveComp->Deactivate();
 		if(UPathFollowingComponent* PathFollowingComp = OwningAIController->GetPathFollowingComponent())
 		{
 			PathFollowingComp->LockResource(RequestPriority);
 		}
-		*/
 	}
 
 	if(bShouldRotateToTarget)
@@ -61,14 +61,12 @@ void UObsidianAIGameplayAbility_Melee::EndAbility(const FGameplayAbilitySpecHand
 
 	if(bShouldStopMovement)
 	{
-		UMovementComponent* MoveComp = GetMovementCompFromActorInfo();
-		MoveComp->Activate();
-		/*
+		//UMovementComponent* MoveComp = GetMovementCompFromActorInfo();
+		//MoveComp->Activate();
 		if(UPathFollowingComponent* PathFollowingComp = OwningAIController->GetPathFollowingComponent())
 		{
 			PathFollowingComp->ClearResourceLock(RequestPriority);
 		}
-		*/
 	}
 }
 

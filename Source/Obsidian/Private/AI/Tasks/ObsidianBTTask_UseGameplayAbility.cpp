@@ -60,7 +60,6 @@ EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilit
 	{
 		if(UAbilitySystemComponent* OwningASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 		{
-			
 			OwningASC->TryActivateAbilitiesByTag(ActivateAbilityWithTag, true);
 			
 			NodeResult = EBTNodeResult::Succeeded;

@@ -21,8 +21,13 @@ public:
 	AObsidianCharacterBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
+    UCapsuleComponent* GetCapsuleComp() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
+	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	
 	bool CanHitReact() const
 	{
 		return bCanHitReact;

@@ -6,7 +6,9 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Obsidian/Obsidian.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -33,6 +35,16 @@ USkeletalMeshComponent* UObsidianGameplayAbility::GetSkeletalMeshCompFromActorIn
 UMovementComponent* UObsidianGameplayAbility::GetMovementCompFromActorInfo() const
 {
 	return (CurrentActorInfo ? CurrentActorInfo->MovementComponent.Get() : nullptr);
+}
+
+UCharacterMovementComponent* UObsidianGameplayAbility::GetCharacterMovementCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<UCharacterMovementComponent>(CurrentActorInfo->MovementComponent.Get()) : nullptr);
+}
+
+UObsidianCharacterMovementComponent* UObsidianGameplayAbility::GetObsidianCharacterMovementCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<UObsidianCharacterMovementComponent>(CurrentActorInfo->MovementComponent.Get()) : nullptr);
 }
 
 AObsidianPlayerController* UObsidianGameplayAbility::GetObsidianPlayerControllerFromActorInfo() const

@@ -47,6 +47,15 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	RightHandSocketName = ObsidianAbilitySocketNames::RightHand;
 }
 
+UCapsuleComponent* AObsidianCharacterBase::GetCapsuleComp() const
+{
+	if(UCapsuleComponent* CapsuleComp = GetCapsuleComponent())
+	{
+		return CapsuleComp;
+	}
+	return nullptr; 
+}
+
 UObsidianAbilitySystemComponent* AObsidianCharacterBase::GetObsidianAbilitySystemComponent() const
 {
 	return Cast<UObsidianAbilitySystemComponent>(GetAbilitySystemComponent());
