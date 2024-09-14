@@ -37,6 +37,4 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Enemy", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UAIPerceptionComponent> PerceptionComp;
-
-	bool bIntroduce = true;
 };

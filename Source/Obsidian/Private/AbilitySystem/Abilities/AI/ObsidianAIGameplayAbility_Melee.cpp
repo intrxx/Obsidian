@@ -32,8 +32,6 @@ void UObsidianAIGameplayAbility_Melee::ActivateAbility(const FGameplayAbilitySpe
 	
 	if(bShouldStopMovement)
 	{
-		//UMovementComponent* MoveComp = GetMovementCompFromActorInfo();
-		//MoveComp->Deactivate();
 		if(UPathFollowingComponent* PathFollowingComp = OwningAIController->GetPathFollowingComponent())
 		{
 			PathFollowingComp->LockResource(RequestPriority);
@@ -61,8 +59,6 @@ void UObsidianAIGameplayAbility_Melee::EndAbility(const FGameplayAbilitySpecHand
 
 	if(bShouldStopMovement)
 	{
-		//UMovementComponent* MoveComp = GetMovementCompFromActorInfo();
-		//MoveComp->Activate();
 		if(UPathFollowingComponent* PathFollowingComp = OwningAIController->GetPathFollowingComponent())
 		{
 			PathFollowingComp->ClearResourceLock(RequestPriority);

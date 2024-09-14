@@ -21,9 +21,9 @@ protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Nearest Target Actor"), Category = "Key")
 	FBlackboardKeySelector NearestTargetActor_Selector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Distance To Target Actor"), Category = "Key")
 	FBlackboardKeySelector DistanceToTargetActor_Selector;
 };

@@ -22,10 +22,10 @@ protected:
 	virtual EBTNodeResult::Type PerformFindLocationAroundTargetTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
 
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "New Location Around Target"), Category = "Key")
 	FBlackboardKeySelector NewLocationAroundTarget_Selector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Target"), Category = "Key")
 	FBlackboardKeySelector Target_Selector;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")

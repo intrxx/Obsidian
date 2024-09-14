@@ -28,25 +28,6 @@ void AObsidianBossEnemy::PossessedBy(AController* NewController)
 	ObsidianBossAIController->RunBehaviorTree(BehaviorTree);
 }
 
-void AObsidianBossEnemy::HandleIntroduction(UBlackboardComponent* OwningBlackboard, AObsidianHero* TargetActor)
-{
-	float IntroductionLength = 0.0f;
-	if(IntroductionMontage)
-	{
-		IntroductionLength = PlayAnimMontage(IntroductionMontage);
-	}
-
-	UWorld* World = GetWorld();
-	if(World)
-	{
-		World->GetTimerManager().SetTimer(IntroductionFinishedTimerHandle, FTimerDelegate::CreateWeakLambda(this, [OwningBlackboard]()
-		{
-			OwningBlackboard->SetValueAsBool(FName(TEXT("bIntroduced")), true);
-			
-		}), IntroductionLength, false);
-	}
-}
-
 void AObsidianBossEnemy::OnAbilitySystemInitialized()
 {
 	Super::OnAbilitySystemInitialized();

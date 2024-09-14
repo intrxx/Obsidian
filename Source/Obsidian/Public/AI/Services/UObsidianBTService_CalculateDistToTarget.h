@@ -22,9 +22,9 @@ protected:
 
 protected:
 	/** Target Actor to calculate the distance to. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Target Actor"), Category = "Key")
 	FBlackboardKeySelector TargetActor_Selector;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Distance To Target"), Category = "Key")
 	FBlackboardKeySelector DistanceToTargetActor_Selector;
 };
