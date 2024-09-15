@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "BehaviorTree/BTTaskNode.h"
-#include "UObsidianBTTask_FindLocationAroundTarget.generated.h"
+#include "ObsidianBTTask_FindLocationAroundTarget.generated.h"
 
 /**
  * 

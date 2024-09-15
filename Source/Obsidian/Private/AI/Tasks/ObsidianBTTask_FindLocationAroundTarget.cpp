@@ -1,7 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "AI/Tasks/UObsidianBTTask_FindLocationAroundTarget.h"
+#include "AI/Tasks/ObsidianBTTask_FindLocationAroundTarget.h"
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
