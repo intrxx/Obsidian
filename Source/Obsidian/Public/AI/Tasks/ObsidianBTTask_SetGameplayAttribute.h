@@ -26,7 +26,7 @@ struct FGameplayAttributeSet
 };
 
 /**
- * 
+ * Task for giving Gameplay Attribute to the Behavior Tree Owner.
  */
 UCLASS()
 class OBSIDIAN_API UObsidianBTTask_SetGameplayAttribute : public UBTTaskNode
