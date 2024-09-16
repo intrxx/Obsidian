@@ -58,7 +58,7 @@ enum class EObsidianEnemyClass : uint8
 UENUM(BlueprintType)
 enum class EObsidianAbilitySpawnLocation : uint8
 {
-	ASL_DefaultLocation UMETA(DisplayName = "Default Location"),
+	ASL_DefaultLocation = 0 UMETA(DisplayName = "Default Location"),
 	ASL_LeftHand UMETA(DisplayName = "Left Hand"),
 	ASL_RightHand UMETA(DisplayName = "Right Hand"),
 	ASL_LeftHandEquipment UMETA(DisplayName = "Left Hand Equipment"),
@@ -71,9 +71,18 @@ enum class EObsidianAbilitySpawnLocation : uint8
 UENUM(BlueprintType)
 enum class EObsidianTraceType  : uint8
 {
-	SimpleLineTrace = 0 UMETA(DisplayName = "Simple Line Trace"),
-	ComplexLineTrace UMETA(DisplayName = "Complex Line Trace"),
-	SimpleBoxTrace UMETA(DisplayName = "Simple Box Trace"),
-	ComplexBoxTrace UMETA(DisplayName = "Complex Box Trace"),
-	SimpleCapsuleTrace UMETA(DisplayName = "Simple Capsule Trace")
+	ETT_SimpleLineTrace = 0 UMETA(DisplayName = "Simple Line Trace"),
+	ETT_ComplexLineTrace UMETA(DisplayName = "Complex Line Trace"),
+	ETT_SimpleBoxTrace UMETA(DisplayName = "Simple Box Trace"),
+	ETT_ComplexBoxTrace UMETA(DisplayName = "Complex Box Trace"),
+	ETT_SimpleCapsuleTrace UMETA(DisplayName = "Simple Capsule Trace")
+};
+
+/** Enum that holds types of traced mesh e.g. Actor Mesh, Left Hand Weapon Mesh, Right Hand Weapon Mesh. */
+UENUM(BlueprintType)
+enum class EObsidianTracedMeshType  : uint8
+{
+	ETMT_CharacterMesh = 0 UMETA(DisplayName = "Character Mesh"),
+	ETMT_RightHandWeaponMesh UMETA(DisplayName = "Right Hand Weapon Mesh"),
+	ETMT_LeftHandWeaponMesh UMETA(DisplayName = "Left Hand Weapon Mesh")
 };

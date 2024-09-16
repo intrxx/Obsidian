@@ -14,6 +14,18 @@ AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializ
 	Super(ObjectInitializer)
 {
 	AdvancedCombatComponent = CreateDefaultSubobject<UObsidianAdvancedCombatComponent>(TEXT("AdvancedCombatComponent"));
+
+	UMeshComponent* CharacterMesh = GetMesh();
+	check(CharacterMesh);
+	
+	const TMap<UPrimitiveComponent*, EObsidianTracedMeshType> TracedMeshesMap
+	{
+		{CharacterMesh, EObsidianTracedMeshType::ETMT_CharacterMesh},
+		{RightHandEquipmentMesh, EObsidianTracedMeshType::ETMT_RightHandWeaponMesh},
+		{LeftHandEquipmentMesh, EObsidianTracedMeshType::ETMT_LeftHandWeaponMesh}
+	};
+	AdvancedCombatComponent->AddTracedMeshes(TracedMeshesMap);
+	
 	
 	Tags.Emplace(ObsidianActorTags::BossEnemy);
 }
