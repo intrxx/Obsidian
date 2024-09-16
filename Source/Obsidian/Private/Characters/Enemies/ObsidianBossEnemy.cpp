@@ -5,6 +5,7 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AI/ObsidianBossAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -12,6 +13,8 @@
 AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer) :
 	Super(ObjectInitializer)
 {
+	AdvancedCombatComponent = CreateDefaultSubobject<UObsidianAdvancedCombatComponent>(TEXT("AdvancedCombatComponent"));
+	
 	Tags.Emplace(ObsidianActorTags::BossEnemy);
 }
 
@@ -23,6 +26,7 @@ void AObsidianBossEnemy::PossessedBy(AController* NewController)
 	{
 		return;
 	}
+	
 	ObsidianBossAIController = Cast<AObsidianBossAIController>(NewController);
 	ObsidianBossAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
 	ObsidianBossAIController->RunBehaviorTree(BehaviorTree);

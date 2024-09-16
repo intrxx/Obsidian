@@ -66,3 +66,14 @@ enum class EObsidianAbilitySpawnLocation : uint8
 
 	ASL_MAX UMETA(DisplayName = "Default MAX") 
 };
+
+/** Enum that holds trace types used for advanced combat component. */
+UENUM(BlueprintType)
+enum class EObsidianTraceType  : uint8
+{
+	SimpleLineTrace = 0 UMETA(DisplayName = "Simple Line Trace"),
+	ComplexLineTrace UMETA(DisplayName = "Complex Line Trace"),
+	SimpleBoxTrace UMETA(DisplayName = "Simple Box Trace"),
+	ComplexBoxTrace UMETA(DisplayName = "Complex Box Trace"),
+	SimpleCapsuleTrace UMETA(DisplayName = "Simple Capsule Trace")
+};

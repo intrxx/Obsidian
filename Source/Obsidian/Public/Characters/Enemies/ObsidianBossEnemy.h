@@ -6,6 +6,7 @@
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "ObsidianBossEnemy.generated.h"
 
+class UObsidianAdvancedCombatComponent;
 class AObsidianHero;
 class UBlackboardComponent;
 class AObsidianAIControllerBase;
@@ -37,4 +38,7 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<AObsidianAIControllerBase> ObsidianBossAIController;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianAdvancedCombatComponent> AdvancedCombatComponent;
 };

@@ -59,6 +59,9 @@ public:
 	}
 
 protected:
+	template<typename T>
+	T* GetCharacterFromActorInfo() const;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	APlayerController* GetPlayerControllerFromActorInfo() const;
 
@@ -102,3 +105,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianTaggedMontage> AbilityMontages;
 };
+
+template <typename T>
+T* UObsidianGameplayAbility::GetCharacterFromActorInfo() const
+{
+	return CurrentActorInfo ? Cast<T>(CurrentActorInfo->AvatarActor.Get()) : nullptr;
+}
