@@ -71,10 +71,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void AddTracedMeshes(TMap<EObsidianTracedMeshType, UPrimitiveComponent*> InTracedMeshesMap);
-
-	/* Probably shouldn't use it for now. **/
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void RemoveTracedMesh(UPrimitiveComponent* TracedMeshToRemove);
+	void RemoveTracedMeshWithType(const EObsidianTracedMeshType TracedMeshType);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void ClearTracedMeshes();

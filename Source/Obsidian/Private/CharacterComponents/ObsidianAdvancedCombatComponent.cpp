@@ -212,14 +212,9 @@ void UObsidianAdvancedCombatComponent::AddTracedMeshes(TMap<EObsidianTracedMeshT
 	}
 }
 
-void UObsidianAdvancedCombatComponent::RemoveTracedMesh(UPrimitiveComponent* TracedMeshToRemove)
+void UObsidianAdvancedCombatComponent::RemoveTracedMeshWithType(const EObsidianTracedMeshType TracedMeshType)
 {
-	// Idk if this is actually ever needed
-	if(!IsValid(TracedMeshToRemove))
-	{
-		return;
-	}
-	TracedMeshesMap.Remove(*TracedMeshesMap.FindKey(TracedMeshToRemove));
+	TracedMeshesMap.Remove(TracedMeshType);
 }
 
 void UObsidianAdvancedCombatComponent::ClearTracedMeshes()
