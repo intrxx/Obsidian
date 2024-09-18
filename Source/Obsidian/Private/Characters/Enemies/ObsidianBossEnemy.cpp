@@ -18,14 +18,16 @@ AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializ
 	UMeshComponent* CharacterMesh = GetMesh();
 	check(CharacterMesh);
 	
-	const TMap<UPrimitiveComponent*, EObsidianTracedMeshType> TracedMeshesMap
+	const TMap<EObsidianTracedMeshType, UPrimitiveComponent*> TracedMeshesMap
 	{
-		{CharacterMesh, EObsidianTracedMeshType::ETMT_CharacterMesh},
-		{RightHandEquipmentMesh, EObsidianTracedMeshType::ETMT_RightHandWeaponMesh},
-		{LeftHandEquipmentMesh, EObsidianTracedMeshType::ETMT_LeftHandWeaponMesh}
+		{EObsidianTracedMeshType::ETMT_CharacterMesh, CharacterMesh},
+		{EObsidianTracedMeshType::ETMT_CharacterMesh_LeftHand, CharacterMesh},
+		{EObsidianTracedMeshType::ETMT_CharacterMesh_RightHand, CharacterMesh},
+		{EObsidianTracedMeshType::ETMT_RightHandWeaponMesh, RightHandEquipmentMesh},
+		{EObsidianTracedMeshType::ETMT_LeftHandWeaponMesh, LeftHandEquipmentMesh}
 	};
 	AdvancedCombatComponent->AddTracedMeshes(TracedMeshesMap);
-	
+	AdvancedCombatComponent->AddIgnoredActor(this);
 	
 	Tags.Emplace(ObsidianActorTags::BossEnemy);
 }

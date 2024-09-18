@@ -83,6 +83,8 @@ UENUM(BlueprintType)
 enum class EObsidianTracedMeshType  : uint8
 {
 	ETMT_CharacterMesh = 0 UMETA(DisplayName = "Character Mesh"),
+	ETMT_CharacterMesh_LeftHand UMETA(DisplayName = "Character Mesh - Left Hand"),
+	ETMT_CharacterMesh_RightHand UMETA(DisplayName = "Character Mesh - Right Hand"),
 	ETMT_RightHandWeaponMesh UMETA(DisplayName = "Right Hand Weapon Mesh"),
 	ETMT_LeftHandWeaponMesh UMETA(DisplayName = "Left Hand Weapon Mesh")
 };

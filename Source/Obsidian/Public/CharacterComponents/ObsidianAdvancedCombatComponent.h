@@ -11,6 +11,26 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackTraceStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackTraceFinished);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttackHit, FHitResult, Hit);
 
+USTRUCT(BlueprintType)
+struct FObsidianAdvancedCombatSockets
+{
+	GENERATED_BODY()
+
+	FObsidianAdvancedCombatSockets(){};
+	
+	FObsidianAdvancedCombatSockets(const FName InStartSocketName, const FName InEndSocketName)
+	{
+		StartSocketName = InStartSocketName;
+		EndSocketName = InEndSocketName;
+	};
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	FName StartSocketName = "AdvancedCombat_Start";
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	FName EndSocketName = "AdvancedCombat_End";
+};
+
 /**
  * Component that gives the functionality to perform advance tracing using sockets on mesh.
  * Should not be used on regular enemies as it might be quite expensive.
@@ -32,7 +52,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void StartTrace(EObsidianTraceType TraceType = EObsidianTraceType::ETT_SimpleLineTrace, const EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::ETMT_CharacterMesh);
+	void StartTrace(const EObsidianTraceType TraceType = EObsidianTraceType::ETT_SimpleLineTrace, const EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::ETMT_CharacterMesh);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void StopTrace();
@@ -50,8 +70,9 @@ public:
 	void AddTracedMesh(UPrimitiveComponent* InTracedMesh, const EObsidianTracedMeshType TracedMeshType);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void AddTracedMeshes(TMap<UPrimitiveComponent*, EObsidianTracedMeshType> InTracedMeshesMap);
-	
+	void AddTracedMeshes(TMap<EObsidianTracedMeshType, UPrimitiveComponent*> InTracedMeshesMap);
+
+	/* Probably shouldn't use it for now. **/
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void RemoveTracedMesh(UPrimitiveComponent* TracedMeshToRemove);
 
@@ -59,6 +80,33 @@ public:
 	void ClearTracedMeshes();
 
 public:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	TEnumAsByte<ETraceTypeQuery> TraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	TMap<EObsidianTracedMeshType, FObsidianAdvancedCombatSockets> SocketsMap;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	int32 TraceIntervalCount = 5;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	bool bTraceComplex = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	bool bStartInCurrentTick = true;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
+	bool bWithDebug = false;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
+	FLinearColor DebugTraceColor = FLinearColor::Green;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
+	FLinearColor DebugHitColor = FLinearColor::Red;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
+	float DebugDuration = 5.0f;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian Advanced Combat|Events")
 	FOnAttackTraceStarted OnAttackTraceStartedDelegate;
 
@@ -67,24 +115,44 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian Advanced Combat|Events")
 	FOnAttackHit OnAttackHitDelegate;
-	
-protected:
-	virtual void BeginPlay() override;
 
 protected:
 	/** Meshes to gather the socket used for trace from, could be a character mesh that hits with hands or weapon mesh. */
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Collision")
-	TMap<UPrimitiveComponent*, EObsidianTracedMeshType> TracedMeshesMap;
+	TMap<EObsidianTracedMeshType, UPrimitiveComponent*> TracedMeshesMap;
 
 	/** Initial ignored Actors for traces. */
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Collision")
 	TArray<AActor*> IgnoredActors;
 
 private:
+	void TickTrace();
+
+	void GetSocketsLocationsByMesh(const UPrimitiveComponent* Mesh, FVector& OutStartSocketLoc, FVector& OutEndSocketLoc) const;
+	void HandleHit(const bool bHit, const TArray<FHitResult>& HitResults) const;
+	void CalculateNextTracePoint(const int32 Index, const FVector& Start, const FVector& End, FVector& OutTracePoint);
+
+	void SimpleLineTrace() const;
+	void ComplexLineTrace();
+
+private:
 	bool bStartTrace = false;
 
 	UPROPERTY()
+	FVector CachedStart = FVector::ZeroVector;
+	UPROPERTY()
+	FVector CachedEnd = FVector::ZeroVector;
+
+	UPROPERTY()
 	TObjectPtr<UPrimitiveComponent> CurrentTracedMesh = nullptr;
+
+	UPROPERTY()
+	EObsidianTraceType CurrentTraceType = EObsidianTraceType::ETT_SimpleLineTrace;
+
+	UPROPERTY()
+	FName TraceStartSocketName = "";
+	UPROPERTY()
+	FName TraceEndSocketName = "";
 	
 };
 
