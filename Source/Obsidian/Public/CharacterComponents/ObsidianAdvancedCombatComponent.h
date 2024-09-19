@@ -80,17 +80,26 @@ public:
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
-	TEnumAsByte<ETraceTypeQuery> TraceChannel = UEngineTypes::ConvertToTraceType(ECC_Visibility);
+	TEnumAsByte<ETraceTypeQuery> TraceChannel = UEngineTypes::ConvertToTraceType(Obsidian_TraceChannel_Melee);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	TMap<EObsidianTracedMeshType, FObsidianAdvancedCombatSockets> SocketsMap;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	int32 TraceIntervalCount = 5;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	FVector BoxTraceHalfSize = FVector(10.0f);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	float CapsuleRadius = 5.0f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	float CapsuleHalfHeight = 5.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	bool bTraceComplex = false;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	bool bStartInCurrentTick = true;
 
@@ -133,7 +142,10 @@ private:
 
 	void SimpleLineTrace() const;
 	void ComplexLineTrace();
-
+	void SimpleBoxTrace() const;
+	void ComplexBoxTrace();
+	void SimpleCapsuleTrace() const;
+	
 private:
 	bool bStartTrace = false;
 

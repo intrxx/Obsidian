@@ -2,6 +2,8 @@
 
 
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
+
+#include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Obsidian/Obsidian.h"
 
@@ -41,10 +43,13 @@ void UObsidianAdvancedCombatComponent::TickTrace()
 		ComplexLineTrace();
 		break;
 	case EObsidianTraceType::ETT_SimpleBoxTrace:
+		SimpleBoxTrace();
 		break;
 	case EObsidianTraceType::ETT_ComplexBoxTrace:
+		SimpleBoxTrace();
 		break;
 	case EObsidianTraceType::ETT_SimpleCapsuleTrace:
+		SimpleCapsuleTrace();
 		break;
 		default:
 			break;
@@ -106,6 +111,11 @@ void UObsidianAdvancedCombatComponent::HandleHit(const bool bHit, const TArray<F
 	{
 		for(const FHitResult& HitResult : HitResults)
 		{
+			if(HitResult.GetActor())
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("Hit Actor: [%s]"),
+					*GetNameSafe(HitResult.GetActor())));
+			}
 			OnAttackHitDelegate.Broadcast(HitResult);
 		}
 	}
@@ -124,11 +134,11 @@ void UObsidianAdvancedCombatComponent::SimpleLineTrace() const
 	GetSocketsLocationsByMesh(CurrentTracedMesh, /* OUT **/ StartLocation, /* OUT **/ EndLocation);
 
 	TArray<FHitResult> HitResults;
-
+	
 	const bool bHit = UKismetSystemLibrary::LineTraceMulti(this, StartLocation, EndLocation, TraceChannel, bTraceComplex,
-		IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
-		DebugHitColor, DebugDuration);
-
+	IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
+	DebugHitColor, DebugDuration);
+	
 	HandleHit(bHit, HitResults);
 }
 
@@ -159,6 +169,42 @@ void UObsidianAdvancedCombatComponent::ComplexLineTrace()
 	}
 	
 	GetSocketsLocationsByMesh(CurrentTracedMesh, /* OUT **/ CachedStart, /* OUT **/ CachedEnd);
+}
+
+void UObsidianAdvancedCombatComponent::SimpleBoxTrace() const
+{
+	FVector StartLocation;
+	FVector EndLocation;
+	GetSocketsLocationsByMesh(CurrentTracedMesh, StartLocation, EndLocation);
+
+	const FRotator Rotation = UKismetMathLibrary::FindLookAtRotation(GetOwner()->GetActorLocation(), StartLocation);
+
+	TArray<FHitResult> HitResults;
+	
+	const bool bHit = UKismetSystemLibrary::BoxTraceMulti(this, StartLocation, EndLocation, BoxTraceHalfSize,
+		Rotation, TraceChannel, bTraceComplex, IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+		HitResults, true, DebugTraceColor, DebugHitColor, DebugDuration);
+
+	HandleHit(bHit, HitResults);
+}
+
+void UObsidianAdvancedCombatComponent::ComplexBoxTrace()
+{
+}
+
+void UObsidianAdvancedCombatComponent::SimpleCapsuleTrace() const
+{
+	FVector StartLocation;
+	FVector EndLocation;
+	GetSocketsLocationsByMesh(CurrentTracedMesh, StartLocation, EndLocation);
+	
+	TArray<FHitResult> HitResults;
+	
+	const bool bHit = UKismetSystemLibrary::CapsuleTraceMulti(this, StartLocation, EndLocation, CapsuleRadius,
+		CapsuleHalfHeight, TraceChannel, bTraceComplex, IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None,
+		HitResults, true, DebugTraceColor, DebugHitColor, DebugDuration);
+
+	HandleHit(bHit, HitResults);
 }
 
 void UObsidianAdvancedCombatComponent::AddIgnoredActor(AActor* InIgnoredActor)
@@ -204,7 +250,7 @@ void UObsidianAdvancedCombatComponent::AddTracedMeshes(TMap<EObsidianTracedMeshT
 {
 	for(TTuple<EObsidianTracedMeshType, UPrimitiveComponent*> TracedMeshPair : InTracedMeshesMap)
 	{
-		if(!IsValid(TracedMeshPair.Value))
+		if (!IsValid(TracedMeshPair.Value))
 		{
 			continue;
 		}
