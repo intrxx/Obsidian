@@ -39,6 +39,9 @@ void UObsidianAdvancedCombatComponent::TickTrace()
 	case EObsidianTraceType::ETT_SimpleLineTrace:
 		SimpleLineTrace();
 		break;
+	case EObsidianTraceType::ETT_SemiComplexLineTrace:
+		SemiComplexLineTrace();
+		break;
 	case EObsidianTraceType::ETT_ComplexLineTrace:
 		ComplexLineTrace();
 		break;
@@ -46,7 +49,7 @@ void UObsidianAdvancedCombatComponent::TickTrace()
 		SimpleBoxTrace();
 		break;
 	case EObsidianTraceType::ETT_ComplexBoxTrace:
-		SimpleBoxTrace();
+		ComplexBoxTrace();
 		break;
 	case EObsidianTraceType::ETT_SimpleCapsuleTrace:
 		SimpleCapsuleTrace();
@@ -121,10 +124,10 @@ void UObsidianAdvancedCombatComponent::HandleHit(const bool bHit, const TArray<F
 	}
 }
 
-void UObsidianAdvancedCombatComponent::CalculateNextTracePoint(const int32 Index, const FVector& Start,
+void UObsidianAdvancedCombatComponent::CalculateNextTracePoint(const int32 Index, const int32 Count, const FVector& Start,
 	const FVector& End, FVector& OutTracePoint)
 {
-	OutTracePoint = Start + Index * ((End - Start) / TraceIntervalCount);
+	OutTracePoint = Start + Index * ((End - Start) / Count);
 }
 
 void UObsidianAdvancedCombatComponent::SimpleLineTrace() const
@@ -142,6 +145,33 @@ void UObsidianAdvancedCombatComponent::SimpleLineTrace() const
 	HandleHit(bHit, HitResults);
 }
 
+void UObsidianAdvancedCombatComponent::SemiComplexLineTrace()
+{
+	for(int32 i = 0; i <= MultiLineCount; i++)
+	{
+		FVector TempStart = CachedStart;
+		FVector TempEnd = CachedEnd;
+
+		FVector StartLocation;
+		FVector EndLocation;
+		
+		CalculateNextTracePoint(i, MultiLineCount, TempStart, TempEnd, /* OUT **/ StartLocation);
+		
+		GetSocketsLocationsByMesh(CurrentTracedMesh, /* OUT **/ TempStart, /* OUT **/ TempEnd);
+		CalculateNextTracePoint(i, MultiLineCount, TempStart, TempEnd, /* OUT **/ EndLocation);
+
+		TArray<FHitResult> HitResults;
+		
+		const bool bHit = UKismetSystemLibrary::LineTraceMulti(this, StartLocation, EndLocation, TraceChannel, bTraceComplex,
+		IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
+		DebugHitColor, DebugDuration);
+
+		HandleHit(bHit, HitResults);
+	}
+	
+	GetSocketsLocationsByMesh(CurrentTracedMesh, /* OUT **/ CachedStart, /* OUT **/ CachedEnd);
+}
+
 void UObsidianAdvancedCombatComponent::ComplexLineTrace()
 {
 	SimpleLineTrace();
@@ -154,10 +184,10 @@ void UObsidianAdvancedCombatComponent::ComplexLineTrace()
 		FVector StartLocation;
 		FVector EndLocation;
 		
-		CalculateNextTracePoint(i, TempStart, TempEnd, /* OUT **/ StartLocation);
+		CalculateNextTracePoint(i, TraceIntervalCount, TempStart, TempEnd, /* OUT **/ StartLocation);
 		
 		GetSocketsLocationsByMesh(CurrentTracedMesh, /* OUT **/ TempStart, /* OUT **/ TempEnd);
-		CalculateNextTracePoint(i, TempStart, TempEnd, /* OUT **/ EndLocation);
+		CalculateNextTracePoint(i, TraceIntervalCount, TempStart, TempEnd, /* OUT **/ EndLocation);
 
 		TArray<FHitResult> HitResults;
 		

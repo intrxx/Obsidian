@@ -87,14 +87,18 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	int32 TraceIntervalCount = 5;
+
+	/** n + 1 number of lines that will be drawn with SemiComplexLineTrace. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|LineTrace")
+	int32 MultiLineCount = 3;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|BoxTrace")
 	FVector BoxTraceHalfSize = FVector(10.0f);
 
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|CapsuleTrace")
 	float CapsuleRadius = 5.0f;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|CapsuleTrace")
 	float CapsuleHalfHeight = 5.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
@@ -138,9 +142,10 @@ private:
 
 	void GetSocketsLocationsByMesh(const UPrimitiveComponent* Mesh, FVector& OutStartSocketLoc, FVector& OutEndSocketLoc) const;
 	void HandleHit(const bool bHit, const TArray<FHitResult>& HitResults) const;
-	void CalculateNextTracePoint(const int32 Index, const FVector& Start, const FVector& End, FVector& OutTracePoint);
+	void CalculateNextTracePoint(const int32 Index, const int32 Count, const FVector& Start, const FVector& End, FVector& OutTracePoint);
 
 	void SimpleLineTrace() const;
+	void SemiComplexLineTrace();
 	void ComplexLineTrace();
 	void SimpleBoxTrace() const;
 	void ComplexBoxTrace();

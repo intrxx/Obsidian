@@ -73,6 +73,7 @@ UENUM(BlueprintType)
 enum class EObsidianTraceType  : uint8
 {
 	ETT_SimpleLineTrace = 0 UMETA(DisplayName = "Simple Line Trace"),
+	ETT_SemiComplexLineTrace UMETA(DisplayName = "Semi Complex Line Trace"),
 	ETT_ComplexLineTrace UMETA(DisplayName = "Complex Line Trace"),
 	ETT_SimpleBoxTrace UMETA(DisplayName = "Simple Box Trace"),
 	ETT_ComplexBoxTrace UMETA(DisplayName = "Complex Box Trace"),
