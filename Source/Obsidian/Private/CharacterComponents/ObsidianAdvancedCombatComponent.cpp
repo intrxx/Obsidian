@@ -48,9 +48,6 @@ void UObsidianAdvancedCombatComponent::TickTrace()
 	case EObsidianTraceType::ETT_SimpleBoxTrace:
 		SimpleBoxTrace();
 		break;
-	case EObsidianTraceType::ETT_ComplexBoxTrace:
-		ComplexBoxTrace();
-		break;
 	case EObsidianTraceType::ETT_SimpleCapsuleTrace:
 		SimpleCapsuleTrace();
 		break;
@@ -218,10 +215,6 @@ void UObsidianAdvancedCombatComponent::SimpleBoxTrace() const
 	HandleHit(bHit, HitResults);
 }
 
-void UObsidianAdvancedCombatComponent::ComplexBoxTrace()
-{
-}
-
 void UObsidianAdvancedCombatComponent::SimpleCapsuleTrace() const
 {
 	FVector StartLocation;
@@ -265,6 +258,11 @@ void UObsidianAdvancedCombatComponent::RemoveIgnoredActor(AActor* IgnoredActorTo
 		return;
 	}
 	IgnoredActors.Remove(IgnoredActorToRemove);
+}
+
+void UObsidianAdvancedCombatComponent::ClearIgnoredActors()
+{
+	IgnoredActors.Empty();
 }
 
 void UObsidianAdvancedCombatComponent::AddTracedMesh(UPrimitiveComponent* InTracedMesh, const EObsidianTracedMeshType TracedMeshType)

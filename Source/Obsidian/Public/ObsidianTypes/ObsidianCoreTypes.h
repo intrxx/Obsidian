@@ -76,7 +76,6 @@ enum class EObsidianTraceType  : uint8
 	ETT_SemiComplexLineTrace UMETA(DisplayName = "Semi Complex Line Trace"),
 	ETT_ComplexLineTrace UMETA(DisplayName = "Complex Line Trace"),
 	ETT_SimpleBoxTrace UMETA(DisplayName = "Simple Box Trace"),
-	ETT_ComplexBoxTrace UMETA(DisplayName = "Complex Box Trace"),
 	ETT_SimpleCapsuleTrace UMETA(DisplayName = "Simple Capsule Trace")
 };
 

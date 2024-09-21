@@ -35,6 +35,10 @@ protected:
 	/** Given the Array of Actors, damages all of them with the damage provided in the ability. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
 	void DamageAllCharacters(UPARAM(ref) TArray<AActor*>& ActorsToDamage);
+
+	/** Damages the actor with the damage provided in the ability. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
+	void DamageCharacter(AActor* ActorToDamage);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")

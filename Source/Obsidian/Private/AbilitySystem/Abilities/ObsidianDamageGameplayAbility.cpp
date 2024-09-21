@@ -43,6 +43,34 @@ void UObsidianDamageGameplayAbility::DamageAllCharacters(TArray<AActor*>& Actors
     }
 }
 
+void UObsidianDamageGameplayAbility::DamageCharacter(AActor* ActorToDamage)
+{
+    if(!IsValid(ActorToDamage))
+    {
+        return;
+    }
+
+    const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo();
+    const float AbilityLevel = GetAbilityLevel();
+    
+    FGameplayEffectContextHandle ContextHandle = OwningASC->MakeEffectContext();
+    ContextHandle.SetAbility(this);
+    ContextHandle.AddSourceObject(GetAvatarActorFromActorInfo());
+	
+    const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, AbilityLevel, ContextHandle);
+
+    for(TTuple<FGameplayTag, FObsidianAbilityDamageRange>& Pair : DamageTypeMap)
+    {
+        const float Damage = Pair.Value.RollForDamageNumberAtLevel(AbilityLevel);
+        UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, Damage);
+    }
+
+    if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToDamage))
+    {
+        TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+    }
+}
+
 float FObsidianAbilityDamageRange::RollForDamageNumberAtLevel(const float Level) const
 {
     const float MinValue = MinimalDamage.GetValueAtLevel(Level);

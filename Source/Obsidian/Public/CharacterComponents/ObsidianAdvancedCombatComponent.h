@@ -9,8 +9,9 @@
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackTraceStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackTraceFinished);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttackHit, FHitResult, Hit);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttackHit, const FHitResult&, Hit);
 
+/** Pair of sockets used in traces. */
 USTRUCT(BlueprintType)
 struct FObsidianAdvancedCombatSockets
 {
@@ -51,44 +52,60 @@ public:
 
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	/** Starts the trace on the Component. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void StartTrace(const EObsidianTraceType TraceType = EObsidianTraceType::ETT_SimpleLineTrace, const EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::ETMT_CharacterMesh);
 
+	/** Stops the trace, clearing all variables. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void StopTrace();
 
+	/** Adds actor that will be ignored by the trace. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void AddIgnoredActor(AActor* InIgnoredActor);
 
+	/** Adds array of actors that will be ignored by the trace. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void AddIgnoredActors(TArray<AActor*> InIgnoredActors);
 
+	/** Removes ignored actor. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void RemoveIgnoredActor(AActor* IgnoredActorToRemove);
+	
+	/** Removes all ignored actors. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
+	void ClearIgnoredActors();
 
+	/** Adds Traced Mesh to the map. It is necessary to state the type of the mesh which can be then paired with proper sockets. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void AddTracedMesh(UPrimitiveComponent* InTracedMesh, const EObsidianTracedMeshType TracedMeshType);
 
+	/** Adds all traced meshes to the map. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void AddTracedMeshes(TMap<EObsidianTracedMeshType, UPrimitiveComponent*> InTracedMeshesMap);
-	
+
+	/** Removes all meshes with a given type. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void RemoveTracedMeshWithType(const EObsidianTracedMeshType TracedMeshType);
 
+	/** Removes all traced meshes. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void ClearTracedMeshes();
 
 public:
+	/** Trace Channel used in all traces. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	TEnumAsByte<ETraceTypeQuery> TraceChannel = UEngineTypes::ConvertToTraceType(Obsidian_TraceChannel_Melee);
 
+	/** Maps Traced Mesh Type to Start and End socket on it. Thanks to that we can choose between different pair of sockets on the same mesh. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	TMap<EObsidianTracedMeshType, FObsidianAdvancedCombatSockets> SocketsMap;
 
+	/** Number of traces that will be added within the complex trace. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
-	int32 TraceIntervalCount = 5;
+	int32 TraceIntervalCount = 2;
 
-	/** n + 1 number of lines that will be drawn with SemiComplexLineTrace. */
+	/** N + 1 number of lines that will be drawn with SemiComplexLineTrace. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|LineTrace")
 	int32 MultiLineCount = 3;
 	
@@ -148,7 +165,6 @@ private:
 	void SemiComplexLineTrace();
 	void ComplexLineTrace();
 	void SimpleBoxTrace() const;
-	void ComplexBoxTrace();
 	void SimpleCapsuleTrace() const;
 	
 private:

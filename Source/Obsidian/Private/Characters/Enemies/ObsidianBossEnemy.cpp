@@ -8,6 +8,7 @@
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer) :
@@ -28,6 +29,7 @@ AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializ
 	};
 	AdvancedCombatComponent->AddTracedMeshes(TracedMeshesMap);
 	AdvancedCombatComponent->AddIgnoredActor(this);
+	AdvancedCombatComponent->OnAttackHitDelegate.AddDynamic(this, &ThisClass::HandleAdvancedCombatHit);
 	
 	Tags.Emplace(ObsidianActorTags::BossEnemy);
 }
@@ -63,4 +65,21 @@ void AObsidianBossEnemy::OnDeathStarted(AActor* OwningActor)
 void AObsidianBossEnemy::OnDeathFinished(AActor* OwningActor)
 {
 	Super::OnDeathFinished(OwningActor);
+}
+
+void AObsidianBossEnemy::HandleAdvancedCombatHit(const FHitResult& HitResult)
+{
+	//TODO Verify if I actually use it in the future.
+	BP_HandleAdvancedCombatHit(HitResult);
+
+	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
+	if(ASC == nullptr)
+	{
+	 	return;
+	}
+
+	FGameplayEventData Payload;
+	Payload.Target = HitResult.GetActor();
+	
+	ASC->HandleGameplayEvent(ObsidianGameplayTags::GameplayEvent_AdvancedCombat_Hit, &Payload);
 }

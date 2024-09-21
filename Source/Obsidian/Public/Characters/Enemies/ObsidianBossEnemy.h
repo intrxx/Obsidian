@@ -24,6 +24,9 @@ public:
 	
 	virtual void PossessedBy(AController* NewController) override;
 
+	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "Handle Advanced Combat Hit"), Category = "Obsidian|Boss")
+	void BP_HandleAdvancedCombatHit(const FHitResult& HitResult);
+
 protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
@@ -34,6 +37,9 @@ protected:
 	UFUNCTION()
 	virtual void OnDeathFinished(AActor* OwningActor) override;
 	//~ End of AObsidianCharacterBase
+
+	UFUNCTION()
+	void HandleAdvancedCombatHit(const FHitResult& HitResult);
 
 private:
 	UPROPERTY()
