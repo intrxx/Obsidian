@@ -39,6 +39,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShieldRegeneration);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, StaggerMeter);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxStaggerMeter);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AllDamageMultiplier);
 
 	/**
 	 * Defence attributes
@@ -151,6 +152,8 @@ protected:
 	void OnRep_StaggerMeter(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxStaggerMeter(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_AllDamageMultiplier(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Defence attributes
@@ -308,6 +311,10 @@ private:
 	/** The current Max Stagger Meter attribute. Defines the Max amount after which the character will be stunned and unable to move for some time. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStaggerMeter, Category = "Obsidian|CAttributes|MaxStaggerMeter", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxStaggerMeter;
+	
+	/** The current All Damage Multiplier attribute. Defines the All Damage Multiplier, can be used to mitigate some damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllDamageMultiplier, Category = "Obsidian|CAttributes|AllDamageMultiplier", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AllDamageMultiplier;
 
 	/**
 	 * Defence attributes

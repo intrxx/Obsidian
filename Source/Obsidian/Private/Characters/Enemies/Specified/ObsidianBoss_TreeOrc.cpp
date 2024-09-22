@@ -8,3 +8,8 @@ AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectIni
 {
 	RightHandEquipmentMesh->SetupAttachment(GetMesh(), ObsidianMeshSocketNames::BackWeaponSocket);
 }
+
+void AObsidianBoss_TreeOrc::EquipWeapon()
+{
+	RightHandEquipmentMesh->SetupAttachment(GetMesh(), ObsidianMeshSocketNames::RightHandWeaponSocket);
+}

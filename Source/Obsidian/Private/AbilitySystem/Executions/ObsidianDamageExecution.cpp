@@ -23,12 +23,13 @@ struct FObsidianDamageStatics
 	FGameplayEffectAttributeCaptureDefinition SpellSuppressionMagnitudeDef;
 	FGameplayEffectAttributeCaptureDefinition AilmentThresholdDef;
 	FGameplayEffectAttributeCaptureDefinition StaggerDamageTakenMultiplierDef;
+	FGameplayEffectAttributeCaptureDefinition AllDamageMultiplierDef;
 	
 	FGameplayEffectAttributeCaptureDefinition FireResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition ColdResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition LightningResistanceDef;
 	FGameplayEffectAttributeCaptureDefinition ChaosResistanceDef;
-
+	
 	FGameplayTagContainer UIDataTags;
 
 	TMap<FGameplayTag, FGameplayEffectAttributeCaptureDefinition> DamageTypesToResistancesDefMap;
@@ -49,6 +50,7 @@ struct FObsidianDamageStatics
 		SpellSuppressionMagnitudeDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetSpellSuppressionMagnitudeAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		AilmentThresholdDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAilmentThresholdAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		StaggerDamageTakenMultiplierDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetStaggerDamageTakenMultiplierAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
+		AllDamageMultiplierDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetAllDamageMultiplierAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		
 		FireResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetFireResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		ColdResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetColdResistanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -335,6 +337,14 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	const FGameplayModifierEvaluatedData& StaggerModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingStaggerMagnitudeAttribute(), EGameplayModOp::Override, StaggerMagnitude);
 	OutExecutionOutput.AddOutputModifier(StaggerModifierEvaluatedData);
 	// ~ End of Stagger calculation
+
+	// ~ Start of All Damage Multiplier calculation
+	float AllDamageMultiplier = 0.0f;
+	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AllDamageMultiplierDef, EvaluationParameters, AllDamageMultiplier);
+	AllDamageMultiplier = FMath::Max<float>(AllDamageMultiplier, 0.0f);
+
+	ModifiedDamage *= AllDamageMultiplier;
+	// ~ End of All Damage Multiplier calculation
 	
 	const FGameplayModifierEvaluatedData& DamageModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, ModifiedDamage);
 	OutExecutionOutput.AddOutputModifier(DamageModifierEvaluatedData);

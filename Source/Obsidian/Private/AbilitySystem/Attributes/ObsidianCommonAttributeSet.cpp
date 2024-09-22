@@ -11,7 +11,8 @@
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
-	: StaggerDamageTakenMultiplier(0.0f)
+	: AllDamageMultiplier(1.0f),
+	StaggerDamageTakenMultiplier(0.0f)
 {
 	bOutOfHealth = false;
 }
@@ -31,6 +32,7 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, StaggerMeter, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AllDamageMultiplier, COND_None, REPNOTIFY_Always);
 
 	// Defence Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, Armor, COND_None, REPNOTIFY_Always);
@@ -268,6 +270,11 @@ void UObsidianCommonAttributeSet::OnRep_StaggerMeter(const FGameplayAttributeDat
 void UObsidianCommonAttributeSet::OnRep_MaxStaggerMeter(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_AllDamageMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllDamageMultiplier, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldValue)

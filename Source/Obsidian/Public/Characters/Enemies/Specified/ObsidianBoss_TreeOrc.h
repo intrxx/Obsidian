@@ -16,5 +16,7 @@ class OBSIDIAN_API AObsidianBoss_TreeOrc : public AObsidianBossEnemy
 
 public:
 	AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectInitializer);
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|TreeOrc")
+	void EquipWeapon();
 };

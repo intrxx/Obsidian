@@ -102,46 +102,7 @@ namespace ObsidianGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_TreeOrc_UnarmedSwing, "AbilityActivation.TreeOrc.UnarmedSwing", "Tag used for triggering activation of TreeOrcs's swing melee attack.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_TreeOrc_LeapAttack, "AbilityActivation.TreeOrc.LeapAttack", "Tag used for triggering activation of TreeOrcs's leap attack.");
-
-	// Attributes UI Data - I will leave it here for now in case I would need it in the future
-	/**
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Health, "Attribute.Health", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxHealth, "Attribute.MaxHealth", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_EnergyShield, "Attribute.EnergyShield", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxEnergyShield, "Attribute.MaxEnergyShield", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_HealthRegeneration, "Attribute.HealthRegeneration", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_EnergyShieldRegeneration, "Attribute.EnergyShieldRegeneration", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Armor, "Attribute.Armor", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Evasion, "Attribute.Evasion", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_FireResistance, "Attribute.FireResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxFireResistance, "Attribute.MaxFireResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ColdResistance, "Attribute.ColdResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxColdResistance, "Attribute.MaxColdResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_LightningResistance, "Attribute.LightningResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxLightningResistance, "Attribute.MaxLightningResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ChaosResistance, "Attribute.ChaosResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxChaosResistance, "Attribute.MaxChaosResistance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_CriticalStrikeChance, "Attribute.CriticalStrikeChance", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_CriticalStrikeMultiplier, "Attribute.CriticalStrikeMultiplier", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_AttackSpeed, "Attribute.AttackSpeed", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_CastSpeed, "Attribute.CastSpeed", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_FirePenetration, "Attribute.FirePenetration", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ColdPenetration, "Attribute.ColdPenetration", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_LightningPenetration, "Attribute.LightningPenetration", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ChaosPenetration, "Attribute.ChaosPenetration", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_FireDamageMultiplier, "Attribute.FireDamageMultiplier", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ColdDamageMultiplier, "Attribute.ColdDamageMultiplier", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_LightningDamageMultiplier, "Attribute.LightningDamageMultiplier", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_PhysicalDamageMultiplier, "Attribute.PhysicalDamageMultiplier", "Tag used for identifying the attribute.");
-	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Mana, "Attribute.Mana", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_MaxMana, "Attribute.MaxMana", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_ManaRegeneration, "Attribute.ManaRegeneration", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Strength, "Attribute.Strength", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Intelligence, "Attribute.Intelligence", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Dexterity, "Attribute.Dexterity", "Tag used for identifying the attribute.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Attribute_Faith, "Attribute.Faith", "Tag used for identifying the attribute.");
-	*/
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_TreeOrc_Equip, "AbilityActivation.TreeOrc.Equip", "Tag used for triggering activation of TreeOrcs's equip ability.");
 	
 	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
 	{
