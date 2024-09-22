@@ -33,8 +33,8 @@ void AObsidianRegularEnemy::PossessedBy(AController* NewController)
 		return;
 	}
 	ObsidianRegularAIController = Cast<AObsidianAIControllerBase>(NewController);
-	ObsidianRegularAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
-	ObsidianRegularAIController->RunBehaviorTree(BehaviorTree);
+	ObsidianRegularAIController->GetBlackboardComponent()->InitializeBlackboard(*DefaultBehaviorTree->BlackboardAsset);
+	ObsidianRegularAIController->RunBehaviorTree(DefaultBehaviorTree);
 
 	UBlackboardComponent* BlackboardComponent = ObsidianRegularAIController->GetBlackboardComponent();
 	BlackboardComponent->SetValueAsBool(FName("bHitReacting"), false);

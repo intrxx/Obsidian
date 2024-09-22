@@ -47,8 +47,8 @@ void AObsidianBossEnemy::PossessedBy(AController* NewController)
 	}
 	
 	ObsidianBossAIController = Cast<AObsidianBossAIController>(NewController);
-	ObsidianBossAIController->GetBlackboardComponent()->InitializeBlackboard(*BehaviorTree->BlackboardAsset);
-	ObsidianBossAIController->RunBehaviorTree(BehaviorTree);
+	ObsidianBossAIController->GetBlackboardComponent()->InitializeBlackboard(*DefaultBehaviorTree->BlackboardAsset);
+	ObsidianBossAIController->RunBehaviorTree(DefaultBehaviorTree);
 }
 
 void AObsidianBossEnemy::OnAbilitySystemInitialized()

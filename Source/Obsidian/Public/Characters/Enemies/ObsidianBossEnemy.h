@@ -45,11 +45,11 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianBossComponent> BossComponent;
-
-private:
-	UPROPERTY()
-	TObjectPtr<AObsidianAIControllerBase> ObsidianBossAIController;
-
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianAdvancedCombatComponent> AdvancedCombatComponent;
+	
+	UPROPERTY()
+	TObjectPtr<AObsidianAIControllerBase> ObsidianBossAIController;
+	
 };

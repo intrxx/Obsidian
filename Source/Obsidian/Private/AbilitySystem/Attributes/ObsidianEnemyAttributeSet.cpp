@@ -52,7 +52,7 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 		{
 			if(const UObsidianBossComponent* BossComponent = UObsidianBossComponent::FindBossComponent(EffectProps.TargetAvatarActor))
 			{
-				if(CurrentHealth / GetMaxHealth() <= 50.0f)
+				if(CurrentHealth / GetMaxHealth() <= 0.50f)
 				{
 					BossComponent->OnBossThresholdReached_50Delegate.Broadcast();
 				}

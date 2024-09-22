@@ -2,6 +2,7 @@
 
 #include "Characters/Enemies/Specified/ObsidianBoss_TreeOrc.h"
 #include "AbilitySystemComponent.h"
+#include "AI/AObsidianAIControllerBase.h"
 #include "CharacterComponents/ObsidianBossComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -15,21 +16,29 @@ void AObsidianBoss_TreeOrc::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	BossComponent->OnBossThresholdReached_50Delegate.AddUObject(this, &ThisClass::HandleThreshold_50);
+	OnThresholdReached_50DelegateHandle = BossComponent->OnBossThresholdReached_50Delegate.AddUObject(this, &ThisClass::HandleThreshold_50);
 }
 
 void AObsidianBoss_TreeOrc::EquipWeapon()
 {
 	RightHandEquipmentMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
 		ObsidianMeshSocketNames::RightHandWeaponSocket);
+
+	if(OnThresholdReached_50DelegateHandle.IsValid())
+	{
+		OnThresholdReached_50DelegateHandle.Reset();
+	}
 }
 
 void AObsidianBoss_TreeOrc::HandleThreshold_50()
 {
-	if(UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+	if(!HasAuthority())
 	{
-		FGameplayTagContainer ActivationTags;
-		ActivationTags.AddTag(ObsidianGameplayTags::AbilityActivation_TreeOrc_Equip);
-		ASC->TryActivateAbilitiesByTag(ActivationTags);
+		return;
+	}
+
+	if(ObsidianBossAIController)
+	{
+		ObsidianBossAIController->RunBehaviorTree(ArmedBehaviorTree);
 	}
 }

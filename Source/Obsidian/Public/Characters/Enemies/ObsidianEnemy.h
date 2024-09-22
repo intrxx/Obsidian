@@ -63,7 +63,7 @@ protected:
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
-	TObjectPtr<UBehaviorTree> BehaviorTree;
+	TObjectPtr<UBehaviorTree> DefaultBehaviorTree;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::EEC_MAX;
