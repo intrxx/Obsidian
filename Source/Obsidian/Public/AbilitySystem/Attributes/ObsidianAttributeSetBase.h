@@ -75,6 +75,9 @@ public:
 	bool bIsPlayerCharacter = false;
 
 	UPROPERTY()
+	bool bIsBoss = false;
+
+	UPROPERTY()
 	bool bCanHitReact = false;
 };
 

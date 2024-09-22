@@ -22,6 +22,7 @@ void FObsidianEffectProperties::Reset()
 	Instigator = nullptr;
 	EffectCauser = nullptr;
 	bIsPlayerCharacter = false;
+	bIsBoss = false;
 }
 
 UObsidianAttributeSetBase::UObsidianAttributeSetBase()
@@ -114,6 +115,11 @@ void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCall
 		}
 
 		Props.bIsPlayerCharacter = Props.TargetCharacter->ActorHasTag(ObsidianActorTags::Player);
+		if(!Props.bIsPlayerCharacter)
+		{
+			Props.bIsBoss = Props.TargetCharacter->ActorHasTag(ObsidianActorTags::BossEnemy);
+		}
+		
 		Props.bCanHitReact = Props.TargetCharacter->CanHitReact();
 
 		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetAvatarActor);

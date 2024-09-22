@@ -89,6 +89,7 @@ UObsidianDamageExecution::UObsidianDamageExecution()
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().SpellSuppressionMagnitudeDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AilmentThresholdDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().StaggerDamageTakenMultiplierDef);
+	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AllDamageMultiplierDef);
 
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().FireResistanceDef);
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ColdResistanceDef);
@@ -343,7 +344,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AllDamageMultiplierDef, EvaluationParameters, AllDamageMultiplier);
 	AllDamageMultiplier = FMath::Max<float>(AllDamageMultiplier, 0.0f);
 
-	ModifiedDamage *= AllDamageMultiplier;
+	ModifiedDamage = ModifiedDamage * AllDamageMultiplier;
 	// ~ End of All Damage Multiplier calculation
 	
 	const FGameplayModifierEvaluatedData& DamageModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, ModifiedDamage);

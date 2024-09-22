@@ -4,6 +4,8 @@
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
 
 #include "GameplayEffectExtension.h"
+#include "CharacterComponents/ObsidianBossComponent.h"
+#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -28,8 +30,9 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 	if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
+		const float CurrentHealth = GetHealth();
 		
-		if(EffectProps.bCanHitReact && GetHealth() > 0.0f)
+		if(EffectProps.bCanHitReact && CurrentHealth > 0.0f)
 		{
 			//TODO As it stands now only damage that damages health will cause a hit react - decide if its okay, I like it for now
 			// Check if we should hit react, small hits shouldn't cause hit reacting
@@ -43,6 +46,17 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 				ActivateTag.AddTag(ObsidianGameplayTags::Ability_HitReact);
 				TargetASC->TryActivateAbilitiesByTag(ActivateTag);
 			}	
+		}
+
+		if(EffectProps.bIsBoss && CurrentHealth > 0.0f)
+		{
+			if(const UObsidianBossComponent* BossComponent = UObsidianBossComponent::FindBossComponent(EffectProps.TargetAvatarActor))
+			{
+				if(CurrentHealth / GetMaxHealth() <= 50.0f)
+				{
+					BossComponent->OnBossThresholdReached_50Delegate.Broadcast();
+				}
+			}
 		}
 	}
 

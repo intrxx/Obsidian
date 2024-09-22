@@ -6,6 +6,7 @@
 #include "AI/ObsidianBossAIController.h"
 #include "BehaviorTree/BehaviorTree.h"
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
+#include "CharacterComponents/ObsidianBossComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -30,6 +31,8 @@ AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializ
 	AdvancedCombatComponent->AddTracedMeshes(TracedMeshesMap);
 	AdvancedCombatComponent->AddIgnoredActor(this);
 	AdvancedCombatComponent->OnAttackHitDelegate.AddDynamic(this, &ThisClass::HandleAdvancedCombatHit);
+
+	BossComponent = CreateDefaultSubobject<UObsidianBossComponent>(TEXT("BossComponent"));
 	
 	Tags.Emplace(ObsidianActorTags::BossEnemy);
 }

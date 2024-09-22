@@ -6,6 +6,7 @@
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "ObsidianBossEnemy.generated.h"
 
+class UObsidianBossComponent;
 class UObsidianAdvancedCombatComponent;
 class AObsidianHero;
 class UBlackboardComponent;
@@ -40,6 +41,10 @@ protected:
 
 	UFUNCTION()
 	void HandleAdvancedCombatHit(const FHitResult& HitResult);
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianBossComponent> BossComponent;
 
 private:
 	UPROPERTY()
