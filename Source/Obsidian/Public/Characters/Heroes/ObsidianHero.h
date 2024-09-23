@@ -43,7 +43,8 @@ public:
 	//~ End of CombatInterface
 
 	/** Updates when boss sees Player, BossActor will be nullptr when Boss lost sight of Player, this is by design and might change. */
-	void UpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer);
+	UFUNCTION(Client, Reliable)
+	void ClientUpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer);
 
 protected:
 	//~ Start of AObsidianCharacterBase

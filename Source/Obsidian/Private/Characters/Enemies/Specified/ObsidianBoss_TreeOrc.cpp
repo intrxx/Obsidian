@@ -1,10 +1,8 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/Enemies/Specified/ObsidianBoss_TreeOrc.h"
-#include "AbilitySystemComponent.h"
 #include "AI/AObsidianAIControllerBase.h"
 #include "CharacterComponents/ObsidianBossComponent.h"
-#include "Obsidian/ObsidianGameplayTags.h"
 
 AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -16,7 +14,10 @@ void AObsidianBoss_TreeOrc::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	OnThresholdReached_50DelegateHandle = BossComponent->OnBossThresholdReached_50Delegate.AddUObject(this, &ThisClass::HandleThreshold_50);
+	if(HasAuthority())
+	{
+		OnThresholdReached_50DelegateHandle = BossComponent->OnBossThresholdReached_50Delegate.AddUObject(this, &ThisClass::HandleThreshold_50);
+	}
 }
 
 void AObsidianBoss_TreeOrc::EquipWeapon()
@@ -32,11 +33,6 @@ void AObsidianBoss_TreeOrc::EquipWeapon()
 
 void AObsidianBoss_TreeOrc::HandleThreshold_50()
 {
-	if(!HasAuthority())
-	{
-		return;
-	}
-
 	if(ObsidianBossAIController)
 	{
 		ObsidianBossAIController->RunBehaviorTree(ArmedBehaviorTree);

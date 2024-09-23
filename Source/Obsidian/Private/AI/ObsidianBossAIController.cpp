@@ -52,7 +52,7 @@ void AObsidianBossAIController::OnStimulusChanged(AActor* UpdatedActor, FAIStimu
 	
 	if(Stimulus.IsActive())
 	{
-		HeroTarget->UpdateBossDetectingPlayer(EnemyOwner, true);
+		HeroTarget->ClientUpdateBossDetectingPlayer(EnemyOwner, true);
 		
 		Blackboard->SetValueAsBool(FName(TEXT("bIsPlayerSeen")), true);
 		Blackboard->SetValueAsObject(FName(TEXT("HeroTarget")), HeroTarget);
@@ -62,7 +62,7 @@ void AObsidianBossAIController::OnStimulusChanged(AActor* UpdatedActor, FAIStimu
 		Blackboard->SetValueAsBool(FName(TEXT("bIsPlayerSeen")), false);
 		Blackboard->ClearValue(FName(TEXT("HeroTarget")));
 
-		HeroTarget->UpdateBossDetectingPlayer(nullptr, false);
+		HeroTarget->ClientUpdateBossDetectingPlayer(nullptr, false);
 	}
 }
 

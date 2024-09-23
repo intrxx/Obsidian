@@ -135,7 +135,7 @@ AActor* AObsidianHero::GetAvatarActor_Implementation()
 	return this;
 }
 
-void AObsidianHero::UpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer)
+void AObsidianHero::ClientUpdateBossDetectingPlayer_Implementation(AActor* BossActor, const bool bSeenPlayer)
 {
 	if(const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
 	{

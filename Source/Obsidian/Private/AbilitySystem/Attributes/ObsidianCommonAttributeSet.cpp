@@ -54,6 +54,7 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxLightningResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, ChaosResistance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AllElementalResistances, COND_None, REPNOTIFY_Always);
 
 	// Status Effects
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, IncreasedEffectOfShock, COND_None, REPNOTIFY_Always);
