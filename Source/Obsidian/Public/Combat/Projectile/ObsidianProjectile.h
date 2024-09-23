@@ -32,11 +32,6 @@ public:
 	{
 		return DamageEffectSpecHandle;
 	}
-
-	void SetClassToIgnore(UClass* InClassToIgnore)
-	{
-		ClassToIgnore = InClassToIgnore;
-	}
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
 	void SetProjectileDamageSpecHandle(const FGameplayEffectSpecHandle DamageSpec)
@@ -90,6 +85,6 @@ private:
 	UPROPERTY(BlueprintReadWrite, meta = (ExposeOnSpawn = true, AllowPrivateAccess = true), Category = "Obsidian|Projectile")
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
 	UClass* ClassToIgnore = nullptr;
 };

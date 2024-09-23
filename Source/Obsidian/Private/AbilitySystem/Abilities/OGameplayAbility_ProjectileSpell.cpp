@@ -56,8 +56,6 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 	}
 	
 	Projectile->SetProjectileDamageSpecHandle(SpecHandle);
-	Projectile->SetClassToIgnore(ClassToIgnore);
-	
 	Projectile->FinishSpawning(SpawnTransform);
 }
 

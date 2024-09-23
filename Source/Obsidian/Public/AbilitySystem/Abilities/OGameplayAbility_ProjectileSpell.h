@@ -27,9 +27,5 @@ protected:
 	/** Projectile class to spawn by this ability. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<AObsidianProjectile> ProjectileClass;
-
-	/** This class will be ignored by the projectile. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
-	UClass* ClassToIgnore = nullptr;
 };
 
