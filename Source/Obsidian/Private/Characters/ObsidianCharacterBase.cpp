@@ -7,6 +7,7 @@
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
@@ -30,10 +31,12 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");
 	RightHandEquipmentMesh->SetupAttachment(MeshComp, ObsidianMeshSocketNames::RightHandWeaponSocket);
 	RightHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RightHandEquipmentMesh->SetIsReplicated(true);
 	
 	LeftHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("LeftHandEquipmentMesh");
 	LeftHandEquipmentMesh->SetupAttachment(MeshComp, ObsidianMeshSocketNames::LeftHandWeaponSocket);
 	LeftHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	LeftHandEquipmentMesh->SetIsReplicated(true);
 
 	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	
@@ -68,6 +71,14 @@ UAbilitySystemComponent* AObsidianCharacterBase::GetAbilitySystemComponent() con
 		return nullptr;
 	}
 	return  PawnExtComp->GetObsidianAbilitySystemComponent();
+}
+
+void AObsidianCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(AObsidianCharacterBase, LeftHandEquipmentMesh);
+	DOREPLIFETIME(AObsidianCharacterBase, RightHandEquipmentMesh);
 }
 
 void AObsidianCharacterBase::BeginPlay()

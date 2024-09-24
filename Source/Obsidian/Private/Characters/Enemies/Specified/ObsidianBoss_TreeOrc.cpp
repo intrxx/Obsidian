@@ -22,13 +22,13 @@ void AObsidianBoss_TreeOrc::PostInitializeComponents()
 
 void AObsidianBoss_TreeOrc::EquipWeapon()
 {
-	RightHandEquipmentMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
-		ObsidianMeshSocketNames::RightHandWeaponSocket);
-
 	if(OnThresholdReached_50DelegateHandle.IsValid())
 	{
 		OnThresholdReached_50DelegateHandle.Reset();
 	}
+
+	RightHandEquipmentMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
+		ObsidianMeshSocketNames::RightHandWeaponSocket);
 }
 
 void AObsidianBoss_TreeOrc::HandleThreshold_50()

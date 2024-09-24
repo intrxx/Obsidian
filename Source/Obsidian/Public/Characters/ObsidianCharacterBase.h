@@ -33,6 +33,8 @@ public:
 		return bCanHitReact;
 	}
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 protected:
 	virtual void BeginPlay() override;
 
@@ -74,15 +76,15 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
 	TObjectPtr<UObsidianPawnExtensionComponent> PawnExtComp;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
-	TObjectPtr<USkeletalMeshComponent> RightHandEquipmentMesh;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Combat")
-	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Combat", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComp;
+	
+	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Combat")
+	TObjectPtr<USkeletalMeshComponent> RightHandEquipmentMesh;
+
+	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Combat")
+	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
 
 	/**
 	 * Sockets used mostly for combat reasons, spawning projectiles.
