@@ -56,6 +56,8 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer) :
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
 
+	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
+
 	// Identifies this class as a Player character
 	Tags.Emplace(ObsidianActorTags::Player);
 }
