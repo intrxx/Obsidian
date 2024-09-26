@@ -7,6 +7,7 @@
 #include "Combat/ObsidianCombatInterface.h"
 #include "Combat/Projectile/ObsidianProjectile.h"
 #include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianMacros.h"
 
 UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell()
 {
@@ -19,12 +20,18 @@ void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySp
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
 
-void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLocation, const FVector& TargetLocation)
+void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLocation, const FVector& TargetLocation, const bool bWithDebug)
 {
 	const bool bHasAuthority = GetAvatarActorFromActorInfo()->HasAuthority();
 	if(!bHasAuthority)
 	{
 		return;
+	}
+
+	if(bWithDebug)
+	{
+		DEBUG_SPHERE(TargetLocation);
+		DEBUG_LINE(SpawnLocation, TargetLocation);
 	}
 	
 	const FVector StartLocation = SpawnLocation;

@@ -62,6 +62,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
 	float ProjectileLifeSpan = 15.f;
 	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
+	bool bDestroyOnHit = true;
+	
 	/**
 	 * Cosmetics
 	 */
@@ -87,4 +90,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
 	UClass* ClassToIgnore = nullptr;
+
+	UPROPERTY()
+	TArray<AActor*> AlreadyHitActors;
 };

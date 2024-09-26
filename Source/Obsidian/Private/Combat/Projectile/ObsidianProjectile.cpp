@@ -82,12 +82,27 @@ void AObsidianProjectile::OnSphereOverlap(UPrimitiveComponent* OverlappedCompone
 	
 	if(HasAuthority())
 	{
-		if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+		if(bDestroyOnHit)
 		{
-			TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+			{
+				TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+			}
+			
+			Destroy();	
 		}
-		
-		Destroy();		
+		else
+		{
+			if(!AlreadyHitActors.Contains(OtherActor))
+			{
+				AlreadyHitActors.Add(OtherActor);
+				
+				if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
+				{
+					TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+				}
+			}
+		}
 	}
 	else
 	{		
