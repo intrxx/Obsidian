@@ -55,12 +55,13 @@ void UObsidianAdvancedCombatComponent::TickTrace()
 	}
 }
 
-void UObsidianAdvancedCombatComponent::StartTrace(const EObsidianTraceType TraceType, const EObsidianTracedMeshType TracedMeshType)
+void UObsidianAdvancedCombatComponent::StartTrace(const FObsidianAdvancedTraceParams& TraceParams)
 {
-	CurrentTraceType = TraceType;
-	CurrentTracedMesh = TracedMeshesMap[TracedMeshType];
+	CurrentTraceType = TraceParams.TraceType;
+	CurrentTracedMesh = TracedMeshesMap[TraceParams.TracedMeshType];
+	bOneHitPerTrace = TraceParams.bAllowOneHitPerTrace;
 	
-	const FObsidianAdvancedCombatSockets Sockets = SocketsMap[TracedMeshType];
+	const FObsidianAdvancedCombatSockets Sockets = SocketsMap[TraceParams.TracedMeshType];
 	TraceStartSocketName = Sockets.StartSocketName;
 	TraceEndSocketName = Sockets.EndSocketName;
 
@@ -94,6 +95,9 @@ void UObsidianAdvancedCombatComponent::StopTrace()
 	TraceStartSocketName = "";
 	TraceEndSocketName = "";
 
+	bOneHitPerTrace = true;
+	AlreadyHitActors.Empty();
+
 	OnAttackTraceFinishedDelegate.Broadcast();
 }
 
@@ -104,17 +108,26 @@ void UObsidianAdvancedCombatComponent::GetSocketsLocationsByMesh(const UPrimitiv
 	OutEndSocketLoc = Mesh->GetSocketLocation(TraceEndSocketName);
 }
 
-void UObsidianAdvancedCombatComponent::HandleHit(const bool bHit, const TArray<FHitResult>& HitResults) const
+void UObsidianAdvancedCombatComponent::HandleHit(const bool bHit, const TArray<FHitResult>& HitResults)
 {
-	if(bHit)
+	if(!bHit)
 	{
-		for(const FHitResult& HitResult : HitResults)
+		return;
+	}
+
+	for(const FHitResult& HitResult : HitResults)
+	{
+		if(bOneHitPerTrace)
 		{
-			if(HitResult.GetActor())
+			AActor* ActorHit = HitResult.GetActor();
+			if(!AlreadyHitActors.Contains(ActorHit))
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Purple, FString::Printf(TEXT("Hit Actor: [%s]"),
-					*GetNameSafe(HitResult.GetActor())));
+				AlreadyHitActors.Add(ActorHit);
+				OnAttackHitDelegate.Broadcast(HitResult);
 			}
+		}
+		else
+		{
 			OnAttackHitDelegate.Broadcast(HitResult);
 		}
 	}
@@ -126,7 +139,7 @@ void UObsidianAdvancedCombatComponent::CalculateNextTracePoint(const int32 Index
 	OutTracePoint = Start + Index * ((End - Start) / Count);
 }
 
-void UObsidianAdvancedCombatComponent::SimpleLineTrace() const
+void UObsidianAdvancedCombatComponent::SimpleLineTrace()
 {
 	FVector StartLocation;
 	FVector EndLocation;
@@ -135,8 +148,8 @@ void UObsidianAdvancedCombatComponent::SimpleLineTrace() const
 	TArray<FHitResult> HitResults;
 	
 	const bool bHit = UKismetSystemLibrary::LineTraceMulti(this, StartLocation, EndLocation, TraceChannel, bTraceComplex,
-	IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
-	DebugHitColor, DebugDuration);
+		IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
+		DebugHitColor, DebugDuration);
 	
 	HandleHit(bHit, HitResults);
 }
@@ -159,8 +172,8 @@ void UObsidianAdvancedCombatComponent::SemiComplexLineTrace()
 		TArray<FHitResult> HitResults;
 		
 		const bool bHit = UKismetSystemLibrary::LineTraceMulti(this, StartLocation, EndLocation, TraceChannel, bTraceComplex,
-		IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
-		DebugHitColor, DebugDuration);
+			IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
+			DebugHitColor, DebugDuration);
 
 		HandleHit(bHit, HitResults);
 	}
@@ -188,8 +201,8 @@ void UObsidianAdvancedCombatComponent::ComplexLineTrace()
 		TArray<FHitResult> HitResults;
 		
 		const bool bHit = UKismetSystemLibrary::LineTraceMulti(this, StartLocation, EndLocation, TraceChannel, bTraceComplex,
-		IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
-		DebugHitColor, DebugDuration);
+			IgnoredActors, bWithDebug ? EDrawDebugTrace::ForDuration : EDrawDebugTrace::None, HitResults, true, DebugTraceColor,
+			DebugHitColor, DebugDuration);
 
 		HandleHit(bHit, HitResults);
 	}
@@ -197,7 +210,7 @@ void UObsidianAdvancedCombatComponent::ComplexLineTrace()
 	GetSocketsLocationsByMesh(CurrentTracedMesh, /* OUT **/ CachedStart, /* OUT **/ CachedEnd);
 }
 
-void UObsidianAdvancedCombatComponent::SimpleBoxTrace() const
+void UObsidianAdvancedCombatComponent::SimpleBoxTrace()
 {
 	FVector StartLocation;
 	FVector EndLocation;
@@ -214,7 +227,7 @@ void UObsidianAdvancedCombatComponent::SimpleBoxTrace() const
 	HandleHit(bHit, HitResults);
 }
 
-void UObsidianAdvancedCombatComponent::SimpleCapsuleTrace() const
+void UObsidianAdvancedCombatComponent::SimpleCapsuleTrace()
 {
 	FVector StartLocation;
 	FVector EndLocation;

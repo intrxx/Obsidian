@@ -7,6 +7,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianAdvancedCombatComponent.generated.h"
 
+struct FObsidianAdvancedTraceParams;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackTraceStarted);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnAttackTraceFinished);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttackHit, const FHitResult&, Hit);
@@ -32,6 +34,30 @@ struct FObsidianAdvancedCombatSockets
 	FName EndSocketName = "AdvancedCombat_End";
 };
 
+USTRUCT(BlueprintType)
+struct FObsidianAdvancedTraceParams
+{
+	GENERATED_BODY();
+	
+	FObsidianAdvancedTraceParams(){}
+
+	FObsidianAdvancedTraceParams(const EObsidianTraceType InTraceType, const EObsidianTracedMeshType InTracedMesh, const bool InAllowOneHitPerTrace)
+	{
+		TraceType = InTraceType;
+		TracedMeshType = InTracedMesh;
+		bAllowOneHitPerTrace = InAllowOneHitPerTrace;
+	}
+	
+	UPROPERTY()
+	EObsidianTraceType TraceType = EObsidianTraceType::ETT_SimpleLineTrace;
+
+	UPROPERTY()
+	EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::ETMT_CharacterMesh;
+
+	UPROPERTY()
+	bool bAllowOneHitPerTrace = true;
+};
+
 /**
  * Component that gives the functionality to perform advance tracing using sockets on mesh.
  * Should not be used on regular enemies as it might be quite expensive.
@@ -54,7 +80,7 @@ public:
 
 	/** Starts the trace on the Component. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void StartTrace(const EObsidianTraceType TraceType = EObsidianTraceType::ETT_SimpleLineTrace, const EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::ETMT_CharacterMesh);
+	void StartTrace(const FObsidianAdvancedTraceParams& TraceParams);
 
 	/** Stops the trace, clearing all variables. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
@@ -158,14 +184,14 @@ private:
 	void TickTrace();
 
 	void GetSocketsLocationsByMesh(const UPrimitiveComponent* Mesh, FVector& OutStartSocketLoc, FVector& OutEndSocketLoc) const;
-	void HandleHit(const bool bHit, const TArray<FHitResult>& HitResults) const;
+	void HandleHit(const bool bHit, const TArray<FHitResult>& HitResults);
 	void CalculateNextTracePoint(const int32 Index, const int32 Count, const FVector& Start, const FVector& End, FVector& OutTracePoint);
 
-	void SimpleLineTrace() const;
+	void SimpleLineTrace();
 	void SemiComplexLineTrace();
 	void ComplexLineTrace();
-	void SimpleBoxTrace() const;
-	void SimpleCapsuleTrace() const;
+	void SimpleBoxTrace();
+	void SimpleCapsuleTrace();
 	
 private:
 	bool bStartTrace = false;
@@ -185,6 +211,11 @@ private:
 	FName TraceStartSocketName = "";
 	UPROPERTY()
 	FName TraceEndSocketName = "";
-	
+
+	UPROPERTY()
+	bool bOneHitPerTrace = true;
+
+	UPROPERTY()
+	TArray<AActor*> AlreadyHitActors;
 };
 

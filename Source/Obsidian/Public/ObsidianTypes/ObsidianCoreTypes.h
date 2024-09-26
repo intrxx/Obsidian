@@ -89,3 +89,4 @@ enum class EObsidianTracedMeshType  : uint8
 	ETMT_RightHandWeaponMesh UMETA(DisplayName = "Right Hand Weapon Mesh"),
 	ETMT_LeftHandWeaponMesh UMETA(DisplayName = "Left Hand Weapon Mesh")
 };
+
