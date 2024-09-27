@@ -36,13 +36,13 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
 	void DamageAllCharacters(UPARAM(ref) TArray<AActor*>& ActorsToDamage);
 
-	/** Damages the actor with the damage provided in the ability. */
+	/** Damages the actor with the damage provided in the ability. Uses DamageTypeMap. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
 	void DamageCharacter(AActor* ActorToDamage);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")
-	TMap<FGameplayTag, FObsidianAbilityDamageRange> DamageTypeMap;
+	TMap<FGameplayTag, FObsidianAbilityDamageRange> BaseDamageTypeMap;
 
 	/** Damage effect that will be applied to target */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")

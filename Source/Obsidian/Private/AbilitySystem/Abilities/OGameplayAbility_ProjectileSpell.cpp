@@ -56,7 +56,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 	
 	const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ContextHandle);
 
-	for(TTuple<FGameplayTag, FObsidianAbilityDamageRange>& Pair : DamageTypeMap)
+	for(TTuple<FGameplayTag, FObsidianAbilityDamageRange>& Pair : ProjectileDamageTypeMap)
 	{
 		const float Damage = Pair.Value.RollForDamageNumberAtLevel(GetAbilityLevel());
 		UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, Damage);

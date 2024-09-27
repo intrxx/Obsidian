@@ -24,6 +24,9 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")
+	TMap<FGameplayTag, FObsidianAbilityDamageRange> ProjectileDamageTypeMap;
+	
 	/** Projectile class to spawn by this ability. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<AObsidianProjectile> ProjectileClass;

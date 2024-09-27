@@ -28,7 +28,7 @@ void UObsidianDamageGameplayAbility::DamageAllCharacters(TArray<AActor*>& Actors
 	
     const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, AbilityLevel, ContextHandle);
 
-    for(TTuple<FGameplayTag, FObsidianAbilityDamageRange>& Pair : DamageTypeMap)
+    for(TTuple<FGameplayTag, FObsidianAbilityDamageRange>& Pair : BaseDamageTypeMap)
     {
         const float Damage = Pair.Value.RollForDamageNumberAtLevel(AbilityLevel);
         UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, Damage);
@@ -59,7 +59,7 @@ void UObsidianDamageGameplayAbility::DamageCharacter(AActor* ActorToDamage)
 	
     const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, AbilityLevel, ContextHandle);
 
-    for(TTuple<FGameplayTag, FObsidianAbilityDamageRange>& Pair : DamageTypeMap)
+    for(TTuple<FGameplayTag, FObsidianAbilityDamageRange>& Pair : BaseDamageTypeMap)
     {
         const float Damage = Pair.Value.RollForDamageNumberAtLevel(AbilityLevel);
         UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, Damage);
