@@ -17,6 +17,9 @@ AObsidianRegularEnemy::AObsidianRegularEnemy(const FObjectInitializer& ObjectIni
 {
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComponent"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
+	HealthBarWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 100.0f));
+	HealthBarWidgetComp->SetDrawAtDesiredSize(true);
+	HealthBarWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 
 	bCanHitReact = true;
 

@@ -57,7 +57,7 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	float EffectLevel = 1.0f;
 
-	/** If this is set to true, this Gameplay effect will be given as the last one. */
+	/** If this is set to true, this Gameplay effect will be given as the last one (Backing attributes should have this set to true). */
 	UPROPERTY(EditDefaultsOnly)
 	bool bIsDependentOnOtherAttributes = false;
 
