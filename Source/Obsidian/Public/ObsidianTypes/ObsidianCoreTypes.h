@@ -5,6 +5,7 @@
 /** Obsidian Trace Channels. */
 #define Obsidian_TraceChannel_PlayerCursorTrace	ECC_GameTraceChannel1
 #define Obsidian_TraceChannel_Melee ECC_GameTraceChannel2
+#define Obsidian_TraceChannel_Test ECC_GameTraceChannel3
 
 /** Obsidian Object Channels. */
 #define Obsidian_ObjectChannel_Projectile ECC_GameTraceChannel2
