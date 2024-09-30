@@ -6,17 +6,10 @@
 
 namespace ObsidianGameplayTags
 {
-	// Abilities
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivationFail_IsDead);
+	/**
+	 * Damage Types
+	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_HitReact);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Stagger);
-
-	// Kind of Deprecated - using damage types tags for SetByCaller now //
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Damage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_Heal);
-
-	// Damage Types
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Physical);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Fire);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Cold);
@@ -26,24 +19,33 @@ namespace ObsidianGameplayTags
 	/** All damage Types stored for convenience */
 	OBSIDIAN_API extern const TArray<FGameplayTag> DamageTypes;
 	
-	// Cooldowns
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_HitReact)
+	/**
+	 *  Effects
+	 */
 	
-	// Effects
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_Stagger)
 	
-	// Statuses
+	/**
+	 * Statuses
+	 */
+	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death_Dying);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death_Dead);
 	
-	// Native Input
+	/**
+	 * Native Input
+	 */
+	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move_Keyboard);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move_Mouse);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_CharacterStatus);
 
-	// Ability Input
+	/**
+	 * Ability Input
+	 */
+	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability_Move_Mouse);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability_Move_Roll);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability1);
@@ -55,10 +57,18 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability7);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability8);
 
-	// Data
+	/*
+	 * Data
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_AdvancedCombat_Hit);
+	
+	/**
+	 * UI Data
+	 */
+
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_EffectUIInfo)
 	
-	// UI Data
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Flask_HealthHealing);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Flask_ManaHealing);
 
@@ -74,10 +84,11 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_HealingHealth);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_RepleanishingMana);
 
-	// Events
+	/**
+	 * Events
+	 */
+	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Death);
-
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AdvancedCombat_Hit);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_Firebolt)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_Aura)
@@ -88,10 +99,36 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_LeftHand)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_BetweenHands)
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Melee);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Ranged);
+	/**
+	 * ---- Ability Activation Tags ----
+	 */
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivationFail_IsDead);
+
+	/**
+	 * Shared
+	 */
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_HitReact);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Stagger);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Introduction);
+
+	/**
+	 * Zombie
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Zombie_MeleeAttack);
+
+	/**
+	 * Ranged Goblin
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_RangedGoblin_BowAttack);
+
+	/**
+	 * Skeletal Mage
+	 */
 
 	/**
 	 * Tree Orc
@@ -104,47 +141,20 @@ namespace ObsidianGameplayTags
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_EquipWeapon);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_SpawnComboProjectile);
-	
-	// Attributes UI Data - I will leave it here for now in case I would need it in the future
-	/**
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Health);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxHealth);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_EnergyShield);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxEnergyShield);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_HealthRegeneration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_EnergyShieldRegeneration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Armor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Evasion);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_FireResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxFireResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_ColdResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxColdResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_LightningResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxLightningResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_ChaosResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxChaosResistance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_CriticalStrikeChance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_CriticalStrikeMultiplier);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_AttackSpeed);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_CastSpeed);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_FirePenetration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_ColdPenetration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_LightningPenetration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_ChaosPenetration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_FireDamageMultiplier);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_ColdDamageMultiplier);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_LightningDamageMultiplier);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_PhysicalDamageMultiplier);
 
+	/**
+	 * ---- Cooldowns ----
+	 */
+
+	/**
+	 * Shared
+	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Mana);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_MaxMana);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_ManaRegeneration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Intelligence);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Attribute_Faith);
-	*/
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_HitReact)
+	
+	/**
+	 * ---- End of Cooldowns ----
+	 */
 	
 	OBSIDIAN_API FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
 }

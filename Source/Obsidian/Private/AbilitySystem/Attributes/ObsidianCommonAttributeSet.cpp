@@ -179,7 +179,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			TargetASC->CancelAllAbilities();
 			
 			FGameplayTagContainer ActivateTag;
-			ActivateTag.AddTag(ObsidianGameplayTags::Ability_Stagger);
+			ActivateTag.AddTag(ObsidianGameplayTags::AbilityActivation_Stagger);
 			TargetASC->TryActivateAbilitiesByTag(ActivateTag);
 
 			SetStaggerMeter(0.0f);
