@@ -2,15 +2,21 @@
 
 #pragma once
 
-/** Obsidian Trace Channels. */
+/**
+ * Obsidian Trace Channels.
+ */
 #define Obsidian_TraceChannel_PlayerCursorTrace	ECC_GameTraceChannel1
 #define Obsidian_TraceChannel_Melee ECC_GameTraceChannel2
 #define Obsidian_TraceChannel_Test ECC_GameTraceChannel3
 
-/** Obsidian Object Channels. */
+/**
+ * Obsidian Object Channels.
+ */
 #define Obsidian_ObjectChannel_Projectile ECC_GameTraceChannel2
 
-/** Stencil Values used for highlight colors. */
+/**
+ * Stencil Values used for highlight colors.
+ */
 namespace ObsidianHighlight
 {
 	static constexpr int32 Red = 250;
@@ -18,7 +24,9 @@ namespace ObsidianHighlight
 	static constexpr int32 White = 252;
 }
 
-/** Collection of FNames Actor tags stored for convenience and typo avoidance. */
+/**
+ * Collection of FNames Actor tags stored for convenience and typo avoidance.
+ */
 namespace ObsidianActorTags
 {
 	static inline FName Player = FName("Player");
@@ -28,7 +36,9 @@ namespace ObsidianActorTags
 	static inline FName BossEnemy = FName("BossEnemy");
 }
 
-/** Collection of FNames socket names stored for convenience and typo avoidance. */
+/**
+ * Collection of FNames socket names stored for convenience and typo avoidance.
+ */
 namespace ObsidianAbilitySocketNames
 {
 	static inline FName Weapon = FName("WeaponAbilitySocket");
@@ -36,7 +46,9 @@ namespace ObsidianAbilitySocketNames
 	static inline FName LeftHand = FName("LeftHandAbilitySocket");
 }
 
-/** Collection of FNames socket names stored for convenience and typo avoidance. */
+/**
+ * Collection of FNames socket names stored for convenience and typo avoidance.
+ */
 namespace ObsidianMeshSocketNames
 {
 	static inline FName RightHandWeaponSocket = FName("EquipmentRightHandSocket");
@@ -44,7 +56,9 @@ namespace ObsidianMeshSocketNames
 	static inline FName BackWeaponSocket = FName("EquipmentBackSocket");
 }
 
-/** Enum that holds enemy classes. */
+/**
+ * Enum that holds enemy classes.
+ */
 UENUM(BlueprintType)
 enum class EObsidianEnemyClass : uint8
 {
@@ -56,7 +70,9 @@ enum class EObsidianEnemyClass : uint8
 	
 };
 
-/** Enum that holds socket spawn locations for abilities. */
+/**
+ * Enum that holds socket spawn locations for abilities.
+ */
 UENUM(BlueprintType)
 enum class EObsidianAbilitySpawnLocation : uint8
 {
@@ -69,7 +85,9 @@ enum class EObsidianAbilitySpawnLocation : uint8
 	ASL_MAX UMETA(DisplayName = "Default MAX") 
 };
 
-/** Enum that holds trace types used for advanced combat component. */
+/**
+ * Enum that holds trace types used for advanced combat component.
+ */
 UENUM(BlueprintType)
 enum class EObsidianTraceType  : uint8
 {
@@ -80,7 +98,9 @@ enum class EObsidianTraceType  : uint8
 	ETT_SimpleCapsuleTrace UMETA(DisplayName = "Simple Capsule Trace")
 };
 
-/** Enum that holds types of traced mesh e.g. Actor Mesh, Left Hand Weapon Mesh, Right Hand Weapon Mesh. */
+/**
+ * Enum that holds types of traced mesh e.g. Actor Mesh, Left Hand Weapon Mesh, Right Hand Weapon Mesh.
+ */
 UENUM(BlueprintType)
 enum class EObsidianTracedMeshType  : uint8
 {

@@ -109,22 +109,6 @@ void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
 	UAbilitySystemComponent* AbilitySystemComponent = GetAbilitySystemComponent();
 	check(AbilitySystemComponent);
 	AbilitySystemComponent->CancelAbilities();
-
-	if(!DeathMontages.IsEmpty())
-	{
-		const float DeathMontagesLength = DeathMontages.Num();
-		const float RandomIndex = FMath::RandRange(0.f, DeathMontagesLength - 1);
-		
-		const float AnimLength = PlayAnimMontage(DeathMontages[RandomIndex]);
-
-		USkeletalMeshComponent* MeshComp = GetMesh();
-		FTimerHandle DeathMontageFinishedHandle;
-		GetWorld()->GetTimerManager().SetTimer(DeathMontageFinishedHandle, FTimerDelegate::CreateWeakLambda(this, [MeshComp]()
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Replace the mesh with dummy mesh, hide and destroy the current one"));
-			
-		}), AnimLength, false);
-	}
 }
 
 void AObsidianCharacterBase::OnDeathFinished(AActor* OwningActor)
@@ -155,25 +139,6 @@ void AObsidianCharacterBase::UninitAndDestroy()
 	}
 
 	SetActorHiddenInGame(true);
-}
-
-void AObsidianCharacterBase::Ragdoll() const
-{
-	USkeletalMeshComponent* CharacterMesh = GetMesh();
-	check(CharacterMesh);
-
-	CharacterMesh->SetCollisionProfileName(FName("Ragdoll"), true);
-	CharacterMesh->SetAllBodiesBelowSimulatePhysics(RagdollImpulseBone, true, true);
-
-	if(bRagdollWithImpulse)
-	{
-		const UCharacterMovementComponent* CharacterMoveComp = GetCharacterMovement();
-		check(CharacterMoveComp);
-
-		const FVector LastUpdateVelocity = CharacterMoveComp->GetLastUpdateVelocity();
-		const FVector Impulse = LastUpdateVelocity.GetSafeNormal() * RagdollImpulseStrength + LastUpdateVelocity;
-		CharacterMesh->AddImpulse(Impulse, RagdollImpulseBone, true);
-	}
 }
 
 FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)

@@ -179,12 +179,20 @@ void AObsidianHero::OnAbilitySystemUninitialized()
 
 void AObsidianHero::OnDeathStarted(AActor* OwningActor)
 {
-	if(Controller)
+	if(IsValid(Controller))
 	{
 		Controller->SetIgnoreMoveInput(true);
 	}
 	
 	Super::OnDeathStarted(OwningActor);
+
+	if(!DeathMontages.IsEmpty())
+	{
+		const float DeathMontagesLength = DeathMontages.Num();
+		const float RandomIndex = FMath::RandRange(0.f, DeathMontagesLength - 1);
+		
+		PlayAnimMontage(DeathMontages[RandomIndex]);
+	}
 }
 
 void AObsidianHero::OnDeathFinished(AActor* OwningActor)

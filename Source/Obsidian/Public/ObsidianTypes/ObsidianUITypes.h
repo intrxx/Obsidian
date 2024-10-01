@@ -6,6 +6,9 @@
 #include "GameplayEffect.h"
 #include "ObsidianUITypes.generated.h"
 
+/**
+ * Struct used to define damage number text displayed on screen.
+ */
 USTRUCT(BlueprintType)
 struct FObsidianDamageTextProps
 {
@@ -27,6 +30,9 @@ struct FObsidianDamageTextProps
 	bool bIsSuppressedSpell = false;
 };
 
+/**
+ * Struct that defines Stacking Effect displayed on screen.
+ */
 USTRUCT(BlueprintType)
 struct FObsidianEffectUIStackingData
 {
@@ -43,6 +49,9 @@ public:
 	EGameplayEffectStackingDurationPolicy EffectStackingDurationPolicy = EGameplayEffectStackingDurationPolicy();
 };
 
+/**
+ * Enum defining the container to assign the effect when displaying it on the screen so the Player can quickly spot any bad effects he needs to be aware of.
+ */
 UENUM(BlueprintType)
 enum class EObsidianUIEffectClassification : uint8
 {

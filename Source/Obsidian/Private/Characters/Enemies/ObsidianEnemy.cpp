@@ -101,11 +101,25 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 {
 	Super::OnDeathStarted(OwningActor);
 
-	if(HasAuthority())
+	if(HasAuthority() && IsValid(Controller))
 	{
-		AController* C = GetController();
-		check(C);
-		C->UnPossess();
+		Controller->UnPossess();
+	}
+
+	if(!DeathMontages.IsEmpty())
+	{
+		const float DeathMontagesLength = DeathMontages.Num();
+		const float RandomIndex = FMath::RandRange(0.f, DeathMontagesLength - 1);
+		
+		const float AnimLength = PlayAnimMontage(DeathMontages[RandomIndex]);
+
+		USkeletalMeshComponent* MeshComp = GetMesh();
+		FTimerHandle DeathMontageFinishedHandle;
+		GetWorld()->GetTimerManager().SetTimer(DeathMontageFinishedHandle, FTimerDelegate::CreateWeakLambda(this, [MeshComp]()
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Replace the mesh with dummy mesh, hide and destroy the current one"));
+			
+		}), AnimLength, false);
 	}
 }
 

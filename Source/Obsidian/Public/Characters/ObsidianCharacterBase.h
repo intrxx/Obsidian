@@ -53,13 +53,6 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName="On Death Finished"), Category = "Obsidian|Character")
 	void BP_OnDeathFinished();
 
-	/**
-	 * AFTER SOME CONSIDERATION, I'M NOT REALLY SURE, I WANT TO USE RAGDOLLS AT ALL
-	 * will it leave here for now tho
-	 * */
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
-	void Ragdoll() const;
-
 	void DestroyDueToDeath();
 	void UninitAndDestroy();
 
