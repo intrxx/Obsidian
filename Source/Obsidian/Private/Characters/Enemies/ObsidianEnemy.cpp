@@ -11,6 +11,7 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
+#include "Characters/ObsidianDummyMeshActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
@@ -110,16 +111,33 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 	{
 		const float DeathMontagesLength = DeathMontages.Num();
 		const float RandomIndex = FMath::RandRange(0.f, DeathMontagesLength - 1);
-		
-		const float AnimLength = PlayAnimMontage(DeathMontages[RandomIndex]);
 
-		USkeletalMeshComponent* MeshComp = GetMesh();
-		FTimerHandle DeathMontageFinishedHandle;
-		GetWorld()->GetTimerManager().SetTimer(DeathMontageFinishedHandle, FTimerDelegate::CreateWeakLambda(this, [MeshComp]()
+		if(bShouldSpawnDummyMesh)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Replace the mesh with dummy mesh, hide and destroy the current one"));
+			float AnimLength = PlayAnimMontage(DeathMontages[RandomIndex]);
 			
-		}), AnimLength, false);
+			// This is a hack to copy the mesh before the anim montage actually ends.
+			AnimLength -= 0.2f;
+
+			USkeletalMeshComponent* MeshComp = GetMesh();
+			FTimerHandle DeathMontageFinishedHandle;
+			GetWorld()->GetTimerManager().SetTimer(DeathMontageFinishedHandle, FTimerDelegate::CreateWeakLambda(this, [MeshComp, this]()
+			{
+				UWorld* World = GetWorld();
+				if(World)
+				{
+					AObsidianDummyMeshActor* Dummy = World->SpawnActorDeferred<AObsidianDummyMeshActor>(AObsidianDummyMeshActor::StaticClass(), GetActorTransform());
+					Dummy->SetupDummyMeshActor(MeshComp, DummyMeshLifeSpan);
+
+					Dummy->FinishSpawning(GetActorTransform());
+				}
+			
+			}), AnimLength, false);
+		}
+		else
+		{
+			PlayAnimMontage(DeathMontages[RandomIndex]);
+		}
 	}
 }
 

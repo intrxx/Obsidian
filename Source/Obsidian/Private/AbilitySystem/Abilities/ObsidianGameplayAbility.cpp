@@ -170,7 +170,14 @@ FObsidianTaggedMontage UObsidianGameplayAbility::GetRandomAnimMontageToPlay()
 	const uint16 ArrCount = AbilityMontages.Num();
 	if(ArrCount == 0)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
+		if(GetAvatarActorFromActorInfo())
+		{
+			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
+		}
+		else
+		{
+			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
+		}
 		return FObsidianTaggedMontage();
 	}
 
@@ -189,7 +196,14 @@ UAnimMontage* UObsidianGameplayAbility::GetAnimMontage()
 	const uint16 ArrCount = AbilityMontages.Num();
 	if(ArrCount == 0)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
+		if(GetAvatarActorFromActorInfo())
+		{
+			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
+		}
+		else
+		{
+			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
+		}
 		return nullptr;
 	}
 

@@ -100,7 +100,7 @@ protected:
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")
-	EObsidianGameplayAbility_ActivationPolicy ActivationPolicy;
+	EObsidianGameplayAbility_ActivationPolicy ActivationPolicy = EObsidianGameplayAbility_ActivationPolicy::EAP_OnInputTriggered;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianTaggedMontage> AbilityMontages;
