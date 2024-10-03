@@ -22,6 +22,9 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	MeshComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
 	MeshComp->SetGenerateOverlapEvents(true);
+	
+	// This seems like a hack now - this fixes incorrect spawning transforms for projectiles which is taken from sockets. //TODO Validate later
+	MeshComp->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::OnlyTickMontagesAndRefreshBonesWhenPlayingMontages;
 
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);

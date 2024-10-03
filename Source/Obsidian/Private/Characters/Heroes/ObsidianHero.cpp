@@ -55,10 +55,7 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer) :
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-
-	// This seems like a hack now - this fixes incorrect spawning transforms for projectiles which is taken from sockets. //TODO Validate later
-	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
-
+	
 	// Identifies this class as a Player character
 	Tags.Emplace(ObsidianActorTags::Player);
 }

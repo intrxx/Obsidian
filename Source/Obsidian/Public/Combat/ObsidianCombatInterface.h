@@ -34,8 +34,8 @@ public:
 	virtual AActor* GetAvatarActor_Implementation();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
-	void SetMotionWarpingFacingTarget(const FName MotionWarpName, const FVector& FacingTarget);
-	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget);
+	void SetMotionWarpingFacingTarget(const FName MotionWarpName = FName("FacingTarget"), const FVector& FacingTarget = FVector(0.0f, 0.0f, 0.0f));
+	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName = FName("FacingTarget"), const FVector& FacingTarget = FVector(0.0f, 0.0f, 0.0f));
 	
 	/*
 	 * Socket Locations for spawning abilities.

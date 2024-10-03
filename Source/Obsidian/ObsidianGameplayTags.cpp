@@ -130,6 +130,8 @@ namespace ObsidianGameplayTags
 	 * Skeletal Mage
 	 */
 	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(AbilityActivation_SkeletalMage_FireBall, "AbilityActivation.SkeletalMage.FireBall", "Tag used for triggering activation of Skeletal Mage's fire ball spell.");
+	
 	/**
 	 * Tree Orc
 	 */
