@@ -63,6 +63,11 @@ void AObsidianBossEnemy::OnAbilitySystemInitialized()
 void AObsidianBossEnemy::OnDeathStarted(AActor* OwningActor)
 {
 	Super::OnDeathStarted(OwningActor);
+
+	if(ObsidianBossAIController)
+	{
+		ObsidianBossAIController->GetBrainComponent()->StopLogic(TEXT("Death"));
+	}
 }
 
 void AObsidianBossEnemy::OnDeathFinished(AActor* OwningActor)

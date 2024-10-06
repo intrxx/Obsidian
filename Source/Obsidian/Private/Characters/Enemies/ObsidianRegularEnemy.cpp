@@ -68,6 +68,11 @@ void AObsidianRegularEnemy::OnDeathStarted(AActor* OwningActor)
 	{
 		HealthBarWidgetComp->DestroyComponent();
 	}
+
+	if(ObsidianRegularAIController)
+	{
+		ObsidianRegularAIController->GetBrainComponent()->StopLogic(TEXT("Death"));
+	}
 }
 
 void AObsidianRegularEnemy::OnDeathFinished(AActor* OwningActor)
