@@ -83,7 +83,7 @@ private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")
 	bool bShouldSpawnDummyMesh = false;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true, EditCondition = "bShouldSpawnDummyMesh == true", EditConditionHides), Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true, EditCondition = "bShouldSpawnDummyMesh", EditConditionHides), Category = "Obsidian")
 	float DummyMeshLifeSpan = 25.0f;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|Level")
