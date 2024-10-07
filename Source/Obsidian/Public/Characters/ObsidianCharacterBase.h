@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "ObsidianCharacterBase.generated.h"
 
+struct FGameplayAbilitySpec;
 class UMotionWarpingComponent;
 class UObsidianAbilitySystemComponent;
 class UObsidianPawnExtensionComponent;
@@ -27,6 +28,8 @@ public:
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+
+	FGameplayAbilitySpec* GetFirstAbilitySpecForTag(const FGameplayTag& AbilityTag) const;
 	
 	bool CanHitReact() const
 	{

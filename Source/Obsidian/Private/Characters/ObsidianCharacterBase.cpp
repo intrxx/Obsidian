@@ -76,6 +76,25 @@ UAbilitySystemComponent* AObsidianCharacterBase::GetAbilitySystemComponent() con
 	return  PawnExtComp->GetObsidianAbilitySystemComponent();
 }
 
+FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FGameplayTag& AbilityTag) const
+{
+	FGameplayAbilitySpec* AbilitySpec = nullptr;
+	if(const UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
+	{
+		TArray<FGameplayAbilitySpec*> AbilitySpecs;
+		FGameplayTagContainer AbilityTags;
+		AbilityTags.AddTag(AbilityTag);
+		
+		ASC->GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTags, AbilitySpecs);
+
+		if(AbilitySpecs[0])
+		{
+			AbilitySpec = AbilitySpecs[0];
+		}
+	}
+	return AbilitySpec;
+}
+
 void AObsidianCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
