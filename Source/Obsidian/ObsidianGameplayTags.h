@@ -7,7 +7,7 @@
 namespace ObsidianGameplayTags
 {
 	/**
-	 * Damage Types
+	 * ---- Damage Types ----
 	 */
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Physical);
@@ -20,32 +20,34 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API extern const TArray<FGameplayTag> DamageTypes;
 	
 	/**
-	 *  Effects
+	 *  ---- Effects ----
 	 */
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_Stagger)
 	
 	/**
-	 * Statuses
+	 * ---- Statuses ----
 	 */
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death_Dying);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death_Dead);
-	
+
 	/**
-	 * Native Input
+	 * ---- Input ----
 	 */
 	
+	/**
+	 * Native
+	 */
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move_Keyboard);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move_Mouse);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_CharacterStatus);
 
 	/**
-	 * Ability Input
+	 * Ability
 	 */
-	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability_Move_Mouse);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability_Move_Roll);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability1);
@@ -58,7 +60,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability8);
 
 	/*
-	 * Data
+	 * ---- Data ----
 	 */
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_AdvancedCombat_Hit);
@@ -66,7 +68,6 @@ namespace ObsidianGameplayTags
 	/**
 	 * UI Data
 	 */
-
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_EffectUIInfo)
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Flask_HealthHealing);
@@ -85,14 +86,34 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_RepleanishingMana);
 
 	/**
-	 * Events
+	 * ---- Gameplay Events ----
 	 */
-	
+
+	/**
+	 * Shared
+	 */
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Death);
-	
+
+	/**
+	 * Hero
+	 */
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_Firebolt)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_Aura)
+
+	/**
+	 * Tree Orc
+	 */
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_EquipWeapon);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_SpawnComboProjectile);
+
+	/**
+	 * Skeletal Mage
+	 */
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_SkeletalMage_SpawnFireNova);
 	
+	/**
+	 * Sockets
+	 */
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_RightHandWeapon)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_LeftHandWeapon)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_RightHand)
@@ -108,7 +129,6 @@ namespace ObsidianGameplayTags
 	/**
 	 * Shared
 	 */
-	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_HitReact);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Stagger);
 	
@@ -117,20 +137,18 @@ namespace ObsidianGameplayTags
 	/**
 	 * Zombie
 	 */
-
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Zombie_MeleeAttack);
 
 	/**
 	 * Ranged Goblin
 	 */
-
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_RangedGoblin_BowAttack);
 
 	/**
 	 * Skeletal Mage
 	 */
-	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_SkeletalMage_FireBall);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_SkeletalMage_FireNova);
 
 	/**
 	 * Tree Orc
@@ -141,9 +159,6 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_TreeOrc_ComboSwing);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_TreeOrc_360Swing);
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_EquipWeapon);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_SpawnComboProjectile);
-
 	/**
 	 * ---- Cooldowns ----
 	 */
@@ -151,8 +166,17 @@ namespace ObsidianGameplayTags
 	/**
 	 * Shared
 	 */
-	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_HitReact)
+
+	/**
+	 * Tree Orc
+	 */
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_TreeOrc_LeapAttack)
+	
+	/**
+	 * Skeletal Mage
+	 */
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_SkeletalMage_FireNova)
 	
 	/**
 	 * ---- End of Cooldowns ----

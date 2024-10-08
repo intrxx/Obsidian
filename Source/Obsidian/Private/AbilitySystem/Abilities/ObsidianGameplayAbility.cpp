@@ -57,6 +57,11 @@ UObsidianAbilitySystemComponent* UObsidianGameplayAbility::GetObsidianAbilitySys
 	return (CurrentActorInfo ? Cast<UObsidianAbilitySystemComponent>(CurrentActorInfo->AbilitySystemComponent.Get()) : nullptr);
 }
 
+FVector UObsidianGameplayAbility::GetOwnerLocationFromActorInfo() const
+{
+	return (CurrentActorInfo ? GetOwningActorFromActorInfo()->GetActorLocation() : FVector::ZeroVector);
+}
+
 bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent,
                                                                  const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
 {

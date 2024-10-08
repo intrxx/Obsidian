@@ -85,9 +85,9 @@ FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FG
 		FGameplayTagContainer AbilityTags;
 		AbilityTags.AddTag(AbilityTag);
 		
-		ASC->GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTags, AbilitySpecs);
+		ASC->GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTags, AbilitySpecs, false);
 
-		if(AbilitySpecs.IsEmpty())
+		if(!AbilitySpecs.IsEmpty())
 		{
 			return AbilitySpecs[0];
 		}

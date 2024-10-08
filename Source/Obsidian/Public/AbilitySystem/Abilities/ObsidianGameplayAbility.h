@@ -86,6 +86,9 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemCompFromActorInfo() const;
 	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	FVector GetOwnerLocationFromActorInfo() const;
+	
 	//~UGameplayAbility interface
 	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
 	//~End of UGameplayAbility interface

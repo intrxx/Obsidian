@@ -22,23 +22,23 @@ UObsidianBTDecorator_CanActivateAbility::UObsidianBTDecorator_CanActivateAbility
 bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp,
 	uint8* NodeMemory) const
 {
-	AAIController* AIController = OwnerComp.GetAIOwner();
+	const AAIController* AIController = OwnerComp.GetAIOwner();
 	if(AIController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AI Controller is invalid on [UObsidianBTDecorator_CanActivateAbility]."));
+		UE_LOG(LogObsidian, Error, TEXT("AI Controller is invalid on [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
 		return false;
 	}
 
-	UBlackboardComponent* BlackboardComponent = AIController->GetBlackboardComponent();
-	if(BlackboardComponent)
+	const UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+	if(BlackboardComponent == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Blackboard Component Controller is invalid on [UObsidianBTDecorator_CanActivateAbility]."));
+		UE_LOG(LogObsidian, Error, TEXT("Blackboard Component is invalid on [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
 		return false;
 	}
 
-	if(AObsidianEnemy* ObsidianEnemy = Cast<AObsidianEnemy>(AIController->GetPawn()))
+	if(const AObsidianEnemy* ObsidianEnemy = Cast<AObsidianEnemy>(AIController->GetPawn()))
 	{
-		FGameplayAbilitySpec* ActivatableAbilitySpec = ObsidianEnemy->GetFirstAbilitySpecForTag(ActivateAbilityWithTag);
+		const FGameplayAbilitySpec* ActivatableAbilitySpec = ObsidianEnemy->GetFirstAbilitySpecForTag(ActivateAbilityWithTag);
 		
 		if(const UGameplayAbility* Ability = ActivatableAbilitySpec->GetPrimaryInstance())
 		{
