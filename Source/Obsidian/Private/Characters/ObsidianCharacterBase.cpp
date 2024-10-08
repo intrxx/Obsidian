@@ -8,6 +8,7 @@
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Net/UnrealNetwork.h"
+#include "Obsidian/Obsidian.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
@@ -78,7 +79,6 @@ UAbilitySystemComponent* AObsidianCharacterBase::GetAbilitySystemComponent() con
 
 FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FGameplayTag& AbilityTag) const
 {
-	FGameplayAbilitySpec* AbilitySpec = nullptr;
 	if(const UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
 	{
 		TArray<FGameplayAbilitySpec*> AbilitySpecs;
@@ -87,12 +87,18 @@ FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FG
 		
 		ASC->GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTags, AbilitySpecs);
 
-		if(AbilitySpecs[0])
+		if(AbilitySpecs.IsEmpty())
 		{
-			AbilitySpec = AbilitySpecs[0];
+			return AbilitySpecs[0];
 		}
 	}
-	return AbilitySpec;
+	
+#if !UE_BUILD_SHIPPING	
+	UE_LOG(LogObsidian, Error, TEXT("Could not find any Gameplay Ability for Tag [%s] on Owner [%s]."),
+		*AbilityTag.GetTagName().ToString(), *GetNameSafe(this));
+#endif
+	
+	return nullptr;
 }
 
 void AObsidianCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -2,6 +2,8 @@
 
 
 #include "Core/ObsidianAbilitySystemFunctionLibrary.h"
+
+#include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
@@ -63,8 +65,16 @@ void UObsidianAbilitySystemFunctionLibrary::SetIsCriticalAttack(FGameplayEffectC
     }
 }
 
+void UObsidianAbilitySystemFunctionLibrary::GetAllOwnedTagsFromActor(AActor* Actor, FGameplayTagContainer& OutTags)
+{
+    if(const UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
+    {
+        ASC->GetOwnedGameplayTags(OutTags);
+    }
+}
+
 void UObsidianAbilitySystemFunctionLibrary::GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
-    UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug)
+                                                                         UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug)
 {
     FCollisionQueryParams SphereParams;
     SphereParams.AddIgnoredActors(ActorsToIgnore);

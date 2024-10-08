@@ -7,6 +7,7 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianAbilitySystemFunctionLibrary.generated.h"
 
+struct FGameplayTagContainer;
 struct FGameplayEffectContextHandle;
 class UObsidianAbilitySystemComponent;
 
@@ -20,7 +21,12 @@ class OBSIDIAN_API UObsidianAbilitySystemFunctionLibrary : public UBlueprintFunc
 
 public:
 	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Init")
-	static void InitializeEnemyDefaultAttributesWithClass(const UObject* WorldContextObject, UObsidianAbilitySystemComponent* ASC, const EObsidianEnemyClass EnemyClass, const float Level, UObject* SourceObject = nullptr);
+	static void InitializeEnemyDefaultAttributesWithClass(const UObject* WorldContextObject, UObsidianAbilitySystemComponent* ASC,
+		const EObsidianEnemyClass EnemyClass, const float Level, UObject* SourceObject = nullptr);
+
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Combat")
+	static void GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
+		UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug);
 
 	UFUNCTION(BlueprintPure, Category = "ObsidianASCFunctionLibrary|Combat")
 	static bool IsBlockedAttack(const FGameplayEffectContextHandle& EffectContextHandle);
@@ -34,6 +40,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
 	static void SetIsCriticalAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalAttack);
 
-	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Combat")
-	static void GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors, UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug);
+	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary")
+	static void GetAllOwnedTagsFromActor(AActor* Actor, FGameplayTagContainer& OutTags);
 };
