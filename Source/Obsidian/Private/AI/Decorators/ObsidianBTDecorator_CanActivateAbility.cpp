@@ -15,8 +15,13 @@ UObsidianBTDecorator_CanActivateAbility::UObsidianBTDecorator_CanActivateAbility
 {
 	INIT_DECORATOR_NODE_NOTIFY_FLAGS();
 	
-	FlowAbortMode = EBTFlowAbortMode::Self;
 	NodeName = "Can Activate Ability?";
+
+	// Can't abort, the decorator is not watching anything.
+	FlowAbortMode = EBTFlowAbortMode::None;
+	bAllowAbortNone = false;
+	bAllowAbortChildNodes = false;
+	bAllowAbortLowerPri = false;
 }
 
 bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp,
@@ -53,10 +58,30 @@ bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehavi
 			
 			if(Ability->CanActivateAbility(ActivatableAbilitySpec->Handle, ActorInfo, &SourceTags, &TargetTags))
 			{
+#if !UE_BUILD_SHIPPING
+				if(bDebugEnabled)
+				{
+					UE_LOG(LogObsidian, Display, TEXT("Owner: [%s] is able to activate Ability: [%s]"), *GetNameSafe(ObsidianEnemy), *GetNameSafe(Ability));
+				}
+#endif
+				
 				return true;
 			}
+#if !UE_BUILD_SHIPPING
+			if(bDebugEnabled)
+			{
+				UE_LOG(LogObsidian, Error, TEXT("Owner: [%s] is NOT able to activate Ability: [%s]"), *GetNameSafe(ObsidianEnemy), *GetNameSafe(Ability));
+			}
+#endif
 		}
 	}
 	return false;
 }
+
+FString UObsidianBTDecorator_CanActivateAbility::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Gameplay Tag: %s \n"), *ActivateAbilityWithTag.GetTagName().ToString()) +=
+		bDebugEnabled ? FString::Printf(TEXT("Debug Enabled.")) : FString::Printf(TEXT("Debug Disabled.")); 
+}
+
 

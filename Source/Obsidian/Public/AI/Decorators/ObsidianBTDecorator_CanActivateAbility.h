@@ -18,6 +18,7 @@ public:
 	UObsidianBTDecorator_CanActivateAbility();
 
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
+	virtual FString GetStaticDescription() const override;
 	
 protected:
 	/** Ability tag to check the activation for. */
@@ -27,4 +28,7 @@ protected:
 	/** Enemy Target. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Target Actor"), Category = "Key")
 	FBlackboardKeySelector TargetActor_Selector;
+
+	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	bool bDebugEnabled = false;
 };
