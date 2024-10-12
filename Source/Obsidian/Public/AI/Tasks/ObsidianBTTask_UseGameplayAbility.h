@@ -21,6 +21,7 @@ class OBSIDIAN_API UObsidianBTTask_UseGameplayAbility : public UBTTaskNode
 
 protected:
 	virtual EBTNodeResult::Type PerformUseGameplayAbilityTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual FString GetStaticDescription() const override;
 
 protected:
 	/** Ability tag used for activation. */
@@ -34,4 +35,7 @@ protected:
 	/** Should this task set the Combat Target on EnemyInterface. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian|CombatTarget")
 	bool bSetCombatTargetOnEnemyInterface = false;
+
+	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	bool bDebugEnabled = false;
 };

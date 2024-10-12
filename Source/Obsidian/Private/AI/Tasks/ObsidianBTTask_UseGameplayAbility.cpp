@@ -55,15 +55,36 @@ EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilit
 								   "Make sure to set the TargetActor on the Node!"), *GetNameSafe(AIController));
 		}
 	}
-	
+
+	bool bWasSuccessful = false;
 	if(Actor)
 	{
 		if(UAbilitySystemComponent* OwningASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
 		{
-			OwningASC->TryActivateAbilitiesByTag(ActivateAbilityWithTag, true);
+			
+			bWasSuccessful = OwningASC->TryActivateAbilitiesByTag(ActivateAbilityWithTag, true);
 			NodeResult = EBTNodeResult::Succeeded;
 		}
 	}
+
+#if !UE_BUILD_SHIPPING
+	if(bDebugEnabled)
+	{
+		const FString Message = bWasSuccessful ? FString::Printf(TEXT("Ability [%s] Activation was successfull."), *ActivateAbilityWithTag.ToString())
+				: FString::Printf(TEXT("Ability [%s] Activation failed."), *ActivateAbilityWithTag.ToString());
+		const FColor LogColor = bWasSuccessful ? FColor::Green : FColor::Red;
+		
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, LogColor, Message);
+	}
+#endif
 	
 	return NodeResult;
+}
+
+FString UObsidianBTTask_UseGameplayAbility::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Gameplay Tag: %s \n"), *ActivateAbilityWithTag.ToString()) +=
+		FString::Printf(TEXT("Combat Target: %s \n"), *CombatTarget_Selector.SelectedKeyName.ToString()) +=
+		bSetCombatTargetOnEnemyInterface ? FString::Printf(TEXT("Set Target on Enemy Interface. \n")) : FString::Printf(TEXT("Do not set Target on Enemy Interface. \n")) += 
+		bDebugEnabled ? FString::Printf(TEXT("Debug Enabled.")) : FString::Printf(TEXT("Debug Disabled.")); 
 }

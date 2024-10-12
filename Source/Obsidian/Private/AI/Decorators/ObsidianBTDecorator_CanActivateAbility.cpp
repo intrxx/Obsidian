@@ -81,6 +81,7 @@ bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehavi
 FString UObsidianBTDecorator_CanActivateAbility::GetStaticDescription() const
 {
 	return FString::Printf(TEXT("Gameplay Tag: %s \n"), *ActivateAbilityWithTag.GetTagName().ToString()) +=
+		FString::Printf(TEXT("Target Actor: %s \n"), *TargetActor_Selector.SelectedKeyName.ToString()) +=
 		bDebugEnabled ? FString::Printf(TEXT("Debug Enabled.")) : FString::Printf(TEXT("Debug Disabled.")); 
 }
 
