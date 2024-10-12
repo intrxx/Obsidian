@@ -18,4 +18,7 @@ class OBSIDIAN_API UObsidianBTTask_ClearFocus : public UBTTaskNode
 	UObsidianBTTask_ClearFocus();
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+
+protected:
+	virtual FString GetStaticDescription() const override;
 };

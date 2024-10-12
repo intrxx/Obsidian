@@ -19,12 +19,14 @@ public:
 	
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
-
+	virtual FString GetStaticDescription() const override;
+	
 protected:
 	/** Target Actor to calculate the distance to. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Target Actor"), Category = "Key")
 	FBlackboardKeySelector TargetActor_Selector;
 
+	/** Distance to the selected Actor. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Distance To Target"), Category = "Key")
 	FBlackboardKeySelector DistanceToTargetActor_Selector;
 };

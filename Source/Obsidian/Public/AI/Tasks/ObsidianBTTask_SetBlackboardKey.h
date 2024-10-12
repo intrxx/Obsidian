@@ -34,6 +34,9 @@ class OBSIDIAN_API UObsidianBTTask_SetBlackboardKey : public UBTTaskNode
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 protected:
+	virtual FString GetStaticDescription() const override;
+
+protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESetAsType SetAsType = ESetAsType::None;
 	

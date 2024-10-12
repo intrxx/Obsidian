@@ -83,8 +83,15 @@ EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilit
 
 FString UObsidianBTTask_UseGameplayAbility::GetStaticDescription() const
 {
-	return FString::Printf(TEXT("Gameplay Tag: %s \n"), *ActivateAbilityWithTag.ToString()) +=
-		FString::Printf(TEXT("Combat Target: %s \n"), *CombatTarget_Selector.SelectedKeyName.ToString()) +=
-		bSetCombatTargetOnEnemyInterface ? FString::Printf(TEXT("Set Target on Enemy Interface. \n")) : FString::Printf(TEXT("Do not set Target on Enemy Interface. \n")) += 
-		bDebugEnabled ? FString::Printf(TEXT("Debug Enabled.")) : FString::Printf(TEXT("Debug Disabled.")); 
+	FString BasicMessage = FString::Printf(TEXT("Gameplay Tag: [%s] \n"), *ActivateAbilityWithTag.ToString()) +=
+		bSetCombatTargetOnEnemyInterface ? FString::Printf(TEXT("Set Target on Enemy Interface. \n")) : FString::Printf(TEXT("Do not set Target on Enemy Interface. \n"));
+
+	if(bSetCombatTargetOnEnemyInterface)
+	{
+		BasicMessage += FString::Printf(TEXT("Combat Target: [%s] \n"), *CombatTarget_Selector.SelectedKeyName.ToString());
+	}
+	
+	BasicMessage += bDebugEnabled ? FString::Printf(TEXT("Debug Enabled.")) : FString::Printf(TEXT("Debug Disabled."));
+		
+	return BasicMessage;
 }

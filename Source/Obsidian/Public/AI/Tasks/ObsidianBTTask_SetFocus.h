@@ -17,6 +17,7 @@ class OBSIDIAN_API UObsidianBTTask_SetFocus : public UBTTaskNode
 	UObsidianBTTask_SetFocus();
 	
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual FString GetStaticDescription() const override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Focus Target"), Category = "Key")

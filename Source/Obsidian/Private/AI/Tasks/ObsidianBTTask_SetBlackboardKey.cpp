@@ -69,3 +69,47 @@ EBTNodeResult::Type UObsidianBTTask_SetBlackboardKey::ExecuteTask(UBehaviorTreeC
 	
 	return EBTNodeResult::Failed;
 }
+
+FString UObsidianBTTask_SetBlackboardKey::GetStaticDescription() const
+{
+	FString FinalMessage = FString::Printf(TEXT("Ket to Set: [%s] \n"), *KeyToSet_Selector.SelectedKeyName.ToString());
+		
+	if(SetAsType == ESetAsType::AsBool)
+	{
+		return FinalMessage += BoolToSet ? FString::Printf(TEXT("Set as True")) : FString::Printf(TEXT("Set as False"));
+	}
+	if(SetAsType == ESetAsType::AsObject)
+	{
+		return FinalMessage += FString::Printf(TEXT("Object to set: [%s]"), *GetNameSafe(ObjectToSet));
+	}
+	if(SetAsType == ESetAsType::AsFloat)
+	{
+		return FinalMessage += FString::Printf(TEXT("Float to set: [%f]"), FloatToSet);
+	}
+	if(SetAsType == ESetAsType::AsVector)
+	{
+		return FinalMessage += FString::Printf(TEXT("Vector to set: [X: %f,Y: %f,Z: %f]"), VectorToSet.X, VectorToSet.Y, VectorToSet.Z);
+	}
+	if(SetAsType == ESetAsType::AsInt)
+	{
+		return FinalMessage += FString::Printf(TEXT("Int to set: [%d]"), IntToSet);
+	}
+	if(SetAsType == ESetAsType::AsRotator)
+	{
+		return FinalMessage += FString::Printf(TEXT("Rotator to set: [Pitch: %f,Roll: %f,Yaw: %f]"), RotatorToSet.Pitch, RotatorToSet.Roll, RotatorToSet.Yaw);
+	}
+	if(SetAsType == ESetAsType::AsString)
+	{
+		return FinalMessage += FString::Printf(TEXT("String to set: [%s]"), *StringToSet);
+	}
+	if(SetAsType == ESetAsType::AsName)
+	{
+		return FinalMessage += FString::Printf(TEXT("Name to set: [%s]"), *NameToSet.ToString());
+	}
+	if(SetAsType == ESetAsType::AsClass)
+	{
+		return FinalMessage += FString::Printf(TEXT("Class to set: [%s]"), *GetNameSafe(ClassToSet));
+	}
+
+	return FinalMessage;
+}

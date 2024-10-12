@@ -39,3 +39,9 @@ EBTNodeResult::Type UObsidianBTTask_SetFocus::ExecuteTask(UBehaviorTreeComponent
 	
 	return NodeResult;
 }
+
+FString UObsidianBTTask_SetFocus::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Sets Focus on Target's AI Controller. \n")) +=
+		FString::Printf(TEXT("Target Key: [%s] \n"), *Target_Selector.SelectedKeyName.ToString());
+}

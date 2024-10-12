@@ -20,3 +20,8 @@ EBTNodeResult::Type UObsidianBTTask_ClearFocus::ExecuteTask(UBehaviorTreeCompone
 	}
 	return EBTNodeResult::Failed;
 }
+
+FString UObsidianBTTask_ClearFocus::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Cleares Focus from AI Controller."));
+}

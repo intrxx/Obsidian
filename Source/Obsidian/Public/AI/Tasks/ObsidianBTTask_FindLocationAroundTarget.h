@@ -20,6 +20,7 @@ class OBSIDIAN_API UObsidianBTTask_FindLocationAroundTarget : public UBTTaskNode
 
 protected:
 	virtual EBTNodeResult::Type PerformFindLocationAroundTargetTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual FString GetStaticDescription() const override;
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "New Location Around Target"), Category = "Key")

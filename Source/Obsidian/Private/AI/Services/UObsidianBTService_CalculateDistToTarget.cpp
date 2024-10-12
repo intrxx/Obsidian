@@ -33,3 +33,10 @@ void UObsidianBTService_CalculateDistToTarget::TickNode(UBehaviorTreeComponent& 
 	
 	OwnerBlackBoardComp->SetValueAsFloat(DistanceToTargetActor_Selector.SelectedKeyName, DistanceToActor);
 }
+
+FString UObsidianBTService_CalculateDistToTarget::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Target Actor Key: [%s] \n"), *TargetActor_Selector.SelectedKeyName.ToString()) +=
+		FString::Printf(TEXT("Distance to Target Actor Key: [%s] \n"), *DistanceToTargetActor_Selector.SelectedKeyName.ToString());
+		
+}

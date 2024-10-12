@@ -51,3 +51,9 @@ void UObsidianBTService_FindNearestPlayer::TickNode(UBehaviorTreeComponent& Owne
 	OwnerBlackBoardComp->SetValueAsObject(NearestTargetActor_Selector.SelectedKeyName, NearestActor);
 	OwnerBlackBoardComp->SetValueAsFloat(DistanceToTargetActor_Selector.SelectedKeyName, NearestDistance);
 }
+
+FString UObsidianBTService_FindNearestPlayer::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Nearest Target Actor Key: [%s] \n"), *NearestTargetActor_Selector.SelectedKeyName.ToString()) +=
+		FString::Printf(TEXT("Distance to Target Actor Key: [%s] \n"), *DistanceToTargetActor_Selector.SelectedKeyName.ToString());
+}

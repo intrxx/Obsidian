@@ -67,3 +67,11 @@ EBTNodeResult::Type UObsidianBTTask_FindLocationAroundTarget::PerformFindLocatio
 	
 	return NodeResult;
 }
+
+FString UObsidianBTTask_FindLocationAroundTarget::GetStaticDescription() const
+{
+	return FString::Printf(TEXT("Location Around Target Key: [%s] \n"), *NewLocationAroundTarget_Selector.SelectedKeyName.ToString()) +=
+		FString::Printf(TEXT("Target Key: [%s] \n"), *Target_Selector.SelectedKeyName.ToString()) +=
+		FString::Printf(TEXT("Radius Around Target: [%f] \n"), RadiusAroundTheTarget) +=
+		bFallBackToDefaultIfFailed ? FString::Printf(TEXT("bFallBackToDefaultIfFailed : true")) : FString::Printf(TEXT("bFallBackToDefaultIfFailed : false"));
+}

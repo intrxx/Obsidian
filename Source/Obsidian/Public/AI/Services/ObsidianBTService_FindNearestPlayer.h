@@ -19,11 +19,14 @@ public:
 
 protected:
 	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	virtual FString GetStaticDescription() const override;
 
 protected:
+	/** Nearest Target Actor Key returned by the Service. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Nearest Target Actor"), Category = "Key")
 	FBlackboardKeySelector NearestTargetActor_Selector;
 
+	/** Distance to the nearest Actor returned by the Service. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Distance To Target Actor"), Category = "Key")
 	FBlackboardKeySelector DistanceToTargetActor_Selector;
 };

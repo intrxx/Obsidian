@@ -38,6 +38,9 @@ class OBSIDIAN_API UObsidianBTTask_SetGameplayAttribute : public UBTTaskNode
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
 
 protected:
+	virtual FString GetStaticDescription() const override;
+	
+protected:
 	/** Policy for the duration of this effect */
 	UPROPERTY(EditAnywhere, Category = "Duration")
 	EGameplayEffectDurationType DurationPolicy;

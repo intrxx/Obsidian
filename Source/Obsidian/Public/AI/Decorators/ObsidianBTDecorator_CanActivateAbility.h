@@ -18,6 +18,8 @@ public:
 	UObsidianBTDecorator_CanActivateAbility();
 
 	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) const override;
+
+protected:
 	virtual FString GetStaticDescription() const override;
 	
 protected:
