@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetController.h"
+#include "UI/ObsidianHeroWidgetControllerBase.h"
 #include "OCharacterStatusWidgetController.generated.h"
 
 DECLARE_DELEGATE_OneParam(FOnAttributeValueChangedOneParam, const float /** Value */);
@@ -14,7 +14,7 @@ struct FOnAttributeChangeData;
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class OBSIDIAN_API UOCharacterStatusWidgetController : public UObsidianWidgetController
+class OBSIDIAN_API UOCharacterStatusWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 

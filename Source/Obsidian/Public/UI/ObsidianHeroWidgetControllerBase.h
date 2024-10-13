@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianWidgetController.generated.h"
+#include "ObsidianHeroWidgetControllerBase.generated.h"
 
 class UObsidianHeroAttributesComponent;
 class UObsidianAbilitySystemComponent;
@@ -12,13 +12,13 @@ class APlayerState;
 class UAbilitySystemComponent;
 
 USTRUCT(BlueprintType)
-struct FWidgetControllerParams
+struct FObsidianHeroWidgetControllerParams
 {
 	GENERATED_BODY()
 
-	FWidgetControllerParams() {}
+	FObsidianHeroWidgetControllerParams() {}
 
-	FWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)
+	FObsidianHeroWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)
 	: PlayerController(PC)
 	, PlayerState(PS)
 	, AbilitySystemComponent(ASC)
@@ -42,13 +42,13 @@ struct FWidgetControllerParams
  * 
  */
 UCLASS(Abstract)
-class OBSIDIAN_API UObsidianWidgetController : public UObject
+class OBSIDIAN_API UObsidianHeroWidgetControllerBase : public UObject
 {
 	GENERATED_BODY()
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|WidgetController")
-	void SetWidgetControllerParams(const FWidgetControllerParams& WidgetControllerParams);
+	void SetWidgetControllerParams(const FObsidianHeroWidgetControllerParams& WidgetControllerParams);
 	
 	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
 	virtual void OnWidgetControllerSetupCompleted();
@@ -59,16 +59,16 @@ protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
 
 protected:
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<APlayerController> PlayerController;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<APlayerState> PlayerState;
 	
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|WidgetController")
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
 	
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|WidgetController")
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<UObsidianHeroAttributesComponent> AttributesComponent;
 };
 

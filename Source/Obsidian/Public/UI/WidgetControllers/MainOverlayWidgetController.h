@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetController.h"
+#include "UI/ObsidianHeroWidgetControllerBase.h"
 #include "GameplayTagContainer.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "MainOverlayWidgetController.generated.h"
@@ -89,7 +89,7 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraWidgetDestructionInfoReceived, const FG
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class OBSIDIAN_API UMainOverlayWidgetController : public UObsidianWidgetController
+class OBSIDIAN_API UMainOverlayWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 

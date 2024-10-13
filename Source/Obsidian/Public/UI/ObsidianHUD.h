@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianWidgetController.h"
+#include "ObsidianHeroWidgetControllerBase.h"
 #include "GameFramework/HUD.h"
 #include "ObsidianHUD.generated.h"
 
+struct FObsidianHeroWidgetControllerParams;
 class UOCharacterStatusWidgetController;
 class UObsidianHeroAttributesComponent;
 class UAbilitySystemComponent;
-struct FWidgetControllerParams;
 class UMainOverlayWidgetController;
 class UObsidianMainOverlay;
 class UObsidianWidgetBase;
@@ -23,8 +23,8 @@ class OBSIDIAN_API AObsidianHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
-	UMainOverlayWidgetController* GetMainOverlayWidgetController(const FWidgetControllerParams& WidgetControllerParams);
-	UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FWidgetControllerParams& WidgetControllerParams);
+	UMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianHeroWidgetControllerParams& WidgetControllerParams);
+	UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianHeroWidgetControllerParams& WidgetControllerParams);
 
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
 
