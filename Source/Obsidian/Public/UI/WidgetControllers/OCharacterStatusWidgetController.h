@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianHeroWidgetControllerBase.h"
+#include "UI/ObsidianWidgetControllerBase.h"
 #include "OCharacterStatusWidgetController.generated.h"
 
 DECLARE_DELEGATE_OneParam(FOnAttributeValueChangedOneParam, const float /** Value */);

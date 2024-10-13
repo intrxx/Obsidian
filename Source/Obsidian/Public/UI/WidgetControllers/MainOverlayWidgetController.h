@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianHeroWidgetControllerBase.h"
+#include "UI/ObsidianWidgetControllerBase.h"
 #include "GameplayTagContainer.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "MainOverlayWidgetController.generated.h"
@@ -13,69 +13,6 @@ class UOStackingDurationalEffectInfo;
 class UObsidianDurationalEffectInfo;
 class UObsidianAbilitySystemComponent;
 class UObsidianEffectInfoBase;
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, float, NewValue);
-
-UENUM(BlueprintType)
-enum class EObsidianInfoWidgetType : uint8
-{
-	EIWT_SimpleEffectInfo UMETA(DisplayName = "Simple Effect Info"),
-	EIWT_DurationalEffectInfo UMETA(DisplayName = "Durational Effect Info"),
-	EIWT_StackingEffectInfo UMETA(DisplayName = "Stacking Effect Info"),
-	EIWT_StackingDurationalEffectInfo UMETA(DisplayName = "Stacking Durational Effect Info"),
-
-	EIWT_MAX UMETA(DisplayName = "Default MAX") 
-};
-
-USTRUCT(BlueprintType)
-struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
-	EObsidianInfoWidgetType InfoWidgetType = EObsidianInfoWidgetType::EIWT_SimpleEffectInfo;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FGameplayTag EffectTag = FGameplayTag();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::EUEC_NoClassification;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText EffectName = FText();
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FText EffectDesc = FText();
-	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TObjectPtr<UTexture2D> EffectImage = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo", EditConditionHides))
-	TSubclassOf<UObsidianEffectInfoBase> SimpleEffectWidget;
-
-	/** Indicates that this effect is an Aura Gameplay Ability that will be cleared manually */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo", EditConditionHides))
-	bool bAuraEffect = false;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo", EditConditionHides))
-	TSubclassOf<UObsidianDurationalEffectInfo> DurationalEffectWidget;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_StackingEffectInfo", EditConditionHides))
-	TSubclassOf<UObsidianEffectInfoBase> StackingEffectWidget;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_StackingDurationalEffectInfo", EditConditionHides))
-	TSubclassOf<UOStackingDurationalEffectInfo> StackingDurationalEffectWidget;
-	
-	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
-	float EffectDuration = 0.f;
-};
-
-/** Broadcasts DataTable Row that corresponds to a given asset tag */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEffectUIDataWidgetRow, FObsidianEffectUIDataWidgetRow, Row);
-
-/** Broadcasts DataTable Row that corresponds to a given asset tag as well as the stacking information */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FStackingEffectUIDataWidgetRow, FObsidianEffectUIDataWidgetRow, Row, FObsidianEffectUIStackingData, StackingData);
 
 /** Delegate used for notifying Progress Globes to display the healing/replenish amount */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIGlobeData, const float&, EffectDuration, const float&, EffectMagnitude);
@@ -161,9 +98,6 @@ public:
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
 	
-	template<typename T>
-	T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
-
 	void HandleEffectApplied(const FObsidianEffectUIData& UIData);
 
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
@@ -204,9 +138,3 @@ private:
 	UFUNCTION()
 	void DestroyAuraWidget(const FGameplayTag AuraWidgetTag);
 };
-
-template <typename T>
-T* UMainOverlayWidgetController::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
-{
-	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
-}

@@ -7,7 +7,7 @@
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/ObsidianHUD.h"
-#include "UI/ObsidianHeroWidgetControllerBase.h"
+#include "UI/ObsidianWidgetControllerBase.h"
 
 UMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
@@ -24,7 +24,7 @@ UMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetContro
 			UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
 			UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(PC->GetOwner());
 			
-			const FObsidianHeroWidgetControllerParams Params(PC, ObsidianPS, ObsidianASC, AttributesComponent);
+			const FObsidianWidgetControllerParams Params(PC, ObsidianPS, ObsidianASC, AttributesComponent);
 			return ObsidianHUD->GetMainOverlayWidgetController(Params);
 		}
 	}
@@ -48,7 +48,7 @@ UOCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatu
 				UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
 				UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(ObsidianPC->GetPawn());
 			
-				const FObsidianHeroWidgetControllerParams Params(ObsidianPC, ObsidianPS, ObsidianASC, AttributesComponent);
+				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, ObsidianASC, AttributesComponent);
 				return ObsidianHUD->GetCharacterStatusWidgetController(Params);
 			}
 		}

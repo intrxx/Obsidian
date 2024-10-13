@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianHeroWidgetControllerBase.generated.h"
+#include "ObsidianWidgetControllerBase.generated.h"
 
 class UObsidianHeroAttributesComponent;
 class UObsidianAbilitySystemComponent;
@@ -12,13 +12,13 @@ class APlayerState;
 class UAbilitySystemComponent;
 
 USTRUCT(BlueprintType)
-struct FObsidianHeroWidgetControllerParams
+struct FObsidianWidgetControllerParams
 {
 	GENERATED_BODY()
 
-	FObsidianHeroWidgetControllerParams() {}
+	FObsidianWidgetControllerParams() {}
 
-	FObsidianHeroWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)
+	FObsidianWidgetControllerParams(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)
 	: PlayerController(PC)
 	, PlayerState(PS)
 	, AbilitySystemComponent(ASC)
@@ -48,7 +48,7 @@ class OBSIDIAN_API UObsidianHeroWidgetControllerBase : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|WidgetController")
-	void SetWidgetControllerParams(const FObsidianHeroWidgetControllerParams& WidgetControllerParams);
+	void SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams);
 	
 	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
 	virtual void OnWidgetControllerSetupCompleted();

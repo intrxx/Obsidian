@@ -8,7 +8,7 @@
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
-UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianHeroWidgetControllerParams& WidgetControllerParams)
+UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	// If the overlay controller is a nullptr we need to construct one
 	if(MainOverlayWidgetController == nullptr)
@@ -24,7 +24,7 @@ UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const
 	return MainOverlayWidgetController;
 }
 
-UOCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetController(const FObsidianHeroWidgetControllerParams& WidgetControllerParams)
+UOCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	// If the character status controller is a nullptr we need to construct one
 	if(CharacterStatusWidgetController == nullptr)
@@ -47,7 +47,7 @@ void AObsidianHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbility
 	{
 		MainOverlayWidget = CreateWidget<UObsidianMainOverlay>(GetWorld(), MainOverlayWidgetClass);
 
-		const FObsidianHeroWidgetControllerParams Params(PC, PS, ASC, AC);
+		const FObsidianWidgetControllerParams Params(PC, PS, ASC, AC);
 		UMainOverlayWidgetController* WidgetController = GetMainOverlayWidgetController(Params);
 
 		MainOverlayWidget->SetWidgetController(WidgetController);

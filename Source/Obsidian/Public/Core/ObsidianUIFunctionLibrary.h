@@ -4,8 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "GameplayTags.h"
 #include "ObsidianUIFunctionLibrary.generated.h"
 
+class UObsidianEnemyOverlayWidgetController;
+struct FObsidianEnemyWidgetControllerParams;
 class UOCharacterStatusWidgetController;
 class UMainOverlayWidgetController;
 
@@ -23,4 +26,13 @@ public:
 
 	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
 	static UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const UObject* WorldContextObject);
+	
+	template<typename T>
+	static T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
 };
+
+template <typename T>
+T* UObsidianUIFunctionLibrary::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+{
+	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+}

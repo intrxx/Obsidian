@@ -1,9 +1,9 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "UI/ObsidianHeroWidgetControllerBase.h"
+#include "UI/ObsidianWidgetControllerBase.h"
 
-void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidianHeroWidgetControllerParams& WidgetControllerParams)
+void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	PlayerController = WidgetControllerParams.PlayerController;
 	PlayerState = WidgetControllerParams.PlayerState;

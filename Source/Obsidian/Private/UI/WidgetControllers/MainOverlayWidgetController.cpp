@@ -5,6 +5,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Core/ObsidianUIFunctionLibrary.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
@@ -70,7 +71,7 @@ void UMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIDa
 		const FGameplayTag EffectUIDataTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData"));
 		if(Tag.MatchesTag(EffectUIDataTag))
 		{
-			FObsidianEffectUIDataWidgetRow* Row = GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
+			FObsidianEffectUIDataWidgetRow* Row = UObsidianUIFunctionLibrary::GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
 			Row->EffectDuration = UIData.EffectDuration;
 					
 			if(UIData.bStackingEffect)
