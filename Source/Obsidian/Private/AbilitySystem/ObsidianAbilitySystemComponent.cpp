@@ -222,6 +222,11 @@ void UObsidianAbilitySystemComponent::SetTagRelationshipMapping(UOAbilityTagRela
 
 void UObsidianAbilitySystemComponent::AbilityActorInfoSet()
 {
+	BindToOnEffectAppliedDelegate();
+}
+
+void UObsidianAbilitySystemComponent::BindToOnEffectAppliedDelegate()
+{
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::ClientOnEffectApplied);
 }
 

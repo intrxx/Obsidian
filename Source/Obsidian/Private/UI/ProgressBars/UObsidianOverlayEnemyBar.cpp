@@ -22,6 +22,13 @@ void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 
 	SetInitialValues();
 
+	bIsBind = EnemyAttributesComp->BindToOnEffectCallback();
+	if(bIsBind)
+	{
+		EnemyAttributesComp->EffectUIDataWidgetRowDelegate.AddDynamic(this, &ThisClass::HandleUIData);
+		EnemyAttributesComp->EffectStackingUIDataDelegate.AddDynamic(this, &ThisClass::HandleStackingUIData);
+	}
+	
 	if(EnemyName_TextBlock)
 	{
 		const FText EnemyName = EnemyAttributesComp->GetEnemyName();
@@ -44,6 +51,16 @@ void UObsidianOverlayEnemyBar::SetInitialValues()
 		SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
 	}
+}
+
+void UObsidianOverlayEnemyBar::HandleUIData(const FObsidianEffectUIDataWidgetRow Row)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
+}
+
+void UObsidianOverlayEnemyBar::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
 }
 
 void UObsidianOverlayEnemyBar::HealthChanged(const float NewValue)
@@ -98,6 +115,11 @@ void UObsidianOverlayEnemyBar::UninitAndDestroy()
 	MaxEnergyShieldChangedDelegateHandle.Reset();
 	StaggerMeterChangedDelegateHandle.Reset();
 	MaxStaggerMeterChangedDelegateHandle.Reset();
+
+	if(EnemyAttributesComp && bIsBind)
+	{
+		EnemyAttributesComp->ClearOnEffectCallback();
+	}
 
 	RemoveFromParent();
 }

@@ -56,6 +56,7 @@ public:
 
 	void SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* MappingToSet);
 	void AbilityActorInfoSet();
+	void BindToOnEffectAppliedDelegate();
 
 	void GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const;
 

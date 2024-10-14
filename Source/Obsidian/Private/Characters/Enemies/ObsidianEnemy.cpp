@@ -78,6 +78,9 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
 	EnemyAttributesComponent->SetEnemyName(EnemyName);
+
+	/** Sets the UI Effect Data Table for Gameplay Effects categorization. */
+	EnemyAttributesComponent->SetUIDataTable(EffectInfoDataTable);
 	
 	if(const UObsidianPawnExtensionComponent* PawnExt = UObsidianPawnExtensionComponent::FindPawnExtComponent(this))
 	{
@@ -89,6 +92,8 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 			}
 		}
 	}
+
+	ObsidianASC->BindToOnEffectAppliedDelegate();
 }
 
 void AObsidianEnemy::OnAbilitySystemUninitialized()

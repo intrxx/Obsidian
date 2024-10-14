@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
 #include "UObsidianOverlayEnemyBar.generated.h"
 
@@ -42,8 +43,15 @@ protected:
 	void MaxEnergyShieldChanged(const float NewValue);
 	void StaggerMeterChanged(const float NewValue);
 	void MaxStaggerMeterChanged(const float NewValue);
+
+	UFUNCTION()
+	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
+	UFUNCTION()
+	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
 	
 private:
+	bool bIsBind = false;
+	
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;

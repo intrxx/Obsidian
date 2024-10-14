@@ -3,6 +3,7 @@
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
+#include "Core/ObsidianUIFunctionLibrary.h"
 #include "Obsidian/Obsidian.h"
 
 UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer)
@@ -56,6 +57,46 @@ void UObsidianEnemyAttributesComponent::BroadcastInitialValues() const
 void UObsidianEnemyAttributesComponent::ClearGameplayTags()
 {
 	Super::ClearGameplayTags();
+}
+
+bool UObsidianEnemyAttributesComponent::BindToOnEffectCallback()
+{
+	if(AbilitySystemComponent)
+	{
+		UIDataDelegateHandle = AbilitySystemComponent->OnEffectAppliedAssetTags.AddUObject(this, &ThisClass::HandleEnemyEffectApplied);
+		return true;
+	}
+	return false;
+}
+
+void UObsidianEnemyAttributesComponent::ClearOnEffectCallback()
+{
+	if(UIDataDelegateHandle.IsValid())
+	{
+		UIDataDelegateHandle.Reset();
+	}
+}
+
+void UObsidianEnemyAttributesComponent::HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData)
+{
+	for(const FGameplayTag& Tag : UIData.AssetTags)
+	{
+		const FGameplayTag EffectUIDataTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData.Effect"));
+		if(Tag.MatchesTag(EffectUIDataTag))
+		{
+			FObsidianEffectUIDataWidgetRow* Row = UObsidianUIFunctionLibrary::GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
+			Row->EffectDuration = UIData.EffectDuration;
+					
+			if(UIData.bStackingEffect)
+			{
+				EffectStackingUIDataDelegate.Broadcast(*Row, UIData.StackingData);
+			}
+			else
+			{
+				EffectUIDataWidgetRowDelegate.Broadcast(*Row);
+			}
+		}
+	}
 }
 
 void UObsidianEnemyAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)

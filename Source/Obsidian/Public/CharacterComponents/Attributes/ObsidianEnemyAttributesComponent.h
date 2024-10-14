@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 #include "ObsidianEnemyAttributesComponent.generated.h"
 
+struct FObsidianEffectUIData;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnEnemyAttributeValueChangedSignature, const float /** New Value */);
 
 class UObsidianEnemyAttributeSet;
@@ -31,12 +33,12 @@ public:
 	{
 		EnemyName = InEnemyName;
 	}
-	
-	//~ Start of ObsidianAttributesComponent
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
-	virtual void UninitializeFromAbilitySystem() override;
-	//~ End of ObsidianAttributesComponent
-	
+
+	void SetUIDataTable(UDataTable* InDataTable)
+	{
+		UIEffectDataWidgetTable = InDataTable;
+	};
+
 	/**
 	 * Getters for Gameplay Attributes.
 	 */
@@ -50,7 +52,22 @@ public:
 	/** Getters for EnemySpecificAttribute Value and Attribute from UObsidianEnemyAttributeSet. */
 	float GetHitReactThreshold() const;
 	FGameplayAttribute GetHitReactThresholdAttribute() const;
+	
+	//~ Start of ObsidianAttributesComponent
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
+	virtual void UninitializeFromAbilitySystem() override;
+	//~ End of ObsidianAttributesComponent
+	
+	bool BindToOnEffectCallback();
+	void ClearOnEffectCallback();
 
+public:
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
+	
 	/**
 	 * Delegates for enemy health bar
 	 */
@@ -79,6 +96,8 @@ protected:
 	/**
 	 * 
 	 */
+	
+	void HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData);
 
 protected:
 	/**
@@ -98,7 +117,13 @@ protected:
 	/**
 	 * 
 	 */
+
+	FDelegateHandle UIDataDelegateHandle;
+	
 private:
+	UPROPERTY()
+	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
+	
 	FText EnemyName = FText::FromString("Lorem");
 	
 private:
