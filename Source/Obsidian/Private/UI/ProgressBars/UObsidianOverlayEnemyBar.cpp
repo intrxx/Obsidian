@@ -4,6 +4,25 @@
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "CommonTextBlock.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
+#include "Components/ProgressBar.h"
+
+void UObsidianOverlayEnemyBar::ResetStyle() const
+{
+	if(Health_ProgressBar)
+	{
+		FProgressBarStyle Style;
+		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
+		Style.FillImage = OverlayBarFillImage;
+		Health_ProgressBar->SetWidgetStyle(Style);
+	}
+}
+
+void UObsidianOverlayEnemyBar::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	ResetStyle();
+}
 
 void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 {
@@ -56,11 +75,74 @@ void UObsidianOverlayEnemyBar::SetInitialValues()
 void UObsidianOverlayEnemyBar::HandleUIData(const FObsidianEffectUIDataWidgetRow Row)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
+	
+	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo)
+	{
+		FObsidianProgressBarEffectFillImage FillImage;
+		if(GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
+		{
+			SetOverlayBarStyle(FillImage.ProgressBarFillImage);
+			CachedEffectFillImages.Add(FillImage);
+			
+			FTimerHandle EffectExpiredDelegateHandle;
+			GetWorld()->GetTimerManager().SetTimer(EffectExpiredDelegateHandle, FTimerDelegate::CreateWeakLambda(this, [this, Row]()
+			{
+				HandleEffectFillImageRemoval(Row.EffectTag);
+			
+			}), Row.EffectDuration, false);
+		}
+	}
 }
 
 void UObsidianOverlayEnemyBar::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
+	
+	FObsidianProgressBarEffectFillImage FillImage;
+	if(GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
+	{
+		SetOverlayBarStyle(FillImage.ProgressBarFillImage);
+		CachedEffectFillImages.Add(FillImage);
+
+		//TODO Handle Stacking effects removal
+	}
+}
+
+void UObsidianOverlayEnemyBar::SetOverlayBarStyle(const FSlateBrush& Brush) const
+{
+	if(Health_ProgressBar)
+	{
+		FProgressBarStyle Style;
+		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
+		Style.FillImage = Brush;
+		Health_ProgressBar->SetWidgetStyle(Style);
+	}
+}
+
+void UObsidianOverlayEnemyBar::HandleEffectFillImageRemoval(const FGameplayTag& EffectTag)
+{
+	if(!CachedEffectFillImages.IsEmpty())
+	{
+		for(int i = 0; i < CachedEffectFillImages.Num(); i++)
+		{
+			if(CachedEffectFillImages[i].EffectTag == EffectTag)
+			{
+				CachedEffectFillImages.RemoveAt(i);
+			}
+		}
+
+		if(CachedEffectFillImages.Num() != 0)
+		{
+			SetOverlayBarStyle(CachedEffectFillImages.Last().ProgressBarFillImage);
+		}
+		else
+		{
+			ResetStyle();
+		}
+		
+		return;
+	}
+	ResetStyle();
 }
 
 void UObsidianOverlayEnemyBar::HealthChanged(const float NewValue)

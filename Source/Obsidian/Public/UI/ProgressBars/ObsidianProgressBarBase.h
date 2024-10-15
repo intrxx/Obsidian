@@ -38,7 +38,7 @@ public:
 	bool GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& EffectTag);
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup|Globe")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
 
 protected:
