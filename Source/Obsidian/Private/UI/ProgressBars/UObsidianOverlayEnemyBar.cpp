@@ -3,7 +3,7 @@
 
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "CommonTextBlock.h"
-#include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
+#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Components/ProgressBar.h"
 
 void UObsidianOverlayEnemyBar::ResetStyle() const
@@ -26,85 +26,41 @@ void UObsidianOverlayEnemyBar::NativePreConstruct()
 
 void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 {
-	EnemyAttributesComp = Cast<UObsidianEnemyAttributesComponent>(WidgetController);
-	if(EnemyAttributesComp == nullptr)
+	EnemyOverlayBarComp = Cast<UObsidianEnemyOverlayBarComponent>(WidgetController);
+	if(EnemyOverlayBarComp == nullptr)
 	{
 		return;
 	}
    
-	HealthChangedDelegateHandle = EnemyAttributesComp->HealthChangedDelegate.AddUObject(this, &ThisClass::HealthChanged);
-	MaxHealthChangedDelegateHandle = EnemyAttributesComp->MaxHealthChangedDelegate.AddUObject(this, &ThisClass::MaxHealthChanged);
-	EnergyShieldChangedDelegateHandle = EnemyAttributesComp->EnergyShieldChangedDelegate.AddUObject(this, &ThisClass::EnergyShieldChanged);
-	MaxEnergyShieldChangedDelegateHandle = EnemyAttributesComp->MaxEnergyShieldChangedDelegate.AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
-	StaggerMeterChangedDelegateHandle = EnemyAttributesComp->StaggerMeterChangedDelegate.AddUObject(this, &ThisClass::StaggerMeterChanged);
-	MaxStaggerMeterChangedDelegateHandle = EnemyAttributesComp->MaxStaggerMeterChangedDelegate.AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
+	EnemyOverlayBarComp->OnHealthChangedDelegate.AddDynamic(this, &ThisClass::HealthChanged);
+	EnemyOverlayBarComp->OnMaxHealthChangedDelegate.AddDynamic(this, &ThisClass::MaxHealthChanged);
+	EnemyOverlayBarComp->OnEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::EnergyShieldChanged);
+	EnemyOverlayBarComp->OnMaxEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::MaxEnergyShieldChanged);
+	EnemyOverlayBarComp->OnStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::StaggerMeterChanged);
+	EnemyOverlayBarComp->OnMaxStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::MaxStaggerMeterChanged);
 
 	SetInitialValues();
 
-	bIsBind = EnemyAttributesComp->BindToOnEffectCallback();
-	if(bIsBind)
-	{
-		EnemyAttributesComp->EffectUIDataWidgetRowDelegate.AddDynamic(this, &ThisClass::HandleUIData);
-		EnemyAttributesComp->EffectStackingUIDataDelegate.AddDynamic(this, &ThisClass::HandleStackingUIData);
-	}
+	EnemyOverlayBarComp->OnOverlayBarStyleResetDelegate.AddUObject(this, &ThisClass::ResetStyle);
+	EnemyOverlayBarComp->OnNewOverlayBarStyleNeededDelegate.AddUObject(this, &ThisClass::SetOverlayBarStyle);
 	
 	if(EnemyName_TextBlock)
 	{
-		const FText EnemyName = EnemyAttributesComp->GetEnemyName();
+		const FText EnemyName = EnemyOverlayBarComp->GetEnemyName();
 		EnemyName_TextBlock->SetText(EnemyName);
 	}
 }
 
 void UObsidianOverlayEnemyBar::SetInitialValues()
 {
-	if(!EnemyAttributesComp->IsDeadOrDying())
+	if(!EnemyOverlayBarComp->IsDeadOrDying())
 	{
-		Health = EnemyAttributesComp->GetHealth();
-		MaxHealth = EnemyAttributesComp->GetMaxHealth();
-		EnergyShield = EnemyAttributesComp->GetEnergyShield();
-		MaxEnergyShield = EnemyAttributesComp->GetMaxEnergyShield();
-		StaggerMeter = EnemyAttributesComp->GetStaggerMeter();
-		MaxStaggerMeter = EnemyAttributesComp->GetMaxStaggerMeter();
+		EnemyOverlayBarComp->FillInitialValues(Health, MaxHealth, EnergyShield,
+			MaxEnergyShield, StaggerMeter, MaxStaggerMeter);
 		
 		SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 		SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 		SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
-	}
-}
-
-void UObsidianOverlayEnemyBar::HandleUIData(const FObsidianEffectUIDataWidgetRow Row)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
-	
-	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo)
-	{
-		FObsidianProgressBarEffectFillImage FillImage;
-		if(GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
-		{
-			SetOverlayBarStyle(FillImage.ProgressBarFillImage);
-			CachedEffectFillImages.Add(FillImage);
-			
-			FTimerHandle EffectExpiredDelegateHandle;
-			GetWorld()->GetTimerManager().SetTimer(EffectExpiredDelegateHandle, FTimerDelegate::CreateWeakLambda(this, [this, Row]()
-			{
-				HandleEffectFillImageRemoval(Row.EffectTag);
-			
-			}), Row.EffectDuration, false);
-		}
-	}
-}
-
-void UObsidianOverlayEnemyBar::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
-	
-	FObsidianProgressBarEffectFillImage FillImage;
-	if(GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
-	{
-		SetOverlayBarStyle(FillImage.ProgressBarFillImage);
-		CachedEffectFillImages.Add(FillImage);
-
-		//TODO Handle Stacking effects removal
 	}
 }
 
@@ -119,42 +75,16 @@ void UObsidianOverlayEnemyBar::SetOverlayBarStyle(const FSlateBrush& Brush) cons
 	}
 }
 
-void UObsidianOverlayEnemyBar::HandleEffectFillImageRemoval(const FGameplayTag& EffectTag)
-{
-	if(!CachedEffectFillImages.IsEmpty())
-	{
-		for(int i = 0; i < CachedEffectFillImages.Num(); i++)
-		{
-			if(CachedEffectFillImages[i].EffectTag == EffectTag)
-			{
-				CachedEffectFillImages.RemoveAt(i);
-			}
-		}
-
-		if(CachedEffectFillImages.Num() != 0)
-		{
-			SetOverlayBarStyle(CachedEffectFillImages.Last().ProgressBarFillImage);
-		}
-		else
-		{
-			ResetStyle();
-		}
-		
-		return;
-	}
-	ResetStyle();
-}
-
 void UObsidianOverlayEnemyBar::HealthChanged(const float NewValue)
 {
-	if(EnemyAttributesComp && !EnemyAttributesComp->IsDeadOrDying())
+	if(EnemyOverlayBarComp && !EnemyOverlayBarComp->IsDeadOrDying())
 	{
 		Health = NewValue;
 		SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 
 		if(Health <= 0)
 		{
-			UninitAndDestroy();
+			RemoveFromParent();
 		}
 	}
 }
@@ -189,19 +119,3 @@ void UObsidianOverlayEnemyBar::MaxStaggerMeterChanged(const float NewValue)
 	SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
 }
 
-void UObsidianOverlayEnemyBar::UninitAndDestroy()
-{
-	HealthChangedDelegateHandle.Reset();
-	MaxHealthChangedDelegateHandle.Reset();
-	EnergyShieldChangedDelegateHandle.Reset();
-	MaxEnergyShieldChangedDelegateHandle.Reset();
-	StaggerMeterChangedDelegateHandle.Reset();
-	MaxStaggerMeterChangedDelegateHandle.Reset();
-
-	if(EnemyAttributesComp && bIsBind)
-	{
-		EnemyAttributesComp->ClearOnEffectCallback();
-	}
-
-	RemoveFromParent();
-}

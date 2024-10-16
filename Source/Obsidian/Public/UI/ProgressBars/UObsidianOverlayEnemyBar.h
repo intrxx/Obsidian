@@ -7,6 +7,7 @@
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
 #include "UObsidianOverlayEnemyBar.generated.h"
 
+class UObsidianEnemyOverlayBarComponent;
 class UCommonTextBlock;
 class UObsidianEnemyAttributesComponent;
 
@@ -21,46 +22,44 @@ class OBSIDIAN_API UObsidianOverlayEnemyBar : public UObsidianBasicHealthBar
 protected:
 	void ResetStyle() const;
 	void SetOverlayBarStyle(const FSlateBrush& Brush) const;
-	void HandleEffectFillImageRemoval(const FGameplayTag& EffectTag);
 
 	virtual void NativePreConstruct() override;
 	virtual void HandleWidgetControllerSet() override;
-	virtual void UninitAndDestroy();
 	
 	void SetInitialValues();
-	
-	void HealthChanged(const float NewValue);
-	void MaxHealthChanged(const float NewValue);
-	void EnergyShieldChanged(const float NewValue);
-	void MaxEnergyShieldChanged(const float NewValue);
-	void StaggerMeterChanged(const float NewValue);
-	void MaxStaggerMeterChanged(const float NewValue);
 
 	UFUNCTION()
-	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
+	void HealthChanged(const float NewValue);
 	UFUNCTION()
-	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
+	void MaxHealthChanged(const float NewValue);
+	UFUNCTION()
+	void EnergyShieldChanged(const float NewValue);
+	UFUNCTION()
+	void MaxEnergyShieldChanged(const float NewValue);
+	UFUNCTION()
+	void StaggerMeterChanged(const float NewValue);
+	UFUNCTION()
+	void MaxStaggerMeterChanged(const float NewValue);
 
 protected:
 	UPROPERTY()
-	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComp;
+	TObjectPtr<UObsidianEnemyOverlayBarComponent> EnemyOverlayBarComp;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> EnemyName_TextBlock;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UProgressBar> StaggerMeter_ProgressBar;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
+	/** Basic fill image cached for convenience. */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	FSlateBrush OverlayBarFillImage;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
+	TObjectPtr<UProgressBar> StaggerMeter_ProgressBar;
+	
 	float StaggerMeter = 0.0f;
 	float MaxStaggerMeter = 0.0f;
 	
 private:
 	bool bIsBind = false;
-	
-	TArray<FObsidianProgressBarEffectFillImage> CachedEffectFillImages;
 	
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle MaxHealthChangedDelegateHandle;

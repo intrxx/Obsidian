@@ -2,7 +2,8 @@
 
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
-#include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
+
+#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Components/Overlay.h"
 #include "Components/VerticalBox.h"
 #include "Components/WrapBox.h"
@@ -177,10 +178,10 @@ void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDi
 	{
 		RegularEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayEnemyBar>(OwningPlayerController, RegularEnemyOverlayHealthBarClass);
 		
-		UObsidianEnemyAttributesComponent* EnemyAttributesComponent = UObsidianEnemyAttributesComponent::FindAttributesComponent(TargetActor);
-		check(EnemyAttributesComponent);
+		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(TargetActor);
+		check(EnemyOverlayBarComponent);
 		
-		RegularEnemyOverlayHealthBar->SetWidgetController(EnemyAttributesComponent);
+		RegularEnemyOverlayHealthBar->SetWidgetController(EnemyOverlayBarComponent);
 		OverlayRegularBars_Overlay->AddChildToOverlay(RegularEnemyOverlayHealthBar);
 	}
 	else
@@ -199,10 +200,10 @@ void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDispl
 	{
 		BossEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayBossEnemyBar>(OwningPlayerController, BossEnemyOverlayHealthBarClass);
 		
-		UObsidianEnemyAttributesComponent* EnemyAttributesComponent = UObsidianEnemyAttributesComponent::FindAttributesComponent(TargetActor);
-		check(EnemyAttributesComponent);
+		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(TargetActor);
+		check(EnemyOverlayBarComponent);
 		
-		BossEnemyOverlayHealthBar->SetWidgetController(EnemyAttributesComponent);
+		BossEnemyOverlayHealthBar->SetWidgetController(EnemyOverlayBarComponent);
 		OverlayBossBars_Overlay->AddChildToOverlay(BossEnemyOverlayHealthBar);
 	}
 	else

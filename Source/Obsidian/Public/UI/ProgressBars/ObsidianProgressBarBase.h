@@ -5,24 +5,10 @@
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "GameplayTagContainer.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 #include "ObsidianProgressBarBase.generated.h"
 
 class UProgressBar;
-
-/*
- * Struct that ties the specific Effect Tag to Fill image so the system can for example replace the Red Progress globe with green one for poison.
- */
-USTRUCT(BlueprintType)
-struct FObsidianProgressBarEffectFillImage
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly)
-	FGameplayTag EffectTag = FGameplayTag();
-
-	UPROPERTY(EditDefaultsOnly)
-	FSlateBrush ProgressBarFillImage = FSlateBrush();
-};
 
 /**
  * 

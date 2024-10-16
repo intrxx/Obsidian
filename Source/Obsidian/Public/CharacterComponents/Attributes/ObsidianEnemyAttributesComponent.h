@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianTypes/ObsidianUITypes.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 #include "ObsidianEnemyAttributesComponent.generated.h"
 
@@ -33,12 +32,7 @@ public:
 	{
 		EnemyName = InEnemyName;
 	}
-
-	void SetUIDataTable(UDataTable* InDataTable)
-	{
-		UIEffectDataWidgetTable = InDataTable;
-	};
-
+	
 	/**
 	 * Getters for Gameplay Attributes.
 	 */
@@ -57,17 +51,8 @@ public:
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
-	
-	bool BindToOnEffectCallback();
-	void ClearOnEffectCallback();
 
 public:
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
-	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
-	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
-	
 	/**
 	 * Delegates for enemy health bar
 	 */
@@ -96,8 +81,6 @@ protected:
 	/**
 	 * 
 	 */
-	
-	void HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData);
 
 protected:
 	/**
@@ -118,12 +101,7 @@ protected:
 	 * 
 	 */
 
-	FDelegateHandle UIDataDelegateHandle;
-	
 private:
-	UPROPERTY()
-	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
-	
 	FText EnemyName = FText::FromString("Lorem");
 	
 private:

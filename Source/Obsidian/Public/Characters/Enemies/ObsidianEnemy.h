@@ -9,6 +9,7 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianEnemy.generated.h"
 
+class UObsidianEnemyOverlayBarComponent;
 class UBehaviorTree;
 class UWidgetComponent;
 class UObsidianEnemyAttributeSet;
@@ -61,6 +62,9 @@ protected:
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianEnemyOverlayBarComponent> EnemyOverlayBarComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
 	TObjectPtr<UBehaviorTree> DefaultBehaviorTree;

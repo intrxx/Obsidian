@@ -12,6 +12,21 @@ class UOStackingDurationalEffectInfo;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, float, NewValue);
 
+/*
+ * Struct that ties the specific Effect Tag to Fill image so the system can for example replace the Red Progress globe with green one for poison.
+ */
+USTRUCT(BlueprintType)
+struct FObsidianProgressBarEffectFillImage
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayTag EffectTag = FGameplayTag();
+
+	UPROPERTY(EditDefaultsOnly)
+	FSlateBrush ProgressBarFillImage = FSlateBrush();
+};
+
 /**
  * Types of Gameplay Effects used by widgets to display with different kind of components.
  */

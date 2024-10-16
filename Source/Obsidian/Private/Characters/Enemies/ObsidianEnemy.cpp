@@ -11,6 +11,7 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Components/CapsuleComponent.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
+#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Characters/ObsidianDummyMeshActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -30,6 +31,8 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
 	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
 	
 	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
+	
+	EnemyOverlayBarComponent = CreateDefaultSubobject<UObsidianEnemyOverlayBarComponent>(TEXT("EnemyOverlayBarComponent"));
 	
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
@@ -79,8 +82,7 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
 	EnemyAttributesComponent->SetEnemyName(EnemyName);
 
-	/** Sets the UI Effect Data Table for Gameplay Effects categorization. */
-	EnemyAttributesComponent->SetUIDataTable(EffectInfoDataTable);
+	EnemyOverlayBarComponent->InitializeOverlayBarComponent(ObsidianASC, EnemyAttributesComponent);
 	
 	if(const UObsidianPawnExtensionComponent* PawnExt = UObsidianPawnExtensionComponent::FindPawnExtComponent(this))
 	{
@@ -101,6 +103,7 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 	Super::OnAbilitySystemUninitialized();
 
 	EnemyAttributesComponent->UninitializeFromAbilitySystem();
+	EnemyOverlayBarComponent->UninitializeOverlayBarComponent();
 }
 
 void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
