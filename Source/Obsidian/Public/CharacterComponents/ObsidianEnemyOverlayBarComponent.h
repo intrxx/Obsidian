@@ -30,7 +30,7 @@ public:
 		return (Actor ? Actor->FindComponentByClass<UObsidianEnemyOverlayBarComponent>() : nullptr);
 	}
 
-	// Returns most recent fill bar effect image if one exists currently. 
+	/** Returns most recent fill bar effect image if one exists currently. */ 
 	bool GetCurrentOverlayFillBarEffect(FSlateBrush& CurrentFillBarEffect);
 
 	FText GetEnemyName() const;
@@ -58,12 +58,13 @@ public:
 	FOnOverlayBarStyleResetSignature OnOverlayBarStyleResetDelegate;
 
 protected:
-	virtual void BeginPlay() override;
-	
 	void HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData);
 	void HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& Row, const FObsidianEffectUIStackingData& StackingData);
 	void HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row);
 
+	void HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag);
+	void RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag);
+	
 	bool GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck);
 	void HandleEffectFillImageRemoval(const FGameplayTag& EffectImageTag);
 
@@ -82,6 +83,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
 	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
 	
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
+	bool bDebugEnabled = false;
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianASC;
@@ -102,4 +105,8 @@ private:
 	FDelegateHandle MaxStaggerMeterChangedDelegateHandle;
 	
 	FDelegateHandle UIDataDelegateHandle;
+
+	FTimerHandle StackingEffectTimerHandle;
+
+	int32 EffectStackCount = 0;
 };

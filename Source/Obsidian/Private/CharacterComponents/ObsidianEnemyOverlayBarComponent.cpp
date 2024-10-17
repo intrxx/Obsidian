@@ -110,21 +110,70 @@ void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidian
 
 void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& Row, const FObsidianEffectUIStackingData& StackingData)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
-	
-	FObsidianProgressBarEffectFillImage FillImage;
-	if(GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
+	UWorld* World = GetWorld();
+	if(World == nullptr)
 	{
-		//SetOverlayBarStyle(FillImage.ProgressBarFillImage);
-		//CachedEffectFillImages.Add(FillImage);
-
-		//TODO Handle Stacking effects removal
+		return;
 	}
+
+	FObsidianProgressBarEffectFillImage FillImage;
+	if(!GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
+	{
+		return;
+	}
+
+	// Effect already exists, refresh its counter
+	bool bAlreadyApplied = false;
+	for(const FObsidianProgressBarEffectFillImage& EffectImage : CachedEffectFillImages)
+	{
+		if(EffectImage.EffectTag == Row.EffectTag)
+		{
+			bAlreadyApplied = true;
+		}
+	}
+	
+	if(bAlreadyApplied && StackingData.EffectStackingDurationPolicy == EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication)
+	{
+		EffectStackCount++;
+		
+		RefreshStackingEffectDuration(StackingData.EffectExpirationDurationPolicy, Row.EffectDuration, Row.EffectTag);
+		
+		return;
+	}
+	
+#if !UE_BUILD_SHIPPING
+	if(bDebugEnabled)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
+			FString::Printf(TEXT("Adding Stacking Effect [%s] on Enemy [%s]."), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
+	}
+#endif
+		
+	OnNewOverlayBarStyleNeededDelegate.Broadcast(FillImage.ProgressBarFillImage);
+	CachedEffectFillImages.Add(FillImage);
+	EffectStackCount = 1;
+		
+	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [StackingData, Row, this]()
+	{
+		HandleStackingEffectExpiration(StackingData.EffectExpirationDurationPolicy, Row.EffectDuration, Row.EffectTag);
+	}), Row.EffectDuration, false);
 }
 
 void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
+#if !UE_BUILD_SHIPPING
+	if(bDebugEnabled)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+			FString::Printf(TEXT("Adding Regular Effect [%s] on Enemy [%s]."), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
+	}
+#endif
+
+	UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		return;
+	}
 	
 	FObsidianProgressBarEffectFillImage FillImage;
 	if(GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
@@ -133,12 +182,91 @@ void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffec
 		CachedEffectFillImages.Add(FillImage);
 			
 		FTimerHandle EffectExpiredDelegateHandle;
-		GetWorld()->GetTimerManager().SetTimer(EffectExpiredDelegateHandle, FTimerDelegate::CreateWeakLambda(this, [this, Row]()
+		World->GetTimerManager().SetTimer(EffectExpiredDelegateHandle, FTimerDelegate::CreateWeakLambda(this, [this, Row]()
 		{
+			
+#if !UE_BUILD_SHIPPING
+if(bDebugEnabled)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+		FString::Printf(TEXT("Removing Regular Effect for Tag [%s]."), *Row.EffectTag.GetTagName().ToString()));
+}
+#endif
+			
 			HandleEffectFillImageRemoval(Row.EffectTag);
 			
 		}), Row.EffectDuration, false);
 	}
+}
+
+void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag)
+{
+	switch(ExpirationPolicy)
+	{
+	case EGameplayEffectStackingExpirationPolicy::ClearEntireStack:
+		
+#if !UE_BUILD_SHIPPING
+		if(bDebugEnabled)
+		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
+				FString::Printf(TEXT("Removing Stacking Effect for Tag [%s]."), *StackingEffectTag.GetTagName().ToString()));
+		}
+#endif
+		
+		HandleEffectFillImageRemoval(StackingEffectTag);
+		break;
+	case EGameplayEffectStackingExpirationPolicy::RemoveSingleStackAndRefreshDuration:
+		if(EffectStackCount-1 == 0)
+		{
+			
+#if !UE_BUILD_SHIPPING
+			if(bDebugEnabled)
+			{
+				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
+					FString::Printf(TEXT("Removing Stacking Effect for Tag [%s]."), *StackingEffectTag.GetTagName().ToString()));
+			}
+#endif
+			
+			HandleEffectFillImageRemoval(StackingEffectTag);
+			return;
+		}
+		
+		EffectStackCount--;
+		RefreshStackingEffectDuration(ExpirationPolicy, Duration, StackingEffectTag);
+		break;
+	case EGameplayEffectStackingExpirationPolicy::RefreshDuration:
+		RefreshStackingEffectDuration(ExpirationPolicy, Duration, StackingEffectTag);
+		break;
+	default:
+		break;
+	}
+}
+
+void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag)
+{
+#if !UE_BUILD_SHIPPING
+	if(bDebugEnabled)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+			FString::Printf(TEXT("Refreshing duration for Effect with tag [%s]."), *StackingEffectTag.GetTagName().ToString()));
+	}
+#endif
+	
+	UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		return;
+	}
+	
+	if(StackingEffectTimerHandle.IsValid())
+	{
+		World->GetTimerManager().ClearTimer(StackingEffectTimerHandle);
+	}
+
+	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [ExpirationPolicy, Duration, StackingEffectTag, this]()
+	{
+		HandleStackingEffectExpiration(ExpirationPolicy, Duration, StackingEffectTag);
+	}), Duration, false);
 }
 
 bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck)
@@ -151,6 +279,15 @@ bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(FObsidianProgre
 			return true;
 		}
 	}
+	
+#if !UE_BUILD_SHIPPING
+	if(bDebugEnabled)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+			FString::Printf(TEXT("There is no Fill Image for Tag [%s]."), *TagToCheck.GetTagName().ToString()));
+	}
+#endif
+	
 	return false;
 }
 
@@ -209,8 +346,4 @@ void UObsidianEnemyOverlayBarComponent::MaxStaggerMeterChanged(const FOnAttribut
 	OnMaxStaggerMeterChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::BeginPlay()
-{
-	Super::BeginPlay();
-}
 
