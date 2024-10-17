@@ -131,8 +131,7 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 			FTimerHandle DeathMontageFinishedHandle;
 			GetWorld()->GetTimerManager().SetTimer(DeathMontageFinishedHandle, FTimerDelegate::CreateWeakLambda(this, [MeshComp, this]()
 			{
-				UWorld* World = GetWorld();
-				if(World)
+				if(UWorld* World = GetWorld())
 				{
 					AObsidianDummyMeshActor* Dummy = World->SpawnActorDeferred<AObsidianDummyMeshActor>(AObsidianDummyMeshActor::StaticClass(), GetActorTransform());
 					Dummy->SetupDummyMeshActor(MeshComp, DummyMeshLifeSpan);

@@ -30,6 +30,9 @@ public:
 		return (Actor ? Actor->FindComponentByClass<UObsidianEnemyOverlayBarComponent>() : nullptr);
 	}
 
+	// Returns most recent fill bar effect image if one exists currently. 
+	bool GetCurrentOverlayFillBarEffect(FSlateBrush& CurrentFillBarEffect);
+
 	FText GetEnemyName() const;
 	bool IsDeadOrDying() const;
 	void FillInitialValues(float& OutHealth, float& OutMaxHealth, float& OutEnergyShield, float& OutMaxEnergyShield, float& OutStaggerMeter, float& OutMaxStaggerMeter) const;

@@ -13,6 +13,17 @@ UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent()
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
+bool UObsidianEnemyOverlayBarComponent::GetCurrentOverlayFillBarEffect(FSlateBrush& CurrentFillBarEffect)
+{
+	if(CachedEffectFillImages.IsEmpty())
+	{
+		return false;
+	}
+	CurrentFillBarEffect = CachedEffectFillImages.Last().ProgressBarFillImage;
+	
+	return true;
+}
+
 FText UObsidianEnemyOverlayBarComponent::GetEnemyName() const
 {
 	return EnemyAttributesComp ? EnemyAttributesComp->GetEnemyName() : FText();
@@ -102,13 +113,13 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	UE_LOG(LogTemp, Warning, TEXT("Effect [%s] on Enemy [%s]"), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString());
 	
 	FObsidianProgressBarEffectFillImage FillImage;
-	//if(GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
-	//{
+	if(GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
+	{
 		//SetOverlayBarStyle(FillImage.ProgressBarFillImage);
 		//CachedEffectFillImages.Add(FillImage);
 
 		//TODO Handle Stacking effects removal
-	//}
+	}
 }
 
 void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row)

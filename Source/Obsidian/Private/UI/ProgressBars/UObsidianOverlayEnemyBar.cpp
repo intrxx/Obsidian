@@ -24,6 +24,17 @@ void UObsidianOverlayEnemyBar::NativePreConstruct()
 	ResetStyle();
 }
 
+void UObsidianOverlayEnemyBar::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	FSlateBrush FillBarEffect;
+	if(EnemyOverlayBarComp->GetCurrentOverlayFillBarEffect(FillBarEffect))
+	{
+		SetOverlayBarStyle(FillBarEffect);
+	}
+}
+
 void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 {
 	EnemyOverlayBarComp = Cast<UObsidianEnemyOverlayBarComponent>(WidgetController);

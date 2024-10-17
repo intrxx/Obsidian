@@ -24,6 +24,7 @@ protected:
 	void SetOverlayBarStyle(const FSlateBrush& Brush) const;
 
 	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
 	virtual void HandleWidgetControllerSet() override;
 	
 	void SetInitialValues();
