@@ -10,6 +10,7 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnNewOverlayBarStyleNeededSignature, const FSlateBrush& /** New Style */);
 DECLARE_MULTICAST_DELEGATE(FOnOverlayBarStyleResetSignature);
 
+struct FOnAttributeChangeData;
 struct FObsidianEffectUIData;
 class UObsidianEnemyAttributesComponent;
 class UObsidianAbilitySystemComponent;
@@ -43,24 +44,13 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
 	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
-	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
-	FOnAttributeValueChangedSignature OnMaxHealthChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
-	FOnAttributeValueChangedSignature OnEnergyShieldChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
-	FOnAttributeValueChangedSignature OnMaxEnergyShieldChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|StaggerMeter")
-	FOnAttributeValueChangedSignature OnStaggerMeterChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|StaggerMeter")
-	FOnAttributeValueChangedSignature OnMaxStaggerMeterChangedDelegate;
-
+	FOnAttributeValueChangedOneParam OnHealthChangedDelegate;
+	FOnAttributeValueChangedOneParam OnMaxHealthChangedDelegate;
+	FOnAttributeValueChangedOneParam OnEnergyShieldChangedDelegate;
+	FOnAttributeValueChangedOneParam OnMaxEnergyShieldChangedDelegate;
+	FOnAttributeValueChangedOneParam OnStaggerMeterChangedDelegate;
+	FOnAttributeValueChangedOneParam OnMaxStaggerMeterChangedDelegate;
+	
 	FOnNewOverlayBarStyleNeededSignature OnNewOverlayBarStyleNeededDelegate;
 	FOnOverlayBarStyleResetSignature OnOverlayBarStyleResetDelegate;
 
@@ -74,12 +64,12 @@ protected:
 	bool GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck);
 	void HandleEffectFillImageRemoval(const FGameplayTag& EffectImageTag);
 
-	void HealthChanged(const float NewValue);
-	void MaxHealthChanged(const float NewValue);
-	void EnergyShieldChanged(const float NewValue);
-	void MaxEnergyShieldChanged(const float NewValue);
-	void StaggerMeterChanged(const float NewValue);
-	void MaxStaggerMeterChanged(const float NewValue);
+	void HealthChanged(const FOnAttributeChangeData& Data);
+	void MaxHealthChanged(const FOnAttributeChangeData& Data);
+	void EnergyShieldChanged(const FOnAttributeChangeData& Data);
+	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data);
+	void StaggerMeterChanged(const FOnAttributeChangeData& Data);
+	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")

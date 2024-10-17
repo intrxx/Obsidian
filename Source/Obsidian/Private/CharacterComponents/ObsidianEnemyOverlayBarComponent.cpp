@@ -45,12 +45,12 @@ void UObsidianEnemyOverlayBarComponent::InitializeOverlayBarComponent(UObsidianA
 	check(InEnemyAttributesComp)
 	EnemyAttributesComp = InEnemyAttributesComp;
 
-	HealthChangedDelegateHandle = EnemyAttributesComp->HealthChangedDelegate.AddUObject(this, &ThisClass::HealthChanged);
-	MaxHealthChangedDelegateHandle = EnemyAttributesComp->MaxHealthChangedDelegate.AddUObject(this, &ThisClass::MaxHealthChanged);
-	EnergyShieldChangedDelegateHandle = EnemyAttributesComp->EnergyShieldChangedDelegate.AddUObject(this, &ThisClass::EnergyShieldChanged);
-	MaxEnergyShieldChangedDelegateHandle = EnemyAttributesComp->MaxEnergyShieldChangedDelegate.AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
-	StaggerMeterChangedDelegateHandle = EnemyAttributesComp->StaggerMeterChangedDelegate.AddUObject(this, &ThisClass::StaggerMeterChanged);
-	MaxStaggerMeterChangedDelegateHandle = EnemyAttributesComp->MaxStaggerMeterChangedDelegate.AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
+	HealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(EnemyAttributesComp->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
+	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(EnemyAttributesComp->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
+	EnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(EnemyAttributesComp->GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
+	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(EnemyAttributesComp->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
+	StaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(EnemyAttributesComp->GetStaggerMeterAttribute()).AddUObject(this, &ThisClass::StaggerMeterChanged);
+	MaxStaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(EnemyAttributesComp->GetMaxStaggerMeterAttribute()).AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
 
 	UIDataDelegateHandle = ObsidianASC->OnEffectAppliedAssetTags.AddUObject(this, &ThisClass::HandleEnemyEffectApplied);
 }
@@ -168,39 +168,38 @@ void UObsidianEnemyOverlayBarComponent::HandleEffectFillImageRemoval(const FGame
 	OnOverlayBarStyleResetDelegate.Broadcast();
 }
 
-void UObsidianEnemyOverlayBarComponent::HealthChanged(const float NewValue)
+void UObsidianEnemyOverlayBarComponent::HealthChanged(const FOnAttributeChangeData& Data)
 {
-	OnHealthChangedDelegate.Broadcast(NewValue);
+	OnHealthChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxHealthChanged(const float NewValue)
+void UObsidianEnemyOverlayBarComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	OnMaxHealthChangedDelegate.Broadcast(NewValue);
+	OnMaxHealthChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::EnergyShieldChanged(const float NewValue)
+void UObsidianEnemyOverlayBarComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	OnEnergyShieldChangedDelegate.Broadcast(NewValue);
+	OnEnergyShieldChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxEnergyShieldChanged(const float NewValue)
+void UObsidianEnemyOverlayBarComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	OnMaxEnergyShieldChangedDelegate.Broadcast(NewValue);
+	OnMaxEnergyShieldChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::StaggerMeterChanged(const float NewValue)
+void UObsidianEnemyOverlayBarComponent::StaggerMeterChanged(const FOnAttributeChangeData& Data)
 {
-	OnStaggerMeterChangedDelegate.Broadcast(NewValue);
+	OnStaggerMeterChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxStaggerMeterChanged(const float NewValue)
+void UObsidianEnemyOverlayBarComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data)
 {
-	OnMaxStaggerMeterChangedDelegate.Broadcast(NewValue);
+	OnMaxStaggerMeterChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
 void UObsidianEnemyOverlayBarComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 

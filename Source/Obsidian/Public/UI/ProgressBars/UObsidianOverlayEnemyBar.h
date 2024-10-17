@@ -28,17 +28,11 @@ protected:
 	
 	void SetInitialValues();
 
-	UFUNCTION()
 	void HealthChanged(const float NewValue);
-	UFUNCTION()
 	void MaxHealthChanged(const float NewValue);
-	UFUNCTION()
 	void EnergyShieldChanged(const float NewValue);
-	UFUNCTION()
 	void MaxEnergyShieldChanged(const float NewValue);
-	UFUNCTION()
 	void StaggerMeterChanged(const float NewValue);
-	UFUNCTION()
 	void MaxStaggerMeterChanged(const float NewValue);
 
 protected:

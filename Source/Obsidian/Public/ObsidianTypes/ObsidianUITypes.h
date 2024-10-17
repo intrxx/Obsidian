@@ -12,6 +12,9 @@ class UOStackingDurationalEffectInfo;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, float, NewValue);
 
+DECLARE_DELEGATE_OneParam(FOnAttributeValueChangedOneParam, const float /** Value */);
+DECLARE_DELEGATE_TwoParams(FOnAttributeValueChangedTwoParams, const float /** Value 1 */, const float /** Value 2 */);
+
 /*
  * Struct that ties the specific Effect Tag to Fill image so the system can for example replace the Red Progress globe with green one for poison.
  */

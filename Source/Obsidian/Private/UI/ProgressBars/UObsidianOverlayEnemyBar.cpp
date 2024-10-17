@@ -32,12 +32,12 @@ void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 		return;
 	}
    
-	EnemyOverlayBarComp->OnHealthChangedDelegate.AddDynamic(this, &ThisClass::HealthChanged);
-	EnemyOverlayBarComp->OnMaxHealthChangedDelegate.AddDynamic(this, &ThisClass::MaxHealthChanged);
-	EnemyOverlayBarComp->OnEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::EnergyShieldChanged);
-	EnemyOverlayBarComp->OnMaxEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::MaxEnergyShieldChanged);
-	EnemyOverlayBarComp->OnStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::StaggerMeterChanged);
-	EnemyOverlayBarComp->OnMaxStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::MaxStaggerMeterChanged);
+	EnemyOverlayBarComp->OnHealthChangedDelegate.BindUObject(this, &ThisClass::HealthChanged);
+	EnemyOverlayBarComp->OnMaxHealthChangedDelegate.BindUObject(this, &ThisClass::MaxHealthChanged);
+	EnemyOverlayBarComp->OnEnergyShieldChangedDelegate.BindUObject(this, &ThisClass::EnergyShieldChanged);
+	EnemyOverlayBarComp->OnMaxEnergyShieldChangedDelegate.BindUObject(this, &ThisClass::MaxEnergyShieldChanged);
+	EnemyOverlayBarComp->OnStaggerMeterChangedDelegate.BindUObject(this, &ThisClass::StaggerMeterChanged);
+	EnemyOverlayBarComp->OnMaxStaggerMeterChangedDelegate.BindUObject(this, &ThisClass::MaxStaggerMeterChanged);
 
 	SetInitialValues();
 

@@ -4,10 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetControllerBase.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 #include "OCharacterStatusWidgetController.generated.h"
-
-DECLARE_DELEGATE_OneParam(FOnAttributeValueChangedOneParam, const float /** Value */);
-DECLARE_DELEGATE_TwoParams(FOnAttributeValueChangedTwoParams, const float /** Value 1 */, const float /** Value 2 */);
 
 struct FOnAttributeChangeData;
 /**
