@@ -121,8 +121,7 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	{
 		return;
 	}
-
-	// Effect already exists, refresh its counter
+	
 	bool bAlreadyApplied = false;
 	for(const FObsidianProgressBarEffectFillImage& EffectImage : CachedEffectFillImages)
 	{
@@ -316,32 +315,32 @@ void UObsidianEnemyOverlayBarComponent::HandleEffectFillImageRemoval(const FGame
 	OnOverlayBarStyleResetDelegate.Broadcast();
 }
 
-void UObsidianEnemyOverlayBarComponent::HealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyOverlayBarComponent::HealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnHealthChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyOverlayBarComponent::MaxHealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxHealthChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyOverlayBarComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data) const
 {
 	OnEnergyShieldChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyOverlayBarComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxEnergyShieldChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::StaggerMeterChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyOverlayBarComponent::StaggerMeterChanged(const FOnAttributeChangeData& Data) const
 {
 	OnStaggerMeterChangedDelegate.ExecuteIfBound(Data.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyOverlayBarComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxStaggerMeterChangedDelegate.ExecuteIfBound(Data.NewValue);
 }

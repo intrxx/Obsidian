@@ -68,12 +68,12 @@ protected:
 	bool GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck);
 	void HandleEffectFillImageRemoval(const FGameplayTag& EffectImageTag);
 
-	void HealthChanged(const FOnAttributeChangeData& Data);
-	void MaxHealthChanged(const FOnAttributeChangeData& Data);
-	void EnergyShieldChanged(const FOnAttributeChangeData& Data);
-	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data);
-	void StaggerMeterChanged(const FOnAttributeChangeData& Data);
-	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data);
+	void HealthChanged(const FOnAttributeChangeData& Data) const;
+	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
+	void EnergyShieldChanged(const FOnAttributeChangeData& Data) const;
+	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
+	void StaggerMeterChanged(const FOnAttributeChangeData& Data) const;
+	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
