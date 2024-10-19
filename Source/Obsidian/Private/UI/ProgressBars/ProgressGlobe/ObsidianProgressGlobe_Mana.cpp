@@ -25,13 +25,13 @@ void UObsidianProgressGlobe_Mana::OnManaChanged(float NewMana)
 	Mana = NewMana;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Mana, MaxMana);
-	ProgressGlobe->SetPercent(ProgressBarPercent);
+	Mana_ProgressGlobe->SetPercent(ProgressBarPercent);
 
 	const int32 ManaFloored = FMath::FloorToInt(Mana);
 	const int32 MaxManaFloored = FMath::FloorToInt(MaxMana);
 	
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), ManaFloored, MaxManaFloored));
-	FirstAttributeCountText->SetText(AttributeText);
+	ManaAttributeCount_TextBlock->SetText(AttributeText);
 }
 
 void UObsidianProgressGlobe_Mana::OnMaxManaChanged(float NewMaxMana)
@@ -39,13 +39,13 @@ void UObsidianProgressGlobe_Mana::OnMaxManaChanged(float NewMaxMana)
 	MaxMana = NewMaxMana;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Mana, MaxMana);
-	ProgressGlobe->SetPercent(ProgressBarPercent);
+	Mana_ProgressGlobe->SetPercent(ProgressBarPercent);
 
 	const int32 ManaFloored = FMath::FloorToInt(Mana);
 	const int32 MaxManaFloored = FMath::FloorToInt(MaxMana);
 	
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), ManaFloored, MaxManaFloored));
-	FirstAttributeCountText->SetText(AttributeText);
+	ManaAttributeCount_TextBlock->SetText(AttributeText);
 }
 
 void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResource)
@@ -56,7 +56,7 @@ void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResou
 	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);
 	
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), SpecialResourceFloored, MaxSpecialResourceFloored));
-	SecondAttributeCountText->SetText(AttributeText);
+	SpecialResourceAttributeCount_TextBlock->SetText(AttributeText);
 }
 
 void UObsidianProgressGlobe_Mana::OnMaxSpecialResourceChanged(float NewMaxSpecialResource)
@@ -67,5 +67,5 @@ void UObsidianProgressGlobe_Mana::OnMaxSpecialResourceChanged(float NewMaxSpecia
 	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);
 	
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), SpecialResourceFloored, MaxSpecialResourceFloored));
-	SecondAttributeCountText->SetText(AttributeText);
+	SpecialResourceAttributeCount_TextBlock->SetText(AttributeText);
 }

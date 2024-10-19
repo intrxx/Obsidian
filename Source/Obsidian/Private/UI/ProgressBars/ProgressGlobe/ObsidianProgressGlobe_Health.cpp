@@ -7,6 +7,28 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
+void UObsidianProgressGlobe_Health::SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage) const
+{
+	if(Health_ProgressGlobe)
+	{
+		FProgressBarStyle Style;
+		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
+		Style.FillImage = ProgressGlobeFillImage;
+		Health_ProgressGlobe->SetWidgetStyle(Style);
+	}
+}
+
+void UObsidianProgressGlobe_Health::ResetStyle() const
+{
+	if(Health_ProgressGlobe)
+	{
+		FProgressBarStyle Style;
+		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
+		Style.FillImage = GlobeFillImage;
+		Health_ProgressGlobe->SetWidgetStyle(Style);
+	}
+}
+
 void UObsidianProgressGlobe_Health::HandleWidgetControllerSet()
 {
 	Super::HandleWidgetControllerSet();
@@ -24,13 +46,13 @@ void UObsidianProgressGlobe_Health::OnHealthChanged(float NewHealth)
 	Health = NewHealth;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Health, MaxHealth);
-	ProgressGlobe->SetPercent(ProgressBarPercent);
+	Health_ProgressGlobe->SetPercent(ProgressBarPercent);
 
 	const int32 HealthFloored = FMath::FloorToInt(Health);
 	const int32 MaxHealthFloored = FMath::FloorToInt(MaxHealth);
 	
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), HealthFloored, MaxHealthFloored));
-	FirstAttributeCountText->SetText(AttributeText);
+	HealthAttributeCount_TextBlock->SetText(AttributeText);
 }
 
 void UObsidianProgressGlobe_Health::OnMaxHealthChanged(float NewMaxHealth)
@@ -38,33 +60,39 @@ void UObsidianProgressGlobe_Health::OnMaxHealthChanged(float NewMaxHealth)
 	MaxHealth = NewMaxHealth;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Health, MaxHealth);
-	ProgressGlobe->SetPercent(ProgressBarPercent);
+	Health_ProgressGlobe->SetPercent(ProgressBarPercent);
 
 	const int32 HealthFloored = FMath::FloorToInt(Health);
 	const int32 MaxHealthFloored = FMath::FloorToInt(MaxHealth);
 	
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), HealthFloored, MaxHealthFloored));
-	FirstAttributeCountText->SetText(AttributeText);
+	HealthAttributeCount_TextBlock->SetText(AttributeText);
 }
 
 void UObsidianProgressGlobe_Health::OnEnergyShieldChanged(float NewEnergyShield)
 {
 	EnergyShield = NewEnergyShield;
+	
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(EnergyShield, MaxEnergyShield);
+	EnergyShield_ProgressGlobe->SetPercent(ProgressBarPercent);
 
 	const int32 EnergyShieldFloored = FMath::FloorToInt(EnergyShield);
 	const int32 MaxEnergyShieldFloored = FMath::FloorToInt(MaxEnergyShield);
 
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), EnergyShieldFloored, MaxEnergyShieldFloored));
-	SecondAttributeCountText->SetText(AttributeText);
+	EnergyShieldAttributeCount_TextBlock->SetText(AttributeText);
 }
 
 void UObsidianProgressGlobe_Health::OnMaxEnergyShieldChanged(float NewMaxEnergyShield)
 {
 	MaxEnergyShield = NewMaxEnergyShield;
+
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(EnergyShield, MaxEnergyShield);
+	EnergyShield_ProgressGlobe->SetPercent(ProgressBarPercent);
 	
 	const int32 EnergyShieldFloored = FMath::FloorToInt(EnergyShield);
 	const int32 MaxEnergyShieldFloored = FMath::FloorToInt(MaxEnergyShield);
 
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), EnergyShieldFloored, MaxEnergyShieldFloored));
-	SecondAttributeCountText->SetText(AttributeText);
+	EnergyShieldAttributeCount_TextBlock->SetText(AttributeText);
 }

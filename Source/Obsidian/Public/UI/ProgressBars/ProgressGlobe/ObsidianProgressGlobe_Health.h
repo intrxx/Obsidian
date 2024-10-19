@@ -14,6 +14,10 @@ class OBSIDIAN_API UObsidianProgressGlobe_Health : public UObsidianProgressGlobe
 {
 	GENERATED_BODY()
 
+public:
+	void SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage) const;
+	void ResetStyle() const;
+	
 protected:
 	virtual void HandleWidgetControllerSet() override;
 
@@ -26,6 +30,28 @@ protected:
 	UFUNCTION()
 	void OnMaxEnergyShieldChanged(float NewMaxEnergyShield);
 
+protected:
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UHorizontalBox> EnergyShieldAttribute_HorizontalBox;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UProgressBar> Health_ProgressGlobe;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> HealthAttributeName_TextBlock;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> HealthAttributeCount_TextBlock;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UProgressBar> EnergyShield_ProgressGlobe;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> EnergyShieldAttributeName_TextBlock;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> EnergyShieldAttributeCount_TextBlock;
+	
 private:
 	float Health = 0.0f;
 	float MaxHealth = 0.0f;

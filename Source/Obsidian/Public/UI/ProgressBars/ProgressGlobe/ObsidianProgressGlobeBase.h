@@ -28,15 +28,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
 	void SetInfoGlobeVisibility(const bool bShouldBeVisible);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void SetSecondAttributeName(const FText& SecondAttributeNameToSet);
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage);
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void ResetStyle();
-
 public:
 	/**
 	 *  Widget build blocks
@@ -49,66 +40,24 @@ public:
 	TObjectPtr<UOverlay> RootOverlay;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UImage> GlobeWrapperImage;
+	TObjectPtr<UImage> GlobeWrapper_Image;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UImage> GlobeGlassImage;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UProgressBar> ProgressGlobe;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UProgressBar> GhostProgressGlobe;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UProgressBar> InfoProgressGlobe;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> FirstAttributeNameText;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> FirstAttributeCountText;
+	TObjectPtr<UImage> GlobeGlass_Image;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> SecondAttributeNameText;
+	TObjectPtr<UProgressBar> Ghost_ProgressGlobe;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> SecondAttributeCountText;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
-	TObjectPtr<UHorizontalBox> EnergyShieldAttributeValueBox;
+	TObjectPtr<UProgressBar> Info_ProgressGlobe;
 	
 	/**
 	 * Set up
 	 */
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
-	FSlateBrush GlobeWrapperBrush;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
 	FSlateBrush GlobeFillImage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
-	FSlateBrush GhostGlobeFillImage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
-	FSlateBrush InfoGlobeFillImage;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Globe")
-	FMargin GlobeMargin;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
-	float RootBoxWidth = 0.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup")
-	float RootBoxHeight = 0.0f;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
-	FText FirstAttributeName;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|Setup|Attributes")
-	FText SecondAttributeName;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	bool bShouldSetGhostGlobe = false;
 	

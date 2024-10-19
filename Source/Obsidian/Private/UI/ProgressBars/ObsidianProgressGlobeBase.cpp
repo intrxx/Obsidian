@@ -2,10 +2,7 @@
 
 
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
-#include "CommonTextBlock.h"
-#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/Image.h"
-#include "Components/OverlaySlot.h"
 #include "Components/ProgressBar.h"
 #include "Components/SizeBox.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -15,37 +12,7 @@
 void UObsidianProgressGlobe::NativePreConstruct()
 {
 	Super::NativePreConstruct();
-
-	RootSizeBox->SetWidthOverride(RootBoxWidth);
-	RootSizeBox->SetHeightOverride(RootBoxHeight);
-	GlobeWrapperImage->SetBrush(GlobeWrapperBrush);
-
-	//TODO Set the alpha back to 1 when using wrapper image
-	FSlateBrush GlobeStyle;
-	GlobeStyle.TintColor = FSlateColor(FLinearColor::Transparent);
 	
-	FProgressBarStyle BarStyle;
-	BarStyle.FillImage = GlobeFillImage;
-	BarStyle.BackgroundImage = GlobeStyle;
-	
-	ProgressGlobe->SetWidgetStyle(BarStyle);
-
-	UWidgetLayoutLibrary::SlotAsOverlaySlot(ProgressGlobe)->SetPadding(GlobeMargin);
-
-	FirstAttributeNameText->SetText(FirstAttributeName);
-	SecondAttributeNameText->SetText(SecondAttributeName);
-	
-	FProgressBarStyle GhostGlobeBarStyle;
-	GhostGlobeBarStyle.FillImage = GhostGlobeFillImage;
-	GhostGlobeBarStyle.BackgroundImage = GlobeStyle;
-	
-	GhostProgressGlobe->SetWidgetStyle(GhostGlobeBarStyle);
-	
-	FProgressBarStyle InfoGlobeBarStyle;
-	InfoGlobeBarStyle.FillImage = InfoGlobeFillImage;
-	InfoGlobeBarStyle.BackgroundImage = GlobeStyle;
-	
-	InfoProgressGlobe->SetWidgetStyle(InfoGlobeBarStyle);
 	SetInfoGlobeVisibility(false);
 }
 
@@ -75,55 +42,25 @@ void UObsidianProgressGlobe::HandleWidgetControllerSet()
 
 void UObsidianProgressGlobe::SetInfoGlobeVisibility(const bool bShouldBeVisible)
 {
-	if(InfoProgressGlobe == nullptr)
+	if(Info_ProgressGlobe == nullptr)
 	{
 		return;
 	}
 
 	if(bShouldBeVisible)
 	{
-		InfoProgressGlobe->SetVisibility(ESlateVisibility::Visible);
+		Info_ProgressGlobe->SetVisibility(ESlateVisibility::Visible);
 	}
 	else
 	{
-		InfoProgressGlobe->SetVisibility(ESlateVisibility::Hidden);
-	}
-}
-
-void UObsidianProgressGlobe::SetSecondAttributeName(const FText& SecondAttributeNameToSet)
-{
-	if(SecondAttributeNameText)
-	{
-		SecondAttributeNameText->SetText(SecondAttributeNameToSet);
-	}
-}
-
-void UObsidianProgressGlobe::SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage)
-{
-	if(ProgressGlobe)
-	{
-		FProgressBarStyle Style;
-		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
-		Style.FillImage = ProgressGlobeFillImage;
-		ProgressGlobe->SetWidgetStyle(Style);
-	}
-}
-
-void UObsidianProgressGlobe::ResetStyle()
-{
-	if(ProgressGlobe)
-	{
-		FProgressBarStyle Style;
-		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
-		Style.FillImage = GlobeFillImage;
-		ProgressGlobe->SetWidgetStyle(Style);
+		Info_ProgressGlobe->SetVisibility(ESlateVisibility::Hidden);
 	}
 }
 
 void UObsidianProgressGlobe::SetGhostGlobeDecreasing(const float CurrentPercent, const float NewPercent, const float DeltaTime)
 {
 	CurrentPercentage = FMath::FInterpTo(CurrentPercent, NewPercent, DeltaTime, GhostGlobeFollowingSpeed);
-	GhostProgressGlobe->SetPercent(CurrentPercentage);
+	Ghost_ProgressGlobe->SetPercent(CurrentPercentage);
 	
 	if(CurrentPercent <= NewPercent)
 	{

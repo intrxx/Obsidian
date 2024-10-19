@@ -10,6 +10,8 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianProgressGlobe_Mana;
+class UObsidianProgressGlobe_Health;
 class UObsidianOverlayBossEnemyBar;
 class UObsidianOverlayEnemyBar;
 class UObsidianProgressGlobe;
@@ -62,11 +64,11 @@ protected:
 protected:
 	// This should be set in blueprint during initialization ;/ //
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|MainOverlay")
-	TObjectPtr<UObsidianProgressGlobe> HealthProgressGlobe;
+	TObjectPtr<UObsidianProgressGlobe_Health> HealthProgressGlobe;
 
 	// This should be set in blueprint during initialization ;/ //
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|MainOverlay")
-	TObjectPtr<UObsidianProgressGlobe> ManaProgressGlobe;
+	TObjectPtr<UObsidianProgressGlobe_Mana> ManaProgressGlobe;
 	
 	UPROPERTY()
 	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;

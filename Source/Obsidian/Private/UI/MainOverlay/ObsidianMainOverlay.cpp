@@ -2,7 +2,7 @@
 
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
-
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Components/Overlay.h"
 #include "Components/VerticalBox.h"
