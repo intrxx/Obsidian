@@ -1,0 +1,71 @@
+// Copyright 2024 out of sCope team - Michał Ogiński
+
+
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
+
+#include "CommonTextBlock.h"
+#include "Components/ProgressBar.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+
+void UObsidianProgressGlobe_Mana::HandleWidgetControllerSet()
+{
+	Super::HandleWidgetControllerSet();
+
+	MainOverlayWidgetController->OnManaChangedDelegate.AddDynamic(this, &ThisClass::OnManaChanged);
+	MainOverlayWidgetController->OnMaxManaChangedDelegate.AddDynamic(this, &ThisClass::OnMaxManaChanged);
+	MainOverlayWidgetController->OnSpecialResourceChangedDelegate.AddDynamic(this, &ThisClass::OnSpecialResourceChanged);
+	MainOverlayWidgetController->OnMaxSpecialResourceChangedDelegate.AddDynamic(this, &ThisClass::OnMaxSpecialResourceChanged);
+}
+
+void UObsidianProgressGlobe_Mana::OnManaChanged(float NewMana)
+{
+	ShouldGhostGlobeDecrease(NewMana, Mana, MaxMana);
+	
+	Mana = NewMana;
+
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Mana, MaxMana);
+	ProgressGlobe->SetPercent(ProgressBarPercent);
+
+	const int32 ManaFloored = FMath::FloorToInt(Mana);
+	const int32 MaxManaFloored = FMath::FloorToInt(MaxMana);
+	
+	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), ManaFloored, MaxManaFloored));
+	FirstAttributeCountText->SetText(AttributeText);
+}
+
+void UObsidianProgressGlobe_Mana::OnMaxManaChanged(float NewMaxMana)
+{
+	MaxMana = NewMaxMana;
+
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Mana, MaxMana);
+	ProgressGlobe->SetPercent(ProgressBarPercent);
+
+	const int32 ManaFloored = FMath::FloorToInt(Mana);
+	const int32 MaxManaFloored = FMath::FloorToInt(MaxMana);
+	
+	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), ManaFloored, MaxManaFloored));
+	FirstAttributeCountText->SetText(AttributeText);
+}
+
+void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResource)
+{
+	SpecialResource = NewSpecialResource;
+	
+	const int32 SpecialResourceFloored = FMath::FloorToInt(SpecialResource);
+	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);
+	
+	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), SpecialResourceFloored, MaxSpecialResourceFloored));
+	SecondAttributeCountText->SetText(AttributeText);
+}
+
+void UObsidianProgressGlobe_Mana::OnMaxSpecialResourceChanged(float NewMaxSpecialResource)
+{
+	MaxSpecialResource = NewMaxSpecialResource;
+
+	const int32 SpecialResourceFloored = FMath::FloorToInt(SpecialResource);
+	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);
+	
+	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), SpecialResourceFloored, MaxSpecialResourceFloored));
+	SecondAttributeCountText->SetText(AttributeText);
+}

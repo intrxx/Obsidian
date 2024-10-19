@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianProgressBarBase.h"
+#include "UI/ProgressBars/ObsidianProgressBarBase.h"
 #include "Styling/SlateBrush.h"
 #include "Layout/Margin.h"
-#include "ObsidianProgressGlobe.generated.h"
+#include "ObsidianProgressGlobeBase.generated.h"
 
 class UMainOverlayWidgetController;
 class UHorizontalBox;
@@ -29,15 +29,13 @@ public:
 	void SetInfoGlobeVisibility(const bool bShouldBeVisible);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void SetSecondAttributeName(const FText SecondAttributeNameToSet);
+	void SetSecondAttributeName(const FText& SecondAttributeNameToSet);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void SetProgressGlobeStyle(const FSlateBrush ProgressGlobeFillImage);
+	void SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
 	void ResetStyle();
-	
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
 public:
 	/**
@@ -121,6 +119,16 @@ public:
 	float GhostGlobeFollowingSpeed = 5.f;
 
 protected:
+	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void HandleWidgetControllerSet() override;
+	virtual void NativePreConstruct() override;
+
+	void ShouldGhostGlobeDecrease(const float NewAttribute, const float Attribute, const float MaxAttribute);
+	
+protected:
+	UPROPERTY()
+	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float CurrentPercentage;
 
@@ -131,7 +139,7 @@ protected:
 	bool bInfoGlobeActive = false;
 
 private:
-	void SetGhostGlobeDecreasing(float CurrentPercent, float NewPercent, float DeltaTime);
+	void SetGhostGlobeDecreasing(const float CurrentPercent, const float NewPercent, const float DeltaTime);
 	
 };
 

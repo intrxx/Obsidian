@@ -18,7 +18,7 @@
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
-#include "UI/ProgressBars/ObsidianProgressGlobe.h"
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
 
 void UObsidianMainOverlay::NativeConstruct()
 {
