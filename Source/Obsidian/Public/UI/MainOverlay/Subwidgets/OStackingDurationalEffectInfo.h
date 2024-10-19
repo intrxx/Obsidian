@@ -21,7 +21,7 @@ class OBSIDIAN_API UOStackingDurationalEffectInfo : public UObsidianEffectInfoBa
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void InitDurationalStackingEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float& Duration, const FObsidianEffectUIStackingData& InData);
+	void InitDurationalStackingEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float Duration, const FObsidianEffectUIStackingData& InData);
 	
 	void UpdateStackingInfoWidget(const int32 NewCount);
 

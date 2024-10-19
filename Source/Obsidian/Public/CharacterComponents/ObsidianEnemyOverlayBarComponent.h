@@ -62,8 +62,8 @@ protected:
 	void HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& Row, const FObsidianEffectUIStackingData& StackingData);
 	void HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row);
 
-	void HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag);
-	void RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag);
+	void HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag);
+	void RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag);
 	
 	bool GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck);
 	void HandleEffectFillImageRemoval(const FGameplayTag& EffectImageTag);

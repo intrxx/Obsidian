@@ -198,7 +198,7 @@ if(bDebugEnabled)
 	}
 }
 
-void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag)
+void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag)
 {
 	switch(ExpirationPolicy)
 	{
@@ -241,7 +241,7 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGa
 	}
 }
 
-void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float& Duration, const FGameplayTag& StackingEffectTag)
+void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag)
 {
 #if !UE_BUILD_SHIPPING
 	if(bDebugEnabled)

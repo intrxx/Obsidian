@@ -15,7 +15,7 @@ class UObsidianAbilitySystemComponent;
 class UObsidianEffectInfoBase;
 
 /** Delegate used for notifying Progress Globes to display the healing/replenish amount */
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIGlobeData, const float&, EffectDuration, const float&, EffectMagnitude);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIGlobeData, const float, EffectDuration, const float, EffectMagnitude);
 
 /** Delegate used for updating the target for health bar displayed on player's hud */
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateEnemyTargetForHealthBar, AActor*, TargetActor, const bool, bDisplayHealthBar);
@@ -36,10 +36,10 @@ public:
 	// ~ End of UObsidianWidgetController
 
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Health")
-	void UpdateHealthInfoGlobe(const float& Magnitude) const;
+	void UpdateHealthInfoGlobe(const float Magnitude) const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Mana")
-	void UpdateManaInfoGlobe(const float& Magnitude) const;
+	void UpdateManaInfoGlobe(const float Magnitude) const;
 
 	virtual void SetInitialAttributeValues() const override;
 	virtual void SetInitialStaggerMeter() const;

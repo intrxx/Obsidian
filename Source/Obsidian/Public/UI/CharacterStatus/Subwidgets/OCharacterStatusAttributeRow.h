@@ -24,17 +24,17 @@ public:
 
 	/** Sets the Attribute Value on the widget and the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetAttributeValue(const float& Value) const;
+	void SetAttributeValue(const float Value) const;
 
 	/** Sets the Attribute Value on the widget, adds a "%" to the end and sets the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetAttributeValueWithPercentage(const float& Value) const;
+	void SetAttributeValueWithPercentage(const float Value) const;
 
 	/**
 	 * Sets both the current Attribute Value and the Max Attribute Value on the widget, adds a "%" to the end and sets the private attribute variables in OCharacterStatusAttributeRow.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
-	void SetTwoAttributeValuesWithPercent(const float& Value, const float& MaxValue) const;
+	void SetTwoAttributeValuesWithPercent(const float Value, const float MaxValue) const;
 	
 protected:
 	virtual void NativePreConstruct() override;

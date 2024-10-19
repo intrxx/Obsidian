@@ -21,7 +21,7 @@ class OBSIDIAN_API UObsidianDurationalEffectInfo : public UObsidianEffectInfoBas
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void InitDurationalEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float& Duration);
+	void InitDurationalEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float Duration);
 	
 public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Obsidian|EffectInfo")

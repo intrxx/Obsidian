@@ -12,7 +12,7 @@
 UCLASS()
 class OBSIDIAN_API UObsidianProgressGlobe_Health : public UObsidianProgressGlobe
 {
-	GENERATED_BODY()
+	GENERATED_BODY()	
 
 public:
 	void SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage) const;

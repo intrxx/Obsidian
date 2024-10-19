@@ -165,12 +165,12 @@ void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidg
 	OnAuraWidgetDestructionInfoReceivedDelegate.ExecuteIfBound(AuraWidgetTag);
 }
 
-void UMainOverlayWidgetController::UpdateHealthInfoGlobe(const float& Magnitude) const
+void UMainOverlayWidgetController::UpdateHealthInfoGlobe(const float Magnitude) const
 {
 	EffectUIHealthGlobeDataDelegate.Broadcast(0, Magnitude);
 }
 
-void UMainOverlayWidgetController::UpdateManaInfoGlobe(const float& Magnitude) const 
+void UMainOverlayWidgetController::UpdateManaInfoGlobe(const float Magnitude) const 
 {
 	EffectUIManaGlobeDataDelegate.Broadcast(0, Magnitude);
 }
