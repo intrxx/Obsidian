@@ -6,6 +6,7 @@
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
 #include "ObsidianProgressGlobe_Health.generated.h"
 
+class UObsidianRadialProgressBar;
 /**
  * 
  */
@@ -29,6 +30,10 @@ protected:
 	void OnEnergyShieldChanged(float NewEnergyShield);
 	UFUNCTION()
 	void OnMaxEnergyShieldChanged(float NewMaxEnergyShield);
+	UFUNCTION()
+	void OnStaggerMeterChanged(float NewStaggerMeter);
+	UFUNCTION()
+	void OnMaxStaggerMeterChanged(float NewMaxStaggerMeter);
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
@@ -51,10 +56,15 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> EnergyShieldAttributeCount_TextBlock;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UObsidianRadialProgressBar> Stagger_RadialProgressBar;
 	
 private:
 	float Health = 0.0f;
 	float MaxHealth = 0.0f;
 	float EnergyShield = 0.0f;
 	float MaxEnergyShield = 0.0f;
+	float StaggerMeter = 0.0f;
+	float MaxStaggerMeter = 0.0f;
 };

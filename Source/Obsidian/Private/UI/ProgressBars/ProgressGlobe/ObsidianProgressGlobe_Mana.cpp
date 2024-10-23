@@ -6,6 +6,7 @@
 #include "CommonTextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UI/Components/ObsidianRadialProgressBar.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe_Mana::HandleWidgetControllerSet()
@@ -51,6 +52,9 @@ void UObsidianProgressGlobe_Mana::OnMaxManaChanged(float NewMaxMana)
 void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResource)
 {
 	SpecialResource = NewSpecialResource;
+
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(SpecialResource, MaxSpecialResource);
+	SpecialResource_RadialProgressBar->SetPercent(ProgressBarPercent);
 	
 	const int32 SpecialResourceFloored = FMath::FloorToInt(SpecialResource);
 	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);
@@ -62,6 +66,9 @@ void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResou
 void UObsidianProgressGlobe_Mana::OnMaxSpecialResourceChanged(float NewMaxSpecialResource)
 {
 	MaxSpecialResource = NewMaxSpecialResource;
+
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(SpecialResource, MaxSpecialResource);
+	SpecialResource_RadialProgressBar->SetPercent(ProgressBarPercent);
 
 	const int32 SpecialResourceFloored = FMath::FloorToInt(SpecialResource);
 	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);

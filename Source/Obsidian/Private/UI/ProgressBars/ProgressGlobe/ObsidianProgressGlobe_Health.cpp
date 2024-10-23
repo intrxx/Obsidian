@@ -5,6 +5,7 @@
 #include "CommonTextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "UI/Components/ObsidianRadialProgressBar.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe_Health::SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage) const
@@ -37,6 +38,8 @@ void UObsidianProgressGlobe_Health::HandleWidgetControllerSet()
 	MainOverlayWidgetController->OnMaxHealthChangedDelegate.AddDynamic(this, &ThisClass::OnMaxHealthChanged);
 	MainOverlayWidgetController->OnEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::OnEnergyShieldChanged);
 	MainOverlayWidgetController->OnMaxEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::OnMaxEnergyShieldChanged);
+	MainOverlayWidgetController->OnStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::OnStaggerMeterChanged);
+	MainOverlayWidgetController->OnMaxStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::OnMaxStaggerMeterChanged);
 }
 
 void UObsidianProgressGlobe_Health::OnHealthChanged(float NewHealth)
@@ -95,4 +98,20 @@ void UObsidianProgressGlobe_Health::OnMaxEnergyShieldChanged(float NewMaxEnergyS
 
 	const FText AttributeText = FText::FromString(FString::Printf(TEXT("%d/%d"), EnergyShieldFloored, MaxEnergyShieldFloored));
 	EnergyShieldAttributeCount_TextBlock->SetText(AttributeText);
+}
+
+void UObsidianProgressGlobe_Health::OnStaggerMeterChanged(float NewStaggerMeter)
+{
+	StaggerMeter = NewStaggerMeter;
+
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(StaggerMeter, MaxStaggerMeter);
+	Stagger_RadialProgressBar->SetPercent(ProgressBarPercent);
+}
+
+void UObsidianProgressGlobe_Health::OnMaxStaggerMeterChanged(float NewMaxStaggerMeter)
+{
+	MaxStaggerMeter = NewMaxStaggerMeter;
+
+	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(StaggerMeter, MaxStaggerMeter);
+	Stagger_RadialProgressBar->SetPercent(ProgressBarPercent);
 }

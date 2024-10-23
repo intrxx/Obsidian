@@ -6,7 +6,6 @@
 #include "GameplayTagContainer.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/ObsidianWidgetBase.h"
-#include "UI/ProgressBars/ObsidianProgressBarBase.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 

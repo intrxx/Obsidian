@@ -6,6 +6,7 @@
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
 #include "ObsidianProgressGlobe_Mana.generated.h"
 
+class UObsidianRadialProgressBar;
 /**
  * 
  */
@@ -41,6 +42,9 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> SpecialResourceAttributeCount_TextBlock;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
+	TObjectPtr<UObsidianRadialProgressBar> SpecialResource_RadialProgressBar;
 
 private:
 	float Mana = 0.0f;
