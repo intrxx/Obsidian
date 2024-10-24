@@ -78,10 +78,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Obsidian|Defaults")
 	FText EnemyName = FText::FromString("Lorem");
 
-	/** Used for categorization of gameplay effects that will for example cause the health bar to change color. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")
-	TObjectPtr<UDataTable> EffectInfoDataTable;
-
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;

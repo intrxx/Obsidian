@@ -41,10 +41,10 @@ public:
 	void UninitializeOverlayBarComponent();
 
 public:
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|EnemyOverlayBarComp|Data")
 	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
 
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|UIData")
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|EnemyOverlayBarComp|Data")
 	FEffectUIDataWidgetRow EffectUIDataWidgetRowDelegate;
 
 	FOnAttributeValueChangedOneParam OnHealthChangedDelegate;
@@ -76,14 +76,14 @@ protected:
 	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyOverlayBarComp|Data")
 	TObjectPtr<UDataTable> UIEffectDataTable;
 	
 	/** Effect Progress Bar to choose from when specific Effect is applied. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
 	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
 	bool bDebugEnabled = false;
 private:
 	UPROPERTY()

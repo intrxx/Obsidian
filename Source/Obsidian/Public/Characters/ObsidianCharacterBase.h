@@ -108,7 +108,7 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
 	TArray<TObjectPtr<UAnimMontage>> DeathMontages;
-
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death|Ragdoll", meta=(DeprecatedProperty))
 	FName RagdollImpulseBone = FName();
 
