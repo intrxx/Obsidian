@@ -6,6 +6,7 @@
 #include "UObject/Interface.h"
 #include "ObsidianCombatInterface.generated.h"
 
+class UNiagaraSystem;
 struct FGameplayTag;
 
 UINTERFACE(MinimalAPI)
@@ -32,6 +33,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
 	AActor* GetAvatarActor();
 	virtual AActor* GetAvatarActor_Implementation();
+
+	/** Gets the blood effect of the character, might be null if that character has no blood. */
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
+	UNiagaraSystem* GetBloodEffect();
+	virtual UNiagaraSystem* GetBloodEffect_Implementation();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
 	void SetMotionWarpingFacingTarget(const FName MotionWarpName = FName("FacingTarget"), const FVector& FacingTarget = FVector(0.0f, 0.0f, 0.0f));

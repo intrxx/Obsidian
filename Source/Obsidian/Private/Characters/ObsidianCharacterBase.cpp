@@ -169,6 +169,11 @@ void AObsidianCharacterBase::UninitAndDestroy()
 	SetActorHiddenInGame(true);
 }
 
+UNiagaraSystem* AObsidianCharacterBase::GetBloodEffect_Implementation()
+{
+	return BloodEffect;
+}
+
 FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)
 {
 	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_RightHandWeapon)

@@ -8,6 +8,7 @@
 #include "GameFramework/Character.h"
 #include "ObsidianCharacterBase.generated.h"
 
+class UNiagaraSystem;
 struct FGameplayAbilitySpec;
 class UMotionWarpingComponent;
 class UObsidianAbilitySystemComponent;
@@ -60,6 +61,7 @@ protected:
 	void UninitAndDestroy();
 
 	//~ Start of CombatInterface
+	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	virtual FVector GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag) override;
 	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
@@ -103,11 +105,16 @@ protected:
 	bool bCanHitReact = false;
 
 	/**
-	 * Death
+	 * Character Properties
 	 */
 	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|CharacterProperties|Death")
 	TArray<TObjectPtr<UAnimMontage>> DeathMontages;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = "Obsidian|CharacterProperties")
+	TObjectPtr<UNiagaraSystem> BloodEffect;
+	
+	/** DEPRECATED */
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Death|Ragdoll", meta=(DeprecatedProperty))
 	FName RagdollImpulseBone = FName();

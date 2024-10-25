@@ -20,6 +20,11 @@ AActor* IObsidianCombatInterface::GetAvatarActor_Implementation()
 	return nullptr;
 }
 
+UNiagaraSystem* IObsidianCombatInterface::GetBloodEffect_Implementation()
+{
+	return nullptr;
+}
+
 void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget)
 {
 	

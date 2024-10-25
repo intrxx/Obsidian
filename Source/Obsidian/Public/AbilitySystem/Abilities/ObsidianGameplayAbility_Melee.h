@@ -13,5 +13,8 @@ UCLASS()
 class OBSIDIAN_API UObsidianGameplayAbility_Melee : public UObsidianDamageGameplayAbility
 {
 	GENERATED_BODY()
-	
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TObjectPtr<USoundBase> MeleeImpactSound;
 };
