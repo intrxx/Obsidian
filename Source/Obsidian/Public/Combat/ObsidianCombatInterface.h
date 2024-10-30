@@ -48,8 +48,8 @@ public:
 	 */
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
-	FVector GetAbilitySocketLocationForTag(const FGameplayTag& Tag);
-	virtual FVector GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag);
+	FVector GetAbilitySocketLocationForTag(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag Tag);
+	virtual FVector GetAbilitySocketLocationForTag_Implementation(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag Tag);
 
 	/** Gets the socket location from left hand weapon. */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")

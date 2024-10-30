@@ -23,7 +23,7 @@ struct FObsidianProgressBarEffectFillImage
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, meta=(Categories="UI"))
 	FGameplayTag EffectTag = FGameplayTag();
 
 	UPROPERTY(EditDefaultsOnly)

@@ -37,7 +37,7 @@ struct FObsidianTaggedMontage
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<UAnimMontage> AbilityMontage = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
+	UPROPERTY(EditDefaultsOnly, meta=(Categories = "GameplayEvent.AbilityMontage"), BlueprintReadOnly)
 	FGameplayTagContainer MontageTags = FGameplayTagContainer();
 };
 

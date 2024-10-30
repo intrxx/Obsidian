@@ -62,7 +62,7 @@ struct FObsidianDamageStatics
 		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Lightning, LightningResistanceDef);
 		DamageTypesToResistancesDefMap.Add(ObsidianGameplayTags::SetByCaller_DamageType_Chaos, ChaosResistanceDef);
 		
-		UIDataTags.AddTag(ObsidianGameplayTags::Data_EffectUIInfo);
+		UIDataTags.AddTag(ObsidianGameplayTags::UI_DataSpecifierTag);
 		UIDataTags.AddTag(ObsidianGameplayTags::UI_EffectData_Effect_Shock);
 	}
 };

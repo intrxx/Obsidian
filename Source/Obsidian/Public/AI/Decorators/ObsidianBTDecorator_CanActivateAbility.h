@@ -24,7 +24,7 @@ protected:
 	
 protected:
 	/** Ability tag to check the activation for. */
-	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, meta=(Categories="AbilityActivation"), Category = "Obsidian")
 	FGameplayTag ActivateAbilityWithTag = FGameplayTag();
 	
 	/** Enemy Target. */

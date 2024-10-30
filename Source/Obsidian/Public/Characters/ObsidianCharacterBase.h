@@ -62,7 +62,7 @@ protected:
 
 	//~ Start of CombatInterface
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
-	virtual FVector GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag) override;
+	virtual FVector GetAbilitySocketLocationForTag_Implementation(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag Tag) override;
 	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromLeftHand_Implementation() override;

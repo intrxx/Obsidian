@@ -41,6 +41,8 @@ protected:
 	void DamageCharacter(AActor* ActorToDamage);
 	
 protected:
+	// UPROPERTY(EditDefaultsOnly, meta=(Categories = "SetByCaller.DamageType"), Category = "Obsidian|Damage")
+	//TODO Categorisation of gameplay tags inside a TMap does not work for now.
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Damage")
 	TMap<FGameplayTag, FObsidianAbilityDamageRange> BaseDamageTypeMap;
 

@@ -68,7 +68,7 @@ namespace ObsidianGameplayTags
 	/**
 	 * UI Data
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_EffectUIInfo)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_DataSpecifierTag)
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Flask_HealthHealing);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Flask_ManaHealing);

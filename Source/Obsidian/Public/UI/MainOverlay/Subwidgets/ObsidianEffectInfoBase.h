@@ -44,7 +44,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	bool bIsEffectDurational = 0.f;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffecInfo")
+	UPROPERTY(BlueprintReadWrite, meta=(Categories = "UI"), Category = "Obsidian|EffecInfo")
 	FGameplayTag UIEffectTag = FGameplayTag();
 
 protected:

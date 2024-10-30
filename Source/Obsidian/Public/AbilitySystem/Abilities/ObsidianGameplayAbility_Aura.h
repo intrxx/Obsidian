@@ -24,8 +24,9 @@ protected:
 	/** Aura effect that will be applied to user */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<UGameplayEffect> AuraEffectClass;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
+
+	/** Tag to identify this effect while displaying it on the UI. Should be child of "UI.EffectData.Aura" */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(Categories = "UI.EffectData.Aura"), Category = "Obsidian|AbilitySetup")
 	FGameplayTag EffectUIInfoTag;
 
 private:

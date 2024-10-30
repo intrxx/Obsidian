@@ -5,7 +5,7 @@
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
 
-bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& EffectTag)
+bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, FGameplayTag EffectTag)
 {
 	for(const FObsidianProgressBarEffectFillImage& EffectFillImage : ProgressBarEffectFillImages)
 	{

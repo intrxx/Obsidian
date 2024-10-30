@@ -5,7 +5,7 @@
 
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "Obsidian/Obsidian.h"
+
 
 UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility()
 {

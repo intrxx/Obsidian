@@ -21,7 +21,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UInputAction> InputAction = nullptr;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "InputTag"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Input"))
 	FGameplayTag InputTag;
 
 #if WITH_EDITOR

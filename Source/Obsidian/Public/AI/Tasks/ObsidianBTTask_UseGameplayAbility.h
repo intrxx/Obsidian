@@ -25,7 +25,7 @@ protected:
 
 protected:
 	/** Ability tag used for activation. */
-	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	UPROPERTY(EditAnywhere, meta=(Categories="AbilityActivation"), Category = "Obsidian")
 	FGameplayTagContainer ActivateAbilityWithTag;
 
 	/** Combat Target to set on EnemyInterface. Make sure to set this or the Combat Target will be nullptr! */

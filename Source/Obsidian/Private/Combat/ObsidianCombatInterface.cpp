@@ -30,7 +30,7 @@ void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const
 	
 }
 
-FVector IObsidianCombatInterface::GetAbilitySocketLocationForTag_Implementation(const FGameplayTag& Tag)
+FVector IObsidianCombatInterface::GetAbilitySocketLocationForTag_Implementation(FGameplayTag Tag)
 {
 	return FVector();
 }

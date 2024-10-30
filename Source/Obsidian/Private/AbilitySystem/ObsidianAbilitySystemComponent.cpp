@@ -69,7 +69,7 @@ void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbil
 	FGameplayTagContainer AssetTags;
 	EffectSpec.GetAllAssetTags(AssetTags);
 	
-	if(AssetTags.HasTagExact(ObsidianGameplayTags::Data_EffectUIInfo))
+	if(AssetTags.HasTagExact(ObsidianGameplayTags::UI_DataSpecifierTag))
 	{
 		FObsidianEffectUIData EffectUIData;
 		
