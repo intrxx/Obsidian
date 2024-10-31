@@ -86,8 +86,11 @@ void AObsidianBossEnemy::HandleAdvancedCombatHit(const FHitResult& HitResult)
 	 	return;
 	}
 
+	FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit();
+	TargetData->HitResult = HitResult;
+
 	FGameplayEventData Payload;
-	Payload.Target = HitResult.GetActor();
+	Payload.TargetData = TargetData; 
 	
 	ASC->HandleGameplayEvent(ObsidianGameplayTags::Data_AdvancedCombat_Hit, &Payload);
 }

@@ -6,6 +6,8 @@
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "ObsidianDamageGameplayAbility.generated.h"
 
+class UNiagaraSystem;
+
 USTRUCT()
 struct FObsidianAbilityDamageRange
 {
@@ -34,11 +36,23 @@ public:
 protected:
 	/** Given the Array of Actors, damages all of them with the damage provided in the ability. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
-	void DamageAllCharacters(UPARAM(ref) TArray<AActor*>& ActorsToDamage);
+	void DamageAllCharacters(const TArray<AActor*>& ActorsToDamage);
 
 	/** Damages the actor with the damage provided in the ability. Uses DamageTypeMap. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
 	void DamageCharacter(AActor* ActorToDamage);
+
+	/** Spawns blood effect at given BloodOriginLocation if one exists on the specified Actor. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
+	void SpawnBloodEffect(AActor* Actor, const FVector& BloodOriginLocation, UNiagaraSystem* OptionalBloodEffect = nullptr);
+
+	/** Spawns blood effects if they exist on specified actors. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
+	void SpawnBloodEffects(const TArray<AActor*>& Actors, UNiagaraSystem* OptionalBloodEffect = nullptr);
+
+	/** Combines damaging all character and spawning blood effects at their locations if one exist on provided actors. May be slightly more performant. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
+	void DamageAllCharactersAndSpawnBloodEffect(const TArray<AActor*>& Actors, UNiagaraSystem* OptionalBloodEffect = nullptr);
 	
 protected:
 	// UPROPERTY(EditDefaultsOnly, meta=(Categories = "SetByCaller.DamageType"), Category = "Obsidian|Damage")
