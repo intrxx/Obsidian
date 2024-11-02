@@ -121,6 +121,12 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_BetweenHands)
 
 	/**
+	 * ---- Gameplay Cues ----
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_MeleeImpact)
+
+	/**
 	 * ---- Ability Activation Tags ----
 	 */
 	
