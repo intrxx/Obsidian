@@ -27,7 +27,7 @@ protected:
 	UPROPERTY(EditAnywhere, meta=(Categories="AbilityActivation"), Category = "Obsidian")
 	FGameplayTag ActivateAbilityWithTag = FGameplayTag();
 	
-	/** Enemy Target. */
+	/** Enemy Target, used to get tags from it. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Target Actor"), Category = "Key")
 	FBlackboardKeySelector TargetActor_Selector;
 

@@ -144,7 +144,7 @@ void UObsidianAdvancedCombatComponent::SimpleLineTrace()
 	FVector StartLocation;
 	FVector EndLocation;
 	GetSocketsLocationsByMesh(CurrentTracedMesh, /* OUT **/ StartLocation, /* OUT **/ EndLocation);
-
+	
 	TArray<FHitResult> HitResults;
 	
 	const bool bHit = UKismetSystemLibrary::LineTraceMulti(this, StartLocation, EndLocation, TraceChannel, bTraceComplex,
