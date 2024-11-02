@@ -6,11 +6,6 @@
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 #include "Obsidian/Obsidian.h"
 
-UObsidianAdvancedAttackNotify::UObsidianAdvancedAttackNotify()
-{
-	bShouldFireInEditor = false;
-}
-
 void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                                 float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
