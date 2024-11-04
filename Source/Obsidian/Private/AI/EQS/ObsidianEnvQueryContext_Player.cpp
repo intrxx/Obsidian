@@ -11,12 +11,13 @@
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/Items/EnvQueryItemType_Actor.h"
 #include "Kismet/GameplayStatics.h"
+#include "Obsidian/Obsidian.h"
 
 void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const
 {
 	TArray<AActor*> Heroes;
-	
 	bool bWasSuccessful = false;
+	
 	if(const AObsidianRegularEnemy* EnemyOwner = Cast<AObsidianRegularEnemy>(QueryInstance.Owner.Get()))
 	{
 		if(AObsidianAIControllerBase* ObsidianAIController = EnemyOwner->GetObsidianAIController())
@@ -41,5 +42,11 @@ void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryIns
 	if(!Heroes.IsEmpty())
 	{
 		UEnvQueryItemType_Actor::SetContextHelper(ContextData, Heroes);
+		return;
 	}
+
+#if !UE_BUILD_SHIPPING
+	UE_LOG(LogObsidian, Error, TEXT("Context [%hs] failed to provide Player Context for [%s]."),
+		ANSI_TO_TCHAR(__FUNCTION__), *GetNameSafe(QueryInstance.Owner.Get()));
+#endif
 }
