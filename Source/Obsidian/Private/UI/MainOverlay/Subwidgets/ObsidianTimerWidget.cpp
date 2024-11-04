@@ -29,7 +29,8 @@ void UObsidianTimerWidget::UpdateTimer()
 {
 	const int32 HourNow = FDateTime::Now().GetHour();
 	const int32 MinuteNow = FDateTime::Now().GetMinute();
-	const FText TimeNowText = FText::FromString(FString::Printf(TEXT("%d:%d"), HourNow, MinuteNow));
+	const FText TimeNowText = MinuteNow < 10 ? FText::FromString(FString::Printf(TEXT("%d:0%d"), HourNow, MinuteNow))
+		: FText::FromString(FString::Printf(TEXT("%d:%d"), HourNow, MinuteNow));
 
 	Timer_Text->SetText(TimeNowText);
 }
