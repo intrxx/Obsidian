@@ -23,6 +23,11 @@ public:
 	
 	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
+	AObsidianAIControllerBase* GetObsidianAIController() const
+	{
+		return ObsidianRegularAIController;
+	}
+
 protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;

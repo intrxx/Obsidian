@@ -106,3 +106,4 @@ void AObsidianRegularEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, i
 		}
 	}
 }
+

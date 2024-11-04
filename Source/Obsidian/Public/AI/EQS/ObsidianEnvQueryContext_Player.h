@@ -7,7 +7,7 @@
 #include "ObsidianEnvQueryContext_Player.generated.h"
 
 /**
- * 
+ * Made for regular enemies.
  */
 UCLASS()
 class OBSIDIAN_API UObsidianEnvQueryContext_Player : public UEnvQueryContext
