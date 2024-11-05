@@ -73,6 +73,37 @@ void UObsidianDamageGameplayAbility::DamageCharacter(AActor* ActorToDamage)
     }
 }
 
+FVector UObsidianDamageGameplayAbility::PredictActorLocation(AActor* Actor, const float Time, const FVector& FallBackVector)
+{
+    if(Actor == nullptr)
+    {
+        return FallBackVector;
+    }
+    
+    const FVector ActorVelocity = Actor->GetVelocity() * FVector(1.0f, 1.0f, 0.0f);
+    if(ActorVelocity.IsNearlyZero())
+    {
+        return Actor->GetActorLocation();
+    }
+    
+    return Actor->GetActorLocation() + (ActorVelocity * Time);
+}
+
+FVector UObsidianDamageGameplayAbility::ShortenVector(const FVector& StartVector, const FVector& EndVector,
+    const float AmountToShorten)
+{
+    float ShortenBy = AmountToShorten;
+    const FVector OriginalVector = EndVector - StartVector;
+    const float OriginalVectorLength = OriginalVector.Length();
+    
+    if(ShortenBy >= OriginalVectorLength)
+    {
+        ShortenBy = OriginalVectorLength;
+    }
+
+    return StartVector + OriginalVector.GetSafeNormal() * (OriginalVectorLength - ShortenBy);
+}
+
 float FObsidianAbilityDamageRange::RollForDamageNumberAtLevel(const float Level) const
 {
     const float MinValue = MinimalDamage.GetValueAtLevel(Level);

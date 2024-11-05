@@ -41,6 +41,12 @@ protected:
 	/** Damages the actor with the damage provided in the ability. Uses DamageTypeMap. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
 	void DamageCharacter(AActor* ActorToDamage);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
+	static FVector PredictActorLocation(AActor* Actor, const float Time = 1.0f, const FVector& FallBackVector = FVector::ZeroVector);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
+	static FVector ShortenVector(const FVector& StartVector, const FVector& EndVector, const float AmountToShorten);
 	
 protected:
 	// UPROPERTY(EditDefaultsOnly, meta=(Categories = "SetByCaller.DamageType"), Category = "Obsidian|Damage")
