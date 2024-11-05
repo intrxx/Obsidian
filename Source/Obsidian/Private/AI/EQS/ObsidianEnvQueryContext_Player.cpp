@@ -2,10 +2,8 @@
 
 
 #include "AI/EQS/ObsidianEnvQueryContext_Player.h"
-
 #include "AI/AObsidianAIControllerBase.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Characters/Enemies/ObsidianEnemy.h"
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
