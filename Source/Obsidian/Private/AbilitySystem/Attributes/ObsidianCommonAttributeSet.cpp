@@ -11,8 +11,9 @@
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
-	: AllDamageMultiplier(1.0f),
-	StaggerDamageTakenMultiplier(0.0f)
+	: StaggerMultiplier(1.0f)
+	, AllDamageMultiplier(1.0f)
+	, StaggerDamageTakenMultiplier(0.0f)
 {
 	bOutOfHealth = false;
 }
@@ -32,6 +33,7 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, StaggerMeter, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, StaggerMultiplier, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianCommonAttributeSet, AllDamageMultiplier, COND_None, REPNOTIFY_Always);
 
 	// Defence Attributes
@@ -170,8 +172,9 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 	else if(Data.EvaluatedData.Attribute == GetIncomingStaggerMagnitudeAttribute())
 	{
 		const float LocalIncomingStaggerMagnitude = GetIncomingStaggerMagnitude();
+		const float ModifiedIncomingStaggerMagnitude = FMath::FloorToInt(LocalIncomingStaggerMagnitude * GetStaggerMultiplier());
 		const float CurrentStaggerMeter = GetStaggerMeter();
-		const float NewStaggerMeter = CurrentStaggerMeter + LocalIncomingStaggerMagnitude;
+		const float NewStaggerMeter = CurrentStaggerMeter + ModifiedIncomingStaggerMagnitude;
 		
 		if(NewStaggerMeter > GetMaxStaggerMeter())
 		{
@@ -271,6 +274,11 @@ void UObsidianCommonAttributeSet::OnRep_StaggerMeter(const FGameplayAttributeDat
 void UObsidianCommonAttributeSet::OnRep_MaxStaggerMeter(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_StaggerMultiplier(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerMultiplier, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_AllDamageMultiplier(const FGameplayAttributeData& OldValue)

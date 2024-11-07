@@ -56,6 +56,8 @@ void UMainOverlayWidgetController::SetInitialAttributeValues() const
 	OnMaxEnergyShieldChangedDelegate.Broadcast(AttributesComponent->GetMaxEnergyShield());
 	OnSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetSpecialResource());
 	OnMaxSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetMaxSpecialResource());
+	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
+	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
 }
 
 void UMainOverlayWidgetController::SetInitialStaggerMeter() const

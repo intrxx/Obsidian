@@ -50,6 +50,7 @@ public:
 
 protected:
 	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
 
 	void CreateProgressBarMaterial();
 
@@ -67,5 +68,6 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> ProgressBarMaterialDynamic;
 
-	
+private:
+	float BarPercent = 0.0f;
 };

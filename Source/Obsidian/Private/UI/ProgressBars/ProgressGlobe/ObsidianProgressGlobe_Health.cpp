@@ -89,7 +89,7 @@ void UObsidianProgressGlobe_Health::OnEnergyShieldChanged(float NewEnergyShield)
 void UObsidianProgressGlobe_Health::OnMaxEnergyShieldChanged(float NewMaxEnergyShield)
 {
 	MaxEnergyShield = NewMaxEnergyShield;
-
+	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(EnergyShield, MaxEnergyShield);
 	EnergyShield_ProgressGlobe->SetPercent(ProgressBarPercent);
 	
@@ -103,7 +103,7 @@ void UObsidianProgressGlobe_Health::OnMaxEnergyShieldChanged(float NewMaxEnergyS
 void UObsidianProgressGlobe_Health::OnStaggerMeterChanged(float NewStaggerMeter)
 {
 	StaggerMeter = NewStaggerMeter;
-
+	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(StaggerMeter, MaxStaggerMeter);
 	Stagger_RadialProgressBar->SetPercent(ProgressBarPercent);
 }
@@ -111,7 +111,7 @@ void UObsidianProgressGlobe_Health::OnStaggerMeterChanged(float NewStaggerMeter)
 void UObsidianProgressGlobe_Health::OnMaxStaggerMeterChanged(float NewMaxStaggerMeter)
 {
 	MaxStaggerMeter = NewMaxStaggerMeter;
-
+	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(StaggerMeter, MaxStaggerMeter);
 	Stagger_RadialProgressBar->SetPercent(ProgressBarPercent);
 }
