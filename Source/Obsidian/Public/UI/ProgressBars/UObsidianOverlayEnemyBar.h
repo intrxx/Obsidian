@@ -7,6 +7,7 @@
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
 #include "UObsidianOverlayEnemyBar.generated.h"
 
+class UImage;
 class UObsidianEnemyOverlayBarComponent;
 class UCommonTextBlock;
 class UObsidianEnemyAttributesComponent;
@@ -43,6 +44,10 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> EnemyName_TextBlock;
 
+	/* Image to display special effects like immunity or temporary damage reduction. **/
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UImage> SpecialEffect_Image;
+
 	/** Basic fill image cached for convenience. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian")
 	FSlateBrush OverlayBarFillImage;
@@ -54,8 +59,6 @@ protected:
 	float MaxStaggerMeter = 0.0f;
 	
 private:
-	bool bIsBind = false;
-	
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;

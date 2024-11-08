@@ -94,8 +94,12 @@ private:
 
 	UPROPERTY()
 	TArray<FObsidianProgressBarEffectFillImage> CachedEffectFillImages;
-	
-	const FGameplayTag EffectTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData.Effect"));
+
+	/* Regular Effects Tag like Chill, Ignite etc. **/
+	FGameplayTag EffectTag;
+
+	/* Special Effects like Immunity or Damage Reduction, this won't affect the fill image, it will display its own. **/
+	FGameplayTag SpecialEffectTag;
 
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle MaxHealthChangedDelegateHandle;

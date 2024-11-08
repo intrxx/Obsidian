@@ -4,6 +4,7 @@
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "CommonTextBlock.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
 
 void UObsidianOverlayEnemyBar::ResetStyle() const
@@ -33,6 +34,8 @@ void UObsidianOverlayEnemyBar::NativeConstruct()
 	{
 		SetOverlayBarStyle(FillBarEffect);
 	}
+
+	SpecialEffect_Image->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()

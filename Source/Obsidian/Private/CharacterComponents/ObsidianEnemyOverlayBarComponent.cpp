@@ -11,6 +11,9 @@ UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent()
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
+
+	EffectTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData.Effect"));
+	SpecialEffectTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData.Effect.Special"));
 }
 
 bool UObsidianEnemyOverlayBarComponent::GetCurrentOverlayFillBarEffect(FSlateBrush& CurrentFillBarEffect)
@@ -83,15 +86,22 @@ void UObsidianEnemyOverlayBarComponent::UninitializeOverlayBarComponent()
 
 void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData)
 {
-	// We don't care about any non-durational effects as they will not affect the bar display change
-	if(UIData.EffectDurationPolicy != EGameplayEffectDurationType::HasDuration)
+	// We don't care about any Instant gameplay effects, might want to change it later.
+	if(UIData.EffectDurationPolicy == EGameplayEffectDurationType::Instant)
 	{
 		return;
 	}
 	
 	for(const FGameplayTag& Tag : UIData.AssetTags)
 	{
-		if(Tag.MatchesTag(EffectTag))
+		if(Tag.MatchesTag(SpecialEffectTag)) // "UI.EffectData.Effect.Special"
+		{
+			UE_LOG(LogTemp, Error, TEXT("Effect [%s] is applied to enemy."), *Tag.GetTagName().ToString());
+
+			continue;
+		}
+		
+		if(Tag.MatchesTag(EffectTag)) // "UI.EffectData.Effect"
 		{
 			FObsidianEffectUIDataWidgetRow* Row = UObsidianUIFunctionLibrary::GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataTable, Tag);
 			Row->EffectDuration = UIData.EffectDuration;
