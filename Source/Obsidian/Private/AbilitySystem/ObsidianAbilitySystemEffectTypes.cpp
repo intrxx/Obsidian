@@ -16,7 +16,7 @@ FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectCon
 
 bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
 {
-	uint16 RepBits = 0;
+	uint32 RepBits = 0;
 	if (Ar.IsSaving())
 	{
 		if (bReplicateInstigator && Instigator.IsValid())
@@ -64,9 +64,13 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 		{
 			RepBits |= 1 << 10;
 		}
+		if(bIsTargetImmune)
+		{
+			RepBits |= 1 << 11;
+		}
 	}
 
-	Ar.SerializeBits(&RepBits, 9);
+	Ar.SerializeBits(&RepBits, 10);
 
 	if (RepBits & (1 << 0))
 	{
@@ -123,6 +127,10 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 	if(RepBits & (1 << 10))
 	{
 		Ar << bIsSuppressedSpell;
+	}
+	if(RepBits & (1 << 11))
+	{
+		Ar << bIsTargetImmune;
 	}
 
 	if (Ar.IsLoading())

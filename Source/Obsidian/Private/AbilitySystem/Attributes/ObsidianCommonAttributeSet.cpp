@@ -163,6 +163,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 					DamageTextProps.bIsCriticalAttack = ObsidianEffectContext->IsCriticalAttack();
 					DamageTextProps.bIsEvadedHit = ObsidianEffectContext->IsEvadedHit();
 					DamageTextProps.bIsSuppressedSpell = ObsidianEffectContext->IsSuppressedSpell();
+					DamageTextProps.bIsTargetImmune = ObsidianEffectContext->IsTargetImmune();
 				}
 					
 				ObsidianPC->ClientShowDamageNumber(DamageTextProps, EffectProps.TargetCharacter);

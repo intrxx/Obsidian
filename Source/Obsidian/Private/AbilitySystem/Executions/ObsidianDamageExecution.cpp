@@ -118,6 +118,18 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	FAggregatorEvaluateParameters EvaluationParameters;
 	EvaluationParameters.SourceTags = SourceTags;
 	EvaluationParameters.TargetTags = TargetTags;
+
+	//~ Implementation of Immunity
+	if(TargetTags->HasTag(ObsidianGameplayTags::Status_Immunity))
+	{
+		ObsidianEffectContext->SetIsTargetImmune(true);
+		
+		const FGameplayModifierEvaluatedData& DamageModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
+		OutExecutionOutput.AddOutputModifier(DamageModifierEvaluatedData);
+		
+		return;
+	}
+	//~ End of Immunity implementation
 	
 	//TODO Only evade Hits
 	// ~ Start of Hit Evasion Calculation

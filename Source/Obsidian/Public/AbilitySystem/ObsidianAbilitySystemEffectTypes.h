@@ -24,28 +24,34 @@ public:
 
 	static OBSIDIAN_API FObsidianGameplayEffectContext* ExtractEffectContextFromHandle(struct FGameplayEffectContextHandle Handle);
 
-	/** Returns true if hit was blocked, it is not determined if it was a spell or hit */
+	/** Returns true if hit was blocked, it is not determined if it was a spell or hit. */
 	bool IsBlockedAttack() const
 	{
 		return bIsBlockedAttack;
 	}
 
-	/** Returns true if attack, was a critical strike */
+	/** Returns true if attack, was a critical strike. */
 	bool IsCriticalAttack() const
 	{
 		return bIsCriticalAttack;
 	}
 
-	/** Returns true if hit, was evaded or not */
+	/** Returns true if hit, was evaded or not. */
 	bool IsEvadedHit() const
 	{
 		return bIsEvadedHit;
 	}
 
-	/** Returns true if spell, was suppressed or not */
+	/** Returns true if spell, was suppressed or not. */
 	bool IsSuppressedSpell() const
 	{
 		return bIsSuppressedSpell;
+	}
+
+	/** Returns true if spell, was suppressed or not. */
+	bool IsTargetImmune() const
+	{
+		return bIsTargetImmune;
 	}
 	
 	/** Returns the actual struct used for serialization, subclasses must override this! */
@@ -54,28 +60,34 @@ public:
 		return StaticStruct();
 	}
 
-	/** Set whether the Attack was blocked or not */
+	/** Set whether the Attack was blocked or not. */
 	void SetIsBlockedAttack(const bool bInIsBlockedAttack)
 	{
 		bIsBlockedAttack = bInIsBlockedAttack;
 	}
 
-	/** Set whether the Attack was critical or not */
+	/** Set whether the Attack was critical or not. */
 	void SetIsCriticalAttack(const bool bInIsCriticalAttack)
 	{
 		bIsCriticalAttack = bInIsCriticalAttack;
 	}
 
-	/** Set whether the hit was evaded or not */
+	/** Set whether the hit was evaded or not. */
 	void SetIsEvadedHit(const bool bInIsEvadedHit)
 	{
 		bIsEvadedHit = bInIsEvadedHit;
 	}
 
-	/** Set whether the spell was suppressed or not */
+	/** Set whether the spell was suppressed or not. */
 	void SetIsSuppressedSpell(const bool bInIsSuppressedSpell)
 	{
 		bIsSuppressedSpell = bInIsSuppressedSpell;
+	}
+
+	/** Set whether the target has immunity or not. */
+	void SetIsTargetImmune(const bool bInIsTargetImmune)
+	{
+		bIsTargetImmune = bInIsTargetImmune;
 	}
 
 	/** Creates a copy of this context, used to duplicate for later modifications */ // I'm not sure if override should be here since I changed the return type
@@ -105,6 +117,9 @@ protected:
 
 	UPROPERTY()
 	bool bIsSuppressedSpell = false;
+
+	UPROPERTY()
+	bool bIsTargetImmune = false;
 };
 
 template<>

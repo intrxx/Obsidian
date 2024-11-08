@@ -152,4 +152,7 @@ struct FObsidianDamageTextProps
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsSuppressedSpell = false;
+	
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsTargetImmune = false;
 };
