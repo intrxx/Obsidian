@@ -110,6 +110,10 @@ public:
 	float GetMaxStaggerMeter() const;
 	FGameplayAttribute GetMaxStaggerMeterAttribute() const;
 
+	/** Getters for Stagger Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
+	float GetMaxStaggerMultiplier() const;
+	FGameplayAttribute GetMaxStaggerMultiplierAttribute() const;
+
 	/** Getters for All Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetAllDamageMultiplier() const;
 	FGameplayAttribute GetAllDamageMultiplierAttribute() const;

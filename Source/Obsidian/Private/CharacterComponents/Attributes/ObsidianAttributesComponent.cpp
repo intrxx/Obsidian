@@ -309,6 +309,16 @@ FGameplayAttribute UObsidianAttributesComponent::GetMaxStaggerMeterAttribute() c
 	return (CommonAttributeSet ? CommonAttributeSet->GetMaxStaggerMeterAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetMaxStaggerMultiplier() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetStaggerMultiplier() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMaxStaggerMultiplierAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetStaggerMultiplierAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetAllDamageMultiplier() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetAllDamageMultiplier() : 0.0f);

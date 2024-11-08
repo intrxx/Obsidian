@@ -19,11 +19,6 @@ void UObsidianRadialProgressBar::NativePreConstruct()
 	Root_SizeBox->SetHeightOverride(CircularHeight);
 }
 
-void UObsidianRadialProgressBar::NativeConstruct()
-{
-	Super::NativeConstruct();
-}
-
 void UObsidianRadialProgressBar::CreateProgressBarMaterial()
 {
 	if(ProgressBarMaterial && ProgressBarMaterialDynamic == nullptr)
