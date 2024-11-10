@@ -165,7 +165,6 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 					DamageTextProps.bIsSuppressedSpell = ObsidianEffectContext->IsSuppressedSpell();
 					DamageTextProps.bIsTargetImmune = ObsidianEffectContext->IsTargetImmune();
 				}
-					
 				ObsidianPC->ClientShowDamageNumber(DamageTextProps, EffectProps.TargetCharacter);
 			}
 		}
