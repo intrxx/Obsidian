@@ -22,7 +22,9 @@ class OBSIDIAN_API UObsidianOverlayEnemyBar : public UObsidianBasicHealthBar
 
 protected:
 	void ResetStyle() const;
+	void ResetSpecialStyle() const;
 	void SetOverlayBarStyle(const FSlateBrush& Brush) const;
+	void HandleSpecialEffectApplied(const FSlateBrush& Brush) const;
 
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;

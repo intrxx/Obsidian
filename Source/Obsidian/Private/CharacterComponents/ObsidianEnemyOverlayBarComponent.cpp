@@ -98,6 +98,8 @@ void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidian
 		{
 			UE_LOG(LogTemp, Error, TEXT("Effect [%s] is applied to enemy."), *Tag.GetTagName().ToString());
 
+			HandleSpecialEffect(Tag);
+
 			continue;
 		}
 		
@@ -127,7 +129,7 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	}
 
 	FObsidianProgressBarEffectFillImage FillImage;
-	if(!GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
+	if(!GetEffectFillImageForTag(ProgressBarEffectFillImages, /* OUT */ FillImage, Row.EffectTag))
 	{
 		return;
 	}
@@ -185,7 +187,7 @@ void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffec
 	}
 	
 	FObsidianProgressBarEffectFillImage FillImage;
-	if(GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
+	if(GetEffectFillImageForTag(ProgressBarEffectFillImages, /* OUT */FillImage, Row.EffectTag))
 	{
 		OnNewOverlayBarStyleNeededDelegate.Broadcast(FillImage.ProgressBarFillImage);
 		CachedEffectFillImages.Add(FillImage);
@@ -205,6 +207,25 @@ if(bDebugEnabled)
 			HandleEffectFillImageRemoval(Row.EffectTag);
 			
 		}), Row.EffectDuration, false);
+	}
+}
+
+
+void UObsidianEnemyOverlayBarComponent::HandleSpecialEffect(const FGameplayTag& EffectImageTag)
+{
+#if !UE_BUILD_SHIPPING
+	if(bDebugEnabled)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+			FString::Printf(TEXT("Adding Special Effect with Tag [%s] on Enemy [%s]."), *EffectImageTag.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
+	}
+#endif
+	
+	FObsidianProgressBarEffectFillImage SpecialImage;
+	if(GetEffectFillImageForTag(ProgressBarSpecialEffects, SpecialImage, EffectImageTag))
+	{
+		OnNewOverlayBarSpecialEffectNeededDelegate.Broadcast(SpecialImage.ProgressBarFillImage);
+		CachedSpecialEffectFillImages.Add(SpecialImage);
 	}
 }
 
@@ -278,9 +299,14 @@ void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGam
 	}), Duration, false);
 }
 
-bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck)
+bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& Images, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck)
 {
-	for(const FObsidianProgressBarEffectFillImage& EffectFillImage : ProgressBarEffectFillImages)
+	if(Images.IsEmpty())
+	{
+		return false;
+	}
+	
+	for(const FObsidianProgressBarEffectFillImage& EffectFillImage : Images)
 	{
 		if(EffectFillImage.ProgressBarFillImage.IsSet() && (EffectFillImage.EffectTag == TagToCheck))
 		{
@@ -292,7 +318,7 @@ bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(FObsidianProgre
 #if !UE_BUILD_SHIPPING
 	if(bDebugEnabled)
 	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
 			FString::Printf(TEXT("There is no Fill Image for Tag [%s]."), *TagToCheck.GetTagName().ToString()));
 	}
 #endif
@@ -308,6 +334,13 @@ void UObsidianEnemyOverlayBarComponent::HandleEffectFillImageRemoval(const FGame
 		{
 			if(CachedEffectFillImages[i].EffectTag == EffectImageTag)
 			{
+#if !UE_BUILD_SHIPPING
+				if(bDebugEnabled)
+				{
+					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
+						FString::Printf(TEXT("Removing Special Effect for Tag [%s]."), *EffectImageTag.GetTagName().ToString()));
+				}
+#endif
 				CachedEffectFillImages.RemoveAt(i);
 			}
 		}
@@ -323,6 +356,31 @@ void UObsidianEnemyOverlayBarComponent::HandleEffectFillImageRemoval(const FGame
 		return;
 	}
 	OnOverlayBarStyleResetDelegate.Broadcast();
+}
+
+void UObsidianEnemyOverlayBarComponent::HandleSpecialEffectImageRemoval(const FGameplayTag& EffectImageTag)
+{
+	if(!CachedSpecialEffectFillImages.IsEmpty())
+	{
+		for(int i = 0; i < CachedSpecialEffectFillImages.Num(); i++)
+		{
+			if(CachedSpecialEffectFillImages[i].EffectTag == EffectImageTag)
+			{
+				CachedSpecialEffectFillImages.RemoveAt(i);
+			}
+		}
+
+		if(CachedSpecialEffectFillImages.Num() != 0)
+		{
+			OnNewOverlayBarSpecialEffectNeededDelegate.Broadcast(CachedSpecialEffectFillImages.Last().ProgressBarFillImage);
+		}
+		else
+		{
+			OnOverlayBarSpecialEffectResetDelegate.Broadcast();
+		}
+		return;
+	}
+	OnOverlayBarSpecialEffectResetDelegate.Broadcast();
 }
 
 void UObsidianEnemyOverlayBarComponent::HealthChanged(const FOnAttributeChangeData& Data) const

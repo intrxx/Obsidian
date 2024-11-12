@@ -10,6 +10,9 @@
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnNewOverlayBarStyleNeededSignature, const FSlateBrush& /** New Style */);
 DECLARE_MULTICAST_DELEGATE(FOnOverlayBarStyleResetSignature);
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnNewOverlayBarSpecialEffectNeededSignature, const FSlateBrush& /** New Style */);
+DECLARE_MULTICAST_DELEGATE(FOnOverlayBarSpecialEffectResetSignature);
+
 struct FOnAttributeChangeData;
 struct FObsidianEffectUIData;
 class UObsidianEnemyAttributesComponent;
@@ -57,16 +60,23 @@ public:
 	FOnNewOverlayBarStyleNeededSignature OnNewOverlayBarStyleNeededDelegate;
 	FOnOverlayBarStyleResetSignature OnOverlayBarStyleResetDelegate;
 
+	FOnNewOverlayBarSpecialEffectNeededSignature OnNewOverlayBarSpecialEffectNeededDelegate;
+	FOnOverlayBarSpecialEffectResetSignature OnOverlayBarSpecialEffectResetDelegate;
+
 protected:
 	void HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData);
 	void HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& Row, const FObsidianEffectUIStackingData& StackingData);
 	void HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row);
+	void HandleSpecialEffect(const FGameplayTag& EffectImageTag);
 
 	void HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag);
 	void RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag);
 	
-	bool GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck);
+	bool GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& Images, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck);
 	void HandleEffectFillImageRemoval(const FGameplayTag& EffectImageTag);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|EnemyOverlayBarComp")
+	void HandleSpecialEffectImageRemoval(const FGameplayTag& EffectImageTag);
 
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
@@ -82,6 +92,10 @@ protected:
 	/** Effect Progress Bar to choose from when specific Effect is applied. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
 	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
+
+	/** Special Effects Progress Bar images to choose from when specific Effect is applied. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
+	TArray<FObsidianProgressBarEffectFillImage> ProgressBarSpecialEffects;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
 	bool bDebugEnabled = false;
@@ -94,6 +108,9 @@ private:
 
 	UPROPERTY()
 	TArray<FObsidianProgressBarEffectFillImage> CachedEffectFillImages;
+
+	UPROPERTY()
+	TArray<FObsidianProgressBarEffectFillImage> CachedSpecialEffectFillImages;
 
 	/* Regular Effects Tag like Chill, Ignite etc. **/
 	FGameplayTag EffectTag;

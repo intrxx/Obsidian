@@ -18,6 +18,14 @@ void UObsidianOverlayEnemyBar::ResetStyle() const
 	}
 }
 
+void UObsidianOverlayEnemyBar::ResetSpecialStyle() const
+{
+	if(SpecialEffect_Image)
+	{
+		SpecialEffect_Image->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
 void UObsidianOverlayEnemyBar::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -57,6 +65,8 @@ void UObsidianOverlayEnemyBar::HandleWidgetControllerSet()
 
 	EnemyOverlayBarComp->OnOverlayBarStyleResetDelegate.AddUObject(this, &ThisClass::ResetStyle);
 	EnemyOverlayBarComp->OnNewOverlayBarStyleNeededDelegate.AddUObject(this, &ThisClass::SetOverlayBarStyle);
+	EnemyOverlayBarComp->OnNewOverlayBarSpecialEffectNeededDelegate.AddUObject(this, &ThisClass::HandleSpecialEffectApplied);
+	EnemyOverlayBarComp->OnOverlayBarSpecialEffectResetDelegate.AddUObject(this, &ThisClass::ResetSpecialStyle);
 	
 	if(EnemyName_TextBlock)
 	{
@@ -86,6 +96,15 @@ void UObsidianOverlayEnemyBar::SetOverlayBarStyle(const FSlateBrush& Brush) cons
 		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
 		Style.FillImage = Brush;
 		Health_ProgressBar->SetWidgetStyle(Style);
+	}
+}
+
+void UObsidianOverlayEnemyBar::HandleSpecialEffectApplied(const FSlateBrush& Brush) const
+{
+	if(SpecialEffect_Image)
+	{
+		SpecialEffect_Image->SetBrush(Brush);
+		SpecialEffect_Image->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
