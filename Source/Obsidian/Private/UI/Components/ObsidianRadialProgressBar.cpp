@@ -19,14 +19,15 @@ void UObsidianRadialProgressBar::NativePreConstruct()
 	Root_SizeBox->SetHeightOverride(CircularHeight);
 }
 
-void UObsidianRadialProgressBar::CreateProgressBarMaterial()
+bool UObsidianRadialProgressBar::CreateProgressBarMaterial()
 {
 	if(ProgressBarMaterial && ProgressBarMaterialDynamic == nullptr)
 	{
 		ProgressBarMaterialDynamic = UMaterialInstanceDynamic::Create(ProgressBarMaterial, this);
-
 		ProgressBar_Image->SetBrushFromMaterial(ProgressBarMaterialDynamic);
+		return true;
 	}
+	return false;
 }
 
 void UObsidianRadialProgressBar::SetThickness(const float InThickness)
@@ -45,9 +46,9 @@ float UObsidianRadialProgressBar::GetMappedValue(float RawValue)
 
 void UObsidianRadialProgressBar::SetPercent(float InPercent)
 {
-	if(ProgressBarMaterialDynamic == nullptr)
+	if(ProgressBarMaterialDynamic == nullptr && !CreateProgressBarMaterial())
 	{
-		CreateProgressBarMaterial();
+		return;
 	}
 	
 	BarPercent = FMath::Clamp<float>(InPercent, 0.0f, 1.0f);

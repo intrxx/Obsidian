@@ -51,7 +51,7 @@ public:
 protected:
 	virtual void NativePreConstruct() override;
 
-	void CreateProgressBarMaterial();
+	bool CreateProgressBarMaterial();
 
 	void SetThickness(const float InThickness);
 
