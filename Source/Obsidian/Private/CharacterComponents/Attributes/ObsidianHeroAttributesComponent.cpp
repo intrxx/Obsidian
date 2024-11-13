@@ -4,6 +4,7 @@
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "GameFramework/Character.h"
 #include "Obsidian/Obsidian.h"
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
@@ -12,12 +13,11 @@ UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObject
 	HeroAttributeSet = nullptr;
 }
 
-void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner)
+void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner)
 {
-	AActor* CurrentOwner = GetOwner();
-	check(CurrentOwner);
+	check(Owner);
 	
-	Super::InitializeWithAbilitySystem(InASC, CurrentOwner);
+	Super::InitializeWithAbilitySystem(InASC, Owner);
 
 	HeroAttributeSet = AbilitySystemComponent->GetSet<UObsidianHeroAttributeSet>();
 	if (!HeroAttributeSet)
@@ -31,6 +31,8 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 	
 	// Set the Mana value to the MaxMana
 	AbilitySystemComponent->SetNumericAttributeBase(GetManaAttribute(), GetMaxMana());
+
+	bIsLocallyController = Owner->IsLocallyControlled();
 }
 
 void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
@@ -53,22 +55,38 @@ void UObsidianHeroAttributesComponent::ClearGameplayTags()
 
 void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	// Broadcast for simulated hero health bar
+	if (!bIsLocallyController)
+	{
+		OnHeroHealthChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	// Broadcast for simulated hero health bar
+	if(!bIsLocallyController)
+	{
+		OnHeroMaxHealthChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	// Broadcast for simulated hero health bar
+	if(!bIsLocallyController)
+	{
+		OnHeroEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	// Broadcast for simulated hero health bar
+	if(!bIsLocallyController)
+	{
+		OnHeroMaxEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+	}
 }
 
 void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& Data)

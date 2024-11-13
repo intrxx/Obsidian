@@ -7,6 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianAttributesComponent.generated.h"
 
+class AObsidianHero;
 class UObsidianHeroAttributeSet;
 class UObsidianCommonAttributeSet;
 
@@ -60,7 +61,7 @@ public:
 	
 	/** Initializes this component using ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr);
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner = nullptr);
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	

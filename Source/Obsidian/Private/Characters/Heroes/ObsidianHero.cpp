@@ -12,6 +12,8 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Components/WidgetComponent.h"
+#include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
+#include "UI/ProgressBars/ObsidianHeroHealthBar.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -45,7 +47,9 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer) :
 
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComp"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
-
+	HealthBarWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+	HealthBarWidgetComp->SetDrawAtDesiredSize(true);
+	
 	UObsidianCharacterMovementComponent* ObsidianMovementComp = CastChecked<UObsidianCharacterMovementComponent>(GetCharacterMovement());
 	ObsidianMovementComp->bOrientRotationToMovement = true;
 	ObsidianMovementComp->RotationRate = FRotator(0.f, 800.f, 0.f);
@@ -77,6 +81,8 @@ void AObsidianHero::PossessedBy(AController* NewController)
 		check(PawnExtComp);
 		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
 	}
+
+	InitializeHealthBar();
 }
 
 void AObsidianHero::OnRep_PlayerState()
@@ -89,6 +95,8 @@ void AObsidianHero::OnRep_PlayerState()
 		check(PawnExtComp);
 		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
 	}
+
+	InitializeHealthBar();
 }
 
 AObsidianPlayerState* AObsidianHero::GetObsidianPlayerState() const
@@ -150,7 +158,7 @@ void AObsidianHero::OnAbilitySystemInitialized()
 	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
 	check(ObsidianASC);
 
-	HeroAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
+	HeroAttributesComponent->InitializeWithAbilitySystem(ObsidianASC, this);
 	
 	if(const UObsidianPawnExtensionComponent* PawnExt = UObsidianPawnExtensionComponent::FindPawnExtComponent(this))
 	{
@@ -206,6 +214,25 @@ void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC)
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			ObsidianHUD->InitOverlay(ObsidianPC, ObsidianPS, ObsidianASC, HeroAttributesComponent);
+		}
+	}
+}
+
+void AObsidianHero::InitializeHealthBar() const
+{
+	if(HealthBarWidgetComp)
+	{
+		if(IsLocallyControlled())
+		{
+			HealthBarWidgetComp->SetWidgetClass(AutonomousHealthBarClass);
+		}
+		else
+		{
+			HealthBarWidgetComp->SetWidgetClass(SimulatedHealthBarClass);
+			if(UObsidianWidgetBase* Widget = GetHealthBarWidget())
+			{
+				Widget->SetWidgetController(HeroAttributesComponent);
+			}
 		}
 	}
 }

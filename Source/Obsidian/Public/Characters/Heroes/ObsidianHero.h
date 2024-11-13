@@ -6,6 +6,8 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianHero.generated.h"
 
+class UObsidianHeroHealthBar_Simple;
+class UObsidianHeroHealthBar;
 class UObsidianWidgetBase;
 class UWidgetComponent;
 class AObsidianPlayerController;
@@ -59,6 +61,9 @@ protected:
 	//~ End of AObsidianCharacterBase
 
 	void InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC);
+
+private:
+	void InitializeHealthBar() const;
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
@@ -75,4 +80,12 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
+
+	/** Health bar to set on locally controller Player. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianHeroHealthBar> AutonomousHealthBarClass;
+
+	/** Health bar to set on simulated proxy Player. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianHeroHealthBar_Simple> SimulatedHealthBarClass;
 };

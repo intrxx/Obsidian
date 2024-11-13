@@ -3,7 +3,7 @@
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
-#include "Core/ObsidianUIFunctionLibrary.h"
+#include "GameFramework/Character.h"
 #include "Obsidian/Obsidian.h"
 
 UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer)
@@ -12,12 +12,11 @@ UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObje
 	EnemyAttributeSet = nullptr;
 }
 
-void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner)
+void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner)
 {
-	AActor* CurrentOwner = GetOwner();
-	check(CurrentOwner);
+	check(Owner);
 	
-	Super::InitializeWithAbilitySystem(InASC, CurrentOwner);
+	Super::InitializeWithAbilitySystem(InASC, Owner);
 
 	EnemyAttributeSet = AbilitySystemComponent->GetSet<UObsidianEnemyAttributeSet>();
 	if (!EnemyAttributeSet)

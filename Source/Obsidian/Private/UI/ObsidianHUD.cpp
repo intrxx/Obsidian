@@ -55,9 +55,12 @@ void AObsidianHUD::InitOverlay(APlayerController* PC, APlayerState* PS, UAbility
 
 		if(const AObsidianHero* Hero = Cast<AObsidianHero>(GetOwningPawn()))
 		{
-			if(UObsidianWidgetBase* Widget = Hero->GetHealthBarWidget())
+			if(Hero->IsLocallyControlled())
 			{
-				Widget->SetWidgetController(WidgetController);
+				if(UObsidianWidgetBase* Widget = Hero->GetHealthBarWidget())
+				{
+					Widget->SetWidgetController(WidgetController);
+				}
 			}
 		}
 		

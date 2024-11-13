@@ -79,7 +79,7 @@ void AObsidianEnemy::OnAbilitySystemInitialized()
 	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
 	check(ObsidianASC);
 	
-	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC);
+	EnemyAttributesComponent->InitializeWithAbilitySystem(ObsidianASC, this);
 	EnemyAttributesComponent->SetEnemyName(EnemyName);
 
 	EnemyOverlayBarComponent->InitializeOverlayBarComponent(ObsidianASC, EnemyAttributesComponent);

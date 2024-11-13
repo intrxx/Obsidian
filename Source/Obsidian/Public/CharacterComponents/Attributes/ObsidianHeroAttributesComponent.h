@@ -7,7 +7,7 @@
 #include "ObsidianHeroAttributesComponent.generated.h"
 
 class UMainOverlayWidgetController;
-
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeroAttributeValueChangedSignature, const float /** New Value */);
 /**
  * 
  */
@@ -27,7 +27,7 @@ public:
 	}
 
 	//~ Start of ObsidianAttributesComponent
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
 	
@@ -100,7 +100,10 @@ public:
 	 */
 
 public:
-	
+	FOnHeroAttributeValueChangedSignature OnHeroHealthChangedDelegate;
+	FOnHeroAttributeValueChangedSignature OnHeroMaxHealthChangedDelegate;
+	FOnHeroAttributeValueChangedSignature OnHeroEnergyShieldChangedDelegate;
+	FOnHeroAttributeValueChangedSignature OnHeroMaxEnergyShieldChangedDelegate;
 
 protected:
 	virtual void ClearGameplayTags() override;
@@ -138,4 +141,6 @@ protected:
 	/**
 	 * 
 	 */
+
+	bool bIsLocallyController = true;
 };

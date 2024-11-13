@@ -48,7 +48,7 @@ public:
 	FGameplayAttribute GetHitReactThresholdAttribute() const;
 	
 	//~ Start of ObsidianAttributesComponent
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner = nullptr) override;
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
 

@@ -4,6 +4,7 @@
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/Obsidian.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -23,25 +24,25 @@ UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitiali
 	DeathState = EObsidianDeathState::EDS_Alive;
 }
 
-void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* Owner)
+void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner)
 {
 	if(AbilitySystemComponent)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *Owner->GetName());
 		return;
 	}
 
 	AbilitySystemComponent = InASC;
 	if (!AbilitySystemComponent)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *Owner->GetName());
 		return;
 	}
 	
 	CommonAttributeSet = AbilitySystemComponent->GetSet<UObsidianCommonAttributeSet>();
 	if (!CommonAttributeSet)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *Owner->GetName());
 		return;
 	}
 	

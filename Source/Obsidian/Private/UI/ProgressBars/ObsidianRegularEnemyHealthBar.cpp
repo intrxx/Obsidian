@@ -17,7 +17,16 @@ void UObsidianRegularEnemyHealthBar::HandleWidgetControllerSet()
    EnemyAttributesComp->EnergyShieldChangedDelegate.AddUObject(this, &ThisClass::EnergyShieldChanged);
    EnemyAttributesComp->MaxEnergyShieldChangedDelegate.AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
 
-   SetInitialValues(EnemyAttributesComp);
+   if(!EnemyAttributesComp->IsDeadOrDying())
+   {
+      Health = EnemyAttributesComp->GetHealth();
+      MaxHealth = EnemyAttributesComp->GetMaxHealth();
+      EnergyShield = EnemyAttributesComp->GetEnergyShield();
+      MaxEnergyShield = EnemyAttributesComp->GetMaxEnergyShield();
+		
+      SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
+      SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
+   }
 }
 
 void UObsidianRegularEnemyHealthBar::HealthChanged(const float NewValue)
@@ -76,17 +85,4 @@ void UObsidianRegularEnemyHealthBar::HideWidget()
    SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UObsidianRegularEnemyHealthBar::SetInitialValues(const UObsidianEnemyAttributesComponent* EnemyAttributesComp)
-{
-   if(!EnemyAttributesComp->IsDeadOrDying())
-   {
-      Health = EnemyAttributesComp->GetHealth();
-      MaxHealth = EnemyAttributesComp->GetMaxHealth();
-      EnergyShield = EnemyAttributesComp->GetEnergyShield();
-      MaxEnergyShield = EnemyAttributesComp->GetMaxEnergyShield();
-		
-      SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
-      SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
-   }
-}
 
