@@ -81,8 +81,6 @@ void AObsidianHero::PossessedBy(AController* NewController)
 		check(PawnExtComp);
 		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
 	}
-
-	InitializeHealthBar();
 }
 
 void AObsidianHero::OnRep_PlayerState()
@@ -95,8 +93,6 @@ void AObsidianHero::OnRep_PlayerState()
 		check(PawnExtComp);
 		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
 	}
-
-	InitializeHealthBar();
 }
 
 AObsidianPlayerState* AObsidianHero::GetObsidianPlayerState() const
@@ -207,6 +203,8 @@ void AObsidianHero::OnDeathFinished(AActor* OwningActor)
 
 void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC)
 {
+	InitializeHealthBar();
+	
 	AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState();
 	AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController();
 	if(ObsidianPS && ObsidianPC)
