@@ -201,7 +201,7 @@ void AObsidianHero::OnDeathFinished(AActor* OwningActor)
 	Super::OnDeathFinished(OwningActor);
 }
 
-void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC)
+void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) const
 {
 	InitializeHealthBar();
 	
@@ -218,19 +218,18 @@ void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC)
 
 void AObsidianHero::InitializeHealthBar() const
 {
-	if(HealthBarWidgetComp)
+	check(HealthBarWidgetComp);
+
+	if(IsLocallyControlled())
 	{
-		if(IsLocallyControlled())
+		HealthBarWidgetComp->SetWidgetClass(AutonomousHealthBarClass);
+	}
+	else
+	{
+		HealthBarWidgetComp->SetWidgetClass(SimulatedHealthBarClass);
+		if(UObsidianWidgetBase* Widget = GetHealthBarWidget())
 		{
-			HealthBarWidgetComp->SetWidgetClass(AutonomousHealthBarClass);
-		}
-		else
-		{
-			HealthBarWidgetComp->SetWidgetClass(SimulatedHealthBarClass);
-			if(UObsidianWidgetBase* Widget = GetHealthBarWidget())
-			{
-				Widget->SetWidgetController(HeroAttributesComponent);
-			}
+			Widget->SetWidgetController(HeroAttributesComponent);
 		}
 	}
 }

@@ -26,7 +26,7 @@ void UObsidianPawnExtensionComponent::GetLifetimeReplicatedProps(TArray<FLifetim
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UObsidianPawnExtensionComponent, PawnData);
+	DOREPLIFETIME(ThisClass, PawnData);
 }
 
 void UObsidianPawnExtensionComponent::InitializeAbilitySystem(UObsidianAbilitySystemComponent* InASC,

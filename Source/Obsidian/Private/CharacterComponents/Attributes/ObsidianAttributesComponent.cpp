@@ -63,7 +63,7 @@ void UObsidianAttributesComponent::GetLifetimeReplicatedProps(TArray<FLifetimePr
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(UObsidianAttributesComponent, DeathState);
+	DOREPLIFETIME(ThisClass, DeathState);
 }
 
 void UObsidianAttributesComponent::UninitializeFromAbilitySystem()

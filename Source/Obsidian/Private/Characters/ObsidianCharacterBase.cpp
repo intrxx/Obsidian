@@ -105,8 +105,8 @@ void AObsidianCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AObsidianCharacterBase, LeftHandEquipmentMesh);
-	DOREPLIFETIME(AObsidianCharacterBase, RightHandEquipmentMesh);
+	DOREPLIFETIME(ThisClass, LeftHandEquipmentMesh);
+	DOREPLIFETIME(ThisClass, RightHandEquipmentMesh);
 }
 
 void AObsidianCharacterBase::BeginPlay()

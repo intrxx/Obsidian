@@ -17,7 +17,7 @@ void UObsidianEnemyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME_CONDITION_NOTIFY(UObsidianEnemyAttributeSet, HitReactThreshold, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, HitReactThreshold, COND_None, REPNOTIFY_Always);
 }
 
 void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)

@@ -60,7 +60,7 @@ protected:
 	virtual void OnDeathFinished(AActor* OwningActor) override;
 	//~ End of AObsidianCharacterBase
 
-	void InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC);
+	void InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) const;
 
 private:
 	void InitializeHealthBar() const;
@@ -81,6 +81,9 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
 
+	//@Note, this health bars does not work for the simulated clients if we are the server,
+	// I'm okay with that but that should be something to consider implementing
+	
 	/** Health bar to set on locally controller Player. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianHeroHealthBar> AutonomousHealthBarClass;

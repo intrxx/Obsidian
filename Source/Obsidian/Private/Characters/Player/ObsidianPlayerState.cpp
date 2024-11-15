@@ -12,7 +12,7 @@ AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& ObjectIniti
 	: Super(ObjectInitializer)
 {
 	// GAS needs higher NetUpdateFrequency
-	NetUpdateFrequency = 100.f;
+	SetNetUpdateFrequency(100.f);
 
 	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<UObsidianAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
@@ -25,7 +25,7 @@ void AObsidianPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(AObsidianPlayerState, HeroLevel);
+	DOREPLIFETIME(ThisClass, HeroLevel);
 }
 
 UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const
