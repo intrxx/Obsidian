@@ -21,7 +21,8 @@ public class Obsidian : ModuleRules
 				"GameplayAbilities",
 				"GameplayTasks",
 				"CommonUI",
-				"MotionWarping", "AIModule"
+				"MotionWarping",
+				"AIModule"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
@@ -31,7 +32,8 @@ public class Obsidian : ModuleRules
 			"AIModule",
 			"NavigationSystem",
 			"Niagara",
-			"AIModule"
+			"AIModule",
+			"NetCore"
 		});
 
 		// Uncomment if you are using Slate UI

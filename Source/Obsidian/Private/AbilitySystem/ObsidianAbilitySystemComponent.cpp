@@ -104,7 +104,7 @@ void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbil
 
 float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGameplayEffectSpec& EffectSpec)
 {
-	// It fixes a crash when applying cooldown effects as cds have no modifiers
+	//@Hack It fixes a crash when applying cooldown effects as cds have no modifiers
 	if(EffectSpec.Def->Modifiers.Num() == 0)
 	{
 		return 0.f;

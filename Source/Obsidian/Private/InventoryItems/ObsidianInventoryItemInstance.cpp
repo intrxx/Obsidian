@@ -16,6 +16,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ThisClass, ItemDef);
+	DOREPLIFETIME(ThisClass, ItemStackTags);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -25,5 +26,25 @@ const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragme
 		return GetDefault<UObsidianInventoryItemDefinition>(ItemDef)->FindFragmentByClass(FragmentClass);
 	}
 	return nullptr;
+}
+
+void UObsidianInventoryItemInstance::AddItemTagStack(const FGameplayTag ToTag, const int32 StackCount)
+{
+	ItemStackTags.AddStack(ToTag, StackCount);
+}
+
+void UObsidianInventoryItemInstance::RemoveItemTagStack(const FGameplayTag FromTag, const int32 StackCount)
+{
+	ItemStackTags.RemoveStack(FromTag, StackCount);
+}
+
+int32 UObsidianInventoryItemInstance::GetItemTagStackCount(const FGameplayTag Tag) const
+{
+	return ItemStackTags.GetStackCount(Tag);
+}
+
+bool UObsidianInventoryItemInstance::HasStackTag(const FGameplayTag Tag) const
+{
+	return ItemStackTags.ContainsTag(Tag);
 }
 
