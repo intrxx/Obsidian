@@ -52,7 +52,12 @@ void UObsidianAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySp
 	Super::AbilitySpecInputPressed(Spec);
 	if (Spec.IsActive())
 	{
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+		const UGameplayAbility* Instance = Spec.GetPrimaryInstance();
+		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : Spec.ActivationInfo.GetActivationPredictionKey();
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+		
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, InstancedPredictionKey);
 	}
 }
 
@@ -61,7 +66,12 @@ void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilityS
 	Super::AbilitySpecInputReleased(Spec);
 	if (Spec.IsActive())
 	{
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, Spec.ActivationInfo.GetActivationPredictionKey());
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+		const UGameplayAbility* Instance = Spec.GetPrimaryInstance();
+		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : Spec.ActivationInfo.GetActivationPredictionKey();
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, InstancedPredictionKey);
 	}
 }
 

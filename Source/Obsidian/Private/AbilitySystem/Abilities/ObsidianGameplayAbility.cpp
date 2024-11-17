@@ -74,8 +74,10 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 	const FGameplayTag& BlockedTag = AbilitySystemGlobals.ActivateFailTagsBlockedTag;
 	const FGameplayTag& MissingTag = AbilitySystemGlobals.ActivateFailTagsMissingTag;
 
+	const FGameplayTagContainer& AssetTags = GetAssetTags();
+	
 	// Check if any of this ability's tags are currently blocked
-	if (AbilitySystemComponent.AreAbilityTagsBlocked(AbilityTags))
+	if (AbilitySystemComponent.AreAbilityTagsBlocked(AssetTags))
 	{
 		bBlocked = true;
 	}
@@ -90,7 +92,7 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 	// Expand our ability tags to add additional required/blocked tags
 	if (ObsidianASC)
 	{
-		ObsidianASC->GetAdditionalActivationTagRequirements(AbilityTags, AllRequiredTags, AllBlockedTags);
+		ObsidianASC->GetAdditionalActivationTagRequirements(AssetTags, AllRequiredTags, AllBlockedTags);
 	}
 
 	// Check to see the required/blocked tags for this ability
