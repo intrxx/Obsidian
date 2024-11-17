@@ -7,6 +7,29 @@
 
 namespace ObsidianGameplayTags
 {
+	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
+	{
+		const UGameplayTagsManager& TagsManager = UGameplayTagsManager::Get();
+		FGameplayTag ReturnTag = TagsManager.RequestGameplayTag(FName(*TagString), false);
+
+		if(bMatchPartialString && !ReturnTag.IsValid())
+		{
+			FGameplayTagContainer AllTags;
+			TagsManager.RequestAllGameplayTags(AllTags, true);
+
+			for(const FGameplayTag& Tag : AllTags)
+			{
+				if(Tag.ToString().Contains(TagString))
+				{
+					UE_LOG(LogObsidian, Display, TEXT("Did not find exact match for [%s] but found partial match on tag [%s]."), *TagString, *Tag.ToString());
+					ReturnTag = Tag;
+					break;
+				}	
+			}
+		}
+		return ReturnTag;
+	}
+	
 	/**
 	 * ---- Damage Types ----
 	 */
@@ -138,7 +161,7 @@ namespace ObsidianGameplayTags
 	/**
 	* ---- Gameplay Cues ----
 	*/
-
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayCue_MeleeImpact, "GameplayCue.MeleeImpact", "Tag used for Melee Impact GC.");
 	
 	/**
@@ -187,43 +210,28 @@ namespace ObsidianGameplayTags
 	/**
 	 * Shared
 	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_HitReact, "Ability.Cooldown.HitReact", "Tag used for Hit React Ability cooldown.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_HitReact, "Ability.Cooldown.HitReact", "Tag used for Hit React Ability cooldown.");
 
 	/**
 	 * Tree Orc
 	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_TreeOrc_LeapAttack, "Ability.Cooldown.TreeOrc.LeapAttack", "Tag used for Leap Attack Tree Orc's Ability cooldown.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_TreeOrc_ComboSwing, "Ability.Cooldown.TreeOrc.ComboSwing", "Tag used for Combo Swing Tree Orc's Ability cooldown.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_TreeOrc_LeapAttack, "Ability.Cooldown.TreeOrc.LeapAttack", "Tag used for Leap Attack Tree Orc's Ability cooldown.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_TreeOrc_ComboSwing, "Ability.Cooldown.TreeOrc.ComboSwing", "Tag used for Combo Swing Tree Orc's Ability cooldown.");
 	
 	/**
 	 * Skeletal Mage
 	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_SkeletalMage_FireNova, "Ability.Cooldown.SkeletalMage.FireNova", "Tag used for Fire Nova Skeletal Mage's Ability cooldown.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ability_Cooldown_SkeletalMage_FireNova, "Ability.Cooldown.SkeletalMage.FireNova", "Tag used for Fire Nova Skeletal Mage's Ability cooldown.");
 
 	/**
-	 * ---- End of Cooldowns ----
+	 * ---- Items ----
 	 */
-	
-	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
-	{
-		const UGameplayTagsManager& TagsManager = UGameplayTagsManager::Get();
-		FGameplayTag ReturnTag = TagsManager.RequestGameplayTag(FName(*TagString), false);
 
-		if(bMatchPartialString && !ReturnTag.IsValid())
-		{
-			FGameplayTagContainer AllTags;
-			TagsManager.RequestAllGameplayTags(AllTags, true);
-
-			for(const FGameplayTag& Tag : AllTags)
-			{
-				if(Tag.ToString().Contains(TagString))
-				{
-					UE_LOG(LogObsidian, Display, TEXT("Did not find exact match for [%s] but found partial match on tag [%s]."), *TagString, *Tag.ToString());
-					ReturnTag = Tag;
-					break;
-				}	
-			}
-		}
-		return ReturnTag;
-	}
+	/**
+	 * Stack Counts
+	 */
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Default, "Item.StackCount.Default", "Item Tag representing the default count of the item, e.g. 3x Potion of Healing on the ground.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Current, "Item.StackCount.Current", "Item Tag representing the current number of item in the stack.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Max, "Item.StackCount.Max", "Item Tag representing the Max Stack Count the item have.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_TotalCount_Max, "Item.TotalCount.Max", "Item Tag representing the Total number of items the Player can have, can be used for mission items which can be limited to 1.");
 }

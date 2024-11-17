@@ -28,22 +28,22 @@ const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragme
 	return nullptr;
 }
 
-void UObsidianInventoryItemInstance::AddItemTagStack(const FGameplayTag ToTag, const int32 StackCount)
+void UObsidianInventoryItemInstance::AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount)
 {
 	ItemStackTags.AddStack(ToTag, StackCount);
 }
 
-void UObsidianInventoryItemInstance::RemoveItemTagStack(const FGameplayTag FromTag, const int32 StackCount)
+void UObsidianInventoryItemInstance::RemoveItemStackCount(const FGameplayTag FromTag, const int32 StackCount)
 {
 	ItemStackTags.RemoveStack(FromTag, StackCount);
 }
 
-int32 UObsidianInventoryItemInstance::GetItemTagStackCount(const FGameplayTag Tag) const
+int32 UObsidianInventoryItemInstance::GetItemStackCount(const FGameplayTag Tag) const
 {
 	return ItemStackTags.GetStackCount(Tag);
 }
 
-bool UObsidianInventoryItemInstance::HasStackTag(const FGameplayTag Tag) const
+bool UObsidianInventoryItemInstance::HasStackCountForTag(const FGameplayTag Tag) const
 {
 	return ItemStackTags.ContainsTag(Tag);
 }

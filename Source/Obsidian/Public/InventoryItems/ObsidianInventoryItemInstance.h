@@ -49,19 +49,19 @@ public:
 
 	/** Adds a specified number of stacks to the tag (does nothing if StackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void AddItemTagStack(const FGameplayTag ToTag, const int32 StackCount);
+	void AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount);
 
 	/** Removes a specified number of stacks to the tag (does nothing if StackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void RemoveItemTagStack(const FGameplayTag FromTag, const int32 StackCount);
+	void RemoveItemStackCount(const FGameplayTag FromTag, const int32 StackCount);
 	
 	/** Returns the stack count of the specified tag (or 0 is there is no stack for this tag). */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	int32 GetItemTagStackCount(const FGameplayTag Tag) const;
+	int32 GetItemStackCount(const FGameplayTag Tag) const;
 
 	/** Return true if there is at least one stack of the specified tag. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	bool HasStackTag(const FGameplayTag Tag) const;
+	bool HasStackCountForTag(const FGameplayTag Tag) const;
 
 private:
 	UPROPERTY(Replicated)
