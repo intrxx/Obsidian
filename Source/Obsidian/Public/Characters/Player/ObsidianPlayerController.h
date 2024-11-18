@@ -24,7 +24,7 @@ class OBSIDIAN_API AObsidianPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 public:
-	AObsidianPlayerController();
+	AObsidianPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 

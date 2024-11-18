@@ -37,7 +37,7 @@ class OBSIDIAN_API UObsidianInputConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianInputConfig(const FObjectInitializer& ObjectInitializer);
+	UObsidianInputConfig(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Input")
 	const UInputAction* FindNativeInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;

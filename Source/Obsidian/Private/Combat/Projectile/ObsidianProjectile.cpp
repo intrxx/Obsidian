@@ -11,7 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-AObsidianProjectile::AObsidianProjectile()
+AObsidianProjectile::AObsidianProjectile(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;

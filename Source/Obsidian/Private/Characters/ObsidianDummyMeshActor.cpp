@@ -5,7 +5,8 @@
 
 #include "Components/PoseableMeshComponent.h"
 
-AObsidianDummyMeshActor::AObsidianDummyMeshActor()
+AObsidianDummyMeshActor::AObsidianDummyMeshActor(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;

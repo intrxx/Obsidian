@@ -3,6 +3,11 @@
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 
+UObsidianCharacterMovementComponent::UObsidianCharacterMovementComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+}
+
 float UObsidianCharacterMovementComponent::GetMaxSpeed() const
 {
 	const AActor* Owner = GetOwner();

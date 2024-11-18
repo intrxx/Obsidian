@@ -7,7 +7,8 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 
-AObsidianPlayerController::AObsidianPlayerController()
+AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	bReplicates = true;
 }

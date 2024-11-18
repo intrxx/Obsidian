@@ -62,13 +62,13 @@ struct FObsidianAdvancedTraceParams
  * Component that gives the functionality to perform advance tracing using sockets on mesh.
  * Should not be used on regular enemies as it might be quite expensive.
  */
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(BlueprintType)
 class OBSIDIAN_API UObsidianAdvancedCombatComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	UObsidianAdvancedCombatComponent();
+	UObsidianAdvancedCombatComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintPure, Category = "Obsidian Advanced Combat")
 	static UObsidianAdvancedCombatComponent* FindAdvancedCombatComponent(const AActor* Owner)

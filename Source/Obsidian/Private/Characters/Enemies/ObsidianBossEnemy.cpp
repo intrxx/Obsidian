@@ -12,8 +12,8 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer) :
-	Super(ObjectInitializer)
+AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	AdvancedCombatComponent = CreateDefaultSubobject<UObsidianAdvancedCombatComponent>(TEXT("AdvancedCombatComponent"));
 

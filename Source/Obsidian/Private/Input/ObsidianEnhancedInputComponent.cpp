@@ -3,6 +3,7 @@
 #include "Input/ObsidianEnhancedInputComponent.h"
 
 UObsidianEnhancedInputComponent::UObsidianEnhancedInputComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 }
 

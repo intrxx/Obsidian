@@ -12,8 +12,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
 
-AObsidianRegularEnemy::AObsidianRegularEnemy(const FObjectInitializer& ObjectInitializer) :
-	Super(ObjectInitializer)
+AObsidianRegularEnemy::AObsidianRegularEnemy(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComponent"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());

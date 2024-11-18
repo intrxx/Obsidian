@@ -6,7 +6,8 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Obsidian/Obsidian.h"
 
-UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent()
+UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;

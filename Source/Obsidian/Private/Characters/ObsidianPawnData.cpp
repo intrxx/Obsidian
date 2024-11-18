@@ -4,5 +4,6 @@
 #include "Characters/ObsidianPawnData.h"
 
 UObsidianPawnData::UObsidianPawnData(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 }

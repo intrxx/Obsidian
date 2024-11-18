@@ -46,6 +46,7 @@ public:
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
+	
 private:
 	UPROPERTY(Replicated)
 	FObsidianInventoryList InventoryList;

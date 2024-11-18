@@ -14,7 +14,7 @@ class OBSIDIAN_API UObsidianBossComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianBossComponent();
+	UObsidianBossComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	/** Returns the Boss Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")

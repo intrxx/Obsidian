@@ -17,7 +17,7 @@ class OBSIDIAN_API AObsidianProjectile : public AActor
 	GENERATED_BODY()
 	
 public:	
-	AObsidianProjectile();
+	AObsidianProjectile(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void Destroyed() override;
 

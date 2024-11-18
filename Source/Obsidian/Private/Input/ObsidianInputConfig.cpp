@@ -8,6 +8,7 @@
 #endif // ~ With Editor
 
 UObsidianInputConfig::UObsidianInputConfig(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 }
 

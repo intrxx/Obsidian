@@ -24,7 +24,7 @@ class OBSIDIAN_API UObsidianEnemyOverlayBarComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianEnemyOverlayBarComponent();
+	UObsidianEnemyOverlayBarComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	/** Returns Enemy Overlay Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyOverlayBarComp")

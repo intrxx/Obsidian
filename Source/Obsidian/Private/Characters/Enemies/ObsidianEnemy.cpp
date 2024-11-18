@@ -15,8 +15,8 @@
 #include "Characters/ObsidianDummyMeshActor.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer) :
-	Super(ObjectInitializer)
+AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	MeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);

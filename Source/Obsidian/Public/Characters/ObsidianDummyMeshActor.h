@@ -16,7 +16,7 @@ class OBSIDIAN_API AObsidianDummyMeshActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	AObsidianDummyMeshActor();
+	AObsidianDummyMeshActor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	void SetupDummyMeshActor(USkeletalMeshComponent* InMeshToCopy, const float LifeSpan);
 	

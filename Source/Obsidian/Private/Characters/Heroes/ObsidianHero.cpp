@@ -20,8 +20,8 @@
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetBase.h"
 
-AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer) :
-	Super(ObjectInitializer)
+AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
 	SpringArmComponent->SetupAttachment(RootComponent);

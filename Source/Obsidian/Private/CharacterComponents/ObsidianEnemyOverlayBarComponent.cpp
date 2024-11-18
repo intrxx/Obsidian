@@ -7,7 +7,8 @@
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
 
-UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent()
+UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;

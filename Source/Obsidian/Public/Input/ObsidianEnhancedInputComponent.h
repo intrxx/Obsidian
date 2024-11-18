@@ -16,7 +16,7 @@ class OBSIDIAN_API UObsidianEnhancedInputComponent : public UEnhancedInputCompon
 	GENERATED_BODY()
 
 public:
-	UObsidianEnhancedInputComponent(const FObjectInitializer& ObjectInitializer);
+	UObsidianEnhancedInputComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	template<class UserClass, typename FuncType>
 	void BindNativeAction(const UObsidianInputConfig* InputConfig, const FGameplayTag& InputTag, ETriggerEvent TriggerEvent,
