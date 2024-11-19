@@ -6,11 +6,14 @@
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "InventoryItems/ObsidianInventoryComponent.h"
 
 AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	bReplicates = true;
+
+	InventoryComponent = CreateDefaultSubobject<UObsidianInventoryComponent>(TEXT("Inventory Component"));
 }
 
 void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const

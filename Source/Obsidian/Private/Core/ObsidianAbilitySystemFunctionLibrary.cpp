@@ -9,6 +9,7 @@
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/Data/ObsidianEnemyTypeInfo.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
+#include "Engine/OverlapResult.h"
 #include "Game/ObsidianGameMode.h"
 #include "Kismet/GameplayStatics.h"
 

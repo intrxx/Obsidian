@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class UObsidianInventoryComponent;
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnEnemyActorHovered, AActor*, TargetActor, const bool, bHoveredOver);
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, const bool, bSeen);
 
@@ -27,6 +28,9 @@ public:
 	AObsidianPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
+	UObsidianInventoryComponent* GetInventoryComponent() const {return InventoryComponent;}
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianPlayerState* GetObsidianPlayerState() const;
@@ -58,5 +62,8 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DamageNumber")
 	TSubclassOf<UObsidianDamageNumberWidgetComp> DamageNumberWidgetCompClass;
+
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
+	TObjectPtr<UObsidianInventoryComponent> InventoryComponent;
 	
 };
