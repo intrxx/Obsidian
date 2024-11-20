@@ -9,6 +9,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianInventory;
 class UObsidianProgressGlobe_Mana;
 class UObsidianProgressGlobe_Health;
 class UObsidianOverlayBossEnemyBar;
@@ -35,6 +36,8 @@ public:
 
 	UFUNCTION()
 	void ToggleCharacterStatus();
+	UFUNCTION()
+	void ToggleInventory();
 	
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|MainOverlay")
@@ -79,6 +82,9 @@ protected:
 	TObjectPtr<UOverlay> CharacterStatus_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOverlay> Inventory_Overlay;;
+
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> OverlayRegularBars_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
@@ -102,12 +108,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianCharacterStatus> CharacterStatusClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
+	TSubclassOf<UObsidianInventory> InventoryClass;
+
 	UPROPERTY()
 	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
 
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianCharacterStatus> CharacterStatus;
+	UPROPERTY()
+	TObjectPtr<UObsidianInventory> Inventory;
 	
 	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
 	

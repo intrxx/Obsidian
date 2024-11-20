@@ -15,6 +15,13 @@ void UObsidianOverlayGameTabsMenu::NativeConstruct()
 		
 		OnCharacterStatusTabStatusChangeDelegate.AddUObject(this, &ThisClass::OnCharacterStatusTabStatusChange);
 	}
+
+	if(Inventory_GameTabButton && Inventory_GameTabButton->Tab_Button)
+	{
+		Inventory_GameTabButton->Tab_Button->OnClicked.AddDynamic(this, &ThisClass::OnInventoryButtonClicked);
+		
+		OnCharacterStatusTabStatusChangeDelegate.AddUObject(this, &ThisClass::OnInventoryTabStatusChange);
+	}
 }
 
 void UObsidianOverlayGameTabsMenu::OnCharacterStatusButtonClicked()
@@ -27,5 +34,18 @@ void UObsidianOverlayGameTabsMenu::OnCharacterStatusTabStatusChange(bool bIsCons
 	if(CharacterStatus_GameTabButton)
 	{
 		CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
+	}
+}
+
+void UObsidianOverlayGameTabsMenu::OnInventoryButtonClicked()
+{
+	OnInventoryButtonClickedDelegate.Broadcast();
+}
+
+void UObsidianOverlayGameTabsMenu::OnInventoryTabStatusChange(bool bIsConstructed)
+{
+	if(Inventory_GameTabButton)
+	{
+		Inventory_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
 	}
 }

@@ -2,9 +2,7 @@
 
 
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
-
 #include "CommonTextBlock.h"
-#include "Components/Button.h"
 #include "Components/ProgressBar.h"
 #include "Components/ScrollBox.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
@@ -15,20 +13,11 @@ void UObsidianCharacterStatus::NativeConstruct()
 	Super::NativeConstruct();
 
 	CurrentlyShownTab = Offence_ScrollBox;
-
-	Close_Button->OnClicked.AddDynamic(this, &ThisClass::OnCloseButtonClicked);
-
+	
 	Strength_AttributeRow->SetCharacterStatus(this);
 	Dexterity_AttributeRow->SetCharacterStatus(this);
 	Intelligence_AttributeRow->SetCharacterStatus(this);
 	Faith_AttributeRow->SetCharacterStatus(this);
-}
-
-void UObsidianCharacterStatus::NativeDestruct()
-{
-	Close_Button->OnClicked.Clear();
-	
-	Super::NativeDestruct();
 }
 
 void UObsidianCharacterStatus::SwitchToTab(UScrollBox* Tab)
@@ -41,11 +30,6 @@ void UObsidianCharacterStatus::SwitchToTab(UScrollBox* Tab)
 	CurrentlyShownTab->SetVisibility(ESlateVisibility::Collapsed);
 	Tab->SetVisibility(ESlateVisibility::Visible);
 	CurrentlyShownTab = Tab;
-}
-
-void UObsidianCharacterStatus::OnCloseButtonClicked()
-{
-	RemoveFromParent();
 }
 
 void UObsidianCharacterStatus::HandleWidgetControllerSet()

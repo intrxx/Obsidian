@@ -25,15 +25,11 @@ class OBSIDIAN_API UObsidianCharacterStatus : public UObsidianMainOverlayWidgetB
 
 public:
 	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatus")
 	void SwitchToTab(UScrollBox* Tab);
 
 protected:
-	UFUNCTION()
-	void OnCloseButtonClicked();
-
 	// ~ Start of Obsidian Widget Base
 	virtual void HandleWidgetControllerSet() override;
 	// ~ End of Obsidian Widget Base
@@ -83,9 +79,6 @@ protected:
 	void OnSpellBlockChanceChanged(const float Value, const float MaxValue);
 	
 protected:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> Close_Button;
-
 	/**
 	 *  Character
 	 */

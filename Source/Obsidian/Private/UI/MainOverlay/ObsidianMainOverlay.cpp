@@ -14,11 +14,11 @@
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
 #include "UI/ProgressBars/ObsidianOverlayBossEnemyBar.h"
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
+#include "UI/Inventory/ObsidianInventory.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
-#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
 
 void UObsidianMainOverlay::NativeConstruct()
 {
@@ -29,6 +29,7 @@ void UObsidianMainOverlay::NativeConstruct()
 	if(Overlay_GameTabsMenu)
 	{
 		Overlay_GameTabsMenu->OnCharacterStatusButtonClickedDelegate.AddUObject(this, &UObsidianMainOverlay::ToggleCharacterStatus);
+		Overlay_GameTabsMenu->OnInventoryButtonClickedDelegate.AddUObject(this, &ThisClass::ToggleInventory);
 	}
 }
 
@@ -59,6 +60,31 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		CharacterStatus->RemoveFromParent();
 		CharacterStatus = nullptr;
 		Overlay_GameTabsMenu->OnCharacterStatusTabStatusChangeDelegate.Broadcast(false);
+	}
+}
+
+void UObsidianMainOverlay::ToggleInventory()
+{
+	if(!Inventory)
+	{
+		Inventory = CreateWidget<UObsidianInventory>(this, InventoryClass);
+
+		Inventory_Overlay->AddChildToOverlay(Inventory);
+		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
+		{
+			Inventory = nullptr;
+
+			if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->Inventory_GameTabButton)
+			{
+				Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
+			}
+		});
+	}
+	else
+	{
+		Inventory->RemoveFromParent();
+		Inventory = nullptr;
+		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
 	}
 }
 

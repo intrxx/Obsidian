@@ -25,6 +25,8 @@ public:
 	
 	UFUNCTION()
 	void OnCharacterStatusButtonClicked();
+	UFUNCTION()
+	void OnInventoryButtonClicked();
 
 public:
 	/**
@@ -33,17 +35,23 @@ public:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGameTabButton> CharacterStatus_GameTabButton;
-
-	FOnTabButtonClicked OnCharacterStatusButtonClickedDelegate;
 	
+	FOnTabButtonClicked OnCharacterStatusButtonClickedDelegate;
 	FOnTabStatusChange OnCharacterStatusTabStatusChangeDelegate;
 
 	/**
-	 * 
+	 * Inventory
 	 */
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianGameTabButton> Inventory_GameTabButton;
+	
+	FOnTabButtonClicked OnInventoryButtonClickedDelegate;
+	FOnTabStatusChange OnInventoryTabStatusChangeDelegate;
 
 protected:
 	void OnCharacterStatusTabStatusChange(bool bIsConstructed);
+	void OnInventoryTabStatusChange(bool bIsConstructed);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
