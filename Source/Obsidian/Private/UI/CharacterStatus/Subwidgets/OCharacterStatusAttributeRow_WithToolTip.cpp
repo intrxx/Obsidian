@@ -54,7 +54,7 @@ void UOCharacterStatusAttributeRow_WithToolTip::SetCharacterStatus(UObsidianChar
 {
 	CharacterStatus = InCharacterStatus;
 	
-	CharacterStatus->OnCharacterStatusDestroyedDelegate.AddUObject(this, &ThisClass::HandleCharacterStatusSet);
+	CharacterStatus->OnWidgetDestroyedDelegate.AddUObject(this, &ThisClass::HandleCharacterStatusSet);
 }
 
 void UOCharacterStatusAttributeRow_WithToolTip::OnToolTipButtonHovered()

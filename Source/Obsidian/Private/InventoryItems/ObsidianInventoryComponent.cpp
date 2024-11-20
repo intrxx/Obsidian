@@ -66,14 +66,29 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackF
 
 bool UObsidianInventoryComponent::CanAddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount)
 {
-	//TODO Implement
-	return true;
+	bool bCanAdd = true;
+
+	if(InventoryList.GetEntriesCount() == InventoryGridSpace)
+	{
+		bCanAdd = false;
+	}
+	
+	return bCanAdd;
 }
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount)
 {
 	if(ItemDef == nullptr)
 	{
+		return nullptr;
+	}
+
+	if(CanAddItemDefinition(ItemDef, StackCount) == false)
+	{
+		//TODO Inventory is full, add voice over?
+		
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
+			FString::Printf(TEXT("Inventory is full!")));
 		return nullptr;
 	}
 	

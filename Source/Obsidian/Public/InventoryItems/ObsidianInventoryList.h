@@ -55,6 +55,7 @@ public:
 	{}
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
+	int32 GetEntriesCount() const;
 
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount);
 	void AddEntry(UObsidianInventoryItemInstance* Instance);

@@ -35,6 +35,11 @@ TArray<UObsidianInventoryItemInstance*> FObsidianInventoryList::GetAllItems() co
 	return Items;
 }
 
+int32 FObsidianInventoryList::GetEntriesCount() const
+{
+	return Entries.Num();
+}
+
 UObsidianInventoryItemInstance* FObsidianInventoryList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount)
 {
 	UObsidianInventoryItemInstance* Item = nullptr;
@@ -67,7 +72,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryList::AddEntry(const TSubclass
 
 void FObsidianInventoryList::AddEntry(UObsidianInventoryItemInstance* Instance)
 {
-	//TODO Implement
+	//TODO currently no use for it
 }
 
 void FObsidianInventoryList::RemoveEntry(UObsidianInventoryItemInstance* Instance)

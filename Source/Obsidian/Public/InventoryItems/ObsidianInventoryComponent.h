@@ -50,4 +50,7 @@ public:
 private:
 	UPROPERTY(Replicated)
 	FObsidianInventoryList InventoryList;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
+	int32 InventoryGridSpace = 30;
 };

@@ -42,7 +42,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		CharacterStatusWidgetController->SetInitialAttributeValues();
 		
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
-		CharacterStatus->OnCharacterStatusDestroyedDelegate.AddLambda([this]()
+		CharacterStatus->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{
 			CharacterStatus = nullptr;
 

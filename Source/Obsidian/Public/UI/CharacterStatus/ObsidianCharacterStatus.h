@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetBase.h"
+#include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianCharacterStatus.generated.h"
 
 class UProgressBar;
@@ -15,13 +15,11 @@ class UImage;
 class UCommonTextBlock;
 class UOCharacterStatusWidgetController;
 
-DECLARE_MULTICAST_DELEGATE(FOnCharacterStatusDestroyed);
-
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianCharacterStatus : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianCharacterStatus : public UObsidianMainOverlayWidgetBase
 {
 	GENERATED_BODY()
 
@@ -32,9 +30,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatus")
 	void SwitchToTab(UScrollBox* Tab);
 
-public:
-	FOnCharacterStatusDestroyed OnCharacterStatusDestroyedDelegate;
-	
 protected:
 	UFUNCTION()
 	void OnCloseButtonClicked();
