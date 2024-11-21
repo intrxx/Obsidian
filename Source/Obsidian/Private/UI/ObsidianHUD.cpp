@@ -76,3 +76,11 @@ void AObsidianHUD::ToggleCharacterStatus() const
 	}
 }
 
+void AObsidianHUD::ToggleInventory() const
+{
+	if(MainOverlayWidget)
+	{
+		MainOverlayWidget->ToggleInventory();
+	}
+}
+

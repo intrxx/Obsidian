@@ -43,8 +43,10 @@ protected:
 	void Input_MoveStartedMouse();
 	void Input_MoveTriggeredMouse();
 	void Input_MoveReleasedMouse();
+	
 	void Input_ToggleCharacterStatus();
-
+	void Input_ToggleInventory();
+	
 protected:
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)

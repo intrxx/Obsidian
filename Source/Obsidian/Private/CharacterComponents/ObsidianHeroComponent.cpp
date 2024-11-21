@@ -167,16 +167,18 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 					ETriggerEvent::Triggered,this, &ThisClass::Input_MoveKeyboard, true);
 				
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
-					ETriggerEvent::Started, this, &ThisClass::Input_MoveStartedMouse, true);
+					ETriggerEvent::Started, this, &ThisClass::Input_MoveStartedMouse, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
-					ETriggerEvent::Triggered, this, &ThisClass::Input_MoveTriggeredMouse, true);
+					ETriggerEvent::Triggered, this, &ThisClass::Input_MoveTriggeredMouse, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
-					ETriggerEvent::Completed, this, &ThisClass::Input_MoveReleasedMouse, true);
+					ETriggerEvent::Completed, this, &ThisClass::Input_MoveReleasedMouse, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
-					ETriggerEvent::Canceled, this, &ThisClass::Input_MoveReleasedMouse, true);
+					ETriggerEvent::Canceled, this, &ThisClass::Input_MoveReleasedMouse, false);
 				
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_CharacterStatus,
-					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleCharacterStatus, true);
+					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleCharacterStatus, false);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Inventory,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleInventory, false);
 			}
 		}
 	}
@@ -290,17 +292,25 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 
 void UObsidianHeroComponent::Input_ToggleCharacterStatus()
 {
-	if(AObsidianHUD* ObsidianHUD = GetObsidianHUD())
+	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
 	{
 		ObsidianHUD->ToggleCharacterStatus();
 	}
 }
 
+void UObsidianHeroComponent::Input_ToggleInventory()
+{
+	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
+	{
+		ObsidianHUD->ToggleInventory();
+	}
+}
+
 AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 {
-	if(AObsidianPlayerController* OPC = GetController<AObsidianPlayerController>())
+	if(const AObsidianPlayerController* ObsidianPC = GetController<AObsidianPlayerController>())
 	{
-		return OPC->GetObsidianHUD();
+		return ObsidianPC->GetObsidianHUD();
 	}
 	return nullptr;
 }

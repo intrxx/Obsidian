@@ -29,6 +29,7 @@ public:
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
 
 	void ToggleCharacterStatus() const;
+	void ToggleInventory() const;
 	
 public:
 	UPROPERTY()
