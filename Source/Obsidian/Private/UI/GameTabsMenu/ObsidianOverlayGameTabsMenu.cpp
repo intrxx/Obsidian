@@ -12,15 +12,19 @@ void UObsidianOverlayGameTabsMenu::NativeConstruct()
 	if(CharacterStatus_GameTabButton && CharacterStatus_GameTabButton->Tab_Button)
 	{
 		CharacterStatus_GameTabButton->Tab_Button->OnClicked.AddDynamic(this, &ThisClass::OnCharacterStatusButtonClicked);
-		
 		OnCharacterStatusTabStatusChangeDelegate.AddUObject(this, &ThisClass::OnCharacterStatusTabStatusChange);
 	}
 
 	if(Inventory_GameTabButton && Inventory_GameTabButton->Tab_Button)
 	{
 		Inventory_GameTabButton->Tab_Button->OnClicked.AddDynamic(this, &ThisClass::OnInventoryButtonClicked);
-		
 		OnCharacterStatusTabStatusChangeDelegate.AddUObject(this, &ThisClass::OnInventoryTabStatusChange);
+	}
+
+	if(PassiveSkillTree_GameTabButton && PassiveSkillTree_GameTabButton->Tab_Button)
+	{
+		PassiveSkillTree_GameTabButton->Tab_Button->OnClicked.AddDynamic(this, &ThisClass::OnPassiveSkillTreeButtonClicked);
+		OnPassiveSkillTreeTabStatusChangeDelegate.AddUObject(this, &ThisClass::OnPassiveSkillTreeTabStatusChange);
 	}
 }
 
@@ -47,5 +51,18 @@ void UObsidianOverlayGameTabsMenu::OnInventoryTabStatusChange(bool bIsConstructe
 	if(Inventory_GameTabButton)
 	{
 		Inventory_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
+	}
+}
+
+void UObsidianOverlayGameTabsMenu::OnPassiveSkillTreeButtonClicked()
+{
+	OnPassiveSkillTreeButtonClickedDelegate.Broadcast();
+}
+
+void UObsidianOverlayGameTabsMenu::OnPassiveSkillTreeTabStatusChange(bool bIsConstructed)
+{
+	if(PassiveSkillTree_GameTabButton)
+	{
+		PassiveSkillTree_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
 	}
 }

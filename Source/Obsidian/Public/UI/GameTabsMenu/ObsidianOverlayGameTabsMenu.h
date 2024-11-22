@@ -27,6 +27,8 @@ public:
 	void OnCharacterStatusButtonClicked();
 	UFUNCTION()
 	void OnInventoryButtonClicked();
+	UFUNCTION()
+	void OnPassiveSkillTreeButtonClicked();
 
 public:
 	/**
@@ -49,9 +51,20 @@ public:
 	FOnTabButtonClicked OnInventoryButtonClickedDelegate;
 	FOnTabStatusChange OnInventoryTabStatusChangeDelegate;
 
+	/**
+	 * Passive Skill Tree
+	 */
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianGameTabButton> PassiveSkillTree_GameTabButton;
+	
+	FOnTabButtonClicked OnPassiveSkillTreeButtonClickedDelegate;
+	FOnTabStatusChange OnPassiveSkillTreeTabStatusChangeDelegate;
+
 protected:
 	void OnCharacterStatusTabStatusChange(bool bIsConstructed);
 	void OnInventoryTabStatusChange(bool bIsConstructed);
+	void OnPassiveSkillTreeTabStatusChange(bool bIsConstructed);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

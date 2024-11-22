@@ -179,6 +179,8 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleCharacterStatus, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Inventory,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleInventory, false);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_PassiveSkillTree,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_TogglePassiveSkillTree, false);
 			}
 		}
 	}
@@ -303,6 +305,14 @@ void UObsidianHeroComponent::Input_ToggleInventory()
 	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
 	{
 		ObsidianHUD->ToggleInventory();
+	}
+}
+
+void UObsidianHeroComponent::Input_TogglePassiveSkillTree()
+{
+	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
+	{
+		ObsidianHUD->TogglePassiveSkillTree();
 	}
 }
 

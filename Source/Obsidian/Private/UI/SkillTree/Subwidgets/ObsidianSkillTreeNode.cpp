@@ -1,7 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 
-#include "UI/SkillTree/Subwidgets/ObsidianSkillTreeNode.h"
+#include "UI/PassiveSkillTree/Subwidgets/ObsidianSkillTreeNode.h"
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"

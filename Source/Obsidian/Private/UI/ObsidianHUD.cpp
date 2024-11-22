@@ -84,3 +84,11 @@ void AObsidianHUD::ToggleInventory() const
 	}
 }
 
+void AObsidianHUD::TogglePassiveSkillTree() const
+{
+	if(MainOverlayWidget)
+	{
+		MainOverlayWidget->TogglePassiveSkillTree();
+	}
+}
+

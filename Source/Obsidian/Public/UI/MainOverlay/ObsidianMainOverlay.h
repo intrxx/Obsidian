@@ -9,6 +9,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianPassiveSkillTree;
 class UObsidianInventory;
 class UObsidianProgressGlobe_Mana;
 class UObsidianProgressGlobe_Health;
@@ -38,6 +39,8 @@ public:
 	void ToggleCharacterStatus();
 	UFUNCTION()
 	void ToggleInventory();
+	UFUNCTION()
+	void TogglePassiveSkillTree();
 	
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|MainOverlay")
@@ -82,7 +85,10 @@ protected:
 	TObjectPtr<UOverlay> CharacterStatus_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOverlay> Inventory_Overlay;;
+	TObjectPtr<UOverlay> Inventory_Overlay;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOverlay> PassiveSkillTree_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> OverlayRegularBars_Overlay;
@@ -111,6 +117,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianInventory> InventoryClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
+	TSubclassOf<UObsidianPassiveSkillTree> PassiveSkillTreeClass;
+
 	UPROPERTY()
 	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
 
@@ -119,6 +128,8 @@ private:
 	TObjectPtr<UObsidianCharacterStatus> CharacterStatus;
 	UPROPERTY()
 	TObjectPtr<UObsidianInventory> Inventory;
+	UPROPERTY()
+	TObjectPtr<UObsidianPassiveSkillTree> PassiveSkillTree;
 	
 	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
 	

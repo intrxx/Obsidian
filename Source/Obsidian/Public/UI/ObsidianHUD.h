@@ -30,6 +30,7 @@ public:
 
 	void ToggleCharacterStatus() const;
 	void ToggleInventory() const;
+	void TogglePassiveSkillTree() const;
 	
 public:
 	UPROPERTY()

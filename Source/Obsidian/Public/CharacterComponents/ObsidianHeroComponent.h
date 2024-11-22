@@ -46,6 +46,7 @@ protected:
 	
 	void Input_ToggleCharacterStatus();
 	void Input_ToggleInventory();
+	void Input_TogglePassiveSkillTree();
 	
 protected:
 	/** Time Threshold to know if it was a short press */

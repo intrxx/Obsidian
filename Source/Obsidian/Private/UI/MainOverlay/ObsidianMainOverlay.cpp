@@ -13,6 +13,7 @@
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
 #include "UI/ProgressBars/ObsidianOverlayBossEnemyBar.h"
+#include "UI/PassiveSkillTree/ObsidianPassiveSkillTree.h"
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
 #include "UI/Inventory/ObsidianInventory.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
@@ -30,6 +31,7 @@ void UObsidianMainOverlay::NativeConstruct()
 	{
 		Overlay_GameTabsMenu->OnCharacterStatusButtonClickedDelegate.AddUObject(this, &UObsidianMainOverlay::ToggleCharacterStatus);
 		Overlay_GameTabsMenu->OnInventoryButtonClickedDelegate.AddUObject(this, &ThisClass::ToggleInventory);
+		Overlay_GameTabsMenu->OnPassiveSkillTreeButtonClickedDelegate.AddUObject(this, &ThisClass::TogglePassiveSkillTree);
 	}
 }
 
@@ -85,6 +87,31 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory->RemoveFromParent();
 		Inventory = nullptr;
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
+	}
+}
+
+void UObsidianMainOverlay::TogglePassiveSkillTree()
+{
+	if(!PassiveSkillTree)
+	{
+		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
+
+		PassiveSkillTree_Overlay->AddChildToOverlay(PassiveSkillTree);
+		PassiveSkillTree->OnWidgetDestroyedDelegate.AddLambda([this]()
+		{
+			PassiveSkillTree = nullptr;
+
+			if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->PassiveSkillTree_GameTabButton)
+			{
+				Overlay_GameTabsMenu->PassiveSkillTree_GameTabButton->bIsCorrespondingTabOpen = false;
+			}
+		});
+	}
+	else
+	{
+		PassiveSkillTree->RemoveFromParent();
+		PassiveSkillTree = nullptr;
+		Overlay_GameTabsMenu->OnPassiveSkillTreeTabStatusChangeDelegate.Broadcast(false);
 	}
 }
 

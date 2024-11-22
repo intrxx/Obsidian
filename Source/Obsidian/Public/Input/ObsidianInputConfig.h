@@ -10,7 +10,7 @@
 class UInputAction;
 
 /**
- *	Struct used to map a input action to a gameplay tag that is used for input.
+ *	Struct used to map an input action to a gameplay tag that is used for input.
  */
 USTRUCT(Blueprintable)
 struct FObsidianInputAction
@@ -28,6 +28,7 @@ public:
 	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index, const FString& InputActionsName) const;
 #endif
 };
+
 /**
  * 
  */
@@ -46,7 +47,7 @@ public:
 	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;
 
 #if WITH_EDITOR
-	EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
 #endif
 	
 public:
