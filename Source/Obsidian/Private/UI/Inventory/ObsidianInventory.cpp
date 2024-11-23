@@ -3,3 +3,9 @@
 
 #include "UI/Inventory/ObsidianInventory.h"
 
+#include "Components/UniformGridPanel.h"
+
+void UObsidianInventory::NativeConstruct()
+{
+	Super::NativeConstruct();
+}
