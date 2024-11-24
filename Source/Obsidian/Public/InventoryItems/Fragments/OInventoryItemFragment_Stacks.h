@@ -15,10 +15,6 @@ class OBSIDIAN_API UOInventoryItemFragment_Stacks : public UObsidianInventoryIte
 {
 	GENERATED_BODY()
 
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventoryItem")
-	TMap<FGameplayTag, int32> InventoryItemStackNumbers;
-
 public:
 	//~ Start of UObsidianInventoryItemFragment
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
@@ -26,4 +22,8 @@ public:
 	
 	/** Getter for item stack number, if the Tag for Stack Count does not exist on the item, it will return the unified project default. */
 	int32 GetItemStackNumberByTag(const FGameplayTag Tag) const;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Stacks")
+	TMap<FGameplayTag, int32> InventoryItemStackNumbers;
 };

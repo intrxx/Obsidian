@@ -63,10 +63,21 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	bool HasStackCountForTag(const FGameplayTag Tag) const;
 
+	/**
+	 * Item Grid Size.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	TArray<FVector2D> GetItemGridSize() const;
+	
+	void SetItemGridSize(const TArray<FVector2D>& GridSizeToSet);
+
 private:
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
 	
 	UPROPERTY(Replicated)
 	FGameplayTagStackContainer ItemStackTags;
+
+	UPROPERTY(Replicated)
+	TArray<FVector2D> ItemGridSize;
 };

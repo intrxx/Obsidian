@@ -17,6 +17,9 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 
 	DOREPLIFETIME(ThisClass, ItemDef);
 	DOREPLIFETIME(ThisClass, ItemStackTags);
+
+	//TODO Test if this actually needs to be replicated.
+	DOREPLIFETIME(ThisClass, ItemGridSize);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -46,5 +49,15 @@ int32 UObsidianInventoryItemInstance::GetItemStackCount(const FGameplayTag Tag) 
 bool UObsidianInventoryItemInstance::HasStackCountForTag(const FGameplayTag Tag) const
 {
 	return ItemStackTags.ContainsTag(Tag);
+}
+
+TArray<FVector2D> UObsidianInventoryItemInstance::GetItemGridSize() const
+{
+	return ItemGridSize;
+}
+
+void UObsidianInventoryItemInstance::SetItemGridSize(const TArray<FVector2D>& GridSizeToSet)
+{
+	ItemGridSize = GridSizeToSet;
 }
 
