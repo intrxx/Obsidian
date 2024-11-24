@@ -9,6 +9,7 @@ void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidia
 	PlayerState = WidgetControllerParams.PlayerState;
 	AbilitySystemComponent = WidgetControllerParams.AbilitySystemComponent;
 	AttributesComponent = WidgetControllerParams.AttributesComponent;
+	InventoryComponent = WidgetControllerParams.InventoryComponent;
 }
 
 void UObsidianHeroWidgetControllerBase::OnWidgetControllerSetupCompleted()

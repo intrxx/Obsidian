@@ -18,6 +18,13 @@ class OBSIDIAN_API UObsidianInventoryComponent : public UActorComponent
 public:	
 	UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	/** Returns the Inventory Component if one exists on the specified actor, will be nullptr otherwise */
+	UFUNCTION(BlueprintPure, Category = "Obsidian|Inventory")
+	static UObsidianInventoryComponent* FindInventoryComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UObsidianInventoryComponent>() : nullptr);
+	}
+
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	int32 GetTotalItemCountByDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;

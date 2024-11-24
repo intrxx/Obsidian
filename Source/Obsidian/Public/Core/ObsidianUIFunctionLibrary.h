@@ -7,6 +7,7 @@
 #include "GameplayTags.h"
 #include "ObsidianUIFunctionLibrary.generated.h"
 
+class UObsidianInventoryWidgetController;
 class UObsidianEnemyOverlayWidgetController;
 struct FObsidianEnemyWidgetControllerParams;
 class UOCharacterStatusWidgetController;
@@ -26,6 +27,9 @@ public:
 
 	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
 	static UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
+	static UObsidianInventoryWidgetController* GetInventoryWidgetController(const UObject* WorldContextObject);
 	
 	template<typename T>
 	static T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);

@@ -8,6 +8,7 @@
 #include "Components/VerticalBox.h"
 #include "Components/WrapBox.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
+#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
@@ -39,9 +40,10 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 {
 	if(!CharacterStatus)
 	{
-		CharacterStatus = CreateWidget<UObsidianCharacterStatus>(this, CharacterStatusClass);
 		UOCharacterStatusWidgetController* CharacterStatusWidgetController = UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this);
+		CharacterStatus = CreateWidget<UObsidianCharacterStatus>(this, CharacterStatusClass);
 		CharacterStatus->SetWidgetController(CharacterStatusWidgetController);
+		
 		CharacterStatusWidgetController->SetInitialAttributeValues();
 		
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
@@ -69,8 +71,10 @@ void UObsidianMainOverlay::ToggleInventory()
 {
 	if(!Inventory)
 	{
+		UObsidianInventoryWidgetController* InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 		Inventory = CreateWidget<UObsidianInventory>(this, InventoryClass);
-
+		Inventory->SetWidgetController(InventoryWidgetController);
+		
 		Inventory_Overlay->AddChildToOverlay(Inventory);
 		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{

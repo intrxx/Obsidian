@@ -56,3 +56,28 @@ UOCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatu
 	return nullptr;
 }
 
+UObsidianInventoryWidgetController* UObsidianUIFunctionLibrary::GetInventoryWidgetController(const UObject* WorldContextObject)
+{
+	if(WorldContextObject == nullptr)
+	{
+		return nullptr;
+	}
+
+	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+	{
+		if(AObsidianHUD* ObsidianHUD = Cast<AObsidianHUD>(ObsidianPC->GetHUD()))
+		{
+			if(AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState())
+			{
+				//UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
+				//UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(ObsidianPC->GetPawn());
+				UObsidianInventoryComponent* InventoryComponent = UObsidianInventoryComponent::FindInventoryComponent(ObsidianPC->GetPawn());
+				
+				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, nullptr, nullptr, InventoryComponent);
+				return ObsidianHUD->GetInventoryWidgetController(Params);
+			}
+		}
+	}
+	return nullptr;
+}
+

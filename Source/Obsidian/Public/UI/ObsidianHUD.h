@@ -7,6 +7,7 @@
 #include "GameFramework/HUD.h"
 #include "ObsidianHUD.generated.h"
 
+class UObsidianInventoryWidgetController;
 struct FObsidianHeroWidgetControllerParams;
 class UOCharacterStatusWidgetController;
 class UObsidianHeroAttributesComponent;
@@ -25,6 +26,7 @@ class OBSIDIAN_API AObsidianHUD : public AHUD
 public:
 	UMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
 	UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	UObsidianInventoryWidgetController* GetInventoryWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
 
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
 
@@ -55,4 +57,10 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|CharacterStatus")
 	TSubclassOf<UOCharacterStatusWidgetController> CharacterStatusWidgetControllerClass;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
+	
+	UPROPERTY(EditAnywhere, Category = "ObsidianUI|Inventory")
+	TSubclassOf<UObsidianInventoryWidgetController> InventoryWidgetControllerClass;
 };

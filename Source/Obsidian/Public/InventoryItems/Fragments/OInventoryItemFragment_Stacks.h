@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName="Stacks")
 class OBSIDIAN_API UOInventoryItemFragment_Stacks : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
@@ -24,6 +24,6 @@ public:
 	int32 GetItemStackNumberByTag(const FGameplayTag Tag) const;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Stacks")
+	UPROPERTY(EditDefaultsOnly, Category = "Stacks")
 	TMap<FGameplayTag, int32> InventoryItemStackNumbers;
 };

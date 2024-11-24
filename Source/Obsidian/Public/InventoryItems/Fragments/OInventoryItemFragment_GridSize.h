@@ -43,7 +43,7 @@ enum class EObsidianInventoryItemGridSize : uint8
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName="Grid Size")
 class OBSIDIAN_API UOInventoryItemFragment_GridSize : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
@@ -55,6 +55,6 @@ public:
 
 protected:
 	/** Enum that represents the items predefined grid size, will be later mapped to the actual TArray<FVector2D> containing the 'size'. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|GridSize")
+	UPROPERTY(EditDefaultsOnly, Category = "Grid Size")
 	EObsidianInventoryItemGridSize InventoryItemGridSizeDesc = EObsidianInventoryItemGridSize::IIGS_SingleSquare;
 };
