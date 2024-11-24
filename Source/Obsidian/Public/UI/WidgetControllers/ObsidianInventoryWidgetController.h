@@ -6,6 +6,10 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryWidgetController.generated.h"
 
+class UObsidianItemWidget;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAutomaticallyAddedSignature, TSubclassOf<UObsidianItemWidget> ItemWidgetClass);
+
 /**
  * 
  */
@@ -18,4 +22,9 @@ public:
 	//~ Start of UObsidianWidgetController
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController
+
+	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance);
+
+public:
+	FOnItemAutomaticallyAddedSignature OnItemAutomaticallyAddedDelegate;
 };

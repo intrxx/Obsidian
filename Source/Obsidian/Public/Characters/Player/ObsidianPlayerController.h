@@ -29,8 +29,11 @@ public:
 	
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
-	UObsidianInventoryComponent* GetInventoryComponent() const {return InventoryComponent;}
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
+	UObsidianInventoryComponent* GetInventoryComponent() const
+	{
+		return InventoryComponent;
+	}
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianPlayerState* GetObsidianPlayerState() const;
@@ -40,7 +43,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianHUD* GetObsidianHUD() const;
-
+	
 	UFUNCTION(Client, Reliable)
 	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);
 

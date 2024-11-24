@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance);
+
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
  */
@@ -53,6 +55,9 @@ public:
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
+
+public:
+	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
 	
 private:
 	UPROPERTY(Replicated)

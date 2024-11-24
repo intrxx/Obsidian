@@ -6,7 +6,8 @@
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Appearance.generated.h"
 
-class UImage;
+class UObsidianItemWidget;
+
 /**
  * 
  */
@@ -20,7 +21,7 @@ public:
 	TObjectPtr<USkeletalMesh> SkeletalMesh;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	TObjectPtr<UImage> ItemImage;
+	TSubclassOf<UObsidianItemWidget> ItemWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	FText DisplayName;

@@ -69,10 +69,7 @@ UObsidianInventoryWidgetController* UObsidianUIFunctionLibrary::GetInventoryWidg
 		{
 			if(AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState())
 			{
-				//UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
-				//UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(ObsidianPC->GetPawn());
-				UObsidianInventoryComponent* InventoryComponent = UObsidianInventoryComponent::FindInventoryComponent(ObsidianPC->GetPawn());
-				
+				UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
 				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, nullptr, nullptr, InventoryComponent);
 				return ObsidianHUD->GetInventoryWidgetController(Params);
 			}
