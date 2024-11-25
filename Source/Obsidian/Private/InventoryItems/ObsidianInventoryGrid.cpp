@@ -66,7 +66,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 	Item = NewEntry.Instance;
 
 	GridLocationToItemMap.Add(AvailablePosition, Item);
-
+	
 	MarkItemDirty(NewEntry);
 
 	return Item;
@@ -90,6 +90,9 @@ void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 			bSuccess = true;
 		}
 	}
+	
+	const FVector2D Key = *GridLocationToItemMap.FindKey(Instance);
+	GridLocationToItemMap.Remove(Key);
 
 	if(!bSuccess)
 	{

@@ -44,6 +44,9 @@ public:
 	UObsidianInventoryItemInstance* AddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount = 1);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	bool CanAddItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance);
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd);
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
@@ -60,9 +63,12 @@ public:
 	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
 
 private:
+	FVector2D GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
+	
 	void InitInventoryState();
 	
 	void Item_MarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance);
+	void Item_UnMarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance);
 	
 private:
 	UPROPERTY(Replicated)

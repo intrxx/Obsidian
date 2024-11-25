@@ -144,9 +144,15 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(T
 	return Instance;
 }
 
+bool UObsidianInventoryComponent::CanAddItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance)
+{
+	//TODO Implement.
+	return true;
+}
+
 void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
-	InventoryGrid.AddEntry(InstanceToAdd);
+	InventoryGrid.AddEntry(InstanceToAdd); //TODO Adding instances not implemented yet.
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(InstanceToAdd);
@@ -155,7 +161,10 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
 {
+	const FVector2D FromLocation = GetItemLocationFromGrid(InstanceToRemove);
+	Item_UnMarkSpace(FromLocation, InstanceToRemove);
 	InventoryGrid.RemoveEntry(InstanceToRemove);
+	
 	if(InstanceToRemove && IsUsingRegisteredSubObjectList())
 	{
 		RemoveReplicatedSubObject(InstanceToRemove);
@@ -225,6 +234,11 @@ void UObsidianInventoryComponent::ReadyForReplication()
 	}
 }
 
+FVector2D UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const
+{
+	return ItemInstance == nullptr ? FVector2D::Zero() : *InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
+}
+
 void UObsidianInventoryComponent::InitInventoryState()
 {
 	int16 GridX = 0;
@@ -259,7 +273,16 @@ void UObsidianInventoryComponent::Item_MarkSpace(const FVector2D AtPosition, con
 		const FVector2D Location = AtPosition + LocationComp;
 		InventoryStateMap[Location] = true;
 	}
-	
+}
+
+void UObsidianInventoryComponent::Item_UnMarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance)
+{
+	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = AtPosition + LocationComp;
+		InventoryStateMap[Location] = false;
+	}
 }
 
 
