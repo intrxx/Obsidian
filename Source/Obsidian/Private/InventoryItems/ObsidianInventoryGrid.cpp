@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "InventoryItems/ObsidianInventoryList.h"
+#include "InventoryItems/ObsidianInventoryGrid.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
@@ -20,7 +20,7 @@ FString FObsidianInventoryEntry::GetDebugString() const
 
 // ---- End of FObsidianInventoryEntry ----
 
-TArray<UObsidianInventoryItemInstance*> FObsidianInventoryList::GetAllItems() const
+TArray<UObsidianInventoryItemInstance*> FObsidianInventoryGrid::GetAllItems() const
 {
 	TArray<UObsidianInventoryItemInstance*> Items;
 	Items.Reserve(Entries.Num());
@@ -35,12 +35,12 @@ TArray<UObsidianInventoryItemInstance*> FObsidianInventoryList::GetAllItems() co
 	return Items;
 }
 
-int32 FObsidianInventoryList::GetEntriesCount() const
+int32 FObsidianInventoryGrid::GetEntriesCount() const
 {
 	return Entries.Num();
 }
 
-UObsidianInventoryItemInstance* FObsidianInventoryList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount)
+UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FVector2D& AvailablePosition)
 {
 	UObsidianInventoryItemInstance* Item = nullptr;
 
@@ -65,17 +65,19 @@ UObsidianInventoryItemInstance* FObsidianInventoryList::AddEntry(const TSubclass
 	NewEntry.StackCount = StackCount;
 	Item = NewEntry.Instance;
 
+	GridLocationToItemMap.Add(AvailablePosition, Item);
+
 	MarkItemDirty(NewEntry);
 
 	return Item;
 }
 
-void FObsidianInventoryList::AddEntry(UObsidianInventoryItemInstance* Instance)
+void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance)
 {
-	//TODO currently no use for it
+	//TODO Implement when grabbing item instances
 }
 
-void FObsidianInventoryList::RemoveEntry(UObsidianInventoryItemInstance* Instance)
+void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instance)
 {
 	bool bSuccess = false;
 	for(auto It = Entries.CreateIterator(); It; ++It)
@@ -95,7 +97,7 @@ void FObsidianInventoryList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 	}
 }
 
-void FObsidianInventoryList::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
+void FObsidianInventoryGrid::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
 {
 	for(const int32 Index : RemovedIndices)
 	{
@@ -104,7 +106,7 @@ void FObsidianInventoryList::PreReplicatedRemove(const TArrayView<int32> Removed
 	}
 }
 
-void FObsidianInventoryList::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
+void FObsidianInventoryGrid::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
 {
 	for(const int32 Index : AddedIndices)
 	{
@@ -113,7 +115,7 @@ void FObsidianInventoryList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 	}
 }
 
-void FObsidianInventoryList::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
+void FObsidianInventoryGrid::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
 {
 	for(const int32 Index : ChangedIndices)
 	{

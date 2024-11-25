@@ -52,6 +52,8 @@ public:
 	//~ Start of UObsidianInventoryItemFragment
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
+	
+	TArray<FVector2D> GetItemGridSizeFromDesc() const;
 
 protected:
 	/** Enum that represents the items predefined grid size, will be later mapped to the actual TArray<FVector2D> containing the 'size'. */

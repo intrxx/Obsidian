@@ -5,29 +5,34 @@
 #include "Engine/ActorChannel.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_GridSize.h"
 #include "Net/UnrealNetwork.h"
 
 UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
-	, InventoryList(this)
+	, InventoryGrid(this)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
-
+	
 	SetIsReplicatedByDefault(true);
+	
+	InventoryGridSize = InventoryGridWidth * InventoryGridHeight;
+	
+	InitInventoryState();
 }
 
 void UObsidianInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimeProperty >& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
-	DOREPLIFETIME(ThisClass, InventoryList);
+	DOREPLIFETIME(ThisClass, InventoryGrid);
 }
 
 int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
 {
 	int32 FinalCount = 0;
-	for(const FObsidianInventoryEntry& Entry : InventoryList.Entries)
+	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
 		UObsidianInventoryItemInstance* Instance = Entry.Instance;
 
@@ -44,12 +49,12 @@ int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(TSubclassOf<UOb
 
 TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems() const
 {
-	return InventoryList.GetAllItems();
+	return InventoryGrid.GetAllItems();
 }
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackForDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
 {
-	for(const FObsidianInventoryEntry& Entry : InventoryList.Entries)
+	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
 		UObsidianInventoryItemInstance* Instance = Entry.Instance;
 
@@ -64,13 +69,46 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackF
 	return nullptr;
 }
 
-bool UObsidianInventoryComponent::CanAddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount)
+bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePosition, TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount)
 {
-	bool bCanAdd = true;
-
-	if(InventoryList.GetEntriesCount() == InventoryGridSpace)
+	bool bCanAdd = false;
+	
+	TArray<FVector2D> ItemGridSize;
+	
+	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
-		bCanAdd = false;
+		if(const UOInventoryItemFragment_GridSize* GridSizeFragment = Cast<UOInventoryItemFragment_GridSize>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_GridSize::StaticClass())))
+		{
+			ItemGridSize = GridSizeFragment->GetItemGridSizeFromDesc();
+		}
+	}
+	
+	for(FVector2D SizeComp : ItemGridSize)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("X: %f, Y: %f"), SizeComp.X, SizeComp.Y);
+	}
+	
+	for(const TTuple<FVector2D, bool>& Location : InventoryStateMap)
+	{
+		if(Location.Value == false) // Location is free
+		{
+			bool bCanFit = true;
+			for(FVector2D LocationComp : ItemGridSize)
+			{
+				const FVector2D Loc = Location.Key + LocationComp;
+				if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
+				{
+					bCanFit = false;
+					break;
+				}
+			}
+			
+			if(bCanFit) // Return if we get Available Position
+			{
+				OutAvailablePosition = Location.Key;
+				return true;
+			}
+		}
 	}
 	
 	return bCanAdd;
@@ -83,7 +121,8 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(T
 		return nullptr;
 	}
 
-	if(CanAddItemDefinition(ItemDef, StackCount) == false)
+	FVector2D AvailablePosition;
+	if(CanAddItemDefinition(AvailablePosition, ItemDef, StackCount) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		
@@ -92,7 +131,8 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(T
 		return nullptr;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = InventoryList.AddEntry(ItemDef, StackCount);
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StackCount, AvailablePosition);
+	Item_MarkSpace(AvailablePosition, Instance);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -106,7 +146,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(T
 
 void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
-	InventoryList.AddEntry(InstanceToAdd);
+	InventoryGrid.AddEntry(InstanceToAdd);
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(InstanceToAdd);
@@ -115,7 +155,7 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
 {
-	InventoryList.RemoveEntry(InstanceToRemove);
+	InventoryGrid.RemoveEntry(InstanceToRemove);
 	if(InstanceToRemove && IsUsingRegisteredSubObjectList())
 	{
 		RemoveReplicatedSubObject(InstanceToRemove);
@@ -136,7 +176,7 @@ bool UObsidianInventoryComponent::ConsumeItemsByDefinition(TSubclassOf<UObsidian
 	{
 		if(UObsidianInventoryItemInstance* Instance = FindFirstItemStackForDefinition(ItemDef))
 		{
-			InventoryList.RemoveEntry(Instance);
+			InventoryGrid.RemoveEntry(Instance);
 			++TotalConsumed;
 		}
 		else
@@ -153,7 +193,7 @@ bool UObsidianInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FO
 {
 	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
-	for(const FObsidianInventoryEntry& Entry : InventoryList.Entries)
+	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
 		UObsidianInventoryItemInstance* Instance = Entry.Instance;
 
@@ -173,7 +213,7 @@ void UObsidianInventoryComponent::ReadyForReplication()
 	// Register existing UObsidianInventoryItemInstance
 	if(IsUsingRegisteredSubObjectList())
 	{
-		for(const FObsidianInventoryEntry& Entry : InventoryList.Entries)
+		for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 		{
 			UObsidianInventoryItemInstance* Instance = Entry.Instance;
 
@@ -183,6 +223,43 @@ void UObsidianInventoryComponent::ReadyForReplication()
 			}
 		}
 	}
+}
+
+void UObsidianInventoryComponent::InitInventoryState()
+{
+	int16 GridX = 0;
+	int16 GridY = 0;
+	
+	for(int32 i = 0; i < InventoryGridSize; i++)
+	{
+		InventoryStateMap.Add(FVector2D(GridX, GridY), false);
+		
+		if(GridX == InventoryGridWidth - 1)
+		{
+			GridX = 0;
+			GridY++;
+		}
+		else
+		{
+			GridX++;
+		}
+	}
+	
+	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& ItemLoc : InventoryGrid.GridLocationToItemMap)
+	{
+		Item_MarkSpace(ItemLoc.Key, ItemLoc.Value);
+	}
+}
+
+void UObsidianInventoryComponent::Item_MarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance)
+{
+	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = AtPosition + LocationComp;
+		InventoryStateMap[Location] = true;
+	}
+	
 }
 
 

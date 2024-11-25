@@ -4,12 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Net/Serialization/FastArraySerializer.h"
-#include "ObsidianInventoryList.generated.h"
+#include "ObsidianInventoryGrid.generated.h"
 
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryComponent;
-struct FObsidianInventoryList;
+struct FObsidianInventoryGrid;
 
 /**
  * A single entry in an inventory.
@@ -24,7 +24,7 @@ struct FObsidianInventoryEntry : public FFastArraySerializerItem
 	FString GetDebugString() const;
 
 private:
-	friend FObsidianInventoryList;
+	friend FObsidianInventoryGrid;
 	friend UObsidianInventoryComponent;
 
 	UPROPERTY()
@@ -41,29 +41,29 @@ private:
  * List of inventory items.
  */
 USTRUCT(BlueprintType)
-struct FObsidianInventoryList : public FFastArraySerializer
+struct FObsidianInventoryGrid : public FFastArraySerializer
 {
 	GENERATED_BODY();
 	
 public:
-	FObsidianInventoryList()
+	FObsidianInventoryGrid()
 		: OwnerComponent(nullptr)
 	{}
 
-	FObsidianInventoryList(UActorComponent* InOwnerComponent)
+	FObsidianInventoryGrid(UActorComponent* InOwnerComponent)
 		: OwnerComponent(InOwnerComponent)
 	{}
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	int32 GetEntriesCount() const;
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FVector2D& AvailablePosition);
 	void AddEntry(UObsidianInventoryItemInstance* Instance);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryList>(Entries, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryGrid>(Entries, DeltaParams, *this);
 	}
 
 	//~ Start of FFastArraySerializer contract
@@ -78,13 +78,16 @@ private:
 	/** Replicated list of all items. */
 	UPROPERTY()
 	TArray<FObsidianInventoryEntry> Entries;
-
+	
 	UPROPERTY(NotReplicated)
 	TObjectPtr<UActorComponent> OwnerComponent;
+
+	/** Accelerated list of item location (0, 0). */
+	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 };
 
 template<>
-struct TStructOpsTypeTraits<FObsidianInventoryList> : public TStructOpsTypeTraitsBase2<FObsidianInventoryList>
+struct TStructOpsTypeTraits<FObsidianInventoryGrid> : public TStructOpsTypeTraitsBase2<FObsidianInventoryGrid>
 {
 	enum
 	{

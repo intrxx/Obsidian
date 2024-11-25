@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianInventoryList.h"
+#include "ObsidianInventoryGrid.h"
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
@@ -38,7 +38,7 @@ public:
 	UObsidianInventoryItemInstance* FindFirstItemStackForDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool CanAddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount = 1);
+	bool CanAddItemDefinition(FVector2D& OutAvailablePosition, TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount = 1);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* AddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount = 1);
@@ -58,11 +58,24 @@ public:
 
 public:
 	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
+
+private:
+	void InitInventoryState();
+	
+	void Item_MarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance);
 	
 private:
 	UPROPERTY(Replicated)
-	FObsidianInventoryList InventoryList;
+	FObsidianInventoryGrid InventoryGrid;
+
+	UPROPERTY()
+	TMap<FVector2D, bool> InventoryStateMap;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
-	int32 InventoryGridSpace = 30;
+	int32 InventoryGridWidth = 12;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
+	int32 InventoryGridHeight = 5;
+	
+	int32 InventoryGridSize = 0;
 };

@@ -28,7 +28,7 @@ struct FObsidianInventoryItemGridSize
 		TwoSquares_Vertical =
 		{
 			FVector2D(0.0f, 0.0f),
-			FVector2D(0.0f, -1.0f)
+			FVector2D(0.0f, 1.0f)
 		};
 		TwoSquares_Horizontal =
 		{
@@ -39,54 +39,54 @@ struct FObsidianInventoryItemGridSize
 		{
 			FVector2D(0.0f, 0.0f),
 			FVector2D(0.0f, 1.0f),
-			FVector2D(0.0f, -1.0f)
+			FVector2D(0.0f, 2.0f)
 		};
 		ThreeSquares_Horizontal =
 		{
 			FVector2D(0.0f, 0.0f),
 			FVector2D(1.0f, 0.0f),
-			FVector2D(-1.0f, 0.0f)
+			FVector2D(2.0f, 0.0f)
 		};
 		FourSquares_Vertical =
 		{
 			FVector2D(0.0f, 0.0f),
 			FVector2D(0.0f, 1.0f),
-			FVector2D(0.0f, -1.0f),
-			FVector2D(0.0f, -2.0f)
+			FVector2D(0.0f, 2.0f),
+			FVector2D(0.0f, 3.0f)
 		};
 		FourSquares_Horizontal =
 		{
 			FVector2D(0.0f, 0.0f),
-			FVector2D(-1.0f, 0.0f),
 			FVector2D(1.0f, 0.0f),
-			FVector2D(2.0f, 0.0f)
+			FVector2D(2.0f, 0.0f),
+			FVector2D(3.0f, 0.0f)
 		};
 		FourSquares_Square =
 		{
 			FVector2D(0.0f, 0.0f),
 			FVector2D(1.0f, 0.0f),
-			FVector2D(0.0f, -1.0f),
-			FVector2D(1.0f, -1.0f)
+			FVector2D(0.0f, 1.0f),
+			FVector2D(1.0f, 1.0f)
 		};
 		SixSquares_VerticalRectangle =
 		{
 			FVector2D(0.0f, 0.0f),
-			FVector2D(-1.0f, 0.0f),
-			FVector2D(0.0f, -1.0f),
-			FVector2D(-1.0f, -1.0f),
+			FVector2D(1.0f, 0.0f),
 			FVector2D(0.0f, 1.0f),
-			FVector2D(-1.0f, 1.0f)
+			FVector2D(1.0f, 1.0f),
+			FVector2D(0.0f, 2.0f),
+			FVector2D(1.0f, 2.0f)
 		};
 		EightSquares_VerticalRectangle =
 		{
 			FVector2D(0.0f, 0.0f),
-			FVector2D(-1.0f, 0.0f),
-			FVector2D(0.0f, -1.0f),
-			FVector2D(-1.0f, -1.0f),
+			FVector2D(1.0f, 0.0f),
 			FVector2D(0.0f, 1.0f),
-			FVector2D(-1.0f, 1.0f),
-			FVector2D(-1.0f, -2.0f),
-			FVector2D(0.0f, -2.0f)
+			FVector2D(1.0f, 1.0f),
+			FVector2D(0.0f, 2.0f),
+			FVector2D(1.0f, 2.0f),
+			FVector2D(0.0f, 3.0f),
+			FVector2D(2.0f, 3.0f)
 		};
 		
 		ItemGridSizeMap =
@@ -115,7 +115,11 @@ void UOInventoryItemFragment_GridSize::OnInstancedCreated(UObsidianInventoryItem
 {
 	if(Instance)
 	{
-		const TArray<FVector2D> ItemGridSize = ObsidianItemGridSize().ItemGridSizeMap[InventoryItemGridSizeDesc];
-		Instance->SetItemGridSize(ItemGridSize);
+		Instance->SetItemGridSize(GetItemGridSizeFromDesc());
 	}
+}
+
+TArray<FVector2D> UOInventoryItemFragment_GridSize::GetItemGridSizeFromDesc() const
+{
+	return ObsidianItemGridSize().ItemGridSizeMap[InventoryItemGridSizeDesc];
 }
