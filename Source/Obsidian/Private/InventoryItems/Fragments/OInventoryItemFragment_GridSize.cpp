@@ -16,8 +16,20 @@ struct FObsidianInventoryItemGridSize
 	TArray<FVector2D> FourSquares_Square;
 	TArray<FVector2D> SixSquares_VerticalRectangle;
 	TArray<FVector2D> EightSquares_VerticalRectangle;
+
+	FVector2D SingleSquare_GridSpan;
+	FVector2D TwoSquares_Vertical_GridSpan;
+	FVector2D TwoSquares_Horizontal_GridSpan;
+	FVector2D ThreeSquares_Vertical_GridSpan;
+	FVector2D ThreeSquares_Horizontal_GridSpan;
+	FVector2D FourSquares_Vertical_GridSpan;
+	FVector2D FourSquares_Horizontal_GridSpan;
+	FVector2D FourSquares_Square_GridSpan;
+	FVector2D SixSquares_VerticalRectangle_GridSpan;
+	FVector2D EightSquares_VerticalRectangle_GridSpan;
 	
 	TMap<EObsidianInventoryItemGridSize, TArray<FVector2D>> ItemGridSizeMap;
+	TMap<EObsidianInventoryItemGridSize, FVector2D> ItemGridSpanMap;
 
 	FObsidianInventoryItemGridSize()
 	{
@@ -102,6 +114,31 @@ struct FObsidianInventoryItemGridSize
 			{EObsidianInventoryItemGridSize::IIGS_SixSquares_VerticalRectangle, SixSquares_VerticalRectangle},
 			{EObsidianInventoryItemGridSize::IIGS_EightSquares_VerticalRectangle, EightSquares_VerticalRectangle}
 		};
+		
+		SingleSquare_GridSpan = FVector2D(1.0f, 1.0f);
+		TwoSquares_Vertical_GridSpan = FVector2D(1.0f, 2.0f);
+		TwoSquares_Horizontal_GridSpan = FVector2D(2.0f, 1.0f);
+		ThreeSquares_Vertical_GridSpan = FVector2D(1.0f, 3.0f);
+		ThreeSquares_Horizontal_GridSpan = FVector2D(3.0f, 1.0f);
+		FourSquares_Vertical_GridSpan = FVector2D(1.0f, 4.0f);
+		FourSquares_Horizontal_GridSpan = FVector2D(4.0f, 1.0f);
+		FourSquares_Square_GridSpan = FVector2D(2.0f, 2.0f);
+		SixSquares_VerticalRectangle_GridSpan = FVector2D(2.0f, 3.0f);
+		EightSquares_VerticalRectangle_GridSpan = FVector2D(2.0f, 4.0f);
+
+		ItemGridSpanMap =
+		{
+			{EObsidianInventoryItemGridSize::IIGS_SingleSquare, SingleSquare_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_TwoSquares_Vertical, TwoSquares_Vertical_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_TwoSquares_Horizontal, TwoSquares_Horizontal_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_ThreeSquares_Vertical, ThreeSquares_Vertical_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_ThreeSquares_Horizontal, ThreeSquares_Horizontal_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_FourSquares_Vertical, FourSquares_Vertical_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_FourSquares_Horizontal, FourSquares_Horizontal_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_FourSquares_Square, FourSquares_Square_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_SixSquares_VerticalRectangle, SixSquares_VerticalRectangle_GridSpan},
+			{EObsidianInventoryItemGridSize::IIGS_EightSquares_VerticalRectangle, EightSquares_VerticalRectangle_GridSpan}
+		};
 	}
 };
 
@@ -116,10 +153,16 @@ void UOInventoryItemFragment_GridSize::OnInstancedCreated(UObsidianInventoryItem
 	if(Instance)
 	{
 		Instance->SetItemGridSize(GetItemGridSizeFromDesc());
+		Instance->SetItemGridSpan(GetItemGridSpanFromDesc());
 	}
 }
 
 TArray<FVector2D> UOInventoryItemFragment_GridSize::GetItemGridSizeFromDesc() const
 {
 	return ObsidianItemGridSize().ItemGridSizeMap[InventoryItemGridSizeDesc];
+}
+
+FVector2D UOInventoryItemFragment_GridSize::GetItemGridSpanFromDesc() const
+{
+	return ObsidianItemGridSize().ItemGridSpanMap[InventoryItemGridSizeDesc];
 }

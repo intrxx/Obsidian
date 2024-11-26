@@ -2,8 +2,8 @@
 
 
 #include "UI/Inventory/ObsidianInventory.h"
-
-#include "Components/Overlay.h"
+#include "Components/GridPanel.h"
+#include "Components/GridSlot.h"
 #include "UI/Inventory/ObsidianItemWidget.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 
@@ -20,10 +20,13 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryWidgetController->OnItemAutomaticallyAddedDelegate.AddUObject(this, &ThisClass::OnItemAutomaticallyAdded);
 }
 
-void UObsidianInventory::OnItemAutomaticallyAdded(TSubclassOf<UObsidianItemWidget> ItemWidgetClass)
+void UObsidianInventory::OnItemAutomaticallyAdded(TSubclassOf<UObsidianItemWidget> ItemWidgetClass, FVector2D DesiredPosition, FVector2D GridSpan)
 {
 	check(ItemWidgetClass);
 	UObsidianItemWidget* ItemWidget = CreateWidget<UObsidianItemWidget>(this, ItemWidgetClass);
 
-	TempOverlay->AddChild(ItemWidget);
+	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.X, DesiredPosition.Y);
+	GridSlot->SetLayer(1);
+	GridSlot->SetColumnSpan(GridSpan.X);
+	GridSlot->SetRowSpan(GridSpan.Y);
 }

@@ -71,6 +71,15 @@ public:
 	
 	void SetItemGridSize(const TArray<FVector2D>& GridSizeToSet);
 
+	/**
+	 * Item Grid Span.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FVector2D GetItemGridSpan() const;
+	
+	void SetItemGridSpan(const FVector2D GridSpanToSet);
+
 private:
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
@@ -80,4 +89,7 @@ private:
 
 	UPROPERTY(Replicated)
 	TArray<FVector2D> ItemGridSize;
+
+	UPROPERTY(Replicated)
+	FVector2D ItemGridSpan;
 };

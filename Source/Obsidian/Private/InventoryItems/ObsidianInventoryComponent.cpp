@@ -139,7 +139,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(T
 		AddReplicatedSubObject(Instance);
 	}
 
-	OnItemAddedToInventoryDelegate.Broadcast(Instance);
+	OnItemAddedToInventoryDelegate.Broadcast(Instance, AvailablePosition);
 	
 	return Instance;
 }

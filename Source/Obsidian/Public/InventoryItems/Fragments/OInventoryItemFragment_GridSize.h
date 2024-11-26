@@ -54,6 +54,7 @@ public:
 	//~ End of UObsidianInventoryItemFragment
 	
 	TArray<FVector2D> GetItemGridSizeFromDesc() const;
+	FVector2D GetItemGridSpanFromDesc() const;
 
 protected:
 	/** Enum that represents the items predefined grid size, will be later mapped to the actual TArray<FVector2D> containing the 'size'. */

@@ -6,10 +6,10 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
+class UGridPanel;
 class UOverlay;
 class UObsidianItemWidget;
 class UObsidianInventoryWidgetController;
-class UUniformGridPanel;
 
 /**
  * 
@@ -26,13 +26,10 @@ public:
 	
 public:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UUniformGridPanel> Slots_GridPanel;
-	
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOverlay> TempOverlay;
+	TObjectPtr<UGridPanel> Slots_GridPanel;
 
 private:
-	void OnItemAutomaticallyAdded(TSubclassOf<UObsidianItemWidget> ItemWidgetClass);
+	void OnItemAutomaticallyAdded(TSubclassOf<UObsidianItemWidget> ItemWidgetClass, FVector2D DesiredPosition, FVector2D GridSpan);
 	
 private:
 	UPROPERTY()

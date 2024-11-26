@@ -7,7 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
 
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
