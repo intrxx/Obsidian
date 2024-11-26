@@ -25,7 +25,7 @@ void UObsidianInventory::OnItemAutomaticallyAdded(TSubclassOf<UObsidianItemWidge
 	check(ItemWidgetClass);
 	UObsidianItemWidget* ItemWidget = CreateWidget<UObsidianItemWidget>(this, ItemWidgetClass);
 
-	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.X, DesiredPosition.Y);
+	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
 	GridSlot->SetLayer(1);
 	GridSlot->SetColumnSpan(GridSpan.X);
 	GridSlot->SetRowSpan(GridSpan.Y);
