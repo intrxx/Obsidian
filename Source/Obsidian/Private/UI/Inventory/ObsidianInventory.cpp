@@ -20,10 +20,10 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryWidgetController->OnItemAutomaticallyAddedDelegate.AddUObject(this, &ThisClass::OnItemAutomaticallyAdded);
 }
 
-void UObsidianInventory::OnItemAutomaticallyAdded(TSubclassOf<UObsidianItemWidget> ItemWidgetClass, FVector2D DesiredPosition, FVector2D GridSpan)
+void UObsidianInventory::OnItemAutomaticallyAdded(UTexture2D* ItemImage, FVector2D DesiredPosition, FVector2D GridSpan)
 {
-	check(ItemWidgetClass);
 	UObsidianItemWidget* ItemWidget = CreateWidget<UObsidianItemWidget>(this, ItemWidgetClass);
+	ItemWidget->InitializeItemWidget(GridSpan, ItemImage);
 
 	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
 	GridSlot->SetLayer(1);

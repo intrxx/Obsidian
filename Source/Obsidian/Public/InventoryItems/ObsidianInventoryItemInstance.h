@@ -79,6 +79,15 @@ public:
 	FVector2D GetItemGridSpan() const;
 	
 	void SetItemGridSpan(const FVector2D GridSpanToSet);
+	
+	/**
+	 * Item Image.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UTexture2D* GetItemImage() const;
+	
+	void SetItemImage(UTexture2D* ItemImageToSet);
 
 private:
 	UPROPERTY(Replicated)
@@ -92,4 +101,7 @@ private:
 
 	UPROPERTY(Replicated)
 	FVector2D ItemGridSpan;
+
+	UPROPERTY(Replicated)
+	TObjectPtr<UTexture2D> ItemImage;
 };

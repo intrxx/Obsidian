@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemWidget.generated.h"
 
+class USizeBox;
 class UImage;
 /**
  * 
@@ -17,8 +18,20 @@ class OBSIDIAN_API UObsidianItemWidget : public UObsidianWidgetBase
 
 public:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+
+	void InitializeItemWidget(const FVector2D& ItemGridSpan, UTexture2D* ItemImage) const;
 	
 public:
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<USizeBox> Root_SizeBox;
+	
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	float WidthConstant = 64.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	float HeightConstant = 64.0f;
 };

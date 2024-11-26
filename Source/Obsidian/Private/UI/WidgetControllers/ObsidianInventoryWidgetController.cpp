@@ -15,11 +15,6 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition)
 {
 	check(ItemInstance);
-
-	//TODO Fix later, pass the widget onto the instance itself,
-	//maybe not use a widget but texture for the image, construct some regular widget and sets its desired size based on GridSpan
-	const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(
-		ItemInstance->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
-
-	OnItemAutomaticallyAddedDelegate.Broadcast(Appearance->ItemWidgetClass, DesiredPosition, ItemInstance->GetItemGridSpan());
+	
+	OnItemAutomaticallyAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
 }

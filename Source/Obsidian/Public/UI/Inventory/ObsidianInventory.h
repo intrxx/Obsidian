@@ -29,9 +29,13 @@ public:
 	TObjectPtr<UGridPanel> Slots_GridPanel;
 
 private:
-	void OnItemAutomaticallyAdded(TSubclassOf<UObsidianItemWidget> ItemWidgetClass, FVector2D DesiredPosition, FVector2D GridSpan);
+	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
+	void OnItemAutomaticallyAdded(UTexture2D* ItemImage, FVector2D DesiredPosition, FVector2D GridSpan);
 	
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UObsidianItemWidget> ItemWidgetClass;
 };

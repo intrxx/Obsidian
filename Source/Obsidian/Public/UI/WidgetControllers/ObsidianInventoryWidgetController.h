@@ -8,7 +8,7 @@
 
 class UObsidianItemWidget;
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAutomaticallyAddedSignature, TSubclassOf<UObsidianItemWidget> ItemWidgetClass, FVector2D DesiredPosition, FVector2D GridSpan);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAutomaticallyAddedSignature, UTexture2D* ItemImage, FVector2D DesiredPosition, FVector2D GridSpan);
 
 /**
  * 

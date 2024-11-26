@@ -21,6 +21,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	//TODO Test if this actually needs to be replicated.
 	DOREPLIFETIME(ThisClass, ItemGridSize);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
+	DOREPLIFETIME(ThisClass, ItemImage);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -70,5 +71,15 @@ FVector2D UObsidianInventoryItemInstance::GetItemGridSpan() const
 void UObsidianInventoryItemInstance::SetItemGridSpan(const FVector2D GridSpanToSet)
 {
 	ItemGridSpan = GridSpanToSet;
+}
+
+UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const
+{
+	return ItemImage;
+}
+
+void UObsidianInventoryItemInstance::SetItemImage(UTexture2D* ItemImageToSet)
+{
+	ItemImage = ItemImageToSet;
 }
 

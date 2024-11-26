@@ -17,11 +17,14 @@ class OBSIDIAN_API UOInventoryItemFragment_Appearance : public UObsidianInventor
 	GENERATED_BODY()
 
 public:
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
+	
+public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TObjectPtr<USkeletalMesh> SkeletalMesh;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	TSubclassOf<UObsidianItemWidget> ItemWidgetClass;
+	TObjectPtr<UTexture2D> ItemImage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	FText DisplayName;
