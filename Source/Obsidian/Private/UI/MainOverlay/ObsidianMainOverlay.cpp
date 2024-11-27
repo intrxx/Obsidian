@@ -85,6 +85,8 @@ void UObsidianMainOverlay::ToggleInventory()
 				Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
 			}
 		});
+
+		InventoryWidgetController->OnInventoryOpen();
 	}
 	else
 	{

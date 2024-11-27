@@ -25,6 +25,11 @@ public:
 
 	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
 
+	void OnInventoryOpen();
+
 public:
 	FOnItemAutomaticallyAddedSignature OnItemAutomaticallyAddedDelegate;
+	
+private:
+	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 };

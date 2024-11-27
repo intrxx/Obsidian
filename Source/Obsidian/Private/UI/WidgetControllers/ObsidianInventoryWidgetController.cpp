@@ -3,7 +3,6 @@
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 
 void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
@@ -17,4 +16,15 @@ void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInsta
 	check(ItemInstance);
 	
 	OnItemAutomaticallyAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
+	GridLocationToItemMap.Add(DesiredPosition, ItemInstance);
+}
+
+void UObsidianInventoryWidgetController::OnInventoryOpen()
+{
+	//TODO This really needs profiling, for now let it be this way
+	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
+	{
+		OnItemAutomaticallyAddedDelegate.Broadcast(LocToInstancePair.Value->GetItemImage(), LocToInstancePair.Key,
+			LocToInstancePair.Value->GetItemGridSpan());
+	}
 }

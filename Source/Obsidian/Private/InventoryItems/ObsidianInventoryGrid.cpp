@@ -68,9 +68,8 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 #if !UE_BUILD_SHIPPING
 	if(GridLocationToItemMap.Contains(AvailablePosition))
 	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already
-			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y),
-			 ELogVerbosity::Error);
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already"
+			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y), ELogVerbosity::Error);
 	}
 #endif
 
@@ -89,9 +88,8 @@ void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance, 
 #if !UE_BUILD_SHIPPING
 	if(GridLocationToItemMap.Contains(AvailablePosition))
 	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already
-			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y),
-			 ELogVerbosity::Error);
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already"
+			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y), ELogVerbosity::Error);
 	}
 #endif
 

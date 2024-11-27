@@ -6,6 +6,7 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
+class UObsidianInventoryItemInstance;
 class UGridPanel;
 class UOverlay;
 class UObsidianItemWidget;
@@ -23,7 +24,7 @@ public:
 	virtual void NativeConstruct() override;
 
 	virtual void HandleWidgetControllerSet() override;
-	
+
 public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UGridPanel> Slots_GridPanel;
