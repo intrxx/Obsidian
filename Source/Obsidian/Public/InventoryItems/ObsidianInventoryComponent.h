@@ -69,6 +69,9 @@ private:
 	
 	void Item_MarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance);
 	void Item_UnMarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance);
+
+	/** Checks if the item  */
+	bool CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition);
 	
 private:
 	UPROPERTY(Replicated)

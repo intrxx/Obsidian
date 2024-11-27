@@ -64,6 +64,15 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 
 	NewEntry.StackCount = StackCount;
 	Item = NewEntry.Instance;
+	
+#if !UE_BUILD_SHIPPING
+	if(GridLocationToItemMap.Contains(AvailablePosition))
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already
+			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y),
+			 ELogVerbosity::Error);
+	}
+#endif
 
 	GridLocationToItemMap.Add(AvailablePosition, Item);
 	
@@ -72,9 +81,25 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 	return Item;
 }
 
-void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance)
+void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance, const FVector2D& AvailablePosition)
 {
-	//TODO Implement when grabbing item instances
+	check(Instance != nullptr);
+	check(OwnerComponent);
+
+#if !UE_BUILD_SHIPPING
+	if(GridLocationToItemMap.Contains(AvailablePosition))
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already
+			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y),
+			 ELogVerbosity::Error);
+	}
+#endif
+
+	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(Instance);
+	
+	GridLocationToItemMap.Add(AvailablePosition, Instance);
+	
+	MarkItemDirty(NewEntry);
 }
 
 void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instance)

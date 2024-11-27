@@ -19,7 +19,12 @@ struct FObsidianInventoryEntry : public FFastArraySerializerItem
 {
 	GENERATED_BODY();
 	
-	FObsidianInventoryEntry(){}
+	FObsidianInventoryEntry()
+		: Instance(nullptr)
+	{}
+	FObsidianInventoryEntry(UObsidianInventoryItemInstance* InInstance)
+		: Instance(InInstance)
+	{}
 
 	FString GetDebugString() const;
 
@@ -28,7 +33,7 @@ private:
 	friend UObsidianInventoryComponent;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemInstance> Instance = nullptr;
+	TObjectPtr<UObsidianInventoryItemInstance> Instance;
 
 	UPROPERTY()
 	int32 StackCount = 0;
@@ -58,7 +63,7 @@ public:
 	int32 GetEntriesCount() const;
 
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FVector2D& AvailablePosition);
-	void AddEntry(UObsidianInventoryItemInstance* Instance);
+	void AddEntry(UObsidianInventoryItemInstance* Instance, const FVector2D& AvailablePosition);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)

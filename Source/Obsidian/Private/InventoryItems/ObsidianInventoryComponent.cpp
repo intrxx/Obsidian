@@ -73,44 +73,16 @@ bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePo
 {
 	bool bCanAdd = false;
 	
-	TArray<FVector2D> ItemGridSize;
-	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
 		if(const UOInventoryItemFragment_GridSize* GridSizeFragment = Cast<UOInventoryItemFragment_GridSize>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_GridSize::StaticClass())))
 		{
-			ItemGridSize = GridSizeFragment->GetItemGridSizeFromDesc();
+			const TArray<FVector2D> ItemGridSize = GridSizeFragment->GetItemGridSizeFromDesc();
+
+			bCanAdd = CheckAvailablePosition(ItemGridSize, OutAvailablePosition);
+			return bCanAdd;
 		}
 	}
-	
-	for(FVector2D SizeComp : ItemGridSize)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("X: %f, Y: %f"), SizeComp.X, SizeComp.Y);
-	}
-	
-	for(const TTuple<FVector2D, bool>& Location : InventoryStateMap)
-	{
-		if(Location.Value == false) // Location is free
-		{
-			bool bCanFit = true;
-			for(FVector2D LocationComp : ItemGridSize)
-			{
-				const FVector2D Loc = Location.Key + LocationComp;
-				if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
-				{
-					bCanFit = false;
-					break;
-				}
-			}
-			
-			if(bCanFit) // Return if we get Available Position
-			{
-				OutAvailablePosition = Location.Key;
-				return true;
-			}
-		}
-	}
-	
 	return bCanAdd;
 }
 
@@ -146,17 +118,31 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(T
 
 bool UObsidianInventoryComponent::CanAddItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance)
 {
-	//TODO Implement.
-	return true;
+	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
+	
+	const bool bCanAdd = CheckAvailablePosition(ItemGridSize, OutAvailablePosition);
+	return bCanAdd;
 }
 
 void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
-	InventoryGrid.AddEntry(InstanceToAdd); //TODO Adding instances not implemented yet.
+	FVector2D AvailablePosition;
+	if(CanAddItemInstance(AvailablePosition, InstanceToAdd) == false)
+	{
+		//TODO Inventory is full, add voice over?
+		
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
+			FString::Printf(TEXT("Inventory is full!")));
+		return;
+	}
+	
+	InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(InstanceToAdd);
 	}
+
+	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, AvailablePosition);
 }
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
@@ -188,12 +174,14 @@ bool UObsidianInventoryComponent::ConsumeItemsByDefinition(TSubclassOf<UObsidian
 			InventoryGrid.RemoveEntry(Instance);
 			++TotalConsumed;
 		}
+#if !UE_BUILD_SHIPPING
 		else
 		{
 			FFrame::KismetExecutionMessage(TEXT("Provided NumberOfItemsToConsume is greater than the instances of the item, or the Instance is invalid"),
 				ELogVerbosity::Warning);
 			return false;
 		}
+#endif
 	}
 	return TotalConsumed == NumberOfItemsToConsume;
 }
@@ -271,7 +259,17 @@ void UObsidianInventoryComponent::Item_MarkSpace(const FVector2D AtPosition, con
 	for(const FVector2D LocationComp : ItemGridSize)
 	{
 		const FVector2D Location = AtPosition + LocationComp;
-		InventoryStateMap[Location] = true;
+		if(InventoryStateMap.Contains(Location))
+		{
+			InventoryStateMap[Location] = true;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
+			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
+		}
+#endif
 	}
 }
 
@@ -281,8 +279,48 @@ void UObsidianInventoryComponent::Item_UnMarkSpace(const FVector2D AtPosition, c
 	for(const FVector2D LocationComp : ItemGridSize)
 	{
 		const FVector2D Location = AtPosition + LocationComp;
-		InventoryStateMap[Location] = false;
+		if(InventoryStateMap.Contains(Location))
+		{
+			InventoryStateMap[Location] = false;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
+			"exist in the InventoryStateMap in UObsidianInventoryComponent::Item_UnMarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
+		}
+#endif
 	}
+}
+
+bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition)
+{
+	bool bCanFit = true;
+	
+	for(const TTuple<FVector2D, bool>& Location : InventoryStateMap)
+	{
+		if(Location.Value == false) // Location is free
+		{
+			bCanFit = true;
+			for(FVector2D LocationComp : ItemGridSize)
+			{
+				const FVector2D Loc = Location.Key + LocationComp;
+				if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
+				{
+					bCanFit = false;
+					break;
+				}
+			}
+			
+			if(bCanFit) // Return if we get Available Position
+			{
+				OutAvailablePosition = Location.Key;
+				return bCanFit;
+			}
+		}
+	}
+
+	return bCanFit;
 }
 
 
