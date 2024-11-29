@@ -7,7 +7,10 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
+class UObsidianInventoryWidgetController;
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance,
+                                     FVector2D DesiredPosition);
 
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
@@ -72,8 +75,13 @@ private:
 
 	/** Checks if the item  */
 	bool CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition);
+
+	/** Internal usage only, this returns the internal Location To Instance Map. */
+	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
 	
 private:
+	friend UObsidianInventoryWidgetController;
+	
 	UPROPERTY(Replicated)
 	FObsidianInventoryGrid InventoryGrid;
 

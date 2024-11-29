@@ -44,6 +44,11 @@ int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(const TSubclass
 	return FinalCount;
 }
 
+TMap<FVector2D, UObsidianInventoryItemInstance*> UObsidianInventoryComponent::Internal_GetLocationToInstanceMap()
+{
+	return InventoryGrid.GridLocationToItemMap;
+}
+
 TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems() const
 {
 	return InventoryGrid.GetAllItems();

@@ -2,6 +2,7 @@
 
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+#include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
@@ -9,6 +10,9 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	check(InventoryComponent);
 
 	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::OnItemAdded);
+
+	/** When creating the widget controller for the first time, we need to fill it with data from the component. */
+	GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
 }
 
 void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)

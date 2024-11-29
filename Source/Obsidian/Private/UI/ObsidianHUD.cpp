@@ -52,7 +52,7 @@ UObsidianInventoryWidgetController* AObsidianHUD::GetInventoryWidgetController(c
 			InventoryWidgetController = NewObject<UObsidianInventoryWidgetController>(this, InventoryWidgetControllerClass);
 			InventoryWidgetController->SetWidgetControllerParams(WidgetControllerParams);
 			InventoryWidgetController->OnWidgetControllerSetupCompleted();
-
+			
 			return InventoryWidgetController;
 		}
 	}
