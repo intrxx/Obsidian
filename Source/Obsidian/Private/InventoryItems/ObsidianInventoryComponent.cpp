@@ -11,12 +11,12 @@
 UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, InventoryGrid(this)
+	, InventoryGridSize(InventoryGridWidth * InventoryGridHeight)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 	SetIsReplicatedByDefault(true);
 	
-	InventoryGridSize = InventoryGridWidth * InventoryGridHeight;
 	InitInventoryState();
 }
 

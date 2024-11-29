@@ -6,7 +6,10 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianInventorySlot.generated.h"
 
+DECLARE_MULTICAST_DELEGATE(FOnHoverOverSlotSignature)
+
 class UImage;
+
 /**
  * 
  */
@@ -18,4 +21,9 @@ class OBSIDIAN_API UObsidianInventorySlot : public UObsidianWidgetBase
 public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> ItemImage_Image;
+
+	FOnHoverOverSlotSignature OnHoverOverSlotDelegate;
+
+protected:
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 };

@@ -7,18 +7,20 @@
 
 FReply UObsidianItemWidget::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
+	// InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton) - I don't know what is the difference, leaving it here for now
+	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("You just clicked on an item!"));	
+		OnItemLeftMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition);
 	}
 
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void UObsidianItemWidget::InitializeItemWidget(const FVector2D& ItemGridSpan, UTexture2D* ItemImage) const
+void UObsidianItemWidget::InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * WidthConstant);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
-
 	Item_Image->SetBrushFromTexture(ItemImage);
+
+	ItemDesiredPosition = DesiredPosition;
 }

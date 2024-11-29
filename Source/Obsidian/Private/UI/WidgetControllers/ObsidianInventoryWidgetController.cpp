@@ -11,7 +11,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 
 	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 
-	/** When creating the widget controller for the first time, we need to fill it with data from the component. */
+	// When creating the widget controller for the first time, we need to fill it with data from the component.
 	GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
 }
 
