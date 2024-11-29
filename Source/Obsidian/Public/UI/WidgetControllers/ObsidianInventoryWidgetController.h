@@ -8,7 +8,7 @@
 
 class UObsidianItemWidget;
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAutomaticallyAddedSignature, UTexture2D* ItemImage, FVector2D DesiredPosition, FVector2D GridSpan);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAutomaticallyAddedSignature, UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
 
 /**
  * 
@@ -23,7 +23,7 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController
 
-	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
+	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
 
 	void OnInventoryOpen();
 

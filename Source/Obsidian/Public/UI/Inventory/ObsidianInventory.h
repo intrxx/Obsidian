@@ -31,7 +31,7 @@ public:
 
 private:
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
-	void OnItemAutomaticallyAdded(UTexture2D* ItemImage, FVector2D DesiredPosition, FVector2D GridSpan);
+	void OnItemAutomaticallyAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
 	
 private:
 	UPROPERTY()

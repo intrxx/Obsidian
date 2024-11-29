@@ -14,11 +14,9 @@ UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitialize
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
-	
 	SetIsReplicatedByDefault(true);
 	
 	InventoryGridSize = InventoryGridWidth * InventoryGridHeight;
-	
 	InitInventoryState();
 }
 
@@ -29,13 +27,12 @@ void UObsidianInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimePr
 	DOREPLIFETIME(ThisClass, InventoryGrid);
 }
 
-int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
+int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const
 {
 	int32 FinalCount = 0;
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
 		UObsidianInventoryItemInstance* Instance = Entry.Instance;
-
 		if(IsValid(Instance))
 		{
 			if(Instance->GetItemDef() == ItemDef)
@@ -52,12 +49,11 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems
 	return InventoryGrid.GetAllItems();
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackForDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
 {
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
 		UObsidianInventoryItemInstance* Instance = Entry.Instance;
-
 		if(IsValid(Instance))
 		{
 			if(Instance->GetItemDef() == ItemDef)
@@ -69,7 +65,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackF
 	return nullptr;
 }
 
-bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePosition, TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount)
+bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, int32 StackCount)
 {
 	bool bCanAdd = false;
 	
@@ -86,7 +82,7 @@ bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePo
 	return bCanAdd;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount)
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
 	if(ItemDef == nullptr)
 	{
@@ -97,7 +93,6 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(T
 	if(CanAddItemDefinition(AvailablePosition, ItemDef, StackCount) == false)
 	{
 		//TODO Inventory is full, add voice over?
-		
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
 			FString::Printf(TEXT("Inventory is full!")));
 		return nullptr;
@@ -157,7 +152,7 @@ void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInsta
 	}
 }
 
-bool UObsidianInventoryComponent::ConsumeItemsByDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 NumberOfItemsToConsume)
+bool UObsidianInventoryComponent::ConsumeItemsByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 NumberOfItemsToConsume)
 {
 	AActor* OwningActor = GetOwner();
 	if(OwningActor == nullptr || OwningActor->HasAuthority() == false)

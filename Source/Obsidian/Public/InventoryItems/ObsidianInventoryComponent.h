@@ -29,19 +29,19 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
-	int32 GetTotalItemCountByDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
+	int32 GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Obsidian|Inventory")
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* FindFirstItemStackForDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
+	UObsidianInventoryItemInstance* FindFirstItemStackForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool CanAddItemDefinition(FVector2D& OutAvailablePosition, TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount = 1);
+	bool CanAddItemDefinition(FVector2D& OutAvailablePosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, int32 StackCount = 1);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* AddItemDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32 StackCount = 1);
+	UObsidianInventoryItemInstance* AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount = 1);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool CanAddItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance);
@@ -52,7 +52,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
-	bool ConsumeItemsByDefinition(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 NumberOfItemsToConsume);
+	bool ConsumeItemsByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 NumberOfItemsToConsume);
 	
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

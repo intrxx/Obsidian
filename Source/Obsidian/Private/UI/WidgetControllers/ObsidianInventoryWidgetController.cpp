@@ -11,7 +11,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 }
 
-void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition)
+void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
 {
 	check(ItemInstance);
 	
