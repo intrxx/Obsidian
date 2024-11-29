@@ -132,6 +132,9 @@ private:
 	TObjectPtr<UObsidianPassiveSkillTree> PassiveSkillTree;
 	
 	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
 	
 private:
 	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);

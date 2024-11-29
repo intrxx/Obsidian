@@ -19,6 +19,12 @@ class OBSIDIAN_API UObsidianInventoryWidgetController : public UObsidianHeroWidg
 	GENERATED_BODY()
 
 public:
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	void SetInventoryOpened(const bool bInOpened)
+	{
+		bInventoryOpened = bInOpened;
+	}
+	
 	//~ Start of UObsidianWidgetController
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController
@@ -32,4 +38,6 @@ public:
 	
 private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
+
+	bool bInventoryOpened = false;
 };

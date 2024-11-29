@@ -71,7 +71,7 @@ void UObsidianMainOverlay::ToggleInventory()
 {
 	if(!Inventory)
 	{
-		UObsidianInventoryWidgetController* InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
+		InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 		Inventory = CreateWidget<UObsidianInventory>(this, InventoryClass);
 		Inventory->SetWidgetController(InventoryWidgetController);
 		
@@ -87,12 +87,17 @@ void UObsidianMainOverlay::ToggleInventory()
 		});
 
 		InventoryWidgetController->OnInventoryOpen();
+		InventoryWidgetController->SetInventoryOpened(true);
 	}
 	else
 	{
 		Inventory->RemoveFromParent();
 		Inventory = nullptr;
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
+		if(InventoryWidgetController)
+		{
+			InventoryWidgetController->SetInventoryOpened(false);
+		}
 	}
 }
 

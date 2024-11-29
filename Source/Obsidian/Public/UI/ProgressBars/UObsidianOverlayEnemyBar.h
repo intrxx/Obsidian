@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
 #include "UObsidianOverlayEnemyBar.generated.h"
 
