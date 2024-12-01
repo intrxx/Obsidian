@@ -23,7 +23,7 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	
 	ItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("ItemNameWidgetComponent"));
 	ItemNameWidgetComp->SetupAttachment(GetRootComponent());
-	ItemNameWidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 30.0f));
+	ItemNameWidgetComp->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));
 	ItemNameWidgetComp->SetDrawAtDesiredSize(true);
 	ItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	ItemNameWidgetComp->SetupAttachment(StaticMeshComp);
