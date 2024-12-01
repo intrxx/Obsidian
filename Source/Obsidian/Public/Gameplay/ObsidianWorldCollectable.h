@@ -3,17 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "ObsidianPickableInterface.h"
+#include "InventoryItems/ObsidianPickableInterface.h"
 #include "GameFramework/Actor.h"
-#include "ObsidianDroppable.generated.h"
+#include "ObsidianWorldCollectable.generated.h"
 
 UCLASS()
-class OBSIDIAN_API AObsidianDroppable : public AActor, public IObsidianPickableInterface
+class OBSIDIAN_API AObsidianWorldCollectable : public AActor, public IObsidianPickableInterface
 {
 	GENERATED_BODY()
 	
 public:	
-	AObsidianDroppable(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual FPickupContent GetPickupContent() const override;
 	

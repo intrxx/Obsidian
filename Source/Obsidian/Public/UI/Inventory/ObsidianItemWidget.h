@@ -20,8 +20,6 @@ class OBSIDIAN_API UObsidianItemWidget : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-
 	void InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage);
 	
 public:
@@ -36,7 +34,10 @@ public:
 	TObjectPtr<UImage> Visibility_Image;
 
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
-
+	
+protected:
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float WidthConstant = 64.0f;

@@ -1,6 +1,5 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
