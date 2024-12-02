@@ -63,6 +63,9 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if(ObsidianPC)
 	{
+		ENetRole NetRole = GetLocalRole();
+		UE_LOG(LogTemp, Warning, TEXT("Role: %d"), NetRole);
+		
 		UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
 		InventoryComponent->AddItemDefinition(GetPickupContent().Templates[0].ItemDef, GetPickupContent().Templates[0].StackCount);
 	}
