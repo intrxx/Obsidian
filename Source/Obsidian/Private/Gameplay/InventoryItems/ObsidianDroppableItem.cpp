@@ -2,13 +2,17 @@
 
 
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
-
+#include "UI/Inventory/ObsidianItemDragDropOperation.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/WidgetComponent.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
+#include "UI/Inventory/ObsidianDraggedItem.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Inventory/ObsidianGroundItemDesc.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+#include "UI/ObsidianHUD.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -60,13 +64,36 @@ void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)
 void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 {
 	//TODO Temp
-	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	if(ObsidianPC)
+	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
 	{
+		// Debug
 		ENetRole NetRole = GetLocalRole();
 		UE_LOG(LogTemp, Warning, TEXT("Role: %d"), NetRole);
-		
-		UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
-		InventoryComponent->AddItemDefinition(GetPickupContent().Templates[0].ItemDef, GetPickupContent().Templates[0].StackCount);
+
+		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
+		{
+			FPickupContent PickupContent = GetPickupContent();
+			const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef;
+			const int32 StackCount = PickupContent.Templates[0].StackCount;
+			
+			if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
+			{
+				UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+				DraggedItem->InitializeItemWidget(PickupItemDef, StackCount);
+				DraggedItem->AddToViewport();
+
+				// Maybe create widget component on Players cursor and add the widget to the widget component?
+				// Explore some way to maybe create a tickable subsystem to control the widget? PC seems better tho.
+				// Maybe take it from Pc to Hero comp.
+
+				UDragDropOperation* DragDropOperation = UWidgetBlueprintLibrary::CreateDragDropOperation(UObsidianItemDragDropOperation::StaticClass());
+				DragDropOperation->DefaultDragVisual = DraggedItem;
+				
+				return;
+			}
+			
+			UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
+			InventoryComponent->AddItemDefinition(PickupItemDef, StackCount);
+		}
 	}
 }

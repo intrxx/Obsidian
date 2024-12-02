@@ -38,7 +38,7 @@ void AObsidianItemSpawner::BeginPlay()
 
 void AObsidianItemSpawner::OnMeshClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
 {
-	//TODO This probably will be replaced by cursor trace from the hero comp
+	// TODO This probably will be replaced by cursor trace from the hero comp
 	if(ButtonPressed != EKeys::LeftMouseButton)
 	{
 		return;

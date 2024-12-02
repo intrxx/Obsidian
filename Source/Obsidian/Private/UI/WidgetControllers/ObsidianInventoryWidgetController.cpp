@@ -19,10 +19,7 @@ void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInsta
 {
 	check(ItemInstance);
 	
-	if(bInventoryOpened == false) // Automatically add when inventory is closed.
-	{
-		OnItemAutomaticallyAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
-	}
+	OnItemAutomaticallyAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
 	
 	GridLocationToItemMap.Add(DesiredPosition, ItemInstance);
 }

@@ -110,3 +110,12 @@ void AObsidianHUD::TogglePassiveSkillTree() const
 	}
 }
 
+bool AObsidianHUD::IsInventoryOpened()
+{
+	if(InventoryWidgetController)
+	{
+		return InventoryWidgetController->GetInventoryOpened();
+	}
+	return false;
+}
+

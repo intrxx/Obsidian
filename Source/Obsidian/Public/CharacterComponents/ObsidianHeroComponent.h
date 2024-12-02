@@ -74,7 +74,5 @@ private:
 	
 	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
-
-	
 };
 

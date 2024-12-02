@@ -25,6 +25,12 @@ public:
 		bInventoryOpened = bInOpened;
 	}
 	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	bool GetInventoryOpened() const
+	{
+		return bInventoryOpened;
+	}
+	
 	//~ Start of UObsidianWidgetController
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController

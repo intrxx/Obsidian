@@ -6,6 +6,8 @@
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
 
+class UObsidianItemDragDropOperation;
+class UObsidianDraggedItem;
 class UObsidianGroundItemDesc;
 class  UWidgetComponent;
 
@@ -35,4 +37,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianGroundItemDesc> GroundItemDescClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianItemDragDropOperation> DragDropOperationClass;
 };

@@ -14,16 +14,29 @@ void UObsidianGroundItemDesc::NativeConstruct()
 	}
 }
 
-FReply UObsidianGroundItemDesc::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianGroundItemDesc::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	//TODO Maybe some widget animation
-	
+	UE_LOG(LogTemp, Warning, TEXT("YO mouse down"));
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		OnItemDescMouseButtonDownDelegate.Broadcast();
+
+		//const TSharedRef<SWidget> SlateWidget = TakeWidget();
+		//return FReply::Handled()
+		//	.DetectDrag(SlateWidget, EKeys::LeftMouseButton)
+		//	.CaptureMouse(SlateWidget)
+		//	.SetUserFocus(SlateWidget, EFocusCause::Mouse);
 	}
+
+	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
+}
+
+void UObsidianGroundItemDesc::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
+{
+	UE_LOG(LogTemp, Warning, TEXT("YO dragged"));
 	
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
 }
 
 void UObsidianGroundItemDesc::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
