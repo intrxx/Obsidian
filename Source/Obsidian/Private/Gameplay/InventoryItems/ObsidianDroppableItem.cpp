@@ -85,9 +85,6 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 				// Maybe create widget component on Players cursor and add the widget to the widget component?
 				// Explore some way to maybe create a tickable subsystem to control the widget? PC seems better tho.
 				// Maybe take it from Pc to Hero comp.
-
-				UDragDropOperation* DragDropOperation = UWidgetBlueprintLibrary::CreateDragDropOperation(UObsidianItemDragDropOperation::StaticClass());
-				DragDropOperation->DefaultDragVisual = DraggedItem;
 				
 				return;
 			}

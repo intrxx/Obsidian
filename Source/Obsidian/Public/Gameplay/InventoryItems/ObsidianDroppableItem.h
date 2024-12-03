@@ -40,7 +40,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObsidianItemDragDropOperation> DragDropOperationClass;
 };
