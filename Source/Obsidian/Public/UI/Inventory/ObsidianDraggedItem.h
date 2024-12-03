@@ -19,7 +19,7 @@ class OBSIDIAN_API UObsidianDraggedItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidget(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 Stacks);
+	void InitializeItemWidget(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks);
 	
 	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const
 	{

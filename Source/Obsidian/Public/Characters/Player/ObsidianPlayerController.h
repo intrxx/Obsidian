@@ -6,16 +6,16 @@
 #include "GameFramework/PlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
-class UObsidianInventoryComponent;
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnEnemyActorHovered, AActor*, TargetActor, const bool, bHoveredOver);
-DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, const bool, bSeen);
-
 struct FObsidianDamageTextProps;
 class AObsidianCharacterBase;
 class UObsidianDamageNumberWidgetComp;
 class AObsidianHUD;
 class UObsidianAbilitySystemComponent;
 class AObsidianPlayerState;
+class UObsidianInventoryComponent;
+
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnEnemyActorHovered, AActor*, TargetActor, const bool, bHoveredOver);
+DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, const bool, bSeen);
 
 /**
  * Base class for Obsidian player characters player controller.
@@ -60,7 +60,6 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Cursor")
 	TObjectPtr<UUserWidget> DefaultCursor;
-
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DamageNumber")

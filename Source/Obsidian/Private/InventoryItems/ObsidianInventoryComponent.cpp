@@ -87,6 +87,23 @@ bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePo
 	return bCanAdd;
 }
 
+bool UObsidianInventoryComponent::CanAddItemDefinitionAtSpecifiedSlot(const FVector2D& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, int32 StackCount)
+{
+	bool bCanAdd = false;
+	
+	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+	{
+		if(const UOInventoryItemFragment_GridSize* GridSizeFragment = Cast<UOInventoryItemFragment_GridSize>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_GridSize::StaticClass())))
+		{
+			const TArray<FVector2D> ItemGridSize = GridSizeFragment->GetItemGridSizeFromDesc();
+
+			bCanAdd = CheckSpecifiedPosition(ItemGridSize, SpecifiedSlot);
+			return bCanAdd;
+		}
+	}
+	return bCanAdd;
+}
+
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
 	if(ItemDef == nullptr)
@@ -112,6 +129,34 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	}
 
 	OnItemAddedToInventoryDelegate.Broadcast(Instance, AvailablePosition);
+	
+	return Instance;
+}
+
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, const int32 StackCount)
+{
+	if(ItemDef == nullptr)
+	{
+		return nullptr;
+	}
+	
+	if(CanAddItemDefinitionAtSpecifiedSlot(ToSlot, ItemDef, StackCount) == false)
+	{
+		//TODO Inventory is full, add voice over?
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
+			FString::Printf(TEXT("Inventory is full at specified slot!")));
+		return nullptr;
+	}
+
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StackCount, ToSlot);
+	Item_MarkSpace(ToSlot, Instance);
+	
+	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(Instance);
+	}
+
+	OnItemAddedToInventoryDelegate.Broadcast(Instance, ToSlot);
 	
 	return Instance;
 }
@@ -295,7 +340,7 @@ void UObsidianInventoryComponent::Item_UnMarkSpace(const FVector2D AtPosition, c
 
 bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition)
 {
-	bool bCanFit = true;
+	bool bCanFit = true; //TODO shouldn't it be false?
 	
 	for(const TTuple<FVector2D, bool>& Location : InventoryStateMap)
 	{
@@ -320,6 +365,26 @@ bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FVector2D>
 		}
 	}
 
+	return bCanFit;
+}
+
+bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>& ItemGridSize, const FVector2D& SpecifiedPosition)
+{
+	bool bCanFit = false;
+	
+	if(InventoryStateMap[SpecifiedPosition] == false) // Initial location is free
+	{
+		bCanFit = true;
+		for(FVector2D LocationComp : ItemGridSize)
+		{
+			const FVector2D Loc = SpecifiedPosition + LocationComp;
+			if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
+			{
+				bCanFit = false;
+				break;
+			}
+		}
+	}
 	return bCanFit;
 }
 

@@ -50,7 +50,9 @@ void UObsidianInventory::SetupGrid()
 	for(int32 i = 0; i < InventoryGridSize; i++)
 	{
 		UObsidianInventorySlot* InventorySlot = CreateWidget<UObsidianInventorySlot>(this, InventorySlotClass);
+		InventorySlot->SetSlotPosition(FVector2D(GridX, GridY));
 		InventorySlot->OnHoverOverSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHoverOver);
+		InventorySlot->OnMouseButtonDownOnSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotMouseButtonDown);
 		
 		UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(InventorySlot, GridY, GridX);
 		GridSlot->SetLayer(0);
@@ -72,7 +74,15 @@ void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D ItemDesire
 	UE_LOG(LogTemp, Warning, TEXT("Hi Mouse, Item here."));
 }
 
-void UObsidianInventory::OnInventorySlotHoverOver()
+void UObsidianInventory::OnInventorySlotHoverOver(bool bEntered)
 {
 	
+}
+
+void UObsidianInventory::OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition)
+{
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->RequestAddingItemDefToInventory(SlotPosition);
+	}
 }

@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryWidgetController.generated.h"
 
+class UObsidianHeroComponent;
 class UObsidianItemWidget;
 
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAutomaticallyAddedSignature, UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
@@ -30,14 +31,20 @@ public:
 	{
 		return bInventoryOpened;
 	}
+
+	UObsidianHeroComponent* GetHeroComponent()
+	{
+		return InternalHeroComponent;
+	}
 	
 	//~ Start of UObsidianWidgetController
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController
 
 	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
-
 	void OnInventoryOpen();
+
+	void RequestAddingItemDefToInventory(const FVector2D& SlotPosition);
 
 public:
 	FOnItemAutomaticallyAddedSignature OnItemAutomaticallyAddedDelegate;
@@ -46,4 +53,10 @@ private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 
 	bool bInventoryOpened = false;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryComponent> InternalInventoryComponent;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianHeroComponent> InternalHeroComponent;
 };

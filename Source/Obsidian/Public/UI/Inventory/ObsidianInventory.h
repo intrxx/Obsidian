@@ -6,10 +6,12 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
+class UObsidianInventoryItemDefinition;
 class UObsidianInventorySlot;
 class UObsidianInventoryItemInstance;
 class UGridPanel;
 class UOverlay;
+class UGridSlot;
 class UObsidianItemWidget;
 class UObsidianInventoryWidgetController;
 
@@ -39,7 +41,9 @@ private:
 	void SetupGrid();
 
 	void OnItemLeftMouseButtonPressed(const FVector2D ItemDesiredPosition);
-	void OnInventorySlotHoverOver();
+	
+	void OnInventorySlotHoverOver(bool bEntered);
+	void OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition);
 	
 private:
 	UPROPERTY()

@@ -339,6 +339,8 @@ void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
 
 void UObsidianHeroComponent::StopDragging()
 {
+	DraggedItem->RemoveFromParent();
+	
 	bDragItem = false;
 	DraggedItem = nullptr;
 }

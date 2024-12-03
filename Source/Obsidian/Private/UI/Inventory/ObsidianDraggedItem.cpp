@@ -16,13 +16,16 @@ void UObsidianDraggedItem::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-void UObsidianDraggedItem::InitializeItemWidget(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 Stacks)
+void UObsidianDraggedItem::InitializeItemWidget(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks)
 {
 	if(ItemDef == nullptr)
 	{
 		FFrame::KismetExecutionMessage(TEXT("Provided ItemDef is invalid in UObsidianDraggedItem::InitializeItemWidget."), ELogVerbosity::Error);
 		return;
 	}
+
+	InternalItemDef = ItemDef;
+	InternalStacks = Stacks;
 	
 	const UOInventoryItemFragment_Appearance* AppearanceFragment = Cast<UOInventoryItemFragment_Appearance>(
 			ItemDef.GetDefaultObject()->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));

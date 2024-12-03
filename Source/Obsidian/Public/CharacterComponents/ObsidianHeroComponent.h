@@ -39,6 +39,17 @@ public:
 	void DragItem(UObsidianDraggedItem* InDraggedItem);
 	void StopDragging();
 
+	/** Gets the currently dragged item, will be nullptr when the character does not drag any item. */
+	UObsidianDraggedItem* GetCurrentlyDraggedItem()
+	{
+		return DraggedItem;
+	}
+
+	bool IsDraggingAnItem() const
+	{
+		return bDragItem;
+	}
+
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
