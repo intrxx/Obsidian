@@ -38,6 +38,9 @@ public:
 	TObjectPtr<UImage> Item_Image;
 
 protected:
+	virtual void NativeConstruct() override;
+
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float WidthConstant = 64.0f;
 

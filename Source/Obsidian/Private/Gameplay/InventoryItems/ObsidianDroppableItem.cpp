@@ -2,8 +2,7 @@
 
 
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
-#include "UI/Inventory/ObsidianItemDragDropOperation.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
+#include "CharacterComponents/ObsidianHeroComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/WidgetComponent.h"
@@ -78,14 +77,14 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 			
 			if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
 			{
+				AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+				UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+				check(HeroComp);
+					
 				UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
 				DraggedItem->InitializeItemWidget(PickupItemDef, StackCount);
 				DraggedItem->AddToViewport();
-
-				// Maybe create widget component on Players cursor and add the widget to the widget component?
-				// Explore some way to maybe create a tickable subsystem to control the widget? PC seems better tho.
-				// Maybe take it from Pc to Hero comp.
-				
+				HeroComp->DragItem(DraggedItem);
 				return;
 			}
 			

@@ -7,6 +7,7 @@
 #include "Components/PawnComponent.h"
 #include "ObsidianHeroComponent.generated.h"
 
+class UObsidianDraggedItem;
 class USplineComponent;
 class AObsidianHUD;
 struct FInputActionValue;
@@ -34,6 +35,9 @@ public:
 	void InitializePlayerInput(UInputComponent* InputComponent);
 	
 	AObsidianHUD* GetObsidianHUD() const;
+
+	void DragItem(UObsidianDraggedItem* InDraggedItem);
+	void StopDragging();
 
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
@@ -63,6 +67,7 @@ protected:
 private:
 	void AutoRun();
 	void CursorTrace();
+	void DragItem();
 	
 private:
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
@@ -74,5 +79,8 @@ private:
 	
 	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
+
+	TObjectPtr<UObsidianDraggedItem> DraggedItem;
+	bool bDragItem = false;
 };
 

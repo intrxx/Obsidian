@@ -19,6 +19,7 @@
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
+#include "UI/Inventory/ObsidianDraggedItem.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -36,6 +37,11 @@ void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	CursorTrace();
 	AutoRun();
+
+	if(bDragItem)
+	{
+		DragItem();
+	}
 }
 
 void UObsidianHeroComponent::AutoRun()
@@ -323,4 +329,33 @@ AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 		return ObsidianPC->GetObsidianHUD();
 	}
 	return nullptr;
+}
+
+void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
+{
+	DraggedItem = InDraggedItem;
+	bDragItem = true;
+}
+
+void UObsidianHeroComponent::StopDragging()
+{
+	bDragItem = false;
+	DraggedItem = nullptr;
+}
+
+void UObsidianHeroComponent::DragItem()
+{
+	const APlayerController* PC = GetController<APlayerController>();
+	if(PC == nullptr)
+	{
+		return;
+	}
+
+	float LocationX = 0.0f;
+	float LocationY = 0.0f;
+	if(PC->GetMousePosition(LocationX, LocationY))
+	{
+		const FVector2D ViewportPosition = FVector2D(LocationX, LocationY);
+		DraggedItem->SetPositionInViewport(ViewportPosition);
+	}
 }
