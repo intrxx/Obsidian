@@ -5,7 +5,7 @@
 #include "Components/GridPanel.h"
 #include "Components/GridSlot.h"
 #include "UI/Inventory/SubWidgets/ObsidianInventorySlot.h"
-#include "UI/Inventory/ObsidianItemWidget.h"
+#include "UI/Inventory/ObsidianItem.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 
 UObsidianInventory::UObsidianInventory()
@@ -30,7 +30,7 @@ void UObsidianInventory::HandleWidgetControllerSet()
 
 void UObsidianInventory::OnItemAutomaticallyAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan)
 {
-	UObsidianItemWidget* ItemWidget = CreateWidget<UObsidianItemWidget>(this, ItemWidgetClass);
+	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemImage);
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
 

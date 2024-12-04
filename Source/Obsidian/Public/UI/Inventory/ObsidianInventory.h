@@ -6,13 +6,13 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
+class UObsidianItem;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventorySlot;
 class UObsidianInventoryItemInstance;
 class UGridPanel;
 class UOverlay;
 class UGridSlot;
-class UObsidianItemWidget;
 class UObsidianInventoryWidgetController;
 
 /**
@@ -50,7 +50,7 @@ private:
 	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianItemWidget> ItemWidgetClass;
+	TSubclassOf<UObsidianItem> ItemWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianInventorySlot> InventorySlotClass;

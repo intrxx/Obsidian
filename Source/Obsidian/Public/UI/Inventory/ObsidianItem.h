@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetBase.h"
-#include "ObsidianItemWidget.generated.h"
+#include "ObsidianItem.generated.h"
 
 class USizeBox;
 class UImage;
@@ -15,7 +15,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemLeftMouseButtonPressedSignature, cons
  * Item Widget that is displayed in the inventory.
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemWidget : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
