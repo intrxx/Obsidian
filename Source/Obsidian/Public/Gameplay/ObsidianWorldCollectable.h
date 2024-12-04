@@ -18,6 +18,6 @@ public:
 	virtual FPickupContent GetPickupContent() const override;
 	
 protected:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "Obsidian")
 	FPickupContent StaticContent;
 };

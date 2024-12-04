@@ -6,7 +6,6 @@
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_GridSize.h"
 
 void UObsidianDraggedItem::NativeConstruct()
 {
@@ -29,18 +28,16 @@ void UObsidianDraggedItem::InitializeItemWidget(const TSubclassOf<UObsidianInven
 	
 	const UOInventoryItemFragment_Appearance* AppearanceFragment = Cast<UOInventoryItemFragment_Appearance>(
 			ItemDef.GetDefaultObject()->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
-	const UOInventoryItemFragment_GridSize* GridSizeFragment = Cast<UOInventoryItemFragment_GridSize>(
-			ItemDef.GetDefaultObject()->FindFragmentByClass(UOInventoryItemFragment_GridSize::StaticClass()));
 
-	if(AppearanceFragment && GridSizeFragment)
+	if(AppearanceFragment)
 	{
-		const FVector2D ItemGridSpan = GridSizeFragment->GetItemGridSpanFromDesc();
+		const FVector2D ItemGridSpan = AppearanceFragment->GetItemGridSpanFromDesc();
 		Root_SizeBox->SetWidthOverride(ItemGridSpan.X * WidthConstant);
 		Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
 
 		SetDesiredSizeInViewport(ItemGridSpan * WidthConstant);
 		
-		UTexture2D* ItemImage = AppearanceFragment->ItemImage;
+		UTexture2D* ItemImage = AppearanceFragment->GetItemImage();
 		Item_Image->SetBrushFromTexture(ItemImage);
 	}
 }

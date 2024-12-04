@@ -5,7 +5,7 @@
 #include "Engine/ActorChannel.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_GridSize.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Net/UnrealNetwork.h"
 
 UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer)
@@ -76,9 +76,9 @@ bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePo
 	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
-		if(const UOInventoryItemFragment_GridSize* GridSizeFragment = Cast<UOInventoryItemFragment_GridSize>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_GridSize::StaticClass())))
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const TArray<FVector2D> ItemGridSize = GridSizeFragment->GetItemGridSizeFromDesc();
+			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
 
 			bCanAdd = CheckAvailablePosition(ItemGridSize, OutAvailablePosition);
 			return bCanAdd;
@@ -93,9 +93,9 @@ bool UObsidianInventoryComponent::CanAddItemDefinitionAtSpecifiedSlot(const FVec
 	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
-		if(const UOInventoryItemFragment_GridSize* GridSizeFragment = Cast<UOInventoryItemFragment_GridSize>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_GridSize::StaticClass())))
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const TArray<FVector2D> ItemGridSize = GridSizeFragment->GetItemGridSizeFromDesc();
+			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
 
 			bCanAdd = CheckSpecifiedPosition(ItemGridSize, SpecifiedSlot);
 			return bCanAdd;

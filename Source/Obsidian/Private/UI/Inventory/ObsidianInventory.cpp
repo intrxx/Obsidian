@@ -40,7 +40,7 @@ void UObsidianInventory::OnItemAutomaticallyAdded(UTexture2D* ItemImage, const F
 	GridSlot->SetRowSpan(GridSpan.Y);
 }
 
-void UObsidianInventory::SetupGrid()
+void UObsidianInventory::SetupGrid() 
 {
 	Slots_GridPanel->ClearChildren(); 
 	

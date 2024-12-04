@@ -32,13 +32,6 @@ FReply UObsidianGroundItemDesc::NativeOnPreviewMouseButtonDown(const FGeometry& 
 	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void UObsidianGroundItemDesc::NativeOnDragDetected(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent, UDragDropOperation*& OutOperation)
-{
-	UE_LOG(LogTemp, Warning, TEXT("YO dragged"));
-	
-	Super::NativeOnDragDetected(InGeometry, InMouseEvent, OutOperation);
-}
-
 void UObsidianGroundItemDesc::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(Background_Image)
