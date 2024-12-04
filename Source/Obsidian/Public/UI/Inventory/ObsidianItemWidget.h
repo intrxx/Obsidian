@@ -12,7 +12,7 @@ class UImage;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemLeftMouseButtonPressedSignature, const FVector2D ItemDesiredPosition)
 
 /**
- * 
+ * Item Widget that is displayed in the inventory.
  */
 UCLASS()
 class OBSIDIAN_API UObsidianItemWidget : public UObsidianWidgetBase
