@@ -12,11 +12,12 @@
 > &nbsp;&nbsp; 1.5.1 [OInventoryItemFragment_Stacks](#obsidianfragment_stacks) \
 > &nbsp;&nbsp; 1.5.2 [OInventoryItemFragment_Appearance](#obsidianframgent_appearance)
 > 2. [User Interface](#ui) \
-> &nbsp; 2.1 [ObsidianInventory](#obsidianinventory) \
-> &nbsp;&nbsp; 2.1.1 [ObsidianInventorySlot](#obsidianinventoryslot) \
-> &nbsp; 2.2 [ObsidianItem](#obsidianitem) \
-> &nbsp; 2.3 [ObsidianGroundItemDesc](#obsidiangrounditemdesc) \
-> &nbsp; 2.4 [ObsidianDraggedItem](#obsidiandraggeditem)
+> &nbsp; 2.1 [ObsidianInventoryWidgetController](#obsidianinventorywidgetcontroller) \
+> &nbsp; 2.2 [ObsidianInventory](#obsidianinventory) \
+> &nbsp;&nbsp; 2.2.1 [ObsidianInventorySlot](#obsidianinventoryslot) \
+> &nbsp; 2.3 [ObsidianItem](#obsidianitem) \
+> &nbsp; 2.4 [ObsidianGroundItemDesc](#obsidiangrounditemdesc) \
+> &nbsp; 2.5 [ObsidianDraggedItem](#obsidiandraggeditem)
 
 
 <a name="backend"></a>
@@ -46,20 +47,23 @@
 <a name="ui"></a>
 ## 2. User Interface
 
+<a name="obsidianinventorywidgetcontroller"></a>
+### 2.1 ObsidianInventoryWidgetController
+
 <a name="obsidianinventory"></a>
-### 1.2 ObsidianInventory
+### 2.2 ObsidianInventory
 
 <a name="obsidianinventoryslot"></a>
-#### 1.2.1 ObsidianInventorySlot
+#### 2.2.1 ObsidianInventorySlot
 
 <a name="obsidianitem"></a>
-### 1.2 ObsidianItem
+### 2.3 ObsidianItem
 
 <a name="obsidiangrounditemdesc"></a>
-### 1.2 ObsidianGroundItemDesc
+### 2.4 ObsidianGroundItemDesc
 
 <a name="obsidiandraggeditem"></a>
-### 1.2 ObsidianDraggedItem
+### 2.5 ObsidianDraggedItem
 
 
 
