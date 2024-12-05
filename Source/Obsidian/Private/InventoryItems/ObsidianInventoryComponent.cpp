@@ -179,8 +179,21 @@ bool UObsidianInventoryComponent::CanAddItemInstance(FVector2D& OutAvailablePosi
 	return bCanAdd;
 }
 
+bool UObsidianInventoryComponent::CanAddItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance)
+{
+	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
+	
+	const bool bCanAdd = CheckSpecifiedPosition(ItemGridSize, SpecifiedSlot);
+	return bCanAdd;
+}
+
 void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
+	if(InstanceToAdd == nullptr)
+	{
+		return;
+	}
+	
 	FVector2D AvailablePosition;
 	if(CanAddItemInstance(AvailablePosition, InstanceToAdd) == false)
 	{
@@ -198,6 +211,33 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	}
 
 	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, AvailablePosition);
+}
+
+bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot)
+{
+	if(InstanceToAdd == nullptr)
+	{
+		return false;
+	}
+
+	if(CanAddItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
+	{
+		//TODO Inventory is full, add voice over?
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
+			FString::Printf(TEXT("Inventory is full at specified slot!")));
+		return false;
+	}
+
+	InventoryGrid.AddEntry(InstanceToAdd, ToSlot);
+	Item_MarkSpace(ToSlot, InstanceToAdd);
+	
+	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(InstanceToAdd);
+	}
+
+	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, ToSlot);
+	return true;
 }
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)

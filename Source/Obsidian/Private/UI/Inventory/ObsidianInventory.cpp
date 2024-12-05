@@ -25,14 +25,15 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryWidgetController = Cast<UObsidianInventoryWidgetController>(WidgetController);
 	check(InventoryWidgetController);
 
-	InventoryWidgetController->OnItemAutomaticallyAddedDelegate.AddUObject(this, &ThisClass::OnItemAutomaticallyAdded);
+	InventoryWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 }
 
-void UObsidianInventory::OnItemAutomaticallyAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan)
+void UObsidianInventory::OnItemAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan)
 {
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemImage);
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
+	
 	InventoryWidgetController->AddItemWidget(DesiredPosition, ItemWidget);
 
 	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
@@ -87,6 +88,6 @@ void UObsidianInventory::OnInventorySlotMouseButtonDown(const FVector2D& SlotPos
 {
 	if(InventoryWidgetController)
 	{
-		InventoryWidgetController->RequestAddingItemDefToInventory(SlotPosition);
+		InventoryWidgetController->RequestAddingItemToInventory(SlotPosition);
 	}
 }

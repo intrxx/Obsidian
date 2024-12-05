@@ -11,7 +11,7 @@ class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAutomaticallyAddedSignature, UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAddedSignature, UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
 
 /**
  * 
@@ -49,11 +49,11 @@ public:
 	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
 	void OnInventoryOpen();
 
-	void RequestAddingItemDefToInventory(const FVector2D& SlotPosition);
+	void RequestAddingItemToInventory(const FVector2D& SlotPosition);
 	void RequestPickingUpItemFromInventory(const FVector2D& SlotPosition);
 
 public:
-	FOnItemAutomaticallyAddedSignature OnItemAutomaticallyAddedDelegate;
+	FOnItemAddedSignature OnItemAddedDelegate;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

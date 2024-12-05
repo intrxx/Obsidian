@@ -10,7 +10,6 @@
 class UObsidianInventoryWidgetController;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemovedFromInventorySignature, UObsidianInventoryItemInstance* ItemInstance);
 
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
@@ -54,9 +53,15 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool CanAddItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance);
+	
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	bool CanAddItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd);
+	
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot);
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);

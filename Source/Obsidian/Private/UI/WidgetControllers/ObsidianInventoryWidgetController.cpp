@@ -25,22 +25,22 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
 {
 	check(ItemInstance);
-	
-	OnItemAutomaticallyAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
+	OnItemAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
 }
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
 {
 	//TODO This really needs profiling, for now let it be this way
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
+	AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
+	
 	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
 	{
-		OnItemAutomaticallyAddedDelegate.Broadcast(LocToInstancePair.Value->GetItemImage(), LocToInstancePair.Key,
-			LocToInstancePair.Value->GetItemGridSpan());
+		OnItemAddedDelegate.Broadcast(LocToInstancePair.Value->GetItemImage(), LocToInstancePair.Key, LocToInstancePair.Value->GetItemGridSpan());
 	}
 }
 
-void UObsidianInventoryWidgetController::RequestAddingItemDefToInventory(const FVector2D& SlotPosition)
+void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition)
 {
 	if(InternalHeroComponent->IsDraggingAnItem() == false)
 	{
@@ -49,13 +49,23 @@ void UObsidianInventoryWidgetController::RequestAddingItemDefToInventory(const F
 	check(InventoryComponent);
 	
 	const UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef();
-	const int32 ItemStackCount = DraggedItem->GetItemStacks();
-
-	UObsidianInventoryItemInstance* Instance = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, ItemStackCount);
-	if(Instance != nullptr)
+	if(UObsidianInventoryItemInstance* Instance = DraggedItem->GetItemInstance())
 	{
-		InternalHeroComponent->StopDragging();
+		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition))
+		{
+			InternalHeroComponent->StopDragging();
+		}
+	}
+	else
+	{
+		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef();
+		const int32 ItemStackCount = DraggedItem->GetItemStacks();
+
+		UObsidianInventoryItemInstance* NewInstance = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, ItemStackCount);
+		if(NewInstance != nullptr)
+		{
+			InternalHeroComponent->StopDragging();
+		}
 	}
 }
 
@@ -66,7 +76,8 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 		return;
 	}
 	check(InventoryComponent);
-
+	check(DraggedItemWidgetClass);
+	
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceForLocation(SlotPosition);
 	RemoveItemWidget(SlotPosition);
 	
@@ -80,7 +91,10 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 
 void UObsidianInventoryWidgetController::AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)
 {
-	AddedItemWidgetMap.Add(Location, ItemWidget);
+	if(!AddedItemWidgetMap.Contains(Location))
+	{
+		AddedItemWidgetMap.Add(Location, ItemWidget);
+	}
 }
 
 void UObsidianInventoryWidgetController::RemoveItemWidget(const FVector2D& Location)
