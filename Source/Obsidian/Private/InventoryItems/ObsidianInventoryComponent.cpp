@@ -49,6 +49,16 @@ TMap<FVector2D, UObsidianInventoryItemInstance*> UObsidianInventoryComponent::In
 	return InventoryGrid.GridLocationToItemMap;
 }
 
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::Internal_GetItemInstanceForLocation(const FVector2D& Position) const
+{
+	const TMap<FVector2D, UObsidianInventoryItemInstance*> LocToItemMap = InventoryGrid.GridLocationToItemMap;
+	if(LocToItemMap.Contains(Position))
+	{
+		return LocToItemMap[Position];
+	}
+	return nullptr;
+}
+
 TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems() const
 {
 	return InventoryGrid.GetAllItems();

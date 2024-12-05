@@ -8,13 +8,15 @@
 
 class UObsidianHeroComponent;
 class UObsidianItemWidget;
+class UObsidianItem;
+class UObsidianDraggedItem;
 
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAutomaticallyAddedSignature, UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
 
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType, Blueprintable)
 class OBSIDIAN_API UObsidianInventoryWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
@@ -36,6 +38,9 @@ public:
 	{
 		return InternalHeroComponent;
 	}
+
+	void AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
+	void RemoveItemWidget(const FVector2D& Location);
 	
 	//~ Start of UObsidianWidgetController
 	virtual void OnWidgetControllerSetupCompleted() override;
@@ -45,13 +50,16 @@ public:
 	void OnInventoryOpen();
 
 	void RequestAddingItemDefToInventory(const FVector2D& SlotPosition);
+	void RequestPickingUpItemFromInventory(const FVector2D& SlotPosition);
 
 public:
 	FOnItemAutomaticallyAddedSignature OnItemAutomaticallyAddedDelegate;
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
 	
 private:
-	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
-
 	bool bInventoryOpened = false;
 
 	UPROPERTY()
@@ -59,4 +67,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianHeroComponent> InternalHeroComponent;
+	
+	UPROPERTY()
+	TMap<FVector2D, UObsidianItem*> AddedItemWidgetMap;
 };

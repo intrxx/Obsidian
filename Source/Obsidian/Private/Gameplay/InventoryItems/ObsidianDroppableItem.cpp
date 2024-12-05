@@ -68,7 +68,7 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 		// Debug
 		ENetRole NetRole = GetLocalRole();
 		UE_LOG(LogTemp, Warning, TEXT("Role: %d"), NetRole);
-
+		// Debug
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			FPickupContent PickupContent = GetPickupContent();
@@ -82,7 +82,7 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 				check(HeroComp);
 					
 				UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
-				DraggedItem->InitializeItemWidget(PickupItemDef, StackCount);
+				DraggedItem->InitializeItemWidgetWithItemDef(PickupItemDef, StackCount);
 				DraggedItem->AddToViewport();
 				HeroComp->DragItem(DraggedItem);
 				return;

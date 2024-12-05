@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianDraggedItem.generated.h"
 
+class UObsidianInventoryItemInstance;
 class UObsidianInventoryItemDefinition;
 class USizeBox;
 class UImage;
@@ -19,12 +20,20 @@ class OBSIDIAN_API UObsidianDraggedItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidget(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks);
-	
+	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks);
+	void InitializeItemWidgetWithItemInstance(UObsidianInventoryItemInstance* ItemInstance);
+
+	/** Invalid when widget initialized with Instance. */
 	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const
 	{
 		return InternalItemDef;
 	}
+	/** Invalid when widget initialized with Definition. */
+	UObsidianInventoryItemInstance* GetItemInstance() const
+	{
+		return InternalItemInstance;
+	}
+	/** Invalid when widget initialized with Definition. */
 	int32 GetItemStacks() const
 	{
 		return InternalStacks;
@@ -49,4 +58,6 @@ protected:
 	
 	TSubclassOf<UObsidianInventoryItemDefinition> InternalItemDef;
 	int32 InternalStacks = 0;
+	
+	TObjectPtr<UObsidianInventoryItemInstance> InternalItemInstance;
 };

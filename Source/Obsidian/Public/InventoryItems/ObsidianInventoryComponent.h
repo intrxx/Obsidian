@@ -9,8 +9,8 @@
 
 class UObsidianInventoryWidgetController;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance,
-                                     FVector2D DesiredPosition);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemovedFromInventorySignature, UObsidianInventoryItemInstance* ItemInstance);
 
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
@@ -85,6 +85,7 @@ private:
 
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
+	UObsidianInventoryItemInstance* Internal_GetItemInstanceForLocation(const FVector2D& Position) const;
 	
 private:
 	friend UObsidianInventoryWidgetController;

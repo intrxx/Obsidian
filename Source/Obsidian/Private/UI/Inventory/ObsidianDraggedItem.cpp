@@ -5,6 +5,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 
 void UObsidianDraggedItem::NativeConstruct()
@@ -15,11 +16,11 @@ void UObsidianDraggedItem::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-void UObsidianDraggedItem::InitializeItemWidget(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks)
+void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks)
 {
 	if(ItemDef == nullptr)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Provided ItemDef is invalid in UObsidianDraggedItem::InitializeItemWidget."), ELogVerbosity::Error);
+		FFrame::KismetExecutionMessage(TEXT("Provided ItemDef is invalid in UObsidianDraggedItem::InitializeItemWidgetWithItemDef."), ELogVerbosity::Error);
 		return;
 	}
 
@@ -40,4 +41,24 @@ void UObsidianDraggedItem::InitializeItemWidget(const TSubclassOf<UObsidianInven
 		UTexture2D* ItemImage = AppearanceFragment->GetItemImage();
 		Item_Image->SetBrushFromTexture(ItemImage);
 	}
+}
+
+void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(UObsidianInventoryItemInstance* ItemInstance)
+{
+	if(ItemInstance == nullptr)
+	{
+		FFrame::KismetExecutionMessage(TEXT("Provided ItemInstance is invalid in UObsidianDraggedItem::InitializeItemWidgetWithItemInstance."), ELogVerbosity::Error);
+		return;
+	}
+
+	InternalItemInstance = ItemInstance;
+
+	const FVector2D ItemGridSpan = InternalItemInstance->GetItemGridSpan();
+	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * WidthConstant);
+	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
+
+	SetDesiredSizeInViewport(ItemGridSpan * WidthConstant);
+
+	UTexture2D* ItemImage = InternalItemInstance->GetItemImage();
+	Item_Image->SetBrushFromTexture(ItemImage);
 }
