@@ -1,6 +1,8 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/Inventory/ObsidianGroundItemDesc.h"
+
+#include "CommonTextBlock.h"
 #include "Components/Image.h"
 
 
@@ -10,7 +12,15 @@ void UObsidianGroundItemDesc::NativeConstruct()
 
 	if(Background_Image)
 	{
-		Background_Image->SetBrushTintColor(RegularBackgroundColor);		
+		Background_Image->SetBrushTintColor(RegularBackgroundColor);
+	}
+}
+
+void UObsidianGroundItemDesc::SetItemName(FText ItemName)
+{
+	if(ItemName_TextBlock)
+	{
+		ItemName_TextBlock->SetText(ItemName);
 	}
 }
 

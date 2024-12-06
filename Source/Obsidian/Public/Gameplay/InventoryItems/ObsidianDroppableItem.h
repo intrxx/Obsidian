@@ -33,7 +33,7 @@ private:
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UWidgetComponent> ItemNameWidgetComp;
+	TObjectPtr<UWidgetComponent> GroundItemDescWidgetComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianGroundItemDesc> GroundItemDescClass;

@@ -7,6 +7,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/WidgetComponent.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "Kismet/GameplayStatics.h"
 #include "UI/Inventory/ObsidianGroundItemDesc.h"
@@ -24,12 +25,12 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	SetRootComponent(StaticMeshComp);
 	
-	ItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("ItemNameWidgetComponent"));
-	ItemNameWidgetComp->SetupAttachment(GetRootComponent());
-	ItemNameWidgetComp->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));
-	ItemNameWidgetComp->SetDrawAtDesiredSize(true);
-	ItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
-	ItemNameWidgetComp->SetupAttachment(StaticMeshComp);
+	GroundItemDescWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("GoundItemDescWidgetComp"));
+	GroundItemDescWidgetComp->SetupAttachment(GetRootComponent());
+	GroundItemDescWidgetComp->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));
+	GroundItemDescWidgetComp->SetDrawAtDesiredSize(true);
+	GroundItemDescWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+	GroundItemDescWidgetComp->SetupAttachment(StaticMeshComp);
 }
 
 void AObsidianDroppableItem::BeginPlay()
@@ -46,8 +47,20 @@ void AObsidianDroppableItem::BeginPlay()
 	GroundItemDesc->OnItemDescMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemDescMouseHover);
 	GroundItemDesc->OnItemDescMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemDescMouseButtonDown);
 
-	ItemNameWidgetComp->SetWidget(GroundItemDesc);
-	ItemNameWidgetComp->InitWidget();
+	FPickupContent PickupContent = GetPickupContent();
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef)
+	{
+		if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
+		{
+			const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
+
+			const FText ItemDisplayName = Appearance->GetItemDisplayName();
+			GroundItemDesc->SetItemName(ItemDisplayName);
+		}
+	}
+
+	GroundItemDescWidgetComp->SetWidget(GroundItemDesc);
+	GroundItemDescWidgetComp->InitWidget();
 }
 
 void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)

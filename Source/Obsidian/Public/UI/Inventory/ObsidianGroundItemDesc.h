@@ -22,6 +22,8 @@ class OBSIDIAN_API UObsidianGroundItemDesc : public UObsidianWidgetBase
 
 public:
 	virtual void NativeConstruct() override;
+
+	void SetItemName(FText ItemName);
 	
 public:
 	/** Delegate that fires when the Player presses the left mouse button onto the item desc. */
