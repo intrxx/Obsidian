@@ -49,6 +49,7 @@ FReply UObsidianInventorySlot::NativeOnPreviewMouseButtonDown(const FGeometry& I
 {
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("SLOT!"));
 		OnMouseButtonDownOnSlotDelegate.Broadcast(SlotPosition);
 	}
 	

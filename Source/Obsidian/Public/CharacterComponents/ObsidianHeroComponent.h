@@ -50,6 +50,11 @@ public:
 		return bDragItem;
 	}
 
+	void SetCursorOverUI(const bool bInOverUI)
+	{
+		bCursorOverUI = bInOverUI;
+	}
+	
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
@@ -93,5 +98,7 @@ private:
 
 	TObjectPtr<UObsidianDraggedItem> DraggedItem;
 	bool bDragItem = false;
+
+	bool bCursorOverUI = false;
 };
 

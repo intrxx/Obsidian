@@ -13,3 +13,4 @@ void UObsidianWidgetBase::SetWidgetController(UObject* InWidgetController)
 void UObsidianWidgetBase::HandleWidgetControllerSet()
 {
 }
+

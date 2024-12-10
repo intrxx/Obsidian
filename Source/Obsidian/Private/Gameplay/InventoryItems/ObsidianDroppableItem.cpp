@@ -75,7 +75,10 @@ void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)
 
 void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 {
-	//TODO Temp
+	//TODO For the future
+	// 1. Get the local Player Controller
+	// 2. Check if the inventory is opened
+	// 3. Server delegate to request to add the item to inventory/cursor?
 	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
 	{
 		// Debug

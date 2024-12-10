@@ -248,15 +248,26 @@ void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputAc
 
 void UObsidianHeroComponent::Input_MoveStartedMouse()
 {
+	if(bCursorOverUI)
+	{
+		return;
+	}
+	
 	bAutoRunning = false;
 }
 
 void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 {
+	if(bCursorOverUI)
+	{
+		return;
+	}
+	
 	FollowTime += GetWorld()->GetDeltaSeconds();
 	
 	if(CursorHit.bBlockingHit)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Move mouse!"));
 		CachedDestination = CursorHit.Location;
 	}
 	
@@ -269,6 +280,11 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 
 void UObsidianHeroComponent::Input_MoveReleasedMouse()
 {
+	if(bCursorOverUI)
+	{
+		return;
+	}
+	
 	APlayerController* PC = GetController<APlayerController>();
 	if(PC == nullptr)
 	{
