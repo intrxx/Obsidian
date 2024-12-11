@@ -24,6 +24,8 @@ class UObsidianOverlayGameTabsMenu;
 class UWrapBox;
 class UOStackingDurationalEffectInfo;
 class UObsidianCharacterStatus;
+class UObsidianHeroComponent;
+
 /**
  * 
  */
@@ -41,6 +43,12 @@ public:
 	void ToggleInventory();
 	UFUNCTION()
 	void TogglePassiveSkillTree();
+
+	void SetPlayerMouseOverInventory(const bool bInMouseOver);
+	void SetPlayerMouseOverCharacterStatus(const bool bInMouseOver);
+	void SetPlayerMouseOverPassiveSkillTree(const bool bInMouseOver);
+	void SetPlayerMouseOverGlobe(const bool bInMouseOver);
+	void SetPlayerMouseOverButtonMenu(const bool bInMouseOver);
 	
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|MainOverlay")
@@ -65,6 +73,9 @@ protected:
 	void HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar);
 	UFUNCTION()
 	void HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar);
+
+	/** Needs to be called after updating of the bPlayerMouseOver booleans. */
+	void UpdatePlayerMouseOverUIElem() const;
 
 protected:
 	// This should be set in blueprint during initialization ;/ //
@@ -124,6 +135,14 @@ protected:
 	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
 
 private:
+	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
+
+	UFUNCTION()
+	void DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag);
+
+	void HandleEffectFillImageRemoval(const FGameplayTag& EffectTag);
+	
+private:
 	UPROPERTY()
 	TObjectPtr<UObsidianCharacterStatus> CharacterStatus;
 	UPROPERTY()
@@ -136,11 +155,13 @@ private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
 	
-private:
-	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
+	UPROPERTY()
+	TObjectPtr<UObsidianHeroComponent> HeroComp;
 
-	UFUNCTION()
-	void DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag);
-
-	void HandleEffectFillImageRemoval(const FGameplayTag& EffectTag);
+	bool bPlayerMouseOverInventory = false;
+	bool bPlayerMouseOverCharacterStatus = false;
+	bool bPlayerMouseOverPassiveSkillTree = false;
+	bool bPlayerMouseOverGlobe = false;
+	bool bPlayerMouseOverButtonMenu = false;
 };
+

@@ -34,6 +34,32 @@ void UObsidianProgressGlobe::ShouldGhostGlobeDecrease(const float NewAttribute, 
 	bShouldSetGhostGlobe = false;
 }
 
+void UObsidianProgressGlobe::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+	
+	if(InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
+	{
+		return;
+	}
+	
+	OnMouseEnterLeaveDelegate.Broadcast(true);
+	UE_LOG(LogTemp, Warning, TEXT("Entered Progress Globe!"));
+}
+
+void UObsidianProgressGlobe::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseLeave(InMouseEvent);
+	
+	if(InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
+	{
+		return;
+	}
+	
+	OnMouseEnterLeaveDelegate.Broadcast(false);
+	UE_LOG(LogTemp, Warning, TEXT("Left Progress Globe!"));
+}
+
 void UObsidianProgressGlobe::HandleWidgetControllerSet()
 {
 	MainOverlayWidgetController = Cast<UMainOverlayWidgetController>(WidgetController);

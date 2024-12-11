@@ -7,6 +7,7 @@
 #include "Components/Overlay.h"
 #include "Components/VerticalBox.h"
 #include "Components/WrapBox.h"
+#include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
@@ -47,6 +48,10 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		CharacterStatusWidgetController->SetInitialAttributeValues();
 		
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
+		CharacterStatus->OnMouseEnterLeaveDelegate.AddLambda([this](const bool bEnter)
+		{
+			SetPlayerMouseOverCharacterStatus(bEnter);
+		});
 		CharacterStatus->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{
 			CharacterStatus = nullptr;
@@ -62,6 +67,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 	else
 	{
 		CharacterStatus->RemoveFromParent();
+		SetPlayerMouseOverCharacterStatus(false);
 		CharacterStatus = nullptr;
 		Overlay_GameTabsMenu->OnCharacterStatusTabStatusChangeDelegate.Broadcast(false);
 	}
@@ -76,6 +82,10 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory->SetWidgetController(InventoryWidgetController);
 		
 		Inventory_Overlay->AddChildToOverlay(Inventory);
+		Inventory->OnMouseEnterLeaveDelegate.AddLambda([this](const bool bEnter)
+		{
+			SetPlayerMouseOverInventory(bEnter);
+		});
 		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{
 			Inventory = nullptr;
@@ -92,6 +102,7 @@ void UObsidianMainOverlay::ToggleInventory()
 	else
 	{
 		Inventory->RemoveFromParent();
+		SetPlayerMouseOverInventory(false);
 		Inventory = nullptr;
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
 		if(InventoryWidgetController)
@@ -108,6 +119,10 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
 
 		PassiveSkillTree_Overlay->AddChildToOverlay(PassiveSkillTree);
+		PassiveSkillTree->OnMouseEnterLeaveDelegate.AddLambda([this](const bool bEnter)
+		{
+			SetPlayerMouseOverPassiveSkillTree(bEnter);
+		});
 		PassiveSkillTree->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{
 			PassiveSkillTree = nullptr;
@@ -121,9 +136,47 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 	else
 	{
 		PassiveSkillTree->RemoveFromParent();
+		SetPlayerMouseOverPassiveSkillTree(false);
 		PassiveSkillTree = nullptr;
 		Overlay_GameTabsMenu->OnPassiveSkillTreeTabStatusChangeDelegate.Broadcast(false);
 	}
+}
+
+void UObsidianMainOverlay::SetPlayerMouseOverInventory(const bool bInMouseOver)
+{
+	bPlayerMouseOverInventory = bInMouseOver;
+	UpdatePlayerMouseOverUIElem();
+}
+
+void UObsidianMainOverlay::SetPlayerMouseOverCharacterStatus(const bool bInMouseOver)
+{
+	bPlayerMouseOverCharacterStatus = bInMouseOver;
+	UpdatePlayerMouseOverUIElem();
+}
+
+void UObsidianMainOverlay::SetPlayerMouseOverPassiveSkillTree(const bool bInMouseOver)
+{
+	bPlayerMouseOverPassiveSkillTree = bInMouseOver;
+	UpdatePlayerMouseOverUIElem();
+}
+
+void UObsidianMainOverlay::SetPlayerMouseOverGlobe(const bool bInMouseOver)
+{
+	bPlayerMouseOverGlobe = bInMouseOver;
+	UpdatePlayerMouseOverUIElem();
+}
+
+void UObsidianMainOverlay::SetPlayerMouseOverButtonMenu(const bool bInMouseOver)
+{
+	bPlayerMouseOverButtonMenu = bInMouseOver;
+	UpdatePlayerMouseOverUIElem();
+}
+
+void UObsidianMainOverlay::UpdatePlayerMouseOverUIElem() const
+{
+	const bool bMouseOverAnyUIElem = bPlayerMouseOverInventory || bPlayerMouseOverCharacterStatus ||
+		bPlayerMouseOverPassiveSkillTree || bPlayerMouseOverGlobe || bPlayerMouseOverButtonMenu;
+	HeroComp->SetCursorOverUI(bMouseOverAnyUIElem);
 }
 
 void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData)
@@ -234,6 +287,11 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 
 	MainOverlayWidgetController->OnUpdateRegularEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleRegularOverlayBar);
 	MainOverlayWidgetController->OnUpdateBossEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleBossOverlayBar);
+
+	OwningPlayerController = OwningPlayerController == nullptr ? GetOwningPlayer() : OwningPlayerController;
+	check(OwningPlayerController);
+	const AActor* OwningActor = Cast<AActor>(OwningPlayerController->GetPawn());
+	HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 }
 
 void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar)

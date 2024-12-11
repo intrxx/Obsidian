@@ -34,6 +34,10 @@ public:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UGridPanel> Slots_GridPanel;
 
+protected:
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+
 private:
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
 	void OnItemAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);

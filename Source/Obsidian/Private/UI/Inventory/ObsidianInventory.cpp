@@ -28,6 +28,16 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 }
 
+void UObsidianInventory::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+}
+
+void UObsidianInventory::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseLeave(InMouseEvent);
+}
+
 void UObsidianInventory::OnItemAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan)
 {
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);

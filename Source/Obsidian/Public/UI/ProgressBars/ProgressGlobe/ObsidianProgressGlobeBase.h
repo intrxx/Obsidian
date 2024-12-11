@@ -74,6 +74,9 @@ protected:
 
 	void ShouldGhostGlobeDecrease(const float NewAttribute, const float Attribute, const float MaxAttribute);
 	
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+	
 protected:
 	UPROPERTY()
 	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;

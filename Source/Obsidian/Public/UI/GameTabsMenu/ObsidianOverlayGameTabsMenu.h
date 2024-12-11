@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UI/ObsidianMainWidgetBase.h"
+#include "UI/ObsidianWidgetBase.h"
 #include "ObsidianOverlayGameTabsMenu.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnTabButtonClicked);
@@ -16,7 +16,7 @@ class UOverlay;
  *  Parent class for Gameplay Tabs Menu like Character Status, Inventory etc. which will be placed in the main Overlay.
  */
 UCLASS()
-class OBSIDIAN_API UObsidianOverlayGameTabsMenu : public UObsidianMainWidgetBase
+class OBSIDIAN_API UObsidianOverlayGameTabsMenu : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
