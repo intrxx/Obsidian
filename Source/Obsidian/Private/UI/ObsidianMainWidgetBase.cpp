@@ -6,11 +6,6 @@ void UObsidianMainWidgetBase::NativeOnMouseEnter(const FGeometry& InGeometry, co
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
-	if(InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
-	{
-		return;
-	}
-	
 	OnMouseEnterLeaveDelegate.Broadcast(true);
 	UE_LOG(LogTemp, Warning, TEXT("Entered Main Obsidian Widget"));
 }
@@ -18,7 +13,10 @@ void UObsidianMainWidgetBase::NativeOnMouseEnter(const FGeometry& InGeometry, co
 void UObsidianMainWidgetBase::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseLeave(InMouseEvent);
-	
+
+	// @Hack
+	// Problem that it solves: When we click the mouse button this functions gets called, so we leave the widget and character moves.
+	// Why is it questionable? I don't know if this is reliable
 	if(InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
 	{
 		return;

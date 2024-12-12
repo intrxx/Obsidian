@@ -33,4 +33,7 @@ protected:
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Handle Widget Controller Set", Category = "Obsidian|UI")
 	void BP_HandleWidgetControllerSet();
 	virtual void HandleWidgetControllerSet();
+
+	/** Function that gets called after WidgetControllerSet functions for both cpp and BP. */
+	virtual void PostHandleWidgetControllerSet();
 };

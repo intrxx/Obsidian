@@ -77,6 +77,8 @@ protected:
 	/** Needs to be called after updating of the bPlayerMouseOver booleans. */
 	void UpdatePlayerMouseOverUIElem() const;
 
+	virtual void PostHandleWidgetControllerSet() override;
+
 protected:
 	// This should be set in blueprint during initialization ;/ //
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|MainOverlay")

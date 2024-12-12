@@ -3,6 +3,7 @@
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Components/Overlay.h"
 #include "Components/VerticalBox.h"
@@ -22,6 +23,29 @@
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
+
+void UObsidianMainOverlay::HandleWidgetControllerSet()
+{
+	MainOverlayWidgetController = CastChecked<UMainOverlayWidgetController>(WidgetController);
+	MainOverlayWidgetController->EffectUIDataWidgetRowDelegate.AddDynamic(this, &ThisClass::HandleUIData);
+	MainOverlayWidgetController->EffectStackingUIDataDelegate.AddDynamic(this, &ThisClass::HandleStackingUIData);
+
+	MainOverlayWidgetController->OnAuraWidgetDestructionInfoReceivedDelegate.BindDynamic(this, &ThisClass::DestroyAuraInfoWidget);
+
+	MainOverlayWidgetController->OnUpdateRegularEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleRegularOverlayBar);
+	MainOverlayWidgetController->OnUpdateBossEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleBossOverlayBar);
+
+	OwningPlayerController = OwningPlayerController == nullptr ? GetOwningPlayer() : OwningPlayerController;
+	check(OwningPlayerController);
+	const AActor* OwningActor = Cast<AActor>(OwningPlayerController->GetPawn());
+	HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+}
+
+void UObsidianMainOverlay::PostHandleWidgetControllerSet()
+{
+	HealthProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &UObsidianMainOverlay::SetPlayerMouseOverGlobe);
+	ManaProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &UObsidianMainOverlay::SetPlayerMouseOverGlobe);
+}
 
 void UObsidianMainOverlay::NativeConstruct()
 {
@@ -48,10 +72,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		CharacterStatusWidgetController->SetInitialAttributeValues();
 		
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
-		CharacterStatus->OnMouseEnterLeaveDelegate.AddLambda([this](const bool bEnter)
-		{
-			SetPlayerMouseOverCharacterStatus(bEnter);
-		});
+		CharacterStatus->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverCharacterStatus);
 		CharacterStatus->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{
 			CharacterStatus = nullptr;
@@ -82,10 +103,7 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory->SetWidgetController(InventoryWidgetController);
 		
 		Inventory_Overlay->AddChildToOverlay(Inventory);
-		Inventory->OnMouseEnterLeaveDelegate.AddLambda([this](const bool bEnter)
-		{
-			SetPlayerMouseOverInventory(bEnter);
-		});
+		Inventory->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverInventory);
 		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{
 			Inventory = nullptr;
@@ -119,10 +137,7 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
 
 		PassiveSkillTree_Overlay->AddChildToOverlay(PassiveSkillTree);
-		PassiveSkillTree->OnMouseEnterLeaveDelegate.AddLambda([this](const bool bEnter)
-		{
-			SetPlayerMouseOverPassiveSkillTree(bEnter);
-		});
+		PassiveSkillTree->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverPassiveSkillTree);
 		PassiveSkillTree->OnWidgetDestroyedDelegate.AddLambda([this]()
 		{
 			PassiveSkillTree = nullptr;
@@ -277,21 +292,6 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 			break;
 		}
 	}
-}
-
-void UObsidianMainOverlay::HandleWidgetControllerSet()
-{
-	MainOverlayWidgetController = CastChecked<UMainOverlayWidgetController>(WidgetController);
-
-	MainOverlayWidgetController->OnAuraWidgetDestructionInfoReceivedDelegate.BindDynamic(this, &ThisClass::DestroyAuraInfoWidget);
-
-	MainOverlayWidgetController->OnUpdateRegularEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleRegularOverlayBar);
-	MainOverlayWidgetController->OnUpdateBossEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleBossOverlayBar);
-
-	OwningPlayerController = OwningPlayerController == nullptr ? GetOwningPlayer() : OwningPlayerController;
-	check(OwningPlayerController);
-	const AActor* OwningActor = Cast<AActor>(OwningPlayerController->GetPawn());
-	HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 }
 
 void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar)
