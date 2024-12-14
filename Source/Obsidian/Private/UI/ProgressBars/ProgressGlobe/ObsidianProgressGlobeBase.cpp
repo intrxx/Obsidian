@@ -8,7 +8,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
-
 void UObsidianProgressGlobe::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -39,7 +38,6 @@ void UObsidianProgressGlobe::NativeOnMouseEnter(const FGeometry& InGeometry, con
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
 	OnMouseEnterLeaveDelegate.Broadcast(true);
-	UE_LOG(LogTemp, Warning, TEXT("Entered Progress Globe!"));
 }
 
 void UObsidianProgressGlobe::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -47,7 +45,6 @@ void UObsidianProgressGlobe::NativeOnMouseLeave(const FPointerEvent& InMouseEven
 	Super::NativeOnMouseLeave(InMouseEvent);
 	
 	OnMouseEnterLeaveDelegate.Broadcast(false);
-	UE_LOG(LogTemp, Warning, TEXT("Left Progress Globe!"));
 }
 
 FReply UObsidianProgressGlobe::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

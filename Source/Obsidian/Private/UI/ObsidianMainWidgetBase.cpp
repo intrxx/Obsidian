@@ -7,7 +7,6 @@ void UObsidianMainWidgetBase::NativeOnMouseEnter(const FGeometry& InGeometry, co
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
 	OnMouseEnterLeaveDelegate.Broadcast(true);
-	UE_LOG(LogTemp, Warning, TEXT("Entered Main Obsidian Widget"));
 }
 
 void UObsidianMainWidgetBase::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -15,7 +14,6 @@ void UObsidianMainWidgetBase::NativeOnMouseLeave(const FPointerEvent& InMouseEve
 	Super::NativeOnMouseLeave(InMouseEvent);
 	
 	OnMouseEnterLeaveDelegate.Broadcast(false);
-	UE_LOG(LogTemp, Warning, TEXT("Left Main Obsidian Widget"));
 }
 
 FReply UObsidianMainWidgetBase::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
