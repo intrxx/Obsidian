@@ -88,6 +88,33 @@ public:
 	UTexture2D* GetItemImage() const;
 	
 	void SetItemImage(UTexture2D* ItemImageToSet);
+	
+	/**
+	 * Item Skeletal Mesh.
+	 */
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	USkeletalMesh* GetItemSkeletalMesh() const;
+	
+	void SetItemSkeletalMesh(USkeletalMesh* InItemSkeletalMesh);
+
+	/**
+	 * Item Static Mesh.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UStaticMesh* GetItemDroppedMesh() const;
+	
+	void SetItemDroppedMesh(UStaticMesh* InItemDroppedMesh);
+
+	/**
+	 * Item Display Name.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FText GetItemDisplayName() const;
+	
+	void SetItemDisplayName(const FText& InItemDisplayName);
 
 private:
 	UPROPERTY(Replicated)
@@ -104,4 +131,13 @@ private:
 
 	UPROPERTY(Replicated)
 	TObjectPtr<UTexture2D> ItemImage;
+
+	UPROPERTY(Replicated)
+	TObjectPtr<USkeletalMesh> ItemSkeletalMesh;
+
+	UPROPERTY(Replicated)
+	TObjectPtr<UStaticMesh> ItemDroppedMesh;
+	
+	UPROPERTY(Replicated)
+	FText ItemDisplayName;
 };

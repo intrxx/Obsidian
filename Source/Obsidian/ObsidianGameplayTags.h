@@ -51,6 +51,8 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_CharacterStatus);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Inventory);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_PassiveSkillTree);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_DropItem);
 
 	/**
 	 * Ability

@@ -153,6 +153,8 @@ void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryIt
 	if(Instance)
 	{
 		Instance->SetItemImage(ItemImage);
+		Instance->SetItemSkeletalMesh(SkeletalMesh);
+		Instance->SetItemDisplayName(DisplayName);
 		Instance->SetItemGridSize(GetItemGridSizeFromDesc());
 		Instance->SetItemGridSpan(GetItemGridSpanFromDesc());
 	}

@@ -22,12 +22,21 @@ class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable
 public:
 	AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
+	void SetupItemAppearanceFromInstance();
+
 protected:
 	virtual void BeginPlay() override;
 
 	void OnItemDescMouseHover(const bool bMouseEnter);
 	void OnItemDescMouseButtonDown();
 
+private:
+	void PickupItemInstance() const;
+	void PickupItemDef() const;
+
+	void InitItemDesc(UObsidianGroundItemDesc* GroundItemDesc);
+	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;

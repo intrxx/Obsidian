@@ -214,6 +214,8 @@ void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) c
 			ObsidianHUD->InitOverlay(ObsidianPC, ObsidianPS, ObsidianASC, HeroAttributesComponent);
 		}
 	}
+
+	HeroComponent->SetDraggedItemClass(DroppableItemClass);
 }
 
 void AObsidianHero::InitializeHealthBar() const

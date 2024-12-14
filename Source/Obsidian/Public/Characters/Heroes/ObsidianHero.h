@@ -6,6 +6,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianHero.generated.h"
 
+class AObsidianDroppableItem;
 class UObsidianHeroHealthBar_Simple;
 class UObsidianHeroHealthBar;
 class UObsidianWidgetBase;
@@ -77,8 +78,8 @@ private:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USpringArmComponent> SpringArmComponent;
-
-	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
 
 	//@Note, this health bars does not work for the simulated clients if we are the server,
@@ -91,4 +92,7 @@ private:
 	/** Health bar to set on simulated proxy Player. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianHeroHealthBar_Simple> SimulatedHealthBarClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;
 };

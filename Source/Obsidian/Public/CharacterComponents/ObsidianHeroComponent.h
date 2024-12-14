@@ -7,11 +7,12 @@
 #include "Components/PawnComponent.h"
 #include "ObsidianHeroComponent.generated.h"
 
-class UObsidianDraggedItem;
+struct FInputActionValue;
+class AObsidianDroppableItem;
 class USplineComponent;
 class AObsidianHUD;
-struct FInputActionValue;
 class IObsidianHighlightInterface;
+class UObsidianDraggedItem;
 
 /**
  * Component that manages hero related things like input
@@ -38,7 +39,12 @@ public:
 
 	void DragItem(UObsidianDraggedItem* InDraggedItem);
 	void StopDragging();
-
+	
+	void SetDraggedItemClass(TSubclassOf<AObsidianDroppableItem> InDroppableItemClass)
+	{
+		DroppableItemClass = InDroppableItemClass;
+	};
+	
 	/** Gets the currently dragged item, will be nullptr when the character does not drag any item. */
 	UObsidianDraggedItem* GetCurrentlyDraggedItem()
 	{
@@ -68,6 +74,8 @@ protected:
 	void Input_ToggleInventory();
 	void Input_TogglePassiveSkillTree();
 	
+	void Input_DropItem();
+	
 protected:
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
@@ -84,8 +92,12 @@ private:
 	void AutoRun();
 	void CursorTrace();
 	void DragItem();
+
+	bool CanDropItem() const;
 	
 private:
+	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;
+	
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
 	FHitResult CursorHit;
 	
@@ -98,7 +110,8 @@ private:
 
 	TObjectPtr<UObsidianDraggedItem> DraggedItem;
 	bool bDragItem = false;
-
+	bool bItemAvailableForDrop = false;
+	
 	bool bCursorOverUI = false;
 };
 

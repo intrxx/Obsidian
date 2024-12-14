@@ -16,6 +16,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/SplineComponent.h"
 #include "GameFramework/PlayerController.h"
+#include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
@@ -187,6 +188,9 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleInventory, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_PassiveSkillTree,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_TogglePassiveSkillTree, false);
+
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_DropItem,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_DropItem, false);
 			}
 		}
 	}
@@ -267,7 +271,6 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 	
 	if(CursorHit.bBlockingHit)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Move mouse!"));
 		CachedDestination = CursorHit.Location;
 	}
 	
@@ -338,6 +341,35 @@ void UObsidianHeroComponent::Input_TogglePassiveSkillTree()
 	}
 }
 
+void UObsidianHeroComponent::Input_DropItem()
+{
+	if(CanDropItem() == false)
+	{
+		return;
+	}
+	
+	UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		return;
+	}
+
+	const FVector CursorHitLocation = CursorHit.Location;
+	const UObsidianDraggedItem* CurrentlyDraggedItem = GetCurrentlyDraggedItem();
+	check(CurrentlyDraggedItem);
+	UObsidianInventoryItemInstance* ItemInstance = CurrentlyDraggedItem->GetItemInstance();
+	check(ItemInstance)
+
+	check(DroppableItemClass);
+	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, CursorHitLocation, FVector(1.0f, 1.0f, 1.0f));
+	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
+	Item->AddItemInstance(ItemInstance);
+	Item->SetupItemAppearanceFromInstance();
+	Item->FinishSpawning(ItemSpawnTransform);
+
+	StopDragging();
+}
+
 AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 {
 	if(const AObsidianPlayerController* ObsidianPC = GetController<AObsidianPlayerController>())
@@ -351,6 +383,11 @@ void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
 {
 	DraggedItem = InDraggedItem;
 	bDragItem = true;
+
+	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+	{
+		bItemAvailableForDrop = true;
+	});
 }
 
 void UObsidianHeroComponent::StopDragging()
@@ -359,6 +396,7 @@ void UObsidianHeroComponent::StopDragging()
 	
 	bDragItem = false;
 	DraggedItem = nullptr;
+	bItemAvailableForDrop = false;
 }
 
 void UObsidianHeroComponent::DragItem()
@@ -377,3 +415,9 @@ void UObsidianHeroComponent::DragItem()
 		DraggedItem->SetPositionInViewport(ViewportPosition);
 	}
 }
+
+bool UObsidianHeroComponent::CanDropItem() const
+{
+	return !bCursorOverUI && IsDraggingAnItem() && bItemAvailableForDrop;
+}
+

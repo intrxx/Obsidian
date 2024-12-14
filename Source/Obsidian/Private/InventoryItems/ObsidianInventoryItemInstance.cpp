@@ -22,6 +22,8 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemGridSize);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemImage);
+	DOREPLIFETIME(ThisClass, ItemDisplayName);
+	DOREPLIFETIME(ThisClass, ItemSkeletalMesh);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -81,5 +83,35 @@ UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const
 void UObsidianInventoryItemInstance::SetItemImage(UTexture2D* ItemImageToSet)
 {
 	ItemImage = ItemImageToSet;
+}
+
+USkeletalMesh* UObsidianInventoryItemInstance::GetItemSkeletalMesh() const
+{
+	return ItemSkeletalMesh;
+}
+
+void UObsidianInventoryItemInstance::SetItemSkeletalMesh(USkeletalMesh* InItemSkeletalMesh)
+{
+	ItemSkeletalMesh = InItemSkeletalMesh;
+}
+
+UStaticMesh* UObsidianInventoryItemInstance::GetItemDroppedMesh() const
+{
+	return ItemDroppedMesh;
+}
+
+void UObsidianInventoryItemInstance::SetItemDroppedMesh(UStaticMesh* InItemDroppedMesh)
+{
+	ItemDroppedMesh = InItemDroppedMesh;
+}
+
+FText UObsidianInventoryItemInstance::GetItemDisplayName() const
+{
+	return ItemDisplayName;
+}
+
+void UObsidianInventoryItemInstance::SetItemDisplayName(const FText& InItemDisplayName)
+{
+	ItemDisplayName = InItemDisplayName;
 }
 

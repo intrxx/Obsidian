@@ -7,6 +7,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/WidgetComponent.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "Kismet/GameplayStatics.h"
@@ -33,6 +34,23 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	GroundItemDescWidgetComp->SetupAttachment(StaticMeshComp);
 }
 
+void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
+{
+	FPickupContent PickupContent = GetPickupContent();
+	if(PickupContent.Instances.Num() > 0)
+	{
+		return;
+	}
+	
+	if(const UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item)
+	{
+		if(UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh())
+		{
+			StaticMeshComp->SetStaticMesh(DroppedMesh);
+		}
+	}
+}
+
 void AObsidianDroppableItem::BeginPlay()
 {
 	Super::BeginPlay();
@@ -47,20 +65,35 @@ void AObsidianDroppableItem::BeginPlay()
 	GroundItemDesc->OnItemDescMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemDescMouseHover);
 	GroundItemDesc->OnItemDescMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemDescMouseButtonDown);
 
-	FPickupContent PickupContent = GetPickupContent();
-	if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef)
-	{
-		if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
-		{
-			const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
+	InitItemDesc(GroundItemDesc);
+	GroundItemDescWidgetComp->SetWidget(GroundItemDesc);
+	GroundItemDescWidgetComp->InitWidget();
+}
 
-			const FText ItemDisplayName = Appearance->GetItemDisplayName();
+void AObsidianDroppableItem::InitItemDesc(UObsidianGroundItemDesc* GroundItemDesc)
+{
+	FPickupContent PickupContent = GetPickupContent();
+	if(CarriesItemDef())
+	{
+		if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef)
+		{
+			if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
+			{
+				const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
+
+				const FText ItemDisplayName = Appearance->GetItemDisplayName();
+				GroundItemDesc->SetItemName(ItemDisplayName);
+			}
+		}
+	}
+	else if(CarriesItemInstance())
+	{
+		if(const UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item)
+		{
+			const FText ItemDisplayName = ItemInstance->GetItemDisplayName();
 			GroundItemDesc->SetItemName(ItemDisplayName);
 		}
 	}
-
-	GroundItemDescWidgetComp->SetWidget(GroundItemDesc);
-	GroundItemDescWidgetComp->InitWidget();
 }
 
 void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)
@@ -79,12 +112,49 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 	// 1. Get the local Player Controller
 	// 2. Check if the inventory is opened
 	// 3. Server delegate to request to add the item to inventory/cursor?
+	if(CarriesItemDef())
+	{
+		PickupItemDef();
+	}
+	else if(CarriesItemInstance())
+	{
+		PickupItemInstance();
+	}
+	
+	Destroy();
+}
+
+void AObsidianDroppableItem::PickupItemInstance() const
+{
 	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
 	{
-		// Debug
-		ENetRole NetRole = GetLocalRole();
-		UE_LOG(LogTemp, Warning, TEXT("Role: %d"), NetRole);
-		// Debug
+		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
+		{
+			FPickupContent PickupContent = GetPickupContent();
+			UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item;
+			
+			if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
+			{
+				const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+				UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+				check(HeroComp);
+					
+				UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+				DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
+				DraggedItem->AddToViewport();
+				HeroComp->DragItem(DraggedItem);
+				return;
+			}
+			UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
+			InventoryComponent->AddItemInstance(ItemInstance);
+		}
+	}
+}
+
+void AObsidianDroppableItem::PickupItemDef() const
+{
+	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			FPickupContent PickupContent = GetPickupContent();
@@ -93,7 +163,7 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 			
 			if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
 			{
-				AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+				const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
 				UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 				check(HeroComp);
 					
@@ -103,9 +173,10 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 				HeroComp->DragItem(DraggedItem);
 				return;
 			}
-			
 			UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
 			InventoryComponent->AddItemDefinition(PickupItemDef, StackCount);
 		}
 	}
 }
+
+

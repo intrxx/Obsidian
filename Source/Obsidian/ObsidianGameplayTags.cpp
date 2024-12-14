@@ -80,6 +80,8 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_CharacterStatus, "Input.Native.CharacterStatus", "Character Status toggle input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Inventory, "Input.Native.Inventory", "Inventory toggle input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_PassiveSkillTree, "Input.Native.PassiveSkillTree", "Passive Skill Tree toggle input.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_DropItem, "Input.DropItem", "Aditional input for droping the item.");
 
 	/**
 	 * Ability

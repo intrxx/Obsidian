@@ -27,7 +27,13 @@ USTRUCT(BlueprintType)
 struct FPickupInstance
 {
 	GENERATED_BODY()
-
+	
+public:
+	FPickupInstance(){};
+	FPickupInstance(UObsidianInventoryItemInstance* InItemInstance)
+		: Item(InItemInstance)
+	{};
+	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UObsidianInventoryItemInstance> Item = nullptr;
@@ -62,6 +68,9 @@ class OBSIDIAN_API IObsidianPickableInterface
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Pickable")
 	virtual FPickupContent GetPickupContent() const = 0;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
+	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) = 0;
 };
 
 /**

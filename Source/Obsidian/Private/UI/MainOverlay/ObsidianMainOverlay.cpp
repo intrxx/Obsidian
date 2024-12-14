@@ -112,6 +112,7 @@ void UObsidianMainOverlay::ToggleInventory()
 			{
 				Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
 			}
+			InventoryWidgetController->SetInventoryOpened(false);
 		});
 
 		InventoryWidgetController->OnInventoryOpen();
@@ -125,6 +126,11 @@ void UObsidianMainOverlay::ToggleInventory()
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
 		if(InventoryWidgetController)
 		{
+			InventoryWidgetController->SetInventoryOpened(false);
+		}
+		else
+		{
+			InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 			InventoryWidgetController->SetInventoryOpened(false);
 		}
 	}

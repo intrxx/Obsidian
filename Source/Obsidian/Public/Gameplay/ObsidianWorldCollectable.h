@@ -16,6 +16,12 @@ public:
 	AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual FPickupContent GetPickupContent() const override;
+	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
+
+protected:
+	bool CarriesItemInstance() const;
+	bool CarriesItemDef() const;
+	bool CarriesBoth() const;
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian")
