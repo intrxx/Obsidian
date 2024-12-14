@@ -38,11 +38,6 @@ void UObsidianProgressGlobe::NativeOnMouseEnter(const FGeometry& InGeometry, con
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
-	if(InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
-	{
-		return;
-	}
-	
 	OnMouseEnterLeaveDelegate.Broadcast(true);
 	UE_LOG(LogTemp, Warning, TEXT("Entered Progress Globe!"));
 }
@@ -51,13 +46,14 @@ void UObsidianProgressGlobe::NativeOnMouseLeave(const FPointerEvent& InMouseEven
 {
 	Super::NativeOnMouseLeave(InMouseEvent);
 	
-	if(InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton))
-	{
-		return;
-	}
-	
 	OnMouseEnterLeaveDelegate.Broadcast(false);
 	UE_LOG(LogTemp, Warning, TEXT("Left Progress Globe!"));
+}
+
+FReply UObsidianProgressGlobe::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// @HACK displaying mouse button down event fixes a bug when we click on the globe, move the mouse over and have our mouse movement blocked.
+	return FReply::Handled();
 }
 
 void UObsidianProgressGlobe::HandleWidgetControllerSet()
