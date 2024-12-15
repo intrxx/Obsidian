@@ -61,13 +61,16 @@ void UObsidianInventory::SetupGrid()
 	
 	for(int32 i = 0; i < InventoryGridSize; i++)
 	{
+		const FVector2D SlotPosition = FVector2D(GridX, GridY);
 		UObsidianInventorySlot* InventorySlot = CreateWidget<UObsidianInventorySlot>(this, InventorySlotClass);
-		InventorySlot->SetSlotPosition(FVector2D(GridX, GridY));
-		InventorySlot->OnHoverOverSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHoverOver);
+		InventorySlot->SetSlotPosition(SlotPosition);
+		InventorySlot->OnHoverOverSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHover);
 		InventorySlot->OnMouseButtonDownOnSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotMouseButtonDown);
 		
 		UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(InventorySlot, GridY, GridX);
 		GridSlot->SetLayer(0);
+
+		InventorySlotToLocMap.Add(InventorySlot, SlotPosition);
 		
 		if(GridX == InventoryGridWidth - 1)
 		{
@@ -89,9 +92,39 @@ void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D ItemDesire
 	}
 }
 
-void UObsidianInventory::OnInventorySlotHoverOver(bool bEntered)
+void UObsidianInventory::OnInventorySlotHover(bool bEntered, UObsidianInventorySlot* AffectedSlot)
 {
-	
+	// Check if we carry item +
+	// Get the item grid span +
+	// Get the slot that was entered +
+	// Add it to the Array of Slots that has changed state to reset it later
+	// Change the color to available for now
+	if(bEntered)
+	{
+		if(!InventoryWidgetController || !InventoryWidgetController->IsDraggingAnItem())
+		{
+			return;
+		}
+		
+		FVector2D ItemGridSpan = InventoryWidgetController->GetDraggedItemGridSpan();
+		FVector2D SlotPosition = AffectedSlot->GetSlotPosition();
+
+		AffectedSlots.Add(AffectedSlot);
+		AffectedSlot->SetSlotAvailable();
+	}
+	else
+	{
+		if(AffectedSlots.IsEmpty())
+		{
+			return;
+		}
+
+		for(UObsidianInventorySlot* InventorySlot : AffectedSlots)
+		{
+			InventorySlot->ResetSlot();
+		}
+		AffectedSlots.Empty();
+	}
 }
 
 void UObsidianInventory::OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition)

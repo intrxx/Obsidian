@@ -6,10 +6,11 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianInventorySlot.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHoverOverSlotSignature, bool bEntered)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseButtonDownOnSlotSignature, const FVector2D& SlotPosition)
-
+class UObsidianInventorySlot;
 class UImage;
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, bool bEntered, UObsidianInventorySlot* AffectedSlot)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseButtonDownOnSlotSignature, const FVector2D& SlotPosition)
 
 /**
  * 

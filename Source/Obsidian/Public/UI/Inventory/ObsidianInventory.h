@@ -46,7 +46,7 @@ private:
 
 	void OnItemLeftMouseButtonPressed(const FVector2D ItemDesiredPosition);
 	
-	void OnInventorySlotHoverOver(bool bEntered);
+	void OnInventorySlotHover(bool bEntered, UObsidianInventorySlot* AffectedSlot);
 	void OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition);
 	
 private:
@@ -66,4 +66,7 @@ private:
 	int32 InventoryGridHeight = 5;
 	
 	int32 InventoryGridSize;
+
+	TMap<UObsidianInventorySlot*, FVector2D> InventorySlotToLocMap;
+	TArray<UObsidianInventorySlot*> AffectedSlots;
 };

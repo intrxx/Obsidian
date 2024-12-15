@@ -2,10 +2,11 @@
 
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
-
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "UI/Inventory/ObsidianItem.h"
 
@@ -87,6 +88,46 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 	InternalHeroComponent->DragItem(DraggedItem);
 
 	InventoryComponent->RemoveItemInstance(ItemInstance);
+}
+
+bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
+{
+	if(InternalHeroComponent)
+	{
+		return InternalHeroComponent->IsDraggingAnItem();
+	}
+	return false;
+}
+
+FVector2D UObsidianInventoryWidgetController::GetDraggedItemGridSpan() const
+{
+	if(!IsDraggingAnItem())
+	{
+		return FVector2D::Zero();
+	}
+
+	const UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
+	if(!DraggedItem)
+	{
+		return FVector2D::Zero();
+	}
+	
+	if(const UObsidianInventoryItemInstance* Instance = DraggedItem->GetItemInstance())
+	{
+		return Instance->GetItemGridSpan();		
+	}
+	
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef())
+	{
+		if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+		{
+			if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+			{
+				return AppearanceFrag->GetItemGridSpanFromDesc();
+			}
+		}
+	}
+	return FVector2D::Zero();
 }
 
 void UObsidianInventoryWidgetController::AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)

@@ -39,6 +39,9 @@ public:
 		return InternalHeroComponent;
 	}
 
+	bool IsDraggingAnItem() const;
+	FVector2D GetDraggedItemGridSpan() const;
+
 	void AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
 	void RemoveItemWidget(const FVector2D& Location);
 	
