@@ -113,9 +113,8 @@ void UObsidianInventory::OnInventorySlotHover(bool bEntered, UObsidianInventoryS
 			return;
 		}
 		
-		FVector2D HoveredSlotPosition = AffectedSlot->GetSlotPosition();
-
-		// Check if we can place the item here
+		const FVector2D HoveredSlotPosition = AffectedSlot->GetSlotPosition();
+		const bool bCanPlace = InventoryWidgetController->CanPlaceDraggedItem(HoveredSlotPosition, ItemGridSize);
 		
 		for(FVector2D SizeComp : ItemGridSize)
 		{
@@ -123,7 +122,7 @@ void UObsidianInventory::OnInventorySlotHover(bool bEntered, UObsidianInventoryS
 			if(InventoryLocationToSlotMap.Contains(LocationToCheck))
 			{
 				UObsidianInventorySlot* LocalSlot = InventoryLocationToSlotMap[LocationToCheck];
-				LocalSlot->SetSlotAvailable();
+				LocalSlot->SetSlotState(bCanPlace);
 				AffectedSlots.Add(LocalSlot);
 			}
 		}

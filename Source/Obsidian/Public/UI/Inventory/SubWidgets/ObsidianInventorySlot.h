@@ -30,9 +30,9 @@ public:
 	{
 		return SlotPosition;
 	}
-	
-	void SetSlotTaken();
-	void SetSlotAvailable();
+
+	/** Sets the slot state based on bAvailable, if true sets it to green if false to red. */
+	void SetSlotState(bool bAvailable);
 	void ResetSlot();
 
 	FOnHoverOverSlotSignature OnHoverOverSlotDelegate;

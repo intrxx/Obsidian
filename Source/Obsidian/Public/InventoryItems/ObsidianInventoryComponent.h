@@ -90,6 +90,7 @@ private:
 
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
+	TMap<FVector2D, bool> Internal_GetInventoryStateMap();
 	UObsidianInventoryItemInstance* Internal_GetItemInstanceForLocation(const FVector2D& Position) const;
 	
 private:

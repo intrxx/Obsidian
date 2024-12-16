@@ -360,6 +360,8 @@ void UObsidianHeroComponent::Input_DropItem()
 	UObsidianInventoryItemInstance* ItemInstance = CurrentlyDraggedItem->GetItemInstance();
 	check(ItemInstance)
 
+	//TODO Drop item def
+
 	check(DroppableItemClass);
 	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, CursorHitLocation, FVector(1.0f, 1.0f, 1.0f));
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);

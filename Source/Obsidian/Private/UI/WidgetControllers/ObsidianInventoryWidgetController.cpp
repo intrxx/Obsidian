@@ -15,6 +15,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	check(InventoryComponent);
 	InternalInventoryComponent = InventoryComponent;
 	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::OnItemAdded);
+	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 
 	const AActor* OwningActor = Cast<AActor>(PlayerController->GetPawn());
 	check(OwningActor);
@@ -26,19 +27,35 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
 {
 	check(ItemInstance);
+	//bInventoryChanged = true;
+	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 	OnItemAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
 }
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
 {
 	//TODO This really needs profiling, for now let it be this way
-	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
+	/*
+	if(bInventoryChanged == false)
+	{
+		for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
+		{
+			OnItemAddedDelegate.Broadcast(LocToInstancePair.Value->GetItemImage(), LocToInstancePair.Key, LocToInstancePair.Value->GetItemGridSpan());
+		}
+		return;
+	}
+	*/
+	
+	GridLocationToItemMap.Empty();
+	GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
 	AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
 	
 	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
 	{
 		OnItemAddedDelegate.Broadcast(LocToInstancePair.Value->GetItemImage(), LocToInstancePair.Key, LocToInstancePair.Value->GetItemGridSpan());
 	}
+
+	//bInventoryChanged = false;
 }
 
 void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition)
@@ -88,6 +105,7 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 	InternalHeroComponent->DragItem(DraggedItem);
 
 	InventoryComponent->RemoveItemInstance(ItemInstance);
+	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 }
 
 bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
@@ -97,6 +115,37 @@ bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
 		return InternalHeroComponent->IsDraggingAnItem();
 	}
 	return false;
+}
+
+bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize) const
+{
+	if(ItemGridSize.IsEmpty())
+	{
+		TArray<FVector2D> LocalItemGridSize;
+		GetDraggedItemGridSize(LocalItemGridSize);
+		return CanAddToSpecificSlot(LocalItemGridSize, HoveredSlot);
+	}
+	return CanAddToSpecificSlot(ItemGridSize, HoveredSlot);
+}
+
+bool UObsidianInventoryWidgetController::CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const
+{
+	bool bCanFit = false;
+	
+	if(InventoryStateMap[HoveredSlot] == false) // Initial location is free
+	{
+		bCanFit = true;
+		for(FVector2D LocationComp : ItemGridSize)
+		{
+			const FVector2D Loc = HoveredSlot + LocationComp;
+			if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
+			{
+				bCanFit = false;
+				break;
+			}
+		}
+	}
+	return bCanFit;
 }
 
 bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const

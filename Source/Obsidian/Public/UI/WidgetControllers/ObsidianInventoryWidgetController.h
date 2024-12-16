@@ -40,6 +40,7 @@ public:
 	}
 
 	bool IsDraggingAnItem() const;
+	bool CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize = TArray<FVector2D>()) const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
@@ -63,9 +64,15 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
+
+private:
+	bool CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const;
 	
 private:
+	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
+	TMap<FVector2D, bool> InventoryStateMap;
 	bool bInventoryOpened = false;
+	//bool bInventoryChanged = false;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryComponent> InternalInventoryComponent;

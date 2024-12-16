@@ -12,16 +12,18 @@ void UObsidianInventorySlot::NativeConstruct()
 	Action_Image->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UObsidianInventorySlot::SetSlotTaken()
+void UObsidianInventorySlot::SetSlotState(bool bAvailable)
 {
-	Action_Image->SetBrush(SlotTakenColor);
-	Action_Image->SetVisibility(ESlateVisibility::Visible);
-}
-
-void UObsidianInventorySlot::SetSlotAvailable()
-{
-	Action_Image->SetBrush(SlotAvailableColor);
-	Action_Image->SetVisibility(ESlateVisibility::Visible);
+	if(bAvailable)
+	{
+		Action_Image->SetBrush(SlotAvailableColor);
+		Action_Image->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		Action_Image->SetBrush(SlotTakenColor);
+		Action_Image->SetVisibility(ESlateVisibility::Visible);
+	}
 }
 
 void UObsidianInventorySlot::ResetSlot()
