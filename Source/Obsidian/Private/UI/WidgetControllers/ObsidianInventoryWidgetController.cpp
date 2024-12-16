@@ -99,22 +99,23 @@ bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
 	return false;
 }
 
-FVector2D UObsidianInventoryWidgetController::GetDraggedItemGridSpan() const
+bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const
 {
 	if(!IsDraggingAnItem())
 	{
-		return FVector2D::Zero();
+		return false;
 	}
 
 	const UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 	if(!DraggedItem)
 	{
-		return FVector2D::Zero();
+		return false;
 	}
 	
 	if(const UObsidianInventoryItemInstance* Instance = DraggedItem->GetItemInstance())
 	{
-		return Instance->GetItemGridSpan();		
+		OutItemGridSize = Instance->GetItemGridSize();
+		return true;	
 	}
 	
 	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef())
@@ -123,11 +124,12 @@ FVector2D UObsidianInventoryWidgetController::GetDraggedItemGridSpan() const
 		{
 			if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 			{
-				return AppearanceFrag->GetItemGridSpanFromDesc();
+				OutItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
+				return true;	
 			}
 		}
 	}
-	return FVector2D::Zero();
+	return false;
 }
 
 void UObsidianInventoryWidgetController::AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)

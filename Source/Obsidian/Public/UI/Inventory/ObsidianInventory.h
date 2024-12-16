@@ -67,6 +67,6 @@ private:
 	
 	int32 InventoryGridSize;
 
-	TMap<UObsidianInventorySlot*, FVector2D> InventorySlotToLocMap;
+	TMap<FVector2D, UObsidianInventorySlot*> InventoryLocationToSlotMap;
 	TArray<UObsidianInventorySlot*> AffectedSlots;
 };

@@ -70,7 +70,7 @@ void UObsidianInventory::SetupGrid()
 		UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(InventorySlot, GridY, GridX);
 		GridSlot->SetLayer(0);
 
-		InventorySlotToLocMap.Add(InventorySlot, SlotPosition);
+		InventoryLocationToSlotMap.Add(SlotPosition, InventorySlot);
 		
 		if(GridX == InventoryGridWidth - 1)
 		{
@@ -105,12 +105,28 @@ void UObsidianInventory::OnInventorySlotHover(bool bEntered, UObsidianInventoryS
 		{
 			return;
 		}
-		
-		FVector2D ItemGridSpan = InventoryWidgetController->GetDraggedItemGridSpan();
-		FVector2D SlotPosition = AffectedSlot->GetSlotPosition();
 
-		AffectedSlots.Add(AffectedSlot);
-		AffectedSlot->SetSlotAvailable();
+		TArray<FVector2D> ItemGridSize;
+		const bool bSuccess = InventoryWidgetController->GetDraggedItemGridSize(ItemGridSize);
+		if(!bSuccess)
+		{
+			return;
+		}
+		
+		FVector2D HoveredSlotPosition = AffectedSlot->GetSlotPosition();
+
+		// Check if we can place the item here
+		
+		for(FVector2D SizeComp : ItemGridSize)
+		{
+			const FVector2D LocationToCheck = HoveredSlotPosition + SizeComp;
+			if(InventoryLocationToSlotMap.Contains(LocationToCheck))
+			{
+				UObsidianInventorySlot* LocalSlot = InventoryLocationToSlotMap[LocationToCheck];
+				LocalSlot->SetSlotAvailable();
+				AffectedSlots.Add(LocalSlot);
+			}
+		}
 	}
 	else
 	{
