@@ -467,21 +467,21 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 	}
 	
 	const TArray<FVector2D> ReplacingItemGridSize = ReplacingInstance->GetItemGridSize();
-	bool bCanFit = false;
+	bool bCanReplace = false;
 	if(TempInventoryStateMap[Slot] == false) // Initial location is free
 	{
-		bCanFit = true;
+		bCanReplace = true;
 		for(FVector2D LocationComp : ReplacingItemGridSize)
 		{
 			const FVector2D Loc = Slot + LocationComp;
 			if(!TempInventoryStateMap.Contains(Loc) || TempInventoryStateMap[Loc] == true)
 			{
-				bCanFit = false;
+				bCanReplace = false;
 				break;
 			}
 		}
 	}
-	return bCanFit;
+	return bCanReplace;
 }
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef)
@@ -506,7 +506,7 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVec
 		}
 #endif
 	}
-	bool bCanFit = false;
+	bool bCanReplace = false;
 	
 	const UObsidianInventoryItemDefinition* DefaultItem = ItemDef.GetDefaultObject();
 	if(ensureMsgf(DefaultItem, TEXT("Item Default could not be extracted from provided Item Def in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef")))
@@ -518,20 +518,20 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVec
 
 			if(TempInventoryStateMap[Slot] == false) // Initial location is free
 			{
-				bCanFit = true;
+				bCanReplace = true;
 				for(FVector2D LocationComp : ReplacingItemGridSize)
 				{
 					const FVector2D Loc = Slot + LocationComp;
 					if(!TempInventoryStateMap.Contains(Loc) || TempInventoryStateMap[Loc] == true)
 					{
-						bCanFit = false;
+						bCanReplace = false;
 						break;
 					}
 				}
 			}
 		}
 	}
-	return bCanFit;
+	return bCanReplace;
 }
 
 
