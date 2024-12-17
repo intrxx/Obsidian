@@ -443,4 +443,95 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>
 	return bCanFit;
 }
 
+bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance)
+{
+	UObsidianInventoryItemInstance* InstanceAtLocation = Internal_GetItemInstanceForLocation(Slot);
+	FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
+	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
+	
+	TMap<FVector2D, bool> TempInventoryStateMap = InventoryStateMap;
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = ItemOrigin + LocationComp;
+		if(TempInventoryStateMap.Contains(Location))
+		{
+			TempInventoryStateMap[Location] = false;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
+			"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), Location.X, Location.Y), ELogVerbosity::Warning);
+		}
+#endif
+	}
+	
+	const TArray<FVector2D> ReplacingItemGridSize = ReplacingInstance->GetItemGridSize();
+	bool bCanFit = false;
+	if(TempInventoryStateMap[Slot] == false) // Initial location is free
+	{
+		bCanFit = true;
+		for(FVector2D LocationComp : ReplacingItemGridSize)
+		{
+			const FVector2D Loc = Slot + LocationComp;
+			if(!TempInventoryStateMap.Contains(Loc) || TempInventoryStateMap[Loc] == true)
+			{
+				bCanFit = false;
+				break;
+			}
+		}
+	}
+	return bCanFit;
+}
+
+bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef)
+{
+	UObsidianInventoryItemInstance* InstanceAtLocation = Internal_GetItemInstanceForLocation(Slot);
+	FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
+	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
+	
+	TMap<FVector2D, bool> TempInventoryStateMap = InventoryStateMap;
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = ItemOrigin + LocationComp;
+		if(TempInventoryStateMap.Contains(Location))
+		{
+			TempInventoryStateMap[Location] = false;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
+			"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), Location.X, Location.Y), ELogVerbosity::Warning);
+		}
+#endif
+	}
+	bool bCanFit = false;
+	
+	const UObsidianInventoryItemDefinition* DefaultItem = ItemDef.GetDefaultObject();
+	if(ensureMsgf(DefaultItem, TEXT("Item Default could not be extracted from provided Item Def in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef")))
+	{
+		const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
+		if(ensureMsgf(Appearance, TEXT("Appearance fragment does not exist on provided Item Def in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef")))
+		{
+			TArray<FVector2D> ReplacingItemGridSize = Appearance->GetItemGridSizeFromDesc();
+
+			if(TempInventoryStateMap[Slot] == false) // Initial location is free
+			{
+				bCanFit = true;
+				for(FVector2D LocationComp : ReplacingItemGridSize)
+				{
+					const FVector2D Loc = Slot + LocationComp;
+					if(!TempInventoryStateMap.Contains(Loc) || TempInventoryStateMap[Loc] == true)
+					{
+						bCanFit = false;
+						break;
+					}
+				}
+			}
+		}
+	}
+	return bCanFit;
+}
+
 

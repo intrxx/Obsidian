@@ -89,13 +89,40 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 
 void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const FVector2D& SlotPosition)
 {
-	if(InternalHeroComponent->IsDraggingAnItem() == true) //TODO This should be a valid case in the future, just replace the item
-	{
-		return;
-	}
 	check(InventoryComponent);
 	check(DraggedItemWidgetClass);
 	
+	if(InternalHeroComponent->IsDraggingAnItem() == true) //TODO This should be a valid case in the future, just replace the item
+	{
+		//Replace the item if it fits
+		const UObsidianDraggedItem* CachedDraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
+		if(UObsidianInventoryItemInstance* CachedDraggedInstance = CachedDraggedItem->GetItemInstance())
+		{
+			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, CachedDraggedInstance))
+			{
+				InternalHeroComponent->StopDragging();
+				PickupItem(SlotPosition);
+				InventoryComponent->AddItemInstanceToSpecificSlot(CachedDraggedInstance, SlotPosition);
+			}
+			return;
+		}
+		if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem->GetItemDef())
+		{
+			InternalHeroComponent->StopDragging();
+			PickupItem(SlotPosition);
+			
+			const int32 ItemStackCount = CachedDraggedItem->GetItemStacks();
+			InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, ItemStackCount);
+			
+			return;
+		}
+		return;
+	}
+	PickupItem(SlotPosition);
+}
+
+void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPosition)
+{
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceForLocation(SlotPosition);
 	RemoveItemWidget(SlotPosition);
 	

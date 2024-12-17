@@ -67,6 +67,7 @@ protected:
 
 private:
 	bool CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const;
+	void PickupItem(const FVector2D& SlotPosition);
 	
 private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
