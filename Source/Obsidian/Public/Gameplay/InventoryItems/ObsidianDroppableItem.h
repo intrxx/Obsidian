@@ -22,9 +22,9 @@ class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable
 public:
 	AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
-	void SetupItemAppearanceFromInstance();
-
+	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
+	
 protected:
 	virtual void BeginPlay() override;
 
@@ -36,6 +36,11 @@ private:
 	void PickupItemDef() const;
 
 	void InitItemDesc(UObsidianGroundItemDesc* GroundItemDesc);
+
+	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
+	void SetupItemAppearanceFromInstance();
+	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
+	void SetupItemAppearanceFromDefinition();
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

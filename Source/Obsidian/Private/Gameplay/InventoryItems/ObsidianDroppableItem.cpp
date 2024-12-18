@@ -34,6 +34,20 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	GroundItemDescWidgetComp->SetupAttachment(StaticMeshComp);
 }
 
+void AObsidianDroppableItem::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
+{
+	Super::AddItemInstance(InstanceToAdd);
+
+	SetupItemAppearanceFromInstance();
+}
+
+void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks)
+{
+	Super::AddItemDefinition(ItemDef, ItemStacks);
+
+	SetupItemAppearanceFromDefinition();
+}
+
 void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
 {
 	FPickupContent PickupContent = GetPickupContent();
@@ -47,6 +61,32 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
 		if(UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh())
 		{
 			StaticMeshComp->SetStaticMesh(DroppedMesh);
+		}
+	}
+}
+
+void AObsidianDroppableItem::SetupItemAppearanceFromDefinition()
+{
+	FPickupContent PickupContent = GetPickupContent();
+	if(PickupContent.Templates.Num() > 0)
+	{
+		return;
+	}
+
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = PickupContent.Templates[0].ItemDef;
+	if(ItemDef == nullptr)
+	{
+		return;
+	}
+
+	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+	{
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		{
+			if(UStaticMesh* DroppedMesh = AppearanceFrag->GetItemDroppedMesh())
+			{
+				StaticMeshComp->SetStaticMesh(DroppedMesh);	
+			}
 		}
 	}
 }

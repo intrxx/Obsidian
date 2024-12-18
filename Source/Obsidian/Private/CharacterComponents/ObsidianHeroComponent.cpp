@@ -9,6 +9,7 @@
 #include "NavigationPath.h"
 #include "NavigationSystem.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Interaction/ObsidianHighlightInterface.h"
@@ -355,20 +356,20 @@ void UObsidianHeroComponent::Input_DropItem()
 	}
 
 	const FVector CursorHitLocation = CursorHit.Location;
-	const UObsidianDraggedItem* CurrentlyDraggedItem = GetCurrentlyDraggedItem();
-	check(CurrentlyDraggedItem);
-	UObsidianInventoryItemInstance* ItemInstance = CurrentlyDraggedItem->GetItemInstance();
-	check(ItemInstance)
-
-	//TODO Drop item def
-
-	check(DroppableItemClass);
 	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, CursorHitLocation, FVector(1.0f, 1.0f, 1.0f));
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
-	Item->AddItemInstance(ItemInstance);
-	Item->SetupItemAppearanceFromInstance();
-	Item->FinishSpawning(ItemSpawnTransform);
 
+	const UObsidianDraggedItem* CurrentlyDraggedItem = GetCurrentlyDraggedItem();
+	if(UObsidianInventoryItemInstance* ItemInstance = CurrentlyDraggedItem->GetItemInstance())
+	{
+		Item->AddItemInstance(ItemInstance);
+	}
+	else if(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CurrentlyDraggedItem->GetItemDef())
+	{
+		const int32 Stacks = CurrentlyDraggedItem->GetItemStacks();
+		Item->AddItemDefinition(ItemDef, Stacks);
+	}
+	Item->FinishSpawning(ItemSpawnTransform);
 	StopDragging();
 }
 

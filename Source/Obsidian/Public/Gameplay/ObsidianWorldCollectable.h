@@ -17,6 +17,7 @@ public:
 
 	virtual FPickupContent GetPickupContent() const override;
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
 
 protected:
 	bool CarriesItemInstance() const;

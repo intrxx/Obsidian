@@ -2,6 +2,7 @@
 
 
 #include "Gameplay//ObsidianWorldCollectable.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
 AObsidianWorldCollectable::AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -18,7 +19,13 @@ FPickupContent AObsidianWorldCollectable::GetPickupContent() const
 void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
 	check(InstanceToAdd);
-	StaticContent.Instances.Add(InstanceToAdd);
+	StaticContent.Instances.Add(FPickupInstance(InstanceToAdd));
+}
+
+void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks)
+{
+	check(ItemDef);
+	StaticContent.Templates.Add(FPickupTemplate(ItemDef, ItemStacks));
 }
 
 bool AObsidianWorldCollectable::CarriesItemInstance() const

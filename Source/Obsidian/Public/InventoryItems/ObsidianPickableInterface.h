@@ -16,11 +16,18 @@ struct FPickupTemplate
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
-	int32 StackCount = 1;
-
+	FPickupTemplate(){};
+	FPickupTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const int32 InStackCount)
+		: ItemDef(InItemDef)
+		, StackCount(InStackCount)
+	{};
+	
+public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
+
+	UPROPERTY(EditAnywhere)
+	int32 StackCount = 1;
 };
 
 USTRUCT(BlueprintType)
@@ -71,6 +78,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) = 0;
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) = 0;
 };
 
 /**
