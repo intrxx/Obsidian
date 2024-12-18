@@ -17,7 +17,11 @@
 > &nbsp;&nbsp; 2.2.1 [ObsidianInventorySlot](#obsidianinventoryslot) \
 > &nbsp; 2.3 [ObsidianItem](#obsidianitem) \
 > &nbsp; 2.4 [ObsidianGroundItemDesc](#obsidiangrounditemdesc) \
-> &nbsp; 2.5 [ObsidianDraggedItem](#obsidiandraggeditem)
+> &nbsp; 2.5 [ObsidianDraggedItem](#obsidiandraggeditem) \
+> 3. [The Rest](#rest) \
+> &nbsp; 3.1 [ObsidianHeroComponent](#obsidianherocomponent) \
+> &nbsp; 3.2 [ObsidianPlayerController](#obsidianplayercontroller) \
+> &nbsp; 3.3 [ObsidianMainOverlay](#obsidianmainoverlay)
 
 
 <a name="backend"></a>
@@ -64,6 +68,18 @@
 
 <a name="obsidiandraggeditem"></a>
 ### 2.5 ObsidianDraggedItem
+
+<a name="rest"></a>
+## 3. The Rest
+
+<a name="obsidianherocomponent"></a>
+### 3.1 ObsidianHeroComponent
+
+<a name="obsidianplayercontroller"></a>
+### 3.2 ObsidianPlayerController
+
+<a name="obsidianmainoverlay"></a>
+### 3.3 ObsidianMainOverlay
 
 
 
