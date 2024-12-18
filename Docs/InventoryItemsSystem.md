@@ -30,6 +30,10 @@
 <a name="obsidianinventorycomp"></a>
 ### 1.1 ObsidianInventoryComponent
 
+Repo Links:
+- [ObsidianInventoryComponent.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianInventoryComponent.h)
+- [ObsidianInventoryComponent.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/ObsidianInventoryComponent.cpp)
+
 <a name="obsidianinventorygrid"></a>
 ### 1.2 ObsidianInventoryGrid
 
