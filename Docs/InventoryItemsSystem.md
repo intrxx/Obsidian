@@ -10,6 +10,7 @@
 > &nbsp; 1.4 [ObsidianInventoryItemInstance](#obsidianinventoryiteminstance) \
 > &nbsp; 1.5 [ObsidianInventoryItemFragment](#obsidianinventoryitemfragment) \
 > &nbsp;&nbsp; 1.5.1 [OInventoryItemFragment_Stacks](#obsidianfragment_stacks) \
+> &nbsp;&nbsp;&nbsp; 1.5.1.1 [ObsidianGameplayTagStack](#obsidiangameplaytagstack) \
 > &nbsp;&nbsp; 1.5.2 [OInventoryItemFragment_Appearance](#obsidianframgent_appearance)
 > 2. [User Interface](#ui) \
 > &nbsp; 2.1 [ObsidianInventoryWidgetController](#obsidianinventorywidgetcontroller) \
@@ -72,8 +73,15 @@ Repo Links:
 - [OInventoryItemFragment_Stacks.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Stacks.h)
 - [OInventoryItemFragment_Stacks.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Fragments/OInventoryItemFragment_Stacks.cpp)
 
+<a name="obsidiangameplaytagstack"></a>
+#### 1.5.1.1 ObsidianGameplayTagStack
+
+Repo Links:
+- [ObsidianGameplayTagStack.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Core/ObsidianGameplayTagStack.h)
+- [ObsidianGameplayTagStack.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Core/ObsidianGameplayTagStack.cpp)
+
 <a name="obsidianframgent_appearance"></a>
-#### 1.5.1 OInventoryItemFragment_Appearance
+#### 1.5.2 OInventoryItemFragment_Appearance
 
 Repo Links:
 - [OInventoryItemFragment_Appearance.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Appearance.h)
