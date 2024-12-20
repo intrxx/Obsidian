@@ -76,10 +76,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Pickable")
 	virtual FPickupContent GetPickupContent() const = 0;
 
+	// This is a direct way to add items to pickup, I'm okay with it for now but idk if it's the way to go
+	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) = 0;
+
+	//
 };
 
 /**

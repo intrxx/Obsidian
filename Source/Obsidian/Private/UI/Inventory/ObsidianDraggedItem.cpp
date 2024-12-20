@@ -12,7 +12,7 @@ void UObsidianDraggedItem::NativeConstruct()
 {
 	Super::NativeConstruct();
 	
-	SetAlignmentInViewport(FVector2D(0.5f));
+	SetAlignmentInViewport(FVector2D(0.51f));
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
@@ -29,7 +29,6 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 	
 	const UOInventoryItemFragment_Appearance* AppearanceFragment = Cast<UOInventoryItemFragment_Appearance>(
 			ItemDef.GetDefaultObject()->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
-
 	if(AppearanceFragment)
 	{
 		const FVector2D ItemGridSpan = AppearanceFragment->GetItemGridSpanFromDesc();

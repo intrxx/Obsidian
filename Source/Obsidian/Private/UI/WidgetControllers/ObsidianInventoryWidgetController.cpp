@@ -123,7 +123,7 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 
 void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPosition)
 {
-	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceForLocation(SlotPosition);
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceAtLocation(SlotPosition);
 	RemoveItemWidget(SlotPosition);
 	
 	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
@@ -149,7 +149,10 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& Ho
 	if(ItemGridSize.IsEmpty())
 	{
 		TArray<FVector2D> LocalItemGridSize;
-		GetDraggedItemGridSize(LocalItemGridSize);
+		if(!GetDraggedItemGridSize(LocalItemGridSize))
+		{
+			return false;
+		}
 		return CanAddToSpecificSlot(LocalItemGridSize, HoveredSlot);
 	}
 	return CanAddToSpecificSlot(ItemGridSize, HoveredSlot);

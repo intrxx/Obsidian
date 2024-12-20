@@ -16,7 +16,7 @@ UObsidianInventory::UObsidianInventory()
 void UObsidianInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
-
+	
 	SetupGrid();
 }
 
@@ -28,33 +28,12 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 }
 
-void UObsidianInventory::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
-	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-}
-
-void UObsidianInventory::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
-{
-	Super::NativeOnMouseLeave(InMouseEvent);
-}
-
-void UObsidianInventory::OnItemAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan)
-{
-	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemImage);
-	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
-	
-	InventoryWidgetController->AddItemWidget(DesiredPosition, ItemWidget);
-
-	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
-	GridSlot->SetLayer(1);
-	GridSlot->SetColumnSpan(GridSpan.X);
-	GridSlot->SetRowSpan(GridSpan.Y);
-}
-
 void UObsidianInventory::SetupGrid() 
 {
-	Slots_GridPanel->ClearChildren(); 
+	if(Slots_GridPanel->HasAnyChildren())
+	{
+		Slots_GridPanel->ClearChildren(); 
+	}
 	
 	int16 GridX = 0;
 	int16 GridY = 0;
@@ -84,7 +63,20 @@ void UObsidianInventory::SetupGrid()
 	}
 }
 
-void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D ItemDesiredPosition)
+void UObsidianInventory::OnItemAdded(UTexture2D* ItemImage, const FVector2D& DesiredPosition, const FVector2D& GridSpan)
+{
+	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
+	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemImage);
+	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
+	InventoryWidgetController->AddItemWidget(DesiredPosition, ItemWidget);
+
+	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
+	GridSlot->SetLayer(1);
+	GridSlot->SetColumnSpan(GridSpan.X);
+	GridSlot->SetRowSpan(GridSpan.Y);
+}
+
+void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition)
 {
 	if(InventoryWidgetController)
 	{
@@ -94,11 +86,6 @@ void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D ItemDesire
 
 void UObsidianInventory::OnInventorySlotHover(bool bEntered, UObsidianInventorySlot* AffectedSlot)
 {
-	// Check if we carry item +
-	// Get the item grid span +
-	// Get the slot that was entered +
-	// Add it to the Array of Slots that has changed state to reset it later
-	// Change the color to available for now
 	if(bEntered)
 	{
 		if(!InventoryWidgetController || !InventoryWidgetController->IsDraggingAnItem())

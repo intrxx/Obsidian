@@ -11,7 +11,7 @@ class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAddedSignature, UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAddedSignature, UTexture2D* ItemImage, const FVector2D& DesiredPosition, const FVector2D& GridSpan);
 
 /**
  * 
@@ -29,16 +29,11 @@ public:
 	}
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
-	bool GetInventoryOpened() const
+	bool IsInventoryOpened() const
 	{
 		return bInventoryOpened;
 	}
-
-	UObsidianHeroComponent* GetHeroComponent()
-	{
-		return InternalHeroComponent;
-	}
-
+	
 	bool IsDraggingAnItem() const;
 	bool CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize = TArray<FVector2D>()) const;
 

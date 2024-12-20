@@ -9,7 +9,7 @@
 class USizeBox;
 class UImage;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemLeftMouseButtonPressedSignature, const FVector2D ItemDesiredPosition)
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemLeftMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition)
 
 /**
  * Item Widget that is displayed in the inventory.
@@ -28,11 +28,7 @@ public:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
-
-	/** I don't know the better way for know, we use it to notify the slot that the item went here even if the item image does not overlap with the slot. */
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> Visibility_Image;
-
+	
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
 	
 protected:

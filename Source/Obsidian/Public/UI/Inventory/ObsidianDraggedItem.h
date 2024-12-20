@@ -58,6 +58,7 @@ protected:
 	
 	TSubclassOf<UObsidianInventoryItemDefinition> InternalItemDef;
 	int32 InternalStacks = 0;
-	
+
+	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemInstance> InternalItemInstance;
 };

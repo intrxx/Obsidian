@@ -27,25 +27,19 @@ public:
 	UObsidianInventory();
 	
 	virtual void NativeConstruct() override;
-
 	virtual void HandleWidgetControllerSet() override;
 
-public:
+protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UGridPanel> Slots_GridPanel;
 
-protected:
-	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-
 private:
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
-	void OnItemAdded(UTexture2D* ItemImage, const FVector2D DesiredPosition, const FVector2D GridSpan);
+	void OnItemAdded(UTexture2D* ItemImage, const FVector2D& DesiredPosition, const FVector2D& GridSpan);
 
 	void SetupGrid();
 
-	void OnItemLeftMouseButtonPressed(const FVector2D ItemDesiredPosition);
-	
+	void OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition);
 	void OnInventorySlotHover(bool bEntered, UObsidianInventorySlot* AffectedSlot);
 	void OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition);
 	
@@ -66,7 +60,8 @@ private:
 	int32 InventoryGridHeight = 5;
 	
 	int32 InventoryGridSize;
-
 	TMap<FVector2D, UObsidianInventorySlot*> InventoryLocationToSlotMap;
+
+	/** Array of slots that are affected by item hover, to clear it later. */
 	TArray<UObsidianInventorySlot*> AffectedSlots;
 };

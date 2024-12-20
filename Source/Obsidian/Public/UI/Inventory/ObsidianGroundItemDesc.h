@@ -7,10 +7,10 @@
 #include "ObsidianGroundItemDesc.generated.h"
 
 class UImage;
-DECLARE_MULTICAST_DELEGATE(FOnItemDescMouseButtonDownSignature);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemDescMouseHover, const bool bEnter);
-
 class UCommonTextBlock;
+
+DECLARE_MULTICAST_DELEGATE(FOnItemDescMouseButtonDownSignature);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemDescMouseHoverSignature, const bool bEnter);
 
 /**
  * 
@@ -23,14 +23,14 @@ class OBSIDIAN_API UObsidianGroundItemDesc : public UObsidianWidgetBase
 public:
 	virtual void NativeConstruct() override;
 
-	void SetItemName(FText ItemName);
+	void SetItemName(const FText& ItemName);
 	
 public:
 	/** Delegate that fires when the Player presses the left mouse button onto the item desc. */
 	FOnItemDescMouseButtonDownSignature OnItemDescMouseButtonDownDelegate;
 
 	/** Delegate that fires when the Player hovers over the item Desc Widget, will fire with true if enters, false if leaves. */
-	FOnItemDescMouseHover OnItemDescMouseHoverDelegate;
+	FOnItemDescMouseHoverSignature OnItemDescMouseHoverDelegate;
 	
 protected:
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;

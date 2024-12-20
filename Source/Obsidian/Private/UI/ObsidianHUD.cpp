@@ -114,7 +114,7 @@ bool AObsidianHUD::IsInventoryOpened()
 {
 	if(InventoryWidgetController)
 	{
-		return InventoryWidgetController->GetInventoryOpened();
+		return InventoryWidgetController->IsInventoryOpened();
 	}
 	return false;
 }

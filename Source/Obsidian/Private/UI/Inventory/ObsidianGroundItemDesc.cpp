@@ -1,10 +1,8 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/Inventory/ObsidianGroundItemDesc.h"
-
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
-
 
 void UObsidianGroundItemDesc::NativeConstruct()
 {
@@ -16,7 +14,7 @@ void UObsidianGroundItemDesc::NativeConstruct()
 	}
 }
 
-void UObsidianGroundItemDesc::SetItemName(FText ItemName)
+void UObsidianGroundItemDesc::SetItemName(const FText& ItemName)
 {
 	if(ItemName_TextBlock)
 	{
@@ -27,39 +25,31 @@ void UObsidianGroundItemDesc::SetItemName(FText ItemName)
 FReply UObsidianGroundItemDesc::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	//TODO Maybe some widget animation
-	UE_LOG(LogTemp, Warning, TEXT("YO mouse down"));
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		OnItemDescMouseButtonDownDelegate.Broadcast();
-
-		//const TSharedRef<SWidget> SlateWidget = TakeWidget();
-		//return FReply::Handled()
-		//	.DetectDrag(SlateWidget, EKeys::LeftMouseButton)
-		//	.CaptureMouse(SlateWidget)
-		//	.SetUserFocus(SlateWidget, EFocusCause::Mouse);
 	}
-
-	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
+	return FReply::Handled();
 }
 
 void UObsidianGroundItemDesc::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+	
 	if(Background_Image)
 	{
 		Background_Image->SetBrushTintColor(HoveredBackgroundColor);
 	}
 	OnItemDescMouseHoverDelegate.Broadcast(true);
-	
-	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 }
 
 void UObsidianGroundItemDesc::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
+	Super::NativeOnMouseLeave(InMouseEvent);
+	
 	if(Background_Image)
 	{
 		Background_Image->SetBrushTintColor(RegularBackgroundColor);
 	}
 	OnItemDescMouseHoverDelegate.Broadcast(false);
-	
-	Super::NativeOnMouseLeave(InMouseEvent);
 }
