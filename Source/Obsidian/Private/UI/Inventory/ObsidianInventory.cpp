@@ -63,10 +63,15 @@ void UObsidianInventory::SetupGrid()
 	}
 }
 
-void UObsidianInventory::OnItemAdded(UTexture2D* ItemImage, const FVector2D& DesiredPosition, const FVector2D& GridSpan)
+void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 {
+	const FVector2D DesiredPosition = ItemVisuals.DesiredPosition;
+	const FVector2D GridSpan = ItemVisuals.GridSpan;
+
+	UE_LOG(LogTemp, Warning, TEXT("Item Stacks: [%d]"), ItemVisuals.StackCount);
+	
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemImage);
+	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemVisuals.ItemImage, ItemVisuals.StackCount);
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
 	InventoryWidgetController->AddItemWidget(DesiredPosition, ItemWidget);
 

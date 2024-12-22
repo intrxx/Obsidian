@@ -7,6 +7,7 @@
 #include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "UI/Inventory/ObsidianItem.h"
 
@@ -29,7 +30,16 @@ void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInsta
 	check(ItemInstance);
 	//bInventoryChanged = true;
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
-	OnItemAddedDelegate.Broadcast(ItemInstance->GetItemImage(), DesiredPosition, ItemInstance->GetItemGridSpan());
+	
+	const int32 StackCount = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
+	(
+		ItemInstance->GetItemImage(),
+		DesiredPosition,
+		ItemInstance->GetItemGridSpan(),
+		StackCount
+	);
+	OnItemAddedDelegate.Broadcast(ItemVisuals);
 }
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
@@ -52,7 +62,18 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	
 	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
 	{
-		OnItemAddedDelegate.Broadcast(LocToInstancePair.Value->GetItemImage(), LocToInstancePair.Key, LocToInstancePair.Value->GetItemGridSpan());
+		const UObsidianInventoryItemInstance* ItemInstance = LocToInstancePair.Value;
+		ensure(ItemInstance);
+		
+		const int32 StackCount = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
+		(
+			ItemInstance->GetItemImage(),
+			LocToInstancePair.Key,
+			ItemInstance->GetItemGridSpan(),
+			StackCount
+		);
+		OnItemAddedDelegate.Broadcast(ItemVisuals);
 	}
 
 	//bInventoryChanged = false;

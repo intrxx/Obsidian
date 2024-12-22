@@ -11,7 +11,25 @@ class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemAddedSignature, UTexture2D* ItemImage, const FVector2D& DesiredPosition, const FVector2D& GridSpan);
+struct FObsidianItemVisuals
+{
+public:
+	FObsidianItemVisuals(){};
+	FObsidianItemVisuals(UTexture2D* InItemImage, const FVector2D& InDesiredPosition, const FVector2D& InGridSpan, const int32 InStackCount)
+		: ItemImage(InItemImage)
+		, DesiredPosition(InDesiredPosition)
+		, GridSpan(InGridSpan)
+		, StackCount(InStackCount)
+	{};
+	
+public:
+	UTexture2D* ItemImage = nullptr;
+	FVector2D DesiredPosition = FVector2D::Zero();
+	FVector2D GridSpan = FVector2D::Zero();
+	int32 StackCount = 0;
+};
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemVisuals& ItemVisuals);
 
 /**
  * 

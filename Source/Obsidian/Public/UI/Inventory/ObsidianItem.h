@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItem.generated.h"
 
+class UCommonTextBlock;
 class USizeBox;
 class UImage;
 
@@ -20,21 +21,24 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage);
+	void InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
 	
 public:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<USizeBox> Root_SizeBox;
-	
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> Item_Image;
-	
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
 	
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<USizeBox> Root_SizeBox;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UImage> Item_Image;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float WidthConstant = 64.0f;
 

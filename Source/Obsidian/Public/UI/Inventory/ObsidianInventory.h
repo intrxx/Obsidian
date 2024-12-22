@@ -6,6 +6,7 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
+struct FObsidianItemVisuals;
 class UObsidianItem;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventorySlot;
@@ -35,7 +36,7 @@ protected:
 
 private:
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
-	void OnItemAdded(UTexture2D* ItemImage, const FVector2D& DesiredPosition, const FVector2D& GridSpan);
+	void OnItemAdded(const FObsidianItemVisuals& ItemVisuals);
 
 	void SetupGrid();
 

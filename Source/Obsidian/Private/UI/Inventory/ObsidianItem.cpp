@@ -2,6 +2,7 @@
 
 
 #include "UI/Inventory/ObsidianItem.h"
+#include "CommonTextBlock.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 
@@ -16,11 +17,19 @@ FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage)
+void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * WidthConstant);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
 	Item_Image->SetBrushFromTexture(ItemImage);
-
 	ItemDesiredPosition = DesiredPosition;
+	
+	if(CurrentStack == 0)
+	{
+		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), CurrentStack));
+	StackCount_TextBlock->SetText(StackCountText);
+	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
