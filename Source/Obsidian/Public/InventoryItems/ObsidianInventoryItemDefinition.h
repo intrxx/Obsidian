@@ -18,6 +18,8 @@ class OBSIDIAN_API UObsidianInventoryItemDefinition : public UObject
 public:
 	UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	bool HasStacks() const;
+
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;
 	
 public:

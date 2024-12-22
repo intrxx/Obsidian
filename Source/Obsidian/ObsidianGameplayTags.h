@@ -213,6 +213,9 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_StackCount_Current);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_StackCount_Max);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_TotalCount_Max);
+
+	/** All Stack Types stored for convenience */
+	OBSIDIAN_API extern const TArray<FGameplayTag> StackTypes;
 }
 
 

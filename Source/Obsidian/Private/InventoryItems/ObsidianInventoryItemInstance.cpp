@@ -5,6 +5,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "Net/UnrealNetwork.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -53,6 +54,19 @@ int32 UObsidianInventoryItemInstance::GetItemStackCount(const FGameplayTag Tag) 
 bool UObsidianInventoryItemInstance::HasStackCountForTag(const FGameplayTag Tag) const
 {
 	return ItemStackTags.ContainsTag(Tag);
+}
+
+bool UObsidianInventoryItemInstance::HasAnyStacks() const
+{
+	bool bHasTags = false;
+	for(const FGameplayTag& StackTag : ObsidianGameplayTags::StackTypes)
+	{
+		if(ItemStackTags.ContainsTag(StackTag))
+		{
+			bHasTags = true;
+		}
+	}
+	return bHasTags;
 }
 
 TArray<FVector2D> UObsidianInventoryItemInstance::GetItemGridSize() const

@@ -237,4 +237,14 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Current, "Item.StackCount.Current", "Item Tag representing the current number of item in the stack.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Max, "Item.StackCount.Max", "Item Tag representing the Max Stack Count the item have.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_TotalCount_Max, "Item.TotalCount.Max", "Item Tag representing the Total number of items the Player can have, can be used for mission items which can be limited to 1.");
+
+	const TArray<FGameplayTag> StackTypes =
+	{
+		{
+			Item_StackCount_Default,
+			Item_StackCount_Current,
+			Item_StackCount_Max,
+			Item_TotalCount_Max
+		  }
+	};
 }

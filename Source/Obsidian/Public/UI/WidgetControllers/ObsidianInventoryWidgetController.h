@@ -22,6 +22,10 @@ class OBSIDIAN_API UObsidianInventoryWidgetController : public UObsidianHeroWidg
 	GENERATED_BODY()
 
 public:
+	//~ Start of UObsidianWidgetController
+	virtual void OnWidgetControllerSetupCompleted() override;
+	//~ End of UObsidianWidgetController
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
 	void SetInventoryOpened(const bool bInOpened)
 	{
@@ -43,10 +47,6 @@ public:
 	void AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
 	void RemoveItemWidget(const FVector2D& Location);
 	
-	//~ Start of UObsidianWidgetController
-	virtual void OnWidgetControllerSetupCompleted() override;
-	//~ End of UObsidianWidgetController
-
 	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
 	void OnInventoryOpen();
 

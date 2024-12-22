@@ -63,6 +63,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	bool HasStackCountForTag(const FGameplayTag Tag) const;
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	bool HasAnyStacks() const;
+
 	/**
 	 * Item Grid Size.
 	 */
