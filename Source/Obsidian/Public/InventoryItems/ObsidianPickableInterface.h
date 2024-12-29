@@ -28,6 +28,9 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	int32 StackCount = 1;
+
+	UPROPERTY(EditAnywhere)
+	bool bShouldDisplayStacks = false;
 };
 
 USTRUCT(BlueprintType)

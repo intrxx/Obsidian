@@ -9,6 +9,7 @@
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryItemDefinition;
 class USizeBox;
+class UCommonTextBlock;
 class UImage;
 
 /**
@@ -45,6 +46,9 @@ public:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
 
 protected:
 	virtual void NativeConstruct() override;
