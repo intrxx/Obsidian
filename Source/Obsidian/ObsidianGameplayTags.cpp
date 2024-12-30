@@ -233,18 +233,16 @@ namespace ObsidianGameplayTags
 	/**
 	 * Stack Counts
 	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Default, "Item.StackCount.Default", "Item Tag representing the default count of the item, e.g. 3x Potion of Healing on the ground.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Current, "Item.StackCount.Current", "Item Tag representing the current number of item in the stack.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Max, "Item.StackCount.Max", "Item Tag representing the Max Stack Count the item have.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_TotalCount_Max, "Item.TotalCount.Max", "Item Tag representing the Total number of items the Player can have, can be used for mission items which can be limited to 1.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Current, "Item.StackCount.Current", "Item Tag representing the current number of stacked items.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Max, "Item.StackCount.Max", "Item Tag representing the Max Stack Count the item have, after which it will no longer stack and will need another space in the inventory.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Limit, "Item.StackCount.Limit", "Item Tag representing the Total number of items the Player can have, can be used for mission items which can be limited to 1.");
 
 	const TArray<FGameplayTag> StackTypes =
 	{
 		{
-			Item_StackCount_Default,
 			Item_StackCount_Current,
 			Item_StackCount_Max,
-			Item_TotalCount_Max
+			Item_StackCount_Limit
 		  }
 	};
 }

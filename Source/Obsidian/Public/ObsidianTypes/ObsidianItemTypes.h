@@ -6,18 +6,13 @@
 
 namespace ObsidianDefaultStackCounts 
 {
-	static constexpr int32 DefaultStackCount = 1;
 	static constexpr int32 CurrentStackCount = 1;
 	static constexpr int32 MaxStackCount = 1;
-	static constexpr int32 TotalCount = 0;
+	static constexpr int32 LimitCount = 0;
 
 	/** Returns the unified project default for given Stack Tag. */
 	inline int32 GetUnifiedDefaultForTag(const FGameplayTag Tag)
 	{
-		if(Tag == ObsidianGameplayTags::Item_StackCount_Default)
-		{
-			return DefaultStackCount;
-		}
 		if(Tag == ObsidianGameplayTags::Item_StackCount_Current)
 		{
 			return CurrentStackCount;
@@ -26,9 +21,9 @@ namespace ObsidianDefaultStackCounts
 		{
 			return MaxStackCount;
 		}
-		if(Tag == ObsidianGameplayTags::Item_TotalCount_Max)
+		if(Tag == ObsidianGameplayTags::Item_StackCount_Limit)
 		{
-			return TotalCount;
+			return LimitCount;
 		}
 		return 0;
 	}
