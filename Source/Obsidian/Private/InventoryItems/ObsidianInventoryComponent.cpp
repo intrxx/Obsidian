@@ -7,6 +7,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Net/UnrealNetwork.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -125,9 +126,62 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	{
 		return nullptr;
 	}
+	
+	int32 AddedStacks = -1;
+	int32 StacksToAdd = StackCount;
+	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
+	
+	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
+	for(UObsidianInventoryItemInstance* Instance : Items)
+	{
+		if(AddedStacks == StackCount)
+		{
+			return LastAddedToInstance;
+		}
+		
+		if(!IsValid(Instance))
+		{
+			continue;
+		}
+
+		if(ItemDef.Get() == Instance->GetItemDef().Get())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Checking if can be added to already existing instance."));
+			
+			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			if(CurrentStackCount == 0)
+			{
+				break;
+			}
+			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+			if(LimitStackCount == 1) // Only one item of this kind can be added to the inventory
+			{
+				break;
+			}
+			
+			const int32 StacksThatCanBeAddedToInventory = LimitStackCount - CurrentStackCount;
+			if(StacksThatCanBeAddedToInventory <= 0)
+			{
+				break;
+			}
+			
+			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+			const int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
+			if(AmountThatCanBeAddedToInstance <= 0)
+			{
+				break;
+			}
+			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
+			
+			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+			AddedStacks += AmountThatCanBeAddedToInstance;
+			StacksToAdd -= AmountThatCanBeAddedToInstance;
+			LastAddedToInstance = Instance;
+		}
+	}
 
 	FVector2D AvailablePosition;
-	if(CanAddItemDefinition(AvailablePosition, ItemDef, StackCount) == false)
+	if(CanAddItemDefinition(AvailablePosition, ItemDef, StacksToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
@@ -135,7 +189,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 		return nullptr;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StackCount, AvailablePosition);
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksToAdd, AvailablePosition);
 	Item_MarkSpace(AvailablePosition, Instance);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
