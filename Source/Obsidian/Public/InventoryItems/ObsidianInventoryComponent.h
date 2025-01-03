@@ -83,6 +83,8 @@ public:
 	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
 
 private:
+	UObsidianInventoryItemInstance* TryAddingStacksToExistingItem(const UClass* NewItemDefClass, const int32 NewItemStacks, int32& StacksLeft);
+	
 	FVector2D GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
 	
 	void InitInventoryState();

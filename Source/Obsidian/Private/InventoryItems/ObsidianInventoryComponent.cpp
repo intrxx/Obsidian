@@ -126,63 +126,16 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	{
 		return nullptr;
 	}
-	
-	int32 AddedStacks = 0;
-	int32 StacksToAdd = StackCount;
-	int32 StacksInInventory = 0;
-	
-	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
-	for(UObsidianInventoryItemInstance* Instance : Items)
+
+	int32 StacksLeft;
+	UObsidianInventoryItemInstance* LastAddedToInstance = TryAddingStacksToExistingItem(ItemDef.Get(), StackCount, StacksLeft);
+	if(StacksLeft == 0)
 	{
-		if(!IsValid(Instance))
-		{
-			continue;
-		}
-
-		if(ItemDef.Get() == Instance->GetItemDef().Get())
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Checking if can be added to already existing instance."));
-			
-			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-			StacksInInventory += CurrentStackCount;
-			if(CurrentStackCount == 0)
-			{
-				break;
-			}
-			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
-			if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
-			{
-				break;
-			}
-			
-			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? CurrentStackCount : LimitStackCount - StacksInInventory;
-			if(StacksThatCanBeAddedToInventory <= 0)
-			{
-				break;
-			}
-			
-			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
-			int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
-			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, StacksToAdd);
-			if(AmountThatCanBeAddedToInstance <= 0)
-			{
-				break;
-			}
-			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
-			
-			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
-			AddedStacks += AmountThatCanBeAddedToInstance;
-			StacksToAdd -= AmountThatCanBeAddedToInstance;
-			
-			if((StackCount != 0) && (AddedStacks == StackCount))
-			{
-				return Instance;
-			}
-		}
+		return LastAddedToInstance;
 	}
-
+	
 	FVector2D AvailablePosition;
-	if(CanAddItemDefinition(AvailablePosition, ItemDef, StacksToAdd) == false)
+	if(CanAddItemDefinition(AvailablePosition, ItemDef, StacksLeft) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
@@ -190,7 +143,8 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 		return nullptr;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksToAdd, AvailablePosition);
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksLeft, AvailablePosition);
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksLeft);
 	Item_MarkSpace(AvailablePosition, Instance);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -253,6 +207,15 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	{
 		return;
 	}
+
+	const int32 StacksToAdd = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	
+	int32 StacksLeft;
+	TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef().Get(), StacksToAdd, StacksLeft);
+	if(StacksLeft == 0)
+	{
+		return;
+	}
 	
 	FVector2D AvailablePosition;
 	if(CanAddItemInstance(AvailablePosition, InstanceToAdd) == false)
@@ -297,6 +260,66 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 
 	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, ToSlot);
 	return true;
+}
+
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToExistingItem(const UClass* NewItemDefClass, const int32 NewItemStacks, int32& StacksLeft)
+{
+	int32 AddedStacks = 0;
+	StacksLeft = NewItemStacks;
+	int32 StacksInInventory = 0;
+	UObsidianInventoryItemInstance* AddedToInstance = nullptr;
+	
+	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
+	for(UObsidianInventoryItemInstance* Instance : Items)
+	{
+		if(!IsValid(Instance))
+		{
+			continue;
+		}
+		
+		if(NewItemDefClass == Instance->GetItemDef().Get())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Checking if can be added to already existing instance."));
+			
+			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			StacksInInventory += CurrentStackCount;
+			if(CurrentStackCount == 0)
+			{
+				break;
+			}
+			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+			if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
+			{
+				break;
+			}
+			
+			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? StacksLeft : LimitStackCount - StacksInInventory;
+			if(StacksThatCanBeAddedToInventory <= 0)
+			{
+				break;
+			}
+			
+			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+			int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
+			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, StacksLeft);
+			if(AmountThatCanBeAddedToInstance <= 0)
+			{
+				break;
+			}
+			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
+			
+			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+			AddedStacks += AmountThatCanBeAddedToInstance;
+			StacksLeft -= AmountThatCanBeAddedToInstance;
+			AddedToInstance = Instance;
+			
+			if((NewItemStacks != 0) && (AddedStacks == NewItemStacks))
+			{
+				return AddedToInstance;
+			}
+		}
+	}
+	return AddedToInstance;
 }
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
