@@ -127,18 +127,13 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 		return nullptr;
 	}
 	
-	int32 AddedStacks = -1;
+	int32 AddedStacks = 0;
 	int32 StacksToAdd = StackCount;
-	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
+	int32 StacksInInventory = 0;
 	
 	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
 	for(UObsidianInventoryItemInstance* Instance : Items)
 	{
-		if(AddedStacks == StackCount)
-		{
-			return LastAddedToInstance;
-		}
-		
 		if(!IsValid(Instance))
 		{
 			continue;
@@ -149,24 +144,26 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 			UE_LOG(LogTemp, Warning, TEXT("Checking if can be added to already existing instance."));
 			
 			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			StacksInInventory += CurrentStackCount;
 			if(CurrentStackCount == 0)
 			{
 				break;
 			}
 			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
-			if(LimitStackCount == 1) // Only one item of this kind can be added to the inventory
+			if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
 			{
 				break;
 			}
 			
-			const int32 StacksThatCanBeAddedToInventory = LimitStackCount - CurrentStackCount;
+			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? CurrentStackCount : LimitStackCount - StacksInInventory;
 			if(StacksThatCanBeAddedToInventory <= 0)
 			{
 				break;
 			}
 			
 			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
-			const int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
+			int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
+			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, StacksToAdd);
 			if(AmountThatCanBeAddedToInstance <= 0)
 			{
 				break;
@@ -176,7 +173,11 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
 			AddedStacks += AmountThatCanBeAddedToInstance;
 			StacksToAdd -= AmountThatCanBeAddedToInstance;
-			LastAddedToInstance = Instance;
+			
+			if((StackCount != 0) && (AddedStacks == StackCount))
+			{
+				return Instance;
+			}
 		}
 	}
 
