@@ -101,7 +101,6 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 		const int32 ItemStackCount = DraggedItem->GetItemStacks();
 		
 		UObsidianInventoryItemInstance* NewInstance = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, ItemStackCount);
-		//TODO change this condition after adding stacks is possible
 		if(NewInstance != nullptr)
 		{
 			InternalHeroComponent->StopDragging();
@@ -114,12 +113,20 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 	check(InventoryComponent);
 	check(DraggedItemWidgetClass);
 	
-	if(InternalHeroComponent->IsDraggingAnItem() == true) //TODO This should be a valid case in the future, just replace the item
+	if(InternalHeroComponent->IsDraggingAnItem())
 	{
 		//Replace the item if it fits
 		const UObsidianDraggedItem* CachedDraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 		if(UObsidianInventoryItemInstance* CachedDraggedInstance = CachedDraggedItem->GetItemInstance())
 		{
+			if(CachedDraggedInstance->IsStackable()) // Try adding the stacks if we click on the same item.
+			{
+				if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(CachedDraggedInstance, SlotPosition))
+				{
+					InternalHeroComponent->StopDragging();
+				}
+				return;
+			}
 			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, CachedDraggedInstance))
 			{
 				InternalHeroComponent->StopDragging();
@@ -130,6 +137,7 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 		}
 		if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem->GetItemDef())
 		{
+			//TODO Why do I don't check if the item can be replaced?
 			InternalHeroComponent->StopDragging();
 			PickupItem(SlotPosition);
 			

@@ -449,10 +449,8 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 	UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(InstanceAtLocation));
 			
 	InstanceAtLocation->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
-	
-	const int32 AddedStacks = NewItemCurrentStacks - AmountThatCanBeAddedToInstance;
-	NewItemInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AddedStacks);
-	if(AddedStacks == NewItemCurrentStacks)
+	NewItemInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	if(AmountThatCanBeAddedToInstance == NewItemCurrentStacks)
 	{
 		return true;
 	}
