@@ -31,7 +31,7 @@ void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInsta
 	//bInventoryChanged = true;
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 	
-	const int32 StackCount = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
 	const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
 	(
 		ItemInstance->GetItemImage(),
@@ -99,8 +99,9 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 	{
 		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef();
 		const int32 ItemStackCount = DraggedItem->GetItemStacks();
-
+		
 		UObsidianInventoryItemInstance* NewInstance = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, ItemStackCount);
+		//TODO change this condition after adding stacks is possible
 		if(NewInstance != nullptr)
 		{
 			InternalHeroComponent->StopDragging();

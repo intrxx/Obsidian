@@ -22,8 +22,15 @@ public:
 	
 	/** Getter for item stack number, if the Tag for Stack Count does not exist on the item, it will return the unified project default. */
 	int32 GetItemStackNumberByTag(const FGameplayTag Tag) const;
+	bool IsStackable() const
+	{
+		return bStackable;
+	}
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Stacks")
+	bool bStackable = true;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Stacks")
 	TMap<FGameplayTag, int32> InventoryItemStackNumbers;
 };

@@ -18,6 +18,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 
 	DOREPLIFETIME(ThisClass, ItemDef);
 	DOREPLIFETIME(ThisClass, ItemStackTags);
+	DOREPLIFETIME(ThisClass, bStackable);
 
 	//TODO Test which of these needs replicating
 	DOREPLIFETIME(ThisClass, ItemGridSize);
@@ -67,6 +68,16 @@ bool UObsidianInventoryItemInstance::HasAnyStacks() const
 		}
 	}
 	return bHasTags;
+}
+
+bool UObsidianInventoryItemInstance::IsStackable() const
+{
+	return bStackable;
+}
+
+void UObsidianInventoryItemInstance::SetStackable(const bool InStackable)
+{
+	bStackable = InStackable;
 }
 
 TArray<FVector2D> UObsidianInventoryItemInstance::GetItemGridSize() const

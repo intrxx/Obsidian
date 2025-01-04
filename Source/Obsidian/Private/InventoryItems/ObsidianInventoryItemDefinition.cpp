@@ -22,6 +22,16 @@ bool UObsidianInventoryItemDefinition::HasStacks() const
 	return false;
 }
 
+bool UObsidianInventoryItemDefinition::IsStackable() const
+{
+	const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass()));
+	if(StacksFrag && StacksFrag->IsStackable())
+	{
+		return true;
+	}
+	return false;
+}
+
 const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const
 {
 	if(FragmentClass == nullptr)

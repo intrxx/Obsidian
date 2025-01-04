@@ -56,14 +56,13 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 		DefaultObject->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass()));
 	if(StacksFragment)
 	{
-		const int32 CurrentStack = StacksFragment->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Current);
-		if(CurrentStack == 0)
+		if(!StacksFragment->IsStackable() || InternalStacks == 0)
 		{
 			StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		}
 		else
 		{
-			const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), CurrentStack));
+			const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), InternalStacks));
 			StackCount_TextBlock->SetText(StackCountText);
 			StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 		}
@@ -90,13 +89,13 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(UObsidianInvento
 
 	UTexture2D* ItemImage = InternalItemInstance->GetItemImage();
 	Item_Image->SetBrushFromTexture(ItemImage);
-
-	const int32 CurrentStack = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	if(CurrentStack == 0)
+	
+	if(ItemInstance->IsStackable() == false)
 	{
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
+	const int32 CurrentStack = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), CurrentStack));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);

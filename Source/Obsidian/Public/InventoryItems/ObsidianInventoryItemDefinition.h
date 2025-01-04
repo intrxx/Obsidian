@@ -19,6 +19,7 @@ public:
 	UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	bool HasStacks() const;
+	bool IsStackable() const;
 
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;
 	

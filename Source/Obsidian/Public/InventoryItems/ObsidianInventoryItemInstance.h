@@ -66,6 +66,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	bool HasAnyStacks() const;
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	bool IsStackable() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetStackable(const bool InStackable);
+
 	/**
 	 * Item Grid Size.
 	 */
@@ -125,6 +131,9 @@ private:
 	
 	UPROPERTY(Replicated)
 	FGameplayTagStackContainer ItemStackTags;
+
+	UPROPERTY(Replicated)
+	bool bStackable;
 
 	UPROPERTY(Replicated)
 	TArray<FVector2D> ItemGridSize;

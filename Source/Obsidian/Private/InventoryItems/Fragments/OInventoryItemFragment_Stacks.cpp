@@ -10,6 +10,7 @@ void UOInventoryItemFragment_Stacks::OnInstancedCreated(UObsidianInventoryItemIn
 	{
 		Instance->AddItemStackCount(Stack.Key, Stack.Value);
 	}
+	Instance->SetStackable(bStackable);
 }
 
 int32 UOInventoryItemFragment_Stacks::GetItemStackNumberByTag(const FGameplayTag Tag) const
