@@ -10,7 +10,7 @@ class UCommonTextBlock;
 class USizeBox;
 class UImage;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemLeftMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLeftMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
 
 /**
  * Item Widget that is displayed in the inventory.
@@ -22,6 +22,7 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 
 public:
 	void InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
+	void AddCurrentStackCount(const int32 StackCountToAdd);
 	
 public:
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
@@ -46,4 +47,7 @@ protected:
 	float HeightConstant = 64.0f;
 
 	FVector2D ItemDesiredPosition = FVector2D::Zero();
+
+private:
+	int32 InternalStacks = 0;
 };

@@ -11,7 +11,7 @@ FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const
 	// InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton) - I don't know what is the difference, leaving it here for now
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		OnItemLeftMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition);
+		OnItemLeftMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition, this);
 	}
 
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
@@ -23,6 +23,7 @@ void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
 	Item_Image->SetBrushFromTexture(ItemImage);
 	ItemDesiredPosition = DesiredPosition;
+	InternalStacks = CurrentStack;
 	
 	if(CurrentStack == 0)
 	{
@@ -30,6 +31,24 @@ void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const
 		return;
 	}
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), CurrentStack));
+	StackCount_TextBlock->SetText(StackCountText);
+	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UObsidianItem::AddCurrentStackCount(const int32 StackCountToAdd)
+{
+	if(StackCountToAdd <= 0)
+	{
+		return;
+	}
+	
+	const int32 NewStack = InternalStacks + StackCountToAdd;
+	if(NewStack <= 0)
+	{
+		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
+		return;
+	}
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), NewStack));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }

@@ -69,7 +69,7 @@ public:
 	void OnInventoryOpen();
 
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition);
-	void RequestPickingUpItemFromInventory(const FVector2D& SlotPosition);
+	void HandleClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 
 public:
 	FOnItemAddedSignature OnItemAddedDelegate;

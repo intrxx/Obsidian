@@ -81,11 +81,11 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 	GridSlot->SetRowSpan(GridSpan.Y);
 }
 
-void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition)
+void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget)
 {
 	if(InventoryWidgetController)
 	{
-		InventoryWidgetController->RequestPickingUpItemFromInventory(ItemDesiredPosition);
+		InventoryWidgetController->HandleClickingOnAnItem(ItemDesiredPosition, ItemWidget);
 	}
 }
 
