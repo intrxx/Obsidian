@@ -65,7 +65,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		const UObsidianInventoryItemInstance* ItemInstance = LocToInstancePair.Value;
 		ensure(ItemInstance);
 		
-		const int32 StackCount = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
 		const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
 		(
 			ItemInstance->GetItemImage(),
