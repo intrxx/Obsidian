@@ -100,3 +100,12 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(UObsidianInvento
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
+
+void UObsidianDraggedItem::UpdateStackCount(const int32 NewStackCount)
+{
+	InternalStacks = NewStackCount;
+	
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), InternalStacks));
+	StackCount_TextBlock->SetText(StackCountText);
+	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
+}

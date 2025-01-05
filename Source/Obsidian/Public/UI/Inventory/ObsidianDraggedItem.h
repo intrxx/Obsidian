@@ -24,6 +24,8 @@ public:
 	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks);
 	void InitializeItemWidgetWithItemInstance(UObsidianInventoryItemInstance* ItemInstance);
 
+	void UpdateStackCount(const int32 NewStackCount);
+
 	/** Invalid when widget initialized with Instance. */
 	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const
 	{

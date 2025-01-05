@@ -110,13 +110,14 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 
 void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const FVector2D& SlotPosition)
 {
+	//TODO I think there is too much logic here, it would probably be better to move it more on the inventory component
 	check(InventoryComponent);
 	check(DraggedItemWidgetClass);
 	
 	if(InternalHeroComponent->IsDraggingAnItem())
 	{
 		//Replace the item if it fits
-		const UObsidianDraggedItem* CachedDraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
+		UObsidianDraggedItem* CachedDraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 		if(UObsidianInventoryItemInstance* CachedDraggedInstance = CachedDraggedItem->GetItemInstance())
 		{
 			if(CachedDraggedInstance->IsStackable()) // Try adding the stacks if we click on the same item.
@@ -135,14 +136,30 @@ void UObsidianInventoryWidgetController::RequestPickingUpItemFromInventory(const
 			}
 			return;
 		}
-		if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem->GetItemDef())
+		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = CachedDraggedItem->GetItemDef())
 		{
-			//TODO Why do I don't check if the item can be replaced?
+			const int32 ItemStackCount = CachedDraggedItem->GetItemStacks();
+			
+			UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+			if(DefaultObject->IsStackable())
+			{
+				int32 StacksLeft = -1;
+				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, SlotPosition, ItemStackCount, StacksLeft) != nullptr) // We added some stacks to an item
+				{
+					if(StacksLeft == 0)
+					{
+						InternalHeroComponent->StopDragging();
+						return;
+					}
+					CachedDraggedItem->UpdateStackCount(StacksLeft);
+					return;
+				}
+			}
+			
 			InternalHeroComponent->StopDragging();
 			PickupItem(SlotPosition);
 			
-			const int32 ItemStackCount = CachedDraggedItem->GetItemStacks();
-			InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, ItemStackCount);
+			InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, ItemStackCount);
 			
 			return;
 		}
