@@ -85,11 +85,12 @@ public:
 	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
 
 private:
-	UObsidianInventoryItemInstance* TryAddingStacksToExistingItem(const UClass* NewItemDefClass, const int32 NewItemStacks, int32& OutStacksLeft);
+	UObsidianInventoryItemInstance* TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft);
 	UObsidianInventoryItemInstance* TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded);
-
 	/** Will try to add stacks from provided Item Instance at specific slot, will return false if there is no matching item AtPosition or entire stack could not be added. */
 	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* NewItemInstance, const FVector2D& AtPosition, int32& OutStacksLeft, int32& OutStacksAdded);
+	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 	
 	FVector2D GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
 	

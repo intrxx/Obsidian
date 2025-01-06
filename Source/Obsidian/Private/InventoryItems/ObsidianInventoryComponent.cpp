@@ -277,11 +277,11 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	return true;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToExistingItem(const UClass* NewItemDefClass, const int32 NewItemStacks, int32& OutStacksLeft)
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft)
 {
 	int32 AddedStacks = 0;
 	OutStacksLeft = NewItemStacks;
-	int32 StacksInInventory = 0;
+	const int32 StacksInInventory = FindAllStacksForGivenItem(NewItemDef);
 	UObsidianInventoryItemInstance* AddedToInstance = nullptr;
 
 	// TODO Count all tack in inventory in other way, this will fail
@@ -289,19 +289,17 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToEx
 	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
 	for(UObsidianInventoryItemInstance* Instance : Items)
 	{
-		
 		if(!IsValid(Instance))
 		{
 			UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryComponent::TryAddingStacksToExistingItem."));
 			continue;
 		}
 		
-		if(NewItemDefClass == Instance->GetItemDef().Get())
+		if(NewItemDef == Instance->GetItemDef())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Checking if can be added to already existing instance."));
 			
 			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-			StacksInInventory += CurrentStackCount;
 			if(CurrentStackCount == 0)
 			{
 				continue;
@@ -350,15 +348,14 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToSp
 	{
 		return nullptr;
 	}
-
-	int32 StacksInInventory = 0;
-
+	
 	const int32 CurrentStackCount = InstanceAtLocation->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	StacksInInventory += CurrentStackCount;
 	if(CurrentStackCount == 0)
 	{
 		return nullptr;
 	}
+	
+	const int32 StacksInInventory = FindAllStacksForGivenItem(ItemDef);
 	const int32 LimitStackCount = InstanceAtLocation->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
 	if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
 	{
@@ -397,15 +394,14 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 	{
 		return false;
 	}
-
-	int32 StacksInInventory = 0;
-
+	
 	const int32 CurrentStackCount = InstanceAtLocation->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	StacksInInventory += CurrentStackCount;
 	if(CurrentStackCount == 0)
 	{
 		return false;
 	}
+
+	const int32 StacksInInventory = FindAllStacksForGivenItem(NewItemInstance);
 	const int32 LimitStackCount = InstanceAtLocation->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
 	if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
 	{
@@ -437,6 +433,41 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 		return true;
 	}
 	return false;
+}
+
+int32 UObsidianInventoryComponent::FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+{
+	int32 AllStacks = 0;
+	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
+	{
+		UObsidianInventoryItemInstance* Instance = Entry.Instance;
+		if(IsValid(Instance))
+		{
+			if(Instance->GetItemDef() == ItemDef)
+			{
+				AllStacks += Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			}
+		}
+	}
+	return AllStacks;
+}
+
+int32 UObsidianInventoryComponent::FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance)
+{
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = ItemInstance->GetItemDef();
+	int32 AllStacks = 0;
+	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
+	{
+		UObsidianInventoryItemInstance* Instance = Entry.Instance;
+		if(IsValid(Instance))
+		{
+			if(Instance->GetItemDef() == ItemDef)
+			{
+				AllStacks += Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			}
+		}
+	}
+	return AllStacks;
 }
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
