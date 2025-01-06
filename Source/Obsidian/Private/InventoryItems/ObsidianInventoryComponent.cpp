@@ -183,6 +183,12 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	{
 		return nullptr;
 	}
+
+	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	if(DefaultObject == nullptr)
+	{
+		return nullptr;
+	}
 	
 	if(CanAddItemDefinitionToSpecifiedSlot(ToSlot, ItemDef, StackCount) == false)
 	{
@@ -191,9 +197,27 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 			FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return nullptr;
 	}
+	
+	bool bAddedWholeItem = true;
+	int32 StacksThatCanBeAdded = StackCount;
+	if(DefaultObject->IsStackable())
+	{
+		StacksThatCanBeAdded = GetNumberOfStacksAvailableToAdd(ItemDef, StackCount);
+		if(StacksThatCanBeAdded == 0)
+		{
+			return nullptr;
+		}
+		
+		const int32 StacksToRemove = StackCount - StacksThatCanBeAdded;
+		if(StacksToRemove > 0)
+		{
+			//TODO Update number of stacks on the carried item
+			bAddedWholeItem = false;
+		}
+	}
 
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StackCount, ToSlot);
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackCount);
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksThatCanBeAdded, ToSlot);
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksThatCanBeAdded);
 	Item_MarkSpace(ToSlot, Instance);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -202,7 +226,12 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	}
 
 	OnItemAddedToInventoryDelegate.Broadcast(Instance, ToSlot);
-	
+
+	if(bAddedWholeItem == false)
+	{
+		//TODO Temp
+		return nullptr;
+	}
 	return Instance;
 }
 
@@ -272,13 +301,32 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	{
 		return false;
 	}
-
+	
 	if(CanAddItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
 			FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return false;
+	}
+
+	bool bAddedWholeItem = true;
+	if(InstanceToAdd->HasAnyStacks())
+	{
+		const int32 StacksThatCanBeAdded = GetNumberOfStacksAvailableToAdd(InstanceToAdd);
+		if(StacksThatCanBeAdded == 0)
+		{
+			return false;
+		}
+
+		const int32 CurrentStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 StacksToRemove = CurrentStacks - StacksThatCanBeAdded;
+		if(StacksToRemove > 0)
+		{
+			//TODO Update number of stacks on the carried item
+			InstanceToAdd->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToRemove);
+			bAddedWholeItem = false;
+		}
 	}
 
 	InventoryGrid.AddEntry(InstanceToAdd, ToSlot);
@@ -290,7 +338,7 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	}
 
 	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, ToSlot);
-	return true;
+	return bAddedWholeItem;
 }
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft)
