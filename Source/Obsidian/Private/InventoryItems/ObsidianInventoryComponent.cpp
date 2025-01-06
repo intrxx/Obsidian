@@ -9,6 +9,8 @@
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
+DEFINE_LOG_CATEGORY(LogInventory);
+
 UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, InventoryGrid(this)
@@ -173,30 +175,6 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 		return nullptr;
 	}
 	
-	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
-	if(DefaultObject == nullptr)
-	{
-		return nullptr;
-	}
-	
-	if(DefaultObject->IsStackable())
-	{
-		int32 OutLeftStacks = -1;
-		int32 OutStacksAdded = 0;
-		if(UObsidianInventoryItemInstance* AddedToInstance = TryAddingStacksToSpecificSlotWithItemDef(ItemDef, ToSlot, StackCount, /* OUT */ OutLeftStacks, OutStacksAdded))
-		{
-			if(OutLeftStacks < StackCount)
-			{
-				//TODO Change the stack number on the definition
-				return AddedToInstance;
-			}
-			if(OutLeftStacks == StackCount) //TODO we ever even here?
-			{
-				return nullptr;
-			}
-		}
-	}
-	
 	if(CanAddItemDefinitionToSpecifiedSlot(ToSlot, ItemDef, StackCount) == false)
 	{
 		//TODO Inventory is full, add voice over?
@@ -279,14 +257,6 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 		return false;
 	}
 
-	//TODO Think about what to do if we return false from trying to add stacks
-	int32 OutAddedStacks = 0;
-	int32 OutLeftStacks = -1;
-	if(InstanceToAdd->IsStackable() && TryAddingStacksToSpecificSlotWithInstance(InstanceToAdd, ToSlot, OutLeftStacks, OutAddedStacks))
-	{
-		return true;
-	}
-
 	if(CanAddItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
@@ -313,12 +283,16 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToEx
 	OutStacksLeft = NewItemStacks;
 	int32 StacksInInventory = 0;
 	UObsidianInventoryItemInstance* AddedToInstance = nullptr;
-	
+
+	// TODO Count all tack in inventory in other way, this will fail
+
 	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
 	for(UObsidianInventoryItemInstance* Instance : Items)
 	{
+		
 		if(!IsValid(Instance))
 		{
+			UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryComponent::TryAddingStacksToExistingItem."));
 			continue;
 		}
 		
@@ -330,18 +304,18 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToEx
 			StacksInInventory += CurrentStackCount;
 			if(CurrentStackCount == 0)
 			{
-				break;
+				continue;
 			}
 			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
 			if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
 			{
-				break;
+				continue;
 			}
 			
 			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? OutStacksLeft : LimitStackCount - StacksInInventory;
 			if(StacksThatCanBeAddedToInventory <= 0)
 			{
-				break;
+				continue;
 			}
 			
 			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
@@ -349,7 +323,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToEx
 			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, OutStacksLeft);
 			if(AmountThatCanBeAddedToInstance <= 0)
 			{
-				break;
+				continue;
 			}
 			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
 			

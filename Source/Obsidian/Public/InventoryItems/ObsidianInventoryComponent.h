@@ -7,6 +7,8 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
+
 class UObsidianInventoryWidgetController;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
