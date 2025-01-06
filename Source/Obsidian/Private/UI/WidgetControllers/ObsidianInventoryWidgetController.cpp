@@ -165,7 +165,6 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 					return;
 				}
 			}
-			
 			InternalHeroComponent->StopDragging();
 			PickupItem(SlotPosition);
 			

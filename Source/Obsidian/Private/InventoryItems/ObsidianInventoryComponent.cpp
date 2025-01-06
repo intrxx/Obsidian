@@ -6,6 +6,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -134,15 +135,23 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	{
 		return nullptr;
 	}
-	
+
+	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
 	int32 StacksLeft = StackCount;
 	if(DefaultObject->IsStackable())
 	{
-		UObsidianInventoryItemInstance* LastAddedToInstance = TryAddingStacksToExistingItem(ItemDef.Get(), StackCount, StacksLeft);
+		LastAddedToInstance = TryAddingStacksToExistingItem(ItemDef, StackCount, StacksLeft);
 		if(StacksLeft == 0)
 		{
 			return LastAddedToInstance;
 		}
+	}
+
+	StacksLeft = GetNumberOfStacksAvailableToAdd(ItemDef, StacksLeft);
+	if(StacksLeft == 0)
+	{
+		//TODO We can no longer add this item to the inventory, add voice over?
+		return LastAddedToInstance;
 	}
 	
 	FVector2D AvailablePosition;
@@ -219,17 +228,24 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	{
 		return;
 	}
-	
+
+	int32 StacksLeft;
 	if(InstanceToAdd->IsStackable())
 	{
 		const int32 StacksToAdd = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	
-		int32 StacksLeft;
-		TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef().Get(), StacksToAdd, StacksLeft);
+		
+		TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef(), StacksToAdd, StacksLeft);
 		if(StacksLeft == 0)
 		{
 			return;
 		}
+	}
+
+	StacksLeft = GetNumberOfStacksAvailableToAdd(InstanceToAdd);
+	if(StacksLeft == 0)
+	{
+		//TODO We can no longer add this item to the inventory, add voice over?
+		return;
 	}
 	
 	FVector2D AvailablePosition;
@@ -307,7 +323,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToEx
 			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
 			if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
 			{
-				continue;
+				break;
 			}
 			
 			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? OutStacksLeft : LimitStackCount - StacksInInventory;
@@ -454,8 +470,8 @@ int32 UObsidianInventoryComponent::FindAllStacksForGivenItem(const TSubclassOf<U
 
 int32 UObsidianInventoryComponent::FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance)
 {
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = ItemInstance->GetItemDef();
 	int32 AllStacks = 0;
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = ItemInstance->GetItemDef();
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
 		UObsidianInventoryItemInstance* Instance = Entry.Instance;
@@ -468,6 +484,42 @@ int32 UObsidianInventoryComponent::FindAllStacksForGivenItem(const UObsidianInve
 		}
 	}
 	return AllStacks;
+}
+
+int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAdd(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks)
+{
+	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	if(DefaultObject == nullptr)
+	{
+		return 0;
+	}
+	
+	const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(DefaultObject->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass()));
+	if(StacksFrag == nullptr)
+	{
+		return CurrentStacks;
+	}
+	
+	const int32 StacksLimit = StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Limit);
+	if(StacksLimit == 0) // Item has no limit
+	{
+		return CurrentStacks;
+	}
+	const int32 AllStacks = FindAllStacksForGivenItem(ItemDef);
+	return  FMath::Clamp(StacksLimit - AllStacks, 0, CurrentStacks);
+}
+
+int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAdd(const UObsidianInventoryItemInstance* ItemInstance)
+{
+	const int32 CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 StacksLimit = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+	if(StacksLimit == 0) // Item has no limit
+	{
+		return CurrentStacks;
+	}
+	
+	const int32 AllStacks = FindAllStacksForGivenItem(ItemInstance);
+	return  FMath::Clamp(StacksLimit - AllStacks, 0, CurrentStacks);
 }
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)

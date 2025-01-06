@@ -91,6 +91,10 @@ private:
 	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* NewItemInstance, const FVector2D& AtPosition, int32& OutStacksLeft, int32& OutStacksAdded);
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
+
+	/** Checks the limit of the item, returns the number of stacks available to add. */
+	int32 GetNumberOfStacksAvailableToAdd(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
+	int32 GetNumberOfStacksAvailableToAdd(const UObsidianInventoryItemInstance* ItemInstance);
 	
 	FVector2D GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
 	
