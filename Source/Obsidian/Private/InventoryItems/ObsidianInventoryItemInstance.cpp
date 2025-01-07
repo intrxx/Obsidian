@@ -47,6 +47,11 @@ void UObsidianInventoryItemInstance::RemoveItemStackCount(const FGameplayTag Fro
 	ItemStackTags.RemoveStack(FromTag, StackCount);
 }
 
+void UObsidianInventoryItemInstance::OverrideItemStackCount(const FGameplayTag Tag, const int32 NewStackCount)
+{
+	ItemStackTags.OverrideStack(Tag, NewStackCount);
+}
+
 int32 UObsidianInventoryItemInstance::GetItemStackCount(const FGameplayTag Tag) const
 {
 	return ItemStackTags.GetStackCount(Tag);

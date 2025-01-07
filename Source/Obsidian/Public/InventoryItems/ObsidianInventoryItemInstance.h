@@ -54,6 +54,10 @@ public:
 	/** Removes a specified number of stacks to the tag (does nothing if StackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void RemoveItemStackCount(const FGameplayTag FromTag, const int32 StackCount);
+
+	/** Overrides stacks on provided tag (does nothing if StackCount is below 1). */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void OverrideItemStackCount(const FGameplayTag Tag, const int32 NewStackCount);
 	
 	/** Returns the stack count of the specified tag (or 0 is there is no stack for this tag). */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")

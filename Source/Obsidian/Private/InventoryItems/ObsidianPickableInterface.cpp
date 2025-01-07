@@ -36,12 +36,14 @@ void UObsidianPickableStatics::AddPickupToInventory(UObsidianInventoryComponent*
 
 		for (const FPickupTemplate& Template : PickupContent.Templates)
 		{
-			InventoryComponent->AddItemDefinition(Template.ItemDef, Template.StackCount);
+			int32 OutStacksLeft = 0;
+			InventoryComponent->AddItemDefinition(Template.ItemDef, /** OUT */ OutStacksLeft, Template.StackCount);
 		}
 
 		for (const FPickupInstance& Instance : PickupContent.Instances)
 		{
-			InventoryComponent->AddItemInstance(Instance.Item);
+			int32 OutStacksLeft = 0;
+			InventoryComponent->AddItemInstance(Instance.Item, /** OUT */ OutStacksLeft);
 		}
 	}
 }

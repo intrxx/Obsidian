@@ -91,6 +91,36 @@ void FGameplayTagStackContainer::RemoveStack(FGameplayTag FromTag, int32 StackCo
 	FFrame::KismetExecutionMessage(TEXT("Trying to Remove 0 or negative number of stacks."), ELogVerbosity::Error);
 }
 
+void FGameplayTagStackContainer::OverrideStack(FGameplayTag Tag, int32 NewStackCount)
+{
+	if(!Tag.IsValid())
+	{
+		FFrame::KismetExecutionMessage(TEXT("Tag passed to OverrideStack is invalid."), ELogVerbosity::Error);
+		return;
+	}
+
+	if(NewStackCount > 0)
+	{
+		for(FGameplayTagStack& Stack : Stacks)
+		{
+			if(Stack.Tag == Tag)
+			{
+				const int32 NewCount = NewStackCount;
+				Stack.StackCount = NewCount;
+				TagToCountMap[Tag] = NewCount;
+				MarkItemDirty(Stack);
+				return;
+			}
+		}
+
+		FGameplayTagStack& NewStack = Stacks.Emplace_GetRef(Tag, NewStackCount);
+		MarkItemDirty(NewStack);
+		TagToCountMap.Add(Tag, NewStackCount);
+		return;
+	}
+	FFrame::KismetExecutionMessage(TEXT("Trying to Override 0 or negative number of stacks, in case of the second one use RemoveStack."), ELogVerbosity::Error);
+}
+
 void FGameplayTagStackContainer::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
 {
 	for(const int32 Index : RemovedIndices)

@@ -123,8 +123,10 @@ bool UObsidianInventoryComponent::CanAddItemDefinitionToSpecifiedSlot(const FVec
 	return bCanAdd;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32& OutStacksLeft, const int32 StackCount)
 {
+	OutStacksLeft = StackCount;
+	
 	if(ItemDef == nullptr)
 	{
 		return nullptr;
@@ -137,25 +139,24 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	}
 
 	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
-	int32 StacksLeft = StackCount;
 	if(DefaultObject->IsStackable())
 	{
-		LastAddedToInstance = TryAddingStacksToExistingItem(ItemDef, StackCount, StacksLeft);
-		if(StacksLeft == 0)
+		LastAddedToInstance = TryAddingStacksToExistingItem(ItemDef, StackCount, OutStacksLeft);
+		if(OutStacksLeft == 0)
 		{
 			return LastAddedToInstance;
 		}
 	}
-
-	StacksLeft = GetNumberOfStacksAvailableToAdd(ItemDef, StacksLeft);
-	if(StacksLeft == 0)
+	
+	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAdd(ItemDef, OutStacksLeft);
+	if(StacksAvailableToAdd == 0)
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
 		return LastAddedToInstance;
 	}
 	
 	FVector2D AvailablePosition;
-	if(CanAddItemDefinition(AvailablePosition, ItemDef, StacksLeft) == false)
+	if(CanAddItemDefinition(AvailablePosition, ItemDef, StacksAvailableToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
@@ -163,8 +164,10 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 		return nullptr;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksLeft, AvailablePosition);
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksLeft);
+	OutStacksLeft -= StacksAvailableToAdd;
+	
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, AvailablePosition);
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	Item_MarkSpace(AvailablePosition, Instance);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -251,27 +254,25 @@ bool UObsidianInventoryComponent::CanAddItemInstanceToSpecificSlot(const FVector
 	return bCanAdd;
 }
 
-void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
+void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd, int32& OutStacksLeft)
 {
 	if(InstanceToAdd == nullptr)
 	{
 		return;
 	}
 
-	int32 StacksLeft;
+	OutStacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(InstanceToAdd->IsStackable())
 	{
-		const int32 StacksToAdd = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		
-		TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef(), StacksToAdd, StacksLeft);
-		if(StacksLeft == 0)
+		TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef(), OutStacksLeft, OutStacksLeft);
+		if(OutStacksLeft == 0)
 		{
 			return;
 		}
 	}
 
-	StacksLeft = GetNumberOfStacksAvailableToAdd(InstanceToAdd);
-	if(StacksLeft == 0)
+	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAdd(InstanceToAdd);
+	if(StacksAvailableToAdd == 0)
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
 		return;
@@ -285,7 +286,10 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 			FString::Printf(TEXT("Inventory is full!")));
 		return;
 	}
+
+	OutStacksLeft -= StacksAvailableToAdd;
 	
+	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{

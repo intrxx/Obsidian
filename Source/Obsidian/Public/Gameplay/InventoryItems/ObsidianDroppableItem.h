@@ -32,8 +32,10 @@ protected:
 	void OnItemDescMouseButtonDown();
 
 private:
-	void PickupItemInstance() const;
-	void PickupItemDef() const;
+	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
+	bool PickupItemInstance();
+	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
+	bool PickupItemDef();
 
 	void InitItemDesc(UObsidianGroundItemDesc* GroundItemDesc);
 

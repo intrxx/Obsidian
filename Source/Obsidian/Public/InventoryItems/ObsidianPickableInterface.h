@@ -85,7 +85,9 @@ public:
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) = 0;
-
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
+	virtual void OverrideTemplateStacks(const int32 TemplateIndex, const int32 NewItemStacks) = 0;
+	
 	//
 };
 

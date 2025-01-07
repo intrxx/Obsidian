@@ -28,6 +28,14 @@ void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInv
 	StaticContent.Templates.Add(FPickupTemplate(ItemDef, ItemStacks));
 }
 
+void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 TemplateIndex, const int32 NewItemStacks)
+{
+	if(StaticContent.Templates[TemplateIndex].ItemDef)
+	{
+		StaticContent.Templates[TemplateIndex].StackCount = NewItemStacks;
+	}
+}
+
 bool AObsidianWorldCollectable::CarriesItemInstance() const
 {
 	const FPickupContent PickupContent = GetPickupContent();

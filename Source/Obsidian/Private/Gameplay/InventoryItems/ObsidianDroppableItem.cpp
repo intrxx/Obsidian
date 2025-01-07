@@ -11,6 +11,7 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "Kismet/GameplayStatics.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Inventory/ObsidianGroundItemDesc.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
@@ -143,6 +144,17 @@ void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)
 		return;
 	}
 
+	int32 StackCount = -1;
+	if(CarriesItemDef())
+	{
+		StackCount = GetPickupContent().Templates[0].StackCount;
+	}
+	if(CarriesItemInstance())
+	{
+		StackCount = GetPickupContent().Instances[0].Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	}
+	UE_LOG(LogTemp, Error, TEXT("Item Stacks: [%d]"), StackCount);
+
 	StaticMeshComp->SetRenderCustomDepth(bMouseEnter);
 }
 
@@ -152,71 +164,103 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 	// 1. Get the local Player Controller
 	// 2. Check if the inventory is opened
 	// 3. Server delegate to request to add the item to inventory/cursor?
+	bool bAddedWholeItem = true;
 	if(CarriesItemDef())
 	{
-		PickupItemDef();
+		bAddedWholeItem = PickupItemDef();
 	}
 	else if(CarriesItemInstance())
 	{
-		PickupItemInstance();
+		bAddedWholeItem = PickupItemInstance();
 	}
 	
-	Destroy();
-}
-
-void AObsidianDroppableItem::PickupItemInstance() const
-{
-	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	if(bAddedWholeItem)
 	{
-		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
-		{
-			FPickupContent PickupContent = GetPickupContent();
-			UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item;
-			
-			if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
-			{
-				const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
-				UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
-				check(HeroComp);
-					
-				UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
-				DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
-				DraggedItem->AddToViewport();
-				HeroComp->DragItem(DraggedItem);
-				return;
-			}
-			UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
-			InventoryComponent->AddItemInstance(ItemInstance);
-		}
+		Destroy();
 	}
 }
 
-void AObsidianDroppableItem::PickupItemDef() const
+bool AObsidianDroppableItem::PickupItemInstance()
 {
-	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if(ObsidianPC == nullptr)
 	{
-		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
-		{
-			FPickupContent PickupContent = GetPickupContent();
-			const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef;
-			const int32 StackCount = PickupContent.Templates[0].StackCount;
-			
-			if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
-			{
-				const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
-				UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
-				check(HeroComp);
-					
-				UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
-				DraggedItem->InitializeItemWidgetWithItemDef(PickupItemDef, StackCount);
-				DraggedItem->AddToViewport();
-				HeroComp->DragItem(DraggedItem);
-				return;
-			}
-			UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
-			InventoryComponent->AddItemDefinition(PickupItemDef, StackCount);
-		}
+		return false;
 	}
+	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
+	if(ObsidianHUD == nullptr)
+	{
+		return false;
+	}
+		
+	FPickupContent PickupContent = GetPickupContent();
+	UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item;
+			
+	if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item (with its whole stacks) on cursor.
+	{
+		const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+		UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+		check(HeroComp);
+					
+		UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+		DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
+		DraggedItem->AddToViewport();
+		HeroComp->DragItem(DraggedItem);
+		return true;
+	}
+	
+	int32 OutStacksLeft = 0;
+	UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
+	InventoryComponent->AddItemInstance(ItemInstance, /** OUT */ OutStacksLeft);
+			
+	if(OutStacksLeft > 0)
+	{
+		//TODO Create new item instance with StacksLeft
+		return false;
+	}
+	return true;
+}
+
+bool AObsidianDroppableItem::PickupItemDef()
+{
+	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if(ObsidianPC == nullptr)
+	{
+		return false;
+	}
+
+	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
+	if(ObsidianHUD == nullptr)
+	{
+		return false;
+	}
+
+	FPickupContent PickupContent = GetPickupContent();
+	const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef;
+	const int32 StackCount = PickupContent.Templates[0].StackCount;
+			
+	if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
+	{
+		const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+		UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+		check(HeroComp);
+					
+		UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+		DraggedItem->InitializeItemWidgetWithItemDef(PickupItemDef, StackCount);
+		DraggedItem->AddToViewport();
+		HeroComp->DragItem(DraggedItem);
+		return true;
+	}
+	UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
+
+	int32 OutStacksLeft = 0;
+	InventoryComponent->AddItemDefinition(PickupItemDef, /** OUT */ OutStacksLeft, StackCount);
+	if(OutStacksLeft > 0)
+	{
+		OverrideTemplateStacks(0, OutStacksLeft);
+		return false;
+	}
+	return true;
 }
 
 
