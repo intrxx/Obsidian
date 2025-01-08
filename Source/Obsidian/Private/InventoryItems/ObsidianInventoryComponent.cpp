@@ -291,6 +291,7 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	
 	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
+	Item_MarkSpace(AvailablePosition, InstanceToAdd);
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(InstanceToAdd);
