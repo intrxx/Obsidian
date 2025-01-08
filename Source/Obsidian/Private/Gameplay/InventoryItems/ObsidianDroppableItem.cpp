@@ -215,7 +215,7 @@ bool AObsidianDroppableItem::PickupItemInstance()
 			
 	if(OutStacksLeft > 0)
 	{
-		//TODO Create new item instance with StacksLeft
+		ItemInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
 		return false;
 	}
 	return true;

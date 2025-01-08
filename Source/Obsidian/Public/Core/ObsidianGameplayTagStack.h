@@ -7,6 +7,7 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianGameplayTagStack.generated.h"
 
+class UObsidianInventoryItemInstance;
 struct FGameplayTagStackContainer;
 struct FNetDeltaSerializeInfo;
 
@@ -80,6 +81,8 @@ public:
 	//~ End of FFastArraySerializer contract
 
 private:
+	friend UObsidianInventoryItemInstance;
+	
 	/** Replicated list of gameplay tag stacks. */
 	UPROPERTY()
 	TArray<FGameplayTagStack> Stacks;

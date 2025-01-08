@@ -100,8 +100,8 @@ private:
 	
 	void InitInventoryState();
 	
-	void Item_MarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance);
-	void Item_UnMarkSpace(const FVector2D AtPosition, const UObsidianInventoryItemInstance* ItemInstance);
+	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
+	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
 
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
 	bool CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition);
