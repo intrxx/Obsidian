@@ -93,7 +93,9 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition))
 		{
 			InternalHeroComponent->StopDragging();
+			return;
 		}
+		DraggedItem->SyncStackCountWithInstance();
 	}
 	else
 	{
@@ -132,7 +134,7 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 				}
 				ItemWidget->AddCurrentStackCount(OutAddedStacks);
 				CachedDraggedItem->UpdateStackCount(OutLeftStacks);
-				return;
+				return; //TODO This shouldn't return as we might want to replace stackable item with non stackable one
 			}
 			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, CachedDraggedInstance))
 			{

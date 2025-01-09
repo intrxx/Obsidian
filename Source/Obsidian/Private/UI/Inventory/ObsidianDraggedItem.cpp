@@ -109,3 +109,12 @@ void UObsidianDraggedItem::UpdateStackCount(const int32 NewStackCount)
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
+
+void UObsidianDraggedItem::SyncStackCountWithInstance() const
+{
+	const int32 StackCount = InternalItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), StackCount));
+	StackCount_TextBlock->SetText(StackCountText);
+	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
+}

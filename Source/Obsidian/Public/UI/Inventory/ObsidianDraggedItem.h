@@ -25,6 +25,9 @@ public:
 	void InitializeItemWidgetWithItemInstance(UObsidianInventoryItemInstance* ItemInstance);
 
 	void UpdateStackCount(const int32 NewStackCount);
+	
+	/** Syncs the stack count with the stack count of carried item instance. */
+	void SyncStackCountWithInstance() const;
 
 	/** Invalid when widget initialized with Instance. */
 	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const

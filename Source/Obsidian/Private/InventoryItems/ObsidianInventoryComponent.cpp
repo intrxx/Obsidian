@@ -316,6 +316,13 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 		return false;
 	}
 	
+	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAdd(InstanceToAdd);
+	if(StacksAvailableToAdd == 0)
+	{
+		//TODO We can no longer add this item to the inventory, add voice over?
+		return false;
+	}
+	
 	if(CanAddItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
@@ -325,24 +332,21 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	}
 
 	bool bAddedWholeItem = true;
-	if(InstanceToAdd->HasAnyStacks())
+	int32 StacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	StacksLeft -= StacksAvailableToAdd;
+	UObsidianInventoryItemInstance* NewInstance = nullptr;
+	if(StacksLeft > 0)
 	{
-		const int32 StacksThatCanBeAdded = GetNumberOfStacksAvailableToAdd(InstanceToAdd);
-		if(StacksThatCanBeAdded == 0)
-		{
-			return false;
-		}
-
-		const int32 CurrentStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		const int32 StacksToRemove = CurrentStacks - StacksThatCanBeAdded;
-		if(StacksToRemove > 0)
-		{
-			//TODO Update number of stacks on the carried item
-			InstanceToAdd->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToRemove);
-			bAddedWholeItem = false;
-		}
+		bAddedWholeItem = false;
+		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksLeft);
+		NewInstance = UObsidianInventoryItemInstance::DuplicateItem(InstanceToAdd, GetOwner());
+	}
+	if(NewInstance != nullptr)
+	{
+		InstanceToAdd = NewInstance;
 	}
 
+	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	InventoryGrid.AddEntry(InstanceToAdd, ToSlot);
 	Item_MarkSpace(InstanceToAdd, ToSlot);
 	
