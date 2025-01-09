@@ -131,10 +131,14 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 				if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(CachedDraggedInstance, SlotPosition, /** OUT */ OutLeftStacks, /** OUT */ OutAddedStacks)) // We added whole stacks to an item
 				{
 					InternalHeroComponent->StopDragging();
+					return;
 				}
-				ItemWidget->AddCurrentStackCount(OutAddedStacks);
-				CachedDraggedItem->UpdateStackCount(OutLeftStacks);
-				return; //TODO This shouldn't return as we might want to replace stackable item with non stackable one
+				if(OutAddedStacks != 0)
+				{
+					ItemWidget->AddCurrentStackCount(OutAddedStacks);
+					CachedDraggedItem->UpdateStackCount(OutLeftStacks);
+					return;
+				}
 			}
 			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, CachedDraggedInstance))
 			{

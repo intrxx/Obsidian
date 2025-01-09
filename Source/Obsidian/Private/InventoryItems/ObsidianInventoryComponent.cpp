@@ -788,6 +788,8 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance)
 {
+	//TODO This need to care about item stack limits
+	
 	UObsidianInventoryItemInstance* InstanceAtLocation = Internal_GetItemInstanceAtLocation(Slot);
 	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
 	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
