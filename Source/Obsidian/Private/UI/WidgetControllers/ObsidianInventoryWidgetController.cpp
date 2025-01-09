@@ -171,10 +171,12 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 					return;
 				}
 			}
-			InternalHeroComponent->StopDragging();
-			PickupItem(SlotPosition);
-			
-			InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, ItemStackCount);
+			if(InternalInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
+			{
+				InternalHeroComponent->StopDragging();
+				PickupItem(SlotPosition);
+				InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, ItemStackCount);
+			}
 			return;
 		}
 		return;
