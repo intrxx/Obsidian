@@ -788,7 +788,11 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance)
 {
-	//TODO This need to care about item stack limits
+	if(GetNumberOfStacksAvailableToAdd(ReplacingInstance) <= 0)
+	{
+		//TODO Limit of stacks reached, add voiceover?
+		return false;
+	}
 	
 	UObsidianInventoryItemInstance* InstanceAtLocation = Internal_GetItemInstanceAtLocation(Slot);
 	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
@@ -829,8 +833,13 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 	return bCanReplace;
 }
 
-bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef)
+bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
+	if(GetNumberOfStacksAvailableToAdd(ItemDef, StackCount) <= 0)
+	{
+		return false;
+	}
+	
 	UObsidianInventoryItemInstance* InstanceAtLocation = Internal_GetItemInstanceAtLocation(Slot);
 	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
 	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();

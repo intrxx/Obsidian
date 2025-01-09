@@ -175,7 +175,6 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 			PickupItem(SlotPosition);
 			
 			InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, ItemStackCount);
-			
 			return;
 		}
 		return;
@@ -286,7 +285,6 @@ void UObsidianInventoryWidgetController::RemoveItemWidget(const FVector2D& Locat
 	if(AddedItemWidgetMap.Contains(Location))
 	{
 		AddedItemWidgetMap[Location]->RemoveFromParent();
-		
 		AddedItemWidgetMap.Remove(Location);
 	}
 }
