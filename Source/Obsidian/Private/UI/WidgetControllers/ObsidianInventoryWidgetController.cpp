@@ -112,15 +112,13 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 
 void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
-	//TODO I think there is too much logic here, it would probably be better to move it more on the inventory component
 	check(InventoryComponent);
 	check(DraggedItemWidgetClass);
 	
-	if(InternalHeroComponent->IsDraggingAnItem())
+	if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
-		//Replace the item if it fits
 		UObsidianDraggedItem* CachedDraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-		if(UObsidianInventoryItemInstance* CachedDraggedInstance = CachedDraggedItem->GetItemInstance())
+		if(UObsidianInventoryItemInstance* CachedDraggedInstance = CachedDraggedItem->GetItemInstance()) // We carry item instance.
 		{
 			if(CachedDraggedInstance->IsStackable()) // Try adding the stacks if we click on the same item.
 			{
@@ -128,18 +126,25 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 				
 				int32 OutAddedStacks = 0;
 				int32 OutLeftStacks = -1;
+				bool bReturn = false;
 				if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(CachedDraggedInstance, SlotPosition, /** OUT */ OutLeftStacks, /** OUT */ OutAddedStacks)) // We added whole stacks to an item
 				{
 					InternalHeroComponent->StopDragging();
-					return;
+					bReturn = true;
 				}
 				if(OutAddedStacks != 0)
 				{
 					ItemWidget->AddCurrentStackCount(OutAddedStacks);
 					CachedDraggedItem->UpdateStackCount(OutLeftStacks);
+					bReturn = true;
+				}
+
+				if(bReturn)
+				{
 					return;
 				}
 			}
+			
 			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, CachedDraggedInstance))
 			{
 				InternalHeroComponent->StopDragging();
@@ -148,11 +153,11 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 			}
 			return;
 		}
-		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = CachedDraggedItem->GetItemDef())
+		
+		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = CachedDraggedItem->GetItemDef()) // We carry item def
 		{
 			const int32 ItemStackCount = CachedDraggedItem->GetItemStacks();
-			
-			UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
 			if(DefaultObject->IsStackable())
 			{
 				check(ItemWidget);
@@ -161,16 +166,26 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 				int32 OutStacksLeft = -1;
 				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, SlotPosition, ItemStackCount, /** OUT */ OutStacksLeft, /** OUT */ OutStacksAdded) != nullptr) // We added some stacks to an item
 				{
-					ItemWidget->AddCurrentStackCount(OutStacksAdded);
+					bool bReturn = false;
 					if(OutStacksLeft == 0)
 					{
 						InternalHeroComponent->StopDragging();
+						bReturn = true;
+					}
+					if(OutStacksAdded != 0)
+					{
+						ItemWidget->AddCurrentStackCount(OutStacksAdded);
+						CachedDraggedItem->UpdateStackCount(OutStacksLeft);
+						bReturn = true;
+					}
+
+					if(bReturn)
+					{
 						return;
 					}
-					CachedDraggedItem->UpdateStackCount(OutStacksLeft);
-					return;
 				}
 			}
+			
 			if(InternalInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
 			{
 				InternalHeroComponent->StopDragging();
