@@ -7,11 +7,14 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
-
 class UObsidianInventoryWidgetController;
 
+DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
+
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
+
+using FLocationToStacksMap = const TMap<FVector2D, int32>&; // Need to wrap the Map in type alias to avoid parsing issues in delegate macro.
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemsStacksChangedSignature, FLocationToStacksMap);
 
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
@@ -83,11 +86,12 @@ public:
 
 public:
 	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
+	FOnItemsStacksChangedSignature OnItemsStacksChangedDelegate;
 
 private:
 	void InitInventoryState();
 	
-	UObsidianInventoryItemInstance* TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft);
+	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft);
 	UObsidianInventoryItemInstance* TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded);
 
 	/** Will try to add stacks from provided Item Instance at specific slot, will return false if there is no matching item AtPosition or entire stack could not be added. */

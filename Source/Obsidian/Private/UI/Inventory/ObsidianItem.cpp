@@ -52,3 +52,14 @@ void UObsidianItem::AddCurrentStackCount(const int32 StackCountToAdd)
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
+
+void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount) const
+{
+	if(NewStackCount <= 0)
+	{
+		return;
+	}
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), NewStackCount));
+	StackCount_TextBlock->SetText(StackCountText);
+	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
+}

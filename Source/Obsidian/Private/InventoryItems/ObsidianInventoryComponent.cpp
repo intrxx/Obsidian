@@ -138,13 +138,24 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 		return nullptr;
 	}
 
-	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
+	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
 	if(DefaultObject->IsStackable())
 	{
-		LastAddedToInstance = TryAddingStacksToExistingItem(ItemDef, StackCount, OutStacksLeft);
+		AddedToInstances = TryAddingStacksToExistingItem(ItemDef, OutStacksLeft, OutStacksLeft);
+		if(AddedToInstances.IsEmpty() == false)
+		{
+			TMap<FVector2D, int32> LocationToStacksMap;
+			for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
+			{
+				const FVector2D InstanceLocation = GetItemLocationFromGrid(AddedToInstance);
+				const int32 NewStacks = AddedToInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+				LocationToStacksMap.Add(InstanceLocation, NewStacks);
+			}
+			OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
+		}
 		if(OutStacksLeft == 0)
 		{
-			return LastAddedToInstance;
+			return AddedToInstances.Last();
 		}
 	}
 	
@@ -152,7 +163,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	if(StacksAvailableToAdd == 0)
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
-		return LastAddedToInstance;
+		return AddedToInstances.Last();
 	}
 	
 	FVector2D AvailablePosition;
@@ -264,7 +275,18 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	OutStacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(InstanceToAdd->IsStackable())
 	{
-		TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef(), OutStacksLeft, OutStacksLeft);
+		TArray<UObsidianInventoryItemInstance*> AddedToInstances = TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef(), OutStacksLeft, OutStacksLeft);
+		if(AddedToInstances.IsEmpty() == false)
+		{
+			TMap<FVector2D, int32> LocationToStacksMap;
+			for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
+			{
+				const FVector2D InstanceLocation = GetItemLocationFromGrid(AddedToInstance);
+				const int32 NewStacks = AddedToInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+				LocationToStacksMap.Add(InstanceLocation, NewStacks);
+			}
+			OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
+		}
 		if(OutStacksLeft == 0)
 		{
 			return;
@@ -359,16 +381,14 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	return bAddedWholeItem;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft)
+TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft)
 {
 	int32 AddedStacks = 0;
 	OutStacksLeft = NewItemStacks;
 	const int32 StacksInInventory = FindAllStacksForGivenItem(NewItemDef);
-	UObsidianInventoryItemInstance* AddedToInstance = nullptr;
-
-	// TODO Count all tack in inventory in other way, this will fail
-
+	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
 	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
+	
 	for(UObsidianInventoryItemInstance* Instance : Items)
 	{
 		if(!IsValid(Instance))
@@ -410,15 +430,15 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToEx
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
 			AddedStacks += AmountThatCanBeAddedToInstance;
 			OutStacksLeft -= AmountThatCanBeAddedToInstance;
-			AddedToInstance = Instance;
+			AddedToInstances.AddUnique(Instance);
 			
 			if((NewItemStacks != 0) && (AddedStacks == NewItemStacks))
 			{
-				return AddedToInstance;
+				return AddedToInstances;
 			}
 		}
 	}
-	return AddedToInstance;
+	return AddedToInstances;
 }
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded)

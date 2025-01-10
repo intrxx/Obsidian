@@ -27,7 +27,8 @@ FReply UObsidianGroundItemDesc::NativeOnPreviewMouseButtonDown(const FGeometry& 
 	//TODO Maybe some widget animation
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		OnItemDescMouseButtonDownDelegate.Broadcast();
+		const bool bLeftControlDown = InMouseEvent.IsLeftControlDown();
+		OnItemDescMouseButtonDownDelegate.Broadcast(bLeftControlDown);
 	}
 	return FReply::Handled();
 }

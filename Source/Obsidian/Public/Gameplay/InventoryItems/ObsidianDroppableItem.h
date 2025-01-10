@@ -29,13 +29,13 @@ protected:
 	virtual void BeginPlay() override;
 
 	void OnItemDescMouseHover(const bool bMouseEnter);
-	void OnItemDescMouseButtonDown();
+	void OnItemDescMouseButtonDown(const bool bLeftControlDown);
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
-	bool PickupItemInstance();
+	bool PickupItemInstance(const bool bLeftControlDown);
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
-	bool PickupItemDef();
+	bool PickupItemDef(const bool bLeftControlDown);
 
 	void InitItemDesc(UObsidianGroundItemDesc* GroundItemDesc);
 

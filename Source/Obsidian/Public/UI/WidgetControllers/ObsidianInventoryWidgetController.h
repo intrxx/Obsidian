@@ -66,6 +66,7 @@ public:
 	void RemoveItemWidget(const FVector2D& Location);
 	
 	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
+	void OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap);
 	void OnInventoryOpen();
 
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition);

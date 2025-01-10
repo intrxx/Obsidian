@@ -16,6 +16,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	check(InventoryComponent);
 	InternalInventoryComponent = InventoryComponent;
 	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::OnItemAdded);
+	InventoryComponent->OnItemsStacksChangedDelegate.AddUObject(this, &ThisClass::OnItemsStacksChanged);
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 
 	const AActor* OwningActor = Cast<AActor>(PlayerController->GetPawn());
@@ -40,6 +41,19 @@ void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInsta
 		StackCount
 	);
 	OnItemAddedDelegate.Broadcast(ItemVisuals);
+}
+
+void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap)
+{
+	for(TTuple<FVector2D, int32> LocationToStack : LocationToStacksMap)
+	{
+		const UObsidianItem* InventoryItem = AddedItemWidgetMap[LocationToStack.Key];
+		if(!IsValid(InventoryItem))
+		{
+			continue;
+		}
+		InventoryItem->OverrideCurrentStackCount(LocationToStack.Value);
+	}
 }
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()

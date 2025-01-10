@@ -158,7 +158,7 @@ void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)
 	StaticMeshComp->SetRenderCustomDepth(bMouseEnter);
 }
 
-void AObsidianDroppableItem::OnItemDescMouseButtonDown()
+void AObsidianDroppableItem::OnItemDescMouseButtonDown(const bool bLeftControlDown)
 {
 	//TODO For the future
 	// 1. Get the local Player Controller
@@ -167,11 +167,11 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 	bool bAddedWholeItem = true;
 	if(CarriesItemDef())
 	{
-		bAddedWholeItem = PickupItemDef();
+		bAddedWholeItem = PickupItemDef(bLeftControlDown);
 	}
 	else if(CarriesItemInstance())
 	{
-		bAddedWholeItem = PickupItemInstance();
+		bAddedWholeItem = PickupItemInstance(bLeftControlDown);
 	}
 	
 	if(bAddedWholeItem)
@@ -180,7 +180,7 @@ void AObsidianDroppableItem::OnItemDescMouseButtonDown()
 	}
 }
 
-bool AObsidianDroppableItem::PickupItemInstance()
+bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown)
 {
 	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if(ObsidianPC == nullptr)
@@ -196,7 +196,7 @@ bool AObsidianDroppableItem::PickupItemInstance()
 	FPickupContent PickupContent = GetPickupContent();
 	UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item;
 			
-	if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item (with its whole stacks) on cursor.
+	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
 	{
 		const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
 		UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
@@ -221,7 +221,7 @@ bool AObsidianDroppableItem::PickupItemInstance()
 	return true;
 }
 
-bool AObsidianDroppableItem::PickupItemDef()
+bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 {
 	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	if(ObsidianPC == nullptr)
@@ -239,7 +239,7 @@ bool AObsidianDroppableItem::PickupItemDef()
 	const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef;
 	const int32 StackCount = PickupContent.Templates[0].StackCount;
 			
-	if(ObsidianHUD->IsInventoryOpened()) // If the inventory is opened spawn the item on cursor
+	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press left control button, spawn the item on cursor
 	{
 		const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
 		UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
