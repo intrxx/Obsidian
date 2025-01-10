@@ -28,6 +28,10 @@ public:
 	}
 
 protected:
+	/** 
+	 * Whether, or not this item is stackable, needs to be set if the item wishes to display stacks and be added to other items.
+	 * This might not be set if the item has some inventory limit set but is not stackable, e.g. non-stackable quest items limited to 3.
+	 */
 	UPROPERTY(EditDefaultsOnly, Category = "Stacks")
 	bool bStackable = true;
 	

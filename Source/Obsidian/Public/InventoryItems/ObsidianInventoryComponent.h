@@ -85,26 +85,34 @@ public:
 	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
 
 private:
+	void InitInventoryState();
+	
 	UObsidianInventoryItemInstance* TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft);
 	UObsidianInventoryItemInstance* TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded);
+
 	/** Will try to add stacks from provided Item Instance at specific slot, will return false if there is no matching item AtPosition or entire stack could not be added. */
 	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* NewItemInstance, const FVector2D& AtPosition, int32& OutStacksLeft, int32& OutStacksAdded);
+
+	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	
+	/** Finds all stacks in the inventory for given item type with item Instance. */
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 
-	/** Checks the limit of the item, returns the number of stacks available to add. */
+	/** Checks the limit of the item, returns the number of stacks available to add with provided ItemDef. */
 	int32 GetNumberOfStacksAvailableToAdd(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
+
+	/** Checks the limit of the item, returns the number of stacks available to add with provided instance. */
 	int32 GetNumberOfStacksAvailableToAdd(const UObsidianInventoryItemInstance* ItemInstance);
 	
 	FVector2D GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
-	
-	void InitInventoryState();
 	
 	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
 	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
 
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
 	bool CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition);
+
 	/** Checks if the item fits in the provided spot. */
 	bool CheckSpecifiedPosition(const TArray<FVector2D>& ItemGridSize, const FVector2D& SpecifiedPosition);
 
