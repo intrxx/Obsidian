@@ -163,7 +163,11 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	if(StacksAvailableToAdd == 0)
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
-		return AddedToInstances.Last();
+		if(!AddedToInstances.IsEmpty())
+		{
+			return AddedToInstances.Last();
+		}
+		return nullptr;
 	}
 	
 	FVector2D AvailablePosition;
