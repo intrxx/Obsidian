@@ -61,6 +61,8 @@ public:
 		bCursorOverUI = bInOverUI;
 	}
 	
+	bool DropItem();
+	
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
@@ -94,6 +96,7 @@ private:
 	void DragItem();
 
 	bool CanDropItem() const;
+	bool HandleDroppingItem();
 	
 private:
 	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;

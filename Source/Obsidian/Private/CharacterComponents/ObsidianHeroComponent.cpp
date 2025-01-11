@@ -348,13 +348,26 @@ void UObsidianHeroComponent::Input_DropItem()
 	{
 		return;
 	}
-	
+	HandleDroppingItem();
+}
+
+bool UObsidianHeroComponent::DropItem()
+{
+	if(CanDropItem() == false)
+	{
+		return false;
+	}
+	return HandleDroppingItem();
+}
+
+bool UObsidianHeroComponent::HandleDroppingItem()
+{
 	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
-		return;
+		return false;
 	}
-
+	
 	const FVector CursorHitLocation = CursorHit.Location;
 	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, CursorHitLocation, FVector(1.0f, 1.0f, 1.0f));
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
@@ -371,6 +384,8 @@ void UObsidianHeroComponent::Input_DropItem()
 	}
 	Item->FinishSpawning(ItemSpawnTransform);
 	StopDragging();
+
+	return true;
 }
 
 AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
@@ -423,4 +438,5 @@ bool UObsidianHeroComponent::CanDropItem() const
 {
 	return !bCursorOverUI && IsDraggingAnItem() && bItemAvailableForDrop;
 }
+
 

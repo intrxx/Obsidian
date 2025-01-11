@@ -195,18 +195,29 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown)
 		
 	FPickupContent PickupContent = GetPickupContent();
 	UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item;
+	
+	const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+	UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+	check(HeroComp);
+	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
 			
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
 	{
-		const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
-		UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
-		check(HeroComp);
-					
-		UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
-		DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
-		DraggedItem->AddToViewport();
-		HeroComp->DragItem(DraggedItem);
-		return true;
+		bool bDroppedItem = false;
+		if(bIsDraggingAnItem)
+		{
+			bDroppedItem = HeroComp->DropItem();
+		}
+
+		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
+		{
+			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+			DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
+			DraggedItem->AddToViewport();
+			HeroComp->DragItem(DraggedItem);
+			return true;
+		}
+		return false;
 	}
 	
 	int32 OutStacksLeft = 0;
@@ -238,19 +249,31 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 	FPickupContent PickupContent = GetPickupContent();
 	const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef;
 	const int32 StackCount = PickupContent.Templates[0].StackCount;
+
+	const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+	UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+	check(HeroComp);
+	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
 			
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press left control button, spawn the item on cursor
 	{
-		const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
-		UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
-		check(HeroComp);
-					
-		UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
-		DraggedItem->InitializeItemWidgetWithItemDef(PickupItemDef, StackCount);
-		DraggedItem->AddToViewport();
-		HeroComp->DragItem(DraggedItem);
-		return true;
+		bool bDroppedItem = false;
+		if(bIsDraggingAnItem)
+		{
+			bDroppedItem = HeroComp->DropItem();
+		}
+
+		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
+		{
+			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+			DraggedItem->InitializeItemWidgetWithItemDef(PickupItemDef, StackCount);
+			DraggedItem->AddToViewport();
+			HeroComp->DragItem(DraggedItem);
+			return true;
+		}
+		return false;
 	}
+	
 	UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
 
 	int32 OutStacksLeft = 0;
