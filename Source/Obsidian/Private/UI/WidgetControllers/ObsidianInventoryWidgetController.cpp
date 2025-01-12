@@ -101,7 +101,7 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 	}
 	check(InventoryComponent);
 	
-	const UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
+	UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem->GetItemInstance())
 	{
 		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition))
@@ -111,16 +111,18 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 		}
 		DraggedItem->SyncStackCountWithInstance();
 	}
-	else
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef())
 	{
-		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef();
 		const int32 ItemStackCount = DraggedItem->GetItemStacks();
-		
-		UObsidianInventoryItemInstance* NewInstance = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, ItemStackCount);
-		if(NewInstance != nullptr)
+
+		int32 StackLeft = ItemStackCount;
+		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StackLeft, ItemStackCount);
+		if(StackLeft == 0)
 		{
 			InternalHeroComponent->StopDragging();
+			return;
 		}
+		DraggedItem->UpdateStackCount(StackLeft);
 	}
 }
 
@@ -204,7 +206,8 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 			{
 				InternalHeroComponent->StopDragging();
 				PickupItem(SlotPosition);
-				InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, ItemStackCount);
+				int32 StackLeft = ItemStackCount;
+				InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, StackLeft, ItemStackCount);
 			}
 			return;
 		}

@@ -195,13 +195,15 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	return Instance;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, const int32 StackCount)
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount)
 {
+	StacksLeft = StackCount;
+	
 	if(ItemDef == nullptr)
 	{
 		return nullptr;
 	}
-
+	
 	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 	if(DefaultObject == nullptr)
 	{
@@ -216,7 +218,6 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 		return nullptr;
 	}
 	
-	bool bAddedWholeItem = true;
 	int32 StacksThatCanBeAdded = StackCount;
 	if(DefaultObject->IsStackable())
 	{
@@ -225,13 +226,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 		{
 			return nullptr;
 		}
-		
-		const int32 StacksToRemove = StackCount - StacksThatCanBeAdded;
-		if(StacksToRemove > 0)
-		{
-			//TODO Update number of stacks on the carried item
-			bAddedWholeItem = false;
-		}
+		StacksLeft = StackCount - StacksThatCanBeAdded;
 	}
 
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksThatCanBeAdded, ToSlot);
@@ -244,12 +239,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	}
 
 	OnItemAddedToInventoryDelegate.Broadcast(Instance, ToSlot);
-
-	if(bAddedWholeItem == false)
-	{
-		//TODO Temp
-		return nullptr;
-	}
+	
 	return Instance;
 }
 
