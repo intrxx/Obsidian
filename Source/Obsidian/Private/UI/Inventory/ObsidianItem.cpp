@@ -11,7 +11,13 @@ FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const
 	// InMouseEvent.IsMouseButtonDown(EKeys::LeftMouseButton) - I don't know what is the difference, leaving it here for now
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		OnItemLeftMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition, this);
+		const bool bShiftPressed = InMouseEvent.IsShiftDown();
+		OnItemLeftMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition, this, bShiftPressed);
+	}
+	if(InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("TODO Add"));
+		OnItemRightMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition, this);
 	}
 
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);

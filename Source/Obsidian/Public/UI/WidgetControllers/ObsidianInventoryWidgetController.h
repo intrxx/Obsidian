@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryWidgetController.generated.h"
 
+class UObsidianUnstackSlider;
 class UObsidianHeroComponent;
 class UObsidianItemWidget;
 class UObsidianItem;
@@ -70,7 +71,8 @@ public:
 	void OnInventoryOpen();
 
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition);
-	void HandleClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
+	void HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
+	void HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 
 public:
 	FOnItemAddedSignature OnItemAddedDelegate;
@@ -78,10 +80,15 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianUnstackSlider> UnstackSliderClass;
 
 private:
 	bool CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const;
 	void PickupItem(const FVector2D& SlotPosition);
+
+	void HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake);
 	
 private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;

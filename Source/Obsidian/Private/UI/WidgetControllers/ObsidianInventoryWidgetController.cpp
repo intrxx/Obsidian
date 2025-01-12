@@ -10,6 +10,7 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "UI/Inventory/ObsidianItem.h"
+#include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
 
 void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
@@ -126,10 +127,11 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 	}
 }
 
-void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
 	check(InventoryComponent);
 	check(DraggedItemWidgetClass);
+	check(ItemWidget);
 	
 	if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
@@ -138,8 +140,6 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 		{
 			if(CachedDraggedInstance->IsStackable()) // Try adding the stacks if we click on the same item.
 			{
-				check(ItemWidget);
-				
 				int32 OutAddedStacks = 0;
 				int32 OutLeftStacks = -1;
 				bool bReturn = false;
@@ -176,8 +176,6 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
 			if(DefaultObject->IsStackable())
 			{
-				check(ItemWidget);
-				
 				int32 OutStacksAdded = 0;
 				int32 OutStacksLeft = -1;
 				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, SlotPosition, ItemStackCount, /** OUT */ OutStacksLeft, /** OUT */ OutStacksAdded) != nullptr) // We added some stacks to an item
@@ -216,6 +214,44 @@ void UObsidianInventoryWidgetController::HandleClickingOnAnItem(const FVector2D&
 	PickupItem(SlotPosition);
 }
 
+void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
+{
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceAtLocation(SlotPosition);
+	
+	if(InternalHeroComponent->IsDraggingAnItem())
+	{
+		//TODO Try to add 1 stack of carried item to the Position
+		return;
+	}
+	
+	if(ItemInstance->IsStackable() == false)
+	{
+		return;
+	}
+	
+	const int32 CurrentItemStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(CurrentItemStacks <= 1)
+	{
+		return;
+	}
+	
+	UObsidianUnstackSlider* UnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
+	UnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
+
+	float LocationX = 0.0f;
+	float LocationY = 0.0f;
+	if(PlayerController->GetMousePosition(LocationX, LocationY))
+	{
+		const FVector2D ViewportPosition = FVector2D(LocationX, LocationY);
+		UnstackSlider->SetPositionInViewport(ViewportPosition);
+	}
+	UnstackSlider->AddToViewport();
+	UnstackSlider->OnAcceptButtonPressedDelegate.AddLambda([this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
+	{
+		HandleTakingOutStacks(ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks, StackToTake);
+	});
+}
+
 void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPosition)
 {
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceAtLocation(SlotPosition);
@@ -228,6 +264,15 @@ void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPositio
 
 	InventoryComponent->RemoveItemInstance(ItemInstance);
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
+}
+
+void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake)
+{
+	if(CurrentStacks == StacksToTake)
+	{
+		PickupItem(SlotPosition);
+	}
+	//TODO Take some stacks into a new item, leave the other one in the inventory
 }
 
 bool UObsidianInventoryWidgetController::IsDraggingAnItem() const

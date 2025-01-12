@@ -79,12 +79,19 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 	GridSlot->SetRowSpan(GridSpan.Y);
 }
 
-void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget)
+void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown)
 {
-	if(InventoryWidgetController)
+	if(InventoryWidgetController == nullptr)
 	{
-		InventoryWidgetController->HandleClickingOnAnItem(ItemDesiredPosition, ItemWidget);
+		return;
 	}
+
+	if(bShiftDown)
+	{
+		InventoryWidgetController->HandleLeftClickingOnAnItemWithShiftDown(ItemDesiredPosition, ItemWidget);
+		return;
+	}
+	InventoryWidgetController->HandleLeftClickingOnAnItem(ItemDesiredPosition, ItemWidget);
 }
 
 void UObsidianInventory::OnInventorySlotHover(bool bEntered, UObsidianInventorySlot* AffectedSlot)
