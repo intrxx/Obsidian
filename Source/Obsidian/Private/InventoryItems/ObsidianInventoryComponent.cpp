@@ -73,7 +73,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems
 	return InventoryGrid.GetAllItems();
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
 {
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
@@ -89,7 +89,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemStackF
 	return nullptr;
 }
 
-bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, int32 StackCount)
+bool UObsidianInventoryComponent::CanFitItemDefinition(FVector2D& OutAvailablePosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	bool bCanAdd = false;
 	
@@ -106,7 +106,7 @@ bool UObsidianInventoryComponent::CanAddItemDefinition(FVector2D& OutAvailablePo
 	return bCanAdd;
 }
 
-bool UObsidianInventoryComponent::CanAddItemDefinitionToSpecifiedSlot(const FVector2D& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, int32 StackCount)
+bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FVector2D& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	bool bCanAdd = false;
 	
@@ -139,10 +139,10 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	}
 
 	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
-	if(DefaultObject->IsStackable())
+	if(DefaultObject->IsStackable()) // If the item is stackable, try adding stacks to the same item type already in the inventory.
 	{
 		AddedToInstances = TryAddingStacksToExistingItem(ItemDef, OutStacksLeft, OutStacksLeft);
-		if(AddedToInstances.IsEmpty() == false)
+		if(AddedToInstances.IsEmpty() == false) // Gather and update visual stack count on all added to instances.
 		{
 			TMap<FVector2D, int32> LocationToStacksMap;
 			for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
@@ -163,6 +163,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	if(StacksAvailableToAdd == 0)
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 		if(!AddedToInstances.IsEmpty())
 		{
 			return AddedToInstances.Last();
@@ -171,11 +172,14 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	}
 	
 	FVector2D AvailablePosition;
-	if(CanAddItemDefinition(AvailablePosition, ItemDef, StacksAvailableToAdd) == false)
+	if(CanFitItemDefinition(AvailablePosition, ItemDef) == false)
 	{
 		//TODO Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
-			FString::Printf(TEXT("Inventory is full!")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Inventory is full!")));
+		if(!AddedToInstances.IsEmpty())
+		{
+			return AddedToInstances.Last();
+		}
 		return nullptr;
 	}
 	
@@ -191,7 +195,6 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	}
 
 	OnItemAddedToInventoryDelegate.Broadcast(Instance, AvailablePosition);
-	
 	return Instance;
 }
 
@@ -209,26 +212,26 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	{
 		return nullptr;
 	}
-	
-	if(CanAddItemDefinitionToSpecifiedSlot(ToSlot, ItemDef, StackCount) == false)
-	{
-		//TODO Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
-			FString::Printf(TEXT("Inventory is full at specified slot!")));
-		return nullptr;
-	}
-	
+
 	int32 StacksThatCanBeAdded = StackCount;
 	if(DefaultObject->IsStackable())
 	{
 		StacksThatCanBeAdded = GetNumberOfStacksAvailableToAdd(ItemDef, StackCount);
 		if(StacksThatCanBeAdded == 0)
 		{
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 			return nullptr;
 		}
 		StacksLeft = StackCount - StacksThatCanBeAdded;
 	}
-
+	
+	if(CanFitItemDefinitionToSpecifiedSlot(ToSlot, ItemDef) == false)
+	{
+		//TODO Inventory is full, add voice over?
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
+		return nullptr;
+	}
+	
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksThatCanBeAdded, ToSlot);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksThatCanBeAdded);
 	Item_MarkSpace(Instance, ToSlot);
@@ -243,7 +246,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	return Instance;
 }
 
-bool UObsidianInventoryComponent::CanAddItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance)
+bool UObsidianInventoryComponent::CanFitItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance)
 {
 	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
 	
@@ -251,7 +254,7 @@ bool UObsidianInventoryComponent::CanAddItemInstance(FVector2D& OutAvailablePosi
 	return bCanAdd;
 }
 
-bool UObsidianInventoryComponent::CanAddItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance)
+bool UObsidianInventoryComponent::CanFitItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance)
 {
 	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
 	
@@ -291,15 +294,15 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	if(StacksAvailableToAdd == 0)
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 		return;
 	}
 	
 	FVector2D AvailablePosition;
-	if(CanAddItemInstance(AvailablePosition, InstanceToAdd) == false)
+	if(CanFitItemInstance(AvailablePosition, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
-			FString::Printf(TEXT("Inventory is full!")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
 		return;
 	}
 
@@ -336,14 +339,14 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	if(StacksAvailableToAdd == 0)
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 		return false;
 	}
 	
-	if(CanAddItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
+	if(CanFitItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,
-			FString::Printf(TEXT("Inventory is full at specified slot!")));
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return false;
 	}
 
