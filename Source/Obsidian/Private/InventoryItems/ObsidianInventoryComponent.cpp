@@ -214,7 +214,8 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	}
 
 	int32 StacksThatCanBeAdded = StackCount;
-	if(DefaultObject->IsStackable())
+	const bool bStackable = DefaultObject->IsStackable();
+	if(bStackable)
 	{
 		StacksThatCanBeAdded = GetNumberOfStacksAvailableToAdd(ItemDef, StackCount);
 		if(StacksThatCanBeAdded == 0)
@@ -235,6 +236,10 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksThatCanBeAdded, ToSlot);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksThatCanBeAdded);
 	Item_MarkSpace(Instance, ToSlot);
+	if(!bStackable)
+	{
+		StacksLeft = 0;
+	}
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -629,7 +634,7 @@ bool UObsidianInventoryComponent::ConsumeItemsByDefinition(const TSubclassOf<UOb
 	int32 TotalConsumed = 0;
 	while(TotalConsumed < NumberOfItemsToConsume)
 	{
-		if(UObsidianInventoryItemInstance* Instance = FindFirstItemStackForDefinition(ItemDef))
+		if(UObsidianInventoryItemInstance* Instance = FindFirstItemInstanceForDefinition(ItemDef))
 		{
 			InventoryGrid.RemoveEntry(Instance);
 			++TotalConsumed;
