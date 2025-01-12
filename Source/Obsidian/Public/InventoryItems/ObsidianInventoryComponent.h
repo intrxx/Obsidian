@@ -49,7 +49,7 @@ public:
 
 	/** Checks if the provided Item Definition can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount);
+	bool CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount = 1);
 
 	/** Tries to add Item Definition to the inventory, if the item is stackable will first try to add all the stacks to the same item types if they exist in inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
