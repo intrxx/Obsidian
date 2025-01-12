@@ -6,9 +6,9 @@
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
 
+class UObsidianItemWorldName;
 class UObsidianItemDragDropOperation;
 class UObsidianDraggedItem;
-class UObsidianGroundItemDesc;
 class  UWidgetComponent;
 
 /**
@@ -37,7 +37,7 @@ private:
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
 	bool PickupItemDef(const bool bLeftControlDown);
 
-	void InitItemDesc(UObsidianGroundItemDesc* GroundItemDesc);
+	void InitItemDesc(UObsidianItemWorldName* GroundItemDesc);
 
 	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
 	void SetupItemAppearanceFromInstance();
@@ -52,7 +52,7 @@ private:
 	TObjectPtr<UWidgetComponent> GroundItemDescWidgetComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObsidianGroundItemDesc> GroundItemDescClass;
+	TSubclassOf<UObsidianItemWorldName> GroundItemDescClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;

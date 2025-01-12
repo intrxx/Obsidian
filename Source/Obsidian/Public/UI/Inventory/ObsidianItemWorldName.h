@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetBase.h"
-#include "ObsidianGroundItemDesc.generated.h"
+#include "ObsidianItemWorldName.generated.h"
 
 class UImage;
 class UCommonTextBlock;
@@ -13,10 +13,10 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemDescMouseButtonDownSignature, const b
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemDescMouseHoverSignature, const bool bEnter);
 
 /**
- * 
+ * Widget class that represents the Item's name above the Item Actor in the world.
  */
 UCLASS()
-class OBSIDIAN_API UObsidianGroundItemDesc : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianItemWorldName : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 

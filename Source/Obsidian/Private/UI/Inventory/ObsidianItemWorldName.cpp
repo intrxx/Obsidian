@@ -1,10 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/Inventory/ObsidianGroundItemDesc.h"
+#include "UI/Inventory/ObsidianItemWorldName.h"
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
 
-void UObsidianGroundItemDesc::NativeConstruct()
+void UObsidianItemWorldName::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -14,7 +14,7 @@ void UObsidianGroundItemDesc::NativeConstruct()
 	}
 }
 
-void UObsidianGroundItemDesc::SetItemName(const FText& ItemName)
+void UObsidianItemWorldName::SetItemName(const FText& ItemName)
 {
 	if(ItemName_TextBlock)
 	{
@@ -22,7 +22,7 @@ void UObsidianGroundItemDesc::SetItemName(const FText& ItemName)
 	}
 }
 
-FReply UObsidianGroundItemDesc::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianItemWorldName::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	//TODO Maybe some widget animation
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
@@ -33,7 +33,7 @@ FReply UObsidianGroundItemDesc::NativeOnPreviewMouseButtonDown(const FGeometry& 
 	return FReply::Handled();
 }
 
-void UObsidianGroundItemDesc::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UObsidianItemWorldName::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
@@ -44,7 +44,7 @@ void UObsidianGroundItemDesc::NativeOnMouseEnter(const FGeometry& InGeometry, co
 	OnItemDescMouseHoverDelegate.Broadcast(true);
 }
 
-void UObsidianGroundItemDesc::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+void UObsidianItemWorldName::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseLeave(InMouseEvent);
 	

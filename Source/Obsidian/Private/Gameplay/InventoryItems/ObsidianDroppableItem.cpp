@@ -12,7 +12,7 @@
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "UI/Inventory/ObsidianGroundItemDesc.h"
+#include "UI/Inventory/ObsidianItemWorldName.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
 
@@ -102,7 +102,7 @@ void AObsidianDroppableItem::BeginPlay()
 		return;
 	}
 	
-	UObsidianGroundItemDesc* GroundItemDesc = CreateWidget<UObsidianGroundItemDesc>(World, GroundItemDescClass);
+	UObsidianItemWorldName* GroundItemDesc = CreateWidget<UObsidianItemWorldName>(World, GroundItemDescClass);
 	GroundItemDesc->OnItemDescMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemDescMouseHover);
 	GroundItemDesc->OnItemDescMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemDescMouseButtonDown);
 
@@ -111,7 +111,7 @@ void AObsidianDroppableItem::BeginPlay()
 	GroundItemDescWidgetComp->InitWidget();
 }
 
-void AObsidianDroppableItem::InitItemDesc(UObsidianGroundItemDesc* GroundItemDesc)
+void AObsidianDroppableItem::InitItemDesc(UObsidianItemWorldName* GroundItemDesc)
 {
 	FPickupContent PickupContent = GetPickupContent();
 	if(CarriesItemDef())
