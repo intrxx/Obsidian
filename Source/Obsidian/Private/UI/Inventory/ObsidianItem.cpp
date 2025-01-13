@@ -48,23 +48,25 @@ void UObsidianItem::AddCurrentStackCount(const int32 StackCountToAdd)
 		return;
 	}
 	
-	const int32 NewStack = InternalStacks + StackCountToAdd;
-	if(NewStack <= 0)
+	InternalStacks += StackCountToAdd;
+	if(InternalStacks <= 0)
 	{
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
-	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), NewStack));
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), InternalStacks));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount) const
+void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 {
 	if(NewStackCount <= 0)
 	{
 		return;
 	}
+	InternalStacks = NewStackCount;
+	
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), NewStackCount));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);

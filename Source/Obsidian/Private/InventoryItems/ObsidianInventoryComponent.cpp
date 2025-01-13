@@ -383,6 +383,22 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	return bAddedWholeItem;
 }
 
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
+{
+	UObsidianInventoryItemInstance* NewInstance = UObsidianInventoryItemInstance::DuplicateItem(TakingFromInstance, GetOwner());
+	if(NewInstance == nullptr)
+	{
+		return nullptr;
+	}
+	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToTake);
+
+	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 NewCurrentTakingFromInstanceStacks = CurrentTakingFromInstanceStacks - StacksToTake;
+	TakingFromInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, NewCurrentTakingFromInstanceStacks);
+
+	return NewInstance;
+}
+
 TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft)
 {
 	int32 AddedStacks = 0;

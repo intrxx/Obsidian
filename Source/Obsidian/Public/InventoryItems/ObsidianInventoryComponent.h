@@ -71,6 +71,10 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot);
 
+	/** Provides a copied Item with the amout of stacks to take. */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UObsidianInventoryItemInstance* TakeOutItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake);
+
 	/** Removes Item Instance from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);

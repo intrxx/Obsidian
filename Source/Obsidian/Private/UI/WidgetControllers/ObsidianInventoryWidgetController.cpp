@@ -48,7 +48,7 @@ void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector
 {
 	for(TTuple<FVector2D, int32> LocationToStack : LocationToStacksMap)
 	{
-		const UObsidianItem* InventoryItem = AddedItemWidgetMap[LocationToStack.Key];
+		UObsidianItem* InventoryItem = AddedItemWidgetMap[LocationToStack.Key];
 		if(!IsValid(InventoryItem))
 		{
 			continue;
@@ -272,7 +272,20 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	{
 		PickupItem(SlotPosition);
 	}
-	//TODO Take some stacks into a new item, leave the other one in the inventory
+	
+	UObsidianInventoryItemInstance* NewInstance = InventoryComponent->TakeOutItemInstance(ItemInstance, StacksToTake);
+	if(NewInstance == nullptr)
+	{
+		return;
+	}
+
+	const int32 CurrentOldInstanceStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	ItemWidget->OverrideCurrentStackCount(CurrentOldInstanceStacks);
+
+	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
+	DraggedItem->InitializeItemWidgetWithItemInstance(NewInstance);
+	DraggedItem->AddToViewport();
+	InternalHeroComponent->DragItem(DraggedItem);
 }
 
 bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
