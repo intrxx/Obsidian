@@ -276,6 +276,7 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	if(CurrentStacks == StacksToTake)
 	{
 		PickupItem(SlotPosition);
+		return;
 	}
 	
 	UObsidianInventoryItemInstance* NewInstance = InventoryComponent->TakeOutItemInstance(ItemInstance, StacksToTake);
