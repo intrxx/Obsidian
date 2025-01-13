@@ -390,12 +390,14 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutItemInstance
 	{
 		return nullptr;
 	}
-	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToTake);
-
 	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	const int32 NewCurrentTakingFromInstanceStacks = CurrentTakingFromInstanceStacks - StacksToTake;
 	TakingFromInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, NewCurrentTakingFromInstanceStacks);
 
+	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
+	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
+	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackToTakeSafe);
+	
 	return NewInstance;
 }
 

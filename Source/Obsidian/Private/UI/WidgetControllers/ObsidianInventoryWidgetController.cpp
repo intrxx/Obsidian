@@ -268,6 +268,11 @@ void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPositio
 
 void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake)
 {
+	if(StacksToTake == 0)
+	{
+		return;
+	}
+	
 	if(CurrentStacks == StacksToTake)
 	{
 		PickupItem(SlotPosition);
