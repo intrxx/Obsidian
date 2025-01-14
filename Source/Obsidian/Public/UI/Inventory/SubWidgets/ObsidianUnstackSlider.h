@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianUnstackSlider.generated.h"
 
+class USizeBox;
 class USlider;
 class UCommonTextBlock;
 class UButton;
@@ -22,6 +23,9 @@ class OBSIDIAN_API UObsidianUnstackSlider : public UObsidianWidgetBase
 
 public:
 	void InitializeUnstackSlider(const int32 CurrentItemStacks);
+
+	FVector2D GetSizeBoxSize() const;
+	float GetTopDesiredOffset() const;
 
 public:
 	FOnAcceptButtonPressedSignature OnAcceptButtonPressedDelegate;
@@ -40,6 +44,13 @@ protected:
 	void UpdateStacksValues(float NewValue);
 	
 protected:
+	/** Offset from the top of the spawned above stackable item widget. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	float TopDesiredOffset = 5.0f;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<USizeBox> Root_SizeBox;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Close_Button;
 	

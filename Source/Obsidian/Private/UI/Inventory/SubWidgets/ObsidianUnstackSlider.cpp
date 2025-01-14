@@ -4,6 +4,7 @@
 #include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
 #include "CommonTextBlock.h"
 #include "Components/Button.h"
+#include "Components/SizeBox.h"
 #include "Components/Slider.h"
 
 void UObsidianUnstackSlider::NativeConstruct()
@@ -36,6 +37,16 @@ void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 CurrentItemStac
 
 	Stacks_Slider->SetMaxValue(MaxStacks);
 	Stacks_Slider->SetValue(1);
+}
+
+FVector2D UObsidianUnstackSlider::GetSizeBoxSize() const
+{
+	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
+}
+
+float UObsidianUnstackSlider::GetTopDesiredOffset() const
+{
+	return TopDesiredOffset;
 }
 
 void UObsidianUnstackSlider::OnCloseButtonClicked()

@@ -2,6 +2,8 @@
 
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+
+#include "Blueprint/SlateBlueprintLibrary.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
@@ -237,14 +239,37 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	
 	UObsidianUnstackSlider* UnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
 	UnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
+	const FVector2D SliderSize = UnstackSlider->GetSizeBoxSize();
+	const float TopDesiredOffset = UnstackSlider->GetTopDesiredOffset();
 
+	FVector2D UnstackSliderViewportPosition = FVector2D::Zero();
+
+	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
+	if(UWorld* World = GetWorld())
+	{
+		const FVector2D LocalSize = CachedGeometry.GetLocalSize();
+
+		FVector2D PixelPosition = FVector2D::Zero();
+		FVector2D ViewportPosition = FVector2D::Zero();
+		USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), PixelPosition, ViewportPosition);
+
+		UnstackSliderViewportPosition = FVector2D((ViewportPosition.X - (SliderSize.X / 2)) + (LocalSize.X / 2), (ViewportPosition.Y - SliderSize.Y - TopDesiredOffset));
+	}
+
+	/*
 	float LocationX = 0.0f;
 	float LocationY = 0.0f;
 	if(PlayerController->GetMousePosition(LocationX, LocationY))
 	{
-		const FVector2D ViewportPosition = FVector2D(LocationX, LocationY);
-		UnstackSlider->SetPositionInViewport(ViewportPosition);
+		UnstackSliderViewportPosition = FVector2D(LocationX, LocationY);
 	}
+	else
+	{
+		UE_LOG(LogInventory, Error, TEXT("Failed to extract Viewport Position for UnstackSlider Widget."));
+	}
+	*/
+	
+	UnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
 	UnstackSlider->AddToViewport();
 	UnstackSlider->OnAcceptButtonPressedDelegate.AddLambda([this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
 	{
