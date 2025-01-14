@@ -27,6 +27,8 @@ public:
 	FVector2D GetSizeBoxSize() const;
 	float GetTopDesiredOffset() const;
 
+	void DestroyUnstackSlider();
+
 public:
 	FOnAcceptButtonPressedSignature OnAcceptButtonPressedDelegate;
 

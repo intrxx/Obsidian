@@ -84,6 +84,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianUnstackSlider> UnstackSliderClass;
 
+	UPROPERTY()
+	TObjectPtr<UObsidianUnstackSlider> ActiveUnstackSlider = nullptr;
+
 private:
 	bool CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const;
 	void PickupItem(const FVector2D& SlotPosition);

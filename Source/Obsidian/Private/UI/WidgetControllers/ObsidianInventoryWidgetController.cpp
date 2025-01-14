@@ -134,6 +134,12 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 	check(InventoryComponent);
 	check(DraggedItemWidgetClass);
 	check(ItemWidget);
+
+	if(ActiveUnstackSlider != nullptr)
+	{
+		ActiveUnstackSlider->DestroyUnstackSlider();
+		ActiveUnstackSlider = nullptr;
+	}
 	
 	if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
@@ -236,11 +242,17 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	{
 		return;
 	}
+
+	if(ActiveUnstackSlider != nullptr)
+	{
+		ActiveUnstackSlider->DestroyUnstackSlider();
+		ActiveUnstackSlider = nullptr;
+	}
 	
-	UObsidianUnstackSlider* UnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
-	UnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
-	const FVector2D SliderSize = UnstackSlider->GetSizeBoxSize();
-	const float TopDesiredOffset = UnstackSlider->GetTopDesiredOffset();
+	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
+	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
+	const FVector2D SliderSize = ActiveUnstackSlider->GetSizeBoxSize();
+	const float TopDesiredOffset = ActiveUnstackSlider->GetTopDesiredOffset();
 
 	FVector2D UnstackSliderViewportPosition = FVector2D::Zero();
 
@@ -269,11 +281,12 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	}
 	*/
 	
-	UnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
-	UnstackSlider->AddToViewport();
-	UnstackSlider->OnAcceptButtonPressedDelegate.AddLambda([this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
+	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
+	ActiveUnstackSlider->AddToViewport();
+	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddLambda([this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
 	{
 		HandleTakingOutStacks(ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks, StackToTake);
+		ActiveUnstackSlider = nullptr;
 	});
 }
 
