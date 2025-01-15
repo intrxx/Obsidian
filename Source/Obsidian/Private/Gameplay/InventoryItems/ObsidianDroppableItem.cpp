@@ -51,13 +51,7 @@ void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInvent
 
 void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
 {
-	FPickupContent PickupContent = GetPickupContent();
-	if(PickupContent.Instances.Num() > 0)
-	{
-		return;
-	}
-	
-	if(const UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item)
+	if(const UObsidianInventoryItemInstance* ItemInstance = GetFirstItemInstanceFromPickupContent().Item)
 	{
 		if(UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh())
 		{
@@ -68,18 +62,13 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
 
 void AObsidianDroppableItem::SetupItemAppearanceFromDefinition()
 {
-	FPickupContent PickupContent = GetPickupContent();
-	if(PickupContent.Templates.Num() > 0)
+	const FPickupTemplate PickupTemplate = GetFirstItemDefFromPickupContent();
+	if(PickupTemplate.ItemDef)
 	{
 		return;
 	}
-
-	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = PickupContent.Templates[0].ItemDef;
-	if(ItemDef == nullptr)
-	{
-		return;
-	}
-
+	
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = PickupTemplate.ItemDef;
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
@@ -113,28 +102,21 @@ void AObsidianDroppableItem::BeginPlay()
 
 void AObsidianDroppableItem::InitItemDesc(UObsidianItemWorldName* GroundItemDesc)
 {
-	FPickupContent PickupContent = GetPickupContent();
-	if(CarriesItemDef())
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = GetFirstItemDefFromPickupContent().ItemDef)
 	{
-		if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef)
+		if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
 		{
-			if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
-			{
-				const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
+			const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
 
-				const FText ItemDisplayName = Appearance->GetItemDisplayName();
-				GroundItemDesc->SetItemName(ItemDisplayName);
-			}
-		}
-	}
-	else if(CarriesItemInstance())
-	{
-		if(const UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item)
-		{
-			const FText ItemDisplayName = ItemInstance->GetItemDisplayName();
+			const FText ItemDisplayName = Appearance->GetItemDisplayName();
 			GroundItemDesc->SetItemName(ItemDisplayName);
 		}
 	}
+	else if(const UObsidianInventoryItemInstance* ItemInstance = GetFirstItemInstanceFromPickupContent().Item)
+    {
+         const FText ItemDisplayName = ItemInstance->GetItemDisplayName();
+         GroundItemDesc->SetItemName(ItemDisplayName);
+    }
 }
 
 void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
@@ -190,15 +172,18 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown)
 	{
 		return false;
 	}
-		
-	FPickupContent PickupContent = GetPickupContent();
-	UObsidianInventoryItemInstance* ItemInstance = PickupContent.Instances[0].Item;
+
+	UObsidianInventoryItemInstance* ItemInstance = GetFirstItemInstanceFromPickupContent().Item;
+	if(ItemInstance == nullptr)
+	{
+		return false;
+	}
 	
 	const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
 	UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	check(HeroComp);
+	
 	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
-			
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
 	{
 		bool bDroppedItem = false;
@@ -244,9 +229,9 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 		return false;
 	}
 
-	FPickupContent PickupContent = GetPickupContent();
-	const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupContent.Templates[0].ItemDef;
-	const int32 StackCount = PickupContent.Templates[0].StackCount;
+	const FPickupTemplate PickupTemplate = GetFirstItemDefFromPickupContent();
+	const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = PickupTemplate.ItemDef;
+	const int32 StackCount = PickupTemplate.StackCount;
 
 	const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
 	UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);

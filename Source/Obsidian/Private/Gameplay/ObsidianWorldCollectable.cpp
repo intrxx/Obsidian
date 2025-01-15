@@ -16,6 +16,24 @@ FPickupContent AObsidianWorldCollectable::GetPickupContent() const
 	return StaticContent;
 }
 
+FPickupInstance AObsidianWorldCollectable::GetFirstItemInstanceFromPickupContent() const
+{
+	if(CarriesItemInstance())
+	{
+		return GetPickupContent().Instances[0];
+	}
+	return FPickupInstance(nullptr);
+}
+
+FPickupTemplate AObsidianWorldCollectable::GetFirstItemDefFromPickupContent() const
+{
+	if(CarriesItemDef())
+	{
+		return GetPickupContent().Templates[0];
+	}
+	return FPickupTemplate(nullptr, -1);
+}
+
 void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
 	check(InstanceToAdd);

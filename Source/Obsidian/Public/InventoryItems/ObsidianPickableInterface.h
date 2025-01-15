@@ -24,13 +24,10 @@ public:
 	
 public:
 	UPROPERTY(EditAnywhere)
-	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	int32 StackCount = 1;
-
-	UPROPERTY(EditAnywhere)
-	bool bShouldDisplayStacks = false;
 };
 
 USTRUCT(BlueprintType)
