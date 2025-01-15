@@ -12,7 +12,7 @@ AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectIniti
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
-	SetReplicates(true);
+	bReplicates = true;
 	bNetLoadOnClient = true;
 
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComp"));
