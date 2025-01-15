@@ -9,8 +9,8 @@
 class UImage;
 class UCommonTextBlock;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemDescMouseButtonDownSignature, const bool bLeftControlDown);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemDescMouseHoverSignature, const bool bEnter);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemWorldNameMouseButtonDownSignature, const bool bLeftControlDown);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemWorldNameMouseHoverSignature, const bool bEnter);
 
 /**
  * Widget class that represents the Item's name above the Item Actor in the world.
@@ -27,10 +27,10 @@ public:
 	
 public:
 	/** Delegate that fires when the Player presses the left mouse button onto the item desc. */
-	FOnItemDescMouseButtonDownSignature OnItemDescMouseButtonDownDelegate;
+	FOnItemWorldNameMouseButtonDownSignature OnItemWorldNameMouseButtonDownDelegate;
 
 	/** Delegate that fires when the Player hovers over the item Desc Widget, will fire with true if enters, false if leaves. */
-	FOnItemDescMouseHoverSignature OnItemDescMouseHoverDelegate;
+	FOnItemWorldNameMouseHoverSignature OnItemWorldNameMouseHoverDelegate;
 	
 protected:
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;

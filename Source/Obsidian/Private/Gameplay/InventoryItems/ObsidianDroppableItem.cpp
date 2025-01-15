@@ -103,8 +103,8 @@ void AObsidianDroppableItem::BeginPlay()
 	}
 	
 	UObsidianItemWorldName* GroundItemDesc = CreateWidget<UObsidianItemWorldName>(World, GroundItemDescClass);
-	GroundItemDesc->OnItemDescMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemDescMouseHover);
-	GroundItemDesc->OnItemDescMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemDescMouseButtonDown);
+	GroundItemDesc->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemWorldNameMouseHover);
+	GroundItemDesc->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemWorldNameMouseButtonDown);
 
 	InitItemDesc(GroundItemDesc);
 	GroundItemDescWidgetComp->SetWidget(GroundItemDesc);
@@ -137,13 +137,15 @@ void AObsidianDroppableItem::InitItemDesc(UObsidianItemWorldName* GroundItemDesc
 	}
 }
 
-void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)
+void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
 {
 	if(StaticMeshComp == nullptr)
 	{
 		return;
 	}
 
+	//TODO Display Item's Description
+	
 	int32 StackCount = -1;
 	if(CarriesItemDef())
 	{
@@ -158,12 +160,8 @@ void AObsidianDroppableItem::OnItemDescMouseHover(const bool bMouseEnter)
 	StaticMeshComp->SetRenderCustomDepth(bMouseEnter);
 }
 
-void AObsidianDroppableItem::OnItemDescMouseButtonDown(const bool bLeftControlDown)
+void AObsidianDroppableItem::OnItemWorldNameMouseButtonDown(const bool bLeftControlDown)
 {
-	//TODO For the future
-	// 1. Get the local Player Controller
-	// 2. Check if the inventory is opened
-	// 3. Server delegate to request to add the item to inventory/cursor?
 	bool bAddedWholeItem = true;
 	if(CarriesItemDef())
 	{

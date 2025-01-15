@@ -28,7 +28,7 @@ FReply UObsidianItemWorldName::NativeOnPreviewMouseButtonDown(const FGeometry& I
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		const bool bLeftControlDown = InMouseEvent.IsLeftControlDown();
-		OnItemDescMouseButtonDownDelegate.Broadcast(bLeftControlDown);
+		OnItemWorldNameMouseButtonDownDelegate.Broadcast(bLeftControlDown);
 	}
 	return FReply::Handled();
 }
@@ -41,7 +41,7 @@ void UObsidianItemWorldName::NativeOnMouseEnter(const FGeometry& InGeometry, con
 	{
 		Background_Image->SetBrushTintColor(HoveredBackgroundColor);
 	}
-	OnItemDescMouseHoverDelegate.Broadcast(true);
+	OnItemWorldNameMouseHoverDelegate.Broadcast(true);
 }
 
 void UObsidianItemWorldName::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -52,5 +52,5 @@ void UObsidianItemWorldName::NativeOnMouseLeave(const FPointerEvent& InMouseEven
 	{
 		Background_Image->SetBrushTintColor(RegularBackgroundColor);
 	}
-	OnItemDescMouseHoverDelegate.Broadcast(false);
+	OnItemWorldNameMouseHoverDelegate.Broadcast(false);
 }

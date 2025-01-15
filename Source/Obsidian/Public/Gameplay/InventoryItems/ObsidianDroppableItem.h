@@ -28,8 +28,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	void OnItemDescMouseHover(const bool bMouseEnter);
-	void OnItemDescMouseButtonDown(const bool bLeftControlDown);
+	void OnItemWorldNameMouseHover(const bool bMouseEnter);
+	void OnItemWorldNameMouseButtonDown(const bool bLeftControlDown);
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
