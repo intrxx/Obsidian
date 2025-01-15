@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetBase.h"
-#include "ObsidianItemDescription.generated.h"
+#include "ObsidianItemDescriptionBase.generated.h"
 
 class UCommonTextBlock;
 class UImage;
@@ -13,17 +13,17 @@ class UImage;
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemDescription : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianItemDescriptionBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
+public:
+	void SetItemDisplayName(const FText& DisplayName);
+	
 protected:
-UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> Background_Image;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UImage> ItemName_Image;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ItemName_TextBlock;
-
-
-	
 };
