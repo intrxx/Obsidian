@@ -18,18 +18,32 @@ FPickupContent AObsidianWorldCollectable::GetPickupContent() const
 
 FPickupInstance AObsidianWorldCollectable::GetFirstItemInstanceFromPickupContent() const
 {
-	if(CarriesItemInstance())
+	TArray<FPickupInstance> PickupInstances = GetPickupContent().Instances;
+	if(PickupInstances.IsEmpty())
 	{
-		return GetPickupContent().Instances[0];
+		return FPickupInstance(nullptr);
+	}
+
+	FPickupInstance PickupInstance = PickupInstances[0];
+	if(PickupInstance.Item)
+	{
+		return PickupInstance;
 	}
 	return FPickupInstance(nullptr);
 }
 
 FPickupTemplate AObsidianWorldCollectable::GetFirstItemDefFromPickupContent() const
 {
-	if(CarriesItemDef())
+	TArray<FPickupTemplate> PickupTemplates = GetPickupContent().Templates;
+	if(PickupTemplates.IsEmpty())
 	{
-		return GetPickupContent().Templates[0];
+		return FPickupTemplate(nullptr, -1);
+	}
+
+	FPickupTemplate PickupTemplate = PickupTemplates[0];
+	if(PickupTemplate.ItemDef)
+	{
+		return PickupTemplate;
 	}
 	return FPickupTemplate(nullptr, -1);
 }

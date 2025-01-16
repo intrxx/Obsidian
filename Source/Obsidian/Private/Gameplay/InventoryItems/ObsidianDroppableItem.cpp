@@ -126,7 +126,7 @@ void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
 		return;
 	}
 
-	//TODO Display Item's Description
+	//TODO Display Item's Description and add it to the predefined place in the viewport
 	
 	int32 StackCount = -1;
 	if(CarriesItemDef())
