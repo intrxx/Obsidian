@@ -7,7 +7,7 @@
 #include "ObsidianSimpleStackableItemDesc.generated.h"
 
 /**
- * 
+ * Simple widget for Stackable Item Descriptions.
  */
 UCLASS()
 class OBSIDIAN_API UObsidianSimpleStackableItemDesc : public UObsidianItemDescriptionBase

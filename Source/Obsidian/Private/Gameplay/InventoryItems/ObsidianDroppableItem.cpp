@@ -27,12 +27,12 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	SetRootComponent(StaticMeshComp);
 	
-	GroundItemDescWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("GoundItemDescWidgetComp"));
-	GroundItemDescWidgetComp->SetupAttachment(GetRootComponent());
-	GroundItemDescWidgetComp->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));
-	GroundItemDescWidgetComp->SetDrawAtDesiredSize(true);
-	GroundItemDescWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
-	GroundItemDescWidgetComp->SetupAttachment(StaticMeshComp);
+	WorldItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WorldItemNameWidgetComp"));
+	WorldItemNameWidgetComp->SetupAttachment(GetRootComponent());
+	WorldItemNameWidgetComp->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));
+	WorldItemNameWidgetComp->SetDrawAtDesiredSize(true);
+	WorldItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
+	WorldItemNameWidgetComp->SetupAttachment(StaticMeshComp);
 }
 
 void AObsidianDroppableItem::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
@@ -78,7 +78,7 @@ void AObsidianDroppableItem::SetupItemAppearanceFromDefinition()
 		return;
 	}
 	
-	const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef)
+	const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef);
 	if(ItemDefault == nullptr)
 	{
 		return;
@@ -114,8 +114,8 @@ void AObsidianDroppableItem::BeginPlay()
 	GroundItemDesc->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemWorldNameMouseButtonDown);
 	InitItemDesc(GroundItemDesc);
 	
-	GroundItemDescWidgetComp->SetWidget(GroundItemDesc);
-	GroundItemDescWidgetComp->InitWidget();
+	WorldItemNameWidgetComp->SetWidget(GroundItemDesc);
+	WorldItemNameWidgetComp->InitWidget();
 }
 
 void AObsidianDroppableItem::InitItemDesc(UObsidianItemWorldName* GroundItemDesc)
@@ -147,7 +147,6 @@ void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
 	if(bMouseEnter)
 	{
 		//TODO Display Item's Description and add it to the predefined place in the viewport
-		
 	}
 	else
 	{

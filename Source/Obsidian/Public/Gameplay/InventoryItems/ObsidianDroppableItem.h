@@ -34,22 +34,24 @@ protected:
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
 	bool PickupItemInstance(const bool bLeftControlDown);
+	
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
 	bool PickupItemDef(const bool bLeftControlDown);
-
-	void InitItemDesc(UObsidianItemWorldName* GroundItemDesc);
-
+	
 	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
 	void SetupItemAppearanceFromInstance();
+	
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition();
+
+	void InitItemDesc(UObsidianItemWorldName* GroundItemDesc);
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;
 	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UWidgetComponent> GroundItemDescWidgetComp;
+	TObjectPtr<UWidgetComponent> WorldItemNameWidgetComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianItemWorldName> GroundItemDescClass;
