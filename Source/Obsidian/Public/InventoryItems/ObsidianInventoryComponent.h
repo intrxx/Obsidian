@@ -108,10 +108,19 @@ private:
 	bool CanFitItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance);
 	
 	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft);
+
 	UObsidianInventoryItemInstance* TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded);
 
+	UObsidianInventoryItemInstance* TryAddingFixedStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded, const int32 StackToAddOverride = 1);
+	
 	/** Will try to add stacks from provided Item Instance at specific slot, will return false if there is no matching item AtPosition or entire stack could not be added. */
 	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* NewItemInstance, const FVector2D& AtPosition, int32& OutStacksLeft, int32& OutStacksAdded);
+
+	/**
+	 * Will try to add the StackToAddOverride (will fall back to stacks available to add if StackToAddOverride > StacksAvailableToAdd) number of stacks from provided Item Instance at specific slot,
+	 * will return false if there is no matching item AtPosition or entire stack could not be added.
+	 */
+	bool TryAddingFixedStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* NewItemInstance, const FVector2D& AtPosition, int32& OutStacksLeft, int32& OutStacksAdded, const int32 StackToAddOverride = 1);
 
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);

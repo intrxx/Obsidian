@@ -12,7 +12,7 @@ class UObsidianDraggedItem;
 class  UWidgetComponent;
 
 /**
- * 
+ * Base class for all droppable items in Obsidian.
  */
 UCLASS()
 class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable
