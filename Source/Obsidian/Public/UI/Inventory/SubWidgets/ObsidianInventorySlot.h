@@ -9,7 +9,7 @@
 class UObsidianInventorySlot;
 class UImage;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, bool bEntered, UObsidianInventorySlot* AffectedSlot)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, const bool bEntered, UObsidianInventorySlot* AffectedSlot)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseButtonDownOnSlotSignature, const FVector2D& SlotPosition)
 
 /**
@@ -41,9 +41,7 @@ public:
 protected:
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
 	virtual void NativeConstruct() override;
 
 protected:

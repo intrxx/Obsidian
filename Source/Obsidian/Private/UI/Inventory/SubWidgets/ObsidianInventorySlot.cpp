@@ -33,18 +33,16 @@ void UObsidianInventorySlot::ResetSlot()
 
 void UObsidianInventorySlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hello mouse! Slot [%s] Here."), *GetNameSafe(this));
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
 	OnHoverOverSlotDelegate.Broadcast(true, this);
-	
-	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 }
 
 void UObsidianInventorySlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	OnHoverOverSlotDelegate.Broadcast(false, this);
-	
 	Super::NativeOnMouseLeave(InMouseEvent);
+	
+	OnHoverOverSlotDelegate.Broadcast(false, this);
 }
 
 FReply UObsidianInventorySlot::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

@@ -60,12 +60,7 @@ public:
 	{
 		return ItemImage;
 	}
-
-	FText GetItemDisplayName() const
-	{
-		return DisplayName;
-	}
-
+	
 	USkeletalMesh* GetItemSkeletalMesh() const
 	{
 		return SkeletalMesh;
@@ -74,6 +69,21 @@ public:
 	UStaticMesh* GetItemDroppedMesh() const
 	{
 		return DroppedMesh;
+	}
+
+	FText GetItemDisplayName() const
+	{
+		return DisplayName;
+	}
+
+	FText GetItemDescription() const
+	{
+		return Description;
+	}
+
+	FText GetItemAdditionalDescription() const
+	{
+		return AdditionalDescription;
 	}
 	
 protected:
@@ -92,4 +102,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	FText DisplayName;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
+	FText Description;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
+	FText AdditionalDescription;
 };

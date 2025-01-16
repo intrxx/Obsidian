@@ -121,12 +121,21 @@ void AObsidianDroppableItem::InitItemDesc(UObsidianItemWorldName* GroundItemDesc
 
 void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
 {
-	if(StaticMeshComp == nullptr)
+	if(StaticMeshComp)
 	{
-		return;
+		StaticMeshComp->SetRenderCustomDepth(bMouseEnter);
 	}
 
-	//TODO Display Item's Description and add it to the predefined place in the viewport
+	if(bMouseEnter)
+	{
+		//TODO Display Item's Description and add it to the predefined place in the viewport
+		
+	}
+	else
+	{
+		
+	}
+	
 	
 	int32 StackCount = -1;
 	if(CarriesItemDef())
@@ -138,8 +147,6 @@ void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
 		StackCount = GetPickupContent().Instances[0].Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	}
 	UE_LOG(LogTemp, Error, TEXT("Item Stacks: [%d]"), StackCount);
-
-	StaticMeshComp->SetRenderCustomDepth(bMouseEnter);
 }
 
 void AObsidianDroppableItem::OnItemWorldNameMouseButtonDown(const bool bLeftControlDown)

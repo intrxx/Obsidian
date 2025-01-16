@@ -20,12 +20,14 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemStackTags);
 	DOREPLIFETIME(ThisClass, bStackable);
 
-	//TODO Test which of these needs replicating
+	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change, so probably never replicated lol?
 	DOREPLIFETIME(ThisClass, ItemGridSize);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
 	DOREPLIFETIME(ThisClass, ItemSkeletalMesh);
+	DOREPLIFETIME(ThisClass, ItemDescription);
+	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -143,5 +145,25 @@ FText UObsidianInventoryItemInstance::GetItemDisplayName() const
 void UObsidianInventoryItemInstance::SetItemDisplayName(const FText& InItemDisplayName)
 {
 	ItemDisplayName = InItemDisplayName;
+}
+
+FText UObsidianInventoryItemInstance::GetItemDescription() const
+{
+	return ItemDescription;
+}
+
+void UObsidianInventoryItemInstance::SetItemDescription(const FText& InItemDescription)
+{
+	ItemDescription = InItemDescription;
+}
+
+FText UObsidianInventoryItemInstance::GetItemAdditionalDescription() const
+{
+	return ItemAdditionalDescription;
+}
+
+void UObsidianInventoryItemInstance::SetItemAdditionalDescription(const FText& InItemAdditionalDescription)
+{
+	ItemAdditionalDescription = InItemAdditionalDescription;
 }
 

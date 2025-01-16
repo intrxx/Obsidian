@@ -94,7 +94,7 @@ void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesir
 	InventoryWidgetController->HandleLeftClickingOnAnItem(ItemDesiredPosition, ItemWidget);
 }
 
-void UObsidianInventory::OnInventorySlotHover(bool bEntered, UObsidianInventorySlot* AffectedSlot)
+void UObsidianInventory::OnInventorySlotHover(const bool bEntered, UObsidianInventorySlot* AffectedSlot)
 {
 	if(bEntered)
 	{

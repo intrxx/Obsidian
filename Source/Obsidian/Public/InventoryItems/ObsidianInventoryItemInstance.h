@@ -140,6 +140,24 @@ public:
 	
 	void SetItemDisplayName(const FText& InItemDisplayName);
 
+	/**
+	 * Item Description.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FText GetItemDescription() const;
+	
+	void SetItemDescription(const FText& InItemDescription);
+
+	/**
+	 * Item Additional Description.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FText GetItemAdditionalDescription() const;
+	
+	void SetItemAdditionalDescription(const FText& InItemAdditionalDescription);
+
 private:
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
@@ -167,4 +185,10 @@ private:
 	
 	UPROPERTY(Replicated)
 	FText ItemDisplayName;
+
+	UPROPERTY(Replicated)
+	FText ItemDescription;
+	
+	UPROPERTY(Replicated)
+	FText ItemAdditionalDescription;
 };

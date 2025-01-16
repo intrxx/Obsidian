@@ -17,7 +17,13 @@ class OBSIDIAN_API UObsidianInventoryItemDefinition : public UObject
 
 public:
 	UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
+	
+	UFUNCTION(BlueprintCallable, Category="Obsidian|Item Definition")
+	FText GetDebugDisplayName() const
+	{
+		return DebugDisplayName;
+	}
+	
 	bool HasStacks() const;
 	bool IsStackable() const;
 
@@ -25,7 +31,7 @@ public:
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Display")
-	FText DisplayName;
+	FText DebugDisplayName;
 
 	/** Collection of Fragments that extends and defines this item. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, Category = "Obsidian|Display")
