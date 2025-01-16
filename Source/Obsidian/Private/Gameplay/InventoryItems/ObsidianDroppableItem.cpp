@@ -51,34 +51,52 @@ void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInvent
 
 void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
 {
-	if(const UObsidianInventoryItemInstance* ItemInstance = GetFirstItemInstanceFromPickupContent().Item)
+	const UObsidianInventoryItemInstance* ItemInstance = GetFirstItemInstanceFromPickupContent().Item;
+	if(ItemInstance == nullptr)
 	{
-		if(UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh())
-		{
-			StaticMeshComp->SetStaticMesh(DroppedMesh);
-		}
+		return;
 	}
+	
+	if(UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh())
+	{
+		StaticMeshComp->SetStaticMesh(DroppedMesh);
+		return;
+	}
+	
+#if !UE_BUILD_SHIPPING
+	const FString ItemDebugName = ItemInstance->GetItemDisplayName().ToString();
+	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"), *ItemDebugName);
+#endif	
 }
 
 void AObsidianDroppableItem::SetupItemAppearanceFromDefinition()
 {
 	const FPickupTemplate PickupTemplate = GetFirstItemDefFromPickupContent();
-	if(PickupTemplate.ItemDef)
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = PickupTemplate.ItemDef;
+	if(ItemDef == nullptr)
 	{
 		return;
 	}
 	
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = PickupTemplate.ItemDef;
-	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+	const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef)
+	if(ItemDefault == nullptr)
 	{
-		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		return;
+	}
+	
+	if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+	{
+		if(UStaticMesh* DroppedMesh = AppearanceFrag->GetItemDroppedMesh())
 		{
-			if(UStaticMesh* DroppedMesh = AppearanceFrag->GetItemDroppedMesh())
-			{
-				StaticMeshComp->SetStaticMesh(DroppedMesh);	
-			}
+			StaticMeshComp->SetStaticMesh(DroppedMesh);
+			return;
 		}
 	}
+	
+#if !UE_BUILD_SHIPPING
+	const FString ItemDebugName = ItemDefault->GetDebugDisplayName().ToString();
+	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"), *ItemDebugName);
+#endif
 }
 
 void AObsidianDroppableItem::BeginPlay()
@@ -94,8 +112,8 @@ void AObsidianDroppableItem::BeginPlay()
 	UObsidianItemWorldName* GroundItemDesc = CreateWidget<UObsidianItemWorldName>(World, GroundItemDescClass);
 	GroundItemDesc->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemWorldNameMouseHover);
 	GroundItemDesc->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemWorldNameMouseButtonDown);
-
 	InitItemDesc(GroundItemDesc);
+	
 	GroundItemDescWidgetComp->SetWidget(GroundItemDesc);
 	GroundItemDescWidgetComp->InitWidget();
 }
@@ -133,7 +151,7 @@ void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
 	}
 	else
 	{
-		
+		//TODO Destroy the widget? Maybe hide it and destroy it later?
 	}
 	
 	
