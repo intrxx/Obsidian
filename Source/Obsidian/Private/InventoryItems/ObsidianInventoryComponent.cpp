@@ -141,8 +141,11 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
 	if(DefaultObject->IsStackable()) // If the item is stackable, try adding stacks to the same item type already in the inventory.
 	{
-		AddedToInstances = TryAddingStacksToExistingItem(ItemDef, OutStacksLeft, OutStacksLeft);
-		if(AddedToInstances.IsEmpty() == false) // Gather and update visual stack count on all added to instances.
+		FObsidianAddingStacksResult AddingStacksResult;
+		AddedToInstances = TryAddingStacksToExistingItems(ItemDef, OutStacksLeft, /** OUT */ AddingStacksResult);
+		OutStacksLeft = AddingStacksResult.StacksLeft;
+		
+		if(AddingStacksResult.bAddedSomeOfTheStacks) // Gather and update visual stack count on all added to instances.
 		{
 			TMap<FVector2D, int32> LocationToStacksMap;
 			for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
@@ -153,7 +156,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 			}
 			OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
 		}
-		if(OutStacksLeft == 0)
+		if(AddingStacksResult.bAddedWholeItemAsStacks)
 		{
 			return AddedToInstances.Last();
 		}
@@ -277,8 +280,11 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	OutStacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(InstanceToAdd->IsStackable())
 	{
-		TArray<UObsidianInventoryItemInstance*> AddedToInstances = TryAddingStacksToExistingItem(InstanceToAdd->GetItemDef(), OutStacksLeft, OutStacksLeft);
-		if(AddedToInstances.IsEmpty() == false)
+		FObsidianAddingStacksResult AddingStacksResult;
+		TArray<UObsidianInventoryItemInstance*> AddedToInstances = TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), OutStacksLeft, /** OUT */ AddingStacksResult);
+		OutStacksLeft = AddingStacksResult.StacksLeft;
+		
+		if(AddingStacksResult.bAddedSomeOfTheStacks)
 		{
 			TMap<FVector2D, int32> LocationToStacksMap;
 			for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
@@ -289,7 +295,7 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 			}
 			OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
 		}
-		if(OutStacksLeft == 0)
+		if(AddingStacksResult.bAddedWholeItemAsStacks)
 		{
 			return;
 		}
@@ -401,14 +407,19 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutItemInstance
 	return NewInstance;
 }
 
-TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft)
+TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult)
 {
-	int32 AddedStacks = 0;
-	OutStacksLeft = NewItemStacks;
-	const int32 StacksInInventory = FindAllStacksForGivenItem(NewItemDef);
 	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
-	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
+	if(StacksToAdd <= 0)
+	{
+		return AddedToInstances;
+	}
 	
+	OutAddingStacksResult.AddedStacks = 0;
+	OutAddingStacksResult.StacksLeft = StacksToAdd;
+	const int32 StacksInInventory = FindAllStacksForGivenItem(AddingFromItemDef);
+	
+	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
 	for(UObsidianInventoryItemInstance* Instance : Items)
 	{
 		if(!IsValid(Instance))
@@ -417,22 +428,22 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 			continue;
 		}
 		
-		if(NewItemDef == Instance->GetItemDef())
+		if(AddingFromItemDef == Instance->GetItemDef())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Checking if can be added to already existing instance."));
-			
-			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-			if(CurrentStackCount == 0)
-			{
-				continue;
-			}
 			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
 			if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
 			{
 				break;
 			}
 			
-			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? OutStacksLeft : LimitStackCount - StacksInInventory;
+			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			if(CurrentStackCount == 0)
+			{
+				continue;
+			}
+
+			const int32 StacksLeft = OutAddingStacksResult.StacksLeft;
+			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? StacksLeft : LimitStackCount - StacksInInventory;
 			if(StacksThatCanBeAddedToInventory <= 0)
 			{
 				continue;
@@ -440,7 +451,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 			
 			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
 			int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
-			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, OutStacksLeft);
+			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, StacksLeft);
 			if(AmountThatCanBeAddedToInstance <= 0)
 			{
 				continue;
@@ -448,15 +459,21 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
 			
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
-			AddedStacks += AmountThatCanBeAddedToInstance;
-			OutStacksLeft -= AmountThatCanBeAddedToInstance;
+			OutAddingStacksResult.AddedStacks += AmountThatCanBeAddedToInstance;
+			OutAddingStacksResult.StacksLeft -= AmountThatCanBeAddedToInstance;
 			AddedToInstances.AddUnique(Instance);
 			
-			if((NewItemStacks != 0) && (AddedStacks == NewItemStacks))
+			if(OutAddingStacksResult.AddedStacks == StacksToAdd)
 			{
+				OutAddingStacksResult.bAddedWholeItemAsStacks = true;
+				OutAddingStacksResult.bAddedSomeOfTheStacks = true;
 				return AddedToInstances;
 			}
 		}
+	}
+	if(AddedToInstances.Num() > 0)
+	{
+		OutAddingStacksResult.bAddedSomeOfTheStacks = true;
 	}
 	return AddedToInstances;
 }

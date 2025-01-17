@@ -107,8 +107,15 @@ private:
 	
 	/** Checks if the provided Item Instance fits in the inventory at provided slot. */
 	bool CanFitItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance);
-	
-	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft);
+
+	/**
+	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
+	 *
+	 *	@param AddingFromItemDef		The Item Definition that the function will try to add from.
+	 *	@param StacksToAdd				The Current Stacks of the provided Item Definition.
+	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
+	 */
+	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult);
 	
 	/**
 	 * Will try to add stacks from provided Item Definition at provided Position. Will return true if at least 1 stack was added successfully.
@@ -142,7 +149,7 @@ private:
 
 	/** Calculates the amount of stacks that can be added to the Item from provided Item Definition, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
 	int32 GetAmountOfStacksAvailableToAddToItem(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const UObsidianInventoryItemInstance* InstanceToAddTo);
-
+	
 	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided ItemDef. */
 	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
 
