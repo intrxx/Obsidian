@@ -54,7 +54,8 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
 
-	for(const UObsidianInventoryItemFragment* Fragment : GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass)->ItemFragments)
+	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
+	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
 	{
 		if(Fragment)
 		{
@@ -62,6 +63,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 		}
 	}
 
+	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.StackCount = StackCount;
 	Item = NewEntry.Instance;
 	

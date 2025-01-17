@@ -63,10 +63,8 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
 		return;
 	}
 	
-#if !UE_BUILD_SHIPPING
-	const FString ItemDebugName = ItemInstance->GetItemDisplayName().ToString();
-	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"), *ItemDebugName);
-#endif	
+	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"),
+		*ItemInstance->GetItemDebugName());
 }
 
 void AObsidianDroppableItem::SetupItemAppearanceFromDefinition()
@@ -93,10 +91,8 @@ void AObsidianDroppableItem::SetupItemAppearanceFromDefinition()
 		}
 	}
 	
-#if !UE_BUILD_SHIPPING
-	const FString ItemDebugName = ItemDefault->GetDebugDisplayName().ToString();
-	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"), *ItemDebugName);
-#endif
+	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"),
+		*ItemDefault->GetDebugName());
 }
 
 void AObsidianDroppableItem::BeginPlay()

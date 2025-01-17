@@ -158,6 +158,16 @@ public:
 	
 	void SetItemAdditionalDescription(const FText& InItemAdditionalDescription);
 
+	/**
+	 * Debug Name
+	 */
+
+	/** Gets the debug name of the item, will be valid only on the server. */	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FString GetItemDebugName() const;
+
+	void SetItemDebugName(const FString& InItemDebugName);
+
 private:
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
@@ -191,4 +201,6 @@ private:
 	
 	UPROPERTY(Replicated)
 	FText ItemAdditionalDescription;
+
+	FString DebugName;
 };

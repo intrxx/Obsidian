@@ -18,10 +18,10 @@ class OBSIDIAN_API UObsidianInventoryItemDefinition : public UObject
 public:
 	UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
-	UFUNCTION(BlueprintCallable, Category="Obsidian|Item Definition")
-	FText GetDebugDisplayName() const
+	UFUNCTION(BlueprintCallable, Category="Obsidian|Debug")
+	FString GetDebugName() const
 	{
-		return DebugDisplayName;
+		return DebugName;
 	}
 	
 	bool HasStacks() const;
@@ -30,8 +30,8 @@ public:
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;
 	
 public:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Display")
-	FText DebugDisplayName;
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Debug")
+	FString DebugName;
 
 	/** Collection of Fragments that extends and defines this item. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, Category = "Obsidian|Display")

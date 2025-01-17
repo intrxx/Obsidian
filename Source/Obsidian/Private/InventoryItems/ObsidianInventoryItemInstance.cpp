@@ -167,3 +167,13 @@ void UObsidianInventoryItemInstance::SetItemAdditionalDescription(const FText& I
 	ItemAdditionalDescription = InItemAdditionalDescription;
 }
 
+FString UObsidianInventoryItemInstance::GetItemDebugName() const
+{
+	return DebugName;
+}
+
+void UObsidianInventoryItemInstance::SetItemDebugName(const FString& InItemDebugName)
+{
+	DebugName = InItemDebugName;
+}
+
