@@ -33,30 +33,30 @@ namespace ObsidianDefaultStackCounts
 	}
 }
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FObsidianAddingStacksResult
 {
 	GENERATED_BODY()
 
 public:
 	/** The amount of stacks that was added from provided Item to other Item/Items. */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	int32 AddedStacks = 0;
 
 	/** The amount of stacks that is left on the provided Item. */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	int32 StacksLeft = -1;
 	
 	/** Whole Item was added as stacks to other Item/Items. */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	bool bAddedWholeItemAsStacks = false;
 
 	/** Added at least 1 stack from provided item to some other item. */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	bool bAddedSomeOfTheStacks = false;
 
 	/** The last Item Instance that we added some stacks to. */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
 };
 

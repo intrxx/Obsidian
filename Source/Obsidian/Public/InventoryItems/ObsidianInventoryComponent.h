@@ -60,6 +60,18 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount = 1);
 
+	/**
+	 * Will try to add stacks from provided Item Definition at provided Position. Will return true if at least 1 stack was added successfully.
+	 *
+	 *	@param AddingFromItemDef				The Item Definition that the function will try to add from.
+	 *	@param AddingFromItemDefCurrentStacks	The Current Stacks of the provided Item Definition.
+	 *  @param AtPosition						The pressed slot at which the function will search for item to add to.
+	 *  @param OutAddingStacksResult			The struct that contains various useful information about the result of the adding process.
+	 *  @param StackToAddOverride				Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	bool TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
+	
 	/** Checks if the provided Item Instance can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance);
@@ -71,6 +83,17 @@ public:
 	/** Tries to add provided Item Instance to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot);
+	
+	/**
+	 * Will try to add stacks from provided Item Instance at provided Position. Will return true if at least 1 stack was added successfully.
+	 *
+	 *	@param AddingFromInstance		The Item Instance that the function will try to add from.
+	 *  @param AtPosition				The pressed slot at which the function will search for item to add to.
+	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
+	 *  @param StackToAddOverride		Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
 
 	/** Provides a copied Item with the amount of stacks to take. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
@@ -116,27 +139,6 @@ private:
 	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
 	 */
 	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult);
-	
-	/**
-	 * Will try to add stacks from provided Item Definition at provided Position. Will return true if at least 1 stack was added successfully.
-	 *
-	 *	@param AddingFromItemDef				The Item Definition that the function will try to add from.
-	 *	@param AddingFromItemDefCurrentStacks	The Current Stacks of the provided Item Definition.
-	 *  @param AtPosition						The pressed slot at which the function will search for item to add to.
-	 *  @param OutAddingStacksResult			The struct that contains various useful information about the result of the adding process.
-	 *  @param StackToAddOverride				Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
-	 */
-	bool TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
-	
-	/**
-	 * Will try to add stacks from provided Item Instance at provided Position. Will return true if at least 1 stack was added successfully.
-	 *
-	 *	@param AddingFromInstance		The Item Instance that the function will try to add from.
-	 *  @param AtPosition				The pressed slot at which the function will search for item to add to.
-	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
-	 *  @param StackToAddOverride		Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
-	 */
-	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
 	
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
