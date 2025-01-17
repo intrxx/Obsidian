@@ -91,7 +91,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstan
 
 bool UObsidianInventoryComponent::CanFitItemDefinition(FVector2D& OutAvailablePosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	bool bCanAdd = false;
+	bool bCanFit = false;
 	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
@@ -99,16 +99,16 @@ bool UObsidianInventoryComponent::CanFitItemDefinition(FVector2D& OutAvailablePo
 		{
 			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
 
-			bCanAdd = CheckAvailablePosition(ItemGridSize, OutAvailablePosition);
-			return bCanAdd;
+			bCanFit = CheckAvailablePosition(ItemGridSize, OutAvailablePosition);
+			return bCanFit;
 		}
 	}
-	return bCanAdd;
+	return bCanFit;
 }
 
 bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FVector2D& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	bool bCanAdd = false;
+	bool bCanFit = false;
 	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
@@ -116,11 +116,11 @@ bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FVec
 		{
 			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
 
-			bCanAdd = CheckSpecifiedPosition(ItemGridSize, SpecifiedSlot);
-			return bCanAdd;
+			bCanFit = CheckSpecifiedPosition(ItemGridSize, SpecifiedSlot);
+			return bCanFit;
 		}
 	}
-	return bCanAdd;
+	return bCanFit;
 }
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32& OutStacksLeft, const int32 StackCount)
@@ -139,22 +139,15 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	}
 
 	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
-	if(DefaultObject->IsStackable()) // If the item is stackable, try adding stacks to the same item type already in the inventory.
+	if(DefaultObject->IsStackable())
 	{
 		FObsidianAddingStacksResult AddingStacksResult;
 		AddedToInstances = TryAddingStacksToExistingItems(ItemDef, OutStacksLeft, /** OUT */ AddingStacksResult);
 		OutStacksLeft = AddingStacksResult.StacksLeft;
 		
-		if(AddingStacksResult.bAddedSomeOfTheStacks) // Gather and update visual stack count on all added to instances.
+		if(AddingStacksResult.bAddedSomeOfTheStacks)
 		{
-			TMap<FVector2D, int32> LocationToStacksMap;
-			for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
-			{
-				const FVector2D InstanceLocation = GetItemLocationFromGrid(AddedToInstance);
-				const int32 NewStacks = AddedToInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-				LocationToStacksMap.Add(InstanceLocation, NewStacks);
-			}
-			OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
+			BroadcastVisualStacksUpdate(AddedToInstances);
 		}
 		if(AddingStacksResult.bAddedWholeItemAsStacks)
 		{
@@ -281,19 +274,14 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	if(InstanceToAdd->IsStackable())
 	{
 		FObsidianAddingStacksResult AddingStacksResult;
-		TArray<UObsidianInventoryItemInstance*> AddedToInstances = TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), OutStacksLeft, /** OUT */ AddingStacksResult);
+		const TArray<UObsidianInventoryItemInstance*> AddedToInstances = TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), OutStacksLeft, /** OUT */ AddingStacksResult);
+
 		OutStacksLeft = AddingStacksResult.StacksLeft;
+		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
 		
 		if(AddingStacksResult.bAddedSomeOfTheStacks)
 		{
-			TMap<FVector2D, int32> LocationToStacksMap;
-			for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
-			{
-				const FVector2D InstanceLocation = GetItemLocationFromGrid(AddedToInstance);
-				const int32 NewStacks = AddedToInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-				LocationToStacksMap.Add(InstanceLocation, NewStacks);
-			}
-			OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
+			BroadcastVisualStacksUpdate(AddedToInstances);
 		}
 		if(AddingStacksResult.bAddedWholeItemAsStacks)
 		{
@@ -1006,6 +994,18 @@ bool UObsidianInventoryComponent::IsTheSameItem(const UObsidianInventoryItemInst
 		return true;
 	}
 	return false;
+}
+
+void UObsidianInventoryComponent::BroadcastVisualStacksUpdate(TArray<UObsidianInventoryItemInstance*> AddedToInstances) const
+{
+	TMap<FVector2D, int32> LocationToStacksMap;
+	for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
+	{
+		const FVector2D InstanceLocation = GetItemLocationFromGrid(AddedToInstance);
+		const int32 NewStacks = AddedToInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		LocationToStacksMap.Add(InstanceLocation, NewStacks);
+	}
+	OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
 }
 
 

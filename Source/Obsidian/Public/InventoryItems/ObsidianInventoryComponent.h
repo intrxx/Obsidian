@@ -185,6 +185,8 @@ private:
 	static bool IsTheSameItem(const UObsidianInventoryItemInstance* Instance, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
 	//END TODO
+
+	void BroadcastVisualStacksUpdate(TArray<UObsidianInventoryItemInstance*> AddedToInstances) const;
 	
 private:
 	friend UObsidianInventoryWidgetController;
