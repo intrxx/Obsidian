@@ -143,71 +143,51 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 	
 	if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
-		UObsidianDraggedItem* CachedDraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-		if(UObsidianInventoryItemInstance* CachedDraggedInstance = CachedDraggedItem->GetItemInstance()) // We carry item instance.
+		UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
+		if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance()) // We carry item instance.
 		{
-			if(CachedDraggedInstance->IsStackable()) // Try adding the stacks if we click on the same item.
+			if(DraggedInstance && DraggedInstance->IsStackable())
 			{
-				int32 OutAddedStacks = 0;
-				int32 OutLeftStacks = -1;
-				bool bReturn = false;
-				if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(CachedDraggedInstance, SlotPosition, /** OUT */ OutLeftStacks, /** OUT */ OutAddedStacks)) // We added whole stacks to an item
+				FObsidianAddingStacksResult AddingStacksResult;
+				if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult))
 				{
-					InternalHeroComponent->StopDragging();
-					bReturn = true;
-				}
-				if(OutAddedStacks != 0)
-				{
-					ItemWidget->AddCurrentStackCount(OutAddedStacks);
-					CachedDraggedItem->UpdateStackCount(OutLeftStacks);
-					bReturn = true;
-				}
-
-				if(bReturn)
-				{
+					ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+					if(AddingStacksResult.bAddedWholeItemAsStacks) 
+					{
+						InternalHeroComponent->StopDragging();
+						return;
+					}
+					DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
 					return;
 				}
 			}
 			
-			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, CachedDraggedInstance))
+			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
 			{
 				InternalHeroComponent->StopDragging();
 				PickupItem(SlotPosition);
-				InventoryComponent->AddItemInstanceToSpecificSlot(CachedDraggedInstance, SlotPosition);
+				InventoryComponent->AddItemInstanceToSpecificSlot(DraggedInstance, SlotPosition);
 			}
 			return;
 		}
 		
-		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = CachedDraggedItem->GetItemDef()) // We carry item def
+		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef()) // We carry item def
 		{
-			const int32 ItemStackCount = CachedDraggedItem->GetItemStacks();
+			const int32 ItemStackCount = DraggedItem->GetItemStacks();
 			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
 			if(DefaultObject && DefaultObject->IsStackable())
 			{
-				int32 OutStacksAdded = 0;
-				int32 OutStacksLeft = -1;
-
-				const UObsidianInventoryItemInstance* InstanceAddedTo = InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(
-					DraggedItemDef, SlotPosition, ItemStackCount, /** OUT */ OutStacksLeft, /** OUT */ OutStacksAdded);
-				if(InstanceAddedTo != nullptr) // We added some stacks to an item
+				FObsidianAddingStacksResult AddingStacksResult;
+				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult))
 				{
-					bool bReturn = false;
-					if(OutStacksLeft == 0)
+					ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+					if(AddingStacksResult.bAddedWholeItemAsStacks)
 					{
 						InternalHeroComponent->StopDragging();
-						bReturn = true;
-					}
-					if(OutStacksAdded != 0)
-					{
-						ItemWidget->AddCurrentStackCount(OutStacksAdded);
-						CachedDraggedItem->UpdateStackCount(OutStacksLeft);
-						bReturn = true;
-					}
-
-					if(bReturn)
-					{
 						return;
 					}
+					DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
+					return;
 				}
 			}
 			
@@ -237,19 +217,16 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 		UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance();
 		if(DraggedInstance && DraggedInstance->IsStackable())
 		{
-			int32 OutStacksLeft = -1;
-			int32 OutStacksAdded = 0;
-		
-			const bool bAddedWholeItem = InventoryComponent->TryAddingFixedStacksToSpecificSlotWithInstance(DraggedInstance,
-				SlotPosition, OutStacksLeft, OutStacksAdded, 1);
-			if(bAddedWholeItem)
+			FObsidianAddingStacksResult AddingStacksResult;
+			if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult, 1))
 			{
-				InternalHeroComponent->StopDragging();
-			}
-			if(OutStacksAdded != 0)
-			{
-				ItemWidget->AddCurrentStackCount(OutStacksAdded);
-				DraggedItem->UpdateStackCount(OutStacksLeft);
+				ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+				if(AddingStacksResult.bAddedWholeItemAsStacks)
+				{
+					InternalHeroComponent->StopDragging();
+				}
+				DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
+				return;
 			}
 			return;
 		}
@@ -260,23 +237,17 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 			if(DefaultObject && DefaultObject->IsStackable())
 			{
 				const int32 ItemStackCount = DraggedItem->GetItemStacks();
-
-				int32 OutStacksLeft = -1;
-				int32 OutStacksAdded = 0;
-
-				const UObsidianInventoryItemInstance* AddedToInstance = InventoryComponent->TryAddingFixedStacksToSpecificSlotWithItemDef(
-					DraggedItemDef, SlotPosition, ItemStackCount, OutStacksLeft, OutStacksAdded, 1);
-				if(AddedToInstance != nullptr)
+				
+				FObsidianAddingStacksResult AddingStacksResult;
+				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult, 1))
 				{
-					if(OutStacksLeft == 0)
+					ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+					if(AddingStacksResult.bAddedWholeItemAsStacks)
 					{
 						InternalHeroComponent->StopDragging();
+						return;
 					}
-					if(OutStacksAdded != 0)
-					{
-						ItemWidget->AddCurrentStackCount(OutStacksAdded);
-						DraggedItem->UpdateStackCount(OutStacksLeft);
-					}
+					DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
 				}
 			}
 			return;

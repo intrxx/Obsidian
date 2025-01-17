@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ObsidianInventoryGrid.h"
 #include "Components/ActorComponent.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianInventoryComponent.generated.h"
 
 class UObsidianInventoryWidgetController;
@@ -108,31 +109,45 @@ private:
 	bool CanFitItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance);
 	
 	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItem(const TSubclassOf<UObsidianInventoryItemDefinition>& NewItemDef, const int32 NewItemStacks, int32& OutStacksLeft);
-
-	UObsidianInventoryItemInstance* TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded);
-
-	UObsidianInventoryItemInstance* TryAddingFixedStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& AtPosition, const int32 NewItemStacks, int32& OutStacksLeft, int32& OutStacksAdded, const int32 StackToAddOverride = 1);
 	
-	/** Will try to add stacks from provided Item Instance at specific slot, will return false if there is no matching item AtPosition or entire stack could not be added. */
-	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* NewItemInstance, const FVector2D& AtPosition, int32& OutStacksLeft, int32& OutStacksAdded);
-
 	/**
-	 * Will try to add the StackToAddOverride (will fall back to stacks available to add if StackToAddOverride > StacksAvailableToAdd) number of stacks from provided Item Instance at specific slot,
-	 * will return false if there is no matching item AtPosition or entire stack could not be added.
+	 * Will try to add stacks from provided Item Definition at provided Position. Will return true if at least 1 stack was added successfully.
+	 *
+	 *	@param AddingFromItemDef				The Item Definition that the function will try to add from.
+	 *	@param AddingFromItemDefCurrentStacks	The Current Stacks of the provided Item Definition.
+	 *  @param AtPosition						The pressed slot at which the function will search for item to add to.
+	 *  @param OutAddingStacksResult			The struct that contains various useful information about the result of the adding process.
+	 *  @param StackToAddOverride				Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
 	 */
-	bool TryAddingFixedStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* NewItemInstance, const FVector2D& AtPosition, int32& OutStacksLeft, int32& OutStacksAdded, const int32 StackToAddOverride = 1);
-
+	bool TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
+	
+	/**
+	 * Will try to add stacks from provided Item Instance at provided Position. Will return true if at least 1 stack was added successfully.
+	 *
+	 *	@param AddingFromInstance		The Item Instance that the function will try to add from.
+	 *  @param AtPosition				The pressed slot at which the function will search for item to add to.
+	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
+	 *  @param StackToAddOverride		Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
+	 */
+	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
+	
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	
 	/** Finds all stacks in the inventory for given item type with item Instance. */
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 
-	/** Checks the limit of the item, returns the number of stacks available to add with provided ItemDef. */
-	int32 GetNumberOfStacksAvailableToAdd(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
+	/** Calculates the amount of stacks that can be added to the Item from provided Instance, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
+	int32 GetAmountOfStacksAvailableToAddToItem(const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo);
 
-	/** Checks the limit of the item, returns the number of stacks available to add with provided instance. */
-	int32 GetNumberOfStacksAvailableToAdd(const UObsidianInventoryItemInstance* ItemInstance);
+	/** Calculates the amount of stacks that can be added to the Item from provided Item Definition, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
+	int32 GetAmountOfStacksAvailableToAddToItem(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const UObsidianInventoryItemInstance* InstanceToAddTo);
+
+	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided ItemDef. */
+	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
+
+	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided instance. */
+	int32 GetNumberOfStacksAvailableToAddToInventory(const UObsidianInventoryItemInstance* ItemInstance);
 
 	/** Gets the item location from internal grid map. */
 	FVector2D GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
@@ -153,6 +168,16 @@ private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
 	TMap<FVector2D, bool> Internal_GetInventoryStateMap();
 	UObsidianInventoryItemInstance* Internal_GetItemInstanceAtLocation(const FVector2D& Position) const;
+
+	//TODO This can be moved to some library later.
+	
+	/** Will compare item's definitions, will return true if items are of the same class. */
+	static bool IsTheSameItem(const UObsidianInventoryItemInstance* InstanceA, const UObsidianInventoryItemInstance* InstanceB);
+
+	/** Will compare item's definitions, will return true if items are of the same class. */
+	static bool IsTheSameItem(const UObsidianInventoryItemInstance* Instance, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+
+	//END TODO
 	
 private:
 	friend UObsidianInventoryWidgetController;
