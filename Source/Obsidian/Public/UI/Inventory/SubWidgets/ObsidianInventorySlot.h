@@ -10,7 +10,7 @@ class UObsidianInventorySlot;
 class UImage;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, const bool bEntered, UObsidianInventorySlot* AffectedSlot)
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseButtonDownOnSlotSignature, const FVector2D& SlotPosition)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnSlotSignature, const FVector2D& SlotPosition, const bool bShiftDown)
 
 /**
  * 

@@ -58,7 +58,7 @@ public:
 
 	/** Tries to add provided Item Definition to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount = 1);
+	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
 
 	/**
 	 * Will try to add stacks from provided Item Definition at provided Position. Will return true if at least 1 stack was added successfully.
@@ -82,7 +82,7 @@ public:
 
 	/** Tries to add provided Item Instance to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot);
+	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot, const int32 StackToAddOverride = -1);
 	
 	/**
 	 * Will try to add stacks from provided Item Instance at provided Position. Will return true if at least 1 stack was added successfully.

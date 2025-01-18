@@ -70,7 +70,7 @@ public:
 	void OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap);
 	void OnInventoryOpen();
 
-	void RequestAddingItemToInventory(const FVector2D& SlotPosition);
+	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
 	void HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 

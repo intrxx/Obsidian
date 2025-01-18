@@ -139,10 +139,10 @@ void UObsidianInventory::OnInventorySlotHover(const bool bEntered, UObsidianInve
 	}
 }
 
-void UObsidianInventory::OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition)
+void UObsidianInventory::OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition, const bool bShiftDown)
 {
 	if(InventoryWidgetController)
 	{
-		InventoryWidgetController->RequestAddingItemToInventory(SlotPosition);
+		InventoryWidgetController->RequestAddingItemToInventory(SlotPosition, bShiftDown);
 	}
 }

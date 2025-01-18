@@ -96,7 +96,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	//bInventoryChanged = false;
 }
 
-void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition)
+void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown)
 {
 	if(InternalHeroComponent->IsDraggingAnItem() == false)
 	{
@@ -107,7 +107,8 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 	UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem->GetItemInstance())
 	{
-		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition))
+		const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition, StacksToAddOverride))
 		{
 			InternalHeroComponent->StopDragging();
 			return;
@@ -119,7 +120,8 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 		const int32 ItemStackCount = DraggedItem->GetItemStacks();
 
 		int32 StackLeft = ItemStackCount;
-		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StackLeft, ItemStackCount);
+		const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StackLeft, ItemStackCount, StacksToAddOverride);
 		if(StackLeft == 0)
 		{
 			InternalHeroComponent->StopDragging();

@@ -194,7 +194,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	return Instance;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount)
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount, const int32 StackToAddOverride)
 {
 	StacksLeft = StackCount;
 	
@@ -209,17 +209,23 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 		return nullptr;
 	}
 
-	int32 StacksThatCanBeAdded = StackCount;
+	int32 StacksAvailableToAdd = 1;
 	const bool bStackable = DefaultObject->IsStackable();
 	if(bStackable)
 	{
-		StacksThatCanBeAdded = GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount);
-		if(StacksThatCanBeAdded == 0)
+		StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount);
+		if(StacksAvailableToAdd == 0)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 			return nullptr;
 		}
-		StacksLeft = StackCount - StacksThatCanBeAdded;
+
+		if(StackToAddOverride != -1)
+		{
+			StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)),
+				1, StacksAvailableToAdd);
+		}
+		StacksLeft = StackCount - StacksAvailableToAdd;
 	}
 	
 	if(CanFitItemDefinitionToSpecifiedSlot(ToSlot, ItemDef) == false)
@@ -229,12 +235,12 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 		return nullptr;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksThatCanBeAdded, ToSlot);
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksThatCanBeAdded);
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, ToSlot);
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	Item_MarkSpace(Instance, ToSlot);
 	if(!bStackable)
 	{
-		StacksLeft = 0;
+		StacksLeft = 0; //@Hack that's little bit of a hack unfortunately, I need this to remove the item from hand
 	}
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -327,19 +333,29 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, AvailablePosition);
 }
 
-bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot)
+bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot, const int32 StackToAddOverride)
 {
 	if(InstanceToAdd == nullptr)
 	{
 		return false;
 	}
-	
-	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(InstanceToAdd);
-	if(StacksAvailableToAdd == 0)
+
+	int32 StacksAvailableToAdd = 1;
+	if(InstanceToAdd->IsStackable())
 	{
-		//TODO We can no longer add this item to the inventory, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
-		return false;
+		StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(InstanceToAdd);
+		if(StacksAvailableToAdd == 0)
+		{
+			//TODO We can no longer add this item to the inventory, add voice over?
+			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
+			return false;
+		}
+		
+		if(StackToAddOverride != -1)
+		{
+			StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)),
+				1, StacksAvailableToAdd);
+		}
 	}
 	
 	if(CanFitItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
