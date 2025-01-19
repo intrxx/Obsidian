@@ -29,7 +29,6 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
 	SetRootComponent(StaticMeshComp);
 	
-	
 	WorldItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WorldItemNameWidgetComp"));
 	WorldItemNameWidgetComp->SetupAttachment(GetRootComponent());
 	WorldItemNameWidgetComp->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));

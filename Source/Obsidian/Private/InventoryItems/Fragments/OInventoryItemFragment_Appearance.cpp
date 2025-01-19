@@ -152,12 +152,15 @@ void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryIt
 {
 	if(Instance)
 	{
+		const TArray<FVector2D> GridSize = GetItemGridSizeFromDesc();
+		const FVector2D GridSpan = GetItemGridSpanFromDesc();
+		
 		Instance->SetItemImage(ItemImage);
 		Instance->SetItemSkeletalMesh(SkeletalMesh);
 		Instance->SetItemDroppedMesh(DroppedMesh);
 		Instance->SetItemDisplayName(DisplayName);
-		Instance->SetItemGridSize(GetItemGridSizeFromDesc());
-		Instance->SetItemGridSpan(GetItemGridSpanFromDesc());
+		Instance->SetItemGridSize(GridSize);
+		Instance->SetItemGridSpan(GridSpan);
 		Instance->SetItemDescription(Description);
 		Instance->SetItemAdditionalDescription(AdditionalDescription);
 	}
