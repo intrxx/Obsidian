@@ -2,8 +2,6 @@
 
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-
-#include "ContentBrowserDataSource.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 struct FObsidianInventoryItemGridSize
@@ -156,6 +154,7 @@ void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryIt
 	{
 		Instance->SetItemImage(ItemImage);
 		Instance->SetItemSkeletalMesh(SkeletalMesh);
+		Instance->SetItemDroppedMesh(DroppedMesh);
 		Instance->SetItemDisplayName(DisplayName);
 		Instance->SetItemGridSize(GetItemGridSizeFromDesc());
 		Instance->SetItemGridSpan(GetItemGridSpanFromDesc());

@@ -26,7 +26,7 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
 	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
 	StaticMeshComp->SetRenderCustomDepth(false);
-	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
+	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
 	SetRootComponent(StaticMeshComp);
 	
 	
