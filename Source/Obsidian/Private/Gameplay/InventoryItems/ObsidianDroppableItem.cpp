@@ -146,7 +146,7 @@ void AObsidianDroppableItem::HandleActorClicked(AActor* AffectedActor, FKey Butt
 {
 	if(ButtonPressed == EKeys::LeftMouseButton)
 	{
-		const bool bLeftControlDown = FSlateApplication::Get().GetModifierKeys().IsShiftDown();
+		const bool bLeftControlDown = FSlateApplication::Get().GetModifierKeys().IsLeftControlDown();
 		OnItemMouseButtonDown(bLeftControlDown);
 	}
 }
