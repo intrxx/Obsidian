@@ -22,10 +22,13 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
 	StaticMeshComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	StaticMeshComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
+	StaticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
+	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
 	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
 	StaticMeshComp->SetRenderCustomDepth(false);
 	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, 90.0f));
 	SetRootComponent(StaticMeshComp);
+	
 	
 	WorldItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WorldItemNameWidgetComp"));
 	WorldItemNameWidgetComp->SetupAttachment(GetRootComponent());
@@ -33,6 +36,8 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	WorldItemNameWidgetComp->SetDrawAtDesiredSize(true);
 	WorldItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	WorldItemNameWidgetComp->SetupAttachment(StaticMeshComp);
+
+	OnClicked.AddDynamic(this, &ThisClass::HandleActorClicked);
 }
 
 void AObsidianDroppableItem::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
@@ -47,6 +52,29 @@ void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInvent
 	Super::AddItemDefinition(ItemDef, ItemStacks);
 
 	SetupItemAppearanceFromDefinition();
+}
+
+AActor* AObsidianDroppableItem::GetHighlightAvatarActor()
+{
+	return this;
+}
+
+void AObsidianDroppableItem::StartHighlight()
+{
+	if(IsValid(GroundItemDesc))
+	{
+		GroundItemDesc->HandleWorldNameHighlightBegin();
+	}
+	OnItemMouseHover(true);
+}
+
+void AObsidianDroppableItem::StopHighlight()
+{
+	if(IsValid(GroundItemDesc))
+	{
+		GroundItemDesc->HandleWorldNameHighlightEnd();
+	}
+	OnItemMouseHover(false);
 }
 
 void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
@@ -105,17 +133,31 @@ void AObsidianDroppableItem::BeginPlay()
 		return;
 	}
 	
-	UObsidianItemWorldName* GroundItemDesc = CreateWidget<UObsidianItemWorldName>(World, GroundItemDescClass);
-	GroundItemDesc->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemWorldNameMouseHover);
-	GroundItemDesc->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemWorldNameMouseButtonDown);
-	InitItemDesc(GroundItemDesc);
+	GroundItemDesc = CreateWidget<UObsidianItemWorldName>(World, GroundItemDescClass);
+	GroundItemDesc->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
+	GroundItemDesc->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
+	InitItemDesc();
 	
 	WorldItemNameWidgetComp->SetWidget(GroundItemDesc);
 	WorldItemNameWidgetComp->InitWidget();
 }
 
-void AObsidianDroppableItem::InitItemDesc(UObsidianItemWorldName* GroundItemDesc)
+void AObsidianDroppableItem::HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed)
 {
+	if(ButtonPressed == EKeys::LeftMouseButton)
+	{
+		const bool bLeftControlDown = FSlateApplication::Get().GetModifierKeys().IsShiftDown();
+		OnItemMouseButtonDown(bLeftControlDown);
+	}
+}
+
+void AObsidianDroppableItem::InitItemDesc() const
+{
+	if(!IsValid(GroundItemDesc))
+	{
+		return;
+	}
+	
 	if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = GetFirstItemDefFromPickupContent().ItemDef)
 	{
 		if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
@@ -133,7 +175,7 @@ void AObsidianDroppableItem::InitItemDesc(UObsidianItemWorldName* GroundItemDesc
     }
 }
 
-void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
+void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)
 {
 	if(StaticMeshComp)
 	{
@@ -162,7 +204,7 @@ void AObsidianDroppableItem::OnItemWorldNameMouseHover(const bool bMouseEnter)
 	UE_LOG(LogTemp, Error, TEXT("Item Stacks: [%d]"), StackCount);
 }
 
-void AObsidianDroppableItem::OnItemWorldNameMouseButtonDown(const bool bLeftControlDown)
+void AObsidianDroppableItem::OnItemMouseButtonDown(const bool bLeftControlDown)
 {
 	bool bAddedWholeItem = true;
 	if(CarriesItemDef())

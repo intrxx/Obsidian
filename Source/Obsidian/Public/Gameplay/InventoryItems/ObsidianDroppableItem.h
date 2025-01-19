@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Gameplay/ObsidianWorldCollectable.h"
+#include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianDroppableItem.generated.h"
 
 class UObsidianItemWorldName;
@@ -15,7 +16,7 @@ class  UWidgetComponent;
  * Base class for all droppable items in Obsidian.
  */
 UCLASS()
-class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable
+class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable, public IObsidianHighlightInterface
 {
 	GENERATED_BODY()
 
@@ -24,12 +25,21 @@ public:
 
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
+
+	//~ Start of HighlightInterface
+	virtual AActor* GetHighlightAvatarActor() override;
+	virtual void StartHighlight() override;
+	virtual void StopHighlight() override;
+	//~ End of HighlightInterface
 	
 protected:
 	virtual void BeginPlay() override;
 
-	void OnItemWorldNameMouseHover(const bool bMouseEnter);
-	void OnItemWorldNameMouseButtonDown(const bool bLeftControlDown);
+	UFUNCTION()
+	void HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed);
+	
+	void OnItemMouseHover(const bool bMouseEnter);
+	void OnItemMouseButtonDown(const bool bLeftControlDown);
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
@@ -44,7 +54,7 @@ private:
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition();
 
-	void InitItemDesc(UObsidianItemWorldName* GroundItemDesc);
+	void InitItemDesc() const;
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
@@ -58,4 +68,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
+
+	UPROPERTY()
+	UObsidianItemWorldName* GroundItemDesc;
 };

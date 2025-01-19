@@ -24,6 +24,9 @@ public:
 	virtual void NativeConstruct() override;
 
 	void SetItemName(const FText& ItemName);
+
+	void HandleWorldNameHighlightBegin() const;
+	void HandleWorldNameHighlightEnd() const;
 	
 public:
 	/** Delegate that fires when the Player presses the left mouse button onto the item desc. */

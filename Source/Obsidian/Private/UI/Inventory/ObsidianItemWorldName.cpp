@@ -22,6 +22,22 @@ void UObsidianItemWorldName::SetItemName(const FText& ItemName)
 	}
 }
 
+void UObsidianItemWorldName::HandleWorldNameHighlightBegin() const
+{
+	if(Background_Image)
+	{
+		Background_Image->SetBrushTintColor(HoveredBackgroundColor);
+	}
+}
+
+void UObsidianItemWorldName::HandleWorldNameHighlightEnd() const
+{
+	if(Background_Image)
+	{
+		Background_Image->SetBrushTintColor(RegularBackgroundColor);
+	}
+}
+
 FReply UObsidianItemWorldName::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	//TODO Maybe some widget animation
@@ -37,10 +53,7 @@ void UObsidianItemWorldName::NativeOnMouseEnter(const FGeometry& InGeometry, con
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
-	if(Background_Image)
-	{
-		Background_Image->SetBrushTintColor(HoveredBackgroundColor);
-	}
+	HandleWorldNameHighlightBegin();
 	OnItemWorldNameMouseHoverDelegate.Broadcast(true);
 }
 
@@ -48,9 +61,6 @@ void UObsidianItemWorldName::NativeOnMouseLeave(const FPointerEvent& InMouseEven
 {
 	Super::NativeOnMouseLeave(InMouseEvent);
 	
-	if(Background_Image)
-	{
-		Background_Image->SetBrushTintColor(RegularBackgroundColor);
-	}
+	HandleWorldNameHighlightEnd();
 	OnItemWorldNameMouseHoverDelegate.Broadcast(false);
 }

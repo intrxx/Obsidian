@@ -12,6 +12,8 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 	: Super(ObjectInitializer)
 {
 	bReplicates = true;
+	bEnableClickEvents = true;
+	bEnableMouseOverEvents = true;
 
 	InventoryComponent = CreateDefaultSubobject<UObsidianInventoryComponent>(TEXT("Inventory Component"));
 }
