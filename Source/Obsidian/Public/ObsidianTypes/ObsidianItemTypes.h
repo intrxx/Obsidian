@@ -60,4 +60,130 @@ public:
 	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
 };
 
+USTRUCT(BlueprintType)
+struct FObsidianStacksUIData
+{
+public:
+	GENERATED_BODY();
+	
+	FObsidianStacksUIData()
+	{}
+	FObsidianStacksUIData(const int32 CurrentStacks, const int32 MaxStacks)
+		: CurrentItemStackCount(CurrentStacks)
+		, MaxItemStackCount(MaxStacks)
+	{}
+	
+public:
+	UPROPERTY(BlueprintReadOnly)
+	int32 CurrentItemStackCount = 0;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 MaxItemStackCount = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FObsidianItemStats
+{
+	GENERATED_BODY()
+
+public:
+	/** Checks if Item Stats contain Item Display Name. This should technically be present on every Item Stats. */
+	bool ContainsDisplayName() const
+	{
+		return bContainsDisplayName;
+	}
+
+	/** Checks if the Item Stats contain Description. */
+	bool ContainsDescription() const
+	{
+		return bContainsDescription;
+	}
+
+	/** Checks if the Item Stats contain Additional Description. */
+	bool ContainsAdditionalDescription() const
+	{
+		return bContainsAdditionalDescription;
+	}
+
+	/** Checks if the Item Stats contain Stacks info. */
+	bool ContainsStacks() const
+	{
+		return bContainsStacks;
+	}
+
+	FText GetDisplayName() const
+	{
+		return DisplayName;
+	}
+
+	FText GetDescription() const
+	{
+		return Description;
+	}
+
+	FText GetAdditionalDescription() const
+	{
+		return AdditionalDescription;
+	}
+
+	FObsidianStacksUIData GetItemStacks() const
+	{
+		return StacksData;
+	}
+	
+	void SetDisplayName(const FText& InDisplayName)
+	{
+		bContainsDisplayName = true;
+		DisplayName = InDisplayName;
+	}
+
+	void SetDescription(const FText& InDescription)
+	{
+		bContainsDescription = true;
+		Description = InDescription;
+	}
+
+	void SetAdditionalDescription(const FText& InAdditionalDescription)
+	{
+		bContainsAdditionalDescription = true;
+		AdditionalDescription = InAdditionalDescription;
+	}
+
+	void SetStacks(const int32 InCurrentStack, const int32 InMaxStacks)
+	{
+		bContainsStacks = true;
+		StacksData = FObsidianStacksUIData(InCurrentStack, InMaxStacks);
+	}
+	
+private:
+	/**
+	 * Item Descriptors.
+	 */
+
+	UPROPERTY()
+	FText DisplayName = FText::GetEmpty();
+
+	UPROPERTY()
+	FText Description = FText::GetEmpty();
+
+	UPROPERTY()
+	FText AdditionalDescription = FText::GetEmpty();
+	
+	/**
+	 * Stacks.
+	 */
+
+	UPROPERTY()
+	FObsidianStacksUIData StacksData = FObsidianStacksUIData();
+
+	/**
+	 * Contains booleans.
+	 */
+	
+	bool bContainsDisplayName = false;
+	bool bContainsDescription = false;
+	bool bContainsAdditionalDescription = false;
+	bool bContainsStacks = false;
+};
+
 

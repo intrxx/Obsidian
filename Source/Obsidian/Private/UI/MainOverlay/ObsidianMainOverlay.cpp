@@ -74,14 +74,14 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
 		CharacterStatus->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverCharacterStatus);
 		CharacterStatus->OnWidgetDestroyedDelegate.AddLambda([this]()
-		{
-			CharacterStatus = nullptr;
-
-			if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->CharacterStatus_GameTabButton)
 			{
-				Overlay_GameTabsMenu->CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = false;
-			}
-		});
+				CharacterStatus = nullptr;
+
+				if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->CharacterStatus_GameTabButton)
+				{
+					Overlay_GameTabsMenu->CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = false;
+				}
+			});
 
 		Overlay_GameTabsMenu->OnCharacterStatusTabStatusChangeDelegate.Broadcast(true);
 	}
@@ -105,15 +105,15 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory_Overlay->AddChildToOverlay(Inventory);
 		Inventory->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverInventory);
 		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
-		{
-			Inventory = nullptr;
-
-			if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->Inventory_GameTabButton)
 			{
-				Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
-			}
-			InventoryWidgetController->SetInventoryOpened(false);
-		});
+				Inventory = nullptr;
+
+				if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->Inventory_GameTabButton)
+				{
+					Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
+				}
+				InventoryWidgetController->SetInventoryOpened(false);
+			});
 
 		InventoryWidgetController->OnInventoryOpen();
 		InventoryWidgetController->SetInventoryOpened(true);
@@ -145,14 +145,14 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 		PassiveSkillTree_Overlay->AddChildToOverlay(PassiveSkillTree);
 		PassiveSkillTree->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverPassiveSkillTree);
 		PassiveSkillTree->OnWidgetDestroyedDelegate.AddLambda([this]()
-		{
-			PassiveSkillTree = nullptr;
-
-			if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->PassiveSkillTree_GameTabButton)
 			{
-				Overlay_GameTabsMenu->PassiveSkillTree_GameTabButton->bIsCorrespondingTabOpen = false;
-			}
-		});
+				PassiveSkillTree = nullptr;
+
+				if(Overlay_GameTabsMenu && Overlay_GameTabsMenu->PassiveSkillTree_GameTabButton)
+				{
+					Overlay_GameTabsMenu->PassiveSkillTree_GameTabButton->bIsCorrespondingTabOpen = false;
+				}
+			});
 	}
 	else
 	{
@@ -221,10 +221,10 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 	}
 	
 	StackingInfoWidget->OnStackingInfoWidgetTerminatedDelegate.AddLambda([Row, this](UOStackingDurationalEffectInfo* WidgetToDestroy)
-	{
-		DestroyStackingInfoWidget(WidgetToDestroy);
-		HandleEffectFillImageRemoval(Row.EffectTag);
-	});
+		{
+			DestroyStackingInfoWidget(WidgetToDestroy);
+			HandleEffectFillImageRemoval(Row.EffectTag);
+		});
 
 	switch(Row.EffectClassification)
 	{
@@ -280,9 +280,9 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 			EffectFillImages.Add(FillImage);
 			
 			DurationalInfoWidget->OnDurationalInfoWidgetTerminatedDelegate.AddLambda([Row, this](UObsidianDurationalEffectInfo* WidgetToDestroy)
-			{
-				HandleEffectFillImageRemoval(Row.EffectTag);
-			});
+				{
+					HandleEffectFillImageRemoval(Row.EffectTag);
+				});
 		}
 
 		switch(Row.EffectClassification)

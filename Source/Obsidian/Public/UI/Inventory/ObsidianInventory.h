@@ -41,6 +41,9 @@ private:
 	void SetupGrid();
 
 	void OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown);
+	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
+	void OnItemMouseLeave(const FVector2D& ItemDesiredPosition);
+	
 	void OnInventorySlotHover(const bool bEntered, UObsidianInventorySlot* AffectedSlot);
 	void OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition, const bool bShiftDown);
 	

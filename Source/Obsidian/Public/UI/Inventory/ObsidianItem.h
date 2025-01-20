@@ -13,6 +13,8 @@ class UImage;
 
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemLeftMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftPressed);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRightMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemMouseEnterSignature, const FVector2D& ItemPosition, UObsidianItem* ItemWidget);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemMouseLeaveSignature, const FVector2D& ItemPosition);
 
 /**
  * Item Widget that is displayed in the inventory.
@@ -30,9 +32,13 @@ public:
 public:
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
 	FOnItemRightMouseButtonPressedSignature OnItemRightMouseButtonPressedDelegate;
+	FOnItemMouseEnterSignature OnItemMouseEnterDelegate;
+	FOnItemMouseLeaveSignature OnItemMouseLeaveDelegate;
 	
 protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

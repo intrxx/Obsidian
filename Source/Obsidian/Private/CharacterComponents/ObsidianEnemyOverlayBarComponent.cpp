@@ -166,9 +166,9 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	EffectStackCount = 1;
 		
 	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [StackingData, Row, this]()
-	{
-		HandleStackingEffectExpiration(StackingData.EffectExpirationDurationPolicy, Row.EffectDuration, Row.EffectTag);
-	}), Row.EffectDuration, false);
+		{
+			HandleStackingEffectExpiration(StackingData.EffectExpirationDurationPolicy, Row.EffectDuration, Row.EffectTag);
+		}), Row.EffectDuration, false);
 }
 
 void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row)
@@ -195,7 +195,7 @@ void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffec
 			
 		FTimerHandle EffectExpiredDelegateHandle;
 		World->GetTimerManager().SetTimer(EffectExpiredDelegateHandle, FTimerDelegate::CreateWeakLambda(this, [this, Row]()
-		{
+			{
 			
 #if !UE_BUILD_SHIPPING
 if(bDebugEnabled)
@@ -205,9 +205,9 @@ if(bDebugEnabled)
 }
 #endif
 			
-			HandleEffectFillImageRemoval(Row.EffectTag);
-			
-		}), Row.EffectDuration, false);
+				HandleEffectFillImageRemoval(Row.EffectTag);
+				
+			}), Row.EffectDuration, false);
 	}
 }
 
@@ -295,9 +295,9 @@ void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGam
 	}
 
 	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [ExpirationPolicy, Duration, StackingEffectTag, this]()
-	{
-		HandleStackingEffectExpiration(ExpirationPolicy, Duration, StackingEffectTag);
-	}), Duration, false);
+		{
+			HandleStackingEffectExpiration(ExpirationPolicy, Duration, StackingEffectTag);
+		}), Duration, false);
 }
 
 bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& Images, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck)

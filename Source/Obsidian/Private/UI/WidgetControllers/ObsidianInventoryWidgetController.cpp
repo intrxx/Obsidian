@@ -2,7 +2,7 @@
 
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
-
+#include "UI/Inventory/ObsidianItemDescriptionBase.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
@@ -292,27 +292,48 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 
 		UnstackSliderViewportPosition = FVector2D((ViewportPosition.X - (SliderSize.X / 2)) + (LocalSize.X / 2), (ViewportPosition.Y - SliderSize.Y - TopDesiredOffset));
 	}
+	
+	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
+	ActiveUnstackSlider->AddToViewport();
+	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddWeakLambda(this,[this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
+		{
+			HandleTakingOutStacks(ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks, StackToTake);
+		});
+}
 
-	/*
+void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Handling Hovering Over Item"));
+	
+	if(ActiveItemDescription)
+	{
+		ActiveItemDescription->RemoveFromParent();
+	}
+	
+	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
+	
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+
+	FVector2d ViewportPosition = FVector2D::Zero();
 	float LocationX = 0.0f;
 	float LocationY = 0.0f;
 	if(PlayerController->GetMousePosition(LocationX, LocationY))
 	{
-		UnstackSliderViewportPosition = FVector2D(LocationX, LocationY);
+		ViewportPosition = FVector2D(LocationX, LocationY);
 	}
-	else
-	{
-		UE_LOG(LogInventory, Error, TEXT("Failed to extract Viewport Position for UnstackSlider Widget."));
-	}
-	*/
+	ActiveItemDescription->SetPositionInViewport(ViewportPosition);
+	ActiveItemDescription->AddToViewport();
+}
+
+void UObsidianInventoryWidgetController::HandleUnhoveringItem(const FVector2D& SlotPosition)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Handling Unhovering Item"));
 	
-	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
-	ActiveUnstackSlider->AddToViewport();
-	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddLambda([this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
+	if(ActiveItemDescription)
 	{
-		HandleTakingOutStacks(ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks, StackToTake);
-		ActiveUnstackSlider = nullptr;
-	});
+		ActiveItemDescription->RemoveFromParent();
+	}
 }
 
 void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPosition)
@@ -331,6 +352,8 @@ void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPositio
 
 void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake)
 {
+	ActiveUnstackSlider = nullptr;
+	
 	if(StacksToTake == 0)
 	{
 		return;

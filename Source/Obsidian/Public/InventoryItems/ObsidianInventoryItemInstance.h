@@ -8,6 +8,7 @@
 
 class UObsidianInventoryItemFragment;
 class UObsidianInventoryItemDefinition;
+
 /**
  * Instance of and Item Definition. When a player obtain an item, this is the actual thing that they receive.
  */
@@ -43,16 +44,7 @@ public:
 		ItemDef = InItemDef;
 	}
 
-	static UObsidianInventoryItemInstance* DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer)
-	{
-		if(OriginalItem)
-		{
-			UObsidianInventoryItemInstance* NewInstance = DuplicateObject<UObsidianInventoryItemInstance>(OriginalItem, Outer);
-			NewInstance->ItemStackTags.TagToCountMap = OriginalItem->ItemStackTags.TagToCountMap; //@HACK This map does not get copied by the DuplicateObject function, need to copy it manually, there might be more.
-			return NewInstance;
-		}
-		return nullptr;
-	}
+	static UObsidianInventoryItemInstance* DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer);
 
 	/**
 	 * Tag Stacks.
@@ -194,13 +186,13 @@ private:
 	TObjectPtr<UStaticMesh> ItemDroppedMesh;
 	
 	UPROPERTY(Replicated)
-	FText ItemDisplayName;
+	FText ItemDisplayName = FText::GetEmpty();
 
 	UPROPERTY(Replicated)
-	FText ItemDescription;
+	FText ItemDescription = FText::GetEmpty();
 	
 	UPROPERTY(Replicated)
-	FText ItemAdditionalDescription;
+	FText ItemAdditionalDescription = FText::GetEmpty();
 
 	FString DebugName;
 };

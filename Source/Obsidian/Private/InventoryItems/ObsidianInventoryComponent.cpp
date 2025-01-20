@@ -73,6 +73,26 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems
 	return InventoryGrid.GetAllItems();
 }
 
+FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(const FVector2D& InPosition) const
+{
+	const UObsidianInventoryItemInstance* ItemInstance = Internal_GetItemInstanceAtLocation(InPosition);
+	check(ItemInstance);
+
+	FObsidianItemStats Stats;
+	
+	if(ItemInstance->IsStackable())
+	{
+		Stats.SetStacks(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current),
+				ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
+	}
+
+	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
+	Stats.SetDescription(ItemInstance->GetItemDescription());
+	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
+
+	return Stats;
+}
+
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
 {
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)

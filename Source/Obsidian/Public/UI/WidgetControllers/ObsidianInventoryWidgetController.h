@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryWidgetController.generated.h"
 
+class UObsidianItemDescriptionBase;
 class UObsidianUnstackSlider;
 class UObsidianHeroComponent;
 class UObsidianItemWidget;
@@ -33,7 +34,7 @@ public:
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemVisuals& ItemVisuals);
 
 /**
- * 
+ *  
  */
 UCLASS(BlueprintType, Blueprintable)
 class OBSIDIAN_API UObsidianInventoryWidgetController : public UObsidianHeroWidgetControllerBase
@@ -71,8 +72,11 @@ public:
 	void OnInventoryOpen();
 
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
+	
 	void HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
+	void HandleHoveringOverItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
+	void HandleUnhoveringItem(const FVector2D& SlotPosition);
 
 public:
 	FOnItemAddedSignature OnItemAddedDelegate;
@@ -84,8 +88,14 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianUnstackSlider> UnstackSliderClass;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianItemDescriptionBase> ItemDescriptionClass;
+
 	UPROPERTY()
 	TObjectPtr<UObsidianUnstackSlider> ActiveUnstackSlider = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription = nullptr;
 
 private:
 	bool CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const;

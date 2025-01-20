@@ -39,6 +39,17 @@ const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragme
 	return nullptr;
 }
 
+UObsidianInventoryItemInstance* UObsidianInventoryItemInstance::DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer)
+{
+	if(OriginalItem)
+	{
+		UObsidianInventoryItemInstance* NewInstance = DuplicateObject<UObsidianInventoryItemInstance>(OriginalItem, Outer);
+		NewInstance->ItemStackTags.TagToCountMap = OriginalItem->ItemStackTags.TagToCountMap; //@HACK This map does not get copied by the DuplicateObject function, need to copy it manually, there might be more.
+		return NewInstance;
+	}
+	return nullptr;
+}
+
 void UObsidianInventoryItemInstance::AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount)
 {
 	ItemStackTags.AddStack(ToTag, StackCount);

@@ -71,6 +71,8 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemVisuals.ItemImage, ItemVisuals.StackCount);
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
+	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnItemMouseEntered);
+	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 	InventoryWidgetController->AddItemWidget(DesiredPosition, ItemWidget);
 
 	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
@@ -81,17 +83,22 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 
 void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown)
 {
-	if(InventoryWidgetController == nullptr)
-	{
-		return;
-	}
-
 	if(bShiftDown)
 	{
 		InventoryWidgetController->HandleLeftClickingOnAnItemWithShiftDown(ItemDesiredPosition, ItemWidget);
 		return;
 	}
 	InventoryWidgetController->HandleLeftClickingOnAnItem(ItemDesiredPosition, ItemWidget);
+}
+
+void UObsidianInventory::OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget)
+{
+	InventoryWidgetController->HandleHoveringOverItem(ItemDesiredPosition, ItemWidget);
+}
+
+void UObsidianInventory::OnItemMouseLeave(const FVector2D& ItemDesiredPosition)
+{
+	InventoryWidgetController->HandleUnhoveringItem(ItemDesiredPosition);
 }
 
 void UObsidianInventory::OnInventorySlotHover(const bool bEntered, UObsidianInventorySlot* AffectedSlot)

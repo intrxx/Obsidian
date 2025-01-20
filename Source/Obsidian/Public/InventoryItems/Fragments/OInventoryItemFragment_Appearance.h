@@ -101,11 +101,11 @@ protected:
 	TObjectPtr<UTexture2D> ItemImage;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	FText DisplayName;
+	FText DisplayName = FText::GetEmpty();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	FText Description;
+	FText Description = FText::GetEmpty();
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	FText AdditionalDescription;
+	FText AdditionalDescription = FText::GetEmpty();
 };
