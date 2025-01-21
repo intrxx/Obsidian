@@ -8,6 +8,13 @@
 #include "Components/Image.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
+void UObsidianItemDescriptionBase::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	SetVisibility(ESlateVisibility::HitTestInvisible);
+}
+
 void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats)
 {
 	SetItemDisplayName(ItemStats.GetDisplayName());
@@ -66,3 +73,10 @@ void UObsidianItemDescriptionBase::CollapseStatBlocks()
 	ItemDescription_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	AdditionalItemDescription_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
+
+void UObsidianItemDescriptionBase::DestroyDescriptionWidget()
+{
+	RemoveFromParent();
+}
+
+

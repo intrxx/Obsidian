@@ -26,14 +26,14 @@ void UObsidianItem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPoint
 {
 	OnItemMouseEnterDelegate.Broadcast(ItemDesiredPosition, this);
 	
-	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+	//Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 }
 
 void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	OnItemMouseLeaveDelegate.Broadcast(ItemDesiredPosition);
 	
-	Super::NativeOnMouseLeave(InMouseEvent);
+	//Super::NativeOnMouseLeave(InMouseEvent);
 }
 
 void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)

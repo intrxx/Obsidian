@@ -27,6 +27,11 @@ public:
 	void SetItemDescription(const FText& ItemDescription);
 	void SetAdditionalItemDescription(const FText& AdditionalItemDescription);
 
+	void DestroyDescriptionWidget();
+
+protected:
+	virtual void NativeConstruct() override;
+
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> ItemName_Image;

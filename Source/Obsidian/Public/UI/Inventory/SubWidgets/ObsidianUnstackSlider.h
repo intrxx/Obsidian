@@ -12,6 +12,7 @@ class UCommonTextBlock;
 class UButton;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnAcceptButtonPressedSignature, const int32 StacksToTake)
+DECLARE_MULTICAST_DELEGATE(FOnCloseButtonPressedSignature)
 
 /**
  * 
@@ -31,6 +32,7 @@ public:
 
 public:
 	FOnAcceptButtonPressedSignature OnAcceptButtonPressedDelegate;
+	FOnCloseButtonPressedSignature OnCloseButtonPressedDelegate;
 
 protected:
 	virtual void NativeConstruct() override;

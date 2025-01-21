@@ -137,11 +137,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 	check(DraggedItemWidgetClass);
 	check(ItemWidget);
 
-	if(ActiveUnstackSlider != nullptr)
-	{
-		ActiveUnstackSlider->DestroyUnstackSlider();
-		ActiveUnstackSlider = nullptr;
-	}
+	RemoveItemUIElements();
 	
 	if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
@@ -268,11 +264,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 		return;
 	}
 
-	if(ActiveUnstackSlider != nullptr)
-	{
-		ActiveUnstackSlider->DestroyUnstackSlider();
-		ActiveUnstackSlider = nullptr;
-	}
+	RemoveItemUIElements();
 	
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
 	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
@@ -295,20 +287,23 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	
 	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
 	ActiveUnstackSlider->AddToViewport();
+	bUnstackSliderActive = true;
+	
 	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddWeakLambda(this,[this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
 		{
 			HandleTakingOutStacks(ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks, StackToTake);
 		});
+	ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
 }
 
 void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Handling Hovering Over Item"));
-	
-	if(ActiveItemDescription)
+	if(!CanShowDescription())
 	{
-		ActiveItemDescription->RemoveFromParent();
+		return;
 	}
+	
+	RemoveItemDescription();
 	
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
 	
@@ -324,16 +319,17 @@ void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D&
 	}
 	ActiveItemDescription->SetPositionInViewport(ViewportPosition);
 	ActiveItemDescription->AddToViewport();
+	bDescriptionActive = true;
+}
+
+bool UObsidianInventoryWidgetController::CanShowDescription() const
+{
+	return !bUnstackSliderActive;
 }
 
 void UObsidianInventoryWidgetController::HandleUnhoveringItem(const FVector2D& SlotPosition)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Handling Unhovering Item"));
-	
-	if(ActiveItemDescription)
-	{
-		ActiveItemDescription->RemoveFromParent();
-	}
+	RemoveItemDescription();
 }
 
 void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPosition)
@@ -352,7 +348,7 @@ void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPositio
 
 void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake)
 {
-	ActiveUnstackSlider = nullptr;
+	RemoveUnstackSlider();
 	
 	if(StacksToTake == 0)
 	{
@@ -378,6 +374,32 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	DraggedItem->InitializeItemWidgetWithItemInstance(NewInstance);
 	DraggedItem->AddToViewport();
 	InternalHeroComponent->DragItem(DraggedItem);
+}
+
+void UObsidianInventoryWidgetController::RemoveItemUIElements()
+{
+	RemoveUnstackSlider();
+	RemoveItemDescription();
+}
+
+void UObsidianInventoryWidgetController::RemoveUnstackSlider()
+{
+	if(bUnstackSliderActive && ActiveUnstackSlider != nullptr)
+	{
+		ActiveUnstackSlider->DestroyUnstackSlider();
+		ActiveUnstackSlider = nullptr;
+		bUnstackSliderActive = false;
+	}
+}
+
+void UObsidianInventoryWidgetController::RemoveItemDescription()
+{
+	if(bDescriptionActive && ActiveItemDescription)
+	{
+		ActiveItemDescription->DestroyDescriptionWidget();
+		ActiveItemDescription = nullptr;
+		bDescriptionActive = false;
+	}
 }
 
 bool UObsidianInventoryWidgetController::IsDraggingAnItem() const

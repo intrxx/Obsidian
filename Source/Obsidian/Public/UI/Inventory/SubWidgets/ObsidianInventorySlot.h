@@ -46,7 +46,7 @@ protected:
 
 protected:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> ItemImage_Image;
+	TObjectPtr<UImage> Slot_Image;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Action_Image;

@@ -57,6 +57,11 @@ public:
 	{
 		return bInventoryOpened;
 	}
+
+	bool IsDescriptionActive() const
+	{
+		return bDescriptionActive;
+	}
 	
 	bool IsDraggingAnItem() const;
 	bool CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize = TArray<FVector2D>()) const;
@@ -102,12 +107,21 @@ private:
 	void PickupItem(const FVector2D& SlotPosition);
 
 	void HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake);
+
+	void RemoveItemUIElements();
+	void RemoveUnstackSlider();
+	void RemoveItemDescription();
+
+	bool CanShowDescription() const;
 	
 private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 	TMap<FVector2D, bool> InventoryStateMap;
 	bool bInventoryOpened = false;
 	//bool bInventoryChanged = false;
+
+	bool bDescriptionActive = false;
+	bool bUnstackSliderActive = false;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryComponent> InternalInventoryComponent;

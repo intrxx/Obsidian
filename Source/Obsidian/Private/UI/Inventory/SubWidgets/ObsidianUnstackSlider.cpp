@@ -52,18 +52,19 @@ float UObsidianUnstackSlider::GetTopDesiredOffset() const
 void UObsidianUnstackSlider::DestroyUnstackSlider()
 {
 	OnAcceptButtonPressedDelegate.Clear();
+	OnCloseButtonPressedDelegate.Clear();
 	RemoveFromParent();
 }
 
 void UObsidianUnstackSlider::OnCloseButtonClicked()
 {
+	OnCloseButtonPressedDelegate.Broadcast();
 	RemoveFromParent();
 }
 
 void UObsidianUnstackSlider::OnAcceptButtonClicked()
 {
 	OnAcceptButtonPressedDelegate.Broadcast(StackToTake);
-	RemoveFromParent();
 }
 
 void UObsidianUnstackSlider::UpdateStacksValues(float NewValue)

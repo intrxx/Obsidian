@@ -33,15 +33,13 @@ void UObsidianInventorySlot::ResetSlot()
 
 void UObsidianInventorySlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-	
+	//Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	OnHoverOverSlotDelegate.Broadcast(true, this);
 }
 
 void UObsidianInventorySlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	Super::NativeOnMouseLeave(InMouseEvent);
-	
+	//Super::NativeOnMouseLeave(InMouseEvent);
 	OnHoverOverSlotDelegate.Broadcast(false, this);
 }
 
