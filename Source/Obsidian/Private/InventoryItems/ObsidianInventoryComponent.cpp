@@ -93,6 +93,62 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(
 	return Stats;
 }
 
+FObsidianItemStats UObsidianInventoryComponent::GetItemStatForInstance(const UObsidianInventoryItemInstance* ItemInstance) const
+{
+	if(ItemInstance == nullptr)
+	{
+		return FObsidianItemStats();
+	}
+	
+	FObsidianItemStats Stats;
+	
+	if(ItemInstance->IsStackable())
+	{
+		Stats.SetStacks(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current),
+			 ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
+	}
+
+	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
+	Stats.SetDescription(ItemInstance->GetItemDescription());
+	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
+
+	return Stats;
+}
+
+FObsidianItemStats UObsidianInventoryComponent::GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const
+{
+	if(!IsValid(ItemDef))
+	{
+		return FObsidianItemStats();
+	}
+
+	const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef);
+	if(ItemDefault == nullptr)
+	{
+		return FObsidianItemStats();
+	}
+
+	FObsidianItemStats Stats;
+
+	if(ItemDefault->IsStackable())
+	{
+		if(const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass())))
+		{
+			Stats.SetStacks(StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Current),
+				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Max));
+		}
+	}
+
+	if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+	{
+		Stats.SetDisplayName(AppearanceFrag->GetItemDisplayName());
+		Stats.SetDescription(AppearanceFrag->GetItemDescription());
+		Stats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());
+	}
+
+	return Stats;
+}
+
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
 {
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)

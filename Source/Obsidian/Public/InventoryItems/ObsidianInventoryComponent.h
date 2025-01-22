@@ -44,8 +44,18 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Obsidian|Inventory")
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 
+	/** Gets the Item Stats based on provided Item position on the Inventory Grid. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	FObsidianItemStats GetItemStatsByInventoryPosition(const FVector2D& InPosition) const;
 
+	/** Gets the Item Stats from provided Item Instance. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
+	FObsidianItemStats GetItemStatForInstance(const UObsidianInventoryItemInstance* ItemInstance) const;
+
+	/** Gets the Item Stats from provided Item Definition. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
+	FObsidianItemStats GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const;
+	
 	/** Finds first Item Instance in the inventory for provided Item Definition. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
