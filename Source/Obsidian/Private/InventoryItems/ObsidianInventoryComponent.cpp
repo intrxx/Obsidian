@@ -115,7 +115,7 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatForInstance(const UOb
 	return Stats;
 }
 
-FObsidianItemStats UObsidianInventoryComponent::GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const
+FObsidianItemStats UObsidianInventoryComponent::GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks) const
 {
 	if(!IsValid(ItemDef))
 	{
@@ -134,7 +134,7 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatsForItemDefinition(co
 	{
 		if(const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass())))
 		{
-			Stats.SetStacks(StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Current),
+			Stats.SetStacks(CurrentItemStacks, // Current Item Stacks are not present on ItemDef, they are directly on Pickable Item
 				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Max));
 		}
 	}

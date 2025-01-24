@@ -218,7 +218,7 @@ UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
 	if(CarriesItemDef())
 	{
 		const FPickupTemplate PickupTemplate = GetFirstItemDefFromPickupContent();
-		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef);
+		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.StackCount);
 	}
 	else if(CarriesItemInstance())
 	{

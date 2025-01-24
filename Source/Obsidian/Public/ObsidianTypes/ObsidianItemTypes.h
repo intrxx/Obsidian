@@ -72,6 +72,16 @@ public:
 		: CurrentItemStackCount(CurrentStacks)
 		, MaxItemStackCount(MaxStacks)
 	{}
+
+	void SetCurrentStacks(const int32 InCurrentStacks)
+	{
+		CurrentItemStackCount = InCurrentStacks;
+	}
+
+	void SetMaxStacks(const int32 InMaxStacks)
+	{
+		MaxItemStackCount = InMaxStacks;
+	}
 	
 public:
 	UPROPERTY(BlueprintReadOnly)
@@ -153,6 +163,18 @@ public:
 	{
 		bContainsStacks = true;
 		StacksData = FObsidianStacksUIData(InCurrentStack, InMaxStacks);
+	}
+
+	void SetCurrentStacks(const int32 InCurrentStack)
+	{
+		bContainsStacks = true;
+		StacksData.SetCurrentStacks(InCurrentStack);
+	}
+
+	void SetMaxStacks(const int32 InMaxStacks)
+	{
+		bContainsStacks = true;
+		StacksData.SetMaxStacks(InMaxStacks);
 	}
 	
 private:

@@ -85,7 +85,7 @@ public:
 	void HandleUnhoveringItem(const FVector2D& SlotPosition);
 
 	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
-	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);
 	
 public:
 	FOnItemAddedSignature OnItemAddedDelegate;
