@@ -2,8 +2,6 @@
 
 
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
-
-#include "ContentBrowserDataSource.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
@@ -88,15 +86,16 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance()
 	{
 		return;
 	}
-	
-	if(UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh())
+
+	UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh();
+	if(DroppedMesh == nullptr)
 	{
-		StaticMeshComp->SetStaticMesh(DroppedMesh);
+		UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"),
+			*ItemInstance->GetItemDebugName());
 		return;
 	}
-	
-	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"),
-		*ItemInstance->GetItemDebugName());
+
+	StaticMeshComp->SetStaticMesh(DroppedMesh);
 }
 
 void AObsidianDroppableItem::SetupItemAppearanceFromDefinition()
@@ -211,6 +210,7 @@ UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
 	UObsidianInventoryWidgetController* InventoryController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 	if(InventoryController == nullptr)
 	{
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::CreateItemDescription."));
 		return nullptr;	
 	}
 	
@@ -225,6 +225,12 @@ UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
 		const FPickupInstance PickupInstance = GetFirstItemInstanceFromPickupContent();
 		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(PickupInstance.Item);
 	}
+#if !UE_BUILD_SHIPPING
+	else
+	{
+		ensureMsgf(ItemDescriptionToReturn, TEXT("Returned ItemDescription is invalid in AObsidianDroppableItem::CreateItemDescription(), verify if the Dropped Item contains any Pickup Content."));
+	}
+#endif
 	
 	return ItemDescriptionToReturn;
 }
