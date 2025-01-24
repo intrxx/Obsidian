@@ -28,6 +28,11 @@ public:
 	UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
 	UObsidianInventoryWidgetController* GetInventoryWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
 
+	UObsidianMainOverlay* GetMainOverlay()
+	{
+		return MainOverlayWidget;
+	}
+
 	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
 
 	void ToggleCharacterStatus() const;

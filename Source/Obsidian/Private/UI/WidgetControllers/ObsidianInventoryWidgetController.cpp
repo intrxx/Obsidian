@@ -6,13 +6,16 @@
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "UI/ObsidianHUD.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "UI/Inventory/ObsidianItem.h"
 #include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
+#include "UI/MainOverlay/ObsidianMainOverlay.h"
 
 void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
@@ -24,6 +27,9 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 
 	const AActor* OwningActor = Cast<AActor>(PlayerController->GetPawn());
 	check(OwningActor);
+
+	ObsidianPC = Cast<AObsidianPlayerController>(PlayerController);
+	check(ObsidianPC);
 	
 	InternalHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	check(InternalHeroComponent);
@@ -330,6 +336,66 @@ bool UObsidianInventoryWidgetController::CanShowDescription() const
 void UObsidianInventoryWidgetController::HandleUnhoveringItem(const FVector2D& SlotPosition)
 {
 	RemoveItemDescription();
+}
+
+UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance)
+{
+	if(!CanShowDescription())
+	{
+		return nullptr;
+	}
+
+	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
+	if(ObsidianHUD == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianHUD in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem."));
+		return nullptr;
+	}
+
+	const UObsidianMainOverlay* MainOverlay = ObsidianHUD->GetMainOverlay();
+	if(MainOverlay == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianMainOverlay in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem."));
+		return nullptr;
+	}
+
+	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatForInstance(Instance);
+	
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
+
+	return ActiveItemDescription;
+}
+
+UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+{
+	if(!CanShowDescription())
+	{
+		return nullptr;
+	}
+
+	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
+	if(ObsidianHUD == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianHUD in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem."));
+		return nullptr;
+	}
+
+	const UObsidianMainOverlay* MainOverlay = ObsidianHUD->GetMainOverlay();
+	if(MainOverlay == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianMainOverlay in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem."));
+		return nullptr;
+	}
+
+	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsForItemDefinition(ItemDef);
+	
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
+
+	return ActiveItemDescription;
 }
 
 void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPosition)

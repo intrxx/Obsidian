@@ -23,6 +23,7 @@
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
+#include "UI/Inventory/ObsidianItemDescriptionBase.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {
@@ -191,6 +192,14 @@ void UObsidianMainOverlay::SetPlayerMouseOverButtonMenu(const bool bInMouseOver)
 {
 	bPlayerMouseOverButtonMenu = bInMouseOver;
 	UpdatePlayerMouseOverUIElem();
+}
+
+void UObsidianMainOverlay::AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const
+{
+	if(ItemDescription)
+	{
+		DroppedItemDesc_Overlay->AddChildToOverlay(ItemDescription);
+	}
 }
 
 void UObsidianMainOverlay::UpdatePlayerMouseOverUIElem() const

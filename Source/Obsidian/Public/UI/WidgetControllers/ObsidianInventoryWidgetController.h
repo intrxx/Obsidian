@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryWidgetController.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
 class UObsidianUnstackSlider;
 class UObsidianHeroComponent;
@@ -83,6 +84,9 @@ public:
 	void HandleHoveringOverItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem(const FVector2D& SlotPosition);
 
+	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
+	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	
 public:
 	FOnItemAddedSignature OnItemAddedDelegate;
 
@@ -101,6 +105,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<AObsidianPlayerController> ObsidianPC = nullptr;
 
 private:
 	bool CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const;

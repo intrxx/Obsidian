@@ -2,10 +2,13 @@
 
 
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
+
+#include "ContentBrowserDataSource.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/WidgetComponent.h"
+#include "Core/ObsidianUIFunctionLibrary.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
@@ -15,6 +18,8 @@
 #include "UI/Inventory/ObsidianItemWorldName.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
+#include "UI/Inventory/ObsidianItemDescriptionBase.h"
+#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -183,24 +188,45 @@ void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)
 
 	if(bMouseEnter)
 	{
-		//TODO Display Item's Description and add it to the predefined place in the viewport
+		ActiveItemDescription = CreateItemDescription();
 	}
 	else
 	{
-		//TODO Destroy the widget? Maybe hide it and destroy it later?
+		if(ActiveItemDescription)
+		{
+			ActiveItemDescription->DestroyDescriptionWidget();
+			ActiveItemDescription = nullptr;
+		}
+	}
+}
+
+UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
+{
+	if(ActiveItemDescription)
+	{
+		ActiveItemDescription->DestroyDescriptionWidget();
+		ActiveItemDescription = nullptr;
 	}
 	
+	UObsidianInventoryWidgetController* InventoryController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
+	if(InventoryController == nullptr)
+	{
+		return nullptr;	
+	}
 	
-	int32 StackCount = -1;
+	UObsidianItemDescriptionBase* ItemDescriptionToReturn = nullptr; 
 	if(CarriesItemDef())
 	{
-		StackCount = GetPickupContent().Templates[0].StackCount;
+		const FPickupTemplate PickupTemplate = GetFirstItemDefFromPickupContent();
+		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef);
 	}
-	if(CarriesItemInstance())
+	else if(CarriesItemInstance())
 	{
-		StackCount = GetPickupContent().Instances[0].Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const FPickupInstance PickupInstance = GetFirstItemInstanceFromPickupContent();
+		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(PickupInstance.Item);
 	}
-	UE_LOG(LogTemp, Error, TEXT("Item Stacks: [%d]"), StackCount);
+	
+	return ItemDescriptionToReturn;
 }
 
 void AObsidianDroppableItem::OnItemMouseButtonDown(const bool bLeftControlDown)

@@ -7,6 +7,7 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianDroppableItem.generated.h"
 
+class UObsidianItemDescriptionBase;
 class UObsidianItemWorldName;
 class UObsidianItemDragDropOperation;
 class UObsidianDraggedItem;
@@ -55,6 +56,8 @@ private:
 	void SetupItemAppearanceFromDefinition();
 
 	void InitItemDesc() const;
+
+	UObsidianItemDescriptionBase* CreateItemDescription();
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
@@ -70,5 +73,8 @@ private:
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
 
 	UPROPERTY()
-	UObsidianItemWorldName* GroundItemDesc;
+	TObjectPtr<UObsidianItemWorldName> GroundItemDesc;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription;
 };

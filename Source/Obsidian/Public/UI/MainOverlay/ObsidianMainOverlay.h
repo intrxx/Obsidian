@@ -9,6 +9,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianItemDescriptionBase;
 class UObsidianPassiveSkillTree;
 class UObsidianInventory;
 class UObsidianProgressGlobe_Mana;
@@ -49,6 +50,8 @@ public:
 	void SetPlayerMouseOverPassiveSkillTree(const bool bInMouseOver);
 	void SetPlayerMouseOverGlobe(const bool bInMouseOver);
 	void SetPlayerMouseOverButtonMenu(const bool bInMouseOver);
+
+	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
 	
 public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|MainOverlay")
@@ -102,6 +105,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> PassiveSkillTree_Overlay;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOverlay> DroppedItemDesc_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> OverlayRegularBars_Overlay;
