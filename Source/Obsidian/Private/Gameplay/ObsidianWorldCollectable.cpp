@@ -16,7 +16,7 @@ FPickupContent AObsidianWorldCollectable::GetPickupContent() const
 	return StaticContent;
 }
 
-FPickupInstance AObsidianWorldCollectable::GetFirstItemInstanceFromPickupContent() const
+FPickupInstance AObsidianWorldCollectable::GetFirstPickupInstanceFromPickupContent() const
 {
 	TArray<FPickupInstance> PickupInstances = GetPickupContent().Instances;
 	if(PickupInstances.IsEmpty())
@@ -32,7 +32,7 @@ FPickupInstance AObsidianWorldCollectable::GetFirstItemInstanceFromPickupContent
 	return FPickupInstance(nullptr);
 }
 
-FPickupTemplate AObsidianWorldCollectable::GetFirstItemDefFromPickupContent() const
+FPickupTemplate AObsidianWorldCollectable::GetFirstPickupTemplateFromPickupContent() const
 {
 	TArray<FPickupTemplate> PickupTemplates = GetPickupContent().Templates;
 	if(PickupTemplates.IsEmpty())
@@ -50,13 +50,13 @@ FPickupTemplate AObsidianWorldCollectable::GetFirstItemDefFromPickupContent() co
 
 void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
-	check(InstanceToAdd);
+	checkf(InstanceToAdd, TEXT("Provided InstanceToAdd is invalid in AObsidianWorldCollectable::AddItemInstance."));
 	StaticContent.Instances.Add(FPickupInstance(InstanceToAdd));
 }
 
 void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks)
 {
-	check(ItemDef);
+	checkf(ItemDef, TEXT("Provided ItemDef is invalid in AObsidianWorldCollectable::AddItemDefinition."));
 	StaticContent.Templates.Add(FPickupTemplate(ItemDef, ItemStacks));
 }
 

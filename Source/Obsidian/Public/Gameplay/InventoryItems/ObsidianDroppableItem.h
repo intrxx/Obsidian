@@ -38,24 +38,23 @@ protected:
 
 	UFUNCTION()
 	void HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed);
-	
 	void OnItemMouseHover(const bool bMouseEnter);
 	void OnItemMouseButtonDown(const bool bLeftControlDown);
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
-	bool PickupItemInstance(const bool bLeftControlDown);
+	bool PickupItemInstance(const bool bLeftControlDown) const;
 	
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
 	bool PickupItemDef(const bool bLeftControlDown);
 	
 	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
-	void SetupItemAppearanceFromInstance();
+	void SetupItemAppearanceFromInstance() const;
 	
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
-	void SetupItemAppearanceFromDefinition();
+	void SetupItemAppearanceFromDefinition() const;
 
-	void InitItemDesc() const;
+	void InitItemWorldName() const;
 
 	UObsidianItemDescriptionBase* CreateItemDescription();
 	void DestroyItemDescription();
@@ -70,13 +69,13 @@ private:
 	TObjectPtr<UWidgetComponent> WorldItemNameWidgetComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObsidianItemWorldName> GroundItemDescClass;
+	TSubclassOf<UObsidianItemWorldName> ItemWorldNameClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianItemWorldName> GroundItemDesc;
+	TObjectPtr<UObsidianItemWorldName> ItemWorldName;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription;
