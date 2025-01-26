@@ -44,8 +44,20 @@ void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName)
 
 void UObsidianItemDescriptionBase::SetStackCount(const int32 CurrentStacks, const int32 MaxStacks)
 {
+	CurrentStackCount = CurrentStacks;
+	MaxStackCount = MaxStacks;
+	
 	StacksContainer_HorizontalBox->SetVisibility(ESlateVisibility::Visible);
-	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d/%d"), CurrentStacks, MaxStacks));
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d/%d"), CurrentStackCount, MaxStackCount));
+	StackCount_TextBlock->SetText(StackCountText);
+}
+
+void UObsidianItemDescriptionBase::UpdateCurrentStackCount(const int32 CurrentStacks)
+{
+	CurrentStackCount = CurrentStacks;
+	
+	StacksContainer_HorizontalBox->SetVisibility(ESlateVisibility::Visible);
+	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d/%d"), CurrentStackCount, MaxStackCount));
 	StackCount_TextBlock->SetText(StackCountText);
 }
 

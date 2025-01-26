@@ -60,7 +60,7 @@ void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInv
 	StaticContent.Templates.Add(FPickupTemplate(ItemDef, ItemStacks));
 }
 
-void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 TemplateIndex, const int32 NewItemStacks)
+void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 NewItemStacks, const int32 TemplateIndex)
 {
 	if(StaticContent.Templates[TemplateIndex].ItemDef)
 	{

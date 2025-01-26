@@ -236,6 +236,26 @@ void AObsidianDroppableItem::DestroyItemDescription()
 	}
 }
 
+void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance) const
+{
+	if(ActiveItemDescription)
+	{
+		if(ensureMsgf(ItemInstance, TEXT("Item Instance is invalid in AObsidianDroppableItem::UpdateStacksOnActiveItemDescription")))
+		{
+			const int32 CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			ActiveItemDescription->UpdateCurrentStackCount(CurrentStacks);
+		}
+	}
+}
+
+void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 StacksToSet) const
+{
+	if(ActiveItemDescription)
+	{
+		ActiveItemDescription->UpdateCurrentStackCount(StacksToSet);
+	}
+}
+
 void AObsidianDroppableItem::OnItemMouseButtonDown(const bool bLeftControlDown)
 {
 	bool bAddedWholeItem = true;
@@ -305,6 +325,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown)
 	if(OutStacksLeft > 0)
 	{
 		ItemInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
+		UpdateStacksOnActiveItemDescription(OutStacksLeft);
 		return false;
 	}
 	return true;
@@ -358,7 +379,8 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 	InventoryComponent->AddItemDefinition(PickupItemDef, /** OUT */ OutStacksLeft, StackCount);
 	if(OutStacksLeft > 0)
 	{
-		OverrideTemplateStacks(0, OutStacksLeft);
+		OverrideTemplateStacks(OutStacksLeft);
+		UpdateStacksOnActiveItemDescription(OutStacksLeft);
 		return false;
 	}
 	return true;

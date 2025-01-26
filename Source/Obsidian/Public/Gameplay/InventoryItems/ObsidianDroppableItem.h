@@ -59,6 +59,8 @@ private:
 
 	UObsidianItemDescriptionBase* CreateItemDescription();
 	void DestroyItemDescription();
+	void UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance) const;
+	void UpdateStacksOnActiveItemDescription(const int32 StacksToSet) const;
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

@@ -23,9 +23,11 @@ public:
 	void InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats);
 	
 	void SetItemDisplayName(const FText& DisplayName);
-	void SetStackCount(const int32 CurrentStacks, const int32 MaxStacks);
 	void SetItemDescription(const FText& ItemDescription);
 	void SetAdditionalItemDescription(const FText& AdditionalItemDescription);
+
+	void SetStackCount(const int32 CurrentStacks, const int32 MaxStacks);
+	void UpdateCurrentStackCount(const int32 CurrentStacks);
 
 	void DestroyDescriptionWidget();
 
@@ -53,5 +55,9 @@ protected:
 
 private:
 	void CollapseStatBlocks();
+
+private:
+	int32 CurrentStackCount = 0;
+	int32 MaxStackCount = 0;
 };
 
