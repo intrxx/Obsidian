@@ -58,6 +58,7 @@ private:
 	void InitItemDesc() const;
 
 	UObsidianItemDescriptionBase* CreateItemDescription();
+	void DestroyItemDescription();
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

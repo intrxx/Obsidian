@@ -191,21 +191,13 @@ void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)
 	}
 	else
 	{
-		if(ActiveItemDescription)
-		{
-			ActiveItemDescription->DestroyDescriptionWidget();
-			ActiveItemDescription = nullptr;
-		}
+		DestroyItemDescription();
 	}
 }
 
 UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
 {
-	if(ActiveItemDescription)
-	{
-		ActiveItemDescription->DestroyDescriptionWidget();
-		ActiveItemDescription = nullptr;
-	}
+	DestroyItemDescription();
 	
 	UObsidianInventoryWidgetController* InventoryController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 	if(InventoryController == nullptr)
@@ -235,6 +227,15 @@ UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
 	return ItemDescriptionToReturn;
 }
 
+void AObsidianDroppableItem::DestroyItemDescription()
+{
+	if(ActiveItemDescription)
+	{
+		ActiveItemDescription->DestroyDescriptionWidget();
+		ActiveItemDescription = nullptr;
+	}
+}
+
 void AObsidianDroppableItem::OnItemMouseButtonDown(const bool bLeftControlDown)
 {
 	bool bAddedWholeItem = true;
@@ -249,6 +250,7 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const bool bLeftControlDown)
 	
 	if(bAddedWholeItem)
 	{
+		DestroyItemDescription();
 		Destroy();
 	}
 }
