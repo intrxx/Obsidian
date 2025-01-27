@@ -469,14 +469,20 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	return bAddedWholeItem;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
 {
+	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(!ensureMsgf(((StacksToTake == 0) || (CurrentTakingFromInstanceStacks != StacksToTake)), TEXT("This function shouldn't be called if you want to take the whole item out. Simply Pickup the item instead.")))
+	{
+		return nullptr;
+	}
+	
 	UObsidianInventoryItemInstance* NewInstance = UObsidianInventoryItemInstance::DuplicateItem(TakingFromInstance, GetOwner());
 	if(NewInstance == nullptr)
 	{
 		return nullptr;
 	}
-	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	
 	const int32 NewCurrentTakingFromInstanceStacks = CurrentTakingFromInstanceStacks - StacksToTake;
 	TakingFromInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, NewCurrentTakingFromInstanceStacks);
 

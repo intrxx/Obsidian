@@ -4,6 +4,7 @@
 #include "UI/Inventory/ObsidianInventory.h"
 #include "Components/GridPanel.h"
 #include "Components/GridSlot.h"
+#include "Components/SizeBox.h"
 #include "UI/Inventory/SubWidgets/ObsidianInventorySlot.h"
 #include "UI/Inventory/ObsidianItem.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
@@ -11,6 +12,14 @@
 UObsidianInventory::UObsidianInventory()
 	: InventoryGridSize(InventoryGridWidth * InventoryGridHeight)
 {
+}
+
+void UObsidianInventory::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	Root_SizeBox->SetHeightOverride(RootSizeBoxHeight);
+	Root_SizeBox->SetWidthOverride(RootSizeBoxWidth);
 }
 
 void UObsidianInventory::NativeConstruct()

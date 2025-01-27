@@ -149,6 +149,8 @@ private:
 	void DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag);
 
 	void HandleEffectFillImageRemoval(const FGameplayTag& EffectTag);
+
+	void MoveDroppedItemDescOverlay(const bool bInventoryOpen);
 	
 private:
 	UPROPERTY()
@@ -172,4 +174,3 @@ private:
 	bool bPlayerMouseOverGlobe = false;
 	bool bPlayerMouseOverButtonMenu = false;
 };
-

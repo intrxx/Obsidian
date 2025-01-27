@@ -2,6 +2,8 @@
 
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
+
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
@@ -9,6 +11,7 @@
 #include "Components/VerticalBox.h"
 #include "Components/WrapBox.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
+#include "Components/CanvasPanelSlot.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
@@ -114,10 +117,12 @@ void UObsidianMainOverlay::ToggleInventory()
 					Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
 				}
 				InventoryWidgetController->SetInventoryOpened(false);
+				MoveDroppedItemDescOverlay(false);
 			});
 
 		InventoryWidgetController->OnInventoryOpen();
 		InventoryWidgetController->SetInventoryOpened(true);
+		MoveDroppedItemDescOverlay(true);
 	}
 	else
 	{
@@ -125,6 +130,7 @@ void UObsidianMainOverlay::ToggleInventory()
 		SetPlayerMouseOverInventory(false);
 		Inventory = nullptr;
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
+		
 		if(InventoryWidgetController)
 		{
 			InventoryWidgetController->SetInventoryOpened(false);
@@ -134,6 +140,8 @@ void UObsidianMainOverlay::ToggleInventory()
 			InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 			InventoryWidgetController->SetInventoryOpened(false);
 		}
+		
+		MoveDroppedItemDescOverlay(false);
 	}
 }
 
@@ -399,6 +407,30 @@ void UObsidianMainOverlay::DestroyAuraInfoWidget(const FGameplayTag WidgetToDest
 		if(Widget->UIEffectTag == WidgetToDestroyWithTag)
 		{
 			Widget->RemoveAuraInfoWidget();
+		}
+	}
+}
+
+void UObsidianMainOverlay::MoveDroppedItemDescOverlay(const bool bInventoryOpen)
+{
+	if(bInventoryOpen)
+	{
+		if(Inventory == nullptr)
+		{
+			return;
+		}
+
+		const float InventoryWidth = Inventory->GetInventoryWidth();
+		if(UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DroppedItemDesc_Overlay))
+		{
+			CanvasSlot->SetPosition(FVector2D(-InventoryWidth, -50.0f));
+		}
+	}
+	else
+	{
+		if(UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DroppedItemDesc_Overlay))
+		{
+			CanvasSlot->SetPosition(FVector2D(0.0f, -50.0f));
 		}
 	}
 }

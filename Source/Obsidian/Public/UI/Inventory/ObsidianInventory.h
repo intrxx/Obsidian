@@ -12,6 +12,7 @@ class UObsidianInventoryItemDefinition;
 class UObsidianInventorySlot;
 class UObsidianInventoryItemInstance;
 class UGridPanel;
+class USizeBox;
 class UOverlay;
 class UGridSlot;
 class UObsidianInventoryWidgetController;
@@ -26,9 +27,20 @@ class OBSIDIAN_API UObsidianInventory : public UObsidianMainOverlayWidgetBase
 
 public:
 	UObsidianInventory();
-	
+
+	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void HandleWidgetControllerSet() override;
+
+	float GetInventoryWidth() const
+	{
+		return RootSizeBoxWidth;
+	}
+
+	float GetInventoryHeight() const
+	{
+		return RootSizeBoxHeight;
+	}
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -48,6 +60,9 @@ private:
 	void OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition, const bool bShiftDown);
 	
 private:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<USizeBox> Root_SizeBox;
+	
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
 
@@ -62,6 +77,14 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	int32 InventoryGridHeight = 5;
+
+	/** Essentially, height component of inventory size. Use this instead of directly setting it on SizeBox. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	float RootSizeBoxHeight = 920.0f;
+
+	/** Essentially, width component of inventory size. Use this instead of directly setting it on SizeBox. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	float RootSizeBoxWidth = 820.0f;
 	
 	int32 InventoryGridSize;
 	TMap<FVector2D, UObsidianInventorySlot*> InventoryLocationToSlotMap;
