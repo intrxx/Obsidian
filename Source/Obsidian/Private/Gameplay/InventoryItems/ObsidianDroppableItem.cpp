@@ -50,7 +50,8 @@ void AObsidianDroppableItem::BeginPlay()
 	{
 		return;
 	}
-	
+
+	checkf(ItemWorldNameClass, TEXT("ItemWorldNameClass is invalid, please make sure it is set in ObsidianDroppableItem instance."));
 	ItemWorldName = CreateWidget<UObsidianItemWorldName>(World, ItemWorldNameClass);
 	ItemWorldName->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
 	ItemWorldName->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);

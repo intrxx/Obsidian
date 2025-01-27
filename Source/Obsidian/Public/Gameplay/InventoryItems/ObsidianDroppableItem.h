@@ -38,6 +38,7 @@ protected:
 
 	UFUNCTION()
 	void HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed);
+	
 	void OnItemMouseHover(const bool bMouseEnter);
 	void OnItemMouseButtonDown(const bool bLeftControlDown);
 

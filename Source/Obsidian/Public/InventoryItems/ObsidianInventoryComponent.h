@@ -204,10 +204,18 @@ private:
 	
 private:
 	friend UObsidianInventoryWidgetController;
-	
+
+	/**
+	 * Actual array of items which is FFastArraySerializer.
+	 * It also contains Map which maps Grid Vector2D location to actual Item Instance in the inventory.
+	 */
 	UPROPERTY(Replicated)
 	FObsidianInventoryGrid InventoryGrid;
 
+	/**
+	 * Map that represents whole Inventory Grid with taken fields.
+	 * If a Given Vector2D location has a true value associated with it, the field is treated as taken.
+	 */
 	UPROPERTY()
 	TMap<FVector2D, bool> InventoryStateMap;
 
@@ -216,6 +224,7 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
 	int32 InventoryGridHeight = 5;
-	
+
+	/** Grid size of the inventory, calculated (InventoryGridWidth * InventoryGridHeight). */
 	int32 InventoryGridSize = 0;
 };
