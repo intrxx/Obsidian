@@ -228,9 +228,12 @@ void UObsidianHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag
 void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputActionValue)
 {
 	APawn* Pawn = GetPawn<APawn>();
-	AController* Controller = Pawn ? Pawn->GetController() : nullptr;
+	if(Pawn == nullptr)
+	{
+		return;
+	}
 	
-	if(Controller)
+	if(const AController* Controller = Pawn->GetController())
 	{
 		bAutoRunning = false;
 		
@@ -253,7 +256,7 @@ void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputAc
 
 void UObsidianHeroComponent::Input_MoveStartedMouse()
 {
-	if(bCursorOverUI)
+	if(CanMoveMouse() == false)
 	{
 		return;
 	}
@@ -263,7 +266,7 @@ void UObsidianHeroComponent::Input_MoveStartedMouse()
 
 void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 {
-	if(bCursorOverUI)
+	if(CanMoveMouse() == false)
 	{
 		return;
 	}
@@ -284,8 +287,12 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 
 void UObsidianHeroComponent::Input_MoveReleasedMouse()
 {
-	if(bCursorOverUI)
+	if(CanMoveMouse() == false)
 	{
+		if(bJustDroppedItem) // If we just dropped item clicking in the world, reset the JustDroppedItem variable so we can move again.
+		{
+			bJustDroppedItem = false;
+		}
 		return;
 	}
 	
@@ -385,6 +392,7 @@ bool UObsidianHeroComponent::HandleDroppingItem()
 	Item->FinishSpawning(ItemSpawnTransform);
 	StopDragging();
 
+	bJustDroppedItem = true;
 	return true;
 }
 
@@ -399,12 +407,22 @@ AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 
 void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
 {
+	const UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		return;
+	}
+	
 	DraggedItem = InDraggedItem;
 	bDragItem = true;
 
-	GetWorld()->GetTimerManager().SetTimerForNextTick([this]()
+	TWeakObjectPtr<UObsidianHeroComponent> WeakThis(this);
+	World->GetTimerManager().SetTimerForNextTick([WeakThis]()
 	{
-		bItemAvailableForDrop = true;
+		if(WeakThis.IsValid())
+		{
+			WeakThis->bItemAvailableForDrop = true;
+		}
 	});
 }
 
@@ -437,6 +455,11 @@ void UObsidianHeroComponent::DragItem()
 bool UObsidianHeroComponent::CanDropItem() const
 {
 	return !bCursorOverUI && IsDraggingAnItem() && bItemAvailableForDrop;
+}
+
+bool UObsidianHeroComponent::CanMoveMouse() const
+{
+	return !CanDropItem() && !bJustDroppedItem;
 }
 
 

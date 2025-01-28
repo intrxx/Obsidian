@@ -2,7 +2,6 @@
 
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
-
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
@@ -423,14 +422,14 @@ void UObsidianMainOverlay::MoveDroppedItemDescOverlay(const bool bInventoryOpen)
 		const float InventoryWidth = Inventory->GetInventoryWidth();
 		if(UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DroppedItemDesc_Overlay))
 		{
-			CanvasSlot->SetPosition(FVector2D(-InventoryWidth, -50.0f));
+			CanvasSlot->SetPosition(FVector2D(-InventoryWidth, -50.0f)); //TODO Hard coded for now, kinda feeling the need to change it
 		}
 	}
 	else
 	{
 		if(UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DroppedItemDesc_Overlay))
 		{
-			CanvasSlot->SetPosition(FVector2D(0.0f, -50.0f));
+			CanvasSlot->SetPosition(FVector2D(0.0f, -50.0f)); //TODO Hard coded for now, kinda feeling the need to change it
 		}
 	}
 }

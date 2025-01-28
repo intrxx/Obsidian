@@ -91,6 +91,8 @@ protected:
 	TObjectPtr<USplineComponent> AutoRunSplineComp;
 
 private:
+	bool CanMoveMouse() const;
+	
 	void AutoRun();
 	void CursorTrace();
 	void DragItem();
@@ -114,6 +116,7 @@ private:
 	TObjectPtr<UObsidianDraggedItem> DraggedItem;
 	bool bDragItem = false;
 	bool bItemAvailableForDrop = false;
+	bool bJustDroppedItem = false;
 	
 	bool bCursorOverUI = false;
 };
