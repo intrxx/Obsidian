@@ -21,8 +21,6 @@ void UObsidianHeroAttributeSet::PreAttributeChange(const FGameplayAttribute& Att
 
 void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
 	/**
 	 * Character
 	 */
@@ -62,6 +60,8 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxHitBlockChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, SpellBlockChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxSpellBlockChance, COND_None, REPNOTIFY_Always);
+
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
 void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)

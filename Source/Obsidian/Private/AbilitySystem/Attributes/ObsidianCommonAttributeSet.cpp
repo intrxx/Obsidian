@@ -81,8 +81,13 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, PhysicalDamageMultiplier, COND_None, REPNOTIFY_Always);
 	
 	// Base Damage Attributes
-	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, BaseDamage, COND_OwnerOnly, REPNOTIFY_Always);
 
+#if WITH_EDITOR // It fixes a crash with Abilities Gameplay Debugger, need more investigation why exactly
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, BaseDamage, COND_None, REPNOTIFY_Always);
+#else
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, BaseDamage, COND_OwnerOnly, REPNOTIFY_Always);
+#endif
+	
 	// Character
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MovementSpeed, COND_None, REPNOTIFY_Always);
 }
