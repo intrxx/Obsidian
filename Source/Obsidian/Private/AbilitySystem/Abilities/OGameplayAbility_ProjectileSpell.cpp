@@ -6,7 +6,7 @@
 #include "AbilitySystemComponent.h"
 #include "Combat/ObsidianCombatInterface.h"
 #include "Combat/Projectile/ObsidianProjectile.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianMacros.h"
 
 UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell()

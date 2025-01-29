@@ -4,7 +4,7 @@
 #include "Core/ObsidianBlueprintFunctionLibrary.h"
 #include "Engine/Console.h"
 #include "Kismet/GameplayStatics.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 bool UObsidianBlueprintFunctionLibrary::IsActorOfClass(const AActor* ActorToCheck, UClass* ActorClass)
 {

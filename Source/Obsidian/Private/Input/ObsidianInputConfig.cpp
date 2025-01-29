@@ -2,7 +2,7 @@
 
 
 #include "Input/ObsidianInputConfig.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor

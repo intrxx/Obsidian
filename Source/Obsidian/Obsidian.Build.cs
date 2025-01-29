@@ -22,7 +22,8 @@ public class Obsidian : ModuleRules
 				"GameplayTasks",
 				"CommonUI",
 				"MotionWarping",
-				"AIModule"
+				"AIModule",
+				"GameplayDebugger"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
@@ -43,5 +44,7 @@ public class Obsidian : ModuleRules
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
+		
+		SetupGameplayDebuggerSupport(Target);
 	}
 }

@@ -6,7 +6,7 @@
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Engine/CurveTable.h"
 #include "Combat/ObsidianCombatInterface.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 struct SObsidian_MaxHealthStatics
 {

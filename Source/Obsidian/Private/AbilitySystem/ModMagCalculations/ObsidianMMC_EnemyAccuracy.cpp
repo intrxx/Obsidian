@@ -3,7 +3,7 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_EnemyAccuracy.h"
 #include "Combat/ObsidianCombatInterface.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 float UObsidianMMC_EnemyAccuracy::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {

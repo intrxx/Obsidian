@@ -7,7 +7,7 @@
 #include "AIController.h"
 #include "AI/ObsidianEnemyInterface.h"
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 UObsidianBTTask_UseGameplayAbility::UObsidianBTTask_UseGameplayAbility()
 {

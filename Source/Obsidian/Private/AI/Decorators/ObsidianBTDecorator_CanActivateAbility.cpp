@@ -9,7 +9,7 @@
 #include "Abilities/GameplayAbility.h"
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "Core/ObsidianAbilitySystemFunctionLibrary.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 UObsidianBTDecorator_CanActivateAbility::UObsidianBTDecorator_CanActivateAbility()
 {

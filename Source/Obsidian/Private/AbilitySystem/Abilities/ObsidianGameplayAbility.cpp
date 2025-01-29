@@ -9,7 +9,7 @@
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianGameplayAbility::UObsidianGameplayAbility(const FObjectInitializer& ObjectInitializer)

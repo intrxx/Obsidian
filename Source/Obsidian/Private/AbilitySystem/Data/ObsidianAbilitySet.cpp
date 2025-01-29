@@ -4,7 +4,7 @@
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor

@@ -5,7 +5,7 @@
 #include "Engine/CurveTable.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Combat/ObsidianCombatInterface.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 struct SObsidian_MaxManaStatics
 {

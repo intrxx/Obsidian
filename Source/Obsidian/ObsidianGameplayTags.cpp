@@ -2,7 +2,7 @@
 
 #include "ObsidianGameplayTags.h"
 #include "GameplayTagsManager.h"
-#include "Obsidian.h"
+#include "ObsidianGameModule.h"
 
 namespace ObsidianGameplayTags
 {

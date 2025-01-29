@@ -4,7 +4,7 @@
 #include "Animation/Notifies/ObsidianAdvancedAttackNotify.h"
 
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                                 float TotalDuration, const FAnimNotifyEventReference& EventReference)

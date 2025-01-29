@@ -3,7 +3,7 @@
 
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "CommonTextBlock.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 
 void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)

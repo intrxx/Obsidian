@@ -4,7 +4,7 @@
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Combat/ObsidianCombatInterface.h"
-#include "Obsidian/Obsidian.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 float UObsidianMMC_MaxSpecialResource::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
