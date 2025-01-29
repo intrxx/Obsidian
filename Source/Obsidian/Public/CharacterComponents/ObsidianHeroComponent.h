@@ -40,7 +40,7 @@ public:
 	void DragItem(UObsidianDraggedItem* InDraggedItem);
 	void StopDragging();
 	
-	void SetDraggedItemClass(TSubclassOf<AObsidianDroppableItem> InDroppableItemClass)
+	void SetDraggedItemClass(const TSubclassOf<AObsidianDroppableItem>& InDroppableItemClass)
 	{
 		DroppableItemClass = InDroppableItemClass;
 	};
@@ -95,12 +95,13 @@ private:
 	
 	void AutoRun();
 	void CursorTrace();
-	void DragItem();
+	void DragItem() const;
 
 	bool CanDropItem() const;
 	bool HandleDroppingItem();
 	
 private:
+	UPROPERTY()
 	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;
 	
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
@@ -113,7 +114,9 @@ private:
 	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
 
+	UPROPERTY()
 	TObjectPtr<UObsidianDraggedItem> DraggedItem;
+	
 	bool bDragItem = false;
 	bool bItemAvailableForDrop = false;
 	bool bJustDroppedItem = false;

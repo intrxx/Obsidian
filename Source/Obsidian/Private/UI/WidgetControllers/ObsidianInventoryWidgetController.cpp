@@ -271,7 +271,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	}
 
 	RemoveItemUIElements();
-	
+
+	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
 	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
 	const FVector2D SliderSize = ActiveUnstackSlider->GetSizeBoxSize();
@@ -312,7 +313,8 @@ void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D&
 	RemoveItemDescription();
 	
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
-	
+
+	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 
@@ -360,7 +362,8 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 	}
 
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatForInstance(Instance);
-	
+
+	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
@@ -390,7 +393,8 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 	}
 	
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsForItemDefinition(ItemDef, CurrentItemStacks);
-	
+
+	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
@@ -402,7 +406,8 @@ void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPositio
 {
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceAtLocation(SlotPosition);
 	RemoveItemWidget(SlotPosition);
-	
+
+	checkf(DraggedItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::PickupItem, fill it in ObsidianInventoryWidgetController instance."));
 	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
 	DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
 	DraggedItem->AddToViewport();
@@ -436,6 +441,7 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	const int32 CurrentOldInstanceStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	ItemWidget->OverrideCurrentStackCount(CurrentOldInstanceStacks);
 
+	checkf(DraggedItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleTakingOutStacks, fill it in ObsidianInventoryWidgetController instance."));
 	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
 	DraggedItem->InitializeItemWidgetWithItemInstance(NewInstance);
 	DraggedItem->AddToViewport();

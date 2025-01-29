@@ -50,6 +50,7 @@ void UObsidianInventory::SetupGrid()
 	for(int32 i = 0; i < InventoryGridSize; i++)
 	{
 		const FVector2D SlotPosition = FVector2D(GridX, GridY);
+		checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::SetupGrid, fill it in ObsidianInventory instance."));
 		UObsidianInventorySlot* InventorySlot = CreateWidget<UObsidianInventorySlot>(this, InventorySlotClass);
 		InventorySlot->SetSlotPosition(SlotPosition);
 		InventorySlot->OnHoverOverSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHover);
@@ -77,6 +78,7 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 	const FVector2D DesiredPosition = ItemVisuals.DesiredPosition;
 	const FVector2D GridSpan = ItemVisuals.GridSpan;
 	
+	checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemVisuals.ItemImage, ItemVisuals.StackCount);
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);

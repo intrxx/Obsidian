@@ -69,6 +69,9 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 	if(!CharacterStatus)
 	{
 		UOCharacterStatusWidgetController* CharacterStatusWidgetController = UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this);
+		check(CharacterStatusWidgetController);
+		
+		checkf(CharacterStatusClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::ToggleCharacterStatus, fill it in ObsidianMainOverlay instance."));
 		CharacterStatus = CreateWidget<UObsidianCharacterStatus>(this, CharacterStatusClass);
 		CharacterStatus->SetWidgetController(CharacterStatusWidgetController);
 		
@@ -102,6 +105,9 @@ void UObsidianMainOverlay::ToggleInventory()
 	if(!Inventory)
 	{
 		InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
+		check(InventoryWidgetController);
+
+		checkf(InventoryClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::ToggleInventory, fill it in ObsidianMainOverlay instance."));
 		Inventory = CreateWidget<UObsidianInventory>(this, InventoryClass);
 		Inventory->SetWidgetController(InventoryWidgetController);
 		
@@ -148,6 +154,7 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 {
 	if(!PassiveSkillTree)
 	{
+		checkf(PassiveSkillTreeClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::TogglePassiveSkillTree, fill it in ObsidianMainOverlay instance."));
 		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
 
 		PassiveSkillTree_Overlay->AddChildToOverlay(PassiveSkillTree);
@@ -223,7 +230,8 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 		StackingInfoWidgetsMap[Row.EffectTag]->UpdateStackingInfoWidget(StackingData.EffectStackCount);
 		return;
 	}
-	
+
+	checkf(Row.StackingDurationalEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleStackingUIData, fill it in ObsidianMainOverlay instance."));
 	UOStackingDurationalEffectInfo* StackingInfoWidget = CreateWidget<UOStackingDurationalEffectInfo>(OwningPlayerController, Row.StackingDurationalEffectWidget);
 	StackingInfoWidgetsMap.Add(Row.EffectTag, StackingInfoWidget);
 	
@@ -260,6 +268,7 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 {
 	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo)
 	{
+		checkf(Row.SimpleEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleUIData, fill it in ObsidianMainOverlay instance."));
 		UObsidianEffectInfoBase* InfoWidget = CreateWidget<UObsidianEffectInfoBase>(OwningPlayerController, Row.SimpleEffectWidget);
 		InfoWidget->InitEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectTag);
 		
@@ -286,6 +295,7 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 	
 	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo)
 	{
+		checkf(Row.DurationalEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleUIData, fill it in ObsidianMainOverlay instance."));
 		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
 		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
 
@@ -320,6 +330,7 @@ void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDi
 {
 	if(bDisplayBar)
 	{
+		checkf(RegularEnemyOverlayHealthBarClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleRegularOverlayBar, fill it in ObsidianMainOverlay instance."));
 		RegularEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayEnemyBar>(OwningPlayerController, RegularEnemyOverlayHealthBarClass);
 		
 		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(TargetActor);
@@ -342,6 +353,7 @@ void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDispl
 {
 	if(bDisplayBar)
 	{
+		checkf(BossEnemyOverlayHealthBarClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleBossOverlayBar, fill it in ObsidianMainOverlay instance."));
 		BossEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayBossEnemyBar>(OwningPlayerController, BossEnemyOverlayHealthBarClass);
 		
 		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(TargetActor);

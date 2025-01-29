@@ -317,6 +317,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown) con
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
+			checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in AObsidianDroppableItem::PickupItemInstance please fill it on ObsidianDroppableItem Instance."));
 			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
 			DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
 			DraggedItem->AddToViewport();
@@ -378,6 +379,7 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
+			checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in AObsidianDroppableItem::PickupItemInstance please fill it on ObsidianDroppableItem Instance."));
 			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
 			DraggedItem->InitializeItemWidgetWithItemDef(ItemDef, StackCount);
 			DraggedItem->AddToViewport();

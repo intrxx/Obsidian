@@ -33,7 +33,8 @@ void UObsidianGameTabButton::OnTabButtonHovered()
 	{
 		return;
 	}
-	
+
+	checkf(TabToolTipWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianGameTabButton::OnTabButtonHovered, fill it in UObsidianGameTabButton instance."));
 	TabToolTipWidget = CreateWidget<UObsidianGameTabTooltip>(this, TabToolTipWidgetClass);
 	
 	const FVector2D DesiredPosition = TabToolTipWidget->GetDesiredPosition();

@@ -62,7 +62,6 @@ void UOCharacterStatusAttributeRow_WithToolTip::OnToolTipButtonHovered()
 	if(!AttributeToolTipWidget)
 	{
 		checkf(AttributeToolTipWidgetClass, TEXT("Tried to create widget without valid widget class in OCharacterStatusAttributeRow_WithToolTip"));
-
 		AttributeToolTipWidget = CreateWidget<UObsidianAttributeToolTip>(this, AttributeToolTipWidgetClass);
 		AttributeToolTipWidget->InitAttributeToolTip(AttributeDescription);
 

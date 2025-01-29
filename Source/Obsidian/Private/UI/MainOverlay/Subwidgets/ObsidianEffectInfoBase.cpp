@@ -40,8 +40,7 @@ void UObsidianEffectInfoBase::RemoveAuraInfoWidget()
 
 void UObsidianEffectInfoBase::OnEffectHovered()
 {
-	checkf(EffectDescWidgetClass, TEXT("Tried to create widget without valid widget class in ObsidianEffectInfo"));
-
+	checkf(EffectDescWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianEffectInfoBase::OnEffectHovered, fill it in ObsidianEffectInfo"));
 	EffectDescWidget = CreateWidget<UObsidianEffectDescription>(this, EffectDescWidgetClass);
 	EffectDescWidget->InitEffectDesc(EffectName, EffectDesc);
 	

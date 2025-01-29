@@ -1,6 +1,5 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "Characters/Player/ObsidianLocalPlayer.h"
@@ -435,7 +434,7 @@ void UObsidianHeroComponent::StopDragging()
 	bItemAvailableForDrop = false;
 }
 
-void UObsidianHeroComponent::DragItem()
+void UObsidianHeroComponent::DragItem() const
 {
 	const APlayerController* PC = GetController<APlayerController>();
 	if(PC == nullptr)
