@@ -54,6 +54,11 @@ void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInsta
 
 void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap)
 {
+	if(IsInventoryOpened() == false)
+	{
+		return;
+	}
+	
 	for(TTuple<FVector2D, int32> LocationToStack : LocationToStacksMap)
 	{
 		UObsidianItem* InventoryItem = AddedItemWidgetMap[LocationToStack.Key];
