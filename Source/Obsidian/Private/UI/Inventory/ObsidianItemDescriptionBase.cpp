@@ -15,9 +15,21 @@ void UObsidianItemDescriptionBase::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats)
+void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats, const bool bDisplayItemImage)
 {
 	SetItemDisplayName(ItemStats.GetDisplayName());
+
+	if(bDisplayItemImage && ItemStats.ContainsItemImage())
+	{
+		if(UTexture2D* ItemTexture = ItemStats.GetItemImage())
+		{
+			Item_Image->SetBrushFromTexture(ItemTexture);
+		}
+	}
+	else
+	{
+		Item_Image->SetVisibility(ESlateVisibility::Collapsed);
+	}
 	
 	if(ItemStats.ContainsStacks())
 	{

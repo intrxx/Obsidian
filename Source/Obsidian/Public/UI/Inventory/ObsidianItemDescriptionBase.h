@@ -20,7 +20,7 @@ class OBSIDIAN_API UObsidianItemDescriptionBase : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats);
+	void InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats, const bool bDisplayItemImage = false);
 	
 	void SetItemDisplayName(const FText& DisplayName);
 	void SetItemDescription(const FText& ItemDescription);
@@ -35,6 +35,9 @@ protected:
 	virtual void NativeConstruct() override;
 
 protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UImage> Item_Image;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> ItemName_Image;
 	

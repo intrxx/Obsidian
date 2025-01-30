@@ -365,7 +365,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
-	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats, true);
 	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
 
 	return ActiveItemDescription;
@@ -396,7 +396,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
-	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats, true);
 	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
 
 	return ActiveItemDescription;

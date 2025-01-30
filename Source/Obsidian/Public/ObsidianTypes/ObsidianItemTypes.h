@@ -97,6 +97,11 @@ struct FObsidianItemStats
 	GENERATED_BODY()
 
 public:
+	bool ContainsItemImage() const
+	{
+		return bContainsItemImage;
+	}
+	
 	/** Checks if Item Stats contain Item Display Name. This should technically be present on every Item Stats. */
 	bool ContainsDisplayName() const
 	{
@@ -121,6 +126,11 @@ public:
 		return bContainsStacks;
 	}
 
+	UTexture2D* GetItemImage() const
+	{
+		return ItemImage;
+	}
+
 	FText GetDisplayName() const
 	{
 		return DisplayName;
@@ -139,6 +149,12 @@ public:
 	FObsidianStacksUIData GetItemStacks() const
 	{
 		return StacksData;
+	}
+
+	void SetItemImage(UTexture2D* InItemImage)
+	{
+		bContainsItemImage = true;
+		ItemImage = InItemImage;
 	}
 	
 	void SetDisplayName(const FText& InDisplayName)
@@ -178,6 +194,9 @@ public:
 	}
 	
 private:
+	UPROPERTY()
+	TObjectPtr<UTexture2D> ItemImage;
+	
 	/**
 	 * Item Descriptors.
 	 */
@@ -201,7 +220,8 @@ private:
 	/**
 	 * Contains booleans.
 	 */
-	
+
+	bool bContainsItemImage = false;
 	bool bContainsDisplayName = false;
 	bool bContainsDescription = false;
 	bool bContainsAdditionalDescription = false;
