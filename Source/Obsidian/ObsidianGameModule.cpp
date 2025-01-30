@@ -16,12 +16,20 @@ IMPLEMENT_PRIMARY_GAME_MODULE(FObsidianGameModule, Obsidian, "Obsidian");
 void FObsidianGameModule::StartupModule()
 {
 #if WITH_GAMEPLAY_DEBUGGER
-	IGameplayDebugger& GameplayDebugger = IGameplayDebugger::Get();
-	GameplayDebugger.RegisterCategory("Inventory", IGameplayDebugger::FOnGetCategory::CreateStatic(&FGameplayDebuggerCategory_InventoryItems::MakeInstance));
-	GameplayDebugger.NotifyCategoriesChanged();
+	IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
+	GameplayDebuggerModule.RegisterCategory("Inventory", IGameplayDebugger::FOnGetCategory::CreateStatic(&FGameplayDebuggerCategory_InventoryItems::MakeInstance));
+	GameplayDebuggerModule.NotifyCategoriesChanged();
 #endif
 }
 
 void FObsidianGameModule::ShutdownModule()
 {
+#if WITH_GAMEPLAY_DEBUGGER
+	if(IGameplayDebugger::IsAvailable())
+	{
+		IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
+		GameplayDebuggerModule.UnregisterCategory("Inventory");
+		GameplayDebuggerModule.NotifyCategoriesChanged();
+	}
+#endif
 }
