@@ -30,8 +30,9 @@ public:
 
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
 	virtual void HandleWidgetControllerSet() override;
-
+	
 	float GetInventoryWidth() const
 	{
 		return RootSizeBoxWidth;

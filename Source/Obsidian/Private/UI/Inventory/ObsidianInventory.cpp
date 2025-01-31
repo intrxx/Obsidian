@@ -29,6 +29,15 @@ void UObsidianInventory::NativeConstruct()
 	SetupGrid();
 }
 
+void UObsidianInventory::NativeDestruct()
+{
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->RemoveItemUIElements();
+	}
+	Super::NativeDestruct();
+}
+
 void UObsidianInventory::HandleWidgetControllerSet()
 {
 	InventoryWidgetController = Cast<UObsidianInventoryWidgetController>(WidgetController);

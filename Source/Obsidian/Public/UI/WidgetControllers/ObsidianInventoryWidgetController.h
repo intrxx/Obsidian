@@ -84,6 +84,8 @@ public:
 	void HandleHoveringOverItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem(const FVector2D& SlotPosition);
 
+	void RemoveItemUIElements();
+
 	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
 	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);
 	
@@ -114,8 +116,7 @@ private:
 	void PickupItem(const FVector2D& SlotPosition);
 
 	void HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake);
-
-	void RemoveItemUIElements();
+	
 	void RemoveUnstackSlider();
 	void RemoveItemDescription();
 
