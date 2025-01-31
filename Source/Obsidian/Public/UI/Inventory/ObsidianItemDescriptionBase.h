@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemDescriptionBase.generated.h"
 
+class UVerticalBox;
 class UHorizontalBox;
 struct FObsidianItemStats;
 class UCommonTextBlock;
@@ -35,6 +36,9 @@ protected:
 	virtual void NativeConstruct() override;
 
 protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UVerticalBox> Description_VerticalBox;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
 	

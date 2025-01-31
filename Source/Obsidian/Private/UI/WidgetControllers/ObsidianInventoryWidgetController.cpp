@@ -61,6 +61,7 @@ void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector
 	
 	for(TTuple<FVector2D, int32> LocationToStack : LocationToStacksMap)
 	{
+		checkf(AddedItemWidgetMap.Contains(LocationToStack.Key), TEXT("There is a missmatch in visual inventory state and actual items location in Inventory Component."));
 		UObsidianItem* InventoryItem = AddedItemWidgetMap[LocationToStack.Key];
 		if(!IsValid(InventoryItem))
 		{
@@ -183,8 +184,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef()) // We carry item def
 		{
 			const int32 ItemStackCount = DraggedItem->GetItemStacks();
-			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-			if(DefaultObject && DefaultObject->IsStackable())
+			if(const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject(); DefaultObject->IsStackable())
 			{
 				FObsidianAddingStacksResult AddingStacksResult;
 				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult))
@@ -222,9 +222,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	{
 		UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 		check(DraggedItem);
-
-		UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance();
-		if(DraggedInstance && DraggedInstance->IsStackable())
+		
+		if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance(); DraggedInstance->IsStackable())
 		{
 			FObsidianAddingStacksResult AddingStacksResult;
 			if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult, 1))
@@ -242,8 +241,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 		
 		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef())
 		{
-			UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-			if(DefaultObject && DefaultObject->IsStackable())
+			if(const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject(); DefaultObject->IsStackable())
 			{
 				const int32 ItemStackCount = DraggedItem->GetItemStacks();
 				
@@ -322,16 +320,24 @@ void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D&
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
-
-	FVector2d ViewportPosition = FVector2D::Zero();
-	float LocationX = 0.0f;
-	float LocationY = 0.0f;
-	if(PlayerController->GetMousePosition(LocationX, LocationY))
-	{
-		ViewportPosition = FVector2D(LocationX, LocationY);
-	}
-	ActiveItemDescription->SetPositionInViewport(ViewportPosition);
 	ActiveItemDescription->AddToViewport();
+	ActiveItemDescription->ForceLayoutPrepass();
+	
+	const FVector2D DescriptionSize = ActiveItemDescription->GetDesiredSize();
+	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
+	FVector2D DescriptionViewportPosition = FVector2D::Zero();
+	if(UWorld* World = GetWorld())
+	{
+		const FVector2D LocalSize = CachedGeometry.GetLocalSize();
+
+		FVector2D PixelPosition = FVector2D::Zero();
+		FVector2D ViewportPosition = FVector2D::Zero();
+		USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), PixelPosition, ViewportPosition);
+
+		DescriptionViewportPosition = FVector2D((ViewportPosition.X - (DescriptionSize.X / 2)) + (LocalSize.X / 2), (ViewportPosition.Y - DescriptionSize.Y));
+	}
+	
+	ActiveItemDescription->SetPositionInViewport(DescriptionViewportPosition);
 	bDescriptionActive = true;
 }
 

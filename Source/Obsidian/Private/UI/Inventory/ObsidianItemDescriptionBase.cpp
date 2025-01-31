@@ -6,6 +6,9 @@
 #include "CommonTextBlock.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
+#include "Components/Overlay.h"
+#include "Components/VerticalBox.h"
+#include "Obsidian/ObsidianGamemodule.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianItemDescriptionBase::NativeConstruct()
@@ -102,5 +105,6 @@ void UObsidianItemDescriptionBase::DestroyDescriptionWidget()
 {
 	RemoveFromParent();
 }
+
 
 
