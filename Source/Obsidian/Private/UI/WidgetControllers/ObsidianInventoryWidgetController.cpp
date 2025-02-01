@@ -4,9 +4,12 @@
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/Inventory/ObsidianItemDescriptionBase.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Core/ObsidianBlueprintFunctionLibrary.h"
+#include "Core/ObsidianUIFunctionLibrary.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
@@ -278,21 +281,27 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
 	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
-	const FVector2D SliderSize = ActiveUnstackSlider->GetSizeBoxSize();
-	const float TopDesiredOffset = ActiveUnstackSlider->GetTopDesiredOffset();
-
+	
 	FVector2D UnstackSliderViewportPosition = FVector2D::Zero();
-
-	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
 	if(UWorld* World = GetWorld())
 	{
-		const FVector2D LocalSize = CachedGeometry.GetLocalSize();
+		const float TopDesiredOffset = ActiveUnstackSlider->GetTopDesiredOffset();
+		FVector2D SliderSize = ActiveUnstackSlider->GetSizeBoxSize();
+		
+		ItemWidget->ForceLayoutPrepass();
+		const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
+		FVector2D ItemLocalSize = CachedGeometry.GetLocalSize();
+
+		// Adjusting sizes based on viewport scale
+		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
+		SliderSize *= DPIScale; 
+		ItemLocalSize *= DPIScale;
 
 		FVector2D PixelPosition = FVector2D::Zero();
 		FVector2D ViewportPosition = FVector2D::Zero();
 		USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), PixelPosition, ViewportPosition);
 
-		UnstackSliderViewportPosition = FVector2D((ViewportPosition.X - (SliderSize.X / 2)) + (LocalSize.X / 2), (ViewportPosition.Y - SliderSize.Y - TopDesiredOffset));
+		UnstackSliderViewportPosition = FVector2D((PixelPosition.X - (SliderSize.X / 2)) + (ItemLocalSize.X / 2), (PixelPosition.Y - SliderSize.Y - TopDesiredOffset));
 	}
 	
 	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
@@ -321,20 +330,33 @@ void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D&
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 	ActiveItemDescription->AddToViewport();
-	ActiveItemDescription->ForceLayoutPrepass();
 	
-	const FVector2D DescriptionSize = ActiveItemDescription->GetDesiredSize();
-	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
 	FVector2D DescriptionViewportPosition = FVector2D::Zero();
 	if(UWorld* World = GetWorld())
 	{
-		const FVector2D LocalSize = CachedGeometry.GetLocalSize();
-
+		ActiveItemDescription->ForceLayoutPrepass();
+		FVector2D DescriptionSize = ActiveItemDescription->GetDesiredSize();
+		
+		ItemWidget->ForceLayoutPrepass();
+		const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
+		FVector2D ItemLocalSize = CachedGeometry.GetLocalSize();
+		
+		// Adjusting sizes based on viewport scale
+		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
+		ItemLocalSize *= DPIScale; 
+		DescriptionSize *= DPIScale;
+		
 		FVector2D PixelPosition = FVector2D::Zero();
 		FVector2D ViewportPosition = FVector2D::Zero();
 		USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), PixelPosition, ViewportPosition);
-
-		DescriptionViewportPosition = FVector2D((ViewportPosition.X - (DescriptionSize.X / 2)) + (LocalSize.X / 2), (ViewportPosition.Y - DescriptionSize.Y));
+		
+		DescriptionViewportPosition = FVector2D((PixelPosition.X - (DescriptionSize.X / 2)) + (ItemLocalSize.X / 2), (PixelPosition.Y - DescriptionSize.Y));
+		/*
+		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, DescriptionSize, TEXT("Description Size: "), NAME_Name, 5.0f, FLinearColor::Red);
+		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, ViewportSize, TEXT("Viewport Size: "));
+		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, DescriptionViewportPosition, TEXT("Item Widget Viewport Position: "));
+		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, PixelPosition, TEXT("Item Widget Viewport Pixel Position: "));
+		*/
 	}
 	
 	ActiveItemDescription->SetPositionInViewport(DescriptionViewportPosition);

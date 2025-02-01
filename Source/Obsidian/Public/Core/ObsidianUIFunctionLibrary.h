@@ -30,6 +30,8 @@ public:
 
 	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
 	static UObsidianInventoryWidgetController* GetInventoryWidgetController(const UObject* WorldContextObject);
+
+	static FVector2D GetGameViewportSize();
 	
 	template<typename T>
 	static T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);

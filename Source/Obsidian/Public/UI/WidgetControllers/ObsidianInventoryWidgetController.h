@@ -121,7 +121,7 @@ private:
 	void RemoveItemDescription();
 
 	bool CanShowDescription() const;
-	
+
 private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 	TMap<FVector2D, bool> InventoryStateMap;

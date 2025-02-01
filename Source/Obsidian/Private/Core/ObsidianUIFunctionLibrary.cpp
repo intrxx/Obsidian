@@ -78,3 +78,18 @@ UObsidianInventoryWidgetController* UObsidianUIFunctionLibrary::GetInventoryWidg
 	return nullptr;
 }
 
+FVector2D UObsidianUIFunctionLibrary::GetGameViewportSize()
+{
+	FVector2D Result = FVector2D::Zero();
+	if(GEngine == nullptr)
+	{
+		return Result;
+	}
+	
+	if(const UGameViewportClient* GameViewport = GEngine->GameViewport)
+	{
+		GameViewport->GetViewportSize(/** OUT */ Result);
+	}
+	return Result;
+}
+
