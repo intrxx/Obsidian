@@ -28,6 +28,8 @@ public:
 	void InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
+
+	FVector2D GetItemSize() const;
 	
 public:
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;

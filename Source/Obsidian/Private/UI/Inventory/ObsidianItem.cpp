@@ -84,3 +84,8 @@ void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
+
+FVector2D UObsidianItem::GetItemSize() const
+{
+	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
+}

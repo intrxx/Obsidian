@@ -26,7 +26,6 @@ public:
 	void InitializeUnstackSlider(const int32 CurrentItemStacks);
 
 	FVector2D GetSizeBoxSize() const;
-	float GetTopDesiredOffset() const;
 
 	void DestroyUnstackSlider();
 
@@ -48,10 +47,6 @@ protected:
 	void UpdateStacksValues(float NewValue);
 	
 protected:
-	/** Offset from the top of the spawned above stackable item widget. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	float TopDesiredOffset = 5.0f;
-	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
 	

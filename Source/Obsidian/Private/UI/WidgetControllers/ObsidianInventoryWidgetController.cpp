@@ -8,8 +8,6 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Core/ObsidianBlueprintFunctionLibrary.h"
-#include "Core/ObsidianUIFunctionLibrary.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
@@ -281,29 +279,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
 	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
-	
-	FVector2D UnstackSliderViewportPosition = FVector2D::Zero();
-	if(UWorld* World = GetWorld())
-	{
-		const float TopDesiredOffset = ActiveUnstackSlider->GetTopDesiredOffset();
-		FVector2D SliderSize = ActiveUnstackSlider->GetSizeBoxSize();
-		
-		ItemWidget->ForceLayoutPrepass();
-		const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
-		FVector2D ItemLocalSize = CachedGeometry.GetLocalSize();
 
-		// Adjusting sizes based on viewport scale
-		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
-		SliderSize *= DPIScale; 
-		ItemLocalSize *= DPIScale;
-
-		FVector2D PixelPosition = FVector2D::Zero();
-		FVector2D ViewportPosition = FVector2D::Zero();
-		USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), PixelPosition, ViewportPosition);
-
-		UnstackSliderViewportPosition = FVector2D((PixelPosition.X - (SliderSize.X / 2)) + (ItemLocalSize.X / 2), (PixelPosition.Y - SliderSize.Y - TopDesiredOffset));
-	}
-	
+	const FVector2D UnstackSliderViewportPosition = CalculateUnstackSliderPosition(ItemWidget);
 	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
 	ActiveUnstackSlider->AddToViewport();
 	bUnstackSliderActive = true;
@@ -331,34 +308,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D&
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 	ActiveItemDescription->AddToViewport();
 	
-	FVector2D DescriptionViewportPosition = FVector2D::Zero();
-	if(UWorld* World = GetWorld())
-	{
-		ActiveItemDescription->ForceLayoutPrepass();
-		FVector2D DescriptionSize = ActiveItemDescription->GetDesiredSize();
-		
-		ItemWidget->ForceLayoutPrepass();
-		const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
-		FVector2D ItemLocalSize = CachedGeometry.GetLocalSize();
-		
-		// Adjusting sizes based on viewport scale
-		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
-		ItemLocalSize *= DPIScale; 
-		DescriptionSize *= DPIScale;
-		
-		FVector2D PixelPosition = FVector2D::Zero();
-		FVector2D ViewportPosition = FVector2D::Zero();
-		USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), PixelPosition, ViewportPosition);
-		
-		DescriptionViewportPosition = FVector2D((PixelPosition.X - (DescriptionSize.X / 2)) + (ItemLocalSize.X / 2), (PixelPosition.Y - DescriptionSize.Y));
-		/*
-		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, DescriptionSize, TEXT("Description Size: "), NAME_Name, 5.0f, FLinearColor::Red);
-		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, ViewportSize, TEXT("Viewport Size: "));
-		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, DescriptionViewportPosition, TEXT("Item Widget Viewport Position: "));
-		UObsidianBlueprintFunctionLibrary::PrintVector2D(this, PixelPosition, TEXT("Item Widget Viewport Pixel Position: "));
-		*/
-	}
-	
+	const FVector2D DescriptionViewportPosition = CalculateDescriptionPosition(ItemWidget);
 	ActiveItemDescription->SetPositionInViewport(DescriptionViewportPosition);
 	bDescriptionActive = true;
 }
@@ -598,4 +548,130 @@ void UObsidianInventoryWidgetController::RemoveItemWidget(const FVector2D& Locat
 		AddedItemWidgetMap[Location]->RemoveFromParent();
 		AddedItemWidgetMap.Remove(Location);
 	}
+}
+
+FVector2D UObsidianInventoryWidgetController::CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const
+{
+	UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Unstack Slider Position"));
+		return FVector2D::Zero();
+	}
+
+	if(ItemWidget == nullptr || ActiveUnstackSlider == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Unstack Slider Position"));
+		return FVector2D::Zero();
+	}
+	
+	FVector2D SliderSize = ActiveUnstackSlider->GetSizeBoxSize();
+		
+	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
+	FVector2D ItemLocalSize = ItemWidget->GetItemSize();
+
+	// Adjusting sizes based on viewport scale
+	const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
+	SliderSize *= DPIScale; 
+	ItemLocalSize *= DPIScale;
+
+	FVector2D ItemPixelPosition = FVector2D::Zero();
+	FVector2D ItemViewportPosition = FVector2D::Zero();
+	USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), ItemPixelPosition, ItemViewportPosition);
+
+	const FVector2D ViewportSize = UWidgetLayoutLibrary::GetViewportSize(World);
+	return GetItemUIElementPositionBoundByViewport(ViewportSize, ItemPixelPosition, ItemLocalSize, SliderSize);
+}
+
+FVector2D UObsidianInventoryWidgetController::CalculateDescriptionPosition(const UObsidianItem* ItemWidget) const
+{
+	FVector2D FinalPosition = FVector2D::Zero();
+	UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Description Position"));
+		return FinalPosition;
+	}
+
+	if(ItemWidget == nullptr || ActiveItemDescription == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Description Position"));
+		return FinalPosition;
+	}
+
+	// @HACK this is quite ugly, but without prepass the desired size is [0, 0], if the performance is the problem,
+	// I could delay the calculation for a frame and see how reliable it is to retrieve the sie information,
+	// Other system with delegates could be implemented to get the size reliably, but it just needs testing cuz if it's not bad I don't really care for now.
+	ActiveItemDescription->ForceLayoutPrepass();
+	FVector2D DescriptionSize = ActiveItemDescription->GetDesiredSize();
+		
+	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
+	FVector2D ItemLocalSize = ItemWidget->GetItemSize();
+		
+	// Adjusting sizes based on viewport scale
+	const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
+	ItemLocalSize *= DPIScale; 
+	DescriptionSize *= DPIScale;
+		
+	FVector2D ItemPixelPosition = FVector2D::Zero();
+	FVector2D ItemViewportPosition = FVector2D::Zero();
+	USlateBlueprintLibrary::LocalToViewport(World, CachedGeometry, FVector2D(0.f,0.f), ItemPixelPosition, ItemViewportPosition);
+	
+	const FVector2D ViewportSize = UWidgetLayoutLibrary::GetViewportSize(World);
+	return GetItemUIElementPositionBoundByViewport(ViewportSize, ItemPixelPosition, ItemLocalSize, DescriptionSize);
+}
+
+FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize,
+	const FVector2D& ItemPosition, const FVector2D& ItemSize, const FVector2D& UIElementSize) const
+{
+	FVector2D BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),
+										  (ItemPosition.Y - UIElementSize.Y));
+	
+	const bool bFitsLeft = BoundedPosition.X > 0.0f;
+	const bool bFitsRight = (BoundedPosition.X + UIElementSize.X) < ViewportSize.X;
+	const bool bFitsTop = (BoundedPosition.Y - UIElementSize.Y) > 0.0f;
+	
+	if(bFitsLeft && bFitsRight && bFitsTop) // We fit in the default position [top-middle]
+	{
+		return BoundedPosition;
+	}
+	
+	if(bFitsLeft && bFitsRight && bFitsTop == false)
+	{
+		BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),
+								    (ItemPosition.Y + ItemSize.Y));
+		
+		if((BoundedPosition.Y + UIElementSize.Y) < ViewportSize.Y) // Desc fit below [bottom-middle]
+		{
+			return BoundedPosition;
+		}
+	}
+	
+	if(bFitsRight == false)
+	{
+		BoundedPosition = FVector2D((ItemPosition.X - UIElementSize.X),
+									(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
+		
+		if(BoundedPosition.X > 0.0f) // Desc fit left [left-middle]
+		{
+			return BoundedPosition;
+		}
+	}
+	
+	if(bFitsLeft == false)
+	{
+		BoundedPosition = FVector2D((ItemPosition.X + ItemSize.X),
+									(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
+		
+		if((BoundedPosition.X + UIElementSize.X) < ViewportSize.X) // Desc Fit right [right-middle]
+		{
+			return BoundedPosition;
+		}
+	}
+	
+	// Falling back to the default not so happy position, could improve it later to fit the screen [middle-middle]
+	BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),
+								(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
+	
+	return BoundedPosition;
 }

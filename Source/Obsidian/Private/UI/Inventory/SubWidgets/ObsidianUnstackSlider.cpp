@@ -44,11 +44,6 @@ FVector2D UObsidianUnstackSlider::GetSizeBoxSize() const
 	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
 }
 
-float UObsidianUnstackSlider::GetTopDesiredOffset() const
-{
-	return TopDesiredOffset;
-}
-
 void UObsidianUnstackSlider::DestroyUnstackSlider()
 {
 	OnAcceptButtonPressedDelegate.Clear();

@@ -39,13 +39,27 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		const FObsidianStacksUIData StacksData = ItemStats.GetItemStacks();
 		SetStackCount(StacksData.CurrentItemStackCount, StacksData.MaxItemStackCount);
 	}
+	else
+	{
+		StacksContainer_HorizontalBox->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	
 	if(ItemStats.ContainsDescription())
 	{
 		SetItemDescription(ItemStats.GetDescription());
 	}
+	else
+	{
+		ItemDescription_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	
 	if(ItemStats.ContainsAdditionalDescription())
 	{
 		SetAdditionalItemDescription(ItemStats.GetAdditionalDescription());
+	}
+	else
+	{
+		AdditionalItemDescription_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 

@@ -122,6 +122,10 @@ private:
 
 	bool CanShowDescription() const;
 
+	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const;
+	FVector2D CalculateDescriptionPosition(const UObsidianItem* ItemWidget) const;
+	FVector2D GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize, const FVector2D& ItemPosition, const FVector2D& ItemSize, const FVector2D& UIElementSize) const;
+	
 private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 	TMap<FVector2D, bool> InventoryStateMap;

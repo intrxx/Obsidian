@@ -34,7 +34,7 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
-
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UVerticalBox> Description_VerticalBox;
