@@ -621,8 +621,7 @@ FVector2D UObsidianInventoryWidgetController::CalculateDescriptionPosition(const
 	return GetItemUIElementPositionBoundByViewport(ViewportSize, ItemPixelPosition, ItemLocalSize, DescriptionSize);
 }
 
-FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize,
-	const FVector2D& ItemPosition, const FVector2D& ItemSize, const FVector2D& UIElementSize) const
+FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize, const FVector2D& ItemPosition, const FVector2D& ItemSize, const FVector2D& UIElementSize) const
 {
 	FVector2D BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),
 										  (ItemPosition.Y - UIElementSize.Y));
@@ -638,9 +637,7 @@ FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByVie
 	
 	if(bFitsLeft && bFitsRight && bFitsTop == false)
 	{
-		BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),
-								    (ItemPosition.Y + ItemSize.Y));
-		
+		BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),(ItemPosition.Y + ItemSize.Y));
 		if((BoundedPosition.Y + UIElementSize.Y) < ViewportSize.Y) // Desc fit below [bottom-middle]
 		{
 			return BoundedPosition;
@@ -649,9 +646,7 @@ FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByVie
 	
 	if(bFitsRight == false)
 	{
-		BoundedPosition = FVector2D((ItemPosition.X - UIElementSize.X),
-									(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
-		
+		BoundedPosition = FVector2D((ItemPosition.X - UIElementSize.X),(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
 		if(BoundedPosition.X > 0.0f) // Desc fit left [left-middle]
 		{
 			return BoundedPosition;
@@ -660,18 +655,16 @@ FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByVie
 	
 	if(bFitsLeft == false)
 	{
-		BoundedPosition = FVector2D((ItemPosition.X + ItemSize.X),
-									(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
-		
+		BoundedPosition = FVector2D((ItemPosition.X + ItemSize.X),(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
 		if((BoundedPosition.X + UIElementSize.X) < ViewportSize.X) // Desc Fit right [right-middle]
 		{
 			return BoundedPosition;
 		}
 	}
 	
-	// Falling back to the default not so happy position, could improve it later to fit the screen [middle-middle]
-	BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),
-								(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
+	// Falling back to the default not so happy position which is most likely to fit if all above cases fail,
+	// could improve it later to fit the screen in every case but is not necessary now [middle-middle].
+	BoundedPosition = FVector2D((ItemPosition.X - (UIElementSize.X / 2)) + (ItemSize.X / 2),(ItemPosition.Y - (UIElementSize.Y / 2)) + (ItemSize.Y / 2));
 	
 	return BoundedPosition;
 }
