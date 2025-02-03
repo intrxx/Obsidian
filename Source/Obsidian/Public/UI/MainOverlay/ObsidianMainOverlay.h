@@ -83,16 +83,11 @@ protected:
 	virtual void PostHandleWidgetControllerSet() override;
 
 protected:
-	// This should be set in blueprint during initialization ;/ //
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|MainOverlay")
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianProgressGlobe_Health> HealthProgressGlobe;
-
-	// This should be set in blueprint during initialization ;/ //
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|MainOverlay")
-	TObjectPtr<UObsidianProgressGlobe_Mana> ManaProgressGlobe;
 	
-	UPROPERTY()
-	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianProgressGlobe_Mana> ManaProgressGlobe;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianOverlayGameTabsMenu> Overlay_GameTabsMenu;
@@ -114,6 +109,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> OverlayBossBars_Overlay;
+
+	UPROPERTY()
+	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
 
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;

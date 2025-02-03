@@ -8,6 +8,18 @@
 #include "UI/Components/ObsidianRadialProgressBar.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
+void UObsidianProgressGlobe_Health::HandleWidgetControllerSet()
+{
+	Super::HandleWidgetControllerSet();
+
+	MainOverlayWidgetController->OnHealthChangedDelegate.AddDynamic(this, &ThisClass::OnHealthChanged);
+	MainOverlayWidgetController->OnMaxHealthChangedDelegate.AddDynamic(this, &ThisClass::OnMaxHealthChanged);
+	MainOverlayWidgetController->OnEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::OnEnergyShieldChanged);
+	MainOverlayWidgetController->OnMaxEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::OnMaxEnergyShieldChanged);
+	MainOverlayWidgetController->OnStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::OnStaggerMeterChanged);
+	MainOverlayWidgetController->OnMaxStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::OnMaxStaggerMeterChanged);
+}
+
 void UObsidianProgressGlobe_Health::SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage) const
 {
 	if(Health_ProgressGlobe)
@@ -28,18 +40,6 @@ void UObsidianProgressGlobe_Health::ResetStyle() const
 		Style.FillImage = GlobeFillImage;
 		Health_ProgressGlobe->SetWidgetStyle(Style);
 	}
-}
-
-void UObsidianProgressGlobe_Health::HandleWidgetControllerSet()
-{
-	Super::HandleWidgetControllerSet();
-
-	MainOverlayWidgetController->OnHealthChangedDelegate.AddDynamic(this, &ThisClass::OnHealthChanged);
-	MainOverlayWidgetController->OnMaxHealthChangedDelegate.AddDynamic(this, &ThisClass::OnMaxHealthChanged);
-	MainOverlayWidgetController->OnEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::OnEnergyShieldChanged);
-	MainOverlayWidgetController->OnMaxEnergyShieldChangedDelegate.AddDynamic(this, &ThisClass::OnMaxEnergyShieldChanged);
-	MainOverlayWidgetController->OnStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::OnStaggerMeterChanged);
-	MainOverlayWidgetController->OnMaxStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::OnMaxStaggerMeterChanged);
 }
 
 void UObsidianProgressGlobe_Health::OnHealthChanged(float NewHealth)

@@ -42,6 +42,9 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 	check(OwningPlayerController);
 	const AActor* OwningActor = Cast<AActor>(OwningPlayerController->GetPawn());
 	HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+
+	HealthProgressGlobe->SetWidgetController(WidgetController);
+	ManaProgressGlobe->SetWidgetController(WidgetController);
 }
 
 void UObsidianMainOverlay::PostHandleWidgetControllerSet()
