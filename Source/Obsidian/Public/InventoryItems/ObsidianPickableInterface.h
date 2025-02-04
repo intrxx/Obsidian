@@ -21,6 +21,8 @@ public:
 		: ItemDef(InItemDef)
 		, StackCount(InStackCount)
 	{};
+
+	bool IsValid() const;
 	
 public:
 	UPROPERTY(EditAnywhere)
@@ -40,6 +42,8 @@ public:
 	FPickupInstance(UObsidianInventoryItemInstance* InItemInstance)
 		: Item(InItemInstance)
 	{};
+
+	bool IsValid() const;
 	
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
@@ -53,10 +57,10 @@ struct FPickupContent
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FPickupInstance> Instances;
+	FPickupInstance Instance = FPickupInstance(nullptr);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TArray<FPickupTemplate> Templates;
+	FPickupTemplate Template = FPickupTemplate(nullptr, 1);
 };
 
 UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
@@ -83,7 +87,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
-	virtual void OverrideTemplateStacks(const int32 TemplateIndex, const int32 NewItemStacks) = 0;
+	virtual void OverrideTemplateStacks(const int32 TemplateIndex) = 0;
 	
 	//
 };

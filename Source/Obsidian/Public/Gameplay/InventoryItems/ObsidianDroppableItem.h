@@ -7,6 +7,7 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianDroppableItem.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
 class UObsidianItemWorldName;
 class UObsidianItemDragDropOperation;
@@ -35,6 +36,7 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
+	virtual void Destroyed() override;
 
 	UFUNCTION()
 	void HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed);
@@ -44,10 +46,10 @@ protected:
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
-	bool PickupItemInstance(const bool bLeftControlDown) const;
+	bool PickupItemInstance(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController) const;
 	
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
-	bool PickupItemDef(const bool bLeftControlDown);
+	bool PickupItemDef(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController);
 	
 	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
 	void SetupItemAppearanceFromInstance() const;

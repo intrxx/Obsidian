@@ -2,6 +2,17 @@
 
 #include "InventoryItems/ObsidianPickableInterface.h"
 #include "InventoryItems/ObsidianInventoryComponent.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+
+bool FPickupTemplate::IsValid() const
+{
+	return ItemDef != nullptr;
+}
+
+bool FPickupInstance::IsValid() const
+{
+	return Item != nullptr;
+}
 
 UObsidianPickableStatics::UObsidianPickableStatics(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -34,13 +45,13 @@ void UObsidianPickableStatics::AddPickupToInventory(UObsidianInventoryComponent*
 	{
 		const FPickupContent& PickupContent = Pickup->GetPickupContent();
 
-		for (const FPickupTemplate& Template : PickupContent.Templates)
+		if(const FPickupTemplate Template = PickupContent.Template; Template.IsValid())
 		{
 			int32 OutStacksLeft = 0;
 			InventoryComponent->AddItemDefinition(Template.ItemDef, /** OUT */ OutStacksLeft, Template.StackCount);
 		}
 
-		for (const FPickupInstance& Instance : PickupContent.Instances)
+		if(const FPickupInstance Instance = PickupContent.Instance; Instance.IsValid())
 		{
 			int32 OutStacksLeft = 0;
 			InventoryComponent->AddItemInstance(Instance.Item, /** OUT */ OutStacksLeft);

@@ -72,8 +72,9 @@ public:
 
 	void AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
 	void RemoveItemWidget(const FVector2D& Location);
-	
-	void OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
+
+	UFUNCTION(Client, Reliable)
+	void ClientOnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
 	void OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap);
 	void OnInventoryOpen();
 
@@ -130,7 +131,6 @@ private:
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 	TMap<FVector2D, bool> InventoryStateMap;
 	bool bInventoryOpened = false;
-	//bool bInventoryChanged = false;
 
 	bool bDescriptionActive = false;
 	bool bUnstackSliderActive = false;

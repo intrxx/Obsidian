@@ -18,60 +18,47 @@ FPickupContent AObsidianWorldCollectable::GetPickupContent() const
 
 FPickupInstance AObsidianWorldCollectable::GetFirstPickupInstanceFromPickupContent() const
 {
-	TArray<FPickupInstance> PickupInstances = GetPickupContent().Instances;
-	if(PickupInstances.IsEmpty())
+	FPickupInstance PickupInstance = GetPickupContent().Instance;
+	if(!PickupInstance.IsValid())
 	{
 		return FPickupInstance(nullptr);
 	}
-
-	FPickupInstance PickupInstance = PickupInstances[0];
-	if(PickupInstance.Item)
-	{
-		return PickupInstance;
-	}
-	return FPickupInstance(nullptr);
+	return PickupInstance;
 }
 
 FPickupTemplate AObsidianWorldCollectable::GetFirstPickupTemplateFromPickupContent() const
 {
-	TArray<FPickupTemplate> PickupTemplates = GetPickupContent().Templates;
-	if(PickupTemplates.IsEmpty())
+	FPickupTemplate PickupTemplate = GetPickupContent().Template;
+	if(!PickupTemplate.IsValid())
 	{
 		return FPickupTemplate(nullptr, -1);
 	}
-
-	FPickupTemplate PickupTemplate = PickupTemplates[0];
-	if(PickupTemplate.ItemDef)
-	{
-		return PickupTemplate;
-	}
-	return FPickupTemplate(nullptr, -1);
+	return PickupTemplate;
 }
 
 void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
 	checkf(InstanceToAdd, TEXT("Provided InstanceToAdd is invalid in AObsidianWorldCollectable::AddItemInstance."));
-	StaticContent.Instances.Add(FPickupInstance(InstanceToAdd));
+	StaticContent.Instance = FPickupInstance(InstanceToAdd);
 }
 
 void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks)
 {
 	checkf(ItemDef, TEXT("Provided ItemDef is invalid in AObsidianWorldCollectable::AddItemDefinition."));
-	StaticContent.Templates.Add(FPickupTemplate(ItemDef, ItemStacks));
+	StaticContent.Template = FPickupTemplate(ItemDef, ItemStacks);
 }
 
-void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 NewItemStacks, const int32 TemplateIndex)
+void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 NewItemStacks)
 {
-	if(StaticContent.Templates[TemplateIndex].ItemDef)
+	if(StaticContent.Template.IsValid())
 	{
-		StaticContent.Templates[TemplateIndex].StackCount = NewItemStacks;
+		StaticContent.Template.StackCount = NewItemStacks;
 	}
 }
 
 bool AObsidianWorldCollectable::CarriesItemInstance() const
 {
-	const FPickupContent PickupContent = GetPickupContent();
-	if(PickupContent.Instances.Num() > 0)
+	if(const FPickupContent PickupContent = GetPickupContent(); PickupContent.Instance.IsValid())
 	{
 		return true;
 	}
@@ -80,8 +67,7 @@ bool AObsidianWorldCollectable::CarriesItemInstance() const
 
 bool AObsidianWorldCollectable::CarriesItemDef() const
 {
-	const FPickupContent PickupContent = GetPickupContent();
-	if(PickupContent.Templates.Num() > 0)
+	if(const FPickupContent PickupContent = GetPickupContent(); PickupContent.Template.IsValid())
 	{
 		return true;
 	}
@@ -91,7 +77,7 @@ bool AObsidianWorldCollectable::CarriesItemDef() const
 bool AObsidianWorldCollectable::CarriesBoth() const
 {
 	const FPickupContent PickupContent = GetPickupContent();
-	if((PickupContent.Instances.Num() > 0) && (PickupContent.Templates.Num() > 0))
+	if((PickupContent.Instance.IsValid()) && (PickupContent.Template.IsValid()))
 	{
 		return true;
 	}

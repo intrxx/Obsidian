@@ -22,7 +22,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(InventoryComponent);
 	InternalInventoryComponent = InventoryComponent;
-	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::OnItemAdded);
+	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::ClientOnItemAdded);
 	InventoryComponent->OnItemsStacksChangedDelegate.AddUObject(this, &ThisClass::OnItemsStacksChanged);
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 
@@ -36,7 +36,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	check(InternalHeroComponent);
 }
 
-void UObsidianInventoryWidgetController::OnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
+void UObsidianInventoryWidgetController::ClientOnItemAdded_Implementation(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
 {
 	check(ItemInstance);
 	//bInventoryChanged = true;
@@ -74,18 +74,6 @@ void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
 {
-	//TODO This really needs profiling, for now let it be this way
-	/*
-	if(bInventoryChanged == false)
-	{
-		for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
-		{
-			OnItemAddedDelegate.Broadcast(LocToInstancePair.Value->GetItemImage(), LocToInstancePair.Key, LocToInstancePair.Value->GetItemGridSpan());
-		}
-		return;
-	}
-	*/
-	
 	GridLocationToItemMap.Empty();
 	GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
 	AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
@@ -105,8 +93,6 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		);
 		OnItemAddedDelegate.Broadcast(ItemVisuals);
 	}
-
-	//bInventoryChanged = false;
 }
 
 void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown)

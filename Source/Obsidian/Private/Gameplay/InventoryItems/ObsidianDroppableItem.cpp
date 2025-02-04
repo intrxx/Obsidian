@@ -30,6 +30,8 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetRenderCustomDepth(false);
 	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
 	SetRootComponent(StaticMeshComp);
+
+	SetReplicates(true);
 	
 	WorldItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WorldItemNameWidgetComp"));
 	WorldItemNameWidgetComp->SetupAttachment(GetRootComponent());
@@ -59,6 +61,13 @@ void AObsidianDroppableItem::BeginPlay()
 	
 	WorldItemNameWidgetComp->SetWidget(ItemWorldName);
 	WorldItemNameWidgetComp->InitWidget();
+}
+
+void AObsidianDroppableItem::Destroyed()
+{
+	DestroyItemDescription();
+	
+	Super::Destroyed();
 }
 
 void AObsidianDroppableItem::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
@@ -266,48 +275,48 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 Sta
 
 void AObsidianDroppableItem::OnItemMouseButtonDown(const bool bLeftControlDown)
 {
-	bool bAddedWholeItem = true;
+	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	if(!ensureMsgf(ObsidianPC, TEXT("Failed to acquire valid ObsidianPlayerController in AObsidianDroppableItem::OnItemMouseButtonDown.")))
+	{
+		return;
+	}
+	
+	bool bItemPickedUp = false;
 	if(CarriesItemDef())
 	{
-		bAddedWholeItem = PickupItemDef(bLeftControlDown);
+		bItemPickedUp = PickupItemDef(bLeftControlDown, ObsidianPC);
 	}
 	else if(CarriesItemInstance())
 	{
-		bAddedWholeItem = PickupItemInstance(bLeftControlDown);
+		bItemPickedUp = PickupItemInstance(bLeftControlDown, ObsidianPC);
 	}
-	
-	if(bAddedWholeItem)
+
+	if(bItemPickedUp && ObsidianPC->HasAuthority())
 	{
-		DestroyItemDescription();
 		Destroy();
 	}
 }
 
-bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown) const
+bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController) const
 {
-	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	if(!ensureMsgf(ObsidianPC, TEXT("Failed to acquire valid ObsidianPlayerController in AObsidianDroppableItem::PickupItemInstance.")))
+	const UObsidianInventoryWidgetController* InventoryController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
+	if(InventoryController == nullptr)
 	{
-		return false;
-	}
-	
-	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
-	if(!ensureMsgf(ObsidianHUD, TEXT("Failed to acquire valid ObsidianHUD in AObsidianDroppableItem::PickupItemInstance.")))
-	{
-		return false;
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::PickupItemDef."));
+		return false;	
 	}
 
 	UObsidianInventoryItemInstance* ItemInstance = GetFirstPickupInstanceFromPickupContent().Item;
 	checkf(ItemInstance, TEXT("First ItemInstance from Pickable Content is invalid in AObsidianDroppableItem::PickupItemInstance"));
 	
-	const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+	const AActor* OwningActor = Cast<AActor>(PickingPlayerController->GetPawn());
 	checkf(OwningActor, TEXT("OwningActor acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemInstance."))
 	
 	UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	checkf(HeroComp, TEXT("HeroComp acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemInstance."));
 	
 	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
-	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
+	if(InventoryController->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
 	{
 		bool bDroppedItem = false;
 		if(bIsDraggingAnItem)
@@ -318,7 +327,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown) con
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
 			checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in AObsidianDroppableItem::PickupItemInstance please fill it on ObsidianDroppableItem Instance."));
-			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PickingPlayerController, DraggedItemWidgetClass);
 			DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
 			DraggedItem->AddToViewport();
 			HeroComp->DragItem(DraggedItem);
@@ -328,7 +337,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown) con
 	}
 	
 	int32 OutStacksLeft = 0;
-	UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
+	UObsidianInventoryComponent* InventoryComponent = PickingPlayerController->GetInventoryComponent();
 	checkf(InventoryComponent, TEXT("InventoryComponent acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemInstance."));
 	
 	InventoryComponent->AddItemInstance(ItemInstance, /** OUT */ OutStacksLeft);
@@ -342,18 +351,13 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown) con
 	return true; // Added whole Item
 }
 
-bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
+bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController)
 {
-	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	if(!ensureMsgf(ObsidianPC, TEXT("Failed to acquire valid ObsidianPlayerController in AObsidianDroppableItem::PickupItemDef.")))
+	const UObsidianInventoryWidgetController* InventoryController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
+	if(InventoryController == nullptr)
 	{
-		return false;
-	}
-
-	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
-	if(!ensureMsgf(ObsidianHUD, TEXT("Failed to acquire valid ObsidianHUD in AObsidianDroppableItem::PickupItemDef.")))
-	{
-		return false;
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::PickupItemDef."));
+		return false;	
 	}
 
 	const FPickupTemplate PickupTemplate = GetFirstPickupTemplateFromPickupContent();
@@ -362,14 +366,14 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 	
 	const int32 StackCount = PickupTemplate.StackCount;
 
-	const AActor* OwningActor = Cast<AActor>(ObsidianPC->GetPawn());
+	const AActor* OwningActor = Cast<AActor>(PickingPlayerController->GetPawn());
 	checkf(OwningActor, TEXT("OwningActor acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemDef."))
 	
 	UObsidianHeroComponent* HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	checkf(HeroComp, TEXT("HeroComp acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemDef."));
 	
 	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
-	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press left control button, spawn the item on cursor
+	if(InventoryController->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press left control button, spawn the item on cursor
 	{
 		bool bDroppedItem = false;
 		if(bIsDraggingAnItem)
@@ -380,7 +384,7 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
 			checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in AObsidianDroppableItem::PickupItemInstance please fill it on ObsidianDroppableItem Instance."));
-			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(ObsidianPC, DraggedItemWidgetClass);
+			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PickingPlayerController, DraggedItemWidgetClass);
 			DraggedItem->InitializeItemWidgetWithItemDef(ItemDef, StackCount);
 			DraggedItem->AddToViewport();
 			HeroComp->DragItem(DraggedItem);
@@ -388,8 +392,8 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown)
 		}
 		return false; // Added some Item stacks
 	}
-	
-	UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
+
+	UObsidianInventoryComponent* InventoryComponent = PickingPlayerController->GetInventoryComponent();
 	checkf(InventoryComponent, TEXT("InventoryComponent acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemDef."));
 
 	int32 OutStacksLeft = 0;
