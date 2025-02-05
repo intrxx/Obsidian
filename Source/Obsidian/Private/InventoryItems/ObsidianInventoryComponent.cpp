@@ -204,6 +204,12 @@ bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FVec
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32& OutStacksLeft, const int32 StackCount)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemDefinition."));
+		return nullptr; 
+	}
+	
 	OutStacksLeft = StackCount;
 	
 	if(ItemDef == nullptr)
@@ -275,6 +281,12 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount, const int32 StackToAddOverride)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot."));
+		return nullptr; 
+	}
+	
 	StacksLeft = StackCount;
 	
 	if(ItemDef == nullptr)
@@ -350,6 +362,12 @@ bool UObsidianInventoryComponent::CanFitItemInstanceToSpecificSlot(const FVector
 
 void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd, int32& OutStacksLeft)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
+		return; 
+	}
+	
 	if(InstanceToAdd == nullptr)
 	{
 		return;
@@ -414,6 +432,12 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 
 bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot, const int32 StackToAddOverride)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstanceToSpecificSlot."));
+		return false; 
+	}
+	
 	if(InstanceToAdd == nullptr)
 	{
 		return false;
@@ -474,6 +498,12 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TakeOutFromItemInstance."));
+		return nullptr; 
+	}
+	
 	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(!ensureMsgf(((StacksToTake == 0) || (CurrentTakingFromInstanceStacks != StacksToTake)), TEXT("This function shouldn't be called if you want to take the whole item out. Simply Pickup the item instead.")))
 	{
@@ -499,6 +529,14 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutFromItemInst
 TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult)
 {
 	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
+	
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToExistingItems."));
+		return AddedToInstances; 
+	}
+	
+	
 	if(StacksToAdd <= 0)
 	{
 		return AddedToInstances;
@@ -569,6 +607,12 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 
 bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef."));
+		return false; 
+	}
+	
 	OutAddingStacksResult.StacksLeft = AddingFromItemDefCurrentStacks;
 	
 	UObsidianInventoryItemInstance* InstanceToAddTo = Internal_GetItemInstanceAtLocation(AtPosition);
@@ -607,6 +651,12 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 
 bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance."));
+		return false; 
+	}
+	
 	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	OutAddingStacksResult.StacksLeft = AddingFromInstanceCurrentStacks;
 	
@@ -771,6 +821,12 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 
 void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::RemoveItemInstance."));
+		return; 
+	}
+	
 	const FVector2D FromLocation = GetItemLocationFromGrid(InstanceToRemove);
 	Item_UnMarkSpace(InstanceToRemove, FromLocation);
 	InventoryGrid.RemoveEntry(InstanceToRemove);
@@ -783,6 +839,12 @@ void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInsta
 
 bool UObsidianInventoryComponent::ConsumeItemsByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 NumberOfItemsToConsume)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::ConsumeItemsByDefinition."));
+		return false; 
+	}
+	
 	AActor* OwningActor = GetOwner();
 	if(OwningActor == nullptr || OwningActor->HasAuthority() == false)
 	{
@@ -969,6 +1031,12 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance."));
+		return false; 
+	}
+	
 	if(GetNumberOfStacksAvailableToAddToInventory(ReplacingInstance) <= 0)
 	{
 		//TODO Limit of stacks reached, add voiceover?
@@ -1016,6 +1084,12 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef."));
+		return false; 
+	}
+	
 	if(GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount) <= 0)
 	{
 		return false;
