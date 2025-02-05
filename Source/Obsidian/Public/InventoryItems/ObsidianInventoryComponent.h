@@ -60,6 +60,17 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
+     /**
+	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
+	 *
+	 *	@param AddingFromItemDef		The Item Definition that the function will try to add from.
+	 *	@param StacksToAdd				The Current Stacks of the provided Item Definition.
+	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
+	 *
+	 *  @return Array of Inventory Item Instances that stacks were added to.
+	 */
+	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult);
+	
 	/** Checks if the provided Item Definition can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount = 1);
@@ -153,17 +164,6 @@ private:
 	
 	/** Checks if the provided Item Instance fits in the inventory at provided slot. */
 	bool CanFitItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance);
-
-	/**
-	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
-	 *
-	 *	@param AddingFromItemDef		The Item Definition that the function will try to add from.
-	 *	@param StacksToAdd				The Current Stacks of the provided Item Definition.
-	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
-	 *
-	 *  @return Array of Inventory Item Instances that stacks were added to.
-	 */
-	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult);
 	
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
