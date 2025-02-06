@@ -133,7 +133,7 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 
 void AObsidianDroppableItem::SetupItemAppearanceFromInstance() const
 {
-	const UObsidianInventoryItemInstance* ItemInstance = GetFirstPickupInstanceFromPickupContent().Item;
+	const UObsidianInventoryItemInstance* ItemInstance = GetPickupInstanceFromPickupContent().Item;
 	if(ItemInstance == nullptr)
 	{
 		return;
@@ -152,7 +152,7 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance() const
 
 void AObsidianDroppableItem::SetupItemAppearanceFromDefinition() const
 {
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = GetFirstPickupTemplateFromPickupContent().ItemDef;
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = GetPickupTemplateFromPickupContent().ItemDef;
 	if(!ensureMsgf(ItemDef, TEXT("Item Def is invalid in AObsidianDroppableItem::SetupItemAppearanceFromDefinition, make sure the logic is correct.")))
 	{
 		return;
@@ -197,7 +197,7 @@ void AObsidianDroppableItem::InitItemWorldName() const
 #if !UE_BUILD_SHIPPING
 	bool bSuccess = false;
 #endif
-	if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = GetFirstPickupTemplateFromPickupContent().ItemDef)
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = GetPickupTemplateFromPickupContent().ItemDef)
 	{
 		if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
 		{
@@ -211,7 +211,7 @@ void AObsidianDroppableItem::InitItemWorldName() const
 			}
 		}
 	}
-	else if(const UObsidianInventoryItemInstance* ItemInstance = GetFirstPickupInstanceFromPickupContent().Item)
+	else if(const UObsidianInventoryItemInstance* ItemInstance = GetPickupInstanceFromPickupContent().Item)
     {
          const FText ItemDisplayName = ItemInstance->GetItemDisplayName();
          ItemWorldName->SetItemName(ItemDisplayName);
@@ -259,12 +259,12 @@ UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
 	UObsidianItemDescriptionBase* ItemDescriptionToReturn = nullptr; 
 	if(CarriesItemDef())
 	{
-		const FPickupTemplate PickupTemplate = GetFirstPickupTemplateFromPickupContent();
+		const FPickupTemplate PickupTemplate = GetPickupTemplateFromPickupContent();
 		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.StackCount);
 	}
 	else if(CarriesItemInstance())
 	{
-		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(GetFirstPickupInstanceFromPickupContent().Item);
+		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(GetPickupInstanceFromPickupContent().Item);
 	}
 #if !UE_BUILD_SHIPPING
 	else
@@ -339,7 +339,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 		return false;	
 	}
 
-	UObsidianInventoryItemInstance* ItemInstance = GetFirstPickupInstanceFromPickupContent().Item;
+	UObsidianInventoryItemInstance* ItemInstance = GetPickupInstanceFromPickupContent().Item;
 	checkf(ItemInstance, TEXT("First ItemInstance from Pickable Content is invalid in AObsidianDroppableItem::PickupItemInstance"));
 	
 	const AActor* OwningActor = Cast<AActor>(PickingPlayerController->GetPawn());
@@ -394,7 +394,7 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 		return false;	
 	}
 
-	const FPickupTemplate PickupTemplate = GetFirstPickupTemplateFromPickupContent();
+	const FPickupTemplate PickupTemplate = GetPickupTemplateFromPickupContent();
 	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = PickupTemplate.ItemDef;
 	checkf(ItemDef, TEXT("First ItemInstance from Pickable Content is invalid in AObsidianDroppableItem::PickupItemDef"));
 	

@@ -395,7 +395,7 @@ void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppab
 		return;
 	}
 
-	const FPickupTemplate Template = ItemToPickup->GetFirstPickupTemplateFromPickupContent();
+	const FPickupTemplate Template = ItemToPickup->GetPickupTemplateFromPickupContent();
 	if(!Template.IsValid())
 	{
 		UE_LOG(LogInventory, Error, TEXT("Template is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
@@ -444,7 +444,7 @@ void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDr
 		return;
 	}
 
-	const FPickupInstance Instance = ItemToPickup->GetFirstPickupInstanceFromPickupContent();
+	const FPickupInstance Instance = ItemToPickup->GetPickupInstanceFromPickupContent();
 	if(!Instance.IsValid())
 	{
 		UE_LOG(LogInventory, Error, TEXT("Instance is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));

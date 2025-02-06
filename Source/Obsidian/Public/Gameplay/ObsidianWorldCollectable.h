@@ -16,8 +16,8 @@ public:
 	AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual FPickupContent GetPickupContent() const override;
-	FPickupInstance GetFirstPickupInstanceFromPickupContent() const;
-	FPickupTemplate GetFirstPickupTemplateFromPickupContent() const;
+	FPickupInstance GetPickupInstanceFromPickupContent() const;
+	FPickupTemplate GetPickupTemplateFromPickupContent() const;
 	
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
