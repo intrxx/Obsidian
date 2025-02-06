@@ -25,6 +25,8 @@ class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable, pu
 public:
 	AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
 
@@ -33,6 +35,8 @@ public:
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
 	//~ End of HighlightInterface
+
+	void UpdateDroppedItemStacks(const int32 NewDroppedItemStacks);
 	
 protected:
 	virtual void BeginPlay() override;
@@ -46,7 +50,7 @@ protected:
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
-	bool PickupItemInstance(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController) const;
+	bool PickupItemInstance(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController);
 	
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
 	bool PickupItemDef(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController);
@@ -63,6 +67,9 @@ private:
 	void DestroyItemDescription();
 	void UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance) const;
 	void UpdateStacksOnActiveItemDescription(const int32 StacksToSet) const;
+
+	UFUNCTION()
+	void OnRep_DroppedItemStacks();
 	
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
@@ -82,4 +89,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription;
+
+	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
+	int32 DroppedItemStacks = 1;
 };
