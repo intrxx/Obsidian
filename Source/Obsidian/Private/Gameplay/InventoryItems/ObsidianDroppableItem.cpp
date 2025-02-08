@@ -128,6 +128,12 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 		UpdateStacksOnActiveItemDescription(DroppedItemStacks);
 		return;
 	}
+#if !UE_BUILD_SHIPPING
+	if(NewDroppedItemStacks < 0)
+	{
+		UE_LOG(LogInventory, Error, TEXT("AObsidianDroppableItem::UpdateDroppedItemStacks shouldn't take a negative number of stacks to update."));
+	}
+#endif 
 	Destroy();
 }
 
@@ -313,18 +319,21 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const bool bLeftControlDown)
 	{
 		return;
 	}
-	
+
+	// Bool needs to stay here for a while as not every case of picking up item is handled through server authoritative way as of now.
 	bool bItemPickedUp = false;
 	if(CarriesItemDef())
 	{
 		bItemPickedUp = PickupItemDef(bLeftControlDown, ObsidianPC);
+		//PickupItemDef(bLeftControlDown, ObsidianPC);
 	}
 	else if(CarriesItemInstance())
 	{
 		bItemPickedUp = PickupItemInstance(bLeftControlDown, ObsidianPC);
+		//PickupItemInstance(bLeftControlDown, ObsidianPC);
 	}
-
-	if(bItemPickedUp && ObsidianPC->HasAuthority())
+	
+	if(bItemPickedUp)
 	{
 		Destroy();
 	}
@@ -369,6 +378,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 		return false; // Added some Item stacks
 	}
 	HeroComp->ServerPickupItemInstance(this);
+	
 	//
 	//	Switching to Server Authoritative Picking of Item Instance
 	//
@@ -382,6 +392,9 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 	//	UpdateStacksOnActiveItemDescription(OutStacksLeft);
 	//	return false; // Added some Item stacks
 	//}
+	//
+	//	~ End Switching to Server Authoritative Picking of Item Instance
+	//
 	return false; // Added whole Item
 }
 
@@ -426,8 +439,8 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 		}
 		return false; // Added some Item stacks
 	}
-
 	HeroComp->ServerPickupItemDef(this);
+	
 	//
 	//	Switching to Server Authoritative Picking of Item Def
 	//
@@ -442,6 +455,9 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 	//	UpdateStacksOnActiveItemDescription(OutStacksLeft);
 	//	return false; // Added some Item stacks
 	//}
+	//
+	//	~ End Switching to Server Authoritative Picking of Item Def
+	//
 	return false; // Added whole Item
 }
 

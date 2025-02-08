@@ -36,6 +36,12 @@ public:
 	virtual void StopHighlight() override;
 	//~ End of HighlightInterface
 
+	/**
+	 * Use only on Server.
+	 * Updates the stack count of dropped item after trying to pick it up.
+	 * Must be called after potential stack changes of the item, handles destroying the item if stack count is 0 or negative,
+	 * although it should never be negative so It will warn you.
+	 */
 	void UpdateDroppedItemStacks(const int32 NewDroppedItemStacks);
 	
 protected:
