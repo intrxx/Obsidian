@@ -105,8 +105,9 @@ public:
 
 public:
 	UFUNCTION(BlueprintPure)
-	static TScriptInterface<IObsidianPickableInterface> GetFirstPickableFromActor(AActor* Actor);
+	static TScriptInterface<IObsidianPickableInterface> GetPickableFromActor(AActor* Actor);
 
+	// Not really using it as adding item to inventory is more complicated due to stacks manipulation
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, meta = (WorldContext = "Ability"))
 	static void AddPickupToInventory(UObsidianInventoryComponent* InventoryComponent, const TScriptInterface<IObsidianPickableInterface> Pickup);
 };

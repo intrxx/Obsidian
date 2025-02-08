@@ -143,7 +143,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 		UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 		if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance()) // We carry item instance.
 		{
-			if(DraggedInstance && DraggedInstance->IsStackable())
+			if(DraggedInstance->IsStackable())
 			{
 				FObsidianAddingStacksResult AddingStacksResult;
 				if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult))
@@ -171,7 +171,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef()) // We carry item def
 		{
 			const int32 ItemStackCount = DraggedItem->GetItemStacks();
-			if(const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject(); DefaultObject->IsStackable())
+			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+			if(DefaultObject && DefaultObject->IsStackable())
 			{
 				FObsidianAddingStacksResult AddingStacksResult;
 				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult))
@@ -209,8 +210,9 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	{
 		UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
 		check(DraggedItem);
-		
-		if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance(); DraggedInstance->IsStackable())
+
+		UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance();
+		if(DraggedInstance && DraggedInstance->IsStackable())
 		{
 			FObsidianAddingStacksResult AddingStacksResult;
 			if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult, 1))
@@ -228,7 +230,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 		
 		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef())
 		{
-			if(const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject(); DefaultObject->IsStackable())
+			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+			if(DefaultObject && DefaultObject->IsStackable())
 			{
 				const int32 ItemStackCount = DraggedItem->GetItemStacks();
 				

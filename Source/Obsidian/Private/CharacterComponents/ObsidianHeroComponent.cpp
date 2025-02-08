@@ -18,6 +18,7 @@
 #include "GameFramework/PlayerController.h"
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
@@ -364,6 +365,106 @@ bool UObsidianHeroComponent::DropItem()
 		return false;
 	}
 	return HandleDroppingItem();
+}
+
+void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppableItem* ItemToPickup)
+{
+	if(!HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianHeroComponent::ServerPickupItemDef_Implementation."))
+		return;
+	}
+
+	if(ItemToPickup == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+		return;
+	}
+	
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+		return;
+	}
+
+	const FPickupTemplate Template = ItemToPickup->GetPickupTemplateFromPickupContent();
+	if(!Template.IsValid())
+	{
+		UE_LOG(LogInventory, Error, TEXT("Template is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+		return;
+	}
+	
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = Template.ItemDef;
+	if(ItemDef == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemDef is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+		return;
+	}
+
+	const int32 StackCount = Template.StackCount;
+	int32 OutStacksLeft;
+	InventoryComponent->AddItemDefinition(ItemDef, OutStacksLeft, StackCount);
+	ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
+}
+
+
+void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDroppableItem* ItemToPickup)
+{
+	if(!HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."))
+		return;
+	}
+
+	if(ItemToPickup == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+	
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+
+	const FPickupInstance Instance = ItemToPickup->GetPickupInstanceFromPickupContent();
+	if(!Instance.IsValid())
+	{
+		UE_LOG(LogInventory, Error, TEXT("Instance is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryItemInstance* ItemInstance = Instance.Item;
+	if(ItemInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+
+	int32 OutStacksLeft;
+	InventoryComponent->AddItemInstance(ItemInstance, OutStacksLeft);
+	if(OutStacksLeft > 0)
+	{
+		ItemInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
+	}
+	ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
 }
 
 bool UObsidianHeroComponent::HandleDroppingItem()

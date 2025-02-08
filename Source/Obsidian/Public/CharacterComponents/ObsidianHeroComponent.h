@@ -13,6 +13,7 @@ class USplineComponent;
 class AObsidianHUD;
 class IObsidianHighlightInterface;
 class UObsidianDraggedItem;
+class UObsidianInventoryItemDefinition;
 
 /**
  * Component that manages hero related things like input
@@ -62,6 +63,12 @@ public:
 	}
 	
 	bool DropItem();
+
+	UFUNCTION(Server, Reliable)
+	void ServerPickupItemDef(AObsidianDroppableItem* ItemToPickup);
+
+	UFUNCTION(Server, Reliable)
+	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
 	
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);

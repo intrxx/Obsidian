@@ -26,6 +26,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
 	DOREPLIFETIME(ThisClass, ItemSkeletalMesh);
+	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
 }

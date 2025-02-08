@@ -16,7 +16,7 @@ FPickupContent AObsidianWorldCollectable::GetPickupContent() const
 	return StaticContent;
 }
 
-FPickupInstance AObsidianWorldCollectable::GetFirstPickupInstanceFromPickupContent() const
+FPickupInstance AObsidianWorldCollectable::GetPickupInstanceFromPickupContent() const
 {
 	FPickupInstance PickupInstance = GetPickupContent().Instance;
 	if(!PickupInstance.IsValid())
@@ -26,7 +26,7 @@ FPickupInstance AObsidianWorldCollectable::GetFirstPickupInstanceFromPickupConte
 	return PickupInstance;
 }
 
-FPickupTemplate AObsidianWorldCollectable::GetFirstPickupTemplateFromPickupContent() const
+FPickupTemplate AObsidianWorldCollectable::GetPickupTemplateFromPickupContent() const
 {
 	FPickupTemplate PickupTemplate = GetPickupContent().Template;
 	if(!PickupTemplate.IsValid())
