@@ -34,7 +34,8 @@ public class Obsidian : ModuleRules
 			"NavigationSystem",
 			"Niagara",
 			"AIModule",
-			"NetCore"
+			"NetCore",
+			"GameplayMessageRuntime"
 		});
 
 		// Uncomment if you are using Slate UI
