@@ -2,6 +2,9 @@
 
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+
+#include <GameFramework/GameplayMessageSubsystem.h>
+
 #include "UI/Inventory/ObsidianItemDescriptionBase.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
@@ -34,6 +37,21 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	
 	InternalHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	check(InternalHeroComponent);
+
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
+}
+
+void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
+{
+	UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
+	if(Instance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryWidgetController::OnInventoryStateChanged."));
+		return;
+	}
+	
+	UE_LOG(LogInventory, Warning, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
 }
 
 void UObsidianInventoryWidgetController::ClientOnItemAdded_Implementation(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
@@ -657,3 +675,4 @@ FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByVie
 	
 	return BoundedPosition;
 }
+

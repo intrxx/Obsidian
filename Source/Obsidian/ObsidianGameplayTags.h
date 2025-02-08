@@ -215,6 +215,16 @@ namespace ObsidianGameplayTags
 
 	/** All Stack Types stored for convenience */
 	OBSIDIAN_API extern const TArray<FGameplayTag> StackTypes;
+
+	/**
+	 * ---- Gameplay Messages ----
+	 */
+
+	/**
+	 * Inventory
+	 */
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_Inventory_Changed);
+	
 }
 
 

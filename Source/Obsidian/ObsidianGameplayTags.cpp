@@ -245,4 +245,13 @@ namespace ObsidianGameplayTags
 			Item_StackCount_Limit
 		  }
 	};
+	
+	/**
+	 * ---- Gameplay Messages ----
+	 */
+
+	/**
+	 * Inventory
+	 */
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_Inventory_Changed, "Message.Inventory.Changed", "Tag used in Gameplay Message Subsystem to represent inventory state change.")
 }

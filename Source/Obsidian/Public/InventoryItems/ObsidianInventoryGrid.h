@@ -11,6 +11,27 @@ class UObsidianInventoryItemInstance;
 class UObsidianInventoryComponent;
 struct FObsidianInventoryGrid;
 
+USTRUCT(BlueprintType)
+struct FObsidianInventoryChangeMessage
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
+	TObjectPtr<UActorComponent> InventoryOwner = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
+	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
+	int32 NewCount = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
+	int32 Delta = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
+	FVector2D GridItemPosition = FVector2d::Zero();
+};
+
 /**
  * A single entry in an inventory.
  */
@@ -38,8 +59,11 @@ private:
 	UPROPERTY()
 	int32 StackCount = 0;
 
-	UPROPERTY()
+	UPROPERTY(NotReplicated)
 	int32 LastObservedCount = INDEX_NONE;
+
+	UPROPERTY()
+	FVector2D GridLocation = FVector2D::Zero();
 };
 
 /**
@@ -77,6 +101,9 @@ public:
 	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
 	//~ End of FFastArraySerializer contract
 
+private:
+	void BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FVector2D& GridPosition) const;
+	
 private:
 	friend UObsidianInventoryComponent;
 

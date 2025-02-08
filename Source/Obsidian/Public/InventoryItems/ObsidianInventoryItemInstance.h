@@ -193,6 +193,6 @@ private:
 	
 	UPROPERTY(Replicated)
 	FText ItemAdditionalDescription = FText::GetEmpty();
-
+	
 	FString DebugName;
 };
