@@ -80,6 +80,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 	
 	MarkItemDirty(NewEntry);
 	
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, AvailablePosition);
 	return Item;
 }
 
@@ -100,8 +101,9 @@ void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	NewEntry.GridLocation = AvailablePosition;
 	
 	GridLocationToItemMap.Add(AvailablePosition, Instance);
-	
 	MarkItemDirty(NewEntry);
+	
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, AvailablePosition);
 }
 
 void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instance)
@@ -117,14 +119,17 @@ void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 			bSuccess = true;
 		}
 	}
-	
-	const FVector2D Key = *GridLocationToItemMap.FindKey(Instance);
-	GridLocationToItemMap.Remove(Key);
-	
-	if(!bSuccess)
+
+	if(bSuccess)
 	{
-		FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
+		const FVector2D Key = *GridLocationToItemMap.FindKey(Instance);
+		GridLocationToItemMap.Remove(Key);
+
+		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, Key);
+		return;
 	}
+	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
 void FObsidianInventoryGrid::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)

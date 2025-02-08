@@ -25,7 +25,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(InventoryComponent);
 	InternalInventoryComponent = InventoryComponent;
-	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::ClientOnItemAdded);
+	//InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::ClientOnItemAdded);
 	InventoryComponent->OnItemsStacksChangedDelegate.AddUObject(this, &ThisClass::OnItemsStacksChanged);
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 
@@ -51,7 +51,30 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		return;
 	}
 	
-	UE_LOG(LogInventory, Warning, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
+	if(InventoryChangeMessage.NewCount == 0) // Removed
+	{
+		UE_LOG(LogInventory, Warning, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+	}
+
+	if(InventoryChangeMessage.NewCount == InventoryChangeMessage.Delta) // Added
+	{
+		UE_LOG(LogInventory, Warning, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		
+		FObsidianItemVisuals ItemVisuals;
+		ItemVisuals.ItemImage = Instance->GetItemImage();
+		ItemVisuals.DesiredPosition = InventoryChangeMessage.GridItemPosition;
+		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
+
+		const int32 StackCount = Instance->IsStackable() ? Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+		ItemVisuals.StackCount = StackCount;
+		
+		OnItemAddedDelegate.Broadcast(ItemVisuals);
+	}
+
+	if (InventoryChangeMessage.NewCount != InventoryChangeMessage.Delta) // Changed
+	{
+		UE_LOG(LogInventory, Warning, TEXT("Changed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+	}	
 }
 
 void UObsidianInventoryWidgetController::ClientOnItemAdded_Implementation(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
