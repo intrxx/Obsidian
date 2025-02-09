@@ -101,6 +101,7 @@ void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(Instance);
 	NewEntry.GridLocation = AvailablePosition;
 	NewEntry.Instance->SetItemCurrentGridLocation(AvailablePosition);
+	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	
 	GridLocationToItemMap.Add(AvailablePosition, Instance);
 	MarkItemDirty(NewEntry);
@@ -124,13 +125,13 @@ void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 
 	if(bSuccess)
 	{
+		const FVector2D CachedLocation = Instance->GetItemCurrentGridLocation();
 		Instance->ResetItemCurrentGridLocation();
 		
-		const FVector2D Key = *GridLocationToItemMap.FindKey(Instance);
-		GridLocationToItemMap.Remove(Key);
+		GridLocationToItemMap.Remove(CachedLocation);
 
 		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, Key);
+		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, CachedLocation);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
@@ -143,6 +144,8 @@ void FObsidianInventoryGrid::PreReplicatedRemove(const TArrayView<int32> Removed
 		FObsidianInventoryEntry& Entry = Entries[Index];
 		BroadcastChangeMessage(Entry, /* Old Count */ Entry.StackCount, /* New Count */ 0, Entry.GridLocation);
 		Entry.LastObservedCount = 0;
+
+		//GridLocationToItemMap.Remove(Entry.GridLocation);
 	}
 }
 
@@ -154,6 +157,8 @@ void FObsidianInventoryGrid::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		FObsidianInventoryEntry& Entry = Entries[Index];
 		BroadcastChangeMessage(Entry, /* Old Count */ 0, /* New Count */ Entry.StackCount, Entry.GridLocation);
 		Entry.LastObservedCount = Entry.StackCount;
+
+		//GridLocationToItemMap.Add(Entry.GridLocation, Entry.Instance);
 	}
 }
 

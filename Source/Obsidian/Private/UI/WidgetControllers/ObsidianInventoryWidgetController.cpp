@@ -44,7 +44,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 
 void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
 {
-	UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
+	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryWidgetController::OnInventoryStateChanged."));
@@ -64,9 +64,7 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		ItemVisuals.ItemImage = Instance->GetItemImage();
 		ItemVisuals.DesiredPosition = InventoryChangeMessage.GridItemPosition;
 		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
-
-		const int32 StackCount = Instance->IsStackable() ? Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
-		ItemVisuals.StackCount = StackCount;
+		ItemVisuals.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
 		
 		OnItemAddedDelegate.Broadcast(ItemVisuals);
 	}
@@ -141,7 +139,10 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	// End of Design change
 	//
 
+	
 	TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
+	AddedItemWidgetMap.Empty(Items.Num());
+	
 	for(const UObsidianInventoryItemInstance* Item : Items)
 	{
 		ensure(Item);
@@ -150,9 +151,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemVisuals.ItemImage = Item->GetItemImage();
 		ItemVisuals.GridSpan = Item->GetItemGridSpan();
 		ItemVisuals.DesiredPosition = Item->GetItemCurrentGridLocation();
-		
-		const int32 StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
-		ItemVisuals.StackCount = StackCount;
+		ItemVisuals.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
 
 		OnItemAddedDelegate.Broadcast(ItemVisuals);
 	}

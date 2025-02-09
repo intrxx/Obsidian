@@ -130,7 +130,7 @@ private:
 	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
 	
 private:
-	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
+	//TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 	TMap<FVector2D, bool> InventoryStateMap;
 	bool bInventoryOpened = false;
 
