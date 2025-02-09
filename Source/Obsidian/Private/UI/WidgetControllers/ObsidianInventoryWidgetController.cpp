@@ -115,23 +115,45 @@ void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
 {
-	GridLocationToItemMap.Empty();
-	GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
-	AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
-	
-	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
+	//
+	//  Design change
+	//
+	// GridLocationToItemMap.Empty();
+	// GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
+	// AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
+	//
+	// for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
+	// {
+	// 	const UObsidianInventoryItemInstance* ItemInstance = LocToInstancePair.Value;
+	// 	ensure(ItemInstance);
+	// 	
+	// 	const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+	// 	const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
+	// 	(
+	// 		ItemInstance->GetItemImage(),
+	// 		LocToInstancePair.Key,
+	// 		ItemInstance->GetItemGridSpan(),
+	// 		StackCount
+	// 	);
+	// 	OnItemAddedDelegate.Broadcast(ItemVisuals);
+	// }
+	//
+	// End of Design change
+	//
+
+	TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
+	for(const UObsidianInventoryItemInstance* Item : Items)
 	{
-		const UObsidianInventoryItemInstance* ItemInstance = LocToInstancePair.Value;
-		ensure(ItemInstance);
+		ensure(Item);
 		
-		const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
-		const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
-		(
-			ItemInstance->GetItemImage(),
-			LocToInstancePair.Key,
-			ItemInstance->GetItemGridSpan(),
-			StackCount
-		);
+		FObsidianItemVisuals ItemVisuals;
+		ItemVisuals.ItemImage = Item->GetItemImage();
+		ItemVisuals.GridSpan = Item->GetItemGridSpan();
+		ItemVisuals.DesiredPosition = Item->GetItemCurrentGridLocation();
+		
+		const int32 StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+		ItemVisuals.StackCount = StackCount;
+
 		OnItemAddedDelegate.Broadcast(ItemVisuals);
 	}
 }

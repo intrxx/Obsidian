@@ -53,6 +53,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 	FObsidianInventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
+	NewEntry.Instance->SetItemCurrentGridLocation(AvailablePosition);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
@@ -99,6 +100,7 @@ void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance, 
 
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(Instance);
 	NewEntry.GridLocation = AvailablePosition;
+	NewEntry.Instance->SetItemCurrentGridLocation(AvailablePosition);
 	
 	GridLocationToItemMap.Add(AvailablePosition, Instance);
 	MarkItemDirty(NewEntry);
@@ -122,6 +124,8 @@ void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 
 	if(bSuccess)
 	{
+		Instance->ResetItemCurrentGridLocation();
+		
 		const FVector2D Key = *GridLocationToItemMap.FindKey(Instance);
 		GridLocationToItemMap.Remove(Key);
 

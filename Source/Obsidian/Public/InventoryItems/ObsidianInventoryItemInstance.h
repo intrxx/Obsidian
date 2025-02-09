@@ -95,6 +95,19 @@ public:
 	FVector2D GetItemGridSpan() const;
 	
 	void SetItemGridSpan(const FVector2D GridSpanToSet);
+
+	/**
+	 * Item Current Grid Location.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FVector2D GetItemCurrentGridLocation() const;
+	
+	void SetItemCurrentGridLocation(const FVector2D CurrentGridLocationToSet);
+
+	/** Should be called when removing item from inventory. */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void ResetItemCurrentGridLocation();
 	
 	/**
 	 * Item Image.
@@ -175,6 +188,10 @@ private:
 
 	UPROPERTY(Replicated)
 	FVector2D ItemGridSpan;
+
+	/** Current Item Location in the inventory grid, should be valid only if the item is already placed in the inventory. */
+	UPROPERTY(Replicated)
+	FVector2D ItemCurrentGridLocation;
 
 	UPROPERTY(Replicated)
 	TObjectPtr<UTexture2D> ItemImage;

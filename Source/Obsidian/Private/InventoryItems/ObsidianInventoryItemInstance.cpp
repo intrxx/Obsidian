@@ -23,6 +23,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change, so probably never replicated lol?
 	DOREPLIFETIME(ThisClass, ItemGridSize);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
+	DOREPLIFETIME(ThisClass, ItemCurrentGridLocation);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
 	DOREPLIFETIME(ThisClass, ItemSkeletalMesh);
@@ -117,6 +118,21 @@ FVector2D UObsidianInventoryItemInstance::GetItemGridSpan() const
 void UObsidianInventoryItemInstance::SetItemGridSpan(const FVector2D GridSpanToSet)
 {
 	ItemGridSpan = GridSpanToSet;
+}
+
+FVector2D UObsidianInventoryItemInstance::GetItemCurrentGridLocation() const
+{
+	return ItemCurrentGridLocation;
+}
+
+void UObsidianInventoryItemInstance::SetItemCurrentGridLocation(const FVector2D CurrentGridLocationToSet)
+{
+	ItemCurrentGridLocation = CurrentGridLocationToSet;	
+}
+
+void UObsidianInventoryItemInstance::ResetItemCurrentGridLocation()
+{
+	ItemCurrentGridLocation = FVector2D::Zero();
 }
 
 UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const
