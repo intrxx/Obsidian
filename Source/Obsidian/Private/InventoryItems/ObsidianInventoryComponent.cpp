@@ -957,6 +957,35 @@ void UObsidianInventoryComponent::Item_MarkSpace(const UObsidianInventoryItemIns
 		}
 #endif
 	}
+
+	// Sync the map with a client, feels like a @HACK. Need second opinion
+	// Alternatives I thought about:
+	// Replace the map with a struct that can be replicated
+	// Different way of handling slot hoverings
+	if(GetOwnerRole() != ENetRole::ROLE_Authority)
+	{
+		ClientItem_MarkSpace(ItemInstance, AtPosition);
+	}
+}
+
+void UObsidianInventoryComponent::ClientItem_MarkSpace_Implementation(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
+{
+	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = AtPosition + LocationComp;
+		if(InventoryStateMap.Contains(Location))
+		{
+			InventoryStateMap[Location] = true;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
+			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
+		}
+#endif
+	}
 }
 
 void UObsidianInventoryComponent::Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
@@ -974,6 +1003,35 @@ void UObsidianInventoryComponent::Item_UnMarkSpace(const UObsidianInventoryItemI
 		{
 			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
 			"exist in the InventoryStateMap in UObsidianInventoryComponent::Item_UnMarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
+		}
+#endif
+	}
+
+	// Sync the map with a client, feels like a @HACK. Need second opinion
+	// Alternatives I thought about:
+	// Replace the map with a struct that can be replicated
+	// Different way of handling slot hoverings
+	if(GetOwnerRole() != ENetRole::ROLE_Authority)
+	{
+		ClientItem_UnMarkSpace(ItemInstance, AtPosition);
+	}
+}
+
+void UObsidianInventoryComponent::ClientItem_UnMarkSpace_Implementation(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
+{
+	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = AtPosition + LocationComp;
+		if(InventoryStateMap.Contains(Location))
+		{
+			InventoryStateMap[Location] = true;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
+			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
 		}
 #endif
 	}

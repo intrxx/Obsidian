@@ -145,7 +145,7 @@ void FObsidianInventoryGrid::PreReplicatedRemove(const TArrayView<int32> Removed
 		BroadcastChangeMessage(Entry, /* Old Count */ Entry.StackCount, /* New Count */ 0, Entry.GridLocation);
 		Entry.LastObservedCount = 0;
 
-		//GridLocationToItemMap.Remove(Entry.GridLocation);
+		GridLocationToItemMap.Remove(Entry.GridLocation);
 	}
 }
 
@@ -158,7 +158,7 @@ void FObsidianInventoryGrid::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		BroadcastChangeMessage(Entry, /* Old Count */ 0, /* New Count */ Entry.StackCount, Entry.GridLocation);
 		Entry.LastObservedCount = Entry.StackCount;
 
-		//GridLocationToItemMap.Add(Entry.GridLocation, Entry.Instance);
+		GridLocationToItemMap.Add(Entry.GridLocation, Entry.Instance);
 	}
 }
 

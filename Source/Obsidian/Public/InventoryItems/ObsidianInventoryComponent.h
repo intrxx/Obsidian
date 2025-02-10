@@ -195,8 +195,16 @@ private:
 	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
 	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
 
+	/** Marks Item space in the internal Inventory State map for client. Do not call Directly! */
+	UFUNCTION(Client, Reliable)
+	void ClientItem_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
+	
 	/** Unmarks Item space in the internal Inventory State map. Must be called after removing item. */
     void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
+
+	/** Unmarks Item space in the internal Inventory State map for client. Do not call Directly! */
+	UFUNCTION(Client, Reliable)
+	void ClientItem_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
     	
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
