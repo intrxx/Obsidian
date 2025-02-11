@@ -1,5 +1,7 @@
 # Obsidian Inventory Items System
 
+Here you can find a [youtube video](https://www.youtube.com/watch?v=_QPb8MBalo4) showcasing the System.
+
 <a name="table-of-contents"></a>
 ## Class Structure Overview
 
