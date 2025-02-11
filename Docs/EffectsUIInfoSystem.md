@@ -1,0 +1,1 @@
+# Game Effects Info System
