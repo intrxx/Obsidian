@@ -2,7 +2,7 @@
 
 Here you can find a [youtube video](https://www.youtube.com/watch?v=_QPb8MBalo4) showcasing the System.
 
-![Inventory Showcase](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems_Inventory.jpg)
+![Inventory Showcase](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/InventoryItems_Inventory.jpg)
 
 <a name="table-of-contents"></a>
 ## Class Structure Overview
@@ -200,7 +200,7 @@ Repo Links:
 Gameplay Debugger Category that contains number of items owned and a list of held items with name, size, stacks and location on the grid.
 In the feature I plan to paint the ```InventoryStateMap``` to represent the actual state of the Grid. 
 
-![Inventory System Debugging](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems_Debugger.jpg)
+![Inventory System Debugging](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/InventoryItems_Debugger.jpg)
 
 Repo Links:
 - [GameplayDebuggerCategory_InventoryItems.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h)
