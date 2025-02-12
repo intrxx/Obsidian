@@ -90,7 +90,7 @@ Repo Links:
 
 Component for Items that provided Stacks, this includes: Current Stack Count, Max Stack Count, Inventory Limit Stack Count.
 
-![Item Definition](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/itemdefinition.jpg)
+![Item Stacks Fragment](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/stacksfrag.jpg)
 
 Repo Links:
 - [OInventoryItemFragment_Stacks.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Stacks.h)
@@ -109,6 +109,8 @@ Repo Links:
 #### 1.5.2 OInventoryItemFragment_Appearance
 
 Component for Items that provides visual aspects like Static Mesh (for displaying on the ground), Skeletal Mesh (for character to wear/hold), Image etc. 
+
+![Item Stacks Appearance](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/appearancefrag.jpg)
 
 Repo Links:
 - [OInventoryItemFragment_Appearance.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Appearance.h)
@@ -132,6 +134,8 @@ Repo Links:
 
 Inventory Widget that holds the Grid, in the future it will also contain Equipment slots.
 
+![Inventory Widget](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/inventorywidget.jpg)
+
 Repo Links:
 - [ObsidianInventory.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianInventory.h)
 - [ObsidianInventory.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianInventory.cpp)
@@ -150,6 +154,8 @@ Repo Links:
 
 Visual representation of an Inventory Item on the Inventory Grid.
 
+![Item Widget](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/inventoryitem.jpg)
+
 Repo Links:
 - [ObsidianItem.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianItem.h)
 - [ObsidianItem.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianItem.cpp)
@@ -159,6 +165,8 @@ Repo Links:
 
 Item's name above its Mesh in the World added to ```ObsidianDroppableItem```. This needs some work as just adding the Widget to the Widget Component
 and displaying it in the screen space isn't enough.
+
+![Item World Name](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/itemworldname.jpg)
 
 Repo Links:
 - [ObsidianItemWorldName.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianItemWorldName.h)
@@ -170,6 +178,8 @@ Repo Links:
 While hovering over the ```ObsidianItemWorldName```, ```ObsidianDroppableItem``` or the ```ObsidianItem``` in the Inventory, the ```ObsidianItemDescription``` is displayed.
 It contains information such as: Item Name, Item Desc, Hints, Stack Sizes in case of stackable item and in the feature it will display Item Stats.
 
+![Item Desc](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/itemdesc.jpg)
+
 Repo Links:
 - [ObsidianItemDescriptionBase.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianItemDescriptionBase.h)
 - [ObsidianItemDescriptionBase.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianItemDescriptionBase.cpp)
@@ -178,6 +188,8 @@ Repo Links:
 ### 2.5 ObsidianDraggedItem
 
 Representation of Item that is being carried around on the Player's cursor.
+
+![Dragged Item](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/draggeditem.jpg)
 
 Repo Links:
 - [ObsidianDraggedItem.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianDraggedItem.h)
@@ -190,6 +202,8 @@ Repo Links:
 ### 3.1 AObsidianDroppableItem
 
 Item that lays on the ground, can contain ```ObsidianInventoryItemDefinition``` or ```ObsidianInventoryItemInstance```. 
+
+![Dropped Item](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/droppeditem.jpg)
 
 Repo Links:
 - [ObsidianDroppableItem.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Gameplay/InventoryItems/ObsidianDroppableItem.h)
