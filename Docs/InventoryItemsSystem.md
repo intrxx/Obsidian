@@ -61,6 +61,8 @@ Repo Links:
 
 Constant config of the Item, can contain various ```UObsidianInventoryItemFragment```'s that extend its functionality.
 
+![Item Definition](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/itemdefinition.jpg)
+
 Repo Links:
 - [ObsidianInventoryItemDefinition.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianInventoryItemDefinition.h)
 - [ObsidianInventoryItemDefinition.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/ObsidianInventoryItemDefinition.cpp)
@@ -87,6 +89,8 @@ Repo Links:
 #### 1.5.1 OInventoryItemFragment_Stacks
 
 Component for Items that provided Stacks, this includes: Current Stack Count, Max Stack Count, Inventory Limit Stack Count.
+
+![Item Definition](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/itemdefinition.jpg)
 
 Repo Links:
 - [OInventoryItemFragment_Stacks.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Stacks.h)
