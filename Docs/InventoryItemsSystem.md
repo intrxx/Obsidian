@@ -19,13 +19,16 @@ Here you can find a [youtube video](https://www.youtube.com/watch?v=_QPb8MBalo4)
 > &nbsp; 2.2 [ObsidianInventory](#obsidianinventory) \
 > &nbsp;&nbsp; 2.2.1 [ObsidianInventorySlot](#obsidianinventoryslot) \
 > &nbsp; 2.3 [ObsidianItem](#obsidianitem) \
-> &nbsp; 2.4 [ObsidianGroundItemDesc](#obsidiangrounditemdesc) \
-> &nbsp; 2.5 [ObsidianDraggedItem](#obsidiandraggeditem)
-> 3. [The Rest](#rest) \
-> &nbsp; 3.1 [ObsidianHeroComponent](#obsidianherocomponent) \
-> &nbsp; 3.2 [ObsidianPlayerController](#obsidianplayercontroller) \
-> &nbsp; 3.3 [ObsidianMainOverlay](#obsidianmainoverlay) \
-> &nbsp; 3.4 [ObsidianPickableInterface](#obsidianpickableinterface)
+> &nbsp; 2.4 [ObsidianItemWorldName](#obsidianitemworldname) \
+> &nbsp; 2.5 [ObsidianItemDescription](#obsidianitemdesc) \
+> &nbsp; 2.6 [ObsidianDraggedItem](#obsidiandraggeditem)
+> 3. [Debugging](#debugging) \
+> &nbsp; 3.1 [GameplayDebuggerCategory_InventoryItems](#gdc_inventoryitems)
+> 4. [The Rest](#rest) \
+> &nbsp; 4.1 [ObsidianHeroComponent](#obsidianherocomponent) \
+> &nbsp; 4.2 [ObsidianPlayerController](#obsidianplayercontroller) \
+> &nbsp; 4.3 [ObsidianMainOverlay](#obsidianmainoverlay) \
+> &nbsp; 4.4 [ObsidianPickableInterface](#obsidianpickableinterface)
 
 
 <a name="backend"></a>
@@ -122,12 +125,19 @@ Repo Links:
 - [ObsidianItem.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianItem.h)
 - [ObsidianItem.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianItem.cpp)
 
-<a name="obsidiangrounditemdesc"></a>
-### 2.4 ObsidianGroundItemDesc
+<a name="obsidianitemworldname"></a>
+### 2.4 ObsidianItemWorldName
 
 Repo Links:
-- [ObsidianGroundItemDesc.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianGroundItemDesc.h)
-- [ObsidianGroundItemDesc.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianGroundItemDesc.cpp)
+- [ObsidianItemWorldName.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianItemWorldName.h)
+- [ObsidianItemWorldName.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianItemWorldName.cpp)
+
+<a name="obsidianitemdesc"></a>
+### 2.4 ObsidianItemDescriptionBase
+
+Repo Links:
+- [ObsidianItemDescriptionBase.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianItemDescriptionBase.h)
+- [ObsidianItemDescriptionBase.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianItemDescriptionBase.cpp)
 
 <a name="obsidiandraggeditem"></a>
 ### 2.5 ObsidianDraggedItem
@@ -136,11 +146,21 @@ Repo Links:
 - [ObsidianDraggedItem.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/ObsidianDraggedItem.h)
 - [ObsidianDraggedItem.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/ObsidianDraggedItem.cpp)
 
+<a name="debugging"></a>
+## 3. Debugging
+
+<a name="gdc_inventoryitems"></a>
+### 3.1 GameplayDebuggerCategory_InventoryItems
+
+Repo Links:
+- [GameplayDebuggerCategory_InventoryItems.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h)
+- [GameplayDebuggerCategory_InventoryItems.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.cpp)
+
 <a name="rest"></a>
-## 3. The Rest
+## 4. The Rest
 
 <a name="obsidianherocomponent"></a>
-### 3.1 ObsidianHeroComponent
+### 4.1 ObsidianHeroComponent
 
 Used for dragging items.
 
@@ -149,7 +169,7 @@ Repo Links:
 - [ObsidianHeroComponent.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/CharacterComponents/ObsidianHeroComponent.cpp)
 
 <a name="obsidianplayercontroller"></a>
-### 3.2 ObsidianPlayerController
+### 4.2 ObsidianPlayerController
 
 InventoryComponent is on PC.
 
@@ -158,7 +178,7 @@ Repo Links:
 - [ObsidianPlayerController.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Characters/Player/ObsidianPlayerController.cpp)
 
 <a name="obsidianmainoverlay"></a>
-### 3.3 ObsidianMainOverlay
+### 4.3 ObsidianMainOverlay
 
 Setup for creating ObsidianInventory is here.
 
@@ -167,7 +187,7 @@ Repo Links:
 - [ObsidianMainOverlay.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/ObsidianMainOverlay.cpp)
 
 <a name="obsidianpickableinterface"></a>
-### 3.4 ObsidianPickableInterface
+### 4.4 ObsidianPickableInterface
 
 Repo Links:
 - [ObsidianPickableInterface.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianPickableInterface.h)
