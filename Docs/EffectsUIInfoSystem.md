@@ -1,5 +1,7 @@
 # Game Effects Info System
 
+![Effect UI Info System](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectUIInfoSystem.jpg)
+
 <a name="table-of-contents"></a>
 ## Class Structure Overview
 
@@ -80,6 +82,8 @@ Repo Links:
 
 Spawned and added to Player's screen in ```UObsidianMainOverlay``` for basic effects.
 
+![Basic Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/basiceffectinfo.jpg)
+
 Repo Links:
 - [ObsidianEffectInfoBase.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h)
 - [ObsidianEffectInfoBase.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.cpp)
@@ -89,6 +93,8 @@ Repo Links:
 
 Spawned and added to Player's screen in ```UObsidianMainOverlay``` for durational effects.
 
+![Durational Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/durationaleffectinfo.jpg)
+
 Repo Links:
 - [ObsidianDurationalEffectInfo.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h)
 - [ObsidianDurationalEffectInfo.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.cpp)
@@ -97,6 +103,8 @@ Repo Links:
 #### 2.3.3 UOStackingDurationalEffectInfo
 
 Spawned and added to Player's screen in ```UObsidianMainOverlay``` for stacking durational effects.
+
+![Stacking Durational Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/stackingdurationaleffectinfo.jpg)
 
 Repo Links:
 - [OStackingDurationalEffectInfo.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h)
@@ -125,6 +133,8 @@ Repo Links:
 
 Player Health Globe, effects like poison, shock or chill are displayed on it.
 
+![Progress Globe Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/progressglobeeffectinfo.jpg)
+
 Repo Links:
 - [ObsidianProgressGlobe_Health.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h)
 - [ObsidianProgressGlobe_Health.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.cpp)
@@ -134,6 +144,8 @@ Repo Links:
 
 Regular Enemy Bar displayed on Player's Overlay, effects like poison, shock or chill are displayed on it.
 
+![Regular Overlay Enemy Bar](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/regularenemybarseffectinfo.jpg)
+
 Repo Links:
 - [ObsidianOverlayEnemyBar.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/UObsidianOverlayEnemyBar.h)
 - [ObsidianOverlayEnemyBar.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/UObsidianOverlayEnemyBar.cpp)
@@ -142,6 +154,8 @@ Repo Links:
 ### 2.6 UObsidianOverlayBossEnemyBar
 
 Boss Enemy Bar displayed on Player's Overlay, effects like poison, shock or chill are displayed on it.
+
+![Boss Overlay Enemy Bar](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/bossoverlaybareffectinfo.jpg)
 
 Repo Links:
 - [ObsidianOverlayBossEnemyBar.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ObsidianOverlayBossEnemyBar.h)
