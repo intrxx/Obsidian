@@ -37,7 +37,7 @@ A more detailed presentation can be found here [here](https://github.com/intrxx/
 
 - **Advanced Combat Component** (Extended Combat Manager from AGR PRO) - This is an extension of AGR PRO Combat Manager
  that builds upon the functionality to perform various traces. The implemented improvments concerns the usage of this Manager,
- users are able to choose from mapped meshes in anim notifies which heavly alleviates errors in setup.
+ users are able to choose from mapped meshes in anim notifies which heavly alleviates errors in setup and enables users to trace different meshes in one Anim Montage.
  A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/AdvancedCombatComponent.md) (TODO).
 
 - **Enemies** (Melee, Ranged, Mage, Melee Boss with two phases) - "One from each" enemy implementations.
