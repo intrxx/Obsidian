@@ -2,6 +2,8 @@
 
 Here you can find a [youtube video](https://www.youtube.com/watch?v=_QPb8MBalo4) showcasing the System.
 
+![Inventory Showcase](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems_Inventory.jpg)
+
 <a name="table-of-contents"></a>
 ## Class Structure Overview
 
@@ -155,6 +157,8 @@ Repo Links:
 Repo Links:
 - [GameplayDebuggerCategory_InventoryItems.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h)
 - [GameplayDebuggerCategory_InventoryItems.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.cpp)
+
+![Inventory System Debugging](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems_Debugger.jpg)
 
 <a name="rest"></a>
 ## 4. The Rest
