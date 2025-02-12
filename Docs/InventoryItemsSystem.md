@@ -197,7 +197,7 @@ Repo Links:
 <a name="gdc_inventoryitems"></a>
 ### 4.1 GameplayDebuggerCategory_InventoryItems
 
-Gameplay Debugger Category that contains number of items owned and a list of held items with name, size, stacks and location on the grid information.
+Gameplay Debugger Category that contains number of items owned and a list of held items with name, size, stacks and location on the grid.
 In the feature I plan to paint the ```InventoryStateMap``` to represent the actual state of the Grid. 
 
 ![Inventory System Debugging](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems_Debugger.jpg)
