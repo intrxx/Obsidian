@@ -20,7 +20,7 @@ build some gameplay content on top of them.
 
 - **Buff/Debuff display on Health Bars and Player's HUD** - Gameplay Effects mapped to their descriptions (name, description, type, etc.) 
 using Gameplay Tags, which are displayed on the player's HUD.
- A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EffectsUIInfoSystem.md) (TODO).
+ A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EffectsUIInfoSystem.md).
     - **Player/Enemy Health Bars**
 
 - **Damage Numbers** - A Damage Number System with functionality to collect data on damage dealt and adjust the displayed number accordingly - for example,
