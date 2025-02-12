@@ -16,7 +16,7 @@ build some gameplay content on top of them.
 ### These includs:
 - **Grid Inventory System/Inventory Items** (In Progress) - Grid Inventory System built using ```FFastArraySerializer```
  supporting items of various sizes, stacks, limits, item descriptions, and networking.
-  A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md) (In Progress).
+  A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).
 
 - **Buff/Debuff display on Health Bars and Player's HUD** - Gameplay Effects mapped to their descriptions (name, description, type, etc.) 
 using Gameplay Tags, which are displayed on the player's HUD.
