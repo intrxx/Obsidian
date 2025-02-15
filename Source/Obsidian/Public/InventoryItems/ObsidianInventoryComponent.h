@@ -8,6 +8,7 @@
 #include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianInventoryComponent.generated.h"
 
+class FGameplayDebuggerCategory_InventoryItems;
 class UObsidianInventoryWidgetController;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
@@ -226,6 +227,10 @@ private:
 private:
 	friend UObsidianInventoryWidgetController;
 
+#if WITH_GAMEPLAY_DEBUGGER
+	friend FGameplayDebuggerCategory_InventoryItems;
+#endif
+	
 	/**
 	 * Actual array of items which is FFastArraySerializer.
 	 * It also contains Map which maps Grid Vector2D location to actual Item Instance in the inventory.

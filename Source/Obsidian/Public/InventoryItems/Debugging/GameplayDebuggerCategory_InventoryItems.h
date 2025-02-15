@@ -7,6 +7,7 @@
 #if WITH_GAMEPLAY_DEBUGGER_MENU
 #include "GameplayDebuggerCategory.h"
 
+class UObsidianInventoryComponent;
 /**
  * 
  */
@@ -37,6 +38,8 @@ protected:
 			FVector2D CurrentGridLocation;
 		};
 		TArray<FInventoryItemDebug> Items;
+
+		TMap<FVector2D, bool> InventoryStateMap;
 
 		void Serialize(FArchive& Ar);
 	};

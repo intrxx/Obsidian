@@ -47,6 +47,11 @@ UObsidianInventoryItemInstance* UObsidianInventoryItemInstance::DuplicateItem(co
 	{
 		UObsidianInventoryItemInstance* NewInstance = DuplicateObject<UObsidianInventoryItemInstance>(OriginalItem, Outer);
 		NewInstance->ItemStackTags.TagToCountMap = OriginalItem->ItemStackTags.TagToCountMap; //@HACK This map does not get copied by the DuplicateObject function, need to copy it manually, there might be more.
+
+#if !UE_BUILD_SHIPPING
+		NewInstance->SetItemDebugName(OriginalItem->GetItemDebugName());
+#endif
+
 		return NewInstance;
 	}
 	return nullptr;
