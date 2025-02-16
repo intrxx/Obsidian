@@ -5,8 +5,10 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Components/PawnComponent.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianHeroComponent.generated.h"
 
+class UObsidianInventoryItemInstance;
 struct FInputActionValue;
 class AObsidianDroppableItem;
 class USplineComponent;
@@ -38,20 +40,16 @@ public:
 	
 	AObsidianHUD* GetObsidianHUD() const;
 
-	void DragItem(UObsidianDraggedItem* InDraggedItem);
-	void StopDragging();
+	FDraggedItem GetDraggedItem()
+	{
+		return InternalDraggedItem;
+	}
 	
 	void SetDraggedItemClass(const TSubclassOf<AObsidianDroppableItem>& InDroppableItemClass)
 	{
 		DroppableItemClass = InDroppableItemClass;
 	};
 	
-	/** Gets the currently dragged item, will be nullptr when the character does not drag any item. */
-	UObsidianDraggedItem* GetCurrentlyDraggedItem()
-	{
-		return DraggedItem;
-	}
-
 	bool IsDraggingAnItem() const
 	{
 		return bDragItem;
@@ -61,6 +59,15 @@ public:
 	{
 		bCursorOverUI = bInOverUI;
 	}
+
+	// /** Gets the currently dragged item, will be nullptr when the character does not drag any item. */
+	// UObsidianDraggedItem* GetCurrentlyDraggedItem()
+	// {
+	// 	return DraggedItem;
+	// }
+
+	void DragItem(UObsidianDraggedItem* InDraggedItem, const FDraggedItem& DraggedItem);
+	void StopDragging();
 	
 	bool DropItem();
 
@@ -69,6 +76,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
+
+	UFUNCTION(Server, Reliable)
+	void ServerSetDraggedItem(const FDraggedItem& InDraggedItem);
 	
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
@@ -105,7 +115,13 @@ private:
 	void DragItem() const;
 
 	bool CanDropItem() const;
-	bool HandleDroppingItem();
+
+	UFUNCTION(Server, Reliable)
+	void ServerHandleDroppingItem(const FVector& HitLocation);
+	// bool HandleDroppingItem();
+
+	UFUNCTION(Client, Reliable)
+	void ClientFinishDroppingItem();
 	
 private:
 	UPROPERTY()
@@ -122,7 +138,13 @@ private:
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianDraggedItem> DraggedItem;
+	TObjectPtr<UObsidianDraggedItem> DraggedItemWidget;
+
+	UPROPERTY()
+	FDraggedItem InternalDraggedItem = FDraggedItem();
+
+	// UPROPERTY()
+	// TObjectPtr<UObsidianDraggedItem> DraggedItem;
 	
 	bool bDragItem = false;
 	bool bItemAvailableForDrop = false;

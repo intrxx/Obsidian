@@ -50,6 +50,41 @@ void AObsidianDroppableItem::GetLifetimeReplicatedProps(TArray<class FLifetimePr
 	DOREPLIFETIME(ThisClass, DroppedItemStacks);
 }
 
+void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
+{
+	if(HasAuthority())
+	{
+		HandleInitializeItem(DraggedItem);
+	}
+	else
+	{
+		ClientInitializeItem(DraggedItem);
+	}
+}
+
+void AObsidianDroppableItem::ClientInitializeItem_Implementation(const FDraggedItem& DraggedItem)
+{
+	HandleInitializeItem(DraggedItem);
+}
+
+void AObsidianDroppableItem::HandleInitializeItem(const FDraggedItem& DraggedItem)
+{
+	if(!ensureMsgf(DraggedItem.IsEmpty(), TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
+	{
+		return;
+	}
+	
+	if(UObsidianInventoryItemInstance* ItemInstance = DraggedItem.Instance)
+	{
+		AddItemInstance(ItemInstance);
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		const int32 Stacks = DraggedItem.Stacks;
+		AddItemDefinition(ItemDef, Stacks);
+	}
+}
+
 void AObsidianDroppableItem::BeginPlay()
 {
 	Super::BeginPlay();
@@ -372,7 +407,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PickingPlayerController, DraggedItemWidgetClass);
 			DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
 			DraggedItem->AddToViewport();
-			HeroComp->DragItem(DraggedItem);
+			HeroComp->DragItem(DraggedItem, FDraggedItem(ItemInstance));
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
@@ -434,7 +469,8 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 			UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PickingPlayerController, DraggedItemWidgetClass);
 			DraggedItem->InitializeItemWidgetWithItemDef(ItemDef, StackCount);
 			DraggedItem->AddToViewport();
-			HeroComp->DragItem(DraggedItem);
+			
+			HeroComp->DragItem(DraggedItem, FDraggedItem(ItemDef, StackCount));
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks

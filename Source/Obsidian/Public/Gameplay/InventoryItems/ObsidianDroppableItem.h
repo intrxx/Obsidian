@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "Interaction/ObsidianHighlightInterface.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianDroppableItem.generated.h"
 
 class AObsidianPlayerController;
@@ -26,6 +27,8 @@ public:
 	AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
+	void InitializeItem(const FDraggedItem& DraggedItem);
 
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
@@ -53,6 +56,13 @@ protected:
 	
 	void OnItemMouseHover(const bool bMouseEnter);
 	void OnItemMouseButtonDown(const bool bLeftControlDown);
+
+	//
+	// Server Authoritative work
+	// 
+	UFUNCTION(Client, Reliable)
+	void ClientInitializeItem(const FDraggedItem& DraggedItem);
+	void HandleInitializeItem(const FDraggedItem& DraggedItem);
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */

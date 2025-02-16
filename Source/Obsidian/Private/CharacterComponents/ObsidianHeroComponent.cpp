@@ -355,7 +355,11 @@ void UObsidianHeroComponent::Input_DropItem()
 	{
 		return;
 	}
-	HandleDroppingItem();
+	//
+	// Server Authoritative work
+	//
+	// HandleDroppingItem();
+	ServerHandleDroppingItem(CursorHit.Location);
 }
 
 bool UObsidianHeroComponent::DropItem()
@@ -364,7 +368,12 @@ bool UObsidianHeroComponent::DropItem()
 	{
 		return false;
 	}
-	return HandleDroppingItem();
+	//
+	// Server Authoritative work
+	//
+	//return HandleDroppingItem();
+	ServerHandleDroppingItem(CursorHit.Location);
+	return true;
 }
 
 void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppableItem* ItemToPickup)
@@ -467,33 +476,51 @@ void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDr
 	ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
 }
 
-bool UObsidianHeroComponent::HandleDroppingItem()
+// void UObsidianHeroComponent::HandleDroppingItem()
+void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVector& HitLocation)
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
-		return false;
+		return;
+		//return false;
 	}
-	
-	const FVector CursorHitLocation = CursorHit.Location;
-	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, CursorHitLocation, FVector(1.0f, 1.0f, 1.0f));
+
+	// const FVector CursorHitLocation = CursorHit.Location;
+	// const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, CursorHitLocation, FVector(1.0f, 1.0f, 1.0f));
+	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, HitLocation, FVector(1.0f, 1.0f, 1.0f));
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
+	//
+	// Server Authoritative work
+	// 
+	Item->InitializeItem(InternalDraggedItem);
+	InternalDraggedItem.Clear();
 
-	const UObsidianDraggedItem* CurrentlyDraggedItem = GetCurrentlyDraggedItem();
-	if(UObsidianInventoryItemInstance* ItemInstance = CurrentlyDraggedItem->GetItemInstance())
-	{
-		Item->AddItemInstance(ItemInstance);
-	}
-	else if(TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CurrentlyDraggedItem->GetItemDef())
-	{
-		const int32 Stacks = CurrentlyDraggedItem->GetItemStacks();
-		Item->AddItemDefinition(ItemDef, Stacks);
-	}
+	// UObsidianDraggedItem* DraggedItem = GetCurrentlyDraggedItem();
+	// if(UObsidianInventoryItemInstance* ItemInstance = DraggedItem->GetItemInstance())
+	// {
+	// 	DraggedItem->AddItemInstance(ItemInstance);
+	// }
+	// else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef())
+	// {
+	// 	const int32 Stacks = DraggedItem->GetItemStacks();
+	// 	DraggedItem->AddItemDefinition(ItemDef, Stacks);
+	// }
+	
 	Item->FinishSpawning(ItemSpawnTransform);
-	StopDragging();
 
+	// StopDragging();
+	// bJustDroppedItem = true;
+	//
+	// Server Authoritative work
+	// 
+	ClientFinishDroppingItem();
+}
+
+void UObsidianHeroComponent::ClientFinishDroppingItem_Implementation()
+{
+	StopDragging();
 	bJustDroppedItem = true;
-	return true;
 }
 
 AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
@@ -505,7 +532,13 @@ AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 	return nullptr;
 }
 
-void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
+void UObsidianHeroComponent::ServerSetDraggedItem_Implementation(const FDraggedItem& InDraggedItem)
+{
+	InternalDraggedItem = InDraggedItem;
+}
+
+// void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
+void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem, const FDraggedItem& DraggedItem)
 {
 	const UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -513,7 +546,7 @@ void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
 		return;
 	}
 	
-	DraggedItem = InDraggedItem;
+	DraggedItemWidget = InDraggedItem;
 	bDragItem = true;
 
 	TWeakObjectPtr<UObsidianHeroComponent> WeakThis(this);
@@ -524,14 +557,16 @@ void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
 			WeakThis->bItemAvailableForDrop = true;
 		}
 	});
+
+	ServerSetDraggedItem(DraggedItem);
 }
 
 void UObsidianHeroComponent::StopDragging()
 {
-	DraggedItem->RemoveFromParent();
+	DraggedItemWidget->RemoveFromParent();
 	
 	bDragItem = false;
-	DraggedItem = nullptr;
+	DraggedItemWidget = nullptr;
 	bItemAvailableForDrop = false;
 }
 
@@ -548,7 +583,7 @@ void UObsidianHeroComponent::DragItem() const
 	if(PC->GetMousePosition(LocationX, LocationY))
 	{
 		const FVector2D ViewportPosition = FVector2D(LocationX, LocationY);
-		DraggedItem->SetPositionInViewport(ViewportPosition);
+		DraggedItemWidget->SetPositionInViewport(ViewportPosition);
 	}
 }
 
