@@ -2,6 +2,9 @@
 
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+
+#include <GameFramework/GameplayMessageSubsystem.h>
+
 #include "UI/Inventory/ObsidianItemDescriptionBase.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
@@ -22,7 +25,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(InventoryComponent);
 	InternalInventoryComponent = InventoryComponent;
-	InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::ClientOnItemAdded);
+	//InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::ClientOnItemAdded);
 	InventoryComponent->OnItemsStacksChangedDelegate.AddUObject(this, &ThisClass::OnItemsStacksChanged);
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 
@@ -34,6 +37,42 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	
 	InternalHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	check(InternalHeroComponent);
+
+	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
+}
+
+void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
+{
+	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
+	if(Instance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryWidgetController::OnInventoryStateChanged."));
+		return;
+	}
+	
+	if(InventoryChangeMessage.NewCount == 0) // Removed
+	{
+		UE_LOG(LogInventory, Warning, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+	}
+
+	if(InventoryChangeMessage.NewCount == InventoryChangeMessage.Delta) // Added
+	{
+		UE_LOG(LogInventory, Warning, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		
+		FObsidianItemVisuals ItemVisuals;
+		ItemVisuals.ItemImage = Instance->GetItemImage();
+		ItemVisuals.DesiredPosition = InventoryChangeMessage.GridItemPosition;
+		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
+		ItemVisuals.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
+		
+		OnItemAddedDelegate.Broadcast(ItemVisuals);
+	}
+
+	if (InventoryChangeMessage.NewCount != InventoryChangeMessage.Delta) // Changed
+	{
+		UE_LOG(LogInventory, Warning, TEXT("Changed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+	}	
 }
 
 void UObsidianInventoryWidgetController::ClientOnItemAdded_Implementation(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
@@ -74,23 +113,46 @@ void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
 {
-	GridLocationToItemMap.Empty();
-	GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
-	AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
+	//
+	//  Design change
+	//
+	// GridLocationToItemMap.Empty();
+	// GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
+	// AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
+	//
+	// for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
+	// {
+	// 	const UObsidianInventoryItemInstance* ItemInstance = LocToInstancePair.Value;
+	// 	ensure(ItemInstance);
+	// 	
+	// 	const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+	// 	const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
+	// 	(
+	// 		ItemInstance->GetItemImage(),
+	// 		LocToInstancePair.Key,
+	// 		ItemInstance->GetItemGridSpan(),
+	// 		StackCount
+	// 	);
+	// 	OnItemAddedDelegate.Broadcast(ItemVisuals);
+	// }
+	//
+	// End of Design change
+	//
+
 	
-	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
+	TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
+	AddedItemWidgetMap.Empty(Items.Num());
+	
+	for(const UObsidianInventoryItemInstance* Item : Items)
 	{
-		const UObsidianInventoryItemInstance* ItemInstance = LocToInstancePair.Value;
-		ensure(ItemInstance);
+		ensure(Item);
 		
-		const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
-		const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
-		(
-			ItemInstance->GetItemImage(),
-			LocToInstancePair.Key,
-			ItemInstance->GetItemGridSpan(),
-			StackCount
-		);
+		FObsidianItemVisuals ItemVisuals;
+		ItemVisuals.ItemImage = Item->GetItemImage();
+		ItemVisuals.GridSpan = Item->GetItemGridSpan();
+		ItemVisuals.DesiredPosition = Item->GetItemCurrentGridLocation();
+		ItemVisuals.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+
 		OnItemAddedDelegate.Broadcast(ItemVisuals);
 	}
 }
@@ -664,3 +726,4 @@ FVector2D UObsidianInventoryWidgetController::GetItemUIElementPositionBoundByVie
 	
 	return BoundedPosition;
 }
+

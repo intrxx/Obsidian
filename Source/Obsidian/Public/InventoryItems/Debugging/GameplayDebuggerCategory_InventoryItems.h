@@ -7,6 +7,7 @@
 #if WITH_GAMEPLAY_DEBUGGER_MENU
 #include "GameplayDebuggerCategory.h"
 
+class UObsidianInventoryComponent;
 /**
  * 
  */
@@ -19,6 +20,34 @@ public:
 	OBSIDIAN_API virtual void DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) override;
 
 	OBSIDIAN_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
+
+protected:
+	OBSIDIAN_API void DrawItems(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) const;
+	
+protected:
+	struct FRepData
+	{
+		struct FInventoryItemDebug
+		{
+			FString Name;
+			FString Item;
+			int32 CurrentStackCount;
+			int32 MaxStackCount;
+			int32 LimitStackCount;
+			FVector2D GridSize;
+			FVector2D CurrentGridLocation;
+		};
+		TArray<FInventoryItemDebug> Items;
+
+		TMap<FVector2D, bool> InventoryStateMap;
+
+		void Serialize(FArchive& Ar);
+	};
+	FRepData DataPack;
+
+private:
+	// Save off the last expected draw size so that we can draw a border around it next frame (and hope we're the same size)
+	float LastDrawDataEndSize = 0.0f;
 };
 
 #endif // WITH_GAMEPLAY_DEBUGGER_MENU
