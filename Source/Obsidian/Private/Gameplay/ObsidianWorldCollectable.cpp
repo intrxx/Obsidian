@@ -3,17 +3,27 @@
 
 #include "Gameplay//ObsidianWorldCollectable.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "Net/UnrealNetwork.h"
 
 AObsidianWorldCollectable::AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	bReplicates = true;
+	
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 }
 
+void AObsidianWorldCollectable::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ThisClass, PickupContent);
+}
+
 FPickupContent AObsidianWorldCollectable::GetPickupContent() const
 {
-	return StaticContent;
+	return PickupContent;
 }
 
 FPickupInstance AObsidianWorldCollectable::GetPickupInstanceFromPickupContent() const
@@ -39,26 +49,31 @@ FPickupTemplate AObsidianWorldCollectable::GetPickupTemplateFromPickupContent() 
 void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
 	checkf(InstanceToAdd, TEXT("Provided InstanceToAdd is invalid in AObsidianWorldCollectable::AddItemInstance."));
-	StaticContent.Instance = FPickupInstance(InstanceToAdd);
+	PickupContent.Instance = FPickupInstance(InstanceToAdd);
 }
 
 void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks)
 {
 	checkf(ItemDef, TEXT("Provided ItemDef is invalid in AObsidianWorldCollectable::AddItemDefinition."));
-	StaticContent.Template = FPickupTemplate(ItemDef, ItemStacks);
+	PickupContent.Template = FPickupTemplate(ItemDef, ItemStacks);
 }
 
 void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 NewItemStacks)
 {
-	if(StaticContent.Template.IsValid())
+	if(PickupContent.Template.IsValid())
 	{
-		StaticContent.Template.StackCount = NewItemStacks;
+		PickupContent.Template.StackCount = NewItemStacks;
 	}
+}
+
+void AObsidianWorldCollectable::OnRep_PickupContent()
+{
+	
 }
 
 bool AObsidianWorldCollectable::CarriesItemInstance() const
 {
-	if(const FPickupContent PickupContent = GetPickupContent(); PickupContent.Instance.IsValid())
+	if(PickupContent.Instance.IsValid())
 	{
 		return true;
 	}
@@ -67,7 +82,7 @@ bool AObsidianWorldCollectable::CarriesItemInstance() const
 
 bool AObsidianWorldCollectable::CarriesItemDef() const
 {
-	if(const FPickupContent PickupContent = GetPickupContent(); PickupContent.Template.IsValid())
+	if(PickupContent.Template.IsValid())
 	{
 		return true;
 	}
@@ -76,8 +91,8 @@ bool AObsidianWorldCollectable::CarriesItemDef() const
 
 bool AObsidianWorldCollectable::CarriesBoth() const
 {
-	const FPickupContent PickupContent = GetPickupContent();
-	if((PickupContent.Instance.IsValid()) && (PickupContent.Template.IsValid()))
+	const FPickupContent Content = GetPickupContent();
+	if((Content.Instance.IsValid()) && (Content.Template.IsValid()))
 	{
 		return true;
 	}

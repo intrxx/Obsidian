@@ -120,6 +120,11 @@ UObsidianWidgetBase* AObsidianHero::GetHealthBarWidget() const
 	return nullptr;
 }
 
+UObsidianHeroComponent* AObsidianHero::GetHeroComponent() const
+{
+	return HeroComponent;
+}
+
 int32 AObsidianHero::GetCharacterLevel()
 {
 	return GetObsidianPlayerState() == nullptr ? GetObsidianPlayerState()->GetHeroLevel() : 1;
@@ -214,8 +219,6 @@ void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) c
 			ObsidianHUD->InitOverlay(ObsidianPC, ObsidianPS, ObsidianASC, HeroAttributesComponent);
 		}
 	}
-
-	HeroComponent->SetDraggedItemClass(DroppableItemClass);
 }
 
 void AObsidianHero::InitializeHealthBar() const

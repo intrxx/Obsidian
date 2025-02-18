@@ -50,19 +50,16 @@ public:
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
-
+	
+	virtual void OnRep_PickupContent() override;
+	
 	UFUNCTION()
 	void HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed);
 	
 	void OnItemMouseHover(const bool bMouseEnter);
-	void OnItemMouseButtonDown(const bool bLeftControlDown);
-
-	//
-	// Server Authoritative work
-	// 
-	UFUNCTION(Client, Reliable)
-	void ClientInitializeItem(const FDraggedItem& DraggedItem);
-	void HandleInitializeItem(const FDraggedItem& DraggedItem);
+	void OnItemMouseButtonDown(const int32 PlayerIndex, const bool bLeftControlDown);
+	
+	bool InitializeWorldName();
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
@@ -77,7 +74,7 @@ private:
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition() const;
 
-	void InitItemWorldName() const;
+	bool InitItemWorldName() const;
 
 	UObsidianItemDescriptionBase* CreateItemDescription();
 	void DestroyItemDescription();
@@ -108,4 +105,6 @@ private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
 	int32 DroppedItemStacks = 1;
+
+	bool bInitializedItemName = false;
 };

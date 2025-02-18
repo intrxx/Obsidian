@@ -8,6 +8,7 @@
 #include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianHeroComponent.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianInventoryItemInstance;
 struct FInputActionValue;
 class AObsidianDroppableItem;
@@ -33,22 +34,20 @@ public:
 	{
 		return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);
 	}
-	
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	
 	void InitializePlayerInput(UInputComponent* InputComponent);
 	
 	AObsidianHUD* GetObsidianHUD() const;
 
+	AObsidianPlayerController* GetObsidianPlayerController() const;
+
 	FDraggedItem GetDraggedItem()
 	{
-		return InternalDraggedItem;
+		return DraggedItem;
 	}
-	
-	void SetDraggedItemClass(const TSubclassOf<AObsidianDroppableItem>& InDroppableItemClass)
-	{
-		DroppableItemClass = InDroppableItemClass;
-	};
 	
 	bool IsDraggingAnItem() const
 	{
@@ -66,8 +65,11 @@ public:
 	// 	return DraggedItem;
 	// }
 
-	void DragItem(UObsidianDraggedItem* InDraggedItem, const FDraggedItem& DraggedItem);
-	void StopDragging();
+	UFUNCTION(Server, Reliable)
+	void ServerGrabItemToCursor(AObsidianDroppableItem* ItemToPickup);
+	
+	void StartDraggingItem();
+	void StopDraggingItem();
 	
 	bool DropItem();
 
@@ -76,9 +78,6 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
-
-	UFUNCTION(Server, Reliable)
-	void ServerSetDraggedItem(const FDraggedItem& InDraggedItem);
 	
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
@@ -94,6 +93,9 @@ protected:
 	void Input_TogglePassiveSkillTree();
 	
 	void Input_DropItem();
+
+	UFUNCTION()
+	void OnRep_DraggedItem();
 	
 protected:
 	/** Time Threshold to know if it was a short press */
@@ -124,8 +126,11 @@ private:
 	void ClientFinishDroppingItem();
 	
 private:
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
 	
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
 	FHitResult CursorHit;
@@ -140,8 +145,8 @@ private:
 	UPROPERTY()
 	TObjectPtr<UObsidianDraggedItem> DraggedItemWidget;
 
-	UPROPERTY()
-	FDraggedItem InternalDraggedItem = FDraggedItem();
+	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
+	FDraggedItem DraggedItem = FDraggedItem();
 
 	// UPROPERTY()
 	// TObjectPtr<UObsidianDraggedItem> DraggedItem;

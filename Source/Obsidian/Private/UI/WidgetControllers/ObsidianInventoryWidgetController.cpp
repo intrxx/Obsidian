@@ -445,7 +445,7 @@ void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPositio
 	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
 	DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
 	DraggedItem->AddToViewport();
-	InternalHeroComponent->DragItem(DraggedItem, FDraggedItem(ItemInstance));
+	//InternalHeroComponent->DragItem(DraggedItem, FDraggedItem(ItemInstance));
 
 	InventoryComponent->RemoveItemInstance(ItemInstance);
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
@@ -479,7 +479,7 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
 	DraggedItem->InitializeItemWidgetWithItemInstance(NewInstance);
 	DraggedItem->AddToViewport();
-	InternalHeroComponent->DragItem(DraggedItem, FDraggedItem(ItemInstance));
+	//InternalHeroComponent->DragItem(DraggedItem, FDraggedItem(ItemInstance));
 }
 
 void UObsidianInventoryWidgetController::RemoveItemUIElements()

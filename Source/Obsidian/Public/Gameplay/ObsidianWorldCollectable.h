@@ -15,6 +15,8 @@ class OBSIDIAN_API AObsidianWorldCollectable : public AActor, public IObsidianPi
 public:	
 	AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
 	virtual FPickupContent GetPickupContent() const override;
 	FPickupInstance GetPickupInstanceFromPickupContent() const;
 	FPickupTemplate GetPickupTemplateFromPickupContent() const;
@@ -24,11 +26,15 @@ public:
 	virtual void OverrideTemplateStacks(const int32 NewItemStacks) override;
 
 protected:
+	UFUNCTION()
+	virtual void OnRep_PickupContent();
+	
 	bool CarriesItemInstance() const;
 	bool CarriesItemDef() const;
 	bool CarriesBoth() const;
 	
 protected:
-	UPROPERTY(EditAnywhere, Category = "Obsidian")
-	FPickupContent StaticContent;
+	UPROPERTY(EditAnywhere, ReplicatedUsing = OnRep_PickupContent, Category = "Obsidian")
+	FPickupContent PickupContent;
+
 };

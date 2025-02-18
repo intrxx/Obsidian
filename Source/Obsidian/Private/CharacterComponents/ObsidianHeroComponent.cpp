@@ -19,6 +19,7 @@
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
@@ -31,6 +32,13 @@ UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectI
 	PrimaryComponentTick.bStartWithTickEnabled = true;
 	
 	AutoRunSplineComp = CreateDefaultSubobject<USplineComponent>(TEXT("AutoRunSplineComponent"));
+}
+
+void UObsidianHeroComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME_CONDITION(ThisClass, DraggedItem, COND_OwnerOnly);
 }
 
 void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -493,8 +501,8 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 	//
 	// Server Authoritative work
 	// 
-	Item->InitializeItem(InternalDraggedItem);
-	InternalDraggedItem.Clear();
+	Item->InitializeItem(DraggedItem);
+	DraggedItem.Clear();
 
 	// UObsidianDraggedItem* DraggedItem = GetCurrentlyDraggedItem();
 	// if(UObsidianInventoryItemInstance* ItemInstance = DraggedItem->GetItemInstance())
@@ -519,7 +527,7 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 
 void UObsidianHeroComponent::ClientFinishDroppingItem_Implementation()
 {
-	StopDragging();
+	StopDraggingItem();
 	bJustDroppedItem = true;
 }
 
@@ -532,21 +540,79 @@ AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 	return nullptr;
 }
 
-void UObsidianHeroComponent::ServerSetDraggedItem_Implementation(const FDraggedItem& InDraggedItem)
+AObsidianPlayerController* UObsidianHeroComponent::GetObsidianPlayerController() const
 {
-	InternalDraggedItem = InDraggedItem;
+	return GetController<AObsidianPlayerController>();
 }
 
-// void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem)
-void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem, const FDraggedItem& DraggedItem)
+void UObsidianHeroComponent::ServerGrabItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
-	const UWorld* World = GetWorld();
+	if(!HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianHeroComponent::ServerPickupItemDef_Implementation."))
+		return;
+	}
+
+	if(ItemToPickup == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+	
+	const FPickupTemplate Template = ItemToPickup->GetPickupTemplateFromPickupContent();
+	if(Template.IsValid()) // We are grabbing Item Template
+	{
+		DraggedItem = FDraggedItem(Template.ItemDef, Template.StackCount);
+		StartDraggingItem();
+		ItemToPickup->Destroy();
+		return;
+	}
+
+	const FPickupInstance Instance = ItemToPickup->GetPickupInstanceFromPickupContent();
+	if(Instance.IsValid()) // We are grabbing Item Instance
+	{
+		DraggedItem = FDraggedItem(Instance.Item);
+		StartDraggingItem();
+		ItemToPickup->Destroy();
+		return;
+	}
+}
+
+void UObsidianHeroComponent::OnRep_DraggedItem()
+{
+	if(!DraggedItem.IsEmpty())
+	{
+		StartDraggingItem();
+	}
+}
+
+void UObsidianHeroComponent::StartDraggingItem()
+{
+	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
 		return;
 	}
 	
-	DraggedItemWidget = InDraggedItem;
+	checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in UObsidianHeroComponent::DragItem please fill it on ObsidianDroppableItem Instance."));
+	UObsidianDraggedItem* Item = CreateWidget<UObsidianDraggedItem>(World, DraggedItemWidgetClass);
+
+	bool bInitialized = false;
+	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
+	{
+		Item->InitializeItemWidgetWithItemInstance(Instance);
+		bInitialized = true;
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		Item->InitializeItemWidgetWithItemDef(ItemDef, DraggedItem.Stacks);
+		bInitialized = true;
+	}
+	checkf(bInitialized, TEXT("Item was not initialized with neither Instance nor ItemDef, this is bad and should not happen."));
+	
+	Item->AddToViewport();
+	
+	DraggedItemWidget = Item;
 	bDragItem = true;
 
 	TWeakObjectPtr<UObsidianHeroComponent> WeakThis(this);
@@ -557,11 +623,9 @@ void UObsidianHeroComponent::DragItem(UObsidianDraggedItem* InDraggedItem, const
 			WeakThis->bItemAvailableForDrop = true;
 		}
 	});
-
-	ServerSetDraggedItem(DraggedItem);
 }
 
-void UObsidianHeroComponent::StopDragging()
+void UObsidianHeroComponent::StopDraggingItem()
 {
 	DraggedItemWidget->RemoveFromParent();
 	

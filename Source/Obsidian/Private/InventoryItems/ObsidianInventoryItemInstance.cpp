@@ -34,7 +34,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
 {
-	if ((ItemDef != nullptr) && (FragmentClass != nullptr))
+	if((ItemDef != nullptr) && (FragmentClass != nullptr))
 	{
 		return GetDefault<UObsidianInventoryItemDefinition>(ItemDef)->FindFragmentByClass(FragmentClass);
 	}
