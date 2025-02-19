@@ -38,6 +38,8 @@ public:
 	AObsidianPlayerController* GetObsidianPlayerController() const;
 
 	UObsidianWidgetBase* GetHealthBarWidget() const;
+
+	UObsidianHeroComponent* GetHeroComponent() const;
 	
 	//~ Start of CombatInterface
 	virtual int32 GetCharacterLevel() override;
@@ -92,7 +94,4 @@ private:
 	/** Health bar to set on simulated proxy Player. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianHeroHealthBar_Simple> SimulatedHealthBarClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;
 };

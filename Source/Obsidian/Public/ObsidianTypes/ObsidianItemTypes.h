@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "ObsidianItemTypes.generated.h"
 
 class UObsidianInventoryItemInstance;
@@ -89,6 +90,44 @@ public:
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 MaxItemStackCount = 0;
+};
+
+USTRUCT()
+struct FDraggedItem
+{
+public:
+	GENERATED_BODY()
+	
+	FDraggedItem(){};
+	FDraggedItem(UObsidianInventoryItemInstance* InInstance)
+		: Instance(InInstance)
+	{}
+	FDraggedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const int32 InStacks)
+		: ItemDef(InItemDef)
+		, Stacks(InStacks)
+	{}
+
+	bool IsEmpty() const
+	{
+		return !Instance && !ItemDef;
+	}
+
+	void Clear()
+	{
+		Instance = nullptr;
+		ItemDef = nullptr;
+		Stacks = 0;
+	}
+
+public:
+	UPROPERTY()
+	UObsidianInventoryItemInstance* Instance = nullptr;
+
+	UPROPERTY()
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = nullptr;
+	
+	UPROPERTY()
+	int32 Stacks = 0;
 };
 
 USTRUCT(BlueprintType)

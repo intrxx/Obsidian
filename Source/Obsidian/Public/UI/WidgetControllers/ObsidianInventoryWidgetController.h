@@ -75,6 +75,7 @@ public:
 
 	UFUNCTION(Client, Reliable)
 	void ClientOnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
+	
 	void OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap);
 	void OnInventoryOpen();
 

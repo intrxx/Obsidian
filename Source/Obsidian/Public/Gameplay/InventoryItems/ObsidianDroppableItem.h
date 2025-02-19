@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "Interaction/ObsidianHighlightInterface.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianDroppableItem.generated.h"
 
 class AObsidianPlayerController;
@@ -27,6 +28,8 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
+	void InitializeItem(const FDraggedItem& DraggedItem);
+
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
 
@@ -40,19 +43,23 @@ public:
 	 * Use only on Server.
 	 * Updates the stack count of dropped item after trying to pick it up.
 	 * Must be called after potential stack changes of the item, handles destroying the item if stack count is 0 or negative,
-	 * although it should never be negative so It will warn you.
+	 * although it should never be negative, so It will warn you.
 	 */
 	void UpdateDroppedItemStacks(const int32 NewDroppedItemStacks);
 	
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
-
+	
+	virtual void OnRep_PickupContent() override;
+	
 	UFUNCTION()
 	void HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed);
 	
 	void OnItemMouseHover(const bool bMouseEnter);
-	void OnItemMouseButtonDown(const bool bLeftControlDown);
+	void OnItemMouseButtonDown(const int32 PlayerIndex, const bool bLeftControlDown);
+	
+	bool InitializeWorldName();
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
@@ -67,7 +74,7 @@ private:
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition() const;
 
-	void InitItemWorldName() const;
+	bool InitItemWorldName() const;
 
 	UObsidianItemDescriptionBase* CreateItemDescription();
 	void DestroyItemDescription();
@@ -98,4 +105,6 @@ private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
 	int32 DroppedItemStacks = 1;
+
+	bool bInitializedItemName = false;
 };

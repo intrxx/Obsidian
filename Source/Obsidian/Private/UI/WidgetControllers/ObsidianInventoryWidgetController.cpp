@@ -165,31 +165,31 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 	}
 	check(InventoryComponent);
 	
-	UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-	if(UObsidianInventoryItemInstance* Instance = DraggedItem->GetItemInstance())
-	{
-		const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
-		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition, StacksToAddOverride))
-		{
-			InternalHeroComponent->StopDragging();
-			return;
-		}
-		DraggedItem->SyncStackCountWithInstance();
-	}
-	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef())
-	{
-		const int32 ItemStackCount = DraggedItem->GetItemStacks();
-
-		int32 StackLeft = ItemStackCount;
-		const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
-		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StackLeft, ItemStackCount, StacksToAddOverride);
-		if(StackLeft == 0)
-		{
-			InternalHeroComponent->StopDragging();
-			return;
-		}
-		DraggedItem->UpdateStackCount(StackLeft);
-	}
+	// FDraggedItem DraggedItem = InternalHeroComponent->GetDraggedItem();
+	// if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
+	// {
+	// 	const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+	// 	if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition, StacksToAddOverride))
+	// 	{
+	// 		InternalHeroComponent->StopDragging();
+	// 		return;
+	// 	}
+	// 	DraggedItem->SyncStackCountWithInstance();
+	// }
+	// if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	// {
+	// 	const int32 ItemStackCount = DraggedItem.Stacks;
+	//
+	// 	int32 StackLeft = ItemStackCount;
+	// 	const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+	// 	InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StackLeft, ItemStackCount, StacksToAddOverride);
+	// 	if(StackLeft == 0)
+	// 	{
+	// 		InternalHeroComponent->StopDragging();
+	// 		return;
+	// 	}
+	// 	DraggedItem->UpdateStackCount(StackLeft);
+	// }
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
@@ -200,67 +200,67 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 
 	RemoveItemUIElements();
 	
-	if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
-	{
-		UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-		if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance()) // We carry item instance.
-		{
-			if(DraggedInstance->IsStackable())
-			{
-				FObsidianAddingStacksResult AddingStacksResult;
-				if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult))
-				{
-					ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
-					if(AddingStacksResult.bAddedWholeItemAsStacks) 
-					{
-						InternalHeroComponent->StopDragging();
-						return;
-					}
-					DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
-					return;
-				}
-			}
-			
-			if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
-			{
-				InternalHeroComponent->StopDragging();
-				PickupItem(SlotPosition);
-				InventoryComponent->AddItemInstanceToSpecificSlot(DraggedInstance, SlotPosition);
-			}
-			return;
-		}
-		
-		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef()) // We carry item def
-		{
-			const int32 ItemStackCount = DraggedItem->GetItemStacks();
-			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-			if(DefaultObject && DefaultObject->IsStackable())
-			{
-				FObsidianAddingStacksResult AddingStacksResult;
-				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult))
-				{
-					ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
-					if(AddingStacksResult.bAddedWholeItemAsStacks)
-					{
-						InternalHeroComponent->StopDragging();
-						return;
-					}
-					DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
-					return;
-				}
-			}
-			
-			if(InternalInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
-			{
-				InternalHeroComponent->StopDragging();
-				PickupItem(SlotPosition);
-				int32 StackLeft = ItemStackCount;
-				InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, StackLeft, ItemStackCount);
-			}
-			return;
-		}
-		return;
-	}
+	// if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+	// {
+	// 	 UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
+	// 	 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance()) // We carry item instance.
+	// 	 {
+	// 	 	if(DraggedInstance->IsStackable())
+	// 	 	{
+	// 	 		FObsidianAddingStacksResult AddingStacksResult;
+	// 	 		if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult))
+	// 	 		{
+	// 	 			ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+	// 	 			if(AddingStacksResult.bAddedWholeItemAsStacks) 
+	// 	 			{
+	// 	 				InternalHeroComponent->StopDragging();
+	// 	 				return;
+	// 	 			}
+	// 	 			DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
+	// 	 			return;
+	// 	 		}
+	// 	 	}
+	// 		
+	// 	 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
+	// 	 	{
+	// 	 		InternalHeroComponent->StopDragging();
+	// 	 		PickupItem(SlotPosition);
+	// 	 		InventoryComponent->AddItemInstanceToSpecificSlot(DraggedInstance, SlotPosition);
+	// 	 	}
+	// 	 	return;
+	// 	 }
+	// 	
+	// 	 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef()) // We carry item def
+	// 	 {
+	// 	 	const int32 ItemStackCount = DraggedItem->GetItemStacks();
+	// 	 	const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+	// 	 	if(DefaultObject && DefaultObject->IsStackable())
+	// 	 	{
+	// 	 		FObsidianAddingStacksResult AddingStacksResult;
+	// 	 		if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult))
+	// 	 		{
+	// 	 			ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+	// 	 			if(AddingStacksResult.bAddedWholeItemAsStacks)
+	// 	 			{
+	// 	 				InternalHeroComponent->StopDragging();
+	// 	 				return;
+	// 	 			}
+	// 	 			DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
+	// 	 			return;
+	// 	 		}
+	// 	 	}
+	// 		
+	// 		 if(InternalInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
+	// 		 {
+	// 		 	InternalHeroComponent->StopDragging();
+	// 		 	PickupItem(SlotPosition);
+	// 		 	int32 StackLeft = ItemStackCount;
+	// 		 	InventoryComponent->AddItemDefinitionToSpecifiedSlot(DraggedItemDef, SlotPosition, StackLeft, ItemStackCount);
+	// 		 }
+	// 		 return;
+	// 	}
+	// 	return;
+	// }
 	PickupItem(SlotPosition);
 }
 
@@ -268,51 +268,51 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 {
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceAtLocation(SlotPosition);
 	
-	if(InternalHeroComponent->IsDraggingAnItem())
-	{
-		UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-		check(DraggedItem);
-
-		UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance();
-		if(DraggedInstance && DraggedInstance->IsStackable())
-		{
-			FObsidianAddingStacksResult AddingStacksResult;
-			if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult, 1))
-			{
-				ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
-				if(AddingStacksResult.bAddedWholeItemAsStacks)
-				{
-					InternalHeroComponent->StopDragging();
-				}
-				DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
-				return;
-			}
-			return;
-		}
-		
-		if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef())
-		{
-			const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-			if(DefaultObject && DefaultObject->IsStackable())
-			{
-				const int32 ItemStackCount = DraggedItem->GetItemStacks();
-				
-				FObsidianAddingStacksResult AddingStacksResult;
-				if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult, 1))
-				{
-					ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
-					if(AddingStacksResult.bAddedWholeItemAsStacks)
-					{
-						InternalHeroComponent->StopDragging();
-						return;
-					}
-					DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
-				}
-			}
-			return;
-		}
-		return;
-	}
+	// if(InternalHeroComponent->IsDraggingAnItem())
+	// {
+	// 	UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
+	// 	check(DraggedItem);
+	//
+	// 	UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance();
+	// 	if(DraggedInstance && DraggedInstance->IsStackable())
+	// 	{
+	// 		FObsidianAddingStacksResult AddingStacksResult;
+	// 		if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult, 1))
+	// 		{
+	// 			ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+	// 			if(AddingStacksResult.bAddedWholeItemAsStacks)
+	// 			{
+	// 				InternalHeroComponent->StopDragging();
+	// 			}
+	// 			DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
+	// 			return;
+	// 		}
+	// 		return;
+	// 	}
+	// 	
+	// 	if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef())
+	// 	{
+	// 		const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+	// 		if(DefaultObject && DefaultObject->IsStackable())
+	// 		{
+	// 			const int32 ItemStackCount = DraggedItem->GetItemStacks();
+	// 			
+	// 			FObsidianAddingStacksResult AddingStacksResult;
+	// 			if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult, 1))
+	// 			{
+	// 				ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+	// 				if(AddingStacksResult.bAddedWholeItemAsStacks)
+	// 				{
+	// 					InternalHeroComponent->StopDragging();
+	// 					return;
+	// 				}
+	// 				DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
+	// 			}
+	// 		}
+	// 		return;
+	// 	}
+	// 	return;
+	// }
 	
 	if(ItemInstance->IsStackable() == false)
 	{
@@ -441,13 +441,8 @@ void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPositio
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceAtLocation(SlotPosition);
 	RemoveItemWidget(SlotPosition);
 
-	checkf(DraggedItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::PickupItem, fill it in ObsidianInventoryWidgetController instance."));
-	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
-	DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
-	DraggedItem->AddToViewport();
-	InternalHeroComponent->DragItem(DraggedItem);
-
-	InventoryComponent->RemoveItemInstance(ItemInstance);
+	check(InternalHeroComponent);
+	InternalHeroComponent->ServerGrabInventoryItemToCursor(ItemInstance);
 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 }
 
@@ -465,7 +460,8 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 		PickupItem(SlotPosition);
 		return;
 	}
-	
+
+	//TODO This should be server authoritative 
 	UObsidianInventoryItemInstance* NewInstance = InventoryComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
 	if(NewInstance == nullptr)
 	{
@@ -474,12 +470,9 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 
 	const int32 CurrentOldInstanceStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	ItemWidget->OverrideCurrentStackCount(CurrentOldInstanceStacks);
-
-	checkf(DraggedItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleTakingOutStacks, fill it in ObsidianInventoryWidgetController instance."));
-	UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PlayerController, DraggedItemWidgetClass);
-	DraggedItem->InitializeItemWidgetWithItemInstance(NewInstance);
-	DraggedItem->AddToViewport();
-	InternalHeroComponent->DragItem(DraggedItem);
+	
+	check(InternalHeroComponent);
+	InternalHeroComponent->ServerGrabInventoryItemToCursor(NewInstance);
 }
 
 void UObsidianInventoryWidgetController::RemoveItemUIElements()
@@ -557,20 +550,20 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D
 	{
 		return false;
 	}
-
-	const UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-	if(!DraggedItem)
+	
+	const FDraggedItem DraggedItem = InternalHeroComponent->GetDraggedItem();
+	if(DraggedItem.IsEmpty())
 	{
 		return false;
 	}
 	
-	if(const UObsidianInventoryItemInstance* Instance = DraggedItem->GetItemInstance())
+	if(const UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
 		OutItemGridSize = Instance->GetItemGridSize();
 		return true;	
 	}
 	
-	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef())
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
 		if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 		{

@@ -9,7 +9,7 @@
 class UImage;
 class UCommonTextBlock;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemWorldNameMouseButtonDownSignature, const bool bLeftControlDown);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemWorldNameMouseButtonDownSignature, const int32 PlayerIndex,  const bool bLeftControlDown);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemWorldNameMouseHoverSignature, const bool bEnter);
 
 /**
