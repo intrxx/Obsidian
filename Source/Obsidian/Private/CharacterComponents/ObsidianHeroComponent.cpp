@@ -125,6 +125,23 @@ void UObsidianHeroComponent::CursorTrace()
 	}
 }
 
+void UObsidianHeroComponent::DragItem() const
+{
+	const APlayerController* PC = GetController<APlayerController>();
+	if(PC == nullptr)
+	{
+		return;
+	}
+
+	float LocationX = 0.0f;
+	float LocationY = 0.0f;
+	if(PC->GetMousePosition(LocationX, LocationY))
+	{
+		const FVector2D ViewportPosition = FVector2D(LocationX, LocationY);
+		DraggedItemWidget->SetPositionInViewport(ViewportPosition);
+	}
+}
+
 void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputComponent)
 {
 	check(InputComponent);
@@ -363,10 +380,6 @@ void UObsidianHeroComponent::Input_DropItem()
 	{
 		return;
 	}
-	//
-	// Server Authoritative work
-	//
-	// HandleDroppingItem();
 	ServerHandleDroppingItem(CursorHit.Location);
 }
 
@@ -376,22 +389,12 @@ bool UObsidianHeroComponent::DropItem()
 	{
 		return false;
 	}
-	//
-	// Server Authoritative work
-	//
-	//return HandleDroppingItem();
 	ServerHandleDroppingItem(CursorHit.Location);
 	return true;
 }
 
 void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
-	if(!HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianHeroComponent::ServerPickupItemDef_Implementation."))
-		return;
-	}
-
 	if(ItemToPickup == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
@@ -484,51 +487,21 @@ void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDr
 	ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
 }
 
-// void UObsidianHeroComponent::HandleDroppingItem()
 void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVector& HitLocation)
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
 		return;
-		//return false;
 	}
-
-	// const FVector CursorHitLocation = CursorHit.Location;
-	// const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, CursorHitLocation, FVector(1.0f, 1.0f, 1.0f));
+	
 	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, HitLocation, FVector(1.0f, 1.0f, 1.0f));
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
-	//
-	// Server Authoritative work
-	// 
 	Item->InitializeItem(DraggedItem);
+	Item->FinishSpawning(ItemSpawnTransform);
 	DraggedItem.Clear();
 
-	// UObsidianDraggedItem* DraggedItem = GetCurrentlyDraggedItem();
-	// if(UObsidianInventoryItemInstance* ItemInstance = DraggedItem->GetItemInstance())
-	// {
-	// 	DraggedItem->AddItemInstance(ItemInstance);
-	// }
-	// else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem->GetItemDef())
-	// {
-	// 	const int32 Stacks = DraggedItem->GetItemStacks();
-	// 	DraggedItem->AddItemDefinition(ItemDef, Stacks);
-	// }
-	
-	Item->FinishSpawning(ItemSpawnTransform);
-
-	// StopDragging();
-	// bJustDroppedItem = true;
-	//
-	// Server Authoritative work
-	// 
-	ClientFinishDroppingItem();
-}
-
-void UObsidianHeroComponent::ClientFinishDroppingItem_Implementation()
-{
 	StopDraggingItem();
-	bJustDroppedItem = true;
 }
 
 AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
@@ -540,22 +513,11 @@ AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 	return nullptr;
 }
 
-AObsidianPlayerController* UObsidianHeroComponent::GetObsidianPlayerController() const
+void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
-	return GetController<AObsidianPlayerController>();
-}
-
-void UObsidianHeroComponent::ServerGrabItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
-{
-	if(!HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianHeroComponent::ServerPickupItemDef_Implementation."))
-		return;
-	}
-
 	if(ItemToPickup == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation."));
 		return;
 	}
 	
@@ -564,7 +526,7 @@ void UObsidianHeroComponent::ServerGrabItemToCursor_Implementation(AObsidianDrop
 	{
 		DraggedItem = FDraggedItem(Template.ItemDef, Template.StackCount);
 		StartDraggingItem();
-		ItemToPickup->Destroy();
+		ItemToPickup->UpdateDroppedItemStacks(0);
 		return;
 	}
 
@@ -573,14 +535,48 @@ void UObsidianHeroComponent::ServerGrabItemToCursor_Implementation(AObsidianDrop
 	{
 		DraggedItem = FDraggedItem(Instance.Item);
 		StartDraggingItem();
-		ItemToPickup->Destroy();
+		ItemToPickup->UpdateDroppedItemStacks(0);
 		return;
 	}
+
+	checkf(false, TEXT("Provided ItemToPickup has no Instance nor Taplate to pick up, this is bad and should not happen."))
+}
+
+void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(UObsidianInventoryItemInstance* InstanceToGrab)
+{
+	if(InstanceToGrab == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
+		return;
+	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+	
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+
+	InventoryComponent->RemoveItemInstance(InstanceToGrab);
+	
+	DraggedItem = FDraggedItem(InstanceToGrab);
+	StartDraggingItem();
 }
 
 void UObsidianHeroComponent::OnRep_DraggedItem()
 {
-	if(!DraggedItem.IsEmpty())
+	if(DraggedItem.IsEmpty()) // We cleared Dragged Item, so we should no longer drag it
+	{
+		StopDraggingItem();
+	}
+	else // We got new Item to drag
 	{
 		StartDraggingItem();
 	}
@@ -627,28 +623,16 @@ void UObsidianHeroComponent::StartDraggingItem()
 
 void UObsidianHeroComponent::StopDraggingItem()
 {
-	DraggedItemWidget->RemoveFromParent();
+	if(DraggedItemWidget)
+	{
+		DraggedItemWidget->RemoveFromParent();
+	}
 	
 	bDragItem = false;
 	DraggedItemWidget = nullptr;
 	bItemAvailableForDrop = false;
-}
 
-void UObsidianHeroComponent::DragItem() const
-{
-	const APlayerController* PC = GetController<APlayerController>();
-	if(PC == nullptr)
-	{
-		return;
-	}
-
-	float LocationX = 0.0f;
-	float LocationY = 0.0f;
-	if(PC->GetMousePosition(LocationX, LocationY))
-	{
-		const FVector2D ViewportPosition = FVector2D(LocationX, LocationY);
-		DraggedItemWidget->SetPositionInViewport(ViewportPosition);
-	}
+	bJustDroppedItem = true;
 }
 
 bool UObsidianHeroComponent::CanDropItem() const

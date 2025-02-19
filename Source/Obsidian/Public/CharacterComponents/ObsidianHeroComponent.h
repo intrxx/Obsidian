@@ -41,9 +41,7 @@ public:
 	void InitializePlayerInput(UInputComponent* InputComponent);
 	
 	AObsidianHUD* GetObsidianHUD() const;
-
-	AObsidianPlayerController* GetObsidianPlayerController() const;
-
+	
 	FDraggedItem GetDraggedItem()
 	{
 		return DraggedItem;
@@ -58,15 +56,12 @@ public:
 	{
 		bCursorOverUI = bInOverUI;
 	}
-
-	// /** Gets the currently dragged item, will be nullptr when the character does not drag any item. */
-	// UObsidianDraggedItem* GetCurrentlyDraggedItem()
-	// {
-	// 	return DraggedItem;
-	// }
-
+	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabItemToCursor(AObsidianDroppableItem* ItemToPickup);
+	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
+	
+	UFUNCTION(Server, Reliable)
+	void ServerGrabInventoryItemToCursor(UObsidianInventoryItemInstance* InstanceToGrab);
 	
 	void StartDraggingItem();
 	void StopDraggingItem();
@@ -120,11 +115,7 @@ private:
 
 	UFUNCTION(Server, Reliable)
 	void ServerHandleDroppingItem(const FVector& HitLocation);
-	// bool HandleDroppingItem();
 
-	UFUNCTION(Client, Reliable)
-	void ClientFinishDroppingItem();
-	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;
@@ -147,9 +138,6 @@ private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
 	FDraggedItem DraggedItem = FDraggedItem();
-
-	// UPROPERTY()
-	// TObjectPtr<UObsidianDraggedItem> DraggedItem;
 	
 	bool bDragItem = false;
 	bool bItemAvailableForDrop = false;

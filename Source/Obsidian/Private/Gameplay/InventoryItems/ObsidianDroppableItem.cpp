@@ -10,7 +10,6 @@
 #include "InventoryItems/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "UI/Inventory/ObsidianDraggedItem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -64,23 +63,30 @@ void AObsidianDroppableItem::GetLifetimeReplicatedProps(TArray<class FLifetimePr
 
 void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
 {
-	if(HasAuthority())
+	if(HasAuthority() == false)
 	{
-		if(!ensureMsgf(DraggedItem.IsEmpty() == false, TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
-		{
-			return;
-		}
-	
-		if(UObsidianInventoryItemInstance* ItemInstance = DraggedItem.Instance)
-		{
-			AddItemInstance(ItemInstance);
-		}
-		else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
-		{
-			const int32 Stacks = DraggedItem.Stacks;
-			AddItemDefinition(ItemDef, Stacks);
-		}
+		return;
 	}
+
+	if(!ensureMsgf(DraggedItem.IsEmpty() == false, TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
+	{
+		return;
+	}
+	
+	if(UObsidianInventoryItemInstance* ItemInstance = DraggedItem.Instance)
+	{
+		AddItemInstance(ItemInstance);
+		return;
+	}
+
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		const int32 Stacks = DraggedItem.Stacks;
+		AddItemDefinition(ItemDef, Stacks);
+		return;
+	}
+
+	checkf(false, TEXT("Failed to Initialize Item with neither Item Def nor Instance, something is wrong."));
 }
 
 bool AObsidianDroppableItem::InitializeWorldName()
@@ -239,6 +245,7 @@ void AObsidianDroppableItem::HandleActorClicked(AActor* AffectedActor, FKey Butt
 	{
 		//TODO This is incorrect for multiplayer, I need to use HeroComponent for that to know the correct Player that wants to pick up the item
 		const bool bLeftControlDown = FSlateApplication::Get().GetModifierKeys().IsLeftControlDown();
+		ensure(false);
 		//OnItemMouseButtonDown(bLeftControlDown);
 	}
 }
@@ -415,7 +422,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
 			// Call Server Drag Item
-			HeroComp->ServerGrabItemToCursor(this);
+			HeroComp->ServerGrabDroppableItemToCursor(this);
 			// checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in AObsidianDroppableItem::PickupItemInstance please fill it on ObsidianDroppableItem Instance."));
 			// UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PickingPlayerController, DraggedItemWidgetClass);
 			// DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
@@ -477,7 +484,7 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 			// DraggedItem->AddToViewport();
 			//
 			// HeroComp->DragItem(DraggedItem, FDraggedItem(ItemDef, StackCount));
-			HeroComp->ServerGrabItemToCursor(this);
+			HeroComp->ServerGrabDroppableItemToCursor(this);
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks

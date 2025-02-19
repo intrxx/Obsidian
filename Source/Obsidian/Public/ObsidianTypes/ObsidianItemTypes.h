@@ -92,9 +92,6 @@ public:
 	int32 MaxItemStackCount = 0;
 };
 
-//
-// Server Authoritative work
-// 
 USTRUCT()
 struct FDraggedItem
 {
