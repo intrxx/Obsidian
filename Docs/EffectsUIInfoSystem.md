@@ -1,5 +1,7 @@
 # Game Effects Info System
 
+Here you can find a [youtube video](https://www.youtube.com/watch?v=1plCy1MTZj8) showcasing the System.
+
 ![Effect UI Info System](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectInfoSystem/EffectUIInfoSystem.jpg)
 
 <a name="table-of-contents"></a>
