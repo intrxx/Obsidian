@@ -48,7 +48,7 @@ public:
 		return bIsSuppressedSpell;
 	}
 
-	/** Returns true if spell, was suppressed or not. */
+	/** Returns true if the Target is Immune to any damage. */
 	bool IsTargetImmune() const
 	{
 		return bIsTargetImmune;
