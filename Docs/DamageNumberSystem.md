@@ -10,7 +10,7 @@
 > &nbsp;&nbsp; 1.3.1 [EnemyObsidianDamageExecution](#enemyobsidiandamageexec)
 > 2. [User Interface](#ui) \
 > &nbsp; 2.1 [ObsidianDamageNumberWidgetComp](#odamagenumberwidgetcomp) \
-> &nbsp; 2.2 [ObsidianDamageNumber](#odamagenumber)
+> &nbsp; 2.2 [ObsidianDamageNumber](#odamagenumber) \
 > &nbsp; 2.3 [ObsidianUITypes](#uitypes)
 > 3. [The Rest](#rest) \
 > &nbsp; 3.1 [ObsidianPlayerController](#obsidianpc) 
