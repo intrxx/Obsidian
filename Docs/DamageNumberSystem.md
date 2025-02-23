@@ -13,7 +13,8 @@
 > &nbsp; 2.2 [ObsidianDamageNumber](#odamagenumber) \
 > &nbsp; 2.3 [ObsidianUITypes](#uitypes)
 > 3. [The Rest](#rest) \
-> &nbsp; 3.1 [ObsidianPlayerController](#obsidianpc) 
+> &nbsp; 3.1 [ObsidianPlayerController](#obsidianpc) \
+> &nbsp; 3.2 [DamageNumber CommonTextStyles](#dncommontextstyles)
 
 <a name="backend"></a>
 ## 1. Backend
@@ -94,3 +95,11 @@ Contains logic for attaching the ```UObsidianDamageNumberWidgetComp``` to the Ta
 Repo Links:
 - [ObsidianPlayerController.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Characters/Player/ObsidianPlayerController.h)
 - [ObsidianPlayerController.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Characters/Player/ObsidianPlayerController.cpp)
+
+<a name="dncommontextstyles"></a>
+### 3.2 Damage Numbers CommonTextStyles
+
+Bunch of CommonTextStyles used for displaying the Damage Number under different circumstances.
+
+Repo Asset Location:
+- ```/All/Game/Obsidian/UI/Styles/DamageNumbers```
