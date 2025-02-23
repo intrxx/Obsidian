@@ -1,5 +1,7 @@
 # Obsidian Damage Number System
 
+![DamageNumberSystemVid](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSystem.mp4)
+
 <a name="table-of-contents"></a>
 ## Class Structure Overview
 
@@ -21,6 +23,8 @@
 
 <a name="ocommonattributeset"></a>
 ### 1.1 UObsidianCommonAttributeSet
+
+![AttributeSet](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSystem_AttributeSet.jpg)
 
 After changes to life in ```PostGameplayEffectExecute```, bools from ```FObsidianGameplayEffectContext``` are gathered and forwarded to ```ObsidianPlayerController```.
 
@@ -70,6 +74,8 @@ Repo Links:
 <a name="odamagenumber"></a>
 ### 2.2 UObsidianDamageNumber
 
+![Crit](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSyetem_Crit.mp4)
+
 Damage Number Widget, holds different ```UCommonTextBlockStyle```'s for managing the text based on received bools.
 
 Repo Links:
@@ -99,7 +105,10 @@ Repo Links:
 <a name="dncommontextstyles"></a>
 ### 3.2 Damage Numbers CommonTextStyles
 
+![Sttyles](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSystem_Styles.jpg)
+
 Bunch of CommonTextStyles used for displaying the Damage Number under different circumstances.
 
 Repo Assets Location:
 - ```/All/Game/Obsidian/UI/Styles/DamageNumbers```
+
