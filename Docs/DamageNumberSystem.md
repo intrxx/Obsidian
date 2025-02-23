@@ -1,6 +1,6 @@
 # Obsidian Damage Number System
 
-![DamageNumberSystemVid](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSystem.mp4)
+[//]: ![DamageNumberSystemVid](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSystem.mp4)
 
 <a name="table-of-contents"></a>
 ## Class Structure Overview
@@ -74,7 +74,7 @@ Repo Links:
 <a name="odamagenumber"></a>
 ### 2.2 UObsidianDamageNumber
 
-![Crit](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSyetem_Crit.mp4)
+[//]: ![Crit](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSyetem_Crit.mp4)
 
 Damage Number Widget, holds different ```UCommonTextBlockStyle```'s for managing the text based on received bools.
 
