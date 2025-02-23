@@ -152,10 +152,10 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 		}
 
 		//TODO Decide if I want to show damage numbers when Player gets damaged.
-		// Show floating text - Logic is performed regardless of damage number because we might want to show blocked or evaded hit
+		// Show floating text - Logic is performed regardless of damage number because we might want to show blocked or evaded texts
 		if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.bIsPlayerCharacter)
 		{
-			// If I decide that I want to show damage numbers for damaged Players - this cast will fail, so I will need to cast the EffectProps.TargetController.
+			// If I decide that I want to show damage numbers for damaged Players - this cast will fail, so I will need to try the EffectProps.TargetController next.
 			if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(EffectProps.SourceController))
 			{
 				FObsidianDamageTextProps DamageTextProps;

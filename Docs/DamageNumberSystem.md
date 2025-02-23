@@ -101,5 +101,5 @@ Repo Links:
 
 Bunch of CommonTextStyles used for displaying the Damage Number under different circumstances.
 
-Repo Asset Location:
+Repo Assets Location:
 - ```/All/Game/Obsidian/UI/Styles/DamageNumbers```
