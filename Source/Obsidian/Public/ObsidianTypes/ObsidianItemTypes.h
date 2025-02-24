@@ -9,6 +9,11 @@
 
 class UObsidianInventoryItemInstance;
 
+namespace ObsidianInventoryItemsStatics
+{
+	static const FVector2D InventorySlotSize(64.0f, 64.0f); 
+}
+
 namespace ObsidianDefaultStackCounts 
 {
 	static constexpr int32 CurrentStackCount = 1;
@@ -170,6 +175,11 @@ public:
 		return ItemImage;
 	}
 
+	FVector2D GetItemGridSpan() const
+	{
+		return ItemGridSpan;
+	}
+
 	FText GetDisplayName() const
 	{
 		return DisplayName;
@@ -190,10 +200,12 @@ public:
 		return StacksData;
 	}
 
-	void SetItemImage(UTexture2D* InItemImage)
+	/** It takes an additional ItemGridSpan argument as UI needs it to rescale the image for now. */
+	void SetItemImage(UTexture2D* InItemImage, const FVector2D& InItemGridSpan)
 	{
 		bContainsItemImage = true;
 		ItemImage = InItemImage;
+		ItemGridSpan = InItemGridSpan;
 	}
 	
 	void SetDisplayName(const FText& InDisplayName)
@@ -235,6 +247,9 @@ public:
 private:
 	UPROPERTY()
 	TObjectPtr<UTexture2D> ItemImage;
+
+	UPROPERTY()
+	FVector2D ItemGridSpan = FVector2D::Zero();
 	
 	/**
 	 * Item Descriptors.

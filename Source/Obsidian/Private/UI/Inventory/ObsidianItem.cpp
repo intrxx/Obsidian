@@ -5,6 +5,7 @@
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
@@ -38,8 +39,8 @@ void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 
 void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
 {
-	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * WidthConstant);
-	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
+	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 	Item_Image->SetBrushFromTexture(ItemImage);
 	ItemDesiredPosition = DesiredPosition;
 	InternalStacks = CurrentStack;

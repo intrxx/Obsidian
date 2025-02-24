@@ -86,7 +86,7 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(
 				ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
 	}
 
-	Stats.SetItemImage(ItemInstance->GetItemImage());
+	Stats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
 	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
 	Stats.SetDescription(ItemInstance->GetItemDescription());
 	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
@@ -109,7 +109,7 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatForInstance(const UOb
 			 ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
 	}
 
-	Stats.SetItemImage(ItemInstance->GetItemImage());
+	Stats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
 	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
 	Stats.SetDescription(ItemInstance->GetItemDescription());
 	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
@@ -143,7 +143,7 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatsForItemDefinition(co
 
 	if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 	{
-		Stats.SetItemImage(AppearanceFrag->GetItemImage());
+		Stats.SetItemImage(AppearanceFrag->GetItemImage(), AppearanceFrag->GetItemGridSpanFromDesc());
 		Stats.SetDisplayName(AppearanceFrag->GetItemDisplayName());
 		Stats.SetDescription(AppearanceFrag->GetItemDescription());
 		Stats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());

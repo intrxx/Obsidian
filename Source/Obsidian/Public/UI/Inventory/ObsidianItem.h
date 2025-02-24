@@ -52,12 +52,6 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float WidthConstant = 64.0f;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float HeightConstant = 64.0f;
-
 	FVector2D ItemDesiredPosition = FVector2D::Zero();
 
 private:

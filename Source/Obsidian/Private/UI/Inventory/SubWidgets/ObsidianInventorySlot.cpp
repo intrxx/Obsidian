@@ -4,15 +4,23 @@
 #include "UI/Inventory/SubWidgets/ObsidianInventorySlot.h"
 
 #include "Components/Image.h"
+#include "Components/SizeBox.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianInventorySlot::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	Action_Image->SetVisibility(ESlateVisibility::Hidden);
+
+	if(Root_SizeBox)
+	{
+		Root_SizeBox->SetHeightOverride(ObsidianInventoryItemsStatics::InventorySlotSize.X);
+		Root_SizeBox->SetWidthOverride(ObsidianInventoryItemsStatics::InventorySlotSize.Y);
+	}
 }
 
-void UObsidianInventorySlot::SetSlotState(bool bAvailable)
+void UObsidianInventorySlot::SetSlotState(const bool bAvailable)
 {
 	if(bAvailable)
 	{

@@ -7,8 +7,6 @@
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
 #include "Components/Overlay.h"
-#include "Components/VerticalBox.h"
-#include "Obsidian/ObsidianGamemodule.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianItemDescriptionBase::NativeConstruct()
@@ -26,7 +24,15 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	{
 		if(UTexture2D* ItemTexture = ItemStats.GetItemImage())
 		{
-			Item_Image->SetBrushFromTexture(ItemTexture);
+			const FVector2D GridSpan = ItemStats.GetItemGridSpan();
+			const FVector2D ImageDesiredSize = FVector2D(
+				GridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X,
+				GridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
+
+			FSlateBrush ItemImageBrush;
+			ItemImageBrush.SetImageSize(ImageDesiredSize);
+			ItemImageBrush.SetResourceObject(ItemTexture);
+			Item_Image->SetBrush(ItemImageBrush);
 		}
 	}
 	else

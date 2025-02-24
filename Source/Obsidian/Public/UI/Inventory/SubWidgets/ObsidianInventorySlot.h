@@ -6,6 +6,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianInventorySlot.generated.h"
 
+class USizeBox;
 class UObsidianInventorySlot;
 class UImage;
 
@@ -32,19 +33,22 @@ public:
 	}
 
 	/** Sets the slot state based on bAvailable, if true sets it to green if false to red. */
-	void SetSlotState(bool bAvailable);
+	void SetSlotState(const bool bAvailable);
 	void ResetSlot();
 
 	FOnHoverOverSlotSignature OnHoverOverSlotDelegate;
 	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnSlotDelegate;
 
 protected:
+	virtual void NativeConstruct() override;
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeConstruct() override;
 
 protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<USizeBox> Root_SizeBox;
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Slot_Image;
 	
