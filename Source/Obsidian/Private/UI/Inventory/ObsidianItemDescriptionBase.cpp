@@ -28,7 +28,7 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 			const FVector2D ImageDesiredSize = FVector2D(
 				GridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X,
 				GridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
-
+			
 			FSlateBrush ItemImageBrush;
 			ItemImageBrush.SetImageSize(ImageDesiredSize);
 			ItemImageBrush.SetResourceObject(ItemTexture);

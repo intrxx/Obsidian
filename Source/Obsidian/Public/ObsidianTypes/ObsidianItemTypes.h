@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianItemTypes.generated.h"
 
 class UObsidianInventoryItemInstance;
@@ -106,6 +107,7 @@ public:
 	FDraggedItem(){};
 	FDraggedItem(UObsidianInventoryItemInstance* InInstance)
 		: Instance(InInstance)
+		, Stacks(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
 	{}
 	FDraggedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const int32 InStacks)
 		: ItemDef(InItemDef)

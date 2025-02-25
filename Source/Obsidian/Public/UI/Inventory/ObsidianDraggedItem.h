@@ -23,10 +23,12 @@ class OBSIDIAN_API UObsidianDraggedItem : public UObsidianWidgetBase
 public:
 	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks);
 	void InitializeItemWidgetWithItemInstance(UObsidianInventoryItemInstance* ItemInstance);
-
+	
 	/** Updates the stack count on the dragged item. */
 	void UpdateStackCount(const int32 NewStackCount);
+	
 	/** Syncs the stack count with the stack count of carried item instance (if the item is stackable). */
+	UFUNCTION(meta=(DeprecatedFunction))
 	void SyncStackCountWithInstance() const;
 
 	/** Invalid when widget initialized with Instance. */
@@ -66,6 +68,7 @@ protected:
 	float HeightConstant = 64.0f;
 	
 	TSubclassOf<UObsidianInventoryItemDefinition> InternalItemDef;
+	
 	int32 InternalStacks = 0;
 
 	UPROPERTY()

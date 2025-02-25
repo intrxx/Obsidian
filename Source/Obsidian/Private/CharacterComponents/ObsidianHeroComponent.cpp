@@ -48,7 +48,7 @@ void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	CursorTrace();
 	AutoRun();
 
-	if(bDragItem)
+	if(bDraggingItem)
 	{
 		DragItem();
 	}
@@ -572,13 +572,80 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(UObs
 
 void UObsidianHeroComponent::OnRep_DraggedItem()
 {
-	if(DraggedItem.IsEmpty()) // We cleared Dragged Item, so we should no longer drag it
+	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
 	{
 		StopDraggingItem();
 	}
-	else // We got new Item to drag
+	else if(!DraggedItem.IsEmpty() && !bDraggingItem)  // We got new Item to drag
 	{
 		StartDraggingItem();
+	}
+	else if(DraggedItem.Stacks > 0) // We are dragging an item but the stacks changed
+	{
+		if(DraggedItemWidget)
+		{
+			DraggedItemWidget->UpdateStackCount(DraggedItem.Stacks);
+		}
+	}
+}
+
+void UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)
+{
+	if(DraggedItem.IsEmpty())
+	{
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		return;
+	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		return;
+	}
+	
+	const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+	
+	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
+	{
+		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition, StacksToAddOverride))
+		{
+			DraggedItem.Clear();
+			StopDraggingItem();
+			return;
+		}
+		const int32 CurrentStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		UpdateStacksOnDraggedItemWidget(CurrentStacks);
+		DraggedItem.Stacks = CurrentStacks;
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		const int32 ItemStackCount = DraggedItem.Stacks;
+		int32 StackLeft = ItemStackCount;
+		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StackLeft, ItemStackCount, StacksToAddOverride);
+		if(StackLeft == 0)
+		{
+			DraggedItem.Clear();
+			StopDraggingItem();
+			return;
+		}
+		UpdateStacksOnDraggedItemWidget(StackLeft);
+		DraggedItem.Stacks = StackLeft;
+	}
+}
+
+void UObsidianHeroComponent::UpdateStacksOnDraggedItemWidget(const int32 InStacks)
+{
+	if(DraggedItemWidget)
+	{
+		DraggedItemWidget->UpdateStackCount(InStacks);
 	}
 }
 
@@ -609,7 +676,7 @@ void UObsidianHeroComponent::StartDraggingItem()
 	Item->AddToViewport();
 	
 	DraggedItemWidget = Item;
-	bDragItem = true;
+	bDraggingItem = true;
 
 	TWeakObjectPtr<UObsidianHeroComponent> WeakThis(this);
 	World->GetTimerManager().SetTimerForNextTick([WeakThis]()
@@ -628,7 +695,7 @@ void UObsidianHeroComponent::StopDraggingItem()
 		DraggedItemWidget->RemoveFromParent();
 	}
 	
-	bDragItem = false;
+	bDraggingItem = false;
 	DraggedItemWidget = nullptr;
 	bItemAvailableForDrop = false;
 

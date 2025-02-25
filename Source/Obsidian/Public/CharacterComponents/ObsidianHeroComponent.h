@@ -27,6 +27,9 @@ class OBSIDIAN_API UObsidianHeroComponent : public UPawnComponent
 	GENERATED_BODY()
 public:
 	UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer);
+	
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	/** Returns the hero component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroComp")
@@ -34,11 +37,6 @@ public:
 	{
 		return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);
 	}
-
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-	
-	void InitializePlayerInput(UInputComponent* InputComponent);
 	
 	AObsidianHUD* GetObsidianHUD() const;
 	
@@ -49,7 +47,7 @@ public:
 	
 	bool IsDraggingAnItem() const
 	{
-		return bDragItem;
+		return bDraggingItem;
 	}
 
 	void SetCursorOverUI(const bool bInOverUI)
@@ -57,17 +55,19 @@ public:
 		bCursorOverUI = bInOverUI;
 	}
 	
+	void InitializePlayerInput(UInputComponent* InputComponent);
+	
+	bool DropItem();
+	
+	UFUNCTION(Server, Reliable)
+	void ServerAddItemToInventoryAtSpecificSlot(const FVector2D& SlotPosition, const bool bShiftDown);
+	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabInventoryItemToCursor(UObsidianInventoryItemInstance* InstanceToGrab);
 	
-	void StartDraggingItem();
-	void StopDraggingItem();
-	
-	bool DropItem();
-
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemDef(AObsidianDroppableItem* ItemToPickup);
 
@@ -75,6 +75,9 @@ public:
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
 	
 protected:
+	UFUNCTION()
+	void OnRep_DraggedItem();
+	
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 	
@@ -88,9 +91,6 @@ protected:
 	void Input_TogglePassiveSkillTree();
 	
 	void Input_DropItem();
-
-	UFUNCTION()
-	void OnRep_DraggedItem();
 	
 protected:
 	/** Time Threshold to know if it was a short press */
@@ -110,11 +110,15 @@ private:
 	void AutoRun();
 	void CursorTrace();
 	void DragItem() const;
-
-	bool CanDropItem() const;
-
+	
+	void StartDraggingItem();
+	void StopDraggingItem();
+	
 	UFUNCTION(Server, Reliable)
 	void ServerHandleDroppingItem(const FVector& HitLocation);
+	bool CanDropItem() const;
+	
+	void UpdateStacksOnDraggedItemWidget(const int32 InStacks);
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
@@ -139,7 +143,7 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
 	FDraggedItem DraggedItem = FDraggedItem();
 	
-	bool bDragItem = false;
+	bool bDraggingItem = false;
 	bool bItemAvailableForDrop = false;
 	bool bJustDroppedItem = false;
 	
