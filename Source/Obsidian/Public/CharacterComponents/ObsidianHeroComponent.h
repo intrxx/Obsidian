@@ -60,7 +60,10 @@ public:
 	bool DropItem();
 	
 	UFUNCTION(Server, Reliable)
-	void ServerAddItemToInventoryAtSpecificSlot(const FVector2D& SlotPosition, const bool bShiftDown);
+	void ServerAddItemToInventoryAtSlot(const FVector2D& SlotPosition, const bool bShiftDown);
+	
+	UFUNCTION(Server, Reliable)
+	void ServerAddStacksFromDraggedItemToItemAtSlot(const FVector2D& SlotPosition, const int32 StacksToAddOverride = -1);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);

@@ -89,6 +89,7 @@ public:
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FVector2D& AvailablePosition);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FVector2D& AvailablePosition);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
+	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{

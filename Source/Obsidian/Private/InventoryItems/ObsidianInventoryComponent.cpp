@@ -518,6 +518,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutFromItemInst
 	
 	const int32 NewCurrentTakingFromInstanceStacks = CurrentTakingFromInstanceStacks - StacksToTake;
 	TakingFromInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, NewCurrentTakingFromInstanceStacks);
+	InventoryGrid.ChangedEntryStacks(TakingFromInstance, CurrentTakingFromInstanceStacks);
 
 	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
 	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
@@ -586,6 +587,8 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
 			
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+			InventoryGrid.ChangedEntryStacks(Instance, CurrentStackCount);
+			
 			OutAddingStacksResult.AddedStacks += AmountThatCanBeAddedToInstance;
 			OutAddingStacksResult.StacksLeft -= AmountThatCanBeAddedToInstance;
 			AddedToInstances.AddUnique(Instance);
@@ -632,8 +635,10 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 		AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((FMath::Min<int32>(AmountThatCanBeAddedToInstance, StackToAddOverride)),
 			1, AmountThatCanBeAddedToInstance);
 	}
-	
+
+	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	InventoryGrid.ChangedEntryStacks(InstanceToAddTo, OldStackCount);
 
 	OutAddingStacksResult.StacksLeft -= AmountThatCanBeAddedToInstance;
 	OutAddingStacksResult.AddedStacks = AmountThatCanBeAddedToInstance;
@@ -645,6 +650,11 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 	if(AmountThatCanBeAddedToInstance == AddingFromItemDefCurrentStacks)
 	{
 		OutAddingStacksResult.bAddedWholeItemAsStacks = true;
+	}
+
+	if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(InstanceToAddTo);
 	}
 	return true;
 }
@@ -677,10 +687,14 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 		AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((FMath::Min<int32>(AmountThatCanBeAddedToInstance, StackToAddOverride)),
 			1, AmountThatCanBeAddedToInstance);
 	}
-	
-	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
-	AddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
 
+	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	InventoryGrid.ChangedEntryStacks(InstanceToAddTo, OldStackCount);
+	
+	AddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	// We should not call the InventoryGrid.ChangedEntryStacks function as the AddingFromInstance is not part of the inventory anyway
+	
 	OutAddingStacksResult.AddedStacks = AmountThatCanBeAddedToInstance;
 	OutAddingStacksResult.StacksLeft -= AmountThatCanBeAddedToInstance;
 	OutAddingStacksResult.LastAddedToInstance = InstanceToAddTo;
@@ -691,6 +705,11 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 	if(AmountThatCanBeAddedToInstance == AddingFromInstanceCurrentStacks)
 	{
 		OutAddingStacksResult.bAddedWholeItemAsStacks = true;
+	}
+
+	if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(InstanceToAddTo);
 	}
 	return true;
 }

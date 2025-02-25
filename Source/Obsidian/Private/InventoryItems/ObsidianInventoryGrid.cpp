@@ -137,6 +137,30 @@ void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
+void FObsidianInventoryGrid::ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount)
+{
+	const int32 NewCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	
+	bool bSuccess = false;
+	for(FObsidianInventoryEntry& Entry : Entries)
+	{
+		if(Entry.Instance == Instance)
+		{
+			Entry.StackCount = NewCount;
+			MarkItemDirty(Entry);
+			bSuccess = true;
+		}
+	}
+
+	if(bSuccess)
+	{
+		const FVector2D GridLocation = Instance->GetItemCurrentGridLocation();
+		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation);
+		return;
+	}
+	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
+}
+
 void FObsidianInventoryGrid::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
 {
 	for(const int32 Index : RemovedIndices)

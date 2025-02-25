@@ -589,7 +589,7 @@ void UObsidianHeroComponent::OnRep_DraggedItem()
 	}
 }
 
-void UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)
+void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -638,6 +638,69 @@ void UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementati
 		}
 		UpdateStacksOnDraggedItemWidget(StackLeft);
 		DraggedItem.Stacks = StackLeft;
+	}
+}
+
+void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation(const FVector2D& SlotPosition, const int32 StacksToAddOverride)
+{
+	if(DraggedItem.IsEmpty())
+	{
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		return;
+	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		return;
+	}
+	
+	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
+	if(Instance && Instance->IsStackable())
+	{
+		FObsidianAddingStacksResult AddingStacksResult;
+		if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(Instance, SlotPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
+		{
+			//TODO ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+			if(AddingStacksResult.bAddedWholeItemAsStacks)
+			{
+				DraggedItem.Clear();
+				StopDraggingItem();
+				return;
+			}
+			const int32 CurrentStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			UpdateStacksOnDraggedItemWidget(CurrentStacks);
+			DraggedItem.Stacks = CurrentStacks;
+		}
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+		if(DefaultObject && DefaultObject->IsStackable())
+		{
+			const int32 ItemStackCount = DraggedItem.Stacks;
+			FObsidianAddingStacksResult AddingStacksResult;
+			if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
+			{
+				//TODO ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
+				if(AddingStacksResult.bAddedWholeItemAsStacks)
+				{
+					DraggedItem.Clear();
+					StopDraggingItem();
+					return;
+				}
+				UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
+				DraggedItem.Stacks = AddingStacksResult.StacksLeft;
+			}
+		}
 	}
 }
 

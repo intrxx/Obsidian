@@ -72,6 +72,14 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 	if (InventoryChangeMessage.NewCount != InventoryChangeMessage.Delta) // Changed
 	{
 		UE_LOG(LogInventory, Warning, TEXT("Changed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		
+		FObsidianItemVisuals ItemVisuals;
+		ItemVisuals.ItemImage = Instance->GetItemImage();
+		ItemVisuals.DesiredPosition = InventoryChangeMessage.GridItemPosition;
+		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
+		ItemVisuals.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
+		
+		OnItemChangedDelegate.Broadcast(ItemVisuals);
 	}	
 }
 
@@ -164,7 +172,7 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 	{
 		return;
 	}
-	InternalHeroComponent->ServerAddItemToInventoryAtSpecificSlot(SlotPosition, bShiftDown);
+	InternalHeroComponent->ServerAddItemToInventoryAtSlot(SlotPosition, bShiftDown);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
@@ -241,54 +249,15 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
+	check(InternalHeroComponent);
+	
+	if(InternalHeroComponent->IsDraggingAnItem())
+	{
+		InternalHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition, 1);
+		return;
+	}
+	
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->Internal_GetItemInstanceAtLocation(SlotPosition);
-	
-	// if(InternalHeroComponent->IsDraggingAnItem())
-	// {
-	// 	UObsidianDraggedItem* DraggedItem = InternalHeroComponent->GetCurrentlyDraggedItem();
-	// 	check(DraggedItem);
-	//
-	// 	UObsidianInventoryItemInstance* DraggedInstance = DraggedItem->GetItemInstance();
-	// 	if(DraggedInstance && DraggedInstance->IsStackable())
-	// 	{
-	// 		FObsidianAddingStacksResult AddingStacksResult;
-	// 		if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(DraggedInstance, SlotPosition, /** OUT */ AddingStacksResult, 1))
-	// 		{
-	// 			ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
-	// 			if(AddingStacksResult.bAddedWholeItemAsStacks)
-	// 			{
-	// 				InternalHeroComponent->StopDragging();
-	// 			}
-	// 			DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
-	// 			return;
-	// 		}
-	// 		return;
-	// 	}
-	// 	
-	// 	if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem->GetItemDef())
-	// 	{
-	// 		const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-	// 		if(DefaultObject && DefaultObject->IsStackable())
-	// 		{
-	// 			const int32 ItemStackCount = DraggedItem->GetItemStacks();
-	// 			
-	// 			FObsidianAddingStacksResult AddingStacksResult;
-	// 			if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(DraggedItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult, 1))
-	// 			{
-	// 				ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
-	// 				if(AddingStacksResult.bAddedWholeItemAsStacks)
-	// 				{
-	// 					InternalHeroComponent->StopDragging();
-	// 					return;
-	// 				}
-	// 				DraggedItem->UpdateStackCount(AddingStacksResult.StacksLeft);
-	// 			}
-	// 		}
-	// 		return;
-	// 	}
-	// 	return;
-	// }
-	
 	if(ItemInstance->IsStackable() == false)
 	{
 		return;
@@ -550,6 +519,15 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D
 		}
 	}
 	return false;
+}
+
+UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtLocation(const FVector2D& Location) const
+{
+	if(AddedItemWidgetMap.Contains(Location))
+	{
+		return AddedItemWidgetMap[Location];
+	}
+	return nullptr;
 }
 
 void UObsidianInventoryWidgetController::AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)

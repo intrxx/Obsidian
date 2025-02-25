@@ -33,6 +33,7 @@ public:
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemVisuals& ItemVisuals);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemVisuals& NewItemVisuals);
 
 /**
  *  
@@ -70,6 +71,7 @@ public:
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
 
+	UObsidianItem* GetItemWidgetAtLocation(const FVector2D& Location) const;
 	void AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
 	void RemoveItemWidget(const FVector2D& Location);
 
@@ -93,6 +95,7 @@ public:
 	
 public:
 	FOnItemAddedSignature OnItemAddedDelegate;
+	FOnItemChangedSignature OnItemChangedDelegate;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

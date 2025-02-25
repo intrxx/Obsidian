@@ -44,6 +44,7 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	check(InventoryWidgetController);
 
 	InventoryWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
+	InventoryWidgetController->OnItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
 }
 
 void UObsidianInventory::SetupGrid() 
@@ -99,6 +100,15 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 	GridSlot->SetLayer(1);
 	GridSlot->SetColumnSpan(GridSpan.X);
 	GridSlot->SetRowSpan(GridSpan.Y);
+}
+
+void UObsidianInventory::OnItemChanged(const FObsidianItemVisuals& ItemVisuals)
+{
+	const FVector2D ItemPosition = ItemVisuals.DesiredPosition;
+	if(UObsidianItem* ItemWidget = InventoryWidgetController->GetItemWidgetAtLocation(ItemPosition))
+	{
+		ItemWidget->OverrideCurrentStackCount(ItemVisuals.StackCount);
+	}
 }
 
 void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown)

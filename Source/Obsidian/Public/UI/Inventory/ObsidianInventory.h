@@ -50,6 +50,7 @@ protected:
 private:
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
 	void OnItemAdded(const FObsidianItemVisuals& ItemVisuals);
+	void OnItemChanged(const FObsidianItemVisuals& ItemVisuals);
 
 	void SetupGrid();
 
