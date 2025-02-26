@@ -25,7 +25,7 @@ using Gameplay Tags, which are displayed on the player's HUD.
 
 - **Damage Numbers** - A Damage Number System with functionality to collect data on damage dealt and adjust the displayed number accordingly - for example,
  changing the color to yellow for critical hits.
-A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/DamageNumberSystem.md) (TODO). 
+A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/DamageNumberSystem.md). 
 
 - **Gameplay Attributes** - A setup for Gameplay Abilities with corresponding components to broadcast and/or handle changes. This setup also includes various ```UGameplayModMagnitudeCalculation```'s.
  An example use case for these calculations is increasing Health when the Strength attribute is increased.
