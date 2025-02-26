@@ -6,6 +6,7 @@
 #include "Input/OEnhancedInputUserSettings.h"
 #include "InputMappingContext.h"
 #include "NavigationPath.h"
+#include "Engine/ActorChannel.h"
 #include "NavigationSystem.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
@@ -393,6 +394,44 @@ bool UObsidianHeroComponent::DropItem()
 	return true;
 }
 
+void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(UObsidianInventoryItemInstance* ItemInstance, const int32 StacksToTake)
+{
+	if(ItemInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		return;
+	}
+	
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		return;
+	}
+	
+	UObsidianInventoryItemInstance* NewInstance = InventoryComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
+	if(NewInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Result of TakeOutFromItemInstance is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		return;
+	}
+	
+	DraggedItem = FDraggedItem(NewInstance);
+	StartDraggingItem();
+
+	if(NewInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(NewInstance);
+	}
+}
+
 void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)
@@ -570,6 +609,46 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(UObs
 	StartDraggingItem();
 }
 
+bool UObsidianHeroComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+{
+	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+
+	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
+	if(Instance && IsValid(Instance))
+	{
+		WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
+	}
+	
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
+	if(ItemDef && IsValid(ItemDef))
+	{
+		WroteSomething |= Channel->ReplicateSubobject(ItemDef, *Bunch, *RepFlags);
+	}
+
+	return WroteSomething;
+}
+
+void UObsidianHeroComponent::ReadyForReplication()
+{
+	Super::ReadyForReplication();
+
+	// Register existing UObsidianInventoryItemInstance
+	if(IsUsingRegisteredSubObjectList() && !DraggedItem.IsEmpty())
+	{
+		UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
+		if(IsValid(Instance))
+		{
+			AddReplicatedSubObject(Instance);
+		}
+
+		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
+		if(IsValid(ItemDef))
+		{
+			AddReplicatedSubObject(ItemDef);
+		}
+	}
+}
+
 void UObsidianHeroComponent::OnRep_DraggedItem()
 {
 	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
@@ -669,7 +748,6 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 		FObsidianAddingStacksResult AddingStacksResult;
 		if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(Instance, SlotPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
 		{
-			//TODO ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
 			if(AddingStacksResult.bAddedWholeItemAsStacks)
 			{
 				DraggedItem.Clear();
@@ -679,6 +757,10 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 			const int32 CurrentStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 			UpdateStacksOnDraggedItemWidget(CurrentStacks);
 			DraggedItem.Stacks = CurrentStacks;
+		}
+		else
+		{
+			//TODO Replace item
 		}
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
@@ -690,7 +772,6 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 			FObsidianAddingStacksResult AddingStacksResult;
 			if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
 			{
-				//TODO ItemWidget->AddCurrentStackCount(AddingStacksResult.AddedStacks);
 				if(AddingStacksResult.bAddedWholeItemAsStacks)
 				{
 					DraggedItem.Clear();
@@ -699,6 +780,10 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 				}
 				UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
 				DraggedItem.Stacks = AddingStacksResult.StacksLeft;
+			}
+			else
+			{
+				//TODO Replace item
 			}
 		}
 	}

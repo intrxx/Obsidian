@@ -422,6 +422,7 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
 	Item_MarkSpace(InstanceToAdd, AvailablePosition);
+	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(InstanceToAdd);
@@ -523,7 +524,12 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutFromItemInst
 	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
 	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
 	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackToTakeSafe);
-	
+
+	// This shouldn't be here I believe
+	// if(NewInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	// {
+	// 	AddReplicatedSubObject(NewInstance);
+	// }
 	return NewInstance;
 }
 
@@ -652,10 +658,11 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 		OutAddingStacksResult.bAddedWholeItemAsStacks = true;
 	}
 
-	if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(InstanceToAddTo);
-	}
+	// This shouldn't be here I believe
+	// if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	// {
+	// 	AddReplicatedSubObject(InstanceToAddTo);
+	// }
 	return true;
 }
 
@@ -707,10 +714,11 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 		OutAddingStacksResult.bAddedWholeItemAsStacks = true;
 	}
 
-	if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(InstanceToAddTo);
-	}
+	// This shouldn't be here I believe
+	// if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	// {
+	// 	AddReplicatedSubObject(InstanceToAddTo);
+	// }
 	return true;
 }
 

@@ -404,19 +404,9 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 		PickupItem(SlotPosition);
 		return;
 	}
-
-	//TODO This should be server authoritative 
-	UObsidianInventoryItemInstance* NewInstance = InventoryComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
-	if(NewInstance == nullptr)
-	{
-		return;
-	}
-
-	const int32 CurrentOldInstanceStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	ItemWidget->OverrideCurrentStackCount(CurrentOldInstanceStacks);
 	
 	check(InternalHeroComponent);
-	InternalHeroComponent->ServerGrabInventoryItemToCursor(NewInstance);
+	InternalHeroComponent->ServerTakeoutFromItem(ItemInstance, StacksToTake);
 }
 
 void UObsidianInventoryWidgetController::RemoveItemUIElements()

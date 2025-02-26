@@ -64,6 +64,9 @@ public:
 	
 	UFUNCTION(Server, Reliable)
 	void ServerAddStacksFromDraggedItemToItemAtSlot(const FVector2D& SlotPosition, const int32 StacksToAddOverride = -1);
+
+	UFUNCTION(Server, Reliable)
+	void ServerTakeoutFromItem(UObsidianInventoryItemInstance* ItemInstance, const int32 StacksToTake);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
@@ -76,6 +79,11 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
+
+	//~ Start of UObject interface
+	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+	virtual void ReadyForReplication() override;
+	//~ End of UObject interface
 	
 protected:
 	UFUNCTION()

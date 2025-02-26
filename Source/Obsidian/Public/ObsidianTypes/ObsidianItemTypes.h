@@ -128,7 +128,7 @@ public:
 
 public:
 	UPROPERTY()
-	UObsidianInventoryItemInstance* Instance = nullptr;
+	TObjectPtr<UObsidianInventoryItemInstance> Instance = nullptr;
 
 	UPROPERTY()
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = nullptr;
