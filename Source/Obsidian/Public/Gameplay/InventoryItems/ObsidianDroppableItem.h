@@ -46,7 +46,7 @@ public:
 	 * although it should never be negative, so It will warn you.
 	 */
 	void UpdateDroppedItemStacks(const int32 NewDroppedItemStacks);
-	
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
