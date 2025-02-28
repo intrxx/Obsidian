@@ -41,6 +41,8 @@ public:
 	/** Gets the total amount of items added to the inventory with the same item Definition. This does not include stacks, only individual entries to the inventory. */
 	int32 GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const;
 
+	UObsidianInventoryItemInstance* GetItemInstanceAtLocation(const FVector2D& Location) const;
+
 	/** Gets all Item Instances that are added to the inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Obsidian|Inventory")
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
@@ -210,7 +212,6 @@ private:
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
 	TMap<FVector2D, bool> Internal_GetInventoryStateMap();
-	UObsidianInventoryItemInstance* Internal_GetItemInstanceAtLocation(const FVector2D& Position) const;
 
 	//TODO This can be moved to some library later.
 	

@@ -58,7 +58,7 @@ TMap<FVector2D, bool> UObsidianInventoryComponent::Internal_GetInventoryStateMap
 	return InventoryStateMap;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::Internal_GetItemInstanceAtLocation(const FVector2D& Location) const
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::GetItemInstanceAtLocation(const FVector2D& Location) const
 {
 	const TMap<FVector2D, UObsidianInventoryItemInstance*> LocToItemMap = InventoryGrid.GridLocationToItemMap;
 	if(LocToItemMap.Contains(Location))
@@ -75,7 +75,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems
 
 FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(const FVector2D& InPosition) const
 {
-	const UObsidianInventoryItemInstance* ItemInstance = Internal_GetItemInstanceAtLocation(InPosition);
+	const UObsidianInventoryItemInstance* ItemInstance = GetItemInstanceAtLocation(InPosition);
 	check(ItemInstance);
 
 	FObsidianItemStats Stats;
@@ -624,7 +624,7 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 	
 	OutAddingStacksResult.StacksLeft = AddingFromItemDefCurrentStacks;
 	
-	UObsidianInventoryItemInstance* InstanceToAddTo = Internal_GetItemInstanceAtLocation(AtPosition);
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtPosition);
 	if(IsTheSameItem(InstanceToAddTo, AddingFromItemDef) == false)
 	{
 		return false;
@@ -677,7 +677,7 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	OutAddingStacksResult.StacksLeft = AddingFromInstanceCurrentStacks;
 	
-	UObsidianInventoryItemInstance* InstanceToAddTo = Internal_GetItemInstanceAtLocation(AtPosition);
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtPosition);
 	if(IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
 	{
 		return false;
@@ -1116,19 +1116,13 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance)
 {
-	if(!GetOwner()->HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance."));
-		return false; 
-	}
-	
 	if(GetNumberOfStacksAvailableToAddToInventory(ReplacingInstance) <= 0)
 	{
 		//TODO Limit of stacks reached, add voiceover?
 		return false;
 	}
 	
-	UObsidianInventoryItemInstance* InstanceAtLocation = Internal_GetItemInstanceAtLocation(Slot);
+	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(Slot);
 	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
 	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
 	
@@ -1169,18 +1163,12 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
-	if(!GetOwner()->HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef."));
-		return false; 
-	}
-	
 	if(GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount) <= 0)
 	{
 		return false;
 	}
 	
-	UObsidianInventoryItemInstance* InstanceAtLocation = Internal_GetItemInstanceAtLocation(Slot);
+	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(Slot);
 	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
 	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
 	

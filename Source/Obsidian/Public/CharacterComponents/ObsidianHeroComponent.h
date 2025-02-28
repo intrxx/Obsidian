@@ -67,6 +67,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerTakeoutFromItem(UObsidianInventoryItemInstance* ItemInstance, const int32 StacksToTake);
+
+	UFUNCTION(Server, Reliable)
+	void ServerReplaceItemAtSlot(const FVector2D& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
@@ -87,7 +90,7 @@ public:
 	
 protected:
 	UFUNCTION()
-	void OnRep_DraggedItem();
+	void OnRep_DraggedItem(const FDraggedItem& OldDraggedItem);
 	
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
@@ -121,6 +124,12 @@ private:
 	void AutoRun();
 	void CursorTrace();
 	void DragItem() const;
+	
+	/**
+	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
+	 * another item in the inventory in OnRep_DraggedItem. If it sounds useful be careful when using it.
+	 */
+	bool DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const;
 	
 	void StartDraggingItem();
 	void StopDraggingItem();

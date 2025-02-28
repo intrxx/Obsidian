@@ -99,7 +99,6 @@ bool AObsidianWorldCollectable::ReplicateSubobjects(UActorChannel* Channel, FOut
 
 void AObsidianWorldCollectable::OnRep_PickupContent()
 {
-	
 }
 
 bool AObsidianWorldCollectable::CarriesItemInstance() const

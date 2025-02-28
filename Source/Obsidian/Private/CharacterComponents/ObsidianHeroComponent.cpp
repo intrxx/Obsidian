@@ -432,6 +432,41 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(UObsidianInven
 	}
 }
 
+void UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation(const FVector2D& SlotPosition)
+{
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation."));
+		return;
+	}
+	
+	const FDraggedItem CachedDraggedItem = DraggedItem;
+	DraggedItem.Clear();
+	StopDraggingItem();
+	
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	ServerGrabInventoryItemToCursor(ItemInstance);
+
+	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
+	{
+		InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition);
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
+	{
+		const int32 Stacks = CachedDraggedItem.Stacks;
+		int32 StacksLeft = Stacks;
+		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StacksLeft, Stacks);
+	}
+}
+
 void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)
@@ -649,13 +684,13 @@ void UObsidianHeroComponent::ReadyForReplication()
 	}
 }
 
-void UObsidianHeroComponent::OnRep_DraggedItem()
+void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedItem)
 {
 	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
 	{
 		StopDraggingItem();
 	}
-	else if(!DraggedItem.IsEmpty() && !bDraggingItem)  // We got new Item to drag
+	else if(!DraggedItem.IsEmpty() && !bDraggingItem || DraggedItemWasReplaced(OldDraggedItem))  // We got new Item to drag
 	{
 		StartDraggingItem();
 	}
@@ -758,10 +793,6 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 			UpdateStacksOnDraggedItemWidget(CurrentStacks);
 			DraggedItem.Stacks = CurrentStacks;
 		}
-		else
-		{
-			//TODO Replace item
-		}
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
@@ -781,10 +812,6 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 				UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
 				DraggedItem.Stacks = AddingStacksResult.StacksLeft;
 			}
-			else
-			{
-				//TODO Replace item
-			}
 		}
 	}
 }
@@ -797,12 +824,32 @@ void UObsidianHeroComponent::UpdateStacksOnDraggedItemWidget(const int32 InStack
 	}
 }
 
+bool UObsidianHeroComponent::DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const
+{
+	if(OldDraggedItem.Instance && OldDraggedItem.Instance != DraggedItem.Instance)
+	{
+		return true;
+	}
+
+	if(OldDraggedItem.ItemDef && DraggedItem.Instance)
+	{
+		return true;
+	}
+	
+	return false;
+}
+
 void UObsidianHeroComponent::StartDraggingItem()
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
 		return;
+	}
+
+	if(DraggedItemWidget)
+	{
+		DraggedItemWidget->RemoveFromParent();
 	}
 	
 	checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in UObsidianHeroComponent::DragItem please fill it on ObsidianDroppableItem Instance."));
