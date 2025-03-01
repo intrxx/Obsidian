@@ -11,11 +11,22 @@ class UObsidianInventoryItemInstance;
 class UObsidianInventoryComponent;
 struct FObsidianInventoryGrid;
 
+UENUM(BlueprintType)
+enum class EObsidianInventoryChangeType : uint8
+{
+	ICT_NONE = 0 UMETA(DisplayName = "None"),
+	ICT_ItemRemoved UMETA(DisplayName = "Item Removed"),
+	ICT_ItemAdded UMETA(DisplayName = "Item Added"),
+	ICT_ItemChanged UMETA(DisplayName = "Item Changed"),
+
+	ICT_MAX
+};
+
 USTRUCT(BlueprintType)
 struct FObsidianInventoryChangeMessage
 {
 	GENERATED_BODY()
-
+	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	TObjectPtr<UActorComponent> InventoryOwner = nullptr;
 
@@ -23,13 +34,20 @@ struct FObsidianInventoryChangeMessage
 	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
+	FVector2D GridItemPosition = FVector2d::Zero();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	int32 NewCount = 0;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	int32 Delta = 0;
-
+	
+	//TODO Decide if I want to actually use it, it shouldn't be an issue but the Change type can be deduced from Stacks changes so it is kinda useless to the actual game logic
+	// InventoryChangeMessage.NewCount == 0 -> Removed
+	// InventoryChangeMessage.NewCount == InventoryChangeMessage.Delta -> Added
+	// InventoryChangeMessage.NewCount != InventoryChangeMessage.Delta -> Changed
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
-	FVector2D GridItemPosition = FVector2d::Zero();
+	EObsidianInventoryChangeType ChangeType = EObsidianInventoryChangeType::ICT_NONE;
 };
 
 /**
@@ -109,7 +127,7 @@ public:
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FVector2D& GridPosition) const;
+	void BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FVector2D& GridPosition, const EObsidianInventoryChangeType& ChangeType) const;
 	
 private:
 	friend UObsidianInventoryComponent;

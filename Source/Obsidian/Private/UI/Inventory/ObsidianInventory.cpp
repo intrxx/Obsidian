@@ -131,7 +131,7 @@ void UObsidianInventory::OnItemMouseLeave(const FVector2D& ItemDesiredPosition)
 	InventoryWidgetController->HandleUnhoveringItem(ItemDesiredPosition);
 }
 
-void UObsidianInventory::OnInventorySlotHover(const bool bEntered, UObsidianInventorySlot* AffectedSlot)
+void UObsidianInventory::OnInventorySlotHover(const bool bEntered, const UObsidianInventorySlot* AffectedSlot)
 {
 	if(bEntered)
 	{

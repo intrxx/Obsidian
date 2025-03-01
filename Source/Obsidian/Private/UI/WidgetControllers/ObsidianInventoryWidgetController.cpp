@@ -1,10 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
-
 #include <GameFramework/GameplayMessageSubsystem.h>
-
 #include "UI/Inventory/ObsidianItemDescriptionBase.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
@@ -23,19 +20,17 @@
 
 void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
-	check(InventoryComponent);
-	InternalInventoryComponent = InventoryComponent;
-	//InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::ClientOnItemAdded);
-	InventoryComponent->OnItemsStacksChangedDelegate.AddUObject(this, &ThisClass::OnItemsStacksChanged);
-
+	OwnerInventoryComponent = InventoryComponent;
+	check(OwnerInventoryComponent);
+	
 	const AActor* OwningActor = Cast<AActor>(PlayerController->GetPawn());
 	check(OwningActor);
 
 	ObsidianPC = Cast<AObsidianPlayerController>(PlayerController);
 	check(ObsidianPC);
 	
-	InternalHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
-	check(InternalHeroComponent);
+	OwnerHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+	check(OwnerHeroComponent);
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
@@ -43,6 +38,11 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 
 void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
 {
+	if(InventoryComponent != InventoryChangeMessage.InventoryOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	{
+		return;
+	}
+	
 	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
@@ -50,15 +50,9 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		return;
 	}
 	
-	if(InventoryChangeMessage.NewCount == 0) // Removed
+	if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemAdded)
 	{
-		UE_LOG(LogInventory, Warning, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
-		RemoveItemWidget(InventoryChangeMessage.GridItemPosition);
-	}
-
-	if(InventoryChangeMessage.NewCount == InventoryChangeMessage.Delta) // Added
-	{
-		UE_LOG(LogInventory, Warning, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemVisuals ItemVisuals;
 		ItemVisuals.ItemImage = Instance->GetItemImage();
@@ -68,10 +62,14 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		
 		OnItemAddedDelegate.Broadcast(ItemVisuals);
 	}
-
-	if (InventoryChangeMessage.NewCount != InventoryChangeMessage.Delta) // Changed
+	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
-		UE_LOG(LogInventory, Warning, TEXT("Changed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		RemoveItemWidget(InventoryChangeMessage.GridItemPosition);
+	}
+	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemChanged)
+	{
+		UE_LOG(LogInventory, Display, TEXT("Changed item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemVisuals ItemVisuals;
 		ItemVisuals.ItemImage = Instance->GetItemImage();
@@ -80,72 +78,11 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		ItemVisuals.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
 		
 		OnItemChangedDelegate.Broadcast(ItemVisuals);
-	}	
-}
-
-void UObsidianInventoryWidgetController::ClientOnItemAdded_Implementation(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
-{
-	check(ItemInstance);
-	const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
-
-	const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
-	(
-		ItemInstance->GetItemImage(),
-		DesiredPosition,
-		ItemInstance->GetItemGridSpan(),
-		StackCount
-	);
-	OnItemAddedDelegate.Broadcast(ItemVisuals);
-}
-
-void UObsidianInventoryWidgetController::OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap)
-{
-	if(IsInventoryOpened() == false)
-	{
-		return;
-	}
-	
-	for(TTuple<FVector2D, int32> LocationToStack : LocationToStacksMap)
-	{
-		checkf(AddedItemWidgetMap.Contains(LocationToStack.Key), TEXT("There is a missmatch in visual inventory state and actual items location in Inventory Component."));
-		UObsidianItem* InventoryItem = AddedItemWidgetMap[LocationToStack.Key];
-		if(!IsValid(InventoryItem))
-		{
-			continue;
-		}
-		InventoryItem->OverrideCurrentStackCount(LocationToStack.Value);
 	}
 }
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
 {
-	//
-	//  Design change
-	//
-	// GridLocationToItemMap.Empty();
-	// GridLocationToItemMap = InventoryComponent->Internal_GetLocationToInstanceMap();
-	// AddedItemWidgetMap.Empty(GridLocationToItemMap.Num());
-	//
-	// for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& LocToInstancePair : GridLocationToItemMap)
-	// {
-	// 	const UObsidianInventoryItemInstance* ItemInstance = LocToInstancePair.Value;
-	// 	ensure(ItemInstance);
-	// 	
-	// 	const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
-	// 	const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
-	// 	(
-	// 		ItemInstance->GetItemImage(),
-	// 		LocToInstancePair.Key,
-	// 		ItemInstance->GetItemGridSpan(),
-	// 		StackCount
-	// 	);
-	// 	OnItemAddedDelegate.Broadcast(ItemVisuals);
-	// }
-	//
-	// End of Design change
-	//
-
-	
 	TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
 	AddedItemWidgetMap.Empty(Items.Num());
 	
@@ -165,24 +102,24 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 
 void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown)
 {
-	check(InternalHeroComponent);
-	if(InternalHeroComponent->IsDraggingAnItem() == false)
+	check(OwnerHeroComponent);
+	if(OwnerHeroComponent->IsDraggingAnItem() == false)
 	{
 		return;
 	}
-	InternalHeroComponent->ServerAddItemToInventoryAtSlot(SlotPosition, bShiftDown);
+	OwnerHeroComponent->ServerAddItemToInventoryAtSlot(SlotPosition, bShiftDown);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
 	check(InventoryComponent);
-	check(InternalHeroComponent);
+	check(OwnerHeroComponent);
 	check(DraggedItemWidgetClass);
 	check(ItemWidget);
 
 	RemoveItemUIElements();
 	
-	if(InternalHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
 		const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
 		if(InstanceToAddTo == nullptr)
@@ -191,21 +128,21 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 			return;
 		}
 		
-		 const FDraggedItem DraggedItem = InternalHeroComponent->GetDraggedItem();
+		 const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
 		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
 		 {
 		 	if(DraggedInstance->IsStackable())
 		 	{
-		 		if(InventoryComponent->IsTheSameItem(DraggedInstance, InstanceToAddTo))
+		 		if(UObsidianInventoryComponent::IsTheSameItem(DraggedInstance, InstanceToAddTo))
 		 		{
-		 			InternalHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition);
+		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition);
 		 			return;
 		 		}
 		 	}
 			
 		 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
 		 	{
-		 		InternalHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
+		 		OwnerHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
 		 	}
 		 	return;
 		 }
@@ -216,31 +153,31 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 		 	const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
 		 	if(DefaultObject && DefaultObject->IsStackable())
 		 	{
-		 		if(InventoryComponent->IsTheSameItem(InstanceToAddTo, DraggedItemDef))
+		 		if(UObsidianInventoryComponent::IsTheSameItem(InstanceToAddTo, DraggedItemDef))
 		 		{
-		 			InternalHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition);
+		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition);
 		 			return;
 		 		}
 		 	}
 			
-			 if(InternalInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
+			 if(OwnerInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
 			 {
-			 	InternalHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
+			 	OwnerHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
 			 }
 			 return;
 		}
 		return;
 	}
-	InternalHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
+	OwnerHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
-	check(InternalHeroComponent);
+	check(OwnerHeroComponent);
 	
-	if(InternalHeroComponent->IsDraggingAnItem())
+	if(OwnerHeroComponent->IsDraggingAnItem())
 	{
-		InternalHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition, 1);
+		OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition, 1);
 		return;
 	}
 	
@@ -274,7 +211,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 	ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
 }
 
-void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::HandleHoveringOverItem(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget)
 {
 	if(!CanShowDescription())
 	{
@@ -378,12 +315,10 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	
 	if(CurrentStacks == StacksToTake)
 	{
-		InternalHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
+		OwnerHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
 		return;
 	}
-	
-	check(InternalHeroComponent);
-	InternalHeroComponent->ServerTakeoutFromItem(ItemInstance, StacksToTake);
+	OwnerHeroComponent->ServerTakeoutFromItem(ItemInstance, StacksToTake);
 }
 
 void UObsidianInventoryWidgetController::RemoveItemUIElements()
@@ -414,9 +349,9 @@ void UObsidianInventoryWidgetController::RemoveItemDescription()
 
 bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
 {
-	if(InternalHeroComponent)
+	if(OwnerHeroComponent)
 	{
-		return InternalHeroComponent->IsDraggingAnItem();
+		return OwnerHeroComponent->IsDraggingAnItem();
 	}
 	return false;
 }
@@ -448,7 +383,7 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D
 		return false;
 	}
 	
-	const FDraggedItem DraggedItem = InternalHeroComponent->GetDraggedItem();
+	const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
 	if(DraggedItem.IsEmpty())
 	{
 		return false;

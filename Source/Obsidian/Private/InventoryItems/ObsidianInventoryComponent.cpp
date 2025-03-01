@@ -230,10 +230,6 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 		AddedToInstances = TryAddingStacksToExistingItems(ItemDef, OutStacksLeft, /** OUT */ AddingStacksResult);
 		OutStacksLeft = AddingStacksResult.StacksLeft;
 		
-		if(AddingStacksResult.bAddedSomeOfTheStacks)
-		{
-			BroadcastVisualStacksUpdate(AddedToInstances);
-		}
 		if(AddingStacksResult.bAddedWholeItemAsStacks)
 		{
 			return AddedToInstances.Last();
@@ -273,8 +269,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	{
 		AddReplicatedSubObject(Instance);
 	}
-
-	OnItemAddedToInventoryDelegate.Broadcast(Instance, AvailablePosition);
+	
 	return Instance;
 }
 
@@ -337,9 +332,6 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	{
 		AddReplicatedSubObject(Instance);
 	}
-
-	OnItemAddedToInventoryDelegate.Broadcast(Instance, ToSlot);
-	
 	return Instance;
 }
 
@@ -376,15 +368,11 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	if(InstanceToAdd->IsStackable())
 	{
 		FObsidianAddingStacksResult AddingStacksResult;
-		const TArray<UObsidianInventoryItemInstance*> AddedToInstances = TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), OutStacksLeft, /** OUT */ AddingStacksResult);
+		TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), OutStacksLeft, /** OUT */ AddingStacksResult);
 
 		OutStacksLeft = AddingStacksResult.StacksLeft;
 		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
 		
-		if(AddingStacksResult.bAddedSomeOfTheStacks)
-		{
-			BroadcastVisualStacksUpdate(AddedToInstances);
-		}
 		if(AddingStacksResult.bAddedWholeItemAsStacks)
 		{
 			return;
@@ -425,8 +413,6 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	{
 		AddReplicatedSubObject(InstanceToAdd);
 	}
-
-	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, AvailablePosition);
 }
 
 bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot, const int32 StackToAddOverride)
@@ -489,8 +475,6 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	{
 		AddReplicatedSubObject(InstanceToAdd);
 	}
-
-	OnItemAddedToInventoryDelegate.Broadcast(InstanceToAdd, ToSlot);
 	return bAddedWholeItem;
 }
 
@@ -1157,18 +1141,6 @@ bool UObsidianInventoryComponent::IsTheSameItem(const UObsidianInventoryItemInst
 		return true;
 	}
 	return false;
-}
-
-void UObsidianInventoryComponent::BroadcastVisualStacksUpdate(TArray<UObsidianInventoryItemInstance*> AddedToInstances) const
-{
-	TMap<FVector2D, int32> LocationToStacksMap;
-	for(UObsidianInventoryItemInstance* AddedToInstance : AddedToInstances)
-	{
-		const FVector2D InstanceLocation = GetItemLocationFromGrid(AddedToInstance);
-		const int32 NewStacks = AddedToInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		LocationToStacksMap.Add(InstanceLocation, NewStacks);
-	}
-	OnItemsStacksChangedDelegate.Broadcast(LocationToStacksMap);
 }
 
 

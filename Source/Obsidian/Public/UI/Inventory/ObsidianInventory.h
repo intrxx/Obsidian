@@ -58,7 +58,7 @@ private:
 	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
 	void OnItemMouseLeave(const FVector2D& ItemDesiredPosition);
 	
-	void OnInventorySlotHover(const bool bEntered, UObsidianInventorySlot* AffectedSlot);
+	void OnInventorySlotHover(const bool bEntered, const UObsidianInventorySlot* AffectedSlot);
 	void OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition, const bool bShiftDown);
 	
 private:

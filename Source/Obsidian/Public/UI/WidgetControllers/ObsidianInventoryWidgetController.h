@@ -74,18 +74,14 @@ public:
 	UObsidianItem* GetItemWidgetAtLocation(const FVector2D& Location) const;
 	void AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
 	void RemoveItemWidget(const FVector2D& Location);
-
-	UFUNCTION(Client, Reliable)
-	void ClientOnItemAdded(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition);
 	
-	void OnItemsStacksChanged(const TMap<FVector2D, int32>& LocationToStacksMap);
 	void OnInventoryOpen();
 
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
 	
 	void HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
-	void HandleHoveringOverItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
+	void HandleHoveringOverItem(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem(const FVector2D& SlotPosition);
 
 	void RemoveItemUIElements();
@@ -113,10 +109,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription = nullptr;
 
-	UPROPERTY()
-	TObjectPtr<AObsidianPlayerController> ObsidianPC = nullptr;
-
 private:
+	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
+	
 	void HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake);
 	
 	void RemoveUnstackSlider();
@@ -128,8 +123,6 @@ private:
 	FVector2D CalculateDescriptionPosition(const UObsidianItem* ItemWidget) const;
 	FVector2D GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize, const FVector2D& ItemPosition, const FVector2D& ItemSize, const FVector2D& UIElementSize) const;
 
-	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
-	
 private:
 	bool bInventoryOpened = false;
 
@@ -137,10 +130,13 @@ private:
 	bool bUnstackSliderActive = false;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryComponent> InternalInventoryComponent;
+	TObjectPtr<UObsidianInventoryComponent> OwnerInventoryComponent = nullptr;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianHeroComponent> InternalHeroComponent;
+	TObjectPtr<UObsidianHeroComponent> OwnerHeroComponent = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<AObsidianPlayerController> ObsidianPC = nullptr;
 	
 	UPROPERTY()
 	TMap<FVector2D, UObsidianItem*> AddedItemWidgetMap;

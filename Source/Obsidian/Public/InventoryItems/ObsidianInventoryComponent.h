@@ -13,11 +13,6 @@ class UObsidianInventoryWidgetController;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemAddedToInventorySignature, UObsidianInventoryItemInstance* ItemInstance, FVector2D DesiredPosition);
-
-using FLocationToStacksMap = const TMap<FVector2D, int32>&; // Need to wrap the Map in type alias to avoid parsing issues in delegate macro.
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemsStacksChangedSignature, FLocationToStacksMap);
-
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
  */
@@ -151,10 +146,6 @@ public:
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
 
-public:
-	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
-	FOnItemsStacksChangedSignature OnItemsStacksChangedDelegate;
-
 protected:
 	bool IsLocallyControlled();
 
@@ -211,8 +202,6 @@ private:
 	static bool IsTheSameItem(const UObsidianInventoryItemInstance* Instance, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
 	//END TODO
-
-	void BroadcastVisualStacksUpdate(TArray<UObsidianInventoryItemInstance*> AddedToInstances) const;
 	
 private:
 	friend UObsidianInventoryWidgetController;
