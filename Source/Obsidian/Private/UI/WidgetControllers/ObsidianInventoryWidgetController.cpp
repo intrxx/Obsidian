@@ -27,7 +27,6 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	InternalInventoryComponent = InventoryComponent;
 	//InventoryComponent->OnItemAddedToInventoryDelegate.AddUObject(this, &ThisClass::ClientOnItemAdded);
 	InventoryComponent->OnItemsStacksChangedDelegate.AddUObject(this, &ThisClass::OnItemsStacksChanged);
-	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 
 	const AActor* OwningActor = Cast<AActor>(PlayerController->GetPawn());
 	check(OwningActor);
@@ -87,10 +86,8 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 void UObsidianInventoryWidgetController::ClientOnItemAdded_Implementation(UObsidianInventoryItemInstance* ItemInstance, const FVector2D DesiredPosition)
 {
 	check(ItemInstance);
-	//bInventoryChanged = true;
-	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
-	
 	const int32 StackCount = ItemInstance->IsStackable() ? ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+
 	const FObsidianItemVisuals ItemVisuals = FObsidianItemVisuals
 	(
 		ItemInstance->GetItemImage(),
@@ -209,7 +206,6 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 		 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
 		 	{
 		 		InternalHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
-		 		InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 		 	}
 		 	return;
 		 }
@@ -230,13 +226,12 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVecto
 			 if(InternalInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
 			 {
 			 	InternalHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
-			 	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 			 }
 			 return;
 		}
 		return;
 	}
-	PickupItem(SlotPosition);
+	InternalHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
@@ -372,15 +367,6 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 	return ActiveItemDescription;
 }
 
-void UObsidianInventoryWidgetController::PickupItem(const FVector2D& SlotPosition)
-{
-	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
-
-	check(InternalHeroComponent);
-	InternalHeroComponent->ServerGrabInventoryItemToCursor(ItemInstance);
-	InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
-}
-
 void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake)
 {
 	RemoveUnstackSlider();
@@ -392,7 +378,7 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	
 	if(CurrentStacks == StacksToTake)
 	{
-		PickupItem(SlotPosition);
+		InternalHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
 		return;
 	}
 	
@@ -451,30 +437,8 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& Ho
 			return false;
 		}
 		return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSize, HoveredSlot);
-		//return CanAddToSpecificSlot(LocalItemGridSize, HoveredSlot);
 	}
 	return InventoryComponent->CheckSpecifiedPosition(ItemGridSize, HoveredSlot);
-	//return CanAddToSpecificSlot(ItemGridSize, HoveredSlot);
-}
-
-bool UObsidianInventoryWidgetController::CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const
-{
-	bool bCanFit = false;
-	
-	if(InventoryStateMap[HoveredSlot] == false) // Initial location is free
-	{
-		bCanFit = true;
-		for(FVector2D LocationComp : ItemGridSize)
-		{
-			const FVector2D Loc = HoveredSlot + LocationComp;
-			if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
-			{
-				bCanFit = false;
-				break;
-			}
-		}
-	}
-	return bCanFit;
 }
 
 bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const

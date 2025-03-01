@@ -117,9 +117,6 @@ protected:
 	TObjectPtr<AObsidianPlayerController> ObsidianPC = nullptr;
 
 private:
-	bool CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const;
-	void PickupItem(const FVector2D& SlotPosition);
-
 	void HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake);
 	
 	void RemoveUnstackSlider();
@@ -134,8 +131,6 @@ private:
 	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
 	
 private:
-	//TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
-	TMap<FVector2D, bool> InventoryStateMap;
 	bool bInventoryOpened = false;
 
 	bool bDescriptionActive = false;

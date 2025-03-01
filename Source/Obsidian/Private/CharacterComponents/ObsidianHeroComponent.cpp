@@ -452,8 +452,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation(const FVecto
 	DraggedItem.Clear();
 	StopDraggingItem();
 	
-	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
-	ServerGrabInventoryItemToCursor(ItemInstance);
+	ServerGrabInventoryItemToCursor(SlotPosition);
 
 	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
@@ -616,14 +615,8 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 	checkf(false, TEXT("Provided ItemToPickup has no Instance nor Taplate to pick up, this is bad and should not happen."))
 }
 
-void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(UObsidianInventoryItemInstance* InstanceToGrab)
+void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(const FVector2D& SlotPosition)
 {
-	if(InstanceToGrab == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
-		return;
-	}
-
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
@@ -635,6 +628,13 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(UObs
 	if(InventoryComponent == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	if(InstanceToGrab == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
 		return;
 	}
 

@@ -75,7 +75,7 @@ public:
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabInventoryItemToCursor(UObsidianInventoryItemInstance* InstanceToGrab);
+	void ServerGrabInventoryItemToCursor(const FVector2D& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemDef(AObsidianDroppableItem* ItemToPickup);
