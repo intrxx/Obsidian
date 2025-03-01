@@ -63,6 +63,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
+	/** Checks if the item fits in the provided spot. */
+	bool CheckSpecifiedPosition(const TArray<FVector2D>& ItemGridSize, const FVector2D& SpecifiedPosition);
+	
      /**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
 	 *
@@ -152,6 +155,9 @@ public:
 	FOnItemAddedToInventorySignature OnItemAddedToInventoryDelegate;
 	FOnItemsStacksChangedSignature OnItemsStacksChangedDelegate;
 
+protected:
+	bool IsLocallyControlled();
+
 private:
 	/** Initializes Inventory State. */
 	void InitInventoryState();
@@ -191,24 +197,7 @@ private:
 	
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
 	bool CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition);
-
-	/** Checks if the item fits in the provided spot. */
-	bool CheckSpecifiedPosition(const TArray<FVector2D>& ItemGridSize, const FVector2D& SpecifiedPosition);
-
-	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
-	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
-
-	/** Marks Item space in the internal Inventory State map for client. Do not call Directly! */
-	UFUNCTION(Client, Reliable)
-	void ClientItem_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
 	
-	/** Unmarks Item space in the internal Inventory State map. Must be called after removing item. */
-    void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
-
-	/** Unmarks Item space in the internal Inventory State map for client. Do not call Directly! */
-	UFUNCTION(Client, Reliable)
-	void ClientItem_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
-    	
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
 	TMap<FVector2D, bool> Internal_GetInventoryStateMap();
@@ -238,14 +227,7 @@ private:
 	 */
 	UPROPERTY(Replicated)
 	FObsidianInventoryGrid InventoryGrid;
-
-	/**
-	 * Map that represents whole Inventory Grid with taken fields.
-	 * If a Given Vector2D location has a true value associated with it, the field is treated as taken.
-	 */
-	UPROPERTY()
-	TMap<FVector2D, bool> InventoryStateMap;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
 	int32 InventoryGridWidth = 12;
 	
@@ -254,4 +236,6 @@ private:
 
 	/** Grid size of the inventory, calculated (InventoryGridWidth * InventoryGridHeight). */
 	int32 InventoryGridSize = 0;
+
+	bool bIsLocallyControlled = false;
 };

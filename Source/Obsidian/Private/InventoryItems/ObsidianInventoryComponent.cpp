@@ -55,7 +55,7 @@ TMap<FVector2D, UObsidianInventoryItemInstance*> UObsidianInventoryComponent::In
 
 TMap<FVector2D, bool> UObsidianInventoryComponent::Internal_GetInventoryStateMap()
 {
-	return InventoryStateMap;
+	return InventoryGrid.InventoryStateMap;
 }
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::GetItemInstanceAtLocation(const FVector2D& Location) const
@@ -268,7 +268,6 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, AvailablePosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	Item_MarkSpace(Instance, AvailablePosition);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -328,7 +327,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, ToSlot);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	Item_MarkSpace(Instance, ToSlot);
+
 	if(!bStackable)
 	{
 		StacksLeft = 0; //@Hack that's little bit of a hack unfortunately, I need this to remove the item from hand
@@ -421,7 +420,6 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	
 	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
-	Item_MarkSpace(InstanceToAdd, AvailablePosition);
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -486,7 +484,6 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 
 	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	InventoryGrid.AddEntry(InstanceToAdd, ToSlot);
-	Item_MarkSpace(InstanceToAdd, ToSlot);
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -854,8 +851,6 @@ void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInsta
 		return; 
 	}
 	
-	const FVector2D FromLocation = GetItemLocationFromGrid(InstanceToRemove);
-	Item_UnMarkSpace(InstanceToRemove, FromLocation);
 	InventoryGrid.RemoveEntry(InstanceToRemove);
 	
 	if(InstanceToRemove && IsUsingRegisteredSubObjectList())
@@ -940,6 +935,24 @@ FVector2D UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventor
 	return ItemInstance == nullptr ? FVector2D::Zero() : *InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
 }
 
+bool UObsidianInventoryComponent::IsLocallyControlled()
+{
+	if(bIsLocallyControlled)
+	{
+		return true;
+	}
+	
+	if(AActor* Owner = GetOwner())
+	{
+		if(AController* Controller = Cast<AController>(Owner))
+		{
+			bIsLocallyControlled = Controller->IsLocalController();
+			return bIsLocallyControlled;
+		}
+	}
+	return false;
+}
+
 void UObsidianInventoryComponent::InitInventoryState()
 {
 	int16 GridX = 0;
@@ -947,7 +960,7 @@ void UObsidianInventoryComponent::InitInventoryState()
 	
 	for(int32 i = 0; i < InventoryGridSize; i++)
 	{
-		InventoryStateMap.Add(FVector2D(GridX, GridY), false);
+		InventoryGrid.InventoryStateMap.Add(FVector2D(GridX, GridY), false);
 		
 		if(GridX == InventoryGridWidth - 1)
 		{
@@ -962,105 +975,7 @@ void UObsidianInventoryComponent::InitInventoryState()
 	
 	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& ItemLoc : InventoryGrid.GridLocationToItemMap)
 	{
-		Item_MarkSpace(ItemLoc.Value, ItemLoc.Key);
-	}
-}
-
-void UObsidianInventoryComponent::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
-{
-	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FVector2D LocationComp : ItemGridSize)
-	{
-		const FVector2D Location = AtPosition + LocationComp;
-		if(InventoryStateMap.Contains(Location))
-		{
-			InventoryStateMap[Location] = true;
-		}
-#if !UE_BUILD_SHIPPING
-		else
-		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
-			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
-		}
-#endif
-	}
-
-	// Sync the map with a client, feels like a @HACK. Need second opinion
-	// Alternatives I thought about:
-	// Replace the map with a struct that can be replicated
-	// Different way of handling slot hoverings
-	if(GetOwnerRole() != ENetRole::ROLE_Authority)
-	{
-		ClientItem_MarkSpace(ItemInstance, AtPosition);
-	}
-}
-
-void UObsidianInventoryComponent::ClientItem_MarkSpace_Implementation(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
-{
-	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FVector2D LocationComp : ItemGridSize)
-	{
-		const FVector2D Location = AtPosition + LocationComp;
-		if(InventoryStateMap.Contains(Location))
-		{
-			InventoryStateMap[Location] = true;
-		}
-#if !UE_BUILD_SHIPPING
-		else
-		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
-			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
-		}
-#endif
-	}
-}
-
-void UObsidianInventoryComponent::Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
-{
-	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FVector2D LocationComp : ItemGridSize)
-	{
-		const FVector2D Location = AtPosition + LocationComp;
-		if(InventoryStateMap.Contains(Location))
-		{
-			InventoryStateMap[Location] = false;
-		}
-#if !UE_BUILD_SHIPPING
-		else
-		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
-			"exist in the InventoryStateMap in UObsidianInventoryComponent::Item_UnMarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
-		}
-#endif
-	}
-
-	// Sync the map with a client, feels like a @HACK. Need second opinion
-	// Alternatives I thought about:
-	// Replace the map with a struct that can be replicated
-	// Different way of handling slot hoverings
-	if(GetOwnerRole() != ENetRole::ROLE_Authority)
-	{
-		ClientItem_UnMarkSpace(ItemInstance, AtPosition);
-	}
-}
-
-void UObsidianInventoryComponent::ClientItem_UnMarkSpace_Implementation(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
-{
-	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FVector2D LocationComp : ItemGridSize)
-	{
-		const FVector2D Location = AtPosition + LocationComp;
-		if(InventoryStateMap.Contains(Location))
-		{
-			InventoryStateMap[Location] = true;
-		}
-#if !UE_BUILD_SHIPPING
-		else
-		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
-			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
-		}
-#endif
+		InventoryGrid.Item_MarkSpace(ItemLoc.Value, ItemLoc.Key);
 	}
 }
 
@@ -1068,7 +983,7 @@ bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FVector2D>
 {
 	bool bCanFit = false;
 	
-	for(const TTuple<FVector2D, bool>& Location : InventoryStateMap)
+	for(const TTuple<FVector2D, bool>& Location : InventoryGrid.InventoryStateMap)
 	{
 		if(Location.Value == false) // Location is free
 		{
@@ -1076,7 +991,7 @@ bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FVector2D>
 			for(FVector2D LocationComp : ItemGridSize)
 			{
 				const FVector2D Loc = Location.Key + LocationComp;
-				if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
+				if(!InventoryGrid.InventoryStateMap.Contains(Loc) || InventoryGrid.InventoryStateMap[Loc] == true)
 				{
 					bCanFit = false;
 					break;
@@ -1098,13 +1013,13 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>
 {
 	bool bCanFit = false;
 	
-	if(InventoryStateMap[SpecifiedPosition] == false) // Initial location is free
+	if(InventoryGrid.InventoryStateMap[SpecifiedPosition] == false) // Initial location is free
 	{
 		bCanFit = true;
 		for(FVector2D LocationComp : ItemGridSize)
 		{
 			const FVector2D Loc = SpecifiedPosition + LocationComp;
-			if(!InventoryStateMap.Contains(Loc) || InventoryStateMap[Loc] == true)
+			if(!InventoryGrid.InventoryStateMap.Contains(Loc) || InventoryGrid.InventoryStateMap[Loc] == true)
 			{
 				bCanFit = false;
 				break;
@@ -1126,7 +1041,7 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
 	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
 	
-	TMap<FVector2D, bool> TempInventoryStateMap = InventoryStateMap;
+	TMap<FVector2D, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
 	for(const FVector2D LocationComp : ItemGridSize)
 	{
 		const FVector2D Location = ItemOrigin + LocationComp;
@@ -1172,7 +1087,7 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVec
 	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
 	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
 	
-	TMap<FVector2D, bool> TempInventoryStateMap = InventoryStateMap;
+	TMap<FVector2D, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
 	for(const FVector2D LocationComp : ItemGridSize)
 	{
 		const FVector2D Location = ItemOrigin + LocationComp;

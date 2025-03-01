@@ -91,6 +91,12 @@ public:
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);
 
+	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
+	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
+	
+	/** Unmarks Item space in the internal Inventory State map. Must be called after removing item. */
+	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
+
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryGrid>(Entries, DeltaParams, *this);
@@ -117,6 +123,12 @@ private:
 
 	/** Accelerated list of item location (0, 0). */
 	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
+
+	/**
+	 * Map that represents whole Inventory Grid with taken fields.
+	 * If a Given Vector2D location has a true value associated with it, the field is treated as taken.
+	 */
+	TMap<FVector2D, bool> InventoryStateMap;
 };
 
 template<>

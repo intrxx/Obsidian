@@ -36,7 +36,7 @@ void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* O
 {
 	DataPack.Items.Empty();
 	
-	if(const UObsidianInventoryComponent* InventoryComponent = OwnerPC->FindComponentByClass<UObsidianInventoryComponent>())
+	if(UObsidianInventoryComponent* InventoryComponent = OwnerPC->FindComponentByClass<UObsidianInventoryComponent>())
 	{
 		TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
 		for(UObsidianInventoryItemInstance* Item : Items)
@@ -54,7 +54,7 @@ void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* O
 
 			DataPack.Items.Add(InventoryItems);
 		}
-		DataPack.InventoryStateMap = InventoryComponent->InventoryStateMap;
+		DataPack.InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
 	}
 }
 
@@ -219,6 +219,8 @@ void FGameplayDebuggerCategory_InventoryItems::FRepData::Serialize(FArchive& Ar)
 {
 	int32 NumItems = Items.Num();
 	Ar << NumItems;
+	Ar << InventoryStateMap;
+	
 	if(Ar.IsLoading())
 	{
 		Items.SetNum(NumItems);

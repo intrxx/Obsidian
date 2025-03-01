@@ -437,6 +437,12 @@ bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
 
 bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize) const
 {
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is invalid in UObsidianInventoryWidgetController::CanPlaceDraggedItem."));
+		return false;	
+	}
+	
 	if(ItemGridSize.IsEmpty())
 	{
 		TArray<FVector2D> LocalItemGridSize;
@@ -444,9 +450,11 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& Ho
 		{
 			return false;
 		}
-		return CanAddToSpecificSlot(LocalItemGridSize, HoveredSlot);
+		return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSize, HoveredSlot);
+		//return CanAddToSpecificSlot(LocalItemGridSize, HoveredSlot);
 	}
-	return CanAddToSpecificSlot(ItemGridSize, HoveredSlot);
+	return InventoryComponent->CheckSpecifiedPosition(ItemGridSize, HoveredSlot);
+	//return CanAddToSpecificSlot(ItemGridSize, HoveredSlot);
 }
 
 bool UObsidianInventoryWidgetController::CanAddToSpecificSlot(const TArray<FVector2D>& ItemGridSize, const FVector2D& HoveredSlot) const

@@ -78,6 +78,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 #endif
 
 	GridLocationToItemMap.Add(AvailablePosition, Item);
+	Item_MarkSpace(Item, AvailablePosition);
 	
 	MarkItemDirty(NewEntry);
 	
@@ -104,6 +105,7 @@ void FObsidianInventoryGrid::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	
 	GridLocationToItemMap.Add(AvailablePosition, Instance);
+	Item_MarkSpace(Instance, AvailablePosition);
 	MarkItemDirty(NewEntry);
 	
 	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, AvailablePosition);
@@ -129,6 +131,7 @@ void FObsidianInventoryGrid::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 		Instance->ResetItemCurrentGridLocation();
 		
 		GridLocationToItemMap.Remove(CachedLocation);
+		Item_UnMarkSpace(Instance, CachedLocation);
 
 		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, CachedLocation);
@@ -161,6 +164,46 @@ void FObsidianInventoryGrid::ChangedEntryStacks(UObsidianInventoryItemInstance* 
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
+void FObsidianInventoryGrid::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
+{
+	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = AtPosition + LocationComp;
+		if(InventoryStateMap.Contains(Location))
+		{
+			InventoryStateMap[Location] = true;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
+			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
+		}
+#endif
+	}
+}
+
+void FObsidianInventoryGrid::Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
+{
+	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FVector2D LocationComp : ItemGridSize)
+	{
+		const FVector2D Location = AtPosition + LocationComp;
+		if(InventoryStateMap.Contains(Location))
+		{
+			InventoryStateMap[Location] = false;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
+			"exist in the InventoryStateMap in UObsidianInventoryComponent::Item_UnMarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
+		}
+#endif
+	}
+}
+
 void FObsidianInventoryGrid::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
 {
 	for(const int32 Index : RemovedIndices)
@@ -170,6 +213,7 @@ void FObsidianInventoryGrid::PreReplicatedRemove(const TArrayView<int32> Removed
 		Entry.LastObservedCount = 0;
 
 		GridLocationToItemMap.Remove(Entry.GridLocation);
+		Item_UnMarkSpace(Entry.Instance, Entry.GridLocation);
 	}
 }
 
@@ -183,6 +227,7 @@ void FObsidianInventoryGrid::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		Entry.LastObservedCount = Entry.StackCount;
 
 		GridLocationToItemMap.Add(Entry.GridLocation, Entry.Instance);
+		Item_MarkSpace(Entry.Instance, Entry.GridLocation);
 	}
 }
 
