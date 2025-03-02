@@ -447,11 +447,23 @@ void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedIte
 {
 	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
 	{
-		StopDraggingItem();
+		const AController* Controller = GetController<AController>();
+		if(Controller == nullptr)
+		{
+			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::OnRep_DraggedItem."));
+			return;
+		}
+		StopDraggingItem(Controller);
 	}
 	else if(!DraggedItem.IsEmpty() && !bDraggingItem || DraggedItemWasReplaced(OldDraggedItem))  // We got new Item to drag
 	{
-		StartDraggingItem();
+		const AController* Controller = GetController<AController>();
+		if(Controller == nullptr)
+		{
+			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::OnRep_DraggedItem."));
+			return;
+		}
+		StartDraggingItem(Controller);
 	}
 	else if(DraggedItem.Stacks > 0) // We are dragging an item but the stacks changed
 	{
@@ -492,7 +504,7 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(UObsidianInven
 	}
 	
 	DraggedItem = FDraggedItem(NewInstance);
-	StartDraggingItem();
+	StartDraggingItem(Controller);
 
 	if(NewInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -518,7 +530,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation(const FVecto
 	
 	const FDraggedItem CachedDraggedItem = DraggedItem;
 	DraggedItem.Clear();
-	StopDraggingItem();
+	StopDraggingItem(Controller);
 	
 	ServerGrabInventoryItemToCursor(SlotPosition);
 
@@ -635,6 +647,13 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 	{
 		return;
 	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
+		return;
+	}
 	
 	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, HitLocation, FVector(1.0f, 1.0f, 1.0f));
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
@@ -642,7 +661,7 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 	Item->FinishSpawning(ItemSpawnTransform);
 	DraggedItem.Clear();
 
-	StopDraggingItem();
+	StopDraggingItem(Controller);
 }
 
 void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
@@ -656,7 +675,7 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation."));
 		return;
 	}
 	
@@ -666,10 +685,7 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 		DraggedItem = FDraggedItem(Template.ItemDef, Template.StackCount);
 		ItemToPickup->UpdateDroppedItemStacks(0);
 		
-		if(Controller->IsLocalController())
-		{
-			StartDraggingItem();
-		}
+		StartDraggingItem(Controller);
 		return;
 	}
 
@@ -679,10 +695,7 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 		DraggedItem = FDraggedItem(Instance.Item);
 		ItemToPickup->UpdateDroppedItemStacks(0);
 		
-		if(Controller->IsLocalController())
-		{
-			StartDraggingItem();
-		}
+		StartDraggingItem(Controller);
 		return;
 	}
 
@@ -694,14 +707,14 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
 		return;
 	}
 	
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
 		return;
 	}
 
@@ -716,10 +729,7 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 	
 	DraggedItem = FDraggedItem(InstanceToGrab);
 
-	if(Controller->IsLocalController())
-	{
-		StartDraggingItem();
-	}
+	StartDraggingItem(Controller);
 }
 
 void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)
@@ -751,7 +761,7 @@ void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const
 		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition, StacksToAddOverride))
 		{
 			DraggedItem.Clear();
-			StopDraggingItem();
+			StopDraggingItem(Controller);
 			return;
 		}
 		const int32 CurrentStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
@@ -766,7 +776,7 @@ void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const
 		if(StackLeft == 0)
 		{
 			DraggedItem.Clear();
-			StopDraggingItem();
+			StopDraggingItem(Controller);
 			return;
 		}
 		UpdateStacksOnDraggedItemWidget(StackLeft);
@@ -778,21 +788,21 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation."));
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation."));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation."));
 		return;
 	}
 	
@@ -805,7 +815,7 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 			if(AddingStacksResult.bAddedWholeItemAsStacks)
 			{
 				DraggedItem.Clear();
-				StopDraggingItem();
+				StopDraggingItem(Controller);
 				return;
 			}
 			const int32 CurrentStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
@@ -825,7 +835,7 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 				if(AddingStacksResult.bAddedWholeItemAsStacks)
 				{
 					DraggedItem.Clear();
-					StopDraggingItem();
+					StopDraggingItem(Controller);
 					return;
 				}
 				UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
@@ -858,10 +868,15 @@ bool UObsidianHeroComponent::DraggedItemWasReplaced(const FDraggedItem& OldDragg
 	return false;
 }
 
-void UObsidianHeroComponent::StartDraggingItem()
+void UObsidianHeroComponent::StartDraggingItem(const AController* Controller)
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
+	{
+		return;
+	}
+	
+	if(Controller && !Controller->IsLocalController())
 	{
 		return;
 	}
@@ -902,8 +917,13 @@ void UObsidianHeroComponent::StartDraggingItem()
 	});
 }
 
-void UObsidianHeroComponent::StopDraggingItem()
+void UObsidianHeroComponent::StopDraggingItem(const AController* Controller)
 {
+	if(Controller && !Controller->IsLocalController())
+	{
+		return;
+	}
+	
 	if(DraggedItemWidget)
 	{
 		DraggedItemWidget->RemoveFromParent();

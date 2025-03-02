@@ -131,8 +131,8 @@ private:
 	 */
 	bool DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const;
 	
-	void StartDraggingItem();
-	void StopDraggingItem();
+	void StartDraggingItem(const AController* Controller);
+	void StopDraggingItem(const AController* Controller);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerHandleDroppingItem(const FVector& HitLocation);
