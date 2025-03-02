@@ -14,7 +14,7 @@ As of now, I've already developed some fundamental systems and have slowly start
 build some gameplay content on top of them.
 
 ### These includs:
-- **Grid Inventory System/Inventory Items** (In Progress) - Grid Inventory System built using ```FFastArraySerializer```
+- **Grid Inventory System/Inventory Items** - Grid Inventory System built using ```FFastArraySerializer```
  supporting items of various sizes, stacks, limits, item descriptions, and networking.
   A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).
 
