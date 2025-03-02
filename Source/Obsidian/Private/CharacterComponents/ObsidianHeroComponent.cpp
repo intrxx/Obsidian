@@ -652,13 +652,24 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation."));
 		return;
 	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+		return;
+	}
 	
 	const FPickupTemplate Template = ItemToPickup->GetPickupTemplateFromPickupContent();
 	if(Template.IsValid()) // We are grabbing Item Template
 	{
 		DraggedItem = FDraggedItem(Template.ItemDef, Template.StackCount);
-		StartDraggingItem();
 		ItemToPickup->UpdateDroppedItemStacks(0);
+		
+		if(Controller->IsLocalController())
+		{
+			StartDraggingItem();
+		}
 		return;
 	}
 
@@ -666,8 +677,12 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 	if(Instance.IsValid()) // We are grabbing Item Instance
 	{
 		DraggedItem = FDraggedItem(Instance.Item);
-		StartDraggingItem();
 		ItemToPickup->UpdateDroppedItemStacks(0);
+		
+		if(Controller->IsLocalController())
+		{
+			StartDraggingItem();
+		}
 		return;
 	}
 
@@ -700,7 +715,11 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 	InventoryComponent->RemoveItemInstance(InstanceToGrab);
 	
 	DraggedItem = FDraggedItem(InstanceToGrab);
-	StartDraggingItem();
+
+	if(Controller->IsLocalController())
+	{
+		StartDraggingItem();
+	}
 }
 
 void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)
