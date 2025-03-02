@@ -10,6 +10,7 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianDraggedItem::NativeConstruct()
 {
@@ -19,7 +20,7 @@ void UObsidianDraggedItem::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks)
+void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 Stacks)
 {
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	
@@ -28,8 +29,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 		FFrame::KismetExecutionMessage(TEXT("Provided ItemDef is invalid in UObsidianDraggedItem::InitializeItemWidgetWithItemDef."), ELogVerbosity::Error);
 		return;
 	}
-
-	InternalItemDef = ItemDef;
+	
 	InternalStacks = Stacks;
 	
 	UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
@@ -43,10 +43,10 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 	if(AppearanceFragment)
 	{
 		const FVector2D ItemGridSpan = AppearanceFragment->GetItemGridSpanFromDesc();
-		Root_SizeBox->SetWidthOverride(ItemGridSpan.X * WidthConstant);
-		Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
+		Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+		Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 
-		SetDesiredSizeInViewport(ItemGridSpan * WidthConstant);
+		SetDesiredSizeInViewport(ItemGridSpan * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 		
 		UTexture2D* ItemImage = AppearanceFragment->GetItemImage();
 		Item_Image->SetBrushFromTexture(ItemImage);
@@ -56,7 +56,8 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 		DefaultObject->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass()));
 	if(StacksFragment)
 	{
-		if(!StacksFragment->IsStackable() || InternalStacks == 0)
+		bStackableItem = StacksFragment->IsStackable();
+		if(!bStackableItem || InternalStacks == 0)
 		{
 			StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		}
@@ -69,7 +70,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 	}
 }
 
-void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(UObsidianInventoryItemInstance* ItemInstance)
+void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* ItemInstance)
 {
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	
@@ -78,19 +79,18 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(UObsidianInvento
 		FFrame::KismetExecutionMessage(TEXT("Provided ItemInstance is invalid in UObsidianDraggedItem::InitializeItemWidgetWithItemInstance."), ELogVerbosity::Error);
 		return;
 	}
-
-	InternalItemInstance = ItemInstance;
-
-	const FVector2D ItemGridSpan = InternalItemInstance->GetItemGridSpan();
-	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * WidthConstant);
-	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * HeightConstant);
-
-	SetDesiredSizeInViewport(ItemGridSpan * WidthConstant);
-
-	UTexture2D* ItemImage = InternalItemInstance->GetItemImage();
-	Item_Image->SetBrushFromTexture(ItemImage);
 	
-	if(ItemInstance->IsStackable() == false)
+	const FVector2D ItemGridSpan = ItemInstance->GetItemGridSpan();
+	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+
+	SetDesiredSizeInViewport(ItemGridSpan * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+
+	UTexture2D* ItemImage = ItemInstance->GetItemImage();
+	Item_Image->SetBrushFromTexture(ItemImage);
+
+	bStackableItem = ItemInstance->IsStackable();
+	if(bStackableItem == false)
 	{
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		return;
@@ -103,22 +103,19 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(UObsidianInvento
 
 void UObsidianDraggedItem::UpdateStackCount(const int32 NewStackCount)
 {
-	InternalStacks = NewStackCount;
+	if(bStackableItem == false)
+	{
+		return;
+	}
+
+	if(NewStackCount == InternalStacks)
+	{
+		return;
+	}
 	
+	InternalStacks = NewStackCount;
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), InternalStacks));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianDraggedItem::SyncStackCountWithInstance() const
-{
-	if(InternalItemInstance->IsStackable() == false)
-	{
-		return;
-	}
-	
-	const int32 StackCount = InternalItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), StackCount));
-	StackCount_TextBlock->SetText(StackCountText);
-	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
-}

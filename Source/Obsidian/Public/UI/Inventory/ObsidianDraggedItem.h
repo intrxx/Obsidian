@@ -21,31 +21,11 @@ class OBSIDIAN_API UObsidianDraggedItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 Stacks);
-	void InitializeItemWidgetWithItemInstance(UObsidianInventoryItemInstance* ItemInstance);
+	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 Stacks);
+	void InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* ItemInstance);
 	
 	/** Updates the stack count on the dragged item. */
 	void UpdateStackCount(const int32 NewStackCount);
-	
-	/** Syncs the stack count with the stack count of carried item instance (if the item is stackable). */
-	UFUNCTION(meta=(DeprecatedFunction))
-	void SyncStackCountWithInstance() const;
-
-	/** Invalid when widget initialized with Instance. */
-	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const
-	{
-		return InternalItemDef;
-	}
-	/** Invalid when widget initialized with Definition. */
-	UObsidianInventoryItemInstance* GetItemInstance() const
-	{
-		return InternalItemInstance;
-	}
-	/** Invalid when widget initialized with Definition. */
-	int32 GetItemStacks() const
-	{
-		return InternalStacks;
-	}
 	
 public:
 	UPROPERTY(meta=(BindWidget))
@@ -61,16 +41,8 @@ protected:
 	virtual void NativeConstruct() override;
 
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float WidthConstant = 64.0f;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float HeightConstant = 64.0f;
-	
-	TSubclassOf<UObsidianInventoryItemDefinition> InternalItemDef;
-	
 	int32 InternalStacks = 0;
 
-	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemInstance> InternalItemInstance;
+private:
+	bool bStackableItem = false;
 };

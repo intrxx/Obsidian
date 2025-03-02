@@ -143,6 +143,15 @@ void UObsidianHeroComponent::DragItem() const
 	}
 }
 
+AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
+{
+	if(const AObsidianPlayerController* ObsidianPC = GetController<AObsidianPlayerController>())
+	{
+		return ObsidianPC->GetObsidianHUD();
+	}
+	return nullptr;
+}
+
 void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputComponent)
 {
 	check(InputComponent);
@@ -394,6 +403,65 @@ bool UObsidianHeroComponent::DropItem()
 	return true;
 }
 
+bool UObsidianHeroComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+{
+	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+
+	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
+	if(Instance && IsValid(Instance))
+	{
+		WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
+	}
+	
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
+	if(ItemDef && IsValid(ItemDef))
+	{
+		WroteSomething |= Channel->ReplicateSubobject(ItemDef, *Bunch, *RepFlags);
+	}
+
+	return WroteSomething;
+}
+
+void UObsidianHeroComponent::ReadyForReplication()
+{
+	Super::ReadyForReplication();
+
+	// Register existing UObsidianInventoryItemInstance
+	if(IsUsingRegisteredSubObjectList() && !DraggedItem.IsEmpty())
+	{
+		UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
+		if(IsValid(Instance))
+		{
+			AddReplicatedSubObject(Instance);
+		}
+
+		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
+		if(IsValid(ItemDef))
+		{
+			AddReplicatedSubObject(ItemDef);
+		}
+	}
+}
+
+void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedItem)
+{
+	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
+	{
+		StopDraggingItem();
+	}
+	else if(!DraggedItem.IsEmpty() && !bDraggingItem || DraggedItemWasReplaced(OldDraggedItem))  // We got new Item to drag
+	{
+		StartDraggingItem();
+	}
+	else if(DraggedItem.Stacks > 0) // We are dragging an item but the stacks changed
+	{
+		if(DraggedItemWidget)
+		{
+			DraggedItemWidget->UpdateStackCount(DraggedItem.Stacks);
+		}
+	}
+}
+
 void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(UObsidianInventoryItemInstance* ItemInstance, const int32 StacksToTake)
 {
 	if(ItemInstance == nullptr)
@@ -577,15 +645,6 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 	StopDraggingItem();
 }
 
-AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
-{
-	if(const AObsidianPlayerController* ObsidianPC = GetController<AObsidianPlayerController>())
-	{
-		return ObsidianPC->GetObsidianHUD();
-	}
-	return nullptr;
-}
-
 void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)
@@ -642,65 +701,6 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 	
 	DraggedItem = FDraggedItem(InstanceToGrab);
 	StartDraggingItem();
-}
-
-bool UObsidianHeroComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
-{
-	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
-
-	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
-	if(Instance && IsValid(Instance))
-	{
-		WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
-	}
-	
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
-	if(ItemDef && IsValid(ItemDef))
-	{
-		WroteSomething |= Channel->ReplicateSubobject(ItemDef, *Bunch, *RepFlags);
-	}
-
-	return WroteSomething;
-}
-
-void UObsidianHeroComponent::ReadyForReplication()
-{
-	Super::ReadyForReplication();
-
-	// Register existing UObsidianInventoryItemInstance
-	if(IsUsingRegisteredSubObjectList() && !DraggedItem.IsEmpty())
-	{
-		UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
-		if(IsValid(Instance))
-		{
-			AddReplicatedSubObject(Instance);
-		}
-
-		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
-		if(IsValid(ItemDef))
-		{
-			AddReplicatedSubObject(ItemDef);
-		}
-	}
-}
-
-void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedItem)
-{
-	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
-	{
-		StopDraggingItem();
-	}
-	else if(!DraggedItem.IsEmpty() && !bDraggingItem || DraggedItemWasReplaced(OldDraggedItem))  // We got new Item to drag
-	{
-		StartDraggingItem();
-	}
-	else if(DraggedItem.Stacks > 0) // We are dragging an item but the stacks changed
-	{
-		if(DraggedItemWidget)
-		{
-			DraggedItemWidget->UpdateStackCount(DraggedItem.Stacks);
-		}
-	}
 }
 
 void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)
