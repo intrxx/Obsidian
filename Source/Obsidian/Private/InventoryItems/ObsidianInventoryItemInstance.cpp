@@ -19,6 +19,8 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemDef);
 	DOREPLIFETIME(ThisClass, ItemStackTags);
 	DOREPLIFETIME(ThisClass, bStackable);
+	DOREPLIFETIME(ThisClass, ItemRarity);
+	DOREPLIFETIME(ThisClass, ItemAffixes);
 
 	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change, so probably never replicated lol?
 	DOREPLIFETIME(ThisClass, ItemGridSize);
@@ -55,6 +57,34 @@ UObsidianInventoryItemInstance* UObsidianInventoryItemInstance::DuplicateItem(co
 		return NewInstance;
 	}
 	return nullptr;
+}
+
+int32 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const
+{
+	return 0;
+}
+
+int32 UObsidianInventoryItemInstance::GetItemAddedSuffixCount() const
+{
+	return 0;
+}
+
+int32 UObsidianInventoryItemInstance::GetItemAddedPrefixCount() const
+{
+	return 0;
+}
+
+void UObsidianInventoryItemInstance::SetItemAffixesCountLimit(const int32 InAffixesLimit)
+{
+	
+}
+
+void UObsidianInventoryItemInstance::SetItemAddedSuffixCount(const int32 InAddedSuffixes)
+{
+}
+
+void UObsidianInventoryItemInstance::SetItemAddedPrefixCount(const int32 InAddedPrefixes)
+{
 }
 
 void UObsidianInventoryItemInstance::AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount)

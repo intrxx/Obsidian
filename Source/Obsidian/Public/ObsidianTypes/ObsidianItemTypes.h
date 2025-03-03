@@ -12,7 +12,7 @@ class UObsidianInventoryItemInstance;
 
 namespace ObsidianInventoryItemsStatics
 {
-	static const FVector2D InventorySlotSize(64.0f, 64.0f); 
+	static const FVector2D InventorySlotSize(64.0f, 64.0f);
 }
 
 namespace ObsidianDefaultStackCounts 
@@ -21,7 +21,7 @@ namespace ObsidianDefaultStackCounts
 	static constexpr int32 MaxStackCount = 1;
 	static constexpr int32 LimitCount = 0;
 
-	/** Returns the unified project default for given Stack Tag. */
+	/** Returns the unified project default item stack count for a given Stack Tag. */
 	inline int32 GetUnifiedDefaultForTag(const FGameplayTag Tag)
 	{
 		if(Tag == ObsidianGameplayTags::Item_StackCount_Current)
@@ -36,6 +36,35 @@ namespace ObsidianDefaultStackCounts
 		{
 			return LimitCount;
 		}
+		
+		UE_LOG(LogTemp, Error, TEXT("Provided Stack Count Gameplay Tag is invalid, returning 0."));
+		return 0;
+	}
+}
+
+namespace ObsidianAffixLimit
+{
+	static constexpr int32 NormalItemAffixesCountLimit = 0;
+	static constexpr int32 MagicItemAffixesCountLimit = 2;
+	static constexpr int32 RareItemAffixesCountLimit = 6;
+
+	/** Returns the unified project default item affix limit for a given Stack Tag. */
+	inline int32 GetUnifiedDefaultForRarityTag(const FGameplayTag Tag)
+	{
+		if(Tag == ObsidianGameplayTags::Item_Rarity_Normal)
+		{
+			return NormalItemAffixesCountLimit;
+		}
+		if(Tag == ObsidianGameplayTags::Item_Rarity_Magic)
+		{
+			return MagicItemAffixesCountLimit;
+		}
+		if(Tag == ObsidianGameplayTags::Item_Rarity_Rare)
+		{
+			return RareItemAffixesCountLimit;
+		}
+
+		UE_LOG(LogTemp, Error, TEXT("Provided Item Rarity Gameplay Tag is invalid, returning 0."));
 		return 0;
 	}
 }

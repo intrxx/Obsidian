@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ObsidianItemAffixStack.h"
 #include "Core/ObsidianGameplayTagStack.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianInventoryItemInstance.generated.h"
 
 class UObsidianInventoryItemFragment;
@@ -45,6 +47,32 @@ public:
 	}
 
 	static UObsidianInventoryItemInstance* DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FGameplayTag GetItemRarity() const
+	{
+		return ItemRarity;
+	}
+	
+	void SetItemRarity(const FGameplayTag& InItemRarityTag)
+	{
+		ItemRarity = InItemRarityTag;
+	}
+	
+	/**
+	 * Item Affixes.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	int32 GetItemCombinedAffixLimit() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	int32 GetItemAddedSuffixCount() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	int32 GetItemAddedPrefixCount() const;
+	
+	void SetItemAffixesCountLimit(const int32 InAffixesLimit);
+	void SetItemAddedSuffixCount(const int32 InAddedSuffixes);
+	void SetItemAddedPrefixCount(const int32 InAddedPrefixes);
 
 	/**
 	 * Tag Stacks.
@@ -176,31 +204,45 @@ public:
 private:
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
+
+	UPROPERTY(Replicated)
+	FGameplayTag ItemRarity = FGameplayTag::EmptyTag;
+	
+	/**
+	 * Item Affixes.
+	 */
+	
+	UPROPERTY(Replicated)
+	FObsidianItemAffixStack ItemAffixes;
+	
+	/**
+	 * Item Stack Count.
+	 */
 	
 	UPROPERTY(Replicated)
 	FGameplayTagStackContainer ItemStackTags;
 
 	UPROPERTY(Replicated)
-	bool bStackable;
+	bool bStackable = false;
 
 	UPROPERTY(Replicated)
 	TArray<FVector2D> ItemGridSize;
 
 	UPROPERTY(Replicated)
-	FVector2D ItemGridSpan;
+	FVector2D ItemGridSpan = FVector2D::ZeroVector;
 
 	/** Current Item Location in the inventory grid, should be valid only if the item is already placed in the inventory. */
 	UPROPERTY(Replicated)
-	FVector2D ItemCurrentGridLocation;
+	FVector2D ItemCurrentGridLocation  = FVector2D::ZeroVector;
 
 	UPROPERTY(Replicated)
-	TObjectPtr<UTexture2D> ItemImage;
+	TObjectPtr<UTexture2D> ItemImage = nullptr;
 
 	UPROPERTY(Replicated)
-	TObjectPtr<USkeletalMesh> ItemSkeletalMesh;
+	TObjectPtr<USkeletalMesh> ItemSkeletalMesh = nullptr;
 
 	UPROPERTY(Replicated)
-	TObjectPtr<UStaticMesh> ItemDroppedMesh;
+	TObjectPtr<UStaticMesh> ItemDroppedMesh = nullptr;
 	
 	UPROPERTY(Replicated)
 	FText ItemDisplayName = FText::GetEmpty();
@@ -211,5 +253,5 @@ private:
 	UPROPERTY(Replicated)
 	FText ItemAdditionalDescription = FText::GetEmpty();
 	
-	FString DebugName;
+	FString DebugName = FString("Not Set");
 };

@@ -1,6 +1,5 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Components/Image.h"
