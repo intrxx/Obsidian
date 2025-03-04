@@ -49,8 +49,6 @@ void FGameplayTagStackContainer::RemoveStack(FGameplayTag FromTag, int32 StackCo
 		FFrame::KismetExecutionMessage(TEXT("Tag passed to RemoveStack is invalid."), ELogVerbosity::Error);
 		return;
 	}
-
-	bool bRemoveSuccess = false;
 	
 	if(StackCount > 0)
 	{
@@ -68,7 +66,6 @@ void FGameplayTagStackContainer::RemoveStack(FGameplayTag FromTag, int32 StackCo
 					It.RemoveCurrent();
 					TagToCountMap.Remove(FromTag);
 					MarkArrayDirty();
-					bRemoveSuccess = true;
 				}
 				else
 				{
@@ -76,15 +73,10 @@ void FGameplayTagStackContainer::RemoveStack(FGameplayTag FromTag, int32 StackCo
 					Stack.StackCount = NewCount;
 					TagToCountMap[FromTag] = NewCount;
 					MarkItemDirty(Stack);
-					bRemoveSuccess = true;
 				}
 				return;
 			}
 		}
-	}
-	
-	if(bRemoveSuccess == false)
-	{
 		FFrame::KismetExecutionMessage(TEXT("There is no Stack for provided Tag."), ELogVerbosity::Error);
 		return;
 	}

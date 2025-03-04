@@ -7,4 +7,10 @@
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
 	Instance->SetItemRarity(ItemRarityTag);
+	Instance->SetIdentified(bIdentified);
+	
+	for(const FObsidianItemAffix& Affix : ItemAffixes)
+	{
+		Instance->AddAffix(Affix);
+	}
 }

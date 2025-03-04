@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ObsidianItemAffixStack.h"
 #include "Core/ObsidianGameplayTagStack.h"
+#include "Fragments/OInventoryItemFragment_Affixes.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianInventoryItemInstance.generated.h"
 
@@ -62,6 +63,18 @@ public:
 	/**
 	 * Item Affixes.
 	 */
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetIdentified(const bool InIdentified);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	bool IsItemIdentified() const;
+	
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void AddAffix(const FObsidianItemAffix& AffixToAdd);
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void RemoveAffix(const FGameplayTag& AffixTag);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	int32 GetItemCombinedAffixLimit() const;
@@ -211,6 +224,9 @@ private:
 	/**
 	 * Item Affixes.
 	 */
+
+	UPROPERTY(Replicated)
+	bool bIdentified = false;
 	
 	UPROPERTY(Replicated)
 	FObsidianItemAffixStack ItemAffixes;

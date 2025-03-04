@@ -96,7 +96,6 @@ public:
 	FObsidianInventoryGrid()
 		: OwnerComponent(nullptr)
 	{}
-
 	FObsidianInventoryGrid(UActorComponent* InOwnerComponent)
 		: OwnerComponent(InOwnerComponent)
 	{}

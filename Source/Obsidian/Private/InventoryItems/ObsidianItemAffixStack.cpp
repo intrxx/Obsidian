@@ -3,6 +3,73 @@
 
 #include "InventoryItems/ObsidianItemAffixStack.h"
 
+int32 FObsidianItemAffixStack::GetTotalAffixCount() const
+{
+	return Entries.Num();
+}
+
+int32 FObsidianItemAffixStack::GetPrefixCount() const
+{
+	int32 PrefixCount = 0;
+	for(const FObsidianAffixEntry& Entry : Entries)
+	{
+		if(Entry.AffixType == EObsidianAffixType::Prefix)
+		{
+			PrefixCount++;
+		}
+	}
+	return PrefixCount;
+}
+
+int32 FObsidianItemAffixStack::GetSuffixCount() const
+{
+	int32 SuffixCount = 0;
+	for(const FObsidianAffixEntry& Entry : Entries)
+	{
+		if(Entry.AffixType == EObsidianAffixType::Suffix)
+		{
+			SuffixCount++;
+		}
+	}
+	return SuffixCount;
+}
+
+bool FObsidianItemAffixStack::HasImplicit() const
+{
+	for(const FObsidianAffixEntry& Entry : Entries)
+	{
+		if(Entry.AffixType == EObsidianAffixType::Implicit)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void FObsidianItemAffixStack::AddAffix(const FObsidianItemAffix& ItemAffix)
+{
+	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(ItemAffix);
+
+	MarkItemDirty(AffixEntry);
+}
+
+void FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& AffixTag)
+{
+	for(auto It = Entries.CreateIterator(); It; ++It)
+	{
+		FObsidianAffixEntry& Entry = *It;
+		if(Entry.AffixIdentifierTag == AffixTag)
+		{
+			It.RemoveCurrent();
+			MarkArrayDirty();
+		}
+	}
+}
+
+void FObsidianItemAffixStack::AffixChanged(const FGameplayTag& AffixTag)
+{
+}
+
 void FObsidianItemAffixStack::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
 {
 }

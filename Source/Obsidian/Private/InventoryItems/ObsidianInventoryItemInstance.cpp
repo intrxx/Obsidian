@@ -32,6 +32,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
+	DOREPLIFETIME(ThisClass, bIdentified);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -57,6 +58,26 @@ UObsidianInventoryItemInstance* UObsidianInventoryItemInstance::DuplicateItem(co
 		return NewInstance;
 	}
 	return nullptr;
+}
+
+void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)
+{
+	bIdentified = InIdentified;
+}
+
+bool UObsidianInventoryItemInstance::IsItemIdentified() const
+{
+	return bIdentified;
+}
+
+void UObsidianInventoryItemInstance::AddAffix(const FObsidianItemAffix& AffixToAdd)
+{
+	ItemAffixes.AddAffix(AffixToAdd);
+}
+
+void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
+{
+	ItemAffixes.RemoveAffix(AffixTag);
 }
 
 int32 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const

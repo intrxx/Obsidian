@@ -23,19 +23,27 @@ struct FObsidianItemAffix
 	GENERATED_BODY()
 
 public:
-	UPROPERTY()
-	FText StatDescription = FText();
+	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Affix"))
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 
-	UPROPERTY()
+	UPROPERTY(EditDefaultsOnly)
 	EObsidianAffixType AffixType = EObsidianAffixType::None;
 
+	UPROPERTY(EditDefaultsOnly)
 	int32 AffixTier = -1;
+	
+	UPROPERTY(EditDefaultsOnly)
+	FText AffixDescription = FText();
+
+	/**TODO just a simple int for now, will cover more later. */
+	UPROPERTY(EditDefaultsOnly)
+	int32 TempAffixMagnitude = 0;
 };
 
 /**
  * 
  */
-UCLASS()
+UCLASS(DisplayName="Affixes")
 class OBSIDIAN_API UOInventoryItemFragment_Affixes : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
@@ -47,12 +55,15 @@ public:
 
 protected:
 	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */
-	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
+	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity"), Category = "Affixes")
 	FGameplayTag ItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
 	TArray<FObsidianItemAffix> ItemAffixes;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
+	bool bIdentified = false;
+
 private:
 	int32 AddedSuffixCount = 0;
 	int32 AddedPrefixCount = 0;
