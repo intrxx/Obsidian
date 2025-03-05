@@ -14,3 +14,22 @@ void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemI
 		Instance->AddAffix(Affix);
 	}
 }
+
+TArray<FObsidianAffixDescriptionRow> UOInventoryItemFragment_Affixes::GetAffixesAsUIDescription() const
+{
+	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
+	AffixDescriptionRows.Reserve(ItemAffixes.Num());
+
+	for(FObsidianItemAffix Affix : ItemAffixes)
+	{
+		if(Affix)
+		{
+			FObsidianAffixDescriptionRow Row;
+			Row.AffixTag = Affix.AffixTag;
+			Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
+			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
+			AffixDescriptionRows.Add(Row);
+		}
+	}
+	return AffixDescriptionRows;
+}

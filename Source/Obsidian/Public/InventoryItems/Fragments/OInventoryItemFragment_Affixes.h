@@ -6,22 +6,22 @@
 #include "GameplayTagContainer.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "OInventoryItemFragment_Affixes.generated.h"
-
-UENUM(BlueprintType)
-enum class EObsidianAffixType : uint8
-{
-	None = 0,
-	Implicit,
-	Prefix,
-	Suffix,
-};
 
 USTRUCT(BlueprintType)
 struct FObsidianItemAffix
 {
 	GENERATED_BODY()
 
+public:
+	FObsidianItemAffix(){}
+
+	explicit operator bool() const
+	{
+		return AffixTag.IsValid();
+	}
+	
 public:
 	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Affix"))
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
@@ -52,6 +52,19 @@ public:
 	//~ Start of UObsidianInventoryItemFragment
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
+
+	bool IsItemIdentified() const
+	{
+		return bIdentified;
+	}
+
+	FGameplayTag GetItemRarityTag() const
+	{
+		return ItemRarityTag;
+	}
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
 
 protected:
 	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */

@@ -24,31 +24,14 @@ public:
 	FObsidianAffixEntry()
 	{}
 	FObsidianAffixEntry(const FObsidianItemAffix& Affix)
-		: AffixIdentifierTag(Affix.AffixTag)
-		, AffixType(Affix.AffixType)
-		, AffixTier(Affix.AffixTier)
-		, AffixDescription(Affix.AffixDescription)
-		, TempAffixMagnitude(Affix.TempAffixMagnitude)
+		: ItemAffix(Affix)
 	{}
-	
+
 private:
 	friend FObsidianItemAffixStack;
-	
-	UPROPERTY()
-	FGameplayTag AffixIdentifierTag = FGameplayTag::EmptyTag;
-	
-	UPROPERTY()
-	EObsidianAffixType AffixType = EObsidianAffixType::None;
 
 	UPROPERTY()
-	int32 AffixTier = -1;
-
-	UPROPERTY()
-	FText AffixDescription = FText();
-
-	/**TODO just a simple int for now, will cover more later. */
-	UPROPERTY()
-	int32 TempAffixMagnitude = 0;
+	FObsidianItemAffix ItemAffix = FObsidianItemAffix();
 };
 
 
@@ -73,6 +56,8 @@ public:
 	int32 GetSuffixCount() const;
 
 	bool HasImplicit() const;
+
+	TArray<FObsidianItemAffix> GetAllItemAffixes() const;
 	
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{

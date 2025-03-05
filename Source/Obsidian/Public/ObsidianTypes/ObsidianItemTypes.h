@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianItemTypes.generated.h"
 
 class UObsidianInventoryItemInstance;
@@ -69,6 +68,15 @@ namespace ObsidianAffixLimit
 	}
 }
 
+UENUM(BlueprintType)
+enum class EObsidianAffixType : uint8
+{
+	None = 0,
+	Implicit,
+	Prefix,
+	Suffix,
+};
+
 USTRUCT(BlueprintType)
 struct FObsidianAddingStacksResult
 {
@@ -102,8 +110,7 @@ struct FObsidianStacksUIData
 public:
 	GENERATED_BODY();
 	
-	FObsidianStacksUIData()
-	{}
+	FObsidianStacksUIData(){}
 	FObsidianStacksUIData(const int32 CurrentStacks, const int32 MaxStacks)
 		: CurrentItemStackCount(CurrentStacks)
 		, MaxItemStackCount(MaxStacks)
@@ -134,10 +141,7 @@ public:
 	GENERATED_BODY()
 	
 	FDraggedItem(){};
-	FDraggedItem(UObsidianInventoryItemInstance* InInstance)
-		: Instance(InInstance)
-		, Stacks(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
-	{}
+	FDraggedItem(UObsidianInventoryItemInstance* InInstance);
 	FDraggedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const int32 InStacks)
 		: ItemDef(InItemDef)
 		, Stacks(InStacks)
@@ -164,6 +168,22 @@ public:
 	
 	UPROPERTY()
 	int32 Stacks = 0;
+};
+
+USTRUCT(BlueprintType)
+struct FObsidianAffixDescriptionRow
+{
+	GENERATED_BODY()
+public:
+	void SetAffixRowDescription(const FText& InAffixDescription, const int32 InTempMagnitude);
+	void SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType, const int32 InAffixTier);
+	
+public:
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+	EObsidianAffixType AffixType = EObsidianAffixType::None;
+	
+	FText AffixRowDescription = FText();
+	FText AffixAdditionalDescription = FText();
 };
 
 USTRUCT(BlueprintType)
@@ -201,6 +221,18 @@ public:
 		return bContainsStacks;
 	}
 
+	/** Checks if the Item Stats contain Affixes info. */
+	bool ContainsAffixes() const
+	{
+		return bContainsAffixes;
+	}
+
+	/** Checks if the Item supports Identification. */
+	bool SupportsIdentification() const
+	{
+		return bSupportIdentification;
+	}
+
 	UTexture2D* GetItemImage() const
 	{
 		return ItemImage;
@@ -229,6 +261,16 @@ public:
 	FObsidianStacksUIData GetItemStacks() const
 	{
 		return StacksData;
+	}
+
+	bool IsIdentified() const
+	{
+		return bIdentified;
+	}
+
+	TArray<FObsidianAffixDescriptionRow> GetAffixDescriptions() const
+	{
+		return AffixDescriptionRows;
 	}
 
 	/** It takes an additional ItemGridSpan argument as UI needs it to rescale the image for now. */
@@ -274,6 +316,22 @@ public:
 		bContainsStacks = true;
 		StacksData.SetMaxStacks(InMaxStacks);
 	}
+
+	void SetIdentified(const bool InIdentified)
+	{
+		bSupportIdentification = true;
+		bIdentified = InIdentified;
+	}
+
+	void SetAffixDescriptionRows(const TArray<FObsidianAffixDescriptionRow>& AffixRows)
+	{
+		bContainsAffixes = true;
+		AffixDescriptionRows = AffixRows;
+	}
+	
+public:
+	UPROPERTY()
+	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;
 	
 private:
 	UPROPERTY()
@@ -303,6 +361,15 @@ private:
 	FObsidianStacksUIData StacksData = FObsidianStacksUIData();
 
 	/**
+	 * Affixes.
+	 */
+
+	UPROPERTY()
+	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
+
+	bool bIdentified = false;
+
+	/**
 	 * Contains booleans.
 	 */
 
@@ -311,6 +378,8 @@ private:
 	bool bContainsDescription = false;
 	bool bContainsAdditionalDescription = false;
 	bool bContainsStacks = false;
+	bool bContainsAffixes = false;
+	bool bSupportIdentification = false;
 };
 
 

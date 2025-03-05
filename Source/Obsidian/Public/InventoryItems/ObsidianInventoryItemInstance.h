@@ -6,7 +6,7 @@
 #include "ObsidianItemAffixStack.h"
 #include "Core/ObsidianGameplayTagStack.h"
 #include "Fragments/OInventoryItemFragment_Affixes.h"
-#include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianInventoryItemInstance.generated.h"
 
 class UObsidianInventoryItemFragment;
@@ -75,6 +75,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void RemoveAffix(const FGameplayTag& AffixTag);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	int32 GetItemCombinedAffixLimit() const;
@@ -219,14 +222,14 @@ private:
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
 
 	UPROPERTY(Replicated)
-	FGameplayTag ItemRarity = FGameplayTag::EmptyTag;
+	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;
 	
 	/**
 	 * Item Affixes.
 	 */
 
 	UPROPERTY(Replicated)
-	bool bIdentified = false;
+	bool bIdentified = true;
 	
 	UPROPERTY(Replicated)
 	FObsidianItemAffixStack ItemAffixes;

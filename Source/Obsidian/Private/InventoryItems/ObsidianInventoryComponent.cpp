@@ -91,6 +91,15 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(
 	Stats.SetDescription(ItemInstance->GetItemDescription());
 	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
 
+	Stats.ItemRarity = ItemInstance->GetItemRarity();
+	
+	const bool bIdentified = ItemInstance->IsItemIdentified();
+	Stats.SetIdentified(bIdentified);
+	if(bIdentified)
+	{
+		Stats.SetAffixDescriptionRows(ItemInstance->GetAffixesAsUIDescription());
+	}
+
 	return Stats;
 }
 
@@ -113,6 +122,15 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatForInstance(const UOb
 	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
 	Stats.SetDescription(ItemInstance->GetItemDescription());
 	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
+
+	Stats.ItemRarity = ItemInstance->GetItemRarity();
+	
+	const bool bIdentified = ItemInstance->IsItemIdentified();
+	Stats.SetIdentified(bIdentified);
+	if(bIdentified)
+	{
+		Stats.SetAffixDescriptionRows(ItemInstance->GetAffixesAsUIDescription());
+	}
 
 	return Stats;
 }
@@ -147,6 +165,17 @@ FObsidianItemStats UObsidianInventoryComponent::GetItemStatsForItemDefinition(co
 		Stats.SetDisplayName(AppearanceFrag->GetItemDisplayName());
 		Stats.SetDescription(AppearanceFrag->GetItemDescription());
 		Stats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());
+	}
+
+	if(const UOInventoryItemFragment_Affixes* AffixesFrag = Cast<UOInventoryItemFragment_Affixes>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())))
+	{
+		Stats.ItemRarity = AffixesFrag->GetItemRarityTag();
+		const bool bIdentified = AffixesFrag->IsItemIdentified();
+		Stats.SetIdentified(bIdentified);
+		if(bIdentified)
+		{
+			Stats.SetAffixDescriptionRows(AffixesFrag->GetAffixesAsUIDescription());
+		}
 	}
 
 	return Stats;

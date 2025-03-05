@@ -13,7 +13,7 @@ int32 FObsidianItemAffixStack::GetPrefixCount() const
 	int32 PrefixCount = 0;
 	for(const FObsidianAffixEntry& Entry : Entries)
 	{
-		if(Entry.AffixType == EObsidianAffixType::Prefix)
+		if(Entry.ItemAffix.AffixType == EObsidianAffixType::Prefix)
 		{
 			PrefixCount++;
 		}
@@ -26,7 +26,7 @@ int32 FObsidianItemAffixStack::GetSuffixCount() const
 	int32 SuffixCount = 0;
 	for(const FObsidianAffixEntry& Entry : Entries)
 	{
-		if(Entry.AffixType == EObsidianAffixType::Suffix)
+		if(Entry.ItemAffix.AffixType == EObsidianAffixType::Suffix)
 		{
 			SuffixCount++;
 		}
@@ -38,12 +38,27 @@ bool FObsidianItemAffixStack::HasImplicit() const
 {
 	for(const FObsidianAffixEntry& Entry : Entries)
 	{
-		if(Entry.AffixType == EObsidianAffixType::Implicit)
+		if(Entry.ItemAffix.AffixType == EObsidianAffixType::Implicit)
 		{
 			return true;
 		}
 	}
 	return false;
+}
+
+TArray<FObsidianItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() const
+{
+	TArray<FObsidianItemAffix> Affixes;
+	Affixes.Reserve(Entries.Num());
+
+	for(const FObsidianAffixEntry& Entry : Entries)
+	{
+		if(Entry.ItemAffix)
+		{
+			Affixes.Add(Entry.ItemAffix);
+		}
+	}
+	return Affixes;
 }
 
 void FObsidianItemAffixStack::AddAffix(const FObsidianItemAffix& ItemAffix)
@@ -58,7 +73,7 @@ void FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& AffixTag)
 	for(auto It = Entries.CreateIterator(); It; ++It)
 	{
 		FObsidianAffixEntry& Entry = *It;
-		if(Entry.AffixIdentifierTag == AffixTag)
+		if(Entry.ItemAffix.AffixTag == AffixTag)
 		{
 			It.RemoveCurrent();
 			MarkArrayDirty();

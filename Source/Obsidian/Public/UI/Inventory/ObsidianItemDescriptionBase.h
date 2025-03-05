@@ -6,6 +6,8 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemDescriptionBase.generated.h"
 
+struct FGameplayTag;
+class UCommonTextStyle;
 class UVerticalBox;
 class UHorizontalBox;
 struct FObsidianItemStats;
@@ -23,7 +25,7 @@ class OBSIDIAN_API UObsidianItemDescriptionBase : public UObsidianWidgetBase
 public:
 	void InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats, const bool bDisplayItemImage = false);
 	
-	void SetItemDisplayName(const FText& DisplayName);
+	void SetItemDisplayName(const FText& DisplayName, const FGameplayTag& RarityTag);
 	void SetItemDescription(const FText& ItemDescription);
 	void SetAdditionalItemDescription(const FText& AdditionalItemDescription);
 
@@ -34,7 +36,10 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
-	
+
+	UCommonTextBlock* GetFreePrefixBlock();
+	UCommonTextBlock* GetFreeSuffixBlock();
+
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UVerticalBox> Description_VerticalBox;
@@ -59,6 +64,45 @@ protected:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> AdditionalItemDescription_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Unidentified_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Implicit_TextBlock;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Prefix1_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Prefix2_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Prefix3_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Suffix1_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Suffix2_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> Suffix3_TextBlock;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> IdentificationHint_TextBlock;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UCommonTextStyle> NormalItemName_TextStyle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UCommonTextStyle> MagicItemName_TextStyle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UCommonTextStyle> RareItemName_TextStyle;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UCommonTextStyle> UniqueItemName_TextStyle;
 
 private:
 	void CollapseStatBlocks();

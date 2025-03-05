@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "ObsidianInventoryItemDefinition.generated.h"
 
 class UObsidianInventoryItemFragment;
@@ -23,6 +24,9 @@ public:
 	{
 		return DebugName;
 	}
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
+	FGameplayTag GetItemRarityTag() const;
 	
 	bool HasStacks() const;
 	bool IsStackable() const;

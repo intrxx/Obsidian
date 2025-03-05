@@ -3,6 +3,7 @@
 
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 
 UObsidianInventoryItemDefinition::UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer)
@@ -49,3 +50,13 @@ const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFrag
 
 	return nullptr;
 }
+
+FGameplayTag UObsidianInventoryItemDefinition::GetItemRarityTag() const
+{
+	if(const UOInventoryItemFragment_Affixes* AffixesFrag = Cast<UOInventoryItemFragment_Affixes>(FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())))
+	{
+		return AffixesFrag->GetItemRarityTag();
+	}
+	return ObsidianGameplayTags::Item_Rarity_Normal;
+}
+

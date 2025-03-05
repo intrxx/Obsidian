@@ -80,6 +80,26 @@ void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
 	ItemAffixes.RemoveAffix(AffixTag);
 }
 
+TArray<FObsidianAffixDescriptionRow> UObsidianInventoryItemInstance::GetAffixesAsUIDescription() const
+{
+	TArray<FObsidianItemAffix> Affixes = ItemAffixes.GetAllItemAffixes();
+	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
+	AffixDescriptionRows.Reserve(Affixes.Num());
+
+	for(FObsidianItemAffix Affix : Affixes)
+	{
+		if(Affix)
+		{
+			FObsidianAffixDescriptionRow Row;
+			Row.AffixTag = Affix.AffixTag;
+			Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
+			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
+			AffixDescriptionRows.Add(Row);
+		}
+	}
+	return AffixDescriptionRows;
+}
+
 int32 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const
 {
 	return 0;
