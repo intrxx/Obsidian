@@ -156,7 +156,6 @@ void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryIt
 		const FVector2D GridSpan = GetItemGridSpanFromDesc();
 		
 		Instance->SetItemImage(ItemImage);
-		Instance->SetItemSkeletalMesh(SkeletalMesh);
 		Instance->SetItemDroppedMesh(DroppedMesh);
 		Instance->SetItemDisplayName(DisplayName);
 		Instance->SetItemGridSize(GridSize);

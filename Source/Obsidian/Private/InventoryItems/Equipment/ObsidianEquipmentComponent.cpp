@@ -1,8 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
-
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 

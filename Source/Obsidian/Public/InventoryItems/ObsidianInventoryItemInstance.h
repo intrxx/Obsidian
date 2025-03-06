@@ -59,6 +59,22 @@ public:
 	{
 		ItemRarity = InItemRarityTag;
 	}
+
+	/**
+	 * Equipping.
+	 */
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetEquippable(const bool InEquippable);
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	bool IsItemEquippable() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	USkeletalMesh* GetItemSkeletalMesh() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetItemSkeletalMesh(USkeletalMesh* InItemSkeletalMesh);
 	
 	/**
 	 * Item Affixes.
@@ -161,15 +177,6 @@ public:
 	UTexture2D* GetItemImage() const;
 	
 	void SetItemImage(UTexture2D* ItemImageToSet);
-	
-	/**
-	 * Item Skeletal Mesh.
-	 */
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	USkeletalMesh* GetItemSkeletalMesh() const;
-	
-	void SetItemSkeletalMesh(USkeletalMesh* InItemSkeletalMesh);
 
 	/**
 	 * Item Static Mesh.
@@ -223,6 +230,16 @@ private:
 
 	UPROPERTY(Replicated)
 	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;
+
+	/**
+	 * Equipping.
+	 */
+
+	UPROPERTY(Replicated)
+	bool bEquippable = false;
+
+	UPROPERTY(Replicated)
+	TObjectPtr<USkeletalMesh> ItemSkeletalMesh = nullptr;
 	
 	/**
 	 * Item Affixes.
@@ -256,10 +273,7 @@ private:
 
 	UPROPERTY(Replicated)
 	TObjectPtr<UTexture2D> ItemImage = nullptr;
-
-	UPROPERTY(Replicated)
-	TObjectPtr<USkeletalMesh> ItemSkeletalMesh = nullptr;
-
+	
 	UPROPERTY(Replicated)
 	TObjectPtr<UStaticMesh> ItemDroppedMesh = nullptr;
 	

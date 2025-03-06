@@ -30,6 +30,7 @@ public:
 	
 	bool HasStacks() const;
 	bool IsStackable() const;
+	bool IsEquippable() const;
 
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;
 	

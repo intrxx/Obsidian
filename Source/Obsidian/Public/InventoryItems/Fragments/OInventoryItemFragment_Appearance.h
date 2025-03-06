@@ -61,11 +61,6 @@ public:
 		return ItemImage;
 	}
 	
-	USkeletalMesh* GetItemSkeletalMesh() const
-	{
-		return SkeletalMesh;
-	}
-
 	UStaticMesh* GetItemDroppedMesh() const
 	{
 		return DroppedMesh;
@@ -90,9 +85,6 @@ protected:
 	/** Enum that represents the items predefined grid size, will be later mapped to the actual TArray<FVector2D> containing the 'size'. */
 	UPROPERTY(EditDefaultsOnly, Category = "Grid Size")
 	EObsidianInventoryItemGridSize InventoryItemGridSizeDesc = EObsidianInventoryItemGridSize::IIGS_SingleSquare;
-	
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
-	TObjectPtr<USkeletalMesh> SkeletalMesh;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TObjectPtr<UStaticMesh> DroppedMesh;

@@ -33,6 +33,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
 	DOREPLIFETIME(ThisClass, bIdentified);
+	DOREPLIFETIME(ThisClass, bEquippable);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -219,6 +220,16 @@ UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const
 void UObsidianInventoryItemInstance::SetItemImage(UTexture2D* ItemImageToSet)
 {
 	ItemImage = ItemImageToSet;
+}
+
+void UObsidianInventoryItemInstance::SetEquippable(const bool InEquippable)
+{
+	bEquippable = InEquippable;
+}
+
+bool UObsidianInventoryItemInstance::IsItemEquippable() const
+{
+	return bEquippable;
 }
 
 USkeletalMesh* UObsidianInventoryItemInstance::GetItemSkeletalMesh() const

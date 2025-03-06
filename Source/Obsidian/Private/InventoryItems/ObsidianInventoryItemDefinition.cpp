@@ -4,6 +4,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 
 UObsidianInventoryItemDefinition::UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer)
@@ -27,6 +28,15 @@ bool UObsidianInventoryItemDefinition::IsStackable() const
 {
 	const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass()));
 	if(StacksFrag && StacksFrag->IsStackable())
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UObsidianInventoryItemDefinition::IsEquippable() const
+{
+	if(Cast<UOInventoryItemFragment_Equippable>(FindFragmentByClass(UOInventoryItemFragment_Equippable::StaticClass())))
 	{
 		return true;
 	}
