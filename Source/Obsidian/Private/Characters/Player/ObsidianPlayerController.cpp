@@ -6,7 +6,7 @@
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
-#include "InventoryItems/ObsidianInventoryComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 
 AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

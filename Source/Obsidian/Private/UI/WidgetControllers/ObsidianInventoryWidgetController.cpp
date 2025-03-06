@@ -8,7 +8,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "InventoryItems/ObsidianInventoryComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Obsidian/ObsidianGameplayTags.h"

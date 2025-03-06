@@ -2,9 +2,8 @@
 
 
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
-
 #include "Engine/Canvas.h"
-#include "InventoryItems/ObsidianInventoryComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 

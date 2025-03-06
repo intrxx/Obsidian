@@ -7,7 +7,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/WidgetComponent.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
-#include "InventoryItems/ObsidianInventoryComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Kismet/GameplayStatics.h"

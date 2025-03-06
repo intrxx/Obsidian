@@ -16,7 +16,7 @@ DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
  */
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(InventoryItems), meta=(BlueprintSpawnableComponent) )
 class OBSIDIAN_API UObsidianInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
