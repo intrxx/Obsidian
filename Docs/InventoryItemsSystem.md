@@ -44,8 +44,8 @@ Here you can find a [youtube video](https://www.youtube.com/watch?v=_QPb8MBalo4)
 Heart of the backend. Provides all the functionality to interact with the Grid, adding Items to first available slot, adding Items to specific slot, adding Stacks, removing Stacks etc.
 
 Repo Links:
-- [ObsidianInventoryComponent.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianInventoryComponent.h)
-- [ObsidianInventoryComponent.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/ObsidianInventoryComponent.cpp)
+- [ObsidianInventoryComponent.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Inventory/ObsidianInventoryComponent.h)
+- [ObsidianInventoryComponent.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Inventory/ObsidianInventoryComponent.cpp)
 
 <a name="obsidianinventorygrid"></a>
 ### 1.2 ObsidianInventoryGrid
@@ -53,8 +53,8 @@ Repo Links:
 The ```FFastArraySerializer``` structure that holds Iventory Items. It also holds the Map which maps Items in the inventory to their origin location of the Grid.
 
 Repo Links:
-- [ObsidianInventoryGrid.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianInventoryGrid.h)
-- [ObsidianInventoryGrid.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/ObsidianInventoryGrid.cpp)
+- [ObsidianInventoryGrid.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Inventory/ObsidianInventoryGrid.h)
+- [ObsidianInventoryGrid.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Inventory/ObsidianInventoryGrid.cpp)
 
 <a name="obsidianinventoryitemdef"></a>
 ### 1.3 ObsidianInventoryItemDefinition
@@ -102,8 +102,8 @@ Repo Links:
 The ```FFastArraySerializer``` structure that holds stack counts and mappings to coresponding Gameplay Tag.
 
 Repo Links:
-- [ObsidianGameplayTagStack.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Core/ObsidianGameplayTagStack.h)
-- [ObsidianGameplayTagStack.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Core/ObsidianGameplayTagStack.cpp)
+- [ObsidianGameplayTagStack.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianGameplayTagStack.h)
+- [ObsidianGameplayTagStack.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/ObsidianGameplayTagStack.cpp)
 
 <a name="obsidianframgent_appearance"></a>
 #### 1.5.2 OInventoryItemFragment_Appearance
