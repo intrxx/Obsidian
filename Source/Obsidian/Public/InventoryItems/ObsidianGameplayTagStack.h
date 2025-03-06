@@ -20,7 +20,7 @@ struct FGameplayTagStack : public FFastArraySerializerItem
 	GENERATED_BODY();
 
 	FGameplayTagStack(){}
-	FGameplayTagStack(const FGameplayTag InTag, const int32 InStackCount)
+	FGameplayTagStack(const FGameplayTag& InTag, const int32 InStackCount)
 		: Tag(InTag)
 		, StackCount(InStackCount)
 	{}

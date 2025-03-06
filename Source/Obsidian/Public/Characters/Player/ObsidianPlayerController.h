@@ -6,6 +6,7 @@
 #include "GameFramework/PlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class UObsidianEquipmentComponent;
 struct FObsidianDamageTextProps;
 class AObsidianCharacterBase;
 class UObsidianDamageNumberWidgetComp;
@@ -65,7 +66,10 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DamageNumber")
 	TSubclassOf<UObsidianDamageNumberWidgetComp> DamageNumberWidgetCompClass;
 
-	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianInventoryComponent> InventoryComponent;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
+	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent;
 	
 };

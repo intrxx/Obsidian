@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ObsidianEquipmentList.h"
 #include "Components/ActorComponent.h"
 #include "ObsidianEquipmentComponent.generated.h"
 
@@ -16,5 +17,16 @@ class OBSIDIAN_API UObsidianEquipmentComponent : public UActorComponent
 
 public:	
 	UObsidianEquipmentComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-	
+
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	//~ Start of UObject interface
+	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+	virtual void ReadyForReplication() override;
+	//~ End of UObject interface
+
+private:
+	/** Actual array of equipped items, also hold Map for Slot at which item instance is equipped. */
+	UPROPERTY(Replicated)
+	FObsidianEquipmentList EquipmentList;
 };

@@ -6,6 +6,7 @@
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 
 AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
@@ -16,6 +17,7 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 	bEnableMouseOverEvents = true;
 
 	InventoryComponent = CreateDefaultSubobject<UObsidianInventoryComponent>(TEXT("Inventory Component"));
+	EquipmentComponent = CreateDefaultSubobject<UObsidianEquipmentComponent>(TEXT("Equipment Component"));
 }
 
 void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
