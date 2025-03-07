@@ -4,28 +4,25 @@
 
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetBase.h"
-#include "ObsidianInventorySlot.generated.h"
+#include "GameplayTagContainer.h"
+#include "UI/Inventory/ObsidianInventory.h"
+#include "ObsidianItemSlot.generated.h"
 
+class UObsidianInventory;
 class USizeBox;
-class UObsidianInventorySlot;
 class UImage;
-
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, const bool bEntered, const UObsidianInventorySlot* AffectedSlot)
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnSlotSignature, const FVector2D& SlotPosition, const bool bShiftDown)
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianInventorySlot : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianItemSlot : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	void SetSlotPosition(const FVector2D& InSlotPosition)
-	{
-		SlotPosition = InSlotPosition;
-	}
+	void InitializeSlot(UObsidianInventory* InOwningInventory, const FVector2D& InSlotPosition);
+	void InitializeSlot(UObsidianInventory* InOwningInventory, const FGameplayTag& InSlotTag);
 
 	FVector2D GetSlotPosition() const
 	{
@@ -35,9 +32,6 @@ public:
 	/** Sets the slot state based on bAvailable, if true sets it to green if false to red. */
 	void SetSlotState(const bool bAvailable);
 	void ResetSlot();
-
-	FOnHoverOverSlotSignature OnHoverOverSlotDelegate;
-	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnSlotDelegate;
 
 protected:
 	virtual void NativeConstruct() override;
@@ -56,11 +50,15 @@ protected:
 	TObjectPtr<UImage> Action_Image;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	FSlateBrush SlotAvailableColor;
+	FSlateBrush SlotGreenLightColor;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	FSlateBrush SlotTakenColor;
+	FSlateBrush SlotRedLightColor;
 
+	UPROPERTY()
+	TObjectPtr<UObsidianInventory> OwningInventory;
+	
 	FVector2D SlotPosition;
+	FGameplayTag SlotTag;
 };
 

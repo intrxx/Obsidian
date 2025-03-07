@@ -5,7 +5,7 @@
 #include "Components/GridPanel.h"
 #include "Components/GridSlot.h"
 #include "Components/SizeBox.h"
-#include "UI/Inventory/SubWidgets/ObsidianInventorySlot.h"
+#include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
 #include "UI/Inventory/ObsidianItem.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 
@@ -61,10 +61,8 @@ void UObsidianInventory::SetupGrid()
 	{
 		const FVector2D SlotPosition = FVector2D(GridX, GridY);
 		checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::SetupGrid, fill it in ObsidianInventory instance."));
-		UObsidianInventorySlot* InventorySlot = CreateWidget<UObsidianInventorySlot>(this, InventorySlotClass);
-		InventorySlot->SetSlotPosition(SlotPosition);
-		InventorySlot->OnHoverOverSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHover);
-		InventorySlot->OnMouseButtonDownOnSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotMouseButtonDown);
+		UObsidianItemSlot* InventorySlot = CreateWidget<UObsidianItemSlot>(this, InventorySlotClass);
+		InventorySlot->InitializeSlot(this, SlotPosition);
 		
 		UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(InventorySlot, GridY, GridX);
 		GridSlot->SetLayer(0);
@@ -81,6 +79,9 @@ void UObsidianInventory::SetupGrid()
 			GridX++;
 		}
 	}
+
+	OnHoverOverSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHover);
+	OnMouseButtonDownOnSlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotMouseButtonDown);
 }
 
 void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
@@ -131,7 +132,7 @@ void UObsidianInventory::OnItemMouseLeave(const FVector2D& ItemDesiredPosition)
 	InventoryWidgetController->HandleUnhoveringItem(ItemDesiredPosition);
 }
 
-void UObsidianInventory::OnInventorySlotHover(const bool bEntered, const UObsidianInventorySlot* AffectedSlot)
+void UObsidianInventory::OnInventorySlotHover(const UObsidianItemSlot* AffectedSlot, const bool bEntered)
 {
 	if(bEntered)
 	{
@@ -155,31 +156,31 @@ void UObsidianInventory::OnInventorySlotHover(const bool bEntered, const UObsidi
 			const FVector2D LocationToCheck = HoveredSlotPosition + SizeComp;
 			if(InventoryLocationToSlotMap.Contains(LocationToCheck))
 			{
-				UObsidianInventorySlot* LocalSlot = InventoryLocationToSlotMap[LocationToCheck];
+				UObsidianItemSlot* LocalSlot = InventoryLocationToSlotMap[LocationToCheck];
 				LocalSlot->SetSlotState(bCanPlace);
-				AffectedSlots.Add(LocalSlot);
+				AffectedInventorySlots.Add(LocalSlot);
 			}
 		}
 	}
 	else
 	{
-		if(AffectedSlots.IsEmpty())
+		if(AffectedInventorySlots.IsEmpty())
 		{
 			return;
 		}
 
-		for(UObsidianInventorySlot* InventorySlot : AffectedSlots)
+		for(UObsidianItemSlot* InventorySlot : AffectedInventorySlots)
 		{
 			InventorySlot->ResetSlot();
 		}
-		AffectedSlots.Empty();
+		AffectedInventorySlots.Empty();
 	}
 }
 
-void UObsidianInventory::OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition, const bool bShiftDown)
+void UObsidianInventory::OnInventorySlotMouseButtonDown(const UObsidianItemSlot* AffectedSlot, const bool bShiftDown)
 {
 	if(InventoryWidgetController)
 	{
-		InventoryWidgetController->RequestAddingItemToInventory(SlotPosition, bShiftDown);
+		InventoryWidgetController->RequestAddingItemToInventory(AffectedSlot->GetSlotPosition(), bShiftDown);
 	}
 }

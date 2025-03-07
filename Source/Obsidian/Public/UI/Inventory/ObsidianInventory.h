@@ -8,6 +8,7 @@
 
 struct FObsidianItemVisuals;
 class UObsidianItem;
+class UObsidianItemSlot;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventorySlot;
 class UObsidianInventoryItemInstance;
@@ -16,6 +17,9 @@ class USizeBox;
 class UOverlay;
 class UGridSlot;
 class UObsidianInventoryWidgetController;
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, const UObsidianItemSlot* AffectedSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnSlotSignature, const UObsidianItemSlot* AffectedSlot, const bool bShiftDown);
 
 /**
  * 
@@ -43,6 +47,10 @@ public:
 		return RootSizeBoxHeight;
 	}
 
+public:
+	FOnHoverOverSlotSignature OnHoverOverSlotDelegate;
+	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnSlotDelegate;
+
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UGridPanel> Slots_GridPanel;
@@ -58,8 +66,8 @@ private:
 	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
 	void OnItemMouseLeave(const FVector2D& ItemDesiredPosition);
 	
-	void OnInventorySlotHover(const bool bEntered, const UObsidianInventorySlot* AffectedSlot);
-	void OnInventorySlotMouseButtonDown(const FVector2D& SlotPosition, const bool bShiftDown);
+	void OnInventorySlotHover(const UObsidianItemSlot* AffectedSlot, const bool bEntered);
+	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot* AffectedSlot, const bool bShiftDown);
 	
 private:
 	UPROPERTY(meta=(BindWidget))
@@ -72,7 +80,7 @@ private:
 	TSubclassOf<UObsidianItem> ItemWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianInventorySlot> InventorySlotClass;
+	TSubclassOf<UObsidianItemSlot> InventorySlotClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	int32 InventoryGridWidth = 12;
@@ -89,8 +97,8 @@ private:
 	float RootSizeBoxWidth = 820.0f;
 	
 	int32 InventoryGridSize;
-	TMap<FVector2D, UObsidianInventorySlot*> InventoryLocationToSlotMap;
+	TMap<FVector2D, UObsidianItemSlot*> InventoryLocationToSlotMap;
 
 	/** Array of slots that are affected by item hover, to clear it later. */
-	TArray<UObsidianInventorySlot*> AffectedSlots;
+	TArray<UObsidianItemSlot*> AffectedInventorySlots;
 };
