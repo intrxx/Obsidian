@@ -7,6 +7,7 @@
 #include "Components/SizeBox.h"
 #include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
 #include "UI/Inventory/ObsidianItem.h"
+#include "UI/Inventory/SubWidgets/ObsidianItemSlot_Equipment.h"
 #include "UI/Inventory/SubWidgets/ObsidianItemSlot_Inventory.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 
@@ -28,6 +29,7 @@ void UObsidianInventory::NativeConstruct()
 	Super::NativeConstruct();
 	
 	SetupInventoryGrid();
+	SetupEquipmentSlots();
 }
 
 void UObsidianInventory::NativeDestruct()
@@ -84,6 +86,34 @@ void UObsidianInventory::SetupInventoryGrid()
 
 	OnHoverOverInventorySlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHover);
 	OnMouseButtonDownOnInventorySlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotMouseButtonDown);
+}
+
+void UObsidianInventory::SetupEquipmentSlots()
+{
+	if(RightHand_EquipmentSlot && LeftHand_EquipmentSlot)
+	{
+		RightHand_EquipmentSlot->InitializeSlot(this);
+		LeftHand_EquipmentSlot->InitializeSlot(this);
+	}
+
+	if(Helmet_EquipmentSlot && BodyArmor_EquipmentSlot && Belt_EquipmentSlot && Gloves_EquipmentSlot && Boots_EquipmentSlot)
+	{
+		Helmet_EquipmentSlot->InitializeSlot(this);
+		BodyArmor_EquipmentSlot->InitializeSlot(this);
+		Belt_EquipmentSlot->InitializeSlot(this);
+		Gloves_EquipmentSlot->InitializeSlot(this);
+		Boots_EquipmentSlot->InitializeSlot(this);
+	}
+
+	if(Amulet_EquipmentSlot && LeftRing_EquipmentSlot && RightRing_EquipmentSlot)
+	{
+		Amulet_EquipmentSlot->InitializeSlot(this);
+		RightRing_EquipmentSlot->InitializeSlot(this);
+		LeftRing_EquipmentSlot->InitializeSlot(this);
+	}
+
+	OnHoverOverEquipmentSlotDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotHover);
+	OnMouseButtonDownOnEquipmentSlotDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
 }
 
 void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
@@ -171,7 +201,7 @@ void UObsidianInventory::OnInventorySlotHover(const UObsidianItemSlot_Inventory*
 			return;
 		}
 
-		for(UObsidianItemSlot* InventorySlot : AffectedInventorySlots)
+		for(UObsidianItemSlot_Inventory* InventorySlot : AffectedInventorySlots)
 		{
 			InventorySlot->ResetSlot();
 		}
@@ -185,4 +215,25 @@ void UObsidianInventory::OnInventorySlotMouseButtonDown(const UObsidianItemSlot_
 	{
 		InventoryWidgetController->RequestAddingItemToInventory(AffectedSlot->GetSlotPosition(), bShiftDown);
 	}
+}
+
+void UObsidianInventory::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)
+{
+	if(bEntered)
+	{
+		if(!InventoryWidgetController || !InventoryWidgetController->IsDraggingAnItem())
+		{
+			return;
+		}
+		
+		//TODO Check if can equip item, display color on the slot based on result
+		return;
+	}
+	
+	AffectedSlot->ResetSlot();
+}
+
+void UObsidianInventory::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown)
+{
+	//TODO Request equipping item
 }

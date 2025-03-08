@@ -11,6 +11,7 @@ class UObsidianItem;
 class UObsidianItemSlot;
 class UObsidianInventoryItemDefinition;
 class UObsidianItemSlot_Inventory;
+class UObsidianItemSlot_Equipment;
 class UObsidianInventoryItemInstance;
 class UGridPanel;
 class USizeBox;
@@ -18,8 +19,11 @@ class UOverlay;
 class UGridSlot;
 class UObsidianInventoryWidgetController;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnSlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverInventorySlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnInventorySlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverEquipmentSlotSignature, UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnEquipmentSlotSignature, const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown);
 
 /**
  * 
@@ -48,11 +52,11 @@ public:
 	}
 
 public:
-	FOnHoverOverSlotSignature OnHoverOverInventorySlotDelegate;
-	FOnHoverOverSlotSignature OnHoverOverEquipmentSlotDelegate;
+	FOnHoverOverInventorySlotSignature OnHoverOverInventorySlotDelegate;
+	FOnMouseButtonDownOnInventorySlotSignature OnMouseButtonDownOnInventorySlotDelegate;
 	
-	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnInventorySlotDelegate;
-	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnEquipmentSlotDelegate;
+	FOnHoverOverEquipmentSlotSignature OnHoverOverEquipmentSlotDelegate;
+	FOnMouseButtonDownOnEquipmentSlotSignature OnMouseButtonDownOnEquipmentSlotDelegate;
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -64,6 +68,7 @@ private:
 	void OnItemChanged(const FObsidianItemVisuals& ItemVisuals);
 
 	void SetupInventoryGrid();
+	void SetupEquipmentSlots();
 
 	void OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown);
 	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
@@ -71,6 +76,9 @@ private:
 	
 	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
 	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
+
+	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
+	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown);
 	
 private:
 	UPROPERTY(meta=(BindWidget))
@@ -85,6 +93,29 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianItemSlot_Inventory> InventorySlotClass;
 
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> RightHand_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> LeftHand_EquipmentSlot;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> Helmet_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> BodyArmor_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> Belt_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> Gloves_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> Boots_EquipmentSlot;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> Amulet_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> RightRing_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> LeftRing_EquipmentSlot;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	int32 InventoryGridWidth = 12;
 	

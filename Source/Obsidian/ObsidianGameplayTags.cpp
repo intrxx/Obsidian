@@ -240,6 +240,22 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Equipment Slots.
+	 */
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightHand, "Equipment.Slot.RightHand", "Item Tag representing Right Hand Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftHand, "Equipment.Slot.LeftHand", "Item Tag representing Left Hand Equipment Slot.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Helmet, "Equipment.Slot.Helmet", "Item Tag representing Helmet Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_BodyArmor, "Equipment.Slot.BodyArmor", "Item Tag representing Body Armor Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Belt, "Equipment.Slot.Belt", "Item Tag representing Belt Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Gloves, "Equipment.Slot.Gloves", "Item Tag representing Gloves Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Boots, "Equipment.Slot.Boots", "Item Tag representing Boots Equipment Slot.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Amulet, "Equipment.Slot.Amulet", "Item Tag representing Amulet Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightRing, "Equipment.Slot.RightRing", "Item Tag representing Right Ring Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftRing, "Equipment.Slot.LeftRing", "Item Tag representing Left Ring Equipment Slot.");
+
+	/**
 	 * Stack Counts
 	 */
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Current, "Item.StackCount.Current", "Item Tag representing the current number of stacked items.");
