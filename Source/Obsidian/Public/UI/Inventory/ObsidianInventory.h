@@ -10,7 +10,7 @@ struct FObsidianItemVisuals;
 class UObsidianItem;
 class UObsidianItemSlot;
 class UObsidianInventoryItemDefinition;
-class UObsidianInventorySlot;
+class UObsidianItemSlot_Inventory;
 class UObsidianInventoryItemInstance;
 class UGridPanel;
 class USizeBox;
@@ -18,8 +18,8 @@ class UOverlay;
 class UGridSlot;
 class UObsidianInventoryWidgetController;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, const UObsidianItemSlot* AffectedSlot, const bool bEntered);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnSlotSignature, const UObsidianItemSlot* AffectedSlot, const bool bShiftDown);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverSlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnSlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
 
 /**
  * 
@@ -48,8 +48,11 @@ public:
 	}
 
 public:
-	FOnHoverOverSlotSignature OnHoverOverSlotDelegate;
-	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnSlotDelegate;
+	FOnHoverOverSlotSignature OnHoverOverInventorySlotDelegate;
+	FOnHoverOverSlotSignature OnHoverOverEquipmentSlotDelegate;
+	
+	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnInventorySlotDelegate;
+	FOnMouseButtonDownOnSlotSignature OnMouseButtonDownOnEquipmentSlotDelegate;
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -60,14 +63,14 @@ private:
 	void OnItemAdded(const FObsidianItemVisuals& ItemVisuals);
 	void OnItemChanged(const FObsidianItemVisuals& ItemVisuals);
 
-	void SetupGrid();
+	void SetupInventoryGrid();
 
 	void OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown);
 	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
 	void OnItemMouseLeave(const FVector2D& ItemDesiredPosition);
 	
-	void OnInventorySlotHover(const UObsidianItemSlot* AffectedSlot, const bool bEntered);
-	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot* AffectedSlot, const bool bShiftDown);
+	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
+	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
 	
 private:
 	UPROPERTY(meta=(BindWidget))
@@ -80,7 +83,7 @@ private:
 	TSubclassOf<UObsidianItem> ItemWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianItemSlot> InventorySlotClass;
+	TSubclassOf<UObsidianItemSlot_Inventory> InventorySlotClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	int32 InventoryGridWidth = 12;
@@ -97,8 +100,8 @@ private:
 	float RootSizeBoxWidth = 820.0f;
 	
 	int32 InventoryGridSize;
-	TMap<FVector2D, UObsidianItemSlot*> InventoryLocationToSlotMap;
+	TMap<FVector2D, UObsidianItemSlot_Inventory*> InventoryLocationToSlotMap;
 
 	/** Array of slots that are affected by item hover, to clear it later. */
-	TArray<UObsidianItemSlot*> AffectedInventorySlots;
+	TArray<UObsidianItemSlot_Inventory*> AffectedInventorySlots;
 };
