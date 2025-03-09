@@ -30,6 +30,7 @@ public:
 	void OverrideCurrentStackCount(const int32 NewStackCount);
 
 	FVector2D GetItemSize() const;
+	void SetSize(const FVector2D& ItemGridSpan);
 	
 public:
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;

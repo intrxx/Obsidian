@@ -21,8 +21,8 @@
 
 void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
-	OwnerInventoryComponent = InventoryComponent;
-	check(OwnerInventoryComponent);
+	check(InventoryComponent);
+	check(EquipmentComponent);
 	
 	const AActor* OwningActor = Cast<AActor>(PlayerController->GetPawn());
 	check(OwningActor);
@@ -67,7 +67,7 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
 		UE_LOG(LogInventory, Display, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
-		RemoveItemWidget(InventoryChangeMessage.GridItemPosition);
+		RemoveInventoryItemWidget(InventoryChangeMessage.GridItemPosition);
 	}
 	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemChanged)
 	{
@@ -85,7 +85,7 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 
 void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage)
 {
-	if(InventoryComponent != EquipmentChangeMessage.EquipmentOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	if(EquipmentComponent != EquipmentChangeMessage.EquipmentOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
 	{
 		return;
 	}
@@ -99,12 +99,20 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 
 	if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemEquipped)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Item Equipped"));
-	}
+		UE_LOG(LogInventory, Display, TEXT("Equipped item: [%s]"), *Instance->GetItemDisplayName().ToString());
 
-	if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
+		FObsidianItemVisuals ItemVisuals;
+		ItemVisuals.ItemImage = Instance->GetItemImage();
+		ItemVisuals.DesiredSlot = EquipmentChangeMessage.SlotTag;
+		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
+		
+		OnItemEquippedDelegate.Broadcast(ItemVisuals);
+	}
+	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Item Unequipped"));
+		UE_LOG(LogInventory, Display, TEXT("Unequipped item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		
+		RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTag);
 	}
 }
 
@@ -135,6 +143,16 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 		return;
 	}
 	OwnerHeroComponent->ServerAddItemToInventoryAtSlot(SlotPosition, bShiftDown);
+}
+
+void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag& SlotTag)
+{
+	check(OwnerHeroComponent);
+	if(OwnerHeroComponent->IsDraggingAnItem() == false)
+	{
+		return;
+	}
+	OwnerHeroComponent->ServerEquipItemAtSlot(SlotTag);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
@@ -436,7 +454,7 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D
 	return false;
 }
 
-UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtLocation(const FVector2D& Location) const
+UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtInventoryLocation(const FVector2D& Location) const
 {
 	if(AddedItemWidgetMap.Contains(Location))
 	{
@@ -445,7 +463,7 @@ UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtLocation(const
 	return nullptr;
 }
 
-void UObsidianInventoryWidgetController::AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::AddInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)
 {
 	if(!AddedItemWidgetMap.Contains(Location))
 	{
@@ -453,12 +471,44 @@ void UObsidianInventoryWidgetController::AddItemWidget(const FVector2D& Location
 	}
 }
 
-void UObsidianInventoryWidgetController::RemoveItemWidget(const FVector2D& Location)
+void UObsidianInventoryWidgetController::RemoveInventoryItemWidget(const FVector2D& Location)
 {
 	if(AddedItemWidgetMap.Contains(Location))
 	{
-		AddedItemWidgetMap[Location]->RemoveFromParent();
+		if(UObsidianItem* Item = AddedItemWidgetMap[Location])
+		{
+			Item->RemoveFromParent();
+		}
 		AddedItemWidgetMap.Remove(Location);
+	}
+}
+
+UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const
+{
+	if(EquippedItemWidgetMap.Contains(Slot))
+	{
+		return EquippedItemWidgetMap[Slot];
+	}
+	return nullptr;
+}
+
+void UObsidianInventoryWidgetController::AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget)
+{
+	if(!EquippedItemWidgetMap.Contains(Slot))
+	{
+		EquippedItemWidgetMap.Add(Slot, ItemWidget);
+	}
+}
+
+void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGameplayTag& Slot)
+{
+	if(EquippedItemWidgetMap.Contains(Slot))
+	{
+		if(UObsidianItem* Item = EquippedItemWidgetMap[Slot])
+		{
+			Item->RemoveFromParent();
+		}
+		EquippedItemWidgetMap.Remove(Slot);
 	}
 }
 

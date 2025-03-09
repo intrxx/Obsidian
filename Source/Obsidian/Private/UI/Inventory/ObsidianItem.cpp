@@ -90,3 +90,9 @@ FVector2D UObsidianItem::GetItemSize() const
 {
 	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
 }
+
+void UObsidianItem::SetSize(const FVector2D& ItemGridSpan)
+{
+	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
+}

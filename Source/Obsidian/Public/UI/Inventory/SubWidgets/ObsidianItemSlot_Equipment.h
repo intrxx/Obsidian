@@ -19,6 +19,11 @@ public:
 	void InitializeSlot(UObsidianInventory* InOwningInventory, const FGameplayTag& InSlotTag);
 	void InitializeSlot(UObsidianInventory* InOwningInventory);
 
+	FGameplayTag GetSlotTag() const
+	{
+		return SlotTag;
+	}
+	
 protected:
 	virtual void NativePreConstruct() override;
 

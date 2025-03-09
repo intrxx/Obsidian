@@ -20,6 +20,7 @@
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
@@ -730,6 +731,46 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 	DraggedItem = FDraggedItem(InstanceToGrab);
 
 	StartDraggingItem(Controller);
+}
+
+void UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation(const FGameplayTag& SlotTag)
+{
+	if(DraggedItem.IsEmpty())
+	{
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		return;
+	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		return;
+	}
+
+	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
+	if(EquipmentComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		return;
+	}
+
+	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
+	{
+		if(EquipmentComponent->EquipItemToSpecificSlot(Instance, SlotTag))
+		{
+			DraggedItem.Clear();
+			StopDraggingItem(Controller);
+		}
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		if(EquipmentComponent->EquipItemToSpecificSlot(ItemDef, SlotTag))
+		{
+			DraggedItem.Clear();
+			StopDraggingItem(Controller);
+		}
+	}
 }
 
 void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)

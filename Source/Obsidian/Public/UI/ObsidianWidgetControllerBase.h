@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "ObsidianWidgetControllerBase.generated.h"
 
+class UObsidianEquipmentComponent;
 class UObsidianInventoryComponent;
 class UObsidianHeroAttributesComponent;
 class UObsidianAbilitySystemComponent;
@@ -19,12 +21,13 @@ struct FObsidianWidgetControllerParams
 	GENERATED_BODY()
 	
 	FObsidianWidgetControllerParams(APlayerController* PC = nullptr, APlayerState* PS = nullptr, UAbilitySystemComponent* ASC = nullptr,
-		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr)
+		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr, UObsidianEquipmentComponent* EC = nullptr)
 	: PlayerController(PC)
 	, PlayerState(PS)
 	, AbilitySystemComponent(ASC)
 	, AttributesComponent(AC)
 	, InventoryComponent(IC)
+	, EquipmentComponent(EC)
 	{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -41,6 +44,9 @@ struct FObsidianWidgetControllerParams
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UObsidianInventoryComponent> InventoryComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent = nullptr;
 };
 
 /**
@@ -78,5 +84,8 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<UObsidianInventoryComponent> InventoryComponent;
+	
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
+	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent;
 };
 

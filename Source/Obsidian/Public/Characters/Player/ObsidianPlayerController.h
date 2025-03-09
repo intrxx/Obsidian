@@ -36,6 +36,12 @@ public:
 		return InventoryComponent;
 	}
 
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
+	UObsidianEquipmentComponent* GetEquipmentComponent() const
+	{
+		return EquipmentComponent;
+	}
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianPlayerState* GetObsidianPlayerState() const;
 

@@ -23,7 +23,7 @@ public:
 
 	void EquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
 	
-	void EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
+	bool EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
 
 	EObsidianEquipResult CanEquipInstance(UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
 
@@ -45,3 +45,27 @@ private:
 	UPROPERTY(Replicated)
 	FObsidianEquipmentList EquipmentList;
 };
+
+#if !UE_BUILD_SHIPPING
+
+namespace ObsidianEquipmentDebugHelpers
+{
+	const inline TMap<EObsidianEquipResult, FString> EquipResultToStringMap =
+	{
+		{EObsidianEquipResult::None, TEXT("None")},
+		{EObsidianEquipResult::ItemUnequippable, TEXT("Item Unequippable")},
+		{EObsidianEquipResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
+		{EObsidianEquipResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},
+		{EObsidianEquipResult::NotEnoughIntelligence, TEXT("Not Enough Intelligence")},
+		{EObsidianEquipResult::NotEnoughStrength, TEXT("Not Enough Strength")},
+		{EObsidianEquipResult::NotEnoughFaith, TEXT("Not Enough Faith")},
+		{EObsidianEquipResult::CanEquip, TEXT("Can Equip")}
+	};
+
+	inline FString GetEquipResultString(const EObsidianEquipResult Result)
+	{
+		return EquipResultToStringMap[Result];
+	}
+}
+
+#endif

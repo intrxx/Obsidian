@@ -2,6 +2,8 @@
 
 
 #include "UI/Inventory/ObsidianInventory.h"
+
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/GridPanel.h"
 #include "Components/GridSlot.h"
 #include "Components/SizeBox.h"
@@ -30,6 +32,20 @@ void UObsidianInventory::NativeConstruct()
 	
 	SetupInventoryGrid();
 	SetupEquipmentSlots();
+
+	EquipmentSlots =
+	{
+		RightHand_EquipmentSlot,
+		LeftHand_EquipmentSlot,
+		Helmet_EquipmentSlot,
+		BodyArmor_EquipmentSlot,
+		Belt_EquipmentSlot,
+		Gloves_EquipmentSlot,
+		Boots_EquipmentSlot,
+		Amulet_EquipmentSlot,
+		RightRing_EquipmentSlot,
+		LeftRing_EquipmentSlot
+	};
 }
 
 void UObsidianInventory::NativeDestruct()
@@ -46,8 +62,22 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryWidgetController = Cast<UObsidianInventoryWidgetController>(WidgetController);
 	check(InventoryWidgetController);
 
+	InventoryWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnItemEquipped);
+	
 	InventoryWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 	InventoryWidgetController->OnItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
+}
+
+UObsidianItemSlot_Equipment* UObsidianInventory::FindEquipmentSlotForTag(const FGameplayTag& Tag) const
+{
+	for(UObsidianItemSlot_Equipment* EquipmentSlot : EquipmentSlots)
+	{
+		if(EquipmentSlot->GetSlotTag() == Tag)
+		{
+			return EquipmentSlot;
+		}
+	}
+	return nullptr;
 }
 
 void UObsidianInventory::SetupInventoryGrid() 
@@ -116,6 +146,26 @@ void UObsidianInventory::SetupEquipmentSlots()
 	OnMouseButtonDownOnEquipmentSlotDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
 }
 
+void UObsidianInventory::OnItemEquipped(const FObsidianItemVisuals& ItemVisuals)
+{
+	const FGameplayTag DesiredSlot = ItemVisuals.DesiredSlot;
+	const FVector2D GridSpan = ItemVisuals.GridSpan;
+	
+	checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
+	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
+	ItemWidget->InitializeItemWidget(FVector2D(0, 0), GridSpan, ItemVisuals.ItemImage, ItemVisuals.StackCount);
+	// ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
+	// ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnItemMouseEntered);
+	// ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+	InventoryWidgetController->AddEquipmentItemWidget(DesiredSlot, ItemWidget);
+
+	UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(DesiredSlot);
+	const UGridSlot* DesiredGridSlot = UWidgetLayoutLibrary::SlotAsGridSlot(EquipmentSlot);
+	UGridSlot* GridSlot = Equipment_GridPanel->AddChildToGrid(ItemWidget, DesiredGridSlot->GetRow(), DesiredGridSlot->GetColumn());
+	GridSlot->SetLayer(1);
+	GridSlot->SetNudge(DesiredGridSlot->GetNudge());
+}
+
 void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 {
 	const FVector2D DesiredPosition = ItemVisuals.DesiredPosition;
@@ -127,7 +177,7 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
 	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnItemMouseEntered);
 	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
-	InventoryWidgetController->AddItemWidget(DesiredPosition, ItemWidget);
+	InventoryWidgetController->AddInventoryItemWidget(DesiredPosition, ItemWidget);
 
 	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
 	GridSlot->SetLayer(1);
@@ -138,7 +188,7 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 void UObsidianInventory::OnItemChanged(const FObsidianItemVisuals& ItemVisuals)
 {
 	const FVector2D ItemPosition = ItemVisuals.DesiredPosition;
-	if(UObsidianItem* ItemWidget = InventoryWidgetController->GetItemWidgetAtLocation(ItemPosition))
+	if(UObsidianItem* ItemWidget = InventoryWidgetController->GetItemWidgetAtInventoryLocation(ItemPosition))
 	{
 		ItemWidget->OverrideCurrentStackCount(ItemVisuals.StackCount);
 	}
@@ -233,7 +283,10 @@ void UObsidianInventory::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 	AffectedSlot->ResetSlot();
 }
 
-void UObsidianInventory::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown)
+void UObsidianInventory::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot)
 {
-	//TODO Request equipping item
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->RequestEquippingItem(AffectedSlot->GetSlotTag());
+	}
 }

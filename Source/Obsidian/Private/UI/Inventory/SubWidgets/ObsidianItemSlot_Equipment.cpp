@@ -31,6 +31,11 @@ void UObsidianItemSlot_Equipment::NativeOnMouseLeave(const FPointerEvent& InMous
 
 FReply UObsidianItemSlot_Equipment::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
+	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	{
+		OwningInventory->OnMouseButtonDownOnEquipmentSlotDelegate.Broadcast(this);
+	}
+	
 	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
 }
 

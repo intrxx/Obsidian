@@ -26,14 +26,22 @@ public:
 		, GridSpan(InGridSpan)
 		, StackCount(InStackCount)
 	{};
+	FObsidianItemVisuals(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FVector2D& InGridSpan, const int32 InStackCount)
+		: ItemImage(InItemImage)
+		, DesiredSlot(InDesiredSlot)
+		, GridSpan(InGridSpan)
+		, StackCount(InStackCount)
+	{};
 	
 public:
 	UTexture2D* ItemImage = nullptr;
 	FVector2D DesiredPosition = FVector2D::Zero();
+	FGameplayTag DesiredSlot = FGameplayTag::EmptyTag;
 	FVector2D GridSpan = FVector2D::Zero();
 	int32 StackCount = 0;
 };
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemVisuals& ItemVisuals);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemVisuals& ItemVisuals);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemVisuals& NewItemVisuals);
 
@@ -73,13 +81,18 @@ public:
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
 
-	UObsidianItem* GetItemWidgetAtLocation(const FVector2D& Location) const;
-	void AddItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
-	void RemoveItemWidget(const FVector2D& Location);
+	UObsidianItem* GetItemWidgetAtInventoryLocation(const FVector2D& Location) const;
+	void AddInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
+	void RemoveInventoryItemWidget(const FVector2D& Location);
+
+	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
+	void AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget);
+	void RemoveEquipmentItemWidget(const FGameplayTag& Slot);
 	
 	void OnInventoryOpen();
 
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
+	void RequestEquippingItem(const FGameplayTag& SlotTag);
 	
 	void HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
@@ -92,6 +105,7 @@ public:
 	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);
 	
 public:
+	FOnItemEquippedSignature OnItemEquippedDelegate;
 	FOnItemAddedSignature OnItemAddedDelegate;
 	FOnItemChangedSignature OnItemChangedDelegate;
 
@@ -134,6 +148,9 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryComponent> OwnerInventoryComponent = nullptr;
+	
+	UPROPERTY()
+	TObjectPtr<UObsidianEquipmentComponent> OwnerEquipmentComponent = nullptr;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianHeroComponent> OwnerHeroComponent = nullptr;
@@ -143,4 +160,7 @@ private:
 	
 	UPROPERTY()
 	TMap<FVector2D, UObsidianItem*> AddedItemWidgetMap;
+
+	UPROPERTY()
+	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;
 };

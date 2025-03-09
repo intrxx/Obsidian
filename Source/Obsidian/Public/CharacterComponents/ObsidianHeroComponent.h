@@ -65,6 +65,9 @@ public:
 	bool DropItem();
 	
 	UFUNCTION(Server, Reliable)
+	void ServerEquipItemAtSlot(const FGameplayTag& SlotTag);
+	
+	UFUNCTION(Server, Reliable)
 	void ServerAddItemToInventoryAtSlot(const FVector2D& SlotPosition, const bool bShiftDown);
 	
 	UFUNCTION(Server, Reliable)

@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
@@ -23,7 +24,7 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverInventorySlotSignature, const U
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnInventorySlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverEquipmentSlotSignature, UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnEquipmentSlotSignature, const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseButtonDownOnEquipmentSlotSignature, const UObsidianItemSlot_Equipment* AffectedSlot);
 
 /**
  * 
@@ -51,6 +52,8 @@ public:
 		return RootSizeBoxHeight;
 	}
 
+	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
+
 public:
 	FOnHoverOverInventorySlotSignature OnHoverOverInventorySlotDelegate;
 	FOnMouseButtonDownOnInventorySlotSignature OnMouseButtonDownOnInventorySlotDelegate;
@@ -62,7 +65,12 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UGridPanel> Slots_GridPanel;
 
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UGridPanel> Equipment_GridPanel;
+
 private:
+	void OnItemEquipped(const FObsidianItemVisuals& ItemVisuals);
+	
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
 	void OnItemAdded(const FObsidianItemVisuals& ItemVisuals);
 	void OnItemChanged(const FObsidianItemVisuals& ItemVisuals);
@@ -78,7 +86,7 @@ private:
 	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
 
 	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown);
+	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot);
 	
 private:
 	UPROPERTY(meta=(BindWidget))
@@ -131,8 +139,14 @@ private:
 	float RootSizeBoxWidth = 820.0f;
 	
 	int32 InventoryGridSize;
+	
+	UPROPERTY()
 	TMap<FVector2D, UObsidianItemSlot_Inventory*> InventoryLocationToSlotMap;
-
+	
 	/** Array of slots that are affected by item hover, to clear it later. */
+	UPROPERTY()
 	TArray<UObsidianItemSlot_Inventory*> AffectedInventorySlots;
+
+	UPROPERTY()
+	TArray<UObsidianItemSlot_Equipment*> EquipmentSlots;
 };

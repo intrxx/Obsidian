@@ -8,6 +8,7 @@
 
 UObsidianEquipmentComponent::UObsidianEquipmentComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
+	, EquipmentList(this)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
@@ -50,24 +51,27 @@ void UObsidianEquipmentComponent::EquipItem(UObsidianInventoryItemInstance* Inst
 	}
 }
 
-void UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag)
+bool UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag)
 {
 	if(!GetOwner()->HasAuthority())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
-		return; 
+		return false; 
 	}
 
 	if(InstanceToEquip == nullptr)
 	{
-		return;
+		return false;
 	}
 
 	const EObsidianEquipResult EquipResult = CanEquipInstance(InstanceToEquip, SlotTag);
 	if(EquipResult != EObsidianEquipResult::CanEquip)
 	{
 		//TODO Send Client RPC with some voice over passing EquipResult?
-		return;
+#if !UE_BUILD_SHIPPING
+		UE_LOG(LogTemp, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
+#endif
+		return false;
 	}
 
 	EquipmentList.AddEntry(InstanceToEquip, SlotTag);
@@ -76,6 +80,8 @@ void UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItem
 	{
 		AddReplicatedSubObject(InstanceToEquip);
 	}
+
+	return true;
 }
 
 EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag)
@@ -139,6 +145,9 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItemToSpecific
 	if(EquipResult != EObsidianEquipResult::CanEquip)
 	{
 		//TODO Send Client RPC to add voiceover passing EquipResult
+#if !UE_BUILD_SHIPPING
+		UE_LOG(LogTemp, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
+#endif
 		return nullptr;
 	}
 
