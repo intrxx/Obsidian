@@ -105,6 +105,7 @@ namespace ObsidianGameplayTags
 	 * Inventory
 	 */
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_Inventory_Changed);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_Equipment_Changed);
 	
 	/**
 	 * ---- Gameplay Events ----

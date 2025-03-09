@@ -12,6 +12,34 @@ class UObsidianInventoryItemDefinition;
 class UObsidianEquipmentComponent;
 struct FObsidianEquipmentList;
 
+UENUM(BlueprintType)
+enum class EObsidianEquipmentChangeType : uint8
+{
+	ECT_None = 0 UMETA(DisplayName = "None"),
+	ECT_ItemUnequipped UMETA(DisplayName = "Item Unequipped"),
+	ECT_ItemEquipped UMETA(DisplayName = "Item Equipped"),
+
+	ECT_MAX
+};
+
+USTRUCT(BlueprintType)
+struct FObsidianEquipmentChangeMessage
+{
+	GENERATED_BODY()
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
+	TObjectPtr<UActorComponent> EquipmentOwner = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
+	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
+	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
+	EObsidianEquipmentChangeType ChangeType = EObsidianEquipmentChangeType::ECT_None;
+};
+
 /**
  * Single item in the equipment list.
  */
@@ -56,7 +84,7 @@ public:
 		: OwnerComponent(InOwnerComponent)
 	{}
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FVector2D& EquipmentSlotTag);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 
@@ -70,6 +98,9 @@ public:
 	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
 	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
 	//~ End of FFastArraySerializer contract
+
+private:
+	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const EObsidianEquipmentChangeType ChangeType) const;
 
 private:
 	friend UObsidianEquipmentComponent;

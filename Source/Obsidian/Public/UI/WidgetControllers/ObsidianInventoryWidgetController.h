@@ -6,6 +6,8 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryWidgetController.generated.h"
 
+struct FObsidianEquipmentChangeMessage;
+
 class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
 class UObsidianUnstackSlider;
@@ -111,6 +113,7 @@ protected:
 
 private:
 	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
+	void OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage);
 	
 	void HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake);
 	

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ObsidianEquipmentList.h"
 #include "Components/ActorComponent.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianEquipmentComponent.generated.h"
 
 /**
@@ -19,6 +20,20 @@ public:
 	UObsidianEquipmentComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+
+	void EquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
+	
+	void EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
+
+	EObsidianEquipResult CanEquipInstance(UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
+
+	UObsidianInventoryItemInstance* EquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	
+	UObsidianInventoryItemInstance* EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+
+	EObsidianEquipResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+
+	void UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

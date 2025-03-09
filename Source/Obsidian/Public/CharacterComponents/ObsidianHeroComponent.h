@@ -57,6 +57,11 @@ public:
 	
 	void InitializePlayerInput(UInputComponent* InputComponent);
 	
+
+	/**
+	 * Inventory Items.
+	 */
+	
 	bool DropItem();
 	
 	UFUNCTION(Server, Reliable)
@@ -82,6 +87,10 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
+	
+	/**
+	 * End of Inventory Items.
+	 */
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

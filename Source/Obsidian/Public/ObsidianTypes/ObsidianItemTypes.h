@@ -69,6 +69,19 @@ namespace ObsidianAffixLimit
 }
 
 UENUM(BlueprintType)
+enum class EObsidianEquipResult : uint8
+{
+	None = 0,
+	ItemUnequippable,
+	NotEnoughHeroLevel,
+	NotEnoughDexterity,
+	NotEnoughIntelligence,
+	NotEnoughStrength,
+	NotEnoughFaith,
+	CanEquip
+};
+
+UENUM(BlueprintType)
 enum class EObsidianAffixType : uint8
 {
 	None = 0,

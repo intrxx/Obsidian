@@ -2,6 +2,7 @@
 
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
@@ -19,6 +20,173 @@ void UObsidianEquipmentComponent::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ThisClass, EquipmentList);
+}
+
+void UObsidianEquipmentComponent::EquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
+		return; 
+	}
+
+	if(InstanceToEquip == nullptr)
+	{
+		return;
+	}
+
+	// const EObsidianEquipResult EquipResult = CanEquipInstance(InstanceToEquip);
+	// if(EquipResult != EObsidianEquipResult::CanEquip)
+	// {
+	// 	//TODO Send Client RPC with some voice over passing EquipResult?
+	// 	return;
+	// }
+	//
+	// EquipmentList.AddEntry(InstanceToEquip);
+	
+	if(InstanceToEquip && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(InstanceToEquip);
+	}
+}
+
+void UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
+		return; 
+	}
+
+	if(InstanceToEquip == nullptr)
+	{
+		return;
+	}
+
+	const EObsidianEquipResult EquipResult = CanEquipInstance(InstanceToEquip, SlotTag);
+	if(EquipResult != EObsidianEquipResult::CanEquip)
+	{
+		//TODO Send Client RPC with some voice over passing EquipResult?
+		return;
+	}
+
+	EquipmentList.AddEntry(InstanceToEquip, SlotTag);
+	
+	if(InstanceToEquip && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(InstanceToEquip);
+	}
+}
+
+EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag)
+{
+	if(Instance == nullptr)
+	{
+		return EObsidianEquipResult::None;
+	}
+
+	if(Instance->IsItemEquippable() == false)
+	{
+		return EObsidianEquipResult::ItemUnequippable;
+	}
+
+	return EObsidianEquipResult::CanEquip;
+}
+
+UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
+		return nullptr; 
+	}
+
+	if(ItemDef == nullptr)
+	{
+		return nullptr;
+	}
+
+	// const EObsidianEquipResult EquipResult = CanEquipTemplate(ItemDef);
+	// if(EquipResult != EObsidianEquipResult::CanEquip)
+	// {
+	// 	//TODO Send Client RPC with some voice over passing EquipResult?
+	// 	return nullptr;
+	// }
+
+
+	// if(EquippedInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	// {
+	// 	AddReplicatedSubObject(EquippedInstance);
+	// }
+
+	return nullptr;
+}
+
+UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
+		return nullptr; 
+	}
+
+	if(ItemDef == nullptr)
+	{
+		return nullptr;
+	}
+
+	EObsidianEquipResult EquipResult = CanEquipTemplate(ItemDef, SlotTag);
+	if(EquipResult != EObsidianEquipResult::CanEquip)
+	{
+		//TODO Send Client RPC to add voiceover passing EquipResult
+		return nullptr;
+	}
+
+	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
+
+	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(Instance);
+	}
+
+	return Instance;
+}
+
+EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
+{
+	if(ItemDef == nullptr)
+	{
+		return EObsidianEquipResult::None;
+	}
+
+	UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	if(DefaultObject == nullptr)
+	{
+		return EObsidianEquipResult::None;
+	}
+
+	if(DefaultObject->IsEquippable() == false)
+	{
+		return EObsidianEquipResult::ItemUnequippable;
+	}
+	
+	return EObsidianEquipResult::CanEquip;
+}
+
+void UObsidianEquipmentComponent::UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
+		return; 
+	}
+
+	if(InstanceToUnequip == nullptr)
+	{
+		return;
+	}
+
+	
 }
 
 bool UObsidianEquipmentComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)

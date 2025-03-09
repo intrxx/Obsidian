@@ -13,6 +13,7 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "UI/Inventory/ObsidianItem.h"
 #include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
@@ -34,6 +35,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Equipment_Changed, this, &ThisClass::OnEquipmentStateChanged);
 }
 
 void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
@@ -78,6 +80,31 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		ItemVisuals.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
 		
 		OnItemChangedDelegate.Broadcast(ItemVisuals);
+	}
+}
+
+void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage)
+{
+	if(InventoryComponent != EquipmentChangeMessage.EquipmentOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	{
+		return;
+	}
+	
+	const UObsidianInventoryItemInstance* Instance = EquipmentChangeMessage.ItemInstance;
+	if(Instance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryWidgetController::OnEquipmentStateChanged."));
+		return;
+	}
+
+	if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemEquipped)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item Equipped"));
+	}
+
+	if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item Unequipped"));
 	}
 }
 
