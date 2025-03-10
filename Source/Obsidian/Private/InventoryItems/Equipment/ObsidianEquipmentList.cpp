@@ -8,17 +8,16 @@
 
 UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag)
 {
-	check(ItemDefClass);
+	check(ItemDefClass != nullptr);
 	check(OwnerComponent);
 
 	const AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor);
 
 	FObsidianEquipmentEntry& NewEntry = Entries.AddDefaulted_GetRef();
-	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
-	
-	Item = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
-	Item->SetItemDef(ItemDefClass);
+	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
+	NewEntry.EquipmentSlotTag = EquipmentSlotTag;
+	NewEntry.Instance->SetItemDef(ItemDefClass);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
@@ -29,7 +28,9 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 		}
 	}
 
-	Item->SetItemDebugName(DefaultObject->GetDebugName());
+	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
+
+	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Item);
 
 	MarkItemDirty(NewEntry);
