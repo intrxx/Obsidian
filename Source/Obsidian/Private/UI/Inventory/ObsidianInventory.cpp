@@ -113,9 +113,6 @@ void UObsidianInventory::SetupInventoryGrid()
 			GridX++;
 		}
 	}
-
-	OnHoverOverInventorySlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotHover);
-	OnMouseButtonDownOnInventorySlotDelegate.AddUObject(this, &ThisClass::OnInventorySlotMouseButtonDown);
 }
 
 void UObsidianInventory::SetupEquipmentSlots()
@@ -141,9 +138,6 @@ void UObsidianInventory::SetupEquipmentSlots()
 		RightRing_EquipmentSlot->InitializeSlot(this);
 		LeftRing_EquipmentSlot->InitializeSlot(this);
 	}
-
-	OnHoverOverEquipmentSlotDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotHover);
-	OnMouseButtonDownOnEquipmentSlotDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
 }
 
 void UObsidianInventory::OnItemEquipped(const FObsidianItemVisuals& ItemVisuals)

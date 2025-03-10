@@ -20,12 +20,6 @@ class UOverlay;
 class UGridSlot;
 class UObsidianInventoryWidgetController;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverInventorySlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnMouseButtonDownOnInventorySlotSignature, const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
-
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnHoverOverEquipmentSlotSignature, UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseButtonDownOnEquipmentSlotSignature, const UObsidianItemSlot_Equipment* AffectedSlot);
-
 /**
  * 
  */
@@ -54,12 +48,11 @@ public:
 
 	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
 
-public:
-	FOnHoverOverInventorySlotSignature OnHoverOverInventorySlotDelegate;
-	FOnMouseButtonDownOnInventorySlotSignature OnMouseButtonDownOnInventorySlotDelegate;
-	
-	FOnHoverOverEquipmentSlotSignature OnHoverOverEquipmentSlotDelegate;
-	FOnMouseButtonDownOnEquipmentSlotSignature OnMouseButtonDownOnEquipmentSlotDelegate;
+	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
+	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
+
+	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
+	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot);
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -81,13 +74,7 @@ private:
 	void OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown);
 	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
 	void OnItemMouseLeave(const FVector2D& ItemDesiredPosition);
-	
-	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
-	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
 
-	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot);
-	
 private:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;

@@ -20,20 +20,23 @@ void UObsidianItemSlot_Equipment::NativeOnMouseEnter(const FGeometry& InGeometry
 {
 	if(OwningInventory)
 	{
-		OwningInventory->OnHoverOverEquipmentSlotDelegate.Broadcast(this, true);
+		OwningInventory->OnEquipmentSlotHover(this, true);
 	}
 }
 
 void UObsidianItemSlot_Equipment::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	OwningInventory->OnHoverOverEquipmentSlotDelegate.Broadcast(this, false);
+	if(OwningInventory)
+	{
+		OwningInventory->OnEquipmentSlotHover(this, false);
+	}
 }
 
 FReply UObsidianItemSlot_Equipment::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	if(OwningInventory && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		OwningInventory->OnMouseButtonDownOnEquipmentSlotDelegate.Broadcast(this);
+		OwningInventory->OnEquipmentSlotMouseButtonDown(this);
 	}
 	
 	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
