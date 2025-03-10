@@ -84,6 +84,8 @@ public:
 		: OwnerComponent(InOwnerComponent)
 	{}
 
+	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
+
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);

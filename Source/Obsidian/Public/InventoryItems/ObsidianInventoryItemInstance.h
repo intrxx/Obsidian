@@ -27,12 +27,7 @@ public:
 	virtual bool IsSupportedForNetworking() const override {return true;}
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	//~ End of UObject interface
-
-	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const
-	{
-		return ItemDef;
-	}
-
+	
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, meta=(DeterminesOutputType = FragmentClass))
 	const UObsidianInventoryItemFragment* FindFragmentByClass(TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const;
 
@@ -42,13 +37,22 @@ public:
 		return (T*)FindFragmentByClass(T::StaticClass());
 	}
 
+	static UObsidianInventoryItemInstance* DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer);
+
+	/**
+	 * Item. 
+	 */
+	
+	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const
+	{
+		return ItemDef;
+	}
+	
 	void SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef)
 	{
 		ItemDef = InItemDef;
 	}
-
-	static UObsidianInventoryItemInstance* DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer);
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FGameplayTag GetItemRarity() const
 	{
@@ -75,9 +79,19 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void SetItemSkeletalMesh(USkeletalMesh* InItemSkeletalMesh);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FGameplayTag GetItemCurrentEquipmentSlot() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetItemCurrentEquipmentSlot(const FGameplayTag& CurrentEquipmentSlotToSet);
+
+	/** Should be called when item unequipped. */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void ResetItemCurrentEquipmentSlot();
 	
 	/**
-	 * Item Affixes.
+	 * Affixes.
 	 */
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
@@ -97,8 +111,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	int32 GetItemCombinedAffixLimit() const;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	int32 GetItemAddedSuffixCount() const;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	int32 GetItemAddedPrefixCount() const;
 	
@@ -107,7 +123,7 @@ public:
 	void SetItemAddedPrefixCount(const int32 InAddedPrefixes);
 
 	/**
-	 * Tag Stacks.
+	 * Stacks.
 	 */
 
 	/** Adds a specified number of stacks to the tag (does nothing if StackCount is below 1). */
@@ -140,74 +156,38 @@ public:
 	void SetStackable(const bool InStackable);
 
 	/**
-	 * Item Grid Size.
+	 * Appearance.
 	 */
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	TArray<FVector2D> GetItemGridSize() const;
 	
 	void SetItemGridSize(const TArray<FVector2D>& GridSizeToSet);
-
-	/**
-	 * Item Grid Span.
-	 */
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FVector2D GetItemGridSpan() const;
 	
 	void SetItemGridSpan(const FVector2D GridSpanToSet);
-
-	/**
-	 * Item Current Grid Location.
-	 */
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	FVector2D GetItemCurrentGridLocation() const;
 	
-	void SetItemCurrentGridLocation(const FVector2D CurrentGridLocationToSet);
-
-	/** Should be called when removing item from inventory. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void ResetItemCurrentGridLocation();
-	
-	/**
-	 * Item Image.
-	 */
-
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	UTexture2D* GetItemImage() const;
 	
 	void SetItemImage(UTexture2D* ItemImageToSet);
-
-	/**
-	 * Item Static Mesh.
-	 */
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	UStaticMesh* GetItemDroppedMesh() const;
 	
 	void SetItemDroppedMesh(UStaticMesh* InItemDroppedMesh);
-
-	/**
-	 * Item Display Name.
-	 */
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FText GetItemDisplayName() const;
 	
 	void SetItemDisplayName(const FText& InItemDisplayName);
 
-	/**
-	 * Item Description.
-	 */
-
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FText GetItemDescription() const;
 	
 	void SetItemDescription(const FText& InItemDescription);
-
-	/**
-	 * Item Additional Description.
-	 */
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FText GetItemAdditionalDescription() const;
@@ -215,7 +195,21 @@ public:
 	void SetItemAdditionalDescription(const FText& InItemAdditionalDescription);
 
 	/**
-	 * Debug Name
+	 * Inventory.
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FVector2D GetItemCurrentGridLocation() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetItemCurrentGridLocation(const FVector2D CurrentGridLocationToSet);
+
+	/** Should be called when removing item from inventory. */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void ResetItemCurrentGridLocation();
+	
+	/**
+	 * Debug.
 	 */
 
 	/** Gets the debug name of the item, will be valid only on the server. */	
@@ -225,6 +219,10 @@ public:
 	void SetItemDebugName(const FString& InItemDebugName);
 
 private:
+	/**
+	 * Item.
+	 */
+	
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
 
@@ -240,9 +238,13 @@ private:
 
 	UPROPERTY(Replicated)
 	TObjectPtr<USkeletalMesh> ItemSkeletalMesh = nullptr;
+
+	/** Current Item Equipment Slot, should be valid only if the item is equipped. */
+	UPROPERTY(Replicated)
+	FGameplayTag ItemCurrentEquipmentSlot = FGameplayTag::EmptyTag;
 	
 	/**
-	 * Item Affixes.
+	 * Affixes.
 	 */
 
 	UPROPERTY(Replicated)
@@ -252,7 +254,7 @@ private:
 	FObsidianItemAffixStack ItemAffixes;
 	
 	/**
-	 * Item Stack Count.
+	 * Stacks.
 	 */
 	
 	UPROPERTY(Replicated)
@@ -261,16 +263,16 @@ private:
 	UPROPERTY(Replicated)
 	bool bStackable = false;
 
+	/**
+	 * Appearance.
+	 */
+	
 	UPROPERTY(Replicated)
 	TArray<FVector2D> ItemGridSize;
 
 	UPROPERTY(Replicated)
 	FVector2D ItemGridSpan = FVector2D::ZeroVector;
-
-	/** Current Item Location in the inventory grid, should be valid only if the item is already placed in the inventory. */
-	UPROPERTY(Replicated)
-	FVector2D ItemCurrentGridLocation  = FVector2D::ZeroVector;
-
+	
 	UPROPERTY(Replicated)
 	TObjectPtr<UTexture2D> ItemImage = nullptr;
 	
@@ -285,6 +287,18 @@ private:
 	
 	UPROPERTY(Replicated)
 	FText ItemAdditionalDescription = FText::GetEmpty();
+
+	/**
+	 * Inventory.
+	 */
+
+	/** Current Item Location in the inventory grid, should be valid only if the item is already placed in the inventory. */
+	UPROPERTY(Replicated)
+	FVector2D ItemCurrentGridLocation = FVector2D::ZeroVector;
+
+	/**
+	 * Debug.
+	 */
 	
 	FString DebugName = FString("Not Set");
 };

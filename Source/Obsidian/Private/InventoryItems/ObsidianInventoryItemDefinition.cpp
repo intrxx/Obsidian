@@ -43,6 +43,15 @@ bool UObsidianInventoryItemDefinition::IsEquippable() const
 	return false;
 }
 
+bool UObsidianInventoryItemDefinition::IsIdentified() const
+{
+	if(const UOInventoryItemFragment_Affixes* AffixesFrag = Cast<UOInventoryItemFragment_Affixes>(FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())))
+	{
+		return AffixesFrag->IsItemIdentified();
+	}
+	return false;
+}
+
 const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const
 {
 	if(FragmentClass == nullptr)

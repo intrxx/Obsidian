@@ -6,6 +6,8 @@
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
+DEFINE_LOG_CATEGORY(LogEquipment);
+
 UObsidianEquipmentComponent::UObsidianEquipmentComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 	, EquipmentList(this)
@@ -23,7 +25,21 @@ void UObsidianEquipmentComponent::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME(ThisClass, EquipmentList);
 }
 
-void UObsidianEquipmentComponent::EquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
+UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag)
+{
+	if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag))
+	{
+		return EquipmentList.SlotToEquipmentMap[SlotTag];
+	}
+	return nullptr;
+}
+
+TArray<UObsidianInventoryItemInstance*> UObsidianEquipmentComponent::GetAllEquippedItems() const
+{
+	return EquipmentList.GetAllEquippedItems();
+}
+
+void UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -36,10 +52,11 @@ void UObsidianEquipmentComponent::EquipItem(UObsidianInventoryItemInstance* Inst
 		return;
 	}
 
+	//TODO Need some Item Tag to determine if item can equipped 
 	// const EObsidianEquipResult EquipResult = CanEquipInstance(InstanceToEquip);
 	// if(EquipResult != EObsidianEquipResult::CanEquip)
 	// {
-	// 	//TODO Send Client RPC with some voice over passing EquipResult?
+	// 	//TODO Shouldn't add voice over here
 	// 	return;
 	// }
 	//
@@ -69,7 +86,7 @@ bool UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItem
 	{
 		//TODO Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
-		UE_LOG(LogTemp, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
+		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
 		return false;
 	}
@@ -96,10 +113,15 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(UObsidianInve
 		return EObsidianEquipResult::ItemUnequippable;
 	}
 
+	if(Instance->IsItemIdentified() == false)
+	{
+		return EObsidianEquipResult::ItemUnientified;
+	}
+
 	return EObsidianEquipResult::CanEquip;
 }
 
-UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+UObsidianInventoryItemInstance* UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -112,10 +134,17 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItem(const TSu
 		return nullptr;
 	}
 
+	UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	if(DefaultObject == nullptr)
+	{
+		return nullptr;
+	}
+
+	//TODO Need some Item Tag to determine if item can equipped 
 	// const EObsidianEquipResult EquipResult = CanEquipTemplate(ItemDef);
 	// if(EquipResult != EObsidianEquipResult::CanEquip)
 	// {
-	// 	//TODO Send Client RPC with some voice over passing EquipResult?
+	//  //TODO Shouldn't add voice over here
 	// 	return nullptr;
 	// }
 
@@ -146,7 +175,7 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItemToSpecific
 	{
 		//TODO Send Client RPC to add voiceover passing EquipResult
 #if !UE_BUILD_SHIPPING
-		UE_LOG(LogTemp, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
+		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
 		return nullptr;
 	}
@@ -178,6 +207,11 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubcla
 	{
 		return EObsidianEquipResult::ItemUnequippable;
 	}
+
+	if(DefaultObject->IsIdentified() == false)
+	{
+		return EObsidianEquipResult::ItemUnientified;
+	}
 	
 	return EObsidianEquipResult::CanEquip;
 }
@@ -186,16 +220,22 @@ void UObsidianEquipmentComponent::UnequipItem(UObsidianInventoryItemInstance* In
 {
 	if(!GetOwner()->HasAuthority())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
+		UE_LOG(LogEquipment, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
 		return; 
 	}
 
 	if(InstanceToUnequip == nullptr)
 	{
+		UE_LOG(LogEquipment, Error, TEXT("Passed InstanceToUnequip is invalid in UObsidianEquipmentComponent::UnequipItem."));
 		return;
 	}
 
-	
+	EquipmentList.RemoveEntry(InstanceToUnequip);
+
+	if(InstanceToUnequip && IsUsingRegisteredSubObjectList())
+	{
+		RemoveReplicatedSubObject(InstanceToUnequip);
+	}
 }
 
 bool UObsidianEquipmentComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)

@@ -66,6 +66,9 @@ public:
 	
 	UFUNCTION(Server, Reliable)
 	void ServerEquipItemAtSlot(const FGameplayTag& SlotTag);
+
+	UFUNCTION(Server, Reliable)
+	void ServerGrabEquippedItemToCursor(const FGameplayTag& SlotTag);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerAddItemToInventoryAtSlot(const FVector2D& SlotPosition, const bool bShiftDown);

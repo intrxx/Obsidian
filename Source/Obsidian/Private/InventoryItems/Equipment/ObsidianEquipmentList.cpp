@@ -6,6 +6,21 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
+TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetAllEquippedItems() const
+{
+	TArray<UObsidianInventoryItemInstance*> Items;
+	Items.Reserve(Entries.Num());
+
+	for(const FObsidianEquipmentEntry& Entry : Entries)
+	{
+		if(Entry.Instance)
+		{
+			Items.Add(Entry.Instance);
+		}
+	}
+	return Items;
+}
+
 UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag)
 {
 	check(ItemDefClass != nullptr);
@@ -18,6 +33,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.EquipmentSlotTag = EquipmentSlotTag;
 	NewEntry.Instance->SetItemDef(ItemDefClass);
+	NewEntry.Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
@@ -54,6 +70,7 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 
 	FObsidianEquipmentEntry& NewEntry = Entries.Emplace_GetRef(Instance, EquipmentSlotTag);
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Instance);
+	Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
 
 	MarkItemDirty(NewEntry);
 
@@ -69,6 +86,7 @@ void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 		{
 			const FGameplayTag CachedSlotTag = Entry.EquipmentSlotTag;
 			SlotToEquipmentMap.Remove(CachedSlotTag);
+			Entry.Instance->ResetItemCurrentEquipmentSlot();
 			It.RemoveCurrent();
 			MarkArrayDirty();
 

@@ -8,6 +8,8 @@
 #include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianEquipmentComponent.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
+
 /**
  * Component that manages equipping items on the Heroes.
  */
@@ -21,13 +23,17 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	void EquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
+	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag);
+
+	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
+
+	void AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
 	
 	bool EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
 
 	EObsidianEquipResult CanEquipInstance(UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
 
-	UObsidianInventoryItemInstance* EquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	UObsidianInventoryItemInstance* AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	
 	UObsidianInventoryItemInstance* EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
 
@@ -54,6 +60,7 @@ namespace ObsidianEquipmentDebugHelpers
 	{
 		{EObsidianEquipResult::None, TEXT("None")},
 		{EObsidianEquipResult::ItemUnequippable, TEXT("Item Unequippable")},
+		{EObsidianEquipResult::ItemUnientified, TEXT("Item Unientified")},
 		{EObsidianEquipResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
 		{EObsidianEquipResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},
 		{EObsidianEquipResult::NotEnoughIntelligence, TEXT("Not Enough Intelligence")},

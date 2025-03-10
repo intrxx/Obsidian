@@ -737,21 +737,21 @@ void UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation(const FGamepla
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
 		return;
 	}
 
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
 		return;
 	}
 
@@ -771,6 +771,36 @@ void UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation(const FGamepla
 			StopDraggingItem(Controller);
 		}
 	}
+}
+
+void UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation(const FGameplayTag& SlotTag)
+{
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation."));
+		return;
+	}
+	
+	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
+	if(EquipmentComponent == nullptr)
+	{
+		UE_LOG(LogEquipment, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryItemInstance* InstanceToGrab = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
+	if(InstanceToGrab == nullptr)
+	{
+		UE_LOG(LogEquipment, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation."));
+		return;
+	}
+
+	EquipmentComponent->UnequipItem(InstanceToGrab);
+	
+	DraggedItem = FDraggedItem(InstanceToGrab);
+
+	StartDraggingItem(Controller);
 }
 
 void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)

@@ -26,6 +26,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemGridSize);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemCurrentGridLocation);
+	DOREPLIFETIME(ThisClass, ItemCurrentEquipmentSlot);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
 	DOREPLIFETIME(ThisClass, ItemSkeletalMesh);
@@ -210,6 +211,21 @@ void UObsidianInventoryItemInstance::SetItemCurrentGridLocation(const FVector2D 
 void UObsidianInventoryItemInstance::ResetItemCurrentGridLocation()
 {
 	ItemCurrentGridLocation = FVector2D::Zero();
+}
+
+FGameplayTag UObsidianInventoryItemInstance::GetItemCurrentEquipmentSlot() const
+{
+	return ItemCurrentEquipmentSlot;
+}
+
+void UObsidianInventoryItemInstance::SetItemCurrentEquipmentSlot(const FGameplayTag& CurrentEquipmentSlotToSet)
+{
+	ItemCurrentEquipmentSlot = CurrentEquipmentSlotToSet;
+}
+
+void UObsidianInventoryItemInstance::ResetItemCurrentEquipmentSlot()
+{
+	ItemCurrentEquipmentSlot = FGameplayTag::EmptyTag;
 }
 
 UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const

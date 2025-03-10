@@ -60,10 +60,9 @@ TMap<FVector2D, bool> UObsidianInventoryComponent::Internal_GetInventoryStateMap
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::GetItemInstanceAtLocation(const FVector2D& Location) const
 {
-	const TMap<FVector2D, UObsidianInventoryItemInstance*> LocToItemMap = InventoryGrid.GridLocationToItemMap;
-	if(LocToItemMap.Contains(Location))
+	if(InventoryGrid.GridLocationToItemMap.Contains(Location))
 	{
-		return LocToItemMap[Location];
+		return InventoryGrid.GridLocationToItemMap[Location];
 	}
 	return nullptr;
 }
@@ -862,6 +861,12 @@ void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInsta
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::RemoveItemInstance."));
 		return; 
+	}
+
+	if(InstanceToRemove == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Passed InstanceToRemove is invalid in UObsidianInventoryComponent::RemoveItemInstance."));
+		return;
 	}
 	
 	InventoryGrid.RemoveEntry(InstanceToRemove);

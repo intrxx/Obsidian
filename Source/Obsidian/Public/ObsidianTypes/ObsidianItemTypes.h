@@ -71,14 +71,15 @@ namespace ObsidianAffixLimit
 UENUM(BlueprintType)
 enum class EObsidianEquipResult : uint8
 {
-	None = 0,
-	ItemUnequippable,
-	NotEnoughHeroLevel,
-	NotEnoughDexterity,
-	NotEnoughIntelligence,
-	NotEnoughStrength,
-	NotEnoughFaith,
-	CanEquip
+	None = 0 UMETA(DisplayName="None"),
+	ItemUnequippable UMETA(DisplayName="Item Unequippable"),
+	ItemUnientified UMETA(DisplayName="Item Unientified"),
+	NotEnoughHeroLevel UMETA(DisplayName="Not Enough Hero Level"),
+	NotEnoughDexterity UMETA(DisplayName="Not Enough Dexterity"),
+	NotEnoughIntelligence UMETA(DisplayName="Not Enough Intelligence"),
+	NotEnoughStrength UMETA(DisplayName="Not Enough Strength"),
+	NotEnoughFaith UMETA(DisplayName="Not Enough Faith"),
+	CanEquip UMETA(DisplayName="Can Equip")
 };
 
 UENUM(BlueprintType)

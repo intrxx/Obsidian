@@ -118,10 +118,10 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()
 {
-	TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
-	AddedItemWidgetMap.Empty(Items.Num());
+	TArray<UObsidianInventoryItemInstance*> InventoryItems = InventoryComponent->GetAllItems();
+	AddedItemWidgetMap.Empty(InventoryItems.Num());
 	
-	for(const UObsidianInventoryItemInstance* Item : Items)
+	for(const UObsidianInventoryItemInstance* Item : InventoryItems)
 	{
 		ensure(Item);
 		
@@ -132,6 +132,21 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemVisuals.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
 
 		OnItemAddedDelegate.Broadcast(ItemVisuals);
+	}
+
+	TArray<UObsidianInventoryItemInstance*> EquippedItems = EquipmentComponent->GetAllEquippedItems();
+	EquippedItemWidgetMap.Empty(EquippedItems.Num());
+
+	for(const UObsidianInventoryItemInstance* Item : EquippedItems)
+	{
+		ensure(Item);
+		
+		FObsidianItemVisuals ItemVisuals;
+		ItemVisuals.ItemImage = Item->GetItemImage();
+		ItemVisuals.GridSpan = Item->GetItemGridSpan();
+		ItemVisuals.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
+
+		OnItemEquippedDelegate.Broadcast(ItemVisuals);
 	}
 }
 
