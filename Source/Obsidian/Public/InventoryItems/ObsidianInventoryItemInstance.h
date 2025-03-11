@@ -43,26 +43,18 @@ public:
 	 * Item. 
 	 */
 	
-	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const
-	{
-		return ItemDef;
-	}
+	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const;
 	
-	void SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef)
-	{
-		ItemDef = InItemDef;
-	}
+	void SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	FGameplayTag GetItemRarity() const
-	{
-		return ItemRarity;
-	}
+	FGameplayTag GetItemRarity() const;
 	
-	void SetItemRarity(const FGameplayTag& InItemRarityTag)
-	{
-		ItemRarity = InItemRarityTag;
-	}
+	void SetItemRarity(const FGameplayTag& InItemRarityTag);
+
+	FGameplayTag GetItemCategory() const;
+
+	void SetItemCategory(const FGameplayTag& InItemCategoryTag);
 
 	/**
 	 * Equipping.
@@ -225,6 +217,9 @@ private:
 	
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
+
+	UPROPERTY(Replicated)
+	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
 
 	UPROPERTY(Replicated)
 	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;

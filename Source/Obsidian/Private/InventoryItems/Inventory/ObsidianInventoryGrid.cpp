@@ -63,8 +63,10 @@ UObsidianInventoryItemInstance* FObsidianInventoryGrid::AddEntry(const TSubclass
 			Fragment->OnInstancedCreated(NewEntry.Instance);
 		}
 	}
-
+	
+	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
+	
 	NewEntry.StackCount = StackCount;
 	NewEntry.GridLocation = AvailablePosition;
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

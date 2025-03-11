@@ -52,6 +52,11 @@ bool UObsidianInventoryItemDefinition::IsIdentified() const
 	return false;
 }
 
+FGameplayTag UObsidianInventoryItemDefinition::GetItemCategoryTag() const
+{
+	return ItemCategory;
+}
+
 const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const
 {
 	if(FragmentClass == nullptr)

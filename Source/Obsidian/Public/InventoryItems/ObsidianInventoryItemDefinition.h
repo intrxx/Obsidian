@@ -28,6 +28,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
 	FGameplayTag GetItemRarityTag() const;
 	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
+	FGameplayTag GetItemCategoryTag() const;
+	
 	bool HasStacks() const;
 	bool IsStackable() const;
 	bool IsEquippable() const;
@@ -36,10 +39,13 @@ public:
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;
 	
 public:
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.Category"), Category = "Obsidian")
+	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Debug")
 	FString DebugName;
 
 	/** Collection of Fragments that extends and defines this item. */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, Category = "Obsidian|Display")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, Category = "Obsidian")
 	TArray<TObjectPtr<UObsidianInventoryItemFragment>> ItemFragments;
 };

@@ -10,6 +10,39 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
 
+USTRUCT(BlueprintType)
+struct FObsidianEquipmentSlotDefinition
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianEquipmentSlotDefinition(){};
+	FObsidianEquipmentSlotDefinition(const FGameplayTag& InSlotTag, const FGameplayTagContainer& InAcceptedEquipmentCategories)
+		: SlotTag(InSlotTag)
+		, AcceptedEquipmentCategories(InAcceptedEquipmentCategories)
+	{};
+
+	bool IsValid() const;
+	
+	bool CanEquipToSlot(const FGameplayTag& EquipmentCategory) const;
+
+	void AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory);
+	void AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories);
+	
+	void RemoveBannedEquipmentCategory(const FGameplayTag& BannedCategoryToRemove);
+	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
+	
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTagContainer AcceptedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTagContainer BannedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
+};
+
 /**
  * Component that manages equipping items on the Heroes.
  */
@@ -26,6 +59,9 @@ public:
 	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag);
 
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
+
+	/** Finds Equipment Slot if one exists in the Equipment, might return invalid slot when nothing was found, check IsValid for safety. */
+	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
 
 	void AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
 	
@@ -46,10 +82,27 @@ public:
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
 
+protected:
+	bool DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
+	
+	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
+	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);
+	
+	void RemoveBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategoryToRemove);
+	void RemoveBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& ItemCategoriesToRemove);
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<FObsidianEquipmentSlotDefinition> EquipmentSlots;
+
+private:
+	void CreateDefaultEquipmentSlots();
+	
 private:
 	/** Actual array of equipped items, also hold Map for Slot at which item instance is equipped. */
 	UPROPERTY(Replicated)
 	FObsidianEquipmentList EquipmentList;
+	
 };
 
 #if !UE_BUILD_SHIPPING
@@ -59,6 +112,7 @@ namespace ObsidianEquipmentDebugHelpers
 	const inline TMap<EObsidianEquipResult, FString> EquipResultToStringMap =
 	{
 		{EObsidianEquipResult::None, TEXT("None")},
+		{EObsidianEquipResult::ItemUnfitForCategory, TEXT("Item Unfit For Category")},
 		{EObsidianEquipResult::ItemUnequippable, TEXT("Item Unequippable")},
 		{EObsidianEquipResult::ItemUnientified, TEXT("Item Unientified")},
 		{EObsidianEquipResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},

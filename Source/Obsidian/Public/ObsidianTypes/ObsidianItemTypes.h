@@ -72,6 +72,9 @@ UENUM(BlueprintType)
 enum class EObsidianEquipResult : uint8
 {
 	None = 0 UMETA(DisplayName="None"),
+	
+	/** Item cannot be equipped to this Equipment Slot either because it does not fit or this item category was banned by a gameplay mechanic. */
+	ItemUnfitForCategory UMETA(DisplayName="Item Unfit For Category"),
 	ItemUnequippable UMETA(DisplayName="Item Unequippable"),
 	ItemUnientified UMETA(DisplayName="Item Unientified"),
 	NotEnoughHeroLevel UMETA(DisplayName="Not Enough Hero Level"),

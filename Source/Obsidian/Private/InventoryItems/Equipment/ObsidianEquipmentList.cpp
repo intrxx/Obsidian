@@ -45,7 +45,8 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	}
 
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
-
+	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
+	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Item);
 

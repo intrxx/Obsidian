@@ -241,6 +241,35 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Item Category.
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Resource, "Item.Category.Resource", "Item Tag that represents Resource item category.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Helmet, "Item.Category.Helmet", "Item Tag that represents Helmet item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_BodyArmor, "Item.Category.BodyArmor", "Item Tag that represents Body Armor item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Belt, "Item.Category.Belt", "Item Tag that represents Belt item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Gloves, "Item.Category.Gloves", "Item Tag that represents Gloves item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Boots, "Item.Category.Boots", "Item Tag that represents Boots item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Shield, "Item.Category.Shield", "Item Tag that represents Shield item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Quiver, "Item.Category.Quiver", "Item Tag that represents Quiver item category.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Amulet, "Item.Category.Amulet", "Item Tag that represents Amulet item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Ring, "Item.Category.Ring", "Item Tag that represents Ring item category.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Dagger, "Item.Category.Dagger", "Item Tag that represents Dagger item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Wand, "Item.Category.Wand", "Item Tag that represents Wand item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Flail, "Item.Category.Flail", "Item Tag that represents Flail item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Bow_TwoHand, "Item.Category.Bow", "Item Tag that represents Bow item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Staff_TwoHand, "Item.Category.Staff", "Item Tag that represents Staff item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Mace_OneHand, "Item.Category.Mace.OneHand", "Item Tag that represents One Hand Mace item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Mace_TwoHand, "Item.Category.Mace.TwoHand", "Item Tag that represents Two Hand Mace item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Sword_OneHand, "Item.Category.Sword.OneHand", "Item Tag that represents One Hand Sword item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Sword_TwoHand, "Item.Category.Sword.TwoHand", "Item Tag that represents Two Hand Sword item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Axe_OneHand, "Item.Category.Axe.OneHand", "Item Tag that represents One Hand Axe item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Axe_TwoHand, "Item.Category.Axe.TwoHand", "Item Tag that represents Two Hand Axe item category.");
+
+	/**
 	 * Equipment Slots.
 	 */
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightHand, "Equipment.Slot.RightHand", "Item Tag representing Right Hand Equipment Slot.");

@@ -20,6 +20,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemStackTags);
 	DOREPLIFETIME(ThisClass, bStackable);
 	DOREPLIFETIME(ThisClass, ItemRarity);
+	DOREPLIFETIME(ThisClass, ItemCategory);
 	DOREPLIFETIME(ThisClass, ItemAffixes);
 
 	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change, so probably never replicated lol?
@@ -60,6 +61,36 @@ UObsidianInventoryItemInstance* UObsidianInventoryItemInstance::DuplicateItem(co
 		return NewInstance;
 	}
 	return nullptr;
+}
+
+TSubclassOf<UObsidianInventoryItemDefinition> UObsidianInventoryItemInstance::GetItemDef() const
+{
+	return ItemDef;
+}
+
+void UObsidianInventoryItemInstance::SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef)
+{
+	ItemDef = InItemDef;
+}
+
+FGameplayTag UObsidianInventoryItemInstance::GetItemRarity() const
+{
+	return ItemRarity;
+}
+
+void UObsidianInventoryItemInstance::SetItemRarity(const FGameplayTag& InItemRarityTag)
+{
+	ItemRarity = InItemRarityTag;
+}
+
+FGameplayTag UObsidianInventoryItemInstance::GetItemCategory() const
+{
+	return ItemCategory;
+}
+
+void UObsidianInventoryItemInstance::SetItemCategory(const FGameplayTag& InItemCategoryTag)
+{
+	ItemCategory = InItemCategoryTag;
 }
 
 void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)
