@@ -421,35 +421,13 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			// Call Server Drag Item
 			HeroComp->ServerGrabDroppableItemToCursor(this);
-			// checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in AObsidianDroppableItem::PickupItemInstance please fill it on ObsidianDroppableItem Instance."));
-			// UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PickingPlayerController, DraggedItemWidgetClass);
-			// DraggedItem->InitializeItemWidgetWithItemInstance(ItemInstance);
-			// DraggedItem->AddToViewport();
-			// HeroComp->DragItem(DraggedItem, FDraggedItem(ItemInstance));
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
 	}
 	HeroComp->ServerPickupItemInstance(this);
 	
-	//
-	//	Switching to Server Authoritative Picking of Item Instance
-	//
-	//UObsidianInventoryComponent* InventoryComponent = PickingPlayerController->GetInventoryComponent();
-	//checkf(InventoryComponent, TEXT("InventoryComponent acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemInstance."));
-	//int32 OutStacksLeft = 0;
-	//InventoryComponent->AddItemInstance(ItemInstance, /** OUT */ OutStacksLeft);
-	//if(OutStacksLeft > 0)
-	//{
-	//	ItemInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
-	//	UpdateStacksOnActiveItemDescription(OutStacksLeft);
-	//	return false; // Added some Item stacks
-	//}
-	//
-	//	~ End Switching to Server Authoritative Picking of Item Instance
-	//
 	return false; // Added whole Item
 }
 
@@ -478,12 +456,6 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			// checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in AObsidianDroppableItem::PickupItemInstance please fill it on ObsidianDroppableItem Instance."));
-			// UObsidianDraggedItem* DraggedItem = CreateWidget<UObsidianDraggedItem>(PickingPlayerController, DraggedItemWidgetClass);
-			// DraggedItem->InitializeItemWidgetWithItemDef(ItemDef, StackCount);
-			// DraggedItem->AddToViewport();
-			//
-			// HeroComp->DragItem(DraggedItem, FDraggedItem(ItemDef, StackCount));
 			HeroComp->ServerGrabDroppableItemToCursor(this);
 			return true; // Added whole Item
 		}
@@ -491,23 +463,6 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 	}
 	HeroComp->ServerPickupItemDef(this);
 	
-	//
-	//	Switching to Server Authoritative Picking of Item Def
-	//
-	//UObsidianInventoryComponent* InventoryComponent = PickingPlayerController->GetInventoryComponent();
-	//checkf(InventoryComponent, TEXT("InventoryComponent acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemDef."));
-
-	//int32 OutStacksLeft = 0;
-	//InventoryComponent->AddItemDefinition(ItemDef, /** OUT */ OutStacksLeft, StackCount);
-	//if(OutStacksLeft > 0)
-	//{
-	//	OverrideTemplateStacks(OutStacksLeft);
-	//	UpdateStacksOnActiveItemDescription(OutStacksLeft);
-	//	return false; // Added some Item stacks
-	//}
-	//
-	//	~ End Switching to Server Authoritative Picking of Item Def
-	//
 	return false; // Added whole Item
 }
 

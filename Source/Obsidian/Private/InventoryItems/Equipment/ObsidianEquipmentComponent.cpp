@@ -102,6 +102,21 @@ FObsidianEquipmentSlotDefinition UObsidianEquipmentComponent::FindEquipmentSlotB
 	return FObsidianEquipmentSlotDefinition();
 }
 
+TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory)
+{
+	TArray<FObsidianEquipmentSlotDefinition> MatchingSlots;
+	
+	for(FObsidianEquipmentSlotDefinition Slot : EquipmentSlots)
+	{
+		if(Slot.CanEquipToSlot(ItemCategory))
+		{
+			MatchingSlots.Add(Slot);
+		}
+	}
+	
+	return MatchingSlots;
+}
+
 void UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
 {
 	if(!GetOwner()->HasAuthority())
@@ -114,20 +129,13 @@ void UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemI
 	{
 		return;
 	}
-
-	//TODO Need some Item Tag to determine if item can equipped 
-	// const EObsidianEquipResult EquipResult = CanEquipInstance(InstanceToEquip);
-	// if(EquipResult != EObsidianEquipResult::CanEquip)
-	// {
-	// 	//TODO Shouldn't add voice over here
-	// 	return;
-	// }
-	//
-	// EquipmentList.AddEntry(InstanceToEquip);
 	
-	if(InstanceToEquip && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(InstanceToEquip->GetItemCategory()))
 	{
-		AddReplicatedSubObject(InstanceToEquip);
+		if(EquipItemToSpecificSlot(InstanceToEquip, Slot.SlotTag))
+		{
+			return;
+		}
 	}
 }
 
@@ -208,19 +216,13 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::AutomaticallyEquipI
 		return nullptr;
 	}
 
-	//TODO Need some Item Tag to determine if item can equipped 
-	// const EObsidianEquipResult EquipResult = CanEquipTemplate(ItemDef);
-	// if(EquipResult != EObsidianEquipResult::CanEquip)
-	// {
-	//  //TODO Shouldn't add voice over here
-	// 	return nullptr;
-	// }
-
-
-	// if(EquippedInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	// {
-	// 	AddReplicatedSubObject(EquippedInstance);
-	// }
+	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(DefaultObject->GetItemCategoryTag()))
+	{
+		if(UObsidianInventoryItemInstance* Instance = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag))
+		{
+			return Instance;
+		}
+	}
 
 	return nullptr;
 }
