@@ -117,26 +117,33 @@ TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchi
 	return MatchingSlots;
 }
 
-void UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
+bool UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
 {
 	if(!GetOwner()->HasAuthority())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
-		return; 
+		return false; 
 	}
 
 	if(InstanceToEquip == nullptr)
 	{
-		return;
+		return false;
 	}
 	
 	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(InstanceToEquip->GetItemCategory()))
 	{
+		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag))
+		{
+			continue; // We already have an item equipped in this slot, we shouldn't try to equip it.
+		}
+		
 		if(EquipItemToSpecificSlot(InstanceToEquip, Slot.SlotTag))
 		{
-			return;
+			return true;
 		}
 	}
+
+	return false;
 }
 
 bool UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag)
@@ -218,6 +225,11 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::AutomaticallyEquipI
 
 	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(DefaultObject->GetItemCategoryTag()))
 	{
+		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag))
+		{
+			continue; // We already have an item equipped in this slot, we shouldn't try to equip it.
+		}
+		
 		if(UObsidianInventoryItemInstance* Instance = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag))
 		{
 			return Instance;
