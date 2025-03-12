@@ -9,14 +9,14 @@ Here you can find a [youtube video](https://www.youtube.com/watch?v=_QPb8MBalo4)
 With this system, you can pick up Items that have a different grid sizes, store it in Grid Inventory, add stacks to items, take out and distribute stacks and limit the Item in the Inventory to some amount of stacks.
 
 Key Binds / Navigation:
-- LMB on Item on the ground (with closed Inventory) - Automatically adds the item to the first available slot in the Inventory,
-- LMB on Item on the ground (with opened Inventory) - Grabs the Item onto the Player's cursor,
-- LMB + Left CTRL on Item on the ground (with opened Inventory) - Automatically adds the item to the first available slot in the Inventory,
-- LMB on the Inventory Slot (with Item on the cursor) - If the item fits, and is not over stacks limit it will be added at pressed location,
-- Shift + LBM on Inventory Slot/Inventory Item (with Item on the cursor) - If Item is stackable and (in the case of clicking on another item) clicked Item is "the same" Item, 1 stack will be added to the Item in the Inventory,
-- Shift + LMB on Item in the Inventory (without Item on the cursor) - If the clicked Item is stackable and contains more than 1 stack, window will show that will give the ability to take some amout of stacks from Item,
-- LMB on Item in the Inventory (without Item on the cursor) - Grabs the Item onto the Player's cursor,
-- LMB on Item in the Inventory (with Item on the cursor) - If carried Item fits in the clicked Item's location, carried Item will replace the Item in the Inventory.
+- **LMB** on Item on the ground (with closed Inventory) - Automatically adds the item to the first available slot in the Inventory,
+- **LMB** on Item on the ground (with opened Inventory) - Grabs the Item onto the Player's cursor,
+- **LMB + Left CTRL** on Item on the ground (with opened Inventory) - Automatically adds the item to the first available slot in the Inventory,
+- **LMB** on the Inventory Slot (with Item on the cursor) - If the item fits, and is not over stacks limit it will be added at pressed location,
+- **Shift + LBM** on Inventory Slot/Inventory Item (with Item on the cursor) - If Item is stackable and (in the case of clicking on another item) clicked Item is "the same" Item, 1 stack will be added to the Item in the Inventory,
+- **Shift + LMB** on Item in the Inventory (without Item on the cursor) - If the clicked Item is stackable and contains more than 1 stack, window will show that will give the ability to take some amout of stacks from Item,
+- **LMB** on Item in the Inventory (without Item on the cursor) - Grabs the Item onto the Player's cursor,
+- **LMB** on Item in the Inventory (with Item on the cursor) - If carried Item fits in the clicked Item's location, carried Item will replace the Item in the Inventory.
 
 
 <a name="table-of-contents"></a>
