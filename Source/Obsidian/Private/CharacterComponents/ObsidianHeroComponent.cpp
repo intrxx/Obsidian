@@ -475,14 +475,8 @@ void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedIte
 	}
 }
 
-void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(UObsidianInventoryItemInstance* ItemInstance, const int32 StacksToTake)
+void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FVector2D& SlotPosition, const int32 StacksToTake)
 {
-	if(ItemInstance == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
-		return;
-	}
-	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
@@ -494,6 +488,13 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(UObsidianInven
 	if(InventoryComponent == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	if(ItemInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
 		return;
 	}
 	
@@ -576,24 +577,24 @@ void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppab
 		return;
 	}
 
-	if(const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject())
-	{
-		if(DefaultObject->IsEquippable())
-		{
-			UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
-			if(EquipmentComponent == nullptr)
-			{
-				UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
-				return;
-			}
-			
-			if(EquipmentComponent->AutomaticallyEquipItem(ItemDef))
-			{
-				ItemToPickup->UpdateDroppedItemStacks(0);
-				return;
-			}
-		}
-	}
+	// if(const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject())
+	// {
+	// 	if(DefaultObject->IsEquippable())
+	// 	{
+	// 		UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
+	// 		if(EquipmentComponent == nullptr)
+	// 		{
+	// 			UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+	// 			return;
+	// 		}
+	// 		
+	// 		if(EquipmentComponent->AutomaticallyEquipItem(ItemDef))
+	// 		{
+	// 			ItemToPickup->UpdateDroppedItemStacks(0);
+	// 			return;
+	// 		}
+	// 	}
+	// }
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
@@ -644,21 +645,21 @@ void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDr
 		return;
 	}
 
-	if(ItemInstance->IsItemEquippable())
-	{
-		UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
-		if(EquipmentComponent == nullptr)
-		{
-			UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
-			return;
-		}
-			
-		if(EquipmentComponent->AutomaticallyEquipItem(ItemInstance))
-		{
-			ItemToPickup->UpdateDroppedItemStacks(0);
-			return;
-		}
-	}
+	// if(ItemInstance->IsItemEquippable())
+	// {
+	// 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
+	// 	if(EquipmentComponent == nullptr)
+	// 	{
+	// 		UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+	// 		return;
+	// 	}
+	// 		
+	// 	if(EquipmentComponent->AutomaticallyEquipItem(ItemInstance))
+	// 	{
+	// 		ItemToPickup->UpdateDroppedItemStacks(0);
+	// 		return;
+	// 	}
+	// }
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)

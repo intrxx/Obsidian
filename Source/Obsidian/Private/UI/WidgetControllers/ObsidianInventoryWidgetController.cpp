@@ -257,17 +257,14 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
-	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks);
+	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, SlotPosition);
 
 	const FVector2D UnstackSliderViewportPosition = CalculateUnstackSliderPosition(ItemWidget);
 	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
 	ActiveUnstackSlider->AddToViewport();
 	bUnstackSliderActive = true;
 	
-	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddWeakLambda(this,[this, ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks](const int32 StackToTake)
-		{
-			HandleTakingOutStacks(ItemInstance, SlotPosition, ItemWidget, CurrentItemStacks, StackToTake);
-		});
+	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddUObject(this, &ThisClass::HandleTakingOutStacks);
 	ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
 }
 
@@ -364,7 +361,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 	return ActiveItemDescription;
 }
 
-void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventoryItemInstance* ItemInstance, const FVector2D& SlotPosition, UObsidianItem* ItemWidget, const int32 CurrentStacks, const int32 StacksToTake)
+void UObsidianInventoryWidgetController::HandleTakingOutStacks(const int32 StacksToTake, const FVector2D& SlotPosition)
 {
 	RemoveUnstackSlider();
 	
@@ -372,13 +369,23 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(UObsidianInventor
 	{
 		return;
 	}
-	
-	if(CurrentStacks == StacksToTake)
+
+	const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	if(Instance == nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%f, %f]"), SlotPosition.X, SlotPosition.Y);
+		return;
+	}
+
+	
+	if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%f, %f]"), SlotPosition.X, SlotPosition.Y);
+		UE_LOG(LogTemp, Warning, TEXT("Instance at position: [%s]"), *InventoryComponent->GetItemInstanceAtLocation(SlotPosition)->GetItemDebugName());
 		OwnerHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
 		return;
 	}
-	OwnerHeroComponent->ServerTakeoutFromItem(ItemInstance, StacksToTake);
+	OwnerHeroComponent->ServerTakeoutFromItem(SlotPosition, StacksToTake);
 }
 
 void UObsidianInventoryWidgetController::RemoveItemUIElements()
@@ -391,6 +398,15 @@ void UObsidianInventoryWidgetController::RemoveUnstackSlider()
 {
 	if(bUnstackSliderActive && ActiveUnstackSlider != nullptr)
 	{
+		if(ActiveUnstackSlider->OnAcceptButtonPressedDelegate.IsBound())
+		{
+			ActiveUnstackSlider->OnAcceptButtonPressedDelegate.Clear();
+		}
+		if(ActiveUnstackSlider->OnCloseButtonPressedDelegate.IsBound())
+		{
+			ActiveUnstackSlider->OnCloseButtonPressedDelegate.Clear();
+		}
+		
 		ActiveUnstackSlider->DestroyUnstackSlider();
 		ActiveUnstackSlider = nullptr;
 		bUnstackSliderActive = false;

@@ -77,7 +77,7 @@ public:
 	void ServerAddStacksFromDraggedItemToItemAtSlot(const FVector2D& SlotPosition, const int32 StacksToAddOverride = -1);
 
 	UFUNCTION(Server, Reliable)
-	void ServerTakeoutFromItem(UObsidianInventoryItemInstance* ItemInstance, const int32 StacksToTake);
+	void ServerTakeoutFromItem(const FVector2D& SlotPosition, const int32 StacksToTake);
 
 	UFUNCTION(Server, Reliable)
 	void ServerReplaceItemAtSlot(const FVector2D& SlotPosition);

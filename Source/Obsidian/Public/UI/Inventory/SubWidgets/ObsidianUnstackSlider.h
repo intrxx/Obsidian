@@ -11,7 +11,7 @@ class USlider;
 class UCommonTextBlock;
 class UButton;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnAcceptButtonPressedSignature, const int32 StacksToTake)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAcceptButtonPressedSignature, const int32 StacksToTake, const FVector2D& ItemSlotPosition)
 DECLARE_MULTICAST_DELEGATE(FOnCloseButtonPressedSignature)
 
 /**
@@ -23,7 +23,7 @@ class OBSIDIAN_API UObsidianUnstackSlider : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeUnstackSlider(const int32 CurrentItemStacks);
+	void InitializeUnstackSlider(const int32 CurrentItemStacks, const FVector2D& InItemSlotPosition);
 
 	FVector2D GetSizeBoxSize() const;
 
@@ -69,4 +69,7 @@ private:
 	int32 StackToLeave;
 	int32 StackToTake;
 	int32 MaxStacks;
+
+	UPROPERTY()
+	FVector2D ItemSlotPosition = FVector2D::ZeroVector;
 };
