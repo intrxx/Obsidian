@@ -1,6 +1,7 @@
 # Obsidian Inventory Items System
 
 Here you can find a [youtube video](https://www.youtube.com/watch?v=_QPb8MBalo4) showcasing the System.
+You can also find a testable packaged game [here](https://github.com/intrxx/Obsidian/releases/tag/Grid_Inventory_System_v0.1.0).
 
 ![Inventory Showcase](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/InventoryItems_Inventory.jpg)
 
