@@ -179,26 +179,26 @@ bool UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItem
 	return true;
 }
 
-EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag)
+EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag)
 {
 	if(Instance == nullptr)
 	{
 		return EObsidianEquipResult::None;
 	}
-
-	if(DoesItemFitEquipmentSlot(SlotTag, Instance->GetItemCategory()) == false)
-	{
-		return EObsidianEquipResult::ItemUnfitForCategory;
-	}
-
+	
 	if(Instance->IsItemEquippable() == false)
 	{
 		return EObsidianEquipResult::ItemUnequippable;
 	}
-
+	
 	if(Instance->IsItemIdentified() == false)
 	{
 		return EObsidianEquipResult::ItemUnientified;
+	}
+
+	if(DoesItemFitEquipmentSlot(SlotTag, Instance->GetItemCategory()) == false)
+	{
+		return EObsidianEquipResult::ItemUnfitForCategory;
 	}
 	
 	return EObsidianEquipResult::CanEquip;
@@ -279,25 +279,25 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubcla
 		return EObsidianEquipResult::None;
 	}
 
-	UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 	if(DefaultObject == nullptr)
 	{
 		return EObsidianEquipResult::None;
+	}
+	
+	if(DefaultObject->IsEquippable() == false)
+	{
+		return EObsidianEquipResult::ItemUnequippable;
+	}
+	
+	if(DefaultObject->IsIdentified() == false)
+	{
+		return EObsidianEquipResult::ItemUnientified;
 	}
 
 	if(DoesItemFitEquipmentSlot(SlotTag, DefaultObject->GetItemCategoryTag()) == false)
 	{
 		return EObsidianEquipResult::ItemUnfitForCategory;
-	}
-
-	if(DefaultObject->IsEquippable() == false)
-	{
-		return EObsidianEquipResult::ItemUnequippable;
-	}
-
-	if(DefaultObject->IsIdentified() == false)
-	{
-		return EObsidianEquipResult::ItemUnientified;
 	}
 	
 	return EObsidianEquipResult::CanEquip;

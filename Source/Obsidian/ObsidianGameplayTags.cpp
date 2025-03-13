@@ -245,6 +245,7 @@ namespace ObsidianGameplayTags
 	 */
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Resource, "Item.Category.Resource", "Item Tag that represents Resource item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional, "Item.Category.Functional", "Item Tag that represents Functional item category.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Helmet, "Item.Category.Helmet", "Item Tag that represents Helmet item category.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_BodyArmor, "Item.Category.BodyArmor", "Item Tag that represents Body Armor item category.");

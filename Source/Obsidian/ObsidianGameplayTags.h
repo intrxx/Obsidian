@@ -221,6 +221,7 @@ namespace ObsidianGameplayTags
 	 */
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Resource);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Functional);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Helmet);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_BodyArmor);

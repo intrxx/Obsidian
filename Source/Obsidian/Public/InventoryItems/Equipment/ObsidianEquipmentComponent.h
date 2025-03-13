@@ -69,7 +69,7 @@ public:
 	
 	bool EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
 
-	EObsidianEquipResult CanEquipInstance(UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
+	EObsidianEquipResult CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
 
 	UObsidianInventoryItemInstance* AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	

@@ -13,6 +13,22 @@ class UObsidianInventoryWidgetController;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
 
+USTRUCT(BlueprintType)
+struct FObsidianDefaultItemTemplate
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UObsidianInventoryItemDefinition> DefaultItemDef = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	int32 StackCount = 1;
+
+	UPROPERTY(EditAnywhere)
+	FVector2D InventoryPositionOverride = FVector2D(-1.0f, -1.0f);
+};
+
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
  */
@@ -147,7 +163,13 @@ public:
 	//~ End of UObject interface
 
 protected:
+	virtual void BeginPlay() override;
+	
 	bool IsLocallyControlled();
+
+protected:
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Default")
+	TArray<FObsidianDefaultItemTemplate> DefaultInventoryItems;
 
 private:
 	/** Initializes Inventory State. */

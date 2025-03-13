@@ -948,6 +948,29 @@ void UObsidianInventoryComponent::ReadyForReplication()
 	}
 }
 
+void UObsidianInventoryComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	const AActor* OwningActor = GetOwner();
+	if(OwningActor && OwningActor->HasAuthority())
+	{
+		int32 StacksLeft = 0;
+		for(const FObsidianDefaultItemTemplate& DefaultItemTemplate : DefaultInventoryItems)
+		{
+			if(DefaultItemTemplate.InventoryPositionOverride != FVector2D(-1.0f, -1.0f))
+			{
+				if(!AddItemDefinitionToSpecifiedSlot(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.InventoryPositionOverride, StacksLeft, DefaultItemTemplate.StackCount))
+				{
+					AddItemDefinition(DefaultItemTemplate.DefaultItemDef, StacksLeft, DefaultItemTemplate.StackCount);
+				}
+				continue;
+			}
+			AddItemDefinition(DefaultItemTemplate.DefaultItemDef, StacksLeft, DefaultItemTemplate.StackCount);
+		}
+	}
+}
+
 FVector2D UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const
 {
 	return ItemInstance == nullptr ? FVector2D::Zero() : *InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
