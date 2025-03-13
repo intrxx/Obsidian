@@ -243,7 +243,7 @@ private:
 	 */
 
 	UPROPERTY(Replicated)
-	bool bIdentified = false;
+	bool bIdentified = true;
 	
 	UPROPERTY(Replicated)
 	FObsidianItemAffixStack ItemAffixes;

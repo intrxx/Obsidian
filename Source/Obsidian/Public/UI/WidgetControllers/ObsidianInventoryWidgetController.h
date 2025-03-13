@@ -16,17 +16,17 @@ class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 
-struct FObsidianItemVisuals
+struct FObsidianItemWidgetData
 {
 public:
-	FObsidianItemVisuals(){};
-	FObsidianItemVisuals(UTexture2D* InItemImage, const FVector2D& InDesiredPosition, const FVector2D& InGridSpan, const int32 InStackCount)
+	FObsidianItemWidgetData(){};
+	FObsidianItemWidgetData(UTexture2D* InItemImage, const FVector2D& InDesiredPosition, const FVector2D& InGridSpan, const int32 InStackCount)
 		: ItemImage(InItemImage)
 		, DesiredPosition(InDesiredPosition)
 		, GridSpan(InGridSpan)
 		, StackCount(InStackCount)
 	{};
-	FObsidianItemVisuals(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FVector2D& InGridSpan, const int32 InStackCount)
+	FObsidianItemWidgetData(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FVector2D& InGridSpan, const int32 InStackCount)
 		: ItemImage(InItemImage)
 		, DesiredSlot(InDesiredSlot)
 		, GridSpan(InGridSpan)
@@ -41,9 +41,9 @@ public:
 	int32 StackCount = 0;
 };
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemVisuals& ItemVisuals);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemVisuals& ItemVisuals);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemVisuals& NewItemVisuals);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemWidgetData& ItemWidgetData);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 
 /**
  *  

@@ -49,7 +49,7 @@ bool UObsidianInventoryItemDefinition::IsIdentified() const
 	{
 		return AffixesFrag->IsItemIdentified();
 	}
-	return false;
+	return true;
 }
 
 FGameplayTag UObsidianInventoryItemDefinition::GetItemCategoryTag() const

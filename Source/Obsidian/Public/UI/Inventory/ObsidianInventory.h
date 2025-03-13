@@ -7,7 +7,7 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
-struct FObsidianItemVisuals;
+struct FObsidianItemWidgetData;
 class UObsidianItem;
 class UObsidianItemSlot;
 class UObsidianInventoryItemDefinition;
@@ -62,17 +62,17 @@ protected:
 	TObjectPtr<UGridPanel> Equipment_GridPanel;
 
 private:
-	void OnItemEquipped(const FObsidianItemVisuals& ItemVisuals);
+	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
 	
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
-	void OnItemAdded(const FObsidianItemVisuals& ItemVisuals);
-	void OnItemChanged(const FObsidianItemVisuals& ItemVisuals);
+	void OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
 
 	void SetupInventoryGrid();
 	void SetupEquipmentSlots();
 
 	void OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown);
-	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
+	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave(const FVector2D& ItemDesiredPosition);
 
 private:

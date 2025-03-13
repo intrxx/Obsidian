@@ -53,10 +53,7 @@ public:
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
 
-	bool IsItemIdentified() const
-	{
-		return bIdentified;
-	}
+	bool IsItemIdentified() const;
 
 	FGameplayTag GetItemRarityTag() const
 	{
@@ -73,9 +70,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
 	TArray<FObsidianItemAffix> ItemAffixes;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
-	bool bIdentified = false;
+	bool bStartsIdentified = false;
 
 private:
 	int32 AddedSuffixCount = 0;

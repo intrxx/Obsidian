@@ -56,13 +56,13 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 	{
 		UE_LOG(LogInventory, Display, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
-		FObsidianItemVisuals ItemVisuals;
-		ItemVisuals.ItemImage = Instance->GetItemImage();
-		ItemVisuals.DesiredPosition = InventoryChangeMessage.GridItemPosition;
-		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
-		ItemVisuals.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemImage = Instance->GetItemImage();
+		ItemWidgetData.DesiredPosition = InventoryChangeMessage.GridItemPosition;
+		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
+		ItemWidgetData.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
 		
-		OnItemAddedDelegate.Broadcast(ItemVisuals);
+		OnItemAddedDelegate.Broadcast(ItemWidgetData);
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
@@ -73,13 +73,13 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 	{
 		UE_LOG(LogInventory, Display, TEXT("Changed item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
-		FObsidianItemVisuals ItemVisuals;
-		ItemVisuals.ItemImage = Instance->GetItemImage();
-		ItemVisuals.DesiredPosition = InventoryChangeMessage.GridItemPosition;
-		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
-		ItemVisuals.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemImage = Instance->GetItemImage();
+		ItemWidgetData.DesiredPosition = InventoryChangeMessage.GridItemPosition;
+		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
+		ItemWidgetData.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
 		
-		OnItemChangedDelegate.Broadcast(ItemVisuals);
+		OnItemChangedDelegate.Broadcast(ItemWidgetData);
 	}
 }
 
@@ -101,12 +101,12 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 	{
 		UE_LOG(LogInventory, Display, TEXT("Equipped item: [%s]"), *Instance->GetItemDisplayName().ToString());
 
-		FObsidianItemVisuals ItemVisuals;
-		ItemVisuals.ItemImage = Instance->GetItemImage();
-		ItemVisuals.DesiredSlot = EquipmentChangeMessage.SlotTag;
-		ItemVisuals.GridSpan = Instance->GetItemGridSpan();
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemImage = Instance->GetItemImage();
+		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
+		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		
-		OnItemEquippedDelegate.Broadcast(ItemVisuals);
+		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
 	{
@@ -125,13 +125,13 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	{
 		ensure(Item);
 		
-		FObsidianItemVisuals ItemVisuals;
-		ItemVisuals.ItemImage = Item->GetItemImage();
-		ItemVisuals.GridSpan = Item->GetItemGridSpan();
-		ItemVisuals.DesiredPosition = Item->GetItemCurrentGridLocation();
-		ItemVisuals.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemImage = Item->GetItemImage();
+		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
+		ItemWidgetData.DesiredPosition = Item->GetItemCurrentGridLocation();
+		ItemWidgetData.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
 
-		OnItemAddedDelegate.Broadcast(ItemVisuals);
+		OnItemAddedDelegate.Broadcast(ItemWidgetData);
 	}
 
 	TArray<UObsidianInventoryItemInstance*> EquippedItems = EquipmentComponent->GetAllEquippedItems();
@@ -141,12 +141,12 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	{
 		ensure(Item);
 		
-		FObsidianItemVisuals ItemVisuals;
-		ItemVisuals.ItemImage = Item->GetItemImage();
-		ItemVisuals.GridSpan = Item->GetItemGridSpan();
-		ItemVisuals.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemImage = Item->GetItemImage();
+		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
+		ItemWidgetData.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
 
-		OnItemEquippedDelegate.Broadcast(ItemVisuals);
+		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
 }
 

@@ -13,7 +13,8 @@ class UImage;
 
 DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemLeftMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftPressed);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRightMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemMouseEnterSignature, const FVector2D& ItemPosition, UObsidianItem* ItemWidget);
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemMouseEnterSignature, const FVector2D& ItemPosition, const UObsidianItem* ItemWidget);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemMouseLeaveSignature, const FVector2D& ItemPosition);
 
 /**

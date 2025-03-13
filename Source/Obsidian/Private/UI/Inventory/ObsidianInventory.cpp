@@ -140,14 +140,14 @@ void UObsidianInventory::SetupEquipmentSlots()
 	}
 }
 
-void UObsidianInventory::OnItemEquipped(const FObsidianItemVisuals& ItemVisuals)
+void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FGameplayTag DesiredSlot = ItemVisuals.DesiredSlot;
-	const FVector2D GridSpan = ItemVisuals.GridSpan;
+	const FGameplayTag DesiredSlot = ItemWidgetData.DesiredSlot;
+	const FVector2D GridSpan = ItemWidgetData.GridSpan;
 	
 	checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(FVector2D(0, 0), GridSpan, ItemVisuals.ItemImage, ItemVisuals.StackCount);
+	ItemWidget->InitializeItemWidget(FVector2D(0, 0), GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
 	// ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
 	// ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnItemMouseEntered);
 	// ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
@@ -160,14 +160,14 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemVisuals& ItemVisuals)
 	GridSlot->SetNudge(DesiredGridSlot->GetNudge());
 }
 
-void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
+void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FVector2D DesiredPosition = ItemVisuals.DesiredPosition;
-	const FVector2D GridSpan = ItemVisuals.GridSpan;
+	const FVector2D DesiredPosition = ItemWidgetData.DesiredPosition;
+	const FVector2D GridSpan = ItemWidgetData.GridSpan;
 	
 	checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemVisuals.ItemImage, ItemVisuals.StackCount);
+	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
 	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnItemMouseEntered);
 	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
@@ -179,12 +179,12 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemVisuals& ItemVisuals)
 	GridSlot->SetRowSpan(GridSpan.Y);
 }
 
-void UObsidianInventory::OnItemChanged(const FObsidianItemVisuals& ItemVisuals)
+void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FVector2D ItemPosition = ItemVisuals.DesiredPosition;
+	const FVector2D ItemPosition = ItemWidgetData.DesiredPosition;
 	if(UObsidianItem* ItemWidget = InventoryWidgetController->GetItemWidgetAtInventoryLocation(ItemPosition))
 	{
-		ItemWidget->OverrideCurrentStackCount(ItemVisuals.StackCount);
+		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
 	}
 }
 
@@ -198,7 +198,7 @@ void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesir
 	InventoryWidgetController->HandleLeftClickingOnAnItem(ItemDesiredPosition, ItemWidget);
 }
 
-void UObsidianInventory::OnItemMouseEntered(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget)
+void UObsidianInventory::OnItemMouseEntered(const FVector2D& ItemDesiredPosition, const UObsidianItem* ItemWidget)
 {
 	InventoryWidgetController->HandleHoveringOverItem(ItemDesiredPosition, ItemWidget);
 }
