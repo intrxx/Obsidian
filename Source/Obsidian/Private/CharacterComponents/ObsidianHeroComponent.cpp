@@ -514,19 +514,19 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FVector2
 	}
 }
 
-void UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation(const FVector2D& SlotPosition)
+void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(const FVector2D& SlotPosition)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation."));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation."));
 		return;
 	}
 	
@@ -536,15 +536,69 @@ void UObsidianHeroComponent::ServerReplaceItemAtSlot_Implementation(const FVecto
 	
 	ServerGrabInventoryItemToCursor(SlotPosition);
 
+	bool bSuccess = false;
 	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition);
+		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
 		const int32 Stacks = CachedDraggedItem.Stacks;
 		int32 StacksLeft = Stacks;
-		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StacksLeft, Stacks);
+		if(InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StacksLeft, Stacks))
+		{
+			bSuccess = true;
+		}
+	}
+	
+	// We fall back and add the previous item to the inventory again, this could happen If the Client cheated through its check to begin the replacement
+	if(bSuccess == false)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Client cheated the check to replace the item! Discarding the replacement."))
+		ServerAddItemToInventoryAtSlot(SlotPosition, false);
+	}
+}
+
+void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation(const FGameplayTag& SlotTag)
+{
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		return;
+	}
+
+	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
+	if(EquipmentComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		return;
+	}
+
+	const FDraggedItem CachedDraggedItem = DraggedItem;
+	DraggedItem.Clear();
+	StopDraggingItem(Controller);
+	
+	ServerGrabEquippedItemToCursor(SlotTag);
+
+	bool bSuccess = false;
+	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
+	{
+		bSuccess = EquipmentComponent->EquipItemToSpecificSlot(Instance, SlotTag);
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
+	{
+		if(EquipmentComponent->EquipItemToSpecificSlot(ItemDef, SlotTag))
+		{
+			bSuccess = true;
+		}
+	}
+
+	// We fall back and equip the previously equipped item again, this could happen If the Client cheated through its check to begin the replacement
+	if(bSuccess == false)
+	{
+		UE_LOG(LogEquipment, Error, TEXT("Client cheated the check to replace the equipped item! Discarding the replacement."))
+		ServerEquipItemAtSlot(SlotTag);	
 	}
 }
 

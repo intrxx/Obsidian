@@ -80,7 +80,10 @@ public:
 	void ServerTakeoutFromItem(const FVector2D& SlotPosition, const int32 StacksToTake);
 
 	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtSlot(const FVector2D& SlotPosition);
+	void ServerReplaceItemAtInventorySlot(const FVector2D& SlotPosition);
+
+	UFUNCTION(Server, Reliable)
+	void ServerReplaceItemAtEquipmentSlotSlot(const FGameplayTag& SlotTag);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);

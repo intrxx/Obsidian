@@ -212,7 +212,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 			
 		 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
 		 	{
-		 		OwnerHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
+		 		OwnerHeroComponent->ServerReplaceItemAtInventorySlot(SlotPosition);
 		 	}
 		 	return;
 		 }
@@ -232,7 +232,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 			
 			 if(OwnerInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
 			 {
-			 	OwnerHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
+			 	OwnerHeroComponent->ServerReplaceItemAtInventorySlot(SlotPosition);
 			 }
 			 return;
 		}
@@ -280,36 +280,38 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag)
 {
-	check(InventoryComponent);
+	check(EquipmentComponent);
 	check(OwnerHeroComponent);
 	check(DraggedItemWidgetClass);
 
 	RemoveItemUIElements();
 	
-	// if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
-	// {
-	// 	
-	// 	 const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
-	// 	 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
-	// 	 {
-	// 	 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
-	// 	 	{
-	// 	 		OwnerHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
-	// 	 	}
-	// 	 	return;
-	// 	 }
-	// 	
-	// 	 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
-	// 	 {
-	// 		 if(OwnerInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, 1))
-	// 		 {
-	// 		 	OwnerHeroComponent->ServerReplaceItemAtSlot(SlotPosition);
-	// 		 }
-	// 		 return;
-	// 	}
-	// 	return;
-	// }
-	// OwnerHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
+	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+	{
+		
+		 const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
+		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
+		 {
+		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanEquipInstance(DraggedInstance, SlotTag);
+		 	if(EquipmentResult == EObsidianEquipResult::CanEquip)
+		 	{
+		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlotSlot(SlotTag);
+		 	}
+		 	return;
+		 }
+		
+		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
+		 {
+		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
+			 if(EquipmentResult == EObsidianEquipResult::CanEquip)
+			 {
+			 	OwnerHeroComponent->ServerReplaceItemAtEquipmentSlotSlot(SlotTag);
+			 }
+			 return;
+		}
+		return;
+	}
+	OwnerHeroComponent->ServerGrabEquippedItemToCursor(SlotTag);
 }
 
 void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget)
