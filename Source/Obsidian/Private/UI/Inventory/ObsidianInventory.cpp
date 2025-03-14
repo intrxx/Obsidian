@@ -311,10 +311,10 @@ void UObsidianInventory::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 			return;
 		}
 		
-		//TODO Check if can equip item, display color on the slot based on result
+		const bool bCanEquip = InventoryWidgetController->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
+		AffectedSlot->SetSlotState(bCanEquip);
 		return;
 	}
-	
 	AffectedSlot->ResetSlot();
 }
 

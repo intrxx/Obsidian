@@ -82,13 +82,15 @@ public:
 	{
 		return bDescriptionActive;
 	}
+
+	void OnInventoryOpen();
 	
 	bool IsDraggingAnItem() const;
 	bool CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize = TArray<FVector2D>()) const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
-
+	
 	UObsidianItem* GetItemWidgetAtInventoryLocation(const FVector2D& Location) const;
 	void AddInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
 	void RemoveInventoryItemWidget(const FVector2D& Location);
@@ -96,9 +98,9 @@ public:
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
 	void AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget);
 	void RemoveEquipmentItemWidget(const FGameplayTag& Slot);
-	
-	void OnInventoryOpen();
 
+	bool CanEquipDraggedItem(const FGameplayTag& SlotTag) const;
+	
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);
 

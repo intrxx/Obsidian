@@ -612,6 +612,28 @@ void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGamepl
 	}
 }
 
+bool UObsidianInventoryWidgetController::CanEquipDraggedItem(const FGameplayTag& SlotTag) const
+{
+	if(OwnerHeroComponent == nullptr || EquipmentComponent == nullptr)
+	{
+		UE_LOG(LogEquipment, Error, TEXT("OwnerHeroComponent or EquipmentComponent is invalid in UObsidianInventoryWidgetController::CanEquipDraggedItem."))
+		return false; 
+	}
+
+	const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
+	if(const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
+	{
+		const EObsidianEquipResult EquipResult = EquipmentComponent->CanEquipInstance(DraggedInstance, SlotTag);
+		return EquipResult == EObsidianEquipResult::CanEquip;
+	}
+	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef)
+	{
+		const EObsidianEquipResult EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
+		return EquipResult == EObsidianEquipResult::CanEquip;
+	}
+	return false;
+}
+
 FVector2D UObsidianInventoryWidgetController::CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const
 {
 	UWorld* World = GetWorld();
