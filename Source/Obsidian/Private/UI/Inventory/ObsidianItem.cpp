@@ -12,12 +12,11 @@ FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		const bool bShiftPressed = InMouseEvent.IsShiftDown();
-		OnItemLeftMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition, this, bShiftPressed);
+		OnItemLeftMouseButtonPressedDelegate.Broadcast(this, bShiftPressed);
 	}
 	if(InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("TODO Add"));
-		OnItemRightMouseButtonPressedDelegate.Broadcast(ItemDesiredPosition, this);
+		OnItemRightMouseButtonPressedDelegate.Broadcast(this);
 	}
 
 	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
@@ -25,12 +24,12 @@ FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const
 
 void UObsidianItem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	OnItemMouseEnterDelegate.Broadcast(ItemDesiredPosition, this);
+	OnItemMouseEnterDelegate.Broadcast(this);
 }
 
 void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	OnItemMouseLeaveDelegate.Broadcast(ItemDesiredPosition);
+	OnItemMouseLeaveDelegate.Broadcast();
 }
 
 void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
@@ -49,6 +48,16 @@ void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), CurrentStack));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
+}
+
+void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage)
+{
+	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
+	Item_Image->SetBrushFromTexture(ItemImage);
+	ItemEquipmentSlot = EquipmentSlot;
+	
+	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UObsidianItem::AddCurrentStackCount(const int32 StackCountToAdd)

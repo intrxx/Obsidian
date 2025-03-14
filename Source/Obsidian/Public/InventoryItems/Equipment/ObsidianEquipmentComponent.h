@@ -65,6 +65,8 @@ public:
 
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory);
 
+	FObsidianItemStats GetItemStatsBySlotTag(const FGameplayTag& SlotTag);
+
 	bool AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
 	
 	bool EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);

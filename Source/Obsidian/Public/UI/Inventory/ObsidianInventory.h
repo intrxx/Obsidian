@@ -71,9 +71,13 @@ private:
 	void SetupInventoryGrid();
 	void SetupEquipmentSlots();
 
-	void OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown);
-	void OnItemMouseEntered(const FVector2D& ItemDesiredPosition, const UObsidianItem* ItemWidget);
-	void OnItemMouseLeave(const FVector2D& ItemDesiredPosition);
+	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
+	void OnInventoryItemRightMouseButtonPressed(const UObsidianItem* ItemWidget);
+	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
+	
+	void OnEquipmentItemMouseEntered(const UObsidianItem* ItemWidget);
+	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
+	void OnItemMouseLeave();
 
 private:
 	UPROPERTY(meta=(BindWidget))

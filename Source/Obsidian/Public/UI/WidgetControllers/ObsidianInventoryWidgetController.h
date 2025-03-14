@@ -16,29 +16,37 @@ class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 
+USTRUCT()
 struct FObsidianItemWidgetData
 {
+	GENERATED_BODY()
+	
 public:
 	FObsidianItemWidgetData(){};
-	FObsidianItemWidgetData(UTexture2D* InItemImage, const FVector2D& InDesiredPosition, const FVector2D& InGridSpan, const int32 InStackCount)
+	FObsidianItemWidgetData(UTexture2D* InItemImage, const FVector2D& InDesiredPosition, const FVector2D& InGridSpan, const int32 InStackCount, const bool bInUsable)
 		: ItemImage(InItemImage)
 		, DesiredPosition(InDesiredPosition)
 		, GridSpan(InGridSpan)
 		, StackCount(InStackCount)
+		, bUsable(bInUsable)
 	{};
-	FObsidianItemWidgetData(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FVector2D& InGridSpan, const int32 InStackCount)
+	FObsidianItemWidgetData(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FVector2D& InGridSpan, const int32 InStackCount, const bool bInUsable)
 		: ItemImage(InItemImage)
 		, DesiredSlot(InDesiredSlot)
 		, GridSpan(InGridSpan)
 		, StackCount(InStackCount)
+		, bUsable(bInUsable)
 	{};
 	
 public:
-	UTexture2D* ItemImage = nullptr;
+	UPROPERTY()
+	TObjectPtr<UTexture2D> ItemImage = nullptr;
+	
 	FVector2D DesiredPosition = FVector2D::Zero();
 	FGameplayTag DesiredSlot = FGameplayTag::EmptyTag;
 	FVector2D GridSpan = FVector2D::Zero();
 	int32 StackCount = 0;
+	bool bUsable = false;
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemWidgetData& ItemWidgetData);
@@ -93,11 +101,15 @@ public:
 
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);
+
+	void HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
+	void HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition);
+	void HandleLeftClickingOnInventoryItemWithShiftDown(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
+	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag);
 	
-	void HandleLeftClickingOnAnItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
-	void HandleLeftClickingOnAnItemWithShiftDown(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
-	void HandleHoveringOverItem(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
-	void HandleUnhoveringItem(const FVector2D& SlotPosition);
+	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);
+	void HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget);
+	void HandleUnhoveringItem();
 
 	void RemoveItemUIElements();
 

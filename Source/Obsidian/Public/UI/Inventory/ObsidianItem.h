@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItem.generated.h"
 
@@ -11,11 +12,11 @@ class USizeBox;
 class UObsidianItem;
 class UImage;
 
-DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemLeftMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftPressed);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemRightMouseButtonPressedSignature, const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLeftMouseButtonPressedSignature, const UObsidianItem* ItemWidget, const bool bShiftPressed);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRightMouseButtonPressedSignature, const UObsidianItem* ItemWidget);
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemMouseEnterSignature, const FVector2D& ItemPosition, const UObsidianItem* ItemWidget);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemMouseLeaveSignature, const FVector2D& ItemPosition);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemMouseEnterSignature, const UObsidianItem* ItemWidget);
+DECLARE_MULTICAST_DELEGATE(FOnItemMouseLeaveSignature);
 
 /**
  * Item Widget that is displayed in the inventory.
@@ -27,8 +28,20 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 
 public:
 	void InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
+	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage);
+	
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
+
+	FVector2D GetInventoryPosition() const
+	{
+		return ItemDesiredPosition;
+	}
+	
+	FGameplayTag GetEquipmentSlotTag() const
+	{
+		return ItemEquipmentSlot;
+	}
 
 	FVector2D GetItemSize() const;
 	void SetSize(const FVector2D& ItemGridSpan);
@@ -53,8 +66,12 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
-	
+
+	UPROPERTY()
 	FVector2D ItemDesiredPosition = FVector2D::Zero();
+
+	UPROPERTY()
+	FGameplayTag ItemEquipmentSlot = FGameplayTag::EmptyTag;
 
 private:
 	int32 InternalStacks = 0;

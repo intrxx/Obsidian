@@ -23,7 +23,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemCategory);
 	DOREPLIFETIME(ThisClass, ItemAffixes);
 
-	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change, so probably never replicated lol?
+	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change
 	DOREPLIFETIME(ThisClass, ItemGridSize);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemCurrentGridLocation);
@@ -36,6 +36,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
 	DOREPLIFETIME(ThisClass, bIdentified);
 	DOREPLIFETIME(ThisClass, bEquippable);
+	DOREPLIFETIME(ThisClass, bUsable);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -91,6 +92,16 @@ FGameplayTag UObsidianInventoryItemInstance::GetItemCategory() const
 void UObsidianInventoryItemInstance::SetItemCategory(const FGameplayTag& InItemCategoryTag)
 {
 	ItemCategory = InItemCategoryTag;
+}
+
+void UObsidianInventoryItemInstance::SetUsable(const bool IsUsable)
+{
+	bUsable = IsUsable;
+}
+
+bool UObsidianInventoryItemInstance::IsItemUsable() const
+{
+	return bUsable;
 }
 
 void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)

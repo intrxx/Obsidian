@@ -143,14 +143,13 @@ void UObsidianInventory::SetupEquipmentSlots()
 void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	const FGameplayTag DesiredSlot = ItemWidgetData.DesiredSlot;
-	const FVector2D GridSpan = ItemWidgetData.GridSpan;
 	
 	checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(FVector2D(0, 0), GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
-	// ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
-	// ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnItemMouseEntered);
-	// ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+	ItemWidget->InitializeItemWidget(DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
+	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemLeftMouseButtonPressed);
+	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnEquipmentItemMouseEntered);
+	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 	InventoryWidgetController->AddEquipmentItemWidget(DesiredSlot, ItemWidget);
 
 	UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(DesiredSlot);
@@ -168,9 +167,15 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetDa
 	checkf(InventorySlotClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
-	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemLeftMouseButtonPressed);
-	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnItemMouseEntered);
+	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemLeftMouseButtonPressed);
+	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnInventoryItemMouseEntered);
 	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+	
+	if(ItemWidgetData.bUsable)
+	{
+		ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRightMouseButtonPressed);
+	}
+	
 	InventoryWidgetController->AddInventoryItemWidget(DesiredPosition, ItemWidget);
 
 	UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
@@ -188,24 +193,60 @@ void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidget
 	}
 }
 
-void UObsidianInventory::OnItemLeftMouseButtonPressed(const FVector2D& ItemDesiredPosition, UObsidianItem* ItemWidget, const bool bShiftDown)
+void UObsidianInventory::OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown)
 {
-	if(bShiftDown)
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemLeftMouseButtonPressed"));
+
+	if(InventoryWidgetController)
 	{
-		InventoryWidgetController->HandleLeftClickingOnAnItemWithShiftDown(ItemDesiredPosition, ItemWidget);
-		return;
+		if(bShiftDown)
+		{
+			InventoryWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(ItemWidget->GetInventoryPosition(), ItemWidget);
+			return;
+		}
+		InventoryWidgetController->HandleLeftClickingOnInventoryItem(ItemWidget->GetInventoryPosition());
 	}
-	InventoryWidgetController->HandleLeftClickingOnAnItem(ItemDesiredPosition, ItemWidget);
 }
 
-void UObsidianInventory::OnItemMouseEntered(const FVector2D& ItemDesiredPosition, const UObsidianItem* ItemWidget)
+void UObsidianInventory::OnInventoryItemRightMouseButtonPressed(const UObsidianItem* ItemWidget)
 {
-	InventoryWidgetController->HandleHoveringOverItem(ItemDesiredPosition, ItemWidget);
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemRightMouseButtonPressed"));
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->HandleRightClickingOnInventoryItem(ItemWidget->GetInventoryPosition(), ItemWidget);
+	}
 }
 
-void UObsidianInventory::OnItemMouseLeave(const FVector2D& ItemDesiredPosition)
+void UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown)
 {
-	InventoryWidgetController->HandleUnhoveringItem(ItemDesiredPosition);
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed"));
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(ItemWidget->GetEquipmentSlotTag());
+	}
+}
+
+void UObsidianInventory::OnEquipmentItemMouseEntered(const UObsidianItem* ItemWidget)
+{
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnEquipmentItemMouseEntered"));
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->HandleHoveringOverEquipmentItem(ItemWidget);
+	}
+}
+
+void UObsidianInventory::OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget)
+{
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemMouseEntered"));
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->HandleHoveringOverInventoryItem(ItemWidget);
+	}
+}
+
+void UObsidianInventory::OnItemMouseLeave()
+{
+	InventoryWidgetController->HandleUnhoveringItem();
 }
 
 void UObsidianInventory::OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered)

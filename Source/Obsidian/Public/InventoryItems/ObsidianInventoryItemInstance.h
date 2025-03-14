@@ -57,6 +57,16 @@ public:
 	void SetItemCategory(const FGameplayTag& InItemCategoryTag);
 
 	/**
+	 * Usability
+	 */
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetUsable(const bool IsUsable);
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	bool IsItemUsable() const;
+
+	/**
 	 * Equipping.
 	 */
 
@@ -223,6 +233,13 @@ private:
 
 	UPROPERTY(Replicated)
 	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;
+
+	/**
+	 * Usability
+	 */
+
+	UPROPERTY(Replicated)
+	bool bUsable = false;
 
 	/**
 	 * Equipping.

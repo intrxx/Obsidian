@@ -117,6 +117,36 @@ TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchi
 	return MatchingSlots;
 }
 
+FObsidianItemStats UObsidianEquipmentComponent::GetItemStatsBySlotTag(const FGameplayTag& SlotTag)
+{
+	const UObsidianInventoryItemInstance* ItemInstance = GetEquippedInstanceAtSlot(SlotTag);
+	check(ItemInstance);
+
+	FObsidianItemStats Stats;
+	
+	if(ItemInstance->IsStackable())
+	{
+		Stats.SetStacks(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current),
+				ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
+	}
+
+	Stats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
+	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
+	Stats.SetDescription(ItemInstance->GetItemDescription());
+	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
+
+	Stats.ItemRarity = ItemInstance->GetItemRarity();
+	
+	const bool bIdentified = ItemInstance->IsItemIdentified();
+	Stats.SetIdentified(bIdentified);
+	if(bIdentified)
+	{
+		Stats.SetAffixDescriptionRows(ItemInstance->GetAffixesAsUIDescription());
+	}
+
+	return Stats;
+}
+
 bool UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
 {
 	if(!GetOwner()->HasAuthority())
