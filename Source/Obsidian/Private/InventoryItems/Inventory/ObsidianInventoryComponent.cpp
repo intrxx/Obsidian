@@ -884,6 +884,8 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 
 	if(UsingInstance->UseItem(UsingOntoInstance))
 	{
+		InventoryGrid.GeneralEntryChange(UsingOntoInstance);
+		
 		const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		if(CurrentUsingInstanceStacks > 1)
 		{

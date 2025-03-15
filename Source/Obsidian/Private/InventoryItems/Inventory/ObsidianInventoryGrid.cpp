@@ -160,7 +160,29 @@ void FObsidianInventoryGrid::ChangedEntryStacks(UObsidianInventoryItemInstance* 
 	if(bSuccess)
 	{
 		const FVector2D GridLocation = Instance->GetItemCurrentGridLocation();
-		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemChanged);
+		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
+		return;
+	}
+	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
+}
+
+void FObsidianInventoryGrid::GeneralEntryChange(UObsidianInventoryItemInstance* Instance)
+{
+	bool bSuccess = false;
+	for(FObsidianInventoryEntry& Entry : Entries)
+	{
+		if(Entry.Instance == Instance)
+		{
+			MarkItemDirty(Entry);
+			bSuccess = true;
+		}
+	}
+	
+	if(bSuccess)
+	{
+		const FVector2D GridLocation = Instance->GetItemCurrentGridLocation();
+		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		BroadcastChangeMessage(Instance, Count, Count, GridLocation, EObsidianInventoryChangeType::ICT_GeneralItemChanged);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
@@ -239,7 +261,14 @@ void FObsidianInventoryGrid::PostReplicatedChange(const TArrayView<int32> Change
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
 		check(Entry.LastObservedCount != INDEX_NONE);
-		BroadcastChangeMessage(Entry, /* Old Count */ Entry.LastObservedCount, /* New Count */ Entry.StackCount, Entry.GridLocation, EObsidianInventoryChangeType::ICT_ItemChanged);
+		if(Entry.LastObservedCount == Entry.StackCount)
+		{
+			BroadcastChangeMessage(Entry, /* Old Count */ Entry.LastObservedCount, /* New Count */ Entry.StackCount, Entry.GridLocation, EObsidianInventoryChangeType::ICT_GeneralItemChanged);
+		}
+		else
+		{
+			BroadcastChangeMessage(Entry, /* Old Count */ Entry.LastObservedCount, /* New Count */ Entry.StackCount, Entry.GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
+		}
 		Entry.LastObservedCount = Entry.StackCount;
 	}
 }

@@ -17,7 +17,8 @@ enum class EObsidianInventoryChangeType : uint8
 	ICT_NONE = 0 UMETA(DisplayName = "None"),
 	ICT_ItemRemoved UMETA(DisplayName = "Item Removed"),
 	ICT_ItemAdded UMETA(DisplayName = "Item Added"),
-	ICT_ItemChanged UMETA(DisplayName = "Item Changed"),
+	ICT_ItemStacksChanged UMETA(DisplayName = "Item Stacks Changed"),
+	ICT_GeneralItemChanged UMETA(DisplayName = "General Item Changed"),
 
 	ICT_MAX
 };
@@ -107,6 +108,7 @@ public:
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FVector2D& AvailablePosition);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);
+	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance);
 
 	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
 	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
