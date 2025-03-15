@@ -147,7 +147,7 @@ private:
 	
 	void RemoveUnstackSlider();
 	void RemoveItemDescription();
-
+	
 	bool CanShowDescription() const;
 
 	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const;

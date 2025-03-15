@@ -9,6 +9,7 @@
 #include "ObsidianHeroComponent.generated.h"
 
 class UImage;
+class UObsidianItem;
 class UObsidianDraggedItem_Simple;
 class AObsidianPlayerController;
 class UObsidianInventoryItemInstance;
@@ -48,10 +49,20 @@ public:
 	{
 		return DraggedItem;
 	}
+
+	UObsidianInventoryItemInstance* GetUsingItem()
+	{
+		return UsingItemInstance;
+	}
 	
 	bool IsDraggingAnItem() const
 	{
 		return bDraggingItem;
+	}
+
+	bool IsUsingItem() const
+	{
+		return bUsingItem;
 	}
 
 	void SetCursorOverUI(const bool bInOverUI)
@@ -59,7 +70,7 @@ public:
 		bCursorOverUI = bInOverUI;
 	}
 	
-	void SetUsingItem(const bool InbUsingItem, const FSlateBrush& InItemImageBrush = FSlateBrush(), const FVector2D& ItemGridSpan = FVector2D::ZeroVector);
+	void SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget = nullptr, UObsidianInventoryItemInstance* UsingInstance = nullptr);
 	
 	/**
 	 * Inventory Items.
@@ -126,6 +137,7 @@ protected:
 	void Input_TogglePassiveSkillTree();
 	
 	void Input_DropItem();
+	void Input_ReleaseUsingItem();
 	
 protected:
 	/** Time Threshold to know if it was a short press */
@@ -190,6 +202,11 @@ private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
 	FDraggedItem DraggedItem = FDraggedItem();
+
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryItemInstance> UsingItemInstance = nullptr;
+	UPROPERTY()
+	TObjectPtr<UObsidianItem> CachedUsingInventoryItemWidget = nullptr;
 
 	bool bUsingItem = false;
 	bool bDraggingItem = false;

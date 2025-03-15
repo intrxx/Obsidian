@@ -27,6 +27,7 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
+#include "UI/Inventory/ObsidianItem.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -259,6 +260,8 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_DropItem,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_DropItem, false);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ReleaseUsingItem,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_ReleaseUsingItem, false);
 			}
 		}
 	}
@@ -326,6 +329,11 @@ void UObsidianHeroComponent::Input_MoveStartedMouse()
 	if(CanMoveMouse() == false)
 	{
 		return;
+	}
+
+	if(IsUsingItem())
+	{
+		SetUsingItem(false);
 	}
 	
 	bAutoRunning = false;
@@ -425,9 +433,17 @@ void UObsidianHeroComponent::Input_DropItem()
 	ServerHandleDroppingItem(CursorHit.Location);
 }
 
-void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, const FSlateBrush& InItemImageBrush, const FVector2D& ItemGridSpan)
+void UObsidianHeroComponent::Input_ReleaseUsingItem()
 {
-	if(InbUsingItem && InItemImageBrush.IsSet() && ItemGridSpan != FVector2D::ZeroVector)
+	if(IsUsingItem())
+	{
+		SetUsingItem(false);
+	}
+}
+
+void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget, UObsidianInventoryItemInstance* UsingInstance)
+{
+	if(InbUsingItem && ItemWidget)
 	{
 		UWorld* World = GetWorld();
 		if(World == nullptr)
@@ -440,10 +456,15 @@ void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, const FSlateB
 			DraggedUsableItemWidget->RemoveFromParent();
 		}
 
+		ItemWidget->SetUsingItemProperties();
+		CachedUsingInventoryItemWidget = ItemWidget;
+
 		checkf(DraggedUsableItemWidgetClass, TEXT("DraggedUsableItemWidgetClass is invalid in UObsidianHeroComponent::SetUsingItem please fill it."));
 		DraggedUsableItemWidget = CreateWidget<UObsidianDraggedItem_Simple>(World, DraggedUsableItemWidgetClass);
-		DraggedUsableItemWidget->InitializeDraggedItem(InItemImageBrush, ItemGridSpan);
+		DraggedUsableItemWidget->InitializeDraggedItem(ItemWidget->GetItemImage(), ItemWidget->GetItemGridSpan());
 		DraggedUsableItemWidget->AddToViewport();
+
+		UsingItemInstance = UsingInstance;
 	}
 	else
 	{
@@ -452,7 +473,13 @@ void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, const FSlateB
 			DraggedUsableItemWidget->RemoveFromParent();
 		}
 
+		if(CachedUsingInventoryItemWidget)
+		{
+			CachedUsingInventoryItemWidget->ResetUsingItemProperties();
+		}
+
 		DraggedUsableItemWidget = nullptr;
+		UsingItemInstance = nullptr;
 	}
 
 	bUsingItem = InbUsingItem;

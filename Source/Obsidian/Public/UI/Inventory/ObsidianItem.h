@@ -54,6 +54,7 @@ public:
 	void SetSize(const FVector2D& ItemGridSpan);
 
 	void SetUsingItemProperties();
+	void ResetUsingItemProperties();
 	
 public:
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;

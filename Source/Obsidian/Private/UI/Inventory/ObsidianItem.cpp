@@ -19,7 +19,7 @@ FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const
 		OnItemRightMouseButtonPressedDelegate.Broadcast(this);
 	}
 
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	return FReply::Handled();
 }
 
 void UObsidianItem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
@@ -116,4 +116,9 @@ void UObsidianItem::SetSize(const FVector2D& ItemGridSpan)
 void UObsidianItem::SetUsingItemProperties()
 {
 	SetRenderOpacity(UsingItemOpacity);
+}
+
+void UObsidianItem::ResetUsingItemProperties()
+{
+	SetRenderOpacity(1.0f);
 }

@@ -17,26 +17,19 @@ class OBSIDIAN_API UOCharacterStatusAttributeRow_WithToolTip : public UOCharacte
 	GENERATED_BODY()
 
 public:
-	virtual void BeginDestroy() override;
-
 	/** Sets the CharacterStatus variable on AttributeRow and bind callback for destroying the tooltip on closing the CharacterStatus. */
 	void SetCharacterStatus(UObsidianCharacterStatus* InCharacterStatus);
 
 protected:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
-	UFUNCTION()
 	void OnToolTipButtonHovered();
-	UFUNCTION()
 	void OnToolTipButtonUnHovered();
 
 	void HandleCharacterStatusSet();
 	
 protected:	
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UButton> Tooltip_Button;
-
 	UPROPERTY(EditAnywhere, Category = "Obsidian|ToolTip")
 	TSubclassOf<UObsidianAttributeToolTip> AttributeToolTipWidgetClass;
 
@@ -49,7 +42,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|ToolTip")
 	FText AttributeDescription = FText::FromString("Attribute Description");
 
-	/** Whether the button is hit testable. */
+	/** Whether the tooltip is enabled. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
-	bool bToolTipButtonEnabled = false;
+	bool bToolTipEnabled = false;
 };

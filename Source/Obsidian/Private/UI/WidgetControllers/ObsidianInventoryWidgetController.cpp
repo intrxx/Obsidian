@@ -153,6 +153,13 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown)
 {
 	check(OwnerHeroComponent);
+
+	if(OwnerHeroComponent->IsUsingItem())
+	{
+		OwnerHeroComponent->SetUsingItem(false);
+		return;
+	}
+	
 	if(OwnerHeroComponent->IsDraggingAnItem() == false)
 	{
 		return;
@@ -163,6 +170,13 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag& SlotTag)
 {
 	check(OwnerHeroComponent);
+
+	if(OwnerHeroComponent->IsUsingItem())
+	{
+		OwnerHeroComponent->SetUsingItem(false);
+		return;
+	}
+	
 	if(OwnerHeroComponent->IsDraggingAnItem() == false)
 	{
 		return;
@@ -173,18 +187,15 @@ void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag
 void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
 	check(OwnerHeroComponent);
+	check(InventoryComponent);
 
 	if(OwnerHeroComponent->IsDraggingAnItem())
 	{
 		return;
 	}
 	
-	if(ItemWidget)
-	{
-		ItemWidget->SetUsingItemProperties();
-	}
-
-	OwnerHeroComponent->SetUsingItem(true, ItemWidget->GetItemImage(), ItemWidget->GetItemGridSpan());
+	UObsidianInventoryItemInstance* UsingInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	OwnerHeroComponent->SetUsingItem(true, ItemWidget, UsingInstance);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition)
@@ -194,6 +205,12 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 	check(DraggedItemWidgetClass);
 
 	RemoveItemUIElements();
+
+	if(OwnerHeroComponent->IsUsingItem())
+	{
+		UE_LOG(LogTemp, Error, TEXT("TODO Use UsingItem onto the pressed Item."))
+		return;
+	}
 	
 	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
@@ -244,12 +261,19 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 		}
 		return;
 	}
+	
 	OwnerHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithShiftDown(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget)
 {
 	check(OwnerHeroComponent);
+
+	if(OwnerHeroComponent->IsUsingItem())
+	{
+		OwnerHeroComponent->SetUsingItem(false);
+		return;
+	}
 	
 	if(OwnerHeroComponent->IsDraggingAnItem())
 	{
@@ -291,6 +315,13 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	check(DraggedItemWidgetClass);
 
 	RemoveItemUIElements();
+
+	if(OwnerHeroComponent->IsUsingItem())
+	{
+		UE_LOG(LogInventory, Error, TEXT("As of now it is imposible to use items onto equipped items, maybe will support it in the future."));
+		OwnerHeroComponent->SetUsingItem(false);
+		return;
+	}
 	
 	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{

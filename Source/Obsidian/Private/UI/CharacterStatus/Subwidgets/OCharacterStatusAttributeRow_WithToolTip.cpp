@@ -7,47 +7,20 @@
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/CharacterStatus/Subwidgets/ObsidianAttributeToolTip.h"
 
-void UOCharacterStatusAttributeRow_WithToolTip::NativePreConstruct()
+void UOCharacterStatusAttributeRow_WithToolTip::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	Super::NativePreConstruct();
-
-	if(!bToolTipButtonEnabled)
+	if(bToolTipEnabled)
 	{
-		/**
-		* This does not actually disable the button, only makes it un-testable for hits
-		* The reason is that there is a bug or design flaw in Unreal Engine that automatically greys out every child of disabled buttons.
-		*/
-		
-		//Tooltip_Button->SetIsEnabled(false);
-		Tooltip_Button->SetVisibility(ESlateVisibility::HitTestInvisible);
-	}
-	else
-	{
-		//Tooltip_Button->SetIsEnabled(true);
-		Tooltip_Button->SetVisibility(ESlateVisibility::Visible);
+		OnToolTipButtonHovered();
 	}
 }
 
-void UOCharacterStatusAttributeRow_WithToolTip::NativeConstruct()
+void UOCharacterStatusAttributeRow_WithToolTip::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	Super::NativeConstruct();
-
-	if(Tooltip_Button)
+	if(bToolTipEnabled)
 	{
-		Tooltip_Button->OnHovered.AddDynamic(this, &ThisClass::OnToolTipButtonHovered);
-		Tooltip_Button->OnUnhovered.AddDynamic(this, &ThisClass::OnToolTipButtonUnHovered);
+		OnToolTipButtonUnHovered();
 	}
-}
-
-void UOCharacterStatusAttributeRow_WithToolTip::BeginDestroy()
-{
-	if(Tooltip_Button)
-	{
-		Tooltip_Button->OnHovered.Clear();
-		Tooltip_Button->OnUnhovered.Clear();
-	}
-	
-	Super::BeginDestroy();
 }
 
 void UOCharacterStatusAttributeRow_WithToolTip::SetCharacterStatus(UObsidianCharacterStatus* InCharacterStatus)
