@@ -9,6 +9,7 @@
 #include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianInventoryItemInstance.generated.h"
 
+class UObsidianUsableShard;
 class UObsidianInventoryItemFragment;
 class UObsidianInventoryItemDefinition;
 
@@ -65,6 +66,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	bool IsItemUsable() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetUsableShard(UObsidianUsableShard* InUsableShard);
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	void UseItem(UObsidianInventoryItemInstance* UsingOntoInstance);
 
 	/**
 	 * Equipping.
@@ -240,6 +247,9 @@ private:
 
 	UPROPERTY(Replicated)
 	bool bUsable = false;
+
+	UPROPERTY(Replicated)
+	TObjectPtr<UObsidianUsableShard> UsableShard = nullptr;
 
 	/**
 	 * Equipping.

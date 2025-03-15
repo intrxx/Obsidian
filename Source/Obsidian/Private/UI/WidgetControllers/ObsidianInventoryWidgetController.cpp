@@ -129,6 +129,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
 		ItemWidgetData.DesiredPosition = Item->GetItemCurrentGridLocation();
 		ItemWidgetData.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+		ItemWidgetData.bUsable = Item->IsItemUsable();
 
 		OnItemAddedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -169,7 +170,7 @@ void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag
 	OwnerHeroComponent->ServerEquipItemAtSlot(SlotTag);
 }
 
-void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
 {
 	check(OwnerHeroComponent);
 
@@ -178,7 +179,12 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 		return;
 	}
 	
-	
+	if(ItemWidget)
+	{
+		ItemWidget->SetUsingItemProperties();
+	}
+
+	OwnerHeroComponent->SetUsingItem(true, ItemWidget->GetItemImage(), ItemWidget->GetItemGridSpan());
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition)

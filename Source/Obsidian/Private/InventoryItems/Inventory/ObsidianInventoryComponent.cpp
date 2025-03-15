@@ -533,12 +533,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::TakeOutFromItemInst
 	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
 	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
 	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackToTakeSafe);
-
-	// This shouldn't be here I believe
-	// if(NewInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	// {
-	// 	AddReplicatedSubObject(NewInstance);
-	// }
+	
 	return NewInstance;
 }
 
@@ -666,12 +661,7 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 	{
 		OutAddingStacksResult.bAddedWholeItemAsStacks = true;
 	}
-
-	// This shouldn't be here I believe
-	// if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	// {
-	// 	AddReplicatedSubObject(InstanceToAddTo);
-	// }
+	
 	return true;
 }
 
@@ -722,12 +712,7 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 	{
 		OutAddingStacksResult.bAddedWholeItemAsStacks = true;
 	}
-
-	// This shouldn't be here I believe
-	// if(InstanceToAddTo && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	// {
-	// 	AddReplicatedSubObject(InstanceToAddTo);
-	// }
+	
 	return true;
 }
 
@@ -877,39 +862,42 @@ void UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInsta
 	}
 }
 
-bool UObsidianInventoryComponent::ConsumeItemsByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 NumberOfItemsToConsume)
+void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {
-	if(!GetOwner()->HasAuthority())
+	if(UsingInstance == nullptr || UsingOntoInstance == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::ConsumeItemsByDefinition."));
-		return false; 
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance or UsingOntoInstance is invalid in UObsidianInventoryComponent::UseItem."));
+		return;
+	}
+
+	if(UsingInstance->IsItemUsable() == false)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Trying to use unusable Item [%s] in UObsidianInventoryComponent::UseItem."), *UsingInstance->GetItemDebugName());
+		return;
 	}
 	
 	AActor* OwningActor = GetOwner();
 	if(OwningActor == nullptr || OwningActor->HasAuthority() == false)
 	{
-		return false;
+		return;
 	}
-
-	//TODO: N squared right now as there's no acceleration structure
-	int32 TotalConsumed = 0;
-	while(TotalConsumed < NumberOfItemsToConsume)
+	
+	UsingInstance->UseItem(UsingOntoInstance);
+	
+	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(CurrentUsingInstanceStacks > 1)
 	{
-		if(UObsidianInventoryItemInstance* Instance = FindFirstItemInstanceForDefinition(ItemDef))
-		{
-			InventoryGrid.RemoveEntry(Instance);
-			++TotalConsumed;
-		}
-#if !UE_BUILD_SHIPPING
-		else
-		{
-			FFrame::KismetExecutionMessage(TEXT("Provided NumberOfItemsToConsume is greater than the instances of the item, or the Instance is invalid"),
-				ELogVerbosity::Warning);
-			return false;
-		}
-#endif
+		UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
+		InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks);
+		return;
 	}
-	return TotalConsumed == NumberOfItemsToConsume;
+	
+	InventoryGrid.RemoveEntry(UsingInstance);
+
+	if(UsingInstance && IsUsingRegisteredSubObjectList())
+	{
+		RemoveReplicatedSubObject(UsingInstance);
+	}
 }
 
 bool UObsidianInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)

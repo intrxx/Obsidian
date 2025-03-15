@@ -6,4 +6,5 @@
 void UOInventoryItemFragment_Usable::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
 	Instance->SetUsable(true);
+	Instance->SetUsableShard(UsableShard);
 }

@@ -4,6 +4,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+#include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -37,6 +38,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, bIdentified);
 	DOREPLIFETIME(ThisClass, bEquippable);
 	DOREPLIFETIME(ThisClass, bUsable);
+	DOREPLIFETIME(ThisClass, UsableShard);
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -102,6 +104,19 @@ void UObsidianInventoryItemInstance::SetUsable(const bool IsUsable)
 bool UObsidianInventoryItemInstance::IsItemUsable() const
 {
 	return bUsable;
+}
+
+void UObsidianInventoryItemInstance::SetUsableShard(UObsidianUsableShard* InUsableShard)
+{
+	UsableShard = InUsableShard;
+}
+
+void UObsidianInventoryItemInstance::UseItem(UObsidianInventoryItemInstance* UsingOntoInstance)
+{
+	if(UsableShard)
+	{
+		UsableShard->OnItemUsed(this, UsingOntoInstance);
+	}
 }
 
 void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)

@@ -104,7 +104,7 @@ public:
 	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);
 
-	void HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
+	void HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition);
 	void HandleLeftClickingOnInventoryItemWithShiftDown(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag);

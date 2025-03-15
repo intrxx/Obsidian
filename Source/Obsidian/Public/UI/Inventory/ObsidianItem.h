@@ -13,7 +13,7 @@ class UObsidianItem;
 class UImage;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLeftMouseButtonPressedSignature, const UObsidianItem* ItemWidget, const bool bShiftPressed);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRightMouseButtonPressedSignature, const UObsidianItem* ItemWidget);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRightMouseButtonPressedSignature, UObsidianItem* ItemWidget);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemMouseEnterSignature, const UObsidianItem* ItemWidget);
 DECLARE_MULTICAST_DELEGATE(FOnItemMouseLeaveSignature);
@@ -38,13 +38,22 @@ public:
 		return ItemDesiredPosition;
 	}
 	
+	FVector2D GetItemGridSpan() const
+	{
+		return ItemDesiredGridSpan;
+	}
+	
 	FGameplayTag GetEquipmentSlotTag() const
 	{
 		return ItemEquipmentSlot;
 	}
 
+	FSlateBrush GetItemImage() const;
+
 	FVector2D GetItemSize() const;
 	void SetSize(const FVector2D& ItemGridSpan);
+
+	void SetUsingItemProperties();
 	
 public:
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
@@ -58,6 +67,10 @@ protected:
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
 protected:
+	/** Opacity to set when item is being used (right-clicked). */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	float UsingItemOpacity = 0.6f;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
 	
@@ -69,6 +82,9 @@ protected:
 
 	UPROPERTY()
 	FVector2D ItemDesiredPosition = FVector2D::Zero();
+	
+	UPROPERTY()
+	FVector2D ItemDesiredGridSpan = FVector2D::Zero();
 
 	UPROPERTY()
 	FGameplayTag ItemEquipmentSlot = FGameplayTag::EmptyTag;

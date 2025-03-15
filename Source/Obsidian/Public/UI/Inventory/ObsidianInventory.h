@@ -72,7 +72,7 @@ private:
 	void SetupEquipmentSlots();
 
 	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
-	void OnInventoryItemRightMouseButtonPressed(const UObsidianItem* ItemWidget);
+	void OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
 	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
 	
 	void OnEquipmentItemMouseEntered(const UObsidianItem* ItemWidget);

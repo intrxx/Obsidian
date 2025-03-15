@@ -81,7 +81,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(const UObsidianI
 	
 	const FVector2D ItemGridSpan = ItemInstance->GetItemGridSpan();
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
-	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 
 	SetDesiredSizeInViewport(ItemGridSpan * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 

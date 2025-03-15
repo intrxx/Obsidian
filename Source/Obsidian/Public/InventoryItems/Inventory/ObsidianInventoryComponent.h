@@ -154,8 +154,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
-	/** Consumes every item in the inventory that matches provided Item Definition. */
-	bool ConsumeItemsByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 NumberOfItemsToConsume);
+	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
+	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance);
 	
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

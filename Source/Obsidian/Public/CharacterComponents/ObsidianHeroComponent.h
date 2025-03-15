@@ -8,6 +8,8 @@
 #include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianHeroComponent.generated.h"
 
+class UImage;
+class UObsidianDraggedItem_Simple;
 class AObsidianPlayerController;
 class UObsidianInventoryItemInstance;
 struct FInputActionValue;
@@ -31,6 +33,8 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	void InitializePlayerInput(UInputComponent* InputComponent);
+	
 	/** Returns the hero component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroComp")
 	static UObsidianHeroComponent* FindHeroComponent(const AActor* Actor)
@@ -55,20 +59,13 @@ public:
 		bCursorOverUI = bInOverUI;
 	}
 	
-	void InitializePlayerInput(UInputComponent* InputComponent);
+	void SetUsingItem(const bool InbUsingItem, const FSlateBrush& InItemImageBrush = FSlateBrush(), const FVector2D& ItemGridSpan = FVector2D::ZeroVector);
 	
-
 	/**
 	 * Inventory Items.
 	 */
 	
 	bool DropItem();
-	
-	UFUNCTION(Server, Reliable)
-	void ServerEquipItemAtSlot(const FGameplayTag& SlotTag);
-
-	UFUNCTION(Server, Reliable)
-	void ServerGrabEquippedItemToCursor(const FGameplayTag& SlotTag);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerAddItemToInventoryAtSlot(const FVector2D& SlotPosition, const bool bShiftDown);
@@ -81,9 +78,6 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerReplaceItemAtInventorySlot(const FVector2D& SlotPosition);
-
-	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtEquipmentSlotSlot(const FGameplayTag& SlotTag);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
@@ -98,8 +92,17 @@ public:
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
 	
 	/**
-	 * End of Inventory Items.
+	 * Equipment.
 	 */
+
+	UFUNCTION(Server, Reliable)
+	void ServerEquipItemAtSlot(const FGameplayTag& SlotTag);
+
+	UFUNCTION(Server, Reliable)
+	void ServerGrabEquippedItemToCursor(const FGameplayTag& SlotTag);
+	
+	UFUNCTION(Server, Reliable)
+	void ServerReplaceItemAtEquipmentSlotSlot(const FGameplayTag& SlotTag);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
@@ -142,6 +145,7 @@ private:
 	void AutoRun();
 	void CursorTrace();
 	void DragItem() const;
+	void DragUsableItemIcon() const;
 	
 	/**
 	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
@@ -164,6 +168,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UObsidianDraggedItem_Simple> DraggedUsableItemWidgetClass;
 	
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
 	FHitResult CursorHit;
@@ -178,9 +185,13 @@ private:
 	UPROPERTY()
 	TObjectPtr<UObsidianDraggedItem> DraggedItemWidget;
 
+	UPROPERTY()
+	TObjectPtr<UObsidianDraggedItem_Simple> DraggedUsableItemWidget;
+
 	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
 	FDraggedItem DraggedItem = FDraggedItem();
-	
+
+	bool bUsingItem = false;
 	bool bDraggingItem = false;
 	bool bItemAvailableForDrop = false;
 	bool bJustDroppedItem = false;

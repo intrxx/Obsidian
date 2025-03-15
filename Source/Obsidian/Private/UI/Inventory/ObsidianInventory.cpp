@@ -208,7 +208,7 @@ void UObsidianInventory::OnInventoryItemLeftMouseButtonPressed(const UObsidianIt
 	}
 }
 
-void UObsidianInventory::OnInventoryItemRightMouseButtonPressed(const UObsidianItem* ItemWidget)
+void UObsidianInventory::OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemRightMouseButtonPressed"));
 	if(InventoryWidgetController)

@@ -8,7 +8,9 @@
 #include "NavigationPath.h"
 #include "Engine/ActorChannel.h"
 #include "NavigationSystem.h"
+#include "UI/Inventory/ObsidianDraggedItem_Simple.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
@@ -53,6 +55,11 @@ void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	if(bDraggingItem)
 	{
 		DragItem();
+	}
+
+	if(bUsingItem)
+	{
+		DragUsableItemIcon();
 	}
 }
 
@@ -137,10 +144,34 @@ void UObsidianHeroComponent::DragItem() const
 
 	float LocationX = 0.0f;
 	float LocationY = 0.0f;
-	if(PC->GetMousePosition(LocationX, LocationY))
+	if(DraggedItemWidget && PC->GetMousePosition(LocationX, LocationY))
 	{
 		const FVector2D ViewportPosition = FVector2D(LocationX, LocationY);
 		DraggedItemWidget->SetPositionInViewport(ViewportPosition);
+	}
+}
+
+void UObsidianHeroComponent::DragUsableItemIcon() const
+{
+	const APlayerController* PC = GetController<APlayerController>();
+	if(PC == nullptr)
+	{
+		return;
+	}
+
+	float LocationX = 0.0f;
+	float LocationY = 0.0f;
+	if(DraggedUsableItemWidget && PC->GetMousePosition(LocationX, LocationY))
+	{
+		if(UWorld* World = GetWorld())
+		{
+			const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
+			FVector2D ItemSize = DraggedUsableItemWidget->GetItemSize() + FVector2D(5.0f, -5.0f);
+			ItemSize *= DPIScale;
+			
+			const FVector2D ViewportPosition = FVector2D(LocationX - ItemSize.X, LocationY - ItemSize.Y);
+			DraggedUsableItemWidget->SetPositionInViewport(ViewportPosition);
+		}
 	}
 }
 
@@ -392,6 +423,39 @@ void UObsidianHeroComponent::Input_DropItem()
 		return;
 	}
 	ServerHandleDroppingItem(CursorHit.Location);
+}
+
+void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, const FSlateBrush& InItemImageBrush, const FVector2D& ItemGridSpan)
+{
+	if(InbUsingItem && InItemImageBrush.IsSet() && ItemGridSpan != FVector2D::ZeroVector)
+	{
+		UWorld* World = GetWorld();
+		if(World == nullptr)
+		{
+			return;
+		}
+		
+		if(DraggedUsableItemWidget)
+		{
+			DraggedUsableItemWidget->RemoveFromParent();
+		}
+
+		checkf(DraggedUsableItemWidgetClass, TEXT("DraggedUsableItemWidgetClass is invalid in UObsidianHeroComponent::SetUsingItem please fill it."));
+		DraggedUsableItemWidget = CreateWidget<UObsidianDraggedItem_Simple>(World, DraggedUsableItemWidgetClass);
+		DraggedUsableItemWidget->InitializeDraggedItem(InItemImageBrush, ItemGridSpan);
+		DraggedUsableItemWidget->AddToViewport();
+	}
+	else
+	{
+		if(DraggedUsableItemWidget)
+		{
+			DraggedUsableItemWidget->RemoveFromParent();
+		}
+
+		DraggedUsableItemWidget = nullptr;
+	}
+
+	bUsingItem = InbUsingItem;
 }
 
 bool UObsidianHeroComponent::DropItem()

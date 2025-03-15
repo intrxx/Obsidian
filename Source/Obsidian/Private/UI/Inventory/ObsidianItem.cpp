@@ -37,6 +37,8 @@ void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 	Item_Image->SetBrushFromTexture(ItemImage);
+
+	ItemDesiredGridSpan = ItemGridSpan;
 	ItemDesiredPosition = DesiredPosition;
 	InternalStacks = CurrentStack;
 	
@@ -91,6 +93,15 @@ void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
+FSlateBrush UObsidianItem::GetItemImage() const
+{
+	if(Item_Image)
+	{
+		return Item_Image->GetBrush();
+	}
+	return FSlateBrush();
+}
+
 FVector2D UObsidianItem::GetItemSize() const
 {
 	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
@@ -100,4 +111,9 @@ void UObsidianItem::SetSize(const FVector2D& ItemGridSpan)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
+}
+
+void UObsidianItem::SetUsingItemProperties()
+{
+	SetRenderOpacity(UsingItemOpacity);
 }
