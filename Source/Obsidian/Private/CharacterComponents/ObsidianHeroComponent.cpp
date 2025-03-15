@@ -511,6 +511,11 @@ bool UObsidianHeroComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBun
 		WroteSomething |= Channel->ReplicateSubobject(ItemDef, *Bunch, *RepFlags);
 	}
 
+	if(UsingItemInstance && IsValid(UsingItemInstance))
+	{
+		WroteSomething |= Channel->ReplicateSubobject(UsingItemInstance, *Bunch, *RepFlags);
+	}
+
 	return WroteSomething;
 }
 
@@ -531,6 +536,11 @@ void UObsidianHeroComponent::ReadyForReplication()
 		if(IsValid(ItemDef))
 		{
 			AddReplicatedSubObject(ItemDef);
+		}
+
+		if(IsValid(UsingItemInstance))
+		{
+			AddReplicatedSubObject(UsingItemInstance);
 		}
 	}
 }
@@ -753,7 +763,6 @@ void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppab
 	InventoryComponent->AddItemDefinition(ItemDef, OutStacksLeft, StackCount);
 	ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
 }
-
 
 void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
@@ -1095,6 +1104,39 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 			}
 		}
 	}
+}
+
+void UObsidianHeroComponent::UseItem(const FVector2D& OnSlotPosition)
+{
+	ServerUseItem(UsingItemInstance, OnSlotPosition);
+
+	SetUsingItem(false);
+}
+
+void UObsidianHeroComponent::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FVector2D& OnSlotPosition)
+{
+	if(UsingInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in UObsidianHeroComponent::ServerUseItem_Implementation."));
+		return;
+	}
+	
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerUseItem_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerUseItem_Implementation."));
+		return;
+	}
+
+	UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(OnSlotPosition);
+	InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
 }
 
 void UObsidianHeroComponent::UpdateStacksOnDraggedItemWidget(const int32 InStacks)

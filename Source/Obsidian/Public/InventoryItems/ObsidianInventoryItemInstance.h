@@ -71,7 +71,7 @@ public:
 	void SetUsableShard(UObsidianUsableShard* InUsableShard);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	void UseItem(UObsidianInventoryItemInstance* UsingOntoInstance);
+	bool UseItem(UObsidianInventoryItemInstance* UsingOntoInstance);
 
 	/**
 	 * Equipping.

@@ -163,7 +163,7 @@ void FObsidianInventoryGrid::ChangedEntryStacks(UObsidianInventoryItemInstance* 
 		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemChanged);
 		return;
 	}
-	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
+	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
 void FObsidianInventoryGrid::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)

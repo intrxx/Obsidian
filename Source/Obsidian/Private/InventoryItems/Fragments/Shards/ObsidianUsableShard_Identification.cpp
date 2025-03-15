@@ -5,10 +5,15 @@
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
-void UObsidianUsableShard_Identification::OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_Identification::OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {
 	if(UsingOntoInstance && UsingInstance)
 	{
-		UsingOntoInstance->SetIdentified(true);
+		if(UsingOntoInstance->IsItemIdentified() == false)
+		{
+			UsingOntoInstance->SetIdentified(true);
+			return true;
+		}
 	}
+	return false;
 }

@@ -111,12 +111,13 @@ void UObsidianInventoryItemInstance::SetUsableShard(UObsidianUsableShard* InUsab
 	UsableShard = InUsableShard;
 }
 
-void UObsidianInventoryItemInstance::UseItem(UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianInventoryItemInstance::UseItem(UObsidianInventoryItemInstance* UsingOntoInstance)
 {
 	if(UsableShard)
 	{
-		UsableShard->OnItemUsed(this, UsingOntoInstance);
+		return UsableShard->OnItemUsed(this, UsingOntoInstance);
 	}
+	return false;
 }
 
 void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)

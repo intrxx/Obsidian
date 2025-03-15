@@ -108,7 +108,8 @@ public:
 	void HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition);
 	void HandleLeftClickingOnInventoryItemWithShiftDown(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag);
-	
+
+	void HandleHoveringOverInventoryItem(const FVector2D& SlotPosition);
 	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);
 	void HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem();

@@ -881,22 +881,23 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	{
 		return;
 	}
-	
-	UsingInstance->UseItem(UsingOntoInstance);
-	
-	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	if(CurrentUsingInstanceStacks > 1)
-	{
-		UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
-		InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks);
-		return;
-	}
-	
-	InventoryGrid.RemoveEntry(UsingInstance);
 
-	if(UsingInstance && IsUsingRegisteredSubObjectList())
+	if(UsingInstance->UseItem(UsingOntoInstance))
 	{
-		RemoveReplicatedSubObject(UsingInstance);
+		const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		if(CurrentUsingInstanceStacks > 1)
+		{
+			UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
+			InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks);
+			return;
+		}
+	
+		InventoryGrid.RemoveEntry(UsingInstance);
+
+		if(UsingInstance && IsUsingRegisteredSubObjectList())
+		{
+			RemoveReplicatedSubObject(UsingInstance);
+		}
 	}
 }
 

@@ -15,6 +15,6 @@ class OBSIDIAN_API UObsidianUsableShard_Identification : public UObsidianUsableS
 	GENERATED_BODY()
 
 public:
-	virtual void OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance) override;
+	virtual bool OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance) override;
 	
 };

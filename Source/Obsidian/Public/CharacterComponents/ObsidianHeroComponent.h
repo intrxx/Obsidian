@@ -101,6 +101,11 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
+
+	void UseItem(const FVector2D& OnSlotPosition);
+	
+	UFUNCTION(Server, Reliable)
+	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FVector2D& OnSlotPosition);
 	
 	/**
 	 * Equipment.
@@ -215,4 +220,3 @@ private:
 	
 	bool bCursorOverUI = false;
 };
-

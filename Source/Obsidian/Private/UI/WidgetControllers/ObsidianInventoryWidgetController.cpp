@@ -208,7 +208,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		UE_LOG(LogTemp, Error, TEXT("TODO Use UsingItem onto the pressed Item."))
+		OwnerHeroComponent->UseItem(SlotPosition);
 		return;
 	}
 	
@@ -351,9 +351,31 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	OwnerHeroComponent->ServerGrabEquippedItemToCursor(SlotTag);
 }
 
+void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const FVector2D& SlotPosition)
+{
+	const UObsidianItem* ItemWidget = GetItemWidgetAtInventoryLocation(SlotPosition);
+	if(ItemWidget == nullptr || !CanShowDescription())
+	{
+		return;
+	}
+	
+	RemoveItemDescription();
+	
+	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
+
+	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	ActiveItemDescription->AddToViewport();
+	
+	const FVector2D DescriptionViewportPosition = CalculateDescriptionPosition(ItemWidget);
+	ActiveItemDescription->SetPositionInViewport(DescriptionViewportPosition);
+	bDescriptionActive = true;
+}
+
 void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget)
 {
-	if(ItemWidget == nullptr && !CanShowDescription())
+	if(ItemWidget == nullptr || !CanShowDescription())
 	{
 		return;
 	}
@@ -375,7 +397,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const U
 
 void UObsidianInventoryWidgetController::HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget)
 {
-	if(ItemWidget == nullptr && !CanShowDescription())
+	if(ItemWidget == nullptr || !CanShowDescription())
 	{
 		return;
 	}
