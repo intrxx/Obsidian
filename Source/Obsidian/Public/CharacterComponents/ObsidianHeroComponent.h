@@ -21,6 +21,8 @@ class IObsidianHighlightInterface;
 class UObsidianDraggedItem;
 class UObsidianInventoryItemDefinition;
 
+DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
+
 /**
  * Component that manages hero related things like input
  */
@@ -28,6 +30,7 @@ UCLASS()
 class OBSIDIAN_API UObsidianHeroComponent : public UPawnComponent
 {
 	GENERATED_BODY()
+	
 public:
 	UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer);
 	
@@ -124,6 +127,9 @@ public:
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
+
+public:
+	FOnStopUsingItemSignature OnStopUsingItemDelegate;
 	
 protected:
 	UFUNCTION()

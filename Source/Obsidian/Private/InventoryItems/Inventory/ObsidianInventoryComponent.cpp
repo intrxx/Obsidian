@@ -905,7 +905,7 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 
 bool UObsidianInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
-	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{

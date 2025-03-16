@@ -32,6 +32,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	
 	OwnerHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	check(OwnerHeroComponent);
+	OwnerHeroComponent->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableUIContext);
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
@@ -160,7 +161,7 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		OwnerHeroComponent->SetUsingItem(false);
+		StopUsingItem();
 		return;
 	}
 	
@@ -177,7 +178,7 @@ void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		OwnerHeroComponent->SetUsingItem(false);
+		StopUsingItem();
 		return;
 	}
 	
@@ -199,7 +200,39 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 	}
 	
 	UObsidianInventoryItemInstance* UsingInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	if(UsingInstance->IsItemUsable() == false)
+	{
+		return;
+	}
+	
 	OwnerHeroComponent->SetUsingItem(true, ItemWidget, UsingInstance);
+
+	TArray<UObsidianInventoryItemInstance*> AllItems;
+	AllItems.Append(InventoryComponent->GetAllItems());
+	AllItems.Append(EquipmentComponent->GetAllEquippedItems());
+	//TODO Add Stash when implemented
+	
+	const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
+	for(const FVector2D& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
+	{
+		if(UObsidianItem* Item = GetItemWidgetAtInventoryLocation(GridLocation))
+		{
+			Item->HighlightItem();
+			CachedItemsMatchingUsableContext.Add(Item);
+		}
+	}
+	for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
+	{
+		if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
+		{
+			Item->HighlightItem();
+			CachedItemsMatchingUsableContext.Add(Item);
+		}
+	}
+	for(const FVector2D& StashGridLocation : MatchingUsableContext.StashItemsMatchingContext)
+	{
+		
+	}
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition)
@@ -275,7 +308,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		OwnerHeroComponent->SetUsingItem(false);
+		StopUsingItem();
 		return;
 	}
 	
@@ -323,7 +356,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	if(OwnerHeroComponent->IsUsingItem())
 	{
 		UE_LOG(LogInventory, Error, TEXT("As of now it is imposible to use items onto equipped items, maybe will support it in the future."));
-		OwnerHeroComponent->SetUsingItem(false);
+		StopUsingItem();
 		return;
 	}
 	
@@ -552,6 +585,27 @@ void UObsidianInventoryWidgetController::RemoveItemDescription()
 		ActiveItemDescription->DestroyDescriptionWidget();
 		ActiveItemDescription = nullptr;
 		bDescriptionActive = false;
+	}
+}
+
+void UObsidianInventoryWidgetController::StopUsingItem()
+{
+	OwnerHeroComponent->SetUsingItem(false);
+}
+
+void UObsidianInventoryWidgetController::ClearUsableUIContext()
+{
+	if(CachedItemsMatchingUsableContext.IsEmpty())
+	{
+		return;
+	}
+
+	for(UObsidianItem* AffectedItem : CachedItemsMatchingUsableContext)
+	{
+		if(AffectedItem)
+		{
+			AffectedItem->ResetHighlight();
+		}
 	}
 }
 

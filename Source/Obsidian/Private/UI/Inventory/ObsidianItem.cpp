@@ -7,6 +7,16 @@
 #include "Components/SizeBox.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
+void UObsidianItem::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	if(Highlight_Image)
+	{
+		Highlight_Image->SetVisibility(ESlateVisibility::Hidden);
+	}
+}
+
 FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
@@ -121,4 +131,20 @@ void UObsidianItem::SetUsingItemProperties()
 void UObsidianItem::ResetUsingItemProperties()
 {
 	SetRenderOpacity(1.0f);
+}
+
+void UObsidianItem::HighlightItem()
+{
+	if(Highlight_Image)
+	{
+		Highlight_Image->SetVisibility(ESlateVisibility::SelfHitTestInvisible);
+	}
+}
+
+void UObsidianItem::ResetHighlight()
+{
+	if(Highlight_Image)
+	{
+		Highlight_Image->SetVisibility(ESlateVisibility::Hidden);
+	}
 }

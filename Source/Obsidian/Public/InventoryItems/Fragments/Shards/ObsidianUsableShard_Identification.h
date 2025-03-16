@@ -16,5 +16,5 @@ class OBSIDIAN_API UObsidianUsableShard_Identification : public UObsidianUsableS
 
 public:
 	virtual bool OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance) override;
-	
+	virtual FObsidianItemsMatchingUsableContext OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) override;
 };

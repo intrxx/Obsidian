@@ -3,9 +3,26 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "ObsidianUsableShard.generated.h"
 
+class UObsidianInventoryComponent;
 class UObsidianInventoryItemInstance;
+
+USTRUCT(BlueprintType)
+struct FObsidianItemsMatchingUsableContext
+{
+	GENERATED_BODY()
+
+	UPROPERTY()
+	TArray<FVector2D> InventoryItemsMatchingContext;
+
+	UPROPERTY()
+	TArray<FGameplayTag> EquipmentItemsMatchingContext;
+
+	UPROPERTY()
+	TArray<FVector2D> StashItemsMatchingContext;
+};
 
 /**
  * Represent some OnItemUse logic for an Item.
@@ -16,8 +33,6 @@ class OBSIDIAN_API UObsidianUsableShard : public UObject
 	GENERATED_BODY()
 	
 public:
-	virtual bool OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
-	{
-		return false;
-	}
+	virtual bool OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance);
+	virtual FObsidianItemsMatchingUsableContext OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems);
 };

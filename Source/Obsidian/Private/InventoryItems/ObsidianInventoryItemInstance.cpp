@@ -120,6 +120,15 @@ bool UObsidianInventoryItemInstance::UseItem(UObsidianInventoryItemInstance* Usi
 	return false;
 }
 
+FObsidianItemsMatchingUsableContext UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) const
+{
+	if(UsableShard)
+	{
+		return UsableShard->OnItemUsed_UIContext(AllItems);
+	}
+	return FObsidianItemsMatchingUsableContext();
+}
+
 void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)
 {
 	bIdentified = InIdentified;

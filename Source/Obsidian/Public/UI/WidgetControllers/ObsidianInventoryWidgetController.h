@@ -141,6 +141,8 @@ protected:
 	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription = nullptr;
 
 private:
+	void StopUsingItem();
+	
 	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
 	void OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage);
 	
@@ -148,6 +150,7 @@ private:
 	
 	void RemoveUnstackSlider();
 	void RemoveItemDescription();
+	void ClearUsableUIContext();
 	
 	bool CanShowDescription() const;
 
@@ -178,4 +181,7 @@ private:
 
 	UPROPERTY()
 	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;
+
+	UPROPERTY()
+	TArray<UObsidianItem*> CachedItemsMatchingUsableContext;
 };

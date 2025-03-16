@@ -480,6 +480,8 @@ void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem
 
 		DraggedUsableItemWidget = nullptr;
 		UsingItemInstance = nullptr;
+
+		OnStopUsingItemDelegate.Broadcast();
 	}
 
 	bUsingItem = InbUsingItem;

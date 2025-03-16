@@ -55,6 +55,9 @@ public:
 
 	void SetUsingItemProperties();
 	void ResetUsingItemProperties();
+
+	void HighlightItem();
+	void ResetHighlight();
 	
 public:
 	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
@@ -63,6 +66,8 @@ public:
 	FOnItemMouseLeaveSignature OnItemMouseLeaveDelegate;
 	
 protected:
+	virtual void NativeConstruct() override;
+	
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
@@ -74,6 +79,9 @@ protected:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UImage> Highlight_Image;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;

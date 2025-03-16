@@ -6,6 +6,7 @@
 #include "ObsidianItemAffixStack.h"
 #include "InventoryItems/ObsidianGameplayTagStack.h"
 #include "Fragments/OInventoryItemFragment_Affixes.h"
+#include "Fragments/Shards/ObsidianUsableShard.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianInventoryItemInstance.generated.h"
 
@@ -70,8 +71,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	void SetUsableShard(UObsidianUsableShard* InUsableShard);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool UseItem(UObsidianInventoryItemInstance* UsingOntoInstance);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	FObsidianItemsMatchingUsableContext FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) const;
 
 	/**
 	 * Equipping.
