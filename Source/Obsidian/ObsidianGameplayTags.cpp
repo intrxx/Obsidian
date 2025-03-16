@@ -78,6 +78,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Move_Mouse, "Input.Native.Move.Mouse", "Move input.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_ReleaseUsingItem, "Input.Native.ReleaseUsingItem", "Input for easy release of Using Item.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_ReleaseContinouslyUsingItem, "Input.Native.ReleaseContinouslyUsingItem", "Input for release of continous Using Item.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_CharacterStatus, "Input.Native.CharacterStatus", "Character Status toggle input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Inventory, "Input.Native.Inventory", "Inventory toggle input.");

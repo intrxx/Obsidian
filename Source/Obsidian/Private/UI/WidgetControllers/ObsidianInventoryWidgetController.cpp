@@ -56,6 +56,11 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 	if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_GeneralItemChanged)
 	{
 		HandleHoveringOverInventoryItem(InventoryChangeMessage.GridItemPosition);
+		if(UObsidianItem* CorrespondingItemWidget = GetItemWidgetAtInventoryLocation(InventoryChangeMessage.GridItemPosition))
+		{
+			CorrespondingItemWidget->ResetHighlight();
+			CachedItemsMatchingUsableContext.Remove(CorrespondingItemWidget);
+		}
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemAdded)
 	{
@@ -74,6 +79,14 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 	{
 		UE_LOG(LogInventory, Display, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		RemoveInventoryItemWidget(InventoryChangeMessage.GridItemPosition);
+		
+		if(OwnerHeroComponent->IsUsingItem())
+		{
+			if(InventoryChangeMessage.ItemInstance == OwnerHeroComponent->GetUsingItem())
+			{
+				OwnerHeroComponent->SetUsingItem(false);
+			}
+		}
 	}
 	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemStacksChanged)
 	{
@@ -245,7 +258,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		OwnerHeroComponent->UseItem(SlotPosition);
+		OwnerHeroComponent->UseItem(SlotPosition, false);
 		return;
 	}
 	
@@ -308,7 +321,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		StopUsingItem();
+		OwnerHeroComponent->UseItem(SlotPosition, true);
 		return;
 	}
 	

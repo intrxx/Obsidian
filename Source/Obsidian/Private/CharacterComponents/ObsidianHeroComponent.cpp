@@ -262,6 +262,8 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 					ETriggerEvent::Triggered, this, &ThisClass::Input_DropItem, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ReleaseUsingItem,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ReleaseUsingItem, false);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ReleaseContinouslyUsingItem,
+					ETriggerEvent::Completed, this, &ThisClass::Input_ReleaseUsingItem, false);
 			}
 		}
 	}
@@ -1108,11 +1110,14 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 	}
 }
 
-void UObsidianHeroComponent::UseItem(const FVector2D& OnSlotPosition)
+void UObsidianHeroComponent::UseItem(const FVector2D& OnSlotPosition, const bool bLeftShiftDown)
 {
 	ServerUseItem(UsingItemInstance, OnSlotPosition);
 
-	SetUsingItem(false);
+	if(bLeftShiftDown == false)
+	{
+		SetUsingItem(false);
+	}
 }
 
 void UObsidianHeroComponent::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FVector2D& OnSlotPosition)

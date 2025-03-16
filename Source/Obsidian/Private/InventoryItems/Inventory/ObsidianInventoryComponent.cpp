@@ -881,12 +881,18 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	{
 		return;
 	}
+	
+	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(CurrentUsingInstanceStacks <= 0)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Trying to use Item [%s] that has no more stacks in UObsidianInventoryComponent::UseItem."), *UsingInstance->GetItemDebugName());
+		return;
+	}
 
 	if(UsingInstance->UseItem(UsingOntoInstance))
 	{
 		InventoryGrid.GeneralEntryChange(UsingOntoInstance);
 		
-		const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		if(CurrentUsingInstanceStacks > 1)
 		{
 			UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);

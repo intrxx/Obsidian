@@ -105,7 +105,7 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
 
-	void UseItem(const FVector2D& OnSlotPosition);
+	void UseItem(const FVector2D& OnSlotPosition, const bool bLeftShiftDown);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FVector2D& OnSlotPosition);
