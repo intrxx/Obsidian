@@ -4,6 +4,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "GameFramework/GameplayMessageSubsystem.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetAllEquippedItems() const
@@ -29,11 +30,24 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	const AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor);
 
+	if(ValidateEquipmentSlot(EquipmentSlotTag) == false)
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided EquipmentSlotTag [%s] does not match any EquipmentSlot."),
+			*EquipmentSlotTag.GetTagName().ToString()), ELogVerbosity::Error);
+		return nullptr;
+	}
+
 	FObsidianEquipmentEntry& NewEntry = Entries.AddDefaulted_GetRef();
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.EquipmentSlotTag = EquipmentSlotTag;
 	NewEntry.Instance->SetItemDef(ItemDefClass);
 	NewEntry.Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
+
+	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Equipment.Slot.Weapon");
+	if(EquipmentSlotTag.MatchesTag(WeaponSlotTag))
+	{
+		NewEntry.AssociatedSwap = CurrentWeaponSwap;
+	}
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
@@ -61,6 +75,13 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	check(Instance);
 	check(OwnerComponent);
 
+	if(ValidateEquipmentSlot(EquipmentSlotTag) == false)
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided EquipmentSlotTag [%s] does not match any EquipmentSlot."),
+			*EquipmentSlotTag.GetTagName().ToString()), ELogVerbosity::Error);
+		return;
+	}
+
 #if !UE_BUILD_SHIPPING
 	if(SlotToEquipmentMap.Contains(EquipmentSlotTag))
 	{
@@ -72,6 +93,12 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	FObsidianEquipmentEntry& NewEntry = Entries.Emplace_GetRef(Instance, EquipmentSlotTag);
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Instance);
 	Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
+
+	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Equipment.Slot.Weapon");
+	if(EquipmentSlotTag.MatchesTag(WeaponSlotTag))
+	{
+		NewEntry.AssociatedSwap = CurrentWeaponSwap;
+	}
 
 	MarkItemDirty(NewEntry);
 
@@ -94,6 +121,18 @@ void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 			BroadcastChangeMessage(FObsidianEquipmentEntry(Instance, CachedSlotTag), EObsidianEquipmentChangeType::ECT_ItemUnequipped);
 		}
 	}
+}
+
+bool FObsidianEquipmentList::ValidateEquipmentSlot(const FGameplayTag& SlotTag)
+{
+	for(const FGameplayTag& Tag : ObsidianGameplayTags::EquipmentSlots)
+	{
+		if(Tag == SlotTag)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void FObsidianEquipmentList::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)

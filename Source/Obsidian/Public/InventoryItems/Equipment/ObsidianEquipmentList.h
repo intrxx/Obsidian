@@ -13,6 +13,14 @@ class UObsidianEquipmentComponent;
 struct FObsidianEquipmentList;
 
 UENUM(BlueprintType)
+enum class EObsidianWeaponSwap : uint8
+{
+	EWS_None UMETA(DisplayName = "None"),
+	EWS_FirstSwap UMETA(DisplayName = "First Swap"),
+	EWS_SecondSwap UMETA(DisplayName = "Second Swap"),
+};
+
+UENUM(BlueprintType)
 enum class EObsidianEquipmentChangeType : uint8
 {
 	ECT_None = 0 UMETA(DisplayName = "None"),
@@ -66,6 +74,9 @@ private:
 
 	UPROPERTY()
 	FGameplayTag EquipmentSlotTag;
+
+	UPROPERTY()
+	EObsidianWeaponSwap AssociatedSwap = EObsidianWeaponSwap::EWS_None;
 };
 
 /**
@@ -94,6 +105,8 @@ public:
 	{
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianEquipmentEntry, FObsidianEquipmentList>(Entries, DeltaParams, *this);
 	}
+	
+	static bool ValidateEquipmentSlot(const FGameplayTag& SlotTag);
 
 	//~ Start of FFastArraySerializer contract
 	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
@@ -115,6 +128,8 @@ private:
 	TObjectPtr<UActorComponent> OwnerComponent;
 	
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToEquipmentMap;
+
+	EObsidianWeaponSwap CurrentWeaponSwap = EObsidianWeaponSwap::EWS_FirstSwap;
 };
 
 template<>

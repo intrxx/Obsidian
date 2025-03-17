@@ -10,6 +10,30 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
 
+USTRUCT()
+struct FObsidianSwapSlot
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianSwapSlot(){};
+	FObsidianSwapSlot(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InOldSlotTag, const EObsidianWeaponSwap InAssociatedSwap)
+		: Instance(InInstance)
+		, OldSlotTag(InOldSlotTag)
+		, AssociatedSwap(InAssociatedSwap)
+	{}
+	
+public:
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryItemInstance> Instance = nullptr;
+
+	UPROPERTY()
+	FGameplayTag OldSlotTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	EObsidianWeaponSwap AssociatedSwap = EObsidianWeaponSwap::EWS_None;
+};
+
 USTRUCT(BlueprintType)
 struct FObsidianEquipmentSlotDefinition
 {
@@ -79,6 +103,8 @@ public:
 
 	EObsidianEquipResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
 
+	void WeaponSwap();
+
 	void UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip);
 
 	//~ Start of UObject interface
@@ -107,6 +133,7 @@ private:
 	UPROPERTY(Replicated)
 	FObsidianEquipmentList EquipmentList;
 	
+	TArray<FObsidianSwapSlot> InactiveSwapEquipment;
 };
 
 #if !UE_BUILD_SHIPPING

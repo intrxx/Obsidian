@@ -264,6 +264,9 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ReleaseUsingItem, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ReleaseContinouslyUsingItem,
 					ETriggerEvent::Completed, this, &ThisClass::Input_ReleaseUsingItem, false);
+
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_WeaponSwap,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_WeaponSwap, false);
 			}
 		}
 	}
@@ -441,6 +444,11 @@ void UObsidianHeroComponent::Input_ReleaseUsingItem()
 	{
 		SetUsingItem(false);
 	}
+}
+
+void UObsidianHeroComponent::Input_WeaponSwap()
+{
+	ServerWeaponSwap();
 }
 
 void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget, UObsidianInventoryItemInstance* UsingInstance)
@@ -705,6 +713,25 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation
 		UE_LOG(LogEquipment, Error, TEXT("Client cheated the check to replace the equipped item! Discarding the replacement."))
 		ServerEquipItemAtSlot(SlotTag);	
 	}
+}
+
+void UObsidianHeroComponent::ServerWeaponSwap_Implementation()
+{
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		return;
+	}
+
+	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
+	if(EquipmentComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		return;
+	}
+
+	EquipmentComponent->WeaponSwap();
 }
 
 void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppableItem* ItemToPickup)

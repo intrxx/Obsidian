@@ -123,6 +123,9 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerReplaceItemAtEquipmentSlotSlot(const FGameplayTag& SlotTag);
 
+	UFUNCTION(Server, Reliable)
+	void ServerWeaponSwap();
+
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
@@ -149,6 +152,8 @@ protected:
 	
 	void Input_DropItem();
 	void Input_ReleaseUsingItem();
+
+	void Input_WeaponSwap();
 	
 protected:
 	/** Time Threshold to know if it was a short press */

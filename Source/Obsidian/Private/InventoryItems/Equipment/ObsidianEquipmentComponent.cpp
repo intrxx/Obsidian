@@ -333,6 +333,82 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubcla
 	return EObsidianEquipResult::CanEquip;
 }
 
+void UObsidianEquipmentComponent::WeaponSwap()
+{
+	if(EquipmentList.CurrentWeaponSwap == EObsidianWeaponSwap::EWS_FirstSwap)
+	{
+		EquipmentList.CurrentWeaponSwap = EObsidianWeaponSwap::EWS_SecondSwap;
+
+		TArray<FObsidianSwapSlot> WeaponsSetToSwapTo = InactiveSwapEquipment;
+		InactiveSwapEquipment.Empty(2);
+		
+		for(const FObsidianEquipmentEntry& Entry : EquipmentList.Entries)
+		{
+			if(Entry.AssociatedSwap == EObsidianWeaponSwap::EWS_FirstSwap && Entry.Instance)
+			{
+				InactiveSwapEquipment.Add(FObsidianSwapSlot(Entry.Instance, Entry.EquipmentSlotTag, EObsidianWeaponSwap::EWS_FirstSwap));
+			}
+		}
+
+		for(const FObsidianSwapSlot& InactiveInstance : InactiveSwapEquipment)
+		{
+			if(InactiveInstance.Instance)
+			{
+				UnequipItem(InactiveInstance.Instance);
+			}
+		}
+		
+		for(const FObsidianSwapSlot& Swap : WeaponsSetToSwapTo)
+		{
+			if(Swap.AssociatedSwap == EObsidianWeaponSwap::EWS_SecondSwap && Swap.Instance)
+			{
+				EquipmentList.AddEntry(Swap.Instance, Swap.OldSlotTag);
+
+				if(Swap.Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+				{
+					AddReplicatedSubObject(Swap.Instance);
+				}
+			}
+		}
+	}
+	else if(EquipmentList.CurrentWeaponSwap  == EObsidianWeaponSwap::EWS_SecondSwap)
+	{
+		EquipmentList.CurrentWeaponSwap  = EObsidianWeaponSwap::EWS_FirstSwap;
+
+		TArray<FObsidianSwapSlot> WeaponsSetToSwapTo = InactiveSwapEquipment;
+		InactiveSwapEquipment.Empty(2);
+
+		for(const FObsidianEquipmentEntry& Entry : EquipmentList.Entries)
+		{
+			if(Entry.AssociatedSwap == EObsidianWeaponSwap::EWS_SecondSwap && Entry.Instance)
+			{
+				InactiveSwapEquipment.Add(FObsidianSwapSlot(Entry.Instance, Entry.EquipmentSlotTag, EObsidianWeaponSwap::EWS_SecondSwap));
+			}
+		}
+
+		for(const FObsidianSwapSlot& InactiveInstance : InactiveSwapEquipment)
+		{
+			if(InactiveInstance.Instance)
+			{
+				UnequipItem(InactiveInstance.Instance);
+			}
+		}
+		
+		for(const FObsidianSwapSlot& Swap : WeaponsSetToSwapTo)
+		{
+			if(Swap.AssociatedSwap == EObsidianWeaponSwap::EWS_FirstSwap)
+			{
+				EquipmentList.AddEntry(Swap.Instance, Swap.OldSlotTag);
+
+				if(Swap.Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+				{
+					AddReplicatedSubObject(Swap.Instance);
+				}
+			}
+		}
+	}
+}
+
 void UObsidianEquipmentComponent::UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip)
 {
 	if(!GetOwner()->HasAuthority())
@@ -454,8 +530,10 @@ void UObsidianEquipmentComponent::CreateDefaultEquipmentSlots()
 	
 	EquipmentSlots =
 		{
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_RightHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_LeftHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
+			// {FObsidianEquipmentSlotDefinition(FGameplayTag::RequestGameplayTag(FName("Equipment.Slot.RightHand")), FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
+			// {FObsidianEquipmentSlotDefinition(FGameplayTag::RequestGameplayTag(FName("Equipment.Slot.LeftHand")), FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
+			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
+			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
 		
 			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Helmet, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Helmet))},
 			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_BodyArmor, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_BodyArmor))},

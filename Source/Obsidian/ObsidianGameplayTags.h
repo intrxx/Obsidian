@@ -50,13 +50,14 @@ namespace ObsidianGameplayTags
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_ReleaseUsingItem);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_ReleaseContinouslyUsingItem);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_DropItem);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_CharacterStatus);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Inventory);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_PassiveSkillTree);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_DropItem);
 
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_WeaponSwap);
+	
 	/**
 	 * Ability
 	 */
@@ -253,8 +254,13 @@ namespace ObsidianGameplayTags
 	 * Equipment Slots.
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_RightHand);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_LeftHand);
+	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_RightHand_FirstSwap);
+	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_LeftHand_FirstSwap);
+	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_RightHand_SecondSwap);
+	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_LeftHand_SecondSwap);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Weapon_RightHand);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Weapon_LeftHand);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Helmet);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_BodyArmor);
@@ -265,6 +271,9 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Amulet);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_RightRing);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_LeftRing);
+
+	/** All Stack Types stored for convenience */
+	OBSIDIAN_API extern const TArray<FGameplayTag> EquipmentSlots;
 
 	/**
 	 * Stacks Counts

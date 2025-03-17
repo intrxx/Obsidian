@@ -79,12 +79,13 @@ namespace ObsidianGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_ReleaseUsingItem, "Input.Native.ReleaseUsingItem", "Input for easy release of Using Item.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_ReleaseContinouslyUsingItem, "Input.Native.ReleaseContinouslyUsingItem", "Input for release of continous Using Item.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_DropItem, "Input.DropItem", "Aditional input for droping the item.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_CharacterStatus, "Input.Native.CharacterStatus", "Character Status toggle input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_Inventory, "Input.Native.Inventory", "Inventory toggle input.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_PassiveSkillTree, "Input.Native.PassiveSkillTree", "Passive Skill Tree toggle input.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_DropItem, "Input.DropItem", "Aditional input for droping the item.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_WeaponSwap, "Input.Native.WeaponSwap", "Input for Weapon Swap.");
 
 	/**
 	 * Ability
@@ -276,8 +277,13 @@ namespace ObsidianGameplayTags
 	/**
 	 * Equipment Slots.
 	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightHand, "Equipment.Slot.RightHand", "Item Tag representing Right Hand Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftHand, "Equipment.Slot.LeftHand", "Item Tag representing Left Hand Equipment Slot.");
+	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightHand_FirstSwap, "Equipment.Slot.RightHand.FirstSwap", "Item Tag representing Right Hand Equipment Slot from First Swap.");
+	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftHand_FirstSwap, "Equipment.Slot.LeftHand.FirstSwap", "Item Tag representing Left Hand Equipment Slot from First Swap.");
+	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightHand_SecondSwap, "Equipment.Slot.RightHand.SecondSwap", "Item Tag representing Right Hand Equipment Slot from Second Swap.");
+	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftHand_SecondSwap, "Equipment.Slot.LeftHand.SecondSwap", "Item Tag representing Left Hand Equipment Slot from Second Swap.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_RightHand, "Equipment.Slot.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_LeftHand, "Equipment.Slot.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Helmet, "Equipment.Slot.Helmet", "Item Tag representing Helmet Equipment Slot.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_BodyArmor, "Equipment.Slot.BodyArmor", "Item Tag representing Body Armor Equipment Slot.");
@@ -288,6 +294,26 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Amulet, "Equipment.Slot.Amulet", "Item Tag representing Amulet Equipment Slot.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightRing, "Equipment.Slot.RightRing", "Item Tag representing Right Ring Equipment Slot.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftRing, "Equipment.Slot.LeftRing", "Item Tag representing Left Ring Equipment Slot.");
+
+	const TArray<FGameplayTag> EquipmentSlots =
+	{
+		{
+			// Equipment_Slot_RightHand_FirstSwap,
+			// Equipment_Slot_LeftHand_FirstSwap,
+			// Equipment_Slot_RightHand_SecondSwap,
+			// Equipment_Slot_LeftHand_SecondSwap,
+			Equipment_Slot_Weapon_RightHand,
+			Equipment_Slot_Weapon_LeftHand,
+			Equipment_Slot_Helmet,
+			Equipment_Slot_BodyArmor,
+			Equipment_Slot_Belt,
+			Equipment_Slot_Gloves,
+			Equipment_Slot_Boots,
+			Equipment_Slot_Amulet,
+			Equipment_Slot_RightRing,
+			Equipment_Slot_LeftRing
+		  }
+	};
 
 	/**
 	 * Stack Counts
