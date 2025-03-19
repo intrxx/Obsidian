@@ -26,6 +26,7 @@ enum class EObsidianEquipmentChangeType : uint8
 	ECT_None = 0 UMETA(DisplayName = "None"),
 	ECT_ItemUnequipped UMETA(DisplayName = "Item Unequipped"),
 	ECT_ItemEquipped UMETA(DisplayName = "Item Equipped"),
+	ECT_ItemSwapped UMETA(DisplayName = "Item Swapped"),
 
 	ECT_MAX
 };
@@ -45,6 +46,9 @@ struct FObsidianEquipmentChangeMessage
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
+	FGameplayTag LastObservedSlot = FGameplayTag::EmptyTag;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
 	EObsidianEquipmentChangeType ChangeType = EObsidianEquipmentChangeType::ECT_None;
 };
 
@@ -60,6 +64,9 @@ public:
 	FObsidianEquipmentEntry()
 		: Instance(nullptr)
 	{}
+	FObsidianEquipmentEntry(UObsidianInventoryItemInstance* InInstance)
+		: Instance(InInstance)
+	{}
 	FObsidianEquipmentEntry(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InTag)
 		: Instance(InInstance)
 		, EquipmentSlotTag(InTag)
@@ -73,7 +80,10 @@ private:
 	TObjectPtr<UObsidianInventoryItemInstance> Instance = nullptr;
 
 	UPROPERTY()
-	FGameplayTag EquipmentSlotTag;
+	FGameplayTag EquipmentSlotTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	FGameplayTag LastObservedEquipmentSlotTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY()
 	EObsidianWeaponSwap AssociatedSwap = EObsidianWeaponSwap::EWS_None;
@@ -99,6 +109,8 @@ public:
 
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
+	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);
+	void MoveFromSwap(UObsidianInventoryItemInstance* Instance);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
@@ -115,7 +127,7 @@ public:
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const EObsidianEquipmentChangeType ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& LastObservedSlotTag, const EObsidianEquipmentChangeType ChangeType) const;
 
 private:
 	friend UObsidianEquipmentComponent;

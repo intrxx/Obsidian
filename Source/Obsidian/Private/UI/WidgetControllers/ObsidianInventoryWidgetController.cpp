@@ -129,7 +129,20 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 	{
 		UE_LOG(LogInventory, Display, TEXT("Unequipped item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
-		RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTag);
+		RemoveEquipmentItemWidget(EquipmentChangeMessage.LastObservedSlot);
+	}
+	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
+	{
+		UE_LOG(LogInventory, Display, TEXT("Swapped item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		
+		RemoveEquipmentItemWidget(EquipmentChangeMessage.LastObservedSlot);
+
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemImage = Instance->GetItemImage();
+		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
+		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
+		
+		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
 }
 

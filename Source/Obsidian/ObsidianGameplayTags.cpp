@@ -277,13 +277,11 @@ namespace ObsidianGameplayTags
 	/**
 	 * Equipment Slots.
 	 */
-	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightHand_FirstSwap, "Equipment.Slot.RightHand.FirstSwap", "Item Tag representing Right Hand Equipment Slot from First Swap.");
-	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftHand_FirstSwap, "Equipment.Slot.LeftHand.FirstSwap", "Item Tag representing Left Hand Equipment Slot from First Swap.");
-	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightHand_SecondSwap, "Equipment.Slot.RightHand.SecondSwap", "Item Tag representing Right Hand Equipment Slot from Second Swap.");
-	// UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftHand_SecondSwap, "Equipment.Slot.LeftHand.SecondSwap", "Item Tag representing Left Hand Equipment Slot from Second Swap.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_RightHand, "Equipment.Slot.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_LeftHand, "Equipment.Slot.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_RightHand_Swap, "Equipment.Slot.Weapon.RightHand.Swap", "Item Tag representing Right Hand Equipment Slot Swap.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_LeftHand_Swap, "Equipment.Slot.Weapon.LeftHand.Swap", "Item Tag representing Left Hand Equipment Slot Swap.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Helmet, "Equipment.Slot.Helmet", "Item Tag representing Helmet Equipment Slot.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_BodyArmor, "Equipment.Slot.BodyArmor", "Item Tag representing Body Armor Equipment Slot.");
@@ -298,10 +296,6 @@ namespace ObsidianGameplayTags
 	const TArray<FGameplayTag> EquipmentSlots =
 	{
 		{
-			// Equipment_Slot_RightHand_FirstSwap,
-			// Equipment_Slot_LeftHand_FirstSwap,
-			// Equipment_Slot_RightHand_SecondSwap,
-			// Equipment_Slot_LeftHand_SecondSwap,
 			Equipment_Slot_Weapon_RightHand,
 			Equipment_Slot_Weapon_LeftHand,
 			Equipment_Slot_Helmet,

@@ -37,6 +37,8 @@ void UObsidianInventory::NativeConstruct()
 	{
 		RightHand_EquipmentSlot,
 		LeftHand_EquipmentSlot,
+		RightHandSwap_EquipmentSlot,
+		LeftHandSwap_EquipmentSlot,
 		Helmet_EquipmentSlot,
 		BodyArmor_EquipmentSlot,
 		Belt_EquipmentSlot,
@@ -117,10 +119,12 @@ void UObsidianInventory::SetupInventoryGrid()
 
 void UObsidianInventory::SetupEquipmentSlots()
 {
-	if(RightHand_EquipmentSlot && LeftHand_EquipmentSlot)
+	if(RightHand_EquipmentSlot && LeftHand_EquipmentSlot && RightHandSwap_EquipmentSlot && LeftHandSwap_EquipmentSlot)
 	{
 		RightHand_EquipmentSlot->InitializeSlot(this);
 		LeftHand_EquipmentSlot->InitializeSlot(this);
+		RightHandSwap_EquipmentSlot->InitializeSlot(this);
+		LeftHandSwap_EquipmentSlot->InitializeSlot(this);
 	}
 
 	if(Helmet_EquipmentSlot && BodyArmor_EquipmentSlot && Belt_EquipmentSlot && Gloves_EquipmentSlot && Boots_EquipmentSlot)

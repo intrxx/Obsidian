@@ -253,14 +253,11 @@ namespace ObsidianGameplayTags
 	/**
 	 * Equipment Slots.
 	 */
-
-	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_RightHand_FirstSwap);
-	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_LeftHand_FirstSwap);
-	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_RightHand_SecondSwap);
-	// OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_LeftHand_SecondSwap);
-
+	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Weapon_RightHand);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Weapon_LeftHand);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Weapon_RightHand_Swap);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Weapon_LeftHand_Swap);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_Helmet);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_BodyArmor);

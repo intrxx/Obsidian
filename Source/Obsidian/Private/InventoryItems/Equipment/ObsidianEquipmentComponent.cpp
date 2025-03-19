@@ -354,7 +354,7 @@ void UObsidianEquipmentComponent::WeaponSwap()
 		{
 			if(InactiveInstance.Instance)
 			{
-				UnequipItem(InactiveInstance.Instance);
+				EquipmentList.MoveWeaponToSwap(InactiveInstance.Instance);
 			}
 		}
 		
@@ -362,12 +362,7 @@ void UObsidianEquipmentComponent::WeaponSwap()
 		{
 			if(Swap.AssociatedSwap == EObsidianWeaponSwap::EWS_SecondSwap && Swap.Instance)
 			{
-				EquipmentList.AddEntry(Swap.Instance, Swap.OldSlotTag);
-
-				if(Swap.Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-				{
-					AddReplicatedSubObject(Swap.Instance);
-				}
+				EquipmentList.MoveFromSwap(Swap.Instance);
 			}
 		}
 	}
@@ -390,7 +385,7 @@ void UObsidianEquipmentComponent::WeaponSwap()
 		{
 			if(InactiveInstance.Instance)
 			{
-				UnequipItem(InactiveInstance.Instance);
+				EquipmentList.MoveWeaponToSwap(InactiveInstance.Instance);
 			}
 		}
 		
@@ -398,12 +393,7 @@ void UObsidianEquipmentComponent::WeaponSwap()
 		{
 			if(Swap.AssociatedSwap == EObsidianWeaponSwap::EWS_FirstSwap)
 			{
-				EquipmentList.AddEntry(Swap.Instance, Swap.OldSlotTag);
-
-				if(Swap.Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-				{
-					AddReplicatedSubObject(Swap.Instance);
-				}
+				EquipmentList.MoveFromSwap(Swap.Instance);
 			}
 		}
 	}

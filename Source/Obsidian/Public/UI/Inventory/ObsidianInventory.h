@@ -96,6 +96,10 @@ private:
 	TObjectPtr<UObsidianItemSlot_Equipment> RightHand_EquipmentSlot;
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianItemSlot_Equipment> LeftHand_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> RightHandSwap_EquipmentSlot;
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemSlot_Equipment> LeftHandSwap_EquipmentSlot;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianItemSlot_Equipment> Helmet_EquipmentSlot;

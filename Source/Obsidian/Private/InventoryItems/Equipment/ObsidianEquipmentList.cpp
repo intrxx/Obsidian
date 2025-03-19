@@ -66,7 +66,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 
 	MarkItemDirty(NewEntry);
 
-	BroadcastChangeMessage(NewEntry, EObsidianEquipmentChangeType::ECT_ItemEquipped);
+	BroadcastChangeMessage(NewEntry, EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
 	return Item;
 }
 
@@ -102,7 +102,101 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 
 	MarkItemDirty(NewEntry);
 
-	BroadcastChangeMessage(NewEntry, EObsidianEquipmentChangeType::ECT_ItemEquipped);
+	BroadcastChangeMessage(NewEntry, EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
+}
+
+void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance)
+{
+	check(Instance);
+	check(OwnerComponent);
+	
+	const FGameplayTag CurrentWeaponTag = Instance->GetItemCurrentEquipmentSlot();
+
+#if !UE_BUILD_SHIPPING
+	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Equipment.Slot.Weapon");
+	if(CurrentWeaponTag.MatchesTag(WeaponSlotTag) == false)
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Instance [%s] is not currentely in Weapon Slot, swapping shouldn't happen."),
+			*CurrentWeaponTag.GetTagName().ToString()), ELogVerbosity::Error);
+	}
+	
+	if(SlotToEquipmentMap.Contains(CurrentWeaponTag) == false)
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided EquipmentSlotTag [%s] is not equipped, why swapping?"),
+			*CurrentWeaponTag.GetTagName().ToString()), ELogVerbosity::Error);
+	}
+#endif
+
+	FGameplayTag SwapTag = ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand_Swap;
+	if(CurrentWeaponTag == ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand)
+	{
+		SwapTag = ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand_Swap;
+	}
+
+	bool bSuccess = false;
+	for(FObsidianEquipmentEntry& Entry : Entries)
+	{
+		if(Entry.Instance == Instance)
+		{
+			Entry.EquipmentSlotTag = SwapTag;
+			//TODO Do anything unequipping related
+			MarkItemDirty(Entry);
+
+			bSuccess = true;
+		}
+	}
+
+	if(bSuccess)
+	{
+		Instance->SetItemCurrentEquipmentSlot(SwapTag);
+		SlotToEquipmentMap.Remove(CurrentWeaponTag);
+		SlotToEquipmentMap.Add(SwapTag, Instance);
+		BroadcastChangeMessage(Instance, SwapTag, CurrentWeaponTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
+	}
+}
+
+void FObsidianEquipmentList::MoveFromSwap(UObsidianInventoryItemInstance* Instance)
+{
+	check(Instance);
+	check(OwnerComponent);
+	
+	const FGameplayTag CurrentWeaponTag = Instance->GetItemCurrentEquipmentSlot();
+
+#if !UE_BUILD_SHIPPING
+	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Equipment.Slot.Weapon");
+	if(CurrentWeaponTag.MatchesTag(WeaponSlotTag) == false)
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Instance [%s] is not currentely in Weapon Slot, swapping shouldn't happen."),
+			*CurrentWeaponTag.GetTagName().ToString()), ELogVerbosity::Error);
+	}
+#endif
+
+	FGameplayTag MainWeaponSlotTag = ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand;
+	if(CurrentWeaponTag == ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand_Swap)
+	{
+		MainWeaponSlotTag = ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand;
+	}
+
+	bool bSuccess = false;
+	for(FObsidianEquipmentEntry& Entry : Entries)
+	{
+		if(Entry.Instance == Instance)
+		{
+			Entry.EquipmentSlotTag = MainWeaponSlotTag;
+			//TODO Do anything equipping related
+			MarkItemDirty(Entry);
+
+			bSuccess = true;
+		}
+	}
+
+	if(bSuccess)
+	{
+		Instance->SetItemCurrentEquipmentSlot(MainWeaponSlotTag);
+		SlotToEquipmentMap.Remove(CurrentWeaponTag);
+		SlotToEquipmentMap.Add(MainWeaponSlotTag, Instance);
+		BroadcastChangeMessage(Instance, MainWeaponSlotTag, CurrentWeaponTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
+	}
 }
 
 void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instance)
@@ -118,7 +212,7 @@ void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 			It.RemoveCurrent();
 			MarkArrayDirty();
 
-			BroadcastChangeMessage(FObsidianEquipmentEntry(Instance, CachedSlotTag), EObsidianEquipmentChangeType::ECT_ItemUnequipped);
+			BroadcastChangeMessage(Instance, FGameplayTag::EmptyTag, CachedSlotTag, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
 		}
 	}
 }
@@ -140,9 +234,10 @@ void FObsidianEquipmentList::PreReplicatedRemove(const TArrayView<int32> Removed
 	for(const int32 Index : RemovedIndices)
 	{
 		FObsidianEquipmentEntry& Entry = Entries[Index];
+		Entry.LastObservedEquipmentSlotTag = FGameplayTag::EmptyTag;
 		SlotToEquipmentMap.Remove(Entry.EquipmentSlotTag);
-
-		BroadcastChangeMessage(Entry, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
+		
+		BroadcastChangeMessage(Entry, FGameplayTag::EmptyTag, Entry.EquipmentSlotTag, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
 	}
 }
 
@@ -151,24 +246,37 @@ void FObsidianEquipmentList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 	for(const int32 Index : AddedIndices)
 	{
 		FObsidianEquipmentEntry& Entry = Entries[Index];
+		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;
 		SlotToEquipmentMap.Add(Entry.EquipmentSlotTag, Entry.Instance);
 
-		BroadcastChangeMessage(Entry, EObsidianEquipmentChangeType::ECT_ItemEquipped);
+		BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
 	}
 }
 
 void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
 {
-	// Don't have a use case for that rn, maybe upgrading items while equipped later?
+	for(const int32 Index : ChangedIndices)
+	{
+		FObsidianEquipmentEntry& Entry = Entries[Index];
+		check(Entry.LastObservedEquipmentSlotTag != FGameplayTag::EmptyTag);
+		if(Entry.LastObservedEquipmentSlotTag != Entry.EquipmentSlotTag)
+		{
+			SlotToEquipmentMap.Remove(Entry.LastObservedEquipmentSlotTag);
+			SlotToEquipmentMap.Add(Entry.EquipmentSlotTag, Entry.Instance);
+			BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, Entry.LastObservedEquipmentSlotTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
+		}
+		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;
+	}
 }
 
-void FObsidianEquipmentList::BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const EObsidianEquipmentChangeType ChangeType) const
+void FObsidianEquipmentList::BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& LastObservedSlotTag, const EObsidianEquipmentChangeType ChangeType) const
 {
 	FObsidianEquipmentChangeMessage Message;
 	Message.EquipmentOwner = OwnerComponent;
 	Message.ItemInstance = Entry.Instance;
-	Message.SlotTag = Entry.EquipmentSlotTag;
+	Message.SlotTag = EquipmentSlotTag;
 	Message.ChangeType = ChangeType;
+	Message.LastObservedSlot = LastObservedSlotTag;
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
 	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message_Equipment_Changed, Message);
