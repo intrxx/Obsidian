@@ -381,6 +381,13 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag)
 {
+	const FGameplayTag WeaponSwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Equipment.SwapSlot.Weapon"));
+	if(SlotTag.MatchesTag(WeaponSwapSlotTag))
+	{
+		//TODO Cannot left click on swapped item, add VO?
+		return;
+	}
+	
 	check(EquipmentComponent);
 	check(OwnerHeroComponent);
 	check(DraggedItemWidgetClass);

@@ -176,9 +176,6 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 		SwapTag = ObsidianGameplayTags::Equipment_SwapSlot_Weapon_LeftHand;
 	}
 
-	FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Moving Instance [%s] From Weapon Slot [%s] To Swap Slot [%s]."),
-			*Instance->GetItemDebugName(), *CurrentWeaponSlotTag.GetTagName().ToString(), *SwapTag.GetTagName().ToString()), ELogVerbosity::Warning);
-
 	bool bSuccess = false;
 	for(FObsidianEquipmentEntry& Entry : Entries)
 	{
@@ -204,7 +201,7 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 	
 }
 
-void FObsidianEquipmentList::MoveFromSwap(UObsidianInventoryItemInstance* Instance, const bool bSwappingBothWays)
+void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* Instance, const bool bSwappingBothWays)
 {
 	check(Instance);
 	check(OwnerComponent);
@@ -237,9 +234,6 @@ void FObsidianEquipmentList::MoveFromSwap(UObsidianInventoryItemInstance* Instan
 			bSuccess = true;
 		}
 	}
-
-	FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Moving Instance [%s] From Swap Slot [%s] To Weapon Slot [%s]."),
-			*Instance->GetItemDebugName(), *CurrentSwapTag.GetTagName().ToString(), *MainWeaponSlotTag.GetTagName().ToString()), ELogVerbosity::Warning);
 
 	if(bSuccess)
 	{

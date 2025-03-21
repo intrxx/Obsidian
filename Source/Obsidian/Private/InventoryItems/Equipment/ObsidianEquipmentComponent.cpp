@@ -353,7 +353,7 @@ void UObsidianEquipmentComponent::WeaponSwap()
 			const FGameplayTag EquippedSlotTag = Swap->GetItemCurrentEquipmentSlot();
 			const bool bSwappingBothWays = FObsidianEquipmentList::SwappingBothWays(EquippedSlotTag, EquipmentToMoveToSwap);
 			
-			EquipmentList.MoveFromSwap(Swap, bSwappingBothWays);
+			EquipmentList.MoveWeaponFromSwap(Swap, bSwappingBothWays);
 		}
 	}
 }

@@ -108,7 +108,7 @@ public:
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	
 	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);
-	void MoveFromSwap(UObsidianInventoryItemInstance* Instance, const bool bSwappingBothWays);
+	void MoveWeaponFromSwap(UObsidianInventoryItemInstance* Instance, const bool bSwappingBothWays);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
