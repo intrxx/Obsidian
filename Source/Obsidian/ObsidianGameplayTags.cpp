@@ -280,8 +280,8 @@ namespace ObsidianGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_RightHand, "Equipment.Slot.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_LeftHand, "Equipment.Slot.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_RightHand_Swap, "Equipment.Slot.Weapon.RightHand.Swap", "Item Tag representing Right Hand Equipment Slot Swap.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_LeftHand_Swap, "Equipment.Slot.Weapon.LeftHand.Swap", "Item Tag representing Left Hand Equipment Slot Swap.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_SwapSlot_Weapon_RightHand, "Equipment.SwapSlot.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot Swap.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_SwapSlot_Weapon_LeftHand, "Equipment.SwapSlot.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot Swap.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Helmet, "Equipment.Slot.Helmet", "Item Tag representing Helmet Equipment Slot.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_BodyArmor, "Equipment.Slot.BodyArmor", "Item Tag representing Body Armor Equipment Slot.");

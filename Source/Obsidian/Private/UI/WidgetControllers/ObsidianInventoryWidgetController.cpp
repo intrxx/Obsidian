@@ -128,15 +128,23 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
 	{
 		UE_LOG(LogInventory, Display, TEXT("Unequipped item: [%s]"), *Instance->GetItemDisplayName().ToString());
-		
-		RemoveEquipmentItemWidget(EquipmentChangeMessage.LastObservedSlot);
+
+		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
+		if(SlotTagToClear.IsValid())
+		{
+			RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTagToClear);
+		}
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
 	{
 		UE_LOG(LogInventory, Display, TEXT("Swapped item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
-		RemoveEquipmentItemWidget(EquipmentChangeMessage.LastObservedSlot);
-
+		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
+		if(SlotTagToClear.IsValid())
+		{
+			RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTagToClear);
+		}
+		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
@@ -737,10 +745,11 @@ UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtEquipmentSlot(
 
 void UObsidianInventoryWidgetController::AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget)
 {
-	if(!EquippedItemWidgetMap.Contains(Slot))
+	if(EquippedItemWidgetMap.Contains(Slot))
 	{
-		EquippedItemWidgetMap.Add(Slot, ItemWidget);
+		RemoveEquipmentItemWidget(Slot);
 	}
+	EquippedItemWidgetMap.Add(Slot, ItemWidget);
 }
 
 void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGameplayTag& Slot)

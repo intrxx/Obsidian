@@ -46,7 +46,7 @@ struct FObsidianEquipmentChangeMessage
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
-	FGameplayTag LastObservedSlot = FGameplayTag::EmptyTag;
+	FGameplayTag SlotTagToClear = FGameplayTag::EmptyTag;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
 	EObsidianEquipmentChangeType ChangeType = EObsidianEquipmentChangeType::ECT_None;
@@ -106,12 +106,15 @@ public:
 	{}
 
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
+	TArray<UObsidianInventoryItemInstance*> GetSwappedWeapons();
+	TArray<UObsidianInventoryItemInstance*> GetEquippedWeapons();
 
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
-	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);
-	void MoveFromSwap(UObsidianInventoryItemInstance* Instance);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
+	
+	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);
+	void MoveFromSwap(UObsidianInventoryItemInstance* Instance, const bool bSwappingBothWays);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
@@ -127,7 +130,7 @@ public:
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& LastObservedSlotTag, const EObsidianEquipmentChangeType ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& SlotTagToClear, const EObsidianEquipmentChangeType ChangeType) const;
 
 private:
 	friend UObsidianEquipmentComponent;

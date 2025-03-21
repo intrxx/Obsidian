@@ -32,7 +32,7 @@ protected:
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 protected:
-	UPROPERTY(EditAnywhere, meta=(Categories = "Equipment.Slot"), Category = "Obsidian|Setup")
+	UPROPERTY(EditAnywhere, meta=(Categories = "Equipment"), Category = "Obsidian|Setup")
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")

@@ -127,6 +127,8 @@ protected:
 
 private:
 	void CreateDefaultEquipmentSlots();
+
+	bool SwappingBothWays(const FGameplayTag& CurrentSlotTag, const TArray<UObsidianInventoryItemInstance*>& SwappingInstances);
 	
 private:
 	/** Actual array of equipped items, also hold Map for Slot at which item instance is equipped. */

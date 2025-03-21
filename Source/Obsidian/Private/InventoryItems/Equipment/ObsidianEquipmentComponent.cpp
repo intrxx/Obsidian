@@ -335,68 +335,49 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubcla
 
 void UObsidianEquipmentComponent::WeaponSwap()
 {
-	if(EquipmentList.CurrentWeaponSwap == EObsidianWeaponSwap::EWS_FirstSwap)
+	TArray<UObsidianInventoryItemInstance*> EquipmentToMoveToSwap = EquipmentList.GetEquippedWeapons();
+	TArray<UObsidianInventoryItemInstance*> EquipmentToMoveFromSwap = EquipmentList.GetSwappedWeapons();
+	
+	for(UObsidianInventoryItemInstance* Equipped : EquipmentToMoveToSwap)
 	{
-		EquipmentList.CurrentWeaponSwap = EObsidianWeaponSwap::EWS_SecondSwap;
-
-		TArray<FObsidianSwapSlot> WeaponsSetToSwapTo = InactiveSwapEquipment;
-		InactiveSwapEquipment.Empty(2);
-		
-		for(const FObsidianEquipmentEntry& Entry : EquipmentList.Entries)
+		if(IsValid(Equipped))
 		{
-			if(Entry.AssociatedSwap == EObsidianWeaponSwap::EWS_FirstSwap && Entry.Instance)
-			{
-				InactiveSwapEquipment.Add(FObsidianSwapSlot(Entry.Instance, Entry.EquipmentSlotTag, EObsidianWeaponSwap::EWS_FirstSwap));
-			}
-		}
-
-		for(const FObsidianSwapSlot& InactiveInstance : InactiveSwapEquipment)
-		{
-			if(InactiveInstance.Instance)
-			{
-				EquipmentList.MoveWeaponToSwap(InactiveInstance.Instance);
-			}
-		}
-		
-		for(const FObsidianSwapSlot& Swap : WeaponsSetToSwapTo)
-		{
-			if(Swap.AssociatedSwap == EObsidianWeaponSwap::EWS_SecondSwap && Swap.Instance)
-			{
-				EquipmentList.MoveFromSwap(Swap.Instance);
-			}
+			EquipmentList.MoveWeaponToSwap(Equipped);
 		}
 	}
-	else if(EquipmentList.CurrentWeaponSwap  == EObsidianWeaponSwap::EWS_SecondSwap)
+	
+	for(UObsidianInventoryItemInstance* Swap : EquipmentToMoveFromSwap)
 	{
-		EquipmentList.CurrentWeaponSwap  = EObsidianWeaponSwap::EWS_FirstSwap;
-
-		TArray<FObsidianSwapSlot> WeaponsSetToSwapTo = InactiveSwapEquipment;
-		InactiveSwapEquipment.Empty(2);
-
-		for(const FObsidianEquipmentEntry& Entry : EquipmentList.Entries)
+		if(IsValid(Swap))
 		{
-			if(Entry.AssociatedSwap == EObsidianWeaponSwap::EWS_SecondSwap && Entry.Instance)
-			{
-				InactiveSwapEquipment.Add(FObsidianSwapSlot(Entry.Instance, Entry.EquipmentSlotTag, EObsidianWeaponSwap::EWS_SecondSwap));
-			}
-		}
-
-		for(const FObsidianSwapSlot& InactiveInstance : InactiveSwapEquipment)
-		{
-			if(InactiveInstance.Instance)
-			{
-				EquipmentList.MoveWeaponToSwap(InactiveInstance.Instance);
-			}
-		}
-		
-		for(const FObsidianSwapSlot& Swap : WeaponsSetToSwapTo)
-		{
-			if(Swap.AssociatedSwap == EObsidianWeaponSwap::EWS_FirstSwap)
-			{
-				EquipmentList.MoveFromSwap(Swap.Instance);
-			}
+			const FGameplayTag EquippedSlotTag = Swap->GetItemCurrentEquipmentSlot();
+			const bool bSwappingBothWays = SwappingBothWays(EquippedSlotTag, EquipmentToMoveToSwap);
+			
+			EquipmentList.MoveFromSwap(Swap, bSwappingBothWays);
 		}
 	}
+}
+
+bool UObsidianEquipmentComponent::SwappingBothWays(const FGameplayTag& CurrentSlotTag, const TArray<UObsidianInventoryItemInstance*>& SwappingInstances)
+{
+	const FString CurrentSlotString = CurrentSlotTag.GetTagName().ToString();
+	FString CurrentSlotChildComponent;
+	CurrentSlotString.Split(TEXT("."), nullptr, &CurrentSlotChildComponent, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
+	
+	for(const UObsidianInventoryItemInstance* Instance : SwappingInstances)
+	{
+		const FGameplayTag SwappingSlotTag = Instance->GetItemCurrentEquipmentSlot();
+		const FString SwappingSlotString = SwappingSlotTag.GetTagName().ToString();
+		FString SwappingSlotChildComponent;
+		SwappingSlotString.Split(TEXT("."), nullptr, &SwappingSlotChildComponent, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
+
+		if(CurrentSlotChildComponent == SwappingSlotChildComponent)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void UObsidianEquipmentComponent::UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip)
@@ -520,8 +501,6 @@ void UObsidianEquipmentComponent::CreateDefaultEquipmentSlots()
 	
 	EquipmentSlots =
 		{
-			// {FObsidianEquipmentSlotDefinition(FGameplayTag::RequestGameplayTag(FName("Equipment.Slot.RightHand")), FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
-			// {FObsidianEquipmentSlotDefinition(FGameplayTag::RequestGameplayTag(FName("Equipment.Slot.LeftHand")), FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
 			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
 			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
 		
@@ -536,5 +515,6 @@ void UObsidianEquipmentComponent::CreateDefaultEquipmentSlots()
 			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_LeftRing, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Ring))},
 		};
 }
+
 
 
