@@ -351,33 +351,11 @@ void UObsidianEquipmentComponent::WeaponSwap()
 		if(IsValid(Swap))
 		{
 			const FGameplayTag EquippedSlotTag = Swap->GetItemCurrentEquipmentSlot();
-			const bool bSwappingBothWays = SwappingBothWays(EquippedSlotTag, EquipmentToMoveToSwap);
+			const bool bSwappingBothWays = FObsidianEquipmentList::SwappingBothWays(EquippedSlotTag, EquipmentToMoveToSwap);
 			
 			EquipmentList.MoveFromSwap(Swap, bSwappingBothWays);
 		}
 	}
-}
-
-bool UObsidianEquipmentComponent::SwappingBothWays(const FGameplayTag& CurrentSlotTag, const TArray<UObsidianInventoryItemInstance*>& SwappingInstances)
-{
-	const FString CurrentSlotString = CurrentSlotTag.GetTagName().ToString();
-	FString CurrentSlotChildComponent;
-	CurrentSlotString.Split(TEXT("."), nullptr, &CurrentSlotChildComponent, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
-	
-	for(const UObsidianInventoryItemInstance* Instance : SwappingInstances)
-	{
-		const FGameplayTag SwappingSlotTag = Instance->GetItemCurrentEquipmentSlot();
-		const FString SwappingSlotString = SwappingSlotTag.GetTagName().ToString();
-		FString SwappingSlotChildComponent;
-		SwappingSlotString.Split(TEXT("."), nullptr, &SwappingSlotChildComponent, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
-
-		if(CurrentSlotChildComponent == SwappingSlotChildComponent)
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 void UObsidianEquipmentComponent::UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip)

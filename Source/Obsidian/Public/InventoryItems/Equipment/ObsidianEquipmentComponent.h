@@ -10,30 +10,6 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
 
-USTRUCT()
-struct FObsidianSwapSlot
-{
-	GENERATED_BODY()
-
-public:
-	FObsidianSwapSlot(){};
-	FObsidianSwapSlot(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InOldSlotTag, const EObsidianWeaponSwap InAssociatedSwap)
-		: Instance(InInstance)
-		, OldSlotTag(InOldSlotTag)
-		, AssociatedSwap(InAssociatedSwap)
-	{}
-	
-public:
-	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemInstance> Instance = nullptr;
-
-	UPROPERTY()
-	FGameplayTag OldSlotTag = FGameplayTag::EmptyTag;
-
-	UPROPERTY()
-	EObsidianWeaponSwap AssociatedSwap = EObsidianWeaponSwap::EWS_None;
-};
-
 USTRUCT(BlueprintType)
 struct FObsidianEquipmentSlotDefinition
 {
@@ -128,14 +104,10 @@ protected:
 private:
 	void CreateDefaultEquipmentSlots();
 
-	bool SwappingBothWays(const FGameplayTag& CurrentSlotTag, const TArray<UObsidianInventoryItemInstance*>& SwappingInstances);
-	
 private:
 	/** Actual array of equipped items, also hold Map for Slot at which item instance is equipped. */
 	UPROPERTY(Replicated)
 	FObsidianEquipmentList EquipmentList;
-	
-	TArray<FObsidianSwapSlot> InactiveSwapEquipment;
 };
 
 #if !UE_BUILD_SHIPPING

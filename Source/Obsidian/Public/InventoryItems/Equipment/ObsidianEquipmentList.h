@@ -13,14 +13,6 @@ class UObsidianEquipmentComponent;
 struct FObsidianEquipmentList;
 
 UENUM(BlueprintType)
-enum class EObsidianWeaponSwap : uint8
-{
-	EWS_None UMETA(DisplayName = "None"),
-	EWS_FirstSwap UMETA(DisplayName = "First Swap"),
-	EWS_SecondSwap UMETA(DisplayName = "Second Swap"),
-};
-
-UENUM(BlueprintType)
 enum class EObsidianEquipmentChangeType : uint8
 {
 	ECT_None = 0 UMETA(DisplayName = "None"),
@@ -86,7 +78,7 @@ private:
 	FGameplayTag LastObservedEquipmentSlotTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY()
-	EObsidianWeaponSwap AssociatedSwap = EObsidianWeaponSwap::EWS_None;
+	bool bSwappedOut = false;
 };
 
 /**
@@ -108,7 +100,9 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetSwappedWeapons();
 	TArray<UObsidianInventoryItemInstance*> GetEquippedWeapons();
-
+	
+	static bool SwappingBothWays(const FGameplayTag& CurrentSlotTag, const TArray<UObsidianInventoryItemInstance*>& SwappingInstances);
+	
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
@@ -143,8 +137,6 @@ private:
 	TObjectPtr<UActorComponent> OwnerComponent;
 	
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToEquipmentMap;
-
-	EObsidianWeaponSwap CurrentWeaponSwap = EObsidianWeaponSwap::EWS_FirstSwap;
 };
 
 template<>
