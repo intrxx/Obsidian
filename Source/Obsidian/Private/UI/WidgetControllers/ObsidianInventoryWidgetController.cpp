@@ -459,6 +459,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const U
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	ActiveItemDescription->SetAssociatedInventoryLocation(SlotPosition);
 	ActiveItemDescription->AddToViewport();
 	
 	const FVector2D DescriptionViewportPosition = CalculateDescriptionPosition(ItemWidget);
@@ -481,6 +482,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverEquipmentItem(const U
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	ActiveItemDescription->SetAssociatedSlotTag(SlotTag);
 	ActiveItemDescription->AddToViewport();
 	
 	const FVector2D DescriptionViewportPosition = CalculateDescriptionPosition(ItemWidget);
@@ -728,6 +730,10 @@ void UObsidianInventoryWidgetController::RemoveInventoryItemWidget(const FVector
 	{
 		if(UObsidianItem* Item = AddedItemWidgetMap[Location])
 		{
+			if(ActiveItemDescription && ActiveItemDescription->IsInventoryItemDescription() && ActiveItemDescription->GetAssociatedInventoryLocation() == Location)
+			{
+				RemoveItemDescription();
+			}
 			Item->RemoveFromParent();
 		}
 		AddedItemWidgetMap.Remove(Location);
@@ -758,6 +764,10 @@ void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGamepl
 	{
 		if(UObsidianItem* Item = EquippedItemWidgetMap[Slot])
 		{
+			if(ActiveItemDescription && ActiveItemDescription->IsEquipmentDescription() && ActiveItemDescription->GetAssociatedSlotTag() == Slot)
+			{
+				RemoveItemDescription();
+			}
 			Item->RemoveFromParent();
 		}
 		EquippedItemWidgetMap.Remove(Slot);

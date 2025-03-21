@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UI/ObsidianWidgetBase.h"
+#include "GameplayTagContainer.h"
 #include "ObsidianItemDescriptionBase.generated.h"
 
 struct FGameplayTag;
@@ -33,6 +34,26 @@ public:
 	void UpdateCurrentStackCount(const int32 CurrentStacks);
 
 	void DestroyDescriptionWidget();
+
+	bool IsEquipmentDescription() const;
+	void SetAssociatedSlotTag(const FGameplayTag& InTag)
+	{
+		AssociatedSlotTag = InTag;
+	}
+	FGameplayTag GetAssociatedSlotTag() const
+	{
+		return AssociatedSlotTag;
+	}
+	
+	bool IsInventoryItemDescription() const;
+	void SetAssociatedInventoryLocation(const FVector2D& InLocation)
+	{
+		AssociatedGridLocation = InLocation;
+	};
+	FVector2D GetAssociatedInventoryLocation() const
+	{
+		return AssociatedGridLocation;
+	}
 
 protected:
 	virtual void NativeConstruct() override;
@@ -110,5 +131,8 @@ private:
 private:
 	int32 CurrentStackCount = 0;
 	int32 MaxStackCount = 0;
+	
+	FGameplayTag AssociatedSlotTag = FGameplayTag::EmptyTag;
+	FVector2D AssociatedGridLocation = FVector2D::ZeroVector;
 };
 

@@ -227,5 +227,15 @@ void UObsidianItemDescriptionBase::DestroyDescriptionWidget()
 	RemoveFromParent();
 }
 
+bool UObsidianItemDescriptionBase::IsEquipmentDescription() const
+{
+	return AssociatedSlotTag.IsValid();
+}
+
+bool UObsidianItemDescriptionBase::IsInventoryItemDescription() const
+{
+	return AssociatedGridLocation == FVector2D::ZeroVector;
+}
+
 
 
