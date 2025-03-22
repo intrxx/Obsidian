@@ -149,6 +149,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
+		ItemWidgetData.bSwappedWithAnotherItem = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag;
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -179,7 +180,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	for(const UObsidianInventoryItemInstance* Item : EquippedItems)
 	{
 		ensure(Item);
-		
+		UE_LOG(LogTemp, Warning, TEXT("XD"));
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Item->GetItemImage();
 		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
@@ -384,7 +385,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	const FGameplayTag WeaponSwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Equipment.SwapSlot.Weapon"));
 	if(SlotTag.MatchesTag(WeaponSwapSlotTag))
 	{
-		//TODO Cannot left click on swapped item, add VO?
+		//TODO Cannot left-click on swapped item, add VO?
 		return;
 	}
 	
@@ -756,13 +757,16 @@ UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtEquipmentSlot(
 	return nullptr;
 }
 
-void UObsidianInventoryWidgetController::AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother)
 {
-	if(EquippedItemWidgetMap.Contains(Slot))
+	if(bSwappedWithAnother)
 	{
 		RemoveEquipmentItemWidget(Slot);
 	}
-	EquippedItemWidgetMap.Add(Slot, ItemWidget);
+	if(!EquippedItemWidgetMap.Contains(Slot))
+	{
+		EquippedItemWidgetMap.Add(Slot, ItemWidget);
+	}
 }
 
 void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGameplayTag& Slot)

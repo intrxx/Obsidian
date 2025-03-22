@@ -154,7 +154,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemLeftMouseButtonPressed);
 	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnEquipmentItemMouseEntered);
 	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
-	InventoryWidgetController->AddEquipmentItemWidget(DesiredSlot, ItemWidget);
+	InventoryWidgetController->AddEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
 
 	UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(DesiredSlot);
 	const UGridSlot* DesiredGridSlot = UWidgetLayoutLibrary::SlotAsGridSlot(EquipmentSlot);

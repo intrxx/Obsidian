@@ -47,6 +47,8 @@ public:
 	FVector2D GridSpan = FVector2D::Zero();
 	int32 StackCount = 0;
 	bool bUsable = false;
+
+	bool bSwappedWithAnotherItem = false;
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemWidgetData& ItemWidgetData);
@@ -96,7 +98,7 @@ public:
 	void RemoveInventoryItemWidget(const FVector2D& Location);
 
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
-	void AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget);
+	void AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
 	void RemoveEquipmentItemWidget(const FGameplayTag& Slot);
 
 	bool CanEquipDraggedItem(const FGameplayTag& SlotTag) const;

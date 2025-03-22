@@ -55,28 +55,6 @@ TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetEquippedWeapo
 	return EquippedWeapons;
 }
 
-bool FObsidianEquipmentList::SwappingBothWays(const FGameplayTag& CurrentSlotTag, const TArray<UObsidianInventoryItemInstance*>& SwappingInstances)
-{
-	const FString CurrentSlotString = CurrentSlotTag.GetTagName().ToString();
-	FString CurrentSlotChildComponent;
-	CurrentSlotString.Split(TEXT("."), nullptr, &CurrentSlotChildComponent, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
-	
-	for(const UObsidianInventoryItemInstance* Instance : SwappingInstances)
-	{
-		const FGameplayTag SwappingSlotTag = Instance->GetItemCurrentEquipmentSlot();
-		const FString SwappingSlotString = SwappingSlotTag.GetTagName().ToString();
-		FString SwappingSlotChildComponent;
-		SwappingSlotString.Split(TEXT("."), nullptr, &SwappingSlotChildComponent, ESearchCase::IgnoreCase, ESearchDir::FromEnd);
-
-		if(CurrentSlotChildComponent == SwappingSlotChildComponent)
-		{
-			return true;
-		}
-	}
-
-	return false;
-}
-
 UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag)
 {
 	check(ItemDefClass != nullptr);
@@ -193,15 +171,21 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 		Instance->SetItemCurrentEquipmentSlot(SwapTag);
 
 		//TODO Do anything unequipping related
+
+		const bool bSwappedBothWays = SlotToEquipmentMap.Contains(CurrentWeaponSlotTag) && SlotToEquipmentMap.Contains(SwapTag);
+		const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : CurrentWeaponSlotTag;
 		
-		SlotToEquipmentMap.Remove(CurrentWeaponSlotTag);
 		SlotToEquipmentMap.Add(SwapTag, Instance);
-		BroadcastChangeMessage(Instance, SwapTag, CurrentWeaponSlotTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
+		BroadcastChangeMessage(Instance, SwapTag, TagToClear, EObsidianEquipmentChangeType::ECT_ItemSwapped);
+		
+		if(bSwappedBothWays == false)
+		{
+			SlotToEquipmentMap.Remove(CurrentWeaponSlotTag);
+		}
 	}
-	
 }
 
-void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* Instance, const bool bSwappingBothWays)
+void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* Instance)
 {
 	check(Instance);
 	check(OwnerComponent);
@@ -240,17 +224,16 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 		Instance->SetItemCurrentEquipmentSlot(MainWeaponSlotTag);
 
 		//TODO Do anything equipping related
+
+		const bool bSwappedBothWays = SlotToEquipmentMap.Contains(CurrentSwapTag) && SlotToEquipmentMap.Contains(MainWeaponSlotTag);
+		const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : CurrentSwapTag;
 		
 		SlotToEquipmentMap.Add(MainWeaponSlotTag, Instance);
-		
-		if(bSwappingBothWays)
-		{
-			BroadcastChangeMessage(Instance, MainWeaponSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
-		}
-		else
+		BroadcastChangeMessage(Instance, MainWeaponSlotTag, TagToClear, EObsidianEquipmentChangeType::ECT_ItemSwapped);
+
+		if(bSwappedBothWays == false)
 		{
 			SlotToEquipmentMap.Remove(CurrentSwapTag);	
-			BroadcastChangeMessage(Instance, MainWeaponSlotTag, CurrentSwapTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
 		}
 	}
 }
@@ -318,15 +301,14 @@ void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> Change
 		if(Entry.LastObservedEquipmentSlotTag != Entry.EquipmentSlotTag)
 		{
 			const bool bSwappedBothWays = SlotToEquipmentMap.Contains(Entry.EquipmentSlotTag) && SlotToEquipmentMap.Contains(Entry.LastObservedEquipmentSlotTag);
+			const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : Entry.LastObservedEquipmentSlotTag;
+			
 			SlotToEquipmentMap.Add(Entry.EquipmentSlotTag, Entry.Instance);
-			if(bSwappedBothWays)
-			{
-				BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
-			}
-			else
+			BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, TagToClear, EObsidianEquipmentChangeType::ECT_ItemSwapped);
+			
+			if(bSwappedBothWays == false)
 			{
 				SlotToEquipmentMap.Remove(Entry.LastObservedEquipmentSlotTag);
-				BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, Entry.LastObservedEquipmentSlotTag, EObsidianEquipmentChangeType::ECT_ItemSwapped);
 			}		
 		}
 		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;

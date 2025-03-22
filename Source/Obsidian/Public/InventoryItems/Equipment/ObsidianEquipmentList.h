@@ -101,14 +101,12 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetSwappedWeapons();
 	TArray<UObsidianInventoryItemInstance*> GetEquippedWeapons();
 	
-	static bool SwappingBothWays(const FGameplayTag& CurrentSlotTag, const TArray<UObsidianInventoryItemInstance*>& SwappingInstances);
-	
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	
 	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);
-	void MoveWeaponFromSwap(UObsidianInventoryItemInstance* Instance, const bool bSwappingBothWays);
+	void MoveWeaponFromSwap(UObsidianInventoryItemInstance* Instance);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
