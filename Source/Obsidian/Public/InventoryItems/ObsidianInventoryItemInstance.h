@@ -6,6 +6,7 @@
 #include "ObsidianItemAffixStack.h"
 #include "InventoryItems/ObsidianGameplayTagStack.h"
 #include "Fragments/OInventoryItemFragment_Affixes.h"
+#include "Fragments/OInventoryItemFragment_Equippable.h"
 #include "Fragments/Shards/ObsidianUsableShard.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianInventoryItemInstance.generated.h"
@@ -29,6 +30,11 @@ public:
 	virtual bool IsSupportedForNetworking() const override {return true;}
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	//~ End of UObject interface
+
+	UFUNCTION(BlueprintPure, Category=Equipment)
+	APawn* GetPawn() const;
+
+	UWorld* GetWorld() const override final;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, meta=(DeterminesOutputType = FragmentClass))
 	const UObsidianInventoryItemFragment* FindFragmentByClass(TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const;
@@ -88,10 +94,11 @@ public:
 	bool IsItemEquippable() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	USkeletalMesh* GetItemSkeletalMesh() const;
+	TArray<AActor*> GetSpawnedActors() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void SetItemSkeletalMesh(USkeletalMesh* InItemSkeletalMesh);
+	void SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors);
+	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
+	void DestroyEquipmentActors();
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FGameplayTag GetItemCurrentEquipmentSlot() const;
@@ -263,7 +270,10 @@ private:
 	bool bEquippable = false;
 
 	UPROPERTY(Replicated)
-	TObjectPtr<USkeletalMesh> ItemSkeletalMesh = nullptr;
+	TArray<FObsidianEquipmentActor> ActorsToSpawn;
+
+	UPROPERTY(Replicated)
+	TArray<TObjectPtr<AActor>> SpawnedActors;
 
 	/** Current Item Equipment Slot, should be valid only if the item is equipped. */
 	UPROPERTY(Replicated)

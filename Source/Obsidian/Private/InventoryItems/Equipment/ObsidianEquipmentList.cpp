@@ -91,6 +91,8 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Item);
 
+	Item->SpawnEquipmentActors(EquipmentSlotTag);
+
 	MarkItemDirty(NewEntry);
 
 	BroadcastChangeMessage(NewEntry, EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
@@ -120,6 +122,8 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	FObsidianEquipmentEntry& NewEntry = Entries.Emplace_GetRef(Instance, EquipmentSlotTag);
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Instance);
 	Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
+
+	Instance->SpawnEquipmentActors(EquipmentSlotTag);
 
 	MarkItemDirty(NewEntry);
 
@@ -247,7 +251,10 @@ void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 		{
 			const FGameplayTag CachedSlotTag = Entry.EquipmentSlotTag;
 			SlotToEquipmentMap.Remove(CachedSlotTag);
-			Entry.Instance->ResetItemCurrentEquipmentSlot();
+			
+			Instance->ResetItemCurrentEquipmentSlot();
+			Instance->DestroyEquipmentActors();
+			
 			It.RemoveCurrent();
 			MarkArrayDirty();
 

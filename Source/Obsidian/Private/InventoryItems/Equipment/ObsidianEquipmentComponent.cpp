@@ -8,6 +8,10 @@
 
 DEFINE_LOG_CATEGORY(LogEquipment);
 
+//
+// Equipment Slot Definition
+//
+
 bool FObsidianEquipmentSlotDefinition::IsValid() const
 {
 	return SlotTag.IsValid();
@@ -56,6 +60,10 @@ void FObsidianEquipmentSlotDefinition::RemoveBannedEquipmentCategories(const FGa
 #endif
 	BannedEquipmentCategories.RemoveTags(BannedCategoriesToRemove);
 }
+
+//
+// Equipment Component 
+//
 
 UObsidianEquipmentComponent::UObsidianEquipmentComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

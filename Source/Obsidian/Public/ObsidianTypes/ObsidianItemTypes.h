@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ObsidianCoreTypes.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "ObsidianItemTypes.generated.h"
@@ -12,6 +13,12 @@ class UObsidianInventoryItemInstance;
 namespace ObsidianInventoryItemsStatics
 {
 	static const FVector2D InventorySlotSize(64.0f, 64.0f);
+
+	static const TMap<FGameplayTag, FName> SlotToAttachSocketMap =
+		{
+		{ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, ObsidianMeshSocketNames::RightHandWeaponSocket},
+		{ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, ObsidianMeshSocketNames::LeftHandWeaponSocket}
+		};
 }
 
 namespace ObsidianDefaultStackCounts 

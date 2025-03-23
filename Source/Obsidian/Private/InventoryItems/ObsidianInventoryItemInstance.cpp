@@ -6,6 +6,7 @@
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "Net/UnrealNetwork.h"
+#include "GameFramework/Character.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
@@ -23,15 +24,16 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemRarity);
 	DOREPLIFETIME(ThisClass, ItemCategory);
 	DOREPLIFETIME(ThisClass, ItemAffixes);
-
+	DOREPLIFETIME(ThisClass, SpawnedActors);
+	
 	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change
 	DOREPLIFETIME(ThisClass, ItemGridSize);
+	DOREPLIFETIME(ThisClass, ActorsToSpawn);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemCurrentGridLocation);
 	DOREPLIFETIME(ThisClass, ItemCurrentEquipmentSlot);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
-	DOREPLIFETIME(ThisClass, ItemSkeletalMesh);
 	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
@@ -39,6 +41,21 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, bEquippable);
 	DOREPLIFETIME(ThisClass, bUsable);
 	DOREPLIFETIME(ThisClass, UsableShard);
+}
+
+APawn* UObsidianInventoryItemInstance::GetPawn() const
+{
+	const APlayerController* OwningController = Cast<APlayerController>(GetOuter());
+	return OwningController->GetPawn();
+}
+
+UWorld* UObsidianInventoryItemInstance::GetWorld() const
+{
+	if(const APawn* Pawn = GetPawn())
+	{
+		return Pawn->GetWorld();
+	}
+	return nullptr;
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
@@ -315,14 +332,62 @@ bool UObsidianInventoryItemInstance::IsItemEquippable() const
 	return bEquippable;
 }
 
-USkeletalMesh* UObsidianInventoryItemInstance::GetItemSkeletalMesh() const
+TArray<AActor*> UObsidianInventoryItemInstance::GetSpawnedActors() const
 {
-	return ItemSkeletalMesh;
+	return SpawnedActors;
 }
 
-void UObsidianInventoryItemInstance::SetItemSkeletalMesh(USkeletalMesh* InItemSkeletalMesh)
+void UObsidianInventoryItemInstance::SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors)
 {
-	ItemSkeletalMesh = InItemSkeletalMesh;
+	if(EquipmentActors.IsEmpty()) // This is a valid case since I don't plan to support any body armor equipment.
+	{
+		return;
+	}
+	
+	ActorsToSpawn.Empty(EquipmentActors.Num());
+	ActorsToSpawn.Append(EquipmentActors);
+}
+
+void UObsidianInventoryItemInstance::SpawnEquipmentActors(const FGameplayTag& SlotTag)
+{
+	if(ActorsToSpawn.IsEmpty()) // This is a valid case since I don't plan to support any body armor equipment.
+	{
+		return;
+	}
+	
+	if(APawn* OwningPawn = GetPawn())
+	{ 
+		USceneComponent* AttachTarget = OwningPawn->GetRootComponent();
+		if(ACharacter* Char = Cast<ACharacter>(OwningPawn))
+		{
+			AttachTarget = Char->GetMesh();
+		}
+
+		for(FObsidianEquipmentActor& SpawnInfo : ActorsToSpawn)
+		{
+			AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
+			NewActor->FinishSpawning(FTransform::Identity, true);
+			NewActor->SetActorRelativeTransform(SpawnInfo.AttachTransform);
+			if(SpawnInfo.bOverrideAttachSocket)
+			{
+				SpawnInfo.OverrideAttachSocket(SlotTag);
+			}
+			NewActor->AttachToComponent(AttachTarget, FAttachmentTransformRules::KeepRelativeTransform, SpawnInfo.AttachSocket);
+
+			SpawnedActors.Add(NewActor);
+		}
+	}
+}
+
+void UObsidianInventoryItemInstance::DestroyEquipmentActors()
+{
+	for(AActor* Actor : SpawnedActors)
+	{
+		if(Actor)
+		{
+			Actor->Destroy();
+		}
+	}
 }
 
 UStaticMesh* UObsidianInventoryItemInstance::GetItemDroppedMesh() const
