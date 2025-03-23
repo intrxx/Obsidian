@@ -4,6 +4,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Engine/ActorChannel.h"
+#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "Net/UnrealNetwork.h"
 
 DEFINE_LOG_CATEGORY(LogEquipment);
@@ -95,6 +96,33 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquippedInstance
 TArray<UObsidianInventoryItemInstance*> UObsidianEquipmentComponent::GetAllEquippedItems() const
 {
 	return EquipmentList.GetAllEquippedItems();
+}
+
+UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const
+{
+	return EquipmentList.GetEquipmentPieceByTag(SlotTag);
+}
+
+USkeletalMeshComponent* UObsidianEquipmentComponent::GetMainEquippedMeshFromSlot(const FGameplayTag& SlotTag) const
+{
+	if(const UObsidianInventoryItemInstance* Instance = GetEquipmentPieceByTag(SlotTag))
+	{
+		TArray<AObsidianSpawnedEquipmentPiece*> SpawnedPieces = Instance->GetSpawnedActors();
+		const AObsidianSpawnedEquipmentPiece* Piece = SpawnedPieces[0];
+		if(IsValid(Piece) && Piece->bMainEquipmentPiece) // This is most likely to be the first one anyway, no need to iterate with for
+		{
+			return Piece->GetEquipmentPieceMesh();
+		}
+			
+		for(const AObsidianSpawnedEquipmentPiece* SpawnedPiece : SpawnedPieces)
+		{
+			if(IsValid(SpawnedPiece) && SpawnedPiece->bMainEquipmentPiece)
+			{
+				return SpawnedPiece->GetEquipmentPieceMesh();
+			}
+		}
+	}
+	return nullptr;
 }
 
 FObsidianEquipmentSlotDefinition UObsidianEquipmentComponent::FindEquipmentSlotByTag(const FGameplayTag& SlotTag)

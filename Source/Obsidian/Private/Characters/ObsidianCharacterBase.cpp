@@ -7,7 +7,6 @@
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
-#include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -31,17 +30,7 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	CapsuleComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
 	CapsuleComp->SetGenerateOverlapEvents(false);
-
-	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");
-	RightHandEquipmentMesh->SetupAttachment(MeshComp, ObsidianMeshSocketNames::RightHandWeaponSocket);
-	RightHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	RightHandEquipmentMesh->SetIsReplicated(true);
 	
-	LeftHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("LeftHandEquipmentMesh");
-	LeftHandEquipmentMesh->SetupAttachment(MeshComp, ObsidianMeshSocketNames::LeftHandWeaponSocket);
-	LeftHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	LeftHandEquipmentMesh->SetIsReplicated(true);
-
 	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
 	
 	PawnExtComp = CreateDefaultSubobject<UObsidianPawnExtensionComponent>(TEXT("PawnExtensionComponent"));
@@ -99,14 +88,6 @@ FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FG
 #endif
 	
 	return nullptr;
-}
-
-void AObsidianCharacterBase::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
-{
-	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-
-	DOREPLIFETIME(ThisClass, LeftHandEquipmentMesh);
-	DOREPLIFETIME(ThisClass, RightHandEquipmentMesh);
 }
 
 void AObsidianCharacterBase::BeginPlay()
@@ -202,19 +183,11 @@ FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(FG
 
 FVector AObsidianCharacterBase::GetAbilitySocketLocationFromLHWeapon_Implementation()
 {
-	if(LeftHandEquipmentMesh)
-	{
-		return LeftHandEquipmentMesh->GetSocketLocation(WeaponSocketName);
-	}
 	return FVector::ZeroVector;
 }
 
 FVector AObsidianCharacterBase::GetAbilitySocketLocationFromRHWeapon_Implementation()
 {
-	if(RightHandEquipmentMesh)
-	{
-		return RightHandEquipmentMesh->GetSocketLocation(WeaponSocketName);
-	}
 	return FVector::ZeroVector;
 }
 

@@ -7,6 +7,8 @@
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Equippable.generated.h"
 
+class AObsidianSpawnedEquipmentPiece;
+
 USTRUCT(BlueprintType)
 struct FObsidianEquipmentActor
 {
@@ -19,7 +21,7 @@ public:
 	
 public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Equipment")
-	TSubclassOf<AActor> ActorToSpawn = nullptr;
+	TSubclassOf<AObsidianSpawnedEquipmentPiece> ActorToSpawn = nullptr;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Equipment")
 	FName AttachSocket;

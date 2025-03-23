@@ -24,9 +24,7 @@ AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializ
 	{
 		{EObsidianTracedMeshType::ETMT_CharacterMesh, CharacterMesh},
 		{EObsidianTracedMeshType::ETMT_CharacterMesh_LeftHand, CharacterMesh},
-		{EObsidianTracedMeshType::ETMT_CharacterMesh_RightHand, CharacterMesh},
-		{EObsidianTracedMeshType::ETMT_RightHandWeaponMesh, RightHandEquipmentMesh},
-		{EObsidianTracedMeshType::ETMT_LeftHandWeaponMesh, LeftHandEquipmentMesh}
+		{EObsidianTracedMeshType::ETMT_CharacterMesh_RightHand, CharacterMesh}
 	};
 	AdvancedCombatComponent->AddTracedMeshes(TracedMeshesMap);
 	AdvancedCombatComponent->AddIgnoredActor(this);

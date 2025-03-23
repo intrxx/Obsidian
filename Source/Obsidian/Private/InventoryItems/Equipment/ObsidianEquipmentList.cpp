@@ -55,6 +55,11 @@ TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetEquippedWeapo
 	return EquippedWeapons;
 }
 
+UObsidianInventoryItemInstance* FObsidianEquipmentList::GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const
+{
+	return SlotToEquipmentMap.FindRef(SlotTag);
+}
+
 UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag)
 {
 	check(ItemDefClass != nullptr);

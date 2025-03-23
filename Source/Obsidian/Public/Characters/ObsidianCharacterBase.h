@@ -37,8 +37,6 @@ public:
 		return bCanHitReact;
 	}
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 protected:
 	virtual void BeginPlay() override;
 
@@ -63,11 +61,11 @@ protected:
 	//~ Start of CombatInterface
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
 	virtual FVector GetAbilitySocketLocationForTag_Implementation(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag Tag) override;
-	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
-	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromLeftHand_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromRightHand_Implementation() override;
 	virtual FVector GetAbilityBetweenHandsSocketLocation_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
 	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName = FName("FacingTarget"), const FVector& FacingTarget = FVector(0.0f, 0.0f, 0.0f)) override;
 	//~ End of CombatInterface
 
@@ -77,12 +75,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Combat", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComp;
-	
-	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Combat")
-	TObjectPtr<USkeletalMeshComponent> RightHandEquipmentMesh;
-
-	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Combat")
-	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;
 
 	/**
 	 * Sockets used mostly for combat reasons, spawning projectiles.

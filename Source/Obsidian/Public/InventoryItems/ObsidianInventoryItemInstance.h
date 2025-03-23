@@ -94,7 +94,7 @@ public:
 	bool IsItemEquippable() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	TArray<AActor*> GetSpawnedActors() const;
+	TArray<AObsidianSpawnedEquipmentPiece*> GetSpawnedActors() const;
 
 	void SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors);
 	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
@@ -273,7 +273,7 @@ private:
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;
 
 	UPROPERTY(Replicated)
-	TArray<TObjectPtr<AActor>> SpawnedActors;
+	TArray<TObjectPtr<AObsidianSpawnedEquipmentPiece>> SpawnedActors;
 
 	/** Current Item Equipment Slot, should be valid only if the item is equipped. */
 	UPROPERTY(Replicated)

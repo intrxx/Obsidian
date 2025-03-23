@@ -100,6 +100,7 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetSwappedWeapons();
 	TArray<UObsidianInventoryItemInstance*> GetEquippedWeapons();
+	UObsidianInventoryItemInstance* GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const;
 	
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);

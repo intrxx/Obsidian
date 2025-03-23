@@ -144,6 +144,36 @@ AActor* AObsidianHero::GetAvatarActor_Implementation()
 	return this;
 }
 
+FVector AObsidianHero::GetAbilitySocketLocationFromLHWeapon_Implementation()
+{
+	if(const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
+	{
+		if(UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
+		{
+			if(const USkeletalMeshComponent* EquipmentPieceMesh = EquipmentComponent->GetMainEquippedMeshFromSlot(ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand))
+			{
+				return EquipmentPieceMesh->GetSocketLocation(WeaponSocketName);
+			}
+		}
+	}
+	return FVector::ZeroVector;
+}
+
+FVector AObsidianHero::GetAbilitySocketLocationFromRHWeapon_Implementation()
+{
+	if(const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
+	{
+		if(UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
+		{
+			if(const USkeletalMeshComponent* EquipmentPieceMesh = EquipmentComponent->GetMainEquippedMeshFromSlot(ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand))
+			{
+				return EquipmentPieceMesh->GetSocketLocation(WeaponSocketName);
+			}
+		}
+	}
+	return FVector::ZeroVector;
+}
+
 void AObsidianHero::ClientUpdateBossDetectingPlayer_Implementation(AActor* BossActor, const bool bSeenPlayer)
 {
 	if(const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())

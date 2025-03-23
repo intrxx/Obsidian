@@ -36,15 +36,15 @@ void AObsidianDummyMeshActor::BeginPlay()
 	{
 		PoseableMeshComp->CopyPoseFromSkeletalComponent(DeadMeshToCopy);
 		
-		UE_LOG(LogTemp, Error, TEXT("Spawned Dummy Mesh."));
+		UE_LOG(LogTemp, Display, TEXT("Spawned Dummy Mesh for [%s]."), *GetNameSafe(this));
 	}
 }
 
 void AObsidianDummyMeshActor::Destroyed()
 {
+	UE_LOG(LogTemp, Display, TEXT("[%s] Dummy Mesh Destroyed."), *GetNameSafe(this));
+	
 	Super::Destroyed();
-
-	UE_LOG(LogTemp, Error, TEXT("Dummy Mesh Destroyed."));
 }
 
 

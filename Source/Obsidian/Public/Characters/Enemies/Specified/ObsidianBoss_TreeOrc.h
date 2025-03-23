@@ -18,10 +18,19 @@ public:
 	AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|TreeOrc")
 	void EquipWeapon();
 
+	//~ Start of CombatInterface
+	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
+	//~ End of CombatInterface
+	
+protected:
+	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Combat")
+	TObjectPtr<USkeletalMeshComponent> RightHandEquipmentMesh;
+	
 private:
 	void HandleThreshold_50();
 

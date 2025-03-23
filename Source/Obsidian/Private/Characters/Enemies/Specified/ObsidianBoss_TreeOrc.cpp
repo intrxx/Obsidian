@@ -2,12 +2,19 @@
 
 #include "Characters/Enemies/Specified/ObsidianBoss_TreeOrc.h"
 #include "AI/AObsidianAIControllerBase.h"
+#include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 #include "CharacterComponents/ObsidianBossComponent.h"
+#include "Net/UnrealNetwork.h"
 
 AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");
 	RightHandEquipmentMesh->SetupAttachment(GetMesh(), ObsidianMeshSocketNames::BackWeaponSocket);
+	RightHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	RightHandEquipmentMesh->SetIsReplicated(true);
+
+	AdvancedCombatComponent->AddTracedMesh(RightHandEquipmentMesh, EObsidianTracedMeshType::ETMT_RightHandWeaponMesh);
 }
 
 void AObsidianBoss_TreeOrc::PostInitializeComponents()
@@ -20,6 +27,13 @@ void AObsidianBoss_TreeOrc::PostInitializeComponents()
 	}
 }
 
+void AObsidianBoss_TreeOrc::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	
+	DOREPLIFETIME(ThisClass, RightHandEquipmentMesh);
+}
+
 void AObsidianBoss_TreeOrc::EquipWeapon()
 {
 	if(OnThresholdReached_50DelegateHandle.IsValid())
@@ -29,6 +43,15 @@ void AObsidianBoss_TreeOrc::EquipWeapon()
 
 	RightHandEquipmentMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetNotIncludingScale,
 		ObsidianMeshSocketNames::RightHandWeaponSocket);
+}
+
+FVector AObsidianBoss_TreeOrc::GetAbilitySocketLocationFromRHWeapon_Implementation()
+{
+	if(RightHandEquipmentMesh)
+	{
+		return RightHandEquipmentMesh->GetSocketLocation(WeaponSocketName);
+	}
+	return FVector::ZeroVector;
 }
 
 void AObsidianBoss_TreeOrc::HandleThreshold_50()

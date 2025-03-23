@@ -45,6 +45,8 @@ public:
 	virtual int32 GetCharacterLevel() override;
 	virtual bool IsDeadOrDying_Implementation() const override;
 	virtual AActor* GetAvatarActor_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
 	//~ End of CombatInterface
 
 	/** Updates when boss sees Player, BossActor will be nullptr when Boss lost sight of Player, this is by design and might change. */

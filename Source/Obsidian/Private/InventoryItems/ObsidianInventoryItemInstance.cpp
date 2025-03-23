@@ -5,6 +5,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
+#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "Net/UnrealNetwork.h"
 #include "GameFramework/Character.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -332,7 +333,7 @@ bool UObsidianInventoryItemInstance::IsItemEquippable() const
 	return bEquippable;
 }
 
-TArray<AActor*> UObsidianInventoryItemInstance::GetSpawnedActors() const
+TArray<AObsidianSpawnedEquipmentPiece*> UObsidianInventoryItemInstance::GetSpawnedActors() const
 {
 	return SpawnedActors;
 }
@@ -365,9 +366,10 @@ void UObsidianInventoryItemInstance::SpawnEquipmentActors(const FGameplayTag& Sl
 
 		for(FObsidianEquipmentActor& SpawnInfo : ActorsToSpawn)
 		{
-			AActor* NewActor = GetWorld()->SpawnActorDeferred<AActor>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
+			AObsidianSpawnedEquipmentPiece* NewActor = GetWorld()->SpawnActorDeferred<AObsidianSpawnedEquipmentPiece>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
 			NewActor->FinishSpawning(FTransform::Identity, true);
 			NewActor->SetActorRelativeTransform(SpawnInfo.AttachTransform);
+			NewActor->AssociatedSlotTag = SlotTag;
 			if(SpawnInfo.bOverrideAttachSocket)
 			{
 				SpawnInfo.OverrideAttachSocket(SlotTag);
@@ -381,7 +383,7 @@ void UObsidianInventoryItemInstance::SpawnEquipmentActors(const FGameplayTag& Sl
 
 void UObsidianInventoryItemInstance::DestroyEquipmentActors()
 {
-	for(AActor* Actor : SpawnedActors)
+	for(AObsidianSpawnedEquipmentPiece* Actor : SpawnedActors)
 	{
 		if(Actor)
 		{
