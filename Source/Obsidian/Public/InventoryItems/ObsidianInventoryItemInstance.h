@@ -278,7 +278,7 @@ private:
 	UPROPERTY(Replicated)
 	TArray<TObjectPtr<AObsidianSpawnedEquipmentPiece>> SpawnedActors;
 
-	UPROPERTY(Replicated)
+	/** Does not need to be replicate since the attributes will replicate, idk about abilities, will need to check. */
 	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySetsToGive;
 
 	/** Current Item Equipment Slot, should be valid only if the item is equipped. */

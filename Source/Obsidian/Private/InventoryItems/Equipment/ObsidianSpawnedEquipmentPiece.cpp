@@ -9,6 +9,8 @@ AObsidianSpawnedEquipmentPiece::AObsidianSpawnedEquipmentPiece(const FObjectInit
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
 
+	bReplicates = true;
+
 	EquipmentPieceMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Equipment Piece Mesh"));
 	SetRootComponent(EquipmentPieceMesh);
 }
