@@ -7,6 +7,7 @@
 #if WITH_GAMEPLAY_DEBUGGER
 #include "GameplayDebugger.h"
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
+#include "InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h"
 #endif
 
 DEFINE_LOG_CATEGORY(LogObsidian);
@@ -17,7 +18,10 @@ void FObsidianGameModule::StartupModule()
 {
 #if WITH_GAMEPLAY_DEBUGGER
 	IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
+	
 	GameplayDebuggerModule.RegisterCategory("Inventory", IGameplayDebugger::FOnGetCategory::CreateStatic(&FGameplayDebuggerCategory_InventoryItems::MakeInstance));
+	GameplayDebuggerModule.NotifyCategoriesChanged();
+	GameplayDebuggerModule.RegisterCategory("Equipment", IGameplayDebugger::FOnGetCategory::CreateStatic(&FGameplayDebuggerCategory_Equipment::MakeInstance));
 	GameplayDebuggerModule.NotifyCategoriesChanged();
 #endif
 }
@@ -29,6 +33,8 @@ void FObsidianGameModule::ShutdownModule()
 	{
 		IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
 		GameplayDebuggerModule.UnregisterCategory("Inventory");
+		GameplayDebuggerModule.NotifyCategoriesChanged();
+		GameplayDebuggerModule.UnregisterCategory("Equipment");
 		GameplayDebuggerModule.NotifyCategoriesChanged();
 	}
 #endif

@@ -8,11 +8,13 @@
 #include "GameplayDebuggerCategory.h"
 
 class UObsidianInventoryComponent;
+
 /**
  * 
  */
 class FGameplayDebuggerCategory_InventoryItems : public FGameplayDebuggerCategory
 {
+	
 public:
 	OBSIDIAN_API FGameplayDebuggerCategory_InventoryItems();
 
