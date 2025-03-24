@@ -57,7 +57,7 @@ void FObsidianAbilitySet_GrantedHandles::TakeFromAbilitySystem(UObsidianAbilityS
 	}
 
 	for(UAttributeSet* AttributeSet : GrantedAttributeSets)
-	{
+	{ 
 		if(AttributeSet)
 		{
 			ObsidianASC->RemoveSpawnedAttribute(AttributeSet);
@@ -74,8 +74,7 @@ UObsidianAbilitySet::UObsidianAbilitySet(const FObjectInitializer& ObjectInitial
 {
 }
 
-void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC,
-	FObsidianAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
+void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
 {
 	check(ObsidianASC);
 

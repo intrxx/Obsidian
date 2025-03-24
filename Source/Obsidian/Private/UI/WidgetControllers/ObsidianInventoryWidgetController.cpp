@@ -180,7 +180,6 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	for(const UObsidianInventoryItemInstance* Item : EquippedItems)
 	{
 		ensure(Item);
-		UE_LOG(LogTemp, Warning, TEXT("XD"));
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Item->GetItemImage();
 		ItemWidgetData.GridSpan = Item->GetItemGridSpan();

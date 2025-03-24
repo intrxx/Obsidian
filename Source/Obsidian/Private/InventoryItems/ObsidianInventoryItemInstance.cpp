@@ -392,6 +392,22 @@ void UObsidianInventoryItemInstance::DestroyEquipmentActors()
 	}
 }
 
+void UObsidianInventoryItemInstance::SetAbilitySets(const TArray<UObsidianAbilitySet*>& InAbilitySets)
+{
+	if(InAbilitySets.IsEmpty())
+	{
+		return;
+	}
+
+	AbilitySetsToGive.Empty(InAbilitySets.Num());
+	AbilitySetsToGive.Append(InAbilitySets);
+}
+
+TArray<UObsidianAbilitySet*> UObsidianInventoryItemInstance::GetOwningAbilitySets() const
+{
+	return AbilitySetsToGive;
+}
+
 UStaticMesh* UObsidianInventoryItemInstance::GetItemDroppedMesh() const
 {
 	return ItemDroppedMesh;

@@ -7,6 +7,7 @@
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Equippable.generated.h"
 
+class UObsidianAbilitySet;
 class AObsidianSpawnedEquipmentPiece;
 
 USTRUCT(BlueprintType)
@@ -50,5 +51,8 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
+	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySetsToGrant;
 	
 };

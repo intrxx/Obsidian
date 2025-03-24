@@ -22,5 +22,6 @@ void FObsidianEquipmentActor::OverrideAttachSocket(const FGameplayTag& SlotTag)
 void UOInventoryItemFragment_Equippable::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
 	Instance->SetEquipmentActors(ActorsToSpawn);
+	Instance->SetAbilitySets(AbilitySetsToGrant);
 	Instance->SetEquippable(true);
 }

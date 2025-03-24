@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianEquipmentList.generated.h"
 
+class UObsidianAbilitySystemComponent;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryItemDefinition;
 class UObsidianEquipmentComponent;
@@ -79,6 +81,10 @@ private:
 
 	UPROPERTY()
 	bool bSwappedOut = false;
+	
+	/** Authority-only list of granted handles to remove when Item unequipped. **/
+	UPROPERTY(NotReplicated)
+	FObsidianAbilitySet_GrantedHandles GrantedHandles;
 };
 
 /**
@@ -101,6 +107,8 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetSwappedWeapons();
 	TArray<UObsidianInventoryItemInstance*> GetEquippedWeapons();
 	UObsidianInventoryItemInstance* GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const;
+
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);

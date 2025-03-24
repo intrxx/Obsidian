@@ -100,6 +100,9 @@ public:
 	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
 	void DestroyEquipmentActors();
 
+	void SetAbilitySets(const TArray<UObsidianAbilitySet*>& InAbilitySets);
+	TArray<UObsidianAbilitySet*> GetOwningAbilitySets() const;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FGameplayTag GetItemCurrentEquipmentSlot() const;
 
@@ -274,6 +277,9 @@ private:
 
 	UPROPERTY(Replicated)
 	TArray<TObjectPtr<AObsidianSpawnedEquipmentPiece>> SpawnedActors;
+
+	UPROPERTY(Replicated)
+	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySetsToGive;
 
 	/** Current Item Equipment Slot, should be valid only if the item is equipped. */
 	UPROPERTY(Replicated)
