@@ -2,12 +2,13 @@
 
 
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
+
+#if WITH_GAMEPLAY_DEBUGGER_MENU
+
 #include "Engine/Canvas.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-
-#if WITH_GAMEPLAY_DEBUGGER_MENU
 
 namespace InventoryItems::Debug
 {
@@ -38,7 +39,7 @@ void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* O
 	if(UObsidianInventoryComponent* InventoryComponent = OwnerPC->FindComponentByClass<UObsidianInventoryComponent>())
 	{
 		TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
-		for(UObsidianInventoryItemInstance* Item : Items)
+		for(const UObsidianInventoryItemInstance* Item : Items)
 		{
 			FRepData::FInventoryItemDebug InventoryItems;
 			

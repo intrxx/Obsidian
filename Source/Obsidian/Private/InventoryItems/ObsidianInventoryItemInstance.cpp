@@ -390,6 +390,8 @@ void UObsidianInventoryItemInstance::DestroyEquipmentActors()
 			Actor->Destroy();
 		}
 	}
+	
+	SpawnedActors.Empty();
 }
 
 void UObsidianInventoryItemInstance::SetAbilitySets(const TArray<UObsidianAbilitySet*>& InAbilitySets)
