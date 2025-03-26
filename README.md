@@ -16,7 +16,7 @@ build some gameplay content on top of them.
 ### These includs:
 - **Grid Inventory System/Inventory Items** - Grid Inventory System built using ```FFastArraySerializer```
  supporting items of various sizes, stacks, limits, item descriptions, and networking.
-  A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).
+  A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).
 
 - **Equipment System** - Closly related to **Grid Inventory System** and **Inventory Items**, also using ```FFastArraySerializer``` to store Equipment Items,
   this System provides a way to equip Items in various Equipment Slots, check for equiping conditions, spawn Mesh Actors on owning Player and give Ability Sets (which can include Gameplay Effects and Gameplay Abilities).
