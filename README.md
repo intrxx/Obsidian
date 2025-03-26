@@ -53,8 +53,6 @@ A more detailed presentation can be found here [here](https://github.com/intrxx/
 
 ## What am I planning to implement?
 
-- **Equipment System with two sets of Weapons**
-
 - **Item stats**
 
 - **Character Passive Skill Tree**
