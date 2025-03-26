@@ -1,6 +1,6 @@
 # Obsidian Equipment System
 
-Here you can find a [youtube video]() showcasing the System. //TODO
+Here you can find a [youtube video](https://www.youtube.com/watch?v=Fop-aGk-9MU) showcasing the System.
 
 You can also find a testable packaged game [here](https://github.com/intrxx/Obsidian/releases/tag/Equipment_System_v0.1.0).
 
