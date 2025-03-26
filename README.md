@@ -20,36 +20,36 @@ build some gameplay content on top of them.
 
 - **Equipment System** - Closly related to **Grid Inventory System** and **Inventory Items**, also using ```FFastArraySerializer``` to store Equipment Items,
   this System provides a way to equip Items in various Equipment Slots, check for equiping conditions, spawn Mesh Actors on owning Player and give Ability Sets (which can include Gameplay Effects and Gameplay Abilities).
-  A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md). // In-progress
+  A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md). // In-progress
 
 - **Buff/Debuff display on Health Bars and Player's HUD** - Gameplay Effects mapped to their descriptions (name, description, type, etc.) 
 using Gameplay Tags, which are displayed on the player's HUD.
- A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EffectsUIInfoSystem.md).
+ A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EffectsUIInfoSystem.md).
     - **Player/Enemy Health Bars**
 
 - **Damage Numbers** - A Damage Number System with functionality to collect data on damage dealt and adjust the displayed number accordingly - for example,
  changing the color to yellow for critical hits.
-A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/DamageNumberSystem.md). 
+A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/DamageNumberSystem.md). 
 
 - **Gameplay Attributes** - A setup for Gameplay Abilities with corresponding components to broadcast and/or handle changes. This setup also includes various ```UGameplayModMagnitudeCalculation```'s.
  An example use case for these calculations is increasing Health when the Strength attribute is increased.
-  A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/Attributes.md) (TODO). 
+  A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/Attributes.md) (TODO). 
 
 - **Extensive Damage Calculations** - Extensive Damage Calculation classes that includes various damage mitigations,
  damage amplifiers, critical strike and dodge calculations ect.
- A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/DamageCalculation.md) (TODO).
+ A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/DamageCalculation.md) (TODO).
 
 - **Advanced Combat Component** (Extended Combat Manager from AGR PRO) - This is an extension of AGR PRO Combat Manager
  that builds upon the functionality to perform various traces. The implemented improvments concerns the usage of this Manager,
  users are able to choose from mapped meshes in anim notifies which heavly alleviates errors in setup and enables users to trace different meshes in one Anim Montage.
- A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/AdvancedCombatComponent.md) (TODO).
+ A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/AdvancedCombatComponent.md) (TODO).
 
 - **Enemies** (Melee, Ranged, Mage, Melee Boss with two phases) - "One from each" enemy implementations.
  I've used Blackboard/Behavioural Trees, custom Decorators, Services, Tasks and EQS'es and integrated Gameplay Ability System with it.
-A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/Enemies.md) (TODO).
+A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/Enemies.md) (TODO).
 
 - **Gameplay Abilities for Enemies and Hero** - Various Gameplay Abilities. 
-A more detailed presentation can be found here [here](https://github.com/intrxx/Obsidian/blob/main/Docs/Abilities_Root.md) (TODO).
+A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/Abilities_Root.md) (TODO).
 
 ## What am I planning to implement?
 
