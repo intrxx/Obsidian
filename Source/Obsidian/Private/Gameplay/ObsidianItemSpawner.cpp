@@ -50,6 +50,11 @@ void AObsidianItemSpawner::OnMeshClicked(UPrimitiveComponent* TouchedComponent, 
 
 void AObsidianItemSpawner::ServerSpawnItem_Implementation()
 {
+	if(bRandomizeItem)
+	{
+		RollItemDrop();
+	}
+	
 	if(UWorld* World = GetWorld())
 	{
 		AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(ItemToDropClass, GetActorTransform());
@@ -66,6 +71,11 @@ void AObsidianItemSpawner::ServerSpawnItem_Implementation()
 			StaticMeshComp->OnClicked.Clear();
 		}
 	}
+}
+
+void AObsidianItemSpawner::RollItemDrop()
+{
+	
 }
 
 AActor* AObsidianItemSpawner::GetHighlightAvatarActor()

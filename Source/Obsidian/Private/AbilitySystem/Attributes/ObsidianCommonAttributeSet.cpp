@@ -5,9 +5,12 @@
 
 #include "GameplayEffectExtension.h"
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
+#include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "Characters/ObsidianCharacterBase.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 UObsidianCommonAttributeSet::UObsidianCommonAttributeSet()
@@ -146,7 +149,15 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 
 				if(!bOutOfHealth && (GetHealth() <= 0.0f))
 				{
-					OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
+					if(OnOutOfHealth.IsBound())
+					{
+						OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
+					}
+
+					if(EffectProps.SourceCharacter->ActorHasTag(ObsidianActorTags::Player))
+					{
+						ApplyExperienceReward(EffectProps.SourceASC);
+					}
 				}
 			}
 		}
@@ -229,6 +240,22 @@ void UObsidianCommonAttributeSet::ResetMetaAttributes()
 	SetIncomingDamage(0.0f);
 	SetIncomingHealthHealing(0.0f);
 	SetIncomingEnergyShieldHealing(0.0f);
+}
+
+void UObsidianCommonAttributeSet::ApplyExperienceReward(UAbilitySystemComponent* SourceASC)
+{
+	// Create a dynamic instant Gameplay Effect to give the bounties
+	UGameplayEffect* ExperienceRewardGE = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ExperienceReward")));
+	ExperienceRewardGE->DurationPolicy = EGameplayEffectDurationType::Instant;
+	
+	ExperienceRewardGE->Modifiers.SetNum(1);
+						
+	FGameplayModifierInfo& ExperienceInfo = ExperienceRewardGE->Modifiers[0];
+	ExperienceInfo.ModifierMagnitude = FScalableFloat(50); //TODO Calculate some experience value
+	ExperienceInfo.ModifierOp = EGameplayModOp::Additive;
+	ExperienceInfo.Attribute = UObsidianHeroAttributeSet::GetExperienceAttribute();
+	
+	SourceASC->ApplyGameplayEffectToSelf(ExperienceRewardGE, 1.0f, SourceASC->MakeEffectContext());
 }
 
 void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)

@@ -128,6 +128,9 @@ public:
 	
 protected:
 	virtual void ResetMetaAttributes();
+
+	void ApplyExperienceReward(UAbilitySystemComponent* SourceASC);
+	
 	/**
 	 * Vital
 	 */

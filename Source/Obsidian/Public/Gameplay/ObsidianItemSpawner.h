@@ -29,6 +29,9 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/** This can be overridden to manipulate the ItemToDropClass that will be spawned. */
+	void RollItemDrop();
+
 	UFUNCTION()
 	void OnMeshClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
 	// It looks like it can also be triggered with virtual void NotifyActorOnClicked(FKey ButtonPressed) override;, can investigate later //
@@ -36,6 +39,9 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly,  Category = "Obsidian|Setup")
 	TSubclassOf<AObsidianDroppableItem> ItemToDropClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	bool bRandomizeItem = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	int32 MaxSpawnCount = 1;
@@ -50,6 +56,6 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USceneComponent> SpawnPointComp;
-
+	
 	int32 SpawnedItems = 0;
 };
