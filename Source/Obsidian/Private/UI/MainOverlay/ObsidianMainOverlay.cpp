@@ -26,6 +26,7 @@
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "UI/Inventory/ObsidianItemDescriptionBase.h"
+#include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {
@@ -45,6 +46,7 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 
 	HealthProgressGlobe->SetWidgetController(WidgetController);
 	ManaProgressGlobe->SetWidgetController(WidgetController);
+	ExperienceProgressBar->SetWidgetController(WidgetController);
 }
 
 void UObsidianMainOverlay::PostHandleWidgetControllerSet()

@@ -9,6 +9,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianOverlayExperienceBar;
 class UObsidianItemDescriptionBase;
 class UObsidianPassiveSkillTree;
 class UObsidianInventory;
@@ -64,14 +65,15 @@ public:
 	TObjectPtr<UWrapBox> DeBuffsEffectInfo_WrapBox;
 
 protected:
+	virtual void HandleWidgetControllerSet() override;
+	virtual void PostHandleWidgetControllerSet() override;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
-
-	virtual void HandleWidgetControllerSet() override;
-
+	
 	UFUNCTION()
 	void HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar);
 	UFUNCTION()
@@ -80,14 +82,15 @@ protected:
 	/** Needs to be called after updating of the bPlayerMouseOver booleans. */
 	void UpdatePlayerMouseOverUIElem() const;
 
-	virtual void PostHandleWidgetControllerSet() override;
-
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianProgressGlobe_Health> HealthProgressGlobe;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianProgressGlobe_Mana> ManaProgressGlobe;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianOverlayExperienceBar> ExperienceProgressBar;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianOverlayGameTabsMenu> Overlay_GameTabsMenu;

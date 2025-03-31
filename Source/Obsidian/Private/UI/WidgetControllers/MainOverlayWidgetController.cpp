@@ -36,6 +36,8 @@ void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystem
 	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
 	SpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpecialResourceAttribute()).AddUObject(this, &ThisClass::SpecialResourceChanged);
 	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
+	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
+	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
 
 	/** Common Set */
 	HealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
@@ -64,6 +66,12 @@ void UMainOverlayWidgetController::SetInitialStaggerMeter() const
 {
 	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
 	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
+}
+
+void UMainOverlayWidgetController::SetInitialExperienceValues() const
+{
+	OnExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
+	OnMaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience(), MaxExperienceOldValue);
 }
 
 void UMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIData& UIData)
@@ -102,26 +110,6 @@ void UMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIDa
 	}
 }
 
-void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnHealthChangedDelegate.Broadcast(Data.NewValue);
-}
-
-void UMainOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxHealthChangedDelegate.Broadcast(Data.NewValue);
-}
-
-void UMainOverlayWidgetController::EnergyShieldChanged(const FOnAttributeChangeData& Data) const
-{
-	OnEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
-}
-
-void UMainOverlayWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
-{
-	OnMaxEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
-}
-
 void UMainOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnManaChangedDelegate.Broadcast(Data.NewValue);
@@ -140,6 +128,43 @@ void UMainOverlayWidgetController::SpecialResourceChanged(const FOnAttributeChan
 void UMainOverlayWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxSpecialResourceChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
+{
+	if(OnExperienceChangedDelegate.IsBound())
+	{
+		OnExperienceChangedDelegate.Execute(Data.NewValue);
+	}
+}
+
+void UMainOverlayWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
+{
+	if(OnMaxExperienceChangedDelegate.IsBound())
+	{
+		MaxExperienceOldValue = Data.OldValue;
+		OnMaxExperienceChangedDelegate.Execute(Data.NewValue, MaxExperienceOldValue);
+	}
+}
+
+void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
+{
+	OnHealthChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxHealthChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::EnergyShieldChanged(const FOnAttributeChangeData& Data) const
+{
+	OnEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
 }
 
 void UMainOverlayWidgetController::StaggerMeterChanged(const FOnAttributeChangeData& Data) const
@@ -164,7 +189,10 @@ void UMainOverlayWidgetController::UpdateBossDetectionInfo(AActor* BossActor, co
 
 void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidgetTag)
 {
-	OnAuraWidgetDestructionInfoReceivedDelegate.ExecuteIfBound(AuraWidgetTag);
+	if(OnAuraWidgetDestructionInfoReceivedDelegate.IsBound())
+	{
+		OnAuraWidgetDestructionInfoReceivedDelegate.Execute(AuraWidgetTag);
+	}
 }
 
 void UMainOverlayWidgetController::UpdateHealthInfoGlobe(const float Magnitude) const

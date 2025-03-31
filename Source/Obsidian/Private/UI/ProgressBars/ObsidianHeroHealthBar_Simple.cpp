@@ -11,8 +11,6 @@ void UObsidianHeroHealthBar_Simple::HandleWidgetControllerSet()
 	{
 		return;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Widget Controlle Set on Simple Health Bar."));
 	
 	HeroAttributesComp->OnHeroHealthChangedDelegate.AddUObject(this, &ThisClass::HealthChanged);
 	HeroAttributesComp->OnHeroMaxHealthChangedDelegate.AddUObject(this, &ThisClass::MaxHealthChanged);

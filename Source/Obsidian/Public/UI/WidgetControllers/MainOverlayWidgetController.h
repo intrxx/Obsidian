@@ -43,32 +43,36 @@ public:
 
 	virtual void SetInitialAttributeValues() const override;
 	virtual void SetInitialStaggerMeter() const;
+	virtual void SetInitialExperienceValues() const;
 
 public:
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
-	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
-	FOnAttributeValueChangedSignature OnMaxHealthChangedDelegate;
-
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
 	FOnAttributeValueChangedSignature OnManaChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
 	FOnAttributeValueChangedSignature OnMaxManaChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
-	FOnAttributeValueChangedSignature OnEnergyShieldChangedDelegate;
-
-	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
-	FOnAttributeValueChangedSignature OnMaxEnergyShieldChangedDelegate;
-
+	
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|SpecialResource")
 	FOnAttributeValueChangedSignature OnSpecialResourceChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|SpecialResource")
 	FOnAttributeValueChangedSignature OnMaxSpecialResourceChangedDelegate;
+	
+	FOnAttributeValueChangedOneParam OnExperienceChangedDelegate;
+	FOnAttributeValueChangedTwoParams OnMaxExperienceChangedDelegate;
+	
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
+	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
 
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
+	FOnAttributeValueChangedSignature OnMaxHealthChangedDelegate;
+	
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
+	FOnAttributeValueChangedSignature OnEnergyShieldChangedDelegate;
+
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
+	FOnAttributeValueChangedSignature OnMaxEnergyShieldChangedDelegate;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|StaggerMeter")
 	FOnAttributeValueChangedSignature OnStaggerMeterChangedDelegate;
 
@@ -100,14 +104,17 @@ protected:
 	
 	void HandleEffectApplied(const FObsidianEffectUIData& UIData);
 
-	void HealthChanged(const FOnAttributeChangeData& Data) const;
-	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
-	void EnergyShieldChanged(const FOnAttributeChangeData& Data) const;
-	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
 	void ManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void SpecialResourceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
+	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
+	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
+	
+	void HealthChanged(const FOnAttributeChangeData& Data) const;
+	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
+	void EnergyShieldChanged(const FOnAttributeChangeData& Data) const;
+	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
 	void StaggerMeterChanged(const FOnAttributeChangeData& Data) const;
 	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const;
 
@@ -125,6 +132,8 @@ protected:
 	FDelegateHandle MaxManaChangedDelegateHandle;
 	FDelegateHandle SpecialResourceChangedDelegateHandle;
 	FDelegateHandle MaxSpecialResourceChangedDelegateHandle;
+	FDelegateHandle ExperienceChangedDelegateHandle;
+	FDelegateHandle MaxExperienceChangedDelegateHandle;
 
 	/** Common Set */
 	FDelegateHandle HealthChangedDelegateHandle;
@@ -137,4 +146,7 @@ protected:
 private:
 	UFUNCTION()
 	void DestroyAuraWidget(const FGameplayTag AuraWidgetTag);
+
+private:
+	float MaxExperienceOldValue = 0.0f;
 };
