@@ -105,10 +105,14 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 
 void UObsidianCharacterStatus::SetExperienceTextBlock() const
 {
-	const float Percent = MaxExperience != 0.0f ? Experience / MaxExperience : 0.0f;
+	int32 PercentToTheNextLevel = 0;
+	if(MaxExperience > 0.0f)
+	{
+		PercentToTheNextLevel = FMath::TruncToInt(((Experience - LastMaxExperience) / (MaxExperience - LastMaxExperience) * 100));
+	}
 	
 	const FText ExperienceText = FText::FromString(FString::Printf(TEXT("%d of %d / (%d%%)"),
-		FMath::TruncToInt(Experience), FMath::TruncToInt(MaxExperience), FMath::TruncToInt(Percent)));
+		FMath::TruncToInt(Experience), FMath::TruncToInt(MaxExperience), PercentToTheNextLevel));
 	
 	if(HeroExp_TextBlock)
 	{
@@ -118,7 +122,11 @@ void UObsidianCharacterStatus::SetExperienceTextBlock() const
 
 void UObsidianCharacterStatus::SetExperienceProgressBar() const
 {
-	const float BarPercentage = MaxExperience != 0.0f ? Experience / MaxExperience : 0.0f;
+	float BarPercentage = 0.0f;
+	if(MaxExperience > 0.0f)
+	{
+		BarPercentage = (Experience - LastMaxExperience) / (MaxExperience - LastMaxExperience);
+	}
 	
 	if(HeroExp_ProgressBar)
 	{
@@ -129,15 +137,16 @@ void UObsidianCharacterStatus::SetExperienceProgressBar() const
 void UObsidianCharacterStatus::OnExperienceChanged(const float Value)
 {
 	Experience = Value;
-
+	
 	SetExperienceTextBlock();
 	SetExperienceProgressBar();
 }
 
-void UObsidianCharacterStatus::OnMaxExperienceChanged(const float Value)
+void UObsidianCharacterStatus::OnMaxExperienceChanged(const float Value, const float OldValue)
 {
+	LastMaxExperience = OldValue;
 	MaxExperience = Value;
-
+	
 	SetExperienceTextBlock();
 	SetExperienceProgressBar();
 }

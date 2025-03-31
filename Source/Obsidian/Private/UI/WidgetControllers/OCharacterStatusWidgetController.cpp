@@ -10,7 +10,7 @@ void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 	UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(AbilitySystemComponent);
 	check(ObsidianASC);
 	check(AttributesComponent);
-
+	
 	HandleBindingCallbacks(ObsidianASC);
 }
 
@@ -73,7 +73,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 {
 	/** Character */
 	ExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
-	MaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience());
+	MaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience(), MaxExperienceOldValue);
 	
 	/** Attributes */
 	StrengthValueChangedDelegate.Execute(AttributesComponent->GetStrength());
@@ -181,11 +181,12 @@ void UOCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChan
 	ExperienceChangedDelegate.ExecuteIfBound(NewValue);
 }
 
-void UOCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data) const
+void UOCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
 {
 	const float NewValue = Data.NewValue;
+	MaxExperienceOldValue = Data.OldValue;
 
-	MaxExperienceChangedDelegate.ExecuteIfBound(NewValue);
+	MaxExperienceChangedDelegate.ExecuteIfBound(NewValue, MaxExperienceOldValue);
 }
 
 void UOCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& Data) const

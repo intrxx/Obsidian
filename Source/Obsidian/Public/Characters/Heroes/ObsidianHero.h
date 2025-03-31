@@ -53,6 +53,9 @@ public:
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer);
 
+	void IncreaseHeroLevel() const;
+	int32 GetHeroLevel() const;
+
 protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;

@@ -33,6 +33,11 @@ UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const
 	return GetObsidianAbilitySystemComponent();
 }
 
+void AObsidianPlayerState::IncreaseHeroLevel()
+{
+	HeroLevel++;
+}
+
 void AObsidianPlayerState::OnRep_HeroLevel()
 {
 }

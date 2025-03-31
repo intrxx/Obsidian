@@ -3,9 +3,11 @@
 
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "GameplayEffectExtension.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "Net/UnrealNetwork.h"
 
 UObsidianHeroAttributeSet::UObsidianHeroAttributeSet()
+	: MaxExperience(0.0f)
 {
 }
 
@@ -83,6 +85,31 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 		{
 			const float NewMana = GetMana() + LocalIncomingManaReplenishing;
 			SetMana(FMath::Clamp(NewMana, 0.f, GetMaxMana()));
+		}
+	}
+	else if(Data.EvaluatedData.Attribute == GetExperienceAttribute())
+	{
+		const float CurrentExperience = GetExperience();
+		const float CurrentMaxExperience = GetMaxExperience();
+
+		if(CurrentExperience > CurrentMaxExperience)
+		{
+			const AObsidianHero* HeroCharacter = Cast<AObsidianHero>(EffectProps.SourceCharacter);
+			checkf(HeroCharacter, TEXT("HeroCharacter is invalid while trying to level up character in UObsidianHeroAttributeSet::PostGameplayEffectExecute."));
+			HeroCharacter->IncreaseHeroLevel();
+
+			float NewMaxExperience = 0.0f;
+			const int32 CurrentHeroLevel = HeroCharacter->GetHeroLevel();
+			if(CurrentHeroLevel <= 50)
+			{
+				NewMaxExperience = 125.0f * FMath::Pow(CurrentHeroLevel, 1.4) + 350.0f * CurrentHeroLevel;
+			}
+			else
+			{
+				NewMaxExperience = 250.0f * FMath::Pow(CurrentHeroLevel, 1.8) + 500.0f * CurrentHeroLevel;
+			}
+
+			SetMaxExperience(NewMaxExperience);
 		}
 	}
 

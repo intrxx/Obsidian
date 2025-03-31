@@ -38,7 +38,7 @@ protected:
 	void SetExperienceProgressBar() const;
 
 	void OnExperienceChanged(const float Value);
-	void OnMaxExperienceChanged(const float Value);
+	void OnMaxExperienceChanged(const float Value, const float OldValue);
 	
 	void OnStrengthChanged(const float Value);
 	void OnIntelligenceChanged(const float Value);
@@ -263,7 +263,8 @@ private:
 	/**
 	 * Cached attributes
 	 */
-
+	
 	float Experience = 0.0f;
 	float MaxExperience = 0.0f;
+	float LastMaxExperience = 0.0f;
 };

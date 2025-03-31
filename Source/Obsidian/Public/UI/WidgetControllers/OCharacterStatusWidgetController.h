@@ -25,7 +25,7 @@ public:
 public:
 	/** Character */
 	FOnAttributeValueChangedOneParam ExperienceChangedDelegate;
-	FOnAttributeValueChangedOneParam MaxExperienceChangedDelegate;
+	FOnAttributeValueChangedTwoParams MaxExperienceChangedDelegate;
 	
 	/** Attributes */
 	FOnAttributeValueChangedOneParam StrengthValueChangedDelegate;
@@ -80,7 +80,7 @@ protected:
 
 	/** Character */
 	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxExperienceChanged(const FOnAttributeChangeData& Data) const;
+	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
 	
 	/** Attributes */
 	void StrengthChanged(const FOnAttributeChangeData& Data) const;
@@ -183,4 +183,7 @@ protected:
 	FDelegateHandle MaxHitBlockChanceChangedDelegateHandle;
 	FDelegateHandle SpellBlockChanceChangedDelegateHandle;
 	FDelegateHandle MaxSpellBlockChanceChangedDelegateHandle;
+
+private:
+	float MaxExperienceOldValue = 0.0f;
 };

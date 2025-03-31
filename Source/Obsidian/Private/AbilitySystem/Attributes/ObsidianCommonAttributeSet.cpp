@@ -247,11 +247,12 @@ void UObsidianCommonAttributeSet::ApplyExperienceReward(UAbilitySystemComponent*
 	// Create a dynamic instant Gameplay Effect to give the bounties
 	UGameplayEffect* ExperienceRewardGE = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ExperienceReward")));
 	ExperienceRewardGE->DurationPolicy = EGameplayEffectDurationType::Instant;
-	
 	ExperienceRewardGE->Modifiers.SetNum(1);
-						
+
+	float ExperienceToGive = /** Base TODO Maybe get it from monster later */ 200.0f /**TODO Get area level */ /**TODO Get monster Type */;
+	
 	FGameplayModifierInfo& ExperienceInfo = ExperienceRewardGE->Modifiers[0];
-	ExperienceInfo.ModifierMagnitude = FScalableFloat(50); //TODO Calculate some experience value
+	ExperienceInfo.ModifierMagnitude = FScalableFloat(ExperienceToGive);
 	ExperienceInfo.ModifierOp = EGameplayModOp::Additive;
 	ExperienceInfo.Attribute = UObsidianHeroAttributeSet::GetExperienceAttribute();
 	

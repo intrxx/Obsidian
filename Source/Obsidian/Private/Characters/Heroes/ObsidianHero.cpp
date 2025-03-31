@@ -182,6 +182,23 @@ void AObsidianHero::ClientUpdateBossDetectingPlayer_Implementation(AActor* BossA
 	}
 }
 
+void AObsidianHero::IncreaseHeroLevel() const
+{
+	AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState();
+	checkf(ObsidianPS, TEXT("Player State is invalid in AObsidianHero::IncreaseHeroLevel"))
+	
+	ObsidianPS->IncreaseHeroLevel();
+}
+
+int32 AObsidianHero::GetHeroLevel() const
+{
+	if(AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
+	{
+		return ObsidianPS->GetHeroLevel();
+	}
+	return 0;
+}
+
 void AObsidianHero::OnAbilitySystemInitialized()
 {
 	Super::OnAbilitySystemInitialized();

@@ -30,10 +30,12 @@ public:
 		return AbilitySystemComponent;
 	}
 	
-	FORCEINLINE int32 GetHeroLevel() const
+	int32 GetHeroLevel() const
 	{
 		return HeroLevel;
 	}
+
+	void IncreaseHeroLevel();
 
 private:
 	UFUNCTION()
