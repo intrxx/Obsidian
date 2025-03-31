@@ -64,6 +64,11 @@ public:
 	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
 	virtual void OnWidgetControllerSetupCompleted();
 
+	APlayerController* GetOwningPlayerController() const
+	{
+		return PlayerController;
+	}
+
 	virtual void SetInitialAttributeValues() const;
 
 protected:
