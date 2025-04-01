@@ -66,13 +66,28 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 		{
 			return;
 		}
+		
+		UWorld* World = GetWorld();
+		if(World == nullptr)
+		{
+			return;
+		}
+
+		
 	
 		checkf(ExperienceInfoWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianOverlayExperienceBar::NativeOnMouseEnter, fill it in UObsidianOverlayExperienceBar on Main Overlay."));
 		ExperienceInfo = CreateWidget<UObsidianOverlayExperienceInfo>(OwningPC, ExperienceInfoWidgetClass);
 		ExperienceInfo->InitializeExperienceInfo(Experience, MaxExperience, LastMaxExperience);
-	
-		const FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(GetWorld());
-		ExperienceInfo->SetPositionInViewport(MousePosition + FVector2d(0.0f, -100.0f));
+		
+		FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
+		const FVector2D ViewportSize = UWidgetLayoutLibrary::GetViewportSize(World);
+		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
+		MousePosition *= DPIScale;
+		
+		const FVector2D InfoPosition = FVector2D(MousePosition.X, ViewportSize.Y) + (ExperienceInfo->ScreenDisplayOffset * DPIScale);
+		
+		ExperienceInfo->SetPositionInViewport(InfoPosition);
+		ExperienceInfo->SetAlignmentInViewport(FVector2D(0.0f, 1.0f));
 		ExperienceInfo->AddToViewport();
 	}
 }

@@ -20,17 +20,16 @@ class OBSIDIAN_API UObsidianOverlayExperienceInfo : public UObsidianWidgetBase
 public:
 	void InitializeExperienceInfo(const float Experience, const float MaxExperience, const float LastMaxExperience);
 	
-	FVector2D GetSizeBoxSize() const;
-	
 	void DestroyExperienceInfo();
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian")
+	FVector2D ScreenDisplayOffset = FVector2D(50.0f, -25.0f);
 
 protected:
 	virtual void NativeConstruct() override;
 	
 protected:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<USizeBox> Root_SizeBox;
-
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ExperienceNumber_TextBlock;
 	

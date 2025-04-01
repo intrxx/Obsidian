@@ -39,11 +39,6 @@ void UObsidianOverlayExperienceInfo::InitializeExperienceInfo(const float Curren
 	}
 }
 
-FVector2D UObsidianOverlayExperienceInfo::GetSizeBoxSize() const
-{
-	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
-}
-
 void UObsidianOverlayExperienceInfo::DestroyExperienceInfo()
 {
 	RemoveFromParent();
