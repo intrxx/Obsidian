@@ -165,18 +165,9 @@ private:
 
 	bool bDescriptionActive = false;
 	bool bUnstackSliderActive = false;
-
-	UPROPERTY()
-	TObjectPtr<UObsidianInventoryComponent> OwnerInventoryComponent = nullptr;
 	
 	UPROPERTY()
-	TObjectPtr<UObsidianEquipmentComponent> OwnerEquipmentComponent = nullptr;
-
-	UPROPERTY()
 	TObjectPtr<UObsidianHeroComponent> OwnerHeroComponent = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<AObsidianPlayerController> ObsidianPC = nullptr;
 	
 	UPROPERTY()
 	TMap<FVector2D, UObsidianItem*> AddedItemWidgetMap;

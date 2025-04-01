@@ -11,10 +11,13 @@ class UObsidianInventoryWidgetController;
 struct FObsidianHeroWidgetControllerParams;
 class UOCharacterStatusWidgetController;
 class UObsidianHeroAttributesComponent;
-class UAbilitySystemComponent;
 class UMainOverlayWidgetController;
 class UObsidianMainOverlay;
 class UObsidianWidgetBase;
+class AObsidianPlayerController;
+class AObsidianPlayerState;
+class UObsidianAbilitySystemComponent;
+
 /**
  * 
  */
@@ -33,7 +36,7 @@ public:
 		return MainOverlayWidget;
 	}
 
-	void InitOverlay(APlayerController* PC, APlayerState* PS, UAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
+	void InitOverlay(AObsidianPlayerController* PC, AObsidianPlayerState* PS, UObsidianAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
 
 	void ToggleCharacterStatus() const;
 	void ToggleInventory() const;

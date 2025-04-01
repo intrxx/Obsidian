@@ -5,9 +5,9 @@
 
 void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
-	PlayerController = WidgetControllerParams.PlayerController;
-	PlayerState = WidgetControllerParams.PlayerState;
-	AbilitySystemComponent = WidgetControllerParams.AbilitySystemComponent;
+	ObsidianPlayerController = WidgetControllerParams.ObsidianPlayerController;
+	ObsidianPlayerState = WidgetControllerParams.ObsidianPlayerState;
+	ObsidianAbilitySystemComponent = WidgetControllerParams.ObsidianAbilitySystemComponent;
 	AttributesComponent = WidgetControllerParams.AttributesComponent;
 	InventoryComponent = WidgetControllerParams.InventoryComponent;
 	EquipmentComponent = WidgetControllerParams.EquipmentComponent;

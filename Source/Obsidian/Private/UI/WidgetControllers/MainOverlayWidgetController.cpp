@@ -10,23 +10,20 @@
 
 void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 {
-	UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(AbilitySystemComponent);
-	check(ObsidianASC);
+	check(ObsidianAbilitySystemComponent);
 	check(AttributesComponent);
-
-	HandleBindingCallbacks(ObsidianASC);
-
-	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(PlayerController);
-	check(ObsidianPC);
-
-	ObsidianPC->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateHoveringOverTarget);
-	ObsidianPC->OnBossDetectedPlayerDelegate.BindDynamic(this, &ThisClass::UpdateBossDetectionInfo);
+	check(ObsidianPlayerController);
 	
-	ObsidianASC->OnEffectAppliedAssetTags.AddUObject(this, &ThisClass::HandleEffectApplied);
+	HandleBindingCallbacks(ObsidianAbilitySystemComponent);
+	
+	ObsidianPlayerController->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateHoveringOverTarget);
+	ObsidianPlayerController->OnBossDetectedPlayerDelegate.BindDynamic(this, &ThisClass::UpdateBossDetectionInfo);
+	
+	ObsidianAbilitySystemComponent->OnEffectAppliedAssetTags.AddUObject(this, &ThisClass::HandleEffectApplied);
 	
 	SetInitialAttributeValues();
 
-	ObsidianASC->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
+	ObsidianAbilitySystemComponent->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
 }
 
 void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)

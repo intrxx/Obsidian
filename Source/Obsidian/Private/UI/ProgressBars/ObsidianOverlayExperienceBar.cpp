@@ -2,7 +2,7 @@
 
 
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
-
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/ProgressBar.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianOverlayExperienceInfo.h"
@@ -61,7 +61,7 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 			return;
 		}
 
-		APlayerController* OwningPC = MainOverlayWidgetController->GetOwningPlayerController();
+		AObsidianPlayerController* OwningPC = MainOverlayWidgetController->GetOwningPlayerController();
 		if(OwningPC == nullptr)
 		{
 			return;
@@ -72,9 +72,7 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 		{
 			return;
 		}
-
 		
-	
 		checkf(ExperienceInfoWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianOverlayExperienceBar::NativeOnMouseEnter, fill it in UObsidianOverlayExperienceBar on Main Overlay."));
 		ExperienceInfo = CreateWidget<UObsidianOverlayExperienceInfo>(OwningPC, ExperienceInfoWidgetClass);
 		ExperienceInfo->InitializeExperienceInfo(Experience, MaxExperience, LastMaxExperience);

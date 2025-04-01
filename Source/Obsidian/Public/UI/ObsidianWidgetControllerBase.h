@@ -7,12 +7,13 @@
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "ObsidianWidgetControllerBase.generated.h"
 
+class AObsidianPlayerController;
+class AObsidianPlayerState;
 class UObsidianEquipmentComponent;
 class UObsidianInventoryComponent;
 class UObsidianHeroAttributesComponent;
 class UObsidianAbilitySystemComponent;
 class UObsidianAttributesComponent;
-class APlayerState;
 class UAbilitySystemComponent;
 
 USTRUCT(BlueprintType)
@@ -20,24 +21,24 @@ struct FObsidianWidgetControllerParams
 {
 	GENERATED_BODY()
 	
-	FObsidianWidgetControllerParams(APlayerController* PC = nullptr, APlayerState* PS = nullptr, UAbilitySystemComponent* ASC = nullptr,
+	FObsidianWidgetControllerParams(AObsidianPlayerController* OPC = nullptr, AObsidianPlayerState* OPS = nullptr, UObsidianAbilitySystemComponent* ObsidianASC = nullptr,
 		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr, UObsidianEquipmentComponent* EC = nullptr)
-	: PlayerController(PC)
-	, PlayerState(PS)
-	, AbilitySystemComponent(ASC)
+	: ObsidianPlayerController(OPC)
+	, ObsidianPlayerState(OPS)
+	, ObsidianAbilitySystemComponent(ObsidianASC)
 	, AttributesComponent(AC)
 	, InventoryComponent(IC)
 	, EquipmentComponent(EC)
 	{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<APlayerController> PlayerController = nullptr;
+	TObjectPtr<AObsidianPlayerController> ObsidianPlayerController = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<APlayerState> PlayerState = nullptr;
+	TObjectPtr<AObsidianPlayerState> ObsidianPlayerState = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent = nullptr;
+	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UObsidianHeroAttributesComponent> AttributesComponent = nullptr;
@@ -64,9 +65,9 @@ public:
 	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
 	virtual void OnWidgetControllerSetupCompleted();
 
-	APlayerController* GetOwningPlayerController() const
+	AObsidianPlayerController* GetOwningPlayerController() const
 	{
-		return PlayerController;
+		return ObsidianPlayerController;
 	}
 
 	virtual void SetInitialAttributeValues() const;
@@ -76,13 +77,13 @@ protected:
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<APlayerController> PlayerController;
+	TObjectPtr<AObsidianPlayerController> ObsidianPlayerController;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<APlayerState> PlayerState;
+	TObjectPtr<AObsidianPlayerState> ObsidianPlayerState;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<UAbilitySystemComponent> AbilitySystemComponent;
+	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<UObsidianHeroAttributesComponent> AttributesComponent;

@@ -23,12 +23,10 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(InventoryComponent);
 	check(EquipmentComponent);
+	check(ObsidianPlayerController);
 	
-	const AActor* OwningActor = Cast<AActor>(PlayerController->GetPawn());
+	const AActor* OwningActor = Cast<AActor>(ObsidianPlayerController->GetPawn());
 	check(OwningActor);
-
-	ObsidianPC = Cast<AObsidianPlayerController>(PlayerController);
-	check(ObsidianPC);
 	
 	OwnerHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
 	check(OwnerHeroComponent);
@@ -324,7 +322,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 		 		}
 		 	}
 			
-			 if(OwnerInventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
+			 if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
 			 {
 			 	OwnerHeroComponent->ServerReplaceItemAtInventorySlot(SlotPosition);
 			 }
@@ -367,7 +365,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 	RemoveItemUIElements();
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown, fill it in ObsidianInventoryWidgetController instance."));
-	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(PlayerController, UnstackSliderClass);
+	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(ObsidianPlayerController, UnstackSliderClass);
 	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, SlotPosition);
 
 	const FVector2D UnstackSliderViewportPosition = CalculateUnstackSliderPosition(ItemWidget);
@@ -442,7 +440,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const F
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
-	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 	ActiveItemDescription->AddToViewport();
 	
@@ -464,7 +462,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const U
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
-	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 	ActiveItemDescription->SetAssociatedInventoryLocation(SlotPosition);
 	ActiveItemDescription->AddToViewport();
@@ -487,7 +485,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverEquipmentItem(const U
 	const FObsidianItemStats ItemStats = EquipmentComponent->GetItemStatsBySlotTag(SlotTag);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
-	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
 	ActiveItemDescription->SetAssociatedSlotTag(SlotTag);
 	ActiveItemDescription->AddToViewport();
@@ -514,7 +512,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 		return nullptr;
 	}
 
-	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
+	AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianHUD in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem."));
@@ -531,7 +529,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatForInstance(Instance);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
-	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats, true);
 	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
 
@@ -545,7 +543,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 		return nullptr;
 	}
 
-	AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD();
+	AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianHUD in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem."));
@@ -562,7 +560,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsForItemDefinition(ItemDef, CurrentItemStacks);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
-	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(PlayerController, ItemDescriptionClass);
+	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
 	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats, true);
 	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
 

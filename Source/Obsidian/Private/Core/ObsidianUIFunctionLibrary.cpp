@@ -16,15 +16,15 @@ UMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetContro
 		return nullptr;
 	}
 
-	if(APlayerController* PC = UGameplayStatics::GetPlayerController(WorldContextObject, 0))
+	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
 	{
-		if(AObsidianHUD* ObsidianHUD = Cast<AObsidianHUD>(PC->GetHUD()))
+		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
-			AObsidianPlayerState* ObsidianPS = PC->GetPlayerState<AObsidianPlayerState>();
+			AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState();
 			UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
-			UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(PC->GetOwner());
+			UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(ObsidianPC->GetOwner());
 			
-			const FObsidianWidgetControllerParams Params(PC, ObsidianPS, ObsidianASC, AttributesComponent);
+			const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, ObsidianASC, AttributesComponent);
 			return ObsidianHUD->GetMainOverlayWidgetController(Params);
 		}
 	}

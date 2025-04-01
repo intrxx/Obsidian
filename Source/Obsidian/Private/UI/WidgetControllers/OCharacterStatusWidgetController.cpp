@@ -7,11 +7,10 @@
 
 void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
-	UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(AbilitySystemComponent);
-	check(ObsidianASC);
+	check(ObsidianAbilitySystemComponent);
 	check(AttributesComponent);
 	
-	HandleBindingCallbacks(ObsidianASC);
+	HandleBindingCallbacks(ObsidianAbilitySystemComponent);
 }
 
 void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
