@@ -70,6 +70,11 @@ public:
 		return ObsidianPlayerController;
 	}
 
+	AObsidianPlayerState* GetOwningPlayerState() const
+	{
+		return ObsidianPlayerState;
+	}
+
 	virtual void SetInitialAttributeValues() const;
 
 protected:

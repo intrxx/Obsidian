@@ -13,9 +13,9 @@ void UObsidianOverlayExperienceInfo::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-void UObsidianOverlayExperienceInfo::InitializeExperienceInfo(const float CurrentExperience, const float MaxExperience, const float LastMaxExperience)
+void UObsidianOverlayExperienceInfo::InitializeExperienceInfo(const float CurrentExperience, const float MaxExperience, const float LastMaxExperience, const int32 PlayerLevel)
 {
-	const FText ExperienceText = FText::FromString(FString::Printf(TEXT("%d of %d"), FMath::TruncToInt(CurrentExperience), FMath::TruncToInt(MaxExperience)));
+	const FText ExperienceText = FText::FromString(FString::Printf(TEXT("%d out of %d experience needed."), FMath::TruncToInt(CurrentExperience), FMath::TruncToInt(MaxExperience)));
 	if(ExperienceNumber_TextBlock)
 	{
 		ExperienceNumber_TextBlock->SetText(ExperienceText);
@@ -27,7 +27,7 @@ void UObsidianOverlayExperienceInfo::InitializeExperienceInfo(const float Curren
 		Percentage = FMath::TruncToInt(((CurrentExperience - LastMaxExperience) / (MaxExperience - LastMaxExperience) * 100));
 	}
 	
-	const FText ExperiencePercentageText = FText::FromString(FString::Printf(TEXT("%d%% to the next level."), Percentage));
+	const FText ExperiencePercentageText = FText::FromString(FString::Printf(TEXT("%d, (%d%%) towards the next level."), PlayerLevel, Percentage));
 	if(ExperiencePercentage_TextBlock)
 	{
 		ExperiencePercentage_TextBlock->SetText(ExperiencePercentageText);

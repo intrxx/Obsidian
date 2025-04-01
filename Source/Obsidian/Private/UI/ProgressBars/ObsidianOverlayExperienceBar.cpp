@@ -3,6 +3,7 @@
 
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/ProgressBar.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianOverlayExperienceInfo.h"
@@ -56,13 +57,19 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 {
 	if(ExperienceInfo == nullptr)
 	{
-		if(MainOverlayWidgetController == nullptr)
+		if(IsValid(MainOverlayWidgetController) == false)
 		{
 			return;
 		}
 
 		AObsidianPlayerController* OwningPC = MainOverlayWidgetController->GetOwningPlayerController();
-		if(OwningPC == nullptr)
+		if(IsValid(OwningPC) == false)
+		{
+			return;
+		}
+
+		AObsidianPlayerState* OwningPS = MainOverlayWidgetController->GetOwningPlayerState();
+		if(IsValid(OwningPS) == false)
 		{
 			return;
 		}
@@ -75,7 +82,7 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 		
 		checkf(ExperienceInfoWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianOverlayExperienceBar::NativeOnMouseEnter, fill it in UObsidianOverlayExperienceBar on Main Overlay."));
 		ExperienceInfo = CreateWidget<UObsidianOverlayExperienceInfo>(OwningPC, ExperienceInfoWidgetClass);
-		ExperienceInfo->InitializeExperienceInfo(Experience, MaxExperience, LastMaxExperience);
+		ExperienceInfo->InitializeExperienceInfo(Experience, MaxExperience, LastMaxExperience, OwningPS->GetHeroLevel());
 		
 		FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
 		const FVector2D ViewportSize = UWidgetLayoutLibrary::GetViewportSize(World);
