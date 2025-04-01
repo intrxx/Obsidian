@@ -24,6 +24,7 @@ public:
 
 public:
 	/** Character */
+	FOnHeroLevelUpSignature HeroLevelUpDelegate;
 	FOnAttributeValueChangedOneParam ExperienceChangedDelegate;
 	FOnAttributeValueChangedTwoParams MaxExperienceChangedDelegate;
 	
@@ -79,6 +80,8 @@ protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
 
 	/** Character */
+	UFUNCTION()
+	void HeroLevelUp(const int32 NewLevel);
 	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
 	
@@ -135,6 +138,8 @@ protected:
 	FDelegateHandle CharacterLevelChangedDelegateHandle;
 	FDelegateHandle ExperienceChangedDelegateHandle;
 	FDelegateHandle MaxExperienceChangedDelegateHandle;
+	
+	FDelegateHandle HeroLevelUpDelegateHandle;
 	
 	/** Attributes */
 	FDelegateHandle StrengthChangedDelegateHandle;

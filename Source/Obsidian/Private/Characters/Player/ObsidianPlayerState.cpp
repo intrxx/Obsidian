@@ -36,10 +36,13 @@ UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const
 void AObsidianPlayerState::IncreaseHeroLevel()
 {
 	HeroLevel++;
+	
+	OnHeroLevelUp.Broadcast(HeroLevel);
 }
 
 void AObsidianPlayerState::OnRep_HeroLevel()
 {
+	OnHeroLevelUp.Broadcast(HeroLevel);
 }
 
 

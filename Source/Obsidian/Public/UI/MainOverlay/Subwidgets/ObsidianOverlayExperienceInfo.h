@@ -18,7 +18,7 @@ class OBSIDIAN_API UObsidianOverlayExperienceInfo : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeExperienceInfo(const float Experience, const float MaxExperience, const float LastMaxExperience, const int32 PlayerLevel);
+	void InitializeExperienceInfo(const float CurrentExperience, const float MaxExperience, const float LastMaxExperience, const int32 PlayerLevel);
 	
 	void DestroyExperienceInfo();
 
@@ -31,11 +31,11 @@ protected:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> ExperienceNumber_TextBlock;
+	TObjectPtr<UCommonTextBlock> ExperiencePercentage_TextBlock;
 	
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> ExperiencePercentage_TextBlock;
-
+	TObjectPtr<UCommonTextBlock> ExperienceNumber_TextBlock;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ExperiencePerHour_TextBlock;
 };

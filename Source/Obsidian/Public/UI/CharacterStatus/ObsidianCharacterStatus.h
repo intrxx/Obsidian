@@ -37,6 +37,8 @@ protected:
 	void SetExperienceTextBlock() const;
 	void SetExperienceProgressBar() const;
 
+	void OnHeroLevelUp(const int32 NewLevel);
+	
 	void OnExperienceChanged(const float Value);
 	void OnMaxExperienceChanged(const float Value, const float OldValue);
 	

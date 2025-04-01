@@ -43,6 +43,7 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	/**
 	 * Character
 	 */
+	CharacterStatusWidgetController->HeroLevelUpDelegate.AddUObject(this, &ThisClass::OnHeroLevelUp);
 	CharacterStatusWidgetController->ExperienceChangedDelegate.BindUObject(this, &ThisClass::OnExperienceChanged);
 	CharacterStatusWidgetController->MaxExperienceChangedDelegate.BindUObject(this, &ThisClass::OnMaxExperienceChanged);
 	
@@ -131,6 +132,15 @@ void UObsidianCharacterStatus::SetExperienceProgressBar() const
 	if(HeroExp_ProgressBar)
 	{
 		HeroExp_ProgressBar->SetPercent(BarPercentage);
+	}
+}
+
+void UObsidianCharacterStatus::OnHeroLevelUp(const int32 NewLevel)
+{
+	if(HeroLevel_TextBlock)
+	{
+		const FText NewLevelText = FText::FromString(FString::FromInt(NewLevel));
+		HeroLevel_TextBlock->SetText(NewLevelText);
 	}
 }
 

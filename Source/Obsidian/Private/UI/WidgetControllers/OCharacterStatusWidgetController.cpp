@@ -4,13 +4,17 @@
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 
 void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(ObsidianAbilitySystemComponent);
 	check(AttributesComponent);
+	check(ObsidianPlayerState);
 	
 	HandleBindingCallbacks(ObsidianAbilitySystemComponent);
+
+	ObsidianPlayerState->OnHeroLevelUp.AddDynamic(this, &ThisClass::HeroLevelUp);
 }
 
 void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
@@ -71,6 +75,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 {
 	/** Character */
+	HeroLevelUpDelegate.Broadcast(ObsidianPlayerState->GetHeroLevel());
 	ExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
 	MaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience(), MaxExperienceOldValue);
 	
@@ -115,6 +120,14 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	SpellSuppressionMagnitudeChangedDelegate.Execute(AttributesComponent->GetSpellSuppressionMagnitude());
 	HitBlockChanceChangedDelegate.Execute(AttributesComponent->GetHitBlockChance(), AttributesComponent->GetMaxHitBlockChance());
 	SpellBlockChanceChangedDelegate.Execute(AttributesComponent->GetSpellBlockChance(), AttributesComponent->GetMaxSpellBlockChance());
+}
+
+void UOCharacterStatusWidgetController::HeroLevelUp(const int32 NewLevel)
+{
+	if(HeroLevelUpDelegate.IsBound())
+	{
+		HeroLevelUpDelegate.Broadcast(NewLevel);
+	}
 }
 
 void UOCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const

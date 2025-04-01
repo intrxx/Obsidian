@@ -10,6 +10,9 @@
 class UObsidianCommonAttributeSet;
 class UObsidianHeroAttributeSet;
 class UObsidianAbilitySystemComponent;
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHeroLevelUp, const int32, NewLevel);
+
 /**
  * 
  */
@@ -37,6 +40,10 @@ public:
 
 	void IncreaseHeroLevel();
 
+public:
+	UPROPERTY(BlueprintAssignable, Category = "Obsidian|PlayerState")
+	FOnHeroLevelUp OnHeroLevelUp;
+	
 private:
 	UFUNCTION()
 	void OnRep_HeroLevel();

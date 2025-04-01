@@ -68,7 +68,7 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 			return;
 		}
 
-		AObsidianPlayerState* OwningPS = MainOverlayWidgetController->GetOwningPlayerState();
+		const AObsidianPlayerState* OwningPS = MainOverlayWidgetController->GetOwningPlayerState();
 		if(IsValid(OwningPS) == false)
 		{
 			return;
