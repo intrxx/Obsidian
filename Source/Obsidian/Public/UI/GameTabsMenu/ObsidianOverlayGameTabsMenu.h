@@ -62,6 +62,10 @@ public:
 	FOnTabStatusChange OnPassiveSkillTreeTabStatusChangeDelegate;
 
 protected:
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+	
 	void OnCharacterStatusTabStatusChange(bool bIsConstructed);
 	void OnInventoryTabStatusChange(bool bIsConstructed);
 	void OnPassiveSkillTreeTabStatusChange(bool bIsConstructed);

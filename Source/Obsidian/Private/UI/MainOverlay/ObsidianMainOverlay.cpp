@@ -51,8 +51,10 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 
 void UObsidianMainOverlay::PostHandleWidgetControllerSet()
 {
-	HealthProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &UObsidianMainOverlay::SetPlayerMouseOverGlobe);
-	ManaProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &UObsidianMainOverlay::SetPlayerMouseOverGlobe);
+	HealthProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverGlobe);
+	ManaProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverGlobe);
+	ExperienceProgressBar->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverExperienceBar);
+	Overlay_GameTabsMenu->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverButtonMenu);
 }
 
 void UObsidianMainOverlay::NativeConstruct()
@@ -63,7 +65,7 @@ void UObsidianMainOverlay::NativeConstruct()
 
 	if(Overlay_GameTabsMenu)
 	{
-		Overlay_GameTabsMenu->OnCharacterStatusButtonClickedDelegate.AddUObject(this, &UObsidianMainOverlay::ToggleCharacterStatus);
+		Overlay_GameTabsMenu->OnCharacterStatusButtonClickedDelegate.AddUObject(this, &ThisClass::ToggleCharacterStatus);
 		Overlay_GameTabsMenu->OnInventoryButtonClickedDelegate.AddUObject(this, &ThisClass::ToggleInventory);
 		Overlay_GameTabsMenu->OnPassiveSkillTreeButtonClickedDelegate.AddUObject(this, &ThisClass::TogglePassiveSkillTree);
 	}
@@ -207,6 +209,12 @@ void UObsidianMainOverlay::SetPlayerMouseOverGlobe(const bool bInMouseOver)
 	UpdatePlayerMouseOverUIElem();
 }
 
+void UObsidianMainOverlay::SetPlayerMouseOverExperienceBar(const bool bInMouseOver)
+{
+	bPlayerMouseOverExperienceBar = bInMouseOver;
+	UpdatePlayerMouseOverUIElem();
+}
+
 void UObsidianMainOverlay::SetPlayerMouseOverButtonMenu(const bool bInMouseOver)
 {
 	bPlayerMouseOverButtonMenu = bInMouseOver;
@@ -224,7 +232,11 @@ void UObsidianMainOverlay::AddItemDescriptionToOverlay(UObsidianItemDescriptionB
 void UObsidianMainOverlay::UpdatePlayerMouseOverUIElem() const
 {
 	const bool bMouseOverAnyUIElem = bPlayerMouseOverInventory || bPlayerMouseOverCharacterStatus ||
-		bPlayerMouseOverPassiveSkillTree || bPlayerMouseOverGlobe || bPlayerMouseOverButtonMenu;
+		bPlayerMouseOverPassiveSkillTree || bPlayerMouseOverGlobe || bPlayerMouseOverExperienceBar || bPlayerMouseOverButtonMenu;
+	if (bMouseOverAnyUIElem)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Mous eovery ui "));
+	}
 	HeroComp->SetCursorOverUI(bMouseOverAnyUIElem);
 }
 

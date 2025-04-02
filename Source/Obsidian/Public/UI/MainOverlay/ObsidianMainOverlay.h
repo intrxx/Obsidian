@@ -50,6 +50,7 @@ public:
 	void SetPlayerMouseOverCharacterStatus(const bool bInMouseOver);
 	void SetPlayerMouseOverPassiveSkillTree(const bool bInMouseOver);
 	void SetPlayerMouseOverGlobe(const bool bInMouseOver);
+	void SetPlayerMouseOverExperienceBar(const bool bInMouseOver);
 	void SetPlayerMouseOverButtonMenu(const bool bInMouseOver);
 
 	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
@@ -173,5 +174,7 @@ private:
 	bool bPlayerMouseOverCharacterStatus = false;
 	bool bPlayerMouseOverPassiveSkillTree = false;
 	bool bPlayerMouseOverGlobe = false;
+	bool bPlayerMouseOverExperienceBar = false;
 	bool bPlayerMouseOverButtonMenu = false;
 };
+

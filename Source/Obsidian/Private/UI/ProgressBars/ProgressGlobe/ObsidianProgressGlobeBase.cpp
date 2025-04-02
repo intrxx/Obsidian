@@ -35,15 +35,11 @@ void UObsidianProgressGlobe::ShouldGhostGlobeDecrease(const float NewAttribute, 
 
 void UObsidianProgressGlobe::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-	
 	OnMouseEnterLeaveDelegate.Broadcast(true);
 }
 
 void UObsidianProgressGlobe::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	Super::NativeOnMouseLeave(InMouseEvent);
-	
 	OnMouseEnterLeaveDelegate.Broadcast(false);
 }
 
