@@ -132,297 +132,340 @@ void UOCharacterStatusWidgetController::HeroLevelUp(const int32 NewLevel)
 
 void UOCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	StrengthValueChangedDelegate.ExecuteIfBound(NewValue);
+	if(StrengthValueChangedDelegate.IsBound())
+	{
+		StrengthValueChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::IntelligenceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	IntelligenceValueChangedDelegate.ExecuteIfBound(NewValue);
+	if(IntelligenceValueChangedDelegate.IsBound())
+	{
+		IntelligenceValueChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::DexterityChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	DexterityValueChangedDelegate.ExecuteIfBound(NewValue);
+	if(DexterityValueChangedDelegate.IsBound())
+	{
+		DexterityValueChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::FaithChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	FaithValueChangedDelegate.ExecuteIfBound(NewValue);
+	if(FaithValueChangedDelegate.IsBound())
+	{
+		FaithValueChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	MaxHealthChangedDelegate.ExecuteIfBound(NewValue);
+	if(MaxHealthChangedDelegate.IsBound())
+	{
+		MaxHealthChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	MaxManaChangedDelegate.ExecuteIfBound(NewValue);
+	if(MaxManaChangedDelegate.IsBound())
+	{
+		MaxManaChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	MaxSpecialResourceChangedDelegate.ExecuteIfBound(NewValue);
+	if(MaxSpecialResourceChangedDelegate.IsBound())
+	{
+		MaxSpecialResourceChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	MaxEnergyShieldChangedDelegate.ExecuteIfBound(NewValue);
+	if(MaxEnergyShieldChangedDelegate.IsBound())
+	{
+		MaxEnergyShieldChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	ExperienceChangedDelegate.ExecuteIfBound(NewValue);
+	if(ExperienceChangedDelegate.IsBound())
+	{
+		ExperienceChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
 {
-	const float NewValue = Data.NewValue;
 	MaxExperienceOldValue = Data.OldValue;
-
-	MaxExperienceChangedDelegate.ExecuteIfBound(NewValue, MaxExperienceOldValue);
+	
+	if(MaxExperienceChangedDelegate.IsBound())
+	{
+		MaxExperienceChangedDelegate.Execute(Data.NewValue, MaxExperienceOldValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	AccuracyChangedDelegate.ExecuteIfBound(NewValue);
+	if(AccuracyChangedDelegate.IsBound())
+	{
+		AccuracyChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::AttackSpeedChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	AttackSpeedChangedDelegate.ExecuteIfBound(NewValue);
+	if(AttackSpeedChangedDelegate.IsBound())
+	{
+		AttackSpeedChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::CastSpeedChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	CastSpeedChangedDelegate.ExecuteIfBound(NewValue);
+	if(CastSpeedChangedDelegate.IsBound())
+	{
+		CastSpeedChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	CriticalStrikeChanceChangedDelegate.ExecuteIfBound(NewValue);
+	if(CriticalStrikeChanceChangedDelegate.IsBound())
+	{
+		CriticalStrikeChanceChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	CriticalStrikeDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+	if(CriticalStrikeDamageMultiplierChangedDelegate.IsBound())
+	{
+		CriticalStrikeDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	PhysicalDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+	if(PhysicalDamageMultiplierChangedDelegate.IsBound())
+	{
+		PhysicalDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	FireDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+	if(FireDamageMultiplierChangedDelegate.IsBound())
+	{
+		FireDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	LightningDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+	if(LightningDamageMultiplierChangedDelegate.IsBound())
+	{
+		LightningDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ColdDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	ColdDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+	if(ColdDamageMultiplierChangedDelegate.IsBound())
+	{
+		ColdDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	ChaosDamageMultiplierChangedDelegate.ExecuteIfBound(NewValue);
+	if(ChaosDamageMultiplierChangedDelegate.IsBound())
+	{
+		ChaosDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::FirePenetrationChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	FirePenetrationChangedDelegate.ExecuteIfBound(NewValue);
+	if(FirePenetrationChangedDelegate.IsBound())
+	{
+		FirePenetrationChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::LightningPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	LightningPenetrationChangedDelegate.ExecuteIfBound(NewValue);
+	if(LightningPenetrationChangedDelegate.IsBound())
+	{
+		LightningPenetrationChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	ColdPenetrationChangedDelegate.ExecuteIfBound(NewValue);
+	if(ColdPenetrationChangedDelegate.IsBound())
+	{
+		ColdPenetrationChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ChaosPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	ChaosPenetrationChangedDelegate.ExecuteIfBound(NewValue);
+	if(ChaosPenetrationChangedDelegate.IsBound())
+	{
+		ChaosPenetrationChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	ArmorChangedDelegate.ExecuteIfBound(NewValue);
+	if(ArmorChangedDelegate.IsBound())
+	{
+		ArmorChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::EvasionChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	EvasionChangedDelegate.ExecuteIfBound(NewValue);
+	if(EvasionChangedDelegate.IsBound())
+	{
+		EvasionChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::HealthRegenerationChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	HealthRegenerationChangedDelegate.ExecuteIfBound(NewValue);
+	if(HealthRegenerationChangedDelegate.IsBound())
+	{
+		HealthRegenerationChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	EnergyShieldRegenerationChangedDelegate.ExecuteIfBound(NewValue);
+	if(EnergyShieldRegenerationChangedDelegate.IsBound())
+	{
+		EnergyShieldRegenerationChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::FireResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	FireResistanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxFireResistance());
+	if(FireResistanceChangedDelegate.IsBound())
+	{
+		FireResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxFireResistance());
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxFireResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	MaxFireResistanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetFireResistance(), NewValue);
+	if(MaxFireResistanceChangedDelegate.IsBound())
+	{
+		MaxFireResistanceChangedDelegate.Execute(AttributesComponent->GetFireResistance(), Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ColdResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	ColdResistanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxColdResistance());
+	if(ColdResistanceChangedDelegate.IsBound())
+	{
+		ColdResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxColdResistance());
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxColdResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	MaxColdResistanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetColdResistance(), NewValue);
+	if(MaxColdResistanceChangedDelegate.IsBound())
+	{
+		MaxColdResistanceChangedDelegate.Execute(AttributesComponent->GetColdResistance(), Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::LightningResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	LightningResistanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxLightningResistance());
+	if(LightningResistanceChangedDelegate.IsBound())
+	{
+		LightningResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxLightningResistance());
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	MaxLightningResistanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetLightningResistance(), NewValue);
+	if(MaxLightningResistanceChangedDelegate.IsBound())
+	{
+		MaxLightningResistanceChangedDelegate.Execute(AttributesComponent->GetLightningResistance(), Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::ChaosResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	ChaosResistanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxChaosResistance());
+	if(ChaosResistanceChangedDelegate.IsBound())
+	{
+		ChaosResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxChaosResistance());
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-	
-	MaxChaosResistanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetChaosResistance(), NewValue);
+	if(MaxChaosResistanceChangedDelegate.IsBound())
+	{
+		MaxChaosResistanceChangedDelegate.Execute(AttributesComponent->GetChaosResistance(), Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	SpellSuppressionChanceChangedDelegate.ExecuteIfBound(NewValue);
+	if(SpellSuppressionChanceChangedDelegate.IsBound())
+	{
+		SpellSuppressionChanceChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	SpellSuppressionMagnitudeChangedDelegate.ExecuteIfBound(NewValue);
+	if(SpellSuppressionMagnitudeChangedDelegate.IsBound())
+	{
+		SpellSuppressionMagnitudeChangedDelegate.Execute(Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	HitBlockChanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxHitBlockChance());
+	if(HitBlockChanceChangedDelegate.IsBound())
+	{
+		HitBlockChanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxHitBlockChance());
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	MaxHitBlockChanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetHitBlockChance(), NewValue);
+	if(MaxHitBlockChanceChangedDelegate.IsBound())
+	{
+		MaxHitBlockChanceChangedDelegate.Execute(AttributesComponent->GetHitBlockChance(), Data.NewValue);
+	}
 }
 
 void UOCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	SpellBlockChanceChangedDelegate.ExecuteIfBound(NewValue, AttributesComponent->GetMaxSpellBlockChance());
+	if(SpellBlockChanceChangedDelegate.IsBound())
+	{
+		SpellBlockChanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxSpellBlockChance());
+	}
 }
 
 void UOCharacterStatusWidgetController::MaxSpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
-	const float NewValue = Data.NewValue;
-
-	MaxSpellBlockChanceChangedDelegate.ExecuteIfBound(AttributesComponent->GetSpellBlockChance(), NewValue);
+	if(MaxSpellBlockChanceChangedDelegate.IsBound())
+	{
+		MaxSpellBlockChanceChangedDelegate.Execute(AttributesComponent->GetSpellBlockChance(), Data.NewValue);
+	}
 }
 
 
