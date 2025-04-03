@@ -52,7 +52,7 @@ public:
 		return DeathState;
 	}
 
-	/** Returns true if the owning character is dead. */
+	/** Returns true if the owning character is dead or in the process of dying. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (ExpandBoolAsExecs), Category = "Obsidian|Attributes")
 	bool IsDeadOrDying() const
 	{
