@@ -21,6 +21,54 @@ void UObsidianHeroAttributeSet::PreAttributeChange(const FGameplayAttribute& Att
 	}
 }
 
+void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+	Super::PostAttributeChange(Attribute, OldValue, NewValue);
+	
+	if(Attribute == GetMaxHealthAttribute())
+	{
+		const float CurrentHealth = GetHealth();
+		if(NewValue < OldValue) // If the New Max Attribute is lower, we need to always lower the base one
+		{
+			const float NewHealth = CurrentHealth - (OldValue - NewValue);
+			SetHealth(FMath::Max<float>(NewHealth, 1.0f));		
+		}
+		else if(true) //TODO Check if hero in non-combat area
+		{
+			const float NewHealth = CurrentHealth + (NewValue - OldValue);
+			SetHealth(FMath::Max<float>(NewHealth, 1.0f));		
+		}
+	}
+	else if(Attribute == GetMaxEnergyShieldAttribute())
+	{
+		const float CurrentEnergyShield = GetEnergyShield();
+		if(NewValue < OldValue) // If the New Max Attribute is lower, we need to always lower it
+		{
+			const float NewEnergyShield = CurrentEnergyShield - (OldValue - NewValue);
+			SetEnergyShield(FMath::Max<float>(NewEnergyShield, 1.0f));		
+		}
+		else if(true) //TODO Check if hero in non-combat area
+		{
+			const float NewEnergyShield = CurrentEnergyShield + (NewValue - OldValue);
+			SetEnergyShield(FMath::Max<float>(NewEnergyShield, 1.0f));
+		}
+	}
+	else if(Attribute == GetMaxManaAttribute())
+	{
+		const float CurrentMana = GetMana();
+		if(NewValue < OldValue) // If the New Max Attribute is lower, we need to always lower it
+		{
+			const float NewMana = CurrentMana - (OldValue - NewValue);
+			SetMana(FMath::Max<float>(NewMana, 1.0f));		
+		}
+		else if(true) //TODO Check if hero in non-combat area
+		{
+			const float NewMana = CurrentMana + (NewValue - OldValue);
+			SetMana(FMath::Max<float>(NewMana, 1.0f));		
+		}
+	}
+}
+
 void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	/**
