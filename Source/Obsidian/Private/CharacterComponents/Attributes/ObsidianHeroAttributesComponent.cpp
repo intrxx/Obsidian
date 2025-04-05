@@ -47,6 +47,15 @@ void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
 	Super::UninitializeFromAbilitySystem();
 }
 
+UGameplayEffect* UObsidianHeroAttributesComponent::GetLevelUpEffect() const
+{
+	if(LevelUpEffectClass)
+	{
+		return LevelUpEffectClass->GetDefaultObject<UGameplayEffect>();
+	}
+	return nullptr;
+}
+
 
 void UObsidianHeroAttributesComponent::ClearGameplayTags()
 {

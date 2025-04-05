@@ -30,6 +30,8 @@ public:
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
+
+	UGameplayEffect* GetLevelUpEffect() const;
 	
 	/**
 	 * Getters for Gameplay Attributes.
@@ -124,6 +126,9 @@ protected:
 	 */
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|LevelingUp")
+	TSubclassOf<UGameplayEffect> LevelUpEffectClass;
+	
 	/**
 	 * Sets used by this component.
 	 */

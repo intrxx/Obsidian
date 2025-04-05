@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "GameplayEffectExtension.h"
+#include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Net/UnrealNetwork.h"
 
@@ -33,7 +34,7 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			const float NewHealth = CurrentHealth - (OldValue - NewValue);
 			SetHealth(FMath::Max<float>(NewHealth, 1.0f));		
 		}
-		else if(true) //TODO Check if hero in non-combat area
+		else if(true) //TODO Check if hero in non-combat area (if equipping item)
 		{
 			const float NewHealth = CurrentHealth + (NewValue - OldValue);
 			SetHealth(FMath::Max<float>(NewHealth, 1.0f));		
@@ -47,7 +48,7 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			const float NewEnergyShield = CurrentEnergyShield - (OldValue - NewValue);
 			SetEnergyShield(FMath::Max<float>(NewEnergyShield, 1.0f));		
 		}
-		else if(true) //TODO Check if hero in non-combat area
+		else if(true) //TODO Check if hero in non-combat area (if equipping item)
 		{
 			const float NewEnergyShield = CurrentEnergyShield + (NewValue - OldValue);
 			SetEnergyShield(FMath::Max<float>(NewEnergyShield, 1.0f));
@@ -61,7 +62,7 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			const float NewMana = CurrentMana - (OldValue - NewValue);
 			SetMana(FMath::Max<float>(NewMana, 1.0f));		
 		}
-		else if(true) //TODO Check if hero in non-combat area
+		else if(true) //TODO Check if hero in non-combat area (if equipping item)
 		{
 			const float NewMana = CurrentMana + (NewValue - OldValue);
 			SetMana(FMath::Max<float>(NewMana, 1.0f));		
@@ -144,8 +145,25 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 		{
 			const AObsidianHero* HeroCharacter = Cast<AObsidianHero>(EffectProps.SourceCharacter);
 			checkf(HeroCharacter, TEXT("HeroCharacter is invalid while trying to level up character in UObsidianHeroAttributeSet::PostGameplayEffectExecute."));
-			HeroCharacter->IncreaseHeroLevel();
+			if(HeroCharacter)
+			{
+				HeroCharacter->IncreaseHeroLevel();
 
+				UObsidianHeroAttributesComponent* HeroAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(HeroCharacter);
+				checkf(HeroAttributesComponent, TEXT("HeroCharacter has no HeroAttributesComponent in UObsidianHeroAttributeSet::PostGameplayEffectExecute."));
+				if(HeroAttributesComponent)
+				{
+					const UGameplayEffect* LevelUpEffect = HeroAttributesComponent->GetLevelUpEffect();
+					if(ensureMsgf(LevelUpEffect, TEXT("Level Up reward Effect is invalid for Hero Character.")))
+					{
+						if(UAbilitySystemComponent* SourceASC = EffectProps.SourceASC)
+						{
+							SourceASC->ApplyGameplayEffectToSelf(LevelUpEffect, 1.0f, SourceASC->MakeEffectContext());
+						}
+					}
+				}
+			}
+			
 			float NewMaxExperience = 0.0f;
 			const int32 CurrentHeroLevel = HeroCharacter->GetHeroLevel();
 			if(CurrentHeroLevel <= 50)
