@@ -53,16 +53,17 @@ float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGamep
 	float Dexterity = 0.f;
 	GetCapturedAttributeMagnitude(MaxHealthStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
+
+	// OBS-79
+	// float LevelAddedMaxHealthValue = 0.f;
+	// if(MaxHealthAwardCurveTable)
+	// {
+	// 	if(const FRealCurve* Curve = MaxHealthAwardCurveTable->FindCurve(FName("MaxHealth"), FString("")))
+	// 	{
+	// 		LevelAddedMaxHealthValue = Curve->Eval(CharacterLevel);
+	// 	}
+	// }
 	
-	float LevelAddedMaxHealthValue = 0.f;
-	if(MaxHealthAwardCurveTable)
-	{
-		if(const FRealCurve* Curve = MaxHealthAwardCurveTable->FindCurve(FName("MaxHealth"), FString("")))
-		{
-			LevelAddedMaxHealthValue = Curve->Eval(CharacterLevel);
-		}
-	}
-	
-	const float MaxHealthBonus = Dexterity + (2 * Strength) + LevelAddedMaxHealthValue;
+	const float MaxHealthBonus = Dexterity + (2 * Strength) /** OBS-79 / + LevelAddedSpecialResource */;
 	return MaxHealthBonus;
 }

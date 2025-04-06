@@ -51,16 +51,17 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 	float Dexterity = 0.f;
 	GetCapturedAttributeMagnitude(MaxManaStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
+
+	// OBS-79
+	// float LevelAddedMaxManaValue = 0.f;
+	// if(MaxManaAwardCurveTable)
+	// {
+	// 	if(const FRealCurve* Curve = MaxManaAwardCurveTable->FindCurve(FName("MaxMana"), FString("")))
+	// 	{
+	// 		LevelAddedMaxManaValue = Curve->Eval(CharacterLevel);
+	// 	}
+	// }
 	
-	float LevelAddedMaxManaValue = 0.f;
-	if(MaxManaAwardCurveTable)
-	{
-		if(const FRealCurve* Curve = MaxManaAwardCurveTable->FindCurve(FName("MaxMana"), FString("")))
-		{
-			LevelAddedMaxManaValue = Curve->Eval(CharacterLevel);
-		}
-	}
-	
-	const float MaxManaBonus = Dexterity + (2 * Faith) + LevelAddedMaxManaValue;
+	const float MaxManaBonus = Dexterity + (2 * Faith) /** OBS-79 / + LevelAddedSpecialResource */;
 	return MaxManaBonus;
 }

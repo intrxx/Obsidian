@@ -27,12 +27,13 @@ UObsidianMMC_MaxSpecialResource_Barbarian::UObsidianMMC_MaxSpecialResource_Barba
 
 float UObsidianMMC_MaxSpecialResource_Barbarian::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
-	const float LevelAddedSpecialResource = Super::CalculateBaseMagnitude_Implementation(Spec);
+	// OBS-79
+	// const float LevelAddedSpecialResource = Super::CalculateBaseMagnitude_Implementation(Spec);
 
 	float Strength = 0.f;
 	GetCapturedAttributeMagnitude(MaxSpecialResource_BarbarianStatics().StrengthDef, Spec, FAggregatorEvaluateParameters(), Strength);
 	Strength = FMath::Max<float>(Strength, 0.f);
 
-	const float MaxSpecialResourceBonus_Witch = LevelAddedSpecialResource + FMath::FloorToInt(Strength / 6);
+	const float MaxSpecialResourceBonus_Witch = /** OBS-79 / LevelAddedSpecialResource + */ FMath::FloorToInt(Strength / 6);
 	return MaxSpecialResourceBonus_Witch;
 }
