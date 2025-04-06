@@ -43,29 +43,46 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 	else if(Attribute == GetMaxEnergyShieldAttribute())
 	{
 		const float CurrentEnergyShield = GetEnergyShield();
+		const float CurrentMaxEnergyShield = GetMaxEnergyShield();
 		if(NewValue < OldValue) // If the New Max Attribute is lower, we need to always lower it
 		{
 			const float NewEnergyShield = CurrentEnergyShield - (OldValue - NewValue);
-			SetEnergyShield(FMath::Max<float>(NewEnergyShield, 1.0f));		
+			SetEnergyShield(FMath::Clamp<float>(NewEnergyShield, 1.0f, CurrentMaxEnergyShield));		
 		}
 		else if(true) //TODO Check if hero in non-combat area (if equipping item)
 		{
 			const float NewEnergyShield = CurrentEnergyShield + (NewValue - OldValue);
-			SetEnergyShield(FMath::Max<float>(NewEnergyShield, 1.0f));
+			SetEnergyShield(FMath::Clamp<float>(NewEnergyShield, 1.0f, CurrentMaxEnergyShield));
 		}
 	}
 	else if(Attribute == GetMaxManaAttribute())
 	{
 		const float CurrentMana = GetMana();
+		const float CurrentMaxMana = GetMaxMana();
 		if(NewValue < OldValue) // If the New Max Attribute is lower, we need to always lower it
 		{
 			const float NewMana = CurrentMana - (OldValue - NewValue);
-			SetMana(FMath::Max<float>(NewMana, 1.0f));		
+			SetMana(FMath::Clamp<float>(NewMana, 1.0f, CurrentMaxMana));		
 		}
 		else if(true) //TODO Check if hero in non-combat area (if equipping item)
 		{
 			const float NewMana = CurrentMana + (NewValue - OldValue);
-			SetMana(FMath::Max<float>(NewMana, 1.0f));		
+			SetMana(FMath::Clamp<float>(NewMana, 1.0f, CurrentMaxMana));		
+		}
+	}
+	else if(Attribute == GetMaxSpecialResourceAttribute())
+	{
+		const float CurrentSpecialResource = GetSpecialResource();
+		const float CurrentMaxSpecialResource = GetMaxSpecialResource();
+		if(NewValue < OldValue) // If the New Max Attribute is lower, we need to always lower it
+		{
+			const float NewSpecialResource = CurrentSpecialResource - (OldValue - NewValue);
+			SetSpecialResource(FMath::Clamp<float>(NewSpecialResource, 1.0f, CurrentMaxSpecialResource));		
+		}
+		else if(true) //TODO Check if hero in non-combat area (if equipping item)
+		{
+			const float NewSpecialResource = CurrentSpecialResource + (NewValue - OldValue);
+			SetSpecialResource(FMath::Clamp<float>(NewSpecialResource, 1.0f, CurrentMaxSpecialResource));		
 		}
 	}
 }
