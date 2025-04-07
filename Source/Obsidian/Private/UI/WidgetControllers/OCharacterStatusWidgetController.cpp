@@ -4,21 +4,37 @@
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+#include "Characters/Heroes/ObsidianHero.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "Core/ObsidianGameplayStatics.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(ObsidianAbilitySystemComponent);
 	check(AttributesComponent);
+	check(ObsidianPlayerController);
 	check(ObsidianPlayerState);
 	
 	HandleBindingCallbacks(ObsidianAbilitySystemComponent);
 
 	ObsidianPlayerState->OnHeroLevelUp.AddDynamic(this, &ThisClass::HeroLevelUp);
+
+	if(const AObsidianHero* Hero = Cast<AObsidianHero>(ObsidianPlayerController->GetCharacter()))
+	{
+		HeroClassText = UObsidianGameplayStatics::GetHeroClassText(Hero->GetHeroClass());
+	}
 }
 
 void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
 {
+	if(ObsidianASC == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("UObsidianAbilitySystemComponent is invalid in UOCharacterStatusWidgetController::HandleBindingCallbacks."));
+		return;
+	}
+	
 	/** Character */
 	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
 	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);

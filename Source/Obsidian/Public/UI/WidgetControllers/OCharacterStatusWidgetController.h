@@ -23,6 +23,8 @@ public:
 	// ~ End of UObsidianWidgetController
 
 public:
+	FText HeroClassText = FText();
+	
 	/** Character */
 	FOnHeroLevelUpSignature HeroLevelUpDelegate;
 	FOnAttributeValueChangedOneParam ExperienceChangedDelegate;

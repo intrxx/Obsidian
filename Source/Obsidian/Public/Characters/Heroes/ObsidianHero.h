@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Characters/ObsidianCharacterBase.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianHero.generated.h"
 
 class AObsidianDroppableItem;
@@ -17,8 +18,9 @@ class AObsidianPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
 class UObsidianHeroComponent;
+
 /**
- * 
+ * Main class for Hero characters in Obsidian.
  */
 UCLASS()
 class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase
@@ -40,6 +42,11 @@ public:
 	UObsidianWidgetBase* GetHealthBarWidget() const;
 
 	UObsidianHeroComponent* GetHeroComponent() const;
+
+	EObsidianHeroClass GetHeroClass() const
+	{
+		return HeroClass;
+	}
 	
 	//~ Start of CombatInterface
 	virtual int32 GetCharacterLevel() override;
@@ -70,6 +77,10 @@ protected:
 
 	void InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) const;
 
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Hero")
+	EObsidianHeroClass HeroClass = EObsidianHeroClass::OHC_None;
+	
 private:
 	void InitializeHealthBar() const;
 	

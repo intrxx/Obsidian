@@ -20,18 +20,6 @@ void UObsidianCharacterStatus::NativeConstruct()
 	Faith_AttributeRow->SetCharacterStatus(this);
 }
 
-void UObsidianCharacterStatus::SwitchToTab(UScrollBox* Tab)
-{
-	if(Tab == nullptr)
-	{
-		return;
-	}
-
-	CurrentlyShownTab->SetVisibility(ESlateVisibility::Collapsed);
-	Tab->SetVisibility(ESlateVisibility::Visible);
-	CurrentlyShownTab = Tab;
-}
-
 void UObsidianCharacterStatus::HandleWidgetControllerSet()
 {
 	CharacterStatusWidgetController = Cast<UOCharacterStatusWidgetController>(WidgetController);
@@ -102,6 +90,24 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	CharacterStatusWidgetController->MaxHitBlockChanceChangedDelegate.BindUObject(this, &ThisClass::OnHitBlockChanceChanged);
 	CharacterStatusWidgetController->SpellBlockChanceChangedDelegate.BindUObject(this, &ThisClass::OnSpellBlockChanceChanged);
 	CharacterStatusWidgetController->MaxSpellBlockChanceChangedDelegate.BindUObject(this, &ThisClass::OnSpellBlockChanceChanged);
+
+	const FText HeroClassText = CharacterStatusWidgetController->HeroClassText;
+	if(HeroClass_TextBlock)
+	{
+		HeroClass_TextBlock->SetText(HeroClassText);		
+	}
+}
+
+void UObsidianCharacterStatus::SwitchToTab(UScrollBox* Tab)
+{
+	if(Tab == nullptr)
+	{
+		return;
+	}
+
+	CurrentlyShownTab->SetVisibility(ESlateVisibility::Collapsed);
+	Tab->SetVisibility(ESlateVisibility::Visible);
+	CurrentlyShownTab = Tab;
 }
 
 void UObsidianCharacterStatus::SetExperienceTextBlock() const

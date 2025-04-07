@@ -111,3 +111,17 @@ enum class EObsidianTracedMeshType  : uint8
 	ETMT_LeftHandWeaponMesh UMETA(DisplayName = "Left Hand Weapon Mesh")
 };
 
+/**
+ * Enum that holds Hero classes available in Obsidian.
+ */
+UENUM(BlueprintType)
+enum class EObsidianHeroClass : uint8
+{
+	OHC_None = 0 UMETA(DisplayName = "None"),
+	
+	OHC_Witch UMETA(DisplayName = "Witch"),
+	OHC_Barbarian UMETA(DisplayName = "Barbarian"),
+	OHC_Assassin UMETA(DisplayName = "Assassin"),
+	OHC_Paladin UMETA(DisplayName = "Paladin")
+};
+
