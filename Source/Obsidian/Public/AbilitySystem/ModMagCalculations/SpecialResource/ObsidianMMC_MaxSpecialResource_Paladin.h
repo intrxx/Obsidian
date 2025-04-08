@@ -1,0 +1,21 @@
+// Copyright 2024 out of sCope team - Michał Ogiński
+
+#pragma once
+
+#include "CoreMinimal.h"
+#include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource.h"
+#include "ObsidianMMC_MaxSpecialResource_Paladin.generated.h"
+
+/**
+ * 
+ */
+UCLASS()
+class OBSIDIAN_API UObsidianMMC_MaxSpecialResource_Paladin : public UObsidianMMC_MaxSpecialResource
+{
+	GENERATED_BODY()
+
+public:
+	UObsidianMMC_MaxSpecialResource_Paladin();
+	
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+};
