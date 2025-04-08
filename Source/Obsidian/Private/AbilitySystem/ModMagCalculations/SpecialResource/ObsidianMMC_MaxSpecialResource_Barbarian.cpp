@@ -23,6 +23,7 @@ static const SObsidianMMC_MaxSpecialResource_Barbarian& MaxSpecialResource_Barba
 
 UObsidianMMC_MaxSpecialResource_Barbarian::UObsidianMMC_MaxSpecialResource_Barbarian()
 {
+	RelevantAttributesToCapture.Add(MaxSpecialResource_BarbarianStatics().StrengthDef);
 }
 
 float UObsidianMMC_MaxSpecialResource_Barbarian::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
