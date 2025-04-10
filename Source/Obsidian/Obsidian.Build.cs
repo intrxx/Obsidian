@@ -23,7 +23,8 @@ public class Obsidian : ModuleRules
 				"CommonUI",
 				"MotionWarping",
 				"AIModule",
-				"GameplayDebugger"
+				"GameplayDebugger",
+				"ModularGameplayActors"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
@@ -35,7 +36,9 @@ public class Obsidian : ModuleRules
 			"Niagara",
 			"AIModule",
 			"NetCore",
-			"GameplayMessageRuntime"
+			"GameplayMessageRuntime",
+			"CommonGame",
+			"CommonUser"
 		});
 
 		// Uncomment if you are using Slate UI
