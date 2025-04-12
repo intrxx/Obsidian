@@ -16,7 +16,8 @@
 				"UMG",
 				"CoreUObject",
 				"CommonUI",
-				"AIModule"
+				"AIModule",
+				"CommonGame"
 			]
 		}
 	],
@@ -56,6 +57,18 @@
 		},
 		{
 			"Name": "MotionWarping",
+			"Enabled": true
+		},
+		{
+			"Name": "ModularGameplayActors",
+			"Enabled": true
+		},
+		{
+			"Name": "CommonUser",
+			"Enabled": true
+		},
+		{
+			"Name": "CommonGame",
 			"Enabled": true
 		}
 	]

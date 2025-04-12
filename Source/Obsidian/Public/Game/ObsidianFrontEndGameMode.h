@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "ObsidianFrontEndGameMode.generated.h"
 
+class UCommonActivatableWidget;
+
 /**
  * 
  */
@@ -13,5 +15,18 @@ UCLASS()
 class OBSIDIAN_API AObsidianFrontEndGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void BeginPlay() override;
+
+	virtual void OnPostLogin(AController* NewPlayer) override;
+
+	void TryToShowMainMenu();
+
+protected:
+	void OnLocalPlayerAdded(ULocalPlayer* NewPlayer);
 	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian") 
+	TSubclassOf<UCommonActivatableWidget> MainMenuWidgetClass;
 };

@@ -7,6 +7,12 @@
 namespace ObsidianGameplayTags
 {
 	OBSIDIAN_API FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
+
+	/**
+	 * ---- User Interface ----
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_MainMenu);
 	
 	/**
 	 * ---- Damage Types ----
@@ -57,6 +63,8 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_PassiveSkillTree);
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_WeaponSwap);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_MainMenu);
 	
 	/**
 	 * Ability

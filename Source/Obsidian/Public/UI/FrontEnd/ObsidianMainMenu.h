@@ -29,6 +29,9 @@ protected:
 	void OnExitButtonClicked();
 	
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TSoftClassPtr<UCommonActivatableWidget> SettingsMenuWidgetClass;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UVerticalBox> MainMenu_VerticalBox;
 	

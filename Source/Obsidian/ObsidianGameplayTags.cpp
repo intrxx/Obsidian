@@ -28,6 +28,12 @@ namespace ObsidianGameplayTags
 		}
 		return ReturnTag;
 	}
+
+	/**
+	 * ---- User Interface ----
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_MainMenu, "UI.Layer.MainMenu", "Layer tag used when pushing widgets to layer in main menu.");
 	
 	/**
 	 * ---- Damage Types ----
@@ -86,6 +92,8 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_PassiveSkillTree, "Input.Native.PassiveSkillTree", "Passive Skill Tree toggle input.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_WeaponSwap, "Input.Native.WeaponSwap", "Input for Weapon Swap.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_MainMenu, "Input.UI.MainMenu", "Main Menu Inputs for Layers.");
 
 	/**
 	 * Ability

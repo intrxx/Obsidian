@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerController.h"
+#include "CommonPlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
 class UObsidianEquipmentComponent;
@@ -22,7 +22,7 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, co
  * Base class for Obsidian player characters player controller.
  */
 UCLASS()
-class OBSIDIAN_API AObsidianPlayerController : public APlayerController
+class OBSIDIAN_API AObsidianPlayerController : public ACommonPlayerController
 {
 	GENERATED_BODY()
 public:

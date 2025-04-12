@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/LocalPlayer.h"
+#include "CommonLocalPlayer.h"
 #include "ObsidianLocalPlayer.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianLocalPlayer : public ULocalPlayer
+class OBSIDIAN_API UObsidianLocalPlayer : public UCommonLocalPlayer
 {
 	GENERATED_BODY()
 	
