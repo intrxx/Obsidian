@@ -35,6 +35,8 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Equipment_Changed, this, &ThisClass::OnEquipmentStateChanged);
+
+	
 }
 
 void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
@@ -151,6 +153,28 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
+}
+
+int32 UObsidianInventoryWidgetController::GetInventoryGridWidth() const
+{
+	if(InventoryComponent)
+	{
+		return InventoryComponent->GetInventoryGridWidth();
+	}
+	
+	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Width but Inventory Component is invalid."))
+	return 0;
+}
+
+int32 UObsidianInventoryWidgetController::GetInventoryGridHeight() const
+{
+	if(InventoryComponent)
+	{
+		return InventoryComponent->GetInventoryGridHeight();
+	}
+	
+	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid."))
+	return 0;
 }
 
 void UObsidianInventoryWidgetController::OnInventoryOpen()

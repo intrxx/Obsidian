@@ -31,6 +31,16 @@ void UObsidianInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimePr
 	DOREPLIFETIME(ThisClass, InventoryGrid);
 }
 
+int32 UObsidianInventoryComponent::GetInventoryGridWidth() const
+{
+	return InventoryGridWidth;
+}
+
+int32 UObsidianInventoryComponent::GetInventoryGridHeight() const
+{
+	return InventoryGridHeight;
+}
+
 int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const
 {
 	int32 FinalCount = 0;

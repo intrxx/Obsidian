@@ -85,6 +85,9 @@ public:
 		return bDescriptionActive;
 	}
 
+	int32 GetInventoryGridWidth() const;
+	int32 GetInventoryGridHeight() const;
+
 	void OnInventoryOpen();
 	
 	bool IsDraggingAnItem() const;

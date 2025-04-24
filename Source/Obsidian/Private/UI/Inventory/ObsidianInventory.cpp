@@ -13,11 +13,6 @@
 #include "UI/Inventory/SubWidgets/ObsidianItemSlot_Inventory.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 
-UObsidianInventory::UObsidianInventory()
-	: InventoryGridSize(InventoryGridWidth * InventoryGridHeight)
-{
-}
-
 void UObsidianInventory::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -91,6 +86,9 @@ void UObsidianInventory::SetupInventoryGrid()
 	
 	int16 GridX = 0;
 	int16 GridY = 0;
+	
+	const int32 InventoryGridWidth = InventoryWidgetController->GetInventoryGridWidth();
+	const int32 InventoryGridSize = InventoryWidgetController->GetInventoryGridHeight() * InventoryGridWidth;
 	InventoryLocationToSlotMap.Reserve(InventoryGridSize);
 	
 	for(int32 i = 0; i < InventoryGridSize; i++)

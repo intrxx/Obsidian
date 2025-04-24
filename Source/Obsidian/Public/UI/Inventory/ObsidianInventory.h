@@ -29,8 +29,6 @@ class OBSIDIAN_API UObsidianInventory : public UObsidianMainOverlayWidgetBase
 	GENERATED_BODY()
 
 public:
-	UObsidianInventory();
-
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -45,7 +43,7 @@ public:
 	{
 		return RootSizeBoxHeight;
 	}
-
+	
 	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
 
 	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
@@ -119,12 +117,6 @@ private:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianItemSlot_Equipment> LeftRing_EquipmentSlot;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	int32 InventoryGridWidth = 12;
-	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	int32 InventoryGridHeight = 5;
-
 	/** Essentially, height component of inventory size. Use this instead of directly setting it on SizeBox. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float RootSizeBoxHeight = 920.0f;
@@ -132,8 +124,6 @@ private:
 	/** Essentially, width component of inventory size. Use this instead of directly setting it on SizeBox. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float RootSizeBoxWidth = 820.0f;
-	
-	int32 InventoryGridSize;
 	
 	UPROPERTY()
 	TMap<FVector2D, UObsidianItemSlot_Inventory*> InventoryLocationToSlotMap;
