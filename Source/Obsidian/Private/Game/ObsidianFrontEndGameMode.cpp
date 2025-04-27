@@ -33,9 +33,6 @@ void AObsidianFrontEndGameMode::OnLocalPlayerAdded(ULocalPlayer* NewPlayer)
 {
 	UE_LOG(LogTemp, Error, TEXT("Local Player Added"));
 	
-	if(UWorld* World = GetWorld())
-	{
-		UCommonUIExtensions::PushContentToLayer_ForPlayer(NewPlayer, ObsidianGameplayTags::UI_Layer_MainMenu, MainMenuWidgetClass);
-	}
+	UCommonUIExtensions::PushContentToLayer_ForPlayer(NewPlayer, ObsidianGameplayTags::UI_Layer_MainMenu, MainMenuWidgetClass);
 }
 	

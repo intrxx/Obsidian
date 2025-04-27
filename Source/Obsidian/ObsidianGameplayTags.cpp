@@ -34,6 +34,8 @@ namespace ObsidianGameplayTags
 	 */
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_MainMenu, "UI.Layer.MainMenu", "Layer tag used when pushing widgets to layer in main menu.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_GameplayMenu, "UI.Layer.GameplayMenu", "Layer tag used when pushing Menu widgets to layer in Gameplay.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_Layer_Gameplay, "UI.Layer.Gameplay", "Layer tag used when pushing gameplay widgets to layer in Gameplay.");
 	
 	/**
 	 * ---- Damage Types ----

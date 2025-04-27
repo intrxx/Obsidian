@@ -13,6 +13,8 @@ namespace ObsidianGameplayTags
 	 */
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_MainMenu);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_GameplayMenu);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_Gameplay);
 	
 	/**
 	 * ---- Damage Types ----

@@ -83,14 +83,12 @@ void UObsidianInventory::SetupInventoryGrid()
 	{
 		Slots_GridPanel->ClearChildren(); 
 	}
-	
-	int16 GridX = 0;
-	int16 GridY = 0;
-	
 	const int32 InventoryGridWidth = InventoryWidgetController->GetInventoryGridWidth();
 	const int32 InventoryGridSize = InventoryWidgetController->GetInventoryGridHeight() * InventoryGridWidth;
 	InventoryLocationToSlotMap.Reserve(InventoryGridSize);
 	
+	int16 GridX = 0;
+	int16 GridY = 0;
 	for(int32 i = 0; i < InventoryGridSize; i++)
 	{
 		const FVector2D SlotPosition = FVector2D(GridX, GridY);
