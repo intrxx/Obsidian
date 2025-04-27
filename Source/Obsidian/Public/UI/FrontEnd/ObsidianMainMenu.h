@@ -3,19 +3,18 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonActivatableWidget.h"
+#include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianMainMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianMainMenu : public UCommonActivatableWidget
+class OBSIDIAN_API UObsidianMainMenu : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UCommonActivatableWidget> SettingsMenuWidgetClass;
-	
 };

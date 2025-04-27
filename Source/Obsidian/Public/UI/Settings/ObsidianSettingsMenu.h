@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CommonActivatableWidget.h"
+#include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianSettingsMenu.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianSettingsMenu : public UCommonActivatableWidget
+class OBSIDIAN_API UObsidianSettingsMenu : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
 	
