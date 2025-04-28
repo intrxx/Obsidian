@@ -2,6 +2,8 @@
 
 
 #include "UI/ObsidianActivatableWidget.h"
+#include "CommonUITypes.h"
+#include "ICommonInputModule.h"
 
 #define LOCTEXT_NAMESPACE "Obsidian"
 

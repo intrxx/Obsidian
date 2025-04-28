@@ -16,6 +16,9 @@ class OBSIDIAN_API AObsidianFrontEndGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+public:
+	AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
 protected:
 	virtual void BeginPlay() override;
 

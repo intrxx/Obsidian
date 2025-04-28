@@ -4,7 +4,7 @@
 
 #include "AbilitySystemInterface.h"
 #include "CoreMinimal.h"
-#include "GameFramework/PlayerState.h"
+#include "ModularPlayerState.h"
 #include "ObsidianPlayerState.generated.h"
 
 class UObsidianCommonAttributeSet;
@@ -17,7 +17,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHeroLevelUp, const int32, NewLeve
  * 
  */
 UCLASS()
-class OBSIDIAN_API AObsidianPlayerState : public APlayerState, public IAbilitySystemInterface
+class OBSIDIAN_API AObsidianPlayerState : public AModularPlayerState, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 

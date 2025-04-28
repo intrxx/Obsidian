@@ -3,3 +3,7 @@
 
 #include "UI/FrontEnd/ObsidianMainMenu.h"
 
+UObsidianMainMenu::UObsidianMainMenu(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+}

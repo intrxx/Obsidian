@@ -4,6 +4,7 @@
 
 #include "AbilitySystemInterface.h"
 #include "CoreMinimal.h"
+#include "ModularCharacter.h"
 #include "Combat/ObsidianCombatInterface.h"
 #include "GameFramework/Character.h"
 #include "ObsidianCharacterBase.generated.h"
@@ -15,7 +16,7 @@ class UObsidianAbilitySystemComponent;
 class UObsidianPawnExtensionComponent;
 
 UCLASS(Abstract)
-class OBSIDIAN_API AObsidianCharacterBase : public ACharacter, public IAbilitySystemInterface, public IObsidianCombatInterface
+class OBSIDIAN_API AObsidianCharacterBase : public AModularCharacter, public IAbilitySystemInterface, public IObsidianCombatInterface
 {
 	GENERATED_BODY()
 

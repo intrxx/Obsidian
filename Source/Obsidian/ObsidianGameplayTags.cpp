@@ -96,6 +96,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_WeaponSwap, "Input.Native.WeaponSwap", "Input for Weapon Swap.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_MainMenu, "Input.UI.MainMenu", "Main Menu Inputs for Layers.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_Action_Backwards, "UI.Action.Backwards", "Input for going back a layer in UI.");
 
 	/**
 	 * Ability

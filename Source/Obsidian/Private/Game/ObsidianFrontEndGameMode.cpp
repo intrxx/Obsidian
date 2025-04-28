@@ -2,7 +2,15 @@
 
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "CommonUIExtensions.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+
+AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	PlayerControllerClass = AObsidianPlayerController::StaticClass();
+	
+}
 
 void AObsidianFrontEndGameMode::BeginPlay()
 {

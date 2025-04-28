@@ -13,6 +13,9 @@ UCLASS()
 class OBSIDIAN_API UObsidianMainMenu : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
+
+public:
+	UObsidianMainMenu(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
