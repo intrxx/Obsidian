@@ -13,5 +13,16 @@ UCLASS()
 class OBSIDIAN_API UObsidianSettingsMenu : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void NativeOnInitialized() override;
+
+	void HandleBackwardsAction();
+
+protected:
+	UPROPERTY(EditDefaultsOnly)
+	FDataTableRowHandle BackwardsInputActionData;
+	
+	FUIActionBindingHandle BackwardsHandle;
 	
 };
