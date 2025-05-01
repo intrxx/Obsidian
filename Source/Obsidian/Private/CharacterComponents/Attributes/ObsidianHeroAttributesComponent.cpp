@@ -56,6 +56,11 @@ UGameplayEffect* UObsidianHeroAttributesComponent::GetLevelUpEffect() const
 	return nullptr;
 }
 
+FObsidianSpecialResourceVisuals UObsidianHeroAttributesComponent::GetSpecialResourceVisuals() const
+{
+	return SpecialResourceVisuals;
+}
+
 
 void UObsidianHeroAttributesComponent::ClearGameplayTags()
 {

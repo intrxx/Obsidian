@@ -17,6 +17,23 @@ DECLARE_DELEGATE_OneParam(FOnAttributeValueChangedOneParam, const float /** Valu
 DECLARE_DELEGATE_TwoParams(FOnAttributeValueChangedTwoParams, const float /** Value 1 */, const float /** Value 2 */);
 
 /*
+ * Struct that describes style of the Special Resource Globe for specific Hero characters.
+ */
+USTRUCT(BlueprintType)
+struct FObsidianSpecialResourceVisuals
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FText SpecialResourceName = FText();
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FSlateBrush SpecialResourceGlobeMaterial = FSlateBrush();
+};
+
+
+/*
  * Struct that ties the specific Effect Tag to Fill image so the system can for example replace the Red Progress globe with green one for poison.
  */
 USTRUCT(BlueprintType)

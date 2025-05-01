@@ -2,11 +2,10 @@
 
 
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
-
 #include "CommonTextBlock.h"
+#include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "UI/Components/ObsidianRadialProgressBar.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe_Mana::HandleWidgetControllerSet()
@@ -17,6 +16,19 @@ void UObsidianProgressGlobe_Mana::HandleWidgetControllerSet()
 	MainOverlayWidgetController->OnMaxManaChangedDelegate.AddDynamic(this, &ThisClass::OnMaxManaChanged);
 	MainOverlayWidgetController->OnSpecialResourceChangedDelegate.AddDynamic(this, &ThisClass::OnSpecialResourceChanged);
 	MainOverlayWidgetController->OnMaxSpecialResourceChangedDelegate.AddDynamic(this, &ThisClass::OnMaxSpecialResourceChanged);
+
+	InitializeSpecialResourceVisuals();
+}
+
+void UObsidianProgressGlobe_Mana::InitializeSpecialResourceVisuals()
+{
+	const FObsidianSpecialResourceVisuals SpecialResourceVisuals = MainOverlayWidgetController->GetSpecialResourceVisuals();
+	SpecialResourceAttributeName_TextBlock->SetText(SpecialResourceVisuals.SpecialResourceName);
+	
+	FProgressBarStyle Style;
+	Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
+	Style.FillImage = SpecialResourceVisuals.SpecialResourceGlobeMaterial;
+	SpecialResource_ProgressGlobe->SetWidgetStyle(Style);
 }
 
 void UObsidianProgressGlobe_Mana::OnManaChanged(float NewMana)
@@ -54,7 +66,7 @@ void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResou
 	SpecialResource = NewSpecialResource;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(SpecialResource, MaxSpecialResource);
-	SpecialResource_RadialProgressBar->SetPercent(ProgressBarPercent);
+	SpecialResource_ProgressGlobe->SetPercent(ProgressBarPercent);
 	
 	const int32 SpecialResourceFloored = FMath::FloorToInt(SpecialResource);
 	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);
@@ -68,7 +80,7 @@ void UObsidianProgressGlobe_Mana::OnMaxSpecialResourceChanged(float NewMaxSpecia
 	MaxSpecialResource = NewMaxSpecialResource;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(SpecialResource, MaxSpecialResource);
-	SpecialResource_RadialProgressBar->SetPercent(ProgressBarPercent);
+	SpecialResource_ProgressGlobe->SetPercent(ProgressBarPercent);
 
 	const int32 SpecialResourceFloored = FMath::FloorToInt(SpecialResource);
 	const int32 MaxSpecialResourceFloored = FMath::FloorToInt(MaxSpecialResource);

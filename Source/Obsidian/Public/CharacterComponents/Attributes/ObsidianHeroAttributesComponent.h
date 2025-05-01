@@ -4,10 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "ObsidianAttributesComponent.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
 #include "ObsidianHeroAttributesComponent.generated.h"
 
 class UMainOverlayWidgetController;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeroAttributeValueChangedSignature, const float /** New Value */);
+
 /**
  * 
  */
@@ -32,6 +34,7 @@ public:
 	//~ End of ObsidianAttributesComponent
 
 	UGameplayEffect* GetLevelUpEffect() const;
+	FObsidianSpecialResourceVisuals GetSpecialResourceVisuals() const;
 	
 	/**
 	 * Getters for Gameplay Attributes.
@@ -126,6 +129,9 @@ protected:
 	 */
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|LevelingUp")
+	FObsidianSpecialResourceVisuals SpecialResourceVisuals;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|LevelingUp")
 	TSubclassOf<UGameplayEffect> LevelUpEffectClass;
 	

@@ -26,6 +26,15 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	ObsidianAbilitySystemComponent->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
 }
 
+FObsidianSpecialResourceVisuals UMainOverlayWidgetController::GetSpecialResourceVisuals() const
+{
+	if(AttributesComponent)
+	{
+		return	AttributesComponent->GetSpecialResourceVisuals();
+	}
+	return FObsidianSpecialResourceVisuals();
+}
+
 void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
 {
 	/** Hero Set */

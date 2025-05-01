@@ -18,6 +18,8 @@ class OBSIDIAN_API UObsidianProgressGlobe_Mana : public UObsidianProgressGlobe
 protected:
 	virtual void HandleWidgetControllerSet() override;
 
+	void InitializeSpecialResourceVisuals();
+
 	UFUNCTION()
 	void OnManaChanged(float NewMana);
 	UFUNCTION()
@@ -44,7 +46,7 @@ protected:
 	TObjectPtr<UCommonTextBlock> SpecialResourceAttributeCount_TextBlock;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
-	TObjectPtr<UObsidianRadialProgressBar> SpecialResource_RadialProgressBar;
+	TObjectPtr<UProgressBar> SpecialResource_ProgressGlobe;
 
 private:
 	float Mana = 0.0f;

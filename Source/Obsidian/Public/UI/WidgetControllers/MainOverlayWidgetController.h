@@ -35,6 +35,8 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	// ~ End of UObsidianWidgetController
 
+	FObsidianSpecialResourceVisuals GetSpecialResourceVisuals() const;
+
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Health")
 	void UpdateHealthInfoGlobe(const float Magnitude) const;
 	
