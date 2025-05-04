@@ -30,7 +30,7 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> CharacterDetails_SizeBox;
 	
-	UPROPERTY(meta=(BindWidget))
+	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
 	TObjectPtr<UEditableTextBox> CharacterName_EditableTextBox;
 
 	UPROPERTY(meta=(BindWidget))

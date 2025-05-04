@@ -17,7 +17,8 @@
 				"CoreUObject",
 				"CommonUI",
 				"AIModule",
-				"CommonGame"
+				"CommonGame",
+				"ModularGameplayActors"
 			]
 		}
 	],

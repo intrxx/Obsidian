@@ -30,6 +30,15 @@ namespace ObsidianGameplayTags
 	}
 
 	/**
+	 * ---- Obsidian Characters ----
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Character_Hero_Assassin, "Character.Hero.Assassin", "Character tag for Assassin Hero.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Character_Hero_Witch, "Character.Hero.Witch", "Character tag for Witch Hero.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Character_Hero_Barbarian, "Character.Hero.Barbarian", "Character tag for Barbarian Hero.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Character_Hero_Paladin, "Character.Hero.Paladin", "Character tag for Paladin Hero.");
+
+	/**
 	 * ---- User Interface ----
 	 */
 
