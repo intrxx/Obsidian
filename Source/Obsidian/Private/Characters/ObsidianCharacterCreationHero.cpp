@@ -14,8 +14,8 @@ AObsidianCharacterCreationHero::AObsidianCharacterCreationHero(const FObjectInit
 	MeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
 	MeshComp->SetRenderCustomDepth(false);
 
-	UCharacterMovementComponent* CharacterMovement = GetCharacterMovement();
-	CharacterMovement->DisableMovement();
+	UCharacterMovementComponent* CharacterMovementComp = GetCharacterMovement();
+	CharacterMovementComp->DisableMovement();
 }
 
 void AObsidianCharacterCreationHero::StartHighlight()

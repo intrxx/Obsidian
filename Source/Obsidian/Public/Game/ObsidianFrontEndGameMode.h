@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "ObsidianFrontEndGameMode.generated.h"
 
+struct FGameplayTag;
+class AObsidianCharacterCreationHero;
 class UCommonActivatableWidget;
 
 /**
@@ -18,18 +20,27 @@ class OBSIDIAN_API AObsidianFrontEndGameMode : public AGameModeBase
 
 public:
 	AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|FrontEnd")
+	void HighlightCharacterWithTag(const FGameplayTag& Tag);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|FrontEnd")
+	void ResetHighlightForCharacterWithTag(const FGameplayTag& Tag);
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|FrontEnd")
+	AObsidianCharacterCreationHero* GetCreationHeroForTag(const FGameplayTag& Tag);
 	
 protected:
 	virtual void BeginPlay() override;
 
-	virtual void OnPostLogin(AController* NewPlayer) override;
-
-	void TryToShowMainMenu();
-
 protected:
-	void OnLocalPlayerAdded(ULocalPlayer* NewPlayer);
-	
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian") 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|FrontEnd") 
 	TSubclassOf<UCommonActivatableWidget> MainMenuWidgetClass;
+
+private:
+	void GatherCreationHeroes();
+
+private:
+	UPROPERTY()
+	TArray<TObjectPtr<AObsidianCharacterCreationHero>> CreationHeroes;
 };

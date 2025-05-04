@@ -1,8 +1,9 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Game/ObsidianFrontEndGameMode.h"
-#include "CommonUIExtensions.h"
+#include "Characters/ObsidianCharacterCreationHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
@@ -12,35 +13,55 @@ AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& O
 	
 }
 
+void AObsidianFrontEndGameMode::HighlightCharacterWithTag(const FGameplayTag& Tag)
+{
+	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(Tag))
+	{
+		CreationHero->StartHighlight();
+		CreationHero->PlayChooseMeAnimMontage();
+	}
+}
+
+void AObsidianFrontEndGameMode::ResetHighlightForCharacterWithTag(const FGameplayTag& Tag)
+{
+	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(Tag))
+	{
+		CreationHero->StopHighlight();
+		CreationHero->StopPlayingChooseMeAnimMontage();
+	}
+}
+
 void AObsidianFrontEndGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if(UGameInstance* GameInstance = GetGameInstance())
+	GatherCreationHeroes();
+}
+
+AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag(const FGameplayTag& Tag)
+{
+	for(AObsidianCharacterCreationHero* Hero : CreationHeroes)
 	{
-		GameInstance->OnLocalPlayerAddedEvent.AddUObject(this, &ThisClass::OnLocalPlayerAdded);	
+		if(Hero && Hero->HeroTag == Tag)
+		{
+			return Hero;
+		}
+	}
+	return nullptr;
+}
+
+void AObsidianFrontEndGameMode::GatherCreationHeroes()
+{
+	TArray<AActor*> CharacterCreationActors; 
+	UGameplayStatics::GetAllActorsOfClass(this, AObsidianCharacterCreationHero::StaticClass(), CharacterCreationActors);
+
+	for(AActor* Actor : CharacterCreationActors)
+	{
+		if(AObsidianCharacterCreationHero* CCHero = Cast<AObsidianCharacterCreationHero>(Actor))
+		{
+			CreationHeroes.Add(CCHero);	
+		}
 	}
 }
 
-void AObsidianFrontEndGameMode::OnPostLogin(AController* NewPlayer)
-{
-	Super::OnPostLogin(NewPlayer);
-	
-	TryToShowMainMenu();
-}
-
-void AObsidianFrontEndGameMode::TryToShowMainMenu()
-{
-	// checkf(MainMenuWidgetClass.IsNull() == false, TEXT("SettingsMenuWidgetClass is invalid in AObsidianFrontEndGameMode::TryToShowMainMenu(), please fill it on ObsidianFrontEndGameMode."));
-	//
-	// APlayerController* PC = UGameplayStatics::GetPlayerController(this, 0);
-	// UAsyncAction_PushContentToLayerForPlayer::PushContentToLayerForPlayer(PC, MainMenuWidgetClass, ObsidianGameplayTags::UI_Layer_MainMenu, true);
-}
-
-void AObsidianFrontEndGameMode::OnLocalPlayerAdded(ULocalPlayer* NewPlayer)
-{
-	UE_LOG(LogTemp, Error, TEXT("Local Player Added"));
-	
-	UCommonUIExtensions::PushContentToLayer_ForPlayer(NewPlayer, ObsidianGameplayTags::UI_Layer_MainMenu, MainMenuWidgetClass);
-}
 	
