@@ -40,6 +40,11 @@ void AObsidianPlayerState::IncreaseHeroLevel()
 	OnHeroLevelUp.Broadcast(HeroLevel);
 }
 
+void AObsidianPlayerState::SetObsidianPlayerName(const FText& InName)
+{
+	PlayerName = InName;
+}
+
 void AObsidianPlayerState::OnRep_HeroLevel()
 {
 	OnHeroLevelUp.Broadcast(HeroLevel);

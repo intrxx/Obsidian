@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterCreationScreen.generated.h"
 
+class AObsidianFrontEndGameMode;
 class UEditableTextBox;
 class UCheckBox;
 class UObsidianButtonBase;
 class USizeBox;
 class UCommonTextBlock;
+
 /**
  * 
  */
@@ -24,6 +27,37 @@ public:
 	void InitializeCharacterCreationScreen(const bool bIsOnline);
 
 protected:
+	virtual void NativeOnActivated() override;
+	virtual void NativeOnInitialized() override;
+
+	void HandleBackwardsAction();
+
+	UFUNCTION()
+	void OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type CommitType);
+	UFUNCTION()
+	void OnHardcoreCheckboxStatusChanged(bool InBool);
+	
+	void OnCreateButtonClicked();
+	void OnWitchButtonClicked();
+	void OnPaladinButtonClicked();
+	void OnBarbarianButtonClicked();
+	void OnAssassinButtonClicked();
+
+protected:
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian")
+	TObjectPtr<AObsidianFrontEndGameMode> FrontEndGameMode;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
+	FGameplayTag ChosenClassTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditDefaultsOnly)
+	FDataTableRowHandle BackwardsInputActionData;
+	
+	FUIActionBindingHandle BackwardsHandle;
+	
+	bool bIsOnlineCharacter = false;
+	
+protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> TabName_TextBlock;
 
@@ -35,6 +69,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCheckBox> Hardcore_CheckBox;
+
+	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
+	TObjectPtr<UObsidianButtonBase> Create_Button;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> CharacterList_SizeBox;
@@ -50,7 +87,4 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Assassin_Button;
-	
-protected:
-	bool bIsOnlineCharacter = false;
 };

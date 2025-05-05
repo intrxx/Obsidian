@@ -40,6 +40,8 @@ public:
 
 	void IncreaseHeroLevel();
 
+	void SetObsidianPlayerName(const FText& InName);
+
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|PlayerState")
 	FOnHeroLevelUp OnHeroLevelUp;
@@ -57,4 +59,6 @@ private:
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_HeroLevel)
 	int32 HeroLevel = 1;
 
+	UPROPERTY(VisibleAnywhere)
+	FText PlayerName = FText();
 };

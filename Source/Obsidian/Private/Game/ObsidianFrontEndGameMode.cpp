@@ -4,7 +4,14 @@
 #include "Characters/ObsidianCharacterCreationHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Obsidian/ObsidianGameplayTags.h"
+
+void FObsidianHeroClassParams::Reset()
+{
+	ObsidianPlayerName = FText();
+	bIsHardcore = false;
+	bIsOnline = false;
+	HeroClass = nullptr;
+}
 
 AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -48,6 +55,29 @@ AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag
 		}
 	}
 	return nullptr;
+}
+
+void AObsidianFrontEndGameMode::AssignPlayerName(const FText& InName)
+{
+	HeroClassParams.ObsidianPlayerName = InName;
+}
+
+void AObsidianFrontEndGameMode::AssignIsHardcore(const bool InIsHardcore)
+{
+	HeroClassParams.bIsHardcore = InIsHardcore;
+}
+
+void AObsidianFrontEndGameMode::CreateHeroClass(const FGameplayTag& InClassTag, const bool InIsOnline)
+{
+	check(ClassTagToClassMap.Contains(InClassTag));
+	
+	HeroClassParams.HeroClass = ClassTagToClassMap[InClassTag];
+	HeroClassParams.bIsOnline = InIsOnline;
+}
+
+void AObsidianFrontEndGameMode::ResetCharacterCreation()
+{
+	HeroClassParams.Reset();
 }
 
 void AObsidianFrontEndGameMode::GatherCreationHeroes()
