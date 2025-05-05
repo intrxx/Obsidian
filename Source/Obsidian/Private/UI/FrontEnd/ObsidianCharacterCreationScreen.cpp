@@ -6,6 +6,7 @@
 #include "CommonTextBlock.h"
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
+#include "Components/SizeBox.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -22,7 +23,8 @@ void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const b
 void UObsidianCharacterCreationScreen::NativeOnActivated()
 {
 	Super::NativeOnActivated();
-	
+
+	HideHeroDescription();
 }
 
 void UObsidianCharacterCreationScreen::NativeOnInitialized()
@@ -34,7 +36,7 @@ void UObsidianCharacterCreationScreen::NativeOnInitialized()
 	FrontEndGameMode = Cast<AObsidianFrontEndGameMode>(UGameplayStatics::GetGameMode(this));
 	ensureMsgf(FrontEndGameMode, TEXT("FrontEndGameMode is invalid in UObsidianCharacterCreationScreen::NativeOnActivated()"));
 	
-	CharacterName_EditableTextBox->OnTextCommitted.AddUniqueDynamic(this, &ThisClass::OnPlayerNameEntered);
+	PlayerName_EditableTextBox->OnTextCommitted.AddUniqueDynamic(this, &ThisClass::OnPlayerNameEntered);
 	Hardcore_CheckBox->OnCheckStateChanged.AddUniqueDynamic(this, &ThisClass::OnHardcoreCheckboxStatusChanged);
 
 	Create_Button->OnClicked().AddUObject(this, &ThisClass::OnCreateButtonClicked);
@@ -52,6 +54,25 @@ void UObsidianCharacterCreationScreen::HandleBackwardsAction()
 	}
 	
 	DeactivateWidget();
+}
+
+void UObsidianCharacterCreationScreen::ShowHeroDescription(const FGameplayTag& HeroTag)
+{
+	for(const FObsidianHeroInfo& Info : HeroInfos)
+	{
+		if(Info.HeroTag == HeroTag)
+		{
+			HeroInfo_HeroName_SizeBox->SetText(Info.HeroName);
+			HeroInfo_HeroDescription_SizeBox->SetText(Info.HeroInfoText);
+			
+			HeroInfo_SizeBox->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
+}
+
+void UObsidianCharacterCreationScreen::HideHeroDescription() const
+{
+	HeroInfo_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UObsidianCharacterCreationScreen::OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type CommitType)

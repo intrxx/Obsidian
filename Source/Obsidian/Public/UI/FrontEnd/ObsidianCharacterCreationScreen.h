@@ -14,6 +14,24 @@ class UObsidianButtonBase;
 class USizeBox;
 class UCommonTextBlock;
 
+USTRUCT(BlueprintType)
+struct FObsidianHeroInfo
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	FGameplayTag HeroTag = FGameplayTag::EmptyTag;
+	
+	UPROPERTY(EditAnywhere)
+	FText HeroName = FText();
+	
+	UPROPERTY(EditAnywhere)
+	FText HeroInfoText = FText();
+
+	// Add Image or something
+};
+
 /**
  * 
  */
@@ -32,6 +50,11 @@ protected:
 
 	void HandleBackwardsAction();
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian")
+	void ShowHeroDescription(const FGameplayTag& HeroTag);
+	UFUNCTION(BlueprintCallable, Category = "Obsidian")
+	void HideHeroDescription() const;
+
 	UFUNCTION()
 	void OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type CommitType);
 	UFUNCTION()
@@ -44,9 +67,13 @@ protected:
 	void OnAssassinButtonClicked();
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<FObsidianHeroInfo> HeroInfos;
+	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian")
 	TObjectPtr<AObsidianFrontEndGameMode> FrontEndGameMode;
 
+	/** Class tag assigned after pressing on the hero button/hero.*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
 	FGameplayTag ChosenClassTag = FGameplayTag::EmptyTag;
 
@@ -62,10 +89,10 @@ protected:
 	TObjectPtr<UCommonTextBlock> TabName_TextBlock;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<USizeBox> CharacterDetails_SizeBox;
+	TObjectPtr<USizeBox> HeroDetails_SizeBox;
 	
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
-	TObjectPtr<UEditableTextBox> CharacterName_EditableTextBox;
+	TObjectPtr<UEditableTextBox> PlayerName_EditableTextBox;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCheckBox> Hardcore_CheckBox;
@@ -74,7 +101,7 @@ protected:
 	TObjectPtr<UObsidianButtonBase> Create_Button;
 	
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<USizeBox> CharacterList_SizeBox;
+	TObjectPtr<USizeBox> HeroList_SizeBox;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Witch_Button;
@@ -87,4 +114,13 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Assassin_Button;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<USizeBox> HeroInfo_SizeBox;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> HeroInfo_HeroName_SizeBox;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> HeroInfo_HeroDescription_SizeBox;
 };
