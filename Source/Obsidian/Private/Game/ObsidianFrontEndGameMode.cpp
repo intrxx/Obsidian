@@ -10,7 +10,8 @@ void FObsidianHeroClassParams::Reset()
 	ObsidianPlayerName = FText();
 	bIsHardcore = false;
 	bIsOnline = false;
-	HeroClass = nullptr;
+	SoftHeroClass = nullptr;
+	Class = EObsidianHeroClass::OHC_None;
 }
 
 AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
@@ -20,18 +21,18 @@ AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& O
 	
 }
 
-void AObsidianFrontEndGameMode::HighlightCharacterWithTag(const FGameplayTag& Tag)
+void AObsidianFrontEndGameMode::HighlightCharacterWithTag(const EObsidianHeroClass& WithClass)
 {
-	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(Tag))
+	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(WithClass))
 	{
 		CreationHero->StartHighlight();
 		CreationHero->PlayChooseMeAnimMontage();
 	}
 }
 
-void AObsidianFrontEndGameMode::ResetHighlightForCharacterWithTag(const FGameplayTag& Tag)
+void AObsidianFrontEndGameMode::ResetHighlightForCharacterWithTag(const EObsidianHeroClass& WithClass)
 {
-	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(Tag))
+	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(WithClass))
 	{
 		CreationHero->StopHighlight();
 		CreationHero->StopPlayingChooseMeAnimMontage();
@@ -45,11 +46,11 @@ void AObsidianFrontEndGameMode::BeginPlay()
 	GatherCreationHeroes();
 }
 
-AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag(const FGameplayTag& Tag)
+AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag(const EObsidianHeroClass& ForClass)
 {
 	for(AObsidianCharacterCreationHero* Hero : CreationHeroes)
 	{
-		if(Hero && Hero->HeroTag == Tag)
+		if(Hero && Hero->HeroClass == ForClass)
 		{
 			return Hero;
 		}
@@ -57,27 +58,29 @@ AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag
 	return nullptr;
 }
 
-void AObsidianFrontEndGameMode::AssignPlayerName(const FText& InName)
+bool AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass& InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore)
 {
-	HeroClassParams.ObsidianPlayerName = InName;
-}
-
-void AObsidianFrontEndGameMode::AssignIsHardcore(const bool InIsHardcore)
-{
-	HeroClassParams.bIsHardcore = InIsHardcore;
-}
-
-void AObsidianFrontEndGameMode::CreateHeroClass(const FGameplayTag& InClassTag, const bool InIsOnline)
-{
-	check(ClassTagToClassMap.Contains(InClassTag));
+	if(InName.IsEmpty() || InClass == EObsidianHeroClass::OHC_None)
+	{
+		return false;
+	}
 	
-	HeroClassParams.HeroClass = ClassTagToClassMap[InClassTag];
+	check(ClassToSoftClassMap.Contains(InClass));
+	
+	FObsidianHeroClassParams HeroClassParams = FObsidianHeroClassParams();
+	HeroClassParams.SoftHeroClass = ClassToSoftClassMap[InClass];
+	HeroClassParams.Class = InClass;
+	HeroClassParams.ObsidianPlayerName = InName;
 	HeroClassParams.bIsOnline = InIsOnline;
+	HeroClassParams.bIsHardcore = InIsHardcore;
+	
+	CreatedHeroes.Add(HeroClassParams);
+	return true;
 }
 
-void AObsidianFrontEndGameMode::ResetCharacterCreation()
+void AObsidianFrontEndGameMode::GatherSavedHeroes()
 {
-	HeroClassParams.Reset();
+	unimplemented()
 }
 
 void AObsidianFrontEndGameMode::GatherCreationHeroes()

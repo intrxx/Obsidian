@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterCreationScreen.generated.h"
 
@@ -21,7 +21,7 @@ struct FObsidianHeroInfo
 
 public:
 	UPROPERTY(EditAnywhere)
-	FGameplayTag HeroTag = FGameplayTag::EmptyTag;
+	EObsidianHeroClass Class = EObsidianHeroClass::OHC_None;
 	
 	UPROPERTY(EditAnywhere)
 	FText HeroName = FText();
@@ -51,7 +51,7 @@ protected:
 	void HandleBackwardsAction();
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian")
-	void ShowHeroDescription(const FGameplayTag& HeroTag);
+	void ShowHeroDescription(const EObsidianHeroClass& ForClass);
 	UFUNCTION(BlueprintCallable, Category = "Obsidian")
 	void HideHeroDescription() const;
 
@@ -73,9 +73,9 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian")
 	TObjectPtr<AObsidianFrontEndGameMode> FrontEndGameMode;
 
-	/** Class tag assigned after pressing on the hero button/hero.*/
+	/** Class assigned after pressing on the hero button/hero.*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
-	FGameplayTag ChosenClassTag = FGameplayTag::EmptyTag;
+	EObsidianHeroClass ChosenClass = EObsidianHeroClass::OHC_None;
 
 	UPROPERTY(EditDefaultsOnly)
 	FDataTableRowHandle BackwardsInputActionData;

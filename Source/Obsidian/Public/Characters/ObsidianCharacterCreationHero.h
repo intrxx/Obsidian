@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "ModularCharacter.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianCharacterCreationHero.generated.h"
 
 /**
@@ -33,7 +33,7 @@ public:
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	FGameplayTag HeroTag = FGameplayTag::EmptyTag;
+	EObsidianHeroClass HeroClass = EObsidianHeroClass::OHC_None;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TObjectPtr<UAnimMontage> ChooseMeAnimMontage;

@@ -6,6 +6,9 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterScreen.generated.h"
 
+class UObsidianCharacterEntry;
+class AObsidianFrontEndGameMode;
+class UCommonHierarchicalScrollBox;
 class UCommonTextBlock;
 class UObsidianButtonBase;
 /**
@@ -26,10 +29,33 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	virtual void NativeOnActivated() override;
 
 	void OnPlayClicked();
+
+	void PopulateCharacterScreen();
+
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TSubclassOf<UCommonActivatableWidget> OnlineLobbyWidgetClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TSubclassOf<UObsidianCharacterEntry> CharacterEntryWidgetClass;
+
+	UPROPERTY()
+	TObjectPtr<AObsidianFrontEndGameMode> FrontEndGameMode;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UObsidianCharacterEntry>> CharacterEntries; 
+
+	UPROPERTY(BlueprintReadOnly)
+	bool bIsOnline = false;
 	
 protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonHierarchicalScrollBox> CharacterList_ScrollBox;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Play_Button;
 
@@ -41,11 +67,4 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> TabName_TextBlock;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TSubclassOf<UCommonActivatableWidget> OnlineLobbyWidgetClass;
-
-	UPROPERTY(BlueprintReadOnly)
-	bool bIsOnline = false;
 };

@@ -2,8 +2,12 @@
 
 
 #include "UI/FrontEnd/ObsidianCharacterScreen.h"
+#include "UI/FrontEnd/ObsidianCharacterEntry.h"
+#include "CommonHierarchicalScrollBox.h"
 #include "CommonTextBlock.h"
 #include "CommonUIExtensions.h"
+#include "Core/ObsidianGameplayStatics.h"
+#include "Game/ObsidianFrontEndGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
@@ -29,10 +33,32 @@ void UObsidianCharacterScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	UE_LOG(LogTemp, Warning, TEXT("NativeConstruct"));
+
 	if(Play_Button)
 	{
 		Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
 	}
+	
+	FrontEndGameMode = Cast<AObsidianFrontEndGameMode>(UGameplayStatics::GetGameMode(this));
+	ensureMsgf(FrontEndGameMode, TEXT("FrontEndGameMode is invalid in UObsidianCharacterCreationScreen::NativeOnActivated()"));
+}
+
+void UObsidianCharacterScreen::NativeDestruct()
+{
+	if(Play_Button)
+	{
+		Play_Button->OnClicked().Clear();
+	}
+	
+	Super::NativeDestruct();
+}
+
+void UObsidianCharacterScreen::NativeOnActivated()
+{
+	Super::NativeOnActivated();
+	
+	PopulateCharacterScreen();
 }
 
 void UObsidianCharacterScreen::OnPlayClicked()
@@ -46,6 +72,43 @@ void UObsidianCharacterScreen::OnPlayClicked()
 		if(UWorld* World = GetWorld())
 		{
 			UGameplayStatics::OpenLevel(World, FName("L_TestMap"));
+		}
+	}
+}
+
+void UObsidianCharacterScreen::PopulateCharacterScreen()
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	if(PlayerController == nullptr)
+	{
+		return;
+	}
+
+	if(CharacterEntries.IsEmpty() == false)
+	{
+		for(UObsidianCharacterEntry* Entry : CharacterEntries)
+		{
+			Entry->RemoveFromParent();
+		}
+		CharacterEntries.Reset();
+	}
+	
+	if(bIsOnline)
+	{
+		
+	}
+	else
+	{
+		// Get Saved Heroes
+
+		// Get Created Heroes, should automatically be saved later so it won't matter
+		for(const FObsidianHeroClassParams Params : FrontEndGameMode->GetCreatedHeroes())
+		{
+			checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
+			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
+			Entry->InitializeCharacterEntry(Params.ObsidianPlayerName, 1, UObsidianGameplayStatics::GetHeroClassText(Params.Class), false, Params.bIsHardcore);
+			CharacterList_ScrollBox->AddChild(Entry);
+			CharacterEntries.Add(Entry);
 		}
 	}
 }

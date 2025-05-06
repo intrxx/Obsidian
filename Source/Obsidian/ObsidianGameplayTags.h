@@ -7,16 +7,6 @@
 namespace ObsidianGameplayTags
 {
 	OBSIDIAN_API FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
-
-	/**
-	 * ---- Obsidian Characters ----
-	 */
-
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Hero_Assassin);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Hero_Witch);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Hero_Barbarian);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Character_Hero_Paladin);
-
 	
 	/**
 	 * ---- User Interface ----

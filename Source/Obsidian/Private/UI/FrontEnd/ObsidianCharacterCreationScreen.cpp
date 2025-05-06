@@ -9,7 +9,6 @@
 #include "Components/SizeBox.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Kismet/GameplayStatics.h"
-#include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
 
 void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const bool bIsOnline)
@@ -48,19 +47,18 @@ void UObsidianCharacterCreationScreen::NativeOnInitialized()
 
 void UObsidianCharacterCreationScreen::HandleBackwardsAction()
 {
-	if(FrontEndGameMode)
-	{
-		FrontEndGameMode->ResetCharacterCreation();
-	}
+	ChosenClass = EObsidianHeroClass::OHC_None;
+	Hardcore_CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+	PlayerName_EditableTextBox->SetText(FText());
 	
 	DeactivateWidget();
 }
 
-void UObsidianCharacterCreationScreen::ShowHeroDescription(const FGameplayTag& HeroTag)
+void UObsidianCharacterCreationScreen::ShowHeroDescription(const EObsidianHeroClass& ForClass)
 {
 	for(const FObsidianHeroInfo& Info : HeroInfos)
 	{
-		if(Info.HeroTag == HeroTag)
+		if(Info.Class == ForClass)
 		{
 			HeroInfo_HeroName_SizeBox->SetText(Info.HeroName);
 			HeroInfo_HeroDescription_SizeBox->SetText(Info.HeroInfoText);
@@ -77,45 +75,48 @@ void UObsidianCharacterCreationScreen::HideHeroDescription() const
 
 void UObsidianCharacterCreationScreen::OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type CommitType)
 {
-	if(FrontEndGameMode)
-	{
-		FrontEndGameMode->AssignPlayerName(InPlayerName);
-	}
 }
 
 void UObsidianCharacterCreationScreen::OnHardcoreCheckboxStatusChanged(bool InBool)
 {
-	if(FrontEndGameMode)
-	{
-		FrontEndGameMode->AssignIsHardcore(InBool);
-	}
 }
 
 void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 {
-	if(FrontEndGameMode && ChosenClassTag != FGameplayTag::EmptyTag)
+	if(FrontEndGameMode == nullptr)
 	{
-		FrontEndGameMode->CreateHeroClass(ChosenClassTag, bIsOnlineCharacter);
+		return;
+	}
+
+	const ECheckBoxState CheckBoxState = Hardcore_CheckBox->GetCheckedState();
+	const bool bIsHardcoreChecked = CheckBoxState == ECheckBoxState::Checked;
+	if(FrontEndGameMode->CreateHeroClass(ChosenClass, PlayerName_EditableTextBox->GetText(), bIsOnlineCharacter, bIsHardcoreChecked))
+	{
+		HandleBackwardsAction();
+	}
+	else
+	{
+		// Notify user of any errors
 	}
 }
 
 void UObsidianCharacterCreationScreen::OnWitchButtonClicked()
 {
-	ChosenClassTag = ObsidianGameplayTags::Character_Hero_Witch;
+	ChosenClass = EObsidianHeroClass::OHC_Witch;
 }
 
 void UObsidianCharacterCreationScreen::OnPaladinButtonClicked()
 {
-	ChosenClassTag = ObsidianGameplayTags::Character_Hero_Paladin;
+	ChosenClass = EObsidianHeroClass::OHC_Paladin;
 }
 
 void UObsidianCharacterCreationScreen::OnBarbarianButtonClicked()
 {
-	ChosenClassTag = ObsidianGameplayTags::Character_Hero_Barbarian;
+	ChosenClass = EObsidianHeroClass::OHC_Barbarian;
 }
 
 void UObsidianCharacterCreationScreen::OnAssassinButtonClicked()
 {
-	ChosenClassTag = ObsidianGameplayTags::Character_Hero_Assassin;
+	ChosenClass = EObsidianHeroClass::OHC_Assassin;
 }
 

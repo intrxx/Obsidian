@@ -8,6 +8,7 @@
 #include "OCharacterStatusWidgetController.generated.h"
 
 struct FOnAttributeChangeData;
+
 /**
  * 
  */

@@ -125,3 +125,5 @@ enum class EObsidianHeroClass : uint8
 	OHC_Paladin UMETA(DisplayName = "Paladin")
 };
 
+
+

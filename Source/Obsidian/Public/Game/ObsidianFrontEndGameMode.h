@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "GameFramework/GameModeBase.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianFrontEndGameMode.generated.h"
 
 class AObsidianHero;
@@ -33,7 +34,11 @@ public:
 	bool bIsOnline = false;
 
 	UPROPERTY()
-	TSoftClassPtr<AObsidianHero> HeroClass = nullptr;
+	TSoftClassPtr<AObsidianHero> SoftHeroClass = nullptr;
+
+	// For convenience
+	UPROPERTY()
+	EObsidianHeroClass Class = EObsidianHeroClass::OHC_None;
 };
 
 /**
@@ -48,19 +53,22 @@ public:
 	AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void HighlightCharacterWithTag(const FGameplayTag& Tag);
+	void HighlightCharacterWithTag(const EObsidianHeroClass& WithClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void ResetHighlightForCharacterWithTag(const FGameplayTag& Tag);
+	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass& WithClass);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	AObsidianCharacterCreationHero* GetCreationHeroForTag(const FGameplayTag& Tag);
+	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass& ForClass);
 
-	void AssignPlayerName(const FText& InName);
-	void AssignIsHardcore(const bool InIsHardcore);
-	void CreateHeroClass(const FGameplayTag& InClassTag, const bool InIsOnline);
+	TArray<FObsidianHeroClassParams> GetCreatedHeroes() const
+	{
+		return CreatedHeroes;
+	}
 	
-	void ResetCharacterCreation();
+	bool CreateHeroClass(const EObsidianHeroClass& InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
+
+	void GatherSavedHeroes();
 	
 protected:
 	virtual void BeginPlay() override;
@@ -70,10 +78,10 @@ protected:
 	TSubclassOf<UCommonActivatableWidget> MainMenuWidgetClass;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|CharacterCreation")
-	TMap<FGameplayTag, TSoftClassPtr<AObsidianHero>> ClassTagToClassMap;
+	TMap<EObsidianHeroClass, TSoftClassPtr<AObsidianHero>> ClassToSoftClassMap;
 
 	UPROPERTY()
-	FObsidianHeroClassParams HeroClassParams = FObsidianHeroClassParams();
+	TArray<FObsidianHeroClassParams> CreatedHeroes;
 
 private:
 	void GatherCreationHeroes();
