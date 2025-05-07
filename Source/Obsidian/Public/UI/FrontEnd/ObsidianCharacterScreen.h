@@ -36,6 +36,8 @@ protected:
 
 	void PopulateCharacterScreen();
 
+	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UCommonActivatableWidget> OnlineLobbyWidgetClass;

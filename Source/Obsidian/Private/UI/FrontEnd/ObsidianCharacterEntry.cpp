@@ -17,3 +17,13 @@ void UObsidianCharacterEntry::InitializeCharacterEntry(const FText& InPlayerName
 	const FText PlayTypeText = FText::FromString(FString::Printf(TEXT("%s %s"), *IsOnlineString, *IsHardcoreString));
 	PlayType_TextBlock->SetText(PlayTypeText);
 }
+
+void UObsidianCharacterEntry::NativeOnClicked()
+{
+	if(!GetLocked())
+	{
+		OnEntryClicked.Broadcast(this);
+	}
+	
+	Super::NativeOnClicked();
+}

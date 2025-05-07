@@ -7,6 +7,7 @@
 #include "ObsidianGameMode.generated.h"
 
 class UObsidianEnemyTypeInfo;
+
 /**
  * 
  */
@@ -18,6 +19,8 @@ class OBSIDIAN_API AObsidianGameMode : public AGameModeBase
 	//~AGameModeBase interface
 	//~End of AGameModeBase interface
 public:
+	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	
 	UObsidianEnemyTypeInfo* GetEnemyTypeInfo() const
 	{
 		return EnemyTypeInfo;

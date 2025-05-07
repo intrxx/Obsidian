@@ -6,7 +6,12 @@
 #include "CommonButtonBase.h"
 #include "ObsidianCharacterEntry.generated.h"
 
+class AObsidianHero;
 class UCommonTextBlock;
+class UObsidianCharacterEntry;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnEntryClicked, UObsidianCharacterEntry*);
+
 /**
  * 
  */
@@ -17,7 +22,14 @@ class OBSIDIAN_API UObsidianCharacterEntry : public UCommonButtonBase
 
 public:
 	void InitializeCharacterEntry(const FText& InPlayerName, const int32 InPlayerLevel, const FText& InPlayerClass, const bool InIsOnline, const bool InIsHardcore);
+	
+	TSoftClassPtr<AObsidianHero> TempObsidianHeroClass;
 
+	FOnEntryClicked OnEntryClicked;
+
+protected:
+	virtual void NativeOnClicked() override;
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> PlayerName_TextBlock;

@@ -8,6 +8,7 @@
 #include "CommonUIExtensions.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
+#include "Game/ObsidianGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
@@ -71,6 +72,11 @@ void UObsidianCharacterScreen::OnPlayClicked()
 	{
 		if(UWorld* World = GetWorld())
 		{
+			if(UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(UGameplayStatics::GetGameInstance(World)))
+			{
+				ObsidianGameInstance->ChosenHero = FrontEndGameMode->ChosenHeroClass;
+			}
+			
 			UGameplayStatics::OpenLevel(World, FName("L_TestMap"));
 		}
 	}
@@ -107,8 +113,26 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 			checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
 			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
 			Entry->InitializeCharacterEntry(Params.ObsidianPlayerName, 1, UObsidianGameplayStatics::GetHeroClassText(Params.Class), false, Params.bIsHardcore);
+			Entry->TempObsidianHeroClass = Params.SoftHeroClass;
+			
 			CharacterList_ScrollBox->AddChild(Entry);
 			CharacterEntries.Add(Entry);
 		}
+	}
+
+	for(UObsidianCharacterEntry* Entry : CharacterEntries)
+	{
+		if(Entry && Entry->OnClicked().IsBound() == false)
+		{
+			Entry->OnEntryClicked.AddUObject(this, &ThisClass::HandleClickingOnCharacterEntry);
+		}
+	}
+}
+
+void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked)
+{
+	if(FrontEndGameMode)
+	{
+		FrontEndGameMode->ChosenHeroClass = EntryClicked->TempObsidianHeroClass;
 	}
 }

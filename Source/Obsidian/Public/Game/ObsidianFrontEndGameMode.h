@@ -69,6 +69,10 @@ public:
 	bool CreateHeroClass(const EObsidianHeroClass& InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
 
 	void GatherSavedHeroes();
+
+public:
+	UPROPERTY()
+	TSoftClassPtr<AObsidianHero> ChosenHeroClass;
 	
 protected:
 	virtual void BeginPlay() override;
