@@ -31,6 +31,7 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	virtual void NativeOnActivated() override;
+	virtual void NativeOnDeactivated() override;
 
 	void OnPlayClicked();
 
@@ -53,6 +54,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsOnline = false;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianCharacterEntry> CachedChosenCharacterEntry;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

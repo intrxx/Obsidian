@@ -8,10 +8,12 @@
 
 void AObsidianGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
-	UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(GetGameInstance());
-	if(ObsidianGameInstance)
+	if(const UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(GetGameInstance()))
 	{
-		DefaultPawnClass = ObsidianGameInstance->ChosenHero.LoadSynchronous();
+		if(const TSubclassOf<AObsidianHero> HeroClass = ObsidianGameInstance->ChosenHero.LoadSynchronous())
+		{
+			DefaultPawnClass = HeroClass;
+		}
 	}
 	
 	Super::InitGame(MapName, Options, ErrorMessage);

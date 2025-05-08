@@ -34,8 +34,6 @@ void UObsidianCharacterScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	UE_LOG(LogTemp, Warning, TEXT("NativeConstruct"));
-
 	if(Play_Button)
 	{
 		Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
@@ -60,6 +58,18 @@ void UObsidianCharacterScreen::NativeOnActivated()
 	Super::NativeOnActivated();
 	
 	PopulateCharacterScreen();
+}
+
+void UObsidianCharacterScreen::NativeOnDeactivated()
+{
+	if(FrontEndGameMode && CachedChosenCharacterEntry)
+	{
+		CachedChosenCharacterEntry->ResetChosenState();
+		CachedChosenCharacterEntry = nullptr;
+		FrontEndGameMode->ChosenHeroClass = nullptr;
+	}
+	
+	Super::NativeOnDeactivated();
 }
 
 void UObsidianCharacterScreen::OnPlayClicked()
@@ -127,10 +137,30 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 			Entry->OnEntryClicked.AddUObject(this, &ThisClass::HandleClickingOnCharacterEntry);
 		}
 	}
+
+	if(CharacterEntries.IsEmpty() == false)
+	{
+		CachedChosenCharacterEntry = CharacterEntries[0];
+		CachedChosenCharacterEntry->SetIsChosen();
+		FrontEndGameMode->ChosenHeroClass = CachedChosenCharacterEntry->TempObsidianHeroClass;
+	}
 }
 
 void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked)
 {
+	if(CachedChosenCharacterEntry)
+	{
+		CachedChosenCharacterEntry->ResetChosenState();
+	}
+	
+	if(EntryClicked == nullptr)
+	{
+		return;
+	}
+
+	EntryClicked->SetIsChosen();
+	CachedChosenCharacterEntry = EntryClicked;
+	
 	if(FrontEndGameMode)
 	{
 		FrontEndGameMode->ChosenHeroClass = EntryClicked->TempObsidianHeroClass;

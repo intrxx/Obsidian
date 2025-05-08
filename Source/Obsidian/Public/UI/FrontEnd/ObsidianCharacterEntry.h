@@ -6,6 +6,7 @@
 #include "CommonButtonBase.h"
 #include "ObsidianCharacterEntry.generated.h"
 
+class UBorder;
 class AObsidianHero;
 class UCommonTextBlock;
 class UObsidianCharacterEntry;
@@ -27,10 +28,17 @@ public:
 
 	FOnEntryClicked OnEntryClicked;
 
+	void SetIsChosen();
+	void ResetChosenState();
+
 protected:
+	virtual void NativeConstruct() override;
 	virtual void NativeOnClicked() override;
 	
 protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UBorder> Chosen_Border;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> PlayerName_TextBlock;
 

@@ -4,6 +4,24 @@
 #include "UI/FrontEnd/ObsidianCharacterEntry.h"
 
 #include "CommonTextBlock.h"
+#include "Components/Border.h"
+
+void UObsidianCharacterEntry::NativeConstruct()
+{
+	Super::NativeConstruct();
+
+	Chosen_Border->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UObsidianCharacterEntry::NativeOnClicked()
+{
+	if(!GetLocked())
+	{
+		OnEntryClicked.Broadcast(this);
+	}
+	
+	Super::NativeOnClicked();
+}
 
 void UObsidianCharacterEntry::InitializeCharacterEntry(const FText& InPlayerName, const int32 InPlayerLevel, const FText& InPlayerClass,
                                                        const bool InIsOnline, const bool InIsHardcore)
@@ -18,12 +36,14 @@ void UObsidianCharacterEntry::InitializeCharacterEntry(const FText& InPlayerName
 	PlayType_TextBlock->SetText(PlayTypeText);
 }
 
-void UObsidianCharacterEntry::NativeOnClicked()
+void UObsidianCharacterEntry::SetIsChosen()
 {
-	if(!GetLocked())
-	{
-		OnEntryClicked.Broadcast(this);
-	}
-	
-	Super::NativeOnClicked();
+	Chosen_Border->SetVisibility(ESlateVisibility::Visible);
 }
+
+void UObsidianCharacterEntry::ResetChosenState()
+{
+	Chosen_Border->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+
