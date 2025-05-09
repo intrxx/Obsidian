@@ -15,6 +15,10 @@
 
 UWidget* UObsidianCharacterScreen::NativeGetDesiredFocusTarget() const
 {
+	if(CharacterEntries.IsEmpty())
+	{
+		return Create_Button;
+	}
 	return Play_Button;
 }
 
@@ -143,19 +147,38 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 		CachedChosenCharacterEntry = CharacterEntries[0];
 		CachedChosenCharacterEntry->SetIsChosen();
 		FrontEndGameMode->ChosenHeroClass = CachedChosenCharacterEntry->TempObsidianHeroClass;
+
+		if(Play_Button->GetIsEnabled() == false)
+		{
+			Play_Button->SetIsEnabled(true);
+		}
+		
+		if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
+		{
+			Play_Button->SetFocus();
+		}
+	}
+	else
+	{
+		Play_Button->SetIsEnabled(false);
 	}
 }
 
 void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked)
 {
-	if(CachedChosenCharacterEntry)
-	{
-		CachedChosenCharacterEntry->ResetChosenState();
-	}
-	
 	if(EntryClicked == nullptr)
 	{
 		return;
+	}
+
+	if(CachedChosenCharacterEntry == EntryClicked)
+	{
+		return;
+	}
+
+	if(CachedChosenCharacterEntry)
+	{
+		CachedChosenCharacterEntry->ResetChosenState();
 	}
 
 	EntryClicked->SetIsChosen();
