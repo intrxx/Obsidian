@@ -4,6 +4,7 @@
 #include "UI/FrontEnd/ObsidianCharacterCreationScreen.h"
 #include "Input/CommonUIInputTypes.h"
 #include "CommonTextBlock.h"
+#include "CommonUIExtensions.h"
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
 #include "Components/SizeBox.h"
@@ -40,9 +41,17 @@ void UObsidianCharacterCreationScreen::NativeOnInitialized()
 
 	Create_Button->OnClicked().AddUObject(this, &ThisClass::OnCreateButtonClicked);
 	Witch_Button->OnClicked().AddUObject(this, &ThisClass::OnWitchButtonClicked);
+	Witch_Button->OnHovered().AddUObject(this, &ThisClass::OnWitchButtonHovered);
+	Witch_Button->OnUnhovered().AddUObject(this, &ThisClass::OnWitchButtonUnhovered);
 	Paladin_Button->OnClicked().AddUObject(this, &ThisClass::OnPaladinButtonClicked);
+	Paladin_Button->OnHovered().AddUObject(this, &ThisClass::OnPaladinButtonHovered);
+	Paladin_Button->OnUnhovered().AddUObject(this, &ThisClass::OnPaladinButtonUnhovered);
 	Barbarian_Button->OnClicked().AddUObject(this, &ThisClass::OnBarbarianButtonClicked);
+	Barbarian_Button->OnHovered().AddUObject(this, &ThisClass::OnBarbarianButtonHovered);
+	Barbarian_Button->OnUnhovered().AddUObject(this, &ThisClass::OnBarbarianButtonUnhovered);
 	Assassin_Button->OnClicked().AddUObject(this, &ThisClass::OnAssassinButtonClicked);
+	Assassin_Button->OnHovered().AddUObject(this, &ThisClass::OnAssassinButtonHovered);
+	Assassin_Button->OnUnhovered().AddUObject(this, &ThisClass::OnAssassinButtonUnhovered);
 }
 
 void UObsidianCharacterCreationScreen::HandleBackwardsAction()
@@ -88,6 +97,9 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 		return;
 	}
 
+	FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
+	HideHeroDescription();
+
 	const ECheckBoxState CheckBoxState = Hardcore_CheckBox->GetCheckedState();
 	const bool bIsHardcoreChecked = CheckBoxState == ECheckBoxState::Checked;
 	if(FrontEndGameMode->CreateHeroClass(ChosenClass, PlayerName_EditableTextBox->GetText(), bIsOnlineCharacter, bIsHardcoreChecked))
@@ -102,21 +114,124 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 
 void UObsidianCharacterCreationScreen::OnWitchButtonClicked()
 {
+	HandleClickingHeroButton(EObsidianHeroClass::OHC_Witch);
 	ChosenClass = EObsidianHeroClass::OHC_Witch;
+}
+
+void UObsidianCharacterCreationScreen::OnWitchButtonHovered()
+{
+	HandleHoveringHeroButton(EObsidianHeroClass::OHC_Witch);
+}
+
+void UObsidianCharacterCreationScreen::OnWitchButtonUnhovered()
+{
+	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Witch);
 }
 
 void UObsidianCharacterCreationScreen::OnPaladinButtonClicked()
 {
+	HandleClickingHeroButton(EObsidianHeroClass::OHC_Paladin);
 	ChosenClass = EObsidianHeroClass::OHC_Paladin;
+}
+
+void UObsidianCharacterCreationScreen::OnPaladinButtonHovered()
+{
+	HandleHoveringHeroButton(EObsidianHeroClass::OHC_Paladin);
+}
+
+void UObsidianCharacterCreationScreen::OnPaladinButtonUnhovered()
+{
+	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Paladin);
 }
 
 void UObsidianCharacterCreationScreen::OnBarbarianButtonClicked()
 {
+	HandleClickingHeroButton(EObsidianHeroClass::OHC_Barbarian);
 	ChosenClass = EObsidianHeroClass::OHC_Barbarian;
+}
+
+void UObsidianCharacterCreationScreen::OnBarbarianButtonHovered()
+{
+	HandleHoveringHeroButton(EObsidianHeroClass::OHC_Barbarian);
+}
+
+void UObsidianCharacterCreationScreen::OnBarbarianButtonUnhovered()
+{
+	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Barbarian);
 }
 
 void UObsidianCharacterCreationScreen::OnAssassinButtonClicked()
 {
+	HandleClickingHeroButton(EObsidianHeroClass::OHC_Assassin);
 	ChosenClass = EObsidianHeroClass::OHC_Assassin;
+}
+
+void UObsidianCharacterCreationScreen::OnAssassinButtonHovered()
+{
+	HandleHoveringHeroButton(EObsidianHeroClass::OHC_Assassin);
+}
+
+void UObsidianCharacterCreationScreen::OnAssassinButtonUnhovered()
+{
+	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Assassin);
+}
+
+void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianHeroClass ForClass)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Clicking"));
+	if(FrontEndGameMode == nullptr)
+	{
+		return;
+	}
+	
+	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
+	{
+		PlayerName_EditableTextBox->SetFocus();
+		UE_LOG(LogTemp, Warning, TEXT("Pressed Button"));
+	}
+	else
+	{
+		FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
+		FrontEndGameMode->HighlightCharacterWithTag(ForClass);
+		ShowHeroDescription(ForClass);
+	}
+}
+
+void UObsidianCharacterCreationScreen::HandleHoveringHeroButton(const EObsidianHeroClass ForClass)
+{
+	if(FrontEndGameMode == nullptr)
+	{
+		return;
+	}
+
+	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
+	{
+		if(ChosenClass != EObsidianHeroClass::OHC_None)
+		{
+			FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
+			ChosenClass = EObsidianHeroClass::OHC_None;
+		}
+		FrontEndGameMode->HighlightCharacterWithTag(ForClass);
+		ShowHeroDescription(ForClass);
+	}
+}
+
+void UObsidianCharacterCreationScreen::HandleUnhoveringHeroButton(const EObsidianHeroClass ForClass)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Unhovering"));
+	
+	if(FrontEndGameMode == nullptr)
+	{
+		return;
+	}
+
+	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
+	{
+		if(ChosenClass != ForClass)
+		{
+			FrontEndGameMode->ResetHighlightForCharacterWithTag(ForClass);
+			HideHeroDescription();
+		}
+	}
 }
 

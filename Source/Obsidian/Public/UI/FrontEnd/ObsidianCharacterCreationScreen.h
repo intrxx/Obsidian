@@ -62,9 +62,21 @@ protected:
 	
 	void OnCreateButtonClicked();
 	void OnWitchButtonClicked();
+	void OnWitchButtonHovered();
+	void OnWitchButtonUnhovered();
 	void OnPaladinButtonClicked();
+	void OnPaladinButtonHovered();
+	void OnPaladinButtonUnhovered();
 	void OnBarbarianButtonClicked();
+	void OnBarbarianButtonHovered();
+	void OnBarbarianButtonUnhovered();
 	void OnAssassinButtonClicked();
+	void OnAssassinButtonHovered();
+	void OnAssassinButtonUnhovered();
+
+	void HandleClickingHeroButton(const EObsidianHeroClass ForClass);
+	void HandleHoveringHeroButton(const EObsidianHeroClass ForClass);
+	void HandleUnhoveringHeroButton(const EObsidianHeroClass ForClass);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
