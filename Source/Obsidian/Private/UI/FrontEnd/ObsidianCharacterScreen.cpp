@@ -38,10 +38,8 @@ void UObsidianCharacterScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if(Play_Button)
-	{
-		Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
-	}
+	Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
+	Delete_Button->OnClicked().AddUObject(this, &ThisClass::OnDeleteClicked);
 	
 	FrontEndGameMode = Cast<AObsidianFrontEndGameMode>(UGameplayStatics::GetGameMode(this));
 	ensureMsgf(FrontEndGameMode, TEXT("FrontEndGameMode is invalid in UObsidianCharacterCreationScreen::NativeOnActivated()"));
@@ -96,6 +94,31 @@ void UObsidianCharacterScreen::OnPlayClicked()
 	}
 }
 
+void UObsidianCharacterScreen::OnDeleteClicked()
+{
+	if(CachedChosenCharacterEntry && FrontEndGameMode && CharacterEntries.Contains(CachedChosenCharacterEntry))
+	{
+		CharacterEntries.Remove(CachedChosenCharacterEntry);
+		CachedChosenCharacterEntry->RemoveFromParent();
+		FrontEndGameMode->DeleteHeroClass(CachedChosenCharacterEntry->TempSaveID);
+
+		if(CharacterEntries.IsEmpty() == false)
+		{
+			if(UObsidianCharacterEntry* NewEntry = CharacterEntries[0])
+			{
+				NewEntry->SetIsChosen();
+				FrontEndGameMode->ChosenHeroClass = NewEntry->TempObsidianHeroClass;
+				CachedChosenCharacterEntry = NewEntry;
+			}
+		}
+		else
+		{
+			FrontEndGameMode->ChosenHeroClass = nullptr;
+			Play_Button->SetIsEnabled(false);
+		}
+	}
+}
+
 void UObsidianCharacterScreen::PopulateCharacterScreen()
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
@@ -128,6 +151,7 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
 			Entry->InitializeCharacterEntry(Params.ObsidianPlayerName, 1, UObsidianGameplayStatics::GetHeroClassText(Params.Class), false, Params.bIsHardcore);
 			Entry->TempObsidianHeroClass = Params.SoftHeroClass;
+			Entry->TempSaveID = Params.TempID;
 			
 			CharacterList_ScrollBox->AddChild(Entry);
 			CharacterEntries.Add(Entry);

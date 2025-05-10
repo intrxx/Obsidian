@@ -34,6 +34,7 @@ protected:
 	virtual void NativeOnDeactivated() override;
 
 	void OnPlayClicked();
+	void OnDeleteClicked();
 
 	void PopulateCharacterScreen();
 

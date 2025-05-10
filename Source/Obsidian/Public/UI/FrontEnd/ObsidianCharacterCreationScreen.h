@@ -77,7 +77,7 @@ protected:
 	void OnAssassinButtonUnhovered();
 
 	void HandleClickingHeroButton(const EObsidianHeroClass ForClass);
-	void HandleHoveringHeroButton(const EObsidianHeroClass ForClass);
+	void HandleHoverHeroButton(const EObsidianHeroClass ForClass);
 	void HandleUnhoverHeroButton(const EObsidianHeroClass ForClass);
 
 	void ResetHeroDetails() const;

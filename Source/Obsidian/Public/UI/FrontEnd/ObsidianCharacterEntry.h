@@ -25,6 +25,7 @@ public:
 	void InitializeCharacterEntry(const FText& InPlayerName, const int32 InPlayerLevel, const FText& InPlayerClass, const bool InIsOnline, const bool InIsHardcore);
 	
 	TSoftClassPtr<AObsidianHero> TempObsidianHeroClass;
+	int32 TempSaveID = 0;
 
 	FOnEntryClicked OnEntryClicked;
 

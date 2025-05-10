@@ -73,9 +73,24 @@ bool AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass& InClas
 	HeroClassParams.ObsidianPlayerName = InName;
 	HeroClassParams.bIsOnline = InIsOnline;
 	HeroClassParams.bIsHardcore = InIsHardcore;
+	HeroClassParams.TempID = CreatedHeroes.Num();
 	
 	CreatedHeroes.Add(HeroClassParams);
 	return true;
+}
+
+bool AObsidianFrontEndGameMode::DeleteHeroClass(const int32 WithID)
+{
+	for(auto It = CreatedHeroes.CreateIterator(); It; ++It)
+	{
+		FObsidianHeroClassParams& Params = *It;
+		if(Params.TempID == WithID)
+		{
+			It.RemoveCurrent();
+			return true;
+		}
+	}
+	return false;
 }
 
 void AObsidianFrontEndGameMode::GatherSavedHeroes()

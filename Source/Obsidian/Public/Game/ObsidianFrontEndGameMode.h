@@ -39,6 +39,9 @@ public:
 	// For convenience
 	UPROPERTY()
 	EObsidianHeroClass Class = EObsidianHeroClass::OHC_None;
+
+	UPROPERTY()
+	int32 TempID = 0;
 };
 
 /**
@@ -67,6 +70,7 @@ public:
 	}
 	
 	bool CreateHeroClass(const EObsidianHeroClass& InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
+	bool DeleteHeroClass(const int32 WithID);
 
 	void GatherSavedHeroes();
 
