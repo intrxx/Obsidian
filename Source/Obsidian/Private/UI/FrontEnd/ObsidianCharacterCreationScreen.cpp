@@ -5,6 +5,7 @@
 #include "Input/CommonUIInputTypes.h"
 #include "CommonTextBlock.h"
 #include "CommonUIExtensions.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
 #include "Components/SizeBox.h"
@@ -20,11 +21,23 @@ void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const b
 	TabName_TextBlock->SetText(TabNameText);
 }
 
+UWidget* UObsidianCharacterCreationScreen::NativeGetDesiredFocusTarget() const
+{
+	return Witch_Button;
+}
+
 void UObsidianCharacterCreationScreen::NativeOnActivated()
 {
 	Super::NativeOnActivated();
-
-	HideHeroDescription();
+	
+	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
+	{
+		HandleHoveringHeroButton(EObsidianHeroClass::OHC_Witch);
+	}
+	else
+	{
+		HideHeroDescription();
+	}
 }
 
 void UObsidianCharacterCreationScreen::NativeOnInitialized()
@@ -52,14 +65,14 @@ void UObsidianCharacterCreationScreen::NativeOnInitialized()
 	Assassin_Button->OnClicked().AddUObject(this, &ThisClass::OnAssassinButtonClicked);
 	Assassin_Button->OnHovered().AddUObject(this, &ThisClass::OnAssassinButtonHovered);
 	Assassin_Button->OnUnhovered().AddUObject(this, &ThisClass::OnAssassinButtonUnhovered);
+
+	HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UObsidianCharacterCreationScreen::HandleBackwardsAction()
 {
 	ChosenClass = EObsidianHeroClass::OHC_None;
-	Hardcore_CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
-	PlayerName_EditableTextBox->SetText(FText());
-	
+	ResetHeroDetails();
 	DeactivateWidget();
 }
 
@@ -125,7 +138,7 @@ void UObsidianCharacterCreationScreen::OnWitchButtonHovered()
 
 void UObsidianCharacterCreationScreen::OnWitchButtonUnhovered()
 {
-	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Witch);
+	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Witch);
 }
 
 void UObsidianCharacterCreationScreen::OnPaladinButtonClicked()
@@ -141,7 +154,7 @@ void UObsidianCharacterCreationScreen::OnPaladinButtonHovered()
 
 void UObsidianCharacterCreationScreen::OnPaladinButtonUnhovered()
 {
-	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Paladin);
+	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Paladin);
 }
 
 void UObsidianCharacterCreationScreen::OnBarbarianButtonClicked()
@@ -157,7 +170,7 @@ void UObsidianCharacterCreationScreen::OnBarbarianButtonHovered()
 
 void UObsidianCharacterCreationScreen::OnBarbarianButtonUnhovered()
 {
-	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Barbarian);
+	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Barbarian);
 }
 
 void UObsidianCharacterCreationScreen::OnAssassinButtonClicked()
@@ -173,21 +186,22 @@ void UObsidianCharacterCreationScreen::OnAssassinButtonHovered()
 
 void UObsidianCharacterCreationScreen::OnAssassinButtonUnhovered()
 {
-	HandleUnhoveringHeroButton(EObsidianHeroClass::OHC_Assassin);
+	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Assassin);
 }
 
 void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianHeroClass ForClass)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Clicking"));
 	if(FrontEndGameMode == nullptr)
 	{
 		return;
 	}
+
+	ResetHeroDetails();
+	HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Visible);
 	
 	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
 	{
 		PlayerName_EditableTextBox->SetFocus();
-		UE_LOG(LogTemp, Warning, TEXT("Pressed Button"));
 	}
 	else
 	{
@@ -208,6 +222,8 @@ void UObsidianCharacterCreationScreen::HandleHoveringHeroButton(const EObsidianH
 	{
 		if(ChosenClass != EObsidianHeroClass::OHC_None)
 		{
+			ResetHeroDetails();
+			HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
 			FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
 			ChosenClass = EObsidianHeroClass::OHC_None;
 		}
@@ -216,10 +232,8 @@ void UObsidianCharacterCreationScreen::HandleHoveringHeroButton(const EObsidianH
 	}
 }
 
-void UObsidianCharacterCreationScreen::HandleUnhoveringHeroButton(const EObsidianHeroClass ForClass)
+void UObsidianCharacterCreationScreen::HandleUnhoverHeroButton(const EObsidianHeroClass ForClass)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Unhovering"));
-	
 	if(FrontEndGameMode == nullptr)
 	{
 		return;
@@ -234,4 +248,11 @@ void UObsidianCharacterCreationScreen::HandleUnhoveringHeroButton(const EObsidia
 		}
 	}
 }
+
+void UObsidianCharacterCreationScreen::ResetHeroDetails() const
+{
+	Hardcore_CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
+	PlayerName_EditableTextBox->SetText(FText());
+}
+
 

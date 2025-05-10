@@ -44,6 +44,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
 	void InitializeCharacterCreationScreen(const bool bIsOnline);
 
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
+
 protected:
 	virtual void NativeOnActivated() override;
 	virtual void NativeOnInitialized() override;
@@ -76,7 +78,9 @@ protected:
 
 	void HandleClickingHeroButton(const EObsidianHeroClass ForClass);
 	void HandleHoveringHeroButton(const EObsidianHeroClass ForClass);
-	void HandleUnhoveringHeroButton(const EObsidianHeroClass ForClass);
+	void HandleUnhoverHeroButton(const EObsidianHeroClass ForClass);
+
+	void ResetHeroDetails() const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -89,12 +93,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
 	EObsidianHeroClass ChosenClass = EObsidianHeroClass::OHC_None;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Input")
 	FDataTableRowHandle BackwardsInputActionData;
 	
 	FUIActionBindingHandle BackwardsHandle;
 	
 	bool bIsOnlineCharacter = false;
+	bool bInitialGamepadFocusSet = false;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -136,3 +141,4 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> HeroInfo_HeroDescription_SizeBox;
 };
+
