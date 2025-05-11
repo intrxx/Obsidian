@@ -89,7 +89,7 @@ void UObsidianCharacterScreen::OnPlayClicked()
 				ObsidianGameInstance->ChosenHero = FrontEndGameMode->ChosenHeroClass;
 			}
 			
-			UGameplayStatics::OpenLevel(World, FName("L_TestMap"));
+			UGameplayStatics::OpenLevel(World, FName("L_Tutorial_01"));
 		}
 	}
 }
