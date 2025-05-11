@@ -26,6 +26,7 @@ void UObsidianCharacterEntry::NativeOnClicked()
 void UObsidianCharacterEntry::InitializeCharacterEntry(const FText& InPlayerName, const int32 InPlayerLevel, const FText& InPlayerClass,
                                                        const bool InIsOnline, const bool InIsHardcore)
 {
+	TempHeroName = InPlayerName;
 	PlayerName_TextBlock->SetText(InPlayerName);
 	PlayerLevel_TextBlock->SetText(FText::FromString(FString::Printf(TEXT("%d"), InPlayerLevel)));
 	PlayerClass_TextBlock->SetText(InPlayerClass);

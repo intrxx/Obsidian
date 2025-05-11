@@ -6,6 +6,8 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "Game/ObsidianGameInstance.h"
+#include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
 AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& ObjectInitializer)
@@ -31,6 +33,20 @@ void AObsidianPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const
 {
 	return GetObsidianAbilitySystemComponent();
+}
+
+FText AObsidianPlayerState::GetObsidianPlayerName()
+{
+	// Temp
+	if(PlayerName.IsEmpty())
+	{
+		if(const UObsidianGameInstance* GameInstance = Cast<UObsidianGameInstance>(UGameplayStatics::GetGameInstance(this)))
+		{
+			SetObsidianPlayerName(GameInstance->TempHeroName);
+		}
+	}
+	// Temp
+	return PlayerName;
 }
 
 void AObsidianPlayerState::IncreaseHeroLevel()

@@ -38,6 +38,8 @@ public:
 		return HeroLevel;
 	}
 
+	FText GetObsidianPlayerName();
+
 	void IncreaseHeroLevel();
 
 	void SetObsidianPlayerName(const FText& InName);

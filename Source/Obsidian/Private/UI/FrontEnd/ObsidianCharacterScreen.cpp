@@ -87,6 +87,7 @@ void UObsidianCharacterScreen::OnPlayClicked()
 			if(UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(UGameplayStatics::GetGameInstance(World)))
 			{
 				ObsidianGameInstance->ChosenHero = FrontEndGameMode->ChosenHeroClass;
+				ObsidianGameInstance->TempHeroName = CachedChosenCharacterEntry->TempHeroName;
 			}
 			
 			UGameplayStatics::OpenLevel(World, FName("L_Tutorial_01"));

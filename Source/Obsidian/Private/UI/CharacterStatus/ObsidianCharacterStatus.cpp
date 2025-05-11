@@ -96,6 +96,11 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	{
 		HeroClass_TextBlock->SetText(HeroClassText);		
 	}
+
+	if(PlayerName_TextBlock)
+	{
+		PlayerName_TextBlock->SetText(CharacterStatusWidgetController->HeroNameText);
+	}
 }
 
 void UObsidianCharacterStatus::SwitchToTab(UScrollBox* Tab)

@@ -20,4 +20,7 @@ public:
 
 	UPROPERTY()
 	TSoftClassPtr<AObsidianHero> ChosenHero;
+
+	UPROPERTY()
+	FText TempHeroName = FText();
 };

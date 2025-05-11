@@ -25,6 +25,7 @@ public:
 
 public:
 	FText HeroClassText = FText();
+	FText HeroNameText = FText();
 	
 	/** Character */
 	FOnHeroLevelUpSignature HeroLevelUpDelegate;
