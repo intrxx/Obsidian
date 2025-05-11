@@ -38,6 +38,8 @@ void UObsidianCharacterCreationScreen::NativeOnActivated()
 	{
 		HideHeroDescription();
 	}
+
+	HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UObsidianCharacterCreationScreen::NativeOnInitialized()
@@ -65,8 +67,6 @@ void UObsidianCharacterCreationScreen::NativeOnInitialized()
 	Assassin_Button->OnClicked().AddUObject(this, &ThisClass::OnAssassinButtonClicked);
 	Assassin_Button->OnHovered().AddUObject(this, &ThisClass::OnAssassinButtonHovered);
 	Assassin_Button->OnUnhovered().AddUObject(this, &ThisClass::OnAssassinButtonUnhovered);
-
-	HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void UObsidianCharacterCreationScreen::HandleBackwardsAction()

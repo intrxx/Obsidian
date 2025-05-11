@@ -12,6 +12,7 @@ void FObsidianHeroClassParams::Reset()
 	bIsOnline = false;
 	SoftHeroClass = nullptr;
 	Class = EObsidianHeroClass::OHC_None;
+	TempID = 0;
 }
 
 AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
@@ -21,7 +22,7 @@ AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& O
 	
 }
 
-void AObsidianFrontEndGameMode::HighlightCharacterWithTag(const EObsidianHeroClass& WithClass)
+void AObsidianFrontEndGameMode::HighlightCharacterWithTag(const EObsidianHeroClass WithClass)
 {
 	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(WithClass))
 	{
@@ -30,7 +31,7 @@ void AObsidianFrontEndGameMode::HighlightCharacterWithTag(const EObsidianHeroCla
 	}
 }
 
-void AObsidianFrontEndGameMode::ResetHighlightForCharacterWithTag(const EObsidianHeroClass& WithClass)
+void AObsidianFrontEndGameMode::ResetHighlightForCharacterWithTag(const EObsidianHeroClass WithClass)
 {
 	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(WithClass))
 	{
@@ -46,7 +47,7 @@ void AObsidianFrontEndGameMode::BeginPlay()
 	GatherCreationHeroes();
 }
 
-AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag(const EObsidianHeroClass& ForClass)
+AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag(const EObsidianHeroClass ForClass)
 {
 	for(AObsidianCharacterCreationHero* Hero : CreationHeroes)
 	{
@@ -58,7 +59,7 @@ AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag
 	return nullptr;
 }
 
-bool AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass& InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore)
+bool AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore)
 {
 	if(InName.IsEmpty() || InClass == EObsidianHeroClass::OHC_None)
 	{

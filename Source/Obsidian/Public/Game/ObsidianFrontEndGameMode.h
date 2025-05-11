@@ -56,20 +56,20 @@ public:
 	AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void HighlightCharacterWithTag(const EObsidianHeroClass& WithClass);
+	void HighlightCharacterWithTag(const EObsidianHeroClass WithClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass& WithClass);
+	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass WithClass);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass& ForClass);
+	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass ForClass);
 
 	TArray<FObsidianHeroClassParams> GetCreatedHeroes() const
 	{
 		return CreatedHeroes;
 	}
 	
-	bool CreateHeroClass(const EObsidianHeroClass& InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
+	bool CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
 	bool DeleteHeroClass(const int32 WithID);
 
 	void GatherSavedHeroes();
