@@ -1,6 +1,8 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+
+#include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Engine/ActorChannel.h"
@@ -278,7 +280,7 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(const UObsidi
 		return Result;
 	}
 
-	if(ItemCategoryTag.MatchesAny(FGameplayTagContainer(TAG_Obsidian_TwoHand)))
+	if(UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("YO YO YO TWO HANDED"));
 		return Result; // Temp
@@ -385,7 +387,7 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubcla
 		return Result;
 	}
 
-	if(ItemCategoryTag.MatchesAny(FGameplayTagContainer(TAG_Obsidian_TwoHand)))
+	if(UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("YO YO YO TWO HANDED"));
 		return Result; // Temp

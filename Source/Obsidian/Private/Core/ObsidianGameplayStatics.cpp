@@ -23,3 +23,8 @@ FText UObsidianGameplayStatics::GetHeroClassText(const EObsidianHeroClass HeroCl
 	}
 	return FText::FromString(TEXT("Error - None!"));
 }
+
+bool UObsidianGameplayStatics::DoesTagMatchesAnySubTag(const FGameplayTag TagToCheck, const FGameplayTag& SubTagToCheck)
+{
+	return TagToCheck.ToString().Contains(SubTagToCheck.ToString());
+}

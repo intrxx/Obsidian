@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 #include "Kismet/GameplayStatics.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianGameplayStatics.generated.h"
@@ -16,5 +17,7 @@ class OBSIDIAN_API UObsidianGameplayStatics : public UGameplayStatics
 	GENERATED_BODY()
 	
 public:
-	static FText GetHeroClassText(const EObsidianHeroClass HeroClass); 
+	static FText GetHeroClassText(const EObsidianHeroClass HeroClass);
+
+	static bool DoesTagMatchesAnySubTag(const FGameplayTag TagToCheck, const FGameplayTag& SubTagToCheck);
 };
