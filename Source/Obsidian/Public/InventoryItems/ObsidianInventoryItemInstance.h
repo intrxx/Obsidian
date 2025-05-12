@@ -60,7 +60,7 @@ public:
 	
 	void SetItemRarity(const FGameplayTag& InItemRarityTag);
 
-	FGameplayTag GetItemCategory() const;
+	FGameplayTag GetItemCategoryTag() const;
 
 	void SetItemCategory(const FGameplayTag& InItemCategoryTag);
 

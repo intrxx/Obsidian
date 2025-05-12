@@ -24,7 +24,7 @@ public:
 
 	bool IsValid() const;
 	
-	bool CanEquipToSlot(const FGameplayTag& EquipmentCategory) const;
+	EObsidianEquipResult CanEquipToSlot(const FGameplayTag& EquipmentCategory) const;
 
 	void AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories);
@@ -86,7 +86,7 @@ public:
 	//~ End of UObject interface
 
 protected:
-	bool DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
+	EObsidianEquipResult DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
 	
 	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
 	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);
@@ -116,6 +116,8 @@ namespace ObsidianEquipmentDebugHelpers
 		{EObsidianEquipResult::None, TEXT("None")},
 		{EObsidianEquipResult::ItemUnfitForCategory, TEXT("Item Unfit For Category")},
 		{EObsidianEquipResult::ItemUnequippable, TEXT("Item Unequippable")},
+		{EObsidianEquipResult::UnableToEquip_BannedCategory, TEXT("Unable To Equip - Banned Category")},
+		{EObsidianEquipResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
 		{EObsidianEquipResult::ItemUnientified, TEXT("Item Unientified")},
 		{EObsidianEquipResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
 		{EObsidianEquipResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},

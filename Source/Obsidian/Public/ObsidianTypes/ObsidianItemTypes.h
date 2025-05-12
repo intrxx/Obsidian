@@ -82,13 +82,35 @@ enum class EObsidianEquipResult : uint8
 	
 	/** Item cannot be equipped to this Equipment Slot either because it does not fit or this item category was banned by a gameplay mechanic. */
 	ItemUnfitForCategory UMETA(DisplayName="Item Unfit For Category"),
+	
+	/** Item cannot be equipped, it does not have equipment fragment. */
 	ItemUnequippable UMETA(DisplayName="Item Unequippable"),
+
+	/** Item cannot be equipped, trying to equip two-handed weapon, two slots are occupied and no sufficient space in inventory. */
+	UnableToEquip_NoSufficientInventorySpace UMETA(DisplayName="Unable To Equip"),
+
+	/** Item cannot be equipped, category is banned by gameplay mechanic. */
+	UnableToEquip_BannedCategory UMETA(DisplayName="Unable To Equip"),
+	
+	/** Item cannot be equipped, it needs to be identified first. */
 	ItemUnientified UMETA(DisplayName="Item Unientified"),
+
+	/** Item cannot be equipped, no sufficient hero level. */
 	NotEnoughHeroLevel UMETA(DisplayName="Not Enough Hero Level"),
+
+	/** Item cannot be equipped, no sufficient Dexterity. */
 	NotEnoughDexterity UMETA(DisplayName="Not Enough Dexterity"),
+
+	/** Item cannot be equipped, no sufficient Intelligence. */
 	NotEnoughIntelligence UMETA(DisplayName="Not Enough Intelligence"),
+
+	/** Item cannot be equipped, no sufficient Strength. */
 	NotEnoughStrength UMETA(DisplayName="Not Enough Strength"),
+
+	/** Item cannot be equipped, no sufficient Faith. */
 	NotEnoughFaith UMETA(DisplayName="Not Enough Faith"),
+
+	/** Item can be quipped. */
 	CanEquip UMETA(DisplayName="Can Equip")
 };
 

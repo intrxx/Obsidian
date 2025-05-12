@@ -103,7 +103,7 @@ void UObsidianInventoryItemInstance::SetItemRarity(const FGameplayTag& InItemRar
 	ItemRarity = InItemRarityTag;
 }
 
-FGameplayTag UObsidianInventoryItemInstance::GetItemCategory() const
+FGameplayTag UObsidianInventoryItemInstance::GetItemCategoryTag() const
 {
 	return ItemCategory;
 }

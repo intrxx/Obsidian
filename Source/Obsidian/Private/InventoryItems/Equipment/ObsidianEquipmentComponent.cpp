@@ -9,6 +9,9 @@
 
 DEFINE_LOG_CATEGORY(LogEquipment);
 
+/** Defined to use in matches. */
+UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Obsidian_TwoHand, "TwoHand");
+
 //
 // Equipment Slot Definition
 //
@@ -18,13 +21,19 @@ bool FObsidianEquipmentSlotDefinition::IsValid() const
 	return SlotTag.IsValid();
 }
 
-bool FObsidianEquipmentSlotDefinition::CanEquipToSlot(const FGameplayTag& EquipmentCategory) const
+EObsidianEquipResult FObsidianEquipmentSlotDefinition::CanEquipToSlot(const FGameplayTag& EquipmentCategory) const
 {
-	if(AcceptedEquipmentCategories.HasTagExact(EquipmentCategory) && BannedEquipmentCategories.HasTagExact(EquipmentCategory) == false)
+	if(BannedEquipmentCategories.HasTagExact(EquipmentCategory))
 	{
-		return true;
+		return EObsidianEquipResult::UnableToEquip_BannedCategory;
 	}
-	return false;
+	
+	if(AcceptedEquipmentCategories.HasTagExact(EquipmentCategory))
+	{
+		return EObsidianEquipResult::CanEquip;
+	}
+	
+	return EObsidianEquipResult::ItemUnfitForCategory;
 }
 
 void FObsidianEquipmentSlotDefinition::AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory)
@@ -144,7 +153,7 @@ TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchi
 	
 	for(FObsidianEquipmentSlotDefinition Slot : EquipmentSlots)
 	{
-		if(Slot.CanEquipToSlot(ItemCategory))
+		if(Slot.CanEquipToSlot(ItemCategory) == EObsidianEquipResult::CanEquip)
 		{
 			MatchingSlots.Add(Slot);
 		}
@@ -196,7 +205,7 @@ bool UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemI
 		return false;
 	}
 	
-	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(InstanceToEquip->GetItemCategory()))
+	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(InstanceToEquip->GetItemCategoryTag()))
 	{
 		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag))
 		{
@@ -262,9 +271,17 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(const UObsidi
 		return EObsidianEquipResult::ItemUnientified;
 	}
 
-	if(DoesItemFitEquipmentSlot(SlotTag, Instance->GetItemCategory()) == false)
+	const FGameplayTag ItemCategoryTag = Instance->GetItemCategoryTag();
+	const EObsidianEquipResult Result = DoesItemFitEquipmentSlot(SlotTag, ItemCategoryTag);
+	if(Result != EObsidianEquipResult::CanEquip)
 	{
-		return EObsidianEquipResult::ItemUnfitForCategory;
+		return Result;
+	}
+
+	if(ItemCategoryTag.MatchesAny(FGameplayTagContainer(TAG_Obsidian_TwoHand)))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("YO YO YO TWO HANDED"));
+		return Result; // Temp
 	}
 	
 	return EObsidianEquipResult::CanEquip;
@@ -361,9 +378,17 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubcla
 		return EObsidianEquipResult::ItemUnientified;
 	}
 
-	if(DoesItemFitEquipmentSlot(SlotTag, DefaultObject->GetItemCategoryTag()) == false)
+	const FGameplayTag ItemCategoryTag = DefaultObject->GetItemCategoryTag();
+	const EObsidianEquipResult Result = DoesItemFitEquipmentSlot(SlotTag, ItemCategoryTag);
+	if(Result != EObsidianEquipResult::CanEquip)
 	{
-		return EObsidianEquipResult::ItemUnfitForCategory;
+		return Result;
+	}
+
+	if(ItemCategoryTag.MatchesAny(FGameplayTagContainer(TAG_Obsidian_TwoHand)))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("YO YO YO TWO HANDED"));
+		return Result; // Temp
 	}
 	
 	return EObsidianEquipResult::CanEquip;
@@ -447,14 +472,14 @@ void UObsidianEquipmentComponent::ReadyForReplication()
 	}
 }
 
-bool UObsidianEquipmentComponent::DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory)
+EObsidianEquipResult UObsidianEquipmentComponent::DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory)
 {
 	const FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
-	if(Slot.IsValid() && Slot.CanEquipToSlot(ItemCategory))
+	if(Slot.IsValid() == false)
 	{
-		return true;
+		return EObsidianEquipResult::ItemUnfitForCategory;
 	}
-	return false;
+	return Slot.CanEquipToSlot(ItemCategory);
 }
 
 void UObsidianEquipmentComponent::AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory)
