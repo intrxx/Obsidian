@@ -664,7 +664,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 		}
 	}
 	
-	// We fall back and add the previous item to the inventory again, this could happen If the Client cheated through its check to begin the replacement
+	// We fall back and add the previous item to the inventory again, this could happen If the Client cheated through its check to begin the replacement since I'm calling it client side
 	if(bSuccess == false)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Client cheated the check to replace the item! Discarding the replacement."))
@@ -707,7 +707,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation
 		}
 	}
 
-	// We fall back and equip the previously equipped item again, this could happen If the Client cheated through its check to begin the replacement
+	// We fall back and equip the previously equipped item again, this could happen If the Client cheated through its check to begin the replacement since I'm calling it client side.
 	if(bSuccess == false)
 	{
 		UE_LOG(LogEquipment, Error, TEXT("Client cheated the check to replace the equipped item! Discarding the replacement."))

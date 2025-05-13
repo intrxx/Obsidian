@@ -110,8 +110,8 @@ public:
 
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& AdditionalSlotTagToFill = FGameplayTag::EmptyTag);
+	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& AdditionalSlotTagToFill = FGameplayTag::EmptyTag);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	
 	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);

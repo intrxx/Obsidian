@@ -72,7 +72,7 @@ UObsidianAbilitySystemComponent* FObsidianEquipmentList::GetObsidianAbilitySyste
 	return OwningController ? OwningController->GetObsidianAbilitySystemComponent() : nullptr;
 }
 
-UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag)
+UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& AdditionalSlotTagToFill)
 {
 	check(ItemDefClass != nullptr);
 	check(OwnerComponent);
@@ -129,7 +129,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	return Item;
 }
 
-void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag)
+void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& AdditionalSlotTagToFill)
 {
 	check(Instance);
 	check(OwnerComponent);

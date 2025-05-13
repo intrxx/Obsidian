@@ -21,6 +21,11 @@ public:
 		: SlotTag(InSlotTag)
 		, AcceptedEquipmentCategories(InAcceptedEquipmentCategories)
 	{};
+	FObsidianEquipmentSlotDefinition(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag, const FGameplayTagContainer& InAcceptedEquipmentCategories)
+		: SlotTag(InSlotTag)
+		, SisterSlotTag(InSisterSlotTag)
+		, AcceptedEquipmentCategories(InAcceptedEquipmentCategories)
+	{};
 
 	bool IsValid() const;
 	
@@ -33,12 +38,19 @@ public:
 	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
 	
 public:
+	/** Gameplay Tag representing this slot. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
 
+	/** Gameplay Tag representing a sister slot (used for weapon set) which will also be checked if the Player tries to equip specific armament (e.g. Two-Handed Weapons). */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTag SisterSlotTag = FGameplayTag::EmptyTag;
+
+	/** Equipment with this Gameplay Tags will be allowed to be equipped in this slot. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTagContainer AcceptedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
 
+	/** Equipment with this Gameplay Tags will not be allowed to be equipped in this slot. Can be used to ban some type of armament as a gameplay mechanic. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTagContainer BannedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
 };

@@ -206,12 +206,14 @@ bool UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemI
 	{
 		return false;
 	}
-	
-	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(InstanceToEquip->GetItemCategoryTag()))
+
+	const FGameplayTag& ItemCategoryTag = InstanceToEquip->GetItemCategoryTag();
+	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
+	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
 	{
-		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag))
+		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
 		{
-			continue; // We already have an item equipped in this slot, we shouldn't try to equip it.
+			continue; // We already have an item equipped in this slot, we shouldn't try to equip it. || Initial slot is free but the other one is occupied so we don't want to automatically equip.
 		}
 		
 		if(EquipItemToSpecificSlot(InstanceToEquip, Slot.SlotTag))
@@ -245,8 +247,10 @@ bool UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItem
 #endif
 		return false;
 	}
-
-	EquipmentList.AddEntry(InstanceToEquip, SlotTag);
+	
+	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(InstanceToEquip->GetItemCategoryTag(), TAG_Obsidian_TwoHand);
+	const FGameplayTag AdditionalTagToOccupy = bIsTwoHanded ? FindEquipmentSlotByTag(SlotTag).SisterSlotTag : FGameplayTag::EmptyTag;
+	EquipmentList.AddEntry(InstanceToEquip, SlotTag, AdditionalTagToOccupy);
 	
 	if(InstanceToEquip && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -280,9 +284,13 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipInstance(const UObsidi
 		return Result;
 	}
 
-	if(UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand))
+	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
+	if(bIsTwoHanded)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("YO YO YO TWO HANDED"));
+		// 1. Check if slot in the other hand is free
+		//		a. if yes - early positive return
+		//		b. if no - check if the item can be unequipped and placed in the inventory (//TODO simulate any attributes removal)
 		return Result; // Temp
 	}
 	
@@ -307,12 +315,14 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::AutomaticallyEquipI
 	{
 		return nullptr;
 	}
-
-	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(DefaultObject->GetItemCategoryTag()))
+	
+	const FGameplayTag& ItemCategoryTag = DefaultObject->GetItemCategoryTag();
+	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
+	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
 	{
-		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag))
+		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
 		{
-			continue; // We already have an item equipped in this slot, we shouldn't try to equip it.
+			continue; // We already have an item equipped in this slot, we shouldn't try to equip it. || Initial slot is free but the other one is occupied so we don't want to automatically equip.
 		}
 		
 		if(UObsidianInventoryItemInstance* Instance = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag))
@@ -337,6 +347,12 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItemToSpecific
 		return nullptr;
 	}
 
+	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	if(DefaultObject == nullptr)
+	{
+		return nullptr;
+	}
+
 	EObsidianEquipResult EquipResult = CanEquipTemplate(ItemDef, SlotTag);
 	if(EquipResult != EObsidianEquipResult::CanEquip)
 	{
@@ -347,7 +363,9 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItemToSpecific
 		return nullptr;
 	}
 
-	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
+	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(DefaultObject->GetItemCategoryTag(), TAG_Obsidian_TwoHand);
+	const FGameplayTag AdditionalTagToOccupy = bIsTwoHanded ? FindEquipmentSlotByTag(SlotTag).SisterSlotTag : FGameplayTag::EmptyTag;
+	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag, AdditionalTagToOccupy);
 
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -539,8 +557,8 @@ void UObsidianEquipmentComponent::CreateDefaultEquipmentSlots()
 	
 	EquipmentSlots =
 		{
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
+			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
+			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
 		
 			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Helmet, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Helmet))},
 			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_BodyArmor, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_BodyArmor))},
