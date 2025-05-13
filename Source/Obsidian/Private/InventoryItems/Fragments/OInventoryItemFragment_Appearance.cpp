@@ -98,7 +98,7 @@ struct FObsidianInventoryItemGridSize
 			FVector2D(0.0f, 2.0f),
 			FVector2D(1.0f, 2.0f),
 			FVector2D(0.0f, 3.0f),
-			FVector2D(2.0f, 3.0f)
+			FVector2D(1.0f, 3.0f)
 		};
 		
 		ItemGridSizeMap =
