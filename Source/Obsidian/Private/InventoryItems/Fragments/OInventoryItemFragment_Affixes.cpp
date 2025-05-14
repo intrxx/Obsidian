@@ -11,7 +11,7 @@ void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemI
 	{
 		Instance->SetIdentified(false);
 	}
-	else
+	else if (bStartsIdentified || ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Normal || ItemAffixes.IsEmpty())
 	{
 		Instance->SetIdentified(true);
 	}

@@ -71,6 +71,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
 	TArray<FObsidianItemAffix> ItemAffixes;
 	
+	/** Whether or not the item starts identified, normal, items without any affixes or items with this bool set to true will start as identified. */
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
 	bool bStartsIdentified = false;
 
