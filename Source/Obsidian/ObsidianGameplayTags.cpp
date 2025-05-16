@@ -48,7 +48,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(SetByCaller_DamageType_Chaos, "DamageType.Chaos", "Chaos Damage Type - also used for SetByCaller.");
 	
 	const TArray<FGameplayTag> DamageTypes =
-	{
+		{
 	{
 			SetByCaller_DamageType_Physical,
 			SetByCaller_DamageType_Elemental_Fire,
@@ -56,7 +56,7 @@ namespace ObsidianGameplayTags
 			SetByCaller_DamageType_Elemental_Lightning,
 			SetByCaller_DamageType_Chaos
 		  }
-	};
+		};
 	
 	/**
 	 * ---- Effects ----
@@ -305,7 +305,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftRing, "Equipment.Slot.LeftRing", "Item Tag representing Left Ring Equipment Slot.");
 
 	const TArray<FGameplayTag> EquipmentSlots =
-	{
+		{
 		{
 			Equipment_Slot_Weapon_RightHand,
 			Equipment_Slot_Weapon_LeftHand,
@@ -318,7 +318,7 @@ namespace ObsidianGameplayTags
 			Equipment_Slot_RightRing,
 			Equipment_Slot_LeftRing
 		  }
-	};
+		};
 
 	/**
 	 * Stack Counts
@@ -328,13 +328,13 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_StackCount_Limit, "Item.StackCount.Limit", "Item Tag representing the Total number of items the Player can have, can be used for mission items which can be limited to 1.");
 
 	const TArray<FGameplayTag> StackTypes =
-	{
+		{
 		{
 			Item_StackCount_Current,
 			Item_StackCount_Max,
 			Item_StackCount_Limit
 		  }
-	};
+		};
 
 	/**
 	 * Rarity

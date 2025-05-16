@@ -6,6 +6,7 @@
 #include "GameplayTagContainer.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "Net/Serialization/FastArraySerializer.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianEquipmentList.generated.h"
 
 class UObsidianAbilitySystemComponent;
@@ -44,6 +45,54 @@ struct FObsidianEquipmentChangeMessage
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Equipement")
 	EObsidianEquipmentChangeType ChangeType = EObsidianEquipmentChangeType::ECT_None;
+};
+
+USTRUCT(BlueprintType)
+struct FObsidianEquipmentSlotDefinition
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianEquipmentSlotDefinition(){};
+	FObsidianEquipmentSlotDefinition(const FGameplayTag& InSlotTag, const FGameplayTagContainer& InAcceptedEquipmentCategories)
+		: SlotTag(InSlotTag)
+		, AcceptedEquipmentCategories(InAcceptedEquipmentCategories)
+	{};
+	FObsidianEquipmentSlotDefinition(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag, const FGameplayTagContainer& InAcceptedEquipmentCategories)
+		: SlotTag(InSlotTag)
+		, SisterSlotTag(InSisterSlotTag)
+		, AcceptedEquipmentCategories(InAcceptedEquipmentCategories)
+	{};
+
+	bool IsValid() const;
+	
+	EObsidianEquipResult CanEquipToSlot(const FGameplayTag& EquipmentCategory) const;
+
+	void AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory);
+	void AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories);
+	
+	void RemoveBannedEquipmentCategory(const FGameplayTag& BannedCategoryToRemove);
+	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
+
+	void OverrideAcceptedEquipmentCategories(const FGameplayTagContainer& InOverrideCategories);
+	void ResetAcceptedEquipmentCategoriesToDefault();
+	
+public:
+	/** Gameplay Tag representing this slot. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+
+	/** Gameplay Tag representing a sister slot (used for weapon set) which will also be checked if the Player tries to equip specific armament (e.g. Two-Handed Weapons). */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTag SisterSlotTag = FGameplayTag::EmptyTag;
+
+	/** Equipment with this Gameplay Tags will be allowed to be equipped in this slot. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTagContainer AcceptedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
+
+	/** Equipment with this Gameplay Tags will not be allowed to be equipped in this slot. Can be used to ban some type of armament as a gameplay mechanic. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTagContainer BannedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
 };
 
 /**
@@ -110,8 +159,11 @@ public:
 
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& AdditionalSlotTagToFill = FGameplayTag::EmptyTag);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& AdditionalSlotTagToFill = FGameplayTag::EmptyTag);
+	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
+	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory);
+	
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
+	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	
 	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);
@@ -143,6 +195,7 @@ private:
 	UPROPERTY(NotReplicated)
 	TObjectPtr<UActorComponent> OwnerComponent;
 	
+	TArray<FObsidianEquipmentSlotDefinition> EquipmentSlots;
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToEquipmentMap;
 };
 

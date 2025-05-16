@@ -73,6 +73,20 @@ void FObsidianEquipmentSlotDefinition::RemoveBannedEquipmentCategories(const FGa
 	BannedEquipmentCategories.RemoveTags(BannedCategoriesToRemove);
 }
 
+void FObsidianEquipmentSlotDefinition::OverrideAcceptedEquipmentCategories(const FGameplayTagContainer& InOverrideCategories)
+{
+	AcceptedEquipmentCategories.Reset(InOverrideCategories.Num());
+	AcceptedEquipmentCategories = InOverrideCategories;
+}
+
+void FObsidianEquipmentSlotDefinition::ResetAcceptedEquipmentCategoriesToDefault()
+{
+	if(SlotTag.IsValid() && ObsidianInventoryItemsStatics::DefaultAcceptedEquipmentCategories.Contains(SlotTag))
+	{
+		AcceptedEquipmentCategories = ObsidianInventoryItemsStatics::DefaultAcceptedEquipmentCategories[SlotTag];
+	}
+}
+
 //
 // Equipment Component 
 //
@@ -138,30 +152,12 @@ USkeletalMeshComponent* UObsidianEquipmentComponent::GetMainEquippedMeshFromSlot
 
 FObsidianEquipmentSlotDefinition UObsidianEquipmentComponent::FindEquipmentSlotByTag(const FGameplayTag& SlotTag)
 {
-	for(FObsidianEquipmentSlotDefinition Slot : EquipmentSlots)
-	{
-		if(Slot.SlotTag == SlotTag)
-		{
-			return Slot;
-		}
-	}
-	
-	return FObsidianEquipmentSlotDefinition();
+	return EquipmentList.FindEquipmentSlotByTag(SlotTag);
 }
 
 TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory)
 {
-	TArray<FObsidianEquipmentSlotDefinition> MatchingSlots;
-	
-	for(FObsidianEquipmentSlotDefinition Slot : EquipmentSlots)
-	{
-		if(Slot.CanEquipToSlot(ItemCategory) == EObsidianEquipResult::CanEquip)
-		{
-			MatchingSlots.Add(Slot);
-		}
-	}
-	
-	return MatchingSlots;
+	return EquipmentList.FindMatchingEquipmentSlotsByItemCategory(ItemCategory);
 }
 
 FObsidianItemStats UObsidianEquipmentComponent::GetItemStatsBySlotTag(const FGameplayTag& SlotTag)
@@ -248,9 +244,7 @@ bool UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItem
 		return false;
 	}
 	
-	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(InstanceToEquip->GetItemCategoryTag(), TAG_Obsidian_TwoHand);
-	const FGameplayTag AdditionalTagToOccupy = bIsTwoHanded ? FindEquipmentSlotByTag(SlotTag).SisterSlotTag : FGameplayTag::EmptyTag;
-	EquipmentList.AddEntry(InstanceToEquip, SlotTag, AdditionalTagToOccupy);
+	EquipmentList.AddEntry(InstanceToEquip, SlotTag);
 	
 	if(InstanceToEquip && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -362,10 +356,8 @@ UObsidianInventoryItemInstance* UObsidianEquipmentComponent::EquipItemToSpecific
 #endif
 		return nullptr;
 	}
-
-	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(DefaultObject->GetItemCategoryTag(), TAG_Obsidian_TwoHand);
-	const FGameplayTag AdditionalTagToOccupy = bIsTwoHanded ? FindEquipmentSlotByTag(SlotTag).SisterSlotTag : FGameplayTag::EmptyTag;
-	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag, AdditionalTagToOccupy);
+	
+	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
 
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -540,35 +532,23 @@ void UObsidianEquipmentComponent::RemoveBannedEquipmentCategoriesToSlot(const FG
 
 void UObsidianEquipmentComponent::CreateDefaultEquipmentSlots()
 {
-	const TArray<FGameplayTag> RightHandAcceptedEquipment =
-		{
-		ObsidianGameplayTags::Item_Category_Flail, ObsidianGameplayTags::Item_Category_Dagger, ObsidianGameplayTags::Item_Category_Wand,
-		ObsidianGameplayTags::Item_Category_Bow_TwoHand, ObsidianGameplayTags::Item_Category_Staff_TwoHand, ObsidianGameplayTags::Item_Category_Mace_OneHand,
-		ObsidianGameplayTags::Item_Category_Mace_TwoHand, ObsidianGameplayTags::Item_Category_Axe_OneHand, ObsidianGameplayTags::Item_Category_Axe_TwoHand,
-		ObsidianGameplayTags::Item_Category_Sword_OneHand, ObsidianGameplayTags::Item_Category_Sword_TwoHand
-		};
+	using namespace ObsidianGameplayTags;
+	using namespace ObsidianInventoryItemsStatics;
 	
-	const TArray<FGameplayTag> LeftHandAcceptedEquipment =
+	EquipmentList.EquipmentSlots =
 		{
-		ObsidianGameplayTags::Item_Category_Flail, ObsidianGameplayTags::Item_Category_Dagger, ObsidianGameplayTags::Item_Category_Wand,
-		ObsidianGameplayTags::Item_Category_Mace_OneHand, ObsidianGameplayTags::Item_Category_Axe_OneHand, ObsidianGameplayTags::Item_Category_Sword_OneHand,
-		ObsidianGameplayTags::Item_Category_Quiver, ObsidianGameplayTags::Item_Category_Shield
-		};
-	
-	EquipmentSlots =
-		{
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(RightHandAcceptedEquipment)))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand, ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand, FGameplayTagContainer(FGameplayTagContainer::CreateFromArray(LeftHandAcceptedEquipment)))},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_Weapon_RightHand, Equipment_Slot_Weapon_LeftHand, DefaultAcceptedEquipmentCategories[Equipment_Slot_Weapon_RightHand])},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_Weapon_LeftHand, Equipment_Slot_Weapon_RightHand, DefaultAcceptedEquipmentCategories[Equipment_Slot_Weapon_LeftHand])},
 		
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Helmet, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Helmet))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_BodyArmor, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_BodyArmor))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Belt, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Belt))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Gloves, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Gloves))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Boots, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Boots))},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_Helmet, DefaultAcceptedEquipmentCategories[Equipment_Slot_Helmet])},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_BodyArmor, DefaultAcceptedEquipmentCategories[Equipment_Slot_BodyArmor])},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_Belt, DefaultAcceptedEquipmentCategories[Equipment_Slot_Belt])},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_Gloves, DefaultAcceptedEquipmentCategories[Equipment_Slot_Gloves])},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_Boots, DefaultAcceptedEquipmentCategories[Equipment_Slot_Boots])},
 		
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_Amulet, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Amulet))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_RightRing, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Ring))},
-			{FObsidianEquipmentSlotDefinition(ObsidianGameplayTags::Equipment_Slot_LeftRing, FGameplayTagContainer(ObsidianGameplayTags::Item_Category_Ring))},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_Amulet, DefaultAcceptedEquipmentCategories[Equipment_Slot_Amulet])},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_RightRing, DefaultAcceptedEquipmentCategories[Equipment_Slot_RightRing])},
+			{FObsidianEquipmentSlotDefinition(Equipment_Slot_LeftRing, DefaultAcceptedEquipmentCategories[Equipment_Slot_LeftRing])},
 		};
 }
 

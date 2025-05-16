@@ -280,7 +280,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_RightRing);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_Slot_LeftRing);
 
-	/** All Stack Types stored for convenience */
+	/** All Stack Types stored for convenience. */
 	OBSIDIAN_API extern const TArray<FGameplayTag> EquipmentSlots;
 
 	/**
@@ -290,7 +290,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_StackCount_Max);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_StackCount_Limit);
 
-	/** All Stack Types stored for convenience */
+	/** All Stack Types stored for convenience. */
 	OBSIDIAN_API extern const TArray<FGameplayTag> StackTypes;
 
 	/**
