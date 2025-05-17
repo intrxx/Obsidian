@@ -54,9 +54,6 @@ public:
 
 protected:
 	EObsidianEquipResult DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
-
-	/** Verifying the sister slot of the given slot, checks if the item can be paired with the others slot item.  */
-	EObsidianEquipResult CanPairItem(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
 	
 	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
 	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);

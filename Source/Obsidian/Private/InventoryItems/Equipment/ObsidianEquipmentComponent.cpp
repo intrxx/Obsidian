@@ -441,7 +441,6 @@ EObsidianEquipResult UObsidianEquipmentComponent::DoesItemFitEquipmentSlot(const
 			return EObsidianEquipResult::UnableToEquip_DoesNotFitWithOtherWeaponType;
 		}
 	}
-	UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 	return EquipResult;
 }
 
