@@ -15,79 +15,6 @@ DEFINE_LOG_CATEGORY(LogEquipment);
 UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Obsidian_TwoHand, "TwoHand");
 
 //
-// Equipment Slot Definition
-//
-
-bool FObsidianEquipmentSlotDefinition::IsValid() const
-{
-	return SlotTag.IsValid();
-}
-
-EObsidianEquipResult FObsidianEquipmentSlotDefinition::CanEquipToSlot(const FGameplayTag& EquipmentCategory) const
-{
-	if(BannedEquipmentCategories.HasTagExact(EquipmentCategory))
-	{
-		return EObsidianEquipResult::UnableToEquip_BannedCategory;
-	}
-	
-	if(AcceptedEquipmentCategories.HasTagExact(EquipmentCategory))
-	{
-		return EObsidianEquipResult::CanEquip;
-	}
-	
-	return EObsidianEquipResult::ItemUnfitForCategory;
-}
-
-void FObsidianEquipmentSlotDefinition::AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory)
-{
-	BannedEquipmentCategories.AddTag(InBannedCategory);
-}
-
-void FObsidianEquipmentSlotDefinition::AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories)
-{
-	BannedEquipmentCategories.AppendTags(InBannedCategories);
-}
-
-void FObsidianEquipmentSlotDefinition::RemoveBannedEquipmentCategory(const FGameplayTag& BannedCategoryToRemove)
-{
-#if !UE_BUILD_SHIPPING
-	if(BannedEquipmentCategories.HasTag(BannedCategoryToRemove) == false)
-	{
-		UE_LOG(LogEquipment, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedEquipmentCategories."), *BannedCategoryToRemove.ToString());
-	}
-#endif
-	BannedEquipmentCategories.RemoveTag(BannedCategoryToRemove);
-}
-
-void FObsidianEquipmentSlotDefinition::RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove)
-{
-#if !UE_BUILD_SHIPPING
-	for(FGameplayTag Tag : BannedEquipmentCategories)
-	{
-		if(BannedEquipmentCategories.HasTag(Tag) == false)
-		{
-			UE_LOG(LogEquipment, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedEquipmentCategories."), *Tag.ToString());
-		}
-	}
-#endif
-	BannedEquipmentCategories.RemoveTags(BannedCategoriesToRemove);
-}
-
-void FObsidianEquipmentSlotDefinition::OverrideAcceptedEquipmentCategories(const FGameplayTagContainer& InOverrideCategories)
-{
-	AcceptedEquipmentCategories.Reset(InOverrideCategories.Num());
-	AcceptedEquipmentCategories = InOverrideCategories;
-}
-
-void FObsidianEquipmentSlotDefinition::ResetAcceptedEquipmentCategoriesToDefault()
-{
-	if(SlotTag.IsValid() && ObsidianInventoryItemsStatics::DefaultAcceptedEquipmentCategories.Contains(SlotTag))
-	{
-		AcceptedEquipmentCategories = ObsidianInventoryItemsStatics::DefaultAcceptedEquipmentCategories[SlotTag];
-	}
-}
-
-//
 // Equipment Component 
 //
 
@@ -153,6 +80,11 @@ USkeletalMeshComponent* UObsidianEquipmentComponent::GetMainEquippedMeshFromSlot
 FObsidianEquipmentSlotDefinition UObsidianEquipmentComponent::FindEquipmentSlotByTag(const FGameplayTag& SlotTag)
 {
 	return EquipmentList.FindEquipmentSlotByTag(SlotTag);
+}
+
+FObsidianEquipmentSlotDefinition& UObsidianEquipmentComponent::GetEquipmentSlotReferenceByTag(const FGameplayTag& SlotTag)
+{
+	return EquipmentList.GetEquipmentSlotReferenceByTag(SlotTag);
 }
 
 TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory)

@@ -93,6 +93,8 @@ public:
 	/** Equipment with this Gameplay Tags will not be allowed to be equipped in this slot. Can be used to ban some type of armament as a gameplay mechanic. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTagContainer BannedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
+
+	static FObsidianEquipmentSlotDefinition InvalidSlot;
 };
 
 /**
@@ -159,6 +161,7 @@ public:
 
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	
+	FObsidianEquipmentSlotDefinition& GetEquipmentSlotReferenceByTag(const FGameplayTag& SlotTag);
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory);
 	
@@ -184,6 +187,9 @@ public:
 
 private:
 	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& SlotTagToClear, const EObsidianEquipmentChangeType ChangeType) const;
+
+	void ResetSisterSlotAcceptedEquipmentTypes(const FGameplayTag& SlotTag);
+	void OverrideSlotsAcceptedEquipmentTypesByItemCategory(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategoryTag);
 
 private:
 	friend UObsidianEquipmentComponent;

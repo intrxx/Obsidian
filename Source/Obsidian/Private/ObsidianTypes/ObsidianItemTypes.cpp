@@ -65,6 +65,7 @@ namespace ObsidianInventoryItemsStatics
 				{Item_Category_Wand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
 				{Item_Category_Flail, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
 				{Item_Category_Bow_TwoHand, FGameplayTagContainer(Item_Category_Quiver)},
+				{Item_Category_Quiver, FGameplayTagContainer(Item_Category_Bow_TwoHand)},
 				{Item_Category_Staff_TwoHand, FGameplayTagContainer::EmptyContainer},
 				{Item_Category_Mace_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
 				{Item_Category_Mace_TwoHand, FGameplayTagContainer::EmptyContainer},

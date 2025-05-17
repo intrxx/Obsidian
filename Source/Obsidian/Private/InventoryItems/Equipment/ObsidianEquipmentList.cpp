@@ -10,6 +10,85 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
+//
+// Equipment Slot Definition
+//
+
+FObsidianEquipmentSlotDefinition FObsidianEquipmentSlotDefinition::InvalidSlot;
+
+bool FObsidianEquipmentSlotDefinition::IsValid() const
+{
+	return SlotTag.IsValid();
+}
+
+EObsidianEquipResult FObsidianEquipmentSlotDefinition::CanEquipToSlot(const FGameplayTag& EquipmentCategory) const
+{
+	if(BannedEquipmentCategories.HasTagExact(EquipmentCategory))
+	{
+		return EObsidianEquipResult::UnableToEquip_BannedCategory;
+	}
+	
+	if(AcceptedEquipmentCategories.HasTagExact(EquipmentCategory))
+	{
+		return EObsidianEquipResult::CanEquip;
+	}
+	
+	return EObsidianEquipResult::ItemUnfitForCategory;
+}
+
+void FObsidianEquipmentSlotDefinition::AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory)
+{
+	BannedEquipmentCategories.AddTag(InBannedCategory);
+}
+
+void FObsidianEquipmentSlotDefinition::AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories)
+{
+	BannedEquipmentCategories.AppendTags(InBannedCategories);
+}
+
+void FObsidianEquipmentSlotDefinition::RemoveBannedEquipmentCategory(const FGameplayTag& BannedCategoryToRemove)
+{
+#if !UE_BUILD_SHIPPING
+	if(BannedEquipmentCategories.HasTag(BannedCategoryToRemove) == false)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedEquipmentCategories."), *BannedCategoryToRemove.ToString());
+	}
+#endif
+	BannedEquipmentCategories.RemoveTag(BannedCategoryToRemove);
+}
+
+void FObsidianEquipmentSlotDefinition::RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove)
+{
+#if !UE_BUILD_SHIPPING
+	for(FGameplayTag Tag : BannedEquipmentCategories)
+	{
+		if(BannedEquipmentCategories.HasTag(Tag) == false)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedEquipmentCategories."), *Tag.ToString());
+		}
+	}
+#endif
+	BannedEquipmentCategories.RemoveTags(BannedCategoriesToRemove);
+}
+
+void FObsidianEquipmentSlotDefinition::	OverrideAcceptedEquipmentCategories(const FGameplayTagContainer& InOverrideCategories)
+{
+	AcceptedEquipmentCategories.Reset(InOverrideCategories.Num());
+	AcceptedEquipmentCategories = InOverrideCategories;
+}
+
+void FObsidianEquipmentSlotDefinition::ResetAcceptedEquipmentCategoriesToDefault()
+{
+	if(SlotTag.IsValid() && ObsidianInventoryItemsStatics::DefaultAcceptedEquipmentCategories.Contains(SlotTag))
+	{
+		AcceptedEquipmentCategories = ObsidianInventoryItemsStatics::DefaultAcceptedEquipmentCategories[SlotTag];
+	}
+}
+
+//
+// Equipment List
+//
+
 TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetAllEquippedItems() const
 {
 	TArray<UObsidianInventoryItemInstance*> Items;
@@ -71,17 +150,30 @@ UObsidianAbilitySystemComponent* FObsidianEquipmentList::GetObsidianAbilitySyste
 	return OwningController ? OwningController->GetObsidianAbilitySystemComponent() : nullptr;
 }
 
+FObsidianEquipmentSlotDefinition& FObsidianEquipmentList::GetEquipmentSlotReferenceByTag(const FGameplayTag& SlotTag)
+{
+	for(int32 i = 0; i < EquipmentSlots.Num(); ++i)
+	{
+		if(EquipmentSlots[i].SlotTag == SlotTag)
+		{
+			return EquipmentSlots[i];
+		}
+	}
+	
+	return FObsidianEquipmentSlotDefinition::InvalidSlot;
+}
+
 FObsidianEquipmentSlotDefinition FObsidianEquipmentList::FindEquipmentSlotByTag(const FGameplayTag& SlotTag)
 {
-	for(FObsidianEquipmentSlotDefinition Slot : EquipmentSlots)
+	for(const FObsidianEquipmentSlotDefinition& Slot : EquipmentSlots)
 	{
-		if(Slot.SlotTag == SlotTag)
+		if (Slot.SlotTag == SlotTag)
 		{
 			return Slot;
 		}
 	}
-	
-	return FObsidianEquipmentSlotDefinition();
+
+	return FObsidianEquipmentSlotDefinition::InvalidSlot;
 }
 
 TArray<FObsidianEquipmentSlotDefinition> FObsidianEquipmentList::FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory)
@@ -134,14 +226,8 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Item);
-
-	FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(EquipmentSlotTag);
-	if(Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
-	{
-		const FGameplayTag EquipmentCategory = NewEntry.Instance->GetItemCategoryTag();
-		FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-		SisterSlot.OverrideAcceptedEquipmentCategories(ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[EquipmentCategory]);
-	}
+	
+	OverrideSlotsAcceptedEquipmentTypesByItemCategory(EquipmentSlotTag, NewEntry.Instance->GetItemCategoryTag());
 	
 	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 	{
@@ -190,14 +276,8 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	FObsidianEquipmentEntry& NewEntry = Entries.Emplace_GetRef(Instance, EquipmentSlotTag);
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Instance);
 	Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
-
-	FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(EquipmentSlotTag);
-	if(Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
-	{
-		const FGameplayTag EquipmentCategory = NewEntry.Instance->GetItemCategoryTag();
-		FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-		SisterSlot.OverrideAcceptedEquipmentCategories(ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[EquipmentCategory]);
-	}
+	
+	OverrideSlotsAcceptedEquipmentTypesByItemCategory(EquipmentSlotTag, NewEntry.Instance->GetItemCategoryTag());
 
 	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 	{
@@ -255,9 +335,7 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 	{
 		if(Entry.Instance == Instance)
 		{
-			FObsidianEquipmentSlotDefinition FirstSlot = FindEquipmentSlotByTag(Entry.EquipmentSlotTag);
-			FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(FirstSlot.SisterSlotTag);
-			SisterSlot.ResetAcceptedEquipmentCategoriesToDefault();
+			ResetSisterSlotAcceptedEquipmentTypes(Entry.EquipmentSlotTag);
 			
 			Entry.EquipmentSlotTag = SwapTag;
 			Entry.bSwappedOut = true;
@@ -329,11 +407,9 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 		{
 			Entry.EquipmentSlotTag = MainWeaponSlotTag;
 			Entry.bSwappedOut = false;
-
-			FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(MainWeaponSlotTag);
-			FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-			SisterSlot.OverrideAcceptedEquipmentCategories(ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[Entry.Instance->GetItemCategoryTag()]);
-
+			
+			OverrideSlotsAcceptedEquipmentTypesByItemCategory(MainWeaponSlotTag, Entry.Instance->GetItemCategoryTag());
+			
 			if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 			{
 				for(UObsidianAbilitySet*& AbilitySet : Instance->GetOwningAbilitySets())
@@ -383,12 +459,7 @@ void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 		if(Entry.Instance == Instance)
 		{
 			const FGameplayTag CachedSlotTag = Entry.EquipmentSlotTag;
-			FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(CachedSlotTag);
-			if(Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
-			{
-				FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-				SisterSlot.ResetAcceptedEquipmentCategoriesToDefault();
-			}
+			ResetSisterSlotAcceptedEquipmentTypes(CachedSlotTag);
 			
 			SlotToEquipmentMap.Remove(CachedSlotTag);
 			Instance->ResetItemCurrentEquipmentSlot();
@@ -432,13 +503,8 @@ void FObsidianEquipmentList::PreReplicatedRemove(const TArrayView<int32> Removed
 		FObsidianEquipmentEntry& Entry = Entries[Index];
 		Entry.LastObservedEquipmentSlotTag = FGameplayTag::EmptyTag;
 		SlotToEquipmentMap.Remove(Entry.EquipmentSlotTag);
-
-		FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(Entry.EquipmentSlotTag);
-		if(Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
-		{
-			FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-			SisterSlot.ResetAcceptedEquipmentCategoriesToDefault();
-		}
+		
+		ResetSisterSlotAcceptedEquipmentTypes(Entry.EquipmentSlotTag);
 		
 		BroadcastChangeMessage(Entry, FGameplayTag::EmptyTag, Entry.EquipmentSlotTag, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
 	}
@@ -451,14 +517,8 @@ void FObsidianEquipmentList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		FObsidianEquipmentEntry& Entry = Entries[Index];
 		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;
 		SlotToEquipmentMap.Add(Entry.EquipmentSlotTag, Entry.Instance);
-
-		FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(Entry.EquipmentSlotTag);
-		if(Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
-		{
-			const FGameplayTag EquipmentCategory = Entry.Instance->GetItemCategoryTag();
-			FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-			SisterSlot.OverrideAcceptedEquipmentCategories(ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[EquipmentCategory]);
-		}
+		
+		OverrideSlotsAcceptedEquipmentTypesByItemCategory(Entry.EquipmentSlotTag, Entry.Instance->GetItemCategoryTag());
 
 		BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
 	}
@@ -476,14 +536,7 @@ void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> Change
 			const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : Entry.LastObservedEquipmentSlotTag;
 			
 			SlotToEquipmentMap.Add(Entry.EquipmentSlotTag, Entry.Instance);
-
-			FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(Entry.EquipmentSlotTag);
-			if(Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
-			{
-				const FGameplayTag EquipmentCategory = Entry.Instance->GetItemCategoryTag();
-				FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-				SisterSlot.OverrideAcceptedEquipmentCategories(ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[EquipmentCategory]);
-			}
+			OverrideSlotsAcceptedEquipmentTypesByItemCategory(Entry.EquipmentSlotTag, Entry.Instance->GetItemCategoryTag());
 			
 			BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, TagToClear, EObsidianEquipmentChangeType::ECT_ItemSwapped);
 			
@@ -491,11 +544,7 @@ void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> Change
 			{
 				SlotToEquipmentMap.Remove(Entry.LastObservedEquipmentSlotTag);
 				
-				if(Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
-				{
-					FObsidianEquipmentSlotDefinition SisterSlot = FindEquipmentSlotByTag(Slot.SisterSlotTag);
-					SisterSlot.ResetAcceptedEquipmentCategoriesToDefault();
-				}
+				ResetSisterSlotAcceptedEquipmentTypes(Entry.EquipmentSlotTag);
 			}		
 		}
 		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;
@@ -513,4 +562,30 @@ void FObsidianEquipmentList::BroadcastChangeMessage(const FObsidianEquipmentEntr
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
 	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message_Equipment_Changed, Message);
+}
+
+void FObsidianEquipmentList::ResetSisterSlotAcceptedEquipmentTypes(const FGameplayTag& SlotTag)
+{
+	FObsidianEquipmentSlotDefinition& Slot = GetEquipmentSlotReferenceByTag(SlotTag);
+	if(Slot.IsValid() && Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
+	{
+		FObsidianEquipmentSlotDefinition& SisterSlot = GetEquipmentSlotReferenceByTag(Slot.SisterSlotTag);
+		if (SisterSlot.IsValid())
+		{
+			SisterSlot.ResetAcceptedEquipmentCategoriesToDefault();
+		}
+	}
+}
+
+void FObsidianEquipmentList::OverrideSlotsAcceptedEquipmentTypesByItemCategory(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategoryTag)
+{
+	FObsidianEquipmentSlotDefinition& Slot = GetEquipmentSlotReferenceByTag(SlotTag);
+	if(Slot.IsValid() && Slot.SisterSlotTag.IsValid()) // Slot has a sister slot that needs to be updated with allowed Equipment Types
+	{
+		FObsidianEquipmentSlotDefinition& SisterSlot = GetEquipmentSlotReferenceByTag(Slot.SisterSlotTag);
+		if (SisterSlot.IsValid())
+		{
+			SisterSlot.OverrideAcceptedEquipmentCategories(ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[ItemCategoryTag]);
+		}
+	}
 }
