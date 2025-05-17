@@ -82,11 +82,6 @@ FObsidianEquipmentSlotDefinition UObsidianEquipmentComponent::FindEquipmentSlotB
 	return EquipmentList.FindEquipmentSlotByTag(SlotTag);
 }
 
-FObsidianEquipmentSlotDefinition& UObsidianEquipmentComponent::GetEquipmentSlotReferenceByTag(const FGameplayTag& SlotTag)
-{
-	return EquipmentList.GetEquipmentSlotReferenceByTag(SlotTag);
-}
-
 TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory)
 {
 	return EquipmentList.FindMatchingEquipmentSlotsByItemCategory(ItemCategory);
@@ -418,12 +413,36 @@ void UObsidianEquipmentComponent::ReadyForReplication()
 
 EObsidianEquipResult UObsidianEquipmentComponent::DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory)
 {
+	EObsidianEquipResult EquipResult = EObsidianEquipResult::ItemUnfitForCategory;
+	
 	const FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
 	if(Slot.IsValid() == false)
 	{
-		return EObsidianEquipResult::ItemUnfitForCategory;
+		return EquipResult;
 	}
-	return Slot.CanEquipToSlot(ItemCategory);
+	
+	EquipResult = Slot.CanEquipToSlot(ItemCategory); // Can equip to slot in the first place.
+	if(EquipResult != EObsidianEquipResult::CanEquip)
+	{
+		return EquipResult;
+	}
+
+	if(Slot.SisterSlotTag.IsValid()) // If the item has a sister slot, check if the item at sister slot can be paired with this one's category
+	{
+		UObsidianInventoryItemInstance* InstanceAtOtherSlot = GetEquippedInstanceAtSlot(Slot.SisterSlotTag);
+		if (InstanceAtOtherSlot == nullptr)
+		{
+			return EquipResult;
+		}
+		
+		const FGameplayTag OtherInstanceCategory = InstanceAtOtherSlot->GetItemCategoryTag();
+		if (ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[OtherInstanceCategory].HasTagExact(ItemCategory) == false)
+		{
+			return EObsidianEquipResult::UnableToEquip_DoesNotFitWithOtherWeaponType;
+		}
+	}
+	UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
+	return EquipResult;
 }
 
 void UObsidianEquipmentComponent::AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory)

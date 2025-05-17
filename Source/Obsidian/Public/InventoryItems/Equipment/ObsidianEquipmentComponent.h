@@ -30,7 +30,6 @@ public:
 
 	/** Finds Equipment Slot if one exists in the Equipment, might return invalid slot when nothing was found, check IsValid for safety. */
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
-	FObsidianEquipmentSlotDefinition& GetEquipmentSlotReferenceByTag(const FGameplayTag& SlotTag);
 
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory);
 
@@ -55,6 +54,9 @@ public:
 
 protected:
 	EObsidianEquipResult DoesItemFitEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
+
+	/** Verifying the sister slot of the given slot, checks if the item can be paired with the others slot item.  */
+	EObsidianEquipResult CanPairItem(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
 	
 	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
 	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);
@@ -82,6 +84,7 @@ namespace ObsidianEquipmentDebugHelpers
 		{EObsidianEquipResult::ItemUnequippable, TEXT("Item Unequippable")},
 		{EObsidianEquipResult::UnableToEquip_BannedCategory, TEXT("Unable To Equip - Banned Category")},
 		{EObsidianEquipResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
+		{EObsidianEquipResult::UnableToEquip_DoesNotFitWithOtherWeaponType, TEXT("Unable To Equip - Does Not Fit With Other Weapon Type")},
 		{EObsidianEquipResult::ItemUnientified, TEXT("Item Unientified")},
 		{EObsidianEquipResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
 		{EObsidianEquipResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},

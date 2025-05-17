@@ -74,9 +74,6 @@ public:
 	void RemoveBannedEquipmentCategory(const FGameplayTag& BannedCategoryToRemove);
 	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
 
-	void OverrideAcceptedEquipmentCategories(const FGameplayTagContainer& InOverrideCategories);
-	void ResetAcceptedEquipmentCategoriesToDefault();
-	
 public:
 	/** Gameplay Tag representing this slot. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -94,7 +91,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTagContainer BannedEquipmentCategories = FGameplayTagContainer::EmptyContainer;
 
-	static FObsidianEquipmentSlotDefinition InvalidSlot;
+	static const FObsidianEquipmentSlotDefinition InvalidSlot;
 };
 
 /**
@@ -161,7 +158,6 @@ public:
 
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	
-	FObsidianEquipmentSlotDefinition& GetEquipmentSlotReferenceByTag(const FGameplayTag& SlotTag);
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory);
 	
@@ -187,9 +183,6 @@ public:
 
 private:
 	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& SlotTagToClear, const EObsidianEquipmentChangeType ChangeType) const;
-
-	void ResetSisterSlotAcceptedEquipmentTypes(const FGameplayTag& SlotTag);
-	void OverrideSlotsAcceptedEquipmentTypesByItemCategory(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategoryTag);
 
 private:
 	friend UObsidianEquipmentComponent;

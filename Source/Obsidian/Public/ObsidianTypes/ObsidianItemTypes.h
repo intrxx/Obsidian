@@ -88,10 +88,13 @@ enum class EObsidianEquipResult : uint8
 	ItemUnequippable UMETA(DisplayName="Item Unequippable"),
 
 	/** Item cannot be equipped, trying to equip two-handed weapon, two slots are occupied and no sufficient space in inventory. */
-	UnableToEquip_NoSufficientInventorySpace UMETA(DisplayName="Unable To Equip"),
+	UnableToEquip_NoSufficientInventorySpace UMETA(DisplayName="Unable To Equip - No Sufficient Inventory Space"),
 
 	/** Item cannot be equipped, category is banned by gameplay mechanic. */
-	UnableToEquip_BannedCategory UMETA(DisplayName="Unable To Equip"),
+	UnableToEquip_BannedCategory UMETA(DisplayName="Unable To Equip - Banned Category"),
+	
+	/** Item cannot be equipped, item cannot be equipped together with the item in sister slot. */
+	UnableToEquip_DoesNotFitWithOtherWeaponType UMETA(DisplayName="Unable To Equip - Item Does not fit with other weapon type."),
 	
 	/** Item cannot be equipped, it needs to be identified first. */
 	ItemUnientified UMETA(DisplayName="Item Unientified"),
