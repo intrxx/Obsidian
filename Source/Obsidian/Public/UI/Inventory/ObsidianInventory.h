@@ -78,6 +78,9 @@ private:
 	void OnItemMouseLeave();
 
 private:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Equipment")
+	TMap<FGameplayTag, TObjectPtr<UTexture2D>> EquipmentToBlockedSlotImageMap;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
 	

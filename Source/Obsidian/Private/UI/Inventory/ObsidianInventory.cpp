@@ -160,8 +160,22 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 
 	if(ItemWidgetData.bDoesBlockSisterSlot)
 	{
-		UObsidianItemSlot_Equipment* SlotToBlock = FindEquipmentSlotForTag(EquipmentSlot->GetSisterSlotTag());
-		UE_LOG(LogTemp, Warning, TEXT("I should block slot with tag: [%s]"), *SlotToBlock->GetSlotTag().GetTagName().ToString());
+		if(UTexture2D* BlockedSlotImage = EquipmentToBlockedSlotImageMap.Contains(ItemWidgetData.ItemCategory) ? EquipmentToBlockedSlotImageMap[ItemWidgetData.ItemCategory] : nullptr)
+		{
+			const FGameplayTag SisterSlotTag = EquipmentSlot->GetSisterSlotTag();
+			
+			UObsidianItem* BlockedSlotItem = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
+			BlockedSlotItem->InitializeItemWidget(SisterSlotTag, ItemWidgetData.GridSpan, BlockedSlotImage);
+			InventoryWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
+
+			UObsidianItemSlot_Equipment* SlotToBlock = FindEquipmentSlotForTag(SisterSlotTag);
+			const UGridSlot* GridSlotToBlock = UWidgetLayoutLibrary::SlotAsGridSlot(SlotToBlock);
+			UGridSlot* BlockedGridSlot = Equipment_GridPanel->AddChildToGrid(BlockedSlotItem, GridSlotToBlock->GetRow(), GridSlotToBlock->GetColumn());
+			BlockedGridSlot->SetLayer(1);
+			BlockedGridSlot->SetNudge(GridSlotToBlock->GetNudge());
+
+			UE_LOG(LogTemp, Warning, TEXT("I should block slot with tag: [%s]"), *SlotToBlock->GetSlotTag().GetTagName().ToString());
+		}
 	}
 }
 

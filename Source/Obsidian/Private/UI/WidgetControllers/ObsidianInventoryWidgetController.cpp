@@ -8,6 +8,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
@@ -123,6 +124,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		ItemWidgetData.bDoesBlockSisterSlot = Instance->ShouldBlockOtherSlot();
+		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -138,7 +140,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 
 		if(Instance->ShouldBlockOtherSlot())
 		{
-			
+			RemoveBlockedSlotItemWidget(EquipmentChangeMessage.SlotTagToClear);
 		}
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
@@ -150,6 +152,12 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		{
 			RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTagToClear);
 		}
+
+		if(Instance->ShouldBlockOtherSlot())
+		{
+			const FGameplayTag EquipmentTag = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
+			RemoveBlockedSlotItemWidget(EquipmentTag);
+		}
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
@@ -157,6 +165,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		ItemWidgetData.bSwappedWithAnotherItem = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag;
 		ItemWidgetData.bDoesBlockSisterSlot = Instance->ShouldBlockOtherSlot();
+		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -797,6 +806,18 @@ void UObsidianInventoryWidgetController::AddEquipmentItemWidget(const FGameplayT
 	}
 }
 
+void UObsidianInventoryWidgetController::AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother)
+{
+	if(bSwappedWithAnother)
+	{
+		RemoveBlockedSlotItemWidget(PrimarySlot);
+	}
+	if(!BlockedSlotsWidgetMap.Contains(PrimarySlot))
+	{
+		BlockedSlotsWidgetMap.Add(PrimarySlot, ItemWidget);
+	}
+}
+
 void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGameplayTag& Slot)
 {
 	if(EquippedItemWidgetMap.Contains(Slot))
@@ -810,6 +831,18 @@ void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGamepl
 			Item->RemoveFromParent();
 		}
 		EquippedItemWidgetMap.Remove(Slot);
+	}
+}
+
+void UObsidianInventoryWidgetController::RemoveBlockedSlotItemWidget(const FGameplayTag& Slot)
+{
+	if(BlockedSlotsWidgetMap.Contains(Slot))
+	{
+		if(UObsidianItem* Item = BlockedSlotsWidgetMap[Slot])
+		{
+			Item->RemoveFromParent();
+		}
+		BlockedSlotsWidgetMap.Remove(Slot);
 	}
 }
 

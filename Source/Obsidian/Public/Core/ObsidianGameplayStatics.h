@@ -20,4 +20,6 @@ public:
 	static FText GetHeroClassText(const EObsidianHeroClass HeroClass);
 
 	static bool DoesTagMatchesAnySubTag(const FGameplayTag TagToCheck, const FGameplayTag& SubTagToCheck);
+	
+	static FGameplayTag GetOpposedEuipmentTagForTag(const FGameplayTag MainTag);
 };

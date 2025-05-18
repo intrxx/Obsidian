@@ -49,6 +49,9 @@ public:
 	FGameplayTag DesiredSlot = FGameplayTag::EmptyTag;
 	
 	UPROPERTY()
+	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
+	
+	UPROPERTY()
 	FVector2D GridSpan = FVector2D::Zero();
 	
 	UPROPERTY()
@@ -115,7 +118,11 @@ public:
 
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
 	void AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
+	
+	/** This function takes the primary slot that is causing the other slot to be blocked. */
+	void AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
 	void RemoveEquipmentItemWidget(const FGameplayTag& Slot);
+	void RemoveBlockedSlotItemWidget(const FGameplayTag& Slot);
 
 	bool CanEquipDraggedItem(const FGameplayTag& SlotTag) const;
 	
@@ -192,5 +199,9 @@ private:
 	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;
 
 	UPROPERTY()
+	TMap<FGameplayTag, UObsidianItem*> BlockedSlotsWidgetMap;
+
+	UPROPERTY()
 	TArray<UObsidianItem*> CachedItemsMatchingUsableContext;
 };
+
