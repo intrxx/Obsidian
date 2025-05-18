@@ -29,7 +29,7 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Equipment")
 	FTransform AttachTransform;
-
+	
 	/** Whether to override Attach Socket based on the slot that the item is being equipped in, defaulting to true since it will be more frequent. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Equipment")
 	bool bOverrideAttachSocket = true;
@@ -49,10 +49,14 @@ public:
 	//~ End of UObsidianInventoryItemFragment
 
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySetsToGrant;
+
+	/** Should this item block the other equipment slot, e.g. Two-Handed Weapons. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
+	bool bShouldBlockOtherSlot = false;
 	
 };

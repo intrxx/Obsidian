@@ -52,6 +52,16 @@ bool UObsidianInventoryItemDefinition::IsIdentified() const
 	return true;
 }
 
+bool UObsidianInventoryItemDefinition::ShouldBlockOtherSlot() const
+{
+	TMap<FGameplayTag, FGameplayTagContainer> MatchingEquipment = ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory;
+	if(MatchingEquipment.Contains(ItemCategory) && MatchingEquipment[ItemCategory].IsEmpty())
+	{
+		return true;
+	}
+	return false;
+}
+
 FGameplayTag UObsidianInventoryItemDefinition::GetItemCategoryTag() const
 {
 	return ItemCategory;

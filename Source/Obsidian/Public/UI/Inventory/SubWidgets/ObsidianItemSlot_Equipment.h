@@ -23,6 +23,11 @@ public:
 	{
 		return SlotTag;
 	}
+
+	FGameplayTag GetSisterSlotTag() const
+	{
+		return SisterSlotTag;
+	}
 	
 protected:
 	virtual void NativePreConstruct() override;
@@ -34,6 +39,9 @@ protected:
 protected:
 	UPROPERTY(EditAnywhere, meta=(Categories = "Equipment"), Category = "Obsidian|Setup")
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditAnywhere, meta=(Categories = "Equipment"), Category = "Obsidian|Setup")
+	FGameplayTag SisterSlotTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SlotWidth = 128.0f;

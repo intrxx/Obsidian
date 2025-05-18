@@ -41,6 +41,16 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, bEquippable);
 	DOREPLIFETIME(ThisClass, bUsable);
 	DOREPLIFETIME(ThisClass, UsableShard);
+	DOREPLIFETIME(ThisClass, bShouldBlockOtherSlot);
+}
+
+void UObsidianInventoryItemInstance::OnInstanceCreatedAndInitialized()
+{
+	using namespace ObsidianInventoryItemsStatics;
+	if(IsItemEquippable() && AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory.Contains(ItemCategory) && AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[ItemCategory].IsEmpty())
+	{
+		bShouldBlockOtherSlot = true;
+	}
 }
 
 APawn* UObsidianInventoryItemInstance::GetPawn() const
@@ -330,6 +340,16 @@ void UObsidianInventoryItemInstance::SetEquippable(const bool InEquippable)
 bool UObsidianInventoryItemInstance::IsItemEquippable() const
 {
 	return bEquippable;
+}
+
+void UObsidianInventoryItemInstance::SetShouldBlockOtherSlot(const bool InShouldBlock)
+{
+	bShouldBlockOtherSlot = InShouldBlock;
+}
+
+bool UObsidianInventoryItemInstance::ShouldBlockOtherSlot() const
+{
+	return bShouldBlockOtherSlot;
 }
 
 TArray<AObsidianSpawnedEquipmentPiece*> UObsidianInventoryItemInstance::GetSpawnedActors() const

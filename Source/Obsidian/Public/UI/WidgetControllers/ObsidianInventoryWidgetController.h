@@ -41,14 +41,27 @@ public:
 public:
 	UPROPERTY()
 	TObjectPtr<UTexture2D> ItemImage = nullptr;
-	
-	FVector2D DesiredPosition = FVector2D::Zero();
-	FGameplayTag DesiredSlot = FGameplayTag::EmptyTag;
-	FVector2D GridSpan = FVector2D::Zero();
-	int32 StackCount = 0;
-	bool bUsable = false;
 
+	UPROPERTY()
+	FVector2D DesiredPosition = FVector2D::Zero();
+	
+	UPROPERTY()
+	FGameplayTag DesiredSlot = FGameplayTag::EmptyTag;
+	
+	UPROPERTY()
+	FVector2D GridSpan = FVector2D::Zero();
+	
+	UPROPERTY()
+	int32 StackCount = 0;
+	
+	UPROPERTY()
+	bool bUsable = false;
+	
+	UPROPERTY()
 	bool bSwappedWithAnotherItem = false;
+	
+	UPROPERTY()
+	bool bDoesBlockSisterSlot = false;
 };
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemWidgetData& ItemWidgetData);

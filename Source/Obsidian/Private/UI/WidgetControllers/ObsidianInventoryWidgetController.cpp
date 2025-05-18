@@ -122,6 +122,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
+		ItemWidgetData.bDoesBlockSisterSlot = Instance->ShouldBlockOtherSlot();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -133,6 +134,11 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		if(SlotTagToClear.IsValid())
 		{
 			RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTagToClear);
+		}
+
+		if(Instance->ShouldBlockOtherSlot())
+		{
+			
 		}
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
@@ -150,6 +156,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		ItemWidgetData.bSwappedWithAnotherItem = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag;
+		ItemWidgetData.bDoesBlockSisterSlot = Instance->ShouldBlockOtherSlot();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}

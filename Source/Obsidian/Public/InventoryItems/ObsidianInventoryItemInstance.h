@@ -31,6 +31,9 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	//~ End of UObject interface
 
+	/** Called when Instance is created for the first time and is initialized with all necessary variables. */
+	void OnInstanceCreatedAndInitialized();
+
 	UFUNCTION(BlueprintPure, Category=Equipment)
 	APawn* GetPawn() const;
 
@@ -92,6 +95,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	bool IsItemEquippable() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	void SetShouldBlockOtherSlot(const bool InShouldBlock);
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	bool ShouldBlockOtherSlot() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	TArray<AObsidianSpawnedEquipmentPiece*> GetSpawnedActors() const;
@@ -271,6 +280,9 @@ private:
 
 	UPROPERTY(Replicated)
 	bool bEquippable = false;
+
+	UPROPERTY(Replicated)
+	bool bShouldBlockOtherSlot = false;
 
 	UPROPERTY(Replicated)
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;

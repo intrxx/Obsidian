@@ -196,6 +196,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
+	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Item);
@@ -334,6 +335,7 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 		const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : CurrentWeaponSlotTag;
 		
 		SlotToEquipmentMap.Add(SwapTag, Instance);
+		
 		BroadcastChangeMessage(Instance, SwapTag, TagToClear, EObsidianEquipmentChangeType::ECT_ItemSwapped);
 		
 		if(bSwappedBothWays == false)
@@ -405,6 +407,7 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 		const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : CurrentSwapTag;
 		
 		SlotToEquipmentMap.Add(MainWeaponSlotTag, Instance);
+		
 		BroadcastChangeMessage(Instance, MainWeaponSlotTag, TagToClear, EObsidianEquipmentChangeType::ECT_ItemSwapped);
 
 		if(bSwappedBothWays == false)
@@ -517,7 +520,7 @@ void FObsidianEquipmentList::BroadcastChangeMessage(const FObsidianEquipmentEntr
 	Message.SlotTag = EquipmentSlotTag;
 	Message.ChangeType = ChangeType;
 	Message.SlotTagToClear = SlotTagToClear;
-
+	
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
 	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message_Equipment_Changed, Message);
 }

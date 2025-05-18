@@ -157,6 +157,12 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	UGridSlot* GridSlot = Equipment_GridPanel->AddChildToGrid(ItemWidget, DesiredGridSlot->GetRow(), DesiredGridSlot->GetColumn());
 	GridSlot->SetLayer(1);
 	GridSlot->SetNudge(DesiredGridSlot->GetNudge());
+
+	if(ItemWidgetData.bDoesBlockSisterSlot)
+	{
+		UObsidianItemSlot_Equipment* SlotToBlock = FindEquipmentSlotForTag(EquipmentSlot->GetSisterSlotTag());
+		UE_LOG(LogTemp, Warning, TEXT("I should block slot with tag: [%s]"), *SlotToBlock->GetSlotTag().GetTagName().ToString());
+	}
 }
 
 void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
