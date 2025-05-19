@@ -136,12 +136,12 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
 		{
-			RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTagToClear);
+			RemoveEquipmentItemWidget(SlotTagToClear);
 		}
 
 		if(Instance->ShouldBlockOtherSlot())
 		{
-			RemoveBlockedSlotItemWidget(EquipmentChangeMessage.SlotTagToClear);
+			RemoveBlockedSlotItemWidget(SlotTagToClear);
 		}
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
@@ -151,12 +151,12 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
 		{
-			RemoveEquipmentItemWidget(EquipmentChangeMessage.SlotTagToClear);
+			RemoveEquipmentItemWidget(SlotTagToClear);
 		}
 
 		if(Instance->ShouldBlockOtherSlot())
 		{
-			const FGameplayTag EquipmentTag = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
+			const FGameplayTag EquipmentTag = SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
 			RemoveBlockedSlotItemWidget(EquipmentTag);
 		}
 		
@@ -215,6 +215,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 
 	TArray<UObsidianInventoryItemInstance*> EquippedItems = EquipmentComponent->GetAllEquippedItems();
 	EquippedItemWidgetMap.Empty(EquippedItems.Num());
+	BlockedSlotsWidgetMap.Empty();
 
 	for(const UObsidianInventoryItemInstance* Item : EquippedItems)
 	{
@@ -223,6 +224,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemWidgetData.ItemImage = Item->GetItemImage();
 		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
 		ItemWidgetData.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
+		ItemWidgetData.bDoesBlockSisterSlot = Item->ShouldBlockOtherSlot();
 
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
