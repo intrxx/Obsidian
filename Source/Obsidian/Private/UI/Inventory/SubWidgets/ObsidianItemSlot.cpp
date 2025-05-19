@@ -12,7 +12,7 @@ void UObsidianItemSlot::NativeConstruct()
 	Action_Image->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UObsidianItemSlot::SetSlotState(const bool bAvailable)
+void UObsidianItemSlot::SetSlotAvailable(const bool bAvailable)
 {
 	if(bAvailable)
 	{

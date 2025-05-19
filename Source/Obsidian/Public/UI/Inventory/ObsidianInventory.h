@@ -7,6 +7,7 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
+class UObsidianSlotBlockadeItem;
 struct FObsidianItemWidgetData;
 class UObsidianItem;
 class UObsidianItemSlot;
@@ -77,21 +78,9 @@ private:
 	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();
 
-private:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Equipment")
-	TMap<FGameplayTag, TObjectPtr<UTexture2D>> EquipmentToBlockedSlotImageMap;
-	
+protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
-	UPROPERTY()
-	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianItem> ItemWidgetClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianItemSlot_Inventory> InventorySlotClass;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianItemSlot_Equipment> RightHand_EquipmentSlot;
@@ -119,6 +108,19 @@ private:
 	TObjectPtr<UObsidianItemSlot_Equipment> RightRing_EquipmentSlot;
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianItemSlot_Equipment> LeftRing_EquipmentSlot;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UObsidianItem> ItemWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UObsidianSlotBlockadeItem> SlotBlockadeItemClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UObsidianItemSlot_Inventory> InventorySlotClass;
 	
 	/** Essentially, height component of inventory size. Use this instead of directly setting it on SizeBox. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")

@@ -21,7 +21,7 @@ class OBSIDIAN_API UObsidianItemSlot : public UObsidianWidgetBase
 
 public:
 	/** Sets the slot state based on bAvailable, if true sets it to green if false to red. */
-	void SetSlotState(const bool bAvailable);
+	void SetSlotAvailable(const bool bAvailable);
 	void ResetSlot();
 
 protected:

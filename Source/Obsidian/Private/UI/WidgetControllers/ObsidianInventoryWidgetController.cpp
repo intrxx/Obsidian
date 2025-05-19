@@ -17,6 +17,7 @@
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "UI/Inventory/ObsidianItem.h"
+#include "UI/Inventory/ObsidianSlotBlockadeItem.h"
 #include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
@@ -806,7 +807,7 @@ void UObsidianInventoryWidgetController::AddEquipmentItemWidget(const FGameplayT
 	}
 }
 
-void UObsidianInventoryWidgetController::AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother)
+void UObsidianInventoryWidgetController::AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother)
 {
 	if(bSwappedWithAnother)
 	{
@@ -838,7 +839,7 @@ void UObsidianInventoryWidgetController::RemoveBlockedSlotItemWidget(const FGame
 {
 	if(BlockedSlotsWidgetMap.Contains(Slot))
 	{
-		if(UObsidianItem* Item = BlockedSlotsWidgetMap[Slot])
+		if(UObsidianSlotBlockadeItem* Item = BlockedSlotsWidgetMap[Slot])
 		{
 			Item->RemoveFromParent();
 		}

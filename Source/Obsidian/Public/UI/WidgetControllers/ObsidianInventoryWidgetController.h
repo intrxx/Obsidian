@@ -15,6 +15,7 @@ class UObsidianHeroComponent;
 class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
+class UObsidianSlotBlockadeItem;
 
 USTRUCT()
 struct FObsidianItemWidgetData
@@ -120,7 +121,7 @@ public:
 	void AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
 	
 	/** This function takes the primary slot that is causing the other slot to be blocked. */
-	void AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
+	void AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother);
 	void RemoveEquipmentItemWidget(const FGameplayTag& Slot);
 	void RemoveBlockedSlotItemWidget(const FGameplayTag& Slot);
 
@@ -199,7 +200,7 @@ private:
 	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;
 
 	UPROPERTY()
-	TMap<FGameplayTag, UObsidianItem*> BlockedSlotsWidgetMap;
+	TMap<FGameplayTag, UObsidianSlotBlockadeItem*> BlockedSlotsWidgetMap;
 
 	UPROPERTY()
 	TArray<UObsidianItem*> CachedItemsMatchingUsableContext;

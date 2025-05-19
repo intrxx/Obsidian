@@ -4,9 +4,6 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
-/** Defined to use in matches. */
-UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Obsidian_TwoHand, "TwoHand");
-
 //
 // Equipment Actor
 //
