@@ -12,23 +12,32 @@ void UObsidianItemSlot::NativeConstruct()
 	Action_Image->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UObsidianItemSlot::SetSlotAvailable(const bool bAvailable)
+void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState) const
 {
-	if(bAvailable)
+	if(InState == ISS_Neutral)
+	{
+		Action_Image->SetVisibility(ESlateVisibility::Hidden);
+		return;
+	}
+	if(InState == ISS_GreenLight)
 	{
 		Action_Image->SetBrush(SlotGreenLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
+		return;
 	}
-	else
+	if(InState == ISS_RedLight)
 	{
 		Action_Image->SetBrush(SlotRedLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
+		return;
+	}
+	if(InState == ISS_Blocked)
+	{
+		Action_Image->SetBrush(SlotBlockedLightColor);
+		Action_Image->SetVisibility(ESlateVisibility::Visible);
+		return;
 	}
 }
 
-void UObsidianItemSlot::ResetSlot()
-{
-	Action_Image->SetVisibility(ESlateVisibility::Hidden);
-}
 
 

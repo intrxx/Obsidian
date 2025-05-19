@@ -173,7 +173,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		BlockedGridSlot->SetLayer(1);
 		BlockedGridSlot->SetNudge(GridSlotToBlock->GetNudge());
 		
-		SlotToBlock->SetSlotAvailable(false);
+		SlotToBlock->SetSlotState(ISS_Blocked);
 		BlockedSlotItem->SetOwningSlot(SlotToBlock);
 		
 		UE_LOG(LogTemp, Warning, TEXT("I should block slot with tag: [%s]"), *SlotToBlock->GetSlotTag().GetTagName().ToString());
@@ -295,7 +295,8 @@ void UObsidianInventory::OnInventorySlotHover(const UObsidianItemSlot_Inventory*
 			if(InventoryLocationToSlotMap.Contains(LocationToCheck))
 			{
 				UObsidianItemSlot_Inventory* LocalSlot = InventoryLocationToSlotMap[LocationToCheck];
-				LocalSlot->SetSlotAvailable(bCanPlace);
+				const EObsidianItemSlotState SlotState = bCanPlace ? ISS_GreenLight : ISS_RedLight;
+				LocalSlot->SetSlotState(SlotState);
 				AffectedInventorySlots.Add(LocalSlot);
 			}
 		}
@@ -309,7 +310,7 @@ void UObsidianInventory::OnInventorySlotHover(const UObsidianItemSlot_Inventory*
 
 		for(UObsidianItemSlot_Inventory* InventorySlot : AffectedInventorySlots)
 		{
-			InventorySlot->ResetSlot();
+			InventorySlot->SetSlotState(ISS_Neutral);
 		}
 		AffectedInventorySlots.Empty();
 	}
@@ -333,10 +334,11 @@ void UObsidianInventory::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 		}
 		
 		const bool bCanEquip = InventoryWidgetController->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
-		AffectedSlot->SetSlotAvailable(bCanEquip);
+		const EObsidianItemSlotState SlotState = bCanEquip ? ISS_GreenLight : ISS_RedLight;
+		AffectedSlot->SetSlotState(SlotState);
 		return;
 	}
-	AffectedSlot->ResetSlot();
+	AffectedSlot->SetSlotState(ISS_Neutral);
 }
 
 void UObsidianInventory::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot)

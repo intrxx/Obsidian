@@ -11,6 +11,15 @@ class UObsidianInventory;
 class USizeBox;
 class UImage;
 
+UENUM()
+enum EObsidianItemSlotState
+{
+	ISS_Neutral,
+	ISS_GreenLight,
+	ISS_RedLight,
+	ISS_Blocked
+};
+
 /**
  * 
  */
@@ -20,9 +29,8 @@ class OBSIDIAN_API UObsidianItemSlot : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	/** Sets the slot state based on bAvailable, if true sets it to green if false to red. */
-	void SetSlotAvailable(const bool bAvailable);
-	void ResetSlot();
+	/** Sets the slot state, switches the slot highlight based on provided state. */
+	void SetSlotState(EObsidianItemSlotState InState) const;
 
 protected:
 	virtual void NativeConstruct() override;
@@ -42,6 +50,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	FSlateBrush SlotRedLightColor;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	FSlateBrush SlotBlockedLightColor;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianInventory> OwningInventory;
