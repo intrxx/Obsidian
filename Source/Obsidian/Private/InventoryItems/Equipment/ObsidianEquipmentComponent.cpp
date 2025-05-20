@@ -438,12 +438,6 @@ EObsidianEquipResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubcla
 	{
 		return Result;
 	}
-
-	// if(UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand))
-	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("YO YO YO TWO HANDED"));
-	// 	return Result; // Temp
-	// }
 	
 	return EObsidianEquipResult::CanEquip;
 }
