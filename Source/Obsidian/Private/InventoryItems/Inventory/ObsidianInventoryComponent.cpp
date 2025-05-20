@@ -1124,6 +1124,15 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 	return bCanReplace;
 }
 
+bool UObsidianInventoryComponent::CanFitItemInstance(UObsidianInventoryItemInstance* Instance)
+{
+	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
+	FVector2D AvailablePosition = FVector2D::ZeroVector;
+	
+	const bool bCanAdd = CheckAvailablePosition(ItemGridSize, AvailablePosition);
+	return bCanAdd;
+}
+
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
 	if(GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount) <= 0)
@@ -1177,6 +1186,24 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVec
 		}
 	}
 	return bCanReplace;
+}
+
+bool UObsidianInventoryComponent::CanFitItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+{
+	bool bCanFit = false;
+	
+	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+	{
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		{
+			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
+
+			FVector2D AvailablePosition = FVector2D::ZeroVector;
+			bCanFit = CheckAvailablePosition(ItemGridSize, AvailablePosition);
+			return bCanFit;
+		}
+	}
+	return bCanFit;
 }
 
 bool UObsidianInventoryComponent::IsTheSameItem(const UObsidianInventoryItemInstance* InstanceA, const UObsidianInventoryItemInstance* InstanceB)

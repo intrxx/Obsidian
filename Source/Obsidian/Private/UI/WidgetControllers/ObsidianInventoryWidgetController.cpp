@@ -124,7 +124,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
-		ItemWidgetData.bDoesBlockSisterSlot = Instance->ShouldBlockOtherSlot();
+		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedsTwoSlots();
 		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
@@ -139,7 +139,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 			RemoveEquipmentItemWidget(SlotTagToClear);
 		}
 
-		if(Instance->ShouldBlockOtherSlot())
+		if(Instance->DoesItemNeedsTwoSlots())
 		{
 			RemoveBlockedSlotItemWidget(SlotTagToClear);
 		}
@@ -154,7 +154,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 			RemoveEquipmentItemWidget(SlotTagToClear);
 		}
 
-		if(Instance->ShouldBlockOtherSlot())
+		if(Instance->DoesItemNeedsTwoSlots())
 		{
 			const FGameplayTag EquipmentTag = SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
 			RemoveBlockedSlotItemWidget(EquipmentTag);
@@ -165,7 +165,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		ItemWidgetData.bSwappedWithAnotherItem = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag;
-		ItemWidgetData.bDoesBlockSisterSlot = Instance->ShouldBlockOtherSlot();
+		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedsTwoSlots();
 		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
@@ -224,7 +224,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemWidgetData.ItemImage = Item->GetItemImage();
 		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
 		ItemWidgetData.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
-		ItemWidgetData.bDoesBlockSisterSlot = Item->ShouldBlockOtherSlot();
+		ItemWidgetData.bDoesBlockSisterSlot = Item->DoesItemNeedsTwoSlots();
 
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -442,26 +442,40 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		return;
 	}
 	
-	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to replace it with it.
 	{
 		
 		 const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
 		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
 		 {
-		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanEquipInstance(DraggedInstance, SlotTag);
+		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanReplaceInstance(DraggedInstance, SlotTag);
 		 	if(EquipmentResult == EObsidianEquipResult::CanEquip)
 		 	{
 		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlotSlot(SlotTag);
+		 	}
+		 	else
+		 	{
+		 		//TODO Send Client RPC with some voice over passing EquipResult?
+#if !UE_BUILD_SHIPPING
+		 		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipmentResult));
+#endif
 		 	}
 		 	return;
 		 }
 		
 		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
 		 {
-		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
+		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
 			 if(EquipmentResult == EObsidianEquipResult::CanEquip)
 			 {
 			 	OwnerHeroComponent->ServerReplaceItemAtEquipmentSlotSlot(SlotTag);
+			 }
+			 else
+			 {
+			 	//TODO Send Client RPC with some voice over passing EquipResult?
+#if !UE_BUILD_SHIPPING
+			 	UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipmentResult));
+#endif
 			 }
 			 return;
 		}

@@ -35,7 +35,7 @@ public:
 	bool IsStackable() const;
 	bool IsEquippable() const;
 	bool IsIdentified() const;
-	bool ShouldBlockOtherSlot() const;
+	bool DoesItemNeedsTwoSlots() const;
 
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;
 	

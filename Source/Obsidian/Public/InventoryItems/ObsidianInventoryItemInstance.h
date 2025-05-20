@@ -97,10 +97,10 @@ public:
 	bool IsItemEquippable() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void SetShouldBlockOtherSlot(const bool InShouldBlock);
+	void SetItemNeedsTwoSlots(const bool InNeedsTwoSlots);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	bool ShouldBlockOtherSlot() const;
+	bool DoesItemNeedsTwoSlots() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	TArray<AObsidianSpawnedEquipmentPiece*> GetSpawnedActors() const;
@@ -281,8 +281,9 @@ private:
 	UPROPERTY(Replicated)
 	bool bEquippable = false;
 
+	/** Whether or not the item needs two slots to be equipped, e.g. Two-Handed weapons. */
 	UPROPERTY(Replicated)
-	bool bShouldBlockOtherSlot = false;
+	bool bNeedsTwoSlots = false;
 
 	UPROPERTY(Replicated)
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;

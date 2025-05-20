@@ -697,14 +697,11 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation
 	bool bSuccess = false;
 	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		bSuccess = EquipmentComponent->EquipItemToSpecificSlot(Instance, SlotTag);
+		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(Instance, SlotTag);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
-		if(EquipmentComponent->EquipItemToSpecificSlot(ItemDef, SlotTag))
-		{
-			bSuccess = true;
-		}
+		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(ItemDef, SlotTag);
 	}
 
 	// We fall back and equip the previously equipped item again, this could happen If the Client cheated through its check to begin the replacement since I'm calling it client side.

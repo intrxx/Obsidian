@@ -41,7 +41,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, bEquippable);
 	DOREPLIFETIME(ThisClass, bUsable);
 	DOREPLIFETIME(ThisClass, UsableShard);
-	DOREPLIFETIME(ThisClass, bShouldBlockOtherSlot);
+	DOREPLIFETIME(ThisClass, bNeedsTwoSlots);
 }
 
 void UObsidianInventoryItemInstance::OnInstanceCreatedAndInitialized()
@@ -49,7 +49,7 @@ void UObsidianInventoryItemInstance::OnInstanceCreatedAndInitialized()
 	using namespace ObsidianInventoryItemsStatics;
 	if(IsItemEquippable() && AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory.Contains(ItemCategory) && AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[ItemCategory].IsEmpty())
 	{
-		bShouldBlockOtherSlot = true;
+		bNeedsTwoSlots = true;
 	}
 }
 
@@ -342,14 +342,14 @@ bool UObsidianInventoryItemInstance::IsItemEquippable() const
 	return bEquippable;
 }
 
-void UObsidianInventoryItemInstance::SetShouldBlockOtherSlot(const bool InShouldBlock)
+void UObsidianInventoryItemInstance::SetItemNeedsTwoSlots(const bool InNeedsTwoSlots)
 {
-	bShouldBlockOtherSlot = InShouldBlock;
+	bNeedsTwoSlots = InNeedsTwoSlots;
 }
 
-bool UObsidianInventoryItemInstance::ShouldBlockOtherSlot() const
+bool UObsidianInventoryItemInstance::DoesItemNeedsTwoSlots() const
 {
-	return bShouldBlockOtherSlot;
+	return bNeedsTwoSlots;
 }
 
 TArray<AObsidianSpawnedEquipmentPiece*> UObsidianInventoryItemInstance::GetSpawnedActors() const
