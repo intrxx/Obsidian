@@ -121,7 +121,7 @@ public:
 	void ServerGrabEquippedItemToCursor(const FGameplayTag& SlotTag);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtEquipmentSlotSlot(const FGameplayTag& SlotTag);
+	void ServerReplaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
 
 	UFUNCTION(Server, Reliable)
 	void ServerWeaponSwap();

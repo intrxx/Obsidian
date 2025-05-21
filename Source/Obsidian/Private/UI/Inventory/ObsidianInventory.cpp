@@ -164,7 +164,10 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		const FGameplayTag SisterSlotTag = EquipmentSlot->GetSisterSlotTag();
 			
 		UObsidianSlotBlockadeItem* BlockedSlotItem = CreateWidget<UObsidianSlotBlockadeItem>(this, SlotBlockadeItemClass);
-		BlockedSlotItem->InitializeItemWidget(SisterSlotTag, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
+		BlockedSlotItem->InitializeItemWidget(SisterSlotTag, DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
+		BlockedSlotItem->OnSlotBlockadeItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemLeftMouseButtonPressed);
+		BlockedSlotItem->OnSlotBlockadeItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemMouseEntered);
+		BlockedSlotItem->OnSlotBlockadeItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 		InventoryWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
 
 		UObsidianItemSlot_Equipment* SlotToBlock = FindEquipmentSlotForTag(SisterSlotTag);
@@ -244,6 +247,24 @@ void UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed(const UObsidianIt
 	if(InventoryWidgetController)
 	{
 		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(ItemWidget->GetEquipmentSlotTag());
+	}
+}
+
+void UObsidianInventory::OnSlotBlockadeItemLeftMouseButtonPressed(const UObsidianSlotBlockadeItem* SlotBlockadeItem)
+{
+	ensureMsgf(SlotBlockadeItem, TEXT("Slot Blockade Item Widget is invalid in UObsidianInventory::OnSlotBlockadeItemLeftMouseButtonPressed"));
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(SlotBlockadeItem->GetPrimaryWeaponSlotTag(), SlotBlockadeItem->GetEquipmentSlotTag());
+	}
+}
+
+void UObsidianInventory::OnSlotBlockadeItemMouseEntered(const UObsidianSlotBlockadeItem* SlotBlockadeItem)
+{
+	ensureMsgf(SlotBlockadeItem, TEXT("Slot Blockade Item Widget is invalid in UObsidianInventory::OnSlotBlockadeItemMouseEntered"));
+	if(InventoryWidgetController)
+	{
+		InventoryWidgetController->HandleHoveringOverEquipmentItem(InventoryWidgetController->GetItemWidgetAtEquipmentSlot(SlotBlockadeItem->GetPrimaryWeaponSlotTag()));
 	}
 }
 

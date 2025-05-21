@@ -200,7 +200,7 @@ bool UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItem
 	return true;
 }
 
-bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
+bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -245,8 +245,9 @@ bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UO
 		InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
 		check(DispensableStacksLeft == 0);
 	}
-	
-	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
+
+	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;
+	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, EquipTag);
 
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -256,7 +257,7 @@ bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UO
 	return Instance != nullptr;
 }
 
-bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag)
+bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -295,8 +296,9 @@ bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryIt
 		InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
 		check(DispensableStacksLeft == 0);
 	}
-	
-	EquipmentList.AddEntry(InstanceToEquip, SlotTag);
+
+	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;
+	EquipmentList.AddEntry(InstanceToEquip, EquipTag);
 	
 	if(InstanceToEquip && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{

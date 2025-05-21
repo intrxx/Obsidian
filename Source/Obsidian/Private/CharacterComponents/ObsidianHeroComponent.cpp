@@ -672,7 +672,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 	}
 }
 
-void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation(const FGameplayTag& SlotTag)
+void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlot_Implementation(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
@@ -697,11 +697,11 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation
 	bool bSuccess = false;
 	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(Instance, SlotTag);
+		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(Instance, SlotTag, EquipSlotTagOverride);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
-		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(ItemDef, SlotTag);
+		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(ItemDef, SlotTag, EquipSlotTagOverride);
 	}
 
 	// We fall back and equip the previously equipped item again, this could happen If the Client cheated through its check to begin the replacement since I'm calling it client side.

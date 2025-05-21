@@ -74,6 +74,9 @@ private:
 	void OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
 	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
 	
+	void OnSlotBlockadeItemLeftMouseButtonPressed(const UObsidianSlotBlockadeItem* SlotBlockadeItem);
+	void OnSlotBlockadeItemMouseEntered(const UObsidianSlotBlockadeItem* ItemWidget);
+	
 	void OnEquipmentItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();

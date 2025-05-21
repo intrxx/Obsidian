@@ -133,7 +133,7 @@ public:
 	void HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition);
 	void HandleLeftClickingOnInventoryItemWithShiftDown(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
-	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag);
+	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
 
 	void HandleHoveringOverInventoryItem(const FVector2D& SlotPosition);
 	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);

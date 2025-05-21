@@ -24,12 +24,35 @@ void UObsidianSlotBlockadeItem::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage)
+void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 	Item_Image->SetBrushFromTexture(ItemImage);
 	ItemEquipmentSlot = EquipmentSlot;
+	PrimaryWeaponSlot = InPrimaryWeaponSlot;
 }
+
+FReply UObsidianSlotBlockadeItem::NativeOnMouseButtonDown(const FGeometry& InGeometry,const FPointerEvent& InMouseEvent)
+{
+	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	{
+		OnSlotBlockadeItemLeftMouseButtonPressedDelegate.Broadcast(this);
+	}
+	
+	return FReply::Handled();
+}
+
+void UObsidianSlotBlockadeItem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	OnSlotBlockadeItemMouseEnterDelegate.Broadcast(this);
+}
+
+void UObsidianSlotBlockadeItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	OnSlotBlockadeItemMouseLeaveDelegate.Broadcast();
+}
+
+
 
 

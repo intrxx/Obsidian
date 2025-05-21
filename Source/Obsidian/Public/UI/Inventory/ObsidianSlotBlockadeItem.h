@@ -10,6 +10,12 @@
 class USizeBox;
 class UImage;
 class UObsidianItemSlot_Equipment;
+class UObsidianSlotBlockadeItem;
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSlotBlockadeItemLeftMouseButtonPressedSignature, const UObsidianSlotBlockadeItem* ItemWidget);
+
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnSlotBlockadeItemMouseEnterSignature, const UObsidianSlotBlockadeItem* ItemWidget);
+DECLARE_MULTICAST_DELEGATE(FOnSlotBlockadeItemMouseLeaveSignature);
 
 /**
  * 
@@ -20,21 +26,35 @@ class OBSIDIAN_API UObsidianSlotBlockadeItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage);
+	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage);
 
 	FGameplayTag GetEquipmentSlotTag() const
 	{
 		return ItemEquipmentSlot;
 	}
 
+	FGameplayTag GetPrimaryWeaponSlotTag() const
+	{
+		return PrimaryWeaponSlot;
+	}
+
 	void SetOwningSlot(UObsidianItemSlot_Equipment* InSlot)
 	{
 		OwningSlot = InSlot;
 	}
+	
+public:
+	FOnSlotBlockadeItemLeftMouseButtonPressedSignature OnSlotBlockadeItemLeftMouseButtonPressedDelegate;
+	FOnSlotBlockadeItemMouseEnterSignature OnSlotBlockadeItemMouseEnterDelegate;
+	FOnSlotBlockadeItemMouseLeaveSignature OnSlotBlockadeItemMouseLeaveDelegate;
 
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
 protected:
 	/** Opacity to set for this blocking item. */
@@ -43,6 +63,8 @@ protected:
 	
 	UPROPERTY()
 	FGameplayTag ItemEquipmentSlot = FGameplayTag::EmptyTag;
+	UPROPERTY()
+	FGameplayTag PrimaryWeaponSlot = FGameplayTag::EmptyTag;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianItemSlot_Equipment> OwningSlot;

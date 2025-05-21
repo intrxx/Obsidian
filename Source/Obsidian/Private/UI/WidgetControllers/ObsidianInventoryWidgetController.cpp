@@ -420,7 +420,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 	ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
 }
 
-void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag)
+void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
 	const FGameplayTag WeaponSwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Equipment.SwapSlot.Weapon"));
 	if(SlotTag.MatchesTag(WeaponSwapSlotTag))
@@ -451,7 +451,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanReplaceInstance(DraggedInstance, SlotTag);
 		 	if(EquipmentResult == EObsidianEquipResult::CanEquip)
 		 	{
-		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlotSlot(SlotTag);
+		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
 		 	}
 		 	else
 		 	{
@@ -468,7 +468,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
 			 if(EquipmentResult == EObsidianEquipResult::CanEquip)
 			 {
-			 	OwnerHeroComponent->ServerReplaceItemAtEquipmentSlotSlot(SlotTag);
+			 	OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
 			 }
 			 else
 			 {
