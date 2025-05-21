@@ -276,7 +276,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Dagger, "Item.Category.Dagger", "Item Tag that represents Dagger item category.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Wand, "Item.Category.Wand", "Item Tag that represents Wand item category.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Flail, "Item.Category.Flail", "Item Tag that represents Flail item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Bow_TwoHand, "Item.Category.Bow.TwoHand", "Item Tag that represents Bow item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Bow, "Item.Category.Bow", "Item Tag that represents Bow item category.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Staff_TwoHand, "Item.Category.Staff.TwoHand", "Item Tag that represents Staff item category.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Mace_OneHand, "Item.Category.Mace.OneHand", "Item Tag that represents One Hand Mace item category.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Mace_TwoHand, "Item.Category.Mace.TwoHand", "Item Tag that represents Two Hand Mace item category.");

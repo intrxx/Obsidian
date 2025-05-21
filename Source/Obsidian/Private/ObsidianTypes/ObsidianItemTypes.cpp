@@ -20,7 +20,7 @@ namespace ObsidianInventoryItemsStatics
 	const TArray<FGameplayTag> RightHandAcceptedEquipment =
 		{
 		{
-			Item_Category_Flail, Item_Category_Dagger, Item_Category_Wand, Item_Category_Bow_TwoHand, Item_Category_Staff_TwoHand,
+			Item_Category_Flail, Item_Category_Dagger, Item_Category_Wand, Item_Category_Bow, Item_Category_Staff_TwoHand,
 			Item_Category_Mace_OneHand,Item_Category_Mace_TwoHand, Item_Category_Axe_OneHand, Item_Category_Axe_TwoHand,
 			Item_Category_Sword_OneHand, Item_Category_Sword_TwoHand
 			}
@@ -64,8 +64,8 @@ namespace ObsidianInventoryItemsStatics
 				{Item_Category_Dagger, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
 				{Item_Category_Wand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
 				{Item_Category_Flail, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-				{Item_Category_Bow_TwoHand, FGameplayTagContainer(Item_Category_Quiver)},
-				{Item_Category_Quiver, FGameplayTagContainer(Item_Category_Bow_TwoHand)},
+				{Item_Category_Bow, FGameplayTagContainer(Item_Category_Quiver)},
+				{Item_Category_Quiver, FGameplayTagContainer(Item_Category_Bow)},
 				{Item_Category_Staff_TwoHand, FGameplayTagContainer::EmptyContainer},
 				{Item_Category_Mace_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
 				{Item_Category_Mace_TwoHand, FGameplayTagContainer::EmptyContainer},
