@@ -178,8 +178,6 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		
 		SlotToBlock->SetSlotState(ISS_Blocked);
 		BlockedSlotItem->SetOwningSlot(SlotToBlock);
-		
-		UE_LOG(LogTemp, Warning, TEXT("I should block slot with tag: [%s]"), *SlotToBlock->GetSlotTag().GetTagName().ToString());
 	}
 }
 
