@@ -232,18 +232,21 @@ bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UO
 	if(DefaultObject->DoesItemNeedsTwoSlots())
 	{
 		const FObsidianEquipmentSlotDefinition PressedSlot = FindEquipmentSlotByTag(SlotTag);
-		UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(PressedSlot.SisterSlotTag);
-		UObsidianInventoryComponent* InventoryComponent = GetInventoryComponentFromOwner();
-		if(InstanceAtSecondSlot == nullptr || InventoryComponent == nullptr)
+		
+		if(UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(PressedSlot.SisterSlotTag))
 		{
-			return false;
+			UObsidianInventoryComponent* InventoryComponent = GetInventoryComponentFromOwner();
+			if(InventoryComponent == nullptr)
+			{
+				return false;
+			}
+			
+			UnequipItem(InstanceAtSecondSlot);
+		
+			int32 DispensableStacksLeft = 0; // We don't care for StacksLeft as the equippable items never have stacks.
+			InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
+			check(DispensableStacksLeft == 0);
 		}
-		
-		UnequipItem(InstanceAtSecondSlot);
-		
-		int32 DispensableStacksLeft = 0; // We don't care for StacksLeft as the equippable items never have stacks.
-		InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
-		check(DispensableStacksLeft == 0);
 	}
 
 	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;
@@ -283,18 +286,21 @@ bool UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryIt
 	if(InstanceToEquip->DoesItemNeedsTwoSlots())
 	{
 		const FObsidianEquipmentSlotDefinition PressedSlot = FindEquipmentSlotByTag(SlotTag);
-		UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(PressedSlot.SisterSlotTag);
-		UObsidianInventoryComponent* InventoryComponent = GetInventoryComponentFromOwner();
-		if(InstanceAtSecondSlot == nullptr || InventoryComponent == nullptr)
+		
+		if(UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(PressedSlot.SisterSlotTag))
 		{
-			return false;
+			UObsidianInventoryComponent* InventoryComponent = GetInventoryComponentFromOwner();
+			if(InventoryComponent == nullptr)
+			{
+				return false;
+			}
+			
+			UnequipItem(InstanceAtSecondSlot);
+		
+			int32 DispensableStacksLeft = 0; // We don't care for StacksLeft as the equippable items never have stacks.
+			InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
+			check(DispensableStacksLeft == 0);
 		}
-		
-		UnequipItem(InstanceAtSecondSlot);
-		
-		int32 DispensableStacksLeft = 0; // We don't care for StacksLeft as the equippable items never have stacks.
-		InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
-		check(DispensableStacksLeft == 0);
 	}
 
 	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;

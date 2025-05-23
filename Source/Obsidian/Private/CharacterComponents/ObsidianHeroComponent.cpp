@@ -668,6 +668,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 	if(bSuccess == false)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Client cheated the check to replace the item! Discarding the replacement."))
+		
 		ServerAddItemToInventoryAtSlot(SlotPosition, false);
 		DraggedItem = CachedDraggedItem;
 		StartDraggingItem(Controller);
@@ -690,7 +691,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlot_Implementation(con
 		return;
 	}
 
-	const FDraggedItem CachedDraggedItem = DraggedItem;
+	const FDraggedItem CachedDraggedItem = DraggedItem;		
 	DraggedItem.Clear();
 	StopDraggingItem(Controller);
 	

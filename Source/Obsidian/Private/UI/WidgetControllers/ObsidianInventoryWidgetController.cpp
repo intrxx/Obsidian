@@ -466,13 +466,13 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
 		 {
 		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
-			 if(EquipmentResult == EObsidianEquipResult::CanEquip)
-			 {
-			 	OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
-			 }
-			 else
-			 {
-			 	//TODO Send Client RPC with some voice over passing EquipResult?
+		 	if(EquipmentResult == EObsidianEquipResult::CanEquip)
+		 	{
+		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
+		 	}
+		 	else
+		 	{
+		 		//TODO Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
 			 	UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipmentResult));
 #endif
