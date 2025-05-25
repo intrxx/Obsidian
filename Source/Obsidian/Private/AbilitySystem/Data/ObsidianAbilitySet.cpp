@@ -1,13 +1,16 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
-#include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Obsidian/ObsidianGameModule.h"
+
+// ~ Core
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor
+
+// ~ Project
+#include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 void FObsidianAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle)
 {

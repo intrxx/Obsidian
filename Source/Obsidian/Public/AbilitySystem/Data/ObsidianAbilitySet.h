@@ -2,10 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "ActiveGameplayEffectHandle.h"
 #include "GameplayAbilitySpecHandle.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
+
 #include "Engine/DataAsset.h"
 #include "ObsidianAbilitySet.generated.h"
 

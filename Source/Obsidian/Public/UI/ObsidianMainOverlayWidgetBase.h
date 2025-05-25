@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "ObsidianMainWidgetBase.h"
 #include "ObsidianMainOverlayWidgetBase.generated.h"
 

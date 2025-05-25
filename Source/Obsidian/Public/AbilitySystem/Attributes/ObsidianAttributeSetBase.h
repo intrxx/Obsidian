@@ -2,10 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "AttributeSet.h"
 #include "GameplayEffectTypes.h"
 
+// ~ Project
+
+
+#include "AttributeSet.h"
 #include "ObsidianAttributeSetBase.generated.h"
 
 class AObsidianCharacterBase;

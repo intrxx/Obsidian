@@ -1,10 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
+
+// ~ Core
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor
+
+// ~ Project
 
 void UOAbilityTagRelationshipMapping::GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& AbilityTags,
                                                                      FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagToCancel) const

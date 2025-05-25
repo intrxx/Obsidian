@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "GameplayModMagnitudeCalculation.h"
 #include "ObsidianMMC_Accuracy.generated.h"
 

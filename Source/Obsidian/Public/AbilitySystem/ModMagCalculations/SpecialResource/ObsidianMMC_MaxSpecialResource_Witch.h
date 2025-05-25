@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource.h"
 #include "ObsidianMMC_MaxSpecialResource_Witch.generated.h"
 

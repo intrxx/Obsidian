@@ -2,11 +2,17 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "ObsidianDamageGameplayAbility.h"
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
 class AObsidianProjectile;
+
 /**
  * 
  */

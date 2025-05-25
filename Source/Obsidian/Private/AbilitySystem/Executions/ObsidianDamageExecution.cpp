@@ -1,8 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/Executions/ObsidianDamageExecution.h"
+
+// ~ Core
 #include "AbilitySystemComponent.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "Obsidian/ObsidianGameplayTags.h"

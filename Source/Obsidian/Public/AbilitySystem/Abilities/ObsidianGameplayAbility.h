@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "Abilities/GameplayAbility.h"
 #include "ObsidianGameplayAbility.generated.h"
 

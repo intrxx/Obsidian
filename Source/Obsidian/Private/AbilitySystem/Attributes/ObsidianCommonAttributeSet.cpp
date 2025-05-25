@@ -3,12 +3,15 @@
 
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 
+// ~ Core
 #include "GameplayEffectExtension.h"
+#include "Net/UnrealNetwork.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianTypes/ObsidianUITypes.h"

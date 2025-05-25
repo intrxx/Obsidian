@@ -1,10 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_MaxHealth.h"
+
+// ~ Core
+#include "Engine/CurveTable.h"
+
+// ~ Project
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
-#include "Engine/CurveTable.h"
 #include "Combat/ObsidianCombatInterface.h"
 #include "Obsidian/ObsidianGameModule.h"
 

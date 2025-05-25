@@ -1,8 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_Accuracy.h"
 
+// ~ Core
+
+
+// ~ Project
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 struct SObsidian_AccuracyStatics

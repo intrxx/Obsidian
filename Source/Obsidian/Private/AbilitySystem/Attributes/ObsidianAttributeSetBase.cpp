@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/Attributes/ObsidianAttributeSetBase.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Characters/ObsidianCharacterBase.h"
+
+// ~ Core
 #include "GameplayEffectExtension.h"
 #include "AbilitySystemBlueprintLibrary.h"
+
+// ~ Project
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 void FObsidianEffectProperties::Reset()

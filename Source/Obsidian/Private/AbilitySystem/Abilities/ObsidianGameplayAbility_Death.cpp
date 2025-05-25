@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility_Death.h"
+
+// ~ Core
+
+// ~ Project
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"

@@ -1,7 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_EnemyAccuracy.h"
+
+// ~ Core
+
+
+// ~ Project
 #include "Combat/ObsidianCombatInterface.h"
 #include "Obsidian/ObsidianGameModule.h"
 

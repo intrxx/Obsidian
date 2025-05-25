@@ -3,8 +3,11 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility_Aura.h"
 
+// ~ Core
 #include "AbilitySystemComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+
+// ~ Project
 
 UObsidianGameplayAbility_Aura::UObsidianGameplayAbility_Aura()
 {

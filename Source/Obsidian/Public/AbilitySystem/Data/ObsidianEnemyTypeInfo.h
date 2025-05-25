@@ -2,9 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "Engine/DataAsset.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
+#include "Engine/DataAsset.h"
 #include "ObsidianEnemyTypeInfo.generated.h"
 
 class UObsidianAbilitySet;

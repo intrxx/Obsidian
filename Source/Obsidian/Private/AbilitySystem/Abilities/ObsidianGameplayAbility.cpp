@@ -3,12 +3,15 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 
+// ~ Core
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemGlobals.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "GameFramework/CharacterMovementComponent.h"
 #include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 

@@ -1,8 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "AbilitySystem/ObsidianGameplayEffectActor.h"
+
+// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianGameplayEffectActor::AObsidianGameplayEffectActor()

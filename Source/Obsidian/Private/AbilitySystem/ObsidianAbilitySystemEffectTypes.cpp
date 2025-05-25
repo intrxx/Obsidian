@@ -2,6 +2,9 @@
 
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 
+// ~ Core
+
+// ~ Project
 
 FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(
 	FGameplayEffectContextHandle Handle)

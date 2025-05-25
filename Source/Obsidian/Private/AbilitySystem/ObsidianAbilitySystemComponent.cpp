@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+
+// ~ Core
 #include "GameplayCueManager.h"
 #include "AbilitySystemGlobals.h"
+
+// ~ Project
 #include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "Obsidian/ObsidianGameplayTags.h"

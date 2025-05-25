@@ -2,9 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
+
+// ~ Project
+
+
+#include "GameFramework/Actor.h"
 #include "ObsidianGameplayEffectActor.generated.h"
 
 class UAbilitySystemComponent;

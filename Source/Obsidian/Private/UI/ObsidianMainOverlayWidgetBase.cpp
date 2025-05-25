@@ -1,7 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/ObsidianMainOverlayWidgetBase.h"
+
+// ~ Core
 #include "Components/Button.h"
+
+// ~ Project
 
 void UObsidianMainOverlayWidgetBase::NativeConstruct()
 {

@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/ObsidianGameplayCueManager.h"
+
+// ~ Core
+
+// ~ Project
 
 bool UObsidianGameplayCueManager::ShouldAsyncLoadRuntimeObjectLibraries() const
 {

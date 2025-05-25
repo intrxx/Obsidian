@@ -1,10 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/AbilityTasks/UOAbilityTask_TargetDataUnderCursor.h"
 
+// ~ Core
 #include "AbilitySystemComponent.h"
 #include "DrawDebugHelpers.h"
+
+// ~ Project
 #include "Obsidian/ObsidianGameModule.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 

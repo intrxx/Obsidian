@@ -2,12 +2,17 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "AbilitySystem/Abilities/ObsidianGameplayAbility_Melee.h"
+
+// ~ Project
 #include "AI/Services/ObsidianBTService_FindNearestPlayer.h"
+
+#include "AbilitySystem/Abilities/ObsidianGameplayAbility_Melee.h"
 #include "ObsidianAIGameplayAbility_Melee.generated.h"
 
 class AAIController;
+
 /**
  * 
  */

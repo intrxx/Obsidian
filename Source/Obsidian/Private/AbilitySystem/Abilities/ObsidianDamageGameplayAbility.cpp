@@ -3,11 +3,11 @@
 
 #include "AbilitySystem/Abilities/ObsidianDamageGameplayAbility.h"
 
+// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
-#include "NiagaraFunctionLibrary.h"
-#include "Combat/ObsidianCombatInterface.h"
 
+// ~ Project
 
 UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility()
 {

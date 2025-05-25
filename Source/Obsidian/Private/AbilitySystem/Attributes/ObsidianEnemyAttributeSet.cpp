@@ -3,11 +3,13 @@
 
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
 
+// ~ Core
 #include "GameplayEffectExtension.h"
-#include "CharacterComponents/ObsidianBossComponent.h"
-#include "EntitySystem/MovieSceneEntitySystemRunner.h"
 #include "Net/UnrealNetwork.h"
+
+// ~ Project
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "CharacterComponents/ObsidianBossComponent.h"
 
 UObsidianEnemyAttributeSet::UObsidianEnemyAttributeSet()
 {
