@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 #include "ObsidianRegular_RangedGoblin.generated.h"
 

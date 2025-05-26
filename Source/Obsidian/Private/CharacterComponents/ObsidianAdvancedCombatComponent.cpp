@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
+
+// ~ Core
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
+
+// ~ Project
 #include "Obsidian/ObsidianGameModule.h"
 
 UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObjectInitializer& ObjectInitializer)

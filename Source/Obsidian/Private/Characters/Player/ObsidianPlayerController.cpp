@@ -1,6 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/Player/ObsidianPlayerController.h"
+
+// ~ Core
+
+// ~ Project
 #include "UI/ObsidianHUD.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"

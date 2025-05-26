@@ -2,8 +2,13 @@
 
 #pragma once
 
-#include "AbilitySystemInterface.h"
+// ~ Core
 #include "CoreMinimal.h"
+#include "AbilitySystemInterface.h"
+
+// ~ Project
+
+
 #include "ModularPlayerState.h"
 #include "ObsidianPlayerState.generated.h"
 

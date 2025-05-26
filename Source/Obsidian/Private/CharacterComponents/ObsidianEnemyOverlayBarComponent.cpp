@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
+
+// ~ Core
+
+// ~ Project
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Core/ObsidianUIFunctionLibrary.h"

@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "Components/ActorComponent.h"
 #include "ObsidianBossComponent.generated.h"
 

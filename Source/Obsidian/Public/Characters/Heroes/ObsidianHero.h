@@ -2,9 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "Characters/ObsidianCharacterBase.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
+#include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianHero.generated.h"
 
 class AObsidianDroppableItem;

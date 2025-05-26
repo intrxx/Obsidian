@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "CommonLocalPlayer.h"
 #include "ObsidianLocalPlayer.generated.h"
 

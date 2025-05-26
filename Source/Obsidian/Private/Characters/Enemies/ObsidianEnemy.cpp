@@ -1,6 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/Enemies/ObsidianEnemy.h"
+
+// ~ Core
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+
+// ~ Project
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
@@ -9,11 +15,9 @@
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/ObsidianPawnData.h"
-#include "Components/CapsuleComponent.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Characters/ObsidianDummyMeshActor.h"
-#include "GameFramework/CharacterMovementComponent.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

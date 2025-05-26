@@ -2,11 +2,14 @@
 
 #pragma once
 
-#include "AbilitySystemInterface.h"
+// ~ Core
 #include "CoreMinimal.h"
-#include "ModularCharacter.h"
+#include "AbilitySystemInterface.h"
+
+// ~ Project
 #include "Combat/ObsidianCombatInterface.h"
-#include "GameFramework/Character.h"
+
+#include "ModularCharacter.h"
 #include "ObsidianCharacterBase.generated.h"
 
 class UNiagaraSystem;
@@ -15,6 +18,9 @@ class UMotionWarpingComponent;
 class UObsidianAbilitySystemComponent;
 class UObsidianPawnExtensionComponent;
 
+/**
+ * 
+ */
 UCLASS(Abstract)
 class OBSIDIAN_API AObsidianCharacterBase : public AModularCharacter, public IAbilitySystemInterface, public IObsidianCombatInterface
 {

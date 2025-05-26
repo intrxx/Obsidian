@@ -1,9 +1,16 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/Heroes/ObsidianHero.h"
+
+// ~ Core
+#include "Camera/CameraComponent.h"
+#include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
-#include "Camera/CameraComponent.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
@@ -11,11 +18,8 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
-#include "Components/WidgetComponent.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetBase.h"

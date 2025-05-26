@@ -1,11 +1,15 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
+
+// ~ Core
 #include "AbilitySystemComponent.h"
-#include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
+
+// ~ Project
+#include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 

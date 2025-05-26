@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Characters/Enemies/Specified/ObsidianRegular_RangedGoblin.h"
 
+// ~ Core
 #include "Net/UnrealNetwork.h"
+
+// ~ Project
+
 
 AObsidianRegular_RangedGoblin::AObsidianRegular_RangedGoblin(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

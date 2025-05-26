@@ -2,11 +2,17 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "GameFramework/Actor.h"
 #include "ObsidianDummyMeshActor.generated.h"
 
 class UPoseableMeshComponent;
+
 /**
  * Actor used to replace the lying enemy with a lighter actor composed of PoseableMesh.
  */

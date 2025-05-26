@@ -2,9 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "ModularCharacter.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
+#include "ModularCharacter.h"
 #include "ObsidianCharacterCreationHero.generated.h"
 
 /**

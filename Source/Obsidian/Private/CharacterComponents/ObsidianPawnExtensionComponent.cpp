@@ -1,10 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+
+// ~ Core
+#include "Net/UnrealNetwork.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/ObsidianPawnData.h"
-#include "Net/UnrealNetwork.h"
 
 UObsidianPawnExtensionComponent::UObsidianPawnExtensionComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

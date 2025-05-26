@@ -1,12 +1,16 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/ObsidianCharacterBase.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+
+// ~ Core
 #include "MotionWarpingComponent.h"
-#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+
+// ~ Project
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"

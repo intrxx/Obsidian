@@ -1,10 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+
+// ~ Core
+#include "GameFramework/Character.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
-#include "GameFramework/Character.h"
 #include "Obsidian/ObsidianGameModule.h"
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)

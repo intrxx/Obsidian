@@ -1,8 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Characters/ObsidianDummyMeshActor.h"
 
+// ~ Core
+
+// ~ Project
 #include "Components/PoseableMeshComponent.h"
 
 AObsidianDummyMeshActor::AObsidianDummyMeshActor(const FObjectInitializer& ObjectInitializer)

@@ -2,18 +2,23 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Components/PawnComponent.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+#include "Components/PawnComponent.h"
 #include "ObsidianHeroComponent.generated.h"
+
+struct FInputActionValue;
 
 class UImage;
 class UObsidianItem;
 class UObsidianDraggedItem_Simple;
 class AObsidianPlayerController;
 class UObsidianInventoryItemInstance;
-struct FInputActionValue;
 class AObsidianDroppableItem;
 class USplineComponent;
 class AObsidianHUD;

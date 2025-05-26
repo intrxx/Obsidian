@@ -1,10 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
+
+// ~ Core
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
-#include "AI/AObsidianAIControllerBase.h"
 #include "Components/WidgetComponent.h"
+
+// ~ Project
+#include "AI/AObsidianAIControllerBase.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"

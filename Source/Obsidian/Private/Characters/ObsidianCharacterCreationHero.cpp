@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Characters/ObsidianCharacterCreationHero.h"
 
+// ~ Core
 #include "GameFramework/CharacterMovementComponent.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianCharacterCreationHero::AObsidianCharacterCreationHero(const FObjectInitializer& ObjectInitializer)

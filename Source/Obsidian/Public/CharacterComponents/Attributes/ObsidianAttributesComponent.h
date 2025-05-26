@@ -2,8 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
+
 #include "Components/ActorComponent.h"
 #include "ObsidianAttributesComponent.generated.h"
 

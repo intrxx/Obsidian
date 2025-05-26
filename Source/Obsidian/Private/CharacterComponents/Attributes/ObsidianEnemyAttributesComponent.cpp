@@ -1,9 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
+
+// ~ Core
+#include "GameFramework/Character.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
-#include "GameFramework/Character.h"
 #include "Obsidian/ObsidianGameModule.h"
 
 UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer)
