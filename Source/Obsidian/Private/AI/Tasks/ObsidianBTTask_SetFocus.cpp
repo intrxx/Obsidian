@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/Tasks/ObsidianBTTask_SetFocus.h"
+
+// ~ Core
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+
+// ~ Project
 
 UObsidianBTTask_SetFocus::UObsidianBTTask_SetFocus()
 {

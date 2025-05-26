@@ -2,8 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "UObject/ObjectMacros.h"
+
 #include "BehaviorTree/BTTaskNode.h"
 #include "ObsidianBTTask_UseGameplayAbility.generated.h"
 

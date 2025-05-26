@@ -2,11 +2,18 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "AbilitySystem/Abilities/OGameplayAbility_ProjectileSpell.h"
+
 #include "BehaviorTree/BTTaskNode.h"
 #include "ObsidianBTTask_SetGameplayAttribute.generated.h"
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FGameplayAttributeSet
 {

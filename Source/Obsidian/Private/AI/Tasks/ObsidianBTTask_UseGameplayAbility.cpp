@@ -1,12 +1,15 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/Tasks/ObsidianBTTask_UseGameplayAbility.h"
+
+// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AIController.h"
-#include "AI/ObsidianEnemyInterface.h"
 #include "BehaviorTree/BlackboardComponent.h"
+
+// ~ Project
+#include "AI/ObsidianEnemyInterface.h"
 #include "Obsidian/ObsidianGameModule.h"
 
 UObsidianBTTask_UseGameplayAbility::UObsidianBTTask_UseGameplayAbility()

@@ -1,11 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/AObsidianAIControllerBase.h"
 
-#include "AI/NavigationSystemBase.h"
+// ~ Core
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+
+// ~ Project
 
 AObsidianAIControllerBase::AObsidianAIControllerBase()
 {

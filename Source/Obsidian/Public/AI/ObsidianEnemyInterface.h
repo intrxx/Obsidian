@@ -2,11 +2,18 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UObject/Interface.h"
 #include "ObsidianEnemyInterface.generated.h"
 
-// This class does not need to be modified.
+/**
+ * 
+ */
 UINTERFACE(MinimalAPI)
 class UObsidianEnemyInterface : public UInterface
 {

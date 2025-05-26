@@ -1,8 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/Tasks/ObsidianBTTask_ClearFocus.h"
+
+// ~ Core
 #include "AIController.h"
+
+// ~ Project
 
 UObsidianBTTask_ClearFocus::UObsidianBTTask_ClearFocus()
 {

@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/Tasks/ObsidianBTTask_SetBlackboardKey.h"
 
+// ~ Core
 #include "BehaviorTree/BlackboardComponent.h"
+
+// ~ Project
 
 UObsidianBTTask_SetBlackboardKey::UObsidianBTTask_SetBlackboardKey()
 {

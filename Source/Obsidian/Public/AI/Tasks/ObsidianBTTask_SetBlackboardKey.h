@@ -2,10 +2,18 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "BehaviorTree/BTTaskNode.h"
 #include "ObsidianBTTask_SetBlackboardKey.generated.h"
 
+/**
+ * 
+ */
 UENUM(BlueprintType)
 enum class ESetAsType : uint8
 {

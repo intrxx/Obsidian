@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/Tasks/ObsidianBTTask_FindLocationAroundTarget.h"
+
+// ~ Core
 #include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
+
+// ~ Project
 
 UObsidianBTTask_FindLocationAroundTarget::UObsidianBTTask_FindLocationAroundTarget()
 {

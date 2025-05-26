@@ -1,14 +1,17 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/EQS/ObsidianEnvQueryContext_Player.h"
-#include "AI/AObsidianAIControllerBase.h"
+
+// ~ Core
 #include "BehaviorTree/BlackboardComponent.h"
-#include "Characters/Enemies/ObsidianRegularEnemy.h"
-#include "Characters/Heroes/ObsidianHero.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/Items/EnvQueryItemType_Actor.h"
 #include "Kismet/GameplayStatics.h"
+
+// ~ Project
+#include "AI/AObsidianAIControllerBase.h"
+#include "Characters/Enemies/ObsidianRegularEnemy.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "Obsidian/ObsidianGameModule.h"
 
 void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const

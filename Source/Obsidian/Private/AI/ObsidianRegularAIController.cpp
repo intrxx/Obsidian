@@ -1,8 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/ObsidianRegularAIController.h"
+
+// ~ Core
 #include "AbilitySystemGlobals.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 

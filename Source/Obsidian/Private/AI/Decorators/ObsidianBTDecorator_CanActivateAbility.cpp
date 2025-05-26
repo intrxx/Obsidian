@@ -1,12 +1,15 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/Decorators/ObsidianBTDecorator_CanActivateAbility.h"
+
+// ~ Core
 #include "BehaviorTree/BlackboardComponent.h"
 #include "AbilitySystemComponent.h"
 #include "AIController.h"
 #include "GameplayAbilitySpec.h"
 #include "Abilities/GameplayAbility.h"
+
+// ~ Project
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "Core/ObsidianAbilitySystemFunctionLibrary.h"
 #include "Obsidian/ObsidianGameModule.h"

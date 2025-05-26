@@ -1,10 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "AI/Tasks/ObsidianBTTask_SetGameplayAttribute.h"
+
+// ~ Core
 #include "AIController.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
+// ~ Project
 
 UObsidianBTTask_SetGameplayAttribute::UObsidianBTTask_SetGameplayAttribute()
 {

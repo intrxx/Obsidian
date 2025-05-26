@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AI/ObsidianEnemyInterface.h"
 
-// Add default functionality here for any IObsidianEnemyInterface functions that are not pure virtual.
+// ~ Core
+
+// ~ Project
+
 void IObsidianEnemyInterface::SetCombatTarget_Implementation(AActor* InTarget)
 {
 }

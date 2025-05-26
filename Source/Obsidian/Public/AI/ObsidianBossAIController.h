@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "AObsidianAIControllerBase.h"
 #include "ObsidianBossAIController.generated.h"
 
