@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Core/ObsidianBlueprintFunctionLibrary.h"
+
+// ~ Core
 #include "Engine/Console.h"
 #include "Kismet/GameplayStatics.h"
+
+// ~ Project
 #include "Obsidian/ObsidianGameModule.h"
 
 bool UObsidianBlueprintFunctionLibrary::IsActorOfClass(const AActor* ActorToCheck, UClass* ActorClass)

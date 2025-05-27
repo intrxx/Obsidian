@@ -2,10 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "ObsidianEquipmentList.h"
-#include "Components/ActorComponent.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+#include "Components/ActorComponent.h"
 #include "ObsidianEquipmentComponent.generated.h"
 
 class UObsidianInventoryComponent;

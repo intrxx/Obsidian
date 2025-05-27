@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Combat/ObsidianCombatInterface.h"
 
+// ~ Core
 #include "GameplayTagContainer.h"
+
+// ~ Project
 
 int32 IObsidianCombatInterface::GetCharacterLevel()
 {

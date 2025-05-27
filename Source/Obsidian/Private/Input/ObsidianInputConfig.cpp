@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Input/ObsidianInputConfig.h"
-#include "Obsidian/ObsidianGameModule.h"
+
+// ~ Core
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor
+
+// ~ Project
+#include "Obsidian/ObsidianGameModule.h"
 
 UObsidianInputConfig::UObsidianInputConfig(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

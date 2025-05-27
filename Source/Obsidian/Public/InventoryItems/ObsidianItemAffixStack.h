@@ -2,9 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
+
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianItemAffixStack.generated.h"
 

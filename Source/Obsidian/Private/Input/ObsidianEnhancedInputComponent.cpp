@@ -2,6 +2,10 @@
 
 #include "Input/ObsidianEnhancedInputComponent.h"
 
+// ~ Core
+
+// ~ Project
+
 UObsidianEnhancedInputComponent::UObsidianEnhancedInputComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

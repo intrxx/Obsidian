@@ -1,14 +1,18 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+
+// ~ Core
+#include "Engine/ActorChannel.h"
+#include "Net/UnrealNetwork.h"
+
+// ~ Project
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "Engine/ActorChannel.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
-#include "Net/UnrealNetwork.h"
 
 DEFINE_LOG_CATEGORY(LogEquipment);
 

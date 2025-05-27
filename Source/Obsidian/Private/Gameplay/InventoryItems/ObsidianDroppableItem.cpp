@@ -1,17 +1,21 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
+
+// ~ Core
+#include "Components/WidgetComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
+
+// ~ Project
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Components/WidgetComponent.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "Kismet/GameplayStatics.h"
-#include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Inventory/ObsidianItemWorldName.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"

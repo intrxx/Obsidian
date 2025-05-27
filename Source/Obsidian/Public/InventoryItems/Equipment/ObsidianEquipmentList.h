@@ -2,11 +2,15 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
-#include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+#include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianEquipmentList.generated.h"
 
 class UObsidianAbilitySystemComponent;
@@ -15,6 +19,9 @@ class UObsidianInventoryItemDefinition;
 class UObsidianEquipmentComponent;
 struct FObsidianEquipmentList;
 
+/**
+ * 
+ */
 UENUM(BlueprintType)
 enum class EObsidianEquipmentChangeType : uint8
 {
@@ -26,6 +33,9 @@ enum class EObsidianEquipmentChangeType : uint8
 	ECT_MAX
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianEquipmentChangeMessage
 {
@@ -47,6 +57,9 @@ struct FObsidianEquipmentChangeMessage
 	EObsidianEquipmentChangeType ChangeType = EObsidianEquipmentChangeType::ECT_None;
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianEquipmentSlotDefinition
 {

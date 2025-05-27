@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Core/ObsidianAssetManager.h"
+
+// ~ Core
+
+// ~ Project
 
 UObsidianAssetManager& UObsidianAssetManager::Get()
 {

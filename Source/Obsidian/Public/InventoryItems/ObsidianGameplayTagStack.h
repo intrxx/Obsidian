@@ -2,8 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
+
+
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianGameplayTagStack.generated.h"
 

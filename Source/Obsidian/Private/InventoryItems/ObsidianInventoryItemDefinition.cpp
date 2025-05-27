@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+
+// ~ Core
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"

@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianBlueprintFunctionLibrary.generated.h"
 

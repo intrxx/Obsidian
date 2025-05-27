@@ -1,17 +1,19 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Core/ObsidianAbilitySystemFunctionLibrary.h"
 
+// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Engine/OverlapResult.h"
+#include "Kismet/GameplayStatics.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/Data/ObsidianEnemyTypeInfo.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
-#include "Engine/OverlapResult.h"
 #include "Game/ObsidianGameMode.h"
-#include "Kismet/GameplayStatics.h"
 
 void UObsidianAbilitySystemFunctionLibrary::InitializeEnemyDefaultAttributesWithClass(const UObject* WorldContextObject, UObsidianAbilitySystemComponent* ASC,
                                                                    const EObsidianEnemyClass EnemyClass, const float Level, UObject* SourceObject)

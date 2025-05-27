@@ -1,6 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
+
+// ~ Core
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const

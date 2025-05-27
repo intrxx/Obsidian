@@ -2,8 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "InventoryItems/ObsidianPickableInterface.h"
+
 #include "GameFramework/Actor.h"
 #include "ObsidianWorldCollectable.generated.h"
 

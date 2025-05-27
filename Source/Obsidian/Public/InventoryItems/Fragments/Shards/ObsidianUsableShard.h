@@ -2,13 +2,21 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
+
+
 #include "ObsidianUsableShard.generated.h"
 
 class UObsidianInventoryComponent;
 class UObsidianInventoryItemInstance;
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianItemsMatchingUsableContext
 {

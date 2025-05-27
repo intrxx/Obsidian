@@ -2,9 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+
+// ~ Project
 #include "GameplayEffectTypes.h"
+
+#include "GameFramework/Actor.h"
 #include "ObsidianProjectile.generated.h"
 
 class UNiagaraSystem;

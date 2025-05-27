@@ -2,9 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
 #include "Kismet/GameplayStatics.h"
+
+// ~ Project
+
+
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianGameplayStatics.generated.h"
 

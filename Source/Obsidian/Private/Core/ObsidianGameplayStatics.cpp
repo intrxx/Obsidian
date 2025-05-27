@@ -1,8 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Core/ObsidianGameplayStatics.h"
 
+// ~ Core
+
+// ~ Project
 #include "Obsidian/ObsidianGameplayTags.h"
 
 FText UObsidianGameplayStatics::GetHeroClassText(const EObsidianHeroClass HeroClass)

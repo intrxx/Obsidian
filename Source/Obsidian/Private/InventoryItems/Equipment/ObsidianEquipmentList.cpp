@@ -1,7 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
+
+// ~ Core
 #include "AbilitySystemGlobals.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "Characters/Player/ObsidianPlayerController.h"

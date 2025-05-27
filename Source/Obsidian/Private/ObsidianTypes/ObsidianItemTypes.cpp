@@ -1,6 +1,10 @@
 ﻿// Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+// ~ Core
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"

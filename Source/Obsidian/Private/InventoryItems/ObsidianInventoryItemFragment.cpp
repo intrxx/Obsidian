@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+
+// ~ Core
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
 const UObsidianInventoryItemFragment* UObsidianInventoryFunctionLibrary::FindItemDefinitionFragment(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass)

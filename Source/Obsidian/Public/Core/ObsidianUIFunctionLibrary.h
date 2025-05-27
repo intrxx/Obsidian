@@ -2,9 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
 #include "GameplayTags.h"
+
+// ~ Project
+
+
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianUIFunctionLibrary.generated.h"
 
 class UObsidianInventoryWidgetController;

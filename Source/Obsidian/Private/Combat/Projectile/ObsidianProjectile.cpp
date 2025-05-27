@@ -2,13 +2,16 @@
 
 #include "Combat/Projectile/ObsidianProjectile.h"
 
+// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
-#include "Combat/Projectile/OProjectileMovementComponent.h"
 #include "Components/AudioComponent.h"
 #include "Components/SphereComponent.h"
 #include "Kismet/GameplayStatics.h"
+
+// ~ Project
+#include "Combat/Projectile/OProjectileMovementComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianProjectile::AObsidianProjectile(const FObjectInitializer& ObjectInitializer)

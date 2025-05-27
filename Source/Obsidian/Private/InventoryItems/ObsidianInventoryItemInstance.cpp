@@ -1,12 +1,16 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+
+// ~ Core
+#include "Net/UnrealNetwork.h"
+#include "GameFramework/Character.h"
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
-#include "Net/UnrealNetwork.h"
-#include "GameFramework/Character.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)

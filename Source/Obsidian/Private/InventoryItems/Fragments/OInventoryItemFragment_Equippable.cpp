@@ -1,6 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
+
+// ~ Core
+
+// ~ Project
 #include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 

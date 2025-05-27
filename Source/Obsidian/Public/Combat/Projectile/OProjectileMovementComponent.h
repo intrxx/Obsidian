@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "OProjectileMovementComponent.generated.h"
 

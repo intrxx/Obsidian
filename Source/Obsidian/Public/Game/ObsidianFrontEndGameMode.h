@@ -2,10 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-#include "GameFramework/GameModeBase.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
+#include "GameFramework/GameModeBase.h"
 #include "ObsidianFrontEndGameMode.generated.h"
 
 class AObsidianHero;
@@ -13,6 +16,9 @@ struct FGameplayTag;
 class AObsidianCharacterCreationHero;
 class UCommonActivatableWidget;
 
+/**
+ * 
+ */
 USTRUCT()
 struct FObsidianHeroClassParams
 {

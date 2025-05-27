@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "Gameplay//ObsidianWorldCollectable.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
+
+// ~ Core
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
+
+// ~ Project
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 AObsidianWorldCollectable::AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

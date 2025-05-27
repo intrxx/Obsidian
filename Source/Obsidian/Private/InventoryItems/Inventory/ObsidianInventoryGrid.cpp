@@ -1,10 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/Inventory/ObsidianInventoryGrid.h"
+
+// ~ Core
+#include "GameFramework/GameplayMessageSubsystem.h"
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "GameFramework/GameplayMessageSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 // ---- Start of FObsidianInventoryEntry ----

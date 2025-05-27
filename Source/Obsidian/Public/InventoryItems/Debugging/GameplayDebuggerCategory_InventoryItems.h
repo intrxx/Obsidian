@@ -2,10 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-
 #if WITH_GAMEPLAY_DEBUGGER_MENU
 #include "GameplayDebuggerCategory.h"
+
+// ~ Project
 
 class UObsidianInventoryComponent;
 

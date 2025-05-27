@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "ObsidianUsableShard_Identification.generated.h"
 

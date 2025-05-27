@@ -2,13 +2,20 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "InventoryItems/ObsidianInventoryItemFragment.h"
+
+// ~ Project
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+#include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Affixes.generated.h"
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianItemAffix
 {

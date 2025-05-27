@@ -1,8 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems/ObsidianPickableInterface.h"
+
+// ~ Core
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+
+// ~ Project
 
 bool FPickupTemplate::IsValid() const
 {

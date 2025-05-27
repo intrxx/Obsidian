@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianInventoryGrid.generated.h"
 
@@ -11,6 +16,9 @@ class UObsidianInventoryItemInstance;
 class UObsidianInventoryComponent;
 struct FObsidianInventoryGrid;
 
+/**
+ * 
+ */
 UENUM(BlueprintType)
 enum class EObsidianInventoryChangeType : uint8
 {
@@ -23,6 +31,9 @@ enum class EObsidianInventoryChangeType : uint8
 	ICT_MAX
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianInventoryChangeMessage
 {

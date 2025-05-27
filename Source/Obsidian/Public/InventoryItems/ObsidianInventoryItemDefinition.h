@@ -2,8 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
+
+
 #include "ObsidianInventoryItemDefinition.generated.h"
 
 class UObsidianInventoryItemFragment;

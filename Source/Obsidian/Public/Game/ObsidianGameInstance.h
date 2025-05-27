@@ -2,11 +2,17 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "CommonGameInstance.h"
 #include "ObsidianGameInstance.generated.h"
 
 class AObsidianHero;
+
 /**
  * 
  */

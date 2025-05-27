@@ -2,8 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "GameplayTagContainer.h"
+
 #include "GameFramework/Actor.h"
 #include "ObsidianSpawnedEquipmentPiece.generated.h"
 

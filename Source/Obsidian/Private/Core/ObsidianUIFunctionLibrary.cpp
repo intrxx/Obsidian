@@ -1,11 +1,15 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Core/ObsidianUIFunctionLibrary.h"
+
+// ~ Core
+#include "Kismet/GameplayStatics.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
-#include "Kismet/GameplayStatics.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetControllerBase.h"
 

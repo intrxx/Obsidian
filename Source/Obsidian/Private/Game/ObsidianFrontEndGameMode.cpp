@@ -1,9 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "Game/ObsidianFrontEndGameMode.h"
+
+// ~ Core
+#include "Kismet/GameplayStatics.h"
+
+// ~ Project
 #include "Characters/ObsidianCharacterCreationHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Kismet/GameplayStatics.h"
 
 void FObsidianHeroClassParams::Reset()
 {

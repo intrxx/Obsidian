@@ -2,13 +2,20 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "Obsidian/ObsidianGameplayTags.h"
+
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "ObsidianItemTypes.generated.h"
 
 class UObsidianInventoryItemInstance;
 
+/**
+ * 
+ */
 namespace ObsidianInventoryItemsStatics
 {
 	static const FVector2D InventorySlotSize(64.0f, 64.0f);
@@ -22,6 +29,9 @@ namespace ObsidianInventoryItemsStatics
 	
 }
 
+/**
+ * 
+ */
 namespace ObsidianDefaultStackCounts 
 {
 	static constexpr int32 CurrentStackCount = 1;
@@ -49,6 +59,9 @@ namespace ObsidianDefaultStackCounts
 	}
 }
 
+/**
+ * 
+ */
 namespace ObsidianAffixLimit
 {
 	static constexpr int32 NormalItemAffixesCountLimit = 0;
@@ -76,6 +89,9 @@ namespace ObsidianAffixLimit
 	}
 }
 
+/**
+ * 
+ */
 UENUM(BlueprintType)
 enum class EObsidianEquipResult : uint8
 {
@@ -118,6 +134,9 @@ enum class EObsidianEquipResult : uint8
 	CanEquip UMETA(DisplayName="Can Equip")
 };
 
+/**
+ * 
+ */
 UENUM(BlueprintType)
 enum class EObsidianAffixType : uint8
 {
@@ -127,6 +146,9 @@ enum class EObsidianAffixType : uint8
 	Suffix,
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianAddingStacksResult
 {
@@ -154,6 +176,9 @@ public:
 	UObsidianInventoryItemInstance* LastAddedToInstance = nullptr;
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianStacksUIData
 {
@@ -184,6 +209,9 @@ public:
 	int32 MaxItemStackCount = 0;
 };
 
+/**
+ * 
+ */
 USTRUCT()
 struct FDraggedItem
 {
@@ -220,6 +248,9 @@ public:
 	int32 Stacks = 0;
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianAffixDescriptionRow
 {

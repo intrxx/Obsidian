@@ -1,12 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h"
 
+// ~ Core
 #if WITH_GAMEPLAY_DEBUGGER_MENU
-
 #include "Engine/Canvas.h"
 #include "CanvasItem.h"
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"

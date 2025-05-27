@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
+
+// ~ Core
+
+// ~ Project
 
 AObsidianSpawnedEquipmentPiece::AObsidianSpawnedEquipmentPiece(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

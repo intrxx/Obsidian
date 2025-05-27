@@ -2,8 +2,10 @@
 
 #include "Gameplay/ObsidianItemSpawner.h"
 
+// ~ Core
+
+// ~ Project
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
-#include "Kismet/GameplayStatics.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectInitializer)

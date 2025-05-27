@@ -1,13 +1,16 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+
+// ~ Core
 #include "Engine/ActorChannel.h"
+#include "Net/UnrealNetwork.h"
+
+// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
-#include "Net/UnrealNetwork.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 DEFINE_LOG_CATEGORY(LogInventory);

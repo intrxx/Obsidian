@@ -1,7 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "InventoryItems//ObsidianGameplayTagStack.h"
+
+// ~ Core
 #include "UObject/Stack.h"
+
+// ~ Project
 
 // ---- Start of FGameplayTagStack ----
 

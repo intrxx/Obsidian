@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UObject/Interface.h"
 #include "ObsidianPickableInterface.generated.h"
 
@@ -10,6 +15,9 @@ class UObsidianInventoryComponent;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FPickupTemplate
 {
@@ -50,6 +58,9 @@ public:
 	TObjectPtr<UObsidianInventoryItemInstance> Item = nullptr;
 };
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FPickupContent
 {
@@ -63,6 +74,9 @@ public:
 	FPickupTemplate Template = FPickupTemplate(nullptr, 1);
 };
 
+/**
+ * 
+ */
 UINTERFACE(MinimalAPI, BlueprintType, meta = (CannotImplementInterfaceInBlueprint))
 class UObsidianPickableInterface : public UInterface
 {

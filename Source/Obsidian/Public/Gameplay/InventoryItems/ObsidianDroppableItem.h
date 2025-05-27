@@ -2,10 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "Gameplay/ObsidianWorldCollectable.h"
+
+// ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+#include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
 
 class AObsidianPlayerController;

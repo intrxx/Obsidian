@@ -2,10 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "ObsidianInventoryGrid.h"
-#include "Components/ActorComponent.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+#include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
 class FGameplayDebuggerCategory_InventoryItems;
@@ -13,6 +17,9 @@ class UObsidianInventoryWidgetController;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianDefaultItemTemplate
 {
