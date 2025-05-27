@@ -2,11 +2,15 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
-#include "UI/ObsidianWidgetBase.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
+
+#include "UI/ObsidianWidgetBase.h"
 #include "ObsidianMainOverlay.generated.h"
 
 class UObsidianOverlayExperienceBar;

@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ObsidianHUD.h"
+
+// ~ Core
+
+// ~ Project
 #include "Characters/Heroes/ObsidianHero.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"

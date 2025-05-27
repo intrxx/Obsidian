@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ObsidianWidgetBase.h"
+
+// ~ Core
+
+// ~ Project
 
 void UObsidianWidgetBase::SetWidgetController(UObject* InWidgetController)
 {

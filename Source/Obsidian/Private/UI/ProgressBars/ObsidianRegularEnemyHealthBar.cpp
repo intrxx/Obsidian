@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
+
+// ~ Core
+
+// ~ Project
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 
 void UObsidianRegularEnemyHealthBar::HandleWidgetControllerSet()

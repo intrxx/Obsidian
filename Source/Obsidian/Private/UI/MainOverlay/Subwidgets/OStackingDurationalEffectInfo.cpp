@@ -1,10 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
-#include "CommonTextBlock.h"
-#include "Obsidian/ObsidianGameModule.h"
 
+// ~ Core
+#include "CommonTextBlock.h"
+
+// ~ Project
+#include "Obsidian/ObsidianGameModule.h"
 
 void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)
 {

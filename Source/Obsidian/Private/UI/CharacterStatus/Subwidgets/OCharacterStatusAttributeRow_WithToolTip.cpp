@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow_WithToolTip.h"
-#include "UI/Subwidgets/ObsidianToolTipBase.h"
+
+// ~ Core
 #include "Components/Button.h"
+
+// ~ Project
+#include "UI/Subwidgets/ObsidianToolTipBase.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/CharacterStatus/Subwidgets/ObsidianAttributeToolTip.h"
 

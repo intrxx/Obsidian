@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Components/ObsidianRadialProgressBar.h"
+
+// ~ Core
+
+// ~ Project
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 

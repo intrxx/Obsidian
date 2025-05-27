@@ -1,10 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/Inventory/ObsidianDraggedItem.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+
+// ~ Core
 #include "Components/Image.h"
 #include "CommonTextBlock.h"
 #include "Components/SizeBox.h"
+
+// ~ Project
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"

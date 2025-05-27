@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "ObsidianProgressBarBase.h"
 #include "ObsidianBasicHealthBar.generated.h"
 

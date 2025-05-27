@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
-#include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
+
+// ~ Project
+#include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe_Mana::HandleWidgetControllerSet()

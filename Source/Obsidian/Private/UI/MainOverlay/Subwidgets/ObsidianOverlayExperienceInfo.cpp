@@ -1,10 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/MainOverlay/Subwidgets/ObsidianOverlayExperienceInfo.h"
 
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/SizeBox.h"
+
+// ~ Project
 
 void UObsidianOverlayExperienceInfo::NativeConstruct()
 {

@@ -1,11 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
 
+// ~ Core
 #include "Components/Button.h"
-#include "UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h"
 
+// ~ Project
+#include "UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h"
 
 void UObsidianEffectInfoBase::NativeConstruct()
 {

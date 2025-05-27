@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
-#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
+
+// ~ Project
+#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 
 void UObsidianOverlayEnemyBar::ResetStyle() const
 {

@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
+
+// ~ Core
+#include "Core/ObsidianUIFunctionLibrary.h"
+
+// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Core/ObsidianUIFunctionLibrary.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()

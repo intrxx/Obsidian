@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/DamageNumbers/ObsidianDamageNumber.h"
 
+// ~ Core
 #include "CommonTextBlock.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 void UObsidianDamageNumber::InitializeDamageNumber(const FObsidianDamageTextProps& DamageTextProps)

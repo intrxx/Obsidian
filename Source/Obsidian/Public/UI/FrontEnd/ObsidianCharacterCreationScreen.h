@@ -2,8 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterCreationScreen.generated.h"
 
@@ -14,6 +18,9 @@ class UObsidianButtonBase;
 class USizeBox;
 class UCommonTextBlock;
 
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianHeroInfo
 {

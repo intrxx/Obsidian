@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianOverlayExperienceInfo.generated.h"
 

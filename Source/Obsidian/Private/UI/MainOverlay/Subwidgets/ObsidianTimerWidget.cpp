@@ -1,8 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/MainOverlay/Subwidgets/ObsidianTimerWidget.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
+
+// ~ Project
 
 void UObsidianTimerWidget::NativeConstruct()
 {

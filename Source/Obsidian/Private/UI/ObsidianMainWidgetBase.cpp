@@ -2,6 +2,10 @@
 
 #include "UI/ObsidianMainWidgetBase.h"
 
+// ~ Core
+
+// ~ Project
+
 void UObsidianMainWidgetBase::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);

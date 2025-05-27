@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "CommonButtonBase.h"
 #include "ObsidianCharacterEntry.generated.h"
 

@@ -2,7 +2,10 @@
 
 #pragma once
 
+// ~ Core
 #include "NativeGameplayTags.h"
+
+// ~ Project
 
 namespace ObsidianGameplayTags
 {

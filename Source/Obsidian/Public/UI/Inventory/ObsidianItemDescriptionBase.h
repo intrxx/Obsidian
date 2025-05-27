@@ -2,9 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetBase.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
+
+
+#include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemDescriptionBase.generated.h"
 
 struct FGameplayTag;

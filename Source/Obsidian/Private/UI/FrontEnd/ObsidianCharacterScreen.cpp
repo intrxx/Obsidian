@@ -1,15 +1,18 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/FrontEnd/ObsidianCharacterScreen.h"
-#include "UI/FrontEnd/ObsidianCharacterEntry.h"
+
+// ~ Core
 #include "CommonHierarchicalScrollBox.h"
 #include "CommonTextBlock.h"
 #include "CommonUIExtensions.h"
+#include "Kismet/GameplayStatics.h"
+
+// ~ Project
+#include "UI/FrontEnd/ObsidianCharacterEntry.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Game/ObsidianGameInstance.h"
-#include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
 

@@ -2,13 +2,19 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
+
+
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
-class UObsidianSlotBlockadeItem;
 struct FObsidianItemWidgetData;
+
+class UObsidianSlotBlockadeItem;
 class UObsidianItem;
 class UObsidianItemSlot;
 class UObsidianInventoryItemDefinition;

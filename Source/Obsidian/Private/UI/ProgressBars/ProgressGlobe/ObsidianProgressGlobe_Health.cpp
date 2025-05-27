@@ -1,10 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
+
+// ~ Project
 #include "UI/Components/ObsidianRadialProgressBar.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 

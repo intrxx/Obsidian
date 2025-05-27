@@ -1,11 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "ObsidianGamemodule.h"
-#include "Modules/ModuleManager.h"
 
+// ~ Core
+#include "Modules/ModuleManager.h"
 #if WITH_GAMEPLAY_DEBUGGER
 #include "GameplayDebugger.h"
+
+// ~ Project
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h"
 #endif

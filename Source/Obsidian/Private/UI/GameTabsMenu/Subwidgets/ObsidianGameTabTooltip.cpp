@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabTooltip.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/Spacer.h"
+
+// ~ Project
 
 void UObsidianGameTabTooltip::NativePreConstruct()
 {

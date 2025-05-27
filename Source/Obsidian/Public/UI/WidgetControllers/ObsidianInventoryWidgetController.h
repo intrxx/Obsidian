@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryWidgetController.generated.h"
 
@@ -17,6 +22,9 @@ class UObsidianItem;
 class UObsidianDraggedItem;
 class UObsidianSlotBlockadeItem;
 
+/**
+ * 
+ */
 USTRUCT()
 struct FObsidianItemWidgetData
 {

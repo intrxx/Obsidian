@@ -1,10 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
-#include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabTooltip.h"
+
+// ~ Core
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
+
+// ~ Project
+#include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabTooltip.h"
 
 void UObsidianGameTabButton::NativePreConstruct()
 {

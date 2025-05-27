@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
-#include "Characters/Player/ObsidianPlayerController.h"
-#include "Characters/Player/ObsidianPlayerState.h"
+
+// ~ Core
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/ProgressBar.h"
+
+// ~ Project
+#include "Characters/Player/ObsidianPlayerController.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianOverlayExperienceInfo.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 

@@ -2,10 +2,18 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "CommonActivatableWidget.h"
 #include "ObsidianActivatableWidget.generated.h"
 
+/**
+ * 
+ */
 UENUM(BlueprintType)
 enum class EObsidianWidgetInputMode : uint8
 {

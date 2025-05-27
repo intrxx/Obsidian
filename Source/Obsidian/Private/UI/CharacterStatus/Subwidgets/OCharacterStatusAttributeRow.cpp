@@ -1,11 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/SizeBox.h"
 #include "Components/Spacer.h"
-#include "UI/CharacterStatus/ObsidianCharacterStatus.h"
+
+// ~ Project
 
 void UOCharacterStatusAttributeRow::NativePreConstruct()
 {

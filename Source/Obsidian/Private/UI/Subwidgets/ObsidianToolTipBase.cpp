@@ -1,8 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Subwidgets/ObsidianToolTipBase.h"
+
+// ~ Core
 #include "Blueprint/WidgetLayoutLibrary.h"
+
+// ~ Project
 
 FVector2D UObsidianToolTipBase::GetDesiredPosition() const
 {

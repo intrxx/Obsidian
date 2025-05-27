@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "ObsidianOverlayBossEnemyBar.generated.h"
 

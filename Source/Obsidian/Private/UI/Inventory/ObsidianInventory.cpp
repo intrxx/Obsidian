@@ -1,12 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Inventory/ObsidianInventory.h"
 
+// ~ Core
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/GridPanel.h"
 #include "Components/GridSlot.h"
 #include "Components/SizeBox.h"
+
+// ~ Project
 #include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
 #include "UI/Inventory/ObsidianItem.h"
 #include "UI/Inventory/ObsidianSlotBlockadeItem.h"

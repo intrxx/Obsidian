@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterScreen.generated.h"
 
@@ -11,6 +16,7 @@ class AObsidianFrontEndGameMode;
 class UCommonHierarchicalScrollBox;
 class UCommonTextBlock;
 class UObsidianButtonBase;
+
 /**
  * 
  */

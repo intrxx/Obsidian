@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Inventory/ObsidianDraggedItem_Simple.h"
+
+// ~ Core
 #include "Components/SizeBox.h"
 #include "Components/Image.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianDraggedItem_Simple::NativeConstruct()

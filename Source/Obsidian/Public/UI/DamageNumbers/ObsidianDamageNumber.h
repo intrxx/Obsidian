@@ -2,13 +2,19 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianDamageNumber.generated.h"
 
 class UCommonTextStyle;
 struct FObsidianDamageTextProps;
 class UCommonTextBlock;
+
 /**
  * 
  */

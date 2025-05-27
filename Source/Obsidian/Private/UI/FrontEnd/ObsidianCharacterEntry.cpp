@@ -1,10 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/FrontEnd/ObsidianCharacterEntry.h"
 
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/Border.h"
+
+// ~ Project
 
 void UObsidianCharacterEntry::NativeConstruct()
 {

@@ -1,9 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/Inventory/ObsidianItem.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianItem::NativeConstruct()

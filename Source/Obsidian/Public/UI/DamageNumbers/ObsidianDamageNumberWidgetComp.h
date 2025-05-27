@@ -1,9 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "Components/WidgetComponent.h"
-#include "ObsidianTypes/ObsidianUITypes.h"
 #include "ObsidianDamageNumberWidgetComp.generated.h"
 
 /**

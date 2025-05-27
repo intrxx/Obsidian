@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianGameTabButton.generated.h"
 
@@ -11,7 +16,6 @@ class UButton;
 class UImage;
 class UOverlay;
 class USizeBox;
-
 
 /**
  * 

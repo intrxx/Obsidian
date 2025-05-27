@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Inventory/ObsidianItemDescriptionBase.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/HorizontalBox.h"
 #include "Components/Image.h"
 #include "Components/Overlay.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianItemDescriptionBase::NativeConstruct()

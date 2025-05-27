@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
 #include "ObsidianDurationalEffectInfo.generated.h"
 

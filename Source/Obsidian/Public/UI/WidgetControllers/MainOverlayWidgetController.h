@@ -2,13 +2,18 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetControllerBase.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
+
+#include "UI/ObsidianWidgetControllerBase.h"
 #include "MainOverlayWidgetController.generated.h"
 
 struct FObsidianEffectUIData;
+
 class UOStackingDurationalEffectInfo;
 class UObsidianDurationalEffectInfo;
 class UObsidianAbilitySystemComponent;

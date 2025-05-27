@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ObsidianActivatableWidget.h"
-#include "CommonUITypes.h"
+
+// ~ Core
 #include "ICommonInputModule.h"
+
+// ~ Project
 
 #define LOCTEXT_NAMESPACE "Obsidian"
 

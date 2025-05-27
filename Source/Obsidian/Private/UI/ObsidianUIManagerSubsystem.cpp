@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ObsidianUIManagerSubsystem.h"
+
+// ~ Core
 #include "GameFramework/HUD.h"
 #include "GameUIPolicy.h"
 #include "PrimaryGameLayout.h"
 #include "CommonLocalPlayer.h"
+
+// ~ Project
 
 UObsidianUIManagerSubsystem::UObsidianUIManagerSubsystem()
 {

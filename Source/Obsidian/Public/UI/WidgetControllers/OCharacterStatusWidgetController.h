@@ -2,9 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetControllerBase.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
+
+#include "UI/ObsidianWidgetControllerBase.h"
 #include "OCharacterStatusWidgetController.generated.h"
 
 struct FOnAttributeChangeData;

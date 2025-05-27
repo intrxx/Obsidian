@@ -1,7 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/Components/ObsidianButtonBase.h"
+
+// ~ Core
 #include "CommonActionWidget.h"
+
+// ~ Project
 
 #include UE_INLINE_GENERATED_CPP_BY_NAME(ObsidianButtonBase)
 

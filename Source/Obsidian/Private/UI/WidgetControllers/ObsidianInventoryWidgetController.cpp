@@ -1,10 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
-#include <GameFramework/GameplayMessageSubsystem.h>
-#include "UI/Inventory/ObsidianItemDescriptionBase.h"
+
+// ~ Core
+#include "GameFramework/GameplayMessageSubsystem.h"
 #include "Blueprint/SlateBlueprintLibrary.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
+
+// ~ Project
+#include "UI/Inventory/ObsidianItemDescriptionBase.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"

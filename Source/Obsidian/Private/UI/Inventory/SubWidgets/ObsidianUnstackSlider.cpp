@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/Button.h"
 #include "Components/SizeBox.h"
 #include "Components/Slider.h"
+
+// ~ Project
 
 void UObsidianUnstackSlider::NativeConstruct()
 {

@@ -2,9 +2,14 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
 #include "GameplayTagContainer.h"
+
+// ~ Project
+
+
+#include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
 #include "ObsidianItemSlot_Equipment.generated.h"
 
 /**

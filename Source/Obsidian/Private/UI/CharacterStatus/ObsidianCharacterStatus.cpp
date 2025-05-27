@@ -1,10 +1,13 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Components/ScrollBox.h"
+
+// ~ Project
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow_WithToolTip.h"
 

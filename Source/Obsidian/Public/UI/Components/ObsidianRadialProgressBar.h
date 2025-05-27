@@ -2,12 +2,18 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "Blueprint/UserWidget.h"
 #include "ObsidianRadialProgressBar.generated.h"
 
 class USizeBox;
 class UImage;
+
 /**
  * 
  */

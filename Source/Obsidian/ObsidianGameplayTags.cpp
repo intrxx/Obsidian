@@ -1,7 +1,10 @@
 ﻿// Copyright 2024 out of sCope team - Michał Ogiński
 
+// ~ Core
 #include "ObsidianGameplayTags.h"
 #include "GameplayTagsManager.h"
+
+// ~ Project
 #include "ObsidianGameModule.h"
 
 namespace ObsidianGameplayTags

@@ -1,11 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
+
+// ~ Core
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/SizeBox.h"
 #include "Kismet/KismetMathLibrary.h"
+
+// ~ Project
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe::NativePreConstruct()

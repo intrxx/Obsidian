@@ -1,16 +1,19 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/FrontEnd/ObsidianCharacterCreationScreen.h"
-#include "Input/CommonUIInputTypes.h"
+
+// ~ Core
 #include "CommonTextBlock.h"
 #include "CommonUIExtensions.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
 #include "Components/SizeBox.h"
-#include "Game/ObsidianFrontEndGameMode.h"
+#include "Input/CommonUIInputTypes.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
+
+// ~ Project
+#include "Game/ObsidianFrontEndGameMode.h"
 #include "UI/Components/ObsidianButtonBase.h"
 
 void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const bool bIsOnline)

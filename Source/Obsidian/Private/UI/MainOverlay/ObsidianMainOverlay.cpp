@@ -1,16 +1,19 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
+
+// ~ Core
 #include "Blueprint/WidgetLayoutLibrary.h"
-#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
-#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
-#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Components/Overlay.h"
 #include "Components/VerticalBox.h"
 #include "Components/WrapBox.h"
-#include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Components/CanvasPanelSlot.h"
+
+// ~ Project
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
+#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
+#include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"

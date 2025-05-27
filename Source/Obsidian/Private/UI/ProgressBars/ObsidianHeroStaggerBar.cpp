@@ -1,7 +1,10 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/ProgressBars/ObsidianHeroStaggerBar.h"
+
+// ~ Core
+
+// ~ Project
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 void UObsidianHeroStaggerBar::HandleWidgetControllerSet()

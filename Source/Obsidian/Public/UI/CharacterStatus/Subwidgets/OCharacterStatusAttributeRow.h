@@ -2,7 +2,12 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
+
+
 #include "UI/ObsidianWidgetBase.h"
 #include "OCharacterStatusAttributeRow.generated.h"
 
@@ -12,6 +17,7 @@ class USpacer;
 class UCommonTextStyle;
 class UCommonTextBlock;
 class USizeBox;
+
 /**
  * 
  */

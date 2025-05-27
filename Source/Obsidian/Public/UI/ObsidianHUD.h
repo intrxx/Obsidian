@@ -2,13 +2,18 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
+
+// ~ Project
 #include "ObsidianWidgetControllerBase.h"
+
 #include "GameFramework/HUD.h"
 #include "ObsidianHUD.generated.h"
 
-class UObsidianInventoryWidgetController;
 struct FObsidianHeroWidgetControllerParams;
+
+class UObsidianInventoryWidgetController;
 class UOCharacterStatusWidgetController;
 class UObsidianHeroAttributesComponent;
 class UMainOverlayWidgetController;

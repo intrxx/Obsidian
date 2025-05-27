@@ -1,6 +1,9 @@
 ﻿#pragma once
 
+// ~ Core
 #include "DrawDebugHelpers.h"
+
+// ~ Project
 
 /** Prints a simple debug message to the screen. */
 #define OB_PRINT(DebugMessage, ...) { GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Purple, FString::Printf(TEXT(DebugMessage), __VA_ARGS__)); }

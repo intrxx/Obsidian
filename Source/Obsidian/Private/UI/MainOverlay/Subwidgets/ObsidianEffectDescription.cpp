@@ -2,7 +2,10 @@
 
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h"
 
+// ~ Core
 #include "CommonTextBlock.h"
+
+// ~ Project
 
 void UObsidianEffectDescription::NativePreConstruct()
 {

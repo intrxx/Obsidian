@@ -2,15 +2,22 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "UI/ObsidianWidgetBase.h"
+
+// ~ Project
 #include "UI/Inventory/ObsidianInventory.h"
+
+#include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemSlot.generated.h"
 
 class UObsidianInventory;
 class USizeBox;
 class UImage;
 
+/**
+ * 
+ */
 UENUM()
 enum EObsidianItemSlotState
 {

@@ -1,9 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Settings/ObsidianSettingsMenu.h"
 
+// ~ Core
 #include "Input/CommonUIInputTypes.h"
+
+// ~ Project
 
 void UObsidianSettingsMenu::NativeOnInitialized()
 {

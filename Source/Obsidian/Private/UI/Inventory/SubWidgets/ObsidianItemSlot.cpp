@@ -1,9 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
+
+// ~ Core
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
+
+// ~ Project
 
 void UObsidianItemSlot::NativeConstruct()
 {
