@@ -24,6 +24,7 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Core/ObsidianBlueprintFunctionLibrary.h"
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
@@ -885,6 +886,11 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 	}
 	
 	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, HitLocation, FVector(1.0f, 1.0f, 1.0f));
+
+	// Debug logging
+	UObsidianBlueprintFunctionLibrary::PrintVector3D(this, ItemSpawnTransform.GetLocation(), FString("HeroComp want to spawn item at: "), NAME_None, 10.0f, FLinearColor::Red);
+	DrawDebugSphere(GetWorld(), ItemSpawnTransform.GetLocation(), 16.0f, 8, FColor::Blue, false, 10.0f);
+	
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
 	Item->InitializeItem(DraggedItem);
 	Item->FinishSpawning(ItemSpawnTransform);
