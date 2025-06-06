@@ -26,6 +26,10 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject", CallableWithoutWorldContext, Keywords = "log print", AdvancedDisplay = "3", DevelopmentOnly), Category = "ObsidianBlueprintFunctionLibrary")
 	static void PrintVector3D(const UObject* WorldContextObject, const FVector& VectorToLog, const FString& PrefixMessage = FString("Vector"), const FName Key = NAME_None,
 		const float TimeToDisplay = 3.0f, const FLinearColor MessageColor = FLinearColor::Green, const bool bPrintToScreen = true, const bool bPrintToLog = true);
+
+	UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject", CallableWithoutWorldContext, Keywords = "log print", AdvancedDisplay = "3", DevelopmentOnly), Category = "ObsidianBlueprintFunctionLibrary")
+	static void PrintRotator(const UObject* WorldContextObject, const FRotator& RotatorToLog, const FString& PrefixMessage = FString("Rotator"), const FName Key = NAME_None,
+		const float TimeToDisplay = 3.0f, const FLinearColor MessageColor = FLinearColor::Green, const bool bPrintToScreen = true, const bool bPrintToLog = true);
 	
 	UFUNCTION(BlueprintCallable, meta=(WorldContext="WorldContextObject", CallableWithoutWorldContext, Keywords = "log print", AdvancedDisplay = "3", DevelopmentOnly), Category = "ObsidianBlueprintFunctionLibrary")
 	static void PrintVector2D(const UObject* WorldContextObject, const FVector2D& VectorToLog, const FString& PrefixMessage = FString("Vector"), const FName Key = NAME_None,
