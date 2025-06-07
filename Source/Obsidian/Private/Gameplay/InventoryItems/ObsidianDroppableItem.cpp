@@ -12,6 +12,8 @@
 #include "Characters/Heroes/ObsidianHero.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Components/SplineComponent.h"
+#include "Components/TimelineComponent.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
@@ -33,7 +35,7 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
 	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
 	StaticMeshComp->SetRenderCustomDepth(false);
-	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
+	//StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
 	SetRootComponent(StaticMeshComp);
 	
 	WorldItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WorldItemNameWidgetComp"));
@@ -42,7 +44,7 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	WorldItemNameWidgetComp->SetDrawAtDesiredSize(true);
 	WorldItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	WorldItemNameWidgetComp->SetupAttachment(StaticMeshComp);
-
+	
 	OnClicked.AddDynamic(this, &ThisClass::HandleActorClicked);
 }
 
@@ -56,6 +58,8 @@ void AObsidianDroppableItem::BeginPlay()
 	{
 		bInitializedItemName = InitializeWorldName();
 	}
+
+	InitDropRouteAnimation();
 }
 
 void AObsidianDroppableItem::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -287,6 +291,78 @@ bool AObsidianDroppableItem::InitItemWorldName() const
 		UE_LOG(LogInventory, Error, TEXT("Failed to setup Item World Name in AObsidianDroppableItem::InitItemWorldName."));
 	}
 	return bSuccess;
+}
+
+void AObsidianDroppableItem::InitDropRouteAnimation()
+{
+	// Maybe create it with NewObject like timeline?
+	ItemDropSplineComp = Cast<USplineComponent>(
+		AddComponentByClass(USplineComponent::StaticClass(), true, FTransform::Identity, false)
+		);
+
+	if(ItemDropSplineComp)
+	{
+		//ItemDropSplineComp->RegisterComponent();
+		//ItemDropSplineComp->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+
+		const FVector CurrentActorLocation = GetActorLocation();
+		const FVector InitialLocation = FVector(CurrentActorLocation.X, CurrentActorLocation.Y, CurrentActorLocation.Z + 75.0f);
+		const FVector MidPointLocation = FMath::Lerp(InitialLocation, CurrentActorLocation, 0.50f) + FVector(0.0f, 0.0f, 100.0f);
+		const TArray<FVector> ItemDropRoute =
+			{
+			{InitialLocation},
+			{MidPointLocation},
+			{CurrentActorLocation}
+			};
+		
+		ItemDropSplineComp->SetSplinePoints(ItemDropRoute, ESplineCoordinateSpace::World, true);
+	}
+
+	InitialRotation = GetActorRotation();
+	RandomYawRotation = FMath::FRandRange(-30.0f, 30.0f);
+
+	ItemDropTimelineComp = NewObject<UTimelineComponent>(this);
+	ItemDropTimelineComp->SetLooping(false);
+	ItemDropTimelineComp->RegisterComponent();
+
+	if (ItemDropTimelineComp && DropRotationCurve && DropLocationCurve)
+	{
+		FOnTimelineFloat ProgressUpdate;
+		ProgressUpdate.BindDynamic(this, &ThisClass::UpdateItemDropAnimation);
+		ItemDropTimelineComp->AddInterpFloat(DropLocationCurve, ProgressUpdate);
+
+		FOnTimelineEventStatic OnFinished;
+		OnFinished.BindLambda([this]()
+			{
+				if(ItemDropTimelineComp)
+				{
+					ItemDropTimelineComp->DestroyComponent();
+				}
+				if(ItemDropSplineComp)
+				{
+					ItemDropSplineComp->DestroyComponent();
+				}
+			});
+
+		ItemDropTimelineComp->SetTimelineFinishedFunc(OnFinished);
+		ItemDropTimelineComp->PlayFromStart();
+	}
+}
+
+void AObsidianDroppableItem::UpdateItemDropAnimation(float UpdateAlpha)
+{
+	if(ItemDropSplineComp == nullptr)
+	{
+		return;
+	}
+	
+	const FVector NewLocation = ItemDropSplineComp->GetLocationAtTime(UpdateAlpha, ESplineCoordinateSpace::World, false);
+
+	const float NewYaw = FMath::Lerp(InitialRotation.Yaw, RandomYawRotation, UpdateAlpha);
+	const float NewRoll = FMath::Lerp(InitialRotation.Roll, InitialRotation.Roll + 270.0f, UpdateAlpha);
+	const FRotator NewRotation = FRotator(InitialRotation.Pitch, NewYaw, NewRoll);
+
+	SetActorLocationAndRotation(NewLocation, NewRotation);
 }
 
 void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)

@@ -12,6 +12,8 @@
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
 
+class USplineComponent;
+class UTimelineComponent;
 class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
 class UObsidianItemWorldName;
@@ -79,6 +81,10 @@ private:
 	void SetupItemAppearanceFromDefinition() const;
 
 	bool InitItemWorldName() const;
+	void InitDropRouteAnimation();
+
+	UFUNCTION()
+	void UpdateItemDropAnimation(float UpdateAlpha);
 
 	UObsidianItemDescriptionBase* CreateItemDescription();
 	void DestroyItemDescription();
@@ -94,6 +100,17 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> WorldItemNameWidgetComp;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UTimelineComponent> ItemDropTimelineComp;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCurveFloat> DropRotationCurve;
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UCurveFloat> DropLocationCurve;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<USplineComponent> ItemDropSplineComp;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianItemWorldName> ItemWorldNameClass;
@@ -111,4 +128,10 @@ private:
 	int32 DroppedItemStacks = 1;
 
 	bool bInitializedItemName = false;
+
+	/**
+	 * Item Drop Route animation.
+	 */
+	FRotator InitialRotation = FRotator::ZeroRotator;
+	float RandomYawRotation = 0.0f;
 };
