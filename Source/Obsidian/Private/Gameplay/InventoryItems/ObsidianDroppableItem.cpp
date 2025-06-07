@@ -113,7 +113,8 @@ bool AObsidianDroppableItem::InitializeWorldName()
 	
 	WorldItemNameWidgetComp->SetWidget(ItemWorldName);
 	WorldItemNameWidgetComp->InitWidget();
-
+	WorldItemNameWidgetComp->SetVisibility(false);
+	
 	return bSuccess;
 }
 
@@ -321,18 +322,18 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 	InitialRotation = GetActorRotation();
 	RandomYawRotation = FMath::FRandRange(-30.0f, 30.0f);
 
-	ItemDropTimelineComp = NewObject<UTimelineComponent>(this);
+	UTimelineComponent* ItemDropTimelineComp = NewObject<UTimelineComponent>(this);
 	ItemDropTimelineComp->SetLooping(false);
 	ItemDropTimelineComp->RegisterComponent();
 
-	if (ItemDropTimelineComp && DropRotationCurve && DropLocationCurve)
+	if (ItemDropTimelineComp && DropLocationCurve)
 	{
 		FOnTimelineFloat ProgressUpdate;
 		ProgressUpdate.BindDynamic(this, &ThisClass::UpdateItemDropAnimation);
 		ItemDropTimelineComp->AddInterpFloat(DropLocationCurve, ProgressUpdate);
 
 		FOnTimelineEventStatic OnFinished;
-		OnFinished.BindLambda([this]()
+		OnFinished.BindLambda([this, ItemDropTimelineComp]()
 			{
 				if(ItemDropTimelineComp)
 				{
@@ -341,6 +342,10 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 				if(ItemDropSplineComp)
 				{
 					ItemDropSplineComp->DestroyComponent();
+				}
+				if(WorldItemNameWidgetComp)
+				{
+					WorldItemNameWidgetComp->SetVisibility(true);
 				}
 			});
 

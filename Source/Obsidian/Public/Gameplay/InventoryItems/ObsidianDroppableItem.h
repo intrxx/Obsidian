@@ -102,11 +102,6 @@ private:
 	TObjectPtr<UWidgetComponent> WorldItemNameWidgetComp;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UTimelineComponent> ItemDropTimelineComp;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCurveFloat> DropRotationCurve;
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCurveFloat> DropLocationCurve;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
