@@ -37,7 +37,8 @@ public class OOSInventoryItems : ModuleRules
 				"CoreUObject",
 				"Engine",
 				"Slate",
-				"SlateCore",
+				"SlateCore", 
+				"EnhancedInput",
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

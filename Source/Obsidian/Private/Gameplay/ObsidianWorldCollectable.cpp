@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Gameplay//ObsidianWorldCollectable.h"
+#include "Gameplay/ObsidianWorldCollectable.h"
 
 // ~ Core
 #include "Engine/ActorChannel.h"

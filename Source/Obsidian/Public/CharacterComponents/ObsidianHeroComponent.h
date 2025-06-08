@@ -37,7 +37,7 @@ class OBSIDIAN_API UObsidianHeroComponent : public UPawnComponent
 	GENERATED_BODY()
 	
 public:
-	UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer);
+	UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

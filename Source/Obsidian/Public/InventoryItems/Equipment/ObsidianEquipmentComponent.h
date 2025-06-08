@@ -13,6 +13,7 @@
 #include "ObsidianEquipmentComponent.generated.h"
 
 class UObsidianInventoryComponent;
+
 DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
 
 /**
