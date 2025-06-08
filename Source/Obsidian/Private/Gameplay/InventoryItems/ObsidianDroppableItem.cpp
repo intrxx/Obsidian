@@ -303,9 +303,6 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 
 	if(ItemDropSplineComp)
 	{
-		//ItemDropSplineComp->RegisterComponent();
-		//ItemDropSplineComp->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-
 		const FVector CurrentActorLocation = GetActorLocation();
 		const FVector InitialLocation = FVector(CurrentActorLocation.X, CurrentActorLocation.Y, CurrentActorLocation.Z + 75.0f);
 		const FVector MidPointLocation = FMath::Lerp(InitialLocation, CurrentActorLocation, 0.50f) + FVector(0.0f, 0.0f, 100.0f);
