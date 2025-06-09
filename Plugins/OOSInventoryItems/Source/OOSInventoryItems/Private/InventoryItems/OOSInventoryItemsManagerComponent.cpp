@@ -101,6 +101,33 @@ void UOOSInventoryItemsManagerComponent::InitializePlayerInventoryInput(UInputCo
 	
 }
 
+void UOOSInventoryItemsManagerComponent::InitializeInventorySystem(APlayerController* OwningPlayerController)
+{
+	//TODO Implement
+	if(bInventorySystemInitialized == true)
+	{
+		return;
+	}
+	
+	bInventorySystemInitialized = true;
+}
+
+void UOOSInventoryItemsManagerComponent::InitializeEquipmentSystem(APlayerController* OwningPlayerController)
+{
+	//TODO Implement
+	if(bEquipmentSystemInitialized == true)
+	{
+		return;
+	}
+	
+	bEquipmentSystemInitialized = true;
+}
+
+void UOOSInventoryItemsManagerComponent::InitializeInventoryAndEquipmentSystem(APlayerController* OwningPlayerController)
+{
+	//TODO Implement
+}
+
 void UOOSInventoryItemsManagerComponent::Input_DropItem()
 {
 }

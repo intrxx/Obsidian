@@ -29,6 +29,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "OOSInventoryItems|ManagerComponent")
 	void InitializePlayerInventoryInput(UInputComponent* InputComponent);
 
+	UFUNCTION(BlueprintCallable, Category = "OOSInventoryItems|ManagerComponent")
+	void InitializeInventorySystem(APlayerController* OwningPlayerController);
+
+	UFUNCTION(BlueprintCallable, Category = "OOSInventoryItems|ManagerComponent")
+	void InitializeEquipmentSystem(APlayerController* OwningPlayerController);
+
+	UFUNCTION(BlueprintCallable, Category = "OOSInventoryItems|ManagerComponent")
+	void InitializeInventoryAndEquipmentSystem(APlayerController* OwningPlayerController);
+	
 	/** Returns the hero component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroComp")
 	static UOOSInventoryItemsManagerComponent* FindInventoryItemsManagerComponent(const AActor* Actor)
@@ -70,4 +79,8 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "OOSInventoryItems|Input")
 	TObjectPtr<UOOSInventoryItemsInputDefinition> InventoryItemsInputDefinition;
+
+private:
+	bool bInventorySystemInitialized = false;
+	bool bEquipmentSystemInitialized = false;
 };
