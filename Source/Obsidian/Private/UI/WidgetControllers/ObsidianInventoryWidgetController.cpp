@@ -720,7 +720,23 @@ bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
 	return false;
 }
 
-bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize) const
+bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& SlotPosition) const
+{
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is invalid in UObsidianInventoryWidgetController::CanPlaceDraggedItem."));
+		return false;	
+	}
+
+	TArray<FVector2D> LocalItemGridSize;
+	if(!GetDraggedItemGridSize(LocalItemGridSize))
+	{
+		return false;
+	}
+	return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSize, SlotPosition);
+}
+
+bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& SlotPosition, const TArray<FVector2D>& ItemGridSize) const
 {
 	if(InventoryComponent == nullptr)
 	{
@@ -728,16 +744,7 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& Ho
 		return false;	
 	}
 	
-	if(ItemGridSize.IsEmpty())
-	{
-		TArray<FVector2D> LocalItemGridSize;
-		if(!GetDraggedItemGridSize(LocalItemGridSize))
-		{
-			return false;
-		}
-		return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSize, HoveredSlot);
-	}
-	return InventoryComponent->CheckSpecifiedPosition(ItemGridSize, HoveredSlot);
+	return InventoryComponent->CheckSpecifiedPosition(ItemGridSize, SlotPosition);
 }
 
 bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const

@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "ObsidianInventoryGrid.h"
+#include "ObsidianInventoryGridItemList.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "Components/ActorComponent.h"
@@ -253,7 +253,7 @@ private:
 	 * It also contains Map which maps Grid Vector2D location to actual Item Instance in the inventory.
 	 */
 	UPROPERTY(Replicated)
-	FObsidianInventoryGrid InventoryGrid;
+	FObsidianInventoryGridItemList InventoryGrid;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
 	int32 InventoryGridWidth = 12;

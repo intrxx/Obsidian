@@ -116,7 +116,8 @@ public:
 	void OnInventoryOpen();
 	
 	bool IsDraggingAnItem() const;
-	bool CanPlaceDraggedItem(const FVector2D& HoveredSlot, const TArray<FVector2D>& ItemGridSize = TArray<FVector2D>()) const;
+	bool CanPlaceDraggedItem(const FVector2D& SlotPosition) const;
+	bool CanPlaceDraggedItem(const FVector2D& SlotPosition, const TArray<FVector2D>& ItemGridSize) const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;

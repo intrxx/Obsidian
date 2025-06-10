@@ -20,7 +20,7 @@ class OBSIDIAN_API UObsidianItemSlot_Inventory : public UObsidianItemSlot
 	GENERATED_BODY()
 	
 public:
-	void InitializeSlot(UObsidianInventory* InOwningInventory, const FVector2D& InSlotPosition);
+	void InitializeSlot(UObsidianInventoryGrid* InOwningInventory, const FVector2D& InSlotPosition);
 	
 	FVector2D GetSlotPosition() const
 	{
@@ -36,4 +36,7 @@ protected:
 	
 protected:
 	FVector2D SlotPosition;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryGrid> OwningGrid;
 };

@@ -11,6 +11,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemSlot.generated.h"
 
+class UObsidianInventoryGrid;
 class UObsidianInventory;
 class USizeBox;
 class UImage;
@@ -60,8 +61,5 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	FSlateBrush SlotBlockedLightColor;
-
-	UPROPERTY()
-	TObjectPtr<UObsidianInventory> OwningInventory;
 };
 

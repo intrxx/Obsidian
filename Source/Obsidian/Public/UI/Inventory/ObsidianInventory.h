@@ -4,7 +4,6 @@
 
 // ~ Core
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 
 // ~ Project
 
@@ -13,12 +12,12 @@
 #include "ObsidianInventory.generated.h"
 
 struct FObsidianItemWidgetData;
+struct FGameplayTag;
 
 class UObsidianSlotBlockadeItem;
 class UObsidianItem;
 class UObsidianItemSlot;
 class UObsidianInventoryItemDefinition;
-class UObsidianItemSlot_Inventory;
 class UObsidianItemSlot_Equipment;
 class UObsidianInventoryItemInstance;
 class UGridPanel;
@@ -26,6 +25,8 @@ class USizeBox;
 class UOverlay;
 class UGridSlot;
 class UObsidianInventoryWidgetController;
+class UObsidianEquipmentPanel;
+class UObsidianInventoryGrid;
 
 /**
  * 
@@ -50,32 +51,32 @@ public:
 	{
 		return RootSizeBoxHeight;
 	}
-	
-	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
 
-	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
-	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown);
-
-	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot);
+	bool IsPlayerDraggingItem() const;
+	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
+	bool CanPlaceDraggedItem(const FVector2D ToHoveredSlotPosition, const TArray<FVector2D>& ItemGridSize) const;
+	bool CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const;
 
 protected:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UGridPanel> Slots_GridPanel;
+	TObjectPtr<USizeBox> Root_SizeBox;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UGridPanel> Equipment_GridPanel;
+	TObjectPtr<UObsidianInventoryGrid> InventoryGrid;
 
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
+	
 private:
+	void RequestAddingItemToInventory(const FVector2D& ToPosition, const bool bShiftDown) const;
+	void RequestEquippingItem(const FGameplayTag& ToSlot) const;
+	
 	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
 	
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
 	void OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
-
-	void SetupInventoryGrid();
-	void SetupEquipmentSlots();
-
+	
 	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
 	void OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
 	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
@@ -87,37 +88,6 @@ private:
 	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();
 
-protected:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<USizeBox> Root_SizeBox;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> RightHand_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> LeftHand_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> RightHandSwap_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> LeftHandSwap_EquipmentSlot;
-
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> Helmet_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> BodyArmor_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> Belt_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> Gloves_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> Boots_EquipmentSlot;
-	
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> Amulet_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> RightRing_EquipmentSlot;
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianItemSlot_Equipment> LeftRing_EquipmentSlot;
-
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
@@ -127,9 +97,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianSlotBlockadeItem> SlotBlockadeItemClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianItemSlot_Inventory> InventorySlotClass;
 	
 	/** Essentially, height component of inventory size. Use this instead of directly setting it on SizeBox. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
@@ -138,14 +105,4 @@ private:
 	/** Essentially, width component of inventory size. Use this instead of directly setting it on SizeBox. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float RootSizeBoxWidth = 820.0f;
-	
-	UPROPERTY()
-	TMap<FVector2D, UObsidianItemSlot_Inventory*> InventoryLocationToSlotMap;
-	
-	/** Array of slots that are affected by item hover, to clear it later. */
-	UPROPERTY()
-	TArray<UObsidianItemSlot_Inventory*> AffectedInventorySlots;
-
-	UPROPERTY()
-	TArray<UObsidianItemSlot_Equipment*> EquipmentSlots;
 };

@@ -9,12 +9,12 @@
 
 
 #include "Net/Serialization/FastArraySerializer.h"
-#include "ObsidianInventoryGrid.generated.h"
+#include "ObsidianInventoryGridItemList.generated.h"
 
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryComponent;
-struct FObsidianInventoryGrid;
+struct FObsidianInventoryGridItemList;
 
 /**
  * 
@@ -80,7 +80,7 @@ struct FObsidianInventoryEntry : public FFastArraySerializerItem
 	FString GetDebugString() const;
 
 private:
-	friend FObsidianInventoryGrid;
+	friend FObsidianInventoryGridItemList;
 	friend UObsidianInventoryComponent;
 
 	UPROPERTY()
@@ -100,15 +100,15 @@ private:
  * List of inventory items.
  */
 USTRUCT(BlueprintType)
-struct FObsidianInventoryGrid : public FFastArraySerializer
+struct FObsidianInventoryGridItemList : public FFastArraySerializer
 {
 	GENERATED_BODY();
 	
 public:
-	FObsidianInventoryGrid()
+	FObsidianInventoryGridItemList()
 		: OwnerComponent(nullptr)
 	{}
-	FObsidianInventoryGrid(UActorComponent* InOwnerComponent)
+	FObsidianInventoryGridItemList(UActorComponent* InOwnerComponent)
 		: OwnerComponent(InOwnerComponent)
 	{}
 
@@ -129,7 +129,7 @@ public:
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryGrid>(Entries, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryGridItemList>(Entries, DeltaParams, *this);
 	}
 
 	//~ Start of FFastArraySerializer contract
@@ -162,7 +162,7 @@ private:
 };
 
 template<>
-struct TStructOpsTypeTraits<FObsidianInventoryGrid> : public TStructOpsTypeTraitsBase2<FObsidianInventoryGrid>
+struct TStructOpsTypeTraits<FObsidianInventoryGridItemList> : public TStructOpsTypeTraitsBase2<FObsidianInventoryGridItemList>
 {
 	enum
 	{

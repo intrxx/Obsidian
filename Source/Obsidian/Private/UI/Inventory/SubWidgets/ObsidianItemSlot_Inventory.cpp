@@ -7,6 +7,7 @@
 
 // ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
+#include "UI/Inventory/ObsidianInventoryGrid.h"
 
 void UObsidianItemSlot_Inventory::NativeConstruct()
 {
@@ -19,34 +20,34 @@ void UObsidianItemSlot_Inventory::NativeConstruct()
 	}
 }
 
-void UObsidianItemSlot_Inventory::InitializeSlot(UObsidianInventory* InOwningInventory, const FVector2D& InSlotPosition)
+void UObsidianItemSlot_Inventory::InitializeSlot(UObsidianInventoryGrid* InOwningGrid, const FVector2D& InSlotPosition)
 {
-	OwningInventory = InOwningInventory;
+	OwningGrid = InOwningGrid;
 	SlotPosition = InSlotPosition;
 }
 
 void UObsidianItemSlot_Inventory::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(OwningInventory)
+	if(OwningGrid)
 	{
-		OwningInventory->OnInventorySlotHover(this, true);
+		OwningGrid->OnInventorySlotHover(this, true);
 	}
 }
 
 void UObsidianItemSlot_Inventory::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	if(OwningInventory)
+	if(OwningGrid)
 	{
-		OwningInventory->OnInventorySlotHover(this, false);
+		OwningGrid->OnInventorySlotHover(this, false);
 	}
 }
 
 FReply UObsidianItemSlot_Inventory::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(OwningInventory && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	if(OwningGrid && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		const bool bShiftDown = InMouseEvent.IsShiftDown();
-		OwningInventory->OnInventorySlotMouseButtonDown(this, bShiftDown);
+		OwningGrid->OnInventorySlotMouseButtonDown(this, bShiftDown);
 	}
 	
 	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);

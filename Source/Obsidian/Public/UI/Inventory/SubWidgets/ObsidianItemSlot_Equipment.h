@@ -12,6 +12,7 @@
 #include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
 #include "ObsidianItemSlot_Equipment.generated.h"
 
+class UObsidianEquipmentPanel;
 /**
  * 
  */
@@ -21,8 +22,8 @@ class OBSIDIAN_API UObsidianItemSlot_Equipment : public UObsidianItemSlot
 	GENERATED_BODY()
 
 public:
-	void InitializeSlot(UObsidianInventory* InOwningInventory, const FGameplayTag& InSlotTag);
-	void InitializeSlot(UObsidianInventory* InOwningInventory);
+	void InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel, const FGameplayTag& InSlotTag);
+	void InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel);
 
 	FGameplayTag GetSlotTag() const
 	{
@@ -53,4 +54,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SlotHeight = 128.0f;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
 };

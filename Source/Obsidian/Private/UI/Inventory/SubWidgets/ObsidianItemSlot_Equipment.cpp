@@ -6,6 +6,7 @@
 #include "Components/SizeBox.h"
 
 // ~ Project
+#include "UI/Inventory/ObsidianEquipmentPanel.h"
 
 void UObsidianItemSlot_Equipment::NativePreConstruct()
 {
@@ -20,33 +21,33 @@ void UObsidianItemSlot_Equipment::NativePreConstruct()
 
 void UObsidianItemSlot_Equipment::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(OwningInventory)
+	if(EquipmentPanel)
 	{
-		OwningInventory->OnEquipmentSlotHover(this, true);
+		EquipmentPanel->OnEquipmentSlotHover(this, true);
 	}
 }
 
 void UObsidianItemSlot_Equipment::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	if(OwningInventory)
+	if(EquipmentPanel)
 	{
-		OwningInventory->OnEquipmentSlotHover(this, false);
+		EquipmentPanel->OnEquipmentSlotHover(this, false);
 	}
 }
 
 FReply UObsidianItemSlot_Equipment::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(OwningInventory && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	if(EquipmentPanel && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		OwningInventory->OnEquipmentSlotMouseButtonDown(this);
+		EquipmentPanel->OnEquipmentSlotMouseButtonDown(this);
 	}
 	
 	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
 }
 
-void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianInventory* InOwningInventory, const FGameplayTag& InSlotTag)
+void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel, const FGameplayTag& InSlotTag)
 {
-	OwningInventory = InOwningInventory;
+	EquipmentPanel = InEquipmentPanel;
 	
 	if(!SlotTag.IsValid()) // Slot Tag has been already set in Blueprint
 	{
@@ -58,7 +59,7 @@ void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianInventory* InOwningInv
 	}
 }
 
-void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianInventory* InOwningInventory)
+void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel)
 {
-	OwningInventory = InOwningInventory;
+	EquipmentPanel = InEquipmentPanel;
 }
