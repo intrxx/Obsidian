@@ -4,9 +4,13 @@
 
 // ~ Core
 #include "Components/SizeBox.h"
+#include "Components/Overlay.h"
 
 // ~ Project
+#include "Components/OverlaySlot.h"
 #include "UI/Inventory/ObsidianEquipmentPanel.h"
+#include "UI/Inventory/ObsidianItem.h"
+#include "UI/Inventory/ObsidianSlotBlockadeItem.h"
 
 void UObsidianItemSlot_Equipment::NativePreConstruct()
 {
@@ -16,6 +20,26 @@ void UObsidianItemSlot_Equipment::NativePreConstruct()
 	{
 		Root_SizeBox->SetWidthOverride(SlotWidth);
 		Root_SizeBox->SetHeightOverride(SlotHeight);
+	}
+}
+
+void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget)
+{
+	if(Main_Overlay)
+	{
+		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
+		ItemSlot->SetHorizontalAlignment(HAlign_Center);
+		ItemSlot->SetVerticalAlignment(VAlign_Center);
+	}
+}
+
+void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget)
+{
+	if(Main_Overlay)
+	{
+		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
+		ItemSlot->SetHorizontalAlignment(HAlign_Center);
+		ItemSlot->SetVerticalAlignment(VAlign_Center);
 	}
 }
 

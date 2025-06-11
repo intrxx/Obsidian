@@ -110,51 +110,6 @@ bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) cons
 	return false;
 }
 
-void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData)
-{
-	if(EquipmentPanel == nullptr)
-	{
-		return;
-	}
-	
-	const FGameplayTag DesiredSlot = ItemWidgetData.DesiredSlot;
-	
-	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
-	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
-	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemLeftMouseButtonPressed);
-	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnEquipmentItemMouseEntered);
-	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
-	InventoryWidgetController->AddEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
-
-	UObsidianItemSlot_Equipment* EquipmentSlot = EquipmentPanel->FindEquipmentSlotForTag(DesiredSlot);
-	const UGridSlot* DesiredGridSlot = UWidgetLayoutLibrary::SlotAsGridSlot(EquipmentSlot);
-	// UGridSlot* GridSlot = EquipmentPanel->AddChildToGrid(ItemWidget, DesiredGridSlot->GetRow(), DesiredGridSlot->GetColumn());
-	// GridSlot->SetLayer(1);
-	// GridSlot->SetNudge(DesiredGridSlot->GetNudge());
-
-	if(ItemWidgetData.bDoesBlockSisterSlot)
-	{
-		const FGameplayTag SisterSlotTag = EquipmentSlot->GetSisterSlotTag();
-			
-		UObsidianSlotBlockadeItem* BlockedSlotItem = CreateWidget<UObsidianSlotBlockadeItem>(this, SlotBlockadeItemClass);
-		BlockedSlotItem->InitializeItemWidget(SisterSlotTag, DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
-		BlockedSlotItem->OnSlotBlockadeItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemLeftMouseButtonPressed);
-		BlockedSlotItem->OnSlotBlockadeItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemMouseEntered);
-		BlockedSlotItem->OnSlotBlockadeItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
-		InventoryWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
-
-		UObsidianItemSlot_Equipment* SlotToBlock = EquipmentPanel->FindEquipmentSlotForTag(SisterSlotTag);
-		const UGridSlot* GridSlotToBlock = UWidgetLayoutLibrary::SlotAsGridSlot(SlotToBlock);
-		// UGridSlot* BlockedGridSlot = Equipment_GridPanel->AddChildToGrid(BlockedSlotItem, GridSlotToBlock->GetRow(), GridSlotToBlock->GetColumn());
-		// BlockedGridSlot->SetLayer(1);
-		// BlockedGridSlot->SetNudge(GridSlotToBlock->GetNudge());
-		
-		SlotToBlock->SetSlotState(ISS_Blocked);
-		BlockedSlotItem->SetOwningSlot(SlotToBlock);
-	}
-}
-
 void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	const FVector2D DesiredPosition = ItemWidgetData.DesiredPosition;
@@ -178,6 +133,44 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetDa
 	// GridSlot->SetLayer(1);
 	// GridSlot->SetColumnSpan(GridSpan.X);
 	// GridSlot->SetRowSpan(GridSpan.Y);
+}
+
+void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData)
+{
+	if(EquipmentPanel == nullptr)
+	{
+		return;
+	}
+	
+	const FGameplayTag DesiredSlot = ItemWidgetData.DesiredSlot;
+	
+	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
+	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
+	ItemWidget->InitializeItemWidget(DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
+	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemLeftMouseButtonPressed);
+	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnEquipmentItemMouseEntered);
+	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+	InventoryWidgetController->AddEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
+
+	UObsidianItemSlot_Equipment* EquipmentSlot = EquipmentPanel->FindEquipmentSlotForTag(DesiredSlot);
+	EquipmentSlot->AddItemToSlot(ItemWidget);
+
+	if(ItemWidgetData.bDoesBlockSisterSlot)
+	{
+		const FGameplayTag SisterSlotTag = EquipmentSlot->GetSisterSlotTag();
+			
+		UObsidianSlotBlockadeItem* BlockedSlotItem = CreateWidget<UObsidianSlotBlockadeItem>(this, SlotBlockadeItemClass);
+		BlockedSlotItem->InitializeItemWidget(SisterSlotTag, DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
+		BlockedSlotItem->OnSlotBlockadeItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemLeftMouseButtonPressed);
+		BlockedSlotItem->OnSlotBlockadeItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemMouseEntered);
+		BlockedSlotItem->OnSlotBlockadeItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+		InventoryWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
+
+		UObsidianItemSlot_Equipment* SlotToBlock = EquipmentPanel->FindEquipmentSlotForTag(SisterSlotTag);
+		SlotToBlock->AddItemToSlot(BlockedSlotItem);
+		SlotToBlock->SetSlotState(ISS_Blocked);
+		BlockedSlotItem->SetOwningSlot(SlotToBlock);
+	}
 }
 
 void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData)

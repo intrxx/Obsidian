@@ -13,6 +13,9 @@
 #include "ObsidianItemSlot_Equipment.generated.h"
 
 class UObsidianEquipmentPanel;
+class UObsidianSlotBlockadeItem;
+class UObsidianItem;
+
 /**
  * 
  */
@@ -34,6 +37,9 @@ public:
 	{
 		return SisterSlotTag;
 	}
+
+	void AddItemToSlot(UObsidianItem* InItemWidget);
+	void AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget);
 	
 protected:
 	virtual void NativePreConstruct() override;

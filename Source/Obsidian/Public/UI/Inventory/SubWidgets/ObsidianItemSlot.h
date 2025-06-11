@@ -48,6 +48,9 @@ protected:
 	TObjectPtr<USizeBox> Root_SizeBox;
 
 	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOverlay> Main_Overlay;
+
+	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Slot_Image;
 	
 	UPROPERTY(meta=(BindWidget))
