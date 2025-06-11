@@ -38,6 +38,11 @@ public:
 		return SisterSlotTag;
 	}
 
+	void SetIsBlocked(const bool bInIsBlocked)
+	{
+		bIsBlocked = bInIsBlocked;
+	}
+
 	void AddItemToSlot(UObsidianItem* InItemWidget);
 	void AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget);
 	
@@ -61,6 +66,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SlotHeight = 128.0f;
 
+private:
 	UPROPERTY()
 	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
+
+	bool bIsBlocked = false;
 };

@@ -37,6 +37,8 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InIte
 {
 	if(Main_Overlay)
 	{
+		bIsBlocked = true;
+		
 		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
@@ -45,7 +47,7 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InIte
 
 void UObsidianItemSlot_Equipment::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(EquipmentPanel)
+	if(EquipmentPanel && bIsBlocked == false)
 	{
 		EquipmentPanel->OnEquipmentSlotHover(this, true);
 	}
@@ -53,7 +55,7 @@ void UObsidianItemSlot_Equipment::NativeOnMouseEnter(const FGeometry& InGeometry
 
 void UObsidianItemSlot_Equipment::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	if(EquipmentPanel)
+	if(EquipmentPanel && bIsBlocked == false)
 	{
 		EquipmentPanel->OnEquipmentSlotHover(this, false);
 	}

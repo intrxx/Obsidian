@@ -48,6 +48,11 @@ public:
 		OwningSlot = InSlot;
 	}
 	
+	UObsidianItemSlot_Equipment* GetOwningSlot() const
+	{
+		return OwningSlot;
+	}
+	
 public:
 	FOnSlotBlockadeItemLeftMouseButtonPressedSignature OnSlotBlockadeItemLeftMouseButtonPressedDelegate;
 	FOnSlotBlockadeItemMouseEnterSignature OnSlotBlockadeItemMouseEnterDelegate;

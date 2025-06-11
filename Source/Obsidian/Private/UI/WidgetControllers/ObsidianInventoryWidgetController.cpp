@@ -22,6 +22,7 @@
 #include "UI/Inventory/ObsidianDraggedItem.h"
 #include "UI/Inventory/ObsidianItem.h"
 #include "UI/Inventory/ObsidianSlotBlockadeItem.h"
+#include "UI/Inventory/SubWidgets/ObsidianItemSlot_Equipment.h"
 #include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
@@ -868,6 +869,10 @@ void UObsidianInventoryWidgetController::RemoveBlockedSlotItemWidget(const FGame
 	{
 		if(UObsidianSlotBlockadeItem* Item = BlockedSlotsWidgetMap[Slot])
 		{
+			if(UObsidianItemSlot_Equipment* BlockedSlot = Item->GetOwningSlot())
+			{
+				BlockedSlot->SetIsBlocked(false);
+			}
 			Item->RemoveFromParent();
 		}
 		BlockedSlotsWidgetMap.Remove(Slot);
