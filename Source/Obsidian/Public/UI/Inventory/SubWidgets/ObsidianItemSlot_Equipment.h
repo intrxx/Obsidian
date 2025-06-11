@@ -66,6 +66,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SlotHeight = 128.0f;
 
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
+	float SlottedItemPadding = 4.0f;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;

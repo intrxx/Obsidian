@@ -30,6 +30,7 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget)
 		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
+		ItemSlot->SetPadding(SlottedItemPadding);
 	}
 }
 
@@ -42,6 +43,7 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InIte
 		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
+		ItemSlot->SetPadding(SlottedItemPadding);
 	}
 }
 
