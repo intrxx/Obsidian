@@ -46,6 +46,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, bUsable);
 	DOREPLIFETIME(ThisClass, UsableShard);
 	DOREPLIFETIME(ThisClass, bNeedsTwoSlots);
+	DOREPLIFETIME(ThisClass, ItemSlotPadding);
 }
 
 void UObsidianInventoryItemInstance::OnInstanceCreatedAndInitialized()
@@ -471,6 +472,16 @@ FText UObsidianInventoryItemInstance::GetItemAdditionalDescription() const
 void UObsidianInventoryItemInstance::SetItemAdditionalDescription(const FText& InItemAdditionalDescription)
 {
 	ItemAdditionalDescription = InItemAdditionalDescription;
+}
+
+float UObsidianInventoryItemInstance::GetItemSlotPadding() const
+{
+	return ItemSlotPadding;
+}
+
+void UObsidianInventoryItemInstance::SetItemSlotPadding(const float InItemSlotPadding)
+{
+	ItemSlotPadding = InItemSlotPadding;
 }
 
 FString UObsidianInventoryItemInstance::GetItemDebugName() const

@@ -88,6 +88,11 @@ public:
 	{
 		return AdditionalDescription;
 	}
+
+	float GetItemSlotPadding() const
+	{
+		return ItemSlotPadding;
+	}
 	
 protected:
 	/** Enum that represents the items predefined grid size, will be later mapped to the actual TArray<FVector2D> containing the 'size'. */
@@ -108,4 +113,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	FText AdditionalDescription = FText::GetEmpty();
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
+	float ItemSlotPadding = 4.0f;
 };

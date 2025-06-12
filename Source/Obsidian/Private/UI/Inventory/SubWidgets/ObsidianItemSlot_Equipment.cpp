@@ -23,18 +23,20 @@ void UObsidianItemSlot_Equipment::NativePreConstruct()
 	}
 }
 
-void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget)
+void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
 	if(Main_Overlay)
 	{
 		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
-		ItemSlot->SetPadding(SlottedItemPadding);
+		
+		const float ItemPadding = SlottedItemAdditionalPadding + ItemSlotPadding;
+		ItemSlot->SetPadding(ItemPadding);
 	}
 }
 
-void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget)
+void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget, const float ItemSlotPadding)
 {
 	if(Main_Overlay)
 	{
@@ -43,7 +45,9 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InIte
 		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
-		ItemSlot->SetPadding(SlottedItemPadding);
+
+		const float ItemPadding = SlottedItemAdditionalPadding + ItemSlotPadding;
+		ItemSlot->SetPadding(ItemPadding);
 	}
 }
 

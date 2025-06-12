@@ -165,6 +165,7 @@ void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryIt
 		Instance->SetItemGridSpan(GridSpan);
 		Instance->SetItemDescription(Description);
 		Instance->SetItemAdditionalDescription(AdditionalDescription);
+		Instance->SetItemSlotPadding(ItemSlotPadding);
 	}
 }
 

@@ -79,6 +79,7 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		ItemWidgetData.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
 		ItemWidgetData.bUsable = Instance->IsItemUsable();
+		ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
 		
 		OnItemAddedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -91,7 +92,7 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		{
 			if(InventoryChangeMessage.ItemInstance == OwnerHeroComponent->GetUsingItem())
 			{
-				OwnerHeroComponent->SetUsingItem(false);
+				OwnerHeroComponent->SetUsingItem(false); //TODO This probably shouldn't be here, its widget controller
 			}
 		}
 	}
@@ -131,6 +132,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedsTwoSlots();
 		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
+		ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -172,6 +174,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.bSwappedWithAnotherItem = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag;
 		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedsTwoSlots();
 		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
+		ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}

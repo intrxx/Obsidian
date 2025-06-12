@@ -230,6 +230,11 @@ public:
 	
 	void SetItemAdditionalDescription(const FText& InItemAdditionalDescription);
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	float GetItemSlotPadding() const;
+	
+	void SetItemSlotPadding(const float InItemSlotPadding);
+
 	/**
 	 * Inventory.
 	 */
@@ -346,6 +351,9 @@ private:
 	
 	UPROPERTY(Replicated)
 	FText ItemAdditionalDescription = FText::GetEmpty();
+
+	UPROPERTY(Replicated)
+	float ItemSlotPadding = 4.0f;
 
 	/**
 	 * Inventory.

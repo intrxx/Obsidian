@@ -43,8 +43,8 @@ public:
 		bIsBlocked = bInIsBlocked;
 	}
 
-	void AddItemToSlot(UObsidianItem* InItemWidget);
-	void AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget);
+	void AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f);
+	void AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget, const float ItemSlotPadding = 0.0f);
 	
 protected:
 	virtual void NativePreConstruct() override;
@@ -67,7 +67,7 @@ protected:
 	float SlotHeight = 128.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
-	float SlottedItemPadding = 4.0f;
+	float SlottedItemAdditionalPadding = 0.0f;
 
 private:
 	UPROPERTY()

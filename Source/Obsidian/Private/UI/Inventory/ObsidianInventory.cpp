@@ -153,7 +153,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	InventoryWidgetController->AddEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
 
 	UObsidianItemSlot_Equipment* EquipmentSlot = EquipmentPanel->FindEquipmentSlotForTag(DesiredSlot);
-	EquipmentSlot->AddItemToSlot(ItemWidget);
+	EquipmentSlot->AddItemToSlot(ItemWidget, ItemWidgetData.ItemSlotPadding);
 
 	if(ItemWidgetData.bDoesBlockSisterSlot)
 	{
@@ -167,7 +167,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		InventoryWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
 
 		UObsidianItemSlot_Equipment* SlotToBlock = EquipmentPanel->FindEquipmentSlotForTag(SisterSlotTag);
-		SlotToBlock->AddItemToSlot(BlockedSlotItem);
+		SlotToBlock->AddItemToSlot(BlockedSlotItem, ItemWidgetData.ItemSlotPadding);
 		SlotToBlock->SetSlotState(ISS_Blocked);
 		BlockedSlotItem->SetOwningSlot(SlotToBlock);
 	}

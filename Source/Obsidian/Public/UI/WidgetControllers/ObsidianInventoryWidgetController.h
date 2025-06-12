@@ -62,6 +62,9 @@ public:
 	
 	UPROPERTY()
 	FVector2D GridSpan = FVector2D::Zero();
+
+	UPROPERTY()
+	float ItemSlotPadding = 0.0f;
 	
 	UPROPERTY()
 	int32 StackCount = 0;
