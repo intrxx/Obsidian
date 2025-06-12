@@ -217,6 +217,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemWidgetData.DesiredPosition = Item->GetItemCurrentGridLocation();
 		ItemWidgetData.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
 		ItemWidgetData.bUsable = Item->IsItemUsable();
+		ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
 
 		OnItemAddedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -233,7 +234,8 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
 		ItemWidgetData.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
 		ItemWidgetData.bDoesBlockSisterSlot = Item->DoesItemNeedsTwoSlots();
-
+		ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
+		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
 }
