@@ -793,7 +793,7 @@ UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtInventoryLocat
 	return nullptr;
 }
 
-void UObsidianInventoryWidgetController::AddInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::RegisterInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)
 {
 	if(!AddedItemWidgetMap.Contains(Location))
 	{
@@ -826,7 +826,7 @@ UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtEquipmentSlot(
 	return nullptr;
 }
 
-void UObsidianInventoryWidgetController::AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother)
+void UObsidianInventoryWidgetController::RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother)
 {
 	if(bSwappedWithAnother)
 	{

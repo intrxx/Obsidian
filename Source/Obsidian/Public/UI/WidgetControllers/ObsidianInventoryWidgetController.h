@@ -126,11 +126,11 @@ public:
 	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
 	
 	UObsidianItem* GetItemWidgetAtInventoryLocation(const FVector2D& Location) const;
-	void AddInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
+	void RegisterInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
 	void RemoveInventoryItemWidget(const FVector2D& Location);
 
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
-	void AddEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
+	void RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
 	
 	/** This function takes the primary slot that is causing the other slot to be blocked. */
 	void AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother);
