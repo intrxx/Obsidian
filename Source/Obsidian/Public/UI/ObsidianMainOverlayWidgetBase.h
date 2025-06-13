@@ -8,7 +8,7 @@
 // ~ Project
 
 
-#include "ObsidianMainWidgetBase.h"
+#include "ObsidianWidgetBase.h"
 #include "ObsidianMainOverlayWidgetBase.generated.h"
 
 class UButton;
@@ -20,7 +20,7 @@ DECLARE_MULTICAST_DELEGATE(FOnWidgetDestroyedSignature);
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianMainOverlayWidgetBase : public UObsidianMainWidgetBase
+class OBSIDIAN_API UObsidianMainOverlayWidgetBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
@@ -31,6 +31,9 @@ protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
+	void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 	UFUNCTION()

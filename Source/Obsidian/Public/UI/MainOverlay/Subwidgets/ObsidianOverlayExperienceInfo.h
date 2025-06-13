@@ -33,6 +33,9 @@ public:
 
 protected:
 	virtual void NativeConstruct() override;
+
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

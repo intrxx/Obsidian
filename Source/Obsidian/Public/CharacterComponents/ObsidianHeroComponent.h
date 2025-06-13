@@ -72,11 +72,6 @@ public:
 	{
 		return bUsingItem;
 	}
-
-	void SetCursorOverUI(const bool bInOverUI)
-	{
-		bCursorOverUI = bInOverUI;
-	}
 	
 	void SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget = nullptr, UObsidianInventoryItemInstance* UsingInstance = nullptr);
 	
@@ -233,6 +228,4 @@ private:
 	bool bDraggingItem = false;
 	bool bItemAvailableForDrop = false;
 	bool bJustDroppedItem = false;
-	
-	bool bCursorOverUI = false;
 };

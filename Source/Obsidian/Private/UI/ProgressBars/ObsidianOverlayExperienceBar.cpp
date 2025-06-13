@@ -25,12 +25,14 @@ void UObsidianOverlayExperienceBar::HandleWidgetControllerSet()
 
 FReply UObsidianOverlayExperienceBar::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	// @HACK displaying mouse button down event fixes a bug when we click on the experience bar, move the mouse over and have our mouse movement blocked.
-	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
-	{
-		return FReply::Handled();
-	}
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
+}
+
+FReply UObsidianOverlayExperienceBar::NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
 }
 
 void UObsidianOverlayExperienceBar::ExperienceChanged(const float NewValue)
@@ -68,8 +70,6 @@ void UObsidianOverlayExperienceBar::MaxExperienceChanged(const float NewValue, c
 
 void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	OnMouseEnterLeaveDelegate.Broadcast(true);
-	
 	if(ExperienceInfo == nullptr)
 	{
 		if(IsValid(MainOverlayWidgetController) == false)
@@ -114,8 +114,6 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 
 void UObsidianOverlayExperienceBar::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	OnMouseEnterLeaveDelegate.Broadcast(false);
-	
 	if(ExperienceInfo)
 	{
 		ExperienceInfo->DestroyExperienceInfo();

@@ -15,6 +15,18 @@ void UObsidianOverlayExperienceInfo::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
+FReply UObsidianOverlayExperienceInfo::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
+}
+
+FReply UObsidianOverlayExperienceInfo::NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
+}
+
 void UObsidianOverlayExperienceInfo::InitializeExperienceInfo(const float CurrentExperience, const float MaxExperience, const float LastMaxExperience, const int32 PlayerLevel)
 {
 	int32 Percentage = 0;

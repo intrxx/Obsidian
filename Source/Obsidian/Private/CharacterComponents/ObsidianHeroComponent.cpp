@@ -1273,7 +1273,7 @@ void UObsidianHeroComponent::StopDraggingItem(const AController* Controller)
 
 bool UObsidianHeroComponent::CanDropItem() const
 {
-	return !bCursorOverUI && IsDraggingAnItem() && bItemAvailableForDrop;
+	return IsDraggingAnItem() && bItemAvailableForDrop;
 }
 
 bool UObsidianHeroComponent::CanMoveMouse() const

@@ -52,14 +52,6 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 	ExperienceProgressBar->SetWidgetController(WidgetController);
 }
 
-void UObsidianMainOverlay::PostHandleWidgetControllerSet()
-{
-	HealthProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverGlobe);
-	ManaProgressGlobe->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverGlobe);
-	ExperienceProgressBar->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverExperienceBar);
-	Overlay_GameTabsMenu->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverButtonMenu);
-}
-
 void UObsidianMainOverlay::NativeConstruct()
 {
 	Super::NativeConstruct();
@@ -88,7 +80,6 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		CharacterStatusWidgetController->SetInitialAttributeValues();
 		
 		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
-		CharacterStatus->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverCharacterStatus);
 		CharacterStatus->OnWidgetDestroyedDelegate.AddLambda([this]()
 			{
 				CharacterStatus = nullptr;
@@ -104,7 +95,6 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 	else
 	{
 		CharacterStatus->RemoveFromParent();
-		SetPlayerMouseOverCharacterStatus(false);
 		CharacterStatus = nullptr;
 		Overlay_GameTabsMenu->OnCharacterStatusTabStatusChangeDelegate.Broadcast(false);
 	}
@@ -122,7 +112,6 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory->SetWidgetController(InventoryWidgetController);
 		
 		Inventory_Overlay->AddChildToOverlay(Inventory);
-		Inventory->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverInventory);
 		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
 			{
 				Inventory = nullptr;
@@ -142,7 +131,6 @@ void UObsidianMainOverlay::ToggleInventory()
 	else
 	{
 		Inventory->RemoveFromParent();
-		SetPlayerMouseOverInventory(false);
 		Inventory = nullptr;
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
 		
@@ -168,7 +156,6 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
 
 		PassiveSkillTree_Overlay->AddChildToOverlay(PassiveSkillTree);
-		PassiveSkillTree->OnMouseEnterLeaveDelegate.AddUObject(this, &ThisClass::SetPlayerMouseOverPassiveSkillTree);
 		PassiveSkillTree->OnWidgetDestroyedDelegate.AddLambda([this]()
 			{
 				PassiveSkillTree = nullptr;
@@ -182,46 +169,9 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 	else
 	{
 		PassiveSkillTree->RemoveFromParent();
-		SetPlayerMouseOverPassiveSkillTree(false);
 		PassiveSkillTree = nullptr;
 		Overlay_GameTabsMenu->OnPassiveSkillTreeTabStatusChangeDelegate.Broadcast(false);
 	}
-}
-
-void UObsidianMainOverlay::SetPlayerMouseOverInventory(const bool bInMouseOver)
-{
-	bPlayerMouseOverInventory = bInMouseOver;
-	UpdatePlayerMouseOverUIElem();
-}
-
-void UObsidianMainOverlay::SetPlayerMouseOverCharacterStatus(const bool bInMouseOver)
-{
-	bPlayerMouseOverCharacterStatus = bInMouseOver;
-	UpdatePlayerMouseOverUIElem();
-}
-
-void UObsidianMainOverlay::SetPlayerMouseOverPassiveSkillTree(const bool bInMouseOver)
-{
-	bPlayerMouseOverPassiveSkillTree = bInMouseOver;
-	UpdatePlayerMouseOverUIElem();
-}
-
-void UObsidianMainOverlay::SetPlayerMouseOverGlobe(const bool bInMouseOver)
-{
-	bPlayerMouseOverGlobe = bInMouseOver;
-	UpdatePlayerMouseOverUIElem();
-}
-
-void UObsidianMainOverlay::SetPlayerMouseOverExperienceBar(const bool bInMouseOver)
-{
-	bPlayerMouseOverExperienceBar = bInMouseOver;
-	UpdatePlayerMouseOverUIElem();
-}
-
-void UObsidianMainOverlay::SetPlayerMouseOverButtonMenu(const bool bInMouseOver)
-{
-	bPlayerMouseOverButtonMenu = bInMouseOver;
-	UpdatePlayerMouseOverUIElem();
 }
 
 void UObsidianMainOverlay::AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const
@@ -230,17 +180,6 @@ void UObsidianMainOverlay::AddItemDescriptionToOverlay(UObsidianItemDescriptionB
 	{
 		DroppedItemDesc_Overlay->AddChildToOverlay(ItemDescription);
 	}
-}
-
-void UObsidianMainOverlay::UpdatePlayerMouseOverUIElem() const
-{
-	const bool bMouseOverAnyUIElem = bPlayerMouseOverInventory || bPlayerMouseOverCharacterStatus ||
-		bPlayerMouseOverPassiveSkillTree || bPlayerMouseOverGlobe || bPlayerMouseOverExperienceBar || bPlayerMouseOverButtonMenu;
-	if (bMouseOverAnyUIElem)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Mous eovery ui "));
-	}
-	HeroComp->SetCursorOverUI(bMouseOverAnyUIElem);
 }
 
 void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData)

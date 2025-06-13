@@ -11,8 +11,6 @@
 #include "CommonUserWidget.h"
 #include "ObsidianWidgetBase.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnMouseEnterLeaveSignature, const bool bEnter);
-
 /**
  * 
  */
@@ -31,8 +29,6 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|UI")
 	TObjectPtr<UObject> WidgetController;
 
-	FOnMouseEnterLeaveSignature OnMouseEnterLeaveDelegate;
-	
 protected:
 	/** Function that gets called after WidgetController has been set */
 	UFUNCTION(BlueprintImplementableEvent, DisplayName = "Handle Widget Controller Set", Category = "Obsidian|UI")

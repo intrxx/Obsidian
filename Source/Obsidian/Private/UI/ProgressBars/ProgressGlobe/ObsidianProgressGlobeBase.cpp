@@ -36,24 +36,16 @@ void UObsidianProgressGlobe::ShouldGhostGlobeDecrease(const float NewAttribute, 
 	bShouldSetGhostGlobe = false;
 }
 
-void UObsidianProgressGlobe::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
-	OnMouseEnterLeaveDelegate.Broadcast(true);
-}
-
-void UObsidianProgressGlobe::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
-{
-	OnMouseEnterLeaveDelegate.Broadcast(false);
-}
-
 FReply UObsidianProgressGlobe::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	// @HACK displaying mouse button down event fixes a bug when we click on the globe, move the mouse over and have our mouse movement blocked.
-	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
-	{
-		return FReply::Handled();
-	}
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
+}
+
+FReply UObsidianProgressGlobe::NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
 }
 
 void UObsidianProgressGlobe::HandleWidgetControllerSet()

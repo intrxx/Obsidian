@@ -38,22 +38,14 @@ void UObsidianOverlayGameTabsMenu::OnCharacterStatusButtonClicked()
 
 FReply UObsidianOverlayGameTabsMenu::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	// @HACK displaying mouse button down event fixes a bug when we click on the Tabs Menu, move the mouse over and have our mouse movement blocked.
-	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
-	{
-		return FReply::Handled();
-	}
-	return Super::NativeOnMouseButtonDown(InGeometry, InMouseEvent);
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
 }
 
-void UObsidianOverlayGameTabsMenu::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianOverlayGameTabsMenu::NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	OnMouseEnterLeaveDelegate.Broadcast(true);
-}
-
-void UObsidianOverlayGameTabsMenu::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
-{
-	OnMouseEnterLeaveDelegate.Broadcast(false);
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
 }
 
 void UObsidianOverlayGameTabsMenu::OnCharacterStatusTabStatusChange(bool bIsConstructed)

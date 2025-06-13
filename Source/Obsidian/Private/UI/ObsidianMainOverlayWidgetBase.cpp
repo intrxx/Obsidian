@@ -22,16 +22,29 @@ void UObsidianMainOverlayWidgetBase::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+void UObsidianMainOverlayWidgetBase::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
+}
+
+void UObsidianMainOverlayWidgetBase::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+{
+	Super::NativeOnMouseLeave(InMouseEvent);
+}
+
+FReply UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+	// This widgets won't take any input, don't want to pass gameplay input through
+	return FReply::Handled();
+}
+
 FReply UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-#if !UE_BUILD_SHIPPING
-	UE_LOG(LogTemp, Display, TEXT("The double click was handled in UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDoubleClick to prevent moving with mouse, if that not what you want to do, please reconsider this logic."));
-#endif 
+	// This widgets won't take any input, don't want to pass gameplay input through
 	return FReply::Handled();
 }
 
 void UObsidianMainOverlayWidgetBase::OnCloseButtonClicked()
 {
-	OnMouseEnterLeaveDelegate.Broadcast(false);
 	RemoveFromParent();
 }

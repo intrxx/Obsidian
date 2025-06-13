@@ -49,14 +49,7 @@ public:
 	void ToggleInventory();
 	UFUNCTION()
 	void TogglePassiveSkillTree();
-
-	void SetPlayerMouseOverInventory(const bool bInMouseOver);
-	void SetPlayerMouseOverCharacterStatus(const bool bInMouseOver);
-	void SetPlayerMouseOverPassiveSkillTree(const bool bInMouseOver);
-	void SetPlayerMouseOverGlobe(const bool bInMouseOver);
-	void SetPlayerMouseOverExperienceBar(const bool bInMouseOver);
-	void SetPlayerMouseOverButtonMenu(const bool bInMouseOver);
-
+	
 	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
 	
 public:
@@ -71,7 +64,6 @@ public:
 
 protected:
 	virtual void HandleWidgetControllerSet() override;
-	virtual void PostHandleWidgetControllerSet() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
@@ -83,9 +75,6 @@ protected:
 	void HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar);
 	UFUNCTION()
 	void HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar);
-
-	/** Needs to be called after updating of the bPlayerMouseOver booleans. */
-	void UpdatePlayerMouseOverUIElem() const;
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -173,12 +162,5 @@ private:
 	
 	UPROPERTY()
 	TObjectPtr<UObsidianHeroComponent> HeroComp;
-
-	bool bPlayerMouseOverInventory = false;
-	bool bPlayerMouseOverCharacterStatus = false;
-	bool bPlayerMouseOverPassiveSkillTree = false;
-	bool bPlayerMouseOverGlobe = false;
-	bool bPlayerMouseOverExperienceBar = false;
-	bool bPlayerMouseOverButtonMenu = false;
 };
 
