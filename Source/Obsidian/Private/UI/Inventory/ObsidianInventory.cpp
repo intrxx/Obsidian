@@ -3,7 +3,6 @@
 #include "UI/Inventory/ObsidianInventory.h"
 
 // ~ Core
-#include "Blueprint/WidgetLayoutLibrary.h"
 #include "Components/SizeBox.h"
 
 // ~ Project
@@ -129,11 +128,6 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetDa
 	
 	InventoryWidgetController->RegisterInventoryItemWidget(DesiredPosition, ItemWidget);
 	InventoryGrid->AddItemToGrid(ItemWidget, ItemWidgetData.ItemSlotPadding);
-	
-	// UGridSlot* GridSlot = Slots_GridPanel->AddChildToGrid(ItemWidget, DesiredPosition.Y, DesiredPosition.X);
-	// GridSlot->SetLayer(1);
-	// GridSlot->SetColumnSpan(GridSpan.X);
-	// GridSlot->SetRowSpan(GridSpan.Y);
 }
 
 void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData)

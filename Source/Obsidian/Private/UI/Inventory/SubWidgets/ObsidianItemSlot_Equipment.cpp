@@ -23,6 +23,25 @@ void UObsidianItemSlot_Equipment::NativePreConstruct()
 	}
 }
 
+void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel, const FGameplayTag& InSlotTag)
+{
+	EquipmentPanel = InEquipmentPanel;
+	
+	if(!SlotTag.IsValid()) // Slot Tag has been already set in Blueprint
+	{
+		SlotTag = InSlotTag;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attempting to set SlotTag but it has already been set."));
+	}
+}
+
+void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel)
+{
+	EquipmentPanel = InEquipmentPanel;
+}
+
 void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
 	if(Main_Overlay)
@@ -67,31 +86,12 @@ void UObsidianItemSlot_Equipment::NativeOnMouseLeave(const FPointerEvent& InMous
 	}
 }
 
-FReply UObsidianItemSlot_Equipment::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianItemSlot_Equipment::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(EquipmentPanel && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		EquipmentPanel->OnEquipmentSlotMouseButtonDown(this);
 	}
 	
-	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
-}
-
-void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel, const FGameplayTag& InSlotTag)
-{
-	EquipmentPanel = InEquipmentPanel;
-	
-	if(!SlotTag.IsValid()) // Slot Tag has been already set in Blueprint
-	{
-		SlotTag = InSlotTag;
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Attempting to set SlotTag but it has already been set."));
-	}
-}
-
-void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel)
-{
-	EquipmentPanel = InEquipmentPanel;
+	return FReply::Handled();
 }

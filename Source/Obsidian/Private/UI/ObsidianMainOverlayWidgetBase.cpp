@@ -22,6 +22,14 @@ void UObsidianMainOverlayWidgetBase::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+FReply UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+{
+#if !UE_BUILD_SHIPPING
+	UE_LOG(LogTemp, Display, TEXT("The double click was handled in UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDoubleClick to prevent moving with mouse, if that not what you want to do, please reconsider this logic."));
+#endif 
+	return FReply::Handled();
+}
+
 void UObsidianMainOverlayWidgetBase::OnCloseButtonClicked()
 {
 	OnMouseEnterLeaveDelegate.Broadcast(false);

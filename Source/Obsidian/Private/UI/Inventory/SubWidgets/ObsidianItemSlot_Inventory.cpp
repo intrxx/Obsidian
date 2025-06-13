@@ -42,7 +42,7 @@ void UObsidianItemSlot_Inventory::NativeOnMouseLeave(const FPointerEvent& InMous
 	}
 }
 
-FReply UObsidianItemSlot_Inventory::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianItemSlot_Inventory::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(OwningGrid && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
@@ -50,7 +50,7 @@ FReply UObsidianItemSlot_Inventory::NativeOnPreviewMouseButtonDown(const FGeomet
 		OwningGrid->OnInventorySlotMouseButtonDown(this, bShiftDown);
 	}
 	
-	return Super::NativeOnPreviewMouseButtonDown(InGeometry, InMouseEvent);
+	return FReply::Handled();
 }
 
 

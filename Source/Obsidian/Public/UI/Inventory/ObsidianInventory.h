@@ -88,6 +88,7 @@ private:
 	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();
 
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
