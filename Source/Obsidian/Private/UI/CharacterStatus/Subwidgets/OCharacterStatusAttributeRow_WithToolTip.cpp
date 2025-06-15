@@ -41,8 +41,8 @@ void UOCharacterStatusAttributeRow_WithToolTip::OnToolTipButtonHovered()
 		AttributeToolTipWidget = CreateWidget<UObsidianAttributeToolTip>(this, AttributeToolTipWidgetClass);
 		AttributeToolTipWidget->InitAttributeToolTip(AttributeDescription);
 
-		const FVector2D Position = AttributeToolTipWidget->GetDesiredPosition();
-		AttributeToolTipWidget->SetPositionInViewport(Position);
+		const FVector2D ViewportPosition = AttributeToolTipWidget->GetDesiredViewportPosition();
+		AttributeToolTipWidget->SetPositionInViewport(ViewportPosition);
 		AttributeToolTipWidget->AddToViewport();
 	}
 }

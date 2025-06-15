@@ -61,8 +61,8 @@ class OBSIDIAN_API UOInventoryItemFragment_Appearance : public UObsidianInventor
 public:
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 
-	TArray<FVector2D> GetItemGridSizeFromDesc() const;
-	FVector2D GetItemGridSpanFromDesc() const;
+	TArray<FIntPoint> GetItemGridSizeFromDesc() const;
+	FIntPoint GetItemGridSpanFromDesc() const;
 	
 	UTexture2D* GetItemImage() const
 	{

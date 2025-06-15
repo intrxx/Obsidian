@@ -23,7 +23,7 @@ class OBSIDIAN_API UObsidianToolTipBase : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	virtual FVector2D GetDesiredPosition() const;
+	virtual FVector2D GetDesiredViewportPosition() const;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|ToolTip")

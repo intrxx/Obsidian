@@ -28,8 +28,8 @@ FObsidianItemsMatchingUsableContext UObsidianUsableShard_Identification::OnItemU
 	{
 		if(Instance->IsItemIdentified() == false)
 		{
-			const FVector2D GridLocation = Instance->GetItemCurrentGridLocation();
-			if(GridLocation != FVector2D::ZeroVector)
+			const FIntPoint GridLocation = Instance->GetItemCurrentGridLocation();
+			if(GridLocation != FIntPoint::NoneValue)
 			{
 				ItemsMatchingContext.InventoryItemsMatchingContext.Add(GridLocation);
 				continue;

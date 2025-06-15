@@ -9,99 +9,99 @@
 
 struct FObsidianInventoryItemGridSize
 {
-	TArray<FVector2D> SingleSquare;
-	TArray<FVector2D> TwoSquares_Vertical;
-	TArray<FVector2D> TwoSquares_Horizontal;
-	TArray<FVector2D> ThreeSquares_Vertical;
-	TArray<FVector2D> ThreeSquares_Horizontal;
-	TArray<FVector2D> FourSquares_Vertical;
-	TArray<FVector2D> FourSquares_Horizontal;
-	TArray<FVector2D> FourSquares_Square;
-	TArray<FVector2D> SixSquares_VerticalRectangle;
-	TArray<FVector2D> EightSquares_VerticalRectangle;
+	TArray<FIntPoint> SingleSquare;
+	TArray<FIntPoint> TwoSquares_Vertical;
+	TArray<FIntPoint> TwoSquares_Horizontal;
+	TArray<FIntPoint> ThreeSquares_Vertical;
+	TArray<FIntPoint> ThreeSquares_Horizontal;
+	TArray<FIntPoint> FourSquares_Vertical;
+	TArray<FIntPoint> FourSquares_Horizontal;
+	TArray<FIntPoint> FourSquares_Square;
+	TArray<FIntPoint> SixSquares_VerticalRectangle;
+	TArray<FIntPoint> EightSquares_VerticalRectangle;
 
-	FVector2D SingleSquare_GridSpan;
-	FVector2D TwoSquares_Vertical_GridSpan;
-	FVector2D TwoSquares_Horizontal_GridSpan;
-	FVector2D ThreeSquares_Vertical_GridSpan;
-	FVector2D ThreeSquares_Horizontal_GridSpan;
-	FVector2D FourSquares_Vertical_GridSpan;
-	FVector2D FourSquares_Horizontal_GridSpan;
-	FVector2D FourSquares_Square_GridSpan;
-	FVector2D SixSquares_VerticalRectangle_GridSpan;
-	FVector2D EightSquares_VerticalRectangle_GridSpan;
+	FIntPoint SingleSquare_GridSpan;
+	FIntPoint TwoSquares_Vertical_GridSpan;
+	FIntPoint TwoSquares_Horizontal_GridSpan;
+	FIntPoint ThreeSquares_Vertical_GridSpan;
+	FIntPoint ThreeSquares_Horizontal_GridSpan;
+	FIntPoint FourSquares_Vertical_GridSpan;
+	FIntPoint FourSquares_Horizontal_GridSpan;
+	FIntPoint FourSquares_Square_GridSpan;
+	FIntPoint SixSquares_VerticalRectangle_GridSpan;
+	FIntPoint EightSquares_VerticalRectangle_GridSpan;
 	
-	TMap<EObsidianInventoryItemGridSize, TArray<FVector2D>> ItemGridSizeMap;
-	TMap<EObsidianInventoryItemGridSize, FVector2D> ItemGridSpanMap;
+	TMap<EObsidianInventoryItemGridSize, TArray<FIntPoint>> ItemGridSizeMap;
+	TMap<EObsidianInventoryItemGridSize, FIntPoint> ItemGridSpanMap;
 
 	FObsidianInventoryItemGridSize()
 	{
 		SingleSquare =
 		{
-			FVector2D(0.0f, 0.0f)
+			FIntPoint(0, 0)
 		};
 		TwoSquares_Vertical =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(0.0f, 1.0f)
+			FIntPoint(0, 0),
+			FIntPoint(0, 1)
 		};
 		TwoSquares_Horizontal =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(1.0f, 0.0f)
+			FIntPoint(0, 0),
+			FIntPoint(1, 0)
 		};
 		ThreeSquares_Vertical =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(0.0f, 1.0f),
-			FVector2D(0.0f, 2.0f)
+			FIntPoint(0, 0),
+			FIntPoint(0, 1),
+			FIntPoint(0, 2)
 		};
 		ThreeSquares_Horizontal =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(1.0f, 0.0f),
-			FVector2D(2.0f, 0.0f)
+			FIntPoint(0, 0),
+			FIntPoint(1, 0),
+			FIntPoint(2, 0)
 		};
 		FourSquares_Vertical =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(0.0f, 1.0f),
-			FVector2D(0.0f, 2.0f),
-			FVector2D(0.0f, 3.0f)
+			FIntPoint(0, 0),
+			FIntPoint(0, 1),
+			FIntPoint(0, 2),
+			FIntPoint(0, 3)
 		};
 		FourSquares_Horizontal =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(1.0f, 0.0f),
-			FVector2D(2.0f, 0.0f),
-			FVector2D(3.0f, 0.0f)
+			FIntPoint(0, 0),
+			FIntPoint(1, 0),
+			FIntPoint(2, 0),
+			FIntPoint(3, 0)
 		};
 		FourSquares_Square =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(1.0f, 0.0f),
-			FVector2D(0.0f, 1.0f),
-			FVector2D(1.0f, 1.0f)
+			FIntPoint(0, 0),
+			FIntPoint(1, 0),
+			FIntPoint(0, 1),
+			FIntPoint(1, 1)
 		};
 		SixSquares_VerticalRectangle =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(1.0f, 0.0f),
-			FVector2D(0.0f, 1.0f),
-			FVector2D(1.0f, 1.0f),
-			FVector2D(0.0f, 2.0f),
-			FVector2D(1.0f, 2.0f)
+			FIntPoint(0, 0),
+			FIntPoint(1, 0),
+			FIntPoint(0, 1),
+			FIntPoint(1, 1),
+			FIntPoint(0, 2),
+			FIntPoint(1, 2)
 		};
 		EightSquares_VerticalRectangle =
 		{
-			FVector2D(0.0f, 0.0f),
-			FVector2D(1.0f, 0.0f),
-			FVector2D(0.0f, 1.0f),
-			FVector2D(1.0f, 1.0f),
-			FVector2D(0.0f, 2.0f),
-			FVector2D(1.0f, 2.0f),
-			FVector2D(0.0f, 3.0f),
-			FVector2D(1.0f, 3.0f)
+			FIntPoint(0, 0),
+			FIntPoint(1, 0),
+			FIntPoint(0, 1),
+			FIntPoint(1, 1),
+			FIntPoint(0, 2),
+			FIntPoint(1, 2),
+			FIntPoint(0, 3),
+			FIntPoint(1, 3)
 		};
 		
 		ItemGridSizeMap =
@@ -118,16 +118,16 @@ struct FObsidianInventoryItemGridSize
 			{EObsidianInventoryItemGridSize::IIGS_EightSquares_VerticalRectangle, EightSquares_VerticalRectangle}
 		};
 		
-		SingleSquare_GridSpan = FVector2D(1.0f, 1.0f);
-		TwoSquares_Vertical_GridSpan = FVector2D(1.0f, 2.0f);
-		TwoSquares_Horizontal_GridSpan = FVector2D(2.0f, 1.0f);
-		ThreeSquares_Vertical_GridSpan = FVector2D(1.0f, 3.0f);
-		ThreeSquares_Horizontal_GridSpan = FVector2D(3.0f, 1.0f);
-		FourSquares_Vertical_GridSpan = FVector2D(1.0f, 4.0f);
-		FourSquares_Horizontal_GridSpan = FVector2D(4.0f, 1.0f);
-		FourSquares_Square_GridSpan = FVector2D(2.0f, 2.0f);
-		SixSquares_VerticalRectangle_GridSpan = FVector2D(2.0f, 3.0f);
-		EightSquares_VerticalRectangle_GridSpan = FVector2D(2.0f, 4.0f);
+		SingleSquare_GridSpan = FIntPoint(1, 1);
+		TwoSquares_Vertical_GridSpan = FIntPoint(1, 2);
+		TwoSquares_Horizontal_GridSpan = FIntPoint(2, 1);
+		ThreeSquares_Vertical_GridSpan = FIntPoint(1, 3);
+		ThreeSquares_Horizontal_GridSpan = FIntPoint(3, 1);
+		FourSquares_Vertical_GridSpan = FIntPoint(1, 4);
+		FourSquares_Horizontal_GridSpan = FIntPoint(4, 1);
+		FourSquares_Square_GridSpan = FIntPoint(2, 2);
+		SixSquares_VerticalRectangle_GridSpan = FIntPoint(2, 3);
+		EightSquares_VerticalRectangle_GridSpan = FIntPoint(2, 4);
 
 		ItemGridSpanMap =
 		{
@@ -155,8 +155,8 @@ void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryIt
 {
 	if(Instance)
 	{
-		const TArray<FVector2D> GridSize = GetItemGridSizeFromDesc();
-		const FVector2D GridSpan = GetItemGridSpanFromDesc();
+		const TArray<FIntPoint> GridSize = GetItemGridSizeFromDesc();
+		const FIntPoint GridSpan = GetItemGridSpanFromDesc();
 		
 		Instance->SetItemImage(ItemImage);
 		Instance->SetItemDroppedMesh(DroppedMesh);
@@ -169,12 +169,12 @@ void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryIt
 	}
 }
 
-TArray<FVector2D> UOInventoryItemFragment_Appearance::GetItemGridSizeFromDesc() const
+TArray<FIntPoint> UOInventoryItemFragment_Appearance::GetItemGridSizeFromDesc() const
 {
 	return ObsidianItemGridSize().ItemGridSizeMap[InventoryItemGridSizeDesc];
 }
 
-FVector2D UOInventoryItemFragment_Appearance::GetItemGridSpanFromDesc() const
+FIntPoint UOInventoryItemFragment_Appearance::GetItemGridSpanFromDesc() const
 {
 	return ObsidianItemGridSize().ItemGridSpanMap[InventoryItemGridSizeDesc];
 }

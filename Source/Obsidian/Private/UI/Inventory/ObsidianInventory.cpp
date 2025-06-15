@@ -79,7 +79,7 @@ bool UObsidianInventory::IsPlayerDraggingItem() const
 	return InventoryWidgetController->IsDraggingAnItem();
 }
 
-bool UObsidianInventory::GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const
+bool UObsidianInventory::GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const
 {
 	if(InventoryWidgetController == false || InventoryWidgetController->IsDraggingAnItem() == false)
 	{
@@ -90,7 +90,7 @@ bool UObsidianInventory::GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSi
 	return true;
 }
 
-bool UObsidianInventory::CanPlaceDraggedItem(const FVector2D ToHoveredSlotPosition, const TArray<FVector2D>& ItemGridSize) const
+bool UObsidianInventory::CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const TArray<FIntPoint>& ItemGridSize) const
 {
 	if(InventoryWidgetController == false || InventoryWidgetController->IsDraggingAnItem() == false)
 	{
@@ -111,8 +111,8 @@ bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) cons
 
 void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FVector2D DesiredPosition = ItemWidgetData.DesiredPosition;
-	const FVector2D GridSpan = ItemWidgetData.GridSpan;
+	const FIntPoint DesiredPosition = ItemWidgetData.DesiredPosition;
+	const FIntPoint GridSpan = ItemWidgetData.GridSpan;
 	
 	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
@@ -170,8 +170,8 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 
 void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FVector2D ItemPosition = ItemWidgetData.DesiredPosition;
-	if(UObsidianItem* ItemWidget = InventoryWidgetController->GetItemWidgetAtInventoryLocation(ItemPosition))
+	const FIntPoint ItemPosition = ItemWidgetData.DesiredPosition;
+	if(UObsidianItem* ItemWidget = InventoryWidgetController->GetItemWidgetAtInventoryGridSlot(ItemPosition))
 	{
 		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
 	}
@@ -251,7 +251,7 @@ void UObsidianInventory::OnItemMouseLeave()
 	InventoryWidgetController->HandleUnhoveringItem();
 }
 
-void UObsidianInventory::RequestAddingItemToInventory(const FVector2D& ToPosition, const bool bShiftDown) const
+void UObsidianInventory::RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const
 {
 	if(InventoryWidgetController)
 	{

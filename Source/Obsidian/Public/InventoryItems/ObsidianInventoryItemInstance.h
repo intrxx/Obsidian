@@ -196,14 +196,14 @@ public:
 	 */
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	TArray<FVector2D> GetItemGridSize() const;
+	TArray<FIntPoint> GetItemGridSize() const;
 	
-	void SetItemGridSize(const TArray<FVector2D>& GridSizeToSet);
+	void SetItemGridSize(const TArray<FIntPoint>& GridSizeToSet);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	FVector2D GetItemGridSpan() const;
+	FIntPoint GetItemGridSpan() const;
 	
-	void SetItemGridSpan(const FVector2D GridSpanToSet);
+	void SetItemGridSpan(const FIntPoint& GridSpanToSet);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	UTexture2D* GetItemImage() const;
@@ -240,10 +240,10 @@ public:
 	 */
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	FVector2D GetItemCurrentGridLocation() const;
+	FIntPoint GetItemCurrentGridLocation() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void SetItemCurrentGridLocation(const FVector2D CurrentGridLocationToSet);
+	void SetItemCurrentGridLocation(const FIntPoint& CurrentGridLocationToSet);
 
 	/** Should be called when removing item from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
@@ -332,10 +332,10 @@ private:
 	 */
 	
 	UPROPERTY(Replicated)
-	TArray<FVector2D> ItemGridSize;
+	TArray<FIntPoint> ItemGridSize;
 
 	UPROPERTY(Replicated)
-	FVector2D ItemGridSpan = FVector2D::ZeroVector;
+	FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 	
 	UPROPERTY(Replicated)
 	TObjectPtr<UTexture2D> ItemImage = nullptr;
@@ -361,7 +361,7 @@ private:
 
 	/** Current Item Location in the inventory grid, should be valid only if the item is already placed in the inventory. */
 	UPROPERTY(Replicated)
-	FVector2D ItemCurrentGridLocation = FVector2D::ZeroVector;
+	FIntPoint ItemCurrentGridLocation = FIntPoint::NoneValue;
 
 	/**
 	 * Debug.

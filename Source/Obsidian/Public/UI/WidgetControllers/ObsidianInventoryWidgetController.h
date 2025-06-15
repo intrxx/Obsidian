@@ -32,14 +32,14 @@ struct FObsidianItemWidgetData
 	
 public:
 	FObsidianItemWidgetData(){};
-	FObsidianItemWidgetData(UTexture2D* InItemImage, const FVector2D& InDesiredPosition, const FVector2D& InGridSpan, const int32 InStackCount, const bool bInUsable)
+	FObsidianItemWidgetData(UTexture2D* InItemImage, const FIntPoint& InDesiredPosition, const FIntPoint& InGridSpan, const int32 InStackCount, const bool bInUsable)
 		: ItemImage(InItemImage)
 		, DesiredPosition(InDesiredPosition)
 		, GridSpan(InGridSpan)
 		, StackCount(InStackCount)
 		, bUsable(bInUsable)
 	{};
-	FObsidianItemWidgetData(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FVector2D& InGridSpan, const int32 InStackCount, const bool bInUsable)
+	FObsidianItemWidgetData(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FIntPoint& InGridSpan, const int32 InStackCount, const bool bInUsable)
 		: ItemImage(InItemImage)
 		, DesiredSlot(InDesiredSlot)
 		, GridSpan(InGridSpan)
@@ -52,7 +52,7 @@ public:
 	TObjectPtr<UTexture2D> ItemImage = nullptr;
 
 	UPROPERTY()
-	FVector2D DesiredPosition = FVector2D::Zero();
+	FIntPoint DesiredPosition = FIntPoint::NoneValue;
 	
 	UPROPERTY()
 	FGameplayTag DesiredSlot = FGameplayTag::EmptyTag;
@@ -61,7 +61,7 @@ public:
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
 	
 	UPROPERTY()
-	FVector2D GridSpan = FVector2D::Zero();
+	FIntPoint GridSpan = FIntPoint::NoneValue;
 
 	UPROPERTY()
 	float ItemSlotPadding = 0.0f;
@@ -119,15 +119,15 @@ public:
 	void OnInventoryOpen();
 	
 	bool IsDraggingAnItem() const;
-	bool CanPlaceDraggedItem(const FVector2D& SlotPosition) const;
-	bool CanPlaceDraggedItem(const FVector2D& SlotPosition, const TArray<FVector2D>& ItemGridSize) const;
+	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot) const;
+	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const TArray<FIntPoint>& ItemGridSize) const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
-	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
+	bool GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const;
 	
-	UObsidianItem* GetItemWidgetAtInventoryLocation(const FVector2D& Location) const;
-	void RegisterInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget);
-	void RemoveInventoryItemWidget(const FVector2D& Location);
+	UObsidianItem* GetItemWidgetAtInventoryGridSlot(const FIntPoint& AtGridSlot) const;
+	void RegisterInventoryItemWidget(const FIntPoint& GridSlot, UObsidianItem* ItemWidget);
+	void RemoveInventoryItemWidget(const FIntPoint& GridSlot);
 
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
 	void RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
@@ -139,15 +139,15 @@ public:
 
 	bool CanEquipDraggedItem(const FGameplayTag& SlotTag) const;
 	
-	void RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown);
+	void RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);
 
-	void HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget);
-	void HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition);
-	void HandleLeftClickingOnInventoryItemWithShiftDown(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget);
+	void HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot, UObsidianItem* ItemWidget);
+	void HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot);
+	void HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot, const UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
 
-	void HandleHoveringOverInventoryItem(const FVector2D& SlotPosition);
+	void HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot);
 	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);
 	void HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem();
@@ -184,7 +184,7 @@ private:
 	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
 	void OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage);
 	
-	void HandleTakingOutStacks(const int32 StacksToTake, const FVector2D& SlotPosition);
+	void HandleTakingOutStacks(const int32 StacksToTake, const FIntPoint& GridSlotPosition);
 	
 	void RemoveUnstackSlider();
 	void RemoveItemDescription();
@@ -206,7 +206,7 @@ private:
 	TObjectPtr<UObsidianHeroComponent> OwnerHeroComponent = nullptr;
 	
 	UPROPERTY()
-	TMap<FVector2D, UObsidianItem*> AddedItemWidgetMap;
+	TMap<FIntPoint, UObsidianItem*> AddedItemWidgetMap;
 
 	UPROPERTY()
 	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;

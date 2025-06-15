@@ -63,7 +63,7 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 	if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_GeneralItemChanged)
 	{
 		HandleHoveringOverInventoryItem(InventoryChangeMessage.GridItemPosition);
-		if(UObsidianItem* CorrespondingItemWidget = GetItemWidgetAtInventoryLocation(InventoryChangeMessage.GridItemPosition))
+		if(UObsidianItem* CorrespondingItemWidget = GetItemWidgetAtInventoryGridSlot(InventoryChangeMessage.GridItemPosition))
 		{
 			CorrespondingItemWidget->ResetHighlight();
 			CachedItemsMatchingUsableContext.Remove(CorrespondingItemWidget);
@@ -240,7 +240,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 	}
 }
 
-void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVector2D& SlotPosition, const bool bShiftDown)
+void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown)
 {
 	check(OwnerHeroComponent);
 
@@ -254,7 +254,7 @@ void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FVec
 	{
 		return;
 	}
-	OwnerHeroComponent->ServerAddItemToInventoryAtSlot(SlotPosition, bShiftDown);
+	OwnerHeroComponent->ServerAddItemToInventoryAtSlot(ToGridSlot, bShiftDown);
 }
 
 void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag& SlotTag)
@@ -274,7 +274,7 @@ void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag
 	OwnerHeroComponent->ServerEquipItemAtSlot(SlotTag);
 }
 
-void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(const FVector2D& SlotPosition, UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot, UObsidianItem* ItemWidget)
 {
 	check(OwnerHeroComponent);
 	check(InventoryComponent);
@@ -284,7 +284,7 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 		return;
 	}
 	
-	UObsidianInventoryItemInstance* UsingInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	UObsidianInventoryItemInstance* UsingInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 	if(UsingInstance->IsItemUsable() == false)
 	{
 		return;
@@ -298,9 +298,9 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 	//TODO Add Stash when implemented
 	
 	const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
-	for(const FVector2D& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
+	for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
 	{
-		if(UObsidianItem* Item = GetItemWidgetAtInventoryLocation(GridLocation))
+		if(UObsidianItem* Item = GetItemWidgetAtInventoryGridSlot(GridLocation))
 		{
 			Item->HighlightItem();
 			CachedItemsMatchingUsableContext.Add(Item);
@@ -314,13 +314,13 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 			CachedItemsMatchingUsableContext.Add(Item);
 		}
 	}
-	for(const FVector2D& StashGridLocation : MatchingUsableContext.StashItemsMatchingContext)
+	for(const FIntPoint& StashGridLocation : MatchingUsableContext.StashItemsMatchingContext)
 	{
 		
 	}
 }
 
-void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const FVector2D& SlotPosition)
+void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot)
 {
 	check(InventoryComponent);
 	check(OwnerHeroComponent);
@@ -330,13 +330,13 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		OwnerHeroComponent->UseItem(SlotPosition, false);
+		OwnerHeroComponent->UseItem(AtGridSlot, false);
 		return;
 	}
 	
 	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
-		const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+		const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 		if(InstanceToAddTo == nullptr)
 		{
 			UE_LOG(LogInventory, Error, TEXT("Item Instance at pressed Location is invalid in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItem."));
@@ -350,14 +350,14 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 		 	{
 		 		if(UObsidianInventoryComponent::IsTheSameItem(DraggedInstance, InstanceToAddTo))
 		 		{
-		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition);
+		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
 		 			return;
 		 		}
 		 	}
 			
-		 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(SlotPosition, DraggedInstance))
+		 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
 		 	{
-		 		OwnerHeroComponent->ServerReplaceItemAtInventorySlot(SlotPosition);
+		 		OwnerHeroComponent->ServerReplaceItemAtInventorySlot(AtGridSlot);
 		 	}
 		 	return;
 		 }
@@ -370,40 +370,40 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 		 	{
 		 		if(UObsidianInventoryComponent::IsTheSameItem(InstanceToAddTo, DraggedItemDef))
 		 		{
-		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition);
+		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
 		 			return;
 		 		}
 		 	}
 			
-			 if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(SlotPosition, DraggedItemDef, ItemStackCount))
+			 if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
 			 {
-			 	OwnerHeroComponent->ServerReplaceItemAtInventorySlot(SlotPosition);
+			 	OwnerHeroComponent->ServerReplaceItemAtInventorySlot(AtGridSlot);
 			 }
 			 return;
 		}
 		return;
 	}
 	
-	OwnerHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
+	OwnerHeroComponent->ServerGrabInventoryItemToCursor(AtGridSlot);
 }
 
-void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithShiftDown(const FVector2D& SlotPosition, const UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot, const UObsidianItem* ItemWidget)
 {
 	check(OwnerHeroComponent);
 
 	if(OwnerHeroComponent->IsUsingItem())
 	{
-		OwnerHeroComponent->UseItem(SlotPosition, true);
+		OwnerHeroComponent->UseItem(AtGridSlot, true);
 		return;
 	}
 	
 	if(OwnerHeroComponent->IsDraggingAnItem())
 	{
-		OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(SlotPosition, 1);
+		OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot, 1);
 		return;
 	}
 	
-	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 	if(ItemInstance->IsStackable() == false)
 	{
 		return;
@@ -419,7 +419,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(ObsidianPlayerController, UnstackSliderClass);
-	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, SlotPosition);
+	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, AtGridSlot);
 
 	const FVector2D UnstackSliderViewportPosition = CalculateUnstackSliderPosition(ItemWidget);
 	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
@@ -494,9 +494,9 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	OwnerHeroComponent->ServerGrabEquippedItemToCursor(SlotTag);
 }
 
-void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const FVector2D& SlotPosition)
+void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot)
 {
-	const UObsidianItem* ItemWidget = GetItemWidgetAtInventoryLocation(SlotPosition);
+	const UObsidianItem* ItemWidget = GetItemWidgetAtInventoryGridSlot(AtGridSlot);
 	if(ItemWidget == nullptr || !CanShowDescription())
 	{
 		return;
@@ -504,7 +504,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const F
 	
 	RemoveItemDescription();
 	
-	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
+	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(AtGridSlot);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
@@ -525,7 +525,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const U
 	
 	RemoveItemDescription();
 
-	const FVector2D SlotPosition = ItemWidget->GetInventoryPosition();
+	const FIntPoint SlotPosition = ItemWidget->GetInventoryPosition();
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
@@ -634,7 +634,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 	return ActiveItemDescription;
 }
 
-void UObsidianInventoryWidgetController::HandleTakingOutStacks(const int32 StacksToTake, const FVector2D& SlotPosition)
+void UObsidianInventoryWidgetController::HandleTakingOutStacks(const int32 StacksToTake, const FIntPoint& GridSlotPosition)
 {
 	RemoveUnstackSlider();
 	
@@ -643,22 +643,22 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(const int32 Stack
 		return;
 	}
 
-	const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(GridSlotPosition);
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%f, %f]"), SlotPosition.X, SlotPosition.Y);
+		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridSlotPosition.X, GridSlotPosition.Y);
 		return;
 	}
 
 	
 	if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%f, %f]"), SlotPosition.X, SlotPosition.Y);
-		UE_LOG(LogTemp, Warning, TEXT("Instance at position: [%s]"), *InventoryComponent->GetItemInstanceAtLocation(SlotPosition)->GetItemDebugName());
-		OwnerHeroComponent->ServerGrabInventoryItemToCursor(SlotPosition);
+		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridSlotPosition.X, GridSlotPosition.Y);
+		UE_LOG(LogTemp, Warning, TEXT("Instance at position: [%s]"), *InventoryComponent->GetItemInstanceAtLocation(GridSlotPosition)->GetItemDebugName());
+		OwnerHeroComponent->ServerGrabInventoryItemToCursor(GridSlotPosition);
 		return;
 	}
-	OwnerHeroComponent->ServerTakeoutFromItem(SlotPosition, StacksToTake);
+	OwnerHeroComponent->ServerTakeoutFromItem(GridSlotPosition, StacksToTake);
 }
 
 void UObsidianInventoryWidgetController::RemoveItemUIElements()
@@ -726,7 +726,7 @@ bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
 	return false;
 }
 
-bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& SlotPosition) const
+bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FIntPoint& AtGridSlot) const
 {
 	if(InventoryComponent == nullptr)
 	{
@@ -734,15 +734,15 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& Sl
 		return false;	
 	}
 
-	TArray<FVector2D> LocalItemGridSize;
+	TArray<FIntPoint> LocalItemGridSize;
 	if(!GetDraggedItemGridSize(LocalItemGridSize))
 	{
 		return false;
 	}
-	return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSize, SlotPosition);
+	return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSize, AtGridSlot);
 }
 
-bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& SlotPosition, const TArray<FVector2D>& ItemGridSize) const
+bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const TArray<FIntPoint>& ItemGridSize) const
 {
 	if(InventoryComponent == nullptr)
 	{
@@ -750,10 +750,10 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FVector2D& Sl
 		return false;	
 	}
 	
-	return InventoryComponent->CheckSpecifiedPosition(ItemGridSize, SlotPosition);
+	return InventoryComponent->CheckSpecifiedPosition(ItemGridSize, AtGridSlot);
 }
 
-bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const
+bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const
 {
 	if(!IsDraggingAnItem())
 	{
@@ -786,36 +786,36 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FVector2D
 	return false;
 }
 
-UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtInventoryLocation(const FVector2D& Location) const
+UObsidianItem* UObsidianInventoryWidgetController::GetItemWidgetAtInventoryGridSlot(const FIntPoint& AtGridSlot) const
 {
-	if(AddedItemWidgetMap.Contains(Location))
+	if(AddedItemWidgetMap.Contains(AtGridSlot))
 	{
-		return AddedItemWidgetMap[Location];
+		return AddedItemWidgetMap[AtGridSlot];
 	}
 	return nullptr;
 }
 
-void UObsidianInventoryWidgetController::RegisterInventoryItemWidget(const FVector2D& Location, UObsidianItem* ItemWidget)
+void UObsidianInventoryWidgetController::RegisterInventoryItemWidget(const FIntPoint& GridSlot, UObsidianItem* ItemWidget)
 {
-	if(!AddedItemWidgetMap.Contains(Location))
+	if(!AddedItemWidgetMap.Contains(GridSlot))
 	{
-		AddedItemWidgetMap.Add(Location, ItemWidget);
+		AddedItemWidgetMap.Add(GridSlot, ItemWidget);
 	}
 }
 
-void UObsidianInventoryWidgetController::RemoveInventoryItemWidget(const FVector2D& Location)
+void UObsidianInventoryWidgetController::RemoveInventoryItemWidget(const FIntPoint& GridSlot)
 {
-	if(AddedItemWidgetMap.Contains(Location))
+	if(AddedItemWidgetMap.Contains(GridSlot))
 	{
-		if(UObsidianItem* Item = AddedItemWidgetMap[Location])
+		if(UObsidianItem* Item = AddedItemWidgetMap[GridSlot])
 		{
-			if(ActiveItemDescription && ActiveItemDescription->IsInventoryItemDescription() && ActiveItemDescription->GetAssociatedInventoryLocation() == Location)
+			if(ActiveItemDescription && ActiveItemDescription->IsInventoryItemDescription() && ActiveItemDescription->GetAssociatedInventoryLocation() == GridSlot)
 			{
 				RemoveItemDescription();
 			}
 			Item->RemoveFromParent();
 		}
-		AddedItemWidgetMap.Remove(Location);
+		AddedItemWidgetMap.Remove(GridSlot);
 	}
 }
 
@@ -924,7 +924,7 @@ FVector2D UObsidianInventoryWidgetController::CalculateUnstackSliderPosition(con
 	FVector2D SliderSize = ActiveUnstackSlider->GetSizeBoxSize();
 		
 	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
-	FVector2D ItemLocalSize = ItemWidget->GetItemSize();
+	FVector2D ItemLocalSize = ItemWidget->GetItemWidgetSize();
 
 	// Adjusting sizes based on viewport scale
 	const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
@@ -962,7 +962,7 @@ FVector2D UObsidianInventoryWidgetController::CalculateDescriptionPosition(const
 	FVector2D DescriptionSize = ActiveItemDescription->GetDesiredSize();
 		
 	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
-	FVector2D ItemLocalSize = ItemWidget->GetItemSize();
+	FVector2D ItemLocalSize = ItemWidget->GetItemWidgetSize();
 		
 	// Adjusting sizes based on viewport scale
 	const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);

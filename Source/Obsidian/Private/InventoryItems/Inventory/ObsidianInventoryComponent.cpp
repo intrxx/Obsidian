@@ -61,17 +61,17 @@ int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(const TSubclass
 	return FinalCount;
 }
 
-TMap<FVector2D, UObsidianInventoryItemInstance*> UObsidianInventoryComponent::Internal_GetLocationToInstanceMap()
+TMap<FIntPoint, UObsidianInventoryItemInstance*> UObsidianInventoryComponent::Internal_GetLocationToInstanceMap()
 {
 	return InventoryGrid.GridLocationToItemMap;
 }
 
-TMap<FVector2D, bool> UObsidianInventoryComponent::Internal_GetInventoryStateMap()
+TMap<FIntPoint, bool> UObsidianInventoryComponent::Internal_GetInventoryStateMap()
 {
 	return InventoryGrid.InventoryStateMap;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::GetItemInstanceAtLocation(const FVector2D& Location) const
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::GetItemInstanceAtLocation(const FIntPoint& Location) const
 {
 	if(InventoryGrid.GridLocationToItemMap.Contains(Location))
 	{
@@ -85,9 +85,9 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems
 	return InventoryGrid.GetAllItems();
 }
 
-FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(const FVector2D& InPosition) const
+FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(const FIntPoint& GridPosition) const
 {
-	const UObsidianInventoryItemInstance* ItemInstance = GetItemInstanceAtLocation(InPosition);
+	const UObsidianInventoryItemInstance* ItemInstance = GetItemInstanceAtLocation(GridPosition);
 	check(ItemInstance);
 
 	FObsidianItemStats Stats;
@@ -209,7 +209,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstan
 	return nullptr;
 }
 
-bool UObsidianInventoryComponent::CanFitItemDefinition(FVector2D& OutAvailablePosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+bool UObsidianInventoryComponent::CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	bool bCanFit = false;
 	
@@ -217,16 +217,16 @@ bool UObsidianInventoryComponent::CanFitItemDefinition(FVector2D& OutAvailablePo
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
+			const TArray<FIntPoint> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
 
-			bCanFit = CheckAvailablePosition(ItemGridSize, OutAvailablePosition);
+			bCanFit = CheckAvailablePosition(ItemGridSize, OutAvailablePositions);
 			return bCanFit;
 		}
 	}
 	return bCanFit;
 }
 
-bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FVector2D& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	bool bCanFit = false;
 	
@@ -234,7 +234,7 @@ bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FVec
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
+			const TArray<FIntPoint> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
 
 			bCanFit = CheckSpecifiedPosition(ItemGridSize, SpecifiedSlot);
 			return bCanFit;
@@ -289,7 +289,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 		return nullptr;
 	}
 	
-	FVector2D AvailablePosition;
+	FIntPoint AvailablePosition;
 	if(CanFitItemDefinition(AvailablePosition, ItemDef) == false)
 	{
 		//TODO Inventory is full, add voice over?
@@ -314,7 +314,7 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinition(c
 	return Instance;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount, const int32 StackToAddOverride)
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, int32& StacksLeft, const int32 StackCount, const int32 StackToAddOverride)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -354,14 +354,14 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 		StacksLeft = StackCount - StacksAvailableToAdd;
 	}
 	
-	if(CanFitItemDefinitionToSpecifiedSlot(ToSlot, ItemDef) == false)
+	if(CanFitItemDefinitionToSpecifiedSlot(ToGridSlot, ItemDef) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return nullptr;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, ToSlot);
+	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, ToGridSlot);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 
 	if(!bStackable)
@@ -376,17 +376,17 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionTo
 	return Instance;
 }
 
-bool UObsidianInventoryComponent::CanFitItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance)
+bool UObsidianInventoryComponent::CanFitItemInstance(FIntPoint& OutAvailablePosition, UObsidianInventoryItemInstance* Instance)
 {
-	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
+	const TArray<FIntPoint> ItemGridSize = Instance->GetItemGridSize();
 	
 	const bool bCanAdd = CheckAvailablePosition(ItemGridSize, OutAvailablePosition);
 	return bCanAdd;
 }
 
-bool UObsidianInventoryComponent::CanFitItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance)
+bool UObsidianInventoryComponent::CanFitItemInstanceToSpecificSlot(const FIntPoint& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance)
 {
-	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
+	const TArray<FIntPoint> ItemGridSize = Instance->GetItemGridSize();
 	
 	const bool bCanAdd = CheckSpecifiedPosition(ItemGridSize, SpecifiedSlot);
 	return bCanAdd;
@@ -428,7 +428,7 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 		return;
 	}
 	
-	FVector2D AvailablePosition;
+	FIntPoint AvailablePosition;
 	if(CanFitItemInstance(AvailablePosition, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
@@ -456,7 +456,7 @@ void UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance
 	}
 }
 
-bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot, const int32 StackToAddOverride)
+bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -487,7 +487,7 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 		}
 	}
 	
-	if(CanFitItemInstanceToSpecificSlot(ToSlot, InstanceToAdd) == false)
+	if(CanFitItemInstanceToSpecificSlot(ToGridSlot, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
@@ -510,7 +510,7 @@ bool UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInvento
 	}
 
 	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	InventoryGrid.AddEntry(InstanceToAdd, ToSlot);
+	InventoryGrid.AddEntry(InstanceToAdd, ToGridSlot);
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -631,7 +631,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 	return AddedToInstances;
 }
 
-bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride)
+bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FIntPoint& AtGridSlot, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -641,7 +641,7 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 	
 	OutAddingStacksResult.StacksLeft = AddingFromItemDefCurrentStacks;
 	
-	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtPosition);
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtGridSlot);
 	if(IsTheSameItem(InstanceToAddTo, AddingFromItemDef) == false)
 	{
 		return false;
@@ -678,7 +678,7 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const
 	return true;
 }
 
-bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride)
+bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FIntPoint& AtGridSlot, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride)
 {
 	if(!GetOwner()->HasAuthority())
 	{
@@ -689,7 +689,7 @@ bool UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObs
 	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	OutAddingStacksResult.StacksLeft = AddingFromInstanceCurrentStacks;
 	
-	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtPosition);
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtGridSlot);
 	if(IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
 	{
 		return false;
@@ -968,7 +968,7 @@ void UObsidianInventoryComponent::BeginPlay()
 		int32 StacksLeft = 0;
 		for(const FObsidianDefaultItemTemplate& DefaultItemTemplate : DefaultInventoryItems)
 		{
-			if(DefaultItemTemplate.InventoryPositionOverride != FVector2D(-1.0f, -1.0f))
+			if(DefaultItemTemplate.InventoryPositionOverride != FIntPoint::NoneValue)
 			{
 				if(!AddItemDefinitionToSpecifiedSlot(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.InventoryPositionOverride, StacksLeft, DefaultItemTemplate.StackCount))
 				{
@@ -981,9 +981,9 @@ void UObsidianInventoryComponent::BeginPlay()
 	}
 }
 
-FVector2D UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const
+FIntPoint UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const
 {
-	return ItemInstance == nullptr ? FVector2D::Zero() : *InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
+	return ItemInstance == nullptr ? FIntPoint::NoneValue : *InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
 }
 
 bool UObsidianInventoryComponent::IsLocallyControlled()
@@ -1011,7 +1011,7 @@ void UObsidianInventoryComponent::InitInventoryState()
 	
 	for(int32 i = 0; i < InventoryGridSize; i++)
 	{
-		InventoryGrid.InventoryStateMap.Add(FVector2D(GridX, GridY), false);
+		InventoryGrid.InventoryStateMap.Add(FIntPoint(GridX, GridY), false);
 		
 		if(GridX == InventoryGridWidth - 1)
 		{
@@ -1024,24 +1024,24 @@ void UObsidianInventoryComponent::InitInventoryState()
 		}
 	}
 	
-	for(const TTuple<FVector2D, UObsidianInventoryItemInstance*>& ItemLoc : InventoryGrid.GridLocationToItemMap)
+	for(const TTuple<FIntPoint, UObsidianInventoryItemInstance*>& ItemLoc : InventoryGrid.GridLocationToItemMap)
 	{
 		InventoryGrid.Item_MarkSpace(ItemLoc.Value, ItemLoc.Key);
 	}
 }
 
-bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition)
+bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FIntPoint>& ItemGridSize, FIntPoint& OutAvailablePosition)
 {
 	bool bCanFit = false;
 	
-	for(const TTuple<FVector2D, bool>& Location : InventoryGrid.InventoryStateMap)
+	for(const TTuple<FIntPoint, bool>& Location : InventoryGrid.InventoryStateMap)
 	{
 		if(Location.Value == false) // Location is free
 		{
 			bCanFit = true;
-			for(FVector2D LocationComp : ItemGridSize)
+			for(FIntPoint LocationComp : ItemGridSize)
 			{
-				const FVector2D Loc = Location.Key + LocationComp;
+				const FIntPoint Loc = Location.Key + LocationComp;
 				if(!InventoryGrid.InventoryStateMap.Contains(Loc) || InventoryGrid.InventoryStateMap[Loc] == true)
 				{
 					bCanFit = false;
@@ -1060,17 +1060,17 @@ bool UObsidianInventoryComponent::CheckAvailablePosition(const TArray<FVector2D>
 	return bCanFit;
 }
 
-bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>& ItemGridSize, const FVector2D& SpecifiedPosition)
+bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FIntPoint>& ItemGridSize, const FIntPoint& SpecifiedPosition)
 {
 	bool bCanFit = false;
 	
 	if(InventoryGrid.InventoryStateMap[SpecifiedPosition] == false) // Initial location is free
 	{
 		bCanFit = true;
-		for(FVector2D LocationComp : ItemGridSize)
+		for(FIntPoint LocationComp : ItemGridSize)
 		{
-			const FVector2D Loc = SpecifiedPosition + LocationComp;
-			if(!InventoryGrid.InventoryStateMap.Contains(Loc) || InventoryGrid.InventoryStateMap[Loc] == true)
+			const FIntPoint SlotToCheck = SpecifiedPosition + LocationComp;
+			if(!InventoryGrid.InventoryStateMap.Contains(SlotToCheck) || InventoryGrid.InventoryStateMap[SlotToCheck] == true)
 			{
 				bCanFit = false;
 				break;
@@ -1080,7 +1080,7 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const TArray<FVector2D>
 	return bCanFit;
 }
 
-bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance)
+bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& AtGridSlot, UObsidianInventoryItemInstance* ReplacingInstance)
 {
 	if(GetNumberOfStacksAvailableToAddToInventory(ReplacingInstance) <= 0)
 	{
@@ -1088,36 +1088,36 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 		return false;
 	}
 	
-	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(Slot);
-	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
-	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
+	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
+	const FIntPoint ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
+	const TArray<FIntPoint> ItemGridSize = InstanceAtLocation->GetItemGridSize();
 	
-	TMap<FVector2D, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
-	for(const FVector2D LocationComp : ItemGridSize)
+	TMap<FIntPoint, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
+	for(const FIntPoint LocationComp : ItemGridSize)
 	{
-		const FVector2D Location = ItemOrigin + LocationComp;
-		if(TempInventoryStateMap.Contains(Location))
+		const FIntPoint GridSlotToCheck = ItemOrigin + LocationComp;
+		if(TempInventoryStateMap.Contains(GridSlotToCheck))
 		{
-			TempInventoryStateMap[Location] = false;
+			TempInventoryStateMap[GridSlotToCheck] = false;
 		}
 #if !UE_BUILD_SHIPPING
 		else
 		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
-			"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), Location.X, Location.Y), ELogVerbosity::Warning);
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
+			"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), GridSlotToCheck.X, GridSlotToCheck.Y), ELogVerbosity::Warning);
 		}
 #endif
 	}
 	
-	const TArray<FVector2D> ReplacingItemGridSize = ReplacingInstance->GetItemGridSize();
+	const TArray<FIntPoint> ReplacingItemGridSize = ReplacingInstance->GetItemGridSize();
 	bool bCanReplace = false;
-	if(TempInventoryStateMap[Slot] == false) // Initial location is free
+	if(TempInventoryStateMap[AtGridSlot] == false) // Initial location is free
 	{
 		bCanReplace = true;
-		for(FVector2D LocationComp : ReplacingItemGridSize)
+		for(FIntPoint LocationComp : ReplacingItemGridSize)
 		{
-			const FVector2D Loc = Slot + LocationComp;
-			if(!TempInventoryStateMap.Contains(Loc) || TempInventoryStateMap[Loc] == true)
+			const FIntPoint GridSlotToCheck = AtGridSlot + LocationComp;
+			if(!TempInventoryStateMap.Contains(GridSlotToCheck) || TempInventoryStateMap[GridSlotToCheck] == true)
 			{
 				bCanReplace = false;
 				break;
@@ -1127,39 +1127,39 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 	return bCanReplace;
 }
 
-bool UObsidianInventoryComponent::CanFitItemInstance(UObsidianInventoryItemInstance* Instance)
+bool UObsidianInventoryComponent::CanFitItemInstance(const UObsidianInventoryItemInstance* Instance)
 {
-	const TArray<FVector2D> ItemGridSize = Instance->GetItemGridSize();
-	FVector2D AvailablePosition = FVector2D::ZeroVector;
+	const TArray<FIntPoint> ItemGridSize = Instance->GetItemGridSize();
+	FIntPoint AvailablePosition = FIntPoint::NoneValue;
 	
 	const bool bCanAdd = CheckAvailablePosition(ItemGridSize, AvailablePosition);
 	return bCanAdd;
 }
 
-bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
+bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& AtGridSlot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
 	if(GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount) <= 0)
 	{
 		return false;
 	}
 	
-	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(Slot);
-	const FVector2D ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
-	const TArray<FVector2D> ItemGridSize = InstanceAtLocation->GetItemGridSize();
+	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
+	const FIntPoint ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
+	const TArray<FIntPoint> ItemGridSize = InstanceAtLocation->GetItemGridSize();
 	
-	TMap<FVector2D, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
-	for(const FVector2D LocationComp : ItemGridSize)
+	TMap<FIntPoint, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
+	for(const FIntPoint LocationComp : ItemGridSize)
 	{
-		const FVector2D Location = ItemOrigin + LocationComp;
-		if(TempInventoryStateMap.Contains(Location))
+		const FIntPoint GridSlotToCheck = ItemOrigin + LocationComp;
+		if(TempInventoryStateMap.Contains(GridSlotToCheck))
 		{
-			TempInventoryStateMap[Location] = false;
+			TempInventoryStateMap[GridSlotToCheck] = false;
 		}
 #if !UE_BUILD_SHIPPING
 		else
 		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
-			"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), Location.X, Location.Y), ELogVerbosity::Warning);
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
+			"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), GridSlotToCheck.X, GridSlotToCheck.Y), ELogVerbosity::Warning);
 		}
 #endif
 	}
@@ -1171,15 +1171,15 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FVec
 		const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
 		if(ensureMsgf(Appearance, TEXT("Appearance fragment does not exist on provided Item Def in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef")))
 		{
-			TArray<FVector2D> ReplacingItemGridSize = Appearance->GetItemGridSizeFromDesc();
+			TArray<FIntPoint> ReplacingItemGridSize = Appearance->GetItemGridSizeFromDesc();
 
-			if(TempInventoryStateMap[Slot] == false) // Initial location is free
+			if(TempInventoryStateMap[AtGridSlot] == false) // Initial location is free
 			{
 				bCanReplace = true;
-				for(FVector2D LocationComp : ReplacingItemGridSize)
+				for(FIntPoint LocationComp : ReplacingItemGridSize)
 				{
-					const FVector2D Loc = Slot + LocationComp;
-					if(!TempInventoryStateMap.Contains(Loc) || TempInventoryStateMap[Loc] == true)
+					const FIntPoint GridSlotToCheck = AtGridSlot + LocationComp;
+					if(!TempInventoryStateMap.Contains(GridSlotToCheck) || TempInventoryStateMap[GridSlotToCheck] == true)
 					{
 						bCanReplace = false;
 						break;
@@ -1199,9 +1199,9 @@ bool UObsidianInventoryComponent::CanFitItemDefinition(const TSubclassOf<UObsidi
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const TArray<FVector2D> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
+			const TArray<FIntPoint> ItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
 
-			FVector2D AvailablePosition = FVector2D::ZeroVector;
+			FIntPoint AvailablePosition = FIntPoint::NoneValue;
 			bCanFit = CheckAvailablePosition(ItemGridSize, AvailablePosition);
 			return bCanFit;
 		}

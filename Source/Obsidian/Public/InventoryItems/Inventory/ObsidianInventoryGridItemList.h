@@ -46,7 +46,7 @@ struct FObsidianInventoryChangeMessage
 	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
-	FVector2D GridItemPosition = FVector2d::Zero();
+	FIntPoint GridItemPosition = FIntPoint::NoneValue;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	int32 NewCount = 0;
@@ -93,7 +93,7 @@ private:
 	int32 LastObservedCount = INDEX_NONE;
 
 	UPROPERTY()
-	FVector2D GridLocation = FVector2D::Zero();
+	FIntPoint GridLocation = FIntPoint::NoneValue;
 };
 
 /**
@@ -115,17 +115,17 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	int32 GetEntriesCount() const;
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FVector2D& AvailablePosition);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FVector2D& AvailablePosition);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FIntPoint& AvailablePosition);
+	void AddEntry(UObsidianInventoryItemInstance* Instance, const FIntPoint& AvailablePosition);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);
 	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance);
 
 	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
-	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
+	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition);
 	
 	/** Unmarks Item space in the internal Inventory State map. Must be called after removing item. */
-	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition);
+	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
@@ -139,7 +139,7 @@ public:
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FVector2D& GridPosition, const EObsidianInventoryChangeType& ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FIntPoint& GridPosition, const EObsidianInventoryChangeType& ChangeType) const;
 	
 private:
 	friend UObsidianInventoryComponent;
@@ -152,13 +152,13 @@ private:
 	TObjectPtr<UActorComponent> OwnerComponent;
 
 	/** Accelerated list of item location (0, 0). */
-	TMap<FVector2D, UObsidianInventoryItemInstance*> GridLocationToItemMap;
+	TMap<FIntPoint, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 
 	/**
 	 * Map that represents whole Inventory Grid with taken fields.
 	 * If a Given Vector2D location has a true value associated with it, the field is treated as taken.
 	 */
-	TMap<FVector2D, bool> InventoryStateMap;
+	TMap<FIntPoint, bool> InventoryStateMap;
 };
 
 template<>

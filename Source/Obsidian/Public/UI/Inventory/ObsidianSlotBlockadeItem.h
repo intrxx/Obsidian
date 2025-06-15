@@ -31,7 +31,7 @@ class OBSIDIAN_API UObsidianSlotBlockadeItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage);
+	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage);
 
 	FGameplayTag GetEquipmentSlotTag() const
 	{

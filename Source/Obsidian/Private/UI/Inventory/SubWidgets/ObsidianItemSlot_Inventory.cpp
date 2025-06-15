@@ -20,7 +20,7 @@ void UObsidianItemSlot_Inventory::NativeConstruct()
 	}
 }
 
-void UObsidianItemSlot_Inventory::InitializeSlot(UObsidianInventoryGrid* InOwningGrid, const FVector2D& InSlotPosition)
+void UObsidianItemSlot_Inventory::InitializeSlot(UObsidianInventoryGrid* InOwningGrid, const FIntPoint& InSlotPosition)
 {
 	OwningGrid = InOwningGrid;
 	SlotPosition = InSlotPosition;

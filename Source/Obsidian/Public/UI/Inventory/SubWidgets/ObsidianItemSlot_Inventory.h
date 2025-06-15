@@ -20,9 +20,9 @@ class OBSIDIAN_API UObsidianItemSlot_Inventory : public UObsidianItemSlot
 	GENERATED_BODY()
 	
 public:
-	void InitializeSlot(UObsidianInventoryGrid* InOwningInventory, const FVector2D& InSlotPosition);
+	void InitializeSlot(UObsidianInventoryGrid* InOwningInventory, const FIntPoint& InSlotPosition);
 	
-	FVector2D GetSlotPosition() const
+	FIntPoint GetSlotPosition() const
 	{
 		return SlotPosition;
 	}
@@ -35,7 +35,7 @@ protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 protected:
-	FVector2D SlotPosition;
+	FIntPoint SlotPosition;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryGrid> OwningGrid;

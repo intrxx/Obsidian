@@ -38,12 +38,12 @@ protected:
 			int32 CurrentStackCount;
 			int32 MaxStackCount;
 			int32 LimitStackCount;
-			FVector2D GridSize;
-			FVector2D CurrentGridLocation;
+			FIntPoint GridSize;
+			FIntPoint CurrentGridLocation;
 		};
 		TArray<FInventoryItemDebug> Items;
 
-		TMap<FVector2D, bool> InventoryStateMap;
+		TMap<FIntPoint, bool> InventoryStateMap;
 
 		void Serialize(FArchive& Ar);
 	};

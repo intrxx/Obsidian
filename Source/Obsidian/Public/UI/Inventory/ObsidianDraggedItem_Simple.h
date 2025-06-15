@@ -23,9 +23,9 @@ class OBSIDIAN_API UObsidianDraggedItem_Simple : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeDraggedItem(const FSlateBrush& InItemImage, const FVector2D& InItemGridSpan);
+	void InitializeDraggedItem(const FSlateBrush& InItemImage, const FIntPoint& InItemGridSpan);
 	
-	FVector2D GetItemSize() const;
+	FVector2D GetItemWidgetSize() const;
 	
 protected:
 	virtual void NativeConstruct() override;

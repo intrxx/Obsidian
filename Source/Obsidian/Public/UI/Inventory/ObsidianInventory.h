@@ -53,8 +53,8 @@ public:
 	}
 
 	bool IsPlayerDraggingItem() const;
-	bool GetDraggedItemGridSize(TArray<FVector2D>& OutItemGridSize) const;
-	bool CanPlaceDraggedItem(const FVector2D ToHoveredSlotPosition, const TArray<FVector2D>& ItemGridSize) const;
+	bool GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const;
+	bool CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const TArray<FIntPoint>& ItemGridSize) const;
 	bool CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const;
 
 protected:
@@ -68,7 +68,7 @@ protected:
 	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
 	
 private:
-	void RequestAddingItemToInventory(const FVector2D& ToPosition, const bool bShiftDown) const;
+	void RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const;
 	void RequestEquippingItem(const FGameplayTag& ToSlot) const;
 	
 	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);

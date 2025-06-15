@@ -7,7 +7,7 @@
 
 // ~ Project
 
-FVector2D UObsidianToolTipBase::GetDesiredPosition() const
+FVector2D UObsidianToolTipBase::GetDesiredViewportPosition() const
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -15,6 +15,6 @@ FVector2D UObsidianToolTipBase::GetDesiredPosition() const
 		return FVector2D::Zero();
 	}
 	
-	const FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
-	return MousePosition + ToolTipOffset;
+	const FVector2D MouseViewportPosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
+	return MouseViewportPosition + ToolTipOffset;
 }

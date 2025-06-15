@@ -28,9 +28,9 @@ void UObsidianUnstackSlider::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 CurrentItemStacks, const FVector2D& InItemSlotPosition)
+void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 CurrentItemStacks, const FIntPoint& InItemGridPosition)
 {
-	ItemSlotPosition = InItemSlotPosition;
+	ItemSlotPosition = InItemGridPosition;
 	
 	MaxStacks = CurrentItemStacks;
 	StackToLeave = MaxStacks - 1;

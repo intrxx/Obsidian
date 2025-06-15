@@ -277,39 +277,39 @@ void UObsidianInventoryItemInstance::SetStackable(const bool InStackable)
 	bStackable = InStackable;
 }
 
-TArray<FVector2D> UObsidianInventoryItemInstance::GetItemGridSize() const
+TArray<FIntPoint> UObsidianInventoryItemInstance::GetItemGridSize() const
 {
 	return ItemGridSize;
 }
 
-void UObsidianInventoryItemInstance::SetItemGridSize(const TArray<FVector2D>& GridSizeToSet)
+void UObsidianInventoryItemInstance::SetItemGridSize(const TArray<FIntPoint>& GridSizeToSet)
 {
 	ItemGridSize = GridSizeToSet;
 }
 
-FVector2D UObsidianInventoryItemInstance::GetItemGridSpan() const
+FIntPoint UObsidianInventoryItemInstance::GetItemGridSpan() const
 {
 	return ItemGridSpan;
 }
 
-void UObsidianInventoryItemInstance::SetItemGridSpan(const FVector2D GridSpanToSet)
+void UObsidianInventoryItemInstance::SetItemGridSpan(const FIntPoint& GridSpanToSet)
 {
 	ItemGridSpan = GridSpanToSet;
 }
 
-FVector2D UObsidianInventoryItemInstance::GetItemCurrentGridLocation() const
+FIntPoint UObsidianInventoryItemInstance::GetItemCurrentGridLocation() const
 {
 	return ItemCurrentGridLocation;
 }
 
-void UObsidianInventoryItemInstance::SetItemCurrentGridLocation(const FVector2D CurrentGridLocationToSet)
+void UObsidianInventoryItemInstance::SetItemCurrentGridLocation(const FIntPoint& CurrentGridLocationToSet)
 {
 	ItemCurrentGridLocation = CurrentGridLocationToSet;	
 }
 
 void UObsidianInventoryItemInstance::ResetItemCurrentGridLocation()
 {
-	ItemCurrentGridLocation = FVector2D::Zero();
+	ItemCurrentGridLocation = FIntPoint::NoneValue;
 }
 
 FGameplayTag UObsidianInventoryItemInstance::GetItemCurrentEquipmentSlot() const

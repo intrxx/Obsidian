@@ -82,22 +82,22 @@ public:
 	bool DropItem();
 	
 	UFUNCTION(Server, Reliable)
-	void ServerAddItemToInventoryAtSlot(const FVector2D& SlotPosition, const bool bShiftDown);
+	void ServerAddItemToInventoryAtSlot(const FIntPoint& SlotPosition, const bool bShiftDown);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerAddStacksFromDraggedItemToItemAtSlot(const FVector2D& SlotPosition, const int32 StacksToAddOverride = -1);
+	void ServerAddStacksFromDraggedItemToItemAtSlot(const FIntPoint& SlotPosition, const int32 StacksToAddOverride = -1);
 
 	UFUNCTION(Server, Reliable)
-	void ServerTakeoutFromItem(const FVector2D& SlotPosition, const int32 StacksToTake);
+	void ServerTakeoutFromItem(const FIntPoint& SlotPosition, const int32 StacksToTake);
 
 	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtInventorySlot(const FVector2D& SlotPosition);
+	void ServerReplaceItemAtInventorySlot(const FIntPoint& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabInventoryItemToCursor(const FVector2D& SlotPosition);
+	void ServerGrabInventoryItemToCursor(const FIntPoint& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemDef(AObsidianDroppableItem* ItemToPickup);
@@ -105,10 +105,10 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
 
-	void UseItem(const FVector2D& OnSlotPosition, const bool bLeftShiftDown);
+	void UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FVector2D& OnSlotPosition);
+	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition);
 	
 	/**
 	 * Equipment.

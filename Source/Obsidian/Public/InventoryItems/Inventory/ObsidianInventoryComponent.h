@@ -33,7 +33,7 @@ public:
 	int32 StackCount = 1;
 
 	UPROPERTY(EditAnywhere)
-	FVector2D InventoryPositionOverride = FVector2D(-1.0f, -1.0f);
+	FIntPoint InventoryPositionOverride = FIntPoint::NoneValue;
 };
 
 /**
@@ -62,7 +62,7 @@ public:
 	/** Gets the total amount of items added to the inventory with the same item Definition. This does not include stacks, only individual entries to the inventory. */
 	int32 GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const;
 
-	UObsidianInventoryItemInstance* GetItemInstanceAtLocation(const FVector2D& Location) const;
+	UObsidianInventoryItemInstance* GetItemInstanceAtLocation(const FIntPoint& Location) const;
 
 	/** Gets all Item Instances that are added to the inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Obsidian|Inventory")
@@ -70,7 +70,7 @@ public:
 
 	/** Gets the Item Stats based on provided Item position on the Inventory Grid. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
-	FObsidianItemStats GetItemStatsByInventoryPosition(const FVector2D& InPosition) const;
+	FObsidianItemStats GetItemStatsByInventoryPosition(const FIntPoint& InPosition) const;
 
 	/** Gets the Item Stats from provided Item Instance. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
@@ -85,7 +85,7 @@ public:
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
 	/** Checks if the item fits in the provided spot. */
-	bool CheckSpecifiedPosition(const TArray<FVector2D>& ItemGridSize, const FVector2D& SpecifiedPosition);
+	bool CheckSpecifiedPosition(const TArray<FIntPoint>& ItemGridSize, const FIntPoint& SpecifiedPosition);
 	
      /**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
@@ -100,7 +100,7 @@ public:
 	
 	/** Checks if the provided Item Definition can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool CanReplaceItemAtSpecificSlotWithDef(const FVector2D& Slot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount = 1);
+	bool CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& AtGridSlot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount = 1);
 
 	/** Checks if the provided Item Definition fits anywhere in the inventory. */
 	bool CanFitItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
@@ -111,7 +111,7 @@ public:
 
 	/** Tries to add provided Item Definition to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FVector2D& ToSlot, int32& StacksLeft, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
+	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, int32& StacksLeft, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Will try to add stacks from provided Item Definition at provided Position.
@@ -125,14 +125,14 @@ public:
 	 *  @return True if at least one stack was added successfully.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
+	bool TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FIntPoint& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
 	
 	/** Checks if the provided Item Instance can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool CanReplaceItemAtSpecificSlotWithInstance(const FVector2D& Slot, UObsidianInventoryItemInstance* ReplacingInstance);
+	bool CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& AtGridSlot, UObsidianInventoryItemInstance* ReplacingInstance);
 
 	/** Checks if the provided Item Instance fits anywhere in the inventory. */
-	bool CanFitItemInstance(UObsidianInventoryItemInstance* Instance);
+	bool CanFitItemInstance(const UObsidianInventoryItemInstance* Instance);
 	
 	/** Tries to add Item Instance to the inventory, if the item is stackable will first try to add all the stacks to the same item types if they exist in inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
@@ -140,20 +140,20 @@ public:
 
 	/** Tries to add provided Item Instance to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FVector2D& ToSlot, const int32 StackToAddOverride = -1);
+	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride = -1);
 	
 	/**
 	 *	Will try to add stacks from provided Item Instance at provided Position. 
 	 *
 	 *	@param AddingFromInstance		The Item Instance that the function will try to add from.
-	 *  @param AtPosition				The pressed slot at which the function will search for item to add to.
+	 *  @param AtGridSlot				The pressed slot at which the function will search for item to add to.
 	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
 	 *  @param StackToAddOverride		Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
 	 *
 	 *  @return True if at least one stack was added successfully.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FVector2D& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
+	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FIntPoint& AtGridSlot, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Provides a copied Item with the amount of stacks to take. Shouldn't ever be called to take out full item stacks or 0 stacks.
@@ -192,16 +192,16 @@ private:
 	void InitInventoryState();
 
 	/** Checks if the provided Item Definition fits anywhere in the inventory. Provides Available Position. */
-	bool CanFitItemDefinition(FVector2D& OutAvailablePosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	bool CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
 	/** Checks if the provided Item Definition fits in the inventory at provided slot. */
-	bool CanFitItemDefinitionToSpecifiedSlot(const FVector2D& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	bool CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
 	/** Checks if the provided Item Instance fits anywhere in the inventory. Provides Available Position. */
-	bool CanFitItemInstance(FVector2D& OutAvailablePosition, UObsidianInventoryItemInstance* Instance);
+	bool CanFitItemInstance(FIntPoint& OutAvailablePosition, UObsidianInventoryItemInstance* Instance);
 	
 	/** Checks if the provided Item Instance fits in the inventory at provided slot. */
-	bool CanFitItemInstanceToSpecificSlot(const FVector2D& SpecifiedSlot, UObsidianInventoryItemInstance* Instance);
+	bool CanFitItemInstanceToSpecificSlot(const FIntPoint& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance);
 	
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
@@ -222,14 +222,14 @@ private:
 	int32 GetNumberOfStacksAvailableToAddToInventory(const UObsidianInventoryItemInstance* ItemInstance);
 
 	/** Gets the item location from internal grid map. */
-	FVector2D GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
+	FIntPoint GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
 	
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
-	bool CheckAvailablePosition(const TArray<FVector2D>& ItemGridSize, FVector2D& OutAvailablePosition);
+	bool CheckAvailablePosition(const TArray<FIntPoint>& ItemGridSize, FIntPoint& OutAvailablePosition);
 	
 	/** Internal usage only, this returns the internal Location To Instance Map. */
-	TMap<FVector2D, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
-	TMap<FVector2D, bool> Internal_GetInventoryStateMap();
+	TMap<FIntPoint, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
+	TMap<FIntPoint, bool> Internal_GetInventoryStateMap();
 
 	//TODO This can be moved to some library later.
 	

@@ -27,7 +27,7 @@ void UObsidianSlotBlockadeItem::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage)
+void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);

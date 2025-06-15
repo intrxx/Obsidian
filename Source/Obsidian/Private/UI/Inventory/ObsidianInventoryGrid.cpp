@@ -51,13 +51,13 @@ void UObsidianInventoryGrid::ConstructInventoryGrid(UObsidianInventory* InOwning
 	}
 }
 
-UObsidianItemSlot_Inventory* UObsidianInventoryGrid::GetSlotByPosition(const FVector2D& BySlotPosition)
+UObsidianItemSlot_Inventory* UObsidianInventoryGrid::GetSlotByPosition(const FIntPoint& BySlotPosition)
 {
 	const int32 Index = Algo::BinarySearchBy(GridSlots, BySlotPosition,[](const UObsidianItemSlot_Inventory* PotentialSlot)
 		{
 			return PotentialSlot->GetSlotPosition();
 		},
-		[](const FVector2D& A, const FVector2D& B)
+		[](const FIntPoint& A, const FIntPoint& B)
 		{
 			if (A.Y < B.Y) return true;
 			if (A.Y > B.Y) return false;
@@ -76,17 +76,17 @@ void UObsidianInventoryGrid::OnInventorySlotHover(const UObsidianItemSlot_Invent
 	
 	if(bEntered)
 	{
-		TArray<FVector2D> ItemGridSize;
+		TArray<FIntPoint> ItemGridSize;
 		if(OwningInventory->GetDraggedItemGridSize(ItemGridSize) == false) 
 		{
 			return; // No Dragged Item
 		}
 		
-		const FVector2D HoveredSlotPosition = AffectedSlot->GetSlotPosition();
+		const FIntPoint HoveredSlotPosition = AffectedSlot->GetSlotPosition();
 		const bool bCanPlace = OwningInventory->CanPlaceDraggedItem(HoveredSlotPosition, ItemGridSize);
-		for(const FVector2D& SizeComp : ItemGridSize)
+		for(const FIntPoint& SizeComp : ItemGridSize)
 		{
-			const FVector2D LocationToCheck = HoveredSlotPosition + SizeComp;
+			const FIntPoint LocationToCheck = HoveredSlotPosition + SizeComp;
 			if(UObsidianItemSlot_Inventory* LocalSlot = GetSlotByPosition(LocationToCheck))
 			{
 				const EObsidianItemSlotState SlotState = bCanPlace ? ISS_GreenLight : ISS_RedLight;
@@ -118,9 +118,9 @@ void UObsidianInventoryGrid::OnInventorySlotMouseButtonDown(const UObsidianItemS
 void UObsidianInventoryGrid::AddItemToGrid(UObsidianItem* ItemWidget, const float ItemSlotPadding)
 {
 	UCanvasPanelSlot* CanvasItem = Root_CanvasPanel->AddChildToCanvas(ItemWidget);
-	CanvasItem->SetSize(ItemWidget->GetItemSize());
-
-	const FVector2D ItemPosition = SlotTileSize * ItemWidget->GetInventoryPosition() + ItemSlotPadding;
+	CanvasItem->SetSize(ItemWidget->GetItemWidgetSize());
+	
+	const FVector2D ItemPosition = SlotTileSize * (FVector2D)ItemWidget->GetInventoryPosition() + ItemSlotPadding;
 	CanvasItem->SetPosition(ItemPosition);
 }
 

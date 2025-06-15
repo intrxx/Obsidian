@@ -45,7 +45,7 @@ void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 	OnItemMouseLeaveDelegate.Broadcast();
 }
 
-void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
+void UObsidianItem::InitializeItemWidget(const FIntPoint& DesiredPosition, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
@@ -65,7 +65,7 @@ void UObsidianItem::InitializeItemWidget(const FVector2D& DesiredPosition, const
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage)
+void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
@@ -115,12 +115,12 @@ FSlateBrush UObsidianItem::GetItemImage() const
 	return FSlateBrush();
 }
 
-FVector2D UObsidianItem::GetItemSize() const
+FVector2D UObsidianItem::GetItemWidgetSize() const
 {
 	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
 }
 
-void UObsidianItem::SetSize(const FVector2D& ItemGridSpan)
+void UObsidianItem::SetSize(const FIntPoint& ItemGridSpan)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);

@@ -319,7 +319,7 @@ public:
 		return ItemImage;
 	}
 
-	FVector2D GetItemGridSpan() const
+	FIntPoint GetItemGridSpan() const
 	{
 		return ItemGridSpan;
 	}
@@ -355,7 +355,7 @@ public:
 	}
 
 	/** It takes an additional ItemGridSpan argument as UI needs it to rescale the image for now. */
-	void SetItemImage(UTexture2D* InItemImage, const FVector2D& InItemGridSpan)
+	void SetItemImage(UTexture2D* InItemImage, const FIntPoint& InItemGridSpan)
 	{
 		bContainsItemImage = true;
 		ItemImage = InItemImage;
@@ -419,7 +419,7 @@ private:
 	TObjectPtr<UTexture2D> ItemImage;
 
 	UPROPERTY()
-	FVector2D ItemGridSpan = FVector2D::Zero();
+	FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 	
 	/**
 	 * Item Descriptors.

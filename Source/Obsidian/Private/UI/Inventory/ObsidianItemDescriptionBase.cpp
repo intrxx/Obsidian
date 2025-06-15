@@ -71,7 +71,7 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	{
 		if(UTexture2D* ItemTexture = ItemStats.GetItemImage())
 		{
-			const FVector2D GridSpan = ItemStats.GetItemGridSpan();
+			const FIntPoint GridSpan = ItemStats.GetItemGridSpan();
 			const FVector2D ImageDesiredSize = FVector2D(
 				GridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X,
 				GridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
@@ -237,7 +237,7 @@ bool UObsidianItemDescriptionBase::IsEquipmentDescription() const
 
 bool UObsidianItemDescriptionBase::IsInventoryItemDescription() const
 {
-	return AssociatedGridLocation == FVector2D::ZeroVector;
+	return AssociatedGridLocation == FIntPoint::NoneValue;
 }
 
 

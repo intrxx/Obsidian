@@ -32,18 +32,18 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeItemWidget(const FVector2D& DesiredPosition, const FVector2D& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
-	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FVector2D& ItemGridSpan, UTexture2D* ItemImage);
+	void InitializeItemWidget(const FIntPoint& DesiredPosition, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
+	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage);
 	
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
 
-	FVector2D GetInventoryPosition() const
+	FIntPoint GetInventoryPosition() const
 	{
 		return ItemDesiredPosition;
 	}
 	
-	FVector2D GetItemGridSpan() const
+	FIntPoint GetItemGridSpan() const
 	{
 		return ItemDesiredGridSpan;
 	}
@@ -55,8 +55,8 @@ public:
 
 	FSlateBrush GetItemImage() const;
 
-	FVector2D GetItemSize() const;
-	void SetSize(const FVector2D& ItemGridSpan);
+	FVector2D GetItemWidgetSize() const;
+	void SetSize(const FIntPoint& ItemGridSpan);
 
 	void SetUsingItemProperties();
 	void ResetUsingItemProperties();
@@ -95,10 +95,10 @@ protected:
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
 
 	UPROPERTY()
-	FVector2D ItemDesiredPosition = FVector2D::Zero();
+	FIntPoint ItemDesiredPosition = FIntPoint::NoneValue;
 	
 	UPROPERTY()
-	FVector2D ItemDesiredGridSpan = FVector2D::Zero();
+	FIntPoint ItemDesiredGridSpan = FIntPoint::NoneValue;
 
 	UPROPERTY()
 	FGameplayTag ItemEquipmentSlot = FGameplayTag::EmptyTag;

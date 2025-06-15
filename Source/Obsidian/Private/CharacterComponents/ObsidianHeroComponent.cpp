@@ -171,7 +171,7 @@ void UObsidianHeroComponent::DragUsableItemIcon() const
 		if(UWorld* World = GetWorld())
 		{
 			const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
-			FVector2D ItemSize = DraggedUsableItemWidget->GetItemSize() + FVector2D(5.0f, -5.0f);
+			FVector2D ItemSize = DraggedUsableItemWidget->GetItemWidgetSize() + FVector2D(5.0f, -5.0f);
 			ItemSize *= DPIScale;
 			
 			const FVector2D ViewportPosition = FVector2D(LocationX - ItemSize.X, LocationY - ItemSize.Y);
@@ -592,7 +592,7 @@ void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedIte
 	}
 }
 
-void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FVector2D& SlotPosition, const int32 StacksToTake)
+void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToTake)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
@@ -608,7 +608,7 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FVector2
 		return;
 	}
 
-	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(ItemGridPosition);
 	if(ItemInstance == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
@@ -631,7 +631,7 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FVector2
 	}
 }
 
-void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(const FVector2D& SlotPosition)
+void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(const FIntPoint& ItemGridPosition)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
@@ -651,18 +651,18 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 	DraggedItem.Clear();
 	StopDraggingItem(Controller);
 	
-	ServerGrabInventoryItemToCursor(SlotPosition);
+	ServerGrabInventoryItemToCursor(ItemGridPosition);
 
 	bool bSuccess = false;
 	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition);
+		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, ItemGridPosition);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
 		const int32 Stacks = CachedDraggedItem.Stacks;
 		int32 StacksLeft = Stacks;
-		if(InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StacksLeft, Stacks))
+		if(InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, ItemGridPosition, StacksLeft, Stacks))
 		{
 			bSuccess = true;
 		}
@@ -673,7 +673,7 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 	{
 		UE_LOG(LogInventory, Error, TEXT("Client cheated the check to replace the item! Discarding the replacement."))
 		
-		ServerAddItemToInventoryAtSlot(SlotPosition, false);
+		ServerAddItemToInventoryAtSlot(ItemGridPosition, false);
 		DraggedItem = CachedDraggedItem;
 		StartDraggingItem(Controller);
 	}
@@ -931,7 +931,7 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 	checkf(false, TEXT("Provided ItemToPickup has no Instance nor Taplate to pick up, this is bad and should not happen."))
 }
 
-void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(const FVector2D& SlotPosition)
+void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(const FIntPoint& ItemGridPosition)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
@@ -947,7 +947,7 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(ItemGridPosition);
 	if(InstanceToGrab == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
@@ -1031,7 +1031,7 @@ void UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation(const
 	StartDraggingItem(Controller);
 }
 
-void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FVector2D& SlotPosition, const bool bShiftDown)
+void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FIntPoint& AtGridSlot, const bool bShiftDown)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -1057,7 +1057,7 @@ void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const
 	
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
-		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, SlotPosition, StacksToAddOverride))
+		if(InventoryComponent->AddItemInstanceToSpecificSlot(Instance, AtGridSlot, StacksToAddOverride))
 		{
 			DraggedItem.Clear();
 			StopDraggingItem(Controller);
@@ -1071,7 +1071,7 @@ void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const
 	{
 		const int32 ItemStackCount = DraggedItem.Stacks;
 		int32 StackLeft = ItemStackCount;
-		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, SlotPosition, StackLeft, ItemStackCount, StacksToAddOverride);
+		InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, AtGridSlot, StackLeft, ItemStackCount, StacksToAddOverride);
 		if(StackLeft == 0)
 		{
 			DraggedItem.Clear();
@@ -1083,7 +1083,7 @@ void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const
 	}
 }
 
-void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation(const FVector2D& SlotPosition, const int32 StacksToAddOverride)
+void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToAddOverride)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -1109,7 +1109,7 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 	if(Instance && Instance->IsStackable())
 	{
 		FObsidianAddingStacksResult AddingStacksResult;
-		if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(Instance, SlotPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
+		if(InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(Instance, ItemGridPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
 		{
 			if(AddingStacksResult.bAddedWholeItemAsStacks)
 			{
@@ -1129,7 +1129,7 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 		{
 			const int32 ItemStackCount = DraggedItem.Stacks;
 			FObsidianAddingStacksResult AddingStacksResult;
-			if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, ItemStackCount, SlotPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
+			if(InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, ItemStackCount, ItemGridPosition, /** OUT */ AddingStacksResult, StacksToAddOverride))
 			{
 				if(AddingStacksResult.bAddedWholeItemAsStacks)
 				{
@@ -1144,7 +1144,7 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 	}
 }
 
-void UObsidianHeroComponent::UseItem(const FVector2D& OnSlotPosition, const bool bLeftShiftDown)
+void UObsidianHeroComponent::UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown)
 {
 	ServerUseItem(UsingItemInstance, OnSlotPosition);
 
@@ -1154,7 +1154,7 @@ void UObsidianHeroComponent::UseItem(const FVector2D& OnSlotPosition, const bool
 	}
 }
 
-void UObsidianHeroComponent::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FVector2D& OnSlotPosition)
+void UObsidianHeroComponent::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition)
 {
 	if(UsingInstance == nullptr)
 	{

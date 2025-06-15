@@ -17,7 +17,7 @@ void UObsidianDraggedItem_Simple::NativeConstruct()
 	SetRenderOpacity(0.9f);
 }
 
-void UObsidianDraggedItem_Simple::InitializeDraggedItem(const FSlateBrush& InItemImage, const FVector2D& InItemGridSpan)
+void UObsidianDraggedItem_Simple::InitializeDraggedItem(const FSlateBrush& InItemImage, const FIntPoint& InItemGridSpan)
 {
 	if(Item_Image)
 	{
@@ -34,7 +34,7 @@ void UObsidianDraggedItem_Simple::InitializeDraggedItem(const FSlateBrush& InIte
 	}
 }
 
-FVector2D UObsidianDraggedItem_Simple::GetItemSize() const
+FVector2D UObsidianDraggedItem_Simple::GetItemWidgetSize() const
 {
 	if(Root_SizeBox)
 	{

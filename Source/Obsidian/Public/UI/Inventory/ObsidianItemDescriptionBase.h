@@ -51,11 +51,11 @@ public:
 	}
 	
 	bool IsInventoryItemDescription() const;
-	void SetAssociatedInventoryLocation(const FVector2D& InLocation)
+	void SetAssociatedInventoryLocation(const FIntPoint& InLocation)
 	{
 		AssociatedGridLocation = InLocation;
 	};
-	FVector2D GetAssociatedInventoryLocation() const
+	FIntPoint GetAssociatedInventoryLocation() const
 	{
 		return AssociatedGridLocation;
 	}
@@ -138,6 +138,6 @@ private:
 	int32 MaxStackCount = 0;
 	
 	FGameplayTag AssociatedSlotTag = FGameplayTag::EmptyTag;
-	FVector2D AssociatedGridLocation = FVector2D::ZeroVector;
+	FIntPoint AssociatedGridLocation = FIntPoint::NoneValue;
 };
 

@@ -16,7 +16,7 @@ class UObsidianInventory;
 class UObsidianItem;
 class UObsidianItemSlot_Inventory;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInventoryGridSlotPressedSignature, const FVector2D& SlotPosition, const bool bWithShiftDown);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnInventoryGridSlotPressedSignature, const FIntPoint& SlotPosition, const bool bWithShiftDown);
 
 /**
  * 
@@ -29,7 +29,7 @@ class OBSIDIAN_API UObsidianInventoryGrid : public UObsidianWidgetBase
 public:
 	void ConstructInventoryGrid(UObsidianInventory* InOwningInventory, const int32 InventoryGridWidth, const int32 InventoryGridHeight);
 
-	UObsidianItemSlot_Inventory* GetSlotByPosition(const FVector2D& BySlotPosition);
+	UObsidianItemSlot_Inventory* GetSlotByPosition(const FIntPoint& BySlotPosition);
 
 	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
 	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown) const;

@@ -45,7 +45,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 			DefaultObject->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
 	if(AppearanceFragment)
 	{
-		const FVector2D ItemGridSpan = AppearanceFragment->GetItemGridSpanFromDesc();
+		const FIntPoint ItemGridSpan = AppearanceFragment->GetItemGridSpanFromDesc();
 		Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 		Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 
@@ -83,7 +83,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(const UObsidianI
 		return;
 	}
 	
-	const FVector2D ItemGridSpan = ItemInstance->GetItemGridSpan();
+	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 

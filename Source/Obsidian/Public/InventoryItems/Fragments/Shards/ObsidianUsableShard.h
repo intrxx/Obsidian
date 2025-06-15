@@ -23,13 +23,13 @@ struct FObsidianItemsMatchingUsableContext
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TArray<FVector2D> InventoryItemsMatchingContext;
+	TArray<FIntPoint> InventoryItemsMatchingContext;
 
 	UPROPERTY()
 	TArray<FGameplayTag> EquipmentItemsMatchingContext;
 
 	UPROPERTY()
-	TArray<FVector2D> StashItemsMatchingContext;
+	TArray<FIntPoint> StashItemsMatchingContext;
 };
 
 /**

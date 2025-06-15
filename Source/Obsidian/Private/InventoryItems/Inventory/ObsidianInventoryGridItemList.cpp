@@ -46,7 +46,7 @@ int32 FObsidianInventoryGridItemList::GetEntriesCount() const
 	return Entries.Num();
 }
 
-UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FVector2D& AvailablePosition)
+UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FIntPoint& AvailablePosition)
 {
 	check(ItemDefClass != nullptr);
 	check(OwnerComponent);
@@ -93,7 +93,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	return Item;
 }
 
-void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* Instance, const FVector2D& AvailablePosition)
+void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* Instance, const FIntPoint& AvailablePosition)
 {
 	check(Instance != nullptr);
 	check(OwnerComponent);
@@ -134,7 +134,7 @@ void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance*
 
 	if(bSuccess)
 	{
-		const FVector2D CachedLocation = Instance->GetItemCurrentGridLocation();
+		const FIntPoint CachedLocation = Instance->GetItemCurrentGridLocation();
 		Instance->ResetItemCurrentGridLocation();
 		
 		GridLocationToItemMap.Remove(CachedLocation);
@@ -164,7 +164,7 @@ void FObsidianInventoryGridItemList::ChangedEntryStacks(UObsidianInventoryItemIn
 
 	if(bSuccess)
 	{
-		const FVector2D GridLocation = Instance->GetItemCurrentGridLocation();
+		const FIntPoint GridLocation = Instance->GetItemCurrentGridLocation();
 		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
 		return;
 	}
@@ -185,7 +185,7 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 	
 	if(bSuccess)
 	{
-		const FVector2D GridLocation = Instance->GetItemCurrentGridLocation();
+		const FIntPoint GridLocation = Instance->GetItemCurrentGridLocation();
 		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		BroadcastChangeMessage(Instance, Count, Count, GridLocation, EObsidianInventoryChangeType::ICT_GeneralItemChanged);
 		return;
@@ -193,12 +193,12 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
-void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
+void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition)
 {
-	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FVector2D LocationComp : ItemGridSize)
+	const TArray<FIntPoint> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FIntPoint LocationComp : ItemGridSize)
 	{
-		const FVector2D Location = AtPosition + LocationComp;
+		const FIntPoint Location = AtPosition + LocationComp;
 		if(InventoryStateMap.Contains(Location))
 		{
 			InventoryStateMap[Location] = true;
@@ -213,12 +213,12 @@ void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItem
 	}
 }
 
-void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FVector2D AtPosition)
+void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition)
 {
-	const TArray<FVector2D> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FVector2D LocationComp : ItemGridSize)
+	const TArray<FIntPoint> ItemGridSize = ItemInstance->GetItemGridSize();
+	for(const FIntPoint LocationComp : ItemGridSize)
 	{
-		const FVector2D Location = AtPosition + LocationComp;
+		const FIntPoint Location = AtPosition + LocationComp;
 		if(InventoryStateMap.Contains(Location))
 		{
 			InventoryStateMap[Location] = false;
@@ -226,7 +226,7 @@ void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryIt
 #if !UE_BUILD_SHIPPING
 		else
 		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %f, y: %f] that doesn't"
+			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
 			"exist in the InventoryStateMap in UObsidianInventoryComponent::Item_UnMarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
 		}
 #endif
@@ -278,7 +278,7 @@ void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32
 	}
 }
 
-void FObsidianInventoryGridItemList::BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FVector2D& GridPosition, const EObsidianInventoryChangeType& ChangeType) const
+void FObsidianInventoryGridItemList::BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FIntPoint& GridPosition, const EObsidianInventoryChangeType& ChangeType) const
 {
 	FObsidianInventoryChangeMessage Message;
 	Message.InventoryOwner = OwnerComponent;

@@ -99,12 +99,12 @@ void UObsidianOverlayExperienceBar::NativeOnMouseEnter(const FGeometry& InGeomet
 		ExperienceInfo = CreateWidget<UObsidianOverlayExperienceInfo>(OwningPC, ExperienceInfoWidgetClass);
 		ExperienceInfo->InitializeExperienceInfo(Experience, MaxExperience, LastMaxExperience, OwningPS->GetHeroLevel());
 		
-		FVector2D MousePosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
+		FVector2D MouseViewportPosition = UWidgetLayoutLibrary::GetMousePositionOnViewport(World);
 		const FVector2D ViewportSize = UWidgetLayoutLibrary::GetViewportSize(World);
 		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
-		MousePosition *= DPIScale;
+		MouseViewportPosition *= DPIScale;
 		
-		const FVector2D InfoPosition = FVector2D(MousePosition.X, ViewportSize.Y) + (ExperienceInfo->ScreenDisplayOffset * DPIScale);
+		const FVector2D InfoPosition = FVector2D(MouseViewportPosition.X, ViewportSize.Y) + (ExperienceInfo->ScreenDisplayOffset * DPIScale);
 		
 		ExperienceInfo->SetPositionInViewport(InfoPosition);
 		ExperienceInfo->SetAlignmentInViewport(FVector2D(0.0f, 1.0f));

@@ -155,8 +155,8 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
 		CanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
 		CanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
-		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%lld, %lld]"), FMath::FloorToInt(ItemData.GridSize.X), FMath::FloorToInt(ItemData.GridSize.Y)));
-		CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%lld, %lld]"), FMath::FloorToInt(ItemData.CurrentGridLocation.X), FMath::FloorToInt(ItemData.CurrentGridLocation.Y)));
+		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSize.X, ItemData.GridSize.Y));
+		CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
 
 		// PrintAt would have reset these values, restore them.
 		CanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
@@ -186,7 +186,7 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 	constexpr float TilePadding = 5.0f;
 	
 	int32 CurrentRow = 1;
-	for(TTuple<FVector2D, bool> Pair : DataPack.InventoryStateMap)
+	for(TTuple<FIntPoint, bool> Pair : DataPack.InventoryStateMap)
 	{
 		if(CurrentRow == Pair.Key.Y)
 		{
@@ -199,13 +199,13 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 		{
 			FCanvasTileItem TakenField = {FVector2D(TileX, TileY), StateMapTileSize, TakenColor};
 			CanvasContext.DrawItem(TakenField, TileX, TileY);
-			CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%lld, %lld]"), FMath::FloorToInt(Pair.Key.X), FMath::FloorToInt(Pair.Key.Y)));
+			CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y));
 		}
 		else
 		{
 			FCanvasTileItem FreeField = {FVector2D(TileX, TileY), StateMapTileSize, FreeColor};
 			CanvasContext.DrawItem(FreeField, TileX, TileY);
-			CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%lld, %lld]"), FMath::FloorToInt(Pair.Key.X), FMath::FloorToInt(Pair.Key.Y)));
+			CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y));
 		}
 		
 		TileX += StateMapTileSize.X + TilePadding;
