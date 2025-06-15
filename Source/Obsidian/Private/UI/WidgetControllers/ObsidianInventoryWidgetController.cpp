@@ -734,15 +734,15 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FIntPoint& At
 		return false;	
 	}
 
-	TArray<FIntPoint> LocalItemGridSize;
-	if(!GetDraggedItemGridSize(LocalItemGridSize))
+	FIntPoint LocalItemGridSpan;
+	if(!GetDraggedItemGridSpan(LocalItemGridSpan))
 	{
 		return false;
 	}
-	return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSize, AtGridSlot);
+	return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSpan, AtGridSlot);
 }
 
-bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const TArray<FIntPoint>& ItemGridSize) const
+bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan) const
 {
 	if(InventoryComponent == nullptr)
 	{
@@ -750,10 +750,10 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FIntPoint& At
 		return false;	
 	}
 	
-	return InventoryComponent->CheckSpecifiedPosition(ItemGridSize, AtGridSlot);
+	return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan, AtGridSlot);
 }
 
-bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const
+bool UObsidianInventoryWidgetController::GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const
 {
 	if(!IsDraggingAnItem())
 	{
@@ -768,7 +768,7 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FIntPoint
 	
 	if(const UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
-		OutItemGridSize = Instance->GetItemGridSize();
+		OutItemGridSpan = Instance->GetItemGridSpan();
 		return true;	
 	}
 	
@@ -778,7 +778,7 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSize(TArray<FIntPoint
 		{
 			if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 			{
-				OutItemGridSize = AppearanceFrag->GetItemGridSizeFromDesc();
+				OutItemGridSpan = AppearanceFrag->GetItemGridSpanFromDesc();
 				return true;	
 			}
 		}

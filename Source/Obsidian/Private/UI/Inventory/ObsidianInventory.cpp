@@ -79,25 +79,25 @@ bool UObsidianInventory::IsPlayerDraggingItem() const
 	return InventoryWidgetController->IsDraggingAnItem();
 }
 
-bool UObsidianInventory::GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const
+bool UObsidianInventory::GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const
 {
 	if(InventoryWidgetController == false || InventoryWidgetController->IsDraggingAnItem() == false)
 	{
 		return false;
 	}
 
-	InventoryWidgetController->GetDraggedItemGridSize(OutItemGridSize);
+	InventoryWidgetController->GetDraggedItemGridSpan(OutItemGridSpan);
 	return true;
 }
 
-bool UObsidianInventory::CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const TArray<FIntPoint>& ItemGridSize) const
+bool UObsidianInventory::CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const FIntPoint& ItemGridSpan) const
 {
 	if(InventoryWidgetController == false || InventoryWidgetController->IsDraggingAnItem() == false)
 	{
 		return false;
 	}
 
-	return InventoryWidgetController->CanPlaceDraggedItem(ToHoveredSlotPosition, ItemGridSize);
+	return InventoryWidgetController->CanPlaceDraggedItem(ToHoveredSlotPosition, ItemGridSpan);
 }
 
 bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const

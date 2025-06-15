@@ -196,11 +196,6 @@ public:
 	 */
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	TArray<FIntPoint> GetItemGridSize() const;
-	
-	void SetItemGridSize(const TArray<FIntPoint>& GridSizeToSet);
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	FIntPoint GetItemGridSpan() const;
 	
 	void SetItemGridSpan(const FIntPoint& GridSpanToSet);
@@ -331,9 +326,6 @@ private:
 	 * Appearance.
 	 */
 	
-	UPROPERTY(Replicated)
-	TArray<FIntPoint> ItemGridSize;
-
 	UPROPERTY(Replicated)
 	FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 	

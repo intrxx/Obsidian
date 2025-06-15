@@ -38,7 +38,7 @@ protected:
 			int32 CurrentStackCount;
 			int32 MaxStackCount;
 			int32 LimitStackCount;
-			FIntPoint GridSize;
+			FIntPoint GridSpan;
 			FIntPoint CurrentGridLocation;
 		};
 		TArray<FInventoryItemDebug> Items;

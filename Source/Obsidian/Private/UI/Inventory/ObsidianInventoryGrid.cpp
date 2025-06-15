@@ -76,23 +76,26 @@ void UObsidianInventoryGrid::OnInventorySlotHover(const UObsidianItemSlot_Invent
 	
 	if(bEntered)
 	{
-		TArray<FIntPoint> ItemGridSize;
-		if(OwningInventory->GetDraggedItemGridSize(ItemGridSize) == false) 
+		FIntPoint ItemGridSpan = FIntPoint::NoneValue;
+		if(OwningInventory->GetDraggedItemGridSpan(ItemGridSpan) == false) 
 		{
 			return; // No Dragged Item
 		}
 		
 		const FIntPoint HoveredSlotPosition = AffectedSlot->GetSlotPosition();
-		const bool bCanPlace = OwningInventory->CanPlaceDraggedItem(HoveredSlotPosition, ItemGridSize);
-		for(const FIntPoint& SizeComp : ItemGridSize)
+		const bool bCanPlace = OwningInventory->CanPlaceDraggedItem(HoveredSlotPosition, ItemGridSpan);
+		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 		{
-			const FIntPoint LocationToCheck = HoveredSlotPosition + SizeComp;
-			if(UObsidianItemSlot_Inventory* LocalSlot = GetSlotByPosition(LocationToCheck))
+			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 			{
-				const EObsidianItemSlotState SlotState = bCanPlace ? ISS_GreenLight : ISS_RedLight;
-				LocalSlot->SetSlotState(SlotState);
-				AffectedInventorySlots.Add(LocalSlot);
-			}
+				const FIntPoint LocationToCheck = HoveredSlotPosition + FIntPoint(SpanX, SpanY);
+				if(UObsidianItemSlot_Inventory* LocalSlot = GetSlotByPosition(LocationToCheck))
+				{
+					const EObsidianItemSlotState SlotState = bCanPlace ? ISS_GreenLight : ISS_RedLight;
+					LocalSlot->SetSlotState(SlotState);
+					AffectedInventorySlots.Add(LocalSlot);
+				}
+			}	
 		}
 	}
 	else

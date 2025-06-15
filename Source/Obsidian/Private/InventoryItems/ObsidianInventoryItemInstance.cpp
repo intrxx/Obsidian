@@ -31,7 +31,6 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, SpawnedActors);
 	
 	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change
-	DOREPLIFETIME(ThisClass, ItemGridSize);
 	DOREPLIFETIME(ThisClass, ActorsToSpawn);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemCurrentGridLocation);
@@ -275,16 +274,6 @@ bool UObsidianInventoryItemInstance::IsStackable() const
 void UObsidianInventoryItemInstance::SetStackable(const bool InStackable)
 {
 	bStackable = InStackable;
-}
-
-TArray<FIntPoint> UObsidianInventoryItemInstance::GetItemGridSize() const
-{
-	return ItemGridSize;
-}
-
-void UObsidianInventoryItemInstance::SetItemGridSize(const TArray<FIntPoint>& GridSizeToSet)
-{
-	ItemGridSize = GridSizeToSet;
 }
 
 FIntPoint UObsidianInventoryItemInstance::GetItemGridSpan() const

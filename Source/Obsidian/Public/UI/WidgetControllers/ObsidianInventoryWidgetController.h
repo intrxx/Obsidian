@@ -120,10 +120,10 @@ public:
 	
 	bool IsDraggingAnItem() const;
 	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot) const;
-	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const TArray<FIntPoint>& ItemGridSize) const;
+	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan) const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
-	bool GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const;
+	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
 	
 	UObsidianItem* GetItemWidgetAtInventoryGridSlot(const FIntPoint& AtGridSlot) const;
 	void RegisterInventoryItemWidget(const FIntPoint& GridSlot, UObsidianItem* ItemWidget);

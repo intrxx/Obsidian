@@ -50,7 +50,7 @@ void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* O
 			InventoryItems.CurrentStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 			InventoryItems.MaxStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
 			InventoryItems.LimitStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
-			InventoryItems.GridSize = Item->GetItemGridSpan();
+			InventoryItems.GridSpan = Item->GetItemGridSpan();
 			InventoryItems.CurrentGridLocation = Item->GetItemCurrentGridLocation();
 
 			DataPack.Items.Add(InventoryItems);
@@ -94,7 +94,7 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 	static float CurrentStackCountNameSize = 0.0f;
 	static float MaxStackCountSize = 0.0f;
 	static float LimitStackCountSize = 0.0f;
-	static float GridSizeSize = 0.0f;
+	static float GridSpanSize = 0.0f;
 	static float CurrentGridLocationSize = 0.0f;
 	if(ObjNameSize <= 0.0f)
 	{
@@ -106,7 +106,7 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 		CanvasContext.MeasureString(TEXT("current stack count: 00"), CurrentStackCountNameSize, TempSizeY);
 		CanvasContext.MeasureString(TEXT("max stack count: 00"), MaxStackCountSize, TempSizeY);
 		CanvasContext.MeasureString(TEXT("limit stack count: 00"), LimitStackCountSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("grid size: 00"), GridSizeSize, TempSizeY);
+		CanvasContext.MeasureString(TEXT("grid size: 00"), GridSpanSize, TempSizeY);
 		CanvasContext.MeasureString(TEXT("grid location: 00"), CurrentGridLocationSize, TempSizeY);
 		ObjNameSize += Padding;
 	}
@@ -115,10 +115,10 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 	const float FourthArgConstX = ObjNameSize * 0.9 + ItemNameSize + CurrentStackCountNameSize;
 	const float FifthArgConstX = ObjNameSize * 1.3 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize;
 	const float SixthArgConstX = ObjNameSize * 1.7 + ItemNameSize +  CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize;
-	const float SeventhArgConstX = ObjNameSize * 2.4 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSizeSize;
+	const float SeventhArgConstX = ObjNameSize * 2.4 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSpanSize;
 
 
-	const float ColumnWidth = ObjNameSize * 5 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSizeSize + CurrentGridLocationSize;
+	const float ColumnWidth = ObjNameSize * 5 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSpanSize + CurrentGridLocationSize;
 	const int NumColumns = FMath::Max(1, FMath::FloorToInt(CanvasWidth / ColumnWidth));
 
 	float TopCursorY = CanvasContext.CursorY;
@@ -155,7 +155,7 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
 		CanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
 		CanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
-		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSize.X, ItemData.GridSize.Y));
+		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSpan.X, ItemData.GridSpan.Y));
 		CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
 
 		// PrintAt would have reset these values, restore them.
@@ -234,7 +234,7 @@ void FGameplayDebuggerCategory_InventoryItems::FRepData::Serialize(FArchive& Ar)
 		Ar << Items[i].CurrentStackCount;
 		Ar << Items[i].MaxStackCount;
 		Ar << Items[i].LimitStackCount;
-		Ar << Items[i].GridSize;
+		Ar << Items[i].GridSpan;
 		Ar << Items[i].CurrentGridLocation;
 	}
 }

@@ -195,41 +195,47 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 
 void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition)
 {
-	const TArray<FIntPoint> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FIntPoint LocationComp : ItemGridSize)
+	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
+	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
-		const FIntPoint Location = AtPosition + LocationComp;
-		if(InventoryStateMap.Contains(Location))
+		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			InventoryStateMap[Location] = true;
-		}
+			const FIntPoint LocationToMark = AtPosition + FIntPoint(SpanX, SpanY);
+			if(InventoryStateMap.Contains(LocationToMark))
+			{
+				InventoryStateMap[LocationToMark] = true;
+			}
 #if !UE_BUILD_SHIPPING
-		else
-		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %f, y: %f] that doesn't"
-			 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
-		}
+			else
+			{
+				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %d, y: %d] that doesn't"
+				 "exist in the InventoryStateMap in UObsidianInventoryComponent::Item_MarkSpace."), LocationToMark.X, LocationToMark.Y), ELogVerbosity::Error);
+			}
 #endif
+		}
 	}
 }
 
 void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition)
 {
-	const TArray<FIntPoint> ItemGridSize = ItemInstance->GetItemGridSize();
-	for(const FIntPoint LocationComp : ItemGridSize)
+	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
+	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
-		const FIntPoint Location = AtPosition + LocationComp;
-		if(InventoryStateMap.Contains(Location))
+		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			InventoryStateMap[Location] = false;
-		}
+			const FIntPoint LocationToUnmark = AtPosition + FIntPoint(SpanX, SpanY);
+			if(InventoryStateMap.Contains(LocationToUnmark))
+			{
+				InventoryStateMap[LocationToUnmark] = false;
+			}
 #if !UE_BUILD_SHIPPING
-		else
-		{
-			FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
-			"exist in the InventoryStateMap in UObsidianInventoryComponent::Item_UnMarkSpace."), Location.X, Location.Y), ELogVerbosity::Error);
-		}
+			else
+			{
+				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
+				"exist in the InventoryStateMap in UObsidianInventoryComponent::Item_UnMarkSpace."), LocationToUnmark.X, LocationToUnmark.Y), ELogVerbosity::Error);
+			}
 #endif
+		}
 	}
 }
 

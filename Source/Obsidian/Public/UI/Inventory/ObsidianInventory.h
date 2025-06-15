@@ -53,8 +53,8 @@ public:
 	}
 
 	bool IsPlayerDraggingItem() const;
-	bool GetDraggedItemGridSize(TArray<FIntPoint>& OutItemGridSize) const;
-	bool CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const TArray<FIntPoint>& ItemGridSize) const;
+	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
+	bool CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const FIntPoint& ItemGridSpan) const;
 	bool CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const;
 
 protected:

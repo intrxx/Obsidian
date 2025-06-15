@@ -85,7 +85,7 @@ public:
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
 	/** Checks if the item fits in the provided spot. */
-	bool CheckSpecifiedPosition(const TArray<FIntPoint>& ItemGridSize, const FIntPoint& SpecifiedPosition);
+	bool CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FIntPoint& SpecifiedPosition);
 	
      /**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
@@ -225,7 +225,7 @@ private:
 	FIntPoint GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
 	
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
-	bool CheckAvailablePosition(const TArray<FIntPoint>& ItemGridSize, FIntPoint& OutAvailablePosition);
+	bool CheckAvailablePosition(const FIntPoint& ItemGridSpan, FIntPoint& OutAvailablePosition);
 	
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FIntPoint, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
