@@ -31,7 +31,7 @@ public:
 
 	UObsidianItemSlot_Inventory* GetSlotByPosition(const FIntPoint& BySlotPosition);
 
-	void OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
+	void OnInventorySlotHover(UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered);
 	void OnInventorySlotMouseButtonDown(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bShiftDown) const;
 
 	void AddItemToGrid(UObsidianItem* ItemWidget, const float ItemSlotPadding = 0.0f);

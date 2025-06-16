@@ -17,14 +17,24 @@ class USizeBox;
 class UImage;
 
 /**
- * 
+ * Enum which describes different states that the Slot will switch to when interacting with it.
  */
 UENUM()
 enum EObsidianItemSlotState
 {
+	/** Normal color of the slot (the action image is hidden). */
 	ISS_Neutral,
+
+	/** The Player is able to place or take the item he/she is hovering over. */
 	ISS_GreenLight,
+
+	/** The slot is being selected without an item in hands. */
+	ISS_Selected,
+
+	/** The Player is NOT able to place or take the item he/she is hovering over. */
 	ISS_RedLight,
+
+	/** The slot is blocked e.g. Two-Handed item is equipped in the other slot. */
 	ISS_Blocked
 };
 
@@ -56,13 +66,16 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Action_Image;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush SlotGreenLightColor;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush SlotRedLightColor;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush SlotBlockedLightColor;
+
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
+	FSlateBrush SlotSelectedLightColor;
 };
 

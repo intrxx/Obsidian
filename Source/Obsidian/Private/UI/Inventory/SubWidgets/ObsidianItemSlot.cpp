@@ -28,6 +28,11 @@ void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState) const
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
+	if(InState == ISS_Selected)
+	{
+		Action_Image->SetBrush(SlotSelectedLightColor);
+		Action_Image->SetVisibility(ESlateVisibility::Visible);
+	}
 	if(InState == ISS_RedLight)
 	{
 		Action_Image->SetBrush(SlotRedLightColor);

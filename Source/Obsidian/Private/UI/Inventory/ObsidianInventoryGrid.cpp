@@ -67,7 +67,7 @@ UObsidianItemSlot_Inventory* UObsidianInventoryGrid::GetSlotByPosition(const FIn
 	return Index != INDEX_NONE ? GridSlots[Index] : nullptr;
 }
 
-void UObsidianInventoryGrid::OnInventorySlotHover(const UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered)
+void UObsidianInventoryGrid::OnInventorySlotHover(UObsidianItemSlot_Inventory* AffectedSlot, const bool bEntered)
 {
 	if(OwningInventory.IsValid() == false)
 	{
@@ -79,7 +79,9 @@ void UObsidianInventoryGrid::OnInventorySlotHover(const UObsidianItemSlot_Invent
 		FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 		if(OwningInventory->GetDraggedItemGridSpan(ItemGridSpan) == false) 
 		{
-			return; // No Dragged Item
+			AffectedSlot->SetSlotState(ISS_Selected);
+			AffectedInventorySlots.Add(AffectedSlot);
+			return; 
 		}
 		
 		const FIntPoint HoveredSlotPosition = AffectedSlot->GetSlotPosition();

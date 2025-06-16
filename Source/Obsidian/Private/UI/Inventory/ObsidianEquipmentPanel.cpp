@@ -34,7 +34,7 @@ UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotForTag(co
 	return nullptr;
 }
 
-void UObsidianEquipmentPanel::OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
+void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
 {
 	if (OwningInventory.IsValid() == false)
 	{
@@ -45,6 +45,7 @@ void UObsidianEquipmentPanel::OnEquipmentSlotHover(const UObsidianItemSlot_Equip
 	{
 		if(OwningInventory->IsPlayerDraggingItem() == false)
 		{
+			AffectedSlot->SetSlotState(ISS_Selected);
 			return;
 		}
 		

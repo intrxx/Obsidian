@@ -1044,8 +1044,6 @@ bool UObsidianInventoryComponent::CheckAvailablePosition(const FIntPoint& ItemGr
 			{
 				for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Checking Items Grid Span, Field to check: [x: %d, y: %d]"), SpanX, SpanY);
-					
 					const FIntPoint LocationToCheck = Location.Key + FIntPoint(SpanX, SpanY);
 					if(!InventoryGrid.InventoryStateMap.Contains(LocationToCheck) || InventoryGrid.InventoryStateMap[LocationToCheck] == true)
 					{
@@ -1077,8 +1075,6 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const FIntPoint& ItemGr
 		{
 			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Checking Items Grid Span, Field to check: [x: %d, y: %d]"), SpanX, SpanY);
-				
 				const FIntPoint LocationToCheck = SpecifiedPosition + FIntPoint(SpanX, SpanY);
 				if(!InventoryGrid.InventoryStateMap.Contains(LocationToCheck) || InventoryGrid.InventoryStateMap[LocationToCheck] == true)
 				{
