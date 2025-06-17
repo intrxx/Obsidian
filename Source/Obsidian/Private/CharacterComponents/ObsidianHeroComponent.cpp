@@ -618,7 +618,6 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FIntPoin
 	UObsidianInventoryItemInstance* NewInstance = InventoryComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
 	if(NewInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Result of TakeOutFromItemInstance is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
 		return;
 	}
 	
@@ -646,6 +645,11 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation."));
 		return;
 	}
+
+	if(InventoryComponent->CanOwnerModifyInventoryState() == false)
+	{
+		return;
+	}
 	
 	const FDraggedItem CachedDraggedItem = DraggedItem;
 	DraggedItem.Clear();
@@ -668,11 +672,8 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 		}
 	}
 	
-	// We fall back and add the previous item to the inventory again, this could happen If the Client cheated through its check to begin the replacement since I'm calling it client side
 	if(bSuccess == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Client cheated the check to replace the item! Discarding the replacement."))
-		
 		ServerAddItemToInventoryAtSlot(ItemGridPosition, false);
 		DraggedItem = CachedDraggedItem;
 		StartDraggingItem(Controller);
@@ -695,6 +696,11 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlot_Implementation(con
 		return;
 	}
 
+	if(EquipmentComponent->CanOwnerModifyEquipmentState() == false)
+	{
+		return;
+	}
+
 	const FDraggedItem CachedDraggedItem = DraggedItem;		
 	DraggedItem.Clear();
 	StopDraggingItem(Controller);
@@ -710,12 +716,9 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlot_Implementation(con
 	{
 		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(ItemDef, SlotTag, EquipSlotTagOverride);
 	}
-
-	// We fall back and equip the previously equipped item again, this could happen If the Client cheated through its check to begin the replacement since I'm calling it client side.
+	
 	if(bSuccess == false)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("Client cheated the check to replace the equipped item! Discarding the replacement."))
-		
 		ServerEquipItemAtSlot(SlotTag);
 		DraggedItem = CachedDraggedItem;
 		StartDraggingItem(Controller);
@@ -798,8 +801,11 @@ void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppab
 
 	const int32 StackCount = Template.StackCount;
 	int32 OutStacksLeft;
-	InventoryComponent->AddItemDefinition(ItemDef, OutStacksLeft, StackCount);
-	ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
+	if(InventoryComponent->AddItemDefinition(ItemDef, OutStacksLeft, StackCount))
+	{
+		ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
+	}
+	
 }
 
 void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDroppableItem* ItemToPickup)
@@ -862,11 +868,14 @@ void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDr
 
 	int32 OutStacksLeft;
 	InventoryComponent->AddItemInstance(ItemInstance, OutStacksLeft);
-	if(OutStacksLeft > 0)
+	if(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) != OutStacksLeft)
 	{
-		ItemInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
+		if(OutStacksLeft > 0)
+		{
+			ItemInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
+		}
+		ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
 	}
-	ItemToPickup->UpdateDroppedItemStacks(OutStacksLeft);
 }
 
 void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVector& HitLocation)
@@ -953,8 +962,11 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
 		return;
 	}
-
-	InventoryComponent->RemoveItemInstance(InstanceToGrab);
+	
+	if(InventoryComponent->RemoveItemInstance(InstanceToGrab) == false)
+	{
+		return;
+	}
 	
 	DraggedItem = FDraggedItem(InstanceToGrab);
 

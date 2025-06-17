@@ -259,6 +259,18 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Inventory
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Inventory_BlockActions, "Inventory.BlockActions", "When applied to player, he/she won't be able to modify inventory state.");
+
+	/**
+	 * Equipment
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_BlockActions, "Equipment.BlockActions", "When applied to player, he/she won't be able to modify equipment state.");
+
+	/**
 	 * Item Category.
 	 */
 

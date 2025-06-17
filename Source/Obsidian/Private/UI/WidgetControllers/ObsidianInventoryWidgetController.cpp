@@ -283,6 +283,11 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 	{
 		return;
 	}
+
+	if(InventoryComponent->CanOwnerModifyInventoryState() == false)
+	{
+		return;
+	}
 	
 	UObsidianInventoryItemInstance* UsingInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 	if(UsingInstance->IsItemUsable() == false)
@@ -326,6 +331,11 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 	check(OwnerHeroComponent);
 	check(DraggedItemWidgetClass);
 
+	if(InventoryComponent->CanOwnerModifyInventoryState() == false)
+	{
+		return;
+	}
+	
 	RemoveItemUIElements();
 
 	if(OwnerHeroComponent->IsUsingItem())
@@ -391,6 +401,11 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 {
 	check(OwnerHeroComponent);
 
+	if(InventoryComponent->CanOwnerModifyInventoryState() == false)
+	{
+		return;
+	}
+	
 	if(OwnerHeroComponent->IsUsingItem())
 	{
 		OwnerHeroComponent->UseItem(AtGridSlot, true);
@@ -414,7 +429,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 	{
 		return;
 	}
-
+	
 	RemoveItemUIElements();
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleLeftClickingOnAnItemWithShiftDown, fill it in ObsidianInventoryWidgetController instance."));
@@ -442,7 +457,12 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	check(EquipmentComponent);
 	check(OwnerHeroComponent);
 	check(DraggedItemWidgetClass);
-
+	
+	if(EquipmentComponent->CanOwnerModifyEquipmentState() == false)
+	{
+		return;
+	}
+	
 	RemoveItemUIElements();
 
 	if(OwnerHeroComponent->IsUsingItem())

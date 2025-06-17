@@ -21,8 +21,6 @@ namespace ObsidianInventoryItemsStatics
 	static const FVector2D InventorySlotSize(64.0f, 64.0f);
 
 	extern const TMap<FGameplayTag, FName> SlotToAttachSocketMap;
-	
-	extern const TMap<FGameplayTag, FGameplayTagContainer> DefaultAcceptedEquipmentCategories;
 
 	/** Accepted Equipment Categories for sister slot per weapon type. */
 	extern const TMap<FGameplayTag, FGameplayTagContainer> AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory;
@@ -102,6 +100,9 @@ enum class EObsidianEquipResult : uint8
 	
 	/** Item cannot be equipped, it does not have equipment fragment. */
 	ItemUnequippable UMETA(DisplayName="Item Unequippable"),
+
+	/** Player cannot modify the state of the equipment. */
+	EquipmentActionsBlocked UMETA(DisplayName="Equipment Actions Blocked"),
 
 	/** Item cannot be equipped, trying to equip two-handed weapon, two slots are occupied and no sufficient space in inventory. */
 	UnableToEquip_NoSufficientInventorySpace UMETA(DisplayName="Unable To Equip - No Sufficient Inventory Space"),

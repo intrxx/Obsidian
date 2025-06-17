@@ -43,6 +43,8 @@ public:
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory);
 
 	FObsidianItemStats GetItemStatsBySlotTag(const FGameplayTag& SlotTag);
+
+	bool CanOwnerModifyEquipmentState() const;
 	
 	EObsidianEquipResult CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
 	EObsidianEquipResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
@@ -95,6 +97,7 @@ namespace ObsidianEquipmentDebugHelpers
 		{EObsidianEquipResult::None, TEXT("None")},
 		{EObsidianEquipResult::ItemUnfitForCategory, TEXT("Item Unfit For Category")},
 		{EObsidianEquipResult::ItemUnequippable, TEXT("Item Unequippable")},
+		{EObsidianEquipResult::EquipmentActionsBlocked, TEXT("Equipment Actions Blocked")},
 		{EObsidianEquipResult::UnableToEquip_BannedCategory, TEXT("Unable To Equip - Banned Category")},
 		{EObsidianEquipResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
 		{EObsidianEquipResult::UnableToEquip_DoesNotFitWithOtherWeaponType, TEXT("Unable To Equip - Does Not Fit With Other Weapon Type")},

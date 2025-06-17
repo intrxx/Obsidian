@@ -84,6 +84,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
+	bool CanOwnerModifyInventoryState() const;
+	
 	/** Checks if the item fits in the provided spot. */
 	bool CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FIntPoint& SpecifiedPosition);
 	
@@ -111,7 +113,7 @@ public:
 
 	/** Tries to add provided Item Definition to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, int32& StacksLeft, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
+	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, int32& OutStacksLeft, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Will try to add stacks from provided Item Definition at provided Position.
@@ -168,7 +170,7 @@ public:
 
 	/** Removes Item Instance from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
+	bool RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
 	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
 	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance);

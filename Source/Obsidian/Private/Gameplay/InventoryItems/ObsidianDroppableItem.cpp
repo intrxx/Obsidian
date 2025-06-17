@@ -181,7 +181,7 @@ void AObsidianDroppableItem::StopHighlight()
 
 void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemStacks)
 {
-	if(NewDroppedItemStacks > 0)
+	if(NewDroppedItemStacks > 0 && DroppedItemStacks != NewDroppedItemStacks)
 	{
 		DroppedItemStacks = NewDroppedItemStacks;
 		
@@ -458,23 +458,14 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, cons
 	{
 		return;
 	}
-
-	// Bool needs to stay here for a while as not every case of picking up item is handled through server authoritative way as of now.
-	bool bItemPickedUp = false;
+	
 	if(CarriesItemDef())
 	{
-		bItemPickedUp = PickupItemDef(bLeftControlDown, ObsidianPC);
-		//PickupItemDef(bLeftControlDown, ObsidianPC);
+		PickupItemDef(bLeftControlDown, ObsidianPC);
 	}
 	else if(CarriesItemInstance())
 	{
-		bItemPickedUp = PickupItemInstance(bLeftControlDown, ObsidianPC);
-		//PickupItemInstance(bLeftControlDown, ObsidianPC);
-	}
-	
-	if(bItemPickedUp)
-	{
-		Destroy();
+		PickupItemInstance(bLeftControlDown, ObsidianPC);
 	}
 }
 

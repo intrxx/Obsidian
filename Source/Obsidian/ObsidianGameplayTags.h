@@ -235,6 +235,18 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Inventory
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Inventory_BlockActions);
+
+	/**
+	 * Equipment
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_BlockActions);
+
+	/**
 	 * Item Category.
 	 */
 	
