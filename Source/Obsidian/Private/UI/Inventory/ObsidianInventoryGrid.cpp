@@ -79,7 +79,8 @@ void UObsidianInventoryGrid::OnInventorySlotHover(UObsidianItemSlot_Inventory* A
 		FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 		if(OwningInventory->GetDraggedItemGridSpan(ItemGridSpan) == false) 
 		{
-			AffectedSlot->SetSlotState(ISS_Selected);
+			const EObsidianItemSlotState SlotState = OwningInventory->CanInteractWithInventory() ? ISS_Selected : ISS_RedLight;
+			AffectedSlot->SetSlotState(SlotState);
 			AffectedInventorySlots.Add(AffectedSlot);
 			return; 
 		}

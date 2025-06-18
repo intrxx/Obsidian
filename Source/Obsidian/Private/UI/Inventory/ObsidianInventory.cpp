@@ -97,14 +97,37 @@ bool UObsidianInventory::CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosit
 		return false;
 	}
 
+	if(InventoryWidgetController->CanInteractWithInventory() == false)
+	{
+		return false;
+	}
+
 	return InventoryWidgetController->CanPlaceDraggedItem(ToHoveredSlotPosition, ItemGridSpan);
+}
+
+bool UObsidianInventory::CanInteractWithInventory() const
+{
+	if (InventoryWidgetController)
+	{
+		return InventoryWidgetController->CanInteractWithInventory();
+	}
+	return false;
 }
 
 bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const
 {
-	if(InventoryWidgetController)
+	if(InventoryWidgetController && InventoryWidgetController->CanInteractWithEquipment())
 	{
 		return InventoryWidgetController->CanEquipDraggedItem(ToSlotTag);
+	}
+	return false;
+}
+
+bool UObsidianInventory::CanInteractWithEquipment() const
+{
+	if(InventoryWidgetController)
+	{
+		return InventoryWidgetController->CanInteractWithEquipment();
 	}
 	return false;
 }

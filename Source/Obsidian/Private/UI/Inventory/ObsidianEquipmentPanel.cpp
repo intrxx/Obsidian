@@ -45,7 +45,8 @@ void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* 
 	{
 		if(OwningInventory->IsPlayerDraggingItem() == false)
 		{
-			AffectedSlot->SetSlotState(ISS_Selected);
+			const EObsidianItemSlotState SlotState = OwningInventory->CanInteractWithEquipment() ? ISS_Selected : ISS_RedLight;
+			AffectedSlot->SetSlotState(SlotState);
 			return;
 		}
 		

@@ -55,7 +55,9 @@ public:
 	bool IsPlayerDraggingItem() const;
 	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
 	bool CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const FIntPoint& ItemGridSpan) const;
+	bool CanInteractWithInventory() const;
 	bool CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const;
+	bool CanInteractWithEquipment() const;
 
 protected:
 	UPROPERTY(meta=(BindWidget))

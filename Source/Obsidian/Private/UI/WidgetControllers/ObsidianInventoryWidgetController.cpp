@@ -773,6 +773,15 @@ bool UObsidianInventoryWidgetController::CanPlaceDraggedItem(const FIntPoint& At
 	return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan, AtGridSlot);
 }
 
+bool UObsidianInventoryWidgetController::CanInteractWithInventory() const
+{
+	if(InventoryComponent)
+	{
+		return InventoryComponent->CanOwnerModifyInventoryState();
+	}
+	return false;
+}
+
 bool UObsidianInventoryWidgetController::GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const
 {
 	if(!IsDraggingAnItem())
@@ -922,6 +931,15 @@ bool UObsidianInventoryWidgetController::CanEquipDraggedItem(const FGameplayTag&
 	{
 		const EObsidianEquipResult EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
 		return EquipResult == EObsidianEquipResult::CanEquip;
+	}
+	return false;
+}
+
+bool UObsidianInventoryWidgetController::CanInteractWithEquipment() const
+{
+	if(EquipmentComponent)
+	{
+		return EquipmentComponent->CanOwnerModifyEquipmentState();
 	}
 	return false;
 }

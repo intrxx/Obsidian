@@ -121,6 +121,7 @@ public:
 	bool IsDraggingAnItem() const;
 	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot) const;
 	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan) const;
+	bool CanInteractWithInventory() const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
@@ -138,6 +139,7 @@ public:
 	void RemoveBlockedSlotItemWidget(const FGameplayTag& Slot);
 
 	bool CanEquipDraggedItem(const FGameplayTag& SlotTag) const;
+	bool CanInteractWithEquipment() const;
 	
 	void RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);
