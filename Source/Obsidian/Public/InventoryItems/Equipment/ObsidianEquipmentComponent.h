@@ -12,6 +12,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianEquipmentComponent.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianInventoryComponent;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
@@ -44,7 +45,7 @@ public:
 
 	FObsidianItemStats GetItemStatsBySlotTag(const FGameplayTag& SlotTag);
 
-	bool CanOwnerModifyEquipmentState() const;
+	bool CanOwnerModifyEquipmentState();
 	
 	EObsidianEquipResult CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
 	EObsidianEquipResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
@@ -86,6 +87,9 @@ private:
 	/** Actual array of equipped items, also hold Map for Slot at which item instance is equipped. */
 	UPROPERTY(Replicated)
 	FObsidianEquipmentList EquipmentList;
+
+	UPROPERTY()
+	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
 };
 
 #if !UE_BUILD_SHIPPING

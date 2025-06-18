@@ -211,14 +211,15 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstan
 	return nullptr;
 }
 
-bool UObsidianInventoryComponent::CanOwnerModifyInventoryState() const
+bool UObsidianInventoryComponent::CanOwnerModifyInventoryState()
 {
-	if(const AObsidianPlayerController* OwnerPC = Cast<AObsidianPlayerController>(GetOwner()))
+	if(CachedOwnerPlayerController == nullptr)
 	{
-		if(const UObsidianAbilitySystemComponent* OwnerASC = OwnerPC->GetObsidianAbilitySystemComponent())
-		{
-			return !OwnerASC->HasMatchingGameplayTag(ObsidianGameplayTags::Inventory_BlockActions);
-		}
+		CachedOwnerPlayerController = Cast<AObsidianPlayerController>(GetOwner());
+	}
+	if(const UObsidianAbilitySystemComponent* OwnerASC = CachedOwnerPlayerController->GetObsidianAbilitySystemComponent())
+	{
+		return !OwnerASC->HasMatchingGameplayTag(ObsidianGameplayTags::Inventory_BlockActions);
 	}
 	return false;
 }

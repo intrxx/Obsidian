@@ -142,14 +142,15 @@ FObsidianItemStats UObsidianEquipmentComponent::GetItemStatsBySlotTag(const FGam
 	return Stats;
 }
 
-bool UObsidianEquipmentComponent::CanOwnerModifyEquipmentState() const
+bool UObsidianEquipmentComponent::CanOwnerModifyEquipmentState()
 {
-	if(const AObsidianPlayerController* OwnerPC = Cast<AObsidianPlayerController>(GetOwner()))
+	if(CachedOwnerPlayerController == nullptr)
 	{
-		if(const UObsidianAbilitySystemComponent* OwnerASC = OwnerPC->GetObsidianAbilitySystemComponent())
-		{
-			return !OwnerASC->HasMatchingGameplayTag(ObsidianGameplayTags::Equipment_BlockActions);
-		}
+		CachedOwnerPlayerController = Cast<AObsidianPlayerController>(GetOwner());
+	}
+	if(const UObsidianAbilitySystemComponent* OwnerASC = CachedOwnerPlayerController->GetObsidianAbilitySystemComponent())
+	{
+		return !OwnerASC->HasMatchingGameplayTag(ObsidianGameplayTags::Equipment_BlockActions);
 	}
 	return false;
 }

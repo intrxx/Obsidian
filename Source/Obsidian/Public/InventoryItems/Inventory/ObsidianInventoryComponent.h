@@ -12,6 +12,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
+class AObsidianPlayerController;
 class FGameplayDebuggerCategory_InventoryItems;
 class UObsidianInventoryWidgetController;
 
@@ -84,7 +85,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
 
-	bool CanOwnerModifyInventoryState() const;
+	bool CanOwnerModifyInventoryState();
 	
 	/** Checks if the item fits in the provided spot. */
 	bool CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FIntPoint& SpecifiedPosition);
@@ -267,4 +268,7 @@ private:
 	int32 InventoryGridSize = 0;
 
 	bool bIsLocallyControlled = false;
+
+	UPROPERTY()
+	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
 };
