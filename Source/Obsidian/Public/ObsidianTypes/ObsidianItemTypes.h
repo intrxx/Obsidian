@@ -91,7 +91,7 @@ namespace ObsidianAffixLimit
  * 
  */
 UENUM(BlueprintType)
-enum class EObsidianEquipResult : uint8
+enum class EObsidianEquipCheckResult : uint8
 {
 	None = 0 UMETA(DisplayName="None"),
 	
@@ -133,6 +133,29 @@ enum class EObsidianEquipResult : uint8
 
 	/** Item can be quipped. */
 	CanEquip UMETA(DisplayName="Can Equip")
+};
+
+USTRUCT()
+struct FObsidianEquippingResult
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianEquippingResult(){};
+
+	FORCEINLINE operator bool() const
+	{
+		return bActionSuccessful;
+	}
+	
+public:
+	/** The action was successful (equipping, de-equipping, replacing with other item). */
+	UPROPERTY()
+	bool bActionSuccessful = false;
+
+	/** Instance that was equipped as a result of called function, might be nullptr. */
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryItemInstance> EquippedInstance = nullptr;
 };
 
 /**

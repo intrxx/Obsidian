@@ -47,24 +47,24 @@ public:
 
 	bool CanOwnerModifyEquipmentState();
 	
-	EObsidianEquipResult CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
-	EObsidianEquipResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+	EObsidianEquipCheckResult CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
+	EObsidianEquipCheckResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
 	
-	EObsidianEquipResult CanReplaceInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
-	EObsidianEquipResult CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+	EObsidianEquipCheckResult CanReplaceInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
+	EObsidianEquipCheckResult CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
 	
-	UObsidianInventoryItemInstance* AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
-	bool AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
+	FObsidianEquippingResult AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	FObsidianEquippingResult AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
 	
-	UObsidianInventoryItemInstance* EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
-	bool EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
+	FObsidianEquippingResult EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+	FObsidianEquippingResult EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
 
-	bool ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
-	bool ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
+	FObsidianEquippingResult ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
+	FObsidianEquippingResult ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
 	
 	void WeaponSwap();
 
-	void UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip);
+	FObsidianEquippingResult UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
@@ -72,7 +72,7 @@ public:
 	//~ End of UObject interface
 
 protected:
-	EObsidianEquipResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
+	EObsidianEquipCheckResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
 	
 	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
 	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);
@@ -96,25 +96,25 @@ private:
 
 namespace ObsidianEquipmentDebugHelpers
 {
-	const inline TMap<EObsidianEquipResult, FString> EquipResultToStringMap =
+	const inline TMap<EObsidianEquipCheckResult, FString> EquipResultToStringMap =
 	{
-		{EObsidianEquipResult::None, TEXT("None")},
-		{EObsidianEquipResult::ItemUnfitForCategory, TEXT("Item Unfit For Category")},
-		{EObsidianEquipResult::ItemUnequippable, TEXT("Item Unequippable")},
-		{EObsidianEquipResult::EquipmentActionsBlocked, TEXT("Equipment Actions Blocked")},
-		{EObsidianEquipResult::UnableToEquip_BannedCategory, TEXT("Unable To Equip - Banned Category")},
-		{EObsidianEquipResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
-		{EObsidianEquipResult::UnableToEquip_DoesNotFitWithOtherWeaponType, TEXT("Unable To Equip - Does Not Fit With Other Weapon Type")},
-		{EObsidianEquipResult::ItemUnientified, TEXT("Item Unientified")},
-		{EObsidianEquipResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
-		{EObsidianEquipResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},
-		{EObsidianEquipResult::NotEnoughIntelligence, TEXT("Not Enough Intelligence")},
-		{EObsidianEquipResult::NotEnoughStrength, TEXT("Not Enough Strength")},
-		{EObsidianEquipResult::NotEnoughFaith, TEXT("Not Enough Faith")},
-		{EObsidianEquipResult::CanEquip, TEXT("Can Equip")}
+		{EObsidianEquipCheckResult::None, TEXT("None")},
+		{EObsidianEquipCheckResult::ItemUnfitForCategory, TEXT("Item Unfit For Category")},
+		{EObsidianEquipCheckResult::ItemUnequippable, TEXT("Item Unequippable")},
+		{EObsidianEquipCheckResult::EquipmentActionsBlocked, TEXT("Equipment Actions Blocked")},
+		{EObsidianEquipCheckResult::UnableToEquip_BannedCategory, TEXT("Unable To Equip - Banned Category")},
+		{EObsidianEquipCheckResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
+		{EObsidianEquipCheckResult::UnableToEquip_DoesNotFitWithOtherWeaponType, TEXT("Unable To Equip - Does Not Fit With Other Weapon Type")},
+		{EObsidianEquipCheckResult::ItemUnientified, TEXT("Item Unientified")},
+		{EObsidianEquipCheckResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
+		{EObsidianEquipCheckResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},
+		{EObsidianEquipCheckResult::NotEnoughIntelligence, TEXT("Not Enough Intelligence")},
+		{EObsidianEquipCheckResult::NotEnoughStrength, TEXT("Not Enough Strength")},
+		{EObsidianEquipCheckResult::NotEnoughFaith, TEXT("Not Enough Faith")},
+		{EObsidianEquipCheckResult::CanEquip, TEXT("Can Equip")}
 	};
 
-	inline FString GetEquipResultString(const EObsidianEquipResult Result)
+	inline FString GetEquipResultString(const EObsidianEquipCheckResult Result)
 	{
 		return EquipResultToStringMap[Result];
 	}

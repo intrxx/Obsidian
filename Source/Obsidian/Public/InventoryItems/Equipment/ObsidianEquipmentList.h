@@ -79,7 +79,7 @@ public:
 
 	bool IsValid() const;
 	
-	EObsidianEquipResult CanEquipToSlot(const FGameplayTag& EquipmentCategory) const;
+	EObsidianEquipCheckResult CanEquipToSlot(const FGameplayTag& EquipmentCategory) const;
 
 	void AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories);

@@ -25,19 +25,19 @@ bool FObsidianEquipmentSlotDefinition::IsValid() const
 	return SlotTag.IsValid();
 }
 
-EObsidianEquipResult FObsidianEquipmentSlotDefinition::CanEquipToSlot(const FGameplayTag& EquipmentCategory) const
+EObsidianEquipCheckResult FObsidianEquipmentSlotDefinition::CanEquipToSlot(const FGameplayTag& EquipmentCategory) const
 {
 	if(BannedEquipmentCategories.HasTagExact(EquipmentCategory))
 	{
-		return EObsidianEquipResult::UnableToEquip_BannedCategory;
+		return EObsidianEquipCheckResult::UnableToEquip_BannedCategory;
 	}
 	
 	if(AcceptedEquipmentCategories.HasTagExact(EquipmentCategory))
 	{
-		return EObsidianEquipResult::CanEquip;
+		return EObsidianEquipCheckResult::CanEquip;
 	}
 	
-	return EObsidianEquipResult::ItemUnfitForCategory;
+	return EObsidianEquipCheckResult::ItemUnfitForCategory;
 }
 
 void FObsidianEquipmentSlotDefinition::AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory)
@@ -159,7 +159,7 @@ TArray<FObsidianEquipmentSlotDefinition> FObsidianEquipmentList::FindMatchingEqu
 	
 	for(FObsidianEquipmentSlotDefinition Slot : EquipmentSlots)
 	{
-		if(Slot.CanEquipToSlot(ItemCategory) == EObsidianEquipResult::CanEquip)
+		if(Slot.CanEquipToSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip)
 		{
 			MatchingSlots.Add(Slot);
 		}

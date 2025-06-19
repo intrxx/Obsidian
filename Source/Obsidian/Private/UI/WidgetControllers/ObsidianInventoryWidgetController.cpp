@@ -478,8 +478,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		 const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
 		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
 		 {
-		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanReplaceInstance(DraggedInstance, SlotTag);
-		 	if(EquipmentResult == EObsidianEquipResult::CanEquip)
+		 	const EObsidianEquipCheckResult EquipmentResult = EquipmentComponent->CanReplaceInstance(DraggedInstance, SlotTag);
+		 	if(EquipmentResult == EObsidianEquipCheckResult::CanEquip)
 		 	{
 		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
 		 	}
@@ -495,8 +495,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		
 		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
 		 {
-		 	const EObsidianEquipResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
-		 	if(EquipmentResult == EObsidianEquipResult::CanEquip)
+		 	const EObsidianEquipCheckResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
+		 	if(EquipmentResult == EObsidianEquipCheckResult::CanEquip)
 		 	{
 		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
 		 	}
@@ -924,13 +924,13 @@ bool UObsidianInventoryWidgetController::CanEquipDraggedItem(const FGameplayTag&
 	const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
 	if(const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
 	{
-		const EObsidianEquipResult EquipResult = EquipmentComponent->CanEquipInstance(DraggedInstance, SlotTag);
-		return EquipResult == EObsidianEquipResult::CanEquip;
+		const EObsidianEquipCheckResult EquipResult = EquipmentComponent->CanEquipInstance(DraggedInstance, SlotTag);
+		return EquipResult == EObsidianEquipCheckResult::CanEquip;
 	}
 	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef)
 	{
-		const EObsidianEquipResult EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
-		return EquipResult == EObsidianEquipResult::CanEquip;
+		const EObsidianEquipCheckResult EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
+		return EquipResult == EObsidianEquipCheckResult::CanEquip;
 	}
 	return false;
 }
