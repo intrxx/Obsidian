@@ -110,25 +110,24 @@ public:
 	
 	/** Tries to add Item Definition to the inventory, if the item is stackable will first try to add all the stacks to the same item types if they exist in inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, int32& OutStacksLeft, const int32 StackCount = 1);
+	FObsidianInventoryResult AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount = 1);
 
 	/** Tries to add provided Item Definition to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, int32& OutStacksLeft, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
+	FObsidianInventoryResult AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Will try to add stacks from provided Item Definition at provided Position.
 	 *
 	 *	@param AddingFromItemDef				The Item Definition that the function will try to add from.
 	 *	@param AddingFromItemDefCurrentStacks	The Current Stacks of the provided Item Definition.
-	 *  @param AtPosition						The pressed slot at which the function will search for item to add to.
-	 *  @param OutAddingStacksResult			The struct that contains various useful information about the result of the adding process.
+	 *  @param AtPosition						The pressed slot at which the function will search for item to add to.			
 	 *  @param StackToAddOverride				Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
 	 *
-	 *  @return True if at least one stack was added successfully.
+	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FIntPoint& AtPosition, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FIntPoint& AtPosition, const int32 StackToAddOverride = -1);
 	
 	/** Checks if the provided Item Instance can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
@@ -139,24 +138,23 @@ public:
 	
 	/** Tries to add Item Instance to the inventory, if the item is stackable will first try to add all the stacks to the same item types if they exist in inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd, int32& OutStacksLeft);
+	FObsidianInventoryResult AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd);
 
 	/** Tries to add provided Item Instance to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride = -1);
+	FObsidianInventoryResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride = -1);
 	
 	/**
 	 *	Will try to add stacks from provided Item Instance at provided Position. 
 	 *
 	 *	@param AddingFromInstance		The Item Instance that the function will try to add from.
 	 *  @param AtGridSlot				The pressed slot at which the function will search for item to add to.
-	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
 	 *  @param StackToAddOverride		Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
 	 *
-	 *  @return True if at least one stack was added successfully.
+	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FIntPoint& AtGridSlot, FObsidianAddingStacksResult& OutAddingStacksResult, const int32 StackToAddOverride = -1);
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FIntPoint& AtGridSlot, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Provides a copied Item with the amount of stacks to take. Shouldn't ever be called to take out full item stacks or 0 stacks.
@@ -167,11 +165,11 @@ public:
 	 *	@return New, duplicated item instance with StacksToTake number of stacks.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	UObsidianInventoryItemInstance* TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake);
+	FObsidianInventoryResult TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake);
 
 	/** Removes Item Instance from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
+	FObsidianInventoryResult RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
 	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
 	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance);

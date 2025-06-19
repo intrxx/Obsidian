@@ -135,13 +135,16 @@ enum class EObsidianEquipCheckResult : uint8
 	CanEquip UMETA(DisplayName="Can Equip")
 };
 
-USTRUCT()
-struct FObsidianEquippingResult
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianEquipmentResult
 {
 	GENERATED_BODY()
 
 public:
-	FObsidianEquippingResult(){};
+	FObsidianEquipmentResult(){};
 
 	FORCEINLINE operator bool() const
 	{
@@ -153,9 +156,38 @@ public:
 	UPROPERTY()
 	bool bActionSuccessful = false;
 
-	/** Instance that was equipped as a result of called function, might be nullptr. */
+	/** Instance that was equipped or de-equipped as a result of called function, might be nullptr. */
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemInstance> EquippedInstance = nullptr;
+	TObjectPtr<UObsidianInventoryItemInstance> AffectedInstance = nullptr;
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianInventoryResult
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianInventoryResult(){};
+
+	FORCEINLINE operator bool() const
+	{
+		return bActionSuccessful;
+	}
+	
+public:
+	/** The action was successful (adding, removing, replacing), the whole item is now in the inventory or removed from. */
+	UPROPERTY()
+	bool bActionSuccessful = false;
+
+	/** Instance that has stacks added to, was added or was removed from the inventory as a result of called function, might be nullptr. */
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryItemInstance> AffectedInstance = nullptr;
+
+	UPROPERTY()
+	int32 StacksLeft = INDEX_NONE;
 };
 
 /**
@@ -173,27 +205,42 @@ enum class EObsidianAffixType : uint8
 /**
  * 
  */
+UENUM(BlueprintType)
+enum class EObsidianAddingStacksResult : uint8
+{
+	/** The action of adding stacks was unsuccessful. */
+	ASR_NoStacksAdded UMETA(DisplayName = "No Stacks Added"),
+	
+	/** Added at least 1 stack from provided item to some other item. */
+	ASR_SomeOfTheStacksAdded UMETA(DisplayName = "Some Of The Stacks Added"),
+
+	/** Whole Item was added as stacks to other Item/Items. */
+	ASR_WholeItemAsStacksAdded UMETA(DisplayName = "Whole Item As Stacks Added")
+};
+
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianAddingStacksResult
 {
 	GENERATED_BODY()
 
 public:
+	FObsidianAddingStacksResult(){};
+	
+public:
 	/** The amount of stacks that was added from provided Item to other Item/Items. */
 	UPROPERTY(BlueprintReadOnly)
-	int32 AddedStacks = 0;
+	int32 AddedStacks = INDEX_NONE;
 
 	/** The amount of stacks that is left on the provided Item. */
 	UPROPERTY(BlueprintReadOnly)
-	int32 StacksLeft = -1;
-	
-	/** Whole Item was added as stacks to other Item/Items. */
-	UPROPERTY(BlueprintReadOnly)
-	bool bAddedWholeItemAsStacks = false;
+	int32 StacksLeft = INDEX_NONE;
 
-	/** Added at least 1 stack from provided item to some other item. */
+	/** The result of trying to add stacks. */
 	UPROPERTY(BlueprintReadOnly)
-	bool bAddedSomeOfTheStacks = false;
+	EObsidianAddingStacksResult AddingStacksResult = EObsidianAddingStacksResult::ASR_NoStacksAdded;
 
 	/** The last Item Instance that we added some stacks to. */
 	UPROPERTY(BlueprintReadOnly)

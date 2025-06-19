@@ -155,9 +155,9 @@ bool UObsidianEquipmentComponent::CanOwnerModifyEquipmentState()
 	return false;
 }
 
-FObsidianEquippingResult UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
+FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip)
 {
-	FObsidianEquippingResult Result = FObsidianEquippingResult();
+	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -187,7 +187,7 @@ FObsidianEquippingResult UObsidianEquipmentComponent::AutomaticallyEquipItem(UOb
 		if(EquipItemToSpecificSlot(InstanceToEquip, Slot.SlotTag))
 		{
 			Result.bActionSuccessful = true;
-			Result.EquippedInstance = InstanceToEquip;
+			Result.AffectedInstance = InstanceToEquip;
 			return Result;
 		}
 	}
@@ -195,9 +195,9 @@ FObsidianEquippingResult UObsidianEquipmentComponent::AutomaticallyEquipItem(UOb
 	return Result;
 }
 
-FObsidianEquippingResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag)
+FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag)
 {
-	FObsidianEquippingResult Result = FObsidianEquippingResult();
+	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -228,13 +228,13 @@ FObsidianEquippingResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(UO
 	}
 	
 	Result.bActionSuccessful = true;
-	Result.EquippedInstance = InstanceToEquip;
+	Result.AffectedInstance = InstanceToEquip;
 	return Result;
 }
 
-FObsidianEquippingResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
+FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
-	FObsidianEquippingResult Result = FObsidianEquippingResult();
+	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -281,10 +281,9 @@ FObsidianEquippingResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 			}
 			
 			UnequipItem(InstanceAtSecondSlot);
-		
-			int32 DispensableStacksLeft = 0; // We don't care for StacksLeft as the equippable items never have stacks.
-			InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
-			check(DispensableStacksLeft == 0);
+			
+			InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
+			checkf(Result, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
 		}
 	}
 
@@ -297,13 +296,13 @@ FObsidianEquippingResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	}
 
 	Result.bActionSuccessful = Instance != nullptr;
-	Result.EquippedInstance = Instance;
+	Result.AffectedInstance = Instance;
 	return Result;
 }
 
-FObsidianEquippingResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
+FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
-	FObsidianEquippingResult Result = FObsidianEquippingResult();
+	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -344,10 +343,9 @@ FObsidianEquippingResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 			}
 			
 			UnequipItem(InstanceAtSecondSlot);
-		
-			int32 DispensableStacksLeft = 0; // We don't care for StacksLeft as the equippable items never have stacks.
-			InventoryComponent->AddItemInstance(InstanceAtSecondSlot, DispensableStacksLeft);
-			check(DispensableStacksLeft == 0);
+			
+			InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
+			checkf(Result, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
 		}
 	}
 
@@ -360,7 +358,7 @@ FObsidianEquippingResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	}
 
 	Result.bActionSuccessful = true;
-	Result.EquippedInstance = InstanceToEquip;
+	Result.AffectedInstance = InstanceToEquip;
 	return Result;
 }
 
@@ -396,9 +394,9 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipInstance(const UO
 	return EObsidianEquipCheckResult::CanEquip;
 }
 
-FObsidianEquippingResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	FObsidianEquippingResult Result = FObsidianEquippingResult();
+	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -431,7 +429,7 @@ FObsidianEquippingResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 			continue; // We already have an item equipped in this slot, we shouldn't try to equip it. || Initial slot is free but the other one is occupied so we don't want to automatically equip.
 		}
 		
-		if(const FObsidianEquippingResult& InternalResult = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag))
+		if(const FObsidianEquipmentResult& InternalResult = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag))
 		{
 			return InternalResult;
 		}
@@ -440,9 +438,9 @@ FObsidianEquippingResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	return Result;
 }
 
-FObsidianEquippingResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
+FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
 {
-	FObsidianEquippingResult Result = FObsidianEquippingResult();
+	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -479,7 +477,7 @@ FObsidianEquippingResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	}
 
 	Result.bActionSuccessful = Instance != nullptr;
-	Result.EquippedInstance = Instance;
+	Result.AffectedInstance = Instance;
 	return Result;
 }
 
@@ -671,9 +669,9 @@ void UObsidianEquipmentComponent::WeaponSwap()
 	}
 }
 
-FObsidianEquippingResult UObsidianEquipmentComponent::UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip)
+FObsidianEquipmentResult UObsidianEquipmentComponent::UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip)
 {
-	FObsidianEquippingResult Result = FObsidianEquippingResult();
+	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -700,6 +698,7 @@ FObsidianEquippingResult UObsidianEquipmentComponent::UnequipItem(UObsidianInven
 	}
 
 	Result.bActionSuccessful = true;
+	Result.AffectedInstance = InstanceToUnequip;
 	return Result;
 }
 

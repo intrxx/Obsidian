@@ -51,14 +51,12 @@ void UObsidianPickableStatics::AddPickupToInventory(UObsidianInventoryComponent*
 
 		if(const FPickupTemplate Template = PickupContent.Template; Template.IsValid())
 		{
-			int32 OutStacksLeft = 0;
-			InventoryComponent->AddItemDefinition(Template.ItemDef, /** OUT */ OutStacksLeft, Template.StackCount);
+			InventoryComponent->AddItemDefinition(Template.ItemDef, Template.StackCount);
 		}
 
 		if(const FPickupInstance Instance = PickupContent.Instance; Instance.IsValid())
 		{
-			int32 OutStacksLeft = 0;
-			InventoryComponent->AddItemInstance(Instance.Item, /** OUT */ OutStacksLeft);
+			InventoryComponent->AddItemInstance(Instance.Item);
 		}
 	}
 }
