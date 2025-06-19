@@ -95,11 +95,11 @@ public:
 	 *
 	 *	@param AddingFromItemDef		The Item Definition that the function will try to add from.
 	 *	@param StacksToAdd				The Current Stacks of the provided Item Definition.
-	 *  @param OutAddingStacksResult	The struct that contains various useful information about the result of the adding process.
+	 *  @param OutAddedToInstances		Array of Inventory Item Instances that stacks were added to.
 	 *
-	 *  @return Array of Inventory Item Instances that stacks were added to.
+	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
-	TArray<UObsidianInventoryItemInstance*> TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult);
+	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
 	
 	/** Checks if the provided Item Definition can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")

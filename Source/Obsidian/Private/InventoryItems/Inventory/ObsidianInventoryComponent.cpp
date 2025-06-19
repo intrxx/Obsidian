@@ -284,23 +284,23 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinition(const TS
 	{
 		return Result;
 	}
-
-	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
+	
+	TArray<UObsidianInventoryItemInstance*> OutAddedToInstances;
 	if(DefaultObject->IsStackable())
 	{
-		FObsidianAddingStacksResult AddingStacksResult;
-		AddedToInstances = TryAddingStacksToExistingItems(ItemDef, Result.StacksLeft, /** OUT */ AddingStacksResult);
+		const FObsidianAddingStacksResult AddingStacksResult = TryAddingStacksToExistingItems(ItemDef, Result.StacksLeft, /** OUT */ OutAddedToInstances);
 
 		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded)
 		{
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
+			Result.AffectedInstance = OutAddedToInstances.Last();
 		}
 		
 		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded)
 		{
 			Result.bActionSuccessful = true;
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
-			Result.AffectedInstance = AddedToInstances.Last();
+			Result.AffectedInstance = OutAddedToInstances.Last();
 			return Result;
 		}
 	}
@@ -310,10 +310,10 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinition(const TS
 	{
 		//TODO We can no longer add this item to the inventory, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
-		if(!AddedToInstances.IsEmpty())
+		if(!OutAddedToInstances.IsEmpty())
 		{
 			Result.bActionSuccessful = true;
-			Result.AffectedInstance = AddedToInstances.Last();
+			Result.AffectedInstance = OutAddedToInstances.Last();
 			return Result;
 		}
 		return Result;
@@ -324,10 +324,10 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinition(const TS
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Inventory is full!")));
-		if(!AddedToInstances.IsEmpty())
+		if(!OutAddedToInstances.IsEmpty())
 		{
 			Result.bActionSuccessful = true;
-			Result.AffectedInstance = AddedToInstances.Last();
+			Result.AffectedInstance = OutAddedToInstances.Last();
 			return Result;
 		}
 		return Result;
@@ -456,12 +456,13 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstance(UObsidianI
 	
 	if(InstanceToAdd->IsStackable())
 	{
-		FObsidianAddingStacksResult AddingStacksResult;
-		TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), Result.StacksLeft, /** OUT */ AddingStacksResult);
+		TArray<UObsidianInventoryItemInstance*> OutAddedToInstances;
+		const FObsidianAddingStacksResult AddingStacksResult = TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), Result.StacksLeft, /** OUT */ OutAddedToInstances);
 
 		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded)
 		{
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
+			Result.AffectedInstance = OutAddedToInstances.Last();
 			InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
 		}
 		
@@ -469,7 +470,7 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstance(UObsidianI
 		{
 			Result.bActionSuccessful = true;
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
-			Result.AffectedInstance = InstanceToAdd;
+			Result.AffectedInstance = OutAddedToInstances.Last();
 			return Result;
 		}
 	}
@@ -625,26 +626,26 @@ FObsidianInventoryResult UObsidianInventoryComponent::TakeOutFromItemInstance(UO
 	return Result;
 }
 
-TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, FObsidianAddingStacksResult& OutAddingStacksResult)
+FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances)
 {
-	TArray<UObsidianInventoryItemInstance*> AddedToInstances;
-	OutAddingStacksResult.AddedStacks = 0;
-	OutAddingStacksResult.StacksLeft = StacksToAdd;
+	FObsidianAddingStacksResult Result = FObsidianAddingStacksResult();
+	Result.AddedStacks = 0;
+	Result.StacksLeft = StacksToAdd;
 	
 	if(!GetOwner()->HasAuthority())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToExistingItems."));
-		return AddedToInstances; 
+		return Result; 
 	}
 
 	if(CanOwnerModifyInventoryState() == false)
 	{
-		return AddedToInstances;
+		return Result;
 	}
 	
 	if(StacksToAdd <= 0)
 	{
-		return AddedToInstances;
+		return Result;
 	}
 	
 	const int32 StacksInInventory = FindAllStacksForGivenItem(AddingFromItemDef);
@@ -672,7 +673,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 				continue;
 			}
 
-			const int32 StacksLeft = OutAddingStacksResult.StacksLeft;
+			const int32 StacksLeft = Result.StacksLeft;
 			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? StacksLeft : LimitStackCount - StacksInInventory;
 			if(StacksThatCanBeAddedToInventory <= 0)
 			{
@@ -691,22 +692,22 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::TryAddingSt
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
 			InventoryGrid.ChangedEntryStacks(Instance, CurrentStackCount);
 			
-			OutAddingStacksResult.AddedStacks += AmountThatCanBeAddedToInstance;
-			OutAddingStacksResult.StacksLeft -= AmountThatCanBeAddedToInstance;
-			AddedToInstances.AddUnique(Instance);
+			Result.AddedStacks += AmountThatCanBeAddedToInstance;
+			Result.StacksLeft -= AmountThatCanBeAddedToInstance;
+			OutAddedToInstances.AddUnique(Instance);
 			
-			if(OutAddingStacksResult.AddedStacks == StacksToAdd)
+			if(Result.AddedStacks == StacksToAdd)
 			{
-				OutAddingStacksResult.AddingStacksResult = EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded;
-				return AddedToInstances;
+				Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded;
+				return Result;
 			}
 		}
 	}
-	if(AddedToInstances.Num() > 0)
+	if(OutAddedToInstances.Num() > 0)
 	{
-		OutAddingStacksResult.AddingStacksResult = EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded;
+		Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded;
 	}
-	return AddedToInstances;
+	return Result;
 }
 
 FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FIntPoint& AtGridSlot, const int32 StackToAddOverride)
