@@ -51,8 +51,6 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Equipment_Changed, this, &ThisClass::OnEquipmentStateChanged);
-
-	
 }
 
 void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
@@ -139,7 +137,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
-		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedsTwoSlots();
+		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedTwoSlots();
 		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
 		ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
 		
@@ -155,7 +153,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 			RemoveEquipmentItemWidget(SlotTagToClear);
 		}
 
-		if(Instance->DoesItemNeedsTwoSlots())
+		if(Instance->DoesItemNeedTwoSlots())
 		{
 			RemoveBlockedSlotItemWidget(SlotTagToClear);
 		}
@@ -170,7 +168,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 			RemoveEquipmentItemWidget(SlotTagToClear);
 		}
 
-		if(Instance->DoesItemNeedsTwoSlots())
+		if(Instance->DoesItemNeedTwoSlots())
 		{
 			const FGameplayTag EquipmentTag = SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
 			RemoveBlockedSlotItemWidget(EquipmentTag);
@@ -181,7 +179,7 @@ void UObsidianInventoryWidgetController::OnEquipmentStateChanged(FGameplayTag Ch
 		ItemWidgetData.DesiredSlot = EquipmentChangeMessage.SlotTag;
 		ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 		ItemWidgetData.bSwappedWithAnotherItem = EquipmentChangeMessage.SlotTagToClear == FGameplayTag::EmptyTag;
-		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedsTwoSlots();
+		ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedTwoSlots();
 		ItemWidgetData.ItemCategory = Instance->GetItemCategoryTag();
 		ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
 		
@@ -242,7 +240,7 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		ItemWidgetData.ItemImage = Item->GetItemImage();
 		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
 		ItemWidgetData.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
-		ItemWidgetData.bDoesBlockSisterSlot = Item->DoesItemNeedsTwoSlots();
+		ItemWidgetData.bDoesBlockSisterSlot = Item->DoesItemNeedTwoSlots();
 		ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);

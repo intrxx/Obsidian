@@ -336,12 +336,12 @@ bool UObsidianInventoryItemInstance::IsItemEquippable() const
 	return bEquippable;
 }
 
-void UObsidianInventoryItemInstance::SetItemNeedsTwoSlots(const bool InNeedsTwoSlots)
+void UObsidianInventoryItemInstance::SetItemNeedTwoSlots(const bool InNeedsTwoSlots)
 {
 	bNeedsTwoSlots = InNeedsTwoSlots;
 }
 
-bool UObsidianInventoryItemInstance::DoesItemNeedsTwoSlots() const
+bool UObsidianInventoryItemInstance::DoesItemNeedTwoSlots() const
 {
 	return bNeedsTwoSlots;
 }

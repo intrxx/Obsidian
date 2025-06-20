@@ -101,10 +101,10 @@ public:
 	bool IsItemEquippable() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	void SetItemNeedsTwoSlots(const bool InNeedsTwoSlots);
+	void SetItemNeedTwoSlots(const bool InNeedsTwoSlots);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
-	bool DoesItemNeedsTwoSlots() const;
+	bool DoesItemNeedTwoSlots() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	TArray<AObsidianSpawnedEquipmentPiece*> GetSpawnedActors() const;

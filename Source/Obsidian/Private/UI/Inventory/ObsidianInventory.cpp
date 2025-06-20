@@ -55,6 +55,9 @@ void UObsidianInventory::NativeDestruct()
 	if(InventoryWidgetController)
 	{
 		InventoryWidgetController->RemoveItemUIElements();
+		InventoryWidgetController->OnItemEquippedDelegate.Clear();
+		InventoryWidgetController->OnItemAddedDelegate.Clear();
+		InventoryWidgetController->OnItemChangedDelegate.Clear();
 	}
 	
 	if(InventoryGrid)
@@ -159,7 +162,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	{
 		return;
 	}
-	
+
 	const FGameplayTag DesiredSlot = ItemWidgetData.DesiredSlot;
 	const bool bIsForSwapSlot = ItemWidgetData.IsItemForSwapSlot();
 	
@@ -169,6 +172,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemLeftMouseButtonPressed);
 	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnEquipmentItemMouseEntered);
 	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+	
 	InventoryWidgetController->RegisterEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
 
 	UObsidianItemSlot_Equipment* EquipmentSlot = EquipmentPanel->FindEquipmentSlotForTag(DesiredSlot);
@@ -183,6 +187,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		BlockedSlotItem->OnSlotBlockadeItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemLeftMouseButtonPressed);
 		BlockedSlotItem->OnSlotBlockadeItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemMouseEntered);
 		BlockedSlotItem->OnSlotBlockadeItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+		
 		InventoryWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
 
 		UObsidianItemSlot_Equipment* SlotToBlock = EquipmentPanel->FindEquipmentSlotForTag(SisterSlotTag);

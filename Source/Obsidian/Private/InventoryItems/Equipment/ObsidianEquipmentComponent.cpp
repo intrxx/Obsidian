@@ -325,7 +325,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 		return Result;
 	}
 
-	if(InstanceToEquip->DoesItemNeedsTwoSlots())
+	if(InstanceToEquip->DoesItemNeedTwoSlots())
 	{
 		const FObsidianEquipmentSlotDefinition PressedSlot = FindEquipmentSlotByTag(SlotTag);
 		
@@ -550,7 +550,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const 
 		return Result;
 	}
 	
-	if(Instance->DoesItemNeedsTwoSlots())
+	if(Instance->DoesItemNeedTwoSlots())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item needs a second slot."));
 		
