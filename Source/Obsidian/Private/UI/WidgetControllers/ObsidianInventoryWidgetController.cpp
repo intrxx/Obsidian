@@ -613,6 +613,8 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 		return nullptr;
 	}
 
+	RemoveItemDescription();
+	
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatForInstance(Instance);
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
@@ -643,6 +645,8 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateItemDesc
 		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianMainOverlay in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem."));
 		return nullptr;
 	}
+
+	RemoveItemDescription();
 	
 	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsForItemDefinition(ItemDef, CurrentItemStacks);
 

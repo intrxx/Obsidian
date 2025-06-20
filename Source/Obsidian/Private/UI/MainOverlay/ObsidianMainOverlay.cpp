@@ -121,6 +121,7 @@ void UObsidianMainOverlay::ToggleInventory()
 					Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
 				}
 				InventoryWidgetController->SetInventoryOpened(false);
+				InventoryWidgetController->RemoveItemUIElements();
 				MoveDroppedItemDescOverlay(false);
 			});
 
