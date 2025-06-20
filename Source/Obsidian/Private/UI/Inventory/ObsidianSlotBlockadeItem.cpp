@@ -27,12 +27,21 @@ void UObsidianSlotBlockadeItem::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage)
+void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& InEquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
 {
-	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
-	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
-	Item_Image->SetBrushFromTexture(ItemImage);
-	ItemEquipmentSlot = EquipmentSlot;
+	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
+	
+	const float WidthOverride = (ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X) * SlotSizeMultiplier;
+	const float HeightOverride = (ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y) * SlotSizeMultiplier;
+	Root_SizeBox->SetWidthOverride(WidthOverride);
+	Root_SizeBox->SetHeightOverride(HeightOverride);
+	
+	FSlateBrush Brush;
+	Brush.SetImageSize(FVector2D(WidthOverride, HeightOverride));
+	Brush.SetResourceObject(ItemImage);
+	Item_Image->SetBrush(Brush);
+	
+	ItemEquipmentSlot = InEquipmentSlot;
 	PrimaryWeaponSlot = InPrimaryWeaponSlot;
 }
 

@@ -31,7 +31,7 @@ class OBSIDIAN_API UObsidianSlotBlockadeItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage);
+	void InitializeItemWidget(const FGameplayTag& InEquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot);
 
 	FGameplayTag GetEquipmentSlotTag() const
 	{
@@ -70,6 +70,9 @@ protected:
 	/** Opacity to set for this blocking item. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float ItemOpacity = 0.5f;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	float SwapSlotSizeMultiplier = 0.5f;
 	
 	UPROPERTY()
 	FGameplayTag ItemEquipmentSlot = FGameplayTag::EmptyTag;

@@ -26,6 +26,15 @@
 #include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
+bool FObsidianItemWidgetData::IsItemForSwapSlot() const 
+{
+	if(DesiredSlot.IsValid() && DesiredSlot.MatchesTag(FGameplayTag::RequestGameplayTag("Equipment.SwapSlot.Weapon")))
+	{
+		return true;
+	}
+	return false;
+}
+
 void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(InventoryComponent);

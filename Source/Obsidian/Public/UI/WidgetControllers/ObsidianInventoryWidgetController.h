@@ -32,20 +32,9 @@ struct FObsidianItemWidgetData
 	
 public:
 	FObsidianItemWidgetData(){};
-	FObsidianItemWidgetData(UTexture2D* InItemImage, const FIntPoint& InDesiredPosition, const FIntPoint& InGridSpan, const int32 InStackCount, const bool bInUsable)
-		: ItemImage(InItemImage)
-		, DesiredPosition(InDesiredPosition)
-		, GridSpan(InGridSpan)
-		, StackCount(InStackCount)
-		, bUsable(bInUsable)
-	{};
-	FObsidianItemWidgetData(UTexture2D* InItemImage, const FGameplayTag& InDesiredSlot, const FIntPoint& InGridSpan, const int32 InStackCount, const bool bInUsable)
-		: ItemImage(InItemImage)
-		, DesiredSlot(InDesiredSlot)
-		, GridSpan(InGridSpan)
-		, StackCount(InStackCount)
-		, bUsable(bInUsable)
-	{};
+
+	/** Return true if the desired slot for this item is a swap slot. Only valid for equipment. */
+	bool IsItemForSwapSlot() const;
 	
 public:
 	UPROPERTY()

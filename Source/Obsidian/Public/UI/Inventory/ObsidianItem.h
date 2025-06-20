@@ -34,6 +34,7 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 public:
 	void InitializeItemWidget(const FIntPoint& DesiredPosition, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
 	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage);
+	void InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot = false);
 	
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
@@ -81,6 +82,9 @@ protected:
 	/** Opacity to set when item is being used (right-clicked). */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float UsingItemOpacity = 0.6f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	float SwapSlotSizeMultiplier = 0.5f;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;

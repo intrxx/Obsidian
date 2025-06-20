@@ -65,6 +65,24 @@ void UObsidianItem::InitializeItemWidget(const FIntPoint& DesiredPosition, const
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
+void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
+{
+	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
+		
+	const float WidthOverride = (ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X) * SlotSizeMultiplier;
+	const float HeightOverride = (ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y) * SlotSizeMultiplier;
+	Root_SizeBox->SetWidthOverride(WidthOverride);
+	Root_SizeBox->SetHeightOverride(HeightOverride);
+
+	FSlateBrush Brush;
+	Brush.SetImageSize(FVector2D(WidthOverride, HeightOverride));
+	Brush.SetResourceObject(ItemImage);
+	Item_Image->SetBrush(Brush);
+	
+	ItemEquipmentSlot = EquipmentSlot;
+	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
+}
+
 void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);

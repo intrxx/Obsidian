@@ -161,10 +161,11 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	}
 	
 	const FGameplayTag DesiredSlot = ItemWidgetData.DesiredSlot;
+	const bool bIsForSwapSlot = ItemWidgetData.IsItemForSwapSlot();
 	
 	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
+	ItemWidget->InitializeItemWidget(DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage, bIsForSwapSlot);
 	ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemLeftMouseButtonPressed);
 	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnEquipmentItemMouseEntered);
 	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
@@ -178,7 +179,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		const FGameplayTag SisterSlotTag = EquipmentSlot->GetSisterSlotTag();
 			
 		UObsidianSlotBlockadeItem* BlockedSlotItem = CreateWidget<UObsidianSlotBlockadeItem>(this, SlotBlockadeItemClass);
-		BlockedSlotItem->InitializeItemWidget(SisterSlotTag, DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage);
+		BlockedSlotItem->InitializeItemWidget(SisterSlotTag, DesiredSlot, ItemWidgetData.GridSpan, ItemWidgetData.ItemImage, bIsForSwapSlot);
 		BlockedSlotItem->OnSlotBlockadeItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemLeftMouseButtonPressed);
 		BlockedSlotItem->OnSlotBlockadeItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemMouseEntered);
 		BlockedSlotItem->OnSlotBlockadeItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
