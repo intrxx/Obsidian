@@ -53,9 +53,10 @@ public:
 	 */
 	void UpdateDroppedItemStacks(const int32 NewDroppedItemStacks);
 
+	void DestroyDroppedItem();
+
 protected:
 	virtual void BeginPlay() override;
-	virtual void Destroyed() override;
 	
 	virtual void OnRep_PickupContent() override;
 	

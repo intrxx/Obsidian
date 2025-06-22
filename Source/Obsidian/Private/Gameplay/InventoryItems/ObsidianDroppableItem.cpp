@@ -118,13 +118,6 @@ bool AObsidianDroppableItem::InitializeWorldName()
 	return bSuccess;
 }
 
-void AObsidianDroppableItem::Destroyed()
-{
-	DestroyItemDescription();
-	
-	Super::Destroyed();
-}
-
 void AObsidianDroppableItem::OnRep_PickupContent()
 {
 	if(CarriesItemDef())
@@ -193,12 +186,21 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 		UpdateStacksOnActiveItemDescription(DroppedItemStacks);
 		return;
 	}
+	
 #if !UE_BUILD_SHIPPING
 	if(NewDroppedItemStacks < 0)
 	{
 		UE_LOG(LogInventory, Error, TEXT("AObsidianDroppableItem::UpdateDroppedItemStacks shouldn't take a negative number of stacks to update."));
 	}
-#endif 
+#endif
+	
+	DestroyDroppedItem();
+}
+
+void AObsidianDroppableItem::DestroyDroppedItem()
+{
+	StopHighlight();
+	
 	Destroy();
 }
 

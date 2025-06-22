@@ -60,12 +60,27 @@ AActor* AObsidianEnemy::GetHighlightAvatarActor()
 
 void AObsidianEnemy::StartHighlight()
 {
-	GetMesh()->SetRenderCustomDepth(true);
+	if(USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		MeshComp->SetRenderCustomDepth(true);
+	}
 }
 
 void AObsidianEnemy::StopHighlight()
 {
-	GetMesh()->SetRenderCustomDepth(false);
+	if(USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		MeshComp->SetRenderCustomDepth(false);
+	}
+}
+
+bool AObsidianEnemy::IsHighlighted() const
+{
+	if(const USkeletalMeshComponent* MeshComp = GetMesh())
+	{
+		return MeshComp->bRenderCustomDepth;
+	}
+	return false;
 }
 
 void AObsidianEnemy::BeginPlay()
@@ -119,6 +134,12 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 		Controller->UnPossess();
 	}
 
+	// If the enemy is highlighted stop it as it looks weird when the stencil disappears later.
+	if(IsHighlighted())
+	{
+		StopHighlight();
+	}
+	
 	if(!DeathMontages.IsEmpty())
 	{
 		const float DeathMontagesLength = DeathMontages.Num();

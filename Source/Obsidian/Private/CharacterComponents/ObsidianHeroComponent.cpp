@@ -786,7 +786,7 @@ void UObsidianHeroComponent::ServerPickupItemDef_Implementation(AObsidianDroppab
 			
 			if(EquipmentComponent->AutomaticallyEquipItem(ItemDef))
 			{
-				ItemToPickup->Destroy();
+				ItemToPickup->DestroyDroppedItem();
 				return;
 			}
 		}
@@ -853,7 +853,7 @@ void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDr
 			
 		if(EquipmentComponent->AutomaticallyEquipItem(ItemInstance))
 		{
-			ItemToPickup->Destroy();
+			ItemToPickup->DestroyDroppedItem();
 			return;
 		}
 	}

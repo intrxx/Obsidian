@@ -38,6 +38,8 @@ public:
 	virtual void StopHighlight() override;
 	//~ End of HighlightInterface
 
+	bool IsHighlighted() const;
+
 public:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Enemy")
 	bool bHitReacting = false;
