@@ -157,12 +157,20 @@ protected:
 	
 protected:
 	/** Time Threshold to know if it was a short press */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
 	float ShortPressThreshold = 0.3f;
 
 	/** Acceptable radius to the destination of autorun */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
 	float AutoRunAcceptanceRadius = 30.f;
+
+	/** Radius of the sphere in which we allow the Player to pickup item. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
+	float PickupRadius = 232.0f;
+
+	/** Radius of the sphere in which we allow the Player to drop item. */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
+	float DropRadius = 232.0f;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> AutoRunSplineComp;

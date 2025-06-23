@@ -21,6 +21,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/Player/ObsidianPlayerController.h"
@@ -28,6 +29,7 @@
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/ObsidianDraggedItem.h"
@@ -892,11 +894,54 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
 		return;
 	}
+
+	AObsidianHero* Hero = Cast<AObsidianHero>(GetOwner());
+	if (Hero == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Hero is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
+		return;
+	}
 	
-	const FTransform ItemSpawnTransform = FTransform(FRotator::ZeroRotator, HitLocation, FVector(1.0f, 1.0f, 1.0f));
+	UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
+	if(NavigationSystem == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("NavigationSystem is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
+		return;
+	}
+
+	const FVector OwnerLocation = Hero->GetActorLocation();
+	//const FVector DropRadiusOrigin = FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f);
+	
+	DrawDebugSphere(World, OwnerLocation, DropRadius, 12, FColor::Blue, false, 8);
+
+	FNavLocation RandomPointLocation;
+	NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation);
+	// FVector ItemRandomPosition = OwnerLocation + (FMath::VRand() * FMath::FRandRange(0.f, DropRadius));
+	// ItemRandomPosition.Z = 0.0f; // This needs to be replaced by some line trace do the ground which will determine the ground level
+	
+	FRotator ItemRotation = FRotator::ZeroRotator;
+	FVector ItemLocation = RandomPointLocation.Location;
+	
+	FHitResult GroundTraceResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(Hero);
+	const FVector GroundTraceEndLocation = FVector(RandomPointLocation.Location.X, RandomPointLocation.Location.Y, RandomPointLocation.Location.Z - 300.0f);
+	World->LineTraceSingleByChannel(GroundTraceResult, RandomPointLocation.Location, GroundTraceEndLocation, ECC_Visibility, QueryParams);
+	if (GroundTraceResult.bBlockingHit) // We are able to align the item to the ground better
+	{
+		//float RandomXFactor = FMath::FRandRange(-30.0f, 30.0f);
+		ItemRotation = UKismetMathLibrary::MakeRotFromZX(GroundTraceResult.ImpactNormal, Hero->GetActorForwardVector());
+		ItemLocation = GroundTraceResult.Location;
+	}
+	
+	DrawDebugSphere(World, ItemLocation, 32.0f, 12, FColor::Red, false, 8);
+	
+	const FTransform ItemSpawnTransform = FTransform(ItemRotation, ItemLocation, FVector(1.0f, 1.0f, 1.0f));
+
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
 	Item->InitializeItem(DraggedItem);
 	Item->FinishSpawning(ItemSpawnTransform);
+
 	DraggedItem.Clear();
 
 	StopDraggingItem(Controller);

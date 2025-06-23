@@ -319,13 +319,13 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 	}
 
 	InitialRotation = GetActorRotation();
-	RandomYawRotation = FMath::FRandRange(-30.0f, 30.0f);
+	RandomYawRotation = InitialRotation.Yaw; /* FMath::FRandRange(-30.0f, 30.0f); */ 
 
 	UTimelineComponent* ItemDropTimelineComp = NewObject<UTimelineComponent>(this);
 	ItemDropTimelineComp->SetLooping(false);
 	ItemDropTimelineComp->RegisterComponent();
 
-	if (ItemDropTimelineComp && DropLocationCurve)
+	if(ItemDropTimelineComp && DropLocationCurve)
 	{
 		FOnTimelineFloat ProgressUpdate;
 		ProgressUpdate.BindDynamic(this, &ThisClass::UpdateItemDropAnimation);
