@@ -912,10 +912,11 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
 	}
 	
 	const FVector OwnerLocation = Hero->GetActorLocation();
-	
+
+#if 0
 	const FVector ClickedLocation = CursorHit.Location;
 	const float ItemDropLocation = CachedItemDropLocation == FVector::Zero() ? FVector::Distance(OwnerLocation, ClickedLocation) : FVector::Distance(OwnerLocation, CachedItemDropLocation);
-	if(ItemDropLocation > DropRadius)
+	if(false) // TODO Check if there is no room in the drop space for dropping the item, then move character to some other location at cached destination
 	{
 		if(CursorHit.bBlockingHit)
 		{
@@ -927,16 +928,16 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
 	}
 	
 	CachedItemDropLocation = FVector::Zero();
-
+#endif
+	
 	UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
 	if(NavigationSystem == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("NavigationSystem is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
 		return;
 	}
-
-	//TODO Bias toward Actors forward Vector
 	
+	//TODO Bias toward Actors forward Vector
 	FNavLocation RandomPointLocation;
 	NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation);
 	
