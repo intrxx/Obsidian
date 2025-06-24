@@ -35,7 +35,7 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
 	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
 	StaticMeshComp->SetRenderCustomDepth(false);
-	//StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
+	StaticMeshComp->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 	SetRootComponent(StaticMeshComp);
 	
 	WorldItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WorldItemNameWidgetComp"));
@@ -318,8 +318,14 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 		ItemDropSplineComp->SetSplinePoints(ItemDropRoute, ESplineCoordinateSpace::World, true);
 	}
 
-	InitialRotation = GetActorRotation();
-	RandomYawRotation = InitialRotation.Yaw; /* FMath::FRandRange(-30.0f, 30.0f); */ 
+	FinalItemRotation = GetActorRotation();
+	
+	if(FinalItemRotation == FRotator::ZeroRotator) // If the item was placed in the level it will have Zero Rotation, randomize the Yaw. //TODO This check will fail if someone set the rotation which I don't expect to do but ¯\_(ツ)_/¯ 
+	{
+		FinalItemRotation.Yaw += FMath::FRandRange(0.0f, 180.0f);
+	}
+	
+	InitialItemRotation = FRotator(FinalItemRotation.Pitch, FinalItemRotation.Yaw + FMath::FRandRange(-30.0f, 30.0f), FinalItemRotation.Roll);
 
 	UTimelineComponent* ItemDropTimelineComp = NewObject<UTimelineComponent>(this);
 	ItemDropTimelineComp->SetLooping(false);
@@ -362,9 +368,9 @@ void AObsidianDroppableItem::UpdateItemDropAnimation(float UpdateAlpha)
 	
 	const FVector NewLocation = ItemDropSplineComp->GetLocationAtTime(UpdateAlpha, ESplineCoordinateSpace::World, false);
 
-	const float NewYaw = FMath::Lerp(InitialRotation.Yaw, RandomYawRotation, UpdateAlpha);
-	const float NewRoll = FMath::Lerp(InitialRotation.Roll, InitialRotation.Roll + 270.0f, UpdateAlpha);
-	const FRotator NewRotation = FRotator(InitialRotation.Pitch, NewYaw, NewRoll);
+	const float NewYaw = FMath::Lerp(InitialItemRotation.Yaw, FinalItemRotation.Yaw, UpdateAlpha);
+	const float NewRoll = FMath::Lerp(InitialItemRotation.Roll, FinalItemRotation.Roll + 270.0f, UpdateAlpha);
+	const FRotator NewRotation = FRotator(FinalItemRotation.Pitch, NewYaw, NewRoll);
 
 	SetActorLocationAndRotation(NewLocation, NewRotation);
 }

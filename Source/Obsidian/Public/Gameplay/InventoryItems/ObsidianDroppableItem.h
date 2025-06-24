@@ -33,7 +33,7 @@ public:
 	AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-
+	
 	void InitializeItem(const FDraggedItem& DraggedItem);
 
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
@@ -128,6 +128,10 @@ private:
 	/**
 	 * Item Drop Route animation.
 	 */
-	FRotator InitialRotation = FRotator::ZeroRotator;
-	float RandomYawRotation = 0.0f;
+
+	/** Initial item rotation, randomised. */
+	FRotator InitialItemRotation = FRotator::ZeroRotator;
+
+	/** Final item rotation, the rotation the item is spawned with, most likely aligned to the ground. */
+	FRotator FinalItemRotation = FRotator::ZeroRotator;
 };

@@ -166,11 +166,11 @@ protected:
 
 	/** Radius of the sphere in which we allow the Player to pickup item. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
-	float PickupRadius = 232.0f;
+	float PickupRadius = 200.0f;
 
 	/** Radius of the sphere in which we allow the Player to drop item. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
-	float DropRadius = 232.0f;
+	float DropRadius = 200.0f;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> AutoRunSplineComp;

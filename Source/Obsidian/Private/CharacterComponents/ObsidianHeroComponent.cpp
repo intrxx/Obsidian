@@ -895,7 +895,7 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 		return;
 	}
 
-	AObsidianHero* Hero = Cast<AObsidianHero>(GetOwner());
+	AActor* Hero = GetOwner();
 	if (Hero == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Hero is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
@@ -910,34 +910,29 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 	}
 
 	const FVector OwnerLocation = Hero->GetActorLocation();
-	//const FVector DropRadiusOrigin = FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f);
-	
-	DrawDebugSphere(World, OwnerLocation, DropRadius, 12, FColor::Blue, false, 8);
 
 	FNavLocation RandomPointLocation;
 	NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation);
-	// FVector ItemRandomPosition = OwnerLocation + (FMath::VRand() * FMath::FRandRange(0.f, DropRadius));
-	// ItemRandomPosition.Z = 0.0f; // This needs to be replaced by some line trace do the ground which will determine the ground level
-	
-	FRotator ItemRotation = FRotator::ZeroRotator;
-	FVector ItemLocation = RandomPointLocation.Location;
 	
 	FHitResult GroundTraceResult;
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(Hero);
 	const FVector GroundTraceEndLocation = FVector(RandomPointLocation.Location.X, RandomPointLocation.Location.Y, RandomPointLocation.Location.Z - 300.0f);
 	World->LineTraceSingleByChannel(GroundTraceResult, RandomPointLocation.Location, GroundTraceEndLocation, ECC_Visibility, QueryParams);
-	if (GroundTraceResult.bBlockingHit) // We are able to align the item to the ground better
+
+	FRotator ItemRotation = FRotator::ZeroRotator;
+	FVector ItemLocation = RandomPointLocation.Location;
+	if(GroundTraceResult.bBlockingHit) // We are able to align the item to the ground better
 	{
-		//float RandomXFactor = FMath::FRandRange(-30.0f, 30.0f);
-		ItemRotation = UKismetMathLibrary::MakeRotFromZX(GroundTraceResult.ImpactNormal, Hero->GetActorForwardVector());
+		FVector RandomisedRotationVector = FMath::VRand().GetSafeNormal();
+		ItemRotation = UKismetMathLibrary::MakeRotFromZY(GroundTraceResult.ImpactNormal, RandomisedRotationVector);
 		ItemLocation = GroundTraceResult.Location;
 	}
-	
-	DrawDebugSphere(World, ItemLocation, 32.0f, 12, FColor::Red, false, 8);
+
+	//DrawDebugSphere(World, OwnerLocation, DropRadius, 12, FColor::Blue, false, 8);
+	//DrawDebugSphere(World, ItemLocation, 32.0f, 12, FColor::Red, false, 8);
 	
 	const FTransform ItemSpawnTransform = FTransform(ItemRotation, ItemLocation, FVector(1.0f, 1.0f, 1.0f));
-
 	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
 	Item->InitializeItem(DraggedItem);
 	Item->FinishSpawning(ItemSpawnTransform);
