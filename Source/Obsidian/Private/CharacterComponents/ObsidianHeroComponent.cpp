@@ -21,7 +21,6 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
-#include "Characters/Heroes/ObsidianHero.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/Player/ObsidianPlayerController.h"
@@ -86,6 +85,10 @@ void UObsidianHeroComponent::AutoRun()
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
 		if(DistanceToDestination <= AutoRunAcceptanceRadius)
 		{
+			if(CanDropItem())
+			{
+				ServerHandleDroppingItem();
+			}
 			bAutoRunning = false;
 		}
 	}
@@ -388,27 +391,37 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 		return;
 	}
 	
-	APawn* Pawn = GetPawn<APawn>();
-	if(FollowTime <= ShortPressThreshold && Pawn)
+	if(FollowTime <= ShortPressThreshold)
 	{
-		UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this,
-			Pawn->GetActorLocation(), CachedDestination);
-		if(NavigationPath)
-		{
-			AutoRunSplineComp->ClearSplinePoints();
-			for(const FVector& PointLocation : NavigationPath->PathPoints)
-			{
-				AutoRunSplineComp->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
-			}
-			
-			if(!NavigationPath->PathPoints.IsEmpty())
-			{
-				CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
-			}
-			bAutoRunning = true;
-		}
+		AutoRunToClickedLocation();
 	}
 	FollowTime = 0.f;
+}
+
+void UObsidianHeroComponent::AutoRunToClickedLocation()
+{
+	const APawn* Pawn = GetPawn<APawn>();
+	if(Pawn == nullptr)
+	{
+		return;
+	}
+	
+	UNavigationPath* NavigationPath = UNavigationSystemV1::FindPathToLocationSynchronously(this,
+			Pawn->GetActorLocation(), CachedDestination);
+	if(NavigationPath)
+	{
+		AutoRunSplineComp->ClearSplinePoints();
+		for(const FVector& PointLocation : NavigationPath->PathPoints)
+		{
+			AutoRunSplineComp->AddSplinePoint(PointLocation, ESplineCoordinateSpace::World);
+		}
+			
+		if(!NavigationPath->PathPoints.IsEmpty())
+		{
+			CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
+		}
+		bAutoRunning = true;
+	}
 }
 
 void UObsidianHeroComponent::Input_ToggleCharacterStatus()
@@ -441,7 +454,7 @@ void UObsidianHeroComponent::Input_DropItem()
 	{
 		return;
 	}
-	ServerHandleDroppingItem(CursorHit.Location);
+	ServerHandleDroppingItem();
 }
 
 void UObsidianHeroComponent::Input_ReleaseUsingItem()
@@ -509,7 +522,7 @@ bool UObsidianHeroComponent::DropItem()
 	{
 		return false;
 	}
-	ServerHandleDroppingItem(CursorHit.Location);
+	ServerHandleDroppingItem();
 	return true;
 }
 
@@ -872,15 +885,11 @@ void UObsidianHeroComponent::ServerPickupItemInstance_Implementation(AObsidianDr
 	const FObsidianInventoryResult Result = InventoryComponent->AddItemInstance(ItemInstance);
 	if(CurrentStacks != Result.StacksLeft)
 	{
-		// if(OutStacksLeft > 0)
-		// {
-		// 	ItemInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, OutStacksLeft);
-		// }
 		ItemToPickup->UpdateDroppedItemStacks(Result.StacksLeft);
 	}
 }
 
-void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVector& HitLocation)
+void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -902,6 +911,23 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 		return;
 	}
 	
+	const FVector OwnerLocation = Hero->GetActorLocation();
+	
+	const FVector ClickedLocation = CursorHit.Location;
+	const float ItemDropLocation = CachedItemDropLocation == FVector::Zero() ? FVector::Distance(OwnerLocation, ClickedLocation) : FVector::Distance(OwnerLocation, CachedItemDropLocation);
+	if(ItemDropLocation > DropRadius)
+	{
+		if(CursorHit.bBlockingHit)
+		{
+			CachedDestination = ClickedLocation;
+		}
+		CachedItemDropLocation = CachedDestination;
+		AutoRunToClickedLocation();
+		return;
+	}
+	
+	CachedItemDropLocation = FVector::Zero();
+
 	UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
 	if(NavigationSystem == nullptr)
 	{
@@ -909,8 +935,8 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation(const FVect
 		return;
 	}
 
-	const FVector OwnerLocation = Hero->GetActorLocation();
-
+	//TODO Bias toward Actors forward Vector
+	
 	FNavLocation RandomPointLocation;
 	NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation);
 	

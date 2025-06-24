@@ -182,6 +182,8 @@ private:
 	void CursorTrace();
 	void DragItem() const;
 	void DragUsableItemIcon() const;
+
+	void AutoRunToClickedLocation();
 	
 	/**
 	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
@@ -193,7 +195,7 @@ private:
 	void StopDraggingItem(const AController* Controller);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerHandleDroppingItem(const FVector& HitLocation);
+	void ServerHandleDroppingItem();
 	bool CanDropItem() const;
 	
 	void UpdateStacksOnDraggedItemWidget(const int32 InStacks);
@@ -226,6 +228,8 @@ private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
 	FDraggedItem DraggedItem = FDraggedItem();
+
+	FVector CachedItemDropLocation = FVector::ZeroVector;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemInstance> UsingItemInstance = nullptr;
