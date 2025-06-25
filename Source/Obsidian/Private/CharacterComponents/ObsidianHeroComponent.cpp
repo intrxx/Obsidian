@@ -91,6 +91,13 @@ void UObsidianHeroComponent::AutoRun()
 				ServerHandleDroppingItem();
 			}
 #endif
+			if(bAutoRunToPickupItem)
+			{
+				OnArrivedAtAcceptableItemPickupRange.Broadcast(CachedDroppableItemToPickup, FVector::Zero() /** We won't use that anyway. */);
+				bAutoRunToPickupItem = false;
+				OnArrivedAtAcceptableItemPickupRange.Clear();
+			}
+			
 			bAutoRunning = false;
 		}
 	}
@@ -162,7 +169,7 @@ void UObsidianHeroComponent::DragItem() const
 		DraggedItemWidget->SetPositionInViewport(ViewportPosition);
 	}
 }
-
+   
 void UObsidianHeroComponent::DragUsableItemIcon() const
 {
 	const APlayerController* PC = GetController<APlayerController>();
@@ -765,14 +772,35 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 {
 	if(ItemToPickup == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
 		return;
 	}
 	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("Controller is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+		return;
+	}
+
+	AActor* OwnerActor = GetOwner();
+	if(OwnerActor == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+		return;
+	}
+	
+	const FVector OwnerLocation = OwnerActor->GetActorLocation();
+	const float DistanceToItem = FVector::Distance(OwnerLocation, ItemLocation);
+	if (bAutoRunToPickupItem == false && DistanceToItem > PickupRadius)
+	{
+		UE_LOG(LogTemp, Display, TEXT("User wants to pickup item out of his range, need to make correction."));
+
+		bAutoRunToPickupItem = true;
+		CachedDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * PickupRadius;
+		CachedDroppableItemToPickup = ItemToPickup;
+		OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::ServerPickupItem);
+		AutoRunToClickedLocation();
 		return;
 	}
 	
@@ -782,7 +810,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = Template.ItemDef;
 		if(ItemDef == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("ItemDef is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("ItemDef is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
 			return;
 		}
 
@@ -793,7 +821,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 				UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 				if(EquipmentComponent == nullptr)
 				{
-					UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+					UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
 					return;
 				}
 			
@@ -808,7 +836,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
 			return;
 		}
 
@@ -827,7 +855,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		UObsidianInventoryItemInstance* ItemInstance = Instance.Item;
 		if(ItemInstance == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
 			return;
 		}
 
@@ -836,7 +864,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 			UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 			if(EquipmentComponent == nullptr)
 			{
-				UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItemDef_Implementation."));
+				UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
 				return;
 			}
 			
@@ -850,7 +878,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItemInstance_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
 			return;
 		}
 
@@ -957,6 +985,27 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 	if(Controller == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation."));
+		return;
+	}
+
+	AActor* OwnerActor = GetOwner();
+	if(OwnerActor == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+		return;
+	}
+	
+	const FVector OwnerLocation = OwnerActor->GetActorLocation();
+	const float DistanceToItem = FVector::Distance(OwnerLocation, ItemLocation);
+	if (bAutoRunToPickupItem == false && DistanceToItem > PickupRadius)
+	{
+		UE_LOG(LogTemp, Display, TEXT("User wants to pickup item out of his range, need to make correction."));
+
+		bAutoRunToPickupItem = true;
+		CachedDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * PickupRadius;
+		CachedDroppableItemToPickup = ItemToPickup;
+		OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::ServerGrabDroppableItemToCursor);
+		AutoRunToClickedLocation();
 		return;
 	}
 	

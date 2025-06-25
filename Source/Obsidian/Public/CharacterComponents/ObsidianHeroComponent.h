@@ -27,6 +27,7 @@ class UObsidianDraggedItem;
 class UObsidianInventoryItemDefinition;
 
 DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnArrivedAtAcceptableItemPickupRangeSignature, AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation)
 
 /**
  * Component that manages hero related things like input
@@ -213,6 +214,10 @@ private:
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	bool bAutoRunning = false;
+	
+	bool bAutoRunToPickupItem = false;
+	TObjectPtr<AObsidianDroppableItem> CachedDroppableItemToPickup;
+	FOnArrivedAtAcceptableItemPickupRangeSignature OnArrivedAtAcceptableItemPickupRange;
 	
 	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
