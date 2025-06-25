@@ -490,6 +490,8 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 	
 	UObsidianHeroComponent* HeroComp = Hero->GetHeroComponent();
 	checkf(HeroComp, TEXT("HeroComp acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemDef."));
+
+	const FVector ItemLocation = GetActorLocation();
 	
 	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
@@ -502,12 +504,12 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			HeroComp->ServerGrabDroppableItemToCursor(this);
+			HeroComp->ServerGrabDroppableItemToCursor(this, ItemLocation);
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
 	}
-	HeroComp->ServerPickupItemInstance(this);
+	HeroComp->ServerPickupItem(this, ItemLocation);
 	
 	return false; // Added whole Item
 }
@@ -525,6 +527,8 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 	
 	UObsidianHeroComponent* HeroComp = Hero->GetHeroComponent();
 	checkf(HeroComp, TEXT("HeroComp acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemDef."));
+
+	const FVector ItemLocation = GetActorLocation();
 	
 	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press left control button, spawn the item on cursor
@@ -537,12 +541,12 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			HeroComp->ServerGrabDroppableItemToCursor(this);
+			HeroComp->ServerGrabDroppableItemToCursor(this, ItemLocation);
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
 	}
-	HeroComp->ServerPickupItemDef(this);
+	HeroComp->ServerPickupItem(this, ItemLocation);
 	
 	return false; // Added whole Item
 }

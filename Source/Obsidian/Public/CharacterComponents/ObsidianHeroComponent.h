@@ -94,17 +94,14 @@ public:
 	void ServerReplaceItemAtInventorySlot(const FIntPoint& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
+	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabInventoryItemToCursor(const FIntPoint& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerPickupItemDef(AObsidianDroppableItem* ItemToPickup);
-
-	UFUNCTION(Server, Reliable)
-	void ServerPickupItemInstance(AObsidianDroppableItem* ItemToPickup);
-
+	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation);
+	
 	void UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown);
 	
 	UFUNCTION(Server, Reliable)
