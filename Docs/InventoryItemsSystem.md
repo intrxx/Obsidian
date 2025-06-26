@@ -32,8 +32,13 @@ Key Binds / Navigation:
 > &nbsp; 1.5 [ObsidianInventoryItemFragment](#obsidianinventoryitemfragment) \
 > &nbsp;&nbsp; 1.5.1 [OInventoryItemFragment_Stacks](#obsidianfragment_stacks) \
 > &nbsp;&nbsp;&nbsp; 1.5.1.1 [ObsidianGameplayTagStack](#obsidiangameplaytagstack) \
-> &nbsp;&nbsp; 1.5.2 [OInventoryItemFragment_Appearance](#obsidianframgent_appearance)
-> 2. [User Interface](#ui) \
+> &nbsp;&nbsp; 1.5.2 [OInventoryItemFragment_Appearance](#obsidianframgent_appearance) \
+> &nbsp;&nbsp; 1.5.3 [OInventoryItemFragment_Affixes](#obsidianframgent_affixes) \
+> &nbsp;&nbsp; 1.5.4 [OInventoryItemFragment_Equippable](#obsidianframgent_equippable) \
+> &nbsp;&nbsp; 1.5.5 [OInventoryItemFragment_Usable](#obsidianframgent_Usable) \
+> &nbsp;&nbsp;&nbsp; 1.5.5.1 [ObsidianUsableShard](#obsidianusableshard) \
+> &nbsp;&nbsp;&nbsp; 1.5.5.1.1 [ObsidianUsableShard_Identification](#obsidianusableshard_identification) \ 
+> 3. [User Interface](#ui) \
 > &nbsp; 2.1 [ObsidianInventoryWidgetController](#obsidianinventorywidgetcontroller) \
 > &nbsp; 2.2 [ObsidianInventory](#obsidianinventory) \
 > &nbsp;&nbsp; 2.2.1 [ObsidianInventoryGrid](#uiinventorygrid) \
@@ -93,7 +98,7 @@ Component for Items that provided Stacks, this includes: Current Stack Count, Ma
 ![Item Stacks Fragment](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/stacksfrag.jpg)
 
 <a name="obsidiangameplaytagstack"></a>
-#### 1.5.1.1 ObsidianGameplayTagStack ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianGameplayTagStack.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/ObsidianGameplayTagStack.cpp))
+##### 1.5.1.1 ObsidianGameplayTagStack ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/ObsidianGameplayTagStack.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/ObsidianGameplayTagStack.cpp))
 
 The ```FFastArraySerializer``` structure that holds stack counts and mappings to coresponding Gameplay Tag.
 
@@ -102,7 +107,38 @@ The ```FFastArraySerializer``` structure that holds stack counts and mappings to
 
 Component for Items that provides visual aspects like Static Mesh (for displaying on the ground), Skeletal Mesh (for character to wear/hold), Image etc. 
 
-![Item Stacks Appearance](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/appearancefrag.jpg)
+![Item Appearance](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/appearancefrag.jpg)
+
+<a name="obsidianframgent_affixes"></a>
+#### 1.5.3 OInventoryItemFragment_Affixes ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Affixes.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Fragments/OInventoryItemFragment_Affixes.cpp))
+
+Component for Items that provides item statistics, this could be prefixes, suffixes or implicits. This component still needs work, for now it raughly only provides data for UI. 
+
+![Item Affixes](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/affixesfrag.jpg)
+
+<a name="obsidianframgent_equippable"></a>
+#### 1.5.4 OInventoryItemFragment_Equippable ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Equippable.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Fragments/OInventoryItemFragment_Equippable.cpp))
+
+Component for Items that provides the ability to equip it into equipment slots (part of [Equipment System](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md)), this also specifies what happens when the item is equipped, for now it supports spawning actors (weapons) and giving Ability Sets (with abilities and attributes) to Player.
+
+![Item Equipping](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/equippmentfrag.jpg)
+
+<a name="obsidianframgent_Usable"></a>
+#### 1.5.5 OInventoryItemFragment_Usable ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/OInventoryItemFragment_Usable.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Fragments/OInventoryItemFragment_Usable.cpp))
+
+Component for Items that provides the ability use the item, uses ```ObsidianUsableShard``` to define the use case (the context that will hightlight items that the Player is able to use the item on) and logic.
+
+![Item Usable](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/usablefrag.jpg)
+
+<a name="obsidianusableshard"></a>
+##### 1.5.5.1 ObsidianUsableShard ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/Shards/ObsidianUsableShard.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Fragments/Shards/ObsidianUsableShard.cpp))
+
+Base class for defining the Use Case (context on which items in Inventory/Stash/Equipment the item can be used) and the Use logic, this logic is called by the ```OInventoryItemFragment_Usable``` when appropriate.
+
+<a name="obsidianusableshard_identification"></a>
+###### 1.5.5.1.1 ObsidianUsableShard_Identification ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Fragments/Shards/ObsidianUsableShard_Identification.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Fragments/Shards/ObsidianUsableShard_Identification.cpp))
+
+Shard that provides the item with ability to identify other items, will also hightlight any unidentified items when item with this shard is used.
 
 <a name="ui"></a>
 ## 2. User Interface
