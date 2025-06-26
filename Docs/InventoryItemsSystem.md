@@ -37,7 +37,7 @@ Key Binds / Navigation:
 > &nbsp;&nbsp; 1.5.4 [OInventoryItemFragment_Equippable](#obsidianframgent_equippable) \
 > &nbsp;&nbsp; 1.5.5 [OInventoryItemFragment_Usable](#obsidianframgent_Usable) \
 > &nbsp;&nbsp;&nbsp; 1.5.5.1 [ObsidianUsableShard](#obsidianusableshard) \
-> &nbsp;&nbsp;&nbsp; 1.5.5.1.1 [ObsidianUsableShard_Identification](#obsidianusableshard_identification) 
+> &nbsp;&nbsp;&nbsp;&nbsp; 1.5.5.1.1 [ObsidianUsableShard_Identification](#obsidianusableshard_identification) 
 > 3. [User Interface](#ui) \
 > &nbsp; 2.1 [ObsidianInventoryWidgetController](#obsidianinventorywidgetcontroller) \
 > &nbsp; 2.2 [ObsidianInventory](#obsidianinventory) \
