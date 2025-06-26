@@ -140,6 +140,8 @@ Base class for defining the Use Case (context on which items in Inventory/Stash/
 
 Shard that provides the item with ability to identify other items, will also hightlight any unidentified items when item with this shard is used.
 
+![Identification](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/identificationshard.jpg)
+
 <a name="ui"></a>
 ## 2. User Interface
 
