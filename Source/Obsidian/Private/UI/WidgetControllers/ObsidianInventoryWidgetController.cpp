@@ -8,7 +8,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 
 // ~ Project
-#include "UI/Inventory/ObsidianItemDescriptionBase.h"
+#include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianHeroComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
@@ -19,11 +19,11 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
-#include "UI/Inventory/ObsidianDraggedItem.h"
-#include "UI/Inventory/ObsidianItem.h"
-#include "UI/Inventory/ObsidianSlotBlockadeItem.h"
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot_Equipment.h"
-#include "UI/Inventory/SubWidgets/ObsidianUnstackSlider.h"
+#include "UI/Inventory/Items/ObsidianDraggedItem.h"
+#include "UI/Inventory/Items/ObsidianItem.h"
+#include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
 bool FObsidianItemWidgetData::IsItemForSwapSlot() const 

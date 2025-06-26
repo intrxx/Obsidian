@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/Inventory/ObsidianItem.h"
+#include "UI/Inventory/Items/ObsidianItem.h"
 
 // ~ Core
 #include "CommonTextBlock.h"

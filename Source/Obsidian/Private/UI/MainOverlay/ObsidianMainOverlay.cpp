@@ -28,7 +28,7 @@
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
-#include "UI/Inventory/ObsidianItemDescriptionBase.h"
+#include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()

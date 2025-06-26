@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/Inventory/ObsidianDraggedItem_Simple.h"
+#include "UI/Inventory/Items/ObsidianDraggedItem_Simple.h"
 
 // ~ Core
 #include "Components/SizeBox.h"

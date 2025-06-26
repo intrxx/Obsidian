@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/Inventory/ObsidianSlotBlockadeItem.h"
+#include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
 
 // ~ Core
 #include "Components/Image.h"
@@ -8,7 +8,7 @@
 
 // ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot_Equipment.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 
 void UObsidianSlotBlockadeItem::NativeConstruct()
 {

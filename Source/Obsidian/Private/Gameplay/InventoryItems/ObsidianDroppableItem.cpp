@@ -19,10 +19,10 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "UI/Inventory/ObsidianItemWorldName.h"
+#include "UI/Inventory/Items/ObsidianItemWorldName.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
-#include "UI/Inventory/ObsidianItemDescriptionBase.h"
+#include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)

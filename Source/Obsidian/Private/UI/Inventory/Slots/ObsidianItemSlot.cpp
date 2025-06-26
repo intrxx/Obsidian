@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
 
 // ~ Core
 #include "Components/Image.h"

@@ -8,7 +8,7 @@
 // ~ Project
 
 
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
 #include "ObsidianItemSlot_Inventory.generated.h"
 
 /**

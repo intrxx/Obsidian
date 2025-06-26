@@ -6,7 +6,7 @@
 
 // ~ Project
 #include "Blueprint/WidgetTree.h"
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot_Equipment.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 
 void UObsidianEquipmentPanel::InitializeEquipmentPanel(UObsidianInventory* InOwningInventory)
 {

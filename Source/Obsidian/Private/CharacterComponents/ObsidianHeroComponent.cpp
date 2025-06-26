@@ -16,7 +16,7 @@
 // ~ Project
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Input/OEnhancedInputUserSettings.h"
-#include "UI/Inventory/ObsidianDraggedItem_Simple.h"
+#include "UI/Inventory/Items/ObsidianDraggedItem_Simple.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
@@ -31,8 +31,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
-#include "UI/Inventory/ObsidianDraggedItem.h"
-#include "UI/Inventory/ObsidianItem.h"
+#include "UI/Inventory/Items/ObsidianDraggedItem.h"
+#include "UI/Inventory/Items/ObsidianItem.h"
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

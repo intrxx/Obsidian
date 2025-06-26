@@ -6,10 +6,10 @@
 #include "Components/SizeBox.h"
 
 // ~ Project
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot.h"
-#include "UI/Inventory/ObsidianItem.h"
-#include "UI/Inventory/ObsidianSlotBlockadeItem.h"
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot_Equipment.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
+#include "UI/Inventory/Items/ObsidianItem.h"
+#include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/Inventory/ObsidianEquipmentPanel.h"
 #include "UI/Inventory/ObsidianInventoryGrid.h"

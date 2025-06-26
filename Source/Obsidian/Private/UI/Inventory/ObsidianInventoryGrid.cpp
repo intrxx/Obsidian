@@ -7,9 +7,9 @@
 #include "Components/CanvasPanelSlot.h"
 
 // ~ Project
-#include "UI/Inventory/SubWidgets/ObsidianItemSlot_Inventory.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Inventory.h"
 #include "UI/Inventory/ObsidianInventory.h"
-#include "UI/Inventory/ObsidianItem.h"
+#include "UI/Inventory/Items/ObsidianItem.h"
 
 void UObsidianInventoryGrid::ConstructInventoryGrid(UObsidianInventory* InOwningInventory, const int32 InventoryGridWidth, const int32 InventoryGridHeight)
 {
