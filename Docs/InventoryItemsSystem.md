@@ -41,7 +41,8 @@ Key Binds / Navigation:
 > &nbsp; 2.3 [ObsidianItem](#obsidianitem) \
 > &nbsp; 2.4 [ObsidianItemWorldName](#obsidianitemworldname) \
 > &nbsp; 2.5 [ObsidianItemDescription](#obsidianitemdesc) \
-> &nbsp; 2.6 [ObsidianDraggedItem](#obsidiandraggeditem)
+> &nbsp; 2.6 [ObsidianDraggedItem](#obsidiandraggeditem) \
+> &nbsp; 2.7 [ObsidianDraggedItem_Simple](#obsidiandraggeditem_simple) 
 > 4. [Gameplay](#gameplay) \
 > &nbsp; 3.1 [ObsidianDroppableItem](#droppableitem)
 > 5. [Debugging](#debugging) \
@@ -144,7 +145,7 @@ and displaying it in the screen space isn't enough.
 ![Item World Name](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/itemworldname.jpg)
 
 <a name="obsidianitemdesc"></a>
-### 2.4 ObsidianItemDescriptionBase ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianItemDescriptionBase.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Items/ObsidianItemDescriptionBase.cpp))
+### 2.5 ObsidianItemDescriptionBase ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianItemDescriptionBase.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Items/ObsidianItemDescriptionBase.cpp))
 
 While hovering over the ```ObsidianItemWorldName```, ```ObsidianDroppableItem``` or the ```ObsidianItem``` in the Inventory, the ```ObsidianItemDescription``` is displayed.
 It contains information such as: Item Name, Item Desc, Hints, Stack Sizes in case of stackable item and in the feature it will display Item Stats.
@@ -152,17 +153,24 @@ It contains information such as: Item Name, Item Desc, Hints, Stack Sizes in cas
 ![Item Desc](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/itemdesc.jpg)
 
 <a name="obsidiandraggeditem"></a>
-### 2.5 ObsidianDraggedItem ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianDraggedItem.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Items/ObsidianDraggedItem.cpp))
+### 2.6 ObsidianDraggedItem ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianDraggedItem.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Items/ObsidianDraggedItem.cpp))
 
 Representation of Item that is being carried around on the Player's cursor.
 
 ![Dragged Item](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/draggeditem.jpg)
 
+<a name="obsidiandraggeditem"></a>
+### 2.7 ObsidianDraggedItem_Simple ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianDraggedItem.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Items/ObsidianDraggedItem_Simple.cpp))
+
+Representation of Item that is being used, a miniature version of this item will appear somewhere around Player's cursor, this widget is stripped from most of the data that is needed on ```ObsidianDraggedItem```.
+
+![Dragged Item Simple](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/draggeditemsimple.jpg)
+
 <a name="gameplay"></a>
 ## 3. Gameplay
 
 <a name="droppableitem"></a>
-### 3.1 AObsidianDroppableItem ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Gameplay/InventoryItems/ObsidianDroppableItem.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Gameplay/InventoryItems/ObsidianDroppableItem.cpp))
+### 3.1 AObsidianDroppableItem ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianDraggedItem_Simple.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Gameplay/InventoryItems/ObsidianDroppableItem.cpp))
 
 Item that lays on the ground, can contain ```ObsidianInventoryItemDefinition``` or ```ObsidianInventoryItemInstance```. 
 
