@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianUnstackSlider.h"
+#include "Obsidian/Public/UI/Inventory/Items/ObsidianUnstackSlider.h"
 
 // ~ Core
 #include "CommonTextBlock.h"

@@ -23,7 +23,7 @@
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianUnstackSlider.h"
+#include "Obsidian/Public/UI/Inventory/Items/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
 bool FObsidianItemWidgetData::IsItemForSwapSlot() const 
