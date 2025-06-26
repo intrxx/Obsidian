@@ -42,7 +42,8 @@ Key Binds / Navigation:
 > &nbsp; 2.4 [ObsidianItemWorldName](#obsidianitemworldname) \
 > &nbsp; 2.5 [ObsidianItemDescription](#obsidianitemdesc) \
 > &nbsp; 2.6 [ObsidianDraggedItem](#obsidiandraggeditem) \
-> &nbsp; 2.7 [ObsidianDraggedItem_Simple](#obsidiandraggeditem_simple) 
+> &nbsp; 2.7 [ObsidianDraggedItem_Simple](#obsidiandraggeditem_simple) \
+> &nbsp; 2.8 [ObsidianUnstackSlider](#obsidianunstackslider)  
 > 4. [Gameplay](#gameplay) \
 > &nbsp; 3.1 [ObsidianDroppableItem](#droppableitem)
 > 5. [Debugging](#debugging) \
@@ -165,6 +166,13 @@ Representation of Item that is being carried around on the Player's cursor.
 Representation of Item that is being used, a miniature version of this item will appear somewhere around Player's cursor, this widget is stripped from most of the data that is needed on ```ObsidianDraggedItem```.
 
 ![Dragged Item Simple](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/draggeditemsimple.jpg)
+
+<a name="obsidiandraggeditem"></a>
+### 2.7 ObsidianUnstackSlider ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianUnstackSlider.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Items/ObsidianUnstackSlider.cpp))
+
+Widget that gives the ability to select some amout of stacks to take from choosen item.
+
+![Unstack Slider](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/unstackslider.jpg)
 
 <a name="gameplay"></a>
 ## 3. Gameplay
