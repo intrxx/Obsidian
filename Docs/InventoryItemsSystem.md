@@ -61,7 +61,7 @@ Key Binds / Navigation:
 Heart of the backend. Provides all the functionality to interact with the Grid, adding Items to first available slot, adding Items to specific slot, adding Stacks, removing Stacks etc.
 
 <a name="obsidianinventorygrid"></a>
-### 1.2 ObsidianInventoryGrid ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Inventory/ObsidianInventoryGridItemList.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Inventory/ObsidianInventoryComponent.cpp))
+### 1.2 ObsidianInventoryGrid ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Inventory/ObsidianInventoryGridItemList.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Inventory/ObsidianInventoryGridItemList.cpp))
 
 The ```FFastArraySerializer``` structure that holds Iventory Items. It also holds the Map which maps Items in the inventory to their origin location of the Grid.
 
