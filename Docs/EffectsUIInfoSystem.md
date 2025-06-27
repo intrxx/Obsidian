@@ -29,7 +29,7 @@ Here you can find a [youtube video](https://www.youtube.com/watch?v=1plCy1MTZj8)
 ## 1. Backend
 
 <a name="abilitysystemcomp"></a>
-### 1.1 UObsidianAbilitySystemComponent
+### 1.1 UObsidianAbilitySystemComponent ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/ObsidianAbilitySystemComponent.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/ObsidianAbilitySystemComponent.cpp))
 
 Handles broadcasting data about any effects with proper GameplayTag setup.
 
@@ -37,140 +37,85 @@ Handles broadcasting data about any effects with proper GameplayTag setup.
 OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::ClientOnEffectApplied);
 ```
 
-Repo Links:
-- [ObsidianAbilitySystemComponent.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/ObsidianAbilitySystemComponent.h)
-- [ObsidianAbilitySystemComponent.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/ObsidianAbilitySystemComponent.cpp)
-
 <a name="enemyoverlaybarcomp"></a>
-### 1.2 UObsidianEnemyOverlayBarComponent
+### 1.2 UObsidianEnemyOverlayBarComponent ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/CharacterComponents/ObsidianEnemyOverlayBarComponent.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/CharacterComponents/ObsidianEnemyOverlayBarComponent.cpp))
 
 Receives and handles the data provided by ASC, bradcasting futher details to Enemy related UI.
-
-Repo Links:
-- [ObsidianEnemyOverlayBarComponent.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/CharacterComponents/ObsidianEnemyOverlayBarComponent.h)
-- [ObsidianEnemyOverlayBarComponent.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/CharacterComponents/ObsidianEnemyOverlayBarComponent.cpp)
 
 <a name="ui"></a>
 ## 2. User Interface
 
 <a name="mainoverlaywidgetcontroller"></a>
-### 2.1 UObsidianHeroWidgetControllerBase
+### 2.1 UObsidianHeroWidgetControllerBase ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/WidgetControllers/MainOverlayWidgetController.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/WidgetControllers/MainOverlayWidgetController.cpp))
 
 Receives and handles the data provided by ASC, bradcasting futher details to Player related UI.
 
-Repo Links:
-- [MainOverlayWidgetController.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/WidgetControllers/MainOverlayWidgetController.h)
-- [MainOverlayWidgetController.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/WidgetControllers/MainOverlayWidgetController.cpp)
-
 <a name="uitypes"></a>
-### 2.2 ObsidianUITypes
+### 2.2 ObsidianUITypes ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/ObsidianTypes/ObsidianUITypes.h))
 
 File that holds ```FObsidianEffectUIDataWidgetRow``` structure which is Table Row definition, this way designer can fill the details about specific effect which is then matched with its GameplayTag. I think about switching to DataAsset instead.
 
-Repo Links:
-- [ObsidianUITypes.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/ObsidianTypes/ObsidianUITypes.h)
-
 <a name="mainoverlay"></a>
-### 2.3 UObsidianMainOverlay
+### 2.3 UObsidianMainOverlay ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/ObsidianMainOverlay.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/ObsidianMainOverlay.cpp))
 
 Center of UI that receives the data from ``MainOverlayWidgetController`` to handle it and spawn corresponding Effect Info widget or broadcast style changes to the ```ProgressGlobe```.
 
-Repo Links:
-- [ObsidianMainOverlay.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/ObsidianMainOverlay.h)
-- [ObsidianMainOverlay.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/ObsidianMainOverlay.cpp)
-
 <a name="effectinfobase"></a>
-#### 2.3.1 UObsidianEffectInfoBase 
+#### 2.3.1 UObsidianEffectInfoBase ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.cpp))
 
 Spawned and added to Player's screen in ```UObsidianMainOverlay``` for basic effects.
 
 ![Basic Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectInfoSystem/basiceffectinfo.jpg)
 
-Repo Links:
-- [ObsidianEffectInfoBase.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h)
-- [ObsidianEffectInfoBase.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.cpp)
-
 <a name="durrationaleffectinfo"></a>
-#### 2.3.2 UObsidianDurationalEffectInfo 
+#### 2.3.2 UObsidianDurationalEffectInfo ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.cpp))
 
 Spawned and added to Player's screen in ```UObsidianMainOverlay``` for durational effects.
 
 ![Durational Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectInfoSystem/durationaleffectinfo.jpg)
 
-Repo Links:
-- [ObsidianDurationalEffectInfo.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h)
-- [ObsidianDurationalEffectInfo.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.cpp)
-
 <a name="stackingdurationaleffectinfo"></a>
-#### 2.3.3 UOStackingDurationalEffectInfo
+#### 2.3.3 UOStackingDurationalEffectInfo ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.cpp))
 
 Spawned and added to Player's screen in ```UObsidianMainOverlay``` for stacking durational effects.
 
 ![Stacking Durational Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectInfoSystem/stackingdurationaleffectinfo.jpg)
 
-Repo Links:
-- [OStackingDurationalEffectInfo.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h)
-- [OStackingDurationalEffectInfo.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.cpp)
-
 <a name="effectdesc"></a>
-#### 2.3.4 UObsidianEffectDescription
+#### 2.3.4 UObsidianEffectDescription ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianEffectDescription.cpp))
 
 Effect Description Widget spawned after howering over the Effect on the Player's screen.
 
-Repo Links:
-- [ObsidianEffectDescription.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h)
-- [ObsidianEffectDescription.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/Subwidgets/ObsidianEffectDescription.cpp)
-
 <a name="progressglobebase"></a>
-### 2.4 UObsidianProgressGlobeBase
+### 2.4 UObsidianProgressGlobeBase ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.cpp))
 
 Base class for Progress Globes in Obsidian.
 
-Repo Links:
-- [ObsidianProgressGlobeBase.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h)
-- [ObsidianProgressGlobeBase.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.cpp)
-
 <a name="progressglobehealth"></a>
-#### 2.4.1 UObsidianProgressGlobe_Health
+#### 2.4.1 UObsidianProgressGlobe_Health ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.cpp))
 
 Player Health Globe, effects like poison, shock or chill are displayed on it.
 
 ![Progress Globe Effect Info](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectInfoSystem/progressglobeeffectinfo.jpg)
 
-Repo Links:
-- [ObsidianProgressGlobe_Health.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h)
-- [ObsidianProgressGlobe_Health.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.cpp)
-
 <a name="overlayenemybar"></a>
-### 2.5 UObsidianOverlayEnemyBar
+### 2.5 UObsidianOverlayEnemyBar ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/UObsidianOverlayEnemyBar.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/UObsidianOverlayEnemyBar.cpp))
 
 Regular Enemy Bar displayed on Player's Overlay, effects like poison, shock or chill are displayed on it.
 
 ![Regular Overlay Enemy Bar](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectInfoSystem/regularenemybarseffectinfo.jpg)
 
-Repo Links:
-- [ObsidianOverlayEnemyBar.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/UObsidianOverlayEnemyBar.h)
-- [ObsidianOverlayEnemyBar.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/UObsidianOverlayEnemyBar.cpp)
-
 <a name="overlaybossenemybar"></a>
-### 2.6 UObsidianOverlayBossEnemyBar
+### 2.6 UObsidianOverlayBossEnemyBar ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ObsidianOverlayBossEnemyBar.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/ObsidianOverlayBossEnemyBar.cpp))
 
 Boss Enemy Bar displayed on Player's Overlay, effects like poison, shock or chill are displayed on it.
 
 ![Boss Overlay Enemy Bar](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EffectInfoSystem/bossoverlaybareffectinfo.jpg)
 
-Repo Links:
-- [ObsidianOverlayBossEnemyBar.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/ProgressBars/ObsidianOverlayBossEnemyBar.h)
-- [ObsidianOverlayBossEnemyBar.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/ProgressBars/ObsidianOverlayBossEnemyBar.cpp)
-
 <a name="rest"></a>
 ## 3. The Rest
 
 <a name="overlaybossenemybar"></a>
-### 3.1 ObsidianGameplayTags
+### 3.1 ObsidianGameplayTags ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/ObsidianGameplayTags.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/ObsidianGameplayTags.cpp))
 
 Namespace containig all GameplayTags used in Obsidian, contains ```UI.EffectData``` tags that represent specific Effect that wish to be displayed on the UI. In order to be considered for broadcasting by ASC the effect needs to have ```UI.DataSpecifierTag``` tag.
-
-Repo Links:
-- [ObsidianGameplayTags.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/ObsidianGameplayTags.h)
-- [ObsidianGameplayTags.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/ObsidianGameplayTags.cpp)
