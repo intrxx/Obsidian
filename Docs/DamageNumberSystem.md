@@ -22,85 +22,54 @@
 ## 1. Backend
 
 <a name="ocommonattributeset"></a>
-### 1.1 UObsidianCommonAttributeSet
+### 1.1 UObsidianCommonAttributeSet ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/Attributes/ObsidianCommonAttributeSet.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/Attributes/ObsidianCommonAttributeSet.cpp))
 
 ![AttributeSet](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSystem_AttributeSet.jpg)
 
 After changes to life in ```PostGameplayEffectExecute```, bools from ```FObsidianGameplayEffectContext``` are gathered and forwarded to ```ObsidianPlayerController```.
 
-Repo Links:
-- [ObsidianCommonAttributeSet.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/Attributes/ObsidianCommonAttributeSet.h)
-- [ObsidianCommonAttributeSet.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/Attributes/ObsidianCommonAttributeSet.cpp)
-
 <a name="ogameplayeffectcontext"></a>
-### 1.2 FObsidianGameplayEffectContext
+### 1.2 FObsidianGameplayEffectContext ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/ObsidianGameplayEffect.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/ObsidianGameplayEffect.cpp))
 
 Custom ```GameplayEffectContext``` that contains bools like: ```bIsEvadedHit```, ```bIsSuppressedSpell``` or ```bIsTargetImmune``` which are set in ```ObsidianDamageExecution```.
 
-Repo Links:
-- [ObsidianGameplayEffect.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/ObsidianGameplayEffect.h)
-- [ObsidianGameplayEffect.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/ObsidianGameplayEffect.cpp)
-
 <a name="odamageexec"></a>
-### 1.3 UObsidianDamageExecution
+### 1.3 UObsidianDamageExecution ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/Executions/ObsidianDamageExecution.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/Executions/ObsidianDamageExecution.cpp))
 
 Damage Execution Calculation used in Obsidian, marks bools in ```FObsidianGameplayEffectContext``` when Evade, Block, Immune etc. occurs.
 
-Repo Links:
-- [ObsidianDamageExecution.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/Executions/ObsidianDamageExecution.h)
-- [ObsidianDamageExecution.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/Executions/ObsidianDamageExecution.cpp)
-
 <a name="enemyobsidiandamageexec"></a>
-#### 1.3.1 UEnemyObsidianDamageExecution
+#### 1.3.1 UEnemyObsidianDamageExecution ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/Executions/EnemyObsidianDamageExecution.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/Executions/EnemyObsidianDamageExecution.cpp))
 
 Builds upon ```UObsidianDamageExecution```, adds logic for damaging Player Character. Might be removed/changed in the future.
-
-Repo Links:
-- [EnemyObsidianDamageExecution.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/AbilitySystem/Executions/EnemyObsidianDamageExecution.h)
-- [EnemyObsidianDamageExecution.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/AbilitySystem/Executions/EnemyObsidianDamageExecution.cpp)
 
 <a name="ui"></a>
 ## 2. User Interface
 
 <a name="odamagenumberwidgetcomp"></a>
-### 2.1 UObsidianDamageNumberWidgetComp
+### 2.1 UObsidianDamageNumberWidgetComp ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/DamageNumbers/ObsidianDamageNumberWidgetComp.cpp))
 
 Widget Component attached to Target Actor (damaged Actor), this holds the ```UObsidianDamageNumber``` widget which is displayed.
 
-Repo Links:
-- [ObsidianDamageNumberWidgetComp.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h)
-- [ObsidianDamageNumberWidgetComp.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/DamageNumbers/ObsidianDamageNumberWidgetComp.cpp)
-
 <a name="odamagenumber"></a>
-### 2.2 UObsidianDamageNumber
+### 2.2 UObsidianDamageNumber ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/DamageNumbers/ObsidianDamageNumber.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/DamageNumbers/ObsidianDamageNumber.cpp))
 
 [//]: ![Crit](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/DamageNumberSystem/DamageNumberSyetem_Crit.mp4)
 
 Damage Number Widget, holds different ```UCommonTextBlockStyle```'s for managing the text based on received bools.
 
-Repo Links:
-- [ObsidianDamageNumber.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/DamageNumbers/ObsidianDamageNumber.h)
-- [ObsidianDamageNumber.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/DamageNumbers/ObsidianDamageNumber.cpp)
-
 <a name="uitypes"></a>
-### 2.3 ObsidianUITypes
+### 2.3 ObsidianUITypes ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/ObsidianTypes/ObsidianUITypes.h))
 
 File that holds ```FObsidianDamageTextProps``` structure which is filled in ```UObsidianCommonAttributeSet``` and passed to ```UObsidianDamageNumber``` for initialization.
-
-Repo Links:
-- [ObsidianUITypes.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/ObsidianTypes/ObsidianUITypes.h)
 
 <a name="rest"></a>
 ## 3. The Rest
 
 <a name="obsidianpc"></a>
-### 3.1 AObsidianPlayerController
+### 3.1 AObsidianPlayerController ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Characters/Player/ObsidianPlayerController.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Characters/Player/ObsidianPlayerController.cpp))
 
 Contains logic for attaching the ```UObsidianDamageNumberWidgetComp``` to the Target Actor and displaying the ```UObsidianDamageNumber``` Widget.
-
-Repo Links:
-- [ObsidianPlayerController.h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Characters/Player/ObsidianPlayerController.h)
-- [ObsidianPlayerController.cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Characters/Player/ObsidianPlayerController.cpp)
 
 <a name="dncommontextstyles"></a>
 ### 3.2 Damage Numbers CommonTextStyles
