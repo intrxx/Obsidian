@@ -166,7 +166,7 @@ Widget that manages inventory slots in form of ```ObsidianItemSlot_Inventory```.
 <a name="obsidianinventoryslot"></a>
 ##### 2.2.1 ObsidianItemSlot_Inventory ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Inventory.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Slots/ObsidianItemSlot_Inventory.cpp))
 
-Individual Slot managed in ```ObsidianInventoryGrid``` displayed in ```ObsidianInventory```, supports different kinds of hightlight.
+Individual Slot managed in ```ObsidianInventoryGrid``` displayed in ```ObsidianInventory```, supports different kinds of highlight.
 
 <a name="obsidianitem"></a>
 ### 2.3 ObsidianItem ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/Inventory/Items/ObsidianItem.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/Inventory/Items/ObsidianItem.cpp))
@@ -228,8 +228,9 @@ Item that lays on the ground, can contain ```ObsidianInventoryItemDefinition``` 
 <a name="gdc_inventoryitems"></a>
 ### 4.1 GameplayDebuggerCategory_InventoryItems ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.cpp))
 
-Gameplay Debugger Category that contains number of items owned and a list of held items with name, size, stacks and location on the grid.
-In the feature I plan to paint the ```InventoryStateMap``` to represent the actual state of the Grid. 
+Gameplay Debugger Category that contains number of items owned and a list of held items with name, size, stacks and
+location on the grid. It also contains the visual representation (in the form of red/green squares with x, y positions)
+of the state of the inventory taken from ```InventoryStateMap```.
 
 ![Inventory System Debugging](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/InventoryItems/InventoryItems_Debugger.jpg)
 
@@ -244,7 +245,7 @@ Used for dragging logic and Server RPC's to pickup items.
 <a name="obsidianplayercontroller"></a>
 ### 5.2 ObsidianPlayerController ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/Characters/Player/ObsidianPlayerController.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/Characters/Player/ObsidianPlayerController.cpp))
 
-```ObsidianInventoryComponent``` is created on Player Controller.
+```ObsidianInventoryComponent``` lives on Player Controller.
 
 <a name="obsidianmainoverlay"></a>
 ### 5.3 ObsidianMainOverlay ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/UI/MainOverlay/ObsidianMainOverlay.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/UI/MainOverlay/ObsidianMainOverlay.cpp))
