@@ -4,8 +4,8 @@ Here you can find a [youtube video](https://www.youtube.com/watch?v=Fop-aGk-9MU)
 
 You can also find a testable packaged game [here](https://github.com/intrxx/Obsidian/releases/tag/Equipment_System_v0.1.0).
 
-Most of the classes used in the Equipment System is cross used by described previously [Inventory System](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).
-I won't be mentioning these classes here, the serve pretty much the same role for these system.
+*Most of the classes used in the Equipment System is cross used by described previously [Inventory System](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).
+I won't be mentioning these classes here, they serve pretty much the same role for these system.*
 
 ![Equipment Showcase](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EquipmentSystem/EquipmentSystemShowcase.jpg)
 
