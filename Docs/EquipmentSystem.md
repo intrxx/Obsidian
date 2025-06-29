@@ -13,18 +13,18 @@ I won't be mentioning these classes here, they serve pretty much the same role f
 ## Class Structure Overview
 
 > 1. [Backend](#1-backend) \
-     > &nbsp; 1.1 [ObsidianEquipmentComponent](#11-obsidianequipmentcomponent-h--cpp) \
-     > &nbsp; 1.2 [ObsidianEquipmentList](#12-obsidianequipmentlist-h--cpp) 
+> &nbsp; 1.1 [ObsidianEquipmentComponent](#11-obsidianequipmentcomponent-h--cpp) \
+> &nbsp; 1.2 [ObsidianEquipmentList](#12-obsidianequipmentlist-h--cpp) 
 > 2. [User Interface](#2-user-interface) \
-     > &nbsp; 2.1 [ObsidianEquipmentPanel](#21-obsidianequipmentpanel-h--cpp) \
-     > &nbsp;&nbsp; 2.2.1 [ObsidianItemSlot_Equipment](#221-obsidianitemslot_equipment-h--cpp) \
-     > &nbsp; 2.2 [ObsidianSlotBlockadeItem](#22-obsidianslotblockadeitem-h--cpp) 
+> &nbsp; 2.1 [ObsidianEquipmentPanel](#21-obsidianequipmentpanel-h--cpp) \
+> &nbsp;&nbsp; 2.2.1 [ObsidianItemSlot_Equipment](#221-obsidianitemslot_equipment-h--cpp) \
+> &nbsp; 2.2 [ObsidianSlotBlockadeItem](#22-obsidianslotblockadeitem-h--cpp) 
 > 3. [Gameplay](#3-gameplay) \
-     > &nbsp; 3.1 [ObsidianSpawnedEquipmentPiece](#31-obsidianspawnedequipmentpiece-h--cpp) 
+> &nbsp; 3.1 [ObsidianSpawnedEquipmentPiece](#31-obsidianspawnedequipmentpiece-h--cpp) 
 > 4. [Debugging](#4-debugging) \
-     > &nbsp; 4.1 [GameplayDebuggerCategory_Equipment](#41-gameplaydebuggercategory_equipment-h--cpp)
+> &nbsp; 4.1 [GameplayDebuggerCategory_Equipment](#41-gameplaydebuggercategory_equipment-h--cpp)
 > 5. [The Rest](#5-the-rest) \
-     > &nbsp; 5.1 [ObsidianPlayerController](#52-obsidianplayercontroller-h--cpp)
+> &nbsp; 5.1 [ObsidianPlayerController](#52-obsidianplayercontroller-h--cpp)
 
 ## 1. Backend
 
