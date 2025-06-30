@@ -36,6 +36,33 @@ void UObsidianInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimePr
 	DOREPLIFETIME(ThisClass, InventoryGrid);
 }
 
+void UObsidianInventoryComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AddDefaultItems();
+}
+
+void UObsidianInventoryComponent::AddDefaultItems()
+{
+	const AActor* OwningActor = GetOwner();
+	if(OwningActor && OwningActor->HasAuthority())
+	{
+		for(const FObsidianDefaultItemTemplate& DefaultItemTemplate : DefaultInventoryItems)
+		{
+			if(DefaultItemTemplate.InventoryPositionOverride != FIntPoint::NoneValue)
+			{
+				if(!AddItemDefinitionToSpecifiedSlot(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.InventoryPositionOverride, DefaultItemTemplate.StackCount))
+				{
+					AddItemDefinition(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.StackCount);
+				}
+				continue;
+			}
+			AddItemDefinition(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.StackCount);
+		}
+	}
+}
+
 int32 UObsidianInventoryComponent::GetInventoryGridWidth() const
 {
 	return InventoryGridWidth;
@@ -1068,28 +1095,6 @@ void UObsidianInventoryComponent::ReadyForReplication()
 			{
 				AddReplicatedSubObject(Instance);
 			}
-		}
-	}
-}
-
-void UObsidianInventoryComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	const AActor* OwningActor = GetOwner();
-	if(OwningActor && OwningActor->HasAuthority())
-	{
-		for(const FObsidianDefaultItemTemplate& DefaultItemTemplate : DefaultInventoryItems)
-		{
-			if(DefaultItemTemplate.InventoryPositionOverride != FIntPoint::NoneValue)
-			{
-				if(!AddItemDefinitionToSpecifiedSlot(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.InventoryPositionOverride, DefaultItemTemplate.StackCount))
-				{
-					AddItemDefinition(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.StackCount);
-				}
-				continue;
-			}
-			AddItemDefinition(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.StackCount);
 		}
 	}
 }

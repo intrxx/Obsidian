@@ -27,12 +27,15 @@ struct FObsidianDefaultItemTemplate
 	GENERATED_BODY()
 
 public:
+	/** Item Definition to add. */
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UObsidianInventoryItemDefinition> DefaultItemDef = nullptr;
 
+	/** Stack count of provided item to add. */
 	UPROPERTY(EditAnywhere)
 	int32 StackCount = 1;
 
+	/** Inventory grid position at which the item will be added, if left empty, the item will be added to the first available slot. */
 	UPROPERTY(EditAnywhere)
 	FIntPoint InventoryPositionOverride = FIntPoint::NoneValue;
 };
@@ -191,6 +194,9 @@ protected:
 private:
 	/** Initializes Inventory State. */
 	void InitInventoryState();
+
+	/** Adds default items specified in DefaultInventoryItems. */
+	void AddDefaultItems();
 
 	/** Checks if the provided Item Definition fits anywhere in the inventory. Provides Available Position. */
 	bool CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);

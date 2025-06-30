@@ -18,6 +18,24 @@ class UObsidianInventoryComponent;
 DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
 
 /**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianDefaultEquipmentTemplate
+{
+	GENERATED_BODY()
+
+public:
+	/** Item Definition to equip. */
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<UObsidianInventoryItemDefinition> DefaultItemDef = nullptr;
+
+	/** Tag of the slot to equip this default equipment to. If left empty will abort equipping. */
+	UPROPERTY(EditAnywhere, meta=(Categories = "Equipment.Slot"))
+	FGameplayTag EquipmentSlotTag = FGameplayTag::EmptyTag;
+};
+
+/**
  * Component that manages equipping items on the Heroes.
  */
 UCLASS( ClassGroup=(InventoryItems), meta=(BlueprintSpawnableComponent) )
@@ -72,6 +90,8 @@ public:
 	//~ End of UObject interface
 
 protected:
+	virtual void BeginPlay() override;
+	
 	EObsidianEquipCheckResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
 	
 	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
@@ -80,8 +100,15 @@ protected:
 	void RemoveBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategoryToRemove);
 	void RemoveBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& ItemCategoriesToRemove);
 
+protected:
+	UPROPERTY(EditAnywhere, Category = "Obsidian|Default")
+	TArray<FObsidianDefaultEquipmentTemplate> DefaultEquipmentItems;
+	
 private:
 	void CreateDefaultEquipmentSlots();
+
+	/** Equip default items specified in DefaultEquipmentItems. */
+	void EquipDefaultItems();
 
 private:
 	/** Actual array of equipped items, also hold Map for Slot at which item instance is equipped. */

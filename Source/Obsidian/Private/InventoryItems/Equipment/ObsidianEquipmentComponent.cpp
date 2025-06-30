@@ -43,6 +43,31 @@ void UObsidianEquipmentComponent::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME(ThisClass, EquipmentList);
 }
 
+void UObsidianEquipmentComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	EquipDefaultItems();
+}
+
+void UObsidianEquipmentComponent::EquipDefaultItems()
+{
+	const AActor* OwningActor = GetOwner();
+	if(OwningActor && OwningActor->HasAuthority())
+	{
+		for(const FObsidianDefaultEquipmentTemplate& DefaultEquipmentTemplate : DefaultEquipmentItems)
+		{
+			if(DefaultEquipmentTemplate.EquipmentSlotTag == FGameplayTag::EmptyTag)
+			{
+				continue;
+			}
+
+			const FObsidianEquipmentResult Result = EquipItemToSpecificSlot(DefaultEquipmentTemplate.DefaultItemDef, DefaultEquipmentTemplate.EquipmentSlotTag);
+			ensureMsgf(Result, TEXT("Were unable to equip default item in UObsidianEquipmentComponent::EquipDefaultItems()."));
+		}
+	}
+}
+
 UObsidianInventoryComponent* UObsidianEquipmentComponent::GetInventoryComponentFromOwner() const
 {
 	if(const AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner()))
