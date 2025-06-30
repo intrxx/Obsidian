@@ -20,7 +20,7 @@ build some gameplay content on top of them.
 
 - **Equipment System** - Closly related to **Grid Inventory System** and **Inventory Items**, also using ```FFastArraySerializer``` to store Equipment Items,
   this System provides a way to equip Items in various Equipment Slots, check for equiping conditions, spawn Mesh Actors on owning Player and give Ability Sets (which can include Gameplay Effects and Gameplay Abilities).
-  A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md). // In-progress
+  A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md).
 
 - **Buff/Debuff display on Health Bars and Player's HUD** - Gameplay Effects mapped to their descriptions (name, description, type, etc.) 
 using Gameplay Tags, which are displayed on the player's HUD.
