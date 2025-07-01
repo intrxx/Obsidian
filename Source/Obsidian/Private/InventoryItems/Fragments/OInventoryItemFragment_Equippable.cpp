@@ -14,9 +14,9 @@
 
 void FObsidianEquipmentActor::OverrideAttachSocket(const FGameplayTag& SlotTag)
 {
-	if(ObsidianInventoryItemsStatics::SlotToAttachSocketMap.Contains(SlotTag))
+	if(ObsidianGameplayTags::GetSlotToAttachSocketMap().Contains(SlotTag))
 	{
-		AttachSocket = ObsidianInventoryItemsStatics::SlotToAttachSocketMap[SlotTag];
+		AttachSocket = ObsidianGameplayTags::GetSlotToAttachSocketMap()[SlotTag];
 	}
 }
 

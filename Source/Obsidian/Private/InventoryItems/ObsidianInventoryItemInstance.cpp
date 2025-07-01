@@ -50,10 +50,12 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 
 void UObsidianInventoryItemInstance::OnInstanceCreatedAndInitialized()
 {
-	using namespace ObsidianInventoryItemsStatics;
-	if(IsItemEquippable() && AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory.Contains(ItemCategory) && AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory[ItemCategory].IsEmpty())
+	if(IsItemEquippable())
 	{
-		bNeedsTwoSlots = true;
+		if(const FGameplayTagContainer* AcceptedCategories = ObsidianGameplayTags::GetSisterSlotAcceptedCategoriesMap().Find(ItemCategory))
+		{
+			bNeedsTwoSlots = AcceptedCategories->IsEmpty();
+		}
 	}
 }
 

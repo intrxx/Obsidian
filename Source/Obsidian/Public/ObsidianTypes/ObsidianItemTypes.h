@@ -18,13 +18,7 @@ class UObsidianInventoryItemInstance;
  */
 namespace ObsidianInventoryItemsStatics
 {
-	static const FVector2D InventorySlotSize(64.0f, 64.0f);
-
-	extern const TMap<FGameplayTag, FName> SlotToAttachSocketMap;
-
-	/** Accepted Equipment Categories for sister slot per weapon type. */
-	extern const TMap<FGameplayTag, FGameplayTagContainer> AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory;
-	
+	static const FVector2D InventorySlotSize(64.0f, 64.0f); // TODO Get rid of later
 }
 
 /**

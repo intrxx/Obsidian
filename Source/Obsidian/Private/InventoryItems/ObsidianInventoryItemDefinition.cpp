@@ -57,10 +57,9 @@ bool UObsidianInventoryItemDefinition::IsIdentified() const
 
 bool UObsidianInventoryItemDefinition::DoesItemNeedsTwoSlots() const
 {
-	TMap<FGameplayTag, FGameplayTagContainer> MatchingEquipment = ObsidianInventoryItemsStatics::AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory;
-	if(MatchingEquipment.Contains(ItemCategory) && MatchingEquipment[ItemCategory].IsEmpty())
+	if(const FGameplayTagContainer* Container = ObsidianGameplayTags::GetSisterSlotAcceptedCategoriesMap().Find(ItemCategory))
 	{
-		return true;
+		return Container->IsEmpty();
 	}
 	return false;
 }

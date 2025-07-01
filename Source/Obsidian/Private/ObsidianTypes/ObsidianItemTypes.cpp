@@ -7,47 +7,6 @@
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
-
-namespace ObsidianInventoryItemsStatics
-{
-	using namespace ObsidianGameplayTags;
-	
-	const TMap<FGameplayTag, FName> SlotToAttachSocketMap =
-		{
-		{
-			{Equipment_Slot_Weapon_RightHand, ObsidianMeshSocketNames::RightHandWeaponSocket},
-			{Equipment_Slot_Weapon_LeftHand, ObsidianMeshSocketNames::LeftHandWeaponSocket}
-			}
-		};
-	
-	const TArray<FGameplayTag> OneHandAcceptedEquipmentCategories =
-		{
-			{
-				Item_Category_Dagger, Item_Category_Wand, Item_Category_Flail, Item_Category_Mace_OneHand, Item_Category_Sword_OneHand,
-				Item_Category_Axe_OneHand, Item_Category_Shield
-			}
-		};
-
-	const TMap<FGameplayTag, FGameplayTagContainer> AcceptedSisterSlotEquipmentCategoriesPerEquipmentCategory =
-		{
-			{
-				{Item_Category_Dagger, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-				{Item_Category_Wand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-				{Item_Category_Flail, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-				{Item_Category_Bow, FGameplayTagContainer(Item_Category_Quiver)},
-				{Item_Category_Quiver, FGameplayTagContainer(Item_Category_Bow)},
-				{Item_Category_Staff_TwoHand, FGameplayTagContainer::EmptyContainer},
-				{Item_Category_Mace_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-				{Item_Category_Mace_TwoHand, FGameplayTagContainer::EmptyContainer},
-				{Item_Category_Sword_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-				{Item_Category_Sword_TwoHand, FGameplayTagContainer::EmptyContainer},
-				{Item_Category_Axe_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-				{Item_Category_Axe_TwoHand, FGameplayTagContainer::EmptyContainer},
-				{Item_Category_Shield, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)}
-			}
-		};
-}
 
 // ~ FDraggedItem
 

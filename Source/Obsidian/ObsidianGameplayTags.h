@@ -297,6 +297,12 @@ namespace ObsidianGameplayTags
 
 	/** All Stack Types stored for convenience. */
 	OBSIDIAN_API extern const TArray<FGameplayTag> EquipmentSlots;
+	
+	/** Default Item Category Attachment rules. */
+	OBSIDIAN_API const TMap<FGameplayTag, FName>& GetSlotToAttachSocketMap();
+
+	/** Accepted Equipment Categories for sister slot per weapon type. */
+	OBSIDIAN_API const TMap<FGameplayTag, FGameplayTagContainer>& GetSisterSlotAcceptedCategoriesMap();
 
 	/**
 	 * Stacks Counts
