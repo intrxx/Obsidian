@@ -206,7 +206,7 @@ enum class EObsidianAffixType : uint8
  * 
  */
 UENUM(BlueprintType)
-enum class EObsidianAddingStacksResult : uint8
+enum class EObsidianAddingStacksResultType : uint8
 {
 	/** The action of adding stacks was unsuccessful. */
 	ASR_NoStacksAdded UMETA(DisplayName = "No Stacks Added"),
@@ -221,7 +221,7 @@ enum class EObsidianAddingStacksResult : uint8
 /**
  * 
  */
-USTRUCT(BlueprintType)
+USTRUCT(BlueprintType, meta=(ScriptName = "ObsidianInventoryAddingStacksResult"))
 struct FObsidianAddingStacksResult
 {
 	GENERATED_BODY()
@@ -240,7 +240,7 @@ public:
 
 	/** The result of trying to add stacks. */
 	UPROPERTY(BlueprintReadOnly)
-	EObsidianAddingStacksResult AddingStacksResult = EObsidianAddingStacksResult::ASR_NoStacksAdded;
+	EObsidianAddingStacksResultType AddingStacksResult = EObsidianAddingStacksResultType::ASR_NoStacksAdded;
 
 	/** The last Item Instance that we added some stacks to. */
 	UPROPERTY(BlueprintReadOnly)

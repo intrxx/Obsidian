@@ -317,13 +317,13 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinition(const TS
 	{
 		const FObsidianAddingStacksResult AddingStacksResult = TryAddingStacksToExistingItems(ItemDef, Result.StacksLeft, /** OUT */ OutAddedToInstances);
 
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded)
+		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
 		{
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
 			Result.AffectedInstance = OutAddedToInstances.Last();
 		}
 		
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded)
+		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
 		{
 			Result.bActionSuccessful = true;
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
@@ -486,14 +486,14 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstance(UObsidianI
 		TArray<UObsidianInventoryItemInstance*> OutAddedToInstances;
 		const FObsidianAddingStacksResult AddingStacksResult = TryAddingStacksToExistingItems(InstanceToAdd->GetItemDef(), Result.StacksLeft, /** OUT */ OutAddedToInstances);
 
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded)
+		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
 		{
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
 			Result.AffectedInstance = OutAddedToInstances.Last();
 			InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
 		}
 		
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded)
+		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
 		{
 			Result.bActionSuccessful = true;
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
@@ -725,14 +725,14 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 			
 			if(Result.AddedStacks == StacksToAdd)
 			{
-				Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded;
+				Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
 				return Result;
 			}
 		}
 	}
 	if(OutAddedToInstances.Num() > 0)
 	{
-		Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded;
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
 	}
 	return Result;
 }
@@ -783,11 +783,11 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecif
 
 	if(AmountThatCanBeAddedToInstance == AddingFromItemDefCurrentStacks)
 	{
-		Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded;
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
 	}
 	else
 	{
-		Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded;
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
 	}
 	
 	return Result;
@@ -849,11 +849,11 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecif
 	
 	if(AmountThatCanBeAddedToInstance == AddingFromInstanceCurrentStacks)
 	{
-		Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded;
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
 	}
 	else
 	{
-		Result.AddingStacksResult = EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded;
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
 	}
 	
 	return Result;

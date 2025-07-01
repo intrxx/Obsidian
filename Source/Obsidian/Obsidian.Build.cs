@@ -22,7 +22,6 @@ public class Obsidian : ModuleRules
 				"GameplayTasks",
 				"CommonUI",
 				"MotionWarping",
-				"AIModule",
 				"GameplayDebugger",
 				"ModularGameplayActors", 
 				"CommonGame"
@@ -35,7 +34,6 @@ public class Obsidian : ModuleRules
 			"AIModule",
 			"NavigationSystem",
 			"Niagara",
-			"AIModule",
 			"NetCore",
 			"GameplayMessageRuntime",
 			"CommonUser"

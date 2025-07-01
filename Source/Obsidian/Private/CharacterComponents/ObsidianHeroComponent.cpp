@@ -1221,13 +1221,13 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 	if(Instance && Instance->IsStackable())
 	{
 		const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(Instance, ItemGridPosition, StacksToAddOverride);
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded)
+		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
 		{
 			DraggedItem.Clear();
 			StopDraggingItem(Controller);
 			return;
 		}
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded)
+		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
 		{
 			UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
 			DraggedItem.Stacks = AddingStacksResult.StacksLeft;
@@ -1239,13 +1239,13 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 		if(DefaultObject && DefaultObject->IsStackable())
 		{
 			const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, DraggedItem.Stacks, ItemGridPosition, StacksToAddOverride);
-			if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_WholeItemAsStacksAdded)
+			if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
 			{
 				DraggedItem.Clear();
 				StopDraggingItem(Controller);
 				return;
 			}
-			if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResult::ASR_SomeOfTheStacksAdded)
+			if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
 			{
 				UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
 				DraggedItem.Stacks = AddingStacksResult.StacksLeft;
