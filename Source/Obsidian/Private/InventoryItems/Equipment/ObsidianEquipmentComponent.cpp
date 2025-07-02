@@ -68,6 +68,11 @@ void UObsidianEquipmentComponent::EquipDefaultItems()
 	}
 }
 
+TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::Internal_GetEquipmentSlots() const
+{
+	return EquipmentList.EquipmentSlots;
+}
+
 UObsidianInventoryComponent* UObsidianEquipmentComponent::GetInventoryComponentFromOwner() const
 {
 	if(const AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner()))
@@ -570,6 +575,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const 
 	const FObsidianEquipmentSlotDefinition PressedSlot = FindEquipmentSlotByTag(SlotTag);
 	
 	const EObsidianEquipCheckResult Result = PressedSlot.CanEquipToSlot(ItemCategoryTag);
+	//const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
 	if(Result != EObsidianEquipCheckResult::CanEquip)
 	{
 		return Result;
@@ -637,6 +643,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 	const FObsidianEquipmentSlotDefinition PressedSlot = FindEquipmentSlotByTag(SlotTag);
 	
 	const EObsidianEquipCheckResult Result = PressedSlot.CanEquipToSlot(ItemCategoryTag);
+	//const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
 	if(Result != EObsidianEquipCheckResult::CanEquip)
 	{
 		return Result;

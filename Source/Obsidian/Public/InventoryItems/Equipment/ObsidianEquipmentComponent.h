@@ -110,7 +110,13 @@ private:
 	/** Equip default items specified in DefaultEquipmentItems. */
 	void EquipDefaultItems();
 
+	TArray<FObsidianEquipmentSlotDefinition> Internal_GetEquipmentSlots() const;
+
 private:
+#if WITH_GAMEPLAY_DEBUGGER
+	friend class FGameplayDebuggerCategory_Equipment;
+#endif
+	
 	/** Actual array of equipped items, also hold Map for Slot at which item instance is equipped. */
 	UPROPERTY(Replicated)
 	FObsidianEquipmentList EquipmentList;

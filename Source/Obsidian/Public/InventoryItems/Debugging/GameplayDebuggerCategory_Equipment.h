@@ -4,7 +4,9 @@
 
 // ~ Core
 #include "CoreMinimal.h"
+
 #if WITH_GAMEPLAY_DEBUGGER_MENU
+#include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 #include "GameplayDebuggerCategory.h"
 #include "GameplayTagContainer.h"
 
@@ -41,7 +43,16 @@ protected:
 			TArray<FString> SpawnedEquipmentPieces;
 			TArray<FString> OwnedAbilitySets;
 		};
+		struct FEquipmentSlotDebug
+		{
+			FString SlotTag;
+			FString SisterSlotTag;
+			TArray<FString> AcceptedTags;
+			TArray<FString> BannedTags;
+		};
+		
 		TArray<FEquipmentItemDebug> Items;
+		TArray<FEquipmentSlotDebug> EquipmentSlots;
 		
 		void Serialize(FArchive& Ar);
 	};

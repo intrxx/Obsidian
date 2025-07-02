@@ -42,7 +42,6 @@ protected:
 			FIntPoint CurrentGridLocation;
 		};
 		TArray<FInventoryItemDebug> Items;
-
 		TMap<FIntPoint, bool> InventoryStateMap;
 
 		void Serialize(FArchive& Ar);

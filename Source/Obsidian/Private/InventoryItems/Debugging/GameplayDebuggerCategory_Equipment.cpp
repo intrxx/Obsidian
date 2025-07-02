@@ -56,6 +56,25 @@ void FGameplayDebuggerCategory_Equipment::CollectData(APlayerController* OwnerPC
 			
 			DataPack.Items.Add(EquipmentItems);
 		}
+
+		for (const FObsidianEquipmentSlotDefinition Slot : EquipmentComponent->Internal_GetEquipmentSlots())
+		{
+			FRepData::FEquipmentSlotDebug EquipmentSlot;
+
+			EquipmentSlot.SlotTag = Slot.SlotTag.GetTagName().ToString();
+			EquipmentSlot.SisterSlotTag = Slot.SisterSlotTag.GetTagName().ToString();
+			
+			for (const FGameplayTag& Tag : Slot.AcceptedEquipmentCategories)
+			{
+				EquipmentSlot.AcceptedTags.Add(Tag.GetTagName().ToString());
+			}
+			for (const FGameplayTag& Tag : Slot.BannedEquipmentCategories)
+			{
+				EquipmentSlot.BannedTags.Add(Tag.GetTagName().ToString());
+			}
+			
+			DataPack.EquipmentSlots.Add(EquipmentSlot);
+		}
 	}
 }
 
@@ -193,16 +212,109 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 
 	// End the category with a newline to separate
 	CanvasContext.MoveToNewLine();
+	CanvasContext.Print(TEXT("Equipment Slots:"));
+	CanvasContext.MoveToNewLine();
+
+	float SecondCategoryTopX = CanvasContext.CursorX;
+	float SecondCategoryTopY = CanvasContext.CursorY;
+	
+	CanvasContext.PrintAt(SecondCategoryTopX, SecondCategoryTopY, FString::Printf(TEXT("Slot Tag:")));
+	CanvasContext.PrintAt(SecondCategoryTopX + SecondArgConstX, SecondCategoryTopY, FString::Printf(TEXT("Slot's Sister Slot Tag:")));
+	CanvasContext.PrintAt(SecondCategoryTopX + ThirdArgConstX, SecondCategoryTopY, FString::Printf(TEXT("Accepted Equipment Categories:")));
+	float CustomForthArgConstX = (ThirdArgConstX + CanvasWidth / 3) + 150.0f;
+	CanvasContext.PrintAt(SecondCategoryTopX + CustomForthArgConstX, SecondCategoryTopY, FString::Printf(TEXT("Banned Equipment Categories:")));
+	
+	CanvasContext.MoveToNewLine();
+	CanvasContext.CursorX += Padding;
+
+	int32 AcceptedIncreasedLines = 0;
+	int32 BannedIncreasedLines = 0;
+	for(const FRepData::FEquipmentSlotDebug& EquipmentSlot : DataPack.EquipmentSlots)
+	{
+		float CursorX = CanvasContext.CursorX;
+		float CursorY = CanvasContext.CursorY;
+
+		// Print positions manually to align them properly
+		CanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, EquipmentSlot.SlotTag);
+		CanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Emerald, EquipmentSlot.SisterSlotTag);
+		
+		float CachedCursorX = CursorX;
+		float CachedCursorY = CursorY;
+		for(const FString& AcceptedTagString : EquipmentSlot.AcceptedTags)
+		{
+			float SizeX;
+			float SizeY;
+			CanvasContext.MeasureString(AcceptedTagString, SizeX, SizeY);
+
+			if (CachedCursorX + SizeX >= CursorX + CustomForthArgConstX - 250.0f)
+			{
+				CachedCursorY += CanvasContext.GetLineHeight();
+				CachedCursorX = CursorX;
+				AcceptedIncreasedLines++;
+			}
+			
+			CanvasContext.PrintAt(CachedCursorX + ThirdArgConstX, CachedCursorY, AcceptedTagString);
+			CachedCursorX += SizeX + Padding;
+		}
+
+		CanvasContext.MoveToNewLine();
+		
+		CachedCursorX = CursorX;
+		for(const FString& BannedTagString : EquipmentSlot.BannedTags)
+		{
+			float SizeX;
+			float SizeY;
+			CanvasContext.MeasureString(BannedTagString, SizeX, SizeY);
+			
+			if (CachedCursorX + SizeX >= CanvasWidth)
+			{
+				CachedCursorY += CanvasContext.GetLineHeight();
+				CachedCursorX = CursorX;
+				BannedIncreasedLines++;
+			}
+			
+			CanvasContext.PrintAt(CachedCursorX + CustomForthArgConstX, CachedCursorY, BannedTagString);
+			CachedCursorX += SizeX + Padding;
+		}
+		
+		// PrintAt would have reset these values, restore them.
+		CanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
+		CanvasContext.CursorY = CursorY;
+
+		int32 NumberOfEntriesInLine = FMath::Max<int32>(AcceptedIncreasedLines, BannedIncreasedLines) - 1;
+		for(;;)
+		{
+			CanvasContext.MoveToNewLine();
+			
+			NumberOfEntriesInLine--;
+			if(NumberOfEntriesInLine <= 0)
+			{
+				break;
+			}
+		}
+		AcceptedIncreasedLines = 0;
+		BannedIncreasedLines = 0;
+		
+		// If we're going to overflow, go to the next line...
+		if (CanvasContext.CursorX + ColumnWidth >= CanvasWidth)
+		{
+			CanvasContext.MoveToNewLine();
+			CanvasContext.CursorX += Padding;
+		}
+	}
 }
 
 void FGameplayDebuggerCategory_Equipment::FRepData::Serialize(FArchive& Ar)
 {
 	int32 NumItems = Items.Num();
 	Ar << NumItems;
+	int32 NumSlots = EquipmentSlots.Num();
+	Ar << NumSlots;
 	
 	if(Ar.IsLoading())
 	{
 		Items.SetNum(NumItems);
+		EquipmentSlots.SetNum(NumSlots);
 	}
 
 	for(int32 i = 0; i < NumItems; i++)
@@ -212,6 +324,14 @@ void FGameplayDebuggerCategory_Equipment::FRepData::Serialize(FArchive& Ar)
 		Ar << Items[i].SlotTag;
 		Ar << Items[i].SpawnedEquipmentPieces;
 		Ar << Items[i].OwnedAbilitySets;
+	}
+
+	for(int32 i = 0; i < NumSlots; i++)
+	{
+		Ar << EquipmentSlots[i].SlotTag;
+		Ar << EquipmentSlots[i].SisterSlotTag;
+		Ar << EquipmentSlots[i].AcceptedTags;
+		Ar << EquipmentSlots[i].BannedTags;
 	}
 }
 
