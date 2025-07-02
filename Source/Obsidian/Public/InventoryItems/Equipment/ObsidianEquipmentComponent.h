@@ -93,6 +93,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 	EObsidianEquipCheckResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
+	void CheckEquipmentPairAcceptance(const FObsidianEquipmentSlotDefinition& PrimarySlot, const FGameplayTag& PrimaryWeaponCategory, EObsidianEquipCheckResult& OutResult);
 	
 	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
 	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);

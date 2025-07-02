@@ -312,8 +312,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 			
 			UnequipItem(InstanceAtSecondSlot);
 			
-			InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
-			checkf(Result, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
+			const FObsidianInventoryResult LocalAddingResult = InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
+			checkf(LocalAddingResult, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
 		}
 	}
 
@@ -374,8 +374,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 			
 			UnequipItem(InstanceAtSecondSlot);
 			
-			InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
-			checkf(Result, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
+			const FObsidianInventoryResult LocalAddingResult = InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
+			checkf(LocalAddingResult, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
 		}
 	}
 
@@ -571,11 +571,10 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const 
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}
 
-	const FGameplayTag ItemCategoryTag = Instance->GetItemCategoryTag();
-	const FObsidianEquipmentSlotDefinition PressedSlot = FindEquipmentSlotByTag(SlotTag);
+	const FGameplayTag ItemCategory = Instance->GetItemCategoryTag();
+	const FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
 	
-	const EObsidianEquipCheckResult Result = PressedSlot.CanEquipToSlot(ItemCategoryTag);
-	//const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
+	EObsidianEquipCheckResult Result = Slot.CanEquipToSlot(ItemCategory);
 	if(Result != EObsidianEquipCheckResult::CanEquip)
 	{
 		return Result;
@@ -585,7 +584,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item needs a second slot."));
 		
-		UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(PressedSlot.SisterSlotTag);
+		UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(Slot.SisterSlotTag);
 		if(InstanceAtSecondSlot == nullptr) // If there is no item at second slot we can just return as the item at pressed slot will be added to the cursor.
 		{
 			return Result;
@@ -608,6 +607,11 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const 
 			return EObsidianEquipCheckResult::UnableToEquip_NoSufficientInventorySpace;
 		}
 	}
+	else
+	{
+		CheckEquipmentPairAcceptance(Slot, ItemCategory, Result);
+	}
+	
 	return Result;
 }
 
@@ -639,11 +643,10 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}
 
-	const FGameplayTag ItemCategoryTag = DefaultObject->GetItemCategoryTag();
-	const FObsidianEquipmentSlotDefinition PressedSlot = FindEquipmentSlotByTag(SlotTag);
+	const FGameplayTag ItemCategory = DefaultObject->GetItemCategoryTag();
+	const FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
 	
-	const EObsidianEquipCheckResult Result = PressedSlot.CanEquipToSlot(ItemCategoryTag);
-	//const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
+	EObsidianEquipCheckResult Result = Slot.CanEquipToSlot(ItemCategory);
 	if(Result != EObsidianEquipCheckResult::CanEquip)
 	{
 		return Result;
@@ -653,7 +656,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Item needs a second slot."));
 		
-		UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(PressedSlot.SisterSlotTag);
+		UObsidianInventoryItemInstance* InstanceAtSecondSlot = GetEquippedInstanceAtSlot(Slot.SisterSlotTag);
 		if(InstanceAtSecondSlot == nullptr) // If there is no item at second slot we can just return as the item at pressed slot will be added to the cursor.
 		{
 			return Result;
@@ -676,6 +679,11 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 			return EObsidianEquipCheckResult::UnableToEquip_NoSufficientInventorySpace;
 		}
 	}
+	else
+	{
+		CheckEquipmentPairAcceptance(Slot, ItemCategory, Result);
+	}
+	
 	return Result;
 }
 
@@ -783,25 +791,33 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanPlaceItemAtEquipmentSl
 	{
 		return EquipResult;
 	}
+
+	CheckEquipmentPairAcceptance(Slot, ItemCategory, EquipResult);
 	
-	if(Slot.SisterSlotTag.IsValid())
+	return EquipResult;
+}
+
+void UObsidianEquipmentComponent::CheckEquipmentPairAcceptance(const FObsidianEquipmentSlotDefinition& PrimarySlot, const FGameplayTag& PrimaryWeaponCategory, EObsidianEquipCheckResult& OutResult)
+{
+	if(PrimarySlot.SisterSlotTag.IsValid() == false)
 	{
-		UObsidianInventoryItemInstance* InstanceAtOtherSlot = GetEquippedInstanceAtSlot(Slot.SisterSlotTag);
-		if (InstanceAtOtherSlot == nullptr)
-		{
-			return EquipResult;
-		}
+		return;
+	}
+	
+	const UObsidianInventoryItemInstance* InstanceAtOtherSlot = GetEquippedInstanceAtSlot(PrimarySlot.SisterSlotTag);
+	if (InstanceAtOtherSlot == nullptr)
+	{
+		return;
+	}
 		
-		const FGameplayTag OtherInstanceCategory = InstanceAtOtherSlot->GetItemCategoryTag();
-		if(const FGameplayTagContainer* AcceptedCategories = ObsidianGameplayTags::GetSisterSlotAcceptedCategoriesMap().Find(OtherInstanceCategory))
+	const FGameplayTag OtherInstanceCategory = InstanceAtOtherSlot->GetItemCategoryTag();
+	if(const FGameplayTagContainer* AcceptedCategories = ObsidianGameplayTags::GetSisterSlotAcceptedCategoriesMap().Find(OtherInstanceCategory))
+	{
+		if(AcceptedCategories->HasTagExact(PrimaryWeaponCategory) == false)
 		{
-			if(AcceptedCategories->HasTagExact(ItemCategory) == false)
-			{
-				return EObsidianEquipCheckResult::UnableToEquip_DoesNotFitWithOtherWeaponType;
-			}
+			OutResult = EObsidianEquipCheckResult::UnableToEquip_DoesNotFitWithOtherWeaponType;
 		}
 	}
-	return EquipResult;
 }
 
 void UObsidianEquipmentComponent::AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory)
