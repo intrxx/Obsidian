@@ -246,7 +246,7 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 			float SizeY;
 			CanvasContext.MeasureString(AcceptedTagString, SizeX, SizeY);
 
-			if (CachedCursorX + SizeX >= CursorX + CustomForthArgConstX - 250.0f)
+			if (CachedCursorX + SizeX >= CursorX + CustomForthArgConstX - 500.0f)
 			{
 				CachedCursorY += CanvasContext.GetLineHeight();
 				CachedCursorX = CursorX;
@@ -256,10 +256,9 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 			CanvasContext.PrintAt(CachedCursorX + ThirdArgConstX, CachedCursorY, AcceptedTagString);
 			CachedCursorX += SizeX + Padding;
 		}
-
-		CanvasContext.MoveToNewLine();
 		
 		CachedCursorX = CursorX;
+		CachedCursorY += CanvasContext.GetLineHeight();
 		for(const FString& BannedTagString : EquipmentSlot.BannedTags)
 		{
 			float SizeX;
@@ -279,18 +278,12 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 		
 		// PrintAt would have reset these values, restore them.
 		CanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
-		CanvasContext.CursorY = CursorY;
+		CanvasContext.CursorY = CursorY + CanvasContext.GetLineHeight();
 
-		int32 NumberOfEntriesInLine = FMath::Max<int32>(AcceptedIncreasedLines, BannedIncreasedLines) - 1;
-		for(;;)
+		int32 NumberOfEntriesInLine = FMath::Max<int32>(AcceptedIncreasedLines, BannedIncreasedLines);
+		for(int i = 0; i < NumberOfEntriesInLine; i++)
 		{
 			CanvasContext.MoveToNewLine();
-			
-			NumberOfEntriesInLine--;
-			if(NumberOfEntriesInLine <= 0)
-			{
-				break;
-			}
 		}
 		AcceptedIncreasedLines = 0;
 		BannedIncreasedLines = 0;
