@@ -62,7 +62,7 @@ void UObsidianEquipmentComponent::EquipDefaultItems()
 				continue;
 			}
 
-			const FObsidianEquipmentResult Result = EquipItemToSpecificSlot(DefaultEquipmentTemplate.DefaultItemDef, DefaultEquipmentTemplate.EquipmentSlotTag);
+			const FObsidianEquipmentResult Result = EquipItemToSpecificSlot(DefaultEquipmentTemplate.DefaultItemDef, DefaultEquipmentTemplate.EquipmentSlotTag, DefaultEquipmentTemplate.StackCount);
 			ensureMsgf(Result, TEXT("Were unable to equip default item in UObsidianEquipmentComponent::EquipDefaultItems()."));
 		}
 	}
@@ -310,7 +310,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 				return Result;
 			}
 			
-			UnequipItem(InstanceAtSecondSlot);
+			const FObsidianEquipmentResult LocalUnequippingResult = UnequipItem(InstanceAtSecondSlot);
+			checkf(LocalUnequippingResult, TEXT("Unequipping item failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
 			
 			const FObsidianInventoryResult LocalAddingResult = InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
 			checkf(LocalAddingResult, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
@@ -372,7 +373,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 				return Result;
 			}
 			
-			UnequipItem(InstanceAtSecondSlot);
+			const FObsidianEquipmentResult LocalUnequippingResult = UnequipItem(InstanceAtSecondSlot);
+			checkf(LocalUnequippingResult, TEXT("Unequipping item failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
 			
 			const FObsidianInventoryResult LocalAddingResult = InventoryComponent->AddItemInstance(InstanceAtSecondSlot);
 			checkf(LocalAddingResult, TEXT("Adding item to Inventory failed in UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot."));
@@ -424,7 +426,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipInstance(const UO
 	return EObsidianEquipCheckResult::CanEquip;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 StackCount)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -452,14 +454,14 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	
 	const FGameplayTag& ItemCategoryTag = DefaultObject->GetItemCategoryTag();
 	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
-	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
+	for(const FObsidianEquipmentSlotDefinition& Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
 	{
 		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
 		{
 			continue; // We already have an item equipped in this slot, we shouldn't try to equip it. || Initial slot is free but the other one is occupied so we don't want to automatically equip.
 		}
 		
-		if(const FObsidianEquipmentResult& InternalResult = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag))
+		if(const FObsidianEquipmentResult& InternalResult = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag, StackCount))
 		{
 			return InternalResult;
 		}
@@ -468,7 +470,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	return Result;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
+FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const int32 StackCount)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -500,7 +502,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	}
 	
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
-
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackCount);
+	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(Instance);

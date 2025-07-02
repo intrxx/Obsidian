@@ -30,6 +30,10 @@ public:
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UObsidianInventoryItemDefinition> DefaultItemDef = nullptr;
 
+	/** Stack Count of the item to equip. For Obsidian, it should always be 1 but exposing it for future sake. */
+	UPROPERTY(EditAnywhere)
+	int32 StackCount = 1;
+
 	/** Tag of the slot to equip this default equipment to. If left empty will abort equipping. */
 	UPROPERTY(EditAnywhere, meta=(Categories = "Equipment.Slot"))
 	FGameplayTag EquipmentSlotTag = FGameplayTag::EmptyTag;
@@ -71,10 +75,10 @@ public:
 	EObsidianEquipCheckResult CanReplaceInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
 	EObsidianEquipCheckResult CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
 	
-	FObsidianEquipmentResult AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	FObsidianEquipmentResult AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 StackCount);
 	FObsidianEquipmentResult AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
 	
-	FObsidianEquipmentResult EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+	FObsidianEquipmentResult EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const int32 StackCount);
 	FObsidianEquipmentResult EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
 
 	FObsidianEquipmentResult ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);

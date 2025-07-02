@@ -825,7 +825,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 					return;
 				}
 			
-				if(EquipmentComponent->AutomaticallyEquipItem(ItemDef))
+				if(EquipmentComponent->AutomaticallyEquipItem(ItemDef, Template.StackCount))
 				{
 					ItemToPickup->DestroyDroppedItem();
 					return;
@@ -1097,7 +1097,7 @@ void UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation(const FGamepla
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
-		if(EquipmentComponent->EquipItemToSpecificSlot(ItemDef, SlotTag))
+		if(EquipmentComponent->EquipItemToSpecificSlot(ItemDef, SlotTag, DraggedItem.Stacks))
 		{
 			DraggedItem.Clear();
 			StopDraggingItem(Controller);
