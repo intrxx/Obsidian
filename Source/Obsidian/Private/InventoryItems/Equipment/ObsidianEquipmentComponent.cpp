@@ -172,6 +172,15 @@ FObsidianItemStats UObsidianEquipmentComponent::GetItemStatsBySlotTag(const FGam
 	return Stats;
 }
 
+bool UObsidianEquipmentComponent::IsItemEquippedAtSlot(const FGameplayTag& SlotTag)
+{
+	if(GetEquippedInstanceAtSlot(SlotTag))
+	{
+		return true;
+	}
+	return false;
+}
+
 bool UObsidianEquipmentComponent::CanOwnerModifyEquipmentState()
 {
 	if(CachedOwnerPlayerController == nullptr)

@@ -43,15 +43,20 @@ void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* 
 	
 	if(bEntered)
 	{
+		if(OwningInventory->CanInteractWithEquipment() == false)
+		{
+			AffectedSlot->SetSlotState(ISS_RedLight);
+			return;
+		}
+
 		if(OwningInventory->IsPlayerDraggingItem() == false)
 		{
-			const EObsidianItemSlotState SlotState = OwningInventory->CanInteractWithEquipment() ? ISS_Selected : ISS_RedLight;
-			AffectedSlot->SetSlotState(SlotState);
+			AffectedSlot->SetSlotState(ISS_Neutral);
 			return;
 		}
 		
-		const bool bCanEquip = OwningInventory->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
-		const EObsidianItemSlotState SlotState = bCanEquip ? ISS_GreenLight : ISS_RedLight;
+		const bool bInteractionSuccess = OwningInventory->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
+		const EObsidianItemSlotState SlotState = bInteractionSuccess ? ISS_GreenLight : ISS_RedLight;
 		AffectedSlot->SetSlotState(SlotState);
 		return;
 	}

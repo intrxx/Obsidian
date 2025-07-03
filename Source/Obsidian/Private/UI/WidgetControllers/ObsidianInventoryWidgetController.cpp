@@ -932,15 +932,34 @@ bool UObsidianInventoryWidgetController::CanEquipDraggedItem(const FGameplayTag&
 		return false; 
 	}
 
+	const bool bSlotOccupied = EquipmentComponent->IsItemEquippedAtSlot(SlotTag);
 	const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
 	if(const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
 	{
-		const EObsidianEquipCheckResult EquipResult = EquipmentComponent->CanEquipInstance(DraggedInstance, SlotTag);
+		EObsidianEquipCheckResult EquipResult;
+		if(bSlotOccupied)
+		{
+			EquipResult	= EquipmentComponent->CanReplaceInstance(DraggedInstance, SlotTag);
+		}
+		else
+		{
+			EquipResult	= EquipmentComponent->CanEquipInstance(DraggedInstance, SlotTag);
+		}
+		 
 		return EquipResult == EObsidianEquipCheckResult::CanEquip;
 	}
 	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef)
 	{
-		const EObsidianEquipCheckResult EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
+		EObsidianEquipCheckResult EquipResult;
+		if(bSlotOccupied)
+		{
+			EquipResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
+		}
+		else
+		{
+			EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
+		}
+		
 		return EquipResult == EObsidianEquipCheckResult::CanEquip;
 	}
 	return false;

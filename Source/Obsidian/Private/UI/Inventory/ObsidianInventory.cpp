@@ -119,7 +119,7 @@ bool UObsidianInventory::CanInteractWithInventory() const
 
 bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const
 {
-	if(InventoryWidgetController && InventoryWidgetController->CanInteractWithEquipment())
+	if(InventoryWidgetController)
 	{
 		return InventoryWidgetController->CanEquipDraggedItem(ToSlotTag);
 	}
