@@ -61,9 +61,9 @@ The actual actor that gets spawned on the Hero if one is specified in ```OInvent
 ### 4.1 GameplayDebuggerCategory_Equipment ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.cpp))
 
 Gameplay Debugger Category that contains number of Items equipped and its Name, Item Definition Class, Currently
-Equipped Slot, Spawned Actors and Owning Ability Sets.
+Equipped Slot, Spawned Actors and Owning Ability Sets. It also lists valuable information about Equipment Slots.
 
-![Equipment System Debugging](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EquipmentSystem/equipmentdebugger.jpg)
+![Equipment System Debugging](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/EquipmentSystem/equipment_debugger.jpg)
 
 ## 5. The Rest
 
