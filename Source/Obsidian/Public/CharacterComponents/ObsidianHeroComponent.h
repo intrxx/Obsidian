@@ -29,6 +29,13 @@ class UObsidianInventoryItemDefinition;
 DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnArrivedAtAcceptableItemPickupRangeSignature, AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation)
 
+UENUM()
+enum class EObsidianItemPickUpType : uint8
+{
+	AutomaticPickUp,
+	PickUpToDrag
+};
+
 /**
  * Component that manages hero related things like input
  */
@@ -175,19 +182,20 @@ protected:
 
 private:
 	bool CanMoveMouse() const;
-	
 	void AutoRun();
-	void CursorTrace();
-	void DragItem() const;
-	void DragUsableItemIcon() const;
-
 	void AutoRunToClickedLocation();
+	
+	void CursorTrace();
 	
 	/**
 	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
 	 * another item in the inventory in OnRep_DraggedItem. If it sounds useful be careful when using it.
 	 */
 	bool DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const;
+	void UpdateStacksOnDraggedItemWidget(const int32 InStacks);
+
+	void DragItem() const;
+	void DragUsableItemIcon() const;
 	
 	void StartDraggingItem(const AController* Controller);
 	void StopDraggingItem(const AController* Controller);
@@ -195,8 +203,12 @@ private:
 	UFUNCTION(Server, Reliable)
 	void ServerHandleDroppingItem();
 	bool CanDropItem() const;
-	
-	void UpdateStacksOnDraggedItemWidget(const int32 InStacks);
+
+	/** If item is out of picking up range, it will handle getting to the item and picking it up. Will return true if item picking up is handled. */
+	bool HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const bool bAutomaticPickupType);
+
+	UFUNCTION(Client, Reliable)
+	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const bool bAutomaticPickupType);
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
@@ -230,9 +242,11 @@ private:
 
 	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
 	FDraggedItem DraggedItem = FDraggedItem();
-
+	
+#if 0 // https://github.com/intrxx/Obsidian/commit/e3eda3899a1b39ec1952221a24bce0b40b7be769
 	FVector CachedItemDropLocation = FVector::ZeroVector;
-
+#endif
+	
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemInstance> UsingItemInstance = nullptr;
 	UPROPERTY()

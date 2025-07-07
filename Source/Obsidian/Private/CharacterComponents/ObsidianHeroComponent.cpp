@@ -85,6 +85,7 @@ void UObsidianHeroComponent::AutoRun()
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
 		if(DistanceToDestination <= AutoRunAcceptanceRadius)
 		{
+			
 #if 0 // https://github.com/intrxx/Obsidian/commit/e3eda3899a1b39ec1952221a24bce0b40b7be769
 			if(CanDropItem())
 			{
@@ -783,24 +784,8 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		return;
 	}
 
-	AActor* OwnerActor = GetOwner();
-	if(OwnerActor == nullptr)
+	if(HandlePickUpIfItemOutOfRange(ItemToPickup, true))
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
-		return;
-	}
-	
-	const FVector OwnerLocation = OwnerActor->GetActorLocation();
-	const float DistanceToItem = FVector::Distance(OwnerLocation, ItemLocation);
-	if (bAutoRunToPickupItem == false && DistanceToItem > PickupRadius)
-	{
-		UE_LOG(LogTemp, Display, TEXT("User wants to pickup item out of his range, need to make correction."));
-
-		bAutoRunToPickupItem = true;
-		CachedDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * PickupRadius;
-		CachedDroppableItemToPickup = ItemToPickup;
-		OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::ServerPickupItem);
-		AutoRunToClickedLocation();
 		return;
 	}
 	
@@ -988,24 +973,8 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 		return;
 	}
 
-	AActor* OwnerActor = GetOwner();
-	if(OwnerActor == nullptr)
+	if(HandlePickUpIfItemOutOfRange(ItemToPickup, false))
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
-		return;
-	}
-	
-	const FVector OwnerLocation = OwnerActor->GetActorLocation();
-	const float DistanceToItem = FVector::Distance(OwnerLocation, ItemLocation);
-	if (bAutoRunToPickupItem == false && DistanceToItem > PickupRadius)
-	{
-		UE_LOG(LogTemp, Display, TEXT("User wants to pickup item out of his range, need to make correction."));
-
-		bAutoRunToPickupItem = true;
-		CachedDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * PickupRadius;
-		CachedDroppableItemToPickup = ItemToPickup;
-		OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::ServerGrabDroppableItemToCursor);
-		AutoRunToClickedLocation();
 		return;
 	}
 	
@@ -1030,6 +999,56 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 	}
 
 	checkf(false, TEXT("Provided ItemToPickup has no Instance nor Taplate to pick up, this is bad and should not happen."))
+}
+
+bool UObsidianHeroComponent::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const bool bAutomaticPickupType)
+{
+	AActor* OwnerActor = GetOwner();
+	if(OwnerActor == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+		return false;
+	}
+
+	if(OwnerActor->HasAuthority() == false)
+	{
+		UE_LOG(LogInventory, Error, TEXT("UObsidianHeroComponent::HandlePickUpIfItemOutOfRange() should not be called without authority."));
+		return false;
+	}
+
+	FVector ItemLocation = ItemToPickUp->GetActorLocation();
+	FVector OwnerLocation = OwnerActor->GetActorLocation();
+	
+	const float DistanceToItem = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(ItemLocation.X, ItemLocation.Y, 0.0f)); 
+	if (DistanceToItem > PickupRadius + AutoRunAcceptanceRadius)
+	{
+		UE_LOG(LogTemp, Display, TEXT("User wants to pickup item out of his range, need to make correction. Distance to the item [%f]"), DistanceToItem);
+		const FVector ApproachDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * PickupRadius;
+		ClientStartApproachingOutOfRangeItem(ApproachDestination, ItemToPickUp, bAutomaticPickupType);
+		return true;
+	}
+	return false;
+}
+
+void UObsidianHeroComponent::ClientStartApproachingOutOfRangeItem_Implementation(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const bool bAutomaticPickupType)
+{
+	bAutoRunToPickupItem = true;
+	CachedDestination = ToDestination;
+	CachedDroppableItemToPickup = ItemToPickUp;
+	
+	if(OnArrivedAtAcceptableItemPickupRange.IsBound() == false)
+	{
+		if(bAutomaticPickupType)
+		{
+			OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::ServerPickupItem);
+		}
+		else
+		{
+			OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::ServerGrabDroppableItemToCursor);
+		}
+	}
+	
+	AutoRunToClickedLocation();
 }
 
 void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(const FIntPoint& ItemGridPosition)
