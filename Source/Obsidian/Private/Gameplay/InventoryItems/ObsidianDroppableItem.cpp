@@ -455,13 +455,13 @@ void AObsidianDroppableItem::OnRep_DroppedItemStacks()
 
 void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, const bool bLeftControlDown)
 {
-	UWorld* World = GetWorld();
+	const UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
 		return;
 	}
 	
-	AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(World, PlayerIndex));
+	const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(World, PlayerIndex));
 	if(!ensureMsgf(ObsidianPC, TEXT("Failed to acquire valid ObsidianPlayerController in AObsidianDroppableItem::OnItemMouseButtonDown.")))
 	{
 		return;
@@ -477,7 +477,7 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, cons
 	}
 }
 
-bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController)
+bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, const AObsidianPlayerController* PickingPlayerController)
 {
 	AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
@@ -490,8 +490,6 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 	
 	UObsidianHeroComponent* HeroComp = Hero->GetHeroComponent();
 	checkf(HeroComp, TEXT("HeroComp acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemDef."));
-
-	const FVector ItemLocation = GetActorLocation();
 	
 	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
@@ -504,17 +502,17 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, AOb
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			HeroComp->ServerGrabDroppableItemToCursor(this, ItemLocation);
+			HeroComp->ServerGrabDroppableItemToCursor(this);
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
 	}
-	HeroComp->ServerPickupItem(this, ItemLocation);
+	HeroComp->ServerPickupItem(this);
 	
 	return false; // Added whole Item
 }
 
-bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController)
+bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, const AObsidianPlayerController* PickingPlayerController)
 {
 	AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
@@ -527,8 +525,6 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 	
 	UObsidianHeroComponent* HeroComp = Hero->GetHeroComponent();
 	checkf(HeroComp, TEXT("HeroComp acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemDef."));
-
-	const FVector ItemLocation = GetActorLocation();
 	
 	const bool bIsDraggingAnItem = HeroComp->IsDraggingAnItem();
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press left control button, spawn the item on cursor
@@ -541,12 +537,12 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, AObsidia
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			HeroComp->ServerGrabDroppableItemToCursor(this, ItemLocation);
+			HeroComp->ServerGrabDroppableItemToCursor(this);
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
 	}
-	HeroComp->ServerPickupItem(this, ItemLocation);
+	HeroComp->ServerPickupItem(this);
 	
 	return false; // Added whole Item
 }

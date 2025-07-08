@@ -9,6 +9,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 // ---- Start of FObsidianInventoryEntry ----
@@ -249,12 +250,13 @@ void FObsidianInventoryGridItemList::PreReplicatedRemove(const TArrayView<int32>
 
 		GridLocationToItemMap.Remove(Entry.GridLocation);
 		Item_UnMarkSpace(Entry.Instance, Entry.GridLocation);
+
+		UE_LOG(LogInventory, Display, TEXT("Replicated removing [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
 void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PostReplicatedAdd, hi."));
 	for(const int32 Index : AddedIndices)
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
@@ -263,6 +265,8 @@ void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> A
 
 		GridLocationToItemMap.Add(Entry.GridLocation, Entry.Instance);
 		Item_MarkSpace(Entry.Instance, Entry.GridLocation);
+
+		UE_LOG(LogInventory, Display, TEXT("Replicated adding [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -281,6 +285,8 @@ void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32
 			BroadcastChangeMessage(Entry, /* Old Count */ Entry.LastObservedCount, /* New Count */ Entry.StackCount, Entry.GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
 		}
 		Entry.LastObservedCount = Entry.StackCount;
+
+		UE_LOG(LogInventory, Display, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 

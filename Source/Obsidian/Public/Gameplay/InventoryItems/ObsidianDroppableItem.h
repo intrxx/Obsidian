@@ -70,10 +70,10 @@ protected:
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
-	bool PickupItemInstance(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController);
+	bool PickupItemInstance(const bool bLeftControlDown, const AObsidianPlayerController* PickingPlayerController);
 	
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
-	bool PickupItemDef(const bool bLeftControlDown, AObsidianPlayerController* PickingPlayerController);
+	bool PickupItemDef(const bool bLeftControlDown, const AObsidianPlayerController* PickingPlayerController);
 	
 	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
 	void SetupItemAppearanceFromInstance() const;

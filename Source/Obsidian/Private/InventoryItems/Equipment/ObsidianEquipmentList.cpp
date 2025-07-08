@@ -12,6 +12,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "GameFramework/GameplayMessageSubsystem.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 //
@@ -477,6 +478,8 @@ void FObsidianEquipmentList::PreReplicatedRemove(const TArrayView<int32> Removed
 		SlotToEquipmentMap.Remove(Entry.EquipmentSlotTag);
 		
 		BroadcastChangeMessage(Entry, FGameplayTag::EmptyTag, Entry.EquipmentSlotTag, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
+
+		UE_LOG(LogEquipment, Display, TEXT("Replicated un-equipping [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -489,6 +492,8 @@ void FObsidianEquipmentList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		SlotToEquipmentMap.Add(Entry.EquipmentSlotTag, Entry.Instance);
 		
 		BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
+
+		UE_LOG(LogEquipment, Display, TEXT("Replicated equipping [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -513,6 +518,8 @@ void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> Change
 			}		
 		}
 		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;
+
+		UE_LOG(LogEquipment, Display, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 

@@ -12,6 +12,7 @@
 #include "Components/SplineComponent.h"
 #include "GameFramework/PlayerController.h"
 #include "Net/UnrealNetwork.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // ~ Project
 #include "Characters/Player/ObsidianLocalPlayer.h"
@@ -28,7 +29,6 @@
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
-#include "Kismet/KismetMathLibrary.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
@@ -768,7 +768,7 @@ void UObsidianHeroComponent::ServerWeaponSwap_Implementation()
 	EquipmentComponent->WeaponSwap();
 }
 
-void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation)
+void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)
 	{
@@ -954,7 +954,7 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
 	StopDraggingItem(Controller);
 }
 
-void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation)
+void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)
 	{
@@ -1052,7 +1052,7 @@ void UObsidianHeroComponent::AutomaticallyPickupOutOfRangeItem()
 {
 	if(CachedDroppableItemToPickup)
 	{
-		ServerPickupItem(CachedDroppableItemToPickup, FVector::Zero());
+		ServerPickupItem(CachedDroppableItemToPickup);
 		
 		OnArrivedAtAcceptableItemPickupRange.Clear();
 		CachedDroppableItemToPickup = nullptr;
@@ -1063,7 +1063,7 @@ void UObsidianHeroComponent::DragOutOfRangeItem()
 {
 	if(CachedDroppableItemToPickup)
 	{
-		ServerGrabDroppableItemToCursor(CachedDroppableItemToPickup, FVector::Zero());
+		ServerGrabDroppableItemToCursor(CachedDroppableItemToPickup);
 		
 		OnArrivedAtAcceptableItemPickupRange.Clear();
 		CachedDroppableItemToPickup = nullptr;

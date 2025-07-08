@@ -105,18 +105,15 @@ public:
 	void ServerReplaceItemAtInventorySlot(const FIntPoint& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation);
+	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabInventoryItemToCursor(const FIntPoint& SlotPosition);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation);
+	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup);
 	
 	void UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown);
-	
-	UFUNCTION(Server, Reliable)
-	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition);
 	
 	/**
 	 * Equipment.
@@ -214,6 +211,9 @@ private:
 	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
 	void AutomaticallyPickupOutOfRangeItem();
 	void DragOutOfRangeItem();
+
+	UFUNCTION(Server, Reliable)
+	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition);
 	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
