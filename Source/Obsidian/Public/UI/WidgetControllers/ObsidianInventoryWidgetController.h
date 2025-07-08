@@ -102,6 +102,11 @@ public:
 		return bDescriptionActive;
 	}
 
+	UObsidianItemDescriptionBase* GetActiveItemDescription()
+	{
+		return ActiveItemDescription;
+	}
+
 	int32 GetInventoryGridWidth() const;
 	int32 GetInventoryGridHeight() const;
 
@@ -144,9 +149,10 @@ public:
 	void HandleUnhoveringItem();
 
 	void RemoveItemUIElements();
+	void RemoveItemDescription();
 
-	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
-	UObsidianItemDescriptionBase* CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);
+	void CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
+	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);
 	
 public:
 	FOnItemEquippedSignature OnItemEquippedDelegate;
@@ -178,7 +184,6 @@ private:
 	void HandleTakingOutStacks(const int32 StacksToTake, const FIntPoint& GridSlotPosition);
 	
 	void RemoveUnstackSlider();
-	void RemoveItemDescription();
 	void ClearUsableUIContext();
 	
 	bool CanShowDescription() const;
@@ -186,6 +191,9 @@ private:
 	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const;
 	FVector2D CalculateDescriptionPosition(const UObsidianItem* ItemWidget) const;
 	FVector2D GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize, const FVector2D& ItemPosition, const FVector2D& ItemSize, const FVector2D& UIElementSize) const;
+
+	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats);
+	UObsidianItemDescriptionBase* CreateDroppedItemDescription(const FObsidianItemStats& ItemStats);
 
 private:
 	bool bInventoryOpened = false;

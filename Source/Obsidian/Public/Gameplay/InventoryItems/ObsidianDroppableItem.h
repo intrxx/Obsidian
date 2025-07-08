@@ -12,6 +12,7 @@
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
 
+class UObsidianInventoryWidgetController;
 class USplineComponent;
 class UTimelineComponent;
 class AObsidianPlayerController;
@@ -57,7 +58,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	
+	virtual void Destroyed() override;
 	virtual void OnRep_PickupContent() override;
 	
 	UFUNCTION()
@@ -87,10 +88,10 @@ private:
 	UFUNCTION()
 	void UpdateItemDropAnimation(float UpdateAlpha);
 
-	UObsidianItemDescriptionBase* CreateItemDescription();
+	void CreateItemDescription();
 	void DestroyItemDescription();
-	void UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance) const;
-	void UpdateStacksOnActiveItemDescription(const int32 StacksToSet) const;
+	void UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance);
+	void UpdateStacksOnActiveItemDescription(const int32 StacksToSet);
 
 	UFUNCTION()
 	void OnRep_DroppedItemStacks();
@@ -118,8 +119,8 @@ private:
 	TObjectPtr<UObsidianItemWorldName> ItemWorldName;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription;
-
+	UObsidianInventoryWidgetController* CachedInventoryWidgetController;
+	
 	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
 	int32 DroppedItemStacks = 1;
 

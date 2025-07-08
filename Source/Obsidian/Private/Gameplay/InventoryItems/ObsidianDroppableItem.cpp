@@ -199,9 +199,22 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 
 void AObsidianDroppableItem::DestroyDroppedItem()
 {
-	StopHighlight();
-	
 	Destroy();
+}
+
+void AObsidianDroppableItem::Destroyed()
+{
+	if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Got PC [%s]"), *GetNameSafe(ObsidianPC));
+		if(ObsidianPC->IsLocalPlayerController())
+		{
+			StopHighlight();
+			DestroyItemDescription();
+		}
+	}
+	
+	Super::Destroyed();
 }
 
 void AObsidianDroppableItem::SetupItemAppearanceFromInstance() const
@@ -384,7 +397,7 @@ void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)
 
 	if(bMouseEnter)
 	{
-		ActiveItemDescription = CreateItemDescription();
+		CreateItemDescription();
 	}
 	else
 	{
@@ -392,40 +405,50 @@ void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)
 	}
 }
 
-UObsidianItemDescriptionBase* AObsidianDroppableItem::CreateItemDescription()
+void AObsidianDroppableItem::CreateItemDescription()
 {
-	DestroyItemDescription();
-	
-	UObsidianInventoryWidgetController* InventoryController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
-	if(InventoryController == nullptr)
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	if(CachedInventoryWidgetController == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::CreateItemDescription."));
-		return nullptr;	
+		return;	
 	}
 	
-	UObsidianItemDescriptionBase* ItemDescriptionToReturn = nullptr; 
 	if(CarriesItemDef())
 	{
 		const FPickupTemplate PickupTemplate = GetPickupTemplateFromPickupContent();
-		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.StackCount);
+		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.StackCount);
 	}
 	else if(CarriesItemInstance())
 	{
-		ItemDescriptionToReturn = InventoryController->CreateItemDescriptionForDroppedItem(GetPickupInstanceFromPickupContent().Item);
+		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(GetPickupInstanceFromPickupContent().Item);
 	}
-#if !UE_BUILD_SHIPPING
-	else
-	{
-		ensureMsgf(ItemDescriptionToReturn, TEXT("Returned ItemDescription is invalid in AObsidianDroppableItem::CreateItemDescription(), verify if the Dropped Item contains any Pickup Content."));
-	}
-#endif
-	
-	return ItemDescriptionToReturn;
 }
 
-void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance) const
+void AObsidianDroppableItem::DestroyItemDescription()
 {
-	if(ActiveItemDescription)
+	const bool server = HasAuthority();
+	UE_LOG(LogTemp, Warning, TEXT("%s"), server ? TEXT("Server") : TEXT("Client"));
+	
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	if(CachedInventoryWidgetController)
+	{
+		CachedInventoryWidgetController->RemoveItemDescription();
+		return;	
+	}
+	UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::DestroyItemDescription."));
+}
+
+void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance)
+{
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	if(CachedInventoryWidgetController == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::UpdateStacksOnActiveItemDescription."));
+		return;	
+	}
+	
+	if(UObsidianItemDescriptionBase* ActiveItemDescription = CachedInventoryWidgetController->GetActiveItemDescription())
 	{
 		int32 CurrentStacks = 0;
 		if(!ensureMsgf(ItemInstance, TEXT("Item Instance is invalid in AObsidianDroppableItem::UpdateStacksOnActiveItemDescription, stacks were set to 0.")))
@@ -436,9 +459,16 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidian
 	}
 }
 
-void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 StacksToSet) const
+void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 StacksToSet)
 {
-	if(ActiveItemDescription)
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	if(CachedInventoryWidgetController == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::CreateItemDescription."));
+		return;	
+	}
+	
+	if(UObsidianItemDescriptionBase* ActiveItemDescription = CachedInventoryWidgetController->GetActiveItemDescription())
 	{
 		ActiveItemDescription->UpdateCurrentStackCount(StacksToSet);
 	}
@@ -547,13 +577,5 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, const AO
 	return false; // Added whole Item
 }
 
-void AObsidianDroppableItem::DestroyItemDescription()
-{
-	if(ActiveItemDescription)
-	{
-		ActiveItemDescription->DestroyDescriptionWidget();
-		ActiveItemDescription = nullptr;
-	}
-}
 
 

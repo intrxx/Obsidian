@@ -45,7 +45,7 @@ UOCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatu
 
 	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
 	{
-		if(AObsidianHUD* ObsidianHUD = Cast<AObsidianHUD>(ObsidianPC->GetHUD()))
+		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			if(AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState())
 			{
@@ -69,7 +69,7 @@ UObsidianInventoryWidgetController* UObsidianUIFunctionLibrary::GetInventoryWidg
 
 	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
 	{
-		if(AObsidianHUD* ObsidianHUD = Cast<AObsidianHUD>(ObsidianPC->GetHUD()))
+		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			if(AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState())
 			{
