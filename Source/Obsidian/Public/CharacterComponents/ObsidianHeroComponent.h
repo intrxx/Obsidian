@@ -27,12 +27,15 @@ class UObsidianDraggedItem;
 class UObsidianInventoryItemDefinition;
 
 DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnArrivedAtAcceptableItemPickupRangeSignature, AObsidianDroppableItem* ItemToPickup, const FVector& ItemLocation)
+DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
 
 UENUM()
 enum class EObsidianItemPickUpType : uint8
 {
+	/** Automatic pickup, the item goes straight to the inventory. */
 	AutomaticPickUp,
+
+	/** The item goes to Player cursor and is being dragged. */
 	PickUpToDrag
 };
 
@@ -205,11 +208,13 @@ private:
 	bool CanDropItem() const;
 
 	/** If item is out of picking up range, it will handle getting to the item and picking it up. Will return true if item picking up is handled. */
-	bool HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const bool bAutomaticPickupType);
+	bool HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
 
 	UFUNCTION(Client, Reliable)
-	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const bool bAutomaticPickupType);
-
+	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
+	void AutomaticallyPickupOutOfRangeItem();
+	void DragOutOfRangeItem();
+	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AObsidianDroppableItem> DroppableItemClass;
