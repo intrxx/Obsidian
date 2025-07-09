@@ -186,6 +186,26 @@ FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxExperienceAttribute()
 	return (HeroAttributeSet ? HeroAttributeSet->GetMaxExperienceAttribute() : nullptr);
 }
 
+float UObsidianHeroAttributesComponent::GetPassiveSkillPoints() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetPassiveSkillPoints() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetPassiveSkillPointsAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetPassiveSkillPointsAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetAscensionPoints() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetAscensionPoints() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetAscensionPointsAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetAscensionPointsAttribute() : nullptr);
+}
+
 float UObsidianHeroAttributesComponent::GetStrength() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetStrength() : 0.0f);

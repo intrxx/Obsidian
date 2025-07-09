@@ -95,6 +95,8 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Experience, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxExperience, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, PassiveSkillPoints, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, AscensionPoints, COND_None, REPNOTIFY_Always);
 	
 	/**
 	 * Spending attributes
@@ -165,8 +167,8 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 			if(HeroCharacter)
 			{
 				HeroCharacter->IncreaseHeroLevel();
-
-				UObsidianHeroAttributesComponent* HeroAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(HeroCharacter);
+				
+				const UObsidianHeroAttributesComponent* HeroAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(HeroCharacter);
 				checkf(HeroAttributesComponent, TEXT("HeroCharacter has no HeroAttributesComponent in UObsidianHeroAttributeSet::PostGameplayEffectExecute."));
 				if(HeroAttributesComponent)
 				{
@@ -175,13 +177,13 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 					{
 						if(UAbilitySystemComponent* SourceASC = EffectProps.SourceASC)
 						{
-							SourceASC->ApplyGameplayEffectToSelf(LevelUpEffect, 1.0f, SourceASC->MakeEffectContext());
+							SourceASC->ApplyGameplayEffectToSelf(LevelUpEffect, (float)HeroCharacter->GetHeroLevel(), SourceASC->MakeEffectContext());
 						}
 					}
 				}
 			}
 			
-			float NewMaxExperience = 0.0f;
+			float NewMaxExperience;
 			const int32 CurrentHeroLevel = HeroCharacter->GetHeroLevel();
 			if(CurrentHeroLevel <= 50)
 			{
@@ -240,6 +242,16 @@ void UObsidianHeroAttributeSet::OnRep_Experience(const FGameplayAttributeData& O
 void UObsidianHeroAttributeSet::OnRep_MaxExperience(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxExperience, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_PassiveSkillPoints(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, PassiveSkillPoints, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_AscensionPoints(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, AscensionPoints, OldValue);
 }
 
 void UObsidianHeroAttributeSet::OnRep_HitBlockChance(const FGameplayAttributeData& OldValue)

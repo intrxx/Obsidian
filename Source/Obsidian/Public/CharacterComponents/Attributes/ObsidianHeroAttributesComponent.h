@@ -71,6 +71,14 @@ public:
 	/** Getters for Max Experience Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetMaxExperience() const;
 	FGameplayAttribute GetMaxExperienceAttribute() const;
+
+	/** Getters for Passive Skill Points Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetPassiveSkillPoints() const;
+	FGameplayAttribute GetPassiveSkillPointsAttribute() const;
+
+	/** Getters for Ascension Points Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetAscensionPoints() const;
+	FGameplayAttribute GetAscensionPointsAttribute() const;
 	
 	/** Getters for Strength Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetStrength() const;

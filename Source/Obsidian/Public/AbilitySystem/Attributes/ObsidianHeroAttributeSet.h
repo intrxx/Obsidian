@@ -34,6 +34,8 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Experience);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxExperience);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, PassiveSkillPoints);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, AscensionPoints);
 
 	/**
 	 * Spending attributes
@@ -85,6 +87,10 @@ protected:
 	void OnRep_Experience(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxExperience(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_PassiveSkillPoints(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_AscensionPoints(const FGameplayAttributeData& OldValue);
 	
 	/**
 	 * Spending attributes
@@ -144,6 +150,12 @@ private:
 	/** The current Max Experience attribute. Defines Experience that we need in order to level up. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxExperience, Category = "Obsidian|CAttributes|Experience", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxExperience;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PassiveSkillPoints, Category = "Obsidian|CAttributes|PassiveSkillPoints", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData PassiveSkillPoints;
+
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AscensionPoints, Category = "Obsidian|CAttributes|AscensionPoints", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AscensionPoints;
 	
 	/**
 	 * Spending attributes
