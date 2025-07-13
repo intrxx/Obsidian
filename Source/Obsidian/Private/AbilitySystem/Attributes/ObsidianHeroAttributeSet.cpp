@@ -1,11 +1,15 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+
+// ~ Core
 #include "GameplayEffectExtension.h"
+#include "Net/UnrealNetwork.h"
+
+// ~ Project
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
-#include "Net/UnrealNetwork.h"
+
 
 UObsidianHeroAttributeSet::UObsidianHeroAttributeSet()
 	: MaxExperience(0.0f)

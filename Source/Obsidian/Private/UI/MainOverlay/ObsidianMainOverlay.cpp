@@ -30,6 +30,7 @@
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
+#include "UI/MainOverlay/SkillPoints/ObsidianSkillPointsNotification.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {
@@ -41,6 +42,9 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 
 	MainOverlayWidgetController->OnUpdateRegularEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleRegularOverlayBar);
 	MainOverlayWidgetController->OnUpdateBossEnemyTargetForHealthBarDelegate.AddDynamic(this, &ThisClass::HandleBossOverlayBar);
+
+	MainOverlayWidgetController->OnPassiveSkillPointsChangedDelegate.AddDynamic(this, &ThisClass::UpdatePassiveSkillPointsNotification);
+	MainOverlayWidgetController->OnAscensionPointsChangedDelegate.AddDynamic(this, &ThisClass::UpdateAscensionSkillPointsNotification);
 
 	OwningPlayerController = OwningPlayerController == nullptr ? GetOwningPlayer() : OwningPlayerController;
 	check(OwningPlayerController);
@@ -329,6 +333,60 @@ void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDispl
 			BossEnemyOverlayHealthBar->RemoveFromParent();
 			BossEnemyOverlayHealthBar = nullptr;
 		}
+	}
+}
+
+void UObsidianMainOverlay::UpdatePassiveSkillPointsNotification(float NewSkillPoints)
+{
+	if(PassiveSkillPointsNotification && NewSkillPoints <= 0)
+	{
+		PassiveSkillPointsNotification->OnSkillPointsNotificationPressed.RemoveAll(this);
+		PassiveSkillPointsNotification->RemoveFromParent();
+		PassiveSkillPointsNotification = nullptr;
+		return;
+	}
+	
+	if(PassiveSkillPointsNotification)
+	{
+		ensureMsgf(NewSkillPoints > 1, TEXT("PassiveSkillPointsNotification is added to viewport but NewSkillPoints is less than 2, why?"));
+		
+		PassiveSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		return;
+	}
+	
+	if(NewSkillPoints > 0)
+	{
+		checkf(PassiveSkillPointsNotificationClass, TEXT("PassiveSkillPointsNotificationClass is not set in UObsidianMainOverlay."));
+		PassiveSkillPointsNotification = CreateWidget<UObsidianSkillPointsNotification>(this, PassiveSkillPointsNotificationClass);
+		PassiveSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		PassiveSkillPointsNotification->OnSkillPointsNotificationPressed.AddUObject(this, &ThisClass::TogglePassiveSkillTree);
+		PassiveSkillPoints_WrapBox->AddChildToWrapBox(PassiveSkillPointsNotification);
+	}
+}
+
+void UObsidianMainOverlay::UpdateAscensionSkillPointsNotification(float NewSkillPoints)
+{
+	if(AscensionSkillPointsNotification && NewSkillPoints <= 0)
+	{
+		AscensionSkillPointsNotification->RemoveFromParent();
+		AscensionSkillPointsNotification = nullptr;
+		return;
+	}
+	
+	if(AscensionSkillPointsNotification)
+	{
+		ensureMsgf(NewSkillPoints > 1, TEXT("AscensionSkillPointsNotification is added to viewport but NewSkillPoints is less than 2, why?"));
+		
+		AscensionSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		return;
+	}
+	
+	if(NewSkillPoints > 0)
+	{
+		checkf(AscensionSkillPointsNotificationClass, TEXT("AscensionSkillPointsNotificationClass is not set in UObsidianMainOverlay."));
+		AscensionSkillPointsNotification = CreateWidget<UObsidianSkillPointsNotification>(this, AscensionSkillPointsNotificationClass);
+		AscensionSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		PassiveSkillPoints_WrapBox->AddChildToWrapBox(AscensionSkillPointsNotification);
 	}
 }
 

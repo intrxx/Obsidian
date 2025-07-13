@@ -42,7 +42,7 @@ void UObsidianAIGameplayAbility_Melee::ActivateAbility(const FGameplayAbilitySpe
 		}
 	}
 
-	if(bShouldRotateToTarget)
+	if(bShouldRotateToTarget && CombatTargetActor)
 	{
 		const FVector TargetLocation = CombatTargetActor->GetActorLocation();
 		const FVector AvatarLocation = AvatarActor->GetActorLocation();

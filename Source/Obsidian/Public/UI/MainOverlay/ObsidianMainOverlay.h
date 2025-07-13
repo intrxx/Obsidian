@@ -13,6 +13,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianSkillPointsNotification;
 class UObsidianOverlayExperienceBar;
 class UObsidianItemDescriptionBase;
 class UObsidianPassiveSkillTree;
@@ -51,16 +52,6 @@ public:
 	void TogglePassiveSkillTree();
 	
 	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
-	
-public:
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|MainOverlay")
-	APlayerController* OwningPlayerController = nullptr;
-
-	UPROPERTY(meta=(BindWidget), BlueprintReadWrite, Category = "Obisidian|MainOverlay")
-	TObjectPtr<UWrapBox> BuffsEffectInfo_WrapBox;
-	
-	UPROPERTY(meta=(BindWidget), BlueprintReadWrite, Category = "Obisidian|MainOverlay")
-	TObjectPtr<UWrapBox> DeBuffsEffectInfo_WrapBox;
 
 protected:
 	virtual void HandleWidgetControllerSet() override;
@@ -76,6 +67,11 @@ protected:
 	UFUNCTION()
 	void HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar);
 
+	UFUNCTION()
+	void UpdatePassiveSkillPointsNotification(float NewSkillPoints);
+	UFUNCTION()
+	void UpdateAscensionSkillPointsNotification(float NewSkillPoints);
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianProgressGlobe_Health> HealthProgressGlobe;
@@ -106,22 +102,30 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> OverlayBossBars_Overlay;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UWrapBox> BuffsEffectInfo_WrapBox;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UWrapBox> DeBuffsEffectInfo_WrapBox;
 
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UWrapBox> PassiveSkillPoints_WrapBox;
+
+protected:
+	UPROPERTY()
+	APlayerController* OwningPlayerController = nullptr;
+	
 	UPROPERTY()
 	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
 
-	UPROPERTY()
-	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay|HealthBars")
 	TSubclassOf<UObsidianOverlayEnemyBar> RegularEnemyOverlayHealthBarClass;
-
 	UPROPERTY()
 	TObjectPtr<UObsidianOverlayEnemyBar> RegularEnemyOverlayHealthBar;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay|HealthBars")
 	TSubclassOf<UObsidianOverlayBossEnemyBar> BossEnemyOverlayHealthBarClass;
-
 	UPROPERTY()
 	TObjectPtr<UObsidianOverlayBossEnemyBar> BossEnemyOverlayHealthBar;
 
@@ -133,10 +137,23 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianPassiveSkillTree> PassiveSkillTreeClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
+	TSubclassOf<UObsidianSkillPointsNotification> PassiveSkillPointsNotificationClass;
+	UPROPERTY()
+	TObjectPtr<UObsidianSkillPointsNotification> PassiveSkillPointsNotification;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
+	TSubclassOf<UObsidianSkillPointsNotification> AscensionSkillPointsNotificationClass;
+	UPROPERTY()
+	TObjectPtr<UObsidianSkillPointsNotification> AscensionSkillPointsNotification;
 
 	UPROPERTY()
 	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
-
+	
+	UPROPERTY()
+	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;
+	
 private:
 	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
 

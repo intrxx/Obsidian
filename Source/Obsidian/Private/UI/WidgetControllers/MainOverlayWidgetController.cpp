@@ -47,7 +47,9 @@ void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystem
 	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
 	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
 	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
-
+	PassiveSkillPointsChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetPassiveSkillPointsAttribute()).AddUObject(this, &ThisClass::PassiveSkillPointsChanged);
+	AscensionPointsChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAscensionPointsAttribute()).AddUObject(this, &ThisClass::AscensionPointsChanged);
+		
 	/** Common Set */
 	HealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
 	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
@@ -69,6 +71,8 @@ void UMainOverlayWidgetController::SetInitialAttributeValues() const
 	OnMaxSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetMaxSpecialResource());
 	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
 	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
+	OnPassiveSkillPointsChangedDelegate.Broadcast(AttributesComponent->GetPassiveSkillPoints());
+	OnAscensionPointsChangedDelegate.Broadcast(AttributesComponent->GetAscensionPoints());
 }
 
 void UMainOverlayWidgetController::SetInitialStaggerMeter() const
@@ -154,6 +158,16 @@ void UMainOverlayWidgetController::MaxExperienceChanged(const FOnAttributeChange
 		MaxExperienceOldValue = Data.OldValue;
 		OnMaxExperienceChangedDelegate.Execute(Data.NewValue, MaxExperienceOldValue);
 	}
+}
+
+void UMainOverlayWidgetController::PassiveSkillPointsChanged(const FOnAttributeChangeData& Data) const
+{
+	OnPassiveSkillPointsChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UMainOverlayWidgetController::AscensionPointsChanged(const FOnAttributeChangeData& Data) const
+{
+	OnAscensionPointsChangedDelegate.Broadcast(Data.NewValue);
 }
 
 void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const

@@ -68,6 +68,9 @@ public:
 	FOnAttributeValueChangedOneParam OnExperienceChangedDelegate;
 	FOnAttributeValueChangedTwoParams OnMaxExperienceChangedDelegate;
 	
+	FOnAttributeValueChangedSignature OnPassiveSkillPointsChangedDelegate;
+	FOnAttributeValueChangedSignature OnAscensionPointsChangedDelegate;
+	
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
 
@@ -117,6 +120,8 @@ protected:
 	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
 	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
+	void PassiveSkillPointsChanged(const FOnAttributeChangeData& Data) const;
+	void AscensionPointsChanged(const FOnAttributeChangeData& Data) const;
 	
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
@@ -141,6 +146,8 @@ protected:
 	FDelegateHandle MaxSpecialResourceChangedDelegateHandle;
 	FDelegateHandle ExperienceChangedDelegateHandle;
 	FDelegateHandle MaxExperienceChangedDelegateHandle;
+	FDelegateHandle PassiveSkillPointsChangedDelegateHandle;
+	FDelegateHandle AscensionPointsChangedDelegateHandle;
 
 	/** Common Set */
 	FDelegateHandle HealthChangedDelegateHandle;
