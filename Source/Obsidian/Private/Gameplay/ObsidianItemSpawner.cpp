@@ -18,24 +18,16 @@ AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectIniti
 	bNetLoadOnClient = true;
 
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComp"));
-	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
-	StaticMeshComp->SetRenderCustomDepth(false);
 	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
 	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Block);
+	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
+	StaticMeshComp->SetRenderCustomDepth(false);
 	SetRootComponent(StaticMeshComp);
+
+	StaticMeshComp->OnClicked.AddDynamic(this, &ThisClass::OnMeshClicked);
 
 	SpawnPointComp = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPointComp"));
 	SpawnPointComp->SetupAttachment(StaticMeshComp);
-}
-
-void AObsidianItemSpawner::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if(StaticMeshComp)
-	{
-		StaticMeshComp->OnClicked.AddDynamic(this, &ThisClass::OnMeshClicked);
-	}
 }
 
 void AObsidianItemSpawner::OnMeshClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)

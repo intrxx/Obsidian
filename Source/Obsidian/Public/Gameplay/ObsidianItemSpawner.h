@@ -31,8 +31,6 @@ public:
 	FVector GetItemSpawnLocation() const;
 
 protected:
-	virtual void BeginPlay() override;
-
 	/** This can be overridden to manipulate the ItemToDropClass that will be spawned. */
 	void RollItemDrop();
 

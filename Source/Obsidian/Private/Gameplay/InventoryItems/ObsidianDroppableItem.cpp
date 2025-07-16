@@ -399,7 +399,7 @@ void AObsidianDroppableItem::UpdateItemDropAnimation(float UpdateAlpha)
 	// In order to bypass this I needed to create SceneComponent and make it RootComponent so the Mesh wouldn't affect
 	// actual Actor Transform (as it was previously RootComponent) and then just set the location on the Mesh, additionally this might be faster
 	// due to using this NoPhysics version - I don't use physics on dropped items anyway. //Learn
-	// 
+	// https://github.com/intrxx/Obsidian/commit/d000d45c49bfeae0597347f75d9e4dc8c8e61642
 	StaticMeshComp->SetWorldLocationAndRotationNoPhysics(NewLocation, NewRotation);
 }
 
