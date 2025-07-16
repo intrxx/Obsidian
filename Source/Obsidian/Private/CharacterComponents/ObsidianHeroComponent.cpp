@@ -27,6 +27,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
+#include "Interaction/ObsidianInteractionInterface.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -282,6 +283,9 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ReleaseUsingItem, false);
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ReleaseContinouslyUsingItem,
 					ETriggerEvent::Completed, this, &ThisClass::Input_ReleaseUsingItem, false);
+				
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Interact,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_Interact, false);
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_WeaponSwap,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_WeaponSwap, false);
@@ -393,6 +397,11 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 		}
 		return;
 	}
+
+	if(IsHoveringOverInteractionTarget()) // Let interaction logic handle this case
+	{
+		return;
+	}
 	
 	APlayerController* PC = GetController<APlayerController>();
 	if(PC == nullptr)
@@ -471,6 +480,31 @@ void UObsidianHeroComponent::Input_ReleaseUsingItem()
 	if(IsUsingItem())
 	{
 		SetUsingItem(false);
+	}
+}
+
+void UObsidianHeroComponent::Input_Interact()
+{
+	if(CursorHit.bBlockingHit == false)
+	{
+		return;
+	}
+
+	AActor* InteractionActor = CursorHit.GetActor();
+	if(InteractionActor == nullptr)
+	{
+		return;
+	}
+
+	if(IObsidianInteractionInterface* InteractionTarget = Cast<IObsidianInteractionInterface>(InteractionActor))
+	{
+		if(InteractionTarget->CanInteract() == false)
+		{
+			return;
+		}
+
+		const TScriptInterface<IObsidianInteractionInterface> TargetInteractionInterface = InteractionActor;
+		ServerInteract(TargetInteractionInterface);
 	}
 }
 
@@ -1025,6 +1059,62 @@ bool UObsidianHeroComponent::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem
 	return false;
 }
 
+bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation)
+{
+	const AActor* OwnerActor = GetOwner();
+	if(OwnerActor == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::HandleOutOfRangeInteraction."));
+		return false;
+	}
+
+	if(OwnerActor->HasAuthority() == false)
+	{
+		UE_LOG(LogInventory, Error, TEXT("UObsidianHeroComponent::HandleOutOfRangeInteraction should not be called without authority."));
+		return false;
+	}
+
+	const float InteractionRadius = InteractionTarget->GetInteractionRadius();
+	const FVector OwnerLocation = OwnerActor->GetActorLocation();
+	
+	const float DistanceToItem = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f)); 
+	if (DistanceToItem > InteractionRadius + AutoRunAcceptanceRadius)
+	{
+		const FVector ApproachDestination = TargetLocation - ((TargetLocation - OwnerLocation).GetSafeNormal()) * InteractionRadius;
+		//ClientStartApproachingOutOfRangeItem(ApproachDestination, ItemToPickUp, PickUpType);
+		UE_LOG(LogTemp, Error, TEXT("Out of Range Interactions is not yet handled."));
+		return true;
+	}
+	return false;
+}
+
+void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
+{
+	if(InteractionTarget == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in UObsidianHeroComponent::ServerInteract_Implementation."));
+		return;
+	}
+
+	const AActor* InteractionActor = InteractionTarget->GetInteractionActor();
+	if(InteractionActor == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in UObsidianHeroComponent::ServerInteract_Implementation."));
+		return;
+	}
+	
+	const FVector InteractionLocation = InteractionActor->GetActorLocation();
+	if(HandleOutOfRangeInteraction(InteractionTarget, InteractionLocation))
+	{
+		return;
+	}
+
+	if(InteractionTarget->CanInteract())
+	{
+		InteractionTarget->Interact();
+	}
+}
+
 void UObsidianHeroComponent::ClientStartApproachingOutOfRangeItem_Implementation(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
 {
 	bAutoRunToPickupItem = true;
@@ -1419,9 +1509,22 @@ void UObsidianHeroComponent::StopDraggingItem(const AController* Controller)
 	bJustDroppedItem = true;
 }
 
+bool UObsidianHeroComponent::IsHoveringOverInteractionTarget() const
+{
+	if(CursorHit.bBlockingHit)
+	{
+		const AActor* InteractionActor = CursorHit.GetActor();
+		if(InteractionActor && Cast<IObsidianInteractionInterface>(InteractionActor))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 bool UObsidianHeroComponent::CanDropItem() const
 {
-	return IsDraggingAnItem() && bItemAvailableForDrop;
+	return IsDraggingAnItem() && bItemAvailableForDrop && IsHoveringOverInteractionTarget() == false;
 }
 
 bool UObsidianHeroComponent::CanMoveMouse() const
