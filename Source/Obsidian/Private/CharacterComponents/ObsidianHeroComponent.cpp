@@ -81,12 +81,12 @@ void UObsidianHeroComponent::AutoRun()
 	{
 		const FVector LocationOnSpline = AutoRunSplineComp->FindLocationClosestToWorldLocation(Pawn->GetActorLocation(), ESplineCoordinateSpace::World);
 		const FVector Direction = AutoRunSplineComp->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		
 		Pawn->AddMovementInput(Direction);
 
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
 		if(DistanceToDestination <= AutoRunAcceptanceRadius)
 		{
-			
 #if 0 // https://github.com/intrxx/Obsidian/commit/e3eda3899a1b39ec1952221a24bce0b40b7be769
 			if(CanDropItem())
 			{
@@ -97,6 +97,11 @@ void UObsidianHeroComponent::AutoRun()
 			{
 				OnArrivedAtAcceptableItemPickupRange.Broadcast();
 				bAutoRunToPickupItem = false;
+			}
+			if(bAutoRunToInteract)
+			{
+				OnArrivedAtAcceptableInteractionRange.Broadcast();
+				bAutoRunToInteract = false;
 			}
 			
 			bAutoRunning = false;
@@ -397,11 +402,6 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 		}
 		return;
 	}
-
-	if(IsHoveringOverInteractionTarget()) // Let interaction logic handle this case
-	{
-		return;
-	}
 	
 	APlayerController* PC = GetController<APlayerController>();
 	if(PC == nullptr)
@@ -438,6 +438,7 @@ void UObsidianHeroComponent::AutoRunToClickedLocation()
 		{
 			CachedDestination = NavigationPath->PathPoints[NavigationPath->PathPoints.Num() - 1];
 		}
+		
 		bAutoRunning = true;
 	}
 }
@@ -503,8 +504,8 @@ void UObsidianHeroComponent::Input_Interact()
 			return;
 		}
 
-		const TScriptInterface<IObsidianInteractionInterface> TargetInteractionInterface = InteractionActor;
-		ServerInteract(TargetInteractionInterface);
+		CachedInteractionTarget = InteractionActor;
+		ServerInteract(CachedInteractionTarget);
 	}
 }
 
@@ -1077,15 +1078,29 @@ bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<
 	const float InteractionRadius = InteractionTarget->GetInteractionRadius();
 	const FVector OwnerLocation = OwnerActor->GetActorLocation();
 	
-	const float DistanceToItem = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f)); 
+	const float DistanceToItem = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f));
 	if (DistanceToItem > InteractionRadius + AutoRunAcceptanceRadius)
 	{
 		const FVector ApproachDestination = TargetLocation - ((TargetLocation - OwnerLocation).GetSafeNormal()) * InteractionRadius;
-		//ClientStartApproachingOutOfRangeItem(ApproachDestination, ItemToPickUp, PickUpType);
-		UE_LOG(LogTemp, Error, TEXT("Out of Range Interactions is not yet handled."));
+		ClientStartApproachingOutOfRangeInteractionTarget(ApproachDestination);
 		return true;
 	}
 	return false;
+}
+
+void UObsidianHeroComponent::ClientStartApproachingOutOfRangeInteractionTarget_Implementation(const FVector_NetQuantize10& ToDestination)
+{
+	bAutoRunToInteract = true;
+	CachedDestination = ToDestination;
+	
+	if(OnArrivedAtAcceptableInteractionRange.IsBound())
+	{
+		OnArrivedAtAcceptableInteractionRange.Clear();
+	}
+
+	OnArrivedAtAcceptableInteractionRange.AddUObject(this, &ThisClass::InteractWithOutOfRangeTarget);
+	
+	AutoRunToClickedLocation();
 }
 
 void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
@@ -1112,6 +1127,17 @@ void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterfac
 	if(InteractionTarget->CanInteract())
 	{
 		InteractionTarget->Interact();
+	}
+}
+
+void UObsidianHeroComponent::InteractWithOutOfRangeTarget()
+{
+	if(CachedInteractionTarget)
+	{
+		ServerInteract(CachedInteractionTarget);
+		
+		OnArrivedAtAcceptableInteractionRange.Clear();
+		CachedInteractionTarget = nullptr;
 	}
 }
 
@@ -1524,12 +1550,12 @@ bool UObsidianHeroComponent::IsHoveringOverInteractionTarget() const
 
 bool UObsidianHeroComponent::CanDropItem() const
 {
-	return IsDraggingAnItem() && bItemAvailableForDrop && IsHoveringOverInteractionTarget() == false;
+	return IsDraggingAnItem() && bItemAvailableForDrop /*&& IsHoveringOverInteractionTarget() == false*/;
 }
 
 bool UObsidianHeroComponent::CanMoveMouse() const
 {
-	return !CanDropItem() && !bJustDroppedItem;
+	return !CanDropItem() && !bJustDroppedItem && !IsHoveringOverInteractionTarget();
 }
 
 

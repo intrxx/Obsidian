@@ -18,9 +18,6 @@ AObsidianPlayerStash::AObsidianPlayerStash(const FObjectInitializer& ObjectIniti
 	SetRootComponent(RootSceneComponent);
 	
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
-	StaticMeshComp->SetCollisionResponseToAllChannels(ECR_Ignore);
-	StaticMeshComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
-	StaticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
 	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
 	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Block);
 	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);

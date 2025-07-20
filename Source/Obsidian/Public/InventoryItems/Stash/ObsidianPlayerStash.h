@@ -39,10 +39,10 @@ protected:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;
-
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Interaction")
+	float InteractionRadius = 100.0f;
+	
 private:
 	bool bCanInteract = true;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Interaction")
-	float InteractionRadius = 150.0f;
 };

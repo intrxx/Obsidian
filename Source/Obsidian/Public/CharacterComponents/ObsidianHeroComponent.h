@@ -5,14 +5,13 @@
 // ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Components/PawnComponent.h"
 
 // ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
-#include "Components/PawnComponent.h"
 #include "ObsidianHeroComponent.generated.h"
 
-class IObsidianInteractionInterface;
 struct FInputActionValue;
 
 class UImage;
@@ -26,9 +25,11 @@ class AObsidianHUD;
 class IObsidianHighlightInterface;
 class UObsidianDraggedItem;
 class UObsidianInventoryItemDefinition;
+class IObsidianInteractionInterface;
 
 DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
+DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
 
 UENUM()
 enum class EObsidianItemPickUpType : uint8
@@ -184,47 +185,74 @@ protected:
 	TObjectPtr<USplineComponent> AutoRunSplineComp;
 
 private:
+	void CursorTrace();
+	
+	/**
+	 * Mouse Movement.
+	 */
+	
 	bool CanMoveMouse() const;
 	void AutoRun();
 	void AutoRunToClickedLocation();
+
+	/**
+	 * Using Item.
+	 */
 	
-	void CursorTrace();
+	void DragUsableItemIcon() const;
 	
+	/**
+	 * Item Pick up.
+	 */
+	
+	UFUNCTION(Client, Reliable)
+	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
+	
+	UFUNCTION(Server, Reliable)
+	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition);
+
+	void AutomaticallyPickupOutOfRangeItem();
+	void DragOutOfRangeItem();
+
+	/** If item is out of picking up range, it will handle getting to the item and picking it up. Will return true if item picking up is handled. */
+	bool HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
+
+	void DragItem() const;
+	
+	void StartDraggingItem(const AController* Controller);
+	void StopDraggingItem(const AController* Controller);
+
 	/**
 	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
 	 * another item in the inventory in OnRep_DraggedItem. If it sounds useful be careful when using it.
 	 */
 	bool DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const;
 	void UpdateStacksOnDraggedItemWidget(const int32 InStacks);
+	
+	/**
+	 * Item Drop.
+	 */
 
-	void DragItem() const;
-	void DragUsableItemIcon() const;
-	
-	void StartDraggingItem(const AController* Controller);
-	void StopDraggingItem(const AController* Controller);
-	
 	UFUNCTION(Server, Reliable)
 	void ServerHandleDroppingItem();
+	
 	bool CanDropItem() const;
-
-	/** If item is out of picking up range, it will handle getting to the item and picking it up. Will return true if item picking up is handled. */
-	bool HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
 	
+	/**
+	 * Interaction.
+	 */
+
 	UFUNCTION(Client, Reliable)
-	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
-	void AutomaticallyPickupOutOfRangeItem();
-	void DragOutOfRangeItem();
-
-	UFUNCTION(Server, Reliable)
-	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition);
-
-	bool IsHoveringOverInteractionTarget() const;
+	void ClientStartApproachingOutOfRangeInteractionTarget(const FVector_NetQuantize10& ToDestination);
 	
-	/** If Interaction target is out of interaction range, it will handle getting to the interaction target and interacting with it. Will return true if interaction was handled here. */
-	bool HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation);
-
 	UFUNCTION(Server, Reliable)
 	void ServerInteract(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
+	void InteractWithOutOfRangeTarget();
+
+	bool IsHoveringOverInteractionTarget() const;
+
+	/** If Interaction target is out of interaction range, it will handle getting to the interaction target and interacting with it. Will return true if interaction was handled here. */
+	bool HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation);
 	
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
@@ -242,6 +270,10 @@ private:
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	bool bAutoRunning = false;
+	
+	bool bAutoRunToInteract = false;
+	TScriptInterface<IObsidianInteractionInterface> CachedInteractionTarget;
+	FOnArrivedAtAcceptableInteractionRangeSignature OnArrivedAtAcceptableInteractionRange;
 	
 	bool bAutoRunToPickupItem = false;
 	TObjectPtr<AObsidianDroppableItem> CachedDroppableItemToPickup;
