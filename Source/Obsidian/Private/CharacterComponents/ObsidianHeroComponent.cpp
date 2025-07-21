@@ -1133,6 +1133,7 @@ void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterfac
 	
 	const FVector InteractionLocation = InteractionActor->GetActorLocation();
 	if(HandleOutOfRangeInteraction(InteractionTarget, InteractionLocation))
+	{
 		return;
 	}
 
