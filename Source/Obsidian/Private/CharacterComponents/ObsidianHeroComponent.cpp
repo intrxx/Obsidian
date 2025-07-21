@@ -74,16 +74,32 @@ void UObsidianHeroComponent::AutoRun()
 {
 	if(!bAutoRunning)
 	{
+		if(bWasAutoMovingLastTick)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("checking shit"));
+			const APawn* Pawn = GetPawn<APawn>();
+			if(Pawn && Pawn->GetVelocity().IsNearlyZero())
+			{
+				if(bAutoRunToPickupItemByLabel)
+				{
+					OnArrivedAtAcceptableItemPickupRange.Broadcast();
+					bAutoRunToPickupItemByLabel = false;
+				}
+				if(bAutoRunToInteract)
+				{
+					OnArrivedAtAcceptableInteractionRange.Broadcast();
+					bAutoRunToInteract = false;
+				}
+				
+				bWasAutoMovingLastTick = false;
+			}
+		}
 		return;
 	}
 	
 	if(APawn* Pawn = GetPawn<APawn>())
 	{
 		const FVector LocationOnSpline = AutoRunSplineComp->FindLocationClosestToWorldLocation(Pawn->GetActorLocation(), ESplineCoordinateSpace::World);
-		const FVector Direction = AutoRunSplineComp->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
-		
-		Pawn->AddMovementInput(Direction);
-
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
 		if(DistanceToDestination <= AutoRunAcceptanceRadius)
 		{
@@ -93,19 +109,13 @@ void UObsidianHeroComponent::AutoRun()
 				ServerHandleDroppingItem();
 			}
 #endif
-			if(bAutoRunToPickupItemByLabel)
-			{
-				OnArrivedAtAcceptableItemPickupRange.Broadcast();
-				bAutoRunToPickupItemByLabel = false;
-			}
-			if(bAutoRunToInteract)
-			{
-				OnArrivedAtAcceptableInteractionRange.Broadcast();
-				bAutoRunToInteract = false;
-			}
-			
 			bAutoRunning = false;
+			return;
 		}
+		
+		const FVector Direction = AutoRunSplineComp->FindDirectionClosestToWorldLocation(LocationOnSpline, ESplineCoordinateSpace::World);
+		Pawn->AddMovementInput(Direction);
+		bWasAutoMovingLastTick = true;
 	}
 }
 
@@ -402,11 +412,6 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 		{
 			bJustDroppedItem = false;
 		}
-		return;
-	}
-
-	if(IsHoveringOverInteractionTarget())
-	{
 		return;
 	}
 	
@@ -1086,8 +1091,8 @@ bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<
 	const float InteractionRadius = InteractionTarget->GetInteractionRadius();
 	const FVector OwnerLocation = OwnerActor->GetActorLocation();
 	
-	const float DistanceToItem = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f));
-	if (DistanceToItem > InteractionRadius + AutoRunAcceptanceRadius)
+	const float DistanceToTarget = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f));
+	if(DistanceToTarget > InteractionRadius + AutoRunAcceptanceRadius)
 	{
 		const FVector ApproachDestination = TargetLocation - ((TargetLocation - OwnerLocation).GetSafeNormal()) * InteractionRadius;
 		ClientStartApproachingOutOfRangeInteractionTarget(ApproachDestination);
@@ -1128,13 +1133,11 @@ void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterfac
 	
 	const FVector InteractionLocation = InteractionActor->GetActorLocation();
 	if(HandleOutOfRangeInteraction(InteractionTarget, InteractionLocation))
-	{
 		return;
 	}
 
 	if(InteractionTarget->CanInteract())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Interact mister"));
 		InteractionTarget->Interact();
 	}
 }
@@ -1559,12 +1562,12 @@ bool UObsidianHeroComponent::IsHoveringOverInteractionTarget() const
 
 bool UObsidianHeroComponent::CanDropItem() const
 {
-	return IsDraggingAnItem() && bItemAvailableForDrop /*&& IsHoveringOverInteractionTarget() == false*/;
+	return IsDraggingAnItem() && bItemAvailableForDrop;
 }
 
 bool UObsidianHeroComponent::CanMoveMouse() const
 {
-	return !CanDropItem() && !bJustDroppedItem;
+	return !CanDropItem() && !bJustDroppedItem && !IsHoveringOverInteractionTarget();
 }
 
 bool UObsidianHeroComponent::CanContinuouslyMoveMouse() const

@@ -271,6 +271,7 @@ private:
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	bool bAutoRunning = false;
+	bool bWasAutoMovingLastTick = false;
 
 	bool bWantsToInteract = false;
 	bool bAutoRunToInteract = false;

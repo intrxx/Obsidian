@@ -59,6 +59,8 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	ObsidianMovementComp->RotationRate = FRotator(0.f, 800.f, 0.f);
 	ObsidianMovementComp->bConstrainToPlane = true;
 	ObsidianMovementComp->bSnapToPlaneAtStart = true;
+	ObsidianMovementComp->BrakingDecelerationWalking = 3400.0f;
+	ObsidianMovementComp->GroundFriction = 10.0f;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
