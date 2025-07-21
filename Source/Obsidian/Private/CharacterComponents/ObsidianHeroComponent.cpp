@@ -93,10 +93,10 @@ void UObsidianHeroComponent::AutoRun()
 				ServerHandleDroppingItem();
 			}
 #endif
-			if(bAutoRunToPickupItem)
+			if(bAutoRunToPickupItemByLabel)
 			{
 				OnArrivedAtAcceptableItemPickupRange.Broadcast();
-				bAutoRunToPickupItem = false;
+				bAutoRunToPickupItemByLabel = false;
 			}
 			if(bAutoRunToInteract)
 			{
@@ -373,7 +373,7 @@ void UObsidianHeroComponent::Input_MoveStartedMouse()
 
 void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 {
-	if(CanMoveMouse() == false)
+	if(CanContinuouslyMoveMouse() == false)
 	{
 		return;
 	}
@@ -394,12 +394,19 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 
 void UObsidianHeroComponent::Input_MoveReleasedMouse()
 {
+	bWantsToInteract = false;
+	
 	if(CanMoveMouse() == false)
 	{
 		if(bJustDroppedItem) // If we just dropped item clicking in the world, reset the JustDroppedItem variable so we can move again.
 		{
 			bJustDroppedItem = false;
 		}
+		return;
+	}
+
+	if(IsHoveringOverInteractionTarget())
+	{
 		return;
 	}
 	
@@ -503,7 +510,8 @@ void UObsidianHeroComponent::Input_Interact()
 		{
 			return;
 		}
-
+		
+		bWantsToInteract = true;
 		CachedInteractionTarget = InteractionActor;
 		ServerInteract(CachedInteractionTarget);
 	}
@@ -1126,6 +1134,7 @@ void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterfac
 
 	if(InteractionTarget->CanInteract())
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Interact mister"));
 		InteractionTarget->Interact();
 	}
 }
@@ -1143,7 +1152,7 @@ void UObsidianHeroComponent::InteractWithOutOfRangeTarget()
 
 void UObsidianHeroComponent::ClientStartApproachingOutOfRangeItem_Implementation(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
 {
-	bAutoRunToPickupItem = true;
+	bAutoRunToPickupItemByLabel = true;
 	CachedDestination = ToDestination;
 	CachedDroppableItemToPickup = ItemToPickUp;
 	
@@ -1555,7 +1564,12 @@ bool UObsidianHeroComponent::CanDropItem() const
 
 bool UObsidianHeroComponent::CanMoveMouse() const
 {
-	return !CanDropItem() && !bJustDroppedItem && !IsHoveringOverInteractionTarget();
+	return !CanDropItem() && !bJustDroppedItem;
+}
+
+bool UObsidianHeroComponent::CanContinuouslyMoveMouse() const
+{
+	return !CanDropItem() && !bJustDroppedItem && !bWantsToInteract;
 }
 
 

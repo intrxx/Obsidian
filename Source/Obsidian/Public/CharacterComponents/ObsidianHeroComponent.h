@@ -192,6 +192,7 @@ private:
 	 */
 	
 	bool CanMoveMouse() const;
+	bool CanContinuouslyMoveMouse() const;
 	void AutoRun();
 	void AutoRunToClickedLocation();
 
@@ -270,12 +271,13 @@ private:
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	bool bAutoRunning = false;
-	
+
+	bool bWantsToInteract = false;
 	bool bAutoRunToInteract = false;
 	TScriptInterface<IObsidianInteractionInterface> CachedInteractionTarget;
 	FOnArrivedAtAcceptableInteractionRangeSignature OnArrivedAtAcceptableInteractionRange;
 	
-	bool bAutoRunToPickupItem = false;
+	bool bAutoRunToPickupItemByLabel = false;
 	TObjectPtr<AObsidianDroppableItem> CachedDroppableItemToPickup;
 	FOnArrivedAtAcceptableItemPickupRangeSignature OnArrivedAtAcceptableItemPickupRange;
 	
