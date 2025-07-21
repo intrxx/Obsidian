@@ -76,7 +76,6 @@ void UObsidianHeroComponent::AutoRun()
 	{
 		if(bWasAutoMovingLastTick)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("checking shit"));
 			const APawn* Pawn = GetPawn<APawn>();
 			if(Pawn && Pawn->GetVelocity().IsNearlyZero())
 			{
