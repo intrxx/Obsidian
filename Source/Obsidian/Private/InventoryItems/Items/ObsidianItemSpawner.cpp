@@ -24,22 +24,8 @@ AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectIniti
 	StaticMeshComp->SetRenderCustomDepth(false);
 	SetRootComponent(StaticMeshComp);
 
-	StaticMeshComp->OnClicked.AddDynamic(this, &ThisClass::OnMeshClicked);
-
 	SpawnPointComp = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPointComp"));
 	SpawnPointComp->SetupAttachment(StaticMeshComp);
-}
-
-void AObsidianItemSpawner::OnMeshClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed)
-{
-	// TODO This probably will be replaced by cursor trace from the hero comp
-	if(ButtonPressed != EKeys::LeftMouseButton)
-	{
-		return;
-	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Hi %s"), *GetNameSafe(TouchedComponent));
-	ServerSpawnItem();
 }
 
 void AObsidianItemSpawner::ServerSpawnItem_Implementation()
@@ -91,6 +77,26 @@ void AObsidianItemSpawner::StopHighlight()
 	{
 		StaticMeshComp->SetRenderCustomDepth(false);
 	}
+}
+
+AActor* AObsidianItemSpawner::GetInteractionActor()
+{
+	return this;
+}
+
+bool AObsidianItemSpawner::CanInteract()
+{
+	return bCanInteract;
+}
+
+float AObsidianItemSpawner::GetInteractionRadius()
+{
+	return InteractionRadius;
+}
+
+void AObsidianItemSpawner::Interact()
+{
+	ServerSpawnItem();
 }
 
 FVector AObsidianItemSpawner::GetItemSpawnLocation() const

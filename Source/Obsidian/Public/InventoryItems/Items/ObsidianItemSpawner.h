@@ -9,12 +9,13 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 
 #include "GameFramework/Actor.h"
+#include "Interaction/ObsidianInteractionInterface.h"
 #include "ObsidianItemSpawner.generated.h"
 
 class AObsidianDroppableItem;
 
 UCLASS()
-class OBSIDIAN_API AObsidianItemSpawner : public AActor, public IObsidianHighlightInterface
+class OBSIDIAN_API AObsidianItemSpawner : public AActor, public IObsidianHighlightInterface, public IObsidianInteractionInterface
 {
 	GENERATED_BODY()
 	
@@ -27,16 +28,19 @@ public:
 	virtual void StopHighlight() override;
 	//~ End of HighlightInterface
 
+	//~ Start of InteractionInterface
+	virtual AActor* GetInteractionActor() override;
+	virtual bool CanInteract() override;
+	virtual float GetInteractionRadius() override;
+	virtual void Interact() override;
+	//~ End of InteractionInterface
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemSpawner")
 	FVector GetItemSpawnLocation() const;
 
 protected:
 	/** This can be overridden to manipulate the ItemToDropClass that will be spawned. */
 	void RollItemDrop();
-
-	UFUNCTION()
-	void OnMeshClicked(UPrimitiveComponent* TouchedComponent, FKey ButtonPressed);
-	// It looks like it can also be triggered with virtual void NotifyActorOnClicked(FKey ButtonPressed) override;, can investigate later //
 
 protected:
 	UPROPERTY(EditDefaultsOnly,  Category = "Obsidian|Setup")
@@ -47,6 +51,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	int32 MaxSpawnCount = 1;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	float InteractionRadius = 150.0f;
 	
 private:
 	UFUNCTION(Server, Reliable)
@@ -60,4 +67,6 @@ private:
 	TObjectPtr<USceneComponent> SpawnPointComp;
 	
 	int32 SpawnedItems = 0;
+	
+	bool bCanInteract = true;
 };
