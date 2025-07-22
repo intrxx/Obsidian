@@ -25,7 +25,7 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
+#include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Interaction/ObsidianInteractionInterface.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"

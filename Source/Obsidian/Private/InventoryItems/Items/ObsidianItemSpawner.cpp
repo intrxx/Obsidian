@@ -1,11 +1,11 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Gameplay/ObsidianItemSpawner.h"
+#include "InventoryItems/Items/ObsidianItemSpawner.h"
 
 // ~ Core
 
 // ~ Project
-#include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
+#include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectInitializer)

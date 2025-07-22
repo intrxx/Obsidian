@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Gameplay/InventoryItems/ObsidianDroppableItem.h"
+#include "InventoryItems/Items/ObsidianDroppableItem.h"
 
 // ~ Core
 #include "Components/WidgetComponent.h"
