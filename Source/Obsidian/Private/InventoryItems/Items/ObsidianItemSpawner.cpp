@@ -6,6 +6,7 @@
 
 // ~ Project
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectInitializer)
@@ -28,7 +29,7 @@ AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectIniti
 	SpawnPointComp->SetupAttachment(StaticMeshComp);
 }
 
-void AObsidianItemSpawner::ServerSpawnItem_Implementation()
+void AObsidianItemSpawner::SpawnItem()
 {
 	if(bRandomizeItem)
 	{
@@ -94,9 +95,12 @@ float AObsidianItemSpawner::GetInteractionRadius()
 	return InteractionRadius;
 }
 
-void AObsidianItemSpawner::Interact()
+void AObsidianItemSpawner::Interact(AObsidianPlayerController* InteractingPlayerController)
 {
-	ServerSpawnItem();
+	if(InteractingPlayerController)
+	{
+		InteractingPlayerController->ServerSpawnItemFromSpawner(this);
+	}
 }
 
 FVector AObsidianItemSpawner::GetItemSpawnLocation() const

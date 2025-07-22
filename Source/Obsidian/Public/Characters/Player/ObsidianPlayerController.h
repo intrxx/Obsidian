@@ -19,6 +19,7 @@ class AObsidianHUD;
 class UObsidianAbilitySystemComponent;
 class AObsidianPlayerState;
 class UObsidianInventoryComponent;
+class AObsidianItemSpawner;
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnEnemyActorHovered, AActor*, TargetActor, const bool, bHoveredOver);
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, const bool, bSeen);
@@ -61,6 +62,9 @@ public:
 
 	/** Updates when Player hovers over Regular Enemy Target, TargetActor will be nullptr after removing the mouse from target, this is by design and might change. */
 	void UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const;
+
+	UFUNCTION(Server, Reliable)
+	void ServerSpawnItemFromSpawner(AObsidianItemSpawner* ItemSpawner);
 
 public:
 	FOnEnemyActorHovered OnEnemyActorHoveredDelegate;

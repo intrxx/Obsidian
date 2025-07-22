@@ -11,6 +11,8 @@
 
 #include "ObsidianInteractionInterface.generated.h"
 
+class AObsidianPlayerController;
+
 UINTERFACE(MinimalAPI)
 class UObsidianInteractionInterface : public UInterface
 {
@@ -28,5 +30,5 @@ public:
 	virtual AActor* GetInteractionActor() = 0;
 	virtual bool CanInteract() = 0;
 	virtual float GetInteractionRadius() = 0;
-	virtual void Interact() = 0;
+	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) = 0;
 };

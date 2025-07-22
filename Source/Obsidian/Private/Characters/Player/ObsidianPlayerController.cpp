@@ -12,6 +12,7 @@
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/Items/ObsidianItemSpawner.h"
 
 AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -27,6 +28,14 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
 {
 	OnEnemyActorHoveredDelegate.ExecuteIfBound(TargetActor, bHoveredOver);
+}
+
+void AObsidianPlayerController::ServerSpawnItemFromSpawner_Implementation(AObsidianItemSpawner* ItemSpawner)
+{
+	if(ItemSpawner)
+	{
+		ItemSpawner->SpawnItem();
+	}
 }
 
 void AObsidianPlayerController::BeginPlay()

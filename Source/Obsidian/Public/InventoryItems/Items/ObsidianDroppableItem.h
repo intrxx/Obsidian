@@ -8,6 +8,7 @@
 // ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
+#include "Interaction/ObsidianInteractionInterface.h"
 
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
@@ -26,7 +27,7 @@ class  UWidgetComponent;
  * Base class for all droppable items in Obsidian.
  */
 UCLASS()
-class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable, public IObsidianHighlightInterface
+class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable, public IObsidianHighlightInterface, public IObsidianInteractionInterface
 {
 	GENERATED_BODY()
 
@@ -46,6 +47,13 @@ public:
 	virtual void StopHighlight() override;
 	//~ End of HighlightInterface
 
+	//~ Start of InteractionInterface
+	virtual AActor* GetInteractionActor() override;
+	virtual bool CanInteract() override;
+	virtual float GetInteractionRadius() override;
+	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
+	//~ End of InteractionInterface
+
 	/**
 	 * Use only on Server.
 	 * Updates the stack count of dropped item after trying to pick it up.
@@ -60,9 +68,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 	virtual void OnRep_PickupContent() override;
-	
-	UFUNCTION()
-	void HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed);
 	
 	void OnItemMouseHover(const bool bMouseEnter);
 	void OnItemMouseButtonDown(const int32 PlayerIndex, const bool bLeftControlDown);

@@ -175,7 +175,7 @@ protected:
 
 	/** Radius of the sphere in which we allow the Player to pickup item. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
-	float PickupRadius = 200.0f;
+	float DefaultInteractionRadius = 200.0f;
 
 	/** Radius of the sphere in which we allow the Player to drop item. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
@@ -247,9 +247,12 @@ private:
 	void ClientStartApproachingOutOfRangeInteractionTarget(const FVector_NetQuantize10& ToDestination);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerInteract(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
+	void ServerStartInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
 	void InteractWithOutOfRangeTarget();
 
+	UFUNCTION(Client, Reliable)
+	void ClientTriggerInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
+	
 	bool IsHoveringOverInteractionTarget() const;
 
 	/** If Interaction target is out of interaction range, it will handle getting to the interaction target and interacting with it. Will return true if interaction was handled here. */

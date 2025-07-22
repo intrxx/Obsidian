@@ -7,12 +7,13 @@
 
 // ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
+#include "Interaction/ObsidianInteractionInterface.h"
 
 #include "GameFramework/Actor.h"
-#include "Interaction/ObsidianInteractionInterface.h"
 #include "ObsidianItemSpawner.generated.h"
 
 class AObsidianDroppableItem;
+class UObsidianHeroComponent;
 
 UCLASS()
 class OBSIDIAN_API AObsidianItemSpawner : public AActor, public IObsidianHighlightInterface, public IObsidianInteractionInterface
@@ -32,11 +33,13 @@ public:
 	virtual AActor* GetInteractionActor() override;
 	virtual bool CanInteract() override;
 	virtual float GetInteractionRadius() override;
-	virtual void Interact() override;
+	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
 	//~ End of InteractionInterface
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemSpawner")
 	FVector GetItemSpawnLocation() const;
+	
+	void SpawnItem();
 
 protected:
 	/** This can be overridden to manipulate the ItemToDropClass that will be spawned. */
@@ -54,10 +57,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float InteractionRadius = 150.0f;
-	
-private:
-	UFUNCTION(Server, Reliable)
-	void ServerSpawnItem();
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

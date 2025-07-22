@@ -47,8 +47,6 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	WorldItemNameWidgetComp->SetDrawAtDesiredSize(true);
 	WorldItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	WorldItemNameWidgetComp->SetupAttachment(StaticMeshComp);
-	
-	OnClicked.AddDynamic(this, &ThisClass::HandleActorClicked);
 }
 
 void AObsidianDroppableItem::BeginPlay()
@@ -175,6 +173,39 @@ void AObsidianDroppableItem::StopHighlight()
 	OnItemMouseHover(false);
 }
 
+AActor* AObsidianDroppableItem::GetInteractionActor()
+{
+	return this;
+}
+
+bool AObsidianDroppableItem::CanInteract()
+{
+	return true;
+}
+
+float AObsidianDroppableItem::GetInteractionRadius()
+{
+	return 0.0f; // Get the Interaction Radius from Hero Comp
+}
+
+void AObsidianDroppableItem::Interact(AObsidianPlayerController* InteractingPlayerController)
+{
+	if(InteractingPlayerController == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Cannot interact with Item Actor, ObsidianPC is invalid in AObsidianDroppableItem::Interact."))
+		return;
+	}
+
+	if(CarriesItemDef())
+	{
+		PickupItemDef(false /**TODO This is no consistent, leave it for now tho : < */, InteractingPlayerController);
+	}
+	else if(CarriesItemInstance())
+	{
+		PickupItemInstance(false /**TODO This is no consistent, leave it for now tho : < */, InteractingPlayerController);
+	}
+}
+
 void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemStacks)
 {
 	if(NewDroppedItemStacks > 0 && DroppedItemStacks != NewDroppedItemStacks)
@@ -264,17 +295,6 @@ void AObsidianDroppableItem::SetupItemAppearanceFromDefinition() const
 	
 	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition."),
 		*ItemDefault->GetDebugName());
-}
-
-void AObsidianDroppableItem::HandleActorClicked(AActor* AffectedActor, FKey ButtonPressed)
-{
-	if(ButtonPressed == EKeys::LeftMouseButton)
-	{
-		//TODO This is incorrect for multiplayer, I need to use HeroComponent for that to know the correct Player that wants to pick up the item
-		const bool bLeftControlDown = FSlateApplication::Get().GetModifierKeys().IsLeftControlDown();
-		ensure(false);
-		//OnItemMouseButtonDown(bLeftControlDown);
-	}
 }
 
 bool AObsidianDroppableItem::InitItemWorldName() const
@@ -527,6 +547,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, con
 	AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
+		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in AObsidianDroppableItem::PickupItemInstance."))
 		return false;
 	}
 	
@@ -562,6 +583,7 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, const AO
 	AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
+		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in AObsidianDroppableItem::PickupItemDef."))
 		return false;
 	}
 	

@@ -12,6 +12,8 @@
 
 #include "ObsidianPlayerStash.generated.h"
 
+class UObsidianHeroComponent;
+
 UCLASS()
 class OBSIDIAN_API AObsidianPlayerStash : public AActor, public IObsidianHighlightInterface, public IObsidianInteractionInterface
 {
@@ -30,7 +32,7 @@ public:
 	virtual AActor* GetInteractionActor() override;
 	virtual bool CanInteract() override;
 	virtual float GetInteractionRadius() override;
-	virtual void Interact() override;
+	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
 	//~ End of InteractionInterface
 	
 protected:

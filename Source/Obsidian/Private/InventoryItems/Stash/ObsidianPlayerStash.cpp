@@ -61,7 +61,7 @@ float AObsidianPlayerStash::GetInteractionRadius()
 	return InteractionRadius;
 }
 
-void AObsidianPlayerStash::Interact()
+void AObsidianPlayerStash::Interact(AObsidianPlayerController* InteractingPlayerController)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Opening Chest")));
 }

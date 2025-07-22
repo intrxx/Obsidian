@@ -517,7 +517,7 @@ void UObsidianHeroComponent::Input_Interact()
 		
 		bWantsToInteract = true;
 		CachedInteractionTarget = InteractionActor;
-		ServerInteract(CachedInteractionTarget);
+		ServerStartInteraction(CachedInteractionTarget);
 	}
 }
 
@@ -1063,9 +1063,9 @@ bool UObsidianHeroComponent::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem
 	const FVector OwnerLocation = OwnerActor->GetActorLocation();
 	
 	const float DistanceToItem = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(ItemLocation.X, ItemLocation.Y, 0.0f)); 
-	if (DistanceToItem > PickupRadius + AutoRunAcceptanceRadius)
+	if (DistanceToItem > DefaultInteractionRadius + AutoRunAcceptanceRadius)
 	{
-		const FVector ApproachDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * PickupRadius;
+		const FVector ApproachDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * DefaultInteractionRadius;
 		ClientStartApproachingOutOfRangeItem(ApproachDestination, ItemToPickUp, PickUpType);
 		return true;
 	}
@@ -1087,7 +1087,9 @@ bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<
 		return false;
 	}
 
-	const float InteractionRadius = InteractionTarget->GetInteractionRadius();
+	float InteractionRadius = InteractionTarget->GetInteractionRadius();
+	InteractionRadius = InteractionRadius == 0.0f ? DefaultInteractionRadius : InteractionRadius;
+
 	const FVector OwnerLocation = OwnerActor->GetActorLocation();
 	
 	const float DistanceToTarget = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f));
@@ -1115,18 +1117,18 @@ void UObsidianHeroComponent::ClientStartApproachingOutOfRangeInteractionTarget_I
 	AutoRunToClickedLocation();
 }
 
-void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
+void UObsidianHeroComponent::ServerStartInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
 {
 	if(InteractionTarget == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in UObsidianHeroComponent::ServerInteract_Implementation."));
+		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in UObsidianHeroComponent::ServerStartInteraction_Implementation."));
 		return;
 	}
 
 	const AActor* InteractionActor = InteractionTarget->GetInteractionActor();
 	if(InteractionActor == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in UObsidianHeroComponent::ServerInteract_Implementation."));
+		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in UObsidianHeroComponent::ServerStartInteraction_Implementation."));
 		return;
 	}
 	
@@ -1136,9 +1138,12 @@ void UObsidianHeroComponent::ServerInteract_Implementation(const TScriptInterfac
 		return;
 	}
 
+	//TODO Perform validation here, if there is no validation, there is no point of keeping this client -> server -> client logic
+	// HandleOutOfRangeInteraction is some kind of validating
+
 	if(InteractionTarget->CanInteract())
 	{
-		InteractionTarget->Interact();
+		ClientTriggerInteraction(InteractionTarget);
 	}
 }
 
@@ -1146,10 +1151,18 @@ void UObsidianHeroComponent::InteractWithOutOfRangeTarget()
 {
 	if(CachedInteractionTarget)
 	{
-		ServerInteract(CachedInteractionTarget);
+		ServerStartInteraction(CachedInteractionTarget);
 		
 		OnArrivedAtAcceptableInteractionRange.Clear();
 		CachedInteractionTarget = nullptr;
+	}
+}
+
+void UObsidianHeroComponent::ClientTriggerInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
+{
+	if (InteractionTarget)
+	{
+		InteractionTarget->Interact(GetController<AObsidianPlayerController>());
 	}
 }
 
