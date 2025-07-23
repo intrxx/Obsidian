@@ -11,6 +11,7 @@
 #include "CommonPlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class UObsidianStash;
 class UObsidianEquipmentComponent;
 struct FObsidianDamageTextProps;
 class AObsidianCharacterBase;
@@ -56,6 +57,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianHUD* GetObsidianHUD() const;
+
+	void TogglePlayerStash() const;
 	
 	UFUNCTION(Client, Reliable)
 	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);
@@ -80,7 +83,7 @@ protected:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DamageNumber")
 	TSubclassOf<UObsidianDamageNumberWidgetComp> DamageNumberWidgetCompClass;
-
+	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianInventoryComponent> InventoryComponent;
 	

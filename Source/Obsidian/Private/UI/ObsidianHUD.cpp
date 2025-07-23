@@ -113,6 +113,14 @@ void AObsidianHUD::TogglePassiveSkillTree() const
 	}
 }
 
+void AObsidianHUD::TogglePlayerStash() const
+{
+	if(MainOverlayWidget)
+	{
+		MainOverlayWidget->TogglePlayerStash();
+	}
+}
+
 bool AObsidianHUD::IsInventoryOpened()
 {
 	if(InventoryWidgetController)

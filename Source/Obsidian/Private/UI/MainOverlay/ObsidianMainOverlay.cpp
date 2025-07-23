@@ -31,6 +31,7 @@
 #include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
 #include "UI/MainOverlay/SkillPoints/ObsidianSkillPointsNotification.h"
+#include "UI/Inventory/ObsidianPlayerStashWidget.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {
@@ -72,7 +73,12 @@ void UObsidianMainOverlay::NativeConstruct()
 
 void UObsidianMainOverlay::ToggleCharacterStatus()
 {
-	if(!CharacterStatus)
+	if(PlayerStash)
+	{
+		TogglePlayerStash();
+	}
+	
+	if(CharacterStatus == nullptr)
 	{
 		UOCharacterStatusWidgetController* CharacterStatusWidgetController = UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this);
 		check(CharacterStatusWidgetController);
@@ -83,7 +89,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 		
 		CharacterStatusWidgetController->SetInitialAttributeValues();
 		
-		CharacterStatus_Overlay->AddChildToOverlay(CharacterStatus);
+		LeftSideContainer_Overlay->AddChildToOverlay(CharacterStatus);
 		CharacterStatus->OnWidgetDestroyedDelegate.AddLambda([this]()
 			{
 				CharacterStatus = nullptr;
@@ -106,7 +112,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 
 void UObsidianMainOverlay::ToggleInventory()
 {
-	if(!Inventory)
+	if(Inventory == nullptr)
 	{
 		InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 		check(InventoryWidgetController);
@@ -115,7 +121,7 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory = CreateWidget<UObsidianInventory>(this, InventoryClass);
 		Inventory->SetWidgetController(InventoryWidgetController);
 		
-		Inventory_Overlay->AddChildToOverlay(Inventory);
+		RightSideContainer_Overlay->AddChildToOverlay(Inventory);
 		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
 			{
 				Inventory = nullptr;
@@ -155,7 +161,7 @@ void UObsidianMainOverlay::ToggleInventory()
 
 void UObsidianMainOverlay::TogglePassiveSkillTree()
 {
-	if(!PassiveSkillTree)
+	if(PassiveSkillTree == nullptr)
 	{
 		checkf(PassiveSkillTreeClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::TogglePassiveSkillTree, fill it in ObsidianMainOverlay instance."));
 		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
@@ -176,6 +182,36 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 		PassiveSkillTree->RemoveFromParent();
 		PassiveSkillTree = nullptr;
 		Overlay_GameTabsMenu->OnPassiveSkillTreeTabStatusChangeDelegate.Broadcast(false);
+	}
+}
+
+void UObsidianMainOverlay::TogglePlayerStash()
+{
+	if(CharacterStatus)
+	{
+		ToggleCharacterStatus();
+	}
+	
+	if(Inventory == nullptr)
+	{
+		ToggleInventory();
+	}
+
+	if(PlayerStash == nullptr)
+	{
+		checkf(PlayerStashClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::TogglePlayerStash, fill it in ObsidianMainOverlay instance."));
+		PlayerStash = CreateWidget<UObsidianPlayerStashWidget>(this, PlayerStashClass);
+		
+		LeftSideContainer_Overlay->AddChildToOverlay(PlayerStash);
+		PlayerStash->OnWidgetDestroyedDelegate.AddLambda([this]()
+			{
+				PlayerStash = nullptr;
+			});
+	}
+	else
+	{
+		PlayerStash->RemoveFromParent();
+		PlayerStash = nullptr;
 	}
 }
 
@@ -449,7 +485,7 @@ void UObsidianMainOverlay::MoveDroppedItemDescOverlay(const bool bInventoryOpen)
 			return;
 		}
 
-		const float InventoryWidth = Inventory->GetInventoryWidth();
+		const float InventoryWidth = Inventory->GetWindowWidth();
 		if(UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DroppedItemDesc_Overlay))
 		{
 			CanvasSlot->SetPosition(FVector2D(-InventoryWidth, -50.0f)); //TODO Hard coded for now, kinda feeling the need to change it

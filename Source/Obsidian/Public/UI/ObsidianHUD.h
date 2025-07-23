@@ -46,6 +46,7 @@ public:
 	void ToggleCharacterStatus() const;
 	void ToggleInventory() const;
 	void TogglePassiveSkillTree() const;
+	void TogglePlayerStash() const;
 
 	bool IsInventoryOpened();
 	

@@ -4,8 +4,17 @@
 
 // ~ Core
 #include "Components/Button.h"
+#include "Components/SizeBox.h"
 
 // ~ Project
+
+void UObsidianMainOverlayWidgetBase::NativePreConstruct()
+{
+	Super::NativePreConstruct();
+
+	Root_SizeBox->SetHeightOverride(RootSizeBoxHeight);
+	Root_SizeBox->SetWidthOverride(RootSizeBoxWidth);
+}
 
 void UObsidianMainOverlayWidgetBase::NativeConstruct()
 {
@@ -20,16 +29,6 @@ void UObsidianMainOverlayWidgetBase::NativeDestruct()
 	Close_Button->OnClicked.Clear();
 	
 	Super::NativeDestruct();
-}
-
-void UObsidianMainOverlayWidgetBase::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
-	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
-}
-
-void UObsidianMainOverlayWidgetBase::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
-{
-	Super::NativeOnMouseLeave(InMouseEvent);
 }
 
 FReply UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

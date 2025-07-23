@@ -78,6 +78,14 @@ AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 	return GetHUD<AObsidianHUD>();
 }
 
+void AObsidianPlayerController::TogglePlayerStash() const
+{
+	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
+	{
+		ObsidianHUD->TogglePlayerStash();
+	}
+}
+
 void AObsidianPlayerController::ClientShowDamageNumber_Implementation(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter)
 {
 	// I use IsValid on the character to also check if the character is currently pending kill

@@ -32,6 +32,7 @@ class UWrapBox;
 class UOStackingDurationalEffectInfo;
 class UObsidianCharacterStatus;
 class UObsidianHeroComponent;
+class UObsidianPlayerStashWidget;
 
 /**
  * 
@@ -50,6 +51,8 @@ public:
 	void ToggleInventory();
 	UFUNCTION()
 	void TogglePassiveSkillTree();
+	UFUNCTION()
+	void TogglePlayerStash();
 	
 	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
 
@@ -86,10 +89,10 @@ protected:
 	TObjectPtr<UObsidianOverlayGameTabsMenu> Overlay_GameTabsMenu;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOverlay> CharacterStatus_Overlay;
+	TObjectPtr<UOverlay> LeftSideContainer_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UOverlay> Inventory_Overlay;
+	TObjectPtr<UOverlay> RightSideContainer_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> PassiveSkillTree_Overlay;
@@ -137,6 +140,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianPassiveSkillTree> PassiveSkillTreeClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|PlayerStash")
+	TSubclassOf<UObsidianPlayerStashWidget> PlayerStashClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianSkillPointsNotification> PassiveSkillPointsNotificationClass;
@@ -171,6 +177,8 @@ private:
 	TObjectPtr<UObsidianInventory> Inventory;
 	UPROPERTY()
 	TObjectPtr<UObsidianPassiveSkillTree> PassiveSkillTree;
+	UPROPERTY()
+	TObjectPtr<UObsidianPlayerStashWidget> PlayerStash; 
 	
 	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
 

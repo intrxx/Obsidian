@@ -5,6 +5,7 @@
 // ~ Core
 
 // ~ Project
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 AObsidianPlayerStash::AObsidianPlayerStash(const FObjectInitializer& ObjectInitializer)
@@ -63,6 +64,15 @@ float AObsidianPlayerStash::GetInteractionRadius()
 
 void AObsidianPlayerStash::Interact(AObsidianPlayerController* InteractingPlayerController)
 {
+	if(InteractingPlayerController == nullptr)
+	{
+		return;
+	}
+	
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Opening Chest")));
+
+	//TODO Play sound and stash animation
+
+	InteractingPlayerController->TogglePlayerStash();
 }
 

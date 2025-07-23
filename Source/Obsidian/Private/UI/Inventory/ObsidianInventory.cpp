@@ -3,7 +3,6 @@
 #include "UI/Inventory/ObsidianInventory.h"
 
 // ~ Core
-#include "Components/SizeBox.h"
 
 // ~ Project
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
@@ -23,14 +22,6 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	
 	InventoryWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 	InventoryWidgetController->OnItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
-}
-
-void UObsidianInventory::NativePreConstruct()
-{
-	Super::NativePreConstruct();
-
-	Root_SizeBox->SetHeightOverride(RootSizeBoxHeight);
-	Root_SizeBox->SetWidthOverride(RootSizeBoxWidth);
 }
 
 void UObsidianInventory::NativeConstruct()

@@ -37,20 +37,7 @@ class OBSIDIAN_API UObsidianInventory : public UObsidianMainOverlayWidgetBase
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
 	virtual void HandleWidgetControllerSet() override;
-	
-	float GetInventoryWidth() const
-	{
-		return RootSizeBoxWidth;
-	}
-
-	float GetInventoryHeight() const
-	{
-		return RootSizeBoxHeight;
-	}
 
 	bool IsPlayerDraggingItem() const;
 	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
@@ -60,9 +47,10 @@ public:
 	bool CanInteractWithEquipment() const;
 
 protected:
-	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<USizeBox> Root_SizeBox;
-
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	
+protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianInventoryGrid> InventoryGrid;
 
@@ -100,12 +88,4 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianSlotBlockadeItem> SlotBlockadeItemClass;
-	
-	/** Essentially, height component of inventory size. Use this instead of directly setting it on SizeBox. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float RootSizeBoxHeight = 920.0f;
-
-	/** Essentially, width component of inventory size. Use this instead of directly setting it on SizeBox. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float RootSizeBoxWidth = 820.0f;
 };
