@@ -78,11 +78,11 @@ AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 	return GetHUD<AObsidianHUD>();
 }
 
-void AObsidianPlayerController::TogglePlayerStash() const
+void AObsidianPlayerController::TogglePlayerStash(const bool bShowStash) const
 {
 	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
 	{
-		ObsidianHUD->TogglePlayerStash();
+		ObsidianHUD->TogglePlayerStash(bShowStash);
 	}
 }
 

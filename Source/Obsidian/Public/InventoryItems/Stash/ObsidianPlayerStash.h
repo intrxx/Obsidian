@@ -31,8 +31,10 @@ public:
 	//~ Start of InteractionInterface
 	virtual AActor* GetInteractionActor() override;
 	virtual bool CanInteract() override;
+	virtual bool RequiresOngoingInteraction() override;
 	virtual float GetInteractionRadius() override;
 	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
+	virtual void StopInteraction(AObsidianPlayerController* InteractingPlayerController) override;
 	//~ End of InteractionInterface
 	
 protected:

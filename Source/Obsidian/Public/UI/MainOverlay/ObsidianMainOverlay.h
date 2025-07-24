@@ -51,8 +51,8 @@ public:
 	void ToggleInventory();
 	UFUNCTION()
 	void TogglePassiveSkillTree();
-	UFUNCTION()
-	void TogglePlayerStash();
+	
+	void TogglePlayerStash(const bool bShowStash);
 	
 	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
 

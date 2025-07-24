@@ -360,7 +360,13 @@ void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputAc
 		if(InputAxisVector.Y != 0.0f)
 		{
 			const FVector MovementDirection = MovementRotation.RotateVector(FVector::ForwardVector);
-			 Pawn->AddMovementInput(MovementDirection, InputAxisVector.Y);
+			Pawn->AddMovementInput(MovementDirection, InputAxisVector.Y);
+		}
+
+		if(CachedInteractionTarget && CachedInteractionTarget->RequiresOngoingInteraction())
+		{
+			CachedInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
+			CachedInteractionTarget = nullptr;
 		}
 	}
 }
@@ -375,6 +381,12 @@ void UObsidianHeroComponent::Input_MoveStartedMouse()
 	if(IsUsingItem())
 	{
 		SetUsingItem(false);
+	}
+
+	if(CachedInteractionTarget && CachedInteractionTarget->RequiresOngoingInteraction())
+	{
+		CachedInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
+		CachedInteractionTarget = nullptr;
 	}
 	
 	bAutoRunning = false;
@@ -1154,13 +1166,17 @@ void UObsidianHeroComponent::InteractWithOutOfRangeTarget()
 		ServerStartInteraction(CachedInteractionTarget);
 		
 		OnArrivedAtAcceptableInteractionRange.Clear();
-		CachedInteractionTarget = nullptr;
+		if(CachedInteractionTarget->RequiresOngoingInteraction() == false)
+		{
+			CachedInteractionTarget = nullptr;
+		}
+
 	}
 }
 
 void UObsidianHeroComponent::ClientTriggerInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
 {
-	if (InteractionTarget)
+	if(InteractionTarget)
 	{
 		InteractionTarget->Interact(GetController<AObsidianPlayerController>());
 	}

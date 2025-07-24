@@ -31,4 +31,8 @@ public:
 	virtual bool CanInteract() = 0;
 	virtual float GetInteractionRadius() = 0;
 	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) = 0;
+
+	virtual bool RequiresOngoingInteraction();
+	virtual void StopInteraction(AObsidianPlayerController* InteractingPlayerController);
+	
 };

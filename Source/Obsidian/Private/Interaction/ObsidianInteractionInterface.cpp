@@ -5,3 +5,13 @@
 // ~ Core
 
 // ~ Project
+
+bool IObsidianInteractionInterface::RequiresOngoingInteraction()
+{
+	return false;
+}
+
+void IObsidianInteractionInterface::StopInteraction(AObsidianPlayerController* InteractingPlayerController)
+{
+	
+}

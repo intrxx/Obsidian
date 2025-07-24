@@ -278,6 +278,7 @@ private:
 
 	bool bWantsToInteract = false;
 	bool bAutoRunToInteract = false;
+	bool bActivelyInteracting = false;
 	TScriptInterface<IObsidianInteractionInterface> CachedInteractionTarget;
 	FOnArrivedAtAcceptableInteractionRangeSignature OnArrivedAtAcceptableInteractionRange;
 	

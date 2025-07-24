@@ -58,7 +58,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianHUD* GetObsidianHUD() const;
 
-	void TogglePlayerStash() const;
+	void TogglePlayerStash(const bool bShowStash) const;
 	
 	UFUNCTION(Client, Reliable)
 	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);

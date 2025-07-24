@@ -113,11 +113,11 @@ void AObsidianHUD::TogglePassiveSkillTree() const
 	}
 }
 
-void AObsidianHUD::TogglePlayerStash() const
+void AObsidianHUD::TogglePlayerStash(const bool bShowStash) const
 {
 	if(MainOverlayWidget)
 	{
-		MainOverlayWidget->TogglePlayerStash();
+		MainOverlayWidget->TogglePlayerStash(bShowStash);
 	}
 }
 

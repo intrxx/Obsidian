@@ -57,6 +57,11 @@ bool AObsidianPlayerStash::CanInteract()
 	return bCanInteract;
 }
 
+bool AObsidianPlayerStash::RequiresOngoingInteraction()
+{
+	return true;
+}
+
 float AObsidianPlayerStash::GetInteractionRadius()
 {
 	return InteractionRadius;
@@ -73,6 +78,14 @@ void AObsidianPlayerStash::Interact(AObsidianPlayerController* InteractingPlayer
 
 	//TODO Play sound and stash animation
 
-	InteractingPlayerController->TogglePlayerStash();
+	InteractingPlayerController->TogglePlayerStash(true);
+}
+
+void AObsidianPlayerStash::StopInteraction(AObsidianPlayerController* InteractingPlayerController)
+{
+	if(InteractingPlayerController)
+	{
+		InteractingPlayerController->TogglePlayerStash(false);
+	}
 }
 
