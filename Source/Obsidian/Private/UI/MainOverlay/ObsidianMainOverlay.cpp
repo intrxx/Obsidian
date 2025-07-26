@@ -71,14 +71,34 @@ void UObsidianMainOverlay::NativeConstruct()
 	}
 }
 
+bool UObsidianMainOverlay::IsCharacterStatusOpen() const
+{
+	return CharacterStatus != nullptr;
+}
+
+bool UObsidianMainOverlay::IsInventoryOpen() const
+{
+	return Inventory != nullptr;
+}
+
+bool UObsidianMainOverlay::IsPassiveSkillTree() const
+{
+	return PassiveSkillTree != nullptr;
+}
+
+bool UObsidianMainOverlay::IsPlayerStashOpen() const
+{
+	return PlayerStash != nullptr;
+}
+
 void UObsidianMainOverlay::ToggleCharacterStatus()
 {
-	if(PlayerStash)
+	if(IsPlayerStashOpen())
 	{
 		TogglePlayerStash(false);
 	}
 	
-	if(CharacterStatus == nullptr)
+	if(IsCharacterStatusOpen() == false)
 	{
 		UOCharacterStatusWidgetController* CharacterStatusWidgetController = UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this);
 		check(CharacterStatusWidgetController);
@@ -112,7 +132,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 
 void UObsidianMainOverlay::ToggleInventory()
 {
-	if(Inventory == nullptr)
+	if(IsInventoryOpen() == false)
 	{
 		InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
 		check(InventoryWidgetController);
@@ -161,7 +181,7 @@ void UObsidianMainOverlay::ToggleInventory()
 
 void UObsidianMainOverlay::TogglePassiveSkillTree()
 {
-	if(PassiveSkillTree == nullptr)
+	if(IsPassiveSkillTree() == false)
 	{
 		checkf(PassiveSkillTreeClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::TogglePassiveSkillTree, fill it in ObsidianMainOverlay instance."));
 		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
@@ -187,8 +207,18 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 
 void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 {
-	if(bShowStash && PlayerStash == nullptr)
+	if(bShowStash && IsPlayerStashOpen() == false)
 	{
+		if(IsCharacterStatusOpen())
+		{
+			ToggleCharacterStatus();
+		}
+		
+		if(IsInventoryOpen() == false)
+		{
+			ToggleInventory();
+		}
+		
 		checkf(PlayerStashClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::TogglePlayerStash, fill it in ObsidianMainOverlay instance."));
 		PlayerStash = CreateWidget<UObsidianPlayerStashWidget>(this, PlayerStashClass);
 		
@@ -197,23 +227,13 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 			{
 				PlayerStash = nullptr;
 			});
-
-		if(Inventory == nullptr)
-		{
-			ToggleInventory();
-		}
-		
-		if(CharacterStatus)
-		{
-			ToggleCharacterStatus();
-		}
 	}
-	else if(bShowStash == false && PlayerStash)
+	else if(bShowStash == false && IsPlayerStashOpen())
 	{
 		PlayerStash->RemoveFromParent();
 		PlayerStash = nullptr;
 
-		if(Inventory)
+		if(IsInventoryOpen())
 		{
 			ToggleInventory();
 		}

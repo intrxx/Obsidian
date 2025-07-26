@@ -34,6 +34,12 @@ class UObsidianCharacterStatus;
 class UObsidianHeroComponent;
 class UObsidianPlayerStashWidget;
 
+UENUM()
+enum EObsidianAddingWindowRule
+{
+	
+};
+
 /**
  * 
  */
@@ -44,6 +50,11 @@ class OBSIDIAN_API UObsidianMainOverlay : public UObsidianWidgetBase
 
 public:
 	virtual void NativeConstruct() override;
+
+	bool IsCharacterStatusOpen() const;
+	bool IsInventoryOpen() const;
+	bool IsPassiveSkillTree() const;
+	bool IsPlayerStashOpen() const;
 
 	UFUNCTION()
 	void ToggleCharacterStatus();

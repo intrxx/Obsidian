@@ -57,11 +57,17 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Close_Button;
 
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Setup")
+	uint8 bOverride_RootSizeHeight : 1;
+	
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Setup")
+	uint8 bOverride_RootSizeWidth : 1;
+
 	/** Essentially, height component of inventory size. Use this instead of directly setting it on SizeBox. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float RootSizeBoxHeight = 920.0f;
+	UPROPERTY(EditDefaultsOnly, meta=(EditCondition="bOverride_RootSizeHeight"), Category = "Obsidian|Setup")
+	float RootSizeBoxHeight = 0.0f;
 
 	/** Essentially, width component of inventory size. Use this instead of directly setting it on SizeBox. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	float RootSizeBoxWidth = 820.0f;
+	UPROPERTY(EditDefaultsOnly, meta=(EditCondition="bOverride_RootSizeWidth"), Category = "Obsidian|Setup")
+	float RootSizeBoxWidth = 0.0f;
 };

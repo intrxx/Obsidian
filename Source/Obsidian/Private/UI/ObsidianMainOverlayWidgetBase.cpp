@@ -12,8 +12,14 @@ void UObsidianMainOverlayWidgetBase::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
-	Root_SizeBox->SetHeightOverride(RootSizeBoxHeight);
-	Root_SizeBox->SetWidthOverride(RootSizeBoxWidth);
+	if(bOverride_RootSizeHeight)
+	{
+		Root_SizeBox->SetHeightOverride(RootSizeBoxHeight);
+	}
+	if(bOverride_RootSizeWidth)
+	{
+		Root_SizeBox->SetWidthOverride(RootSizeBoxWidth);
+	}
 }
 
 void UObsidianMainOverlayWidgetBase::NativeConstruct()
