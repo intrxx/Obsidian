@@ -25,6 +25,7 @@
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Core/ObsidianBlueprintFunctionLibrary.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Interaction/ObsidianInteractionInterface.h"
@@ -34,6 +35,8 @@
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
+
+DEFINE_LOG_CATEGORY(LogInteraction);
 
 UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -367,6 +370,13 @@ void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputAc
 		{
 			CachedInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
 			CachedInteractionTarget = nullptr;
+
+#if !UE_BUILD_SHIPPING
+			if(bDebugInteraction)
+			{
+				UE_LOG(LogInteraction, Display, TEXT("Stopped ongoing interaction."))	
+			}
+#endif
 		}
 	}
 }
@@ -387,6 +397,13 @@ void UObsidianHeroComponent::Input_MoveStartedMouse()
 	{
 		CachedInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
 		CachedInteractionTarget = nullptr;
+
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Stopped ongoing interaction."))	
+		}
+#endif
 	}
 	
 	bAutoRunning = false;
@@ -530,6 +547,12 @@ void UObsidianHeroComponent::Input_Interact()
 		bWantsToInteract = true;
 		CachedInteractionTarget = InteractionActor;
 		ServerStartInteraction(CachedInteractionTarget);
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Starting Interaction."))	
+		}
+#endif
 	}
 }
 
@@ -1103,11 +1126,44 @@ bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<
 	InteractionRadius = InteractionRadius == 0.0f ? DefaultInteractionRadius : InteractionRadius;
 
 	const FVector OwnerLocation = OwnerActor->GetActorLocation();
-	
 	const float DistanceToTarget = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f));
+	
+#if !UE_BUILD_SHIPPING
+	if(bDebugInteraction)
+	{
+		UE_LOG(LogInteraction, Display, TEXT("Calculating Distance to Interaction Target."));
+
+		if(const UWorld* World = GetWorld())
+		{
+			UObsidianBlueprintFunctionLibrary::PrintVector3D(World, TargetLocation, TEXT("(Red Sphere) Target Location: "));
+			UE_LOG(LogInteraction, Display, TEXT("Interaction Radius: [%f]."), InteractionRadius);
+			DrawDebugSphere(World, TargetLocation, InteractionRadius, 16, FColor::Red, false, 5.0f);
+
+			UObsidianBlueprintFunctionLibrary::PrintVector3D(World, OwnerLocation, TEXT("(Blue Sphere) Player Location on distance check: "));
+			DrawDebugSphere(World, OwnerLocation, 32.0f, 8, FColor::Blue, false, 5.0f);
+
+			UE_LOG(LogInteraction, Display, TEXT("Calculated Distance: [%f]."), DistanceToTarget);
+		}
+	}
+#endif
+	
 	if(DistanceToTarget > InteractionRadius + AutoRunAcceptanceRadius)
 	{
 		const FVector ApproachDestination = TargetLocation - ((TargetLocation - OwnerLocation).GetSafeNormal()) * InteractionRadius;
+
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Player out of Interacting range. Calculating Approach Destination."));
+
+			if(const UWorld* World = GetWorld())
+			{
+				UObsidianBlueprintFunctionLibrary::PrintVector3D(World, ApproachDestination, TEXT("(Yellow Sphere) Approach Destination: "));
+				DrawDebugSphere(World, ApproachDestination, 32.0f, 8, FColor::Yellow, false, 5.0f);
+			}
+		}
+#endif
+		
 		ClientStartApproachingOutOfRangeInteractionTarget(ApproachDestination);
 		return true;
 	}
@@ -1147,6 +1203,12 @@ void UObsidianHeroComponent::ServerStartInteraction_Implementation(const TScript
 	const FVector InteractionLocation = InteractionActor->GetActorLocation();
 	if(HandleOutOfRangeInteraction(InteractionTarget, InteractionLocation))
 	{
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Interaction target is out of range. Approaching."))	
+		}
+#endif
 		return;
 	}
 
@@ -1163,14 +1225,24 @@ void UObsidianHeroComponent::InteractWithOutOfRangeTarget()
 {
 	if(CachedInteractionTarget)
 	{
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Trying to interact with out of range Target after approaching."));
+			if(const UWorld* World = GetWorld())
+			{
+				if(const AActor* Owner = GetOwner())
+				{
+					const FVector OwnerLocation = Owner->GetActorLocation();
+					UObsidianBlueprintFunctionLibrary::PrintVector3D(World, OwnerLocation, TEXT("(Green Sphere) Player Location after Approaching: "));
+					DrawDebugSphere(World, OwnerLocation, 32.0f, 8, FColor::Green, false, 5.0f);
+				}
+			}
+		}
+#endif
 		ServerStartInteraction(CachedInteractionTarget);
 		
 		OnArrivedAtAcceptableInteractionRange.Clear();
-		if(CachedInteractionTarget->RequiresOngoingInteraction() == false)
-		{
-			CachedInteractionTarget = nullptr;
-		}
-
 	}
 }
 
@@ -1178,7 +1250,27 @@ void UObsidianHeroComponent::ClientTriggerInteraction_Implementation(const TScri
 {
 	if(InteractionTarget)
 	{
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Interacting."))	
+		}
+#endif
 		InteractionTarget->Interact(GetController<AObsidianPlayerController>());
+
+		if(CachedInteractionTarget->RequiresOngoingInteraction() == false)
+		{
+			CachedInteractionTarget = nullptr;
+		}
+#if !UE_BUILD_SHIPPING
+		else
+		{
+			if(bDebugInteraction)
+			{
+				UE_LOG(LogInteraction, Display, TEXT("Target requires ongoing interaction."))	
+			}
+		}
+#endif
 	}
 }
 

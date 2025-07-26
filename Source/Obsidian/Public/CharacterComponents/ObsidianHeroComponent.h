@@ -31,6 +31,8 @@ DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
 
+DECLARE_LOG_CATEGORY_EXTERN(LogInteraction, Log, All);
+
 UENUM()
 enum class EObsidianItemPickUpType : uint8
 {
@@ -270,25 +272,43 @@ private:
 	
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
 	FHitResult CursorHit;
-	
+
+	/**
+	 * Mouse auto run.
+	 */
 	FVector CachedDestination = FVector::ZeroVector;
 	float FollowTime = 0.f;
 	bool bAutoRunning = false;
 	bool bWasAutoMovingLastTick = false;
 
+	/**
+	 * Interaction.
+	 */
 	bool bWantsToInteract = false;
 	bool bAutoRunToInteract = false;
 	bool bActivelyInteracting = false;
 	TScriptInterface<IObsidianInteractionInterface> CachedInteractionTarget;
 	FOnArrivedAtAcceptableInteractionRangeSignature OnArrivedAtAcceptableInteractionRange;
 	
+	UPROPERTY(EditDefaultsOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian|Debug")
+	bool bDebugInteraction = false;
+	
+	/**
+	 * Pickup.
+	 */
 	bool bAutoRunToPickupItemByLabel = false;
 	TObjectPtr<AObsidianDroppableItem> CachedDroppableItemToPickup;
 	FOnArrivedAtAcceptableItemPickupRangeSignature OnArrivedAtAcceptableItemPickupRange;
-	
+
+	/**
+	 * Highlight.
+	 */
 	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
 
+	/**
+	 * Dragged items.
+	 */
 	UPROPERTY()
 	TObjectPtr<UObsidianDraggedItem> DraggedItemWidget;
 
