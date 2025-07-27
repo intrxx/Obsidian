@@ -10,7 +10,7 @@
 // ~ Project
 #include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "CharacterComponents/ObsidianHeroComponent.h"
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
@@ -44,9 +44,9 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	const AActor* OwningActor = Cast<AActor>(ObsidianPlayerController->GetPawn());
 	check(OwningActor);
 	
-	OwnerHeroComponent = UObsidianHeroComponent::FindHeroComponent(OwningActor);
-	check(OwnerHeroComponent);
-	OwnerHeroComponent->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableUIContext);
+	OwnerPlayerInputManager = UObsidianPlayerInputManager::FindPlayerInputManager(OwningActor);
+	check(OwnerPlayerInputManager);
+	OwnerPlayerInputManager->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableUIContext);
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
@@ -95,11 +95,11 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		UE_LOG(LogInventory, Display, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		RemoveInventoryItemWidget(InventoryChangeMessage.GridItemPosition);
 		
-		if(OwnerHeroComponent->IsUsingItem())
+		if(OwnerPlayerInputManager->IsUsingItem())
 		{
-			if(InventoryChangeMessage.ItemInstance == OwnerHeroComponent->GetUsingItem())
+			if(InventoryChangeMessage.ItemInstance == OwnerPlayerInputManager->GetUsingItem())
 			{
-				OwnerHeroComponent->SetUsingItem(false); //TODO This probably shouldn't be here, its widget controller
+				OwnerPlayerInputManager->SetUsingItem(false); //TODO This probably shouldn't be here, its widget controller
 			}
 		}
 	}
@@ -249,44 +249,44 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 
 void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown)
 {
-	check(OwnerHeroComponent);
+	check(OwnerPlayerInputManager);
 
-	if(OwnerHeroComponent->IsUsingItem())
+	if(OwnerPlayerInputManager->IsUsingItem())
 	{
 		StopUsingItem();
 		return;
 	}
 	
-	if(OwnerHeroComponent->IsDraggingAnItem() == false)
+	if(OwnerPlayerInputManager->IsDraggingAnItem() == false)
 	{
 		return;
 	}
-	OwnerHeroComponent->ServerAddItemToInventoryAtSlot(ToGridSlot, bShiftDown);
+	OwnerPlayerInputManager->ServerAddItemToInventoryAtSlot(ToGridSlot, bShiftDown);
 }
 
 void UObsidianInventoryWidgetController::RequestEquippingItem(const FGameplayTag& SlotTag)
 {
-	check(OwnerHeroComponent);
+	check(OwnerPlayerInputManager);
 
-	if(OwnerHeroComponent->IsUsingItem())
+	if(OwnerPlayerInputManager->IsUsingItem())
 	{
 		StopUsingItem();
 		return;
 	}
 	
-	if(OwnerHeroComponent->IsDraggingAnItem() == false)
+	if(OwnerPlayerInputManager->IsDraggingAnItem() == false)
 	{
 		return;
 	}
-	OwnerHeroComponent->ServerEquipItemAtSlot(SlotTag);
+	OwnerPlayerInputManager->ServerEquipItemAtSlot(SlotTag);
 }
 
 void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot, UObsidianItem* ItemWidget)
 {
-	check(OwnerHeroComponent);
+	check(OwnerPlayerInputManager);
 	check(InventoryComponent);
 
-	if(OwnerHeroComponent->IsDraggingAnItem())
+	if(OwnerPlayerInputManager->IsDraggingAnItem())
 	{
 		return;
 	}
@@ -302,7 +302,7 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 		return;
 	}
 	
-	OwnerHeroComponent->SetUsingItem(true, ItemWidget, UsingInstance);
+	OwnerPlayerInputManager->SetUsingItem(true, ItemWidget, UsingInstance);
 
 	TArray<UObsidianInventoryItemInstance*> AllItems;
 	AllItems.Append(InventoryComponent->GetAllItems());
@@ -335,7 +335,7 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot)
 {
 	check(InventoryComponent);
-	check(OwnerHeroComponent);
+	check(OwnerPlayerInputManager);
 	check(DraggedItemWidgetClass);
 
 	if(InventoryComponent->CanOwnerModifyInventoryState() == false)
@@ -345,13 +345,13 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 	
 	RemoveItemUIElements();
 
-	if(OwnerHeroComponent->IsUsingItem())
+	if(OwnerPlayerInputManager->IsUsingItem())
 	{
-		OwnerHeroComponent->UseItem(AtGridSlot, false);
+		OwnerPlayerInputManager->UseItem(AtGridSlot, false);
 		return;
 	}
 	
-	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+	if(OwnerPlayerInputManager->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
 	{
 		const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 		if(InstanceToAddTo == nullptr)
@@ -360,21 +360,21 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 			return;
 		}
 		
-		 const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
+		 const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
 		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
 		 {
 		 	if(DraggedInstance->IsStackable())
 		 	{
 		 		if(UObsidianInventoryComponent::IsTheSameItem(DraggedInstance, InstanceToAddTo))
 		 		{
-		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+		 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
 		 			return;
 		 		}
 		 	}
 			
 		 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
 		 	{
-		 		OwnerHeroComponent->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		 		OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
 		 	}
 		 	return;
 		 }
@@ -387,41 +387,41 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 		 	{
 		 		if(UObsidianInventoryComponent::IsTheSameItem(InstanceToAddTo, DraggedItemDef))
 		 		{
-		 			OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+		 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
 		 			return;
 		 		}
 		 	}
 			
 			 if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
 			 {
-			 	OwnerHeroComponent->ServerReplaceItemAtInventorySlot(AtGridSlot);
+			 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
 			 }
 			 return;
 		}
 		return;
 	}
 	
-	OwnerHeroComponent->ServerGrabInventoryItemToCursor(AtGridSlot);
+	OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(AtGridSlot);
 }
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot, const UObsidianItem* ItemWidget)
 {
-	check(OwnerHeroComponent);
+	check(OwnerPlayerInputManager);
 
 	if(InventoryComponent->CanOwnerModifyInventoryState() == false)
 	{
 		return;
 	}
 	
-	if(OwnerHeroComponent->IsUsingItem())
+	if(OwnerPlayerInputManager->IsUsingItem())
 	{
-		OwnerHeroComponent->UseItem(AtGridSlot, true);
+		OwnerPlayerInputManager->UseItem(AtGridSlot, true);
 		return;
 	}
 	
-	if(OwnerHeroComponent->IsDraggingAnItem())
+	if(OwnerPlayerInputManager->IsDraggingAnItem())
 	{
-		OwnerHeroComponent->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot, 1);
+		OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot, 1);
 		return;
 	}
 	
@@ -462,7 +462,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	}
 	
 	check(EquipmentComponent);
-	check(OwnerHeroComponent);
+	check(OwnerPlayerInputManager);
 	check(DraggedItemWidgetClass);
 	
 	if(EquipmentComponent->CanOwnerModifyEquipmentState() == false)
@@ -472,23 +472,23 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 	
 	RemoveItemUIElements();
 
-	if(OwnerHeroComponent->IsUsingItem())
+	if(OwnerPlayerInputManager->IsUsingItem())
 	{
 		UE_LOG(LogInventory, Error, TEXT("As of now it is imposible to use items onto equipped items, maybe will support it in the future."));
 		StopUsingItem();
 		return;
 	}
 	
-	if(OwnerHeroComponent->IsDraggingAnItem()) // If we carry an item, try to replace it with it.
+	if(OwnerPlayerInputManager->IsDraggingAnItem()) // If we carry an item, try to replace it with it.
 	{
 		
-		 const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
+		 const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
 		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
 		 {
 		 	const EObsidianEquipCheckResult EquipmentResult = EquipmentComponent->CanReplaceInstance(DraggedInstance, SlotTag);
 		 	if(EquipmentResult == EObsidianEquipCheckResult::CanEquip)
 		 	{
-		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
+		 		OwnerPlayerInputManager->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
 		 	}
 		 	else
 		 	{
@@ -505,7 +505,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		 	const EObsidianEquipCheckResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
 		 	if(EquipmentResult == EObsidianEquipCheckResult::CanEquip)
 		 	{
-		 		OwnerHeroComponent->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
+		 		OwnerPlayerInputManager->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
 		 	}
 		 	else
 		 	{
@@ -518,7 +518,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const
 		}
 		return;
 	}
-	OwnerHeroComponent->ServerGrabEquippedItemToCursor(SlotTag);
+	OwnerPlayerInputManager->ServerGrabEquippedItemToCursor(SlotTag);
 }
 
 void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot)
@@ -623,10 +623,10 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(const int32 Stack
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridSlotPosition.X, GridSlotPosition.Y);
 		UE_LOG(LogTemp, Warning, TEXT("Instance at position: [%s]"), *InventoryComponent->GetItemInstanceAtLocation(GridSlotPosition)->GetItemDebugName());
-		OwnerHeroComponent->ServerGrabInventoryItemToCursor(GridSlotPosition);
+		OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(GridSlotPosition);
 		return;
 	}
-	OwnerHeroComponent->ServerTakeoutFromItem(GridSlotPosition, StacksToTake);
+	OwnerPlayerInputManager->ServerTakeoutFromItem(GridSlotPosition, StacksToTake);
 }
 
 void UObsidianInventoryWidgetController::RemoveItemUIElements()
@@ -666,7 +666,7 @@ void UObsidianInventoryWidgetController::RemoveItemDescription()
 
 void UObsidianInventoryWidgetController::StopUsingItem()
 {
-	OwnerHeroComponent->SetUsingItem(false);
+	OwnerPlayerInputManager->SetUsingItem(false);
 }
 
 void UObsidianInventoryWidgetController::ClearUsableUIContext()
@@ -687,9 +687,9 @@ void UObsidianInventoryWidgetController::ClearUsableUIContext()
 
 bool UObsidianInventoryWidgetController::IsDraggingAnItem() const
 {
-	if(OwnerHeroComponent)
+	if(OwnerPlayerInputManager)
 	{
-		return OwnerHeroComponent->IsDraggingAnItem();
+		return OwnerPlayerInputManager->IsDraggingAnItem();
 	}
 	return false;
 }
@@ -737,7 +737,7 @@ bool UObsidianInventoryWidgetController::GetDraggedItemGridSpan(FIntPoint& OutIt
 		return false;
 	}
 	
-	const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
+	const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
 	if(DraggedItem.IsEmpty())
 	{
 		return false;
@@ -863,14 +863,14 @@ void UObsidianInventoryWidgetController::RemoveBlockedSlotItemWidget(const FGame
 
 bool UObsidianInventoryWidgetController::CanEquipDraggedItem(const FGameplayTag& SlotTag) const
 {
-	if(OwnerHeroComponent == nullptr || EquipmentComponent == nullptr)
+	if(OwnerPlayerInputManager == nullptr || EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("OwnerHeroComponent or EquipmentComponent is invalid in UObsidianInventoryWidgetController::CanEquipDraggedItem."))
+		UE_LOG(LogEquipment, Error, TEXT("OwnerPlayerInputManager or EquipmentComponent is invalid in UObsidianInventoryWidgetController::CanEquipDraggedItem."))
 		return false; 
 	}
 
 	const bool bSlotOccupied = EquipmentComponent->IsItemEquippedAtSlot(SlotTag);
-	const FDraggedItem DraggedItem = OwnerHeroComponent->GetDraggedItem();
+	const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
 	if(const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
 	{
 		EObsidianEquipCheckResult EquipResult;

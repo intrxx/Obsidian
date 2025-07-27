@@ -31,7 +31,7 @@ class UObsidianOverlayGameTabsMenu;
 class UWrapBox;
 class UOStackingDurationalEffectInfo;
 class UObsidianCharacterStatus;
-class UObsidianHeroComponent;
+class UObsidianPlayerInputManager;
 class UObsidianPlayerStashWidget;
 
 UENUM()
@@ -197,6 +197,6 @@ private:
 	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
 	
 	UPROPERTY()
-	TObjectPtr<UObsidianHeroComponent> HeroComp;
+	TObjectPtr<UObsidianPlayerInputManager> PlayerInputManager;
 };
 

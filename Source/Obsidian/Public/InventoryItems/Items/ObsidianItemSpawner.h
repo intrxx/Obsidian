@@ -13,7 +13,7 @@
 #include "ObsidianItemSpawner.generated.h"
 
 class AObsidianDroppableItem;
-class UObsidianHeroComponent;
+class UObsidianPlayerInputManager;
 
 UCLASS()
 class OBSIDIAN_API AObsidianItemSpawner : public AActor, public IObsidianHighlightInterface, public IObsidianInteractionInterface

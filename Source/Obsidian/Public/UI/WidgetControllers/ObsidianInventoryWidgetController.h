@@ -16,7 +16,7 @@ struct FObsidianEquipmentChangeMessage;
 class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
 class UObsidianUnstackSlider;
-class UObsidianHeroComponent;
+class UObsidianPlayerInputManager;
 class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
@@ -202,7 +202,7 @@ private:
 	bool bUnstackSliderActive = false;
 	
 	UPROPERTY()
-	TObjectPtr<UObsidianHeroComponent> OwnerHeroComponent = nullptr;
+	TObjectPtr<UObsidianPlayerInputManager> OwnerPlayerInputManager = nullptr;
 	
 	UPROPERTY()
 	TMap<FIntPoint, UObsidianItem*> AddedItemWidgetMap;

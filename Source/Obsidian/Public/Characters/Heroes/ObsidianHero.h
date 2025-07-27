@@ -21,7 +21,7 @@ class UObsidianHeroAttributesComponent;
 class AObsidianPlayerState;
 class USpringArmComponent;
 class UCameraComponent;
-class UObsidianHeroComponent;
+class UObsidianPlayerInputManager;
 
 /**
  * Main class for Hero characters in Obsidian.
@@ -45,7 +45,7 @@ public:
 
 	UObsidianWidgetBase* GetHealthBarWidget() const;
 
-	UObsidianHeroComponent* GetHeroComponent() const;
+	UObsidianPlayerInputManager* GetPlayerInputManager() const;
 
 	EObsidianHeroClass GetHeroClass() const
 	{
@@ -90,7 +90,7 @@ private:
 	
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UObsidianHeroComponent> HeroComponent;
+	TObjectPtr<UObsidianPlayerInputManager> PlayerInputManager;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianHeroAttributesComponent> HeroAttributesComponent;

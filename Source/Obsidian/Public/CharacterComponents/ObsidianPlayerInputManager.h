@@ -10,7 +10,7 @@
 // ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
-#include "ObsidianHeroComponent.generated.h"
+#include "ObsidianPlayerInputManager.generated.h"
 
 struct FInputActionValue;
 
@@ -47,23 +47,23 @@ enum class EObsidianItemPickUpType : uint8
  * Component that manages hero related things like input
  */
 UCLASS()
-class OBSIDIAN_API UObsidianHeroComponent : public UPawnComponent
+class OBSIDIAN_API UObsidianPlayerInputManager : public UPawnComponent
 {
 	GENERATED_BODY()
 	
 public:
-	UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianPlayerInputManager(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	void InitializePlayerInput(UInputComponent* InputComponent);
 	
-	/** Returns the hero component if one exists on the specified actor. */
-	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroComp")
-	static UObsidianHeroComponent* FindHeroComponent(const AActor* Actor)
+	/** Returns the player input manager component if one exists on the specified actor. */
+	UFUNCTION(BlueprintPure, Category = "Obsidian|PlayerInputManager")
+	static UObsidianPlayerInputManager* FindPlayerInputManager(const AActor* Actor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianHeroComponent>() : nullptr);
+		return (Actor ? Actor->FindComponentByClass<UObsidianPlayerInputManager>() : nullptr);
 	}
 	
 	AObsidianHUD* GetObsidianHUD() const;
@@ -175,7 +175,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
 	float AutoRunAcceptanceRadius = 30.f;
 
-	/** Radius of the sphere in which we allow the Player to pickup item. */
+	/** Radius of the sphere in which we allow the Player to interact with the world e.g. open chest, pickup item etc. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
 	float DefaultInteractionRadius = 200.0f;
 

@@ -12,7 +12,7 @@
 
 #include "ObsidianPlayerStash.generated.h"
 
-class UObsidianHeroComponent;
+class UObsidianPlayerInputManager;
 
 UCLASS()
 class OBSIDIAN_API AObsidianPlayerStash : public AActor, public IObsidianHighlightInterface, public IObsidianInteractionInterface

@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "CharacterComponents/ObsidianHeroComponent.h"
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
 
 // ~ Core
 #include "EnhancedInputSubsystems.h"
@@ -38,7 +38,7 @@
 
 DEFINE_LOG_CATEGORY(LogInteraction);
 
-UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectInitializer)
+UObsidianPlayerInputManager::UObsidianPlayerInputManager(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 	SetIsReplicatedByDefault(true);
@@ -48,14 +48,14 @@ UObsidianHeroComponent::UObsidianHeroComponent(const FObjectInitializer& ObjectI
 	AutoRunSplineComp = CreateDefaultSubobject<USplineComponent>(TEXT("AutoRunSplineComponent"));
 }
 
-void UObsidianHeroComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+void UObsidianPlayerInputManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME_CONDITION(ThisClass, DraggedItem, COND_OwnerOnly);
 }
 
-void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UObsidianPlayerInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
@@ -73,7 +73,7 @@ void UObsidianHeroComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	}
 }
 
-void UObsidianHeroComponent::AutoRun()
+void UObsidianPlayerInputManager::AutoRun()
 {
 	if(!bAutoRunning)
 	{
@@ -121,7 +121,7 @@ void UObsidianHeroComponent::AutoRun()
 	}
 }
 
-void UObsidianHeroComponent::CursorTrace()
+void UObsidianPlayerInputManager::CursorTrace()
 {
 	APlayerController* PC = GetController<APlayerController>();
 	if(PC == nullptr)
@@ -171,7 +171,7 @@ void UObsidianHeroComponent::CursorTrace()
 	}
 }
 
-void UObsidianHeroComponent::DragItem() const
+void UObsidianPlayerInputManager::DragItem() const
 {
 	const APlayerController* PC = GetController<APlayerController>();
 	if(PC == nullptr)
@@ -188,7 +188,7 @@ void UObsidianHeroComponent::DragItem() const
 	}
 }
    
-void UObsidianHeroComponent::DragUsableItemIcon() const
+void UObsidianPlayerInputManager::DragUsableItemIcon() const
 {
 	const APlayerController* PC = GetController<APlayerController>();
 	if(PC == nullptr)
@@ -212,7 +212,7 @@ void UObsidianHeroComponent::DragUsableItemIcon() const
 	}
 }
 
-AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
+AObsidianHUD* UObsidianPlayerInputManager::GetObsidianHUD() const
 {
 	if(const AObsidianPlayerController* ObsidianPC = GetController<AObsidianPlayerController>())
 	{
@@ -221,7 +221,7 @@ AObsidianHUD* UObsidianHeroComponent::GetObsidianHUD() const
 	return nullptr;
 }
 
-void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputComponent)
+void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputComponent)
 {
 	check(InputComponent);
 
@@ -311,7 +311,7 @@ void UObsidianHeroComponent::InitializePlayerInput(UInputComponent* InputCompone
 	}
 }
 
-void UObsidianHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+void UObsidianPlayerInputManager::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 {
 	if(const APawn* Pawn = GetPawn<APawn>())
 	{
@@ -325,7 +325,7 @@ void UObsidianHeroComponent::Input_AbilityInputTagPressed(FGameplayTag InputTag)
 	}
 }
 
-void UObsidianHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+void UObsidianPlayerInputManager::Input_AbilityInputTagReleased(FGameplayTag InputTag)
 {
 	if(const APawn* Pawn = GetPawn<APawn>())
 	{
@@ -339,7 +339,7 @@ void UObsidianHeroComponent::Input_AbilityInputTagReleased(FGameplayTag InputTag
 	}
 }
 
-void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputActionValue)
+void UObsidianPlayerInputManager::Input_MoveKeyboard(const FInputActionValue& InputActionValue)
 {
 	APawn* Pawn = GetPawn<APawn>();
 	if(Pawn == nullptr)
@@ -381,7 +381,7 @@ void UObsidianHeroComponent::Input_MoveKeyboard(const FInputActionValue& InputAc
 	}
 }
 
-void UObsidianHeroComponent::Input_MoveStartedMouse()
+void UObsidianPlayerInputManager::Input_MoveStartedMouse()
 {
 	if(CanMoveMouse() == false)
 	{
@@ -409,7 +409,7 @@ void UObsidianHeroComponent::Input_MoveStartedMouse()
 	bAutoRunning = false;
 }
 
-void UObsidianHeroComponent::Input_MoveTriggeredMouse()
+void UObsidianPlayerInputManager::Input_MoveTriggeredMouse()
 {
 	if(CanContinuouslyMoveMouse() == false)
 	{
@@ -430,7 +430,7 @@ void UObsidianHeroComponent::Input_MoveTriggeredMouse()
 	}
 }
 
-void UObsidianHeroComponent::Input_MoveReleasedMouse()
+void UObsidianPlayerInputManager::Input_MoveReleasedMouse()
 {
 	bWantsToInteract = false;
 	
@@ -456,7 +456,7 @@ void UObsidianHeroComponent::Input_MoveReleasedMouse()
 	FollowTime = 0.f;
 }
 
-void UObsidianHeroComponent::AutoRunToClickedLocation()
+void UObsidianPlayerInputManager::AutoRunToClickedLocation()
 {
 	const APawn* Pawn = GetPawn<APawn>();
 	if(Pawn == nullptr)
@@ -483,7 +483,7 @@ void UObsidianHeroComponent::AutoRunToClickedLocation()
 	}
 }
 
-void UObsidianHeroComponent::Input_ToggleCharacterStatus()
+void UObsidianPlayerInputManager::Input_ToggleCharacterStatus()
 {
 	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
 	{
@@ -491,7 +491,7 @@ void UObsidianHeroComponent::Input_ToggleCharacterStatus()
 	}
 }
 
-void UObsidianHeroComponent::Input_ToggleInventory()
+void UObsidianPlayerInputManager::Input_ToggleInventory()
 {
 	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
 	{
@@ -499,7 +499,7 @@ void UObsidianHeroComponent::Input_ToggleInventory()
 	}
 }
 
-void UObsidianHeroComponent::Input_TogglePassiveSkillTree()
+void UObsidianPlayerInputManager::Input_TogglePassiveSkillTree()
 {
 	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
 	{
@@ -507,7 +507,7 @@ void UObsidianHeroComponent::Input_TogglePassiveSkillTree()
 	}
 }
 
-void UObsidianHeroComponent::Input_DropItem()
+void UObsidianPlayerInputManager::Input_DropItem()
 {
 	if(CanDropItem() == false)
 	{
@@ -516,7 +516,7 @@ void UObsidianHeroComponent::Input_DropItem()
 	ServerHandleDroppingItem();
 }
 
-void UObsidianHeroComponent::Input_ReleaseUsingItem()
+void UObsidianPlayerInputManager::Input_ReleaseUsingItem()
 {
 	if(IsUsingItem())
 	{
@@ -524,7 +524,7 @@ void UObsidianHeroComponent::Input_ReleaseUsingItem()
 	}
 }
 
-void UObsidianHeroComponent::Input_Interact()
+void UObsidianPlayerInputManager::Input_Interact()
 {
 	if(CursorHit.bBlockingHit == false)
 	{
@@ -556,12 +556,12 @@ void UObsidianHeroComponent::Input_Interact()
 	}
 }
 
-void UObsidianHeroComponent::Input_WeaponSwap()
+void UObsidianPlayerInputManager::Input_WeaponSwap()
 {
 	ServerWeaponSwap();
 }
 
-void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget, UObsidianInventoryItemInstance* UsingInstance)
+void UObsidianPlayerInputManager::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget, UObsidianInventoryItemInstance* UsingInstance)
 {
 	if(InbUsingItem && ItemWidget)
 	{
@@ -579,7 +579,7 @@ void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem
 		ItemWidget->SetUsingItemProperties();
 		CachedUsingInventoryItemWidget = ItemWidget;
 
-		checkf(DraggedUsableItemWidgetClass, TEXT("DraggedUsableItemWidgetClass is invalid in UObsidianHeroComponent::SetUsingItem please fill it."));
+		checkf(DraggedUsableItemWidgetClass, TEXT("DraggedUsableItemWidgetClass is invalid in UObsidianPlayerInputManager::SetUsingItem please fill it."));
 		DraggedUsableItemWidget = CreateWidget<UObsidianDraggedItem_Simple>(World, DraggedUsableItemWidgetClass);
 		DraggedUsableItemWidget->InitializeDraggedItem(ItemWidget->GetItemImage(), ItemWidget->GetItemGridSpan());
 		DraggedUsableItemWidget->AddToViewport();
@@ -607,7 +607,7 @@ void UObsidianHeroComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem
 	bUsingItem = InbUsingItem;
 }
 
-bool UObsidianHeroComponent::DropItem()
+bool UObsidianPlayerInputManager::DropItem()
 {
 	if(CanDropItem() == false)
 	{
@@ -617,7 +617,7 @@ bool UObsidianHeroComponent::DropItem()
 	return true;
 }
 
-bool UObsidianHeroComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+bool UObsidianPlayerInputManager::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
 	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
@@ -641,7 +641,7 @@ bool UObsidianHeroComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBun
 	return WroteSomething;
 }
 
-void UObsidianHeroComponent::ReadyForReplication()
+void UObsidianPlayerInputManager::ReadyForReplication()
 {
 	Super::ReadyForReplication();
 
@@ -667,14 +667,14 @@ void UObsidianHeroComponent::ReadyForReplication()
 	}
 }
 
-void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedItem)
+void UObsidianPlayerInputManager::OnRep_DraggedItem(const FDraggedItem& OldDraggedItem)
 {
 	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
 	{
 		const AController* Controller = GetController<AController>();
 		if(Controller == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::OnRep_DraggedItem."));
+			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return;
 		}
 		StopDraggingItem(Controller);
@@ -684,7 +684,7 @@ void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedIte
 		const AController* Controller = GetController<AController>();
 		if(Controller == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::OnRep_DraggedItem."));
+			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return;
 		}
 		StartDraggingItem(Controller);
@@ -698,26 +698,26 @@ void UObsidianHeroComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedIte
 	}
 }
 
-void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToTake)
+void UObsidianPlayerInputManager::ServerTakeoutFromItem_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToTake)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(ItemGridPosition);
 	if(ItemInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerTakeoutFromItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -736,19 +736,19 @@ void UObsidianHeroComponent::ServerTakeoutFromItem_Implementation(const FIntPoin
 	}
 }
 
-void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(const FIntPoint& ItemGridPosition)
+void UObsidianPlayerInputManager::ServerReplaceItemAtInventorySlot_Implementation(const FIntPoint& ItemGridPosition)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -786,19 +786,19 @@ void UObsidianHeroComponent::ServerReplaceItemAtInventorySlot_Implementation(con
 	}
 }
 
-void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlot_Implementation(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
+void UObsidianPlayerInputManager::ServerReplaceItemAtEquipmentSlot_Implementation(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -831,37 +831,37 @@ void UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlot_Implementation(con
 	}
 }
 
-void UObsidianHeroComponent::ServerWeaponSwap_Implementation()
+void UObsidianPlayerInputManager::ServerWeaponSwap_Implementation()
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerReplaceItemAtEquipmentSlotSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	EquipmentComponent->WeaponSwap();
 }
 
-void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableItem* ItemToPickup)
+void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Controller is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("Controller is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -876,7 +876,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = Template.ItemDef;
 		if(ItemDef == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("ItemDef is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("ItemDef is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return;
 		}
 
@@ -887,7 +887,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 				UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 				if(EquipmentComponent == nullptr)
 				{
-					UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+					UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 					return;
 				}
 			
@@ -902,7 +902,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return;
 		}
 
@@ -921,7 +921,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		UObsidianInventoryItemInstance* ItemInstance = Instance.Item;
 		if(ItemInstance == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return;
 		}
 
@@ -930,7 +930,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 			UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 			if(EquipmentComponent == nullptr)
 			{
-				UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+				UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 				return;
 			}
 			
@@ -944,7 +944,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return;
 		}
 
@@ -959,7 +959,7 @@ void UObsidianHeroComponent::ServerPickupItem_Implementation(AObsidianDroppableI
 	}
 }
 
-void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
+void UObsidianPlayerInputManager::ServerHandleDroppingItem_Implementation()
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -970,14 +970,14 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	AActor* Hero = GetOwner();
 	if (Hero == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Hero is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("Hero is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -1003,7 +1003,7 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
 	UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
 	if(NavigationSystem == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("NavigationSystem is null in UObsidianHeroComponent::ServerHandleDroppingItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("NavigationSystem is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -1036,18 +1036,18 @@ void UObsidianHeroComponent::ServerHandleDroppingItem_Implementation()
 	StopDraggingItem(Controller);
 }
 
-void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
+void UObsidianPlayerInputManager::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -1076,21 +1076,21 @@ void UObsidianHeroComponent::ServerGrabDroppableItemToCursor_Implementation(AObs
 		return;
 	}
 
-	checkf(false, TEXT("Provided ItemToPickup has no Instance nor Taplate to pick up, this is bad and should not happen."))
+	checkf(false, TEXT("Provided ItemToPickup has no Instance nor Template to pick up, this is bad and should not happen."))
 }
 
-bool UObsidianHeroComponent::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
+bool UObsidianPlayerInputManager::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
 {
 	const AActor* OwnerActor = GetOwner();
 	if(OwnerActor == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::ServerPickupItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return false;
 	}
 
 	if(OwnerActor->HasAuthority() == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UObsidianHeroComponent::HandlePickUpIfItemOutOfRange() should not be called without authority."));
+		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), ANSI_TO_TCHAR(__FUNCTION__));
 		return false;
 	}
 
@@ -1107,18 +1107,18 @@ bool UObsidianHeroComponent::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem
 	return false;
 }
 
-bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation)
+bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation)
 {
 	const AActor* OwnerActor = GetOwner();
 	if(OwnerActor == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in UObsidianHeroComponent::HandleOutOfRangeInteraction."));
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return false;
 	}
 
 	if(OwnerActor->HasAuthority() == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UObsidianHeroComponent::HandleOutOfRangeInteraction should not be called without authority."));
+		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), ANSI_TO_TCHAR(__FUNCTION__));
 		return false;
 	}
 
@@ -1131,7 +1131,7 @@ bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<
 #if !UE_BUILD_SHIPPING
 	if(bDebugInteraction)
 	{
-		UE_LOG(LogInteraction, Display, TEXT("Calculating Distance to Interaction Target."));
+		UE_LOG(LogInteraction, Display, TEXT("Calculating Distance to Interaction Target in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 
 		if(const UWorld* World = GetWorld())
 		{
@@ -1170,7 +1170,7 @@ bool UObsidianHeroComponent::HandleOutOfRangeInteraction(const TScriptInterface<
 	return false;
 }
 
-void UObsidianHeroComponent::ClientStartApproachingOutOfRangeInteractionTarget_Implementation(const FVector_NetQuantize10& ToDestination)
+void UObsidianPlayerInputManager::ClientStartApproachingOutOfRangeInteractionTarget_Implementation(const FVector_NetQuantize10& ToDestination)
 {
 	bAutoRunToInteract = true;
 	CachedDestination = ToDestination;
@@ -1185,18 +1185,18 @@ void UObsidianHeroComponent::ClientStartApproachingOutOfRangeInteractionTarget_I
 	AutoRunToClickedLocation();
 }
 
-void UObsidianHeroComponent::ServerStartInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
+void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
 {
 	if(InteractionTarget == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in UObsidianHeroComponent::ServerStartInteraction_Implementation."));
+		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	const AActor* InteractionActor = InteractionTarget->GetInteractionActor();
 	if(InteractionActor == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in UObsidianHeroComponent::ServerStartInteraction_Implementation."));
+		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -1221,7 +1221,7 @@ void UObsidianHeroComponent::ServerStartInteraction_Implementation(const TScript
 	}
 }
 
-void UObsidianHeroComponent::InteractWithOutOfRangeTarget()
+void UObsidianPlayerInputManager::InteractWithOutOfRangeTarget()
 {
 	if(CachedInteractionTarget)
 	{
@@ -1246,7 +1246,7 @@ void UObsidianHeroComponent::InteractWithOutOfRangeTarget()
 	}
 }
 
-void UObsidianHeroComponent::ClientTriggerInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
+void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
 {
 	if(InteractionTarget)
 	{
@@ -1274,7 +1274,7 @@ void UObsidianHeroComponent::ClientTriggerInteraction_Implementation(const TScri
 	}
 }
 
-void UObsidianHeroComponent::ClientStartApproachingOutOfRangeItem_Implementation(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
+void UObsidianPlayerInputManager::ClientStartApproachingOutOfRangeItem_Implementation(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
 {
 	bAutoRunToPickupItemByLabel = true;
 	CachedDestination = ToDestination;
@@ -1297,7 +1297,7 @@ void UObsidianHeroComponent::ClientStartApproachingOutOfRangeItem_Implementation
 	AutoRunToClickedLocation();
 }
 
-void UObsidianHeroComponent::AutomaticallyPickupOutOfRangeItem()
+void UObsidianPlayerInputManager::AutomaticallyPickupOutOfRangeItem()
 {
 	if(CachedDroppableItemToPickup)
 	{
@@ -1308,7 +1308,7 @@ void UObsidianHeroComponent::AutomaticallyPickupOutOfRangeItem()
 	}
 }
 
-void UObsidianHeroComponent::DragOutOfRangeItem()
+void UObsidianPlayerInputManager::DragOutOfRangeItem()
 {
 	if(CachedDroppableItemToPickup)
 	{
@@ -1319,26 +1319,26 @@ void UObsidianHeroComponent::DragOutOfRangeItem()
 	}
 }
 
-void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(const FIntPoint& ItemGridPosition)
+void UObsidianPlayerInputManager::ServerGrabInventoryItemToCursor_Implementation(const FIntPoint& ItemGridPosition)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(ItemGridPosition);
 	if(InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -1352,25 +1352,25 @@ void UObsidianHeroComponent::ServerGrabInventoryItemToCursor_Implementation(cons
 	StartDraggingItem(Controller);
 }
 
-void UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation(const FGameplayTag& SlotTag)
+void UObsidianPlayerInputManager::ServerEquipItemAtSlot_Implementation(const FGameplayTag& SlotTag)
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogEquipment, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("EquipmentComponent is null in UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("EquipmentComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -1392,26 +1392,26 @@ void UObsidianHeroComponent::ServerEquipItemAtSlot_Implementation(const FGamepla
 	}
 }
 
-void UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation(const FGameplayTag& SlotTag)
+void UObsidianPlayerInputManager::ServerGrabEquippedItemToCursor_Implementation(const FGameplayTag& SlotTag)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
 	if(InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("InstanceToGrab is null in UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation."));
+		UE_LOG(LogEquipment, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -1422,25 +1422,25 @@ void UObsidianHeroComponent::ServerGrabEquippedItemToCursor_Implementation(const
 	StartDraggingItem(Controller);
 }
 
-void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const FIntPoint& AtGridSlot, const bool bShiftDown)
+void UObsidianPlayerInputManager::ServerAddItemToInventoryAtSlot_Implementation(const FIntPoint& AtGridSlot, const bool bShiftDown)
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerAddItemToInventoryAtSpecificSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -1482,25 +1482,25 @@ void UObsidianHeroComponent::ServerAddItemToInventoryAtSlot_Implementation(const
 	}
 }
 
-void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToAddOverride)
+void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToAddOverride)
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -1541,7 +1541,7 @@ void UObsidianHeroComponent::ServerAddStacksFromDraggedItemToItemAtSlot_Implemen
 	}
 }
 
-void UObsidianHeroComponent::UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown)
+void UObsidianPlayerInputManager::UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown)
 {
 	ServerUseItem(UsingItemInstance, OnSlotPosition);
 
@@ -1551,25 +1551,25 @@ void UObsidianHeroComponent::UseItem(const FIntPoint& OnSlotPosition, const bool
 	}
 }
 
-void UObsidianHeroComponent::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition)
+void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition)
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in UObsidianHeroComponent::ServerUseItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in UObsidianHeroComponent::ServerUseItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in UObsidianHeroComponent::ServerUseItem_Implementation."));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -1577,7 +1577,7 @@ void UObsidianHeroComponent::ServerUseItem_Implementation(UObsidianInventoryItem
 	InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
 }
 
-void UObsidianHeroComponent::UpdateStacksOnDraggedItemWidget(const int32 InStacks)
+void UObsidianPlayerInputManager::UpdateStacksOnDraggedItemWidget(const int32 InStacks)
 {
 	if(DraggedItemWidget)
 	{
@@ -1585,7 +1585,7 @@ void UObsidianHeroComponent::UpdateStacksOnDraggedItemWidget(const int32 InStack
 	}
 }
 
-bool UObsidianHeroComponent::DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const
+bool UObsidianPlayerInputManager::DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const
 {
 	if(OldDraggedItem.Instance && OldDraggedItem.Instance != DraggedItem.Instance)
 	{
@@ -1600,7 +1600,7 @@ bool UObsidianHeroComponent::DraggedItemWasReplaced(const FDraggedItem& OldDragg
 	return false;
 }
 
-void UObsidianHeroComponent::StartDraggingItem(const AController* Controller)
+void UObsidianPlayerInputManager::StartDraggingItem(const AController* Controller)
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -1618,7 +1618,7 @@ void UObsidianHeroComponent::StartDraggingItem(const AController* Controller)
 		DraggedItemWidget->RemoveFromParent();
 	}
 	
-	checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in UObsidianHeroComponent::DragItem please fill it on ObsidianDroppableItem Instance."));
+	checkf(DraggedItemWidgetClass, TEXT("DraggedItemWidgetClass is invalid in UObsidianPlayerInputManager::DragItem please fill it on ObsidianDroppableItem Instance."));
 	UObsidianDraggedItem* Item = CreateWidget<UObsidianDraggedItem>(World, DraggedItemWidgetClass);
 
 	bool bInitialized = false;
@@ -1639,7 +1639,7 @@ void UObsidianHeroComponent::StartDraggingItem(const AController* Controller)
 	DraggedItemWidget = Item;
 	bDraggingItem = true;
 
-	TWeakObjectPtr<UObsidianHeroComponent> WeakThis(this);
+	TWeakObjectPtr<UObsidianPlayerInputManager> WeakThis(this);
 	World->GetTimerManager().SetTimerForNextTick([WeakThis]()
 	{
 		if(WeakThis.IsValid())
@@ -1649,7 +1649,7 @@ void UObsidianHeroComponent::StartDraggingItem(const AController* Controller)
 	});
 }
 
-void UObsidianHeroComponent::StopDraggingItem(const AController* Controller)
+void UObsidianPlayerInputManager::StopDraggingItem(const AController* Controller)
 {
 	if(Controller && !Controller->IsLocalController())
 	{
@@ -1668,7 +1668,7 @@ void UObsidianHeroComponent::StopDraggingItem(const AController* Controller)
 	bJustDroppedItem = true;
 }
 
-bool UObsidianHeroComponent::IsHoveringOverInteractionTarget() const
+bool UObsidianPlayerInputManager::IsHoveringOverInteractionTarget() const
 {
 	if(CursorHit.bBlockingHit)
 	{
@@ -1681,17 +1681,17 @@ bool UObsidianHeroComponent::IsHoveringOverInteractionTarget() const
 	return false;
 }
 
-bool UObsidianHeroComponent::CanDropItem() const
+bool UObsidianPlayerInputManager::CanDropItem() const
 {
 	return IsDraggingAnItem() && bItemAvailableForDrop;
 }
 
-bool UObsidianHeroComponent::CanMoveMouse() const
+bool UObsidianPlayerInputManager::CanMoveMouse() const
 {
 	return !CanDropItem() && !bJustDroppedItem && !IsHoveringOverInteractionTarget();
 }
 
-bool UObsidianHeroComponent::CanContinuouslyMoveMouse() const
+bool UObsidianPlayerInputManager::CanContinuouslyMoveMouse() const
 {
 	return !CanDropItem() && !bJustDroppedItem && !bWantsToInteract;
 }

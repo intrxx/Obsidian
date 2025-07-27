@@ -13,7 +13,7 @@
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
-#include "CharacterComponents/ObsidianHeroComponent.h"
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
@@ -50,7 +50,7 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 	OwningPlayerController = OwningPlayerController == nullptr ? GetOwningPlayer() : OwningPlayerController;
 	check(OwningPlayerController);
 	const AActor* OwningActor = Cast<AActor>(OwningPlayerController->GetPawn());
-	HeroComp = UObsidianHeroComponent::FindHeroComponent(OwningActor);
+	PlayerInputManager = UObsidianPlayerInputManager::FindPlayerInputManager(OwningActor);
 
 	HealthProgressGlobe->SetWidgetController(WidgetController);
 	ManaProgressGlobe->SetWidgetController(WidgetController);

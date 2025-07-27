@@ -12,7 +12,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
-#include "CharacterComponents/ObsidianHeroComponent.h"
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/ObsidianPawnData.h"
@@ -43,7 +43,7 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
 	CameraComponent->SetupAttachment(SpringArmComponent);
 
-	HeroComponent = CreateDefaultSubobject<UObsidianHeroComponent>(TEXT("HeroComponent"));
+	PlayerInputManager = CreateDefaultSubobject<UObsidianPlayerInputManager>(TEXT("PlayerInputManager"));
 
 	HeroAttributesComponent = CreateDefaultSubobject<UObsidianHeroAttributesComponent>(TEXT("HeroAttributesComponent"));
 	HeroAttributesComponent->OnDeathStarted.AddDynamic(this, &ThisClass::OnDeathStarted);
@@ -74,7 +74,7 @@ void AObsidianHero::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	HeroComponent->InitializePlayerInput(PlayerInputComponent);
+	PlayerInputManager->InitializePlayerInput(PlayerInputComponent);
 }
 
 void AObsidianHero::PossessedBy(AController* NewController)
@@ -126,9 +126,9 @@ UObsidianWidgetBase* AObsidianHero::GetHealthBarWidget() const
 	return nullptr;
 }
 
-UObsidianHeroComponent* AObsidianHero::GetHeroComponent() const
+UObsidianPlayerInputManager* AObsidianHero::GetPlayerInputManager() const
 {
-	return HeroComponent;
+	return PlayerInputManager;
 }
 
 int32 AObsidianHero::GetCharacterLevel()
