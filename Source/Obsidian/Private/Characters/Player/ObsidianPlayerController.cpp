@@ -12,6 +12,7 @@
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/Items/ObsidianItemSpawner.h"
 
 AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
@@ -23,6 +24,7 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 
 	InventoryComponent = CreateDefaultSubobject<UObsidianInventoryComponent>(TEXT("Inventory Component"));
 	EquipmentComponent = CreateDefaultSubobject<UObsidianEquipmentComponent>(TEXT("Equipment Component"));
+	PlayerStashComponent = CreateDefaultSubobject<UObsidianPlayerStashComponent>(TEXT("Player Stash Component"));
 }
 
 void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const

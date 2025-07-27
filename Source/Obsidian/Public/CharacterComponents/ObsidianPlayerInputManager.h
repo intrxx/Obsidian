@@ -44,7 +44,8 @@ enum class EObsidianItemPickUpType : uint8
 };
 
 /**
- * Component that manages hero related things like input
+ * Component that manages every type of Player Input in obsidian. This includes regular native input, interactions,
+ * highlights and Inventory Items handling.
  */
 UCLASS()
 class OBSIDIAN_API UObsidianPlayerInputManager : public UPawnComponent

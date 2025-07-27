@@ -21,6 +21,7 @@ class UObsidianAbilitySystemComponent;
 class AObsidianPlayerState;
 class UObsidianInventoryComponent;
 class AObsidianItemSpawner;
+class UObsidianPlayerStashComponent;
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnEnemyActorHovered, AActor*, TargetActor, const bool, bHoveredOver);
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, const bool, bSeen);
@@ -47,6 +48,12 @@ public:
 	UObsidianEquipmentComponent* GetEquipmentComponent() const
 	{
 		return EquipmentComponent;
+	}
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
+	UObsidianPlayerStashComponent* GetPlayerStashComponent() const
+	{
+		return PlayerStashComponent;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
@@ -89,5 +96,8 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
+	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent;
 	
 };

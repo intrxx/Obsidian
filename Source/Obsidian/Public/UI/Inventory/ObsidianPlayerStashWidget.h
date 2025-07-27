@@ -6,6 +6,8 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 
+class UObsidianInventoryGrid;
+
 /**
  * 
  */
