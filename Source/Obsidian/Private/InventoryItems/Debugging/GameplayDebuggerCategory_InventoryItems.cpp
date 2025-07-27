@@ -55,7 +55,7 @@ void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* O
 
 			DataPack.Items.Add(InventoryItems);
 		}
-		DataPack.InventoryStateMap = InventoryComponent->Internal_GetInventoryStateMap();
+		DataPack.InventoryStateMap = InventoryComponent->GetGridStateMap();
 	}
 }
 

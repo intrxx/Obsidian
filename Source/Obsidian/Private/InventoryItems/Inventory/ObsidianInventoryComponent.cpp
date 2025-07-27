@@ -11,6 +11,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -95,11 +96,6 @@ TMap<FIntPoint, UObsidianInventoryItemInstance*> UObsidianInventoryComponent::In
 	return InventoryGrid.GridLocationToItemMap;
 }
 
-TMap<FIntPoint, bool> UObsidianInventoryComponent::Internal_GetInventoryStateMap()
-{
-	return InventoryGrid.InventoryStateMap;
-}
-
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::GetItemInstanceAtLocation(const FIntPoint& Location) const
 {
 	if(InventoryGrid.GridLocationToItemMap.Contains(Location))
@@ -114,112 +110,9 @@ TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems
 	return InventoryGrid.GetAllItems();
 }
 
-FObsidianItemStats UObsidianInventoryComponent::GetItemStatsByInventoryPosition(const FIntPoint& GridPosition) const
+TMap<FIntPoint, bool> UObsidianInventoryComponent::GetGridStateMap() const
 {
-	const UObsidianInventoryItemInstance* ItemInstance = GetItemInstanceAtLocation(GridPosition);
-	check(ItemInstance);
-
-	FObsidianItemStats Stats;
-	
-	if(ItemInstance->IsStackable())
-	{
-		Stats.SetStacks(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current),
-				ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
-	}
-
-	Stats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
-	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
-	Stats.SetDescription(ItemInstance->GetItemDescription());
-	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
-
-	Stats.ItemRarity = ItemInstance->GetItemRarity();
-	
-	const bool bIdentified = ItemInstance->IsItemIdentified();
-	Stats.SetIdentified(bIdentified);
-	if(bIdentified)
-	{
-		Stats.SetAffixDescriptionRows(ItemInstance->GetAffixesAsUIDescription());
-	}
-
-	return Stats;
-}
-
-FObsidianItemStats UObsidianInventoryComponent::GetItemStatForInstance(const UObsidianInventoryItemInstance* ItemInstance) const
-{
-	if(ItemInstance == nullptr)
-	{
-		return FObsidianItemStats();
-	}
-	
-	FObsidianItemStats Stats;
-	
-	if(ItemInstance->IsStackable())
-	{
-		Stats.SetStacks(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current),
-			 ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
-	}
-
-	Stats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
-	Stats.SetDisplayName(ItemInstance->GetItemDisplayName());
-	Stats.SetDescription(ItemInstance->GetItemDescription());
-	Stats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
-
-	Stats.ItemRarity = ItemInstance->GetItemRarity();
-	
-	const bool bIdentified = ItemInstance->IsItemIdentified();
-	Stats.SetIdentified(bIdentified);
-	if(bIdentified)
-	{
-		Stats.SetAffixDescriptionRows(ItemInstance->GetAffixesAsUIDescription());
-	}
-
-	return Stats;
-}
-
-FObsidianItemStats UObsidianInventoryComponent::GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks) const
-{
-	if(!IsValid(ItemDef))
-	{
-		return FObsidianItemStats();
-	}
-
-	const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef);
-	if(ItemDefault == nullptr)
-	{
-		return FObsidianItemStats();
-	}
-
-	FObsidianItemStats Stats;
-
-	if(ItemDefault->IsStackable())
-	{
-		if(const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass())))
-		{
-			Stats.SetStacks(CurrentItemStacks, // Current Item Stacks are not present on ItemDef, they are directly on Pickable Item
-				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Max));
-		}
-	}
-
-	if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
-	{
-		Stats.SetItemImage(AppearanceFrag->GetItemImage(), AppearanceFrag->GetItemGridSpanFromDesc());
-		Stats.SetDisplayName(AppearanceFrag->GetItemDisplayName());
-		Stats.SetDescription(AppearanceFrag->GetItemDescription());
-		Stats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());
-	}
-
-	if(const UOInventoryItemFragment_Affixes* AffixesFrag = Cast<UOInventoryItemFragment_Affixes>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())))
-	{
-		Stats.ItemRarity = AffixesFrag->GetItemRarityTag();
-		const bool bIdentified = AffixesFrag->IsItemIdentified();
-		Stats.SetIdentified(bIdentified);
-		if(bIdentified)
-		{
-			Stats.SetAffixDescriptionRows(AffixesFrag->GetAffixesAsUIDescription());
-		}
-	}
-
-	return Stats;
+	return InventoryGrid.InventoryStateMap;
 }
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
@@ -754,7 +647,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecif
 	}
 	
 	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtGridSlot);
-	if(IsTheSameItem(InstanceToAddTo, AddingFromItemDef) == false)
+	if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, AddingFromItemDef) == false)
 	{
 		return Result;
 	}
@@ -817,7 +710,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecif
 	}
 	
 	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtGridSlot);
-	if(IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
+	if(UObsidianItemsFunctionLibrary::IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
 	{
 		return Result;
 	}
@@ -1348,32 +1241,5 @@ bool UObsidianInventoryComponent::CanFitItemDefinition(const TSubclassOf<UObsidi
 	return bCanFit;
 }
 
-bool UObsidianInventoryComponent::IsTheSameItem(const UObsidianInventoryItemInstance* InstanceA, const UObsidianInventoryItemInstance* InstanceB)
-{
-	if(InstanceA == nullptr || InstanceB == nullptr)
-	{
-		return false;
-	}
-
-	if(InstanceA->GetItemDef().Get() == InstanceB->GetItemDef().Get())
-	{
-		return true;
-	}
-	return false;
-}
-
-bool UObsidianInventoryComponent::IsTheSameItem(const UObsidianInventoryItemInstance* Instance, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
-{
-	if(Instance == nullptr || ItemDef == nullptr)
-	{
-		return false;
-	}
-
-	if(Instance->GetItemDef().Get() == ItemDef.Get())
-	{
-		return true;
-	}
-	return false;
-}
 
 

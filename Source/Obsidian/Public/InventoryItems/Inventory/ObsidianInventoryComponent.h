@@ -72,18 +72,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, Category = "Obsidian|Inventory")
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 
-	/** Gets the Item Stats based on provided Item position on the Inventory Grid. */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
-	FObsidianItemStats GetItemStatsByInventoryPosition(const FIntPoint& InPosition) const;
-
-	/** Gets the Item Stats from provided Item Instance. */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
-	FObsidianItemStats GetItemStatForInstance(const UObsidianInventoryItemInstance* ItemInstance) const;
-
-	/** Gets the Item Stats from provided Item Definition. */
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
-	FObsidianItemStats GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks) const;
-	 
+	TMap<FIntPoint, bool> GetGridStateMap() const;
+	
 	/** Finds first Item Instance in the inventory for provided Item Definition. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const;
@@ -236,18 +226,7 @@ private:
 	
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FIntPoint, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
-	TMap<FIntPoint, bool> Internal_GetInventoryStateMap();
 
-	//TODO This can be moved to some library later.
-	
-	/** Will compare item's definitions, will return true if items are of the same class. */
-	static bool IsTheSameItem(const UObsidianInventoryItemInstance* InstanceA, const UObsidianInventoryItemInstance* InstanceB);
-
-	/** Will compare item's definitions, will return true if items are of the same class. */
-	static bool IsTheSameItem(const UObsidianInventoryItemInstance* Instance, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
-
-	//END TODO
-	
 private:
 	friend UObsidianInventoryWidgetController;
 

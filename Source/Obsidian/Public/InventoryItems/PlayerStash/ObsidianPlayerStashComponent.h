@@ -22,4 +22,10 @@ class OBSIDIAN_API UObsidianPlayerStashComponent : public UActorComponent
 public:	
 	UObsidianPlayerStashComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
+	/** Returns the Player Stash Component if one exists on the specified actor, will be nullptr otherwise */
+	UFUNCTION(BlueprintPure, Category = "Obsidian|Inventory")
+	static UObsidianPlayerStashComponent* FindPlayerStashComponent(const AActor* Actor)
+	{
+		return (Actor ? Actor->FindComponentByClass<UObsidianPlayerStashComponent>() : nullptr);
+	}
 };

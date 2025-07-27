@@ -64,8 +64,7 @@ public:
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
 
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory);
-
-	FObsidianItemStats GetItemStatsBySlotTag(const FGameplayTag& SlotTag);
+	
 	bool IsItemEquippedAtSlot(const FGameplayTag& SlotTag);
 
 	bool CanOwnerModifyEquipmentState();

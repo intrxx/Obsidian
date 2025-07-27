@@ -25,11 +25,3 @@ public:
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const {}
 };
 
-UCLASS()
-class UObsidianInventoryFunctionLibrary : public UBlueprintFunctionLibrary
-{
-	GENERATED_BODY()
-
-	UFUNCTION(BlueprintCallable, meta=(DeterminesOutputType = FragmentClass))
-	static const UObsidianInventoryItemFragment* FindItemDefinitionFragment(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass);
-};

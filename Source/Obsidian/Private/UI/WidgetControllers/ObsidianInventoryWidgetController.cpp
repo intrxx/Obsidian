@@ -15,6 +15,7 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
@@ -365,7 +366,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 		 {
 		 	if(DraggedInstance->IsStackable())
 		 	{
-		 		if(UObsidianInventoryComponent::IsTheSameItem(DraggedInstance, InstanceToAddTo))
+		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance, InstanceToAddTo))
 		 		{
 		 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
 		 			return;
@@ -385,7 +386,7 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItem(const
 		 	const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
 		 	if(DefaultObject && DefaultObject->IsStackable())
 		 	{
-		 		if(UObsidianInventoryComponent::IsTheSameItem(InstanceToAddTo, DraggedItemDef))
+		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, DraggedItemDef))
 		 		{
 		 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
 		 			return;
@@ -530,9 +531,12 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const F
 	}
 	
 	const FIntPoint SlotPosition = ItemWidget->GetInventoryPosition();
-	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(AtGridSlot);
+	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 
-	if(CreateInventoryItemDescription(ItemWidget, ItemStats))
+	FObsidianItemStats OutItemStats;
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(ItemInstance, OutItemStats);
+	
+	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
 		ActiveItemDescription->SetAssociatedInventoryLocation(SlotPosition);
 	}
@@ -546,9 +550,12 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const U
 	}
 
 	const FIntPoint SlotPosition = ItemWidget->GetInventoryPosition();
-	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsByInventoryPosition(SlotPosition);
+	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
 
-	if(CreateInventoryItemDescription(ItemWidget, ItemStats))
+	FObsidianItemStats OutItemStats;
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(ItemInstance, OutItemStats);
+
+	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
 		ActiveItemDescription->SetAssociatedInventoryLocation(SlotPosition);
 	}
@@ -562,9 +569,12 @@ void UObsidianInventoryWidgetController::HandleHoveringOverEquipmentItem(const U
 	}
 	
 	const FGameplayTag SlotTag = ItemWidget->GetEquipmentSlotTag();
-	const FObsidianItemStats ItemStats = EquipmentComponent->GetItemStatsBySlotTag(SlotTag);
+	const UObsidianInventoryItemInstance* ItemInstance = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
 
-	if(CreateInventoryItemDescription(ItemWidget, ItemStats))
+	FObsidianItemStats OutItemStats;
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(ItemInstance, OutItemStats);
+
+	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
 		ActiveItemDescription->SetAssociatedSlotTag(SlotTag);
 	}
@@ -587,8 +597,11 @@ void UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(con
 		return;
 	}
 	
-	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatForInstance(Instance);
-	CreateDroppedItemDescription(ItemStats);
+	FObsidianItemStats OutItemStats;
+	if(UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(Instance, OutItemStats))
+	{
+		CreateDroppedItemDescription(OutItemStats);
+	}
 }
 
 void UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks)
@@ -598,8 +611,11 @@ void UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(con
 		return;
 	}
 	
-	const FObsidianItemStats ItemStats = InventoryComponent->GetItemStatsForItemDefinition(ItemDef, CurrentItemStacks);
-	CreateDroppedItemDescription(ItemStats);
+	FObsidianItemStats OutItemStats;
+	if(UObsidianItemsFunctionLibrary::GetItemStatsForItemDefinition(ItemDef, CurrentItemStacks, OutItemStats))
+	{
+		CreateDroppedItemDescription(OutItemStats);
+	}
 }
 
 void UObsidianInventoryWidgetController::HandleTakingOutStacks(const int32 StacksToTake, const FIntPoint& GridSlotPosition)
