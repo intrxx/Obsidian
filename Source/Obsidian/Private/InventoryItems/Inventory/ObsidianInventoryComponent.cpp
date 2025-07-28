@@ -653,7 +653,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecif
 		return Result;
 	}
 	
-	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAvailableToAddToItem_WithDef(GetOwner(), AddingFromItemDef, AddingFromItemDefCurrentStacks, InstanceToAddTo);
+	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef(GetOwner(), AddingFromItemDef, AddingFromItemDefCurrentStacks, InstanceToAddTo);
 	if(AmountThatCanBeAddedToInstance <= 0)
 	{
 		return Result;
@@ -716,7 +716,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecif
 		return Result;
 	}
 	
-	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAvailableToAddToItem(GetOwner(), AddingFromInstance, InstanceToAddTo);
+	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(GetOwner(), AddingFromInstance, InstanceToAddTo);
 	if(AmountThatCanBeAddedToInstance <= 0)
 	{
 		return Result;
