@@ -4,12 +4,15 @@
 
 // ~ Core
 #include "CoreMinimal.h"
-#include "Components/ActorComponent.h"
 
 // ~ Project
 
 
+#include "Components/ActorComponent.h"
 #include "ObsidianPlayerStashComponent.generated.h"
+
+class UObsidianInventoryItemDefinition;
+class UObsidianInventoryItemInstance;
 
 /**
  * Primary Player Stash Component of Obsidian to be used by Players.
@@ -28,4 +31,10 @@ public:
 	{
 		return (Actor ? Actor->FindComponentByClass<UObsidianPlayerStashComponent>() : nullptr);
 	}
+
+	/** Finds all stacks in the inventory for given item type with item Def. */
+	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	
+	/** Finds all stacks in the inventory for given item type with item Instance. */
+	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 };

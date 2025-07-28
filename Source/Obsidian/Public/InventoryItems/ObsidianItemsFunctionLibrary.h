@@ -2,9 +2,13 @@
 
 #pragma once
 
+// ~ Core
 #include "CoreMinimal.h"
-#include "Kismet/BlueprintFunctionLibrary.h"
+
+// ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
+
+#include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianItemsFunctionLibrary.generated.h"
 
 class UObsidianInventoryItemFragment;
@@ -34,9 +38,17 @@ public:
 
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
-	static bool GetItemStatsForItemInstance(const UObsidianInventoryItemInstance* ItemInstance, FObsidianItemStats& OutItemStats);
+	static bool GetItemStats(const UObsidianInventoryItemInstance* ItemInstance, FObsidianItemStats& OutItemStats);
 
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
-	static bool GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 TemplateCurrentItemStacks, FObsidianItemStats& OutItemStats);
+	static bool GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 TemplateCurrentItemStacks, FObsidianItemStats& OutItemStats);
+
+	/** Calculates the amount of stacks that can be added to the Item from provided Instance, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
+	static int32 GetAmountOfStacksAvailableToAddToItem(const AActor* Owner, const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo);
+
+	/** Calculates the amount of stacks that can be added to the Item from provided Item Definition, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
+	static int32 GetAmountOfStacksAvailableToAddToItem_WithDef(const AActor* Owner, const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const UObsidianInventoryItemInstance* InstanceToAddTo);
 };

@@ -14,4 +14,16 @@ UObsidianPlayerStashComponent::UObsidianPlayerStashComponent(const FObjectInitia
 
 }
 
+int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+{
+	//TODO Implement
+	return 0;
+}
+
+int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance)
+{
+	//TODO Implement
+	return 0;
+}
+
 

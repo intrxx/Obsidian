@@ -156,7 +156,7 @@ private:
 
 	/**
 	 * Map that represents whole Inventory Grid with taken fields.
-	 * If a Given Vector2D location has a true value associated with it, the field is treated as taken.
+	 * If a Given FIntPoint location has a true value associated with it, the field is treated as taken.
 	 */
 	TMap<FIntPoint, bool> InventoryStateMap;
 };

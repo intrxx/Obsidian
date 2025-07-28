@@ -534,7 +534,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const F
 	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 
 	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(ItemInstance, OutItemStats);
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
 	
 	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
@@ -553,7 +553,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const U
 	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
 
 	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(ItemInstance, OutItemStats);
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
 
 	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
@@ -572,7 +572,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverEquipmentItem(const U
 	const UObsidianInventoryItemInstance* ItemInstance = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
 
 	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(ItemInstance, OutItemStats);
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
 
 	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
@@ -598,7 +598,7 @@ void UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(con
 	}
 	
 	FObsidianItemStats OutItemStats;
-	if(UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(Instance, OutItemStats))
+	if(UObsidianItemsFunctionLibrary::GetItemStats(Instance, OutItemStats))
 	{
 		CreateDroppedItemDescription(OutItemStats);
 	}
@@ -612,7 +612,7 @@ void UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(con
 	}
 	
 	FObsidianItemStats OutItemStats;
-	if(UObsidianItemsFunctionLibrary::GetItemStatsForItemDefinition(ItemDef, CurrentItemStacks, OutItemStats))
+	if(UObsidianItemsFunctionLibrary::GetItemStats_WithDef(ItemDef, CurrentItemStacks, OutItemStats))
 	{
 		CreateDroppedItemDescription(OutItemStats);
 	}

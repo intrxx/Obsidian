@@ -10,6 +10,8 @@
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 
 const UObsidianInventoryItemFragment* UObsidianItemsFunctionLibrary::FindItemDefinitionFragment(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass)
 {
@@ -48,7 +50,7 @@ bool UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(const UObsidianInvento
 	return false;
 }
 
-bool UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(const UObsidianInventoryItemInstance* ItemInstance, FObsidianItemStats& OutItemStats)
+bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemInstance* ItemInstance, FObsidianItemStats& OutItemStats)
 {
 	if(ItemInstance == nullptr)
 	{
@@ -78,7 +80,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStatsForItemInstance(const UObsidianI
 	return true;
 }
 
-bool UObsidianItemsFunctionLibrary::GetItemStatsForItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 TemplateCurrentItemStacks, FObsidianItemStats& OutItemStats)
+bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 TemplateCurrentItemStacks, FObsidianItemStats& OutItemStats)
 {
 	if(IsValid(ItemDef) == false)
 	{
@@ -120,5 +122,96 @@ bool UObsidianItemsFunctionLibrary::GetItemStatsForItemDefinition(const TSubclas
 	}
 
 	return true;
+}
+
+int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAvailableToAddToItem(const AActor* Owner, const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo)
+{
+	if(Owner == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Owner is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return 0; 
+	}
+	
+	const int32 CurrentStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(CurrentStackCount == 0)
+	{
+		return 0;
+	}
+
+	int32 CombinedStacks = 0;
+	const int32 LimitStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+	if(LimitStackCount > 0)
+	{
+		int32 StacksInInventory = 0;
+		int32 StacksInStash = 0;
+		if(UObsidianInventoryComponent* InventoryComp = UObsidianInventoryComponent::FindInventoryComponent(Owner))
+		{
+			StacksInInventory = InventoryComp->FindAllStacksForGivenItem(AddingFromInstance);
+		}
+		if(UObsidianPlayerStashComponent* PlayerStashComp = UObsidianPlayerStashComponent::FindPlayerStashComponent(Owner))
+		{
+			StacksInStash = PlayerStashComp->FindAllStacksForGivenItem(AddingFromInstance);
+		}
+
+		CombinedStacks = StacksInInventory + StacksInStash;
+		checkf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
+		if((CombinedStacks == 1) || (CombinedStacks == LimitStackCount))
+		{
+			return 0;
+		}
+	}
+	
+	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? AddingFromInstanceCurrentStacks : LimitStackCount - CombinedStacks;
+	if(StacksThatCanBeAddedToInventory <= 0)
+	{
+		return 0;
+	}
+			
+	const int32 MaxStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+	const int32 AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
+	return FMath::Min<int32>(AmountThatCanBeAddedToInstance, AddingFromInstanceCurrentStacks);
+}
+
+int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAvailableToAddToItem_WithDef(const AActor* Owner, const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const UObsidianInventoryItemInstance* InstanceToAddTo)
+{
+	const int32 CurrentStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(CurrentStackCount == 0)
+	{
+		return 0;
+	}
+
+	int32 CombinedStacks = 0;
+	const int32 LimitStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+	if(LimitStackCount > 0)
+	{
+		int32 StacksInInventory = 0;
+		int32 StacksInStash = 0;
+		if(UObsidianInventoryComponent* InventoryComp = UObsidianInventoryComponent::FindInventoryComponent(Owner))
+		{
+			StacksInInventory = InventoryComp->FindAllStacksForGivenItem(AddingFromItemDef);
+		}
+		if(UObsidianPlayerStashComponent* PlayerStashComp = UObsidianPlayerStashComponent::FindPlayerStashComponent(Owner))
+		{
+			StacksInStash = PlayerStashComp->FindAllStacksForGivenItem(AddingFromItemDef);
+		}
+
+		CombinedStacks = StacksInInventory + StacksInStash;
+		checkf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
+		if((CombinedStacks == 1) || (CombinedStacks == LimitStackCount))
+		{
+			return 0;
+		}
+	}
+			
+	const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? AddingFromItemDefCurrentStacks : LimitStackCount - CombinedStacks;
+	if(StacksThatCanBeAddedToInventory <= 0)
+	{
+		return 0;
+	}
+			
+	const int32 MaxStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+	const int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
+	return FMath::Min(AmountThatCanBeAddedToInstance, AddingFromItemDefCurrentStacks);
 }
 

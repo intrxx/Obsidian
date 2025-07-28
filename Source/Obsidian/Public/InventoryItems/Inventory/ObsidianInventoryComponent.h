@@ -63,6 +63,12 @@ public:
 	int32 GetInventoryGridWidth() const;
 	int32 GetInventoryGridHeight() const;
 
+	/** Finds all stacks in the inventory for given item type with item Def. */
+	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	
+	/** Finds all stacks in the inventory for given item type with item Instance. */
+	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
+
 	/** Gets the total amount of items added to the inventory with the same item Definition. This does not include stacks, only individual entries to the inventory. */
 	int32 GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const;
 
@@ -199,18 +205,6 @@ private:
 	
 	/** Checks if the provided Item Instance fits in the inventory at provided slot. */
 	bool CanFitItemInstanceToSpecificSlot(const FIntPoint& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance);
-	
-	/** Finds all stacks in the inventory for given item type with item Def. */
-	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
-	
-	/** Finds all stacks in the inventory for given item type with item Instance. */
-	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
-
-	/** Calculates the amount of stacks that can be added to the Item from provided Instance, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
-	int32 GetAmountOfStacksAvailableToAddToItem(const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo);
-
-	/** Calculates the amount of stacks that can be added to the Item from provided Item Definition, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
-	int32 GetAmountOfStacksAvailableToAddToItem(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const UObsidianInventoryItemInstance* InstanceToAddTo);
 	
 	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided ItemDef. */
 	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
