@@ -11,10 +11,11 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianInventoryGridItemList.generated.h"
 
+struct FObsidianInventoryGridItemList;
+
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryComponent;
-struct FObsidianInventoryGridItemList;
 
 /**
  * 
@@ -54,10 +55,6 @@ struct FObsidianInventoryChangeMessage
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	int32 Delta = 0;
 	
-	//TODO Decide if I want to actually use it, it shouldn't be an issue but the Change type can be deduced from Stacks changes so it is kinda useless to the actual game logic
-	// InventoryChangeMessage.NewCount == 0 -> Removed
-	// InventoryChangeMessage.NewCount == InventoryChangeMessage.Delta -> Added
-	// InventoryChangeMessage.NewCount != InventoryChangeMessage.Delta -> Changed
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	EObsidianInventoryChangeType ChangeType = EObsidianInventoryChangeType::ICT_NONE;
 };

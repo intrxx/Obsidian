@@ -126,7 +126,7 @@ void UObsidianInventoryGrid::AddItemToGrid(UObsidianItem* ItemWidget, const floa
 	UCanvasPanelSlot* CanvasItem = Root_CanvasPanel->AddChildToCanvas(ItemWidget);
 	CanvasItem->SetSize(ItemWidget->GetItemWidgetSize());
 	
-	const FVector2D ItemPosition = SlotTileSize * (FVector2D)ItemWidget->GetInventoryPosition() + ItemSlotPadding;
+	const FVector2D ItemPosition = SlotTileSize * (FVector2D)ItemWidget->GetGridPosition() + ItemSlotPadding;
 	CanvasItem->SetPosition(ItemPosition);
 }
 

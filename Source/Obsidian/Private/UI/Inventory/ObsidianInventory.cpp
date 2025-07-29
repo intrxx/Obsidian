@@ -205,10 +205,10 @@ void UObsidianInventory::OnInventoryItemLeftMouseButtonPressed(const UObsidianIt
 	{
 		if(bShiftDown)
 		{
-			InventoryWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(ItemWidget->GetInventoryPosition(), ItemWidget);
+			InventoryWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(ItemWidget->GetGridPosition(), ItemWidget);
 			return;
 		}
-		InventoryWidgetController->HandleLeftClickingOnInventoryItem(ItemWidget->GetInventoryPosition());
+		InventoryWidgetController->HandleLeftClickingOnInventoryItem(ItemWidget->GetGridPosition());
 	}
 }
 
@@ -217,7 +217,7 @@ void UObsidianInventory::OnInventoryItemRightMouseButtonPressed(UObsidianItem* I
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemRightMouseButtonPressed"));
 	if(InventoryWidgetController)
 	{
-		InventoryWidgetController->HandleRightClickingOnInventoryItem(ItemWidget->GetInventoryPosition(), ItemWidget);
+		InventoryWidgetController->HandleRightClickingOnInventoryItem(ItemWidget->GetGridPosition(), ItemWidget);
 	}
 }
 
@@ -226,7 +226,7 @@ void UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed(const UObsidianIt
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed"));
 	if(InventoryWidgetController)
 	{
-		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(ItemWidget->GetEquipmentSlotTag());
+		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(ItemWidget->GetSlotTag());
 	}
 }
 

@@ -15,12 +15,23 @@ FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance)
 	, Stacks(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
 {}
 
+// ~ FObsidianItemPosition
+
+FIntPoint FObsidianItemPosition::GetItemGridLocation() const
+{
+	return GridLocation;
+}
+
+FGameplayTag FObsidianItemPosition::GetItemSlotTag() const
+{
+	return SlotTag;
+}
+
 // ~ FObsidianDescriptionAffixRow
 
 void FObsidianAffixDescriptionRow::SetAffixRowDescription(const FText& InAffixDescription, const int32 InTempMagnitude)
 {
 	AffixRowDescription = FText::FromString(FString::Printf(TEXT("Adds %d %s"), InTempMagnitude, *InAffixDescription.ToString()));
-	
 }
 
 void FObsidianAffixDescriptionRow::SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType, const int32 InAffixTier)

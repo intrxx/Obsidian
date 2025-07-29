@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 
 // ~ Project
-
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItem.generated.h"
@@ -39,20 +39,14 @@ public:
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
 
-	FIntPoint GetInventoryPosition() const
-	{
-		return ItemDesiredPosition;
-	}
+	FIntPoint GetGridPosition() const;
 	
 	FIntPoint GetItemGridSpan() const
 	{
 		return ItemDesiredGridSpan;
 	}
 	
-	FGameplayTag GetEquipmentSlotTag() const
-	{
-		return ItemEquipmentSlot;
-	}
+	FGameplayTag GetSlotTag() const;
 
 	FSlateBrush GetItemImage() const;
 
@@ -97,15 +91,12 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
-
-	UPROPERTY()
-	FIntPoint ItemDesiredPosition = FIntPoint::NoneValue;
 	
 	UPROPERTY()
 	FIntPoint ItemDesiredGridSpan = FIntPoint::NoneValue;
 
 	UPROPERTY()
-	FGameplayTag ItemEquipmentSlot = FGameplayTag::EmptyTag;
+	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
 
 private:
 	int32 InternalStacks = 0;

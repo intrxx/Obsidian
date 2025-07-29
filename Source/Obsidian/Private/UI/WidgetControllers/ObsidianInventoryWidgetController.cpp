@@ -530,7 +530,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const F
 		return;
 	}
 	
-	const FIntPoint SlotPosition = ItemWidget->GetInventoryPosition();
+	const FIntPoint SlotPosition = ItemWidget->GetGridPosition();
 	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 
 	FObsidianItemStats OutItemStats;
@@ -549,7 +549,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverInventoryItem(const U
 		return;
 	}
 
-	const FIntPoint SlotPosition = ItemWidget->GetInventoryPosition();
+	const FIntPoint SlotPosition = ItemWidget->GetGridPosition();
 	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
 
 	FObsidianItemStats OutItemStats;
@@ -568,7 +568,7 @@ void UObsidianInventoryWidgetController::HandleHoveringOverEquipmentItem(const U
 		return;
 	}
 	
-	const FGameplayTag SlotTag = ItemWidget->GetEquipmentSlotTag();
+	const FGameplayTag SlotTag = ItemWidget->GetSlotTag();
 	const UObsidianInventoryItemInstance* ItemInstance = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
 
 	FObsidianItemStats OutItemStats;

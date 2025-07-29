@@ -129,6 +129,33 @@ enum class EObsidianEquipCheckResult : uint8
 	CanEquip UMETA(DisplayName="Can Equip")
 };
 
+USTRUCT()
+struct FObsidianItemPosition
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianItemPosition(){}
+	FObsidianItemPosition(const FGameplayTag& InSlotTag)
+		: SlotTag(InSlotTag)
+		, GridLocation(FIntPoint::NoneValue)
+	{}
+	FObsidianItemPosition(const FIntPoint& InGridLocation)
+		: SlotTag(FGameplayTag::EmptyTag)
+		, GridLocation(InGridLocation)
+	{}
+
+	FIntPoint GetItemGridLocation() const;
+	FGameplayTag GetItemSlotTag() const;
+	
+private:
+	UPROPERTY()
+	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	FIntPoint GridLocation = FIntPoint::NoneValue;
+};
+
 /**
  * 
  */

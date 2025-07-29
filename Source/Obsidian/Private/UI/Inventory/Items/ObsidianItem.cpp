@@ -8,7 +8,7 @@
 #include "Components/SizeBox.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+
 
 void UObsidianItem::NativeConstruct()
 {
@@ -52,7 +52,7 @@ void UObsidianItem::InitializeItemWidget(const FIntPoint& DesiredPosition, const
 	Item_Image->SetBrushFromTexture(ItemImage);
 
 	ItemDesiredGridSpan = ItemGridSpan;
-	ItemDesiredPosition = DesiredPosition;
+	ItemPosition = DesiredPosition;
 	InternalStacks = CurrentStack;
 	
 	if(CurrentStack == 0)
@@ -79,7 +79,7 @@ void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, cons
 	Brush.SetResourceObject(ItemImage);
 	Item_Image->SetBrush(Brush);
 	
-	ItemEquipmentSlot = EquipmentSlot;
+	ItemPosition = EquipmentSlot;
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -88,7 +88,7 @@ void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, cons
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 	Item_Image->SetBrushFromTexture(ItemImage);
-	ItemEquipmentSlot = EquipmentSlot;
+	ItemPosition = EquipmentSlot;
 	
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
@@ -122,6 +122,16 @@ void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), NewStackCount));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
+}
+
+FIntPoint UObsidianItem::GetGridPosition() const
+{
+	return ItemPosition.GetItemGridLocation();
+}
+
+FGameplayTag UObsidianItem::GetSlotTag() const
+{
+	return ItemPosition.GetItemSlotTag();
 }
 
 FSlateBrush UObsidianItem::GetItemImage() const
