@@ -26,7 +26,7 @@ class UOverlay;
 class UGridSlot;
 class UObsidianInventoryWidgetController;
 class UObsidianEquipmentPanel;
-class UObsidianInventoryGrid;
+class UObsidianGrid;
 
 /**
  * 
@@ -52,7 +52,7 @@ protected:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianInventoryGrid> InventoryGrid;
+	TObjectPtr<UObsidianGrid> InventoryGrid;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;

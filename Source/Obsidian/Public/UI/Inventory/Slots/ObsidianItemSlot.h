@@ -11,7 +11,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemSlot.generated.h"
 
-class UObsidianInventoryGrid;
+class UObsidianGrid;
 class UObsidianInventory;
 class USizeBox;
 class UImage;

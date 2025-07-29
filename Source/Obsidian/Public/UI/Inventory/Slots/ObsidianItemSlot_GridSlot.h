@@ -9,22 +9,22 @@
 
 
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
-#include "ObsidianItemSlot_Inventory.generated.h"
+#include "ObsidianItemSlot_GridSlot.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemSlot_Inventory : public UObsidianItemSlot
+class OBSIDIAN_API UObsidianItemSlot_GridSlot : public UObsidianItemSlot
 {
 	GENERATED_BODY()
 	
 public:
-	void InitializeSlot(UObsidianInventoryGrid* InOwningInventory, const FIntPoint& InSlotPosition);
+	void InitializeSlot(UObsidianGrid* InOwningGrid, const FIntPoint& InSlotGridPosition);
 	
-	FIntPoint GetSlotPosition() const
+	FIntPoint GetSlotPositionOnGrid() const
 	{
-		return SlotPosition;
+		return GridPosition;
 	}
 	
 protected:
@@ -35,8 +35,8 @@ protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 protected:
-	FIntPoint SlotPosition;
+	FIntPoint GridPosition;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryGrid> OwningGrid;
+	TObjectPtr<UObsidianGrid> OwningGrid;
 };

@@ -11,7 +11,7 @@
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
 #include "UI/Inventory/ObsidianEquipmentPanel.h"
-#include "UI/Inventory/ObsidianInventoryGrid.h"
+#include "UI/Inventory/ObsidianGrid.h"
 
 void UObsidianInventory::HandleWidgetControllerSet()
 {
@@ -30,8 +30,8 @@ void UObsidianInventory::NativeConstruct()
 
 	if(InventoryGrid && InventoryWidgetController)
 	{
-		InventoryGrid->ConstructInventoryGrid(this, InventoryWidgetController->GetInventoryGridWidth(), InventoryWidgetController->GetInventoryGridHeight());
-		InventoryGrid->OnInventoryGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToInventory);
+		InventoryGrid->ConstructGrid(InventoryWidgetController, InventoryWidgetController->GetInventoryGridWidth(), InventoryWidgetController->GetInventoryGridHeight());
+		InventoryGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToInventory);
 	}
 	
 	if(EquipmentPanel)
@@ -53,7 +53,7 @@ void UObsidianInventory::NativeDestruct()
 	
 	if(InventoryGrid)
 	{
-		InventoryGrid->OnInventoryGridSlotPressedDelegate.Clear();
+		InventoryGrid->OnGridSlotPressedDelegate.Clear();
 	}
 
 	if(EquipmentPanel)

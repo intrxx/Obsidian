@@ -1,15 +1,15 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Inventory.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_GridSlot.h"
 
 // ~ Core
 #include "Components/SizeBox.h"
 
 // ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
-#include "UI/Inventory/ObsidianInventoryGrid.h"
+#include "UI/Inventory/ObsidianGrid.h"
 
-void UObsidianItemSlot_Inventory::NativeConstruct()
+void UObsidianItemSlot_GridSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -20,13 +20,13 @@ void UObsidianItemSlot_Inventory::NativeConstruct()
 	}
 }
 
-void UObsidianItemSlot_Inventory::InitializeSlot(UObsidianInventoryGrid* InOwningGrid, const FIntPoint& InSlotPosition)
+void UObsidianItemSlot_GridSlot::InitializeSlot(UObsidianGrid* InOwningGrid, const FIntPoint& InSlotGridPosition)
 {
 	OwningGrid = InOwningGrid;
-	SlotPosition = InSlotPosition;
+	GridPosition = InSlotGridPosition;
 }
 
-void UObsidianItemSlot_Inventory::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UObsidianItemSlot_GridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(OwningGrid)
 	{
@@ -34,7 +34,7 @@ void UObsidianItemSlot_Inventory::NativeOnMouseEnter(const FGeometry& InGeometry
 	}
 }
 
-void UObsidianItemSlot_Inventory::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+void UObsidianItemSlot_GridSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	if(OwningGrid)
 	{
@@ -42,7 +42,7 @@ void UObsidianItemSlot_Inventory::NativeOnMouseLeave(const FPointerEvent& InMous
 	}
 }
 
-FReply UObsidianItemSlot_Inventory::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianItemSlot_GridSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(OwningGrid && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
