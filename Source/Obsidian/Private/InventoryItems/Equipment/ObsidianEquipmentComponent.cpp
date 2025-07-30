@@ -82,22 +82,14 @@ UObsidianInventoryComponent* UObsidianEquipmentComponent::GetInventoryComponentF
 	return nullptr;
 }
 
-UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag)
+UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag) const
 {
-	if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag))
-	{
-		return EquipmentList.SlotToEquipmentMap[SlotTag];
-	}
-	return nullptr;
+	return EquipmentList.GetEquipmentPieceByTag(SlotTag);
 }
 
-UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot)
+UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot) const
 {
-	if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag))
-	{
-		return EquipmentList.SlotToEquipmentMap[Slot.SlotTag];
-	}
-	return nullptr;
+	return EquipmentList.GetEquipmentPieceByTag(Slot.GetEquipmentSlotTag());
 }
 
 TArray<UObsidianInventoryItemInstance*> UObsidianEquipmentComponent::GetAllEquippedItems() const
@@ -105,14 +97,9 @@ TArray<UObsidianInventoryItemInstance*> UObsidianEquipmentComponent::GetAllEquip
 	return EquipmentList.GetAllEquippedItems();
 }
 
-UObsidianInventoryItemInstance* UObsidianEquipmentComponent::GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const
-{
-	return EquipmentList.GetEquipmentPieceByTag(SlotTag);
-}
-
 USkeletalMeshComponent* UObsidianEquipmentComponent::GetMainEquippedMeshFromSlot(const FGameplayTag& SlotTag) const
 {
-	if(const UObsidianInventoryItemInstance* Instance = GetEquipmentPieceByTag(SlotTag))
+	if(const UObsidianInventoryItemInstance* Instance = GetEquippedInstanceAtSlot(SlotTag))
 	{
 		TArray<AObsidianSpawnedEquipmentPiece*> SpawnedPieces = Instance->GetSpawnedActors();
 		const AObsidianSpawnedEquipmentPiece* Piece = SpawnedPieces[0];
@@ -188,12 +175,13 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(UOb
 	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
 	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
 	{
-		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
+		const FGameplayTag SlotTag = Slot.GetEquipmentSlotTag();
+		if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
 		{
 			continue; // We already have an item equipped in this slot, we shouldn't try to equip it. || Initial slot is free but the other one is occupied so we don't want to automatically equip.
 		}
 		
-		if(EquipItemToSpecificSlot(InstanceToEquip, Slot.SlotTag))
+		if(EquipItemToSpecificSlot(InstanceToEquip, SlotTag))
 		{
 			Result.bActionSuccessful = true;
 			Result.AffectedInstance = InstanceToEquip;
@@ -435,12 +423,13 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
 	for(const FObsidianEquipmentSlotDefinition& Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
 	{
-		if(EquipmentList.SlotToEquipmentMap.Contains(Slot.SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
+		const FGameplayTag SlotTag = Slot.GetEquipmentSlotTag();
+		if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
 		{
 			continue; // We already have an item equipped in this slot, we shouldn't try to equip it. || Initial slot is free but the other one is occupied so we don't want to automatically equip.
 		}
 		
-		if(const FObsidianEquipmentResult& InternalResult = EquipItemToSpecificSlot(ItemDef, Slot.SlotTag, StackCount))
+		if(const FObsidianEquipmentResult& InternalResult = EquipItemToSpecificSlot(ItemDef, SlotTag, StackCount))
 		{
 			return InternalResult;
 		}
@@ -556,7 +545,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const 
 	const FGameplayTag ItemCategory = Instance->GetItemCategoryTag();
 	const FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
 	
-	EObsidianEquipCheckResult Result = Slot.CanEquipToSlot(ItemCategory);
+	EObsidianEquipCheckResult Result = Slot.CanEquipAtSlot(ItemCategory);
 	if(Result != EObsidianEquipCheckResult::CanEquip)
 	{
 		return Result;
@@ -628,7 +617,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 	const FGameplayTag ItemCategory = DefaultObject->GetItemCategoryTag();
 	const FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
 	
-	EObsidianEquipCheckResult Result = Slot.CanEquipToSlot(ItemCategory);
+	EObsidianEquipCheckResult Result = Slot.CanEquipAtSlot(ItemCategory);
 	if(Result != EObsidianEquipCheckResult::CanEquip)
 	{
 		return Result;
@@ -768,7 +757,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanPlaceItemAtEquipmentSl
 		return EquipResult;
 	}
 	
-	EquipResult = Slot.CanEquipToSlot(ItemCategory); // Can equip to slot in the first place.
+	EquipResult = Slot.CanEquipAtSlot(ItemCategory); // Can equip to slot in the first place.
 	if(EquipResult != EObsidianEquipCheckResult::CanEquip)
 	{
 		return EquipResult;

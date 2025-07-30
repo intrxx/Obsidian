@@ -15,6 +15,70 @@ FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance)
 	, Stacks(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
 {}
 
+// ~ FObsidianSlotDefinition
+
+FObsidianSlotDefinition const FObsidianSlotDefinition::InvalidSlot;
+
+bool FObsidianSlotDefinition::IsValid() const
+{
+	return SlotTag.IsValid();
+}
+
+FGameplayTag FObsidianSlotDefinition::GetSlotTag() const
+{
+	return SlotTag;
+}
+
+EObsidianEquipCheckResult FObsidianSlotDefinition::CanPlaceAtSlot(const FGameplayTag& ItemCategory) const
+{
+	if(BannedItemCategories.HasTagExact(ItemCategory))
+	{
+		return EObsidianEquipCheckResult::UnableToEquip_BannedCategory;
+	}
+	
+	if(AcceptedItemCategories.HasTagExact(ItemCategory))
+	{
+		return EObsidianEquipCheckResult::CanEquip;
+	}
+	
+	return EObsidianEquipCheckResult::ItemUnfitForCategory;
+}
+
+void FObsidianSlotDefinition::AddBannedItemCategory(const FGameplayTag& InBannedCategory)
+{
+	BannedItemCategories.AddTag(InBannedCategory);
+}
+
+void FObsidianSlotDefinition::AddBannedItemCategories(const FGameplayTagContainer& InBannedCategories)
+{
+	BannedItemCategories.AppendTags(InBannedCategories);
+}
+
+void FObsidianSlotDefinition::RemoveBannedItemCategory(const FGameplayTag& BannedCategoryToRemove)
+{
+#if !UE_BUILD_SHIPPING
+	if(BannedItemCategories.HasTag(BannedCategoryToRemove) == false)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedItemCategories."), *BannedCategoryToRemove.ToString());
+	}
+#endif
+	BannedItemCategories.RemoveTag(BannedCategoryToRemove);
+}
+
+void FObsidianSlotDefinition::RemoveBannedItemCategories(const FGameplayTagContainer& BannedCategoriesToRemove)
+{
+#if !UE_BUILD_SHIPPING
+	for(FGameplayTag Tag : BannedItemCategories)
+	{
+		if(BannedItemCategories.HasTag(Tag) == false)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedItemCategories."), *Tag.ToString());
+		}
+	}
+#endif
+	BannedItemCategories.RemoveTags(BannedCategoriesToRemove);
+}
+
 // ~ FObsidianItemPosition
 
 FIntPoint FObsidianItemPosition::GetItemGridLocation() const

@@ -61,14 +61,14 @@ void FGameplayDebuggerCategory_Equipment::CollectData(APlayerController* OwnerPC
 		{
 			FRepData::FEquipmentSlotDebug EquipmentSlot;
 
-			EquipmentSlot.SlotTag = Slot.SlotTag.GetTagName().ToString();
+			EquipmentSlot.SlotTag = Slot.GetEquipmentSlotTag().GetTagName().ToString();
 			EquipmentSlot.SisterSlotTag = Slot.SisterSlotTag.GetTagName().ToString();
 			
-			for (const FGameplayTag& Tag : Slot.AcceptedEquipmentCategories)
+			for (const FGameplayTag& Tag : Slot.BaseSlotDefinition.AcceptedItemCategories)
 			{
 				EquipmentSlot.AcceptedTags.Add(Tag.GetTagName().ToString());
 			}
-			for (const FGameplayTag& Tag : Slot.BannedEquipmentCategories)
+			for (const FGameplayTag& Tag : Slot.BaseSlotDefinition.BannedItemCategories)
 			{
 				EquipmentSlot.BannedTags.Add(Tag.GetTagName().ToString());
 			}

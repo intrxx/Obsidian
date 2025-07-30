@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "InventoryItems/Stash/ObsidianPlayerStash.h"
+#include "InventoryItems/PlayerStash//ObsidianPlayerStash.h"
 
 // ~ Core
 

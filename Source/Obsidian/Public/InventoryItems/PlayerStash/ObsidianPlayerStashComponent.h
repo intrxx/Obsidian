@@ -37,4 +37,7 @@ public:
 	
 	/** Finds all stacks in the inventory for given item type with item Instance. */
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
+
+protected:
+	
 };

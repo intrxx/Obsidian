@@ -202,9 +202,9 @@ void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItem
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
 			const FIntPoint LocationToMark = AtPosition + FIntPoint(SpanX, SpanY);
-			if(InventoryStateMap.Contains(LocationToMark))
+			if(bool* Location = InventoryStateMap.Find(LocationToMark))
 			{
-				InventoryStateMap[LocationToMark] = true;
+				*Location = true;
 			}
 #if !UE_BUILD_SHIPPING
 			else
@@ -225,9 +225,9 @@ void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryIt
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
 			const FIntPoint LocationToUnmark = AtPosition + FIntPoint(SpanX, SpanY);
-			if(InventoryStateMap.Contains(LocationToUnmark))
+			if(bool* Location = InventoryStateMap.Find(LocationToUnmark))
 			{
-				InventoryStateMap[LocationToUnmark] = false;
+				*Location = false;
 			}
 #if !UE_BUILD_SHIPPING
 			else

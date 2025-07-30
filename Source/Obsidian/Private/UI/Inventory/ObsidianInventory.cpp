@@ -226,6 +226,7 @@ void UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed(const UObsidianIt
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed"));
 	if(InventoryWidgetController)
 	{
+		UE_LOG(LogTemp, Error, TEXT("Item Widget Slot Tag: [%s]"), *ItemWidget->GetSlotTag().GetTagName().ToString())
 		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(ItemWidget->GetSlotTag());
 	}
 }

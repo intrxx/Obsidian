@@ -54,10 +54,9 @@ public:
 
 	UObsidianInventoryComponent* GetInventoryComponentFromOwner() const;
 
-	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag);
-	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot);
+	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag) const;
+	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot) const;
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
-	UObsidianInventoryItemInstance* GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const;
 	USkeletalMeshComponent* GetMainEquippedMeshFromSlot(const FGameplayTag& SlotTag) const;
 
 	/** Finds Equipment Slot if one exists in the Equipment, might return invalid slot when nothing was found, check IsValid for safety. */

@@ -129,6 +129,49 @@ enum class EObsidianEquipCheckResult : uint8
 	CanEquip UMETA(DisplayName="Can Equip")
 };
 
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianSlotDefinition
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianSlotDefinition(){};
+	FObsidianSlotDefinition(const FGameplayTag& InSlotTag, const FGameplayTagContainer& InAcceptedEquipmentCategories)
+		: SlotTag(InSlotTag)
+		, AcceptedItemCategories(InAcceptedEquipmentCategories)
+	{};
+
+	bool IsValid() const;
+
+	FGameplayTag GetSlotTag() const;
+	
+	EObsidianEquipCheckResult CanPlaceAtSlot(const FGameplayTag& ItemCategory) const;
+
+	void AddBannedItemCategory(const FGameplayTag& InBannedCategory);
+	void AddBannedItemCategories(const FGameplayTagContainer& InBannedCategories);
+	
+	void RemoveBannedItemCategory(const FGameplayTag& BannedCategoryToRemove);
+	void RemoveBannedItemCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
+
+public:
+	/** Gameplay Tag representing this slot. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+
+	/** Items with this Gameplay Tags will be allowed to be equipped in this slot. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
+
+	/** Items with this Gameplay Tags will not be allowed to be equipped in this slot. Can be used to ban some type of armament as a gameplay mechanic. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTagContainer BannedItemCategories = FGameplayTagContainer::EmptyContainer;
+
+	static const FObsidianSlotDefinition InvalidSlot;
+};
+
 USTRUCT()
 struct FObsidianItemPosition
 {
