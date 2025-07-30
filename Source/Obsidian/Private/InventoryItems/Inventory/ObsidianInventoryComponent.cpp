@@ -52,7 +52,7 @@ void UObsidianInventoryComponent::AddDefaultItems()
 	{
 		for(const FObsidianDefaultItemTemplate& DefaultItemTemplate : DefaultInventoryItems)
 		{
-			if(DefaultItemTemplate.InventoryPositionOverride != FIntPoint::NoneValue)
+			if(DefaultItemTemplate.bOverrideInventoryPosition)
 			{
 				if(!AddItemDefinitionToSpecifiedSlot(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.InventoryPositionOverride, DefaultItemTemplate.StackCount))
 				{
@@ -99,11 +99,7 @@ TMap<FIntPoint, UObsidianInventoryItemInstance*> UObsidianInventoryComponent::In
 
 UObsidianInventoryItemInstance* UObsidianInventoryComponent::GetItemInstanceAtLocation(const FIntPoint& Location) const
 {
-	if(InventoryGrid.GridLocationToItemMap.Contains(Location))
-	{
-		return InventoryGrid.GridLocationToItemMap[Location];
-	}
-	return nullptr;
+	return InventoryGrid.GridLocationToItemMap.FindRef(Location);
 }
 
 TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetAllItems() const
@@ -1021,7 +1017,8 @@ bool UObsidianInventoryComponent::CheckAvailablePosition(const FIntPoint& ItemGr
 				for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 				{
 					const FIntPoint LocationToCheck = Location.Key + FIntPoint(SpanX, SpanY);
-					if(!InventoryGrid.InventoryStateMap.Contains(LocationToCheck) || InventoryGrid.InventoryStateMap[LocationToCheck] == true)
+					const bool* bExistingOccupied = InventoryGrid.InventoryStateMap.Find(LocationToCheck);
+					if(bExistingOccupied == nullptr || *bExistingOccupied)
 					{
 						bCanFit = false;
 						break;
@@ -1052,7 +1049,8 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const FIntPoint& ItemGr
 			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 			{
 				const FIntPoint LocationToCheck = SpecifiedPosition + FIntPoint(SpanX, SpanY);
-				if(!InventoryGrid.InventoryStateMap.Contains(LocationToCheck) || InventoryGrid.InventoryStateMap[LocationToCheck] == true)
+				const bool* bExistingOccupied = InventoryGrid.InventoryStateMap.Find(LocationToCheck);
+				if(bExistingOccupied == nullptr || *bExistingOccupied)
 				{
 					bCanFit = false;
 					break;
@@ -1081,9 +1079,9 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
 			const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
-			if(TempInventoryStateMap.Contains(GridSlotToCheck))
+			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
 			{
-				TempInventoryStateMap[GridSlotToCheck] = false;
+				*TempLocation = false;
 			}
 #if !UE_BUILD_SHIPPING
 			else
@@ -1106,7 +1104,8 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 			for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
 			{
 				const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
-				if(!TempInventoryStateMap.Contains(GridSlotToCheck) || TempInventoryStateMap[GridSlotToCheck] == true)
+				const bool* bExistingOccupied = TempInventoryStateMap.Find(GridSlotToCheck);
+				if(bExistingOccupied == nullptr || *bExistingOccupied)
 				{
 					bCanReplace = false;
 					break;
@@ -1143,9 +1142,9 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FInt
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
 			const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
-			if(TempInventoryStateMap.Contains(GridSlotToCheck))
+			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
 			{
-				TempInventoryStateMap[GridSlotToCheck] = false;
+				*TempLocation = false;
 			}
 #if !UE_BUILD_SHIPPING
 			else
@@ -1175,7 +1174,8 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FInt
 					for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
 					{
 						const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
-						if(!TempInventoryStateMap.Contains(GridSlotToCheck) || TempInventoryStateMap[GridSlotToCheck] == true)
+						const bool* bExistingOccupied = TempInventoryStateMap.Find(GridSlotToCheck);
+						if(bExistingOccupied == nullptr || *bExistingOccupied)
 						{
 							bCanReplace = false;
 							break;

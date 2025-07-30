@@ -35,8 +35,12 @@ public:
 	UPROPERTY(EditAnywhere)
 	int32 StackCount = 1;
 
-	/** Inventory grid position at which the item will be added, if left empty, the item will be added to the first available slot. */
+	/* If left false, the item will be added to the first available slot. */
 	UPROPERTY(EditAnywhere)
+	bool bOverrideInventoryPosition = false;
+
+	/** Inventory grid position at which the item will be added. */
+	UPROPERTY(EditAnywhere, meta=(EditCondition="bOverrideInventoryPosition", EditConditionHides))
 	FIntPoint InventoryPositionOverride = FIntPoint::NoneValue;
 };
 
