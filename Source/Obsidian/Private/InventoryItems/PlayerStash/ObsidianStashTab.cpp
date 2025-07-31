@@ -13,3 +13,8 @@ FGameplayTag UObsidianStashTab::GetStashTabTag() const
 	return StashTabTag;
 }
 
+void UObsidianStashTab::SetStashTabTag(const FGameplayTag& InTag)
+{
+	StashTabTag = InTag;
+}
+

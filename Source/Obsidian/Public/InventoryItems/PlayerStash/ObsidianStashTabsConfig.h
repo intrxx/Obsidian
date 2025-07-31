@@ -4,6 +4,7 @@
 
 // ~ Core
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 // ~ Project
 
@@ -18,8 +19,12 @@ struct FObsidianStashTabDefinition
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Instanced)
-	TObjectPtr<UObsidianStashTab> StashTab;
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UObsidianStashTab> StashTabClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories = "StashTab"))
+	FGameplayTag StashTag = FGameplayTag::EmptyTag;
 };
 
 /**
@@ -30,6 +35,12 @@ class OBSIDIAN_API UObsidianStashTabsConfig : public UDataAsset
 {
 	GENERATED_BODY()
 
+public:
+	UObsidianStashTabsConfig(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	TArray<FObsidianStashTabDefinition> GetStashTabDefinitions() const;
+	
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianStashTabDefinition> StashTabs;
 };

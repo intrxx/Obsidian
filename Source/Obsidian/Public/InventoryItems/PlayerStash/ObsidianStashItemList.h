@@ -11,6 +11,8 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianStashItemList.generated.h"
 
+class UObsidianStashTabsConfig;
+class UObsidianStashTab;
 struct FObsidianStashItemList;
 
 class UObsidianPlayerStashComponent;
@@ -82,6 +84,8 @@ public:
 		: OwnerComponent(InOwnerComponent)
 	{}
 
+	void InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig);
+
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	int32 GetEntriesCount() const;
 
@@ -120,15 +124,8 @@ private:
 	
 	UPROPERTY(NotReplicated)
 	TObjectPtr<UActorComponent> OwnerComponent;
-
-	// /** Accelerated list of item location (0, 0). */
-	// TMap<FIntPoint, UObsidianInventoryItemInstance*> GridLocationToItemMap;
-	//
-	// /**
-	//  * Map that represents whole Inventory Grid with taken fields.
-	//  * If a Given FIntPoint location has a true value associated with it, the field is treated as taken.
-	//  */
-	// TMap<FIntPoint, bool> InventoryStateMap;
+	
+	TArray<TObjectPtr<UObsidianStashTab>> StashTabs;
 };
 
 template<>

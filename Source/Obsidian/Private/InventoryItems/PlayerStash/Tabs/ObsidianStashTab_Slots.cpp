@@ -23,3 +23,8 @@ void UObsidianStashTab_Slots::UnmarkSpaceInTab(UObsidianInventoryItemInstance* I
 
 	SlotToItemMap.Remove(AtPosition.GetItemSlotTag());
 }
+
+void UObsidianStashTab_Slots::Construct(UObsidianPlayerStashComponent* StashComponent)
+{
+	//TODO Get already added items, mark space
+}

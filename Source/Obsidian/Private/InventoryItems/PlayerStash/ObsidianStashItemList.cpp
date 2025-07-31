@@ -6,6 +6,9 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
+#include "InventoryItems/PlayerStash/ObsidianStashTab.h"
+#include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 
 // ~ FObsidianStashEntry
 
@@ -21,6 +24,38 @@ FString FObsidianStashEntry::GetDebugString() const
 }
 
 // ~ End of FObsidianStashEntry
+
+void FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig)
+{
+	if(StashTabsConfig == nullptr || OwnerComponent == nullptr)
+	{
+		return;
+	}
+
+	ensure(StashTabs.IsEmpty());
+
+	UObsidianPlayerStashComponent* StashTabComponent = Cast<UObsidianPlayerStashComponent>(OwnerComponent);
+	if(StashTabComponent == nullptr)
+	{
+		return;
+	}
+	
+	for(const FObsidianStashTabDefinition& Definition : StashTabsConfig->GetStashTabDefinitions())
+	{
+		if(Definition.StashTabClass == nullptr)
+		{
+			continue;
+		}
+
+		UObsidianStashTab* NewTab = NewObject<UObsidianStashTab>(OwnerComponent, Definition.StashTabClass);
+		check(NewTab);
+		
+		NewTab->SetStashTabTag(Definition.StashTag);
+		NewTab->Construct(StashTabComponent);
+
+		StashTabs.Add(NewTab);
+	}
+}
 
 TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItems() const
 {

@@ -61,3 +61,27 @@ void UObsidianStashTab_Grid::UnmarkSpaceInTab(UObsidianInventoryItemInstance* It
 
 	GridLocationToItemMap.Remove(AtPosition.GetItemGridLocation());
 }
+
+void UObsidianStashTab_Grid::Construct(UObsidianPlayerStashComponent* StashComponent)
+{
+	int16 GridX = 0;
+	int16 GridY = 0;
+
+	const int32 GridSize = GridWidth * GridHeight;
+	for(int32 i = 0; i < GridSize; i++)
+	{
+		GridStateMap.Add(FIntPoint(GridX, GridY), false);
+		
+		if(GridX == GridWidth - 1)
+		{
+			GridX = 0;
+			GridY++;
+		}
+		else
+		{
+			GridX++;
+		}
+	}
+	
+	//TODO Get already added items, mark space
+}

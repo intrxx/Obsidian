@@ -277,6 +277,14 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Sword_TwoHand);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Axe_OneHand);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Axe_TwoHand);
+
+	/**
+	 * Individual Item Tags
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_ScrollOfIdentification);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_ScrollOfTeleportation);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_OrbOfEnchantment);
 	
 	/**
 	 * Equipment Slots.
@@ -305,6 +313,25 @@ namespace ObsidianGameplayTags
 
 	/** Accepted Equipment Categories for sister slot per weapon type. */
 	OBSIDIAN_API const TMap<FGameplayTag, FGameplayTagContainer>& GetSisterSlotAcceptedCategoriesMap();
+
+	/**
+	 * Currency Slots.
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Currency_Slot_ScrollOfIdentification);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Currency_Slot_ScrollOfTeleportation);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Currency_Slot_OrbOfEnchantment);
+
+	/**
+	 * Stash Tabs.
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_1);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_2);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_3);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_4);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_BigGrid_1);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Currency);
 
 	/**
 	 * Stacks Counts

@@ -5,3 +5,12 @@
 // ~ Core
 
 // ~ Project
+UObsidianStashTabsConfig::UObsidianStashTabsConfig(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+}
+
+TArray<FObsidianStashTabDefinition> UObsidianStashTabsConfig::GetStashTabDefinitions() const
+{
+	return StashTabs;
+}

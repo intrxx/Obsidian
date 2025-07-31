@@ -6,11 +6,12 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-
+#include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
 
 #include "Components/ActorComponent.h"
 #include "ObsidianPlayerStashComponent.generated.h"
 
+class UObsidianStashTabsConfig;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 
@@ -32,12 +33,25 @@ public:
 		return (Actor ? Actor->FindComponentByClass<UObsidianPlayerStashComponent>() : nullptr);
 	}
 
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	
-	/** Finds all stacks in the inventory for given item type with item Instance. */
+	/** Finds all stacks in the inventory for gixven item type with item Instance. */
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 
 protected:
+	virtual void BeginPlay() override;
 	
+protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TObjectPtr<UObsidianStashTabsConfig> StashTabsConfig;
+
+private:
+	/**
+	 * Actual array of stashed items which is FFastArraySerializer.
+	 */
+	UPROPERTY(Replicated)
+	FObsidianStashItemList StashItemList;
 };

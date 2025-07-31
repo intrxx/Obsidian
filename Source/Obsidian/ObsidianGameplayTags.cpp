@@ -303,6 +303,14 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Axe_TwoHand, "Item.Category.Axe.TwoHand", "Item Tag that represents Two Hand Axe item category.");
 
 	/**
+	 * Individual Item Tags.
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_ScrollOfIdentification, "Item.Category.ScrollOfIdentification", "Item Tag that represents Scroll Of Identification item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_ScrollOfTeleportation, "Item.Category.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_OrbOfEnchantment, "Item.Category.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item category.");
+
+	/**
 	 * Equipment Slots.
 	 */
 	
@@ -375,6 +383,25 @@ namespace ObsidianGameplayTags
 		return SisterSlotAcceptedEquipmentCategoriesForWeaponCategory;
 	}
 
+	/**
+	 * Currency Slots.
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Currency_Slot_ScrollOfIdentification, "Currency.Slot.ScrollOfIdentification", "Item Tag representing currency Scroll of Identification slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Currency_Slot_ScrollOfTeleportation, "Currency.Slot.ScrollOfTeleportation", "Item Tag representing currency Scroll of Teleportation slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Currency_Slot_OrbOfEnchantment, "Currency.Slot.OrbOfEnchantment", "Item Tag representing currency Orb of Enchantment slot.");
+
+	/**
+	 * Stash Tabs.
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Grid_1, "StashTab.Grid.1", "ID for Grid 1 Stash Tab.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Grid_2, "StashTab.Grid.2", "ID for Grid 2 Stash Tab.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Grid_3, "StashTab.Grid.3", "ID for Grid 3 Stash Tab.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Grid_4, "StashTab.Grid.4", "ID for Grid 4 Stash Tab.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_BigGrid_1, "StashTab.BigGrid.1", "ID for Big Grid 1 Stash Tab.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Currency, "StashTab.Currency", "ID for Currency Stash Tab.");
+	
 	/**
 	 * Stack Counts
 	 */

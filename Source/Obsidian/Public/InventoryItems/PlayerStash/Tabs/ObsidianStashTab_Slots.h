@@ -26,7 +26,11 @@ public:
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
 
+	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
+
 private:
+	UPROPERTY(EditAnywhere, Category = "Obsidian|SlotsSettings")
 	TArray<FObsidianSlotDefinition> TabSlots;
+	
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToItemMap;
 };

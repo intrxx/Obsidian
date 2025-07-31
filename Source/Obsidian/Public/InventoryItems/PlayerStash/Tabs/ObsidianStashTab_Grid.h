@@ -25,6 +25,8 @@ public:
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
 
+	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
+
 private:
 	/**
 	* Map that represents whole Grid with taken fields.
