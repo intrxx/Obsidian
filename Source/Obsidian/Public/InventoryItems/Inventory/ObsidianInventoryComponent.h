@@ -175,7 +175,7 @@ public:
 	FObsidianInventoryResult RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
 	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
-	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance);
+	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
 	
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

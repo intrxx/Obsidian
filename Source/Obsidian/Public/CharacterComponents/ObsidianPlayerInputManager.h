@@ -119,6 +119,9 @@ public:
 	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup);
 	
 	void UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown);
+
+	UFUNCTION(Server, Reliable)
+	void ServerActivateUsableItem(UObsidianInventoryItemInstance* UsingInstance);
 	
 	/**
 	 * Equipment.

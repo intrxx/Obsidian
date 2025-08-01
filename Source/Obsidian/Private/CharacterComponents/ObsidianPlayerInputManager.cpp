@@ -1577,6 +1577,31 @@ void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventor
 	InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
 }
 
+void UObsidianPlayerInputManager::ServerActivateUsableItem_Implementation(UObsidianInventoryItemInstance* UsingInstance)
+{
+	if(UsingInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+	if(InventoryComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	InventoryComponent->UseItem(UsingInstance, nullptr);
+}
+
 void UObsidianPlayerInputManager::UpdateStacksOnDraggedItemWidget(const int32 InStacks)
 {
 	if(DraggedItemWidget)

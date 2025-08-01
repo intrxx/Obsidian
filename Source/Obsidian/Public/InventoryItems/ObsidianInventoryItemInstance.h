@@ -10,6 +10,7 @@
 #include "InventoryItems/ObsidianGameplayTagStack.h"
 #include "Fragments/OInventoryItemFragment_Affixes.h"
 #include "Fragments/OInventoryItemFragment_Equippable.h"
+#include "Fragments/OInventoryItemFragment_Usable.h"
 #include "Fragments/Shards/ObsidianUsableShard.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
@@ -62,7 +63,7 @@ public:
 	
 	void SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FGameplayTag GetItemRarity() const;
 	
 	void SetItemRarity(const FGameplayTag& InItemRarityTag);
@@ -75,38 +76,44 @@ public:
 	 * Usability
 	 */
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetUsable(const bool IsUsable);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsItemUsable() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetUsableShard(UObsidianUsableShard* InUsableShard);
 	
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	bool UseItem(UObsidianInventoryItemInstance* UsingOntoInstance);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	void SetUsableItemType(const EObsidianUsableItemType InUsableItemTyp);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	EObsidianUsableItemType GetUsableItemType() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FObsidianItemsMatchingUsableContext FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) const;
 
 	/**
 	 * Equipping.
 	 */
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetEquippable(const bool InEquippable);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsItemEquippable() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetItemNeedTwoSlots(const bool InNeedsTwoSlots);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool DoesItemNeedTwoSlots() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	TArray<AObsidianSpawnedEquipmentPiece*> GetSpawnedActors() const;
 
 	void SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors);
@@ -116,42 +123,42 @@ public:
 	void SetAbilitySets(const TArray<UObsidianAbilitySet*>& InAbilitySets);
 	TArray<UObsidianAbilitySet*> GetOwningAbilitySets() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FGameplayTag GetItemCurrentEquipmentSlot() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetItemCurrentEquipmentSlot(const FGameplayTag& CurrentEquipmentSlotToSet);
 
 	/** Should be called when item unequipped. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void ResetItemCurrentEquipmentSlot();
 	
 	/**
 	 * Affixes.
 	 */
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetIdentified(const bool InIdentified);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsItemIdentified() const;
 	
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void AddAffix(const FObsidianItemAffix& AffixToAdd);
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void RemoveAffix(const FGameplayTag& AffixTag);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	int32 GetItemCombinedAffixLimit() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	int32 GetItemAddedSuffixCount() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	int32 GetItemAddedPrefixCount() const;
 	
 	void SetItemAffixesCountLimit(const int32 InAffixesLimit);
@@ -163,69 +170,69 @@ public:
 	 */
 
 	/** Adds a specified number of stacks to the tag (does nothing if StackCount is below 1). */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount);
 
 	/** Removes a specified number of stacks to the tag (does nothing if StackCount is below 1). */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void RemoveItemStackCount(const FGameplayTag FromTag, const int32 StackCount);
 
 	/** Overrides stacks on provided tag (does nothing if StackCount is below 1). */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void OverrideItemStackCount(const FGameplayTag Tag, const int32 NewStackCount);
 	
 	/** Returns the stack count of the specified tag (or 0 is there is no stack for this tag). */
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	int32 GetItemStackCount(const FGameplayTag Tag) const;
 
 	/** Return true if there is at least one stack of the specified tag. */
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool HasStackCountForTag(const FGameplayTag Tag) const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool HasAnyStacks() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsStackable() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetStackable(const bool InStackable);
 
 	/**
 	 * Appearance.
 	 */
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FIntPoint GetItemGridSpan() const;
 	
 	void SetItemGridSpan(const FIntPoint& GridSpanToSet);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	UTexture2D* GetItemImage() const;
 	
 	void SetItemImage(UTexture2D* ItemImageToSet);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	UStaticMesh* GetItemDroppedMesh() const;
 	
 	void SetItemDroppedMesh(UStaticMesh* InItemDroppedMesh);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FText GetItemDisplayName() const;
 	
 	void SetItemDisplayName(const FText& InItemDisplayName);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FText GetItemDescription() const;
 	
 	void SetItemDescription(const FText& InItemDescription);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FText GetItemAdditionalDescription() const;
 	
 	void SetItemAdditionalDescription(const FText& InItemAdditionalDescription);
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	float GetItemSlotPadding() const;
 	
 	void SetItemSlotPadding(const float InItemSlotPadding);
@@ -234,14 +241,14 @@ public:
 	 * Inventory.
 	 */
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FIntPoint GetItemCurrentGridLocation() const;
 
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetItemCurrentGridLocation(const FIntPoint& CurrentGridLocationToSet);
 
 	/** Should be called when removing item from inventory. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void ResetItemCurrentGridLocation();
 	
 	/**
@@ -249,7 +256,7 @@ public:
 	 */
 
 	/** Gets the debug name of the item, will be valid only on the server. */	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FString GetItemDebugName() const;
 
 	void SetItemDebugName(const FString& InItemDebugName);
@@ -274,6 +281,9 @@ private:
 
 	UPROPERTY(Replicated)
 	bool bUsable = false;
+	
+	UPROPERTY(Replicated)
+	EObsidianUsableItemType UsableItemType = EObsidianUsableItemType::UIT_None;
 
 	UPROPERTY(Replicated)
 	TObjectPtr<UObsidianUsableShard> UsableShard = nullptr;

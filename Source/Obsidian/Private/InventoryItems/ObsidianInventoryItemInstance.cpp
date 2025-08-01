@@ -46,6 +46,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, UsableShard);
 	DOREPLIFETIME(ThisClass, bNeedsTwoSlots);
 	DOREPLIFETIME(ThisClass, ItemSlotPadding);
+	DOREPLIFETIME(ThisClass, UsableItemType);
 }
 
 void UObsidianInventoryItemInstance::OnInstanceCreatedAndInitialized()
@@ -151,6 +152,16 @@ bool UObsidianInventoryItemInstance::UseItem(UObsidianInventoryItemInstance* Usi
 		return UsableShard->OnItemUsed(this, UsingOntoInstance);
 	}
 	return false;
+}
+
+void UObsidianInventoryItemInstance::SetUsableItemType(const EObsidianUsableItemType InUsableItemTyp)
+{
+	UsableItemType = InUsableItemTyp;
+}
+
+EObsidianUsableItemType UObsidianInventoryItemInstance::GetUsableItemType() const
+{
+	return UsableItemType;
 }
 
 FObsidianItemsMatchingUsableContext UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) const

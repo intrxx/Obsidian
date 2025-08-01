@@ -302,34 +302,41 @@ void UObsidianInventoryWidgetController::HandleRightClickingOnInventoryItem(cons
 	{
 		return;
 	}
-	
-	OwnerPlayerInputManager->SetUsingItem(true, ItemWidget, UsingInstance);
 
-	TArray<UObsidianInventoryItemInstance*> AllItems;
-	AllItems.Append(InventoryComponent->GetAllItems());
-	AllItems.Append(EquipmentComponent->GetAllEquippedItems());
-	//TODO Add Stash when implemented
+	if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Crafting)
+	{
+		OwnerPlayerInputManager->SetUsingItem(true, ItemWidget, UsingInstance);
+
+		TArray<UObsidianInventoryItemInstance*> AllItems;
+		AllItems.Append(InventoryComponent->GetAllItems());
+		AllItems.Append(EquipmentComponent->GetAllEquippedItems());
+		//TODO Add Current Stash Tab when implemented (and actually opened)
 	
-	const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
-	for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
-	{
-		if(UObsidianItem* Item = GetItemWidgetAtInventoryGridSlot(GridLocation))
+		const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
+		for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
 		{
-			Item->HighlightItem();
-			CachedItemsMatchingUsableContext.Add(Item);
+			if(UObsidianItem* Item = GetItemWidgetAtInventoryGridSlot(GridLocation))
+			{
+				Item->HighlightItem();
+				CachedItemsMatchingUsableContext.Add(Item);
+			}
 		}
-	}
-	for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
-	{
-		if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
+		for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
 		{
-			Item->HighlightItem();
-			CachedItemsMatchingUsableContext.Add(Item);
+			if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
+			{
+				Item->HighlightItem();
+				CachedItemsMatchingUsableContext.Add(Item);
+			}
 		}
-	}
-	for(const FIntPoint& StashGridLocation : MatchingUsableContext.StashItemsMatchingContext)
-	{
+		for(const FIntPoint& StashGridLocation : MatchingUsableContext.StashItemsMatchingContext)
+		{
 		
+		}
+	}
+	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
+	{
+		OwnerPlayerInputManager->ServerActivateUsableItem(UsingInstance);
 	}
 }
 

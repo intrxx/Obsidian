@@ -9,6 +9,8 @@
 
 void UOInventoryItemFragment_Usable::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
+	ensureMsgf(UsableItemType != EObsidianUsableItemType::UIT_None, TEXT("UsableItemType is not set on the Usable Item Fragment, this will lead to undefined behaviour, make sure to fill it."));
 	Instance->SetUsable(true);
 	Instance->SetUsableShard(UsableShard);
+	Instance->SetUsableItemType(UsableItemType);
 }
