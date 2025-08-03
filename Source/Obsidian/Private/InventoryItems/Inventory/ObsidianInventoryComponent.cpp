@@ -884,8 +884,8 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 		return;
 	}
 	
-	AActor* OwningActor = GetOwner();
-	if(OwningActor == nullptr || OwningActor->HasAuthority() == false)
+	AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner());
+	if(OwningPlayerController == nullptr || OwningPlayerController->HasAuthority() == false)
 	{
 		return;
 	}
@@ -905,14 +905,14 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 			return;
 		}
 		
-		if(UsingInstance->UseItem(UsingOntoInstance))
+		if(UsingInstance->UseItem(OwningPlayerController, UsingOntoInstance))
 		{
 			InventoryGrid.GeneralEntryChange(UsingOntoInstance);
 		}
 	}
 	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
 	{
-		UsingInstance->UseItem(nullptr);
+		UsingInstance->UseItem(OwningPlayerController, nullptr);
 	}
 	
 	if(CurrentUsingInstanceStacks > 1)

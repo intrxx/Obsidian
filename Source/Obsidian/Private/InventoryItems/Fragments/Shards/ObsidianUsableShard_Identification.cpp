@@ -7,9 +7,9 @@
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
-bool UObsidianUsableShard_Identification::OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_Identification::OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {
-	if(UsingOntoInstance && UsingInstance)
+	if(ItemOwner && UsingOntoInstance && UsingInstance)
 	{
 		if(UsingOntoInstance->IsItemIdentified() == false)
 		{

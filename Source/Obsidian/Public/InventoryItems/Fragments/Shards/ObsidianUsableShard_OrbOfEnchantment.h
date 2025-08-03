@@ -9,13 +9,13 @@
 
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
-#include "ObsidianUsableShard_Identification.generated.h"
+#include "ObsidianUsableShard_OrbOfEnchantment.generated.h"
 
 /**
- * Identifies an item.
+ * 
  */
-UCLASS(DisplayName="Identification")
-class OBSIDIAN_API UObsidianUsableShard_Identification : public UObsidianUsableShard
+UCLASS(DisplayName="Orb of Enchantment")
+class OBSIDIAN_API UObsidianUsableShard_OrbOfEnchantment : public UObsidianUsableShard
 {
 	GENERATED_BODY()
 

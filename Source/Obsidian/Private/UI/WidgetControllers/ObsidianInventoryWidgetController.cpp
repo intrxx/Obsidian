@@ -100,7 +100,7 @@ void UObsidianInventoryWidgetController::OnInventoryStateChanged(FGameplayTag Ch
 		{
 			if(InventoryChangeMessage.ItemInstance == OwnerPlayerInputManager->GetUsingItem())
 			{
-				OwnerPlayerInputManager->SetUsingItem(false); //TODO This probably shouldn't be here, its widget controller
+				OwnerPlayerInputManager->SetUsingItem(false);  //TODO This probably shouldn't be here, its widget controller
 			}
 		}
 	}
@@ -594,7 +594,7 @@ bool UObsidianInventoryWidgetController::CanShowDescription() const
 
 void UObsidianInventoryWidgetController::HandleUnhoveringItem()
 {
-	RemoveItemDescription();
+	RemoveCurrentItemDescription();
 }
 
 void UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance)
@@ -655,7 +655,7 @@ void UObsidianInventoryWidgetController::HandleTakingOutStacks(const int32 Stack
 void UObsidianInventoryWidgetController::RemoveItemUIElements()
 {
 	RemoveUnstackSlider();
-	RemoveItemDescription();
+	RemoveCurrentItemDescription();
 }
 
 void UObsidianInventoryWidgetController::RemoveUnstackSlider()
@@ -677,7 +677,7 @@ void UObsidianInventoryWidgetController::RemoveUnstackSlider()
 	}
 }
 
-void UObsidianInventoryWidgetController::RemoveItemDescription()
+void UObsidianInventoryWidgetController::RemoveCurrentItemDescription()
 {
 	if(bDescriptionActive && ActiveItemDescription)
 	{
@@ -811,7 +811,7 @@ void UObsidianInventoryWidgetController::RemoveInventoryItemWidget(const FIntPoi
 		{
 			if(ActiveItemDescription && ActiveItemDescription->IsInventoryItemDescription() && ActiveItemDescription->GetAssociatedInventoryLocation() == GridSlot)
 			{
-				RemoveItemDescription();
+				RemoveCurrentItemDescription();
 			}
 			Item->RemoveFromParent();
 		}
@@ -860,7 +860,7 @@ void UObsidianInventoryWidgetController::RemoveEquipmentItemWidget(const FGamepl
 		{
 			if(ActiveItemDescription && ActiveItemDescription->IsEquipmentDescription() && ActiveItemDescription->GetAssociatedSlotTag() == Slot)
 			{
-				RemoveItemDescription();
+				RemoveCurrentItemDescription();
 			}
 			Item->RemoveFromParent();
 		}
@@ -936,7 +936,7 @@ bool UObsidianInventoryWidgetController::CanInteractWithEquipment() const
 
 UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateInventoryItemDescription(const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats)
 {
-	RemoveItemDescription(); // Clear any other Item Description
+	RemoveCurrentItemDescription(); // Clear any other Item Description
 	
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::HandleHoveringOverItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
@@ -968,7 +968,7 @@ UObsidianItemDescriptionBase* UObsidianInventoryWidgetController::CreateDroppedI
 		return nullptr;
 	}
 
-	RemoveItemDescription(); // Clear any other Item Description
+	RemoveCurrentItemDescription(); // Clear any other Item Description
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class in UObsidianInventoryWidgetController::CreateItemDescriptionForDroppedItem, fill it in ObsidianInventoryWidgetController instance."));
 	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);

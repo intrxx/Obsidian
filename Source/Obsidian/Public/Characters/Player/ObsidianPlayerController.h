@@ -11,6 +11,7 @@
 #include "CommonPlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class AObsidianHero;
 class UObsidianStash;
 class UObsidianEquipmentComponent;
 struct FObsidianDamageTextProps;
@@ -64,6 +65,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianHUD* GetObsidianHUD() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
+	AObsidianHero* GetObsidianHero() const;
 
 	void TogglePlayerStash(const bool bShowStash) const;
 	

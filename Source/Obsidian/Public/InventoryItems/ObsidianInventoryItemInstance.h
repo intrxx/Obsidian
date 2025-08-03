@@ -16,6 +16,7 @@
 
 #include "ObsidianInventoryItemInstance.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianUsableShard;
 class UObsidianInventoryItemFragment;
 class UObsidianInventoryItemDefinition;
@@ -86,7 +87,7 @@ public:
 	void SetUsableShard(UObsidianUsableShard* InUsableShard);
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	bool UseItem(UObsidianInventoryItemInstance* UsingOntoInstance);
+	bool UseItem(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingOntoInstance);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetUsableItemType(const EObsidianUsableItemType InUsableItemTyp);

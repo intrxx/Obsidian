@@ -11,6 +11,7 @@
 
 #include "ObsidianUsableShard.generated.h"
 
+class AObsidianPlayerController;
 class UObsidianInventoryComponent;
 class UObsidianInventoryItemInstance;
 
@@ -41,6 +42,6 @@ class OBSIDIAN_API UObsidianUsableShard : public UObject
 	GENERATED_BODY()
 	
 public:
-	virtual bool OnItemUsed(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
+	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
 	virtual FObsidianItemsMatchingUsableContext OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems);
 };

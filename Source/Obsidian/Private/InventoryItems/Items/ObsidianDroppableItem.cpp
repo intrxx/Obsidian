@@ -468,7 +468,7 @@ void AObsidianDroppableItem::DestroyItemDescription()
 	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController)
 	{
-		CachedInventoryWidgetController->RemoveItemDescription();
+		CachedInventoryWidgetController->RemoveCurrentItemDescription();
 		return;	
 	}
 	UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::DestroyItemDescription."));

@@ -149,7 +149,7 @@ public:
 	void HandleUnhoveringItem();
 
 	void RemoveItemUIElements();
-	void RemoveItemDescription();
+	void RemoveCurrentItemDescription();
 
 	void CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
 	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);

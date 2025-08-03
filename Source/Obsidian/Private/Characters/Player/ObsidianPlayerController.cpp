@@ -9,6 +9,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
@@ -78,6 +79,11 @@ UObsidianAbilitySystemComponent* AObsidianPlayerController::GetObsidianAbilitySy
 AObsidianHUD* AObsidianPlayerController::GetObsidianHUD() const
 {
 	return GetHUD<AObsidianHUD>();
+}
+
+AObsidianHero* AObsidianPlayerController::GetObsidianHero() const
+{
+	return CastChecked<AObsidianHero>(GetCharacter(), ECastCheckedType::NullAllowed);
 }
 
 void AObsidianPlayerController::TogglePlayerStash(const bool bShowStash) const
