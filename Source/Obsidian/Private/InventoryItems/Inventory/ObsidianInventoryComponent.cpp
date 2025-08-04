@@ -897,7 +897,9 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 		return;
 	}
 
-	if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Crafting)
+	bool bUsageSuccessful = false;
+	const EObsidianUsableItemType ItemType = UsingInstance->GetUsableItemType();
+	if(ItemType == EObsidianUsableItemType::UIT_Crafting)
 	{
 		if(UsingOntoInstance == nullptr)
 		{
@@ -908,25 +910,33 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 		if(UsingInstance->UseItem(OwningPlayerController, UsingOntoInstance))
 		{
 			InventoryGrid.GeneralEntryChange(UsingOntoInstance);
+			bUsageSuccessful = true;
 		}
 	}
-	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
+	else if(ItemType == EObsidianUsableItemType::UIT_Activation)
 	{
-		UsingInstance->UseItem(OwningPlayerController, nullptr);
+		bUsageSuccessful = UsingInstance->UseItem(OwningPlayerController, nullptr);
 	}
-	
-	if(CurrentUsingInstanceStacks > 1)
-	{
-		UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
-		InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks);
-		return;
-	}
-	
-	InventoryGrid.RemoveEntry(UsingInstance);
 
-	if(UsingInstance && IsUsingRegisteredSubObjectList())
+	if(bUsageSuccessful)
 	{
-		RemoveReplicatedSubObject(UsingInstance);
+		if(CurrentUsingInstanceStacks > 1)
+		{
+			UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
+			InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks);
+			return;
+		}
+	
+		InventoryGrid.RemoveEntry(UsingInstance);
+
+		if(UsingInstance && IsUsingRegisteredSubObjectList())
+		{
+			RemoveReplicatedSubObject(UsingInstance);
+		}
+	}
+	else
+	{
+		//TODO Usage failed, Play some VO?
 	}
 }
 

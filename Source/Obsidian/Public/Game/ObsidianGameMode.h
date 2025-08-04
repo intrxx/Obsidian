@@ -11,6 +11,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "ObsidianGameMode.generated.h"
 
+class AObsidianTownPortal;
 class UObsidianEnemyTypeInfo;
 
 /**
@@ -20,9 +21,7 @@ UCLASS()
 class OBSIDIAN_API AObsidianGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-	
-	//~AGameModeBase interface
-	//~End of AGameModeBase interface
+
 public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
 	
@@ -30,8 +29,14 @@ public:
 	{
 		return EnemyTypeInfo;
 	}
+
+	void RegisterPortal(AObsidianTownPortal* InNewTownPortal);
+	bool CanCreatePortal() const;
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UObsidianEnemyTypeInfo> EnemyTypeInfo;
+
+	UPROPERTY()
+	TArray<TObjectPtr<AObsidianTownPortal>> ActiveTownPortals;
 };
