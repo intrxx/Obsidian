@@ -437,4 +437,6 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Cold, "Item.Affix.Resistance.Cold", "Item Tag which represents Cold Resistance Affix.")
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Chaos, "Item.Affix.Resistance.Chaos", "Item Tag which represents Chaos Resistance Affix.")
 	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Enchant_MaximumLifePercentage, "Item.Affix.Enchant.MaximumLifePercentage", "Item Tag which represents Enchant that gives Percentage Maximum Life Affix.")
+	
 }

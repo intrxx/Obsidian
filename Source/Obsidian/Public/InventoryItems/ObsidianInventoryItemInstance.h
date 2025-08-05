@@ -155,6 +155,9 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	int32 GetItemCombinedAffixLimit() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	int32 GetItemAddedAffixCount() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	int32 GetItemAddedSuffixCount() const;

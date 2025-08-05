@@ -215,3 +215,8 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef
 	return FMath::Min(AmountThatCanBeAddedToInstance, AddingFromItemDefCurrentStacks);
 }
 
+bool UObsidianItemsFunctionLibrary::IsItemUnique(const UObsidianInventoryItemInstance* ItemInstance)
+{
+	return ItemInstance->GetItemRarity() == ObsidianGameplayTags::Item_Rarity_Unique;
+}
+

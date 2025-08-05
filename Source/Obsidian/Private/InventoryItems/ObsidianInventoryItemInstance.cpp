@@ -215,7 +215,12 @@ TArray<FObsidianAffixDescriptionRow> UObsidianInventoryItemInstance::GetAffixesA
 
 int32 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const
 {
-	return 0;
+	return 1;
+}
+
+int32 UObsidianInventoryItemInstance::GetItemAddedAffixCount() const
+{
+	return GetItemAddedPrefixCount() + GetItemAddedSuffixCount();
 }
 
 int32 UObsidianInventoryItemInstance::GetItemAddedSuffixCount() const
