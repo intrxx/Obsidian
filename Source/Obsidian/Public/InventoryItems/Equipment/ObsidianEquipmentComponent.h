@@ -35,7 +35,7 @@ public:
 	int32 StackCount = 1;
 
 	/** Tag of the slot to equip this default equipment to. If left empty will abort equipping. */
-	UPROPERTY(EditAnywhere, meta=(Categories = "Equipment.Slot"))
+	UPROPERTY(EditAnywhere, meta=(Categories = "Item.Slot.Equipment"))
 	FGameplayTag EquipmentSlotTag = FGameplayTag::EmptyTag;
 };
 

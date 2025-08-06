@@ -277,70 +277,69 @@ namespace ObsidianGameplayTags
 	 */
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Resource, "Item.Category.Resource", "Item Tag that represents Resource item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional, "Item.Category.Functional", "Item Tag that represents Functional item category.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Helmet, "Item.Category.Helmet", "Item Tag that represents Helmet item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_BodyArmor, "Item.Category.BodyArmor", "Item Tag that represents Body Armor item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Belt, "Item.Category.Belt", "Item Tag that represents Belt item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Gloves, "Item.Category.Gloves", "Item Tag that represents Gloves item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Boots, "Item.Category.Boots", "Item Tag that represents Boots item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Shield, "Item.Category.Shield", "Item Tag that represents Shield item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Quiver, "Item.Category.Quiver", "Item Tag that represents Quiver item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Helmet, "Item.Category.Equipment.Helmet", "Item Tag that represents Helmet item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_BodyArmor, "Item.Category.Equipment.BodyArmor", "Item Tag that represents Body Armor item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Belt, "Item.Category.Equipment.Belt", "Item Tag that represents Belt item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Gloves, "Item.Category.Equipment.Gloves", "Item Tag that represents Gloves item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Boots, "Item.Category.Equipment.Boots", "Item Tag that represents Boots item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Shield, "Item.Category.Equipment.Shield", "Item Tag that represents Shield item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Quiver, "Item.Category.Equipment.Quiver", "Item Tag that represents Quiver item category.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Amulet, "Item.Category.Amulet", "Item Tag that represents Amulet item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Ring, "Item.Category.Ring", "Item Tag that represents Ring item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Amulet, "Item.Category.Equipment.Amulet", "Item Tag that represents Amulet item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Ring, "Item.Category.Equipment.Ring", "Item Tag that represents Ring item category.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Dagger, "Item.Category.Dagger", "Item Tag that represents Dagger item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Wand, "Item.Category.Wand", "Item Tag that represents Wand item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Flail, "Item.Category.Flail", "Item Tag that represents Flail item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Bow, "Item.Category.Bow", "Item Tag that represents Bow item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Staff_TwoHand, "Item.Category.Staff.TwoHand", "Item Tag that represents Staff item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Mace_OneHand, "Item.Category.Mace.OneHand", "Item Tag that represents One Hand Mace item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Mace_TwoHand, "Item.Category.Mace.TwoHand", "Item Tag that represents Two Hand Mace item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Sword_OneHand, "Item.Category.Sword.OneHand", "Item Tag that represents One Hand Sword item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Sword_TwoHand, "Item.Category.Sword.TwoHand", "Item Tag that represents Two Hand Sword item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Axe_OneHand, "Item.Category.Axe.OneHand", "Item Tag that represents One Hand Axe item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Axe_TwoHand, "Item.Category.Axe.TwoHand", "Item Tag that represents Two Hand Axe item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Dagger, "Item.Category.Equipment.Dagger", "Item Tag that represents Dagger item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Wand, "Item.Category.Equipment.Wand", "Item Tag that represents Wand item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Flail, "Item.Category.Equipment.Flail", "Item Tag that represents Flail item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Bow, "Item.Category.Equipment.Bow", "Item Tag that represents Bow item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Staff_TwoHand, "Item.Category.Equipment.Staff.TwoHand", "Item Tag that represents Staff item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Mace_OneHand, "Item.Category.Equipment.Mace.OneHand", "Item Tag that represents One Hand Mace item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Mace_TwoHand, "Item.Category.Equipment.Mace.TwoHand", "Item Tag that represents Two Hand Mace item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Sword_OneHand, "Item.Category.Equipment.Sword.OneHand", "Item Tag that represents One Hand Sword item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Sword_TwoHand, "Item.Category.Equipment.Sword.TwoHand", "Item Tag that represents Two Hand Sword item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Axe_OneHand, "Item.Category.Equipment.Axe.OneHand", "Item Tag that represents One Hand Axe item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Axe_TwoHand, "Item.Category.Equipment.Axe.TwoHand", "Item Tag that represents Two Hand Axe item category.");
 
 	/**
-	 * Individual Item Tags.
+	 * Individual Item Category Tags.
 	 */
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_ScrollOfIdentification, "Item.Category.ScrollOfIdentification", "Item Tag that represents Scroll Of Identification item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_ScrollOfTeleportation, "Item.Category.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_OrbOfEnchantment, "Item.Category.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional_ScrollOfIdentification, "Item.Category.Functional.ScrollOfIdentification", "Item Tag that represents Scroll Of Identification item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional_ScrollOfTeleportation, "Item.Category.Functional.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional_OrbOfEnchantment, "Item.Category.Functional.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item category.");
 
 	/**
 	 * Equipment Slots.
 	 */
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_RightHand, "Equipment.Slot.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Weapon_LeftHand, "Equipment.Slot.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_SwapSlot_Weapon_RightHand, "Equipment.SwapSlot.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot Swap.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_SwapSlot_Weapon_LeftHand, "Equipment.SwapSlot.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot Swap.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Weapon_RightHand, "Item.Slot.Equipment.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Weapon_LeftHand, "Item.Slot.Equipment.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_SwapSlot_Equipment_Weapon_RightHand, "Item.SwapSlot.Equipment.Weapon.RightHand", "Item Tag representing Right Hand Equipment Slot Swap.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_SwapSlot_Equipment_Weapon_LeftHand, "Item.SwapSlot.Equipment.Weapon.LeftHand", "Item Tag representing Left Hand Equipment Slot Swap.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Helmet, "Equipment.Slot.Helmet", "Item Tag representing Helmet Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_BodyArmor, "Equipment.Slot.BodyArmor", "Item Tag representing Body Armor Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Belt, "Equipment.Slot.Belt", "Item Tag representing Belt Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Gloves, "Equipment.Slot.Gloves", "Item Tag representing Gloves Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Boots, "Equipment.Slot.Boots", "Item Tag representing Boots Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Helmet, "Item.Slot.Equipment.Helmet", "Item Tag representing Helmet Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_BodyArmor, "Item.Slot.Equipment.BodyArmor", "Item Tag representing Body Armor Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Belt, "Item.Slot.Equipment.Belt", "Item Tag representing Belt Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Gloves, "Item.Slot.Equipment.Gloves", "Item Tag representing Gloves Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Boots, "Item.Slot.Equipment.Boots", "Item Tag representing Boots Equipment Slot.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_Amulet, "Equipment.Slot.Amulet", "Item Tag representing Amulet Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_RightRing, "Equipment.Slot.RightRing", "Item Tag representing Right Ring Equipment Slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_Slot_LeftRing, "Equipment.Slot.LeftRing", "Item Tag representing Left Ring Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Amulet, "Item.Slot.Equipment.Amulet", "Item Tag representing Amulet Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Ring_RightHand, "Item.Slot.Equipment.Ring.RightHand", "Item Tag representing Right Ring Equipment Slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Equipment_Ring_LeftHand, "Item.Slot.Equipment.Ring.LeftHand", "Item Tag representing Left Ring Equipment Slot.");
 
 	const TArray<FGameplayTag> EquipmentSlots =
 		{
-			Equipment_Slot_Weapon_RightHand,
-			Equipment_Slot_Weapon_LeftHand,
-			Equipment_Slot_Helmet,
-			Equipment_Slot_BodyArmor,
-			Equipment_Slot_Belt,
-			Equipment_Slot_Gloves,
-			Equipment_Slot_Boots,
-			Equipment_Slot_Amulet,
-			Equipment_Slot_RightRing,
-			Equipment_Slot_LeftRing
+			Item_Slot_Equipment_Weapon_RightHand,
+			Item_Slot_Equipment_Weapon_LeftHand,
+			Item_Slot_Equipment_Helmet,
+			Item_Slot_Equipment_BodyArmor,
+			Item_Slot_Equipment_Belt,
+			Item_Slot_Equipment_Gloves,
+			Item_Slot_Equipment_Boots,
+			Item_Slot_Equipment_Amulet,
+			Item_Slot_Equipment_Ring_RightHand,
+		Item_Slot_Equipment_Ring_LeftHand
 		};
 
 	
@@ -348,8 +347,8 @@ namespace ObsidianGameplayTags
 	{
 		static const TMap<FGameplayTag, FName> SlotToAttachSocketMap =
 		{
-			{Equipment_Slot_Weapon_RightHand, ObsidianMeshSocketNames::RightHandWeaponSocket},
-			{Equipment_Slot_Weapon_LeftHand, ObsidianMeshSocketNames::LeftHandWeaponSocket}
+			{Item_Slot_Equipment_Weapon_RightHand, ObsidianMeshSocketNames::RightHandWeaponSocket},
+			{Item_Slot_Equipment_Weapon_LeftHand, ObsidianMeshSocketNames::LeftHandWeaponSocket}
 		};
 
 		return SlotToAttachSocketMap;
@@ -359,37 +358,38 @@ namespace ObsidianGameplayTags
 	{
 		static const TArray<FGameplayTag> OneHandAcceptedEquipmentCategories =
 		{
-			Item_Category_Dagger, Item_Category_Wand, Item_Category_Flail, Item_Category_Mace_OneHand, Item_Category_Sword_OneHand,
-			Item_Category_Axe_OneHand, Item_Category_Shield
+			Item_Category_Equipment_Dagger, Item_Category_Equipment_Wand, Item_Category_Equipment_Flail,
+			Item_Category_Equipment_Mace_OneHand, Item_Category_Equipment_Sword_OneHand,
+			Item_Category_Equipment_Axe_OneHand, Item_Category_Equipment_Shield
 		};
 
 		static const TMap<FGameplayTag, FGameplayTagContainer> SisterSlotAcceptedEquipmentCategoriesForWeaponCategory =
 		{
-			{Item_Category_Dagger, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Wand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Flail, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Bow, FGameplayTagContainer(Item_Category_Quiver)},
-			{Item_Category_Quiver, FGameplayTagContainer(Item_Category_Bow)},
-			{Item_Category_Staff_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Mace_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Mace_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Sword_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Sword_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Axe_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Axe_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Shield, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)}	
+			{Item_Category_Equipment_Dagger, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Wand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Flail, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Bow, FGameplayTagContainer(Item_Category_Equipment_Quiver)},
+			{Item_Category_Equipment_Quiver, FGameplayTagContainer(Item_Category_Equipment_Bow)},
+			{Item_Category_Equipment_Staff_TwoHand, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Mace_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Mace_TwoHand, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Sword_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Sword_TwoHand, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Axe_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Axe_TwoHand, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Shield, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)}	
 		};
 
 		return SisterSlotAcceptedEquipmentCategoriesForWeaponCategory;
 	}
 
 	/**
-	 * Currency Slots.
+	 * Functional Slots.
 	 */
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Currency_Slot_ScrollOfIdentification, "Currency.Slot.ScrollOfIdentification", "Item Tag representing currency Scroll of Identification slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Currency_Slot_ScrollOfTeleportation, "Currency.Slot.ScrollOfTeleportation", "Item Tag representing currency Scroll of Teleportation slot.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Currency_Slot_OrbOfEnchantment, "Currency.Slot.OrbOfEnchantment", "Item Tag representing currency Orb of Enchantment slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Functional_ScrollOfIdentification, "Item.Slot.Functional.ScrollOfIdentification", "Item Tag representing functional Scroll of Identification slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Functional_ScrollOfTeleportation, "Item.Slot.Functional.ScrollOfTeleportation", "Item Tag representing functional Scroll of Teleportation slot.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Slot_Functional_OrbOfEnchantment, "Item.Slot.Functional.OrbOfEnchantment", "Item Tag representing functional Orb of Enchantment slot.");
 
 	/**
 	 * Stash Tabs.
@@ -400,7 +400,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Grid_3, "StashTab.Grid.3", "ID for Grid 3 Stash Tab.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Grid_4, "StashTab.Grid.4", "ID for Grid 4 Stash Tab.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_BigGrid_1, "StashTab.BigGrid.1", "ID for Big Grid 1 Stash Tab.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Currency, "StashTab.Currency", "ID for Currency Stash Tab.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(StashTab_Functional, "StashTab.Functional", "ID for Functional Stash Tab.");
 	
 	/**
 	 * Stack Counts

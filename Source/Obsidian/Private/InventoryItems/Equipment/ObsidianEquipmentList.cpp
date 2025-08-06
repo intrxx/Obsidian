@@ -73,7 +73,7 @@ TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetAllEquippedIt
 
 TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetSwappedWeapons()
 {
-	const FGameplayTag WeaponSwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Equipment.SwapSlot.Weapon"));
+	const FGameplayTag WeaponSwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Item.SwapSlot.Equipment.Weapon"), true);
 	
 	TArray<UObsidianInventoryItemInstance*> SwappedWeapons;
 	SwappedWeapons.Reserve(2);
@@ -90,7 +90,7 @@ TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetSwappedWeapon
 
 TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetEquippedWeapons()
 {
-	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Equipment.Slot.Weapon"));
+	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Item.Slot.Equipment.Weapon"), true);
 	
 	TArray<UObsidianInventoryItemInstance*> EquippedWeapons;
 	EquippedWeapons.Reserve(2);
@@ -261,7 +261,7 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 	const FGameplayTag CurrentWeaponSlotTag = Instance->GetItemCurrentEquipmentSlot();
 
 #if !UE_BUILD_SHIPPING
-	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Equipment.Slot.Weapon");
+	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Item.Slot.Equipment.Weapon");
 	if(CurrentWeaponSlotTag.MatchesTag(WeaponSlotTag) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Instance [%s] with Tag [%s] is not currentely in Weapon Slot, swapping shouldn't happen."),
@@ -275,10 +275,10 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 	}
 #endif
 
-	FGameplayTag SwapTag = ObsidianGameplayTags::Equipment_SwapSlot_Weapon_RightHand;
-	if(CurrentWeaponSlotTag == ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand)
+	FGameplayTag SwapTag = ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_RightHand;
+	if(CurrentWeaponSlotTag == ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand)
 	{
-		SwapTag = ObsidianGameplayTags::Equipment_SwapSlot_Weapon_LeftHand;
+		SwapTag = ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_LeftHand;
 	}
 
 	bool bSuccess = false;
@@ -337,7 +337,7 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 	const FGameplayTag CurrentSwapTag = Instance->GetItemCurrentEquipmentSlot();
 
 #if !UE_BUILD_SHIPPING
-	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Equipment.SwapSlot.Weapon");
+	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Item.SwapSlot.Equipment.Weapon");
 	if(CurrentSwapTag.MatchesTag(WeaponSlotTag) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Instance [%s] with Tag [%s] is not currentely in Weapon Slot, swapping shouldn't happen."),
@@ -345,10 +345,10 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 	}
 #endif
 
-	FGameplayTag MainWeaponSlotTag = ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand;
-	if(CurrentSwapTag == ObsidianGameplayTags::Equipment_SwapSlot_Weapon_LeftHand)
+	FGameplayTag MainWeaponSlotTag = ObsidianGameplayTags::Item_Slot_Equipment_Weapon_RightHand;
+	if(CurrentSwapTag == ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_LeftHand)
 	{
-		MainWeaponSlotTag = ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand;
+		MainWeaponSlotTag = ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand;
 	}
 
 	bool bSuccess = false;

@@ -29,7 +29,7 @@
 
 bool FObsidianItemWidgetData::IsItemForSwapSlot() const 
 {
-	if(DesiredSlot.IsValid() && DesiredSlot.MatchesTag(FGameplayTag::RequestGameplayTag("Equipment.SwapSlot.Weapon")))
+	if(DesiredSlot.IsValid() && DesiredSlot.MatchesTag(FGameplayTag::RequestGameplayTag("Item.SwapSlot.Equipment", true)))
 	{
 		return true;
 	}
@@ -462,8 +462,8 @@ void UObsidianInventoryWidgetController::HandleLeftClickingOnInventoryItemWithSh
 
 void UObsidianInventoryWidgetController::HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
-	const FGameplayTag WeaponSwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Equipment.SwapSlot.Weapon"));
-	if(SlotTag.MatchesTag(WeaponSwapSlotTag))
+	const FGameplayTag SwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Item.SwapSlot.Equipment"));
+	if(SlotTag.MatchesTag(SwapSlotTag))
 	{
 		//TODO Cannot left-click on swapped item, add VO?
 		return;

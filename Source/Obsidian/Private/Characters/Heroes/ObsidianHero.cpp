@@ -156,7 +156,7 @@ FVector AObsidianHero::GetAbilitySocketLocationFromLHWeapon_Implementation()
 	{
 		if(UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
 		{
-			if(const USkeletalMeshComponent* EquipmentPieceMesh = EquipmentComponent->GetMainEquippedMeshFromSlot(ObsidianGameplayTags::Equipment_Slot_Weapon_LeftHand))
+			if(const USkeletalMeshComponent* EquipmentPieceMesh = EquipmentComponent->GetMainEquippedMeshFromSlot(ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand))
 			{
 				return EquipmentPieceMesh->GetSocketLocation(WeaponSocketName);
 			}
@@ -171,7 +171,7 @@ FVector AObsidianHero::GetAbilitySocketLocationFromRHWeapon_Implementation()
 	{
 		if(UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
 		{
-			if(const USkeletalMeshComponent* EquipmentPieceMesh = EquipmentComponent->GetMainEquippedMeshFromSlot(ObsidianGameplayTags::Equipment_Slot_Weapon_RightHand))
+			if(const USkeletalMeshComponent* EquipmentPieceMesh = EquipmentComponent->GetMainEquippedMeshFromSlot(ObsidianGameplayTags::Item_Slot_Equipment_Weapon_RightHand))
 			{
 				return EquipmentPieceMesh->GetSocketLocation(WeaponSocketName);
 			}
