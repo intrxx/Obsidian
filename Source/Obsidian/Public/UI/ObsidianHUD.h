@@ -13,7 +13,7 @@
 
 struct FObsidianHeroWidgetControllerParams;
 
-class UObsidianInventoryWidgetController;
+class UObsidianInventoryItemsWidgetController;
 class UOCharacterStatusWidgetController;
 class UObsidianHeroAttributesComponent;
 class UMainOverlayWidgetController;
@@ -34,7 +34,7 @@ class OBSIDIAN_API AObsidianHUD : public AHUD
 public:
 	UMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
 	UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
-	UObsidianInventoryWidgetController* GetInventoryWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	UObsidianInventoryItemsWidgetController* GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
 
 	UObsidianMainOverlay* GetMainOverlay()
 	{
@@ -76,8 +76,8 @@ private:
 	TSubclassOf<UOCharacterStatusWidgetController> CharacterStatusWidgetControllerClass;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
+	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
 	
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|Inventory")
-	TSubclassOf<UObsidianInventoryWidgetController> InventoryWidgetControllerClass;
+	TSubclassOf<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetControllerClass;
 };

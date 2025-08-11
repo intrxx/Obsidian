@@ -23,7 +23,7 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
-#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -442,7 +442,7 @@ void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)
 
 void AObsidianDroppableItem::CreateItemDescription()
 {
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::CreateItemDescription."));
@@ -465,7 +465,7 @@ void AObsidianDroppableItem::DestroyItemDescription()
 	const bool server = HasAuthority();
 	UE_LOG(LogTemp, Warning, TEXT("%s"), server ? TEXT("Server") : TEXT("Client"));
 	
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController)
 	{
 		CachedInventoryWidgetController->RemoveCurrentItemDescription();
@@ -476,7 +476,7 @@ void AObsidianDroppableItem::DestroyItemDescription()
 
 void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance)
 {
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::UpdateStacksOnActiveItemDescription."));
@@ -496,7 +496,7 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidian
 
 void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 StacksToSet)
 {
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::CreateItemDescription."));

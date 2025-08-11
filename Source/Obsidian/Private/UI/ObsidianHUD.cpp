@@ -9,7 +9,7 @@
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
-#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
@@ -45,21 +45,21 @@ UOCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetControl
 	return CharacterStatusWidgetController;
 }
 
-UObsidianInventoryWidgetController* AObsidianHUD::GetInventoryWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
+UObsidianInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	// If the character status controller is a nullptr we need to construct one
-	if(InventoryWidgetController == nullptr)
+	if(InventoryItemsWidgetController == nullptr)
 	{
-		if(ensureMsgf(InventoryWidgetControllerClass, TEXT("Inventory Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
+		if(ensureMsgf(InventoryItemsWidgetControllerClass, TEXT("Inventory Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 		{
-			InventoryWidgetController = NewObject<UObsidianInventoryWidgetController>(this, InventoryWidgetControllerClass);
-			InventoryWidgetController->SetWidgetControllerParams(WidgetControllerParams);
-			InventoryWidgetController->OnWidgetControllerSetupCompleted();
+			InventoryItemsWidgetController = NewObject<UObsidianInventoryItemsWidgetController>(this, InventoryItemsWidgetControllerClass);
+			InventoryItemsWidgetController->SetWidgetControllerParams(WidgetControllerParams);
+			InventoryItemsWidgetController->OnWidgetControllerSetupCompleted();
 			
-			return InventoryWidgetController;
+			return InventoryItemsWidgetController;
 		}
 	}
-	return InventoryWidgetController;
+	return InventoryItemsWidgetController;
 }
 
 void AObsidianHUD::InitOverlay(AObsidianPlayerController* PC, AObsidianPlayerState* PS, UObsidianAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)
@@ -123,9 +123,9 @@ void AObsidianHUD::TogglePlayerStash(const bool bShowStash) const
 
 bool AObsidianHUD::IsInventoryOpened()
 {
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		return InventoryWidgetController->IsInventoryOpened();
+		return InventoryItemsWidgetController->IsInventoryOpened();
 	}
 	return false;
 }

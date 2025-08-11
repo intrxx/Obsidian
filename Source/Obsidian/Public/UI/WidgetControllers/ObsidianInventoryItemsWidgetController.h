@@ -9,7 +9,7 @@
 
 
 #include "UI/ObsidianWidgetControllerBase.h"
-#include "ObsidianInventoryWidgetController.generated.h"
+#include "ObsidianInventoryItemsWidgetController.generated.h"
 
 struct FObsidianEquipmentChangeMessage;
 
@@ -76,7 +76,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItem
  *  
  */
 UCLASS(BlueprintType, Blueprintable)
-class OBSIDIAN_API UObsidianInventoryWidgetController : public UObsidianHeroWidgetControllerBase
+class OBSIDIAN_API UObsidianInventoryItemsWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 
@@ -85,25 +85,25 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
 	void SetInventoryOpened(const bool bInOpened)
 	{
 		bInventoryOpened = bInOpened;
 	}
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
 	bool IsInventoryOpened() const
 	{
 		return bInventoryOpened;
 	}
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
 	void SetPlayerStashOpened(const bool bInOpened)
 	{
 		bPlayerStashOpened = bInOpened;
 	}
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
 	bool IsPlayerStashOpened() const
 	{
 		return bPlayerStashOpened;

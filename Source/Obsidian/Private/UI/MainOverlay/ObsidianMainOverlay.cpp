@@ -15,7 +15,7 @@
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "Core/ObsidianUIFunctionLibrary.h"
-#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
@@ -134,15 +134,15 @@ void UObsidianMainOverlay::ToggleInventory()
 {
 	if(IsInventoryOpen() == false)
 	{
-		if(InventoryWidgetController == nullptr)
+		if(InventoryItemsWidgetController == nullptr)
 		{
-			InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
+			InventoryItemsWidgetController = UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this);
 		}
-		check(InventoryWidgetController);
+		check(InventoryItemsWidgetController);
 
 		checkf(InventoryClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::ToggleInventory, fill it in ObsidianMainOverlay instance."));
 		Inventory = CreateWidget<UObsidianInventory>(this, InventoryClass);
-		Inventory->SetWidgetController(InventoryWidgetController);
+		Inventory->SetWidgetController(InventoryItemsWidgetController);
 		
 		RightSideContainer_Overlay->AddChildToOverlay(Inventory);
 		Inventory->OnWidgetDestroyedDelegate.AddLambda([this]()
@@ -154,17 +154,17 @@ void UObsidianMainOverlay::ToggleInventory()
 					Overlay_GameTabsMenu->Inventory_GameTabButton->bIsCorrespondingTabOpen = false;
 				}
 			
-				if(ensure(InventoryWidgetController))
+				if(ensure(InventoryItemsWidgetController))
 				{
-					InventoryWidgetController->SetInventoryOpened(false);
-					InventoryWidgetController->RemoveItemUIElements();
+					InventoryItemsWidgetController->SetInventoryOpened(false);
+					InventoryItemsWidgetController->RemoveItemUIElements();
 				}
 				
 				MoveDroppedItemDescOverlay(false);
 			});
 
-		InventoryWidgetController->SetInventoryOpened(true);
-		InventoryWidgetController->OnInventoryOpen();
+		InventoryItemsWidgetController->SetInventoryOpened(true);
+		InventoryItemsWidgetController->OnInventoryOpen();
 		MoveDroppedItemDescOverlay(true);
 	}
 	else
@@ -173,9 +173,9 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory = nullptr;
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
 		
-		if(ensure(InventoryWidgetController))
+		if(ensure(InventoryItemsWidgetController))
 		{
-			InventoryWidgetController->SetInventoryOpened(false);
+			InventoryItemsWidgetController->SetInventoryOpened(false);
 		}
 		
 		MoveDroppedItemDescOverlay(false);
@@ -222,30 +222,30 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 			ToggleInventory();
 		}
 
-		if(InventoryWidgetController == nullptr)
+		if(InventoryItemsWidgetController == nullptr)
 		{
-			InventoryWidgetController = UObsidianUIFunctionLibrary::GetInventoryWidgetController(this);
+			InventoryItemsWidgetController = UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this);
 		}
-		check(InventoryWidgetController);
+		check(InventoryItemsWidgetController);
 		
 		checkf(PlayerStashClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::TogglePlayerStash, fill it in ObsidianMainOverlay instance."));
 		PlayerStash = CreateWidget<UObsidianPlayerStashWidget>(this, PlayerStashClass);
-		PlayerStash->SetWidgetController(InventoryWidgetController);
+		PlayerStash->SetWidgetController(InventoryItemsWidgetController);
 		
 		LeftSideContainer_Overlay->AddChildToOverlay(PlayerStash);
 		PlayerStash->OnWidgetDestroyedDelegate.AddLambda([this]()
 			{
 				PlayerStash = nullptr;
 			
-				if(ensure(InventoryWidgetController))
+				if(ensure(InventoryItemsWidgetController))
 				{
-					InventoryWidgetController->SetInventoryOpened(false);
-					InventoryWidgetController->RemoveItemUIElements();
+					InventoryItemsWidgetController->SetInventoryOpened(false);
+					InventoryItemsWidgetController->RemoveItemUIElements();
 				}
 			});
 
-		InventoryWidgetController->SetPlayerStashOpened(true);
-		InventoryWidgetController->OnPlayerStashOpen();
+		InventoryItemsWidgetController->SetPlayerStashOpened(true);
+		InventoryItemsWidgetController->OnPlayerStashOpen();
 	}
 	else if(bShowStash == false && IsPlayerStashOpen())
 	{
@@ -257,9 +257,9 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 			ToggleInventory();
 		}
 
-		if(ensure(InventoryWidgetController))
+		if(ensure(InventoryItemsWidgetController))
 		{
-			InventoryWidgetController->SetInventoryOpened(false);
+			InventoryItemsWidgetController->SetInventoryOpened(false);
 		}
 	}
 }

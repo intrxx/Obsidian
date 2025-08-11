@@ -60,7 +60,7 @@ UOCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatu
 	return nullptr;
 }
 
-UObsidianInventoryWidgetController* UObsidianUIFunctionLibrary::GetInventoryWidgetController(const UObject* WorldContextObject)
+UObsidianInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(const UObject* WorldContextObject)
 {
 	if(WorldContextObject == nullptr)
 	{
@@ -77,7 +77,7 @@ UObsidianInventoryWidgetController* UObsidianUIFunctionLibrary::GetInventoryWidg
 				UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent();
 				UObsidianPlayerStashComponent* PlayerStashComponent = ObsidianPC->GetPlayerStashComponent();
 				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, nullptr, nullptr, InventoryComponent, EquipmentComponent, PlayerStashComponent);
-				return ObsidianHUD->GetInventoryWidgetController(Params);
+				return ObsidianHUD->GetInventoryItemsWidgetController(Params);
 			}
 		}
 	}

@@ -24,7 +24,7 @@ class UGridPanel;
 class USizeBox;
 class UOverlay;
 class UGridSlot;
-class UObsidianInventoryWidgetController;
+class UObsidianInventoryItemsWidgetController;
 class UObsidianEquipmentPanel;
 class UObsidianGrid;
 
@@ -81,7 +81,7 @@ private:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
+	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianItem> ItemWidgetClass;

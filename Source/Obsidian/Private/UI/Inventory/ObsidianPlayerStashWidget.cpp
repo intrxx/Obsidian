@@ -2,19 +2,19 @@
 
 #include "UI/Inventory/ObsidianPlayerStashWidget.h"
 
-#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 
 // ~ Core
 
 // ~ Project
-#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 
 void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 {
 	Super::HandleWidgetControllerSet();
 
-	InventoryWidgetController = Cast<UObsidianInventoryWidgetController>(WidgetController);
-	check(InventoryWidgetController);
+	InventoryItemsWidgetController = Cast<UObsidianInventoryItemsWidgetController>(WidgetController);
+	check(InventoryItemsWidgetController);
 }
 
 void UObsidianPlayerStashWidget::NativeConstruct()

@@ -7,7 +7,7 @@
 #include "ObsidianPlayerStashWidget.generated.h"
 
 class UObsidianGrid;
-class UObsidianInventoryWidgetController;
+class UObsidianInventoryItemsWidgetController;
 
 /**
  * 
@@ -25,5 +25,5 @@ protected:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
+	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
 };

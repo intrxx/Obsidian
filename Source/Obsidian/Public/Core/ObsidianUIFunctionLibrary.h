@@ -12,7 +12,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianUIFunctionLibrary.generated.h"
 
-class UObsidianInventoryWidgetController;
+class UObsidianInventoryItemsWidgetController;
 class UObsidianEnemyOverlayWidgetController;
 struct FObsidianEnemyWidgetControllerParams;
 class UOCharacterStatusWidgetController;
@@ -34,7 +34,7 @@ public:
 	static UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UObsidianInventoryWidgetController* GetInventoryWidgetController(const UObject* WorldContextObject);
+	static UObsidianInventoryItemsWidgetController* GetInventoryItemsWidgetController(const UObject* WorldContextObject);
 
 	static FVector2D GetGameViewportSize();
 	

@@ -194,7 +194,7 @@ private:
 	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryWidgetController> InventoryWidgetController;
+	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
 	
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerInputManager> PlayerInputManager;

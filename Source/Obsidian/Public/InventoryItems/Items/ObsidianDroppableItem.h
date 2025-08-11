@@ -13,7 +13,7 @@
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
 
-class UObsidianInventoryWidgetController;
+class UObsidianInventoryItemsWidgetController;
 class USplineComponent;
 class UTimelineComponent;
 class AObsidianPlayerController;
@@ -127,7 +127,7 @@ private:
 	TObjectPtr<UObsidianItemWorldName> ItemWorldName;
 
 	UPROPERTY()
-	UObsidianInventoryWidgetController* CachedInventoryWidgetController;
+	UObsidianInventoryItemsWidgetController* CachedInventoryWidgetController;
 	
 	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
 	int32 DroppedItemStacks = 1;

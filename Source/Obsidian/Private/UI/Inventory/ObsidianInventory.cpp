@@ -9,28 +9,28 @@
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
-#include "UI/WidgetControllers/ObsidianInventoryWidgetController.h"
+#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 #include "UI/Inventory/ObsidianEquipmentPanel.h"
 #include "UI/Inventory/ObsidianGrid.h"
 
 void UObsidianInventory::HandleWidgetControllerSet()
 {
-	InventoryWidgetController = Cast<UObsidianInventoryWidgetController>(WidgetController);
-	check(InventoryWidgetController);
+	InventoryItemsWidgetController = Cast<UObsidianInventoryItemsWidgetController>(WidgetController);
+	check(InventoryItemsWidgetController);
 
-	InventoryWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnItemEquipped);
+	InventoryItemsWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnItemEquipped);
 	
-	InventoryWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
-	InventoryWidgetController->OnItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
+	InventoryItemsWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
+	InventoryItemsWidgetController->OnItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
 }
 
 void UObsidianInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if(InventoryGrid && InventoryWidgetController)
+	if(InventoryGrid && InventoryItemsWidgetController)
 	{
-		InventoryGrid->ConstructGrid(InventoryWidgetController, InventoryWidgetController->GetInventoryGridWidth(), InventoryWidgetController->GetInventoryGridHeight());
+		InventoryGrid->ConstructGrid(InventoryItemsWidgetController, InventoryItemsWidgetController->GetInventoryGridWidth(), InventoryItemsWidgetController->GetInventoryGridHeight());
 		InventoryGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToInventory);
 	}
 	
@@ -43,12 +43,12 @@ void UObsidianInventory::NativeConstruct()
 
 void UObsidianInventory::NativeDestruct()
 {
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->RemoveItemUIElements();
-		InventoryWidgetController->OnItemEquippedDelegate.Clear();
-		InventoryWidgetController->OnItemAddedDelegate.Clear();
-		InventoryWidgetController->OnItemChangedDelegate.Clear();
+		InventoryItemsWidgetController->RemoveItemUIElements();
+		InventoryItemsWidgetController->OnItemEquippedDelegate.Clear();
+		InventoryItemsWidgetController->OnItemAddedDelegate.Clear();
+		InventoryItemsWidgetController->OnItemChangedDelegate.Clear();
 	}
 	
 	if(InventoryGrid)
@@ -66,62 +66,62 @@ void UObsidianInventory::NativeDestruct()
 
 bool UObsidianInventory::IsPlayerDraggingItem() const
 {
-	if(InventoryWidgetController == false)
+	if(InventoryItemsWidgetController == false)
 	{
 		return false;
 	}
-	return InventoryWidgetController->IsDraggingAnItem();
+	return InventoryItemsWidgetController->IsDraggingAnItem();
 }
 
 bool UObsidianInventory::GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const
 {
-	if(InventoryWidgetController == false || InventoryWidgetController->IsDraggingAnItem() == false)
+	if(InventoryItemsWidgetController == false || InventoryItemsWidgetController->IsDraggingAnItem() == false)
 	{
 		return false;
 	}
 
-	InventoryWidgetController->GetDraggedItemGridSpan(OutItemGridSpan);
+	InventoryItemsWidgetController->GetDraggedItemGridSpan(OutItemGridSpan);
 	return true;
 }
 
 bool UObsidianInventory::CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const FIntPoint& ItemGridSpan) const
 {
-	if(InventoryWidgetController == false || InventoryWidgetController->IsDraggingAnItem() == false)
+	if(InventoryItemsWidgetController == false || InventoryItemsWidgetController->IsDraggingAnItem() == false)
 	{
 		return false;
 	}
 
-	if(InventoryWidgetController->CanInteractWithInventory() == false)
+	if(InventoryItemsWidgetController->CanInteractWithInventory() == false)
 	{
 		return false;
 	}
 
-	return InventoryWidgetController->CanPlaceDraggedItem(ToHoveredSlotPosition, ItemGridSpan);
+	return InventoryItemsWidgetController->CanPlaceDraggedItem(ToHoveredSlotPosition, ItemGridSpan);
 }
 
 bool UObsidianInventory::CanInteractWithInventory() const
 {
-	if (InventoryWidgetController)
+	if (InventoryItemsWidgetController)
 	{
-		return InventoryWidgetController->CanInteractWithInventory();
+		return InventoryItemsWidgetController->CanInteractWithInventory();
 	}
 	return false;
 }
 
 bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const
 {
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		return InventoryWidgetController->CanEquipDraggedItem(ToSlotTag);
+		return InventoryItemsWidgetController->CanEquipDraggedItem(ToSlotTag);
 	}
 	return false;
 }
 
 bool UObsidianInventory::CanInteractWithEquipment() const
 {
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		return InventoryWidgetController->CanInteractWithEquipment();
+		return InventoryItemsWidgetController->CanInteractWithEquipment();
 	}
 	return false;
 }
@@ -143,7 +143,7 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetDa
 		ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRightMouseButtonPressed);
 	}
 	
-	InventoryWidgetController->RegisterInventoryItemWidget(DesiredPosition, ItemWidget);
+	InventoryItemsWidgetController->RegisterInventoryItemWidget(DesiredPosition, ItemWidget);
 	InventoryGrid->AddItemToGrid(ItemWidget, ItemWidgetData.ItemSlotPadding);
 }
 
@@ -164,7 +164,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnEquipmentItemMouseEntered);
 	ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 	
-	InventoryWidgetController->RegisterEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
+	InventoryItemsWidgetController->RegisterEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
 
 	UObsidianItemSlot_Equipment* EquipmentSlot = EquipmentPanel->FindEquipmentSlotForTag(DesiredSlot);
 	EquipmentSlot->AddItemToSlot(ItemWidget, ItemWidgetData.ItemSlotPadding);
@@ -179,7 +179,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		BlockedSlotItem->OnSlotBlockadeItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnSlotBlockadeItemMouseEntered);
 		BlockedSlotItem->OnSlotBlockadeItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 		
-		InventoryWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
+		InventoryItemsWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
 
 		UObsidianItemSlot_Equipment* SlotToBlock = EquipmentPanel->FindEquipmentSlotForTag(SisterSlotTag);
 		SlotToBlock->AddItemToSlot(BlockedSlotItem, ItemWidgetData.ItemSlotPadding);
@@ -191,7 +191,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	const FIntPoint ItemPosition = ItemWidgetData.DesiredPosition;
-	if(UObsidianItem* ItemWidget = InventoryWidgetController->GetItemWidgetAtInventoryGridSlot(ItemPosition))
+	if(UObsidianItem* ItemWidget = InventoryItemsWidgetController->GetItemWidgetAtInventoryGridSlot(ItemPosition))
 	{
 		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
 	}
@@ -201,89 +201,89 @@ void UObsidianInventory::OnInventoryItemLeftMouseButtonPressed(const UObsidianIt
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemLeftMouseButtonPressed"));
 
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
 		if(bShiftDown)
 		{
-			InventoryWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(ItemWidget->GetGridPosition(), ItemWidget);
+			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(ItemWidget->GetGridPosition(), ItemWidget);
 			return;
 		}
-		InventoryWidgetController->HandleLeftClickingOnInventoryItem(ItemWidget->GetGridPosition());
+		InventoryItemsWidgetController->HandleLeftClickingOnInventoryItem(ItemWidget->GetGridPosition());
 	}
 }
 
 void UObsidianInventory::OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemRightMouseButtonPressed"));
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->HandleRightClickingOnInventoryItem(ItemWidget->GetGridPosition(), ItemWidget);
+		InventoryItemsWidgetController->HandleRightClickingOnInventoryItem(ItemWidget->GetGridPosition(), ItemWidget);
 	}
 }
 
 void UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed"));
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(ItemWidget->GetSlotTag());
+		InventoryItemsWidgetController->HandleLeftClickingOnEquipmentItem(ItemWidget->GetSlotTag());
 	}
 }
 
 void UObsidianInventory::OnSlotBlockadeItemLeftMouseButtonPressed(const UObsidianSlotBlockadeItem* SlotBlockadeItem)
 {
 	ensureMsgf(SlotBlockadeItem, TEXT("Slot Blockade Item Widget is invalid in UObsidianInventory::OnSlotBlockadeItemLeftMouseButtonPressed"));
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->HandleLeftClickingOnEquipmentItem(SlotBlockadeItem->GetPrimaryWeaponSlotTag(), SlotBlockadeItem->GetEquipmentSlotTag());
+		InventoryItemsWidgetController->HandleLeftClickingOnEquipmentItem(SlotBlockadeItem->GetPrimaryWeaponSlotTag(), SlotBlockadeItem->GetEquipmentSlotTag());
 	}
 }
 
 void UObsidianInventory::OnSlotBlockadeItemMouseEntered(const UObsidianSlotBlockadeItem* SlotBlockadeItem)
 {
 	ensureMsgf(SlotBlockadeItem, TEXT("Slot Blockade Item Widget is invalid in UObsidianInventory::OnSlotBlockadeItemMouseEntered"));
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->HandleHoveringOverEquipmentItem(InventoryWidgetController->GetItemWidgetAtEquipmentSlot(SlotBlockadeItem->GetPrimaryWeaponSlotTag()));
+		InventoryItemsWidgetController->HandleHoveringOverEquipmentItem(InventoryItemsWidgetController->GetItemWidgetAtEquipmentSlot(SlotBlockadeItem->GetPrimaryWeaponSlotTag()));
 	}
 }
 
 void UObsidianInventory::OnEquipmentItemMouseEntered(const UObsidianItem* ItemWidget)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnEquipmentItemMouseEntered"));
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->HandleHoveringOverEquipmentItem(ItemWidget);
+		InventoryItemsWidgetController->HandleHoveringOverEquipmentItem(ItemWidget);
 	}
 }
 
 void UObsidianInventory::OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemMouseEntered"));
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->HandleHoveringOverInventoryItem(ItemWidget);
+		InventoryItemsWidgetController->HandleHoveringOverInventoryItem(ItemWidget);
 	}
 }
 
 void UObsidianInventory::OnItemMouseLeave()
 {
-	InventoryWidgetController->HandleUnhoveringItem();
+	InventoryItemsWidgetController->HandleUnhoveringItem();
 }
 
 void UObsidianInventory::RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const
 {
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->RequestAddingItemToInventory(ToPosition, bShiftDown);
+		InventoryItemsWidgetController->RequestAddingItemToInventory(ToPosition, bShiftDown);
 	}
 }
 
 void UObsidianInventory::RequestEquippingItem(const FGameplayTag& ToSlot) const
 {
-	if(InventoryWidgetController)
+	if(InventoryItemsWidgetController)
 	{
-		InventoryWidgetController->RequestEquippingItem(ToSlot);
+		InventoryItemsWidgetController->RequestEquippingItem(ToSlot);
 	}
 }
 

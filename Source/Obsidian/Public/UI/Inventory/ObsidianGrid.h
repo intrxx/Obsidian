@@ -11,7 +11,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianGrid.generated.h"
 
-class UObsidianInventoryWidgetController;
+class UObsidianInventoryItemsWidgetController;
 class UCanvasPanel;
 class UObsidianItem;
 class UObsidianItemSlot_GridSlot;
@@ -27,7 +27,7 @@ class OBSIDIAN_API UObsidianGrid : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void ConstructGrid(UObsidianInventoryWidgetController* InOwningWidgetController, const int32 GridWidth, const int32 GridHeight);
+	void ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const int32 GridWidth, const int32 GridHeight);
 
 	UObsidianItemSlot_GridSlot* GetSlotByPosition(const FIntPoint& BySlotPosition);
 
@@ -54,7 +54,7 @@ protected:
 	TArray<UObsidianItemSlot_GridSlot*> AffectedGridSlots;
 
 	UPROPERTY()
-	TWeakObjectPtr<UObsidianInventoryWidgetController> OwningWidgetController;
+	TWeakObjectPtr<UObsidianInventoryItemsWidgetController> OwningWidgetController;
 
 protected:
 	UPROPERTY(meta=(BindWidget))
