@@ -41,6 +41,7 @@ void UObsidianInventoryWidgetController::OnWidgetControllerSetupCompleted()
 	check(InventoryComponent);
 	check(EquipmentComponent);
 	check(ObsidianPlayerController);
+	check(PlayerStashComponent);
 	
 	const AActor* OwningActor = Cast<AActor>(ObsidianPlayerController->GetPawn());
 	check(OwningActor);
@@ -246,6 +247,11 @@ void UObsidianInventoryWidgetController::OnInventoryOpen()
 		
 		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
 	}
+}
+
+void UObsidianInventoryWidgetController::OnPlayerStashOpen()
+{
+	UE_LOG(LogTemp, Display, TEXT("Stash Opened."));
 }
 
 void UObsidianInventoryWidgetController::RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown)

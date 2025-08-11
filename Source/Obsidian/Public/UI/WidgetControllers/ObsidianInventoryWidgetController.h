@@ -97,6 +97,18 @@ public:
 		return bInventoryOpened;
 	}
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	void SetPlayerStashOpened(const bool bInOpened)
+	{
+		bPlayerStashOpened = bInOpened;
+	}
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryWidgetController")
+	bool IsPlayerStashOpened() const
+	{
+		return bPlayerStashOpened;
+	}
+
 	bool IsDescriptionActive() const
 	{
 		return bDescriptionActive;
@@ -111,6 +123,7 @@ public:
 	int32 GetInventoryGridHeight() const;
 
 	void OnInventoryOpen();
+	void OnPlayerStashOpen();
 	
 	bool IsDraggingAnItem() const;
 	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot) const;
@@ -197,6 +210,7 @@ private:
 
 private:
 	bool bInventoryOpened = false;
+	bool bPlayerStashOpened = false;
 
 	bool bDescriptionActive = false;
 	bool bUnstackSliderActive = false;

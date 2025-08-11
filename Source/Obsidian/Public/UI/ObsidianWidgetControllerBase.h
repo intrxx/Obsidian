@@ -1,4 +1,4 @@
-// Copyright 2024 out of sCope team - Michał Ogiński
+ // Copyright 2024 out of sCope team - Michał Ogiński
 
 #pragma once
 
@@ -8,9 +8,11 @@
 // ~ Project
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 
 #include "ObsidianWidgetControllerBase.generated.h"
 
+ class UObsidianPlayerStashComponent;
 class AObsidianPlayerController;
 class AObsidianPlayerState;
 class UObsidianEquipmentComponent;
@@ -26,13 +28,14 @@ struct FObsidianWidgetControllerParams
 	GENERATED_BODY()
 	
 	FObsidianWidgetControllerParams(AObsidianPlayerController* OPC = nullptr, AObsidianPlayerState* OPS = nullptr, UObsidianAbilitySystemComponent* ObsidianASC = nullptr,
-		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr, UObsidianEquipmentComponent* EC = nullptr)
+		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr, UObsidianEquipmentComponent* EC = nullptr, UObsidianPlayerStashComponent* PSC = nullptr)
 	: ObsidianPlayerController(OPC)
 	, ObsidianPlayerState(OPS)
 	, ObsidianAbilitySystemComponent(ObsidianASC)
 	, AttributesComponent(AC)
 	, InventoryComponent(IC)
 	, EquipmentComponent(EC)
+	, PlayerStashComponent(PSC)
 	{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -52,6 +55,9 @@ struct FObsidianWidgetControllerParams
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent = nullptr;
 };
 
 /**
@@ -102,5 +108,8 @@ protected:
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
+	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent;
 };
 

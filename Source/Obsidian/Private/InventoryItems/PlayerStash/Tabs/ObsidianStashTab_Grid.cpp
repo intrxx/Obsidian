@@ -10,6 +10,7 @@
 UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
+	StashTabType = EObsidianStashTabType::STT_GridType;
 }
 
 void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)

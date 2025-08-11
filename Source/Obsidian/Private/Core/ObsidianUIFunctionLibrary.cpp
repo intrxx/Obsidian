@@ -75,7 +75,8 @@ UObsidianInventoryWidgetController* UObsidianUIFunctionLibrary::GetInventoryWidg
 			{
 				UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
 				UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent();
-				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, nullptr, nullptr, InventoryComponent, EquipmentComponent);
+				UObsidianPlayerStashComponent* PlayerStashComponent = ObsidianPC->GetPlayerStashComponent();
+				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, nullptr, nullptr, InventoryComponent, EquipmentComponent, PlayerStashComponent);
 				return ObsidianHUD->GetInventoryWidgetController(Params);
 			}
 		}

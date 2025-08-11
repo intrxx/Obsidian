@@ -5,6 +5,7 @@
 // ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 // ~ Project
 
@@ -29,11 +30,15 @@ public:
 	
 	FGameplayTag GetStashTabTag() const;
 	void SetStashTabTag(const FGameplayTag& InTag);
-
+	
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) {}
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
 
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	EObsidianStashTabType StashTabType = EObsidianStashTabType::STT_None;
+	
+private:
 	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };

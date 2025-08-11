@@ -35,6 +35,8 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
+	UObsidianStashTabsConfig* GetStashTabConfig() const;
+
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	

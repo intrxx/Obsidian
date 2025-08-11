@@ -31,6 +31,11 @@ void UObsidianPlayerStashComponent::GetLifetimeReplicatedProps(TArray<class FLif
 	DOREPLIFETIME(ThisClass, StashItemList);
 }
 
+UObsidianStashTabsConfig* UObsidianPlayerStashComponent::GetStashTabConfig() const
+{
+	return StashTabsConfig;
+}
+
 int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	//TODO Implement

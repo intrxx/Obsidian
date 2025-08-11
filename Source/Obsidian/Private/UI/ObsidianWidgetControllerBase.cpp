@@ -14,6 +14,7 @@ void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidia
 	AttributesComponent = WidgetControllerParams.AttributesComponent;
 	InventoryComponent = WidgetControllerParams.InventoryComponent;
 	EquipmentComponent = WidgetControllerParams.EquipmentComponent;
+	PlayerStashComponent = WidgetControllerParams.PlayerStashComponent;
 }
 
 void UObsidianHeroWidgetControllerBase::OnWidgetControllerSetupCompleted()
