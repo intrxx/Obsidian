@@ -65,7 +65,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryItemsWidgetController::OnInventoryStateChanged."));
+		UE_LOG(LogInventory, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -80,7 +80,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemAdded)
 	{
-		UE_LOG(LogInventory, Display, TEXT("Added item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("[Widget] Adding item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
@@ -94,7 +94,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
-		UE_LOG(LogInventory, Display, TEXT("Removed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("[Widget] Removing item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		RemoveInventoryItemWidget(InventoryChangeMessage.GridItemPosition);
 		
 		if(OwnerPlayerInputManager->IsUsingItem())
@@ -107,7 +107,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemStacksChanged)
 	{
-		UE_LOG(LogInventory, Display, TEXT("Changed item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("[Widget] Changing item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.DesiredPosition = InventoryChangeMessage.GridItemPosition;
@@ -127,13 +127,13 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	const UObsidianInventoryItemInstance* Instance = EquipmentChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged."));
+		UE_LOG(LogInventory, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemEquipped)
 	{
-		UE_LOG(LogInventory, Display, TEXT("Equipped item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("[Widget] Equipping item: [%s]"), *Instance->GetItemDisplayName().ToString());
 
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
@@ -147,7 +147,7 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
 	{
-		UE_LOG(LogInventory, Display, TEXT("Unequipped item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("[Widget] Unequipping item: [%s]"), *Instance->GetItemDisplayName().ToString());
 
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
@@ -162,7 +162,7 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
 	{
-		UE_LOG(LogInventory, Display, TEXT("Swapped item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogInventory, Display, TEXT("[Widget] Swapping item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
@@ -196,7 +196,7 @@ int32 UObsidianInventoryItemsWidgetController::GetInventoryGridWidth() const
 		return InventoryComponent->GetInventoryGridWidth();
 	}
 	
-	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Width but Inventory Component is invalid."))
+	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Width but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 	return 0;
 }
 
@@ -207,8 +207,19 @@ int32 UObsidianInventoryItemsWidgetController::GetInventoryGridHeight() const
 		return InventoryComponent->GetInventoryGridHeight();
 	}
 	
-	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid."))
+	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 	return 0;
+}
+
+UObsidianStashTabsConfig* UObsidianInventoryItemsWidgetController::GetStashTabConfig() const
+{
+	if(PlayerStashComponent)
+	{
+		return PlayerStashComponent->GetStashTabConfig();
+	}
+	
+	UE_LOG(LogInventory, Error, TEXT("Trying to return Stash Config but Player Stash Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	return nullptr;
 }
 
 void UObsidianInventoryItemsWidgetController::OnInventoryOpen()
@@ -218,17 +229,18 @@ void UObsidianInventoryItemsWidgetController::OnInventoryOpen()
 	
 	for(const UObsidianInventoryItemInstance* Item : InventoryItems)
 	{
-		ensure(Item);
-		
-		FObsidianItemWidgetData ItemWidgetData;
-		ItemWidgetData.ItemImage = Item->GetItemImage();
-		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
-		ItemWidgetData.DesiredPosition = Item->GetItemCurrentGridLocation();
-		ItemWidgetData.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
-		ItemWidgetData.bUsable = Item->IsItemUsable();
-		ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
+		if(ensure(Item))
+		{
+			FObsidianItemWidgetData ItemWidgetData;
+			ItemWidgetData.ItemImage = Item->GetItemImage();
+			ItemWidgetData.GridSpan = Item->GetItemGridSpan();
+			ItemWidgetData.DesiredPosition = Item->GetItemCurrentGridLocation();
+			ItemWidgetData.StackCount = Item->IsStackable() ? Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+			ItemWidgetData.bUsable = Item->IsItemUsable();
+			ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
 
-		OnItemAddedDelegate.Broadcast(ItemWidgetData);
+			OnItemAddedDelegate.Broadcast(ItemWidgetData);
+		}
 	}
 
 	TArray<UObsidianInventoryItemInstance*> EquippedItems = EquipmentComponent->GetAllEquippedItems();
@@ -237,15 +249,17 @@ void UObsidianInventoryItemsWidgetController::OnInventoryOpen()
 
 	for(const UObsidianInventoryItemInstance* Item : EquippedItems)
 	{
-		ensure(Item);
-		FObsidianItemWidgetData ItemWidgetData;
-		ItemWidgetData.ItemImage = Item->GetItemImage();
-		ItemWidgetData.GridSpan = Item->GetItemGridSpan();
-		ItemWidgetData.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
-		ItemWidgetData.bDoesBlockSisterSlot = Item->DoesItemNeedTwoSlots();
-		ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
+		if(ensure(Item))
+		{
+			FObsidianItemWidgetData ItemWidgetData;
+			ItemWidgetData.ItemImage = Item->GetItemImage();
+			ItemWidgetData.GridSpan = Item->GetItemGridSpan();
+			ItemWidgetData.DesiredSlot = Item->GetItemCurrentEquipmentSlot();
+			ItemWidgetData.bDoesBlockSisterSlot = Item->DoesItemNeedTwoSlots();
+			ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
 		
-		OnItemEquippedDelegate.Broadcast(ItemWidgetData);
+			OnItemEquippedDelegate.Broadcast(ItemWidgetData);
+		}
 	}
 }
 

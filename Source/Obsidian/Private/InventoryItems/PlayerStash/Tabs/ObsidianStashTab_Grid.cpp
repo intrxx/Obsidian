@@ -10,7 +10,6 @@
 UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	StashTabType = EObsidianStashTabType::STT_GridType;
 }
 
 void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)
@@ -86,3 +85,14 @@ void UObsidianStashTab_Grid::Construct(UObsidianPlayerStashComponent* StashCompo
 	
 	//TODO Get already added items, mark space
 }
+
+int32 UObsidianStashTab_Grid::GetGridWidth() const
+{
+	return GridWidth;
+}
+
+int32 UObsidianStashTab_Grid::GetGridHeight() const
+{
+	return GridHeight;
+}
+

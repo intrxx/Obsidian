@@ -8,7 +8,6 @@
 UObsidianStashTab_Slots::UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	StashTabType = EObsidianStashTabType::STT_SlotType;
 }
 
 void UObsidianStashTab_Slots::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)

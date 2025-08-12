@@ -35,10 +35,6 @@ public:
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
 
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	EObsidianStashTabType StashTabType = EObsidianStashTabType::STT_None;
-	
 private:
 	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };

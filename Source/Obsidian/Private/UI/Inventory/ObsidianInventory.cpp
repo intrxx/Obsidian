@@ -75,7 +75,7 @@ bool UObsidianInventory::IsPlayerDraggingItem() const
 
 bool UObsidianInventory::GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const
 {
-	if(InventoryItemsWidgetController == false || InventoryItemsWidgetController->IsDraggingAnItem() == false)
+	if(InventoryItemsWidgetController == false)
 	{
 		return false;
 	}

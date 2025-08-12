@@ -121,6 +121,7 @@ public:
 
 	int32 GetInventoryGridWidth() const;
 	int32 GetInventoryGridHeight() const;
+	UObsidianStashTabsConfig* GetStashTabConfig() const;
 
 	void OnInventoryOpen();
 	void OnPlayerStashOpen();

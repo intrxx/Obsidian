@@ -27,6 +27,9 @@ public:
 
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
 
+	int32 GetGridWidth() const;
+	int32 GetGridHeight() const;
+
 private:
 	/**
 	* Map that represents whole Grid with taken fields.

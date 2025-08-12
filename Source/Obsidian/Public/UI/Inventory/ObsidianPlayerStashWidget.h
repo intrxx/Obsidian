@@ -6,6 +6,9 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 
+class UOverlay;
+class UScrollBox;
+class UObsidianStashTabWidget;
 class UObsidianGrid;
 class UObsidianInventoryItemsWidgetController;
 
@@ -23,6 +26,17 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+protected:
+	UPROPERTY()
+	TArray<TObjectPtr<UObsidianStashTabWidget>> StashTabs;
+
+protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UScrollBox> StashTabsList_ScrollBox;
+	
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOverlay> StashTab_Overlay;
+	
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;

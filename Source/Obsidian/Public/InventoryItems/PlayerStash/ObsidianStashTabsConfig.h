@@ -12,8 +12,24 @@
 #include "Engine/DataAsset.h"
 #include "ObsidianStashTabsConfig.generated.h"
 
+class UObsidianStashTabWidget;
 class UObsidianStashTab;
 
+/**
+ * 
+ */
+UENUM(BlueprintType)
+enum class EObsidianStashTabType : uint8
+{
+	STT_None = 0 UMETA(DisplayName = "None"),
+	
+	STT_GridType UMETA(DisplayName = "Grid Type"),
+	STT_SlotType UMETA(DisplayName = "Slot Type")
+};
+
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianStashTabDefinition
 {
@@ -21,7 +37,13 @@ struct FObsidianStashTabDefinition
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EObsidianStashTabType StashTabType = EObsidianStashTabType::STT_None;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UObsidianStashTab> StashTabClass;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	TSubclassOf<UObsidianStashTabWidget> StashTabWidgetClass;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories = "StashTab"))
 	FGameplayTag StashTag = FGameplayTag::EmptyTag;

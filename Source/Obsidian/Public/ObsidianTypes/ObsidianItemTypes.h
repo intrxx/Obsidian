@@ -85,18 +85,6 @@ namespace ObsidianAffixLimit
  * 
  */
 UENUM(BlueprintType)
-enum class EObsidianStashTabType : uint8
-{
-	STT_None = 0 UMETA(DisplayName = "None"),
-	
-	STT_GridType UMETA(DisplayName = "Grid Type"),
-	STT_SlotType UMETA(DisplayName = "Slot Type")
-};
-
-/**
- * 
- */
-UENUM(BlueprintType)
 enum class EObsidianEquipCheckResult : uint8
 {
 	None = 0 UMETA(DisplayName="None"),
