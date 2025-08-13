@@ -8,7 +8,6 @@
 
 // ~ Project
 #include "Components/OverlaySlot.h"
-#include "UI/Inventory/ObsidianEquipmentPanel.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
 
@@ -23,10 +22,8 @@ void UObsidianItemSlot_Equipment::NativePreConstruct()
 	}
 }
 
-void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel, const FGameplayTag& InSlotTag)
+void UObsidianItemSlot_Equipment::InitializeSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag)
 {
-	EquipmentPanel = InEquipmentPanel;
-	
 	if(!SlotTag.IsValid()) // Slot Tag has been already set in Blueprint
 	{
 		SlotTag = InSlotTag;
@@ -35,11 +32,15 @@ void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEqui
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Attempting to set SlotTag but it has already been set."));
 	}
-}
 
-void UObsidianItemSlot_Equipment::InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel)
-{
-	EquipmentPanel = InEquipmentPanel;
+	if(!SisterSlotTag.IsValid()) // Slot Tag has been already set in Blueprint
+	{
+		SisterSlotTag = InSisterSlotTag;
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Attempting to set SisterSlotTag but it has already been set."));
+	}
 }
 
 void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
@@ -72,25 +73,25 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianSlotBlockadeItem* InIte
 
 void UObsidianItemSlot_Equipment::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(EquipmentPanel && bIsBlocked == false)
+	if(bIsBlocked == false)
 	{
-		EquipmentPanel->OnEquipmentSlotHover(this, true);
+		OnEquipmentSlotHoverDelegate.Broadcast(this, true);
 	}
 }
 
 void UObsidianItemSlot_Equipment::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	if(EquipmentPanel && bIsBlocked == false)
+	if(bIsBlocked == false)
 	{
-		EquipmentPanel->OnEquipmentSlotHover(this, false);
+		OnEquipmentSlotHoverDelegate.Broadcast(this, false);
 	}
 }
 
 FReply UObsidianItemSlot_Equipment::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(EquipmentPanel && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		EquipmentPanel->OnEquipmentSlotMouseButtonDown(this);
+		OnEquipmentSlotPressedDelegate.Broadcast(this);
 	}
 	
 	return FReply::Handled();

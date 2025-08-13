@@ -16,8 +16,6 @@ struct FGameplayTag;
 class UObsidianInventory;
 class UObsidianItemSlot_Equipment;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnEquipmentSlotPressedSignature, const FGameplayTag& SlotTag);
-
 /**
  * 
  */
@@ -31,11 +29,8 @@ public:
 
 	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
 
-	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const;
+	void OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const;
 	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot) const;
-
-public:
-	FOnEquipmentSlotPressedSignature OnEquipmentSlotPressedDelegate;
 	
 private:
 	UPROPERTY()

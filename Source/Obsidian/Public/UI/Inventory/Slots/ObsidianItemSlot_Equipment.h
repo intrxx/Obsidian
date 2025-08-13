@@ -16,6 +16,9 @@ class UObsidianEquipmentPanel;
 class UObsidianSlotBlockadeItem;
 class UObsidianItem;
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotHoverSignature, const UObsidianItemSlot_Equipment* HoveredSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnEquipmentSlotPressedSignature, const UObsidianItemSlot_Equipment* HoveredSlot);
+
 /**
  * 
  */
@@ -25,8 +28,7 @@ class OBSIDIAN_API UObsidianItemSlot_Equipment : public UObsidianItemSlot
 	GENERATED_BODY()
 
 public:
-	void InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel, const FGameplayTag& InSlotTag);
-	void InitializeSlot(UObsidianEquipmentPanel* InEquipmentPanel);
+	void InitializeSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag = FGameplayTag::EmptyTag);
 
 	FGameplayTag GetSlotTag() const
 	{
@@ -45,6 +47,10 @@ public:
 
 	void AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f);
 	void AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget, const float ItemSlotPadding = 0.0f);
+
+public:
+	FOnEquipmentSlotHoverSignature OnEquipmentSlotHoverDelegate;
+	FOnEquipmentSlotPressedSignature OnEquipmentSlotPressedDelegate;
 	
 protected:
 	virtual void NativePreConstruct() override;

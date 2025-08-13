@@ -43,6 +43,8 @@ public:
 	bool CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const;
 	bool CanInteractWithEquipment() const;
 
+	void RequestEquippingItem(const FGameplayTag& ToSlot) const;
+
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -56,7 +58,6 @@ protected:
 	
 private:
 	void RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const;
-	void RequestEquippingItem(const FGameplayTag& ToSlot) const;
 	
 	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
 	

@@ -37,7 +37,6 @@ void UObsidianInventory::NativeConstruct()
 	if(EquipmentPanel)
 	{
 		EquipmentPanel->InitializeEquipmentPanel(this);
-		EquipmentPanel->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::RequestEquippingItem);
 	}
 }
 
@@ -54,11 +53,6 @@ void UObsidianInventory::NativeDestruct()
 	if(InventoryGrid)
 	{
 		InventoryGrid->OnGridSlotPressedDelegate.Clear();
-	}
-
-	if(EquipmentPanel)
-	{
-		EquipmentPanel->OnEquipmentSlotPressedDelegate.Clear();
 	}
 	
 	Super::NativeDestruct();

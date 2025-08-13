@@ -6,6 +6,7 @@
 
 // ~ Project
 #include "Blueprint/WidgetTree.h"
+#include "UI/Inventory/ObsidianInventory.h"
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 
 void UObsidianEquipmentPanel::InitializeEquipmentPanel(UObsidianInventory* InOwningInventory)
@@ -16,7 +17,8 @@ void UObsidianEquipmentPanel::InitializeEquipmentPanel(UObsidianInventory* InOwn
 		{
 			if(UObsidianItemSlot_Equipment* EquipmentSlot = Cast<UObsidianItemSlot_Equipment>(Widget))
 			{
-				EquipmentSlot->InitializeSlot(this);
+				EquipmentSlot->OnEquipmentSlotHoverDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotHover);
+				EquipmentSlot->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
 				EquipmentSlots.Add(EquipmentSlot);
 			}
 		});
@@ -34,7 +36,7 @@ UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotForTag(co
 	return nullptr;
 }
 
-void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
+void UObsidianEquipmentPanel::OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
 {
 	if (OwningInventory.IsValid() == false)
 	{
@@ -65,6 +67,9 @@ void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* 
 
 void UObsidianEquipmentPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot) const
 {
-	OnEquipmentSlotPressedDelegate.Broadcast(AffectedSlot->GetSlotTag());
+	if(OwningInventory.IsValid())
+	{
+		OwningInventory->RequestEquippingItem(AffectedSlot->GetSlotTag());
+	}
 }
 
