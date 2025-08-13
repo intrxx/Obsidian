@@ -12,6 +12,6 @@ void UObsidianStashTabWidget_Grid::InitializeStashTab(UObsidianInventoryItemsWid
 {
 	if(StashTabGrid && InventoryItemsWidgetController)
 	{
-		StashTabGrid->ConstructGrid(InventoryItemsWidgetController, GridWidth, GridHeight);
+		StashTabGrid->ConstructGrid(InventoryItemsWidgetController, EObsidianGridOwner::GO_PlayerStash, GridWidth, GridHeight);
 	}
 }

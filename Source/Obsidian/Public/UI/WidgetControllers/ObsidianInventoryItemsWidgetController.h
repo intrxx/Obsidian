@@ -6,10 +6,12 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryItemsWidgetController.generated.h"
+
+DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_Items, Log, All);
 
 struct FObsidianEquipmentChangeMessage;
 
@@ -21,6 +23,7 @@ class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 class UObsidianSlotBlockadeItem;
+
 
 /**
  * 
@@ -127,8 +130,9 @@ public:
 	void OnPlayerStashOpen();
 	
 	bool IsDraggingAnItem() const;
-	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot) const;
-	bool CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan) const;
+	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
+	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
+	bool CanInteractWithGrid(const EObsidianGridOwner GridOwner) const;
 	bool CanInteractWithInventory() const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */

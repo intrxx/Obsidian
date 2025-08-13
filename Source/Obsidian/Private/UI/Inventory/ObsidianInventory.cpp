@@ -30,7 +30,7 @@ void UObsidianInventory::NativeConstruct()
 
 	if(InventoryGrid && InventoryItemsWidgetController)
 	{
-		InventoryGrid->ConstructGrid(InventoryItemsWidgetController, InventoryItemsWidgetController->GetInventoryGridWidth(), InventoryItemsWidgetController->GetInventoryGridHeight());
+		InventoryGrid->ConstructGrid(InventoryItemsWidgetController, EObsidianGridOwner::GO_Inventory, InventoryItemsWidgetController->GetInventoryGridWidth(), InventoryItemsWidgetController->GetInventoryGridHeight());
 		InventoryGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToInventory);
 	}
 	
@@ -71,41 +71,6 @@ bool UObsidianInventory::IsPlayerDraggingItem() const
 		return false;
 	}
 	return InventoryItemsWidgetController->IsDraggingAnItem();
-}
-
-bool UObsidianInventory::GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const
-{
-	if(InventoryItemsWidgetController == false)
-	{
-		return false;
-	}
-
-	InventoryItemsWidgetController->GetDraggedItemGridSpan(OutItemGridSpan);
-	return true;
-}
-
-bool UObsidianInventory::CanPlaceDraggedItem(const FIntPoint& ToHoveredSlotPosition, const FIntPoint& ItemGridSpan) const
-{
-	if(InventoryItemsWidgetController == false || InventoryItemsWidgetController->IsDraggingAnItem() == false)
-	{
-		return false;
-	}
-
-	if(InventoryItemsWidgetController->CanInteractWithInventory() == false)
-	{
-		return false;
-	}
-
-	return InventoryItemsWidgetController->CanPlaceDraggedItem(ToHoveredSlotPosition, ItemGridSpan);
-}
-
-bool UObsidianInventory::CanInteractWithInventory() const
-{
-	if (InventoryItemsWidgetController)
-	{
-		return InventoryItemsWidgetController->CanInteractWithInventory();
-	}
-	return false;
 }
 
 bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const

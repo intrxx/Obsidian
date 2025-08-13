@@ -82,6 +82,17 @@ namespace ObsidianAffixLimit
 }
 
 /**
+ * Grid Owner.
+ */
+UENUM()
+enum class EObsidianGridOwner
+{
+	GO_None = 0,
+	GO_Inventory,
+	GO_PlayerStash
+};
+
+/**
  * 
  */
 UENUM(BlueprintType)

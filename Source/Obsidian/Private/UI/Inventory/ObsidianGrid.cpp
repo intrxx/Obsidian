@@ -11,14 +11,15 @@
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 
-void UObsidianGrid::ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const int32 GridWidth, const int32 GridHeight)
+void UObsidianGrid::ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight)
 {
 	if(InOwningWidgetController == nullptr)
 	{
 		UE_LOG(LogTemp, Error, TEXT("InOwningWidgetController is nullptr in [%hs], please fix it."), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
-	
+
+	GridOwner = InGridOwner;
 	OwningWidgetController = InOwningWidgetController;
 	
 	if(Root_CanvasPanel->HasAnyChildren())
@@ -86,14 +87,14 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 		if(OwningWidgetController->GetDraggedItemGridSpan(ItemGridSpan) == false) 
 		{
 			//TODO This isn't quite what I want here since the grid will be used anywhere, should be dealt with other way
-			const EObsidianItemSlotState SlotState = OwningWidgetController->CanInteractWithInventory() ? ISS_Selected : ISS_RedLight;
+			const EObsidianItemSlotState SlotState = OwningWidgetController->CanInteractWithGrid(GridOwner) ? ISS_Selected : ISS_RedLight;
 			AffectedSlot->SetSlotState(SlotState);
 			AffectedGridSlots.Add(AffectedSlot);
 			return; 
 		}
 		
 		const FIntPoint HoveredSlotPosition = AffectedSlot->GetSlotPositionOnGrid();
-		const bool bCanPlace = OwningWidgetController->CanPlaceDraggedItem(HoveredSlotPosition, ItemGridSpan);
+		const bool bCanPlace = OwningWidgetController->CanPlaceDraggedItem(GridOwner, HoveredSlotPosition, ItemGridSpan);
 		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 		{
 			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)

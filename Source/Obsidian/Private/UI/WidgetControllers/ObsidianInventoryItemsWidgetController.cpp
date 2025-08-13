@@ -27,6 +27,8 @@
 #include "Obsidian/Public/UI/Inventory/Items/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
+DEFINE_LOG_CATEGORY(LogWidgetController_Items);
+
 bool FObsidianItemWidgetData::IsItemForSwapSlot() const 
 {
 	if(DesiredSlot.IsValid() && DesiredSlot.MatchesTag(FGameplayTag::RequestGameplayTag("Item.SwapSlot.Equipment", true)))
@@ -65,7 +67,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -80,7 +82,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemAdded)
 	{
-		UE_LOG(LogInventory, Display, TEXT("[Widget] Adding item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Adding item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
@@ -94,7 +96,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
-		UE_LOG(LogInventory, Display, TEXT("[Widget] Removing item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		RemoveInventoryItemWidget(InventoryChangeMessage.GridItemPosition);
 		
 		if(OwnerPlayerInputManager->IsUsingItem())
@@ -107,7 +109,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemStacksChanged)
 	{
-		UE_LOG(LogInventory, Display, TEXT("[Widget] Changing item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Changing item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.DesiredPosition = InventoryChangeMessage.GridItemPosition;
@@ -127,13 +129,13 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	const UObsidianInventoryItemInstance* Instance = EquipmentChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemEquipped)
 	{
-		UE_LOG(LogInventory, Display, TEXT("[Widget] Equipping item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Equipping item: [%s]"), *Instance->GetItemDisplayName().ToString());
 
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
@@ -147,7 +149,7 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
 	{
-		UE_LOG(LogInventory, Display, TEXT("[Widget] Unequipping item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Unequipping item: [%s]"), *Instance->GetItemDisplayName().ToString());
 
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
@@ -162,7 +164,7 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
 	{
-		UE_LOG(LogInventory, Display, TEXT("[Widget] Swapping item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Swapping item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
@@ -196,7 +198,7 @@ int32 UObsidianInventoryItemsWidgetController::GetInventoryGridWidth() const
 		return InventoryComponent->GetInventoryGridWidth();
 	}
 	
-	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Width but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Grid Width but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 	return 0;
 }
 
@@ -207,7 +209,7 @@ int32 UObsidianInventoryItemsWidgetController::GetInventoryGridHeight() const
 		return InventoryComponent->GetInventoryGridHeight();
 	}
 	
-	UE_LOG(LogInventory, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 	return 0;
 }
 
@@ -218,7 +220,7 @@ UObsidianStashTabsConfig* UObsidianInventoryItemsWidgetController::GetStashTabCo
 		return PlayerStashComponent->GetStashTabConfig();
 	}
 	
-	UE_LOG(LogInventory, Error, TEXT("Trying to return Stash Config but Player Stash Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Stash Config but Player Stash Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 	return nullptr;
 }
 
@@ -384,7 +386,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(
 		const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 		if(InstanceToAddTo == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("Item Instance at pressed Location is invalid in UObsidianInventoryItemsWidgetController::HandleLeftClickingOnAnItem."));
+			UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in UObsidianInventoryItemsWidgetController::HandleLeftClickingOnAnItem."));
 			return;
 		}
 		
@@ -502,7 +504,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 
 	if(OwnerPlayerInputManager->IsUsingItem())
 	{
-		UE_LOG(LogInventory, Error, TEXT("As of now it is imposible to use items onto equipped items, maybe will support it in the future."));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("As of now it is imposible to use items onto equipped items, maybe will support it in the future."));
 		StopUsingItem();
 		return;
 	}
@@ -737,31 +739,71 @@ bool UObsidianInventoryItemsWidgetController::IsDraggingAnItem() const
 	return false;
 }
 
-bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const FIntPoint& AtGridSlot) const
+bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag) const
 {
-	if(InventoryComponent == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is invalid in UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem."));
-		return false;	
-	}
-
 	FIntPoint LocalItemGridSpan;
 	if(!GetDraggedItemGridSpan(LocalItemGridSpan))
 	{
 		return false;
 	}
-	return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSpan, AtGridSlot);
-}
-
-bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan) const
-{
-	if(InventoryComponent == nullptr)
+	
+	switch(GridOwner)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is invalid in UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem."));
-		return false;	
+		case EObsidianGridOwner::GO_Inventory:
+			if(InventoryComponent == nullptr)
+			{
+				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+				return false;	
+			}
+			return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSpan, AtGridSlot);
+		case EObsidianGridOwner::GO_PlayerStash:
+			break;
+	default:
+		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			break;
 	}
 	
-	return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan, AtGridSlot);
+	return false;
+}
+
+bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan, const FGameplayTag& StashTag) const
+{
+	switch(GridOwner)
+	{
+	case EObsidianGridOwner::GO_Inventory:
+		if(InventoryComponent == nullptr)
+		{
+			UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			return false;	
+		}
+		return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan,AtGridSlot);
+	case EObsidianGridOwner::GO_PlayerStash:
+		break;
+	default:
+		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			break;
+	}
+	
+	return false;
+}
+
+bool UObsidianInventoryItemsWidgetController::CanInteractWithGrid(const EObsidianGridOwner GridOwner) const
+{
+	switch(GridOwner)
+	{
+	case EObsidianGridOwner::GO_Inventory:
+		if(InventoryComponent)
+		{
+			return InventoryComponent->CanOwnerModifyInventoryState();
+		}
+	case EObsidianGridOwner::GO_PlayerStash:
+		return true; //TODO Implement
+		break;
+	default:
+		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		break;
+	}
+	return false;
 }
 
 bool UObsidianInventoryItemsWidgetController::CanInteractWithInventory() const
@@ -977,14 +1019,14 @@ UObsidianItemDescriptionBase* UObsidianInventoryItemsWidgetController::CreateDro
 	AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianHUD in UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedItem."));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Unable to get ObsidianHUD in UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedItem."));
 		return nullptr;
 	}
 
 	const UObsidianMainOverlay* MainOverlay = ObsidianHUD->GetMainOverlay();
 	if(MainOverlay == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get ObsidianMainOverlay in UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedItem."));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Unable to get ObsidianMainOverlay in UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedItem."));
 		return nullptr;
 	}
 
@@ -1004,13 +1046,13 @@ FVector2D UObsidianInventoryItemsWidgetController::CalculateUnstackSliderPositio
 	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Unstack Slider Position"));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Failed to calculate Unstack Slider Position"));
 		return FVector2D::Zero();
 	}
 
 	if(ItemWidget == nullptr || ActiveUnstackSlider == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Unstack Slider Position"));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Failed to calculate Unstack Slider Position"));
 		return FVector2D::Zero();
 	}
 	
@@ -1038,13 +1080,13 @@ FVector2D UObsidianInventoryItemsWidgetController::CalculateDescriptionPosition(
 	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Description Position"));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Failed to calculate Description Position"));
 		return FinalPosition;
 	}
 
 	if(ItemWidget == nullptr || ActiveItemDescription == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Failed to calculate Description Position"));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Failed to calculate Description Position"));
 		return FinalPosition;
 	}
 

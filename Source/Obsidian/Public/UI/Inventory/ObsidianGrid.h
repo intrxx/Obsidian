@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianGrid.generated.h"
@@ -27,7 +27,7 @@ class OBSIDIAN_API UObsidianGrid : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const int32 GridWidth, const int32 GridHeight);
+	void ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight);
 
 	UObsidianItemSlot_GridSlot* GetSlotByPosition(const FIntPoint& BySlotPosition);
 
@@ -59,4 +59,7 @@ protected:
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCanvasPanel> Root_CanvasPanel;
+
+private:
+	EObsidianGridOwner GridOwner = EObsidianGridOwner::GO_None;
 };
