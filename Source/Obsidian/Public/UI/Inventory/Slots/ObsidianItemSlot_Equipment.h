@@ -60,10 +60,10 @@ protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 protected:
-	UPROPERTY(EditAnywhere, meta=(Categories = "Item.Slot.Equipment,Item.SwapSlot.Equipment"), Category = "Obsidian|Setup")
+	UPROPERTY(EditAnywhere, meta=(Categories = "Item.Slot.Equipment,Item.SwapSlot.Equipment,Item.Slot.Functional"), Category = "Obsidian|Setup")
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
 
-	UPROPERTY(EditAnywhere, meta=(Categories = "Item.Slot.Equipment,Item.SwapSlot.Equipment"), Category = "Obsidian|Setup")
+	UPROPERTY(EditAnywhere, meta=(Categories = "Item.Slot.Equipment,Item.SwapSlot.Equipment,Item.Slot.Functional"), Category = "Obsidian|Setup")
 	FGameplayTag SisterSlotTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")

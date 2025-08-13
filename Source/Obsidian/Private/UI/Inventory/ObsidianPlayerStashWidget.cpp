@@ -11,6 +11,7 @@
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Grid.h"
+#include "UI/Inventory/Stash/ObsidianStashTabWidget_Slots.h"
 
 void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 {
@@ -50,12 +51,17 @@ void UObsidianPlayerStashWidget::NativeConstruct()
 		}
 		else if(Definition.StashTabType == EObsidianStashTabType::STT_SlotType)
 		{
-			//TODO Implement
+			checkf(Definition.StashTabWidgetClass, TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
+			UObsidianStashTabWidget_Slots* SlotStashTabWidget = CreateWidget<UObsidianStashTabWidget_Slots>(this, Definition.StashTabWidgetClass);
+			SlotStashTabWidget->InitializeStashTab(this);
+
+			StashTab_Overlay->AddChildToOverlay(SlotStashTabWidget);
+			StashTabs.Add(SlotStashTabWidget); //TODO This might be a map stash to button
 		}
 	}
 
 	if(StashTabs.IsEmpty() == false)
 	{
-		StashTabs[0]->ShowStashTab();
+		StashTabs[5]->ShowStashTab();
 	}
 }

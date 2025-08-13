@@ -3,9 +3,9 @@
 #include "UI/Inventory/ObsidianEquipmentPanel.h"
 
 // ~ Core
+#include "Blueprint/WidgetTree.h"
 
 // ~ Project
-#include "Blueprint/WidgetTree.h"
 #include "UI/Inventory/ObsidianInventory.h"
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 
