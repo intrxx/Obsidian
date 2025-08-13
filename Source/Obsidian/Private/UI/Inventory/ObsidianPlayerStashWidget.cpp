@@ -45,7 +45,7 @@ void UObsidianPlayerStashWidget::NativeConstruct()
 				GridStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, GridStashTab->GetGridWidth(), GridStashTab->GetGridHeight());
 
 				StashTab_Overlay->AddChildToOverlay(GridStashTabWidget);
-				StashTabs.Add(GridStashTabWidget);
+				StashTabs.Add(GridStashTabWidget); //TODO This might be a map stash to button
 			}
 		}
 		else if(Definition.StashTabType == EObsidianStashTabType::STT_SlotType)
