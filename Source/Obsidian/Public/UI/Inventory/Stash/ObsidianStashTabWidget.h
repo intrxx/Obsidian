@@ -21,7 +21,11 @@ class OBSIDIAN_API UObsidianStashTabWidget : public UObsidianWidgetBase
 public:
 	void ShowStashTab();
 	void HideStashTab();
+
+	bool IsTabActive();
 	
 protected:
 	virtual void NativeConstruct() override;
+
+	bool bActive = false;
 };

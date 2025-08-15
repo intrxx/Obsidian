@@ -16,11 +16,18 @@ void UObsidianStashTabWidget::NativeConstruct()
 void UObsidianStashTabWidget::ShowStashTab()
 {
 	SetVisibility(ESlateVisibility::Visible);
+	bActive = true;
 }
 
 void UObsidianStashTabWidget::HideStashTab()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
+	bActive = false;
+}
+
+bool UObsidianStashTabWidget::IsTabActive()
+{
+	return bActive;
 }
 
 
