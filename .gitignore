@@ -98,6 +98,9 @@ Plugins/Developer/Riderlink
 Plugins/Developer/RiderLink/
 .idea/.idea.SNDPG/.idea/workspace.xml
 
+# Ignore created zip in scripts
+Scripts/*.zip
+
 # Ignore Assets
 Content/AssetPacks
 Content/StarterContent
