@@ -1,0 +1,3 @@
+[submodule "ObsidianScripts"]
+	path = ObsidianScripts
+	url = https://github.com/intrxx/ObsidianScripts
