@@ -11,6 +11,9 @@
 #include "GameFramework/Actor.h"
 #include "ObsidianTownPortal.generated.h"
 
+class UNiagaraComponent;
+class UNiagaraSystem;
+
 UCLASS()
 class OBSIDIAN_API AObsidianTownPortal : public AActor, public IObsidianInteractionInterface
 {
@@ -36,12 +39,27 @@ protected:
 	virtual void BeginPlay() override;
 	
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Mesh")
+	TObjectPtr<UStaticMeshComponent> ClickableMeshComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Effects")
+	TObjectPtr<UNiagaraComponent> PortalNiagaraComponent;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Effects")
+	TObjectPtr<UNiagaraSystem> PortalOpeningEffect;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Effects")
+	TObjectPtr<UNiagaraSystem> PortalEffect;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float PortalPrepareToOpenDuration = 30.0f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Interaction")
 	float InteractionRadius = 50.0f;
 
+private:
+	void StartPortalOpeningTimer();
+	
 private:
 	UPROPERTY(Replicated)
 	bool bCanTeleport = true;

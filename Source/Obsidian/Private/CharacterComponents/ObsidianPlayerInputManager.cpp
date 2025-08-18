@@ -541,6 +541,12 @@ void UObsidianPlayerInputManager::Input_Interact()
 	{
 		if(InteractionTarget->CanInteract() == false)
 		{
+#if !UE_BUILD_SHIPPING
+			if(bDebugInteraction)
+			{
+				UE_LOG(LogInteraction, Display, TEXT("Target cannot be interacted with."))	
+			}
+#endif
 			return;
 		}
 		

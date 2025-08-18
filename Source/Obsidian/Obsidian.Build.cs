@@ -24,7 +24,8 @@ public class Obsidian : ModuleRules
 				"MotionWarping",
 				"GameplayDebugger",
 				"ModularGameplayActors", 
-				"CommonGame"
+				"CommonGame",
+				"Niagara"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]
@@ -33,7 +34,6 @@ public class Obsidian : ModuleRules
 			"SlateCore", 
 			"AIModule",
 			"NavigationSystem",
-			"Niagara",
 			"NetCore",
 			"GameplayMessageRuntime",
 			"CommonUser"
