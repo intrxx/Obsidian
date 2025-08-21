@@ -33,7 +33,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change
 	DOREPLIFETIME(ThisClass, ActorsToSpawn);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
-	DOREPLIFETIME(ThisClass, ItemCurrentGridLocation);
+	DOREPLIFETIME(ThisClass, ItemCurrentPosition);
 	DOREPLIFETIME(ThisClass, ItemCurrentEquipmentSlot);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
@@ -304,34 +304,19 @@ void UObsidianInventoryItemInstance::SetItemGridSpan(const FIntPoint& GridSpanTo
 	ItemGridSpan = GridSpanToSet;
 }
 
-FIntPoint UObsidianInventoryItemInstance::GetItemCurrentGridLocation() const
+FObsidianItemPosition UObsidianInventoryItemInstance::GetItemCurrentPosition() const
 {
-	return ItemCurrentGridLocation;
+	return ItemCurrentPosition;
 }
 
-void UObsidianInventoryItemInstance::SetItemCurrentGridLocation(const FIntPoint& CurrentGridLocationToSet)
+void UObsidianInventoryItemInstance::SetItemCurrentPosition(const FObsidianItemPosition& CurrentPositionToSet)
 {
-	ItemCurrentGridLocation = CurrentGridLocationToSet;	
+	ItemCurrentPosition = CurrentPositionToSet;	
 }
 
-void UObsidianInventoryItemInstance::ResetItemCurrentGridLocation()
+void UObsidianInventoryItemInstance::ResetItemCurrentPosition()
 {
-	ItemCurrentGridLocation = FIntPoint::NoneValue;
-}
-
-FGameplayTag UObsidianInventoryItemInstance::GetItemCurrentEquipmentSlot() const
-{
-	return ItemCurrentEquipmentSlot;
-}
-
-void UObsidianInventoryItemInstance::SetItemCurrentEquipmentSlot(const FGameplayTag& CurrentEquipmentSlotToSet)
-{
-	ItemCurrentEquipmentSlot = CurrentEquipmentSlotToSet;
-}
-
-void UObsidianInventoryItemInstance::ResetItemCurrentEquipmentSlot()
-{
-	ItemCurrentEquipmentSlot = FGameplayTag::EmptyTag;
+	ItemCurrentPosition = FIntPoint::NoneValue;
 }
 
 UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const

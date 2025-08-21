@@ -152,7 +152,16 @@ namespace ObsidianGameplayTags
 	 * Inventory
 	 */
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_Inventory_Changed, "Message.Inventory.Changed", "Tag used in Gameplay Message Subsystem to represent Inventory state change.")
+
+	/**
+	 * Equipment
+	 */
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_Equipment_Changed, "Message.Equipment.Changed", "Tag used in Gameplay Message Subsystem to represent Equipment state change.")
+
+	/**
+	 * Player Stash
+	 */
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Message_PlayerStash_Changed, "Message.PlayerStash.Changed", "Tag used in Gameplay Message Subsystem to represent Player Stash state change.")
 	
 	/**
 	 * ---- Gameplay Events ----
@@ -271,6 +280,12 @@ namespace ObsidianGameplayTags
 	 */
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Equipment_BlockActions, "Equipment.BlockActions", "When applied to player, he/she won't be able to modify equipment state.");
+
+	/**
+	 * Player Stash
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(PlayerStash_BlockActions, "PlayerStash.BlockActions", "When applied to player, he/she won't be able to modify stash state.");
 
 	/**
 	 * Item Category.

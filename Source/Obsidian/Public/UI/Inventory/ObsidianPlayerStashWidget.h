@@ -12,7 +12,9 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 
+struct FObsidianItemWidgetData;
 class UObsidianStashButton;
+class UObsidianItem;
 class UOverlay;
 class UScrollBox;
 class UObsidianStashTabWidget;
@@ -35,13 +37,18 @@ protected:
 
 	void CreateStashTabButton(const FGameplayTag& StashTag, const FText& StashTabName);
 	void ShowStashTab(const FGameplayTag& WithStashTag);
+
+	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
 	
 protected:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TSubclassOf<UObsidianItem> ItemWidgetClass;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UObsidianStashButton> StashButtonWidgetClass;
 
 	UPROPERTY()
-	TMap<FGameplayTag, TObjectPtr<UObsidianStashTabWidget>> StashTabsMap;
+	TMap<FGameplayTag, UObsidianStashTabWidget*> StashTabsMap;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianStashTabWidget> ActiveStashTab;

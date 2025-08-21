@@ -87,7 +87,7 @@ bool UObsidianInventory::CanInteractWithEquipment() const
 
 void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FIntPoint DesiredPosition = ItemWidgetData.DesiredPosition;
+	const FIntPoint DesiredPosition = ItemWidgetData.ItemPosition.GetItemGridLocation();
 	const FIntPoint GridSpan = ItemWidgetData.GridSpan;
 	
 	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
@@ -113,7 +113,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		return;
 	}
 
-	const FGameplayTag DesiredSlot = ItemWidgetData.DesiredSlot;
+	const FGameplayTag DesiredSlot = ItemWidgetData.ItemPosition.GetItemSlotTag();
 	const bool bIsForSwapSlot = ItemWidgetData.IsItemForSwapSlot();
 	
 	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
@@ -149,7 +149,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 
 void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FIntPoint ItemPosition = ItemWidgetData.DesiredPosition;
+	const FIntPoint ItemPosition = ItemWidgetData.ItemPosition.GetItemGridLocation();
 	if(UObsidianItem* ItemWidget = InventoryItemsWidgetController->GetItemWidgetAtInventoryGridSlot(ItemPosition))
 	{
 		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);

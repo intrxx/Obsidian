@@ -183,7 +183,7 @@ public:
 	static const FObsidianSlotDefinition InvalidSlot;
 };
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FObsidianItemPosition
 {
 	GENERATED_BODY()

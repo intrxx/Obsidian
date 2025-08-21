@@ -4,6 +4,7 @@
 
 // ~ Core
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 // ~ Project
 
@@ -23,9 +24,21 @@ class OBSIDIAN_API UObsidianStashTabWidget_Grid : public UObsidianStashTabWidget
 	GENERATED_BODY()
 
 public:
-	void InitializeStashTab(UObsidianInventoryItemsWidgetController* WidgetController, const int32 GridWidth, const int32 GridHeight);
+	void InitializeStashTab(UObsidianInventoryItemsWidgetController* WidgetController, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag);
 
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding) override;
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGrid> StashTabGrid;
+
+	UPROPERTY()
+	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsController;
+	
+private:
+	void RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const;
 };

@@ -58,7 +58,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	FObsidianInventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
-	NewEntry.Instance->SetItemCurrentGridLocation(AvailablePosition);
+	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
@@ -80,7 +80,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 #if !UE_BUILD_SHIPPING
 	if(GridLocationToItemMap.Contains(AvailablePosition))
 	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already"
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
 			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y), ELogVerbosity::Error);
 	}
 #endif
@@ -102,14 +102,14 @@ void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* In
 #if !UE_BUILD_SHIPPING
 	if(GridLocationToItemMap.Contains(AvailablePosition))
 	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %f, y: %f] already"
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
 			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), AvailablePosition.X, AvailablePosition.Y), ELogVerbosity::Error);
 	}
 #endif
 
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(Instance);
 	NewEntry.GridLocation = AvailablePosition; //TODO Add Grid Location to Entry instead of instance?
-	NewEntry.Instance->SetItemCurrentGridLocation(AvailablePosition);
+	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
 	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	
 	GridLocationToItemMap.Add(AvailablePosition, Instance);
@@ -135,8 +135,8 @@ void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance*
 
 	if(bSuccess)
 	{
-		const FIntPoint CachedLocation = Instance->GetItemCurrentGridLocation();
-		Instance->ResetItemCurrentGridLocation();
+		const FIntPoint CachedLocation = Instance->GetItemCurrentPosition().GetItemGridLocation();
+		Instance->ResetItemCurrentPosition();
 		
 		GridLocationToItemMap.Remove(CachedLocation);
 		Item_UnMarkSpace(Instance, CachedLocation);
@@ -165,7 +165,7 @@ void FObsidianInventoryGridItemList::ChangedEntryStacks(UObsidianInventoryItemIn
 
 	if(bSuccess)
 	{
-		const FIntPoint GridLocation = Instance->GetItemCurrentGridLocation();
+		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridLocation();
 		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
 		return;
 	}
@@ -186,7 +186,7 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 	
 	if(bSuccess)
 	{
-		const FIntPoint GridLocation = Instance->GetItemCurrentGridLocation();
+		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridLocation();
 		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		BroadcastChangeMessage(Instance, Count, Count, GridLocation, EObsidianInventoryChangeType::ICT_GeneralItemChanged);
 		return;

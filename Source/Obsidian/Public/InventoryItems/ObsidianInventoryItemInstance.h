@@ -73,6 +73,16 @@ public:
 
 	void SetItemCategory(const FGameplayTag& InItemCategoryTag);
 
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	FObsidianItemPosition GetItemCurrentPosition() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	void SetItemCurrentPosition(const FObsidianItemPosition& CurrentPositionToSet);
+
+	/** Should be called when removing item from inventory. */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	void ResetItemCurrentPosition();
+
 	/**
 	 * Usability
 	 */
@@ -123,16 +133,6 @@ public:
 
 	void SetAbilitySets(const TArray<UObsidianAbilitySet*>& InAbilitySets);
 	TArray<UObsidianAbilitySet*> GetOwningAbilitySets() const;
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	FGameplayTag GetItemCurrentEquipmentSlot() const;
-
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void SetItemCurrentEquipmentSlot(const FGameplayTag& CurrentEquipmentSlotToSet);
-
-	/** Should be called when item unequipped. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void ResetItemCurrentEquipmentSlot();
 	
 	/**
 	 * Affixes.
@@ -240,20 +240,6 @@ public:
 	float GetItemSlotPadding() const;
 	
 	void SetItemSlotPadding(const float InItemSlotPadding);
-
-	/**
-	 * Inventory.
-	 */
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	FIntPoint GetItemCurrentGridLocation() const;
-
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void SetItemCurrentGridLocation(const FIntPoint& CurrentGridLocationToSet);
-
-	/** Should be called when removing item from inventory. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void ResetItemCurrentGridLocation();
 	
 	/**
 	 * Debug.
@@ -365,9 +351,9 @@ private:
 	 * Inventory.
 	 */
 
-	/** Current Item Location in the inventory grid, should be valid only if the item is already placed in the inventory. */
+	/** Current Item Location on the Grid or in the Slot, will be valid only if the item is placed somewhere. */
 	UPROPERTY(Replicated)
-	FIntPoint ItemCurrentGridLocation = FIntPoint::NoneValue;
+	FObsidianItemPosition ItemCurrentPosition = FObsidianItemPosition();
 
 	/**
 	 * Debug.

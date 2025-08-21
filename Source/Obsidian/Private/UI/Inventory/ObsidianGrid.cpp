@@ -11,7 +11,7 @@
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 
-void UObsidianGrid::ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight)
+void UObsidianGrid::ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& OptionalStashTag)
 {
 	if(InOwningWidgetController == nullptr)
 	{
@@ -20,6 +20,7 @@ void UObsidianGrid::ConstructGrid(UObsidianInventoryItemsWidgetController* InOwn
 	}
 
 	GridOwner = InGridOwner;
+	StashTag = OptionalStashTag;
 	OwningWidgetController = InOwningWidgetController;
 	
 	if(Root_CanvasPanel->HasAnyChildren())
@@ -94,7 +95,7 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 		}
 		
 		const FIntPoint HoveredSlotPosition = AffectedSlot->GetSlotPositionOnGrid();
-		const bool bCanPlace = OwningWidgetController->CanPlaceDraggedItem(GridOwner, HoveredSlotPosition, ItemGridSpan);
+		const bool bCanPlace = OwningWidgetController->CanPlaceDraggedItem(GridOwner, HoveredSlotPosition, ItemGridSpan, StashTag);
 		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 		{
 			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)

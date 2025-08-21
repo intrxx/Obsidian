@@ -9,9 +9,10 @@
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/Inventory/ObsidianPlayerStashWidget.h"
 
-void UObsidianStashTabWidget_Slots::InitializeStashTab(UObsidianPlayerStashWidget* InOwningStashWidget)
+void UObsidianStashTabWidget_Slots::InitializeStashTab(UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag)
 {
 	OwningStashWidget = InOwningStashWidget;
+	StashTabTag = InStashTabTag;
 	
 	WidgetTree->ForEachWidget([this](UWidget* Widget)
 		{

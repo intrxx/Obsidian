@@ -18,3 +18,4 @@ void UObsidianStashTab::SetStashTabTag(const FGameplayTag& InTag)
 	StashTabTag = InTag;
 }
 
+

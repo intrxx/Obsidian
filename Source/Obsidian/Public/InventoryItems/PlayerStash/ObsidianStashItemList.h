@@ -35,6 +35,36 @@ enum class EObsidianStashChangeType : uint8
 };
 
 /**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianStashChangeMessage
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
+	TObjectPtr<UActorComponent> InventoryOwner = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
+	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
+	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
+	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
+	int32 NewCount = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
+	int32 Delta = 0;
+	
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
+	EObsidianStashChangeType ChangeType = EObsidianStashChangeType::ICT_NONE;
+};
+
+/**
  * A single entry in a Player Stash.
  */
 USTRUCT(BlueprintType)
@@ -66,6 +96,9 @@ private:
 
 	UPROPERTY()
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
+
+	UPROPERTY()
+	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };
 
 /**
@@ -87,19 +120,15 @@ public:
 	void InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig);
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
+	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& ForStashTabTag);
 	int32 GetEntriesCount() const;
+	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FObsidianItemPosition& ToPosition);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition);
-	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
-	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);
-	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance);
-
-	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
-	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition);
-	
-	/** Unmarks Item space in the internal Inventory State map. Must be called after removing item. */
-	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ToPosition);
+	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ToPosition);
+	void RemoveEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
+	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount, const FGameplayTag& StashTabTag);
+	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
 
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
@@ -113,7 +142,7 @@ public:
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianStashEntry& Entry, const int32 OldCount, const int32 NewCount, const FObsidianItemPosition& ItemPosition, const EObsidianStashChangeType& ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianStashEntry& Entry, const int32 OldCount, const int32 NewCount, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const EObsidianStashChangeType& ChangeType) const;
 	
 private:
 	friend UObsidianPlayerStashComponent;
@@ -125,7 +154,7 @@ private:
 	UPROPERTY(NotReplicated)
 	TObjectPtr<UActorComponent> OwnerComponent;
 	
-	TArray<TObjectPtr<UObsidianStashTab>> StashTabs;
+	TMap<FGameplayTag, UObsidianStashTab*> StashTabsMap;
 };
 
 template<>

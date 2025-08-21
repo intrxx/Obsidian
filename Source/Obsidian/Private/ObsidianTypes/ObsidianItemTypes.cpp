@@ -7,6 +7,7 @@
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 // ~ FDraggedItem
 
@@ -83,11 +84,23 @@ void FObsidianSlotDefinition::RemoveBannedItemCategories(const FGameplayTagConta
 
 FIntPoint FObsidianItemPosition::GetItemGridLocation() const
 {
+#if !UE_BUILD_SHIPPING
+	if (GridLocation == FIntPoint::NoneValue)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Grid Location is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+	}
+#endif
 	return GridLocation;
 }
 
 FGameplayTag FObsidianItemPosition::GetItemSlotTag() const
 {
+#if !UE_BUILD_SHIPPING
+	if (SlotTag == FGameplayTag::EmptyTag)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Slot Tag is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+	}
+#endif
 	return SlotTag;
 }
 

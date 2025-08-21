@@ -51,7 +51,7 @@ void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* O
 			InventoryItems.MaxStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
 			InventoryItems.LimitStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
 			InventoryItems.GridSpan = Item->GetItemGridSpan();
-			InventoryItems.CurrentGridLocation = Item->GetItemCurrentGridLocation();
+			InventoryItems.CurrentGridLocation = Item->GetItemCurrentPosition().GetItemGridLocation();
 
 			DataPack.Items.Add(InventoryItems);
 		}

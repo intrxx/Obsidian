@@ -14,6 +14,7 @@
 DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_Items, Log, All);
 
 struct FObsidianEquipmentChangeMessage;
+struct FObsidianStashChangeMessage;
 
 class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
@@ -44,10 +45,10 @@ public:
 	TObjectPtr<UTexture2D> ItemImage = nullptr;
 
 	UPROPERTY()
-	FIntPoint DesiredPosition = FIntPoint::NoneValue;
-	
+	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
+
 	UPROPERTY()
-	FGameplayTag DesiredSlot = FGameplayTag::EmptyTag;
+	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 	
 	UPROPERTY()
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
@@ -73,6 +74,7 @@ public:
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemStashedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 
 /**
@@ -155,6 +157,7 @@ public:
 	
 	void RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);
+	void RequestAddingItemToStashTab(const FGameplayTag& StashTag, const FObsidianItemPosition& ToPosition, const bool bShiftDown);
 
 	void HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot);
@@ -175,6 +178,7 @@ public:
 public:
 	FOnItemEquippedSignature OnItemEquippedDelegate;
 	FOnItemAddedSignature OnItemAddedDelegate;
+	FOnItemStashedSignature OnItemStashedDelegate;
 	FOnItemChangedSignature OnItemChangedDelegate;
 
 protected:
@@ -198,6 +202,7 @@ private:
 	
 	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
 	void OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage);
+	void OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage);
 	
 	void HandleTakingOutStacks(const int32 StacksToTake, const FIntPoint& GridSlotPosition);
 	

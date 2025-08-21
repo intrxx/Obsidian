@@ -4,9 +4,10 @@
 
 // ~ Core
 #include "Components/Overlay.h"
+#include "Components/ScrollBox.h"
 
 // ~ Project
-#include "Components/ScrollBox.h"
+#include "UI/Inventory/Items/ObsidianItem.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
@@ -21,7 +22,8 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 	
 	InventoryItemsWidgetController = Cast<UObsidianInventoryItemsWidgetController>(WidgetController);
 	check(InventoryItemsWidgetController);
-	
+
+	InventoryItemsWidgetController->OnItemStashedDelegate.AddUObject(this, &ThisClass::OnItemStashed);
 }
 
 void UObsidianPlayerStashWidget::NativeConstruct()
@@ -29,6 +31,32 @@ void UObsidianPlayerStashWidget::NativeConstruct()
 	Super::NativeConstruct();
 	
 	CreateStashTabs();
+}
+
+void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData)
+{
+	if(UObsidianStashTabWidget** StashTabWidgetPointer = StashTabsMap.Find(ItemWidgetData.StashTabTag))
+	{
+		UObsidianStashTabWidget* StashTabWidget = *StashTabWidgetPointer;
+		
+		const FIntPoint DesiredPosition = ItemWidgetData.ItemPosition.GetItemGridLocation();
+		const FIntPoint GridSpan = ItemWidgetData.GridSpan;
+	
+		checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
+		UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
+		ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
+		// ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemLeftMouseButtonPressed);
+		// ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnInventoryItemMouseEntered);
+		// ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+	
+		// if(ItemWidgetData.bUsable)
+		// {
+		// 	ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRightMouseButtonPressed);
+		// }
+	
+		//InventoryItemsWidgetController->RegisterInventoryItemWidget(DesiredPosition, ItemWidget);
+		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData.ItemSlotPadding);
+	}
 }
 
 void UObsidianPlayerStashWidget::CreateStashTabButton(const FGameplayTag& StashTag, const FText& StashTabName)
@@ -94,7 +122,7 @@ void UObsidianPlayerStashWidget::CreateStashTabs()
 			{
 				checkf(Definition.StashTabWidgetClass, TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
 				UObsidianStashTabWidget_Grid* GridStashTabWidget = CreateWidget<UObsidianStashTabWidget_Grid>(this, Definition.StashTabWidgetClass);
-				GridStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, GridStashTab->GetGridWidth(), GridStashTab->GetGridHeight());
+				GridStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, GridStashTab->GetGridWidth(), GridStashTab->GetGridHeight(), Definition.StashTag);
 
 				StashTab_Overlay->AddChildToOverlay(GridStashTabWidget);
 				StashTabsMap.Add(Definition.StashTag, GridStashTabWidget);
@@ -112,7 +140,7 @@ void UObsidianPlayerStashWidget::CreateStashTabs()
 			
 			checkf(Definition.StashTabWidgetClass, TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
 			UObsidianStashTabWidget_Slots* SlotStashTabWidget = CreateWidget<UObsidianStashTabWidget_Slots>(this, Definition.StashTabWidgetClass);
-			SlotStashTabWidget->InitializeStashTab(this);
+			SlotStashTabWidget->InitializeStashTab(this, Definition.StashTag);
 
 			StashTab_Overlay->AddChildToOverlay(SlotStashTabWidget);
 			StashTabsMap.Add(Definition.StashTag, SlotStashTabWidget);

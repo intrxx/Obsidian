@@ -4,6 +4,7 @@
 
 // ~ Core
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 // ~ Project
 
@@ -23,7 +24,7 @@ class OBSIDIAN_API UObsidianStashTabWidget_Slots : public UObsidianStashTabWidge
 	GENERATED_BODY()
 
 public:
-	void InitializeStashTab(UObsidianPlayerStashWidget* InOwningStashWidget);
+	void InitializeStashTab(UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag);
 
 protected:
 	void OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const;
@@ -35,4 +36,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerStashWidget> OwningStashWidget;
+
+	UPROPERTY()
+	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };

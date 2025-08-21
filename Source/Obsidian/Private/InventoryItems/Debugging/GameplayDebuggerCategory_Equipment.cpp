@@ -44,7 +44,7 @@ void FGameplayDebuggerCategory_Equipment::CollectData(APlayerController* OwnerPC
 			EquipmentItems.Name = Item->GetItemDebugName();
 			EquipmentItems.Item = GetNameSafe(Item->GetItemDef());
 			EquipmentItems.Item.RemoveFromEnd(TEXT("_C"));
-			EquipmentItems.SlotTag = Item->GetItemCurrentEquipmentSlot();
+			EquipmentItems.SlotTag = Item->GetItemCurrentPosition().GetItemSlotTag();
 			for(const AObsidianSpawnedEquipmentPiece* Piece : Item->GetSpawnedActors())
 			{
 				EquipmentItems.SpawnedEquipmentPieces.Add(GetNameSafe(Piece));

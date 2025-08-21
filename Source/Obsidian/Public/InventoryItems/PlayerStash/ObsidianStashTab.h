@@ -30,6 +30,8 @@ public:
 	
 	FGameplayTag GetStashTabTag() const;
 	void SetStashTabTag(const FGameplayTag& InTag);
+
+	virtual bool VerifyPositionFree(const FObsidianItemPosition& Position) {return false;};
 	
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) {}
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}

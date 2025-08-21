@@ -27,7 +27,7 @@ class OBSIDIAN_API UObsidianGrid : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight);
+	void ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& OptionalStashTag = FGameplayTag::EmptyTag);
 
 	UObsidianItemSlot_GridSlot* GetSlotByPosition(const FIntPoint& BySlotPosition);
 
@@ -61,5 +61,9 @@ protected:
 	TObjectPtr<UCanvasPanel> Root_CanvasPanel;
 
 private:
+	UPROPERTY()
 	EObsidianGridOwner GridOwner = EObsidianGridOwner::GO_None;
+
+	UPROPERTY()
+	FGameplayTag StashTag = FGameplayTag::EmptyTag;
 };

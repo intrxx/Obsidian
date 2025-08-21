@@ -164,7 +164,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.EquipmentSlotTag = EquipmentSlotTag;
 	NewEntry.Instance->SetItemDef(ItemDefClass);
-	NewEntry.Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
+	NewEntry.Instance->SetItemCurrentPosition(EquipmentSlotTag);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
@@ -228,7 +228,7 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 
 	FObsidianEquipmentEntry& NewEntry = Entries.Emplace_GetRef(Instance, EquipmentSlotTag);
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Instance);
-	Instance->SetItemCurrentEquipmentSlot(EquipmentSlotTag);
+	Instance->SetItemCurrentPosition(EquipmentSlotTag);
 
 	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 	{
@@ -258,7 +258,7 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 	const AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor);
 	
-	const FGameplayTag CurrentWeaponSlotTag = Instance->GetItemCurrentEquipmentSlot();
+	const FGameplayTag CurrentWeaponSlotTag = Instance->GetItemCurrentPosition().GetItemSlotTag();
 
 #if !UE_BUILD_SHIPPING
 	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Item.Slot.Equipment.Weapon");
@@ -308,7 +308,7 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 
 	if(bSuccess)
 	{
-		Instance->SetItemCurrentEquipmentSlot(SwapTag);
+		Instance->SetItemCurrentPosition(SwapTag);
 		
 		//TODO Do anything unequipping related
 
@@ -334,7 +334,7 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 	const AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor);
 	
-	const FGameplayTag CurrentSwapTag = Instance->GetItemCurrentEquipmentSlot();
+	const FGameplayTag CurrentSwapTag = Instance->GetItemCurrentPosition().GetItemSlotTag();
 
 #if !UE_BUILD_SHIPPING
 	const FGameplayTag WeaponSlotTag = FGameplayTag::RequestGameplayTag("Item.SwapSlot.Equipment.Weapon");
@@ -380,7 +380,7 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 
 	if(bSuccess)
 	{
-		Instance->SetItemCurrentEquipmentSlot(MainWeaponSlotTag);
+		Instance->SetItemCurrentPosition(MainWeaponSlotTag);
 
 		//TODO Do anything equipping related
 
@@ -411,7 +411,7 @@ void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 			const FGameplayTag CachedSlotTag = Entry.EquipmentSlotTag;
 			
 			SlotToEquipmentMap.Remove(CachedSlotTag);
-			Instance->ResetItemCurrentEquipmentSlot();
+			Instance->ResetItemCurrentPosition();
 			
 			if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 			{

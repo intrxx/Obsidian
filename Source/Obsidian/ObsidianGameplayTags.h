@@ -125,7 +125,16 @@ namespace ObsidianGameplayTags
 	 * Inventory
 	 */
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_Inventory_Changed);
+
+	/**
+	 * Equipment
+	 */
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_Equipment_Changed);
+
+	/**
+	 * Player Stash
+	 */
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_PlayerStash_Changed);
 	
 	/**
 	 * ---- Gameplay Events ----
@@ -247,6 +256,12 @@ namespace ObsidianGameplayTags
 	 */
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_BlockActions);
+
+	/**
+	 * Player Stash
+	 */
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PlayerStash_BlockActions);
 
 	/**
 	 * Item Category.

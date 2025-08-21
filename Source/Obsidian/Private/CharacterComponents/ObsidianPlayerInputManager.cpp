@@ -856,6 +856,66 @@ void UObsidianPlayerInputManager::ServerWeaponSwap_Implementation()
 	EquipmentComponent->WeaponSwap();
 }
 
+void UObsidianPlayerInputManager::ServerAddItemToStashTabAtSlot_Implementation(const FGameplayTag& StashTabTag, const FObsidianItemPosition& AtPosition, const bool bShiftDown)
+{
+	if(DraggedItem.IsEmpty())
+	{
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+	if(PlayerStashComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+	
+	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
+	{
+		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const FObsidianInventoryResult Result = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, StashTabTag, AtPosition, StacksToAddOverride);
+		
+		if(CurrentStackCount != Result.StacksLeft)
+		{
+			if(Result.bActionSuccessful)
+			{
+				DraggedItem.Clear();
+				StopDraggingItem(Controller);
+				return;
+			}
+			UpdateStacksOnDraggedItemWidget(Result.StacksLeft);
+			DraggedItem.Stacks = Result.StacksLeft;
+		}
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		const int32 CurrentStackCount = DraggedItem.Stacks;
+		const FObsidianInventoryResult Result = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, StashTabTag, AtPosition, CurrentStackCount, StacksToAddOverride);
+
+		if(CurrentStackCount != Result.StacksLeft)
+		{
+			if(Result.bActionSuccessful)
+			{
+				DraggedItem.Clear();
+				StopDraggingItem(Controller);
+				return;
+			}
+			UpdateStacksOnDraggedItemWidget(Result.StacksLeft);
+			DraggedItem.Stacks = Result.StacksLeft;
+		}
+	}
+}
+
 void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
 	if(ItemToPickup == nullptr)

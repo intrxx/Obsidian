@@ -221,7 +221,8 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinition(const TS
 			return Result;
 		}
 	}
-	
+
+	//TODO Shouldn't this be in the aboves if?
 	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(ItemDef, Result.StacksLeft);
 	if(StacksAvailableToAdd == 0)
 	{
@@ -391,7 +392,8 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstance(UObsidianI
 			return Result;
 		}
 	}
-
+	
+	//TODO Shouldn't this be in the aboves if?
 	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(InstanceToAdd);
 	if(StacksAvailableToAdd == 0)
 	{

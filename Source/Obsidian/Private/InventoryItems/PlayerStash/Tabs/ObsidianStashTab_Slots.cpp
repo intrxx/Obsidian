@@ -10,6 +10,11 @@ UObsidianStashTab_Slots::UObsidianStashTab_Slots(const FObjectInitializer& Objec
 {
 }
 
+bool UObsidianStashTab_Slots::VerifyPositionFree(const FObsidianItemPosition& Position)
+{
+	return true; //TODO Implement
+}
+
 void UObsidianStashTab_Slots::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)
 {
 	ensureMsgf(!SlotToItemMap.Contains(AtPosition.GetItemSlotTag()), TEXT("Item already exists in slot map at given position."));
