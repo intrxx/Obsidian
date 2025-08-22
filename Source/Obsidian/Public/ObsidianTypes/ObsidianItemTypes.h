@@ -240,12 +240,12 @@ public:
  * 
  */
 USTRUCT(BlueprintType)
-struct FObsidianInventoryResult
+struct FObsidianItemOperationResult
 {
 	GENERATED_BODY()
 
 public:
-	FObsidianInventoryResult(){};
+	FObsidianItemOperationResult(){};
 
 	FORCEINLINE operator bool() const
 	{

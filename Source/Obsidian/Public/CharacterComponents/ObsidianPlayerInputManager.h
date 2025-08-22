@@ -236,6 +236,8 @@ private:
 	void StartDraggingItem(const AController* Controller);
 	void StopDraggingItem(const AController* Controller);
 
+	void UpdateDraggedItem(const FObsidianItemOperationResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController);
+
 	/**
 	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
 	 * another item in the inventory in OnRep_DraggedItem. If it sounds useful be careful when using it.

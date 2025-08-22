@@ -883,36 +883,16 @@ void UObsidianPlayerInputManager::ServerAddItemToStashTabAtSlot_Implementation(c
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
 		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		const FObsidianInventoryResult Result = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, StashTabTag, AtPosition, StacksToAddOverride);
+		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, StashTabTag, AtPosition, StacksToAddOverride);
 		
-		if(CurrentStackCount != Result.StacksLeft)
-		{
-			if(Result.bActionSuccessful)
-			{
-				DraggedItem.Clear();
-				StopDraggingItem(Controller);
-				return;
-			}
-			UpdateStacksOnDraggedItemWidget(Result.StacksLeft);
-			DraggedItem.Stacks = Result.StacksLeft;
-		}
+		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
 		const int32 CurrentStackCount = DraggedItem.Stacks;
-		const FObsidianInventoryResult Result = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, StashTabTag, AtPosition, CurrentStackCount, StacksToAddOverride);
+		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, StashTabTag, AtPosition, CurrentStackCount, StacksToAddOverride);
 
-		if(CurrentStackCount != Result.StacksLeft)
-		{
-			if(Result.bActionSuccessful)
-			{
-				DraggedItem.Clear();
-				StopDraggingItem(Controller);
-				return;
-			}
-			UpdateStacksOnDraggedItemWidget(Result.StacksLeft);
-			DraggedItem.Stacks = Result.StacksLeft;
-		}
+		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}
 }
 
@@ -973,7 +953,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 		}
 
 		const int32 StackCount = Template.StackCount;
-		if(const FObsidianInventoryResult& Result = InventoryComponent->AddItemDefinition(ItemDef, StackCount))
+		if(const FObsidianItemOperationResult& Result = InventoryComponent->AddItemDefinition(ItemDef, StackCount))
 		{
 			ItemToPickup->UpdateDroppedItemStacks(Result.StacksLeft);
 		}
@@ -1016,7 +996,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 
 
 		const int32 CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		const FObsidianInventoryResult Result = InventoryComponent->AddItemInstance(ItemInstance);
+		const FObsidianItemOperationResult Result = InventoryComponent->AddItemInstance(ItemInstance);
 		if(CurrentStacks != Result.StacksLeft)
 		{
 			ItemToPickup->UpdateDroppedItemStacks(Result.StacksLeft);
@@ -1515,36 +1495,16 @@ void UObsidianPlayerInputManager::ServerAddItemToInventoryAtSlot_Implementation(
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
 		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		const FObsidianInventoryResult Result = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, AtGridSlot, StacksToAddOverride);
+		const FObsidianItemOperationResult Result = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, AtGridSlot, StacksToAddOverride);
 		
-		if(CurrentStackCount != Result.StacksLeft)
-		{
-			if(Result.bActionSuccessful)
-			{
-				DraggedItem.Clear();
-				StopDraggingItem(Controller);
-				return;
-			}
-			UpdateStacksOnDraggedItemWidget(Result.StacksLeft);
-			DraggedItem.Stacks = Result.StacksLeft;
-		}
+		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
 		const int32 CurrentStackCount = DraggedItem.Stacks;
-		const FObsidianInventoryResult Result = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, AtGridSlot, CurrentStackCount, StacksToAddOverride);
+		const FObsidianItemOperationResult Result = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, AtGridSlot, CurrentStackCount, StacksToAddOverride);
 
-		if(CurrentStackCount != Result.StacksLeft)
-		{
-			if(Result.bActionSuccessful)
-			{
-				DraggedItem.Clear();
-				StopDraggingItem(Controller);
-				return;
-			}
-			UpdateStacksOnDraggedItemWidget(Result.StacksLeft);
-			DraggedItem.Stacks = Result.StacksLeft;
-		}
+		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}
 }
 
@@ -1757,6 +1717,21 @@ void UObsidianPlayerInputManager::StopDraggingItem(const AController* Controller
 	bItemAvailableForDrop = false;
 
 	bJustDroppedItem = true;
+}
+
+void UObsidianPlayerInputManager::UpdateDraggedItem(const FObsidianItemOperationResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController)
+{
+	if(CachedNumberOfStack != OperationResult.StacksLeft)
+	{
+		if(OperationResult.bActionSuccessful)
+		{
+			DraggedItem.Clear();
+			StopDraggingItem(ForController);
+			return;
+		}
+		UpdateStacksOnDraggedItemWidget(OperationResult.StacksLeft);
+		DraggedItem.Stacks = OperationResult.StacksLeft;
+	}
 }
 
 bool UObsidianPlayerInputManager::IsHoveringOverInteractionTarget() const

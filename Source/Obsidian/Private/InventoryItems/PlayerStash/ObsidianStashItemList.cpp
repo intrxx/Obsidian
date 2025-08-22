@@ -118,10 +118,11 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	}
 
 #if !UE_BUILD_SHIPPING
-	if(StashTab->VerifyPositionFree(ToPosition))
+	if(StashTab->VerifyPositionFree(ToPosition) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y), ELogVerbosity::Error);
+			 "exist in the StashTab's Map in [%ls]"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y, ANSI_TO_TCHAR(__FUNCTION__)),
+			 ELogVerbosity::Error);
 	}
 #endif
 
@@ -168,10 +169,11 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	}
 
 #if !UE_BUILD_SHIPPING
-	if(StashTab->VerifyPositionFree(ToPosition))
+	if(StashTab->VerifyPositionFree(ToPosition) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the GridLocationToItemMap in FObsidianInventoryGrid::AddEntry"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y), ELogVerbosity::Error);
+			 "exist in the StashTab's Map in [%ls]"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y, ANSI_TO_TCHAR(__FUNCTION__)),
+			 ELogVerbosity::Error);
 	}
 #endif
 

@@ -144,9 +144,9 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const int32 StackCount)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const int32 StackCount)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = StackCount;
 	
 	if(!GetOwner()->HasAuthority())
@@ -218,9 +218,9 @@ FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemDefinition(const 
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const int32 StackCount, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const int32 StackCount, const int32 StackToAddOverride)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = StackCount;
 	
 	if(!GetOwner()->HasAuthority())
@@ -257,11 +257,11 @@ FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemDefinitionToSpeci
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return Result;
 	}
-
-	Result.bActionSuccessful = true;
+	
 	Result.StacksLeft -= StacksAvailableToAdd;
-
-	//TODO Why don't I handle the Result.StacksLeft > 0 case here?
+	Result.bActionSuccessful = Result.StacksLeft == 0; // We don't need any item duplication logic (like in AddItemInstanceToSpecificSlot)
+														// as we still have a valid item definition in hands if the whole item isn't added here.
+	ensure(Result.StacksLeft >= 0);
 	
 	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, StacksAvailableToAdd, StashTabTag, ItemPosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
@@ -275,9 +275,9 @@ FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemDefinitionToSpeci
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd, const FGameplayTag& StashTabTag)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd, const FGameplayTag& StashTabTag)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -347,9 +347,9 @@ FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemInstance(UObsidia
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const int32 StackToAddOverride)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -384,6 +384,7 @@ FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemInstanceToSpecifi
 
 	Result.bActionSuccessful = true;
 	Result.StacksLeft -= StacksAvailableToAdd;
+	ensure(Result.StacksLeft >= 0);
 	
 	if(Result.StacksLeft > 0)
 	{
@@ -408,9 +409,9 @@ FObsidianInventoryResult UObsidianPlayerStashComponent::AddItemInstanceToSpecifi
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianPlayerStashComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove, const FGameplayTag& StashTabTag)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove, const FGameplayTag& StashTabTag)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{

@@ -175,9 +175,9 @@ bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FInt
 	return bCanFit;
 }
 
-FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
+FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = StackCount;
 	
 	if(!GetOwner()->HasAuthority())
@@ -266,9 +266,9 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinition(const TS
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, const int32 StackCount, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, const int32 StackCount, const int32 StackToAddOverride)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = StackCount;
 	
 	if(!GetOwner()->HasAuthority())
@@ -316,11 +316,11 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemDefinitionToSpecifi
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return Result;
 	}
-
-	Result.bActionSuccessful = true;
+	
 	Result.StacksLeft -= StacksAvailableToAdd;
-
-	//TODO Why don't I handle the Result.StacksLeft > 0 case here?
+	Result.bActionSuccessful = Result.StacksLeft == 0; // We don't need any item duplication logic (like in AddItemInstanceToSpecificSlot)
+														// as we still have a valid item definition in hands if the whole item isn't added here.
+	ensure(Result.StacksLeft >= 0);
 	
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, ToGridSlot);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
@@ -350,9 +350,9 @@ bool UObsidianInventoryComponent::CanFitItemInstanceToSpecificSlot(const FIntPoi
 	return bCanAdd;
 }
 
-FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
+FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -432,9 +432,9 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstance(UObsidianI
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -481,6 +481,7 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstanceToSpecificS
 
 	Result.bActionSuccessful = true;
 	Result.StacksLeft -= StacksAvailableToAdd;
+	ensure(Result.StacksLeft >= 0);
 	
 	if(Result.StacksLeft > 0)
 	{
@@ -505,9 +506,9 @@ FObsidianInventoryResult UObsidianInventoryComponent::AddItemInstanceToSpecificS
 	return Result;
 }
 
-FObsidianInventoryResult UObsidianInventoryComponent::TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
+FObsidianItemOperationResult UObsidianInventoryComponent::TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -839,9 +840,9 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 	return  FMath::Clamp(LimitStackCount - CombinedStacks, 0, CurrentStacks);
 }
 
-FObsidianInventoryResult UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
+FObsidianItemOperationResult UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
 {
-	FObsidianInventoryResult Result = FObsidianInventoryResult();
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
 	if(!GetOwner()->HasAuthority())
 	{
