@@ -43,7 +43,7 @@ struct FObsidianStashChangeMessage
 	GENERATED_BODY()
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
-	TObjectPtr<UActorComponent> InventoryOwner = nullptr;
+	TObjectPtr<UActorComponent> PlayerStashOwner = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;

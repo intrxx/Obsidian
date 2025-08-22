@@ -330,7 +330,7 @@ void FObsidianStashItemList::PostReplicatedChange(const TArrayView<int32> Change
 void FObsidianStashItemList::BroadcastChangeMessage(const FObsidianStashEntry& Entry, const int32 OldCount, const int32 NewCount, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const EObsidianStashChangeType& ChangeType) const
 {
 	FObsidianStashChangeMessage Message;
-	Message.InventoryOwner = OwnerComponent;
+	Message.PlayerStashOwner = OwnerComponent;
 	Message.ItemInstance = Entry.Instance;
 	Message.StashTabTag = StashTabTag;
 	Message.ItemPosition = ItemPosition;

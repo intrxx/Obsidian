@@ -69,7 +69,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -84,7 +84,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemAdded)
 	{
-		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Adding item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Adding item: [%s] to Inventory"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
@@ -98,7 +98,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
-		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s] from Inventory"), *Instance->GetItemDisplayName().ToString());
 		RemoveInventoryItemWidget(InventoryChangeMessage.GridItemPosition);
 		
 		if(OwnerPlayerInputManager->IsUsingItem())
@@ -111,7 +111,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	}
 	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemStacksChanged)
 	{
-		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Changing item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Changing item: [%s] in Inventory"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemPosition = InventoryChangeMessage.GridItemPosition;
@@ -166,7 +166,7 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
 	{
-		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Swapping item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Equipment Swapping item: [%s]"), *Instance->GetItemDisplayName().ToString());
 		
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
@@ -195,7 +195,7 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 
 void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage)
 {
-	if(InventoryComponent != StashChangeMessage.InventoryOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	if(PlayerStashComponent != StashChangeMessage.PlayerStashOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
 	{
 		return;
 	}
@@ -203,7 +203,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 	const UObsidianInventoryItemInstance* Instance = StashChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -218,7 +218,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 	}
 	else if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemAdded)
 	{
-		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Adding item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Adding item: [%s] to Player Stash"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemImage = Instance->GetItemImage();
@@ -227,12 +227,13 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 		ItemWidgetData.StackCount = Instance->IsStackable() ? StashChangeMessage.NewCount : 0;
 		ItemWidgetData.bUsable = Instance->IsItemUsable();
 		ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
+		ItemWidgetData.StashTabTag = StashChangeMessage.StashTabTag;
 		
 		OnItemStashedDelegate.Broadcast(ItemWidgetData);
 	}
 	else if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemRemoved)
 	{
-		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s] from Player Stash"), *Instance->GetItemDisplayName().ToString());
 		//RemoveInventoryItemWidget(StashChangeMessage.GridItemPosition);
 		
 		if(OwnerPlayerInputManager->IsUsingItem())
@@ -245,11 +246,12 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 	}
 	else if (StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemStacksChanged)
 	{
-		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Changing item: [%s]"), *Instance->GetItemDisplayName().ToString());
+		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Changing item: [%s] in Player Stash"), *Instance->GetItemDisplayName().ToString());
 		
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemPosition = StashChangeMessage.ItemPosition;
 		ItemWidgetData.StackCount = Instance->IsStackable() ? StashChangeMessage.NewCount : 0;
+		ItemWidgetData.StashTabTag = StashChangeMessage.StashTabTag;
 		
 		OnItemStashedDelegate.Broadcast(ItemWidgetData);
 	}
