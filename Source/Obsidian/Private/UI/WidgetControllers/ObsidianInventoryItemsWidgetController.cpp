@@ -80,8 +80,8 @@ void FObsidianStashAddedItemWidgets::DebugPrintAllAddedItems()
 	
 	for (const TPair<FObsidianItemPosition, UObsidianItem*>& Pair : StashAddedItemWidgetsMap)
 	{
-		FIntPoint GridLocation = Pair.Key.GetItemGridLocation();
-		FGameplayTag SlotTag = Pair.Key.GetItemSlotTag();
+		FIntPoint GridLocation = Pair.Key.GetItemGridLocation(false);
+		FGameplayTag SlotTag = Pair.Key.GetItemSlotTag(false);
 		if (GridLocation != FIntPoint::NoneValue)
 		{
 			UE_LOG(LogWidgetController_Items, Display, TEXT("Item Widget [%s] at position [%d, %d]"), *GetNameSafe(Pair.Value), GridLocation.X, GridLocation.Y);
@@ -1082,19 +1082,20 @@ void UObsidianInventoryItemsWidgetController::RegisterEquipmentItemWidget(const 
 
 void UObsidianInventoryItemsWidgetController::RegisterStashTabItemWidget(const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget)
 {
-	for(FObsidianStashAddedItemWidgets& Stash : StashAddedItemWidgets)
-	{
-		if(Stash.GetStashTag() == StashTabTag)
+	FObsidianStashAddedItemWidgets* Stash = StashAddedItemWidgets.FindByPredicate(
+		[&](const FObsidianStashAddedItemWidgets& PotentialStash)
 		{
-			Stash.AddItemWidget(ItemPosition, ItemWidget);
-		}
-		else
-		{
-			//TODO Register new stash tab?
-		}
+			return PotentialStash.GetStashTag() == StashTabTag;
+		});
 
-		Stash.DebugPrintAllAddedItems();
+	if(Stash == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Warning, TEXT("[%s] Gameplay Tag wasn't found inside StashAddedItemWidgets, added new one."), *StashTabTag.GetTagName().ToString());
+		Stash = &StashAddedItemWidgets.Emplace_GetRef(StashTabTag);
 	}
+	
+	Stash->AddItemWidget(ItemPosition, ItemWidget);
+	Stash->DebugPrintAllAddedItems();
 }
 
 void UObsidianInventoryItemsWidgetController::AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother)
@@ -1247,7 +1248,7 @@ void UObsidianInventoryItemsWidgetController::RegisterInitialStashTabs()
 
 void UObsidianInventoryItemsWidgetController::EmptyRegisteredItems()
 {
-	for (FObsidianStashAddedItemWidgets& Stash : StashAddedItemWidgets)
+	for(FObsidianStashAddedItemWidgets& Stash : StashAddedItemWidgets)
 	{
 		const int32 NumberOfAddedWidgets = Stash.GetNumberOfItemsAdded();
 		Stash.EmptyAddedItemWidgets(NumberOfAddedWidgets);

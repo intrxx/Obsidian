@@ -214,8 +214,8 @@ public:
 		return SlotTag == Other.SlotTag || GridLocation == Other.GridLocation;
 	}
 
-	FIntPoint GetItemGridLocation() const;
-	FGameplayTag GetItemSlotTag() const;
+	FIntPoint GetItemGridLocation(const bool bWarnIfNotFound = true) const;
+	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
 	
 private:
 	UPROPERTY()

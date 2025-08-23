@@ -82,10 +82,10 @@ void FObsidianSlotDefinition::RemoveBannedItemCategories(const FGameplayTagConta
 
 // ~ FObsidianItemPosition
 
-FIntPoint FObsidianItemPosition::GetItemGridLocation() const
+FIntPoint FObsidianItemPosition::GetItemGridLocation(const bool bWarnIfNotFound) const
 {
 #if !UE_BUILD_SHIPPING
-	if (GridLocation == FIntPoint::NoneValue)
+	if(bWarnIfNotFound && GridLocation == FIntPoint::NoneValue)
 	{
 		UE_LOG(LogObsidian, Error, TEXT("Grid Location is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
 	}
@@ -93,10 +93,10 @@ FIntPoint FObsidianItemPosition::GetItemGridLocation() const
 	return GridLocation;
 }
 
-FGameplayTag FObsidianItemPosition::GetItemSlotTag() const
+FGameplayTag FObsidianItemPosition::GetItemSlotTag(const bool bWarnIfNotFound) const
 {
 #if !UE_BUILD_SHIPPING
-	if (SlotTag == FGameplayTag::EmptyTag)
+	if(bWarnIfNotFound && SlotTag == FGameplayTag::EmptyTag)
 	{
 		UE_LOG(LogObsidian, Error, TEXT("Slot Tag is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
 	}
