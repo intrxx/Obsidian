@@ -74,13 +74,13 @@ TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItems() co
 	return Items;
 }
 
-TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItemsFromStashTab(const FGameplayTag& ForStashTabTag)
+TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItemsFromStashTab(const FGameplayTag& StashTabTag)
 {
 	TArray<UObsidianInventoryItemInstance*> Items;
 
 	for(const FObsidianStashEntry& Entry : Entries)
 	{
-		if(Entry.Instance && Entry.StashTabTag == ForStashTabTag)
+		if(Entry.Instance && Entry.StashTabTag == StashTabTag)
 		{
 			Items.Add(Entry.Instance);
 		}
@@ -130,6 +130,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
 	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
+	NewEntry.Instance->SetItemCurrentStashTab(StashTabTag);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
@@ -180,6 +181,7 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	FObsidianStashEntry& NewEntry = Entries.Emplace_GetRef(Instance);
 	NewEntry.ItemPosition = ToPosition;
 	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
+	NewEntry.Instance->SetItemCurrentStashTab(StashTabTag);
 	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	NewEntry.StashTabTag = StashTabTag;
 	
@@ -217,6 +219,7 @@ void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 	{
 		const FObsidianItemPosition CachedPosition = Instance->GetItemCurrentPosition();
 		Instance->ResetItemCurrentPosition();
+		Instance->ResetItemCurrentStashTab();
 
 		ensure(StashTabTag == ItemStashTabTag);
 		StashTab->UnmarkSpaceInTab(Instance, CachedPosition);

@@ -36,7 +36,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerStashWidget> OwningStashWidget;
-
-	UPROPERTY()
-	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };

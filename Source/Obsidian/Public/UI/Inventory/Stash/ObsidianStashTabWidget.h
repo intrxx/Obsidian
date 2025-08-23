@@ -27,6 +27,8 @@ class OBSIDIAN_API UObsidianStashTabWidget : public UObsidianWidgetBase
 public:
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f) {};
 	
+	FGameplayTag GetStashTabTag() const;
+	
 	void ShowStashTab();
 	void HideStashTab();
 
@@ -37,4 +39,7 @@ protected:
 
 protected:
 	bool bActive = false;
+
+	UPROPERTY()
+	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };

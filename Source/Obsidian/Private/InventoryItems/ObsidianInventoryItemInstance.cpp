@@ -34,7 +34,6 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ActorsToSpawn);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemCurrentPosition);
-	DOREPLIFETIME(ThisClass, ItemCurrentEquipmentSlot);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
 	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
@@ -47,6 +46,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, bNeedsTwoSlots);
 	DOREPLIFETIME(ThisClass, ItemSlotPadding);
 	DOREPLIFETIME(ThisClass, UsableItemType);
+	DOREPLIFETIME(ThisClass, ItemCurrentStashTab);
 }
 
 void UObsidianInventoryItemInstance::OnInstanceCreatedAndInitialized()
@@ -474,6 +474,21 @@ float UObsidianInventoryItemInstance::GetItemSlotPadding() const
 void UObsidianInventoryItemInstance::SetItemSlotPadding(const float InItemSlotPadding)
 {
 	ItemSlotPadding = InItemSlotPadding;
+}
+
+FGameplayTag UObsidianInventoryItemInstance::GetItemCurrentStashTab() const
+{
+	return ItemCurrentStashTab;
+}
+
+void UObsidianInventoryItemInstance::SetItemCurrentStashTab(const FGameplayTag& CurrentStashTab)
+{
+	ItemCurrentStashTab = CurrentStashTab;
+}
+
+void UObsidianInventoryItemInstance::ResetItemCurrentStashTab()
+{
+	ItemCurrentStashTab = FGameplayTag::EmptyTag;
 }
 
 FString UObsidianInventoryItemInstance::GetItemDebugName() const

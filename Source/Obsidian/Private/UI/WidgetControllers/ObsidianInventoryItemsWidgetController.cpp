@@ -20,6 +20,7 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
+#include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
@@ -28,6 +29,8 @@
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
 DEFINE_LOG_CATEGORY(LogWidgetController_Items);
+
+// ~ Start of FObsidianItemWidgetData
 
 bool FObsidianItemWidgetData::IsItemForSwapSlot() const 
 {
@@ -38,6 +41,61 @@ bool FObsidianItemWidgetData::IsItemForSwapSlot() const
 	}
 	return false;
 }
+
+// ~ Start of FObsidianStashAddedItemWidgets
+
+FGameplayTag FObsidianStashAddedItemWidgets::GetStashTag() const
+{
+	return StashTag;
+}
+
+int32 FObsidianStashAddedItemWidgets::GetNumberOfItemsAdded() const
+{
+	return StashAddedItemWidgetsMap.Num();
+}
+
+bool FObsidianStashAddedItemWidgets::AddItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget)
+{
+	if(!StashAddedItemWidgetsMap.Contains(ItemPosition))
+	{
+		StashAddedItemWidgetsMap.Add(ItemPosition, ItemWidget);
+		return true;
+	}
+#if !UE_BUILD_SHIPPING
+	FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Widget at provided ItemPosition already exists in provided Stash Tab with tag [%s]"),
+		*StashTag.GetTagName().ToString()), ELogVerbosity::Error);
+#endif
+	return false;
+}
+
+void FObsidianStashAddedItemWidgets::EmptyAddedItemWidgets(const int32 OptionalReserve)
+{
+	StashAddedItemWidgetsMap.Empty(OptionalReserve);
+}
+
+void FObsidianStashAddedItemWidgets::DebugPrintAllAddedItems()
+{
+	const FString StashTagString = *StashTag.GetTagName().ToString();
+	UE_LOG(LogWidgetController_Items, Warning, TEXT("------------------ Printing All Added Widgets from Stash Tab [%s] ------------------"), *StashTagString);
+	
+	for (const TPair<FObsidianItemPosition, UObsidianItem*>& Pair : StashAddedItemWidgetsMap)
+	{
+		FIntPoint GridLocation = Pair.Key.GetItemGridLocation();
+		FGameplayTag SlotTag = Pair.Key.GetItemSlotTag();
+		if (GridLocation != FIntPoint::NoneValue)
+		{
+			UE_LOG(LogWidgetController_Items, Display, TEXT("Item Widget [%s] at position [%d, %d]"), *GetNameSafe(Pair.Value), GridLocation.X, GridLocation.Y);
+		}
+		else
+		{
+			UE_LOG(LogWidgetController_Items, Display, TEXT("Item Widget [%s] at slot [%s]"), *GetNameSafe(Pair.Value), *SlotTag.GetTagName().ToString());
+		}
+	}
+	
+	UE_LOG(LogWidgetController_Items, Warning, TEXT("------------------ End of Stash [%s] ------------------"), *StashTagString);
+}
+
+// ~ End of FObsidianStashAddedItemWidgets
 
 void UObsidianInventoryItemsWidgetController::OnWidgetControllerSetupCompleted()
 {
@@ -57,6 +115,8 @@ void UObsidianInventoryItemsWidgetController::OnWidgetControllerSetupCompleted()
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Equipment_Changed, this, &ThisClass::OnEquipmentStateChanged);
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_PlayerStash_Changed, this, &ThisClass::OnPlayerStashChanged);
+
+	RegisterInitialStashTabs();
 }
 
 void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage)
@@ -334,6 +394,32 @@ void UObsidianInventoryItemsWidgetController::OnInventoryOpen()
 void UObsidianInventoryItemsWidgetController::OnPlayerStashOpen()
 {
 	UE_LOG(LogTemp, Display, TEXT("Stash Opened."));
+
+	//TODO This for sure will need to be changed, it will be to heavy on performance.
+	TArray<UObsidianInventoryItemInstance*> StashedItems = PlayerStashComponent->GetAllItems();
+	
+	/*
+	 *TODO I need to rethink that, I might not need to reset these items since the Player Stash state
+	 *	might not change without Player seeing it (but what about Stash Tab Affinities?).
+	 **/
+	EmptyRegisteredItems();
+
+	for(const UObsidianInventoryItemInstance* Instance : StashedItems)
+	{
+		if(ensure(Instance))
+		{
+			FObsidianItemWidgetData ItemWidgetData;
+			ItemWidgetData.ItemImage = Instance->GetItemImage();
+			ItemWidgetData.ItemPosition = Instance->GetItemCurrentPosition();
+			ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
+			ItemWidgetData.StackCount = Instance->IsStackable() ? Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+			ItemWidgetData.bUsable = Instance->IsItemUsable();
+			ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
+			ItemWidgetData.StashTabTag = Instance->GetItemCurrentStashTab();
+		
+			OnItemStashedDelegate.Broadcast(ItemWidgetData);
+		}
+	}
 }
 
 void UObsidianInventoryItemsWidgetController::RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown)
@@ -994,6 +1080,23 @@ void UObsidianInventoryItemsWidgetController::RegisterEquipmentItemWidget(const 
 	}
 }
 
+void UObsidianInventoryItemsWidgetController::RegisterStashTabItemWidget(const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget)
+{
+	for(FObsidianStashAddedItemWidgets& Stash : StashAddedItemWidgets)
+	{
+		if(Stash.GetStashTag() == StashTabTag)
+		{
+			Stash.AddItemWidget(ItemPosition, ItemWidget);
+		}
+		else
+		{
+			//TODO Register new stash tab?
+		}
+
+		Stash.DebugPrintAllAddedItems();
+	}
+}
+
 void UObsidianInventoryItemsWidgetController::AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother)
 {
 	if(bSwappedWithAnother)
@@ -1131,6 +1234,24 @@ UObsidianItemDescriptionBase* UObsidianInventoryItemsWidgetController::CreateDro
 	bDescriptionActive = true;
 	
 	return ActiveItemDescription;
+}
+
+void UObsidianInventoryItemsWidgetController::RegisterInitialStashTabs()
+{
+	UObsidianStashTabsConfig* StashConfig = PlayerStashComponent->GetStashTabConfig();
+	for(const FObsidianStashTabDefinition& Definition : StashConfig->GetStashTabDefinitions())
+	{
+		StashAddedItemWidgets.Add(FObsidianStashAddedItemWidgets(Definition.StashTag));
+	}
+}
+
+void UObsidianInventoryItemsWidgetController::EmptyRegisteredItems()
+{
+	for (FObsidianStashAddedItemWidgets& Stash : StashAddedItemWidgets)
+	{
+		const int32 NumberOfAddedWidgets = Stash.GetNumberOfItemsAdded();
+		Stash.EmptyAddedItemWidgets(NumberOfAddedWidgets);
+	}
 }
 
 FVector2D UObsidianInventoryItemsWidgetController::CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const

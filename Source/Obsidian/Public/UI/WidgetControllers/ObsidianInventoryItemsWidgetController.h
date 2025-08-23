@@ -72,6 +72,37 @@ public:
 	bool bDoesBlockSisterSlot = false;
 };
 
+/**
+ * 
+ */
+USTRUCT()
+struct FObsidianStashAddedItemWidgets
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianStashAddedItemWidgets(){}
+	FObsidianStashAddedItemWidgets(const FGameplayTag& InStashTabTag)
+		: StashTag(InStashTabTag){}
+
+	FGameplayTag GetStashTag() const;
+	int32 GetNumberOfItemsAdded() const;
+
+	/** Tries to add Item widget to internal map, will return false if item position is already occupied. */
+	bool AddItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
+
+	void EmptyAddedItemWidgets(const int32 OptionalReserve = 0);
+
+	void DebugPrintAllAddedItems();
+	
+protected:
+	UPROPERTY()
+	FGameplayTag StashTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	TMap<FObsidianItemPosition, UObsidianItem*> StashAddedItemWidgetsMap;
+};
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemStashedSignature, const FObsidianItemWidgetData& ItemWidgetData);
@@ -146,6 +177,8 @@ public:
 
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
 	void RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
+
+	void RegisterStashTabItemWidget(const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
 	
 	/** This function takes the primary slot that is causing the other slot to be blocked. */
 	void AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother);
@@ -218,6 +251,9 @@ private:
 	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats);
 	UObsidianItemDescriptionBase* CreateDroppedItemDescription(const FObsidianItemStats& ItemStats);
 
+	void RegisterInitialStashTabs();
+	void EmptyRegisteredItems();
+
 private:
 	bool bInventoryOpened = false;
 	bool bPlayerStashOpened = false;
@@ -233,6 +269,9 @@ private:
 
 	UPROPERTY()
 	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;
+
+	UPROPERTY()
+	TArray<FObsidianStashAddedItemWidgets> StashAddedItemWidgets;
 
 	UPROPERTY()
 	TMap<FGameplayTag, UObsidianSlotBlockadeItem*> BlockedSlotsWidgetMap;

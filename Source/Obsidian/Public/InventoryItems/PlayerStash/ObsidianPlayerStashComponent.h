@@ -42,6 +42,9 @@ public:
 	
 	bool CanOwnerModifyPlayerStashState();
 
+	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
+	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
+
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	

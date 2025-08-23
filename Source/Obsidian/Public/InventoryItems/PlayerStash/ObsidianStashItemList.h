@@ -120,7 +120,7 @@ public:
 	void InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig);
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
-	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& ForStashTabTag);
+	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
 	int32 GetEntriesCount() const;
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
 

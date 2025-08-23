@@ -33,6 +33,20 @@ void UObsidianPlayerStashWidget::NativeConstruct()
 	CreateStashTabs();
 }
 
+UObsidianStashTabWidget* UObsidianPlayerStashWidget::GetActiveStashTab() const
+{
+	return ActiveStashTab;
+}
+
+FGameplayTag UObsidianPlayerStashWidget::GetActiveStashTabTag() const
+{
+	if(ActiveStashTab)
+	{
+		return ActiveStashTab->GetStashTabTag();
+	}
+	return FGameplayTag::EmptyTag;
+}
+
 void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	if(UObsidianStashTabWidget** StashTabWidgetPointer = StashTabsMap.Find(ItemWidgetData.StashTabTag))
@@ -54,7 +68,7 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 		// 	ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRightMouseButtonPressed);
 		// }
 	
-		//InventoryItemsWidgetController->RegisterInventoryItemWidget(DesiredPosition, ItemWidget);
+		InventoryItemsWidgetController->RegisterStashTabItemWidget(ItemWidgetData.StashTabTag, DesiredPosition, ItemWidget);
 		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData.ItemSlotPadding);
 	}
 }

@@ -32,9 +32,6 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGrid> StashTabGrid;
 
-	UPROPERTY()
-	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
-
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsController;

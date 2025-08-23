@@ -199,6 +199,21 @@ public:
 		, GridLocation(InGridLocation)
 	{}
 
+	// Type Hash (required for TMap)
+	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& ItemPosition)
+	{
+		uint32 Hash = 0;
+		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.SlotTag));
+		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.GridLocation));
+		return Hash;
+	}
+
+	// Equality operator (required for TMap)
+	FORCEINLINE bool operator==(const FObsidianItemPosition& Other) const
+	{
+		return SlotTag == Other.SlotTag || GridLocation == Other.GridLocation;
+	}
+
 	FIntPoint GetItemGridLocation() const;
 	FGameplayTag GetItemSlotTag() const;
 	

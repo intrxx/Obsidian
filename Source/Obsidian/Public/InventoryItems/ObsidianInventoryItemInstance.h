@@ -240,6 +240,20 @@ public:
 	float GetItemSlotPadding() const;
 	
 	void SetItemSlotPadding(const float InItemSlotPadding);
+
+	/**
+	 * Player Stash
+	 */
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	FGameplayTag GetItemCurrentStashTab() const;
+
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	void SetItemCurrentStashTab(const FGameplayTag& CurrentStashTab);
+
+	/** Should be called when removing item from StashTab. */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	void ResetItemCurrentStashTab();
 	
 	/**
 	 * Debug.
@@ -264,6 +278,10 @@ private:
 
 	UPROPERTY(Replicated)
 	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;
+
+	/** Current Item Location on the Grid or in the Slot, will be valid only if the item is placed somewhere. */
+	UPROPERTY(Replicated)
+	FObsidianItemPosition ItemCurrentPosition = FObsidianItemPosition();
 
 	/**
 	 * Usability
@@ -297,10 +315,6 @@ private:
 
 	/** Does not need to be replicate since the attributes will replicate, idk about abilities, will need to check. */
 	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySetsToGive;
-
-	/** Current Item Equipment Slot, should be valid only if the item is equipped. */
-	UPROPERTY(Replicated)
-	FGameplayTag ItemCurrentEquipmentSlot = FGameplayTag::EmptyTag;
 	
 	/**
 	 * Affixes.
@@ -348,12 +362,11 @@ private:
 	float ItemSlotPadding = 4.0f;
 
 	/**
-	 * Inventory.
+	 * Player Stash.
 	 */
 
-	/** Current Item Location on the Grid or in the Slot, will be valid only if the item is placed somewhere. */
 	UPROPERTY(Replicated)
-	FObsidianItemPosition ItemCurrentPosition = FObsidianItemPosition();
+	FGameplayTag ItemCurrentStashTab = FGameplayTag::EmptyTag;
 
 	/**
 	 * Debug.

@@ -56,6 +56,16 @@ bool UObsidianPlayerStashComponent::CanOwnerModifyPlayerStashState()
 	return false;
 }
 
+TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllItems() const
+{
+	return StashItemList.GetAllItems();
+}
+
+TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllItemsFromStashTab(const FGameplayTag& StashTabTag)
+{
+	return StashItemList.GetAllItemsFromStashTab(StashTabTag);
+}
+
 int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	//TODO Implement
