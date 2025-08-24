@@ -53,8 +53,10 @@ public:
 
 	bool IsCharacterStatusOpen() const;
 	bool IsInventoryOpen() const;
-	bool IsPassiveSkillTree() const;
+	bool IsPassiveSkillTreeOpen() const;
 	bool IsPlayerStashOpen() const;
+	
+	FGameplayTag GetActivePlayerStashTabTag() const;
 
 	UFUNCTION()
 	void ToggleCharacterStatus();

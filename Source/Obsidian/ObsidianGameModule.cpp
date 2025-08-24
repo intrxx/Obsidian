@@ -10,6 +10,7 @@
 // ~ Project
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h"
+#include "InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.h"
 #endif
 
 DEFINE_LOG_CATEGORY(LogObsidian);
@@ -25,6 +26,8 @@ void FObsidianGameModule::StartupModule()
 	GameplayDebuggerModule.NotifyCategoriesChanged();
 	GameplayDebuggerModule.RegisterCategory("Equipment", IGameplayDebugger::FOnGetCategory::CreateStatic(&FGameplayDebuggerCategory_Equipment::MakeInstance));
 	GameplayDebuggerModule.NotifyCategoriesChanged();
+	GameplayDebuggerModule.RegisterCategory("PlayerStash", IGameplayDebugger::FOnGetCategory::CreateStatic(&FGameplayDebuggerCategory_PlayerStash::MakeInstance));
+	GameplayDebuggerModule.NotifyCategoriesChanged();
 #endif
 }
 
@@ -37,6 +40,8 @@ void FObsidianGameModule::ShutdownModule()
 		GameplayDebuggerModule.UnregisterCategory("Inventory");
 		GameplayDebuggerModule.NotifyCategoriesChanged();
 		GameplayDebuggerModule.UnregisterCategory("Equipment");
+		GameplayDebuggerModule.NotifyCategoriesChanged();
+		GameplayDebuggerModule.UnregisterCategory("PlayerStash");
 		GameplayDebuggerModule.NotifyCategoriesChanged();
 	}
 #endif

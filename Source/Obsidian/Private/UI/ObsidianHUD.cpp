@@ -121,12 +121,30 @@ void AObsidianHUD::TogglePlayerStash(const bool bShowStash) const
 	}
 }
 
-bool AObsidianHUD::IsInventoryOpened()
+bool AObsidianHUD::IsInventoryOpened() const
 {
-	if(InventoryItemsWidgetController)
+	if(MainOverlayWidget)
 	{
-		return InventoryItemsWidgetController->IsInventoryOpened();
+		return MainOverlayWidget->IsInventoryOpen();
 	}
 	return false;
+}
+
+bool AObsidianHUD::IsPlayerStashOpened() const
+{
+	if(MainOverlayWidget)
+	{
+		return MainOverlayWidget->IsPlayerStashOpen();
+	}
+	return false;
+}
+
+FGameplayTag AObsidianHUD::GetActiveStashTabTag() const
+{
+	if(MainOverlayWidget)
+	{
+		return MainOverlayWidget->GetActivePlayerStashTabTag();
+	}
+	return FGameplayTag::EmptyTag;
 }
 

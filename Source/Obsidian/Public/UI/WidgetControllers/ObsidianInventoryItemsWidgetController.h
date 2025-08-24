@@ -121,30 +121,6 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
-	void SetInventoryOpened(const bool bInOpened)
-	{
-		bInventoryOpened = bInOpened;
-	}
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
-	bool IsInventoryOpened() const
-	{
-		return bInventoryOpened;
-	}
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
-	void SetPlayerStashOpened(const bool bInOpened)
-	{
-		bPlayerStashOpened = bInOpened;
-	}
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|InventoryItemsWidgetController")
-	bool IsPlayerStashOpened() const
-	{
-		return bPlayerStashOpened;
-	}
-
 	bool IsDescriptionActive() const
 	{
 		return bDescriptionActive;

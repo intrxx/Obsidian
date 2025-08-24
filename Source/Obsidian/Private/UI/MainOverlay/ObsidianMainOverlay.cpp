@@ -81,7 +81,7 @@ bool UObsidianMainOverlay::IsInventoryOpen() const
 	return Inventory != nullptr;
 }
 
-bool UObsidianMainOverlay::IsPassiveSkillTree() const
+bool UObsidianMainOverlay::IsPassiveSkillTreeOpen() const
 {
 	return PassiveSkillTree != nullptr;
 }
@@ -89,6 +89,15 @@ bool UObsidianMainOverlay::IsPassiveSkillTree() const
 bool UObsidianMainOverlay::IsPlayerStashOpen() const
 {
 	return PlayerStash != nullptr;
+}
+
+FGameplayTag UObsidianMainOverlay::GetActivePlayerStashTabTag() const
+{
+	if(PlayerStash)
+	{
+		return PlayerStash->GetActiveStashTabTag();
+	}
+	return FGameplayTag::EmptyTag;
 }
 
 void UObsidianMainOverlay::ToggleCharacterStatus()
@@ -156,14 +165,12 @@ void UObsidianMainOverlay::ToggleInventory()
 			
 				if(ensure(InventoryItemsWidgetController))
 				{
-					InventoryItemsWidgetController->SetInventoryOpened(false);
 					InventoryItemsWidgetController->RemoveItemUIElements();
 				}
 				
 				MoveDroppedItemDescOverlay(false);
 			});
-
-		InventoryItemsWidgetController->SetInventoryOpened(true);
+		
 		InventoryItemsWidgetController->OnInventoryOpen();
 		MoveDroppedItemDescOverlay(true);
 	}
@@ -173,18 +180,13 @@ void UObsidianMainOverlay::ToggleInventory()
 		Inventory = nullptr;
 		Overlay_GameTabsMenu->OnInventoryTabStatusChangeDelegate.Broadcast(false);
 		
-		if(ensure(InventoryItemsWidgetController))
-		{
-			InventoryItemsWidgetController->SetInventoryOpened(false);
-		}
-		
 		MoveDroppedItemDescOverlay(false);
 	}
 }
 
 void UObsidianMainOverlay::TogglePassiveSkillTree()
 {
-	if(IsPassiveSkillTree() == false)
+	if(IsPassiveSkillTreeOpen() == false)
 	{
 		checkf(PassiveSkillTreeClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::TogglePassiveSkillTree, fill it in ObsidianMainOverlay instance."));
 		PassiveSkillTree = CreateWidget<UObsidianPassiveSkillTree>(this, PassiveSkillTreeClass);
@@ -239,12 +241,10 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 			
 				if(ensure(InventoryItemsWidgetController))
 				{
-					InventoryItemsWidgetController->SetInventoryOpened(false);
 					InventoryItemsWidgetController->RemoveItemUIElements();
 				}
 			});
-
-		InventoryItemsWidgetController->SetPlayerStashOpened(true);
+		
 		InventoryItemsWidgetController->OnPlayerStashOpen();
 	}
 	else if(bShowStash == false && IsPlayerStashOpen())
@@ -255,11 +255,6 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 		if(IsInventoryOpen())
 		{
 			ToggleInventory();
-		}
-
-		if(ensure(InventoryItemsWidgetController))
-		{
-			InventoryItemsWidgetController->SetInventoryOpened(false);
 		}
 	}
 }

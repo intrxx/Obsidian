@@ -49,7 +49,9 @@ public:
 	
 	void TogglePlayerStash(const bool bShowStash) const;
 
-	bool IsInventoryOpened();
+	bool IsInventoryOpened() const;
+	bool IsPlayerStashOpened() const;
+	FGameplayTag GetActiveStashTabTag() const;
 	
 public:
 	UPROPERTY()

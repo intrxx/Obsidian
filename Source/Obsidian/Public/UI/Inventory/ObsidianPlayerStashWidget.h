@@ -32,12 +32,13 @@ class OBSIDIAN_API UObsidianPlayerStashWidget : public UObsidianMainOverlayWidge
 public:
 	virtual void HandleWidgetControllerSet() override;
 	
+	FGameplayTag GetActiveStashTabTag() const;
+	
 protected:
 	virtual void NativeConstruct() override;
 
 	UObsidianStashTabWidget* GetActiveStashTab() const;
-	FGameplayTag GetActiveStashTabTag() const;
-
+	
 	void CreateStashTabButton(const FGameplayTag& StashTag, const FText& StashTabName);
 	void ShowStashTab(const FGameplayTag& WithStashTag);
 
