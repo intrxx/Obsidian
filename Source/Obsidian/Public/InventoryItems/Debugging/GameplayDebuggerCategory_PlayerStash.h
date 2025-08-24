@@ -9,6 +9,13 @@
 #include "GameplayDebuggerCategory.h"
 #include "GameplayTagContainer.h"
 
+enum class EDebugStashTabType
+{
+	DSTT_None = 0,
+	DSTT_Grid,
+	DSTT_Slots
+};
+
 // ~ Project
 
 class FGameplayDebuggerCategory_PlayerStash : public FGameplayDebuggerCategory
@@ -41,8 +48,6 @@ protected:
 		
 		struct FStashSlotsDebug
 		{
-			bool bUsed;
-			
 			FString SlotTag;
 			TArray<FString> AcceptedTags;
 			TArray<FString> BannedTags;
@@ -50,22 +55,15 @@ protected:
 
 		struct FStashGridDebug
 		{
-			bool bUsed;
-			
-			
 			TMap<FIntPoint, bool> GridStateMap;
-
-			void Reset()
-			{
-				bUsed = false;
-				GridStateMap.Empty();
-			};
 		};
 
 		bool bStashActive;
+		EDebugStashTabType StashTabType = EDebugStashTabType::DSTT_None;
 		FGameplayTag StashTabTag;
-		TArray<FStashedItemsDebug> Items;
+		
 		FStashGridDebug Grid;
+		TArray<FStashedItemsDebug> Items;
 		TArray<FStashSlotsDebug> Slots;
 		
 		void Serialize(FArchive& Ar);

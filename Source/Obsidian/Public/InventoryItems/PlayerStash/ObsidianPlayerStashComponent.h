@@ -113,6 +113,11 @@ protected:
 	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
 
 private:
+	
+#if WITH_GAMEPLAY_DEBUGGER
+	friend class FGameplayDebuggerCategory_PlayerStash;
+#endif
+	
 	/**
 	 * Actual array of stashed items which is FFastArraySerializer.
 	 */

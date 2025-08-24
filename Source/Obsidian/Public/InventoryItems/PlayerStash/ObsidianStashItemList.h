@@ -147,6 +147,10 @@ private:
 private:
 	friend UObsidianPlayerStashComponent;
 
+#if WITH_GAMEPLAY_DEBUGGER
+	friend class FGameplayDebuggerCategory_PlayerStash;
+#endif
+
 	/** Replicated list of all items. */
 	UPROPERTY()
 	TArray<FObsidianStashEntry> Entries;

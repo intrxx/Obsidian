@@ -199,15 +199,14 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 		{
 			FCanvasTileItem TakenField = {FVector2D(TileX, TileY), StateMapTileSize, TakenColor};
 			CanvasContext.DrawItem(TakenField, TileX, TileY);
-			CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y));
 		}
 		else
 		{
 			FCanvasTileItem FreeField = {FVector2D(TileX, TileY), StateMapTileSize, FreeColor};
 			CanvasContext.DrawItem(FreeField, TileX, TileY);
-			CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y));
 		}
 		
+		CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y));
 		TileX += StateMapTileSize.X + TilePadding;
 	}
 	CanvasContext.CursorY = CanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;

@@ -33,11 +33,18 @@ public:
 	int32 GetGridHeight() const;
 
 private:
+
+#if WITH_GAMEPLAY_DEBUGGER
+	friend class FGameplayDebuggerCategory_PlayerStash;
+#endif
+	
 	/**
 	* Map that represents whole Grid with taken fields.
 	* If a Given FIntPoint location has a true value associated with it, the field is treated as taken.
 	*/
 	TMap<FIntPoint, bool> GridStateMap;
+
+	UPROPERTY()
 	TMap<FIntPoint, UObsidianInventoryItemInstance*> GridLocationToItemMap;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|GridSettings")

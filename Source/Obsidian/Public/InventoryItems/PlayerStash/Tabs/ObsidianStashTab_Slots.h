@@ -31,8 +31,14 @@ public:
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
 
 private:
+
+#if WITH_GAMEPLAY_DEBUGGER
+	friend class FGameplayDebuggerCategory_PlayerStash;
+#endif
+	
 	UPROPERTY(EditAnywhere, Category = "Obsidian|SlotsSettings")
 	TArray<FObsidianSlotDefinition> TabSlots;
-	
+
+	UPROPERTY()
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToItemMap;
 };
