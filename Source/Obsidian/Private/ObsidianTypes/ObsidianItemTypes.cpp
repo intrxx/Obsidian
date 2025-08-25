@@ -80,6 +80,16 @@ void FObsidianSlotDefinition::RemoveBannedItemCategories(const FGameplayTagConta
 	BannedItemCategories.RemoveTags(BannedCategoriesToRemove);
 }
 
+bool FObsidianItemPosition::IsPositionedOnGrid() const
+{
+	return (GridLocation != FIntPoint::NoneValue) && (SlotTag == FGameplayTag::EmptyTag);
+}
+
+bool FObsidianItemPosition::IsPositionedAtSlot() const
+{
+	return (GridLocation == FIntPoint::NoneValue) && (SlotTag != FGameplayTag::EmptyTag);
+}
+
 // ~ FObsidianItemPosition
 
 FIntPoint FObsidianItemPosition::GetItemGridLocation(const bool bWarnIfNotFound) const

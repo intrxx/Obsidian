@@ -199,6 +199,12 @@ public:
 		, GridLocation(InGridLocation)
 	{}
 
+	bool IsPositionedOnGrid() const;
+	bool IsPositionedAtSlot() const;
+
+	FIntPoint GetItemGridLocation(const bool bWarnIfNotFound = true) const;
+	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
+
 	// Type Hash (required for TMap)
 	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& ItemPosition)
 	{
@@ -211,12 +217,13 @@ public:
 	// Equality operator (required for TMap)
 	FORCEINLINE bool operator==(const FObsidianItemPosition& Other) const
 	{
-		return SlotTag == Other.SlotTag || GridLocation == Other.GridLocation;
+		if (SlotTag.IsValid() && Other.SlotTag.IsValid())
+		{
+			return SlotTag == Other.SlotTag;
+		}
+		return GridLocation == Other.GridLocation;
 	}
 
-	FIntPoint GetItemGridLocation(const bool bWarnIfNotFound = true) const;
-	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
-	
 private:
 	UPROPERTY()
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
