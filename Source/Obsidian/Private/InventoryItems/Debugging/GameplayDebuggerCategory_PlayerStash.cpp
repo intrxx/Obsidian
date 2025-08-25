@@ -16,7 +16,7 @@
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
 #include "UI/ObsidianHUD.h"
 
-namespace InventoryItems::Debug
+namespace PlayerStash::Debug
 {
 	// This is the longest name we can use for the UI (string format truncate with %.35s).  We use a variety of letters because MeasureString depends on kerning.
 	const FString LongestDebugObjectName{ TEXT("ABCDEFGHIJKLMNOPQRSTUVWXYZ_ ABCDEFGH") };
@@ -130,7 +130,7 @@ void FGameplayDebuggerCategory_PlayerStash::DrawData(APlayerController* OwnerPC,
 	const FVector2D BackgroundPos{CanvasContext.CursorX, CanvasContext.CursorY};
 	const FVector2D BackgroundSize{CanvasContext.Canvas->SizeX -  (2.0f * CanvasContext.CursorX), LastDrawDataEndSize};
 
-	FCanvasTileItem Background(FVector2D(0.0f), BackgroundSize, InventoryItems::Debug::BackgroundColor);
+	FCanvasTileItem Background(FVector2D(0.0f), BackgroundSize, PlayerStash::Debug::BackgroundColor);
 	Background.BlendMode = SE_BLEND_Translucent;
 	
 	CanvasContext.DrawItem(Background, BackgroundPos.X, BackgroundPos.Y);
@@ -142,7 +142,7 @@ void FGameplayDebuggerCategory_PlayerStash::DrawData(APlayerController* OwnerPC,
 
 void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) const
 {
-	using namespace InventoryItems::Debug;
+	using namespace PlayerStash::Debug;
 	
 	const float CanvasWidth = CanvasContext.Canvas->SizeX;
 	Algo::Sort(DataPack.Items, [](const FRepData::FStashedItemsDebug& ItemOne, const FRepData::FStashedItemsDebug& ItemTwo) { return ItemOne.Name < ItemTwo.Name; });

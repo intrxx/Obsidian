@@ -366,18 +366,7 @@ void UObsidianPlayerInputManager::Input_MoveKeyboard(const FInputActionValue& In
 			Pawn->AddMovementInput(MovementDirection, InputAxisVector.Y);
 		}
 
-		if(CachedInteractionTarget && CachedInteractionTarget->RequiresOngoingInteraction())
-		{
-			CachedInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
-			CachedInteractionTarget = nullptr;
-
-#if !UE_BUILD_SHIPPING
-			if(bDebugInteraction)
-			{
-				UE_LOG(LogInteraction, Display, TEXT("Stopped ongoing interaction."))	
-			}
-#endif
-		}
+		StopOngoingInteraction();
 	}
 }
 
@@ -393,10 +382,10 @@ void UObsidianPlayerInputManager::Input_MoveStartedMouse()
 		SetUsingItem(false);
 	}
 
-	if(CachedInteractionTarget && CachedInteractionTarget->RequiresOngoingInteraction())
+	if(ActiveInteractionTarget && ActiveInteractionTarget->RequiresOngoingInteraction())
 	{
-		CachedInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
-		CachedInteractionTarget = nullptr;
+		ActiveInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
+		ActiveInteractionTarget = nullptr;
 
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
@@ -549,10 +538,12 @@ void UObsidianPlayerInputManager::Input_Interact()
 #endif
 			return;
 		}
+
+		StopOngoingInteraction();
 		
 		bWantsToInteract = true;
-		CachedInteractionTarget = InteractionActor;
-		ServerStartInteraction(CachedInteractionTarget);
+		ActiveInteractionTarget = InteractionActor;
+		ServerStartInteraction(ActiveInteractionTarget);
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
@@ -1269,7 +1260,7 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 
 void UObsidianPlayerInputManager::InteractWithOutOfRangeTarget()
 {
-	if(CachedInteractionTarget)
+	if(ActiveInteractionTarget)
 	{
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
@@ -1286,7 +1277,7 @@ void UObsidianPlayerInputManager::InteractWithOutOfRangeTarget()
 			}
 		}
 #endif
-		ServerStartInteraction(CachedInteractionTarget);
+		ServerStartInteraction(ActiveInteractionTarget);
 		
 		OnArrivedAtAcceptableInteractionRange.Clear();
 	}
@@ -1304,9 +1295,9 @@ void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const 
 #endif
 		InteractionTarget->Interact(GetController<AObsidianPlayerController>());
 
-		if(CachedInteractionTarget->RequiresOngoingInteraction() == false)
+		if(ActiveInteractionTarget->RequiresOngoingInteraction() == false)
 		{
-			CachedInteractionTarget = nullptr;
+			ActiveInteractionTarget = nullptr;
 		}
 #if !UE_BUILD_SHIPPING
 		else
@@ -1745,6 +1736,22 @@ bool UObsidianPlayerInputManager::IsHoveringOverInteractionTarget() const
 		}
 	}
 	return false;
+}
+
+void UObsidianPlayerInputManager::StopOngoingInteraction()
+{
+	if(ActiveInteractionTarget && ActiveInteractionTarget->RequiresOngoingInteraction())
+	{
+		ActiveInteractionTarget->StopInteraction(GetController<AObsidianPlayerController>());
+		ActiveInteractionTarget = nullptr;
+
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Stopped ongoing interaction."))	
+		}
+#endif
+	}
 }
 
 bool UObsidianPlayerInputManager::CanDropItem() const

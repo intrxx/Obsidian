@@ -269,6 +269,7 @@ private:
 	void ClientTriggerInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
 	
 	bool IsHoveringOverInteractionTarget() const;
+	void StopOngoingInteraction();
 
 	/** If Interaction target is out of interaction range, it will handle getting to the interaction target and interacting with it. Will return true if interaction was handled here. */
 	bool HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation);
@@ -300,7 +301,7 @@ private:
 	bool bWantsToInteract = false;
 	bool bAutoRunToInteract = false;
 	bool bActivelyInteracting = false;
-	TScriptInterface<IObsidianInteractionInterface> CachedInteractionTarget;
+	TScriptInterface<IObsidianInteractionInterface> ActiveInteractionTarget;
 	FOnArrivedAtAcceptableInteractionRangeSignature OnArrivedAtAcceptableInteractionRange;
 	
 	UPROPERTY(EditDefaultsOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian|Debug")
@@ -310,6 +311,7 @@ private:
 	 * Pickup.
 	 */
 	bool bAutoRunToPickupItemByLabel = false;
+	UPROPERTY()
 	TObjectPtr<AObsidianDroppableItem> CachedDroppableItemToPickup;
 	FOnArrivedAtAcceptableItemPickupRangeSignature OnArrivedAtAcceptableItemPickupRange;
 
