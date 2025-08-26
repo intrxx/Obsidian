@@ -220,3 +220,26 @@ bool UObsidianItemsFunctionLibrary::IsItemUnique(const UObsidianInventoryItemIns
 	return ItemInstance->GetItemRarity() == ObsidianGameplayTags::Item_Rarity_Unique;
 }
 
+FGameplayTag UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(const FDraggedItem& DraggedItem)
+{
+	if (DraggedItem.IsEmpty())
+	{
+		return FGameplayTag::EmptyTag;
+	}
+
+	if (const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
+	{
+		return DraggedInstance->GetItemCategoryTag();
+	}
+
+	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef)
+	{
+		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(DraggedItemDef))
+		{
+			return ItemDefault->GetItemCategoryTag();
+		}
+	}
+	
+	return FGameplayTag::EmptyTag;
+}
+

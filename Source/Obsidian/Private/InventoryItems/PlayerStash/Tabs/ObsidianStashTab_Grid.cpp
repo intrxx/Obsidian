@@ -17,9 +17,69 @@ UObsidianInventoryItemInstance* UObsidianStashTab_Grid::GetInstanceAtPosition(co
 	return GridLocationToItemMap.FindRef(ItemPosition.GetItemGridLocation());
 }
 
-bool UObsidianStashTab_Grid::VerifyPositionFree(const FObsidianItemPosition& Position)
+bool UObsidianStashTab_Grid::DebugVerifyPositionFree(const FObsidianItemPosition& Position)
 {
 	return !GridLocationToItemMap.Contains(Position.GetItemGridLocation());
+}
+
+bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory)
+{
+	const FIntPoint SpecificGridPosition = SpecifiedPosition.GetItemGridLocation();
+	
+	bool bCanFit = false;
+	if(GridStateMap[SpecificGridPosition] == false) // Initial location is free
+	{
+		bCanFit = true;
+		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
+		{
+			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
+			{
+				const FIntPoint LocationToCheck = SpecificGridPosition + FIntPoint(SpanX, SpanY);
+				const bool* bExistingOccupied = GridStateMap.Find(LocationToCheck);
+				if(bExistingOccupied == nullptr || *bExistingOccupied)
+				{
+					bCanFit = false;
+					break;
+				}
+			}
+		}
+	}
+	return bCanFit;
+}
+
+bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory)
+{
+	bool bCanFit = false;
+	
+	for(const TTuple<FIntPoint, bool>& Location : GridStateMap)
+	{
+		if(Location.Value == false) // Location is free
+		{
+			bCanFit = true;
+			
+			for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
+			{
+				for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
+				{
+					const FIntPoint LocationToCheck = Location.Key + FIntPoint(SpanX, SpanY);
+					const bool* bExistingOccupied = GridStateMap.Find(LocationToCheck);
+					if(bExistingOccupied == nullptr || *bExistingOccupied)
+					{
+						bCanFit = false;
+						break;
+					}
+				}
+			}
+			
+			if(bCanFit) // Return if we get Available Position
+			{
+				OutFirstAvailablePosition = Location.Key;
+				return bCanFit;
+			}
+		}
+	}
+
+	return bCanFit;
 }
 
 void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)

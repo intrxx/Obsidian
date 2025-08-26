@@ -964,12 +964,14 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 		}
 		return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan,AtGridSlot);
 	case EObsidianGridOwner::GO_PlayerStash:
-		if(PlayerStashComponent == nullptr)
+		if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
 		{
-			UE_LOG(LogWidgetController_Items, Error, TEXT("PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return false;	
 		}
-		return PlayerStashComponent->CheckSpecifiedPosition(ItemGridSpan, FObsidianItemPosition(AtGridSlot, StashTag));
+		
+		return PlayerStashComponent->CheckSpecifiedPosition(ItemGridSpan, UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem()),
+			FObsidianItemPosition(AtGridSlot, StashTag));
 	default:
 		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			break;

@@ -11,6 +11,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 
 DEFINE_LOG_CATEGORY(LogPlayerStash)
@@ -91,11 +92,6 @@ int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const UObsidianIn
 {
 	//TODO Implement
 	return 0;
-}
-
-bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FObsidianItemPosition& SpecifiedPosition)
-{
-	return true;
 }
 
 FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, const FGameplayTag& InTabTag, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances)
@@ -346,7 +342,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 	}
 	
 	FObsidianItemPosition AvailablePosition;
-	if(CanFitItemInstance(AvailablePosition, StashTabTag, InstanceToAdd) == false)
+	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan(), InstanceToAdd->GetItemCategoryTag(), StashTabTag) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
@@ -404,7 +400,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 		StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)), 1, StacksAvailableToAdd);
 	}
 	
-	if(CanFitItemInstanceToSpecificSlot(ItemPosition, InstanceToAdd) == false)
+	if(CheckSpecifiedPosition(InstanceToAdd->GetItemGridSpan(), InstanceToAdd->GetItemCategoryTag(), ItemPosition) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Player Stash is full at specified slot!")));
@@ -509,22 +505,50 @@ void UObsidianPlayerStashComponent::ReadyForReplication()
 
 bool UObsidianPlayerStashComponent::CanFitItemDefinition(FObsidianItemPosition& OutAvailablePosition, const FGameplayTag& StashTabTag, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	return true;
+	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+	{
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		{
+			return CheckAvailablePosition(OutAvailablePosition, AppearanceFrag->GetItemGridSpanFromDesc(), ItemDefault->GetItemCategoryTag(), StashTabTag);
+		}
+	}
+	return false;
 }
 
 bool UObsidianPlayerStashComponent::CanFitItemDefinitionToSpecifiedSlot(const FObsidianItemPosition& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	return true;
+	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+	{
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		{
+			return CheckSpecifiedPosition(AppearanceFrag->GetItemGridSpanFromDesc(), ItemDefault->GetItemCategoryTag(), SpecifiedSlot);
+		}
+	}
+	return false;
 }
 
-bool UObsidianPlayerStashComponent::CanFitItemInstance(FObsidianItemPosition& OutAvailablePosition, const FGameplayTag& StashTabTag, UObsidianInventoryItemInstance* Instance)
+bool UObsidianPlayerStashComponent::CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& StashTabTag)
 {
-	return true;
+	if (UObsidianStashTab* StashTab = GetStashTabForTag(StashTabTag))
+	{
+		FObsidianItemPosition ItemPosition;
+		if (StashTab->FindFirstAvailablePositionForItem(ItemPosition, ItemGridSpan, ItemCategory))
+		{
+			ItemPosition.SetOwningStashTab(StashTabTag);
+			OutAvailablePosition = ItemPosition;
+			return true;
+		}
+	}
+	return false;
 }
 
-bool UObsidianPlayerStashComponent::CanFitItemInstanceToSpecificSlot(const FObsidianItemPosition& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance)
+bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FObsidianItemPosition& SpecificPosition)
 {
-	return true;
+	if (UObsidianStashTab* StashTab = GetStashTabForTag(SpecificPosition.GetOwningStashTabTag()))
+	{
+		return StashTab->CanPlaceItemAtSpecificPosition(SpecificPosition, ItemGridSpan, ItemCategory);
+	}
+	return false;
 }
 
 

@@ -217,6 +217,8 @@ public:
 	FIntPoint GetItemGridLocation(const bool bWarnIfNotFound = true) const;
 	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
 	FGameplayTag GetOwningStashTabTag() const;
+
+	void SetOwningStashTab(const FGameplayTag& InOwningStashTab);
 	
 	// Type Hash (required for TMap)
 	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& ItemPosition)
@@ -396,7 +398,7 @@ public:
 /**
  * 
  */
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FDraggedItem
 {
 public:

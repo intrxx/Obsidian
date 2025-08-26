@@ -18,9 +18,5 @@ void UObsidianStashTab::SetStashTabTag(const FGameplayTag& InTag)
 	StashTabTag = InTag;
 }
 
-UObsidianInventoryItemInstance* UObsidianStashTab::GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition)
-{
-	return nullptr;
-}
 
 

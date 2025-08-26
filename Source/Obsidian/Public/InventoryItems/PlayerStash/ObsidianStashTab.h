@@ -31,10 +31,13 @@ public:
 	FGameplayTag GetStashTabTag() const;
 	void SetStashTabTag(const FGameplayTag& InTag);
 
-	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition);
+	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) {return nullptr;}
+
+	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory) {return false;}
+	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory) {return false;}
 
 	/** Return true if the position in Stash Tab is free. */
-	virtual bool VerifyPositionFree(const FObsidianItemPosition& Position) {return false;};
+	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& Position) {return false;}
 	
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) {}
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}

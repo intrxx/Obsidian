@@ -143,36 +143,26 @@ bool UObsidianInventoryComponent::CanOwnerModifyInventoryState()
 
 bool UObsidianInventoryComponent::CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	bool bCanFit = false;
-	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const FIntPoint ItemGridSpan = AppearanceFrag->GetItemGridSpanFromDesc();
-
-			bCanFit = CheckAvailablePosition(ItemGridSpan, OutAvailablePositions);
-			return bCanFit;
+			return CheckAvailablePosition(OutAvailablePositions, AppearanceFrag->GetItemGridSpanFromDesc());
 		}
 	}
-	return bCanFit;
+	return false;
 }
 
 bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	bool bCanFit = false;
-	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const FIntPoint ItemGridSpan = AppearanceFrag->GetItemGridSpanFromDesc();
-
-			bCanFit = CheckSpecifiedPosition(ItemGridSpan, SpecifiedSlot);
-			return bCanFit;
+			return CheckSpecifiedPosition(AppearanceFrag->GetItemGridSpanFromDesc(), SpecifiedSlot);
 		}
 	}
-	return bCanFit;
+	return false;
 }
 
 FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
@@ -334,22 +324,6 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 	return Result;
 }
 
-bool UObsidianInventoryComponent::CanFitItemInstance(FIntPoint& OutAvailablePosition, UObsidianInventoryItemInstance* Instance)
-{
-	const FIntPoint ItemGridSpan = Instance->GetItemGridSpan();
-	
-	const bool bCanAdd = CheckAvailablePosition(ItemGridSpan, OutAvailablePosition);
-	return bCanAdd;
-}
-
-bool UObsidianInventoryComponent::CanFitItemInstanceToSpecificSlot(const FIntPoint& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance)
-{
-	const FIntPoint ItemGridSpan = Instance->GetItemGridSpan();
-	
-	const bool bCanAdd = CheckSpecifiedPosition(ItemGridSpan, SpecifiedSlot);
-	return bCanAdd;
-}
-
 FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
@@ -403,7 +377,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 	}
 	
 	FIntPoint AvailablePosition;
-	if(CanFitItemInstance(AvailablePosition, InstanceToAdd) == false)
+	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan()) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
@@ -472,7 +446,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 		}
 	}
 	
-	if(CanFitItemInstanceToSpecificSlot(ToGridSlot, InstanceToAdd) == false)
+	if(CheckSpecifiedPosition(InstanceToAdd->GetItemGridSpan(), ToGridSlot) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
@@ -1028,7 +1002,7 @@ void UObsidianInventoryComponent::InitInventoryState()
 	}
 }
 
-bool UObsidianInventoryComponent::CheckAvailablePosition(const FIntPoint& ItemGridSpan, FIntPoint& OutAvailablePosition)
+bool UObsidianInventoryComponent::CheckAvailablePosition(FIntPoint& OutAvailablePosition, const FIntPoint& ItemGridSpan)
 {
 	bool bCanFit = false;
 	
@@ -1144,11 +1118,8 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 
 bool UObsidianInventoryComponent::CanFitItemInstance(const UObsidianInventoryItemInstance* Instance)
 {
-	const FIntPoint ItemGridSpan = Instance->GetItemGridSpan();
 	FIntPoint AvailablePosition = FIntPoint::NoneValue;
-	
-	const bool bCanAdd = CheckAvailablePosition(ItemGridSpan, AvailablePosition);
-	return bCanAdd;
+	return CheckAvailablePosition(AvailablePosition, Instance->GetItemGridSpan());
 }
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& AtGridSlot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
@@ -1225,7 +1196,7 @@ bool UObsidianInventoryComponent::CanFitItemDefinition(const TSubclassOf<UObsidi
 			const FIntPoint ItemGridSpan = AppearanceFrag->GetItemGridSpanFromDesc();
 
 			FIntPoint AvailablePosition = FIntPoint::NoneValue;
-			bCanFit = CheckAvailablePosition(ItemGridSpan, AvailablePosition);
+			bCanFit = CheckAvailablePosition(AvailablePosition, ItemGridSpan);
 			return bCanFit;
 		}
 	}

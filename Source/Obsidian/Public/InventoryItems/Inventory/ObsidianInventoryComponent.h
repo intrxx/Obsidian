@@ -203,12 +203,6 @@ private:
 
 	/** Checks if the provided Item Definition fits in the inventory at provided slot. */
 	bool CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
-
-	/** Checks if the provided Item Instance fits anywhere in the inventory. Provides Available Position. */
-	bool CanFitItemInstance(FIntPoint& OutAvailablePosition, UObsidianInventoryItemInstance* Instance);
-	
-	/** Checks if the provided Item Instance fits in the inventory at provided slot. */
-	bool CanFitItemInstanceToSpecificSlot(const FIntPoint& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance);
 	
 	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided ItemDef. */
 	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
@@ -220,7 +214,7 @@ private:
 	FIntPoint GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const;
 	
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
-	bool CheckAvailablePosition(const FIntPoint& ItemGridSpan, FIntPoint& OutAvailablePosition);
+	bool CheckAvailablePosition(FIntPoint& OutAvailablePosition, const FIntPoint& ItemGridSpan);
 	
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FIntPoint, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();

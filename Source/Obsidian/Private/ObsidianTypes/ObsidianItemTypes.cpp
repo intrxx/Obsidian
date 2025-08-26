@@ -119,6 +119,11 @@ FGameplayTag FObsidianItemPosition::GetOwningStashTabTag() const
 	return OwningStashTabTag;
 }
 
+void FObsidianItemPosition::SetOwningStashTab(const FGameplayTag& InOwningStashTab)
+{
+	OwningStashTabTag = InOwningStashTab;
+}
+
 // ~ FObsidianDescriptionAffixRow
 
 void FObsidianAffixDescriptionRow::SetAffixRowDescription(const FText& InAffixDescription, const int32 InTempMagnitude)

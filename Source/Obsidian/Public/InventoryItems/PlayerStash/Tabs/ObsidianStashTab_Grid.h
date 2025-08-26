@@ -24,13 +24,15 @@ public:
 
 	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) override;
 
-	virtual bool VerifyPositionFree(const FObsidianItemPosition& Position) override;
-	
-	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
-	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
+	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory) override;
+	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory) override;
+
+	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& Position) override;
 
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
-
+	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
+	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
+	
 	int32 GetGridWidth() const;
 	int32 GetGridHeight() const;
 

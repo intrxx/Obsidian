@@ -55,7 +55,7 @@ public:
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 
 	/** Checks if the item fits in the provided spot. */
-	bool CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FObsidianItemPosition& SpecifiedPosition);
+	bool CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FObsidianItemPosition& SpecifiedPosition);
 
 	/**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
@@ -103,11 +103,8 @@ protected:
 	/** Checks if the provided Item Definition fits in the Stash Tab (for tag) at provided slot. */
 	bool CanFitItemDefinitionToSpecifiedSlot(const FObsidianItemPosition& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
-	/** Checks if the provided Item Instance fits anywhere in the Stash Tab (for tag). Provides Available Position. */
-	bool CanFitItemInstance(FObsidianItemPosition& OutAvailablePosition, const FGameplayTag& StashTabTag, UObsidianInventoryItemInstance* Instance);
-	
-	/** Checks if the provided Item Instance fits in the Stash Tab (for tag) at provided slot. */
-	bool CanFitItemInstanceToSpecificSlot(const FObsidianItemPosition& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance);
+	/** Checks if the item fits in the inventory, outputs the first available position.  */
+	bool CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& StashTabTag);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
