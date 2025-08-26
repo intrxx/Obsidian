@@ -12,6 +12,11 @@ UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectI
 {
 }
 
+UObsidianInventoryItemInstance* UObsidianStashTab_Grid::GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition)
+{
+	return GridLocationToItemMap.FindRef(ItemPosition.GetItemGridLocation());
+}
+
 bool UObsidianStashTab_Grid::VerifyPositionFree(const FObsidianItemPosition& Position)
 {
 	return !GridLocationToItemMap.Contains(Position.GetItemGridLocation());

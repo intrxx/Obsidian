@@ -144,7 +144,7 @@ public:
 	 */
 
 	UFUNCTION(Server, Reliable)
-	void ServerAddItemToStashTabAtSlot(const FGameplayTag& StashTabTag, const FObsidianItemPosition& AtPosition, const bool bShiftDown);
+	void ServerAddItemToStashTabAtSlot(const FObsidianItemPosition& AtPosition, const bool bShiftDown);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

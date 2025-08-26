@@ -114,6 +114,11 @@ FGameplayTag FObsidianItemPosition::GetItemSlotTag(const bool bWarnIfNotFound) c
 	return SlotTag;
 }
 
+FGameplayTag FObsidianItemPosition::GetOwningStashTabTag() const
+{
+	return OwningStashTabTag;
+}
+
 // ~ FObsidianDescriptionAffixRow
 
 void FObsidianAffixDescriptionRow::SetAffixRowDescription(const FText& InAffixDescription, const int32 InTempMagnitude)

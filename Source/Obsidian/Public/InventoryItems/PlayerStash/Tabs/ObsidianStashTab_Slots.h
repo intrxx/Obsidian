@@ -23,6 +23,8 @@ class OBSIDIAN_API UObsidianStashTab_Slots : public UObsidianStashTab
 public:
 	UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
+	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) override;
+
 	virtual bool VerifyPositionFree(const FObsidianItemPosition& Position) override;
 	
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;

@@ -232,12 +232,17 @@ void UObsidianItemDescriptionBase::DestroyDescriptionWidget()
 
 bool UObsidianItemDescriptionBase::IsEquipmentDescription() const
 {
-	return AssociatedSlotTag.IsValid();
+	return AssociatedItemPosition.IsPositionedAtSlot() && AssociatedItemPosition.GetOwningStashTabTag() == FGameplayTag::EmptyTag;
 }
 
 bool UObsidianItemDescriptionBase::IsInventoryItemDescription() const
 {
-	return AssociatedGridLocation == FIntPoint::NoneValue;
+	return AssociatedItemPosition.IsPositionedOnGrid() && AssociatedItemPosition.GetOwningStashTabTag() == FGameplayTag::EmptyTag;
+}
+
+bool UObsidianItemDescriptionBase::IsPlayerStashItemDescription() const
+{
+	return AssociatedItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag;
 }
 
 

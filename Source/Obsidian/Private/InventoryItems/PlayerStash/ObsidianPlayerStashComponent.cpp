@@ -11,6 +11,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 
 DEFINE_LOG_CATEGORY(LogPlayerStash)
 
@@ -66,6 +67,20 @@ TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllIte
 	return StashItemList.GetAllItemsFromStashTab(StashTabTag);
 }
 
+UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition)
+{
+	if (UObsidianStashTab* StashTab = GetStashTabForTag(ItemPosition.GetOwningStashTabTag()))
+	{
+		return StashTab->GetInstanceAtPosition(ItemPosition);
+	}
+	return nullptr;
+}
+
+UObsidianStashTab* UObsidianPlayerStashComponent::GetStashTabForTag(const FGameplayTag& StashTabTag)
+{
+	return StashItemList.GetStashTabForTag(StashTabTag);
+}
+
 int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	//TODO Implement
@@ -78,7 +93,7 @@ int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const UObsidianIn
 	return 0;
 }
 
-bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& StashTabTag)
+bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FObsidianItemPosition& SpecifiedPosition)
 {
 	return true;
 }
@@ -215,7 +230,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 		return Result;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, Result.StacksLeft, StashTabTag, AvailablePosition);
+	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, Result.StacksLeft, AvailablePosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -228,10 +243,12 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const int32 StackCount, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemPosition& ItemPosition, const int32 StackCount, const int32 StackToAddOverride)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = StackCount;
+
+	ensure((ItemPosition.GetItemGridLocation() != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag() != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -261,7 +278,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 		StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)), 1, StacksAvailableToAdd);
 	}
 	
-	if(CanFitItemDefinitionToSpecifiedSlot(ItemPosition, StashTabTag, ItemDef) == false)
+	if(CanFitItemDefinitionToSpecifiedSlot(ItemPosition, ItemDef) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
@@ -273,7 +290,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 														// as we still have a valid item definition in hands if the whole item isn't added here.
 	ensure(Result.StacksLeft >= 0);
 	
-	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, StacksAvailableToAdd, StashTabTag, ItemPosition);
+	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, StacksAvailableToAdd, ItemPosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -345,7 +362,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 	}
 	
 	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
-	StashItemList.AddEntry(InstanceToAdd, StashTabTag, AvailablePosition);
+	StashItemList.AddEntry(InstanceToAdd, AvailablePosition);
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -357,9 +374,11 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FObsidianItemPosition& ItemPosition, const int32 StackToAddOverride)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
+
+	ensure((ItemPosition.GetItemGridLocation() != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag() != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -385,7 +404,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 		StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)), 1, StacksAvailableToAdd);
 	}
 	
-	if(CanFitItemInstanceToSpecificSlot(ItemPosition, StashTabTag, InstanceToAdd) == false)
+	if(CanFitItemInstanceToSpecificSlot(ItemPosition, InstanceToAdd) == false)
 	{
 		//TODO Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Player Stash is full at specified slot!")));
@@ -408,7 +427,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 	}
 	
 	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	StashItemList.AddEntry(InstanceToAdd, StashTabTag, ItemPosition);
+	StashItemList.AddEntry(InstanceToAdd, ItemPosition);
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -493,7 +512,7 @@ bool UObsidianPlayerStashComponent::CanFitItemDefinition(FObsidianItemPosition& 
 	return true;
 }
 
-bool UObsidianPlayerStashComponent::CanFitItemDefinitionToSpecifiedSlot(const FObsidianItemPosition& SpecifiedSlot, const FGameplayTag& StashTabTag, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+bool UObsidianPlayerStashComponent::CanFitItemDefinitionToSpecifiedSlot(const FObsidianItemPosition& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	return true;
 }
@@ -503,7 +522,7 @@ bool UObsidianPlayerStashComponent::CanFitItemInstance(FObsidianItemPosition& Ou
 	return true;
 }
 
-bool UObsidianPlayerStashComponent::CanFitItemInstanceToSpecificSlot(const FObsidianItemPosition& SpecifiedSlot, const FGameplayTag& StashTabTag, const UObsidianInventoryItemInstance* Instance)
+bool UObsidianPlayerStashComponent::CanFitItemInstanceToSpecificSlot(const FObsidianItemPosition& SpecifiedSlot, const UObsidianInventoryItemInstance* Instance)
 {
 	return true;
 }

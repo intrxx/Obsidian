@@ -46,9 +46,6 @@ public:
 
 	UPROPERTY()
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
-
-	UPROPERTY()
-	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 	
 	UPROPERTY()
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
@@ -166,7 +163,7 @@ public:
 	
 	void RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);
-	void RequestAddingItemToStashTab(const FGameplayTag& StashTag, const FObsidianItemPosition& ToPosition, const bool bShiftDown);
+	void RequestAddingItemToStashTab(const FObsidianItemPosition& ToPosition, const bool bShiftDown);
 
 	void HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot, UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot);
@@ -176,6 +173,7 @@ public:
 	void HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot);
 	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);
 	void HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget);
+	void HandleHoveringOverStashedItem(const UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem();
 
 	void RemoveItemUIElements();

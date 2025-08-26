@@ -43,6 +43,9 @@ protected:
 	void ShowStashTab(const FGameplayTag& WithStashTag);
 
 	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
+
+	void OnStashedItemMouseEntered(const UObsidianItem* ItemWidget);
+	void OnItemMouseLeave();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")

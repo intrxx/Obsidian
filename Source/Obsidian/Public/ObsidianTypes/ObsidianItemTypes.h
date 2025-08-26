@@ -193,10 +193,22 @@ public:
 	FObsidianItemPosition(const FGameplayTag& InSlotTag)
 		: SlotTag(InSlotTag)
 		, GridLocation(FIntPoint::NoneValue)
+		, OwningStashTabTag(FGameplayTag::EmptyTag)
+	{}
+	FObsidianItemPosition(const FGameplayTag& InSlotTag, const FGameplayTag& InOwningStashTabTag)
+		: SlotTag(InSlotTag)
+		, GridLocation(FIntPoint::NoneValue)
+		, OwningStashTabTag(InOwningStashTabTag)
 	{}
 	FObsidianItemPosition(const FIntPoint& InGridLocation)
 		: SlotTag(FGameplayTag::EmptyTag)
 		, GridLocation(InGridLocation)
+		, OwningStashTabTag(FGameplayTag::EmptyTag)
+	{}
+	FObsidianItemPosition(const FIntPoint& InGridLocation, const FGameplayTag& InOwningStashTabTag)
+		: SlotTag(FGameplayTag::EmptyTag)
+		, GridLocation(InGridLocation)
+		, OwningStashTabTag(InOwningStashTabTag)
 	{}
 
 	bool IsPositionedOnGrid() const;
@@ -204,7 +216,8 @@ public:
 
 	FIntPoint GetItemGridLocation(const bool bWarnIfNotFound = true) const;
 	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
-
+	FGameplayTag GetOwningStashTabTag() const;
+	
 	// Type Hash (required for TMap)
 	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& ItemPosition)
 	{
@@ -230,6 +243,9 @@ private:
 
 	UPROPERTY()
 	FIntPoint GridLocation = FIntPoint::NoneValue;
+
+	UPROPERTY()
+	FGameplayTag OwningStashTabTag = FGameplayTag::EmptyTag;
 };
 
 /**

@@ -47,9 +47,6 @@ struct FObsidianStashChangeMessage
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;
-
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
-	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
@@ -96,9 +93,6 @@ private:
 
 	UPROPERTY()
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
-
-	UPROPERTY()
-	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };
 
 /**
@@ -124,8 +118,8 @@ public:
 	int32 GetEntriesCount() const;
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ToPosition);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ToPosition);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FObsidianItemPosition& ToPosition);
+	void AddEntry(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount, const FGameplayTag& StashTabTag);
 	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
@@ -142,7 +136,7 @@ public:
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianStashEntry& Entry, const int32 OldCount, const int32 NewCount, const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, const EObsidianStashChangeType& ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianStashEntry& Entry, const int32 OldCount, const int32 NewCount, const FObsidianItemPosition& ItemPosition, const EObsidianStashChangeType& ChangeType) const;
 	
 private:
 	friend UObsidianPlayerStashComponent;

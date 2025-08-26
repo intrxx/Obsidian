@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 
 // ~ Project
-
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemDescriptionBase.generated.h"
@@ -41,23 +41,17 @@ public:
 	void DestroyDescriptionWidget();
 
 	bool IsEquipmentDescription() const;
-	void SetAssociatedSlotTag(const FGameplayTag& InTag)
-	{
-		AssociatedSlotTag = InTag;
-	}
-	FGameplayTag GetAssociatedSlotTag() const
-	{
-		return AssociatedSlotTag;
-	}
-	
 	bool IsInventoryItemDescription() const;
-	void SetAssociatedInventoryLocation(const FIntPoint& InLocation)
+	bool IsPlayerStashItemDescription() const;
+	
+	void SetAssociatedItemPosition(const FObsidianItemPosition& InPosition)
 	{
-		AssociatedGridLocation = InLocation;
+		AssociatedItemPosition = InPosition;
 	};
-	FIntPoint GetAssociatedInventoryLocation() const
+	
+	FObsidianItemPosition GetAssociatedItemPosition() const
 	{
-		return AssociatedGridLocation;
+		return AssociatedItemPosition;
 	}
 
 protected:
@@ -137,7 +131,6 @@ private:
 	int32 CurrentStackCount = 0;
 	int32 MaxStackCount = 0;
 	
-	FGameplayTag AssociatedSlotTag = FGameplayTag::EmptyTag;
-	FIntPoint AssociatedGridLocation = FIntPoint::NoneValue;
+	FObsidianItemPosition AssociatedItemPosition = FObsidianItemPosition();
 };
 

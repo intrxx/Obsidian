@@ -49,27 +49,44 @@ FGameplayTag UObsidianPlayerStashWidget::GetActiveStashTabTag() const
 
 void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if(UObsidianStashTabWidget** StashTabWidgetPointer = StashTabsMap.Find(ItemWidgetData.StashTabTag))
+	const FGameplayTag StashTabTag = ItemWidgetData.ItemPosition.GetOwningStashTabTag();
+	if(UObsidianStashTabWidget** StashTabWidgetPointer = StashTabsMap.Find(StashTabTag))
 	{
 		UObsidianStashTabWidget* StashTabWidget = *StashTabWidgetPointer;
 		
-		const FIntPoint DesiredPosition = ItemWidgetData.ItemPosition.GetItemGridLocation();
 		const FIntPoint GridSpan = ItemWidgetData.GridSpan;
 	
 		checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 		UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-		ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
+		ItemWidget->InitializeItemWidget(ItemWidgetData.ItemPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
 		// ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemLeftMouseButtonPressed);
-		// ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnInventoryItemMouseEntered);
-		// ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
+		ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnStashedItemMouseEntered);
+		ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 	
 		// if(ItemWidgetData.bUsable)
 		// {
 		// 	ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRightMouseButtonPressed);
 		// }
 	
-		InventoryItemsWidgetController->RegisterStashTabItemWidget(ItemWidgetData.StashTabTag, DesiredPosition, ItemWidget);
+		InventoryItemsWidgetController->RegisterStashTabItemWidget(StashTabTag, ItemWidgetData.ItemPosition, ItemWidget);
 		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData.ItemSlotPadding);
+	}
+}
+
+void UObsidianPlayerStashWidget::OnStashedItemMouseEntered(const UObsidianItem* ItemWidget)
+{
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnStashedItemMouseEntered"));
+	if(InventoryItemsWidgetController)
+	{
+		InventoryItemsWidgetController->HandleHoveringOverStashedItem(ItemWidget);
+	}
+}
+
+void UObsidianPlayerStashWidget::OnItemMouseLeave()
+{
+	if(InventoryItemsWidgetController)
+	{
+		InventoryItemsWidgetController->HandleUnhoveringItem();
 	}
 }
 

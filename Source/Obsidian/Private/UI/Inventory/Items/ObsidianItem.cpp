@@ -45,7 +45,7 @@ void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 	OnItemMouseLeaveDelegate.Broadcast();
 }
 
-void UObsidianItem::InitializeItemWidget(const FIntPoint& DesiredPosition, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
+void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& DesiredPosition, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
@@ -65,7 +65,7 @@ void UObsidianItem::InitializeItemWidget(const FIntPoint& DesiredPosition, const
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
+void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
 {
 	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
 		
@@ -83,7 +83,7 @@ void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, cons
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UObsidianItem::InitializeItemWidget(const FGameplayTag& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage)
+void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage)
 {
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
@@ -122,6 +122,11 @@ void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), NewStackCount));
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
+}
+
+FObsidianItemPosition UObsidianItem::GetItemPosition() const
+{
+	return ItemPosition;
 }
 
 FIntPoint UObsidianItem::GetGridPosition() const

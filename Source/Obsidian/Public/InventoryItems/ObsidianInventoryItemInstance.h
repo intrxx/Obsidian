@@ -240,20 +240,6 @@ public:
 	float GetItemSlotPadding() const;
 	
 	void SetItemSlotPadding(const float InItemSlotPadding);
-
-	/**
-	 * Player Stash
-	 */
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	FGameplayTag GetItemCurrentStashTab() const;
-
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void SetItemCurrentStashTab(const FGameplayTag& CurrentStashTab);
-
-	/** Should be called when removing item from StashTab. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void ResetItemCurrentStashTab();
 	
 	/**
 	 * Debug.
@@ -360,13 +346,6 @@ private:
 
 	UPROPERTY(Replicated)
 	float ItemSlotPadding = 4.0f;
-
-	/**
-	 * Player Stash.
-	 */
-
-	UPROPERTY(Replicated)
-	FGameplayTag ItemCurrentStashTab = FGameplayTag::EmptyTag;
 
 	/**
 	 * Debug.

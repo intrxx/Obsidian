@@ -31,6 +31,8 @@ public:
 	FGameplayTag GetStashTabTag() const;
 	void SetStashTabTag(const FGameplayTag& InTag);
 
+	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition);
+
 	/** Return true if the position in Stash Tab is free. */
 	virtual bool VerifyPositionFree(const FObsidianItemPosition& Position) {return false;};
 	

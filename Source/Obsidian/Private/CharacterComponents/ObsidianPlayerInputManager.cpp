@@ -847,7 +847,7 @@ void UObsidianPlayerInputManager::ServerWeaponSwap_Implementation()
 	EquipmentComponent->WeaponSwap();
 }
 
-void UObsidianPlayerInputManager::ServerAddItemToStashTabAtSlot_Implementation(const FGameplayTag& StashTabTag, const FObsidianItemPosition& AtPosition, const bool bShiftDown)
+void UObsidianPlayerInputManager::ServerAddItemToStashTabAtSlot_Implementation(const FObsidianItemPosition& AtPosition, const bool bShiftDown)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -874,14 +874,14 @@ void UObsidianPlayerInputManager::ServerAddItemToStashTabAtSlot_Implementation(c
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
 		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, StashTabTag, AtPosition, StacksToAddOverride);
+		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, AtPosition, StacksToAddOverride);
 		
 		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
 		const int32 CurrentStackCount = DraggedItem.Stacks;
-		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, StashTabTag, AtPosition, CurrentStackCount, StacksToAddOverride);
+		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, AtPosition, CurrentStackCount, StacksToAddOverride);
 
 		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}

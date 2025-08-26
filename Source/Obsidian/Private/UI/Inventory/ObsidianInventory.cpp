@@ -227,7 +227,10 @@ void UObsidianInventory::OnInventoryItemMouseEntered(const UObsidianItem* ItemWi
 
 void UObsidianInventory::OnItemMouseLeave()
 {
-	InventoryItemsWidgetController->HandleUnhoveringItem();
+	if(InventoryItemsWidgetController)
+	{
+		InventoryItemsWidgetController->HandleUnhoveringItem();
+	}
 }
 
 void UObsidianInventory::RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const

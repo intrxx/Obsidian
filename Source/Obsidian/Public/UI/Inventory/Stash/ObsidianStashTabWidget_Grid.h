@@ -37,5 +37,5 @@ private:
 	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsController;
 	
 private:
-	void RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const;
+	void RequestAddingItemToStashTab(const FIntPoint& ToPosition, const bool bShiftDown) const;
 };
