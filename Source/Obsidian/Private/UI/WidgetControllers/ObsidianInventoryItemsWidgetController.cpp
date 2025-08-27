@@ -970,14 +970,26 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 			return false;	
 		}
 		
-		return PlayerStashComponent->CheckSpecifiedPosition(ItemGridSpan, UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem()),
-			FObsidianItemPosition(AtGridSlot, StashTag));
+		return PlayerStashComponent->CheckSpecifiedPosition(FObsidianItemPosition(AtGridSlot, StashTag),
+			UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem()), ItemGridSpan);
 	default:
 		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			break;
 	}
 	
 	return false;
+}
+
+bool UObsidianInventoryItemsWidgetController::CanPlaceItemAtStashSlot(const FObsidianItemPosition& ItemPosition) const
+{
+	if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return false;	
+	}
+
+	const FGameplayTag CategoryTag = UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem());
+	return PlayerStashComponent->CheckSpecifiedPosition(ItemPosition, CategoryTag);
 }
 
 bool UObsidianInventoryItemsWidgetController::CanInteractWithGrid(const EObsidianGridOwner GridOwner) const
@@ -1008,6 +1020,15 @@ bool UObsidianInventoryItemsWidgetController::CanInteractWithInventory() const
 	if(InventoryComponent)
 	{
 		return InventoryComponent->CanOwnerModifyInventoryState();
+	}
+	return false;
+}
+
+bool UObsidianInventoryItemsWidgetController::CanInteractWithPlayerStash() const
+{
+	if(PlayerStashComponent)
+	{
+		return PlayerStashComponent->CanOwnerModifyPlayerStashState();
 	}
 	return false;
 }

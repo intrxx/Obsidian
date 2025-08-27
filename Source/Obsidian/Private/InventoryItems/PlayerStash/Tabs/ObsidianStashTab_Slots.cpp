@@ -20,7 +20,7 @@ bool UObsidianStashTab_Slots::DebugVerifyPositionFree(const FObsidianItemPositio
 	return true; //TODO Implement
 }
 
-bool UObsidianStashTab_Slots::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory)
+bool UObsidianStashTab_Slots::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
 {
 	const FObsidianSlotDefinition Slot = FindSlotByTag(SpecifiedPosition.GetItemSlotTag());
 	if(Slot.IsValid() == false)
@@ -31,7 +31,7 @@ bool UObsidianStashTab_Slots::CanPlaceItemAtSpecificPosition(const FObsidianItem
 	return Slot.CanPlaceAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip;
 }
 
-bool UObsidianStashTab_Slots::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory)
+bool UObsidianStashTab_Slots::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
 {
 	for(const FObsidianSlotDefinition& Slot : TabSlots)
 	{
@@ -60,6 +60,11 @@ void UObsidianStashTab_Slots::UnmarkSpaceInTab(UObsidianInventoryItemInstance* I
 
 void UObsidianStashTab_Slots::Construct(UObsidianPlayerStashComponent* StashComponent)
 {
+	for (const FObsidianSlotDefinition& Slot : TabSlots)
+	{
+		
+	}
+	
 	//TODO Get already added items, mark space
 }
 

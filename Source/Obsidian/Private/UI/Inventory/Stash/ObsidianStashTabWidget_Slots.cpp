@@ -7,28 +7,62 @@
 
 // ~ Project
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
-#include "UI/Inventory/ObsidianPlayerStashWidget.h"
+#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 
-void UObsidianStashTabWidget_Slots::InitializeStashTab(UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag)
+void UObsidianStashTabWidget_Slots::InitializeStashTab(UObsidianInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag)
 {
-	OwningStashWidget = InOwningStashWidget;
-	StashTabTag = InStashTabTag;
+	if (InInventoryItemsWidgetController && InOwningStashWidget && InStashTabTag.IsValid())
+	{
+		InventoryItemsController = InInventoryItemsWidgetController;
+		OwningStashWidget = InOwningStashWidget;
+		StashTabTag = InStashTabTag;
 	
-	WidgetTree->ForEachWidget([this](UWidget* Widget)
-		{
-			if(UObsidianItemSlot_Equipment* EquipmentSlot = Cast<UObsidianItemSlot_Equipment>(Widget))
+		WidgetTree->ForEachWidget([this](UWidget* Widget)
 			{
-				EquipmentSlot->OnEquipmentSlotHoverDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotHover);
-				EquipmentSlot->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
-				EquipmentSlots.Add(EquipmentSlot);
-			}
-		});
+				if(UObsidianItemSlot_Equipment* EquipmentSlot = Cast<UObsidianItemSlot_Equipment>(Widget))
+				{
+					EquipmentSlot->OnEquipmentSlotHoverDelegate.AddUObject(this, &ThisClass::OnStashSlotHover);
+					EquipmentSlot->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::OnStashSlotMouseButtonDown);
+					EquipmentSlots.Add(EquipmentSlot);
+				}
+			});
+	}
 }
 
-void UObsidianStashTabWidget_Slots::OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
+void UObsidianStashTabWidget_Slots::OnStashSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
 {
+	if (InventoryItemsController == nullptr || AffectedSlot == nullptr)
+	{
+		return;
+	}
+
+	if (bEntered == false)
+	{
+		AffectedSlot->SetSlotState(ISS_Neutral);
+		return;
+	}
+
+	if(InventoryItemsController->CanInteractWithPlayerStash() == false)
+	{
+		AffectedSlot->SetSlotState(ISS_RedLight);
+		return;
+	}
+
+	if(InventoryItemsController->IsDraggingAnItem() == false)
+	{
+		AffectedSlot->SetSlotState(ISS_Selected);
+		return;
+	}
+		
+	const bool bCanPlace = InventoryItemsController->CanPlaceItemAtStashSlot(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag));
+	const EObsidianItemSlotState SlotState = bCanPlace ? ISS_GreenLight : ISS_RedLight;
+	AffectedSlot->SetSlotState(SlotState);
 }
 
-void UObsidianStashTabWidget_Slots::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot) const
+void UObsidianStashTabWidget_Slots::OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const
 {
+	if (InventoryItemsController && AffectedSlot)
+	{
+		InventoryItemsController->RequestAddingItemToStashTab(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag), bShiftDown);
+	}
 }

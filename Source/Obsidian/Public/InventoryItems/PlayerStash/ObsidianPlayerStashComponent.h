@@ -55,7 +55,7 @@ public:
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 
 	/** Checks if the item fits in the provided spot. */
-	bool CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FObsidianItemPosition& SpecifiedPosition);
+	bool CheckSpecifiedPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan = FIntPoint::NoneValue);
 
 	/**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.

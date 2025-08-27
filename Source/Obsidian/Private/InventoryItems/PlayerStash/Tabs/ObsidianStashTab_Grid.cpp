@@ -22,7 +22,7 @@ bool UObsidianStashTab_Grid::DebugVerifyPositionFree(const FObsidianItemPosition
 	return !GridLocationToItemMap.Contains(Position.GetItemGridLocation());
 }
 
-bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory)
+bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
 {
 	const FIntPoint SpecificGridPosition = SpecifiedPosition.GetItemGridLocation();
 	
@@ -47,7 +47,7 @@ bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemP
 	return bCanFit;
 }
 
-bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory)
+bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
 {
 	bool bCanFit = false;
 	

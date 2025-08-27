@@ -24,13 +24,16 @@ class OBSIDIAN_API UObsidianStashTabWidget_Slots : public UObsidianStashTabWidge
 	GENERATED_BODY()
 
 public:
-	void InitializeStashTab(UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag);
+	void InitializeStashTab(UObsidianInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag);
 
 protected:
-	void OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const;
-	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot) const;
+	void OnStashSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const;
+	void OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const;
 	
 private:
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsController;
+	
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianItemSlot_Equipment>> EquipmentSlots;
 

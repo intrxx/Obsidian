@@ -38,34 +38,35 @@ UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotForTag(co
 
 void UObsidianEquipmentPanel::OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
 {
-	if (OwningInventory.IsValid() == false)
+	if (OwningInventory == nullptr || OwningInventory.IsValid() == false)
 	{
 		return;
 	}
 	
-	if(bEntered)
+	if(bEntered == false)
 	{
-		if(OwningInventory->CanInteractWithEquipment() == false)
-		{
-			AffectedSlot->SetSlotState(ISS_RedLight);
-			return;
-		}
-
-		if(OwningInventory->IsPlayerDraggingItem() == false)
-		{
-			AffectedSlot->SetSlotState(ISS_Neutral);
-			return;
-		}
-		
-		const bool bInteractionSuccess = OwningInventory->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
-		const EObsidianItemSlotState SlotState = bInteractionSuccess ? ISS_GreenLight : ISS_RedLight;
-		AffectedSlot->SetSlotState(SlotState);
+		AffectedSlot->SetSlotState(ISS_Neutral);
 		return;
 	}
-	AffectedSlot->SetSlotState(ISS_Neutral);
+	
+	if(OwningInventory->CanInteractWithEquipment() == false)
+	{
+		AffectedSlot->SetSlotState(ISS_RedLight);
+		return;
+	}
+
+	if(OwningInventory->IsPlayerDraggingItem() == false)
+	{
+		AffectedSlot->SetSlotState(ISS_Selected);
+		return;
+	}
+		
+	const bool bInteractionSuccess = OwningInventory->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
+	const EObsidianItemSlotState SlotState = bInteractionSuccess ? ISS_GreenLight : ISS_RedLight;
+	AffectedSlot->SetSlotState(SlotState);
 }
 
-void UObsidianEquipmentPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot) const
+void UObsidianEquipmentPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const
 {
 	if(OwningInventory.IsValid())
 	{

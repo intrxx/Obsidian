@@ -171,7 +171,7 @@ void UObsidianPlayerStashWidget::CreateStashTabs()
 			
 			checkf(Definition.StashTabWidgetClass, TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
 			UObsidianStashTabWidget_Slots* SlotStashTabWidget = CreateWidget<UObsidianStashTabWidget_Slots>(this, Definition.StashTabWidgetClass);
-			SlotStashTabWidget->InitializeStashTab(this, Definition.StashTag);
+			SlotStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, this, Definition.StashTag);
 
 			StashTab_Overlay->AddChildToOverlay(SlotStashTabWidget);
 			StashTabsMap.Add(Definition.StashTag, SlotStashTabWidget);

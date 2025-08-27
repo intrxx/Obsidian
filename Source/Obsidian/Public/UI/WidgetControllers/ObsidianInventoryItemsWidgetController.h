@@ -138,8 +138,10 @@ public:
 	bool IsDraggingAnItem() const;
 	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
 	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
+	bool CanPlaceItemAtStashSlot(const FObsidianItemPosition& ItemPosition) const;
 	bool CanInteractWithGrid(const EObsidianGridOwner GridOwner) const;
 	bool CanInteractWithInventory() const;
+	bool CanInteractWithPlayerStash() const;
 
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;

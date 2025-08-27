@@ -91,7 +91,7 @@ FReply UObsidianItemSlot_Equipment::NativeOnMouseButtonDown(const FGeometry& InG
 {
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		OnEquipmentSlotPressedDelegate.Broadcast(this);
+		OnEquipmentSlotPressedDelegate.Broadcast(this, InMouseEvent.IsShiftDown());
 	}
 	
 	return FReply::Handled();
