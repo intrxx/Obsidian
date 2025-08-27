@@ -26,7 +26,11 @@ class OBSIDIAN_API UObsidianStashTabWidget_Slots : public UObsidianStashTabWidge
 public:
 	void InitializeStashTab(UObsidianInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag);
 
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding) override;
+	
 protected:
+	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
+	
 	void OnStashSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const;
 	void OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const;
 	

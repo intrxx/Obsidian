@@ -6,6 +6,7 @@
 #include "Blueprint/WidgetTree.h"
 
 // ~ Project
+#include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 
@@ -27,6 +28,32 @@ void UObsidianStashTabWidget_Slots::InitializeStashTab(UObsidianInventoryItemsWi
 				}
 			});
 	}
+}
+
+void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding)
+{
+	if(InItemWidget == nullptr)
+	{
+		return;
+	}
+
+	const FObsidianItemPosition ItemPosition = InItemWidget->GetItemPosition();
+	if (UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(ItemPosition.GetItemSlotTag()))
+	{
+		EquipmentSlot->AddItemToSlot(InItemWidget, ItemSlotPadding);
+	}
+}
+
+UObsidianItemSlot_Equipment* UObsidianStashTabWidget_Slots::FindEquipmentSlotForTag(const FGameplayTag& Tag) const
+{
+	for(UObsidianItemSlot_Equipment* EquipmentSlot : EquipmentSlots)
+	{
+		if(EquipmentSlot->GetSlotTag() == Tag)
+		{
+			return EquipmentSlot;
+		}
+	}
+	return nullptr;
 }
 
 void UObsidianStashTabWidget_Slots::OnStashSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
