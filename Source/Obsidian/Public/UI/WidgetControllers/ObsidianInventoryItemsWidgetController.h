@@ -87,6 +87,7 @@ public:
 
 	/** Tries to add Item widget to internal map, will return false if item position is already occupied. */
 	bool AddItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
+	bool RemoveItemWidget(const FObsidianItemPosition& ItemPosition);
 
 	void EmptyAddedItemWidgets(const int32 OptionalReserve = 0);
 
@@ -154,6 +155,7 @@ public:
 	void RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
 
 	void RegisterStashTabItemWidget(const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
+	void RemoveStashItemWidget(const FObsidianItemPosition& ItemPosition);
 	
 	/** This function takes the primary slot that is causing the other slot to be blocked. */
 	void AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother);
@@ -171,6 +173,8 @@ public:
 	void HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot);
 	void HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot, const UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
+	void HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition);
+	void HandleLeftClickingOnStashedItemWithShiftDown(const FObsidianItemPosition& AtItemPosition, const UObsidianItem* ItemWidget);
 
 	void HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot);
 	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);

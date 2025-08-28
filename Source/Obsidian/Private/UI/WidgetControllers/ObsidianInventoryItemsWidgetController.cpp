@@ -68,6 +68,19 @@ bool FObsidianStashAddedItemWidgets::AddItemWidget(const FObsidianItemPosition& 
 	return false;
 }
 
+bool FObsidianStashAddedItemWidgets::RemoveItemWidget(const FObsidianItemPosition& ItemPosition)
+{
+	if (UObsidianItem** ItemPointer = StashAddedItemWidgetsMap.Find(ItemPosition))
+	{
+		UObsidianItem* ItemWidget = *ItemPointer;
+		ItemWidget->RemoveFromParent();
+
+		StashAddedItemWidgetsMap.Remove(ItemPosition);
+		return true;
+	}
+	return false;
+}
+
 void FObsidianStashAddedItemWidgets::EmptyAddedItemWidgets(const int32 OptionalReserve)
 {
 	StashAddedItemWidgetsMap.Empty(OptionalReserve);
@@ -293,7 +306,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 	else if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemRemoved)
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s] from Player Stash"), *Instance->GetItemDisplayName().ToString());
-		//RemoveInventoryItemWidget(StashChangeMessage.GridItemPosition);
+		RemoveStashItemWidget(StashChangeMessage.ItemPosition);
 		
 		if(OwnerPlayerInputManager->IsUsingItem())
 		{
@@ -717,6 +730,127 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 	OwnerPlayerInputManager->ServerGrabEquippedItemToCursor(SlotTag);
 }
 
+void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition)
+{
+	check(PlayerStashComponent);
+	check(OwnerPlayerInputManager);
+	check(DraggedItemWidgetClass);
+
+	if(PlayerStashComponent->CanOwnerModifyPlayerStashState() == false)
+	{
+		return;
+	}
+	
+	RemoveItemUIElements();
+
+	// if(OwnerPlayerInputManager->IsUsingItem())
+	// {
+	// 	OwnerPlayerInputManager->UseItem(AtGridSlot, false);
+	// 	return;
+	// }
+	
+	if(OwnerPlayerInputManager->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+	{
+		const UObsidianInventoryItemInstance* InstanceToAddTo = PlayerStashComponent->GetInstanceFromTabAtPosition(AtItemPosition);
+		if(InstanceToAddTo == nullptr)
+		{
+			UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			return;
+		}
+		
+		 const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
+		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
+		 {
+		 	if(DraggedInstance->IsStackable())
+		 	{
+		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance, InstanceToAddTo))
+		 		{
+		 			//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+		 			return;
+		 		}
+		 	}
+			
+		 	// if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
+		 	// {
+		 	// 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		 	// }
+		 	return;
+		 }
+		
+		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
+		 {
+		 	const int32 ItemStackCount = DraggedItem.Stacks;
+		 	const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+		 	if(DefaultObject && DefaultObject->IsStackable())
+		 	{
+		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, DraggedItemDef))
+		 		{
+		 			//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+		 			return;
+		 		}
+		 	}
+			
+			 // if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
+			 // {
+			 // 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+			 // }
+			 return;
+		}
+		return;
+	}
+	
+	OwnerPlayerInputManager->ServerGrabStashedItemToCursor(AtItemPosition);
+}
+
+void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWithShiftDown(const FObsidianItemPosition& AtItemPosition, const UObsidianItem* ItemWidget)
+{
+	check(OwnerPlayerInputManager);
+	check(PlayerStashComponent);
+
+	if(PlayerStashComponent->CanOwnerModifyPlayerStashState() == false)
+	{
+		return;
+	}
+	
+	// if(OwnerPlayerInputManager->IsUsingItem())
+	// {
+	// 	OwnerPlayerInputManager->UseItem(AtGridSlot, true);
+	// 	return;
+	// }
+	
+	if(OwnerPlayerInputManager->IsDraggingAnItem())
+	{
+		//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot, 1);
+		return;
+	}
+	
+	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetInstanceFromTabAtPosition(AtItemPosition);
+	if(ItemInstance->IsStackable() == false)
+	{
+		return;
+	}
+	
+	const int32 CurrentItemStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(CurrentItemStacks <= 1)
+	{
+		return;
+	}
+	
+	RemoveItemUIElements();
+
+	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in fill it in UObsidianInventoryItemsWidgetController instance."));
+	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(ObsidianPlayerController, UnstackSliderClass);
+	//ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, AtGridSlot);
+
+	const FVector2D UnstackSliderViewportPosition = CalculateUnstackSliderPosition(ItemWidget);
+	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
+	ActiveUnstackSlider->AddToViewport();
+	bUnstackSliderActive = true;
+	
+	// ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddUObject(this, &ThisClass::HandleTakingOutStacks);
+	// ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
+}
+
 void UObsidianInventoryItemsWidgetController::HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot)
 {
 	const UObsidianItem* ItemWidget = GetItemWidgetAtInventoryGridSlot(AtGridSlot);
@@ -1136,6 +1270,28 @@ void UObsidianInventoryItemsWidgetController::RegisterStashTabItemWidget(const F
 	
 	Stash->AddItemWidget(ItemPosition, ItemWidget);
 	Stash->DebugPrintAllAddedItems();
+}
+
+void UObsidianInventoryItemsWidgetController::RemoveStashItemWidget(const FObsidianItemPosition& ItemPosition)
+{
+	FObsidianStashAddedItemWidgets* Stash = StashAddedItemWidgets.FindByPredicate(
+		[&](const FObsidianStashAddedItemWidgets& PotentialStash)
+		{
+			return PotentialStash.GetStashTag() == ItemPosition.GetOwningStashTabTag();
+		});
+
+	if (ensure(Stash))
+	{
+		if (Stash->RemoveItemWidget(ItemPosition))
+		{
+			// if(ActiveItemDescription && ActiveItemDescription->IsEquipmentDescription() && ActiveItemDescription->GetAssociatedItemPosition() == Slot)
+			// {
+			// 	RemoveCurrentItemDescription();
+			// }
+			
+			Stash->DebugPrintAllAddedItems();
+		}
+	}
 }
 
 void UObsidianInventoryItemsWidgetController::AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother)

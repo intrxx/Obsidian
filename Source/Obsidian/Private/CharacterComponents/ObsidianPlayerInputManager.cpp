@@ -614,6 +614,38 @@ bool UObsidianPlayerInputManager::DropItem()
 	return true;
 }
 
+void UObsidianPlayerInputManager::ServerGrabStashedItemToCursor_Implementation(const FObsidianItemPosition& FromPosition)
+{
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+	if(PlayerStashComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetInstanceFromTabAtPosition(FromPosition);
+	if(InstanceToGrab == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	if(PlayerStashComponent->RemoveItemInstance(InstanceToGrab) == false)
+	{
+		return;
+	}
+	
+	DraggedItem = FDraggedItem(InstanceToGrab);
+	StartDraggingItem(Controller);
+}
+
 bool UObsidianPlayerInputManager::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
 	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);

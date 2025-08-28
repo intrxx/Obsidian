@@ -59,7 +59,7 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 		checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
 		UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 		ItemWidget->InitializeItemWidget(ItemWidgetData.ItemPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
-		// ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemLeftMouseButtonPressed);
+		ItemWidget->OnItemLeftMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnStashedItemLeftMouseButtonDown);
 		ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnStashedItemMouseEntered);
 		ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 	
@@ -73,9 +73,24 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 	}
 }
 
+void UObsidianPlayerStashWidget::OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const bool bShiftDown)
+{
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianPlayerStashWidget::OnStashedItemLeftMouseButtonDown"));
+
+	if(InventoryItemsWidgetController)
+	{
+		if(bShiftDown)
+		{
+			InventoryItemsWidgetController->HandleLeftClickingOnStashedItemWithShiftDown(ItemWidget->GetItemPosition(), ItemWidget);
+			return;
+		}
+		InventoryItemsWidgetController->HandleLeftClickingOnStashedItem(ItemWidget->GetItemPosition());
+	}
+}
+
 void UObsidianPlayerStashWidget::OnStashedItemMouseEntered(const UObsidianItem* ItemWidget)
 {
-	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnStashedItemMouseEntered"));
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianPlayerStashWidget::OnStashedItemMouseEntered"));
 	if(InventoryItemsWidgetController)
 	{
 		InventoryItemsWidgetController->HandleHoveringOverStashedItem(ItemWidget);

@@ -434,7 +434,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove, const FGameplayTag& StashTabTag)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
@@ -454,8 +454,11 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(U
 		UE_LOG(LogPlayerStash, Error, TEXT("Passed InstanceToRemove is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return Result;
 	}
+
+	const FObsidianItemPosition ItemPosition = InstanceToRemove->GetItemCurrentPosition();
+	check(ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
 	
-	StashItemList.RemoveEntry(InstanceToRemove, StashTabTag);
+	StashItemList.RemoveEntry(InstanceToRemove, ItemPosition.GetOwningStashTabTag());
 	
 	if(InstanceToRemove && IsUsingRegisteredSubObjectList())
 	{

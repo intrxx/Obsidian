@@ -44,6 +44,7 @@ protected:
 
 	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
 
+	void OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const bool bShiftDown);
 	void OnStashedItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();
 	

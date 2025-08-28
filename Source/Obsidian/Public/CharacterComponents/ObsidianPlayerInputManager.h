@@ -146,6 +146,9 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerAddItemToStashTabAtSlot(const FObsidianItemPosition& AtPosition, const bool bShiftDown);
 
+	UFUNCTION(Server, Reliable)
+	void ServerGrabStashedItemToCursor(const FObsidianItemPosition& FromPosition);
+
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
