@@ -28,9 +28,9 @@ void UObsidianUnstackSlider::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 CurrentItemStacks, const FIntPoint& InItemGridPosition)
+void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 CurrentItemStacks, const FObsidianItemPosition& InItemPosition)
 {
-	ItemSlotPosition = InItemGridPosition;
+	ItemSlotPosition = InItemPosition;
 	
 	MaxStacks = CurrentItemStacks;
 	StackToLeave = MaxStacks - 1;
@@ -51,8 +51,6 @@ FVector2D UObsidianUnstackSlider::GetSizeBoxSize() const
 
 void UObsidianUnstackSlider::DestroyUnstackSlider()
 {
-	OnAcceptButtonPressedDelegate.Clear();
-	OnCloseButtonPressedDelegate.Clear();
 	RemoveFromParent();
 }
 

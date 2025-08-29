@@ -239,6 +239,8 @@ public:
 		return GridLocation == Other.GridLocation;
 	}
 
+	FString GetDebugStringPosition() const;
+
 private:
 	UPROPERTY()
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;

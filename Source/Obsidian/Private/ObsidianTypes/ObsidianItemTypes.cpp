@@ -124,6 +124,34 @@ void FObsidianItemPosition::SetOwningStashTab(const FGameplayTag& InOwningStashT
 	OwningStashTabTag = InOwningStashTab;
 }
 
+FString FObsidianItemPosition::GetDebugStringPosition() const
+{
+	if (OwningStashTabTag != FGameplayTag::EmptyTag)
+	{
+		if (SlotTag != FGameplayTag::EmptyTag)
+		{
+			return FString::Printf(TEXT("Stash Tab: [%s], Slot: [%s]"), *OwningStashTabTag.GetTagName().ToString(), *SlotTag.GetTagName().ToString());
+		}
+		if (GridLocation != FIntPoint::NoneValue)
+		{
+			return FString::Printf(TEXT("Stash Tab: [%s], Grid Location: [%d, %d]"), *OwningStashTabTag.GetTagName().ToString(), GridLocation.X, GridLocation.Y);
+		}
+	}
+	else
+	{
+		if (SlotTag != FGameplayTag::EmptyTag)
+		{
+			return FString::Printf(TEXT("Equipment Slot: [%s]"), *SlotTag.GetTagName().ToString());
+		}
+		if (GridLocation != FIntPoint::NoneValue)
+		{
+			return FString::Printf(TEXT("Inventory Grid Location: [%d, %d]"), GridLocation.X, GridLocation.Y);
+		}
+	}
+
+	return FString::Printf(TEXT("Error: Position of an item is not initialized correctly!"));
+}
+
 // ~ FObsidianDescriptionAffixRow
 
 void FObsidianAffixDescriptionRow::SetAffixRowDescription(const FText& InAffixDescription, const int32 InTempMagnitude)

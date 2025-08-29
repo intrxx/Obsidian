@@ -8,6 +8,7 @@
 // ~ Project
 
 
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianUnstackSlider.generated.h"
 
@@ -16,7 +17,7 @@ class USlider;
 class UCommonTextBlock;
 class UButton;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAcceptButtonPressedSignature, const int32 StacksToTake, const FIntPoint& ItemSlotPosition)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnAcceptButtonPressedSignature, const int32 StacksToTake, const FObsidianItemPosition& ItemPosition)
 DECLARE_MULTICAST_DELEGATE(FOnCloseButtonPressedSignature)
 
 /**
@@ -28,7 +29,7 @@ class OBSIDIAN_API UObsidianUnstackSlider : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeUnstackSlider(const int32 CurrentItemStacks, const FIntPoint& InItemSlotPosition);
+	void InitializeUnstackSlider(const int32 CurrentItemStacks, const FObsidianItemPosition& InItemPosition);
 
 	FVector2D GetSizeBoxSize() const;
 
@@ -76,5 +77,5 @@ private:
 	int32 MaxStacks;
 
 	UPROPERTY()
-	FIntPoint ItemSlotPosition = FIntPoint::NoneValue;
+	FObsidianItemPosition ItemSlotPosition = FObsidianItemPosition();
 };

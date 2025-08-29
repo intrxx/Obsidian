@@ -217,7 +217,8 @@ private:
 	void OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage);
 	void OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage);
 	
-	void HandleTakingOutStacks(const int32 StacksToTake, const FIntPoint& GridSlotPosition);
+	void HandleTakingOutStacksFromInventory(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition);
+	void HandleTakingOutStacksFromStash(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition);
 	
 	void RemoveUnstackSlider();
 	void ClearUsableUIContext();

@@ -70,7 +70,8 @@ TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllIte
 
 UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition)
 {
-	if (UObsidianStashTab* StashTab = GetStashTabForTag(ItemPosition.GetOwningStashTabTag()))
+	UObsidianStashTab* StashTab = GetStashTabForTag(ItemPosition.GetOwningStashTabTag());
+	if ()
 	{
 		return StashTab->GetInstanceAtPosition(ItemPosition);
 	}

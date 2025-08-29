@@ -657,7 +657,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemW
 	ActiveUnstackSlider->AddToViewport();
 	bUnstackSliderActive = true;
 	
-	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddUObject(this, &ThisClass::HandleTakingOutStacks);
+	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddUObject(this, &ThisClass::HandleTakingOutStacksFromInventory);
 	ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
 }
 
@@ -840,15 +840,15 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWit
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in fill it in UObsidianInventoryItemsWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(ObsidianPlayerController, UnstackSliderClass);
-	//ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, AtGridSlot);
+	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, AtItemPosition);
 
 	const FVector2D UnstackSliderViewportPosition = CalculateUnstackSliderPosition(ItemWidget);
 	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);
 	ActiveUnstackSlider->AddToViewport();
 	bUnstackSliderActive = true;
 	
-	// ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddUObject(this, &ThisClass::HandleTakingOutStacks);
-	// ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
+	ActiveUnstackSlider->OnAcceptButtonPressedDelegate.AddUObject(this, &ThisClass::HandleTakingOutStacksFromStash);
+	ActiveUnstackSlider->OnCloseButtonPressedDelegate.AddUObject(this, &ThisClass::RemoveUnstackSlider);
 }
 
 void UObsidianInventoryItemsWidgetController::HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot)
@@ -967,7 +967,7 @@ void UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedIte
 	}
 }
 
-void UObsidianInventoryItemsWidgetController::HandleTakingOutStacks(const int32 StacksToTake, const FIntPoint& GridSlotPosition)
+void UObsidianInventoryItemsWidgetController::HandleTakingOutStacksFromInventory(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition)
 {
 	RemoveUnstackSlider();
 	
@@ -976,22 +976,50 @@ void UObsidianInventoryItemsWidgetController::HandleTakingOutStacks(const int32 
 		return;
 	}
 
-	const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(GridSlotPosition);
+	const FIntPoint GridPosition = ItemPosition.GetItemGridLocation(); 
+
+	const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(GridPosition);
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridSlotPosition.X, GridSlotPosition.Y);
+		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridPosition.X, GridPosition.Y);
 		return;
 	}
 
 	
 	if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridSlotPosition.X, GridSlotPosition.Y);
-		UE_LOG(LogTemp, Warning, TEXT("Instance at position: [%s]"), *InventoryComponent->GetItemInstanceAtLocation(GridSlotPosition)->GetItemDebugName());
-		OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(GridSlotPosition);
+		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridPosition.X, GridPosition.Y);
+		UE_LOG(LogTemp, Warning, TEXT("Instance at position: [%s]"), *InventoryComponent->GetItemInstanceAtLocation(GridPosition)->GetItemDebugName());
+		OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(GridPosition);
 		return;
 	}
-	OwnerPlayerInputManager->ServerTakeoutFromItem(GridSlotPosition, StacksToTake);
+	OwnerPlayerInputManager->ServerTakeoutFromItem(GridPosition, StacksToTake);
+}
+
+void UObsidianInventoryItemsWidgetController::HandleTakingOutStacksFromStash(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition)
+{
+	RemoveUnstackSlider();
+	
+	if(StacksToTake == 0)
+	{
+		return;
+	}
+	
+	check(PlayerStashComponent);
+	const UObsidianInventoryItemInstance* Instance = PlayerStashComponent->GetInstanceFromTabAtPosition(ItemPosition);
+	if(Instance == nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item Instance at [%s] is invalid."), *ItemPosition.GetDebugStringPosition());
+		return;
+	}
+
+	
+	if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
+	{
+		OwnerPlayerInputManager->ServerGrabStashedItemToCursor(ItemPosition);
+		return;
+	}
+	//OwnerPlayerInputManager->ServerTakeoutFromItem(GridPosition, StacksToTake);
 }
 
 void UObsidianInventoryItemsWidgetController::RemoveItemUIElements()
