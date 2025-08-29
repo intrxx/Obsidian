@@ -61,6 +61,7 @@ public:
 	UObsidianStashTabsConfig(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	TArray<FObsidianStashTabDefinition> GetStashTabDefinitions() const;
+	int32 StashTabCount() const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

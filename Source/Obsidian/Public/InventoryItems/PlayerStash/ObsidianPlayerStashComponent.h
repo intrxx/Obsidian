@@ -113,6 +113,10 @@ protected:
 	UPROPERTY()
 	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
 
+	/** This is not very clean I think, but I need to store Stash Tabs in some UPROPERTY container so the GC won't get it :/ */
+	UPROPERTY()
+	TArray<TObjectPtr<UObsidianStashTab>> StashTabs;
+
 private:
 	
 #if WITH_GAMEPLAY_DEBUGGER

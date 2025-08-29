@@ -13,6 +13,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
+#include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 
 DEFINE_LOG_CATEGORY(LogPlayerStash)
 
@@ -30,7 +31,11 @@ void UObsidianPlayerStashComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	StashItemList.InitializeStashTabs(StashTabsConfig);
+	if (ensure(StashTabsConfig))
+	{
+		StashTabs.Empty(StashTabsConfig->StashTabCount());
+		StashTabs = StashItemList.InitializeStashTabs(StashTabsConfig);
+	}
 }
 
 void UObsidianPlayerStashComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
@@ -70,8 +75,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllIte
 
 UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition)
 {
-	UObsidianStashTab* StashTab = GetStashTabForTag(ItemPosition.GetOwningStashTabTag());
-	if ()
+	if (UObsidianStashTab* StashTab = GetStashTabForTag(ItemPosition.GetOwningStashTabTag()))
 	{
 		return StashTab->GetInstanceAtPosition(ItemPosition);
 	}

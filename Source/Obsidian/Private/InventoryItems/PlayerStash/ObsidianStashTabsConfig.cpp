@@ -14,3 +14,8 @@ TArray<FObsidianStashTabDefinition> UObsidianStashTabsConfig::GetStashTabDefinit
 {
 	return StashTabs;
 }
+
+int32 UObsidianStashTabsConfig::StashTabCount() const
+{
+	return StashTabs.Num();
+}

@@ -26,17 +26,19 @@ FString FObsidianStashEntry::GetDebugString() const
 
 // ~ End of FObsidianStashEntry
 
-void FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig)
+TArray<UObsidianStashTab*> FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig)
 {
+	TArray<UObsidianStashTab*> InitializedStashTabs;
+	
 	if(StashTabsConfig == nullptr || OwnerComponent == nullptr)
 	{
-		return;
+		return InitializedStashTabs;
 	}
 	
 	UObsidianPlayerStashComponent* StashTabComponent = Cast<UObsidianPlayerStashComponent>(OwnerComponent);
 	if(StashTabComponent == nullptr)
 	{
-		return;
+		return InitializedStashTabs;
 	}
 
 	const TArray<FObsidianStashTabDefinition> StashTabDefinitions = StashTabsConfig->GetStashTabDefinitions();
@@ -55,8 +57,11 @@ void FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig*
 		NewTab->SetStashTabTag(Definition.StashTag);
 		NewTab->Construct(StashTabComponent);
 
-		StashTabsMap.Add(Definition.StashTag,NewTab);
+		StashTabsMap.Add(Definition.StashTag, NewTab);
+		InitializedStashTabs.Add(NewTab);
 	}
+	
+	return InitializedStashTabs;
 }
 
 TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItems() const

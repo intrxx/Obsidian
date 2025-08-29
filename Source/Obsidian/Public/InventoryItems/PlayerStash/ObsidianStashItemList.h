@@ -111,7 +111,7 @@ public:
 		: OwnerComponent(InOwnerComponent)
 	{}
 
-	void InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig);
+	TArray<UObsidianStashTab*> InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig);
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
