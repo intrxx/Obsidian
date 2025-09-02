@@ -796,16 +796,16 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(co
 			}
 		}
 			
-		// if (InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
-		// {
-		// 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
-		// }
+		if (PlayerStashComponent->CanReplaceItemAtPosition(AtItemPosition, DraggedInstance))
+		{
+			UE_LOG(LogTemp, Display, TEXT("Can Replace Item At Position with Instance"));
+			//OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		}
 		return;
 	}
 		
 	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
 	{
-		const int32 ItemStackCount = DraggedItem.Stacks;
 		const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
 		if (DefaultObject && DefaultObject->IsStackable())
 		{
@@ -816,10 +816,11 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(co
 			}
 		}
 			
-		// if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
-		// {
-		// 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
-		// }
+		if(PlayerStashComponent->CanReplaceItemAtPosition(AtItemPosition, DraggedItemDef))
+		{
+			UE_LOG(LogTemp, Display, TEXT("Can Replace Item At Position with Def"));
+			//OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		}
 		return;
 	}
 }

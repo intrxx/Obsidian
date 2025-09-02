@@ -550,6 +550,45 @@ bool UObsidianPlayerStashComponent::CheckAvailablePosition(FObsidianItemPosition
 	return false;
 }
 
+bool UObsidianPlayerStashComponent::CanReplaceItemAtPosition(const FObsidianItemPosition& AtItemPosition, const UObsidianInventoryItemInstance* ReplacingInstance)
+{
+	if (ReplacingInstance == nullptr)
+	{
+		return false;
+	}
+
+	if (CanOwnerModifyPlayerStashState() == false)
+	{
+		return false;
+	}
+	
+	if (UObsidianStashTab* StashTab = GetStashTabForTag(AtItemPosition.GetOwningStashTabTag()))
+	{
+		return StashTab->CanReplaceItemAtSpecificPosition(AtItemPosition, ReplacingInstance);
+	}
+	return false;
+}
+
+
+bool UObsidianPlayerStashComponent::CanReplaceItemAtPosition(const FObsidianItemPosition& AtItemPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef)
+{
+	if (ReplacingDef == nullptr)
+	{
+		return false;
+	}
+
+	if (CanOwnerModifyPlayerStashState() == false)
+	{
+		return false;
+	}
+	
+	if (UObsidianStashTab* StashTab = GetStashTabForTag(AtItemPosition.GetOwningStashTabTag()))
+	{
+		return StashTab->CanReplaceItemAtSpecificPosition(AtItemPosition, ReplacingDef);
+	}
+	return false;
+}
+
 bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
 {
 	if (UObsidianStashTab* StashTab = GetStashTabForTag(SpecifiedPosition.GetOwningStashTabTag()))
@@ -564,6 +603,7 @@ bool UObsidianPlayerStashComponent::CanFitInstanceInStashTab(const FIntPoint& It
 	FObsidianItemPosition OutPosition;
 	return CheckAvailablePosition(OutPosition, ItemGridSpan, ItemCategory, StashTabTag);
 }
+
 
 
 

@@ -30,12 +30,18 @@ public:
 	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan) override;
 	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan) override;
 
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance) override;
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef) override;
+	
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
 
 protected:
 	FObsidianSlotDefinition FindSlotByTag(const FGameplayTag& SlotTag) const;
+
+private:
+	bool CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ReplacingItemCategory) const;
 	
 private:
 

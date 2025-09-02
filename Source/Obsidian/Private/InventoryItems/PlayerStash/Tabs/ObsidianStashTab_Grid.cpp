@@ -6,6 +6,7 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 
 UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -80,6 +81,86 @@ bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosi
 	}
 
 	return bCanFit;
+}
+
+bool UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance)
+{
+	if (ReplacingInstance == nullptr)
+	{
+		return false;
+	}
+
+	return CheckReplacementPossible(SpecifiedPosition, ReplacingInstance->GetItemGridSpan());
+}
+
+bool UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef)
+{
+	if (ReplacingDef == nullptr)
+	{
+		return false;
+	}
+
+	if (const UObsidianInventoryItemDefinition* DefaultItem = ReplacingDef.GetDefaultObject())
+	{
+		if (const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		{
+			return CheckReplacementPossible(SpecifiedPosition, Appearance->GetItemGridSpanFromDesc());
+		}
+	}
+	
+	return false;
+}
+
+bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ReplacingItemGridSpan) const
+{
+	UObsidianInventoryItemInstance* InstanceAtGrid = GridLocationToItemMap.FindRef(SpecifiedPosition.GetItemGridLocation());
+	if (InstanceAtGrid == nullptr )
+	{
+		return false; 
+	}
+
+	const FIntPoint ItemOrigin = SpecifiedPosition.GetItemGridLocation();
+	TMap<FIntPoint, bool> TempInventoryStateMap = GridStateMap;
+	
+	for(int32 SpanX = 0; SpanX < ReplacingItemGridSpan.X; ++SpanX)
+	{
+		for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
+		{
+			const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
+			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
+			{
+				*TempLocation = false;
+			}
+#if !UE_BUILD_SHIPPING
+			else
+			{
+				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
+				"exist in the TempInventoryStateMap in UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition."), GridSlotToCheck.X, GridSlotToCheck.Y), ELogVerbosity::Warning);
+			}
+#endif
+		}
+	}
+	
+	bool bCanReplace = false;
+	
+	if(TempInventoryStateMap[ItemOrigin] == false) // Initial location is free
+	{
+		bCanReplace = true;
+		for(int32 SpanX = 0; SpanX < ReplacingItemGridSpan.X; ++SpanX)
+		{
+			for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
+			{
+				const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
+				const bool* bExistingOccupied = TempInventoryStateMap.Find(GridSlotToCheck);
+				if(bExistingOccupied == nullptr || *bExistingOccupied)
+				{
+					bCanReplace = false;
+					break;
+				}
+			}
+		}
+	}
+	return bCanReplace;
 }
 
 void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)

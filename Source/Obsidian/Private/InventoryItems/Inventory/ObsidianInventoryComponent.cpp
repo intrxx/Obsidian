@@ -801,6 +801,7 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 		return CurrentStacks;
 	}
 
+	//TODO Rethink it, I kinda dont want to limit items in stash
 	int32 AllStacksInStash = 0;
 	if(UObsidianPlayerStashComponent* PlayerStashComponent = UObsidianPlayerStashComponent::FindPlayerStashComponent(GetOwner()))
 	{
@@ -1063,22 +1064,26 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const FIntPoint& ItemGr
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& AtGridSlot, UObsidianInventoryItemInstance* ReplacingInstance)
 {
+	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
+	if (InstanceAtLocation == nullptr)
+	{
+		return false;
+	}
+	
 	if(GetNumberOfStacksAvailableToAddToInventory(ReplacingInstance) <= 0)
 	{
 		//TODO Limit of stacks reached, add voiceover?
 		return false;
 	}
 	
-	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
-	const FIntPoint ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
 	const FIntPoint ItemGridSpan = InstanceAtLocation->GetItemGridSpan();
-	
 	TMap<FIntPoint, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
+	
 	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
+			const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
 			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
 			{
 				*TempLocation = false;

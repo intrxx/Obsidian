@@ -26,7 +26,10 @@ public:
 
 	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan) override;
 	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan) override;
-
+	
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance) override;
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef) override;
+	
 	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& Position) override;
 
 	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
@@ -35,6 +38,9 @@ public:
 	
 	int32 GetGridWidth() const;
 	int32 GetGridHeight() const;
+
+private:
+	bool CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ReplacingItemGridSpan) const;
 
 private:
 

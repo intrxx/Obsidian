@@ -59,6 +59,9 @@ public:
 
 	bool CanFitInstanceInStashTab(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& StashTabTag);
 	
+	bool CanReplaceItemAtPosition(const FObsidianItemPosition& AtItemPosition, const UObsidianInventoryItemInstance* ReplacingInstance);
+	bool CanReplaceItemAtPosition(const FObsidianItemPosition& AtItemPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef);
+	
 	/**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
 	 *

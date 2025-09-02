@@ -5,6 +5,8 @@
 // ~ Core
 
 // ~ Project
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 UObsidianStashTab_Slots::UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -33,7 +35,7 @@ bool UObsidianStashTab_Slots::CanPlaceItemAtSpecificPosition(const FObsidianItem
 
 bool UObsidianStashTab_Slots::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
 {
-	for(const FObsidianSlotDefinition& Slot : TabSlots)
+	for (const FObsidianSlotDefinition& Slot : TabSlots)
 	{
 		if (Slot.CanPlaceAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip)
 		{
@@ -42,6 +44,68 @@ bool UObsidianStashTab_Slots::FindFirstAvailablePositionForItem(FObsidianItemPos
 		}
 	}
 	return false;
+}
+
+bool UObsidianStashTab_Slots::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance)
+{
+	if (ReplacingInstance == nullptr)
+	{
+		return false;
+	}
+	
+	if(ReplacingInstance->IsItemEquippable() == false)
+	{
+		return false;
+	}
+	
+	if(ReplacingInstance->IsItemIdentified() == false)
+	{
+		return false;
+	}
+	
+	return CheckReplacementPossible(SpecifiedPosition, ReplacingInstance->GetItemCategoryTag());
+}
+
+bool UObsidianStashTab_Slots::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef)
+{
+	if (ReplacingDef == nullptr)
+	{
+		return false;
+	}
+
+	const UObsidianInventoryItemDefinition* DefinitionDefault = ReplacingDef.GetDefaultObject();
+	if (DefinitionDefault == nullptr)
+	{
+		return false;
+	}
+	
+	if(DefinitionDefault->IsEquippable() == false)
+	{
+		return false;
+	}
+	
+	if(DefinitionDefault->IsIdentified() == false)
+	{
+		return false;
+	}
+	
+	return CheckReplacementPossible(SpecifiedPosition, DefinitionDefault->GetItemCategoryTag());
+}
+
+bool UObsidianStashTab_Slots::CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ReplacingItemCategory) const
+{
+	const FObsidianSlotDefinition Slot = FindSlotByTag(SpecifiedPosition.GetItemSlotTag());
+	if(Slot.IsValid() == false)
+	{
+		return false;
+	}
+
+	if (Slot.CanPlaceAtSlot(ReplacingItemCategory) != EObsidianEquipCheckResult::CanEquip)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 void UObsidianStashTab_Slots::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)
@@ -80,5 +144,7 @@ FObsidianSlotDefinition UObsidianStashTab_Slots::FindSlotByTag(const FGameplayTa
 
 	return FObsidianSlotDefinition::InvalidSlot;
 }
+
+
 
 
