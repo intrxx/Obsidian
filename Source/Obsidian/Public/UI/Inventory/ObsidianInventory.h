@@ -8,6 +8,7 @@
 // ~ Project
 
 
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianInventory.generated.h"
 
@@ -65,9 +66,9 @@ private:
 	void OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
 	
-	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
+	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
 	void OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
-	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown);
+	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
 	
 	void OnSlotBlockadeItemLeftMouseButtonPressed(const UObsidianSlotBlockadeItem* SlotBlockadeItem);
 	void OnSlotBlockadeItemMouseEntered(const UObsidianSlotBlockadeItem* ItemWidget);

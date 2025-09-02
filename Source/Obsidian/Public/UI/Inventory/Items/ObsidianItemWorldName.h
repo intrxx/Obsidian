@@ -8,13 +8,14 @@
 // ~ Project
 
 
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemWorldName.generated.h"
 
 class UImage;
 class UCommonTextBlock;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemWorldNameMouseButtonDownSignature, const int32 PlayerIndex,  const bool bLeftControlDown);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemWorldNameMouseButtonDownSignature, const int32 PlayerIndex,  const FObsidianItemInteractionFlags& InteractionFlags);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemWorldNameMouseHoverSignature, const bool bEnter);
 
 /**

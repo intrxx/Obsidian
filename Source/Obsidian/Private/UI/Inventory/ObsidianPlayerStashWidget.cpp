@@ -73,18 +73,18 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 	}
 }
 
-void UObsidianPlayerStashWidget::OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const bool bShiftDown)
+void UObsidianPlayerStashWidget::OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianPlayerStashWidget::OnStashedItemLeftMouseButtonDown"));
 
 	if(InventoryItemsWidgetController)
 	{
-		if(bShiftDown)
+		if(InteractionFlags.bItemStacksInteraction)
 		{
 			InventoryItemsWidgetController->HandleLeftClickingOnStashedItemWithShiftDown(ItemWidget->GetItemPosition(), ItemWidget);
 			return;
 		}
-		InventoryItemsWidgetController->HandleLeftClickingOnStashedItem(ItemWidget->GetItemPosition());
+		InventoryItemsWidgetController->HandleLeftClickingOnStashedItem(ItemWidget->GetItemPosition(), InteractionFlags.bMoveBetweenNextOpenedWindow);
 	}
 }
 

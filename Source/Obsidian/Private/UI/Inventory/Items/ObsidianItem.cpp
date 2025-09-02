@@ -24,8 +24,11 @@ FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const
 {
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		const bool bShiftPressed = InMouseEvent.IsShiftDown();
-		OnItemLeftMouseButtonPressedDelegate.Broadcast(this, bShiftPressed);
+		FObsidianItemInteractionFlags AddingItemFlags;
+		AddingItemFlags.bItemStacksInteraction = InMouseEvent.IsShiftDown();
+		AddingItemFlags.bMoveBetweenNextOpenedWindow = InMouseEvent.IsControlDown();
+		
+		OnItemLeftMouseButtonPressedDelegate.Broadcast(this, AddingItemFlags);
 	}
 	if(InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
 	{
@@ -80,16 +83,6 @@ void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& EquipmentS
 	Item_Image->SetBrush(Brush);
 	
 	ItemPosition = EquipmentSlot;
-	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-}
-
-void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage)
-{
-	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
-	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
-	Item_Image->SetBrushFromTexture(ItemImage);
-	ItemPosition = EquipmentSlot;
-	
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
 

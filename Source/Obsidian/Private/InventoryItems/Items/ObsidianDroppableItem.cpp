@@ -518,7 +518,7 @@ void AObsidianDroppableItem::OnRep_DroppedItemStacks()
 	UpdateStacksOnActiveItemDescription(DroppedItemStacks);
 }
 
-void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, const bool bLeftControlDown)
+void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	const UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -534,11 +534,11 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, cons
 	
 	if(CarriesItemDef())
 	{
-		PickupItemDef(bLeftControlDown, ObsidianPC);
+		PickupItemDef(InteractionFlags.bAutomaticallyAddToWindow, ObsidianPC);
 	}
 	else if(CarriesItemInstance())
 	{
-		PickupItemInstance(bLeftControlDown, ObsidianPC);
+		PickupItemInstance(InteractionFlags.bAutomaticallyAddToWindow, ObsidianPC);
 	}
 }
 

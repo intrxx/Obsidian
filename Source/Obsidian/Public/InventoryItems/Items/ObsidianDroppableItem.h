@@ -70,7 +70,7 @@ protected:
 	virtual void OnRep_PickupContent() override;
 	
 	void OnItemMouseHover(const bool bMouseEnter);
-	void OnItemMouseButtonDown(const int32 PlayerIndex, const bool bLeftControlDown);
+	void OnItemMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags);
 	
 	bool InitializeWorldName();
 

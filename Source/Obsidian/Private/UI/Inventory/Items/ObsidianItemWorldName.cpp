@@ -48,8 +48,10 @@ FReply UObsidianItemWorldName::NativeOnPreviewMouseButtonDown(const FGeometry& I
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		const int32 Index = InMouseEvent.GetUserIndex();
-		const bool bLeftControlDown = InMouseEvent.IsLeftControlDown();
-		OnItemWorldNameMouseButtonDownDelegate.Broadcast(Index, bLeftControlDown);
+		FObsidianItemInteractionFlags InteractionFlags;
+		InteractionFlags.bAutomaticallyAddToWindow = InMouseEvent.IsLeftControlDown();
+		
+		OnItemWorldNameMouseButtonDownDelegate.Broadcast(Index, InteractionFlags);
 	}
 	return FReply::Handled();
 }

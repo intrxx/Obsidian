@@ -52,11 +52,11 @@ UObsidianStashTabsConfig* UObsidianPlayerStashComponent::GetStashTabConfig() con
 
 bool UObsidianPlayerStashComponent::CanOwnerModifyPlayerStashState()
 {
-	if(CachedOwnerPlayerController == nullptr)
+	if (CachedOwnerPlayerController == nullptr)
 	{
 		CachedOwnerPlayerController = Cast<AObsidianPlayerController>(GetOwner());
 	}
-	if(const UObsidianAbilitySystemComponent* OwnerASC = CachedOwnerPlayerController->GetObsidianAbilitySystemComponent())
+	if (const UObsidianAbilitySystemComponent* OwnerASC = CachedOwnerPlayerController->GetObsidianAbilitySystemComponent())
 	{
 		return !OwnerASC->HasMatchingGameplayTag(ObsidianGameplayTags::PlayerStash_BlockActions);
 	}
@@ -105,35 +105,35 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 	Result.AddedStacks = 0;
 	Result.StacksLeft = StacksToAdd;
 	
-	if(!GetOwner()->HasAuthority())
+	if (!GetOwner()->HasAuthority())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return Result; 
 	}
 
-	if(CanOwnerModifyPlayerStashState() == false)
+	if (CanOwnerModifyPlayerStashState() == false)
 	{
 		return Result;
 	}
 	
-	if(StacksToAdd <= 0)
+	if (StacksToAdd <= 0)
 	{
 		return Result;
 	}
 	
 	TArray<UObsidianInventoryItemInstance*> Items = StashItemList.GetAllItems();
-	for(UObsidianInventoryItemInstance* Instance : Items)
+	for (UObsidianInventoryItemInstance* Instance : Items)
 	{
-		if(!IsValid(Instance))
+		if (!IsValid(Instance))
 		{
 			UE_LOG(LogPlayerStash, Error, TEXT("Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			continue;
 		}
 		
-		if(AddingFromItemDef == Instance->GetItemDef())
+		if (AddingFromItemDef == Instance->GetItemDef())
 		{
 			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-			if(CurrentStackCount == 0)
+			if (CurrentStackCount == 0)
 			{
 				continue;
 			}
@@ -142,7 +142,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
 			int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksLeft);
 			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, StacksLeft);
-			if(AmountThatCanBeAddedToInstance <= 0)
+			if (AmountThatCanBeAddedToInstance <= 0)
 			{
 				continue;
 			}
@@ -156,14 +156,14 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 			Result.StacksLeft -= AmountThatCanBeAddedToInstance;
 			OutAddedToInstances.AddUnique(Instance);
 			
-			if(Result.AddedStacks == StacksToAdd)
+			if (Result.AddedStacks == StacksToAdd)
 			{
 				Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
 				return Result;
 			}
 		}
 	}
-	if(OutAddedToInstances.Num() > 0)
+	if (OutAddedToInstances.Num() > 0)
 	{
 		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
 	}
@@ -557,6 +557,12 @@ bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FObsidianItemPo
 		return StashTab->CanPlaceItemAtSpecificPosition(SpecifiedPosition, ItemCategory, ItemGridSpan);
 	}
 	return false;
+}
+
+bool UObsidianPlayerStashComponent::CanFitInstanceInStashTab(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& StashTabTag)
+{
+	FObsidianItemPosition OutPosition;
+	return CheckAvailablePosition(OutPosition, ItemGridSpan, ItemCategory, StashTabTag);
 }
 
 

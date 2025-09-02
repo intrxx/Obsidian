@@ -156,18 +156,18 @@ void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidget
 	}
 }
 
-void UObsidianInventory::OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown)
+void UObsidianInventory::OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnInventoryItemLeftMouseButtonPressed"));
 
 	if(InventoryItemsWidgetController)
 	{
-		if(bShiftDown)
+		if(InteractionFlags.bItemStacksInteraction)
 		{
 			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(ItemWidget->GetGridPosition(), ItemWidget);
 			return;
 		}
-		InventoryItemsWidgetController->HandleLeftClickingOnInventoryItem(ItemWidget->GetGridPosition());
+		InventoryItemsWidgetController->HandleLeftClickingOnInventoryItem(ItemWidget->GetGridPosition(), InteractionFlags.bMoveBetweenNextOpenedWindow);
 	}
 }
 
@@ -180,7 +180,7 @@ void UObsidianInventory::OnInventoryItemRightMouseButtonPressed(UObsidianItem* I
 	}
 }
 
-void UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const bool bShiftDown)
+void UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianInventory::OnEquipmentItemLeftMouseButtonPressed"));
 	if(InventoryItemsWidgetController)

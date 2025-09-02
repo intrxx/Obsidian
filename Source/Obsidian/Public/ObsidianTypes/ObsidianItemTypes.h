@@ -140,6 +140,29 @@ enum class EObsidianEquipCheckResult : uint8
 	CanEquip UMETA(DisplayName="Can Equip")
 };
 
+USTRUCT(BlueprintType)
+struct FObsidianItemInteractionFlags
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianItemInteractionFlags()
+		: bMoveBetweenNextOpenedWindow(false)
+		, bAutomaticallyAddToWindow(false)
+		, bItemStacksInteraction(false)
+	{}
+
+public:
+	UPROPERTY()
+	uint8 bMoveBetweenNextOpenedWindow:1;
+
+	UPROPERTY()
+	uint8 bAutomaticallyAddToWindow:1;
+
+	UPROPERTY()
+	uint8 bItemStacksInteraction:1;
+};
+
 /**
  * 
  */

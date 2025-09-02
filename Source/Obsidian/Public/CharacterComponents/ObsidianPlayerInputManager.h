@@ -122,6 +122,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerActivateUsableItem(UObsidianInventoryItemInstance* UsingInstance);
+
+	UFUNCTION(Server, Reliable)
+	void ServerTransferItemToPlayerStash(const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab);
 	
 	/**
 	 * Equipment.
@@ -148,6 +151,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerGrabStashedItemToCursor(const FObsidianItemPosition& FromPosition);
+
+	UFUNCTION(Server, Reliable)
+	void ServerTransferItemToInventory(const FObsidianItemPosition& FromStashPosition);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

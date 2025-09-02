@@ -170,10 +170,12 @@ public:
 	void RequestAddingItemToStashTab(const FObsidianItemPosition& ToPosition, const bool bShiftDown);
 
 	void HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot, UObsidianItem* ItemWidget);
-	void HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot);
+	void HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot, const bool bAddToOtherWindow);
 	void HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot, const UObsidianItem* ItemWidget);
+	
 	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
-	void HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition);
+	
+	void HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, const bool bAddToOtherWindow);
 	void HandleLeftClickingOnStashedItemWithShiftDown(const FObsidianItemPosition& AtItemPosition, const UObsidianItem* ItemWidget);
 
 	void HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot);
@@ -236,9 +238,6 @@ private:
 	void EmptyRegisteredItems();
 
 private:
-	bool bInventoryOpened = false;
-	bool bPlayerStashOpened = false;
-
 	bool bDescriptionActive = false;
 	bool bUnstackSliderActive = false;
 	

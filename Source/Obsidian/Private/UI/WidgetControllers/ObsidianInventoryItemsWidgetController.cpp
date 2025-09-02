@@ -541,7 +541,7 @@ void UObsidianInventoryItemsWidgetController::HandleRightClickingOnInventoryItem
 	}
 }
 
-void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot)
+void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot, const bool bAddToOtherWindow)
 {
 	check(InventoryComponent);
 	check(OwnerPlayerInputManager);
@@ -559,58 +559,69 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(
 		OwnerPlayerInputManager->UseItem(AtGridSlot, false);
 		return;
 	}
-	
-	if(OwnerPlayerInputManager->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+
+	if (OwnerPlayerInputManager->IsDraggingAnItem() == false)
 	{
-		const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
-		if(InstanceToAddTo == nullptr)
+		if (bAddToOtherWindow == false)
 		{
-			UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in UObsidianInventoryItemsWidgetController::HandleLeftClickingOnAnItem."));
+			OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(AtGridSlot);
 			return;
 		}
-		
-		 const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
-		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
-		 {
-		 	if(DraggedInstance->IsStackable())
-		 	{
-		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance, InstanceToAddTo))
-		 		{
-		 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
-		 			return;
-		 		}
-		 	}
-			
-		 	if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
-		 	{
-		 		OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
-		 	}
-		 	return;
-		 }
-		
-		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
-		 {
-		 	const int32 ItemStackCount = DraggedItem.Stacks;
-		 	const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-		 	if(DefaultObject && DefaultObject->IsStackable())
-		 	{
-		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, DraggedItemDef))
-		 		{
-		 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
-		 			return;
-		 		}
-		 	}
-			
-			 if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
-			 {
-			 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
-			 }
-			 return;
+
+		AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
+		if (ObsidianHUD && ObsidianHUD->IsPlayerStashOpened()) //TODO For now I support only Inventory <-> Stash
+		{
+			const FGameplayTag ToStashTab = ObsidianHUD->GetActiveStashTabTag(); //TODO This will need updating when I will support Stash Tab Affinities
+			OwnerPlayerInputManager->ServerTransferItemToPlayerStash(AtGridSlot, ToStashTab);
 		}
 		return;
 	}
 	
-	OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(AtGridSlot);
+	const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
+	if (InstanceToAddTo == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+		
+	const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
+	if (UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
+	{
+		if (DraggedInstance->IsStackable())
+		{
+			if (UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance, InstanceToAddTo))
+			{
+				OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+				return;
+			}
+		}
+			
+		if (InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
+		{
+			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		}
+		return;
+	}
+		
+	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
+	{
+		const int32 ItemStackCount = DraggedItem.Stacks;
+		const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+		if (DefaultObject && DefaultObject->IsStackable())
+		{
+			if (UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, DraggedItemDef))
+			{
+				OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+				return;
+			}
+		}
+			
+		if (InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
+		{
+			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		}
+		return;
+	}
 }
 
 void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot, const UObsidianItem* ItemWidget)
@@ -730,7 +741,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 	OwnerPlayerInputManager->ServerGrabEquippedItemToCursor(SlotTag);
 }
 
-void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition)
+void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, const bool bAddToOtherWindow)
 {
 	check(PlayerStashComponent);
 	check(OwnerPlayerInputManager);
@@ -742,64 +753,75 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(co
 	}
 	
 	RemoveItemUIElements();
-
-	// if(OwnerPlayerInputManager->IsUsingItem())
+	
+	// if (OwnerPlayerInputManager->IsUsingItem())
 	// {
 	// 	OwnerPlayerInputManager->UseItem(AtGridSlot, false);
 	// 	return;
 	// }
-	
-	if(OwnerPlayerInputManager->IsDraggingAnItem()) // If we carry an item, try to add it to this item or replace it with it.
+
+	if (OwnerPlayerInputManager->IsDraggingAnItem() == false)
 	{
-		const UObsidianInventoryItemInstance* InstanceToAddTo = PlayerStashComponent->GetInstanceFromTabAtPosition(AtItemPosition);
-		if(InstanceToAddTo == nullptr)
+		if (bAddToOtherWindow == false)
 		{
-			UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			OwnerPlayerInputManager->ServerGrabStashedItemToCursor(AtItemPosition);
 			return;
 		}
-		
-		 const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
-		 if(UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
-		 {
-		 	if(DraggedInstance->IsStackable())
-		 	{
-		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance, InstanceToAddTo))
-		 		{
-		 			//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
-		 			return;
-		 		}
-		 	}
-			
-		 	// if(InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
-		 	// {
-		 	// 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
-		 	// }
-		 	return;
-		 }
-		
-		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
-		 {
-		 	const int32 ItemStackCount = DraggedItem.Stacks;
-		 	const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-		 	if(DefaultObject && DefaultObject->IsStackable())
-		 	{
-		 		if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, DraggedItemDef))
-		 		{
-		 			//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
-		 			return;
-		 		}
-		 	}
-			
-			 // if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
-			 // {
-			 // 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
-			 // }
-			 return;
+
+		AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
+		if (ObsidianHUD && ObsidianHUD->IsInventoryOpened()) //TODO For now I support only Inventory <-> Stash
+		{
+			OwnerPlayerInputManager->ServerTransferItemToInventory(AtItemPosition);
 		}
 		return;
 	}
 	
-	OwnerPlayerInputManager->ServerGrabStashedItemToCursor(AtItemPosition);
+	
+	const UObsidianInventoryItemInstance* InstanceToAddTo = PlayerStashComponent->GetInstanceFromTabAtPosition(AtItemPosition);
+	if (InstanceToAddTo == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+		
+	const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
+	if (UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
+	{
+		if (DraggedInstance->IsStackable())
+		{
+			if (UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance, InstanceToAddTo))
+			{
+				//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+				return;
+			}
+		}
+			
+		// if (InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
+		// {
+		// 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		// }
+		return;
+	}
+		
+	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
+	{
+		const int32 ItemStackCount = DraggedItem.Stacks;
+		const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
+		if (DefaultObject && DefaultObject->IsStackable())
+		{
+			if (UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, DraggedItemDef))
+			{
+				//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToItemAtSlot(AtGridSlot);
+				return;
+			}
+		}
+			
+		// if(InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, ItemStackCount))
+		// {
+		// 	OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+		// }
+		return;
+	}
 }
 
 void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWithShiftDown(const FObsidianItemPosition& AtItemPosition, const UObsidianItem* ItemWidget)

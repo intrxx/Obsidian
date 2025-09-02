@@ -9,6 +9,7 @@
 // ~ Project
 
 
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 
@@ -44,7 +45,7 @@ protected:
 
 	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
 
-	void OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const bool bShiftDown);
+	void OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
 	void OnStashedItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();
 	
