@@ -414,7 +414,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashOpen()
 	 *	might not change without Player seeing it (but what about Stash Tab Affinities?).
 	 **/
 	EmptyRegisteredItems();
-
+	
 	for(const UObsidianInventoryItemInstance* Instance : StashedItems)
 	{
 		if(ensure(Instance))
