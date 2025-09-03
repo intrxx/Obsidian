@@ -530,7 +530,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::TakeOutFromItemInstanc
 	
 	if(!GetOwner()->HasAuthority())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TakeOutFromItemInstance."));
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return Result; 
 	}
 

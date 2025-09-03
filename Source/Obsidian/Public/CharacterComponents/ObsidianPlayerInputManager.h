@@ -104,7 +104,7 @@ public:
 	void ServerAddStacksFromDraggedItemToInventoryItemAtSlot(const FIntPoint& SlotPosition, const int32 StacksToAddOverride = -1);
 
 	UFUNCTION(Server, Reliable)
-	void ServerTakeoutFromItem(const FIntPoint& SlotPosition, const int32 StacksToTake);
+	void ServerTakeoutFromInventoryItem(const FIntPoint& SlotPosition, const int32 StacksToTake);
 
 	UFUNCTION(Server, Reliable)
 	void ServerReplaceItemAtInventorySlot(const FIntPoint& SlotPosition);
@@ -160,6 +160,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerReplaceItemAtStashPosition(const FObsidianItemPosition& AtStashPosition);
+
+	UFUNCTION(Server, Reliable)
+	void ServerTakeoutFromStashedItem(const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

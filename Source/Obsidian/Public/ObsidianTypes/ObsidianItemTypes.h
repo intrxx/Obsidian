@@ -327,7 +327,7 @@ public:
 	UPROPERTY()
 	bool bActionSuccessful = false;
 
-	/** Instance that has stacks added to, was added or was removed from the inventory as a result of called function, might be nullptr. */
+	/** Instance that was relevantly affected by called function, unfortunately this varies through functions, might be nullptr. */
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemInstance> AffectedInstance = nullptr;
 

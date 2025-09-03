@@ -819,7 +819,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWit
 	
 	if(OwnerPlayerInputManager->IsDraggingAnItem())
 	{
-		//OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(AtGridSlot, 1);
+		OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToStashedItemAtSlot(AtItemPosition, 1);
 		return;
 	}
 	
@@ -970,55 +970,42 @@ void UObsidianInventoryItemsWidgetController::HandleTakingOutStacksFromInventory
 {
 	RemoveUnstackSlider();
 	
-	if(StacksToTake == 0)
+	if(StacksToTake == 0 || InventoryComponent == nullptr)
 	{
 		return;
 	}
 
-	const FIntPoint GridPosition = ItemPosition.GetItemGridLocation(); 
-
-	const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(GridPosition);
-	if(Instance == nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridPosition.X, GridPosition.Y);
-		return;
-	}
-
+	const FIntPoint GridPosition = ItemPosition.GetItemGridLocation();
 	
-	if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
+	if(const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(GridPosition))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("SlotPosition: [%d, %d]"), GridPosition.X, GridPosition.Y);
-		UE_LOG(LogTemp, Warning, TEXT("Instance at position: [%s]"), *InventoryComponent->GetItemInstanceAtLocation(GridPosition)->GetItemDebugName());
-		OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(GridPosition);
-		return;
+		if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
+		{
+			OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(GridPosition);
+			return;
+		}
+		OwnerPlayerInputManager->ServerTakeoutFromInventoryItem(GridPosition, StacksToTake);
 	}
-	OwnerPlayerInputManager->ServerTakeoutFromItem(GridPosition, StacksToTake);
 }
 
 void UObsidianInventoryItemsWidgetController::HandleTakingOutStacksFromStash(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition)
 {
 	RemoveUnstackSlider();
 	
-	if(StacksToTake == 0)
+	if(StacksToTake == 0 || PlayerStashComponent == nullptr)
 	{
 		return;
 	}
 	
-	check(PlayerStashComponent);
-	const UObsidianInventoryItemInstance* Instance = PlayerStashComponent->GetInstanceFromTabAtPosition(ItemPosition);
-	if(Instance == nullptr)
+	if(const UObsidianInventoryItemInstance* Instance = PlayerStashComponent->GetInstanceFromTabAtPosition(ItemPosition))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Item Instance at [%s] is invalid."), *ItemPosition.GetDebugStringPosition());
-		return;
+		if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
+		{
+			OwnerPlayerInputManager->ServerGrabStashedItemToCursor(ItemPosition);
+			return;
+		}
+		OwnerPlayerInputManager->ServerTakeoutFromStashedItem(ItemPosition, StacksToTake);
 	}
-
-	
-	if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
-	{
-		OwnerPlayerInputManager->ServerGrabStashedItemToCursor(ItemPosition);
-		return;
-	}
-	//OwnerPlayerInputManager->ServerTakeoutFromItem(GridPosition, StacksToTake);
 }
 
 void UObsidianInventoryItemsWidgetController::RemoveItemUIElements()

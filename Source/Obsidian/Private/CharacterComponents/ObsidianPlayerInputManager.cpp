@@ -773,6 +773,44 @@ void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToStashedItemAtS
 	}
 }
 
+void UObsidianPlayerInputManager::ServerTakeoutFromStashedItem_Implementation(const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake)
+{
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+	if(PlayerStashComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetInstanceFromTabAtPosition(AtStashPosition);
+	if(ItemInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	UObsidianInventoryItemInstance* NewInstance = PlayerStashComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake).AffectedInstance;
+	if(NewInstance == nullptr)
+	{
+		return;
+	}
+	
+	DraggedItem = FDraggedItem(NewInstance);
+	StartDraggingItem(Controller);
+
+	if(NewInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(NewInstance);
+	}
+}
+
 bool UObsidianPlayerInputManager::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
 	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
@@ -854,7 +892,7 @@ void UObsidianPlayerInputManager::OnRep_DraggedItem(const FDraggedItem& OldDragg
 	}
 }
 
-void UObsidianPlayerInputManager::ServerTakeoutFromItem_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToTake)
+void UObsidianPlayerInputManager::ServerTakeoutFromInventoryItem_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToTake)
 {
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)

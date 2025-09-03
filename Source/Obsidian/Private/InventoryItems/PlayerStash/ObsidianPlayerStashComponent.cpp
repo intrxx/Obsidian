@@ -558,6 +558,47 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToSpec
 	return Result;
 }
 
+FObsidianItemOperationResult UObsidianPlayerStashComponent::TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
+{
+	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
+	
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return Result; 
+	}
+
+	if(CanOwnerModifyPlayerStashState() == false)
+	{
+		return Result;
+	}
+	
+	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(!ensureMsgf(((StacksToTake == 0) || (CurrentTakingFromInstanceStacks != StacksToTake)), TEXT("This function shouldn't be called if you want to take the whole item out. Simply Pickup the item instead.")))
+	{
+		return Result;
+	}
+	
+	UObsidianInventoryItemInstance* NewInstance = UObsidianInventoryItemInstance::DuplicateItem(TakingFromInstance, GetOwner());
+	if(NewInstance == nullptr)
+	{
+		return Result;
+	}
+	
+	const int32 NewCurrentTakingFromInstanceStacks = CurrentTakingFromInstanceStacks - StacksToTake;
+	TakingFromInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, NewCurrentTakingFromInstanceStacks);
+	const FObsidianItemPosition ItemPosition = TakingFromInstance->GetItemCurrentPosition();
+	StashItemList.ChangedEntryStacks(TakingFromInstance, CurrentTakingFromInstanceStacks, ItemPosition.GetOwningStashTabTag());
+
+	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
+	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
+	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackToTakeSafe);
+
+	Result.bActionSuccessful = true;
+	Result.AffectedInstance = NewInstance;
+	return Result;
+}
+
 FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
