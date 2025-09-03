@@ -75,10 +75,10 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 		ItemWidget->OnItemMouseEnterDelegate.AddUObject(this, &ThisClass::OnStashedItemMouseEntered);
 		ItemWidget->OnItemMouseLeaveDelegate.AddUObject(this, &ThisClass::OnItemMouseLeave);
 	
-		// if(ItemWidgetData.bUsable)
-		// {
-		// 	ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRightMouseButtonPressed);
-		// }
+		if(ItemWidgetData.bUsable)
+		{
+			ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnStashedItemRightMouseButtonPressed);
+		}
 		
 		InventoryItemsWidgetController->RegisterStashTabItemWidget(ItemWidgetData.ItemPosition, ItemWidget);
 		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData.ItemSlotPadding);
@@ -90,6 +90,15 @@ void UObsidianPlayerStashWidget::OnItemChanged(const FObsidianItemWidgetData& It
 	if(UObsidianItem* ItemWidget = InventoryItemsWidgetController->GetItemWidgetAtStashPosition(ItemWidgetData.ItemPosition))
 	{
 		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+	}
+}
+
+void UObsidianPlayerStashWidget::OnStashedItemRightMouseButtonPressed(UObsidianItem* ItemWidget)
+{
+	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianPlayerStashWidget::OnStashedItemRightMouseButtonPressed"));
+	if(InventoryItemsWidgetController)
+	{
+		InventoryItemsWidgetController->HandleRightClickingOnStashedItem(ItemWidget->GetItemPosition(), ItemWidget);
 	}
 }
 

@@ -516,7 +516,7 @@ void UObsidianInventoryItemsWidgetController::HandleRightClickingOnInventoryItem
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComponent->GetAllItems());
 		AllItems.Append(EquipmentComponent->GetAllEquippedItems());
-		//TODO Add Current Stash Tab when implemented (and actually opened)
+		AllItems.Append(PlayerStashComponent->GetAllItems()); //TODO This will be hella slow, change later 
 	
 		const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
 		for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
@@ -535,14 +535,18 @@ void UObsidianInventoryItemsWidgetController::HandleRightClickingOnInventoryItem
 				CachedItemsMatchingUsableContext.Add(Item);
 			}
 		}
-		for(const FIntPoint& StashGridLocation : MatchingUsableContext.StashItemsMatchingContext)
+		for(const FObsidianItemPosition& StashPosition : MatchingUsableContext.StashItemsMatchingContext)
 		{
-		
+			if (UObsidianItem* Item = GetItemWidgetAtStashPosition(StashPosition))
+			{
+				Item->HighlightItem();
+				CachedItemsMatchingUsableContext.Add(Item);
+			}
 		}
 	}
 	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
 	{
-		OwnerPlayerInputManager->ServerActivateUsableItem(UsingInstance);
+		OwnerPlayerInputManager->ServerActivateUsableItemFromInventory(UsingInstance);
 	}
 }
 
@@ -732,6 +736,68 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 	OwnerPlayerInputManager->ServerGrabEquippedItemToCursor(SlotTag);
 }
 
+void UObsidianInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, UObsidianItem* ItemWidget)
+{
+	check(OwnerPlayerInputManager);
+	check(PlayerStashComponent);
+	
+	if(OwnerPlayerInputManager->IsDraggingAnItem())
+	{
+		return;
+	}
+
+	if(PlayerStashComponent->CanOwnerModifyPlayerStashState() == false)
+	{
+		return;
+	}
+	
+	UObsidianInventoryItemInstance* UsingInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(AtItemPosition);
+	if(UsingInstance->IsItemUsable() == false)
+	{
+		return;
+	}
+
+	if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Crafting)
+	{
+		OwnerPlayerInputManager->SetUsingItem(true, ItemWidget, UsingInstance);
+
+		TArray<UObsidianInventoryItemInstance*> AllItems;
+		AllItems.Append(InventoryComponent->GetAllItems());
+		AllItems.Append(EquipmentComponent->GetAllEquippedItems());
+		AllItems.Append(PlayerStashComponent->GetAllItems()); //TODO This will be hella slow, change later 
+	
+		const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
+		for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
+		{
+			if(UObsidianItem* Item = GetItemWidgetAtInventoryGridSlot(GridLocation))
+			{
+				Item->HighlightItem();
+				CachedItemsMatchingUsableContext.Add(Item);
+			}
+		}
+		for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
+		{
+			if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
+			{
+				Item->HighlightItem();
+				CachedItemsMatchingUsableContext.Add(Item);
+			}
+		}
+		for(const FObsidianItemPosition& StashPosition : MatchingUsableContext.StashItemsMatchingContext)
+		{
+			if (UObsidianItem* Item = GetItemWidgetAtStashPosition(StashPosition))
+			{
+				Item->HighlightItem();
+				CachedItemsMatchingUsableContext.Add(Item);
+			}
+		}
+	}
+	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
+	{
+		OwnerPlayerInputManager->ServerActivateUsableItemFromInventory(UsingInstance);
+	}
+}
+
 void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, const bool bAddToOtherWindow)
 {
 	check(PlayerStashComponent);
@@ -745,11 +811,11 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(co
 	
 	RemoveItemUIElements();
 	
-	// if (OwnerPlayerInputManager->IsUsingItem())
-	// {
-	// 	OwnerPlayerInputManager->UseItem(AtGridSlot, false);
-	// 	return;
-	// }
+	if (OwnerPlayerInputManager->IsUsingItem())
+	{
+		OwnerPlayerInputManager->UseItem(AtItemPosition, false);
+		return;
+	}
 
 	if (OwnerPlayerInputManager->IsDraggingAnItem() == false)
 	{
@@ -768,7 +834,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(co
 	}
 	
 	
-	const UObsidianInventoryItemInstance* InstanceToAddTo = PlayerStashComponent->GetInstanceFromTabAtPosition(AtItemPosition);
+	const UObsidianInventoryItemInstance* InstanceToAddTo = PlayerStashComponent->GetItemInstanceFromTabAtPosition(AtItemPosition);
 	if (InstanceToAddTo == nullptr)
 	{
 		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
@@ -811,11 +877,11 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWit
 		return;
 	}
 	
-	// if(OwnerPlayerInputManager->IsUsingItem())
-	// {
-	// 	OwnerPlayerInputManager->UseItem(AtGridSlot, true);
-	// 	return;
-	// }
+	if(OwnerPlayerInputManager->IsUsingItem())
+	{
+		OwnerPlayerInputManager->UseItem(AtItemPosition, true);
+		return;
+	}
 	
 	if(OwnerPlayerInputManager->IsDraggingAnItem())
 	{
@@ -823,7 +889,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWit
 		return;
 	}
 	
-	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetInstanceFromTabAtPosition(AtItemPosition);
+	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(AtItemPosition);
 	if(ItemInstance->IsStackable() == false)
 	{
 		return;
@@ -916,7 +982,7 @@ void UObsidianInventoryItemsWidgetController::HandleHoveringOverStashedItem(cons
 	}
 	
 	const FObsidianItemPosition ItemPosition = ItemWidget->GetItemPosition();
-	if (const UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetInstanceFromTabAtPosition(ItemPosition))
+	if (const UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(ItemPosition))
 	{
 		FObsidianItemStats OutItemStats;
 		const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
@@ -997,7 +1063,7 @@ void UObsidianInventoryItemsWidgetController::HandleTakingOutStacksFromStash(con
 		return;
 	}
 	
-	if(const UObsidianInventoryItemInstance* Instance = PlayerStashComponent->GetInstanceFromTabAtPosition(ItemPosition))
+	if(const UObsidianInventoryItemInstance* Instance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(ItemPosition))
 	{
 		if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
 		{

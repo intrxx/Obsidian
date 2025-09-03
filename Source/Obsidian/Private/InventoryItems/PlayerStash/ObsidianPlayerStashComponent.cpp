@@ -74,7 +74,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllIte
 	return StashItemList.GetAllItemsFromStashTab(StashTabTag);
 }
 
-UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition)
+UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetItemInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition)
 {
 	if (UObsidianStashTab* StashTab = GetStashTabForTag(ItemPosition.GetOwningStashTabTag()))
 	{
@@ -320,7 +320,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToSpec
 		return Result; 
 	}
 	
-	UObsidianInventoryItemInstance* InstanceToAddTo = GetInstanceFromTabAtPosition(AtPosition);
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceFromTabAtPosition(AtPosition);
 	if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, AddingFromItemDef) == false)
 	{
 		return Result;
@@ -517,7 +517,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToSpec
 		return Result;
 	}
 	
-	UObsidianInventoryItemInstance* InstanceToAddTo = GetInstanceFromTabAtPosition(AtPosition);
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceFromTabAtPosition(AtPosition);
 	if(UObsidianItemsFunctionLibrary::IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
 	{
 		return Result;
@@ -633,6 +633,80 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(U
 	Result.bActionSuccessful = true;
 	Result.AffectedInstance = InstanceToRemove;
 	return Result;
+}
+
+void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+{
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+		FString::Printf(TEXT("Warning: Using Items between storage units (e.g. Inventory <-> Player Stash) is broken and needs refactoring.")));
+	
+	if(UsingInstance == nullptr)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("UsingInstance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	if(UsingInstance->IsItemUsable() == false)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"), *UsingInstance->GetItemDebugName(), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner());
+	if(OwningPlayerController == nullptr || OwningPlayerController->HasAuthority() == false)
+	{
+		return;
+	}
+	
+	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(CurrentUsingInstanceStacks <= 0)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"), *UsingInstance->GetItemDebugName(), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	bool bUsageSuccessful = false;
+	const EObsidianUsableItemType ItemType = UsingInstance->GetUsableItemType();
+	if(ItemType == EObsidianUsableItemType::UIT_Crafting)
+	{
+		if(UsingOntoInstance == nullptr)
+		{
+			UE_LOG(LogPlayerStash, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			return;
+		}
+		
+		if(UsingInstance->UseItem(OwningPlayerController, UsingOntoInstance))
+		{
+			StashItemList.GeneralEntryChange(UsingOntoInstance, UsingOntoInstance->GetItemCurrentPosition().GetOwningStashTabTag());
+			bUsageSuccessful = true;
+		}
+	}
+	else if(ItemType == EObsidianUsableItemType::UIT_Activation)
+	{
+		bUsageSuccessful = UsingInstance->UseItem(OwningPlayerController, nullptr);
+	}
+
+	if(bUsageSuccessful)
+	{
+		const FGameplayTag ItemOwningStashTab = UsingOntoInstance->GetItemCurrentPosition().GetOwningStashTabTag();
+		if(CurrentUsingInstanceStacks > 1)
+		{
+			UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
+			StashItemList.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks, ItemOwningStashTab);
+			return;
+		}
+	
+		StashItemList.RemoveEntry(UsingInstance, ItemOwningStashTab);
+
+		if(UsingInstance && IsUsingRegisteredSubObjectList())
+		{
+			RemoveReplicatedSubObject(UsingInstance);
+		}
+	}
+	else
+	{
+		//TODO Usage failed, Play some VO?
+	}
 }
 
 bool UObsidianPlayerStashComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)

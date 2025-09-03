@@ -892,6 +892,9 @@ FObsidianItemOperationResult UObsidianInventoryComponent::RemoveItemInstance(UOb
 
 void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {
+	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
+		FString::Printf(TEXT("Warning: Using Items between storage units (e.g. Inventory <-> Player Stash) is broken and needs refactoring.")));
+	
 	if(UsingInstance == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("UsingInstance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));

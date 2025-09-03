@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 
 // ~ Project
-
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "ObsidianUsableShard.generated.h"
 
@@ -30,7 +30,7 @@ struct FObsidianItemsMatchingUsableContext
 	TArray<FGameplayTag> EquipmentItemsMatchingContext;
 
 	UPROPERTY()
-	TArray<FIntPoint> StashItemsMatchingContext;
+	TArray<FObsidianItemPosition> StashItemsMatchingContext;
 };
 
 /**

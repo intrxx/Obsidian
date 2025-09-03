@@ -36,14 +36,20 @@ FObsidianItemsMatchingUsableContext UObsidianUsableShard_OrbOfEnchantment::OnIte
 	{
 		if(CanUseOnItem(Instance))
 		{
-			const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridLocation();
+			const FObsidianItemPosition CurrentPosition = Instance->GetItemCurrentPosition();
+
+			if (CurrentPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag)
+			{
+				ItemsMatchingContext.StashItemsMatchingContext.Add(CurrentPosition);
+				continue;
+			}
+			
+			const FIntPoint GridLocation = CurrentPosition.GetItemGridLocation();
 			if(GridLocation != FIntPoint::NoneValue)
 			{
 				ItemsMatchingContext.InventoryItemsMatchingContext.Add(GridLocation);
 				continue;
 			}
-			
-			//TODO Add Stash when implemented
 		}
 	}
 	

@@ -118,10 +118,10 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup);
 	
-	void UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown);
+	void UseItem(const FObsidianItemPosition& OnPosition, const bool bLeftShiftDown);
 
 	UFUNCTION(Server, Reliable)
-	void ServerActivateUsableItem(UObsidianInventoryItemInstance* UsingInstance);
+	void ServerActivateUsableItemFromInventory(UObsidianInventoryItemInstance* UsingInstance);
 
 	UFUNCTION(Server, Reliable)
 	void ServerTransferItemToPlayerStash(const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab);
@@ -163,6 +163,9 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerTakeoutFromStashedItem(const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake);
+
+	UFUNCTION(Server, Reliable)
+	void ServerActivateUsableItemFromStash(UObsidianInventoryItemInstance* UsingInstance);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
@@ -241,7 +244,7 @@ private:
 	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition);
+	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FObsidianItemPosition& OnPosition);
 
 	void AutomaticallyPickupOutOfRangeItem();
 	void DragOutOfRangeItem();

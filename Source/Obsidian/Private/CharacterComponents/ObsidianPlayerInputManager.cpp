@@ -630,7 +630,7 @@ void UObsidianPlayerInputManager::ServerGrabStashedItemToCursor_Implementation(c
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetInstanceFromTabAtPosition(FromPosition);
+	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(FromPosition);
 	if(InstanceToGrab == nullptr)
 	{
 		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
@@ -669,7 +669,7 @@ void UObsidianPlayerInputManager::ServerTransferItemToInventory_Implementation(c
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetInstanceFromTabAtPosition(FromStashPosition);
+	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(FromStashPosition);
 	if (InstanceToGrab == nullptr)
 	{
 		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
@@ -789,7 +789,7 @@ void UObsidianPlayerInputManager::ServerTakeoutFromStashedItem_Implementation(co
 		return;
 	}
 
-	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetInstanceFromTabAtPosition(AtStashPosition);
+	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(AtStashPosition);
 	if(ItemInstance == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
@@ -809,6 +809,31 @@ void UObsidianPlayerInputManager::ServerTakeoutFromStashedItem_Implementation(co
 	{
 		AddReplicatedSubObject(NewInstance);
 	}
+}
+
+void UObsidianPlayerInputManager::ServerActivateUsableItemFromStash_Implementation(UObsidianInventoryItemInstance* UsingInstance)
+{
+	if(UsingInstance == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+	if(PlayerStashComponent == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	PlayerStashComponent->UseItem(UsingInstance, nullptr);
 }
 
 bool UObsidianPlayerInputManager::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
@@ -1734,9 +1759,9 @@ void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToInventoryItemA
 	}
 }
 
-void UObsidianPlayerInputManager::UseItem(const FIntPoint& OnSlotPosition, const bool bLeftShiftDown)
+void UObsidianPlayerInputManager::UseItem(const FObsidianItemPosition& OnPosition, const bool bLeftShiftDown)
 {
-	ServerUseItem(UsingItemInstance, OnSlotPosition);
+	ServerUseItem(UsingItemInstance, OnPosition);
 
 	if(bLeftShiftDown == false)
 	{
@@ -1783,7 +1808,7 @@ void UObsidianPlayerInputManager::ServerTransferItemToPlayerStash_Implementation
 	}
 }
 
-void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FIntPoint& OnSlotPosition)
+void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FObsidianItemPosition& OnPosition)
 {
 	if(UsingInstance == nullptr)
 	{
@@ -1798,18 +1823,34 @@ void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventor
 		return;
 	}
 
-	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
-	if(InventoryComponent == nullptr)
+	const FGameplayTag StashTabTag = OnPosition.GetOwningStashTabTag();
+	if (StashTabTag != FGameplayTag::EmptyTag)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
-		return;
-	}
+		UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+		if(PlayerStashComponent == nullptr)
+		{
+			UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			return;
+		}
 
-	UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(OnSlotPosition);
-	InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
+		UObsidianInventoryItemInstance* UsingOntoInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(OnPosition);
+		PlayerStashComponent->UseItem(UsingInstance, UsingOntoInstance);
+	}
+	else
+	{
+		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
+		if(InventoryComponent == nullptr)
+		{
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			return;
+		}
+
+		UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(OnPosition.GetItemGridLocation());
+		InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
+	}
 }
 
-void UObsidianPlayerInputManager::ServerActivateUsableItem_Implementation(UObsidianInventoryItemInstance* UsingInstance)
+void UObsidianPlayerInputManager::ServerActivateUsableItemFromInventory_Implementation(UObsidianInventoryItemInstance* UsingInstance)
 {
 	if(UsingInstance == nullptr)
 	{

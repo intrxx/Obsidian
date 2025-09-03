@@ -44,7 +44,7 @@ public:
 	
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
-	UObsidianInventoryItemInstance* GetInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition);
+	UObsidianInventoryItemInstance* GetItemInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition);
 
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
 	
@@ -129,6 +129,9 @@ public:
 	/** Removes Item Instance from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
+
+	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
+	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
