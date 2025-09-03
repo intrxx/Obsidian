@@ -24,6 +24,7 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 	check(InventoryItemsWidgetController);
 
 	InventoryItemsWidgetController->OnItemStashedDelegate.AddUObject(this, &ThisClass::OnItemStashed);
+	InventoryItemsWidgetController->OnStashedItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
 }
 
 void UObsidianPlayerStashWidget::NativeConstruct()
@@ -79,8 +80,16 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 		// 	ItemWidget->OnItemRightMouseButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRightMouseButtonPressed);
 		// }
 		
-		InventoryItemsWidgetController->RegisterStashTabItemWidget(StashTabTag, ItemWidgetData.ItemPosition, ItemWidget);
+		InventoryItemsWidgetController->RegisterStashTabItemWidget(ItemWidgetData.ItemPosition, ItemWidget);
 		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData.ItemSlotPadding);
+	}
+}
+
+void UObsidianPlayerStashWidget::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData) 
+{
+	if(UObsidianItem* ItemWidget = InventoryItemsWidgetController->GetItemWidgetAtStashPosition(ItemWidgetData.ItemPosition))
+	{
+		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
 	}
 }
 

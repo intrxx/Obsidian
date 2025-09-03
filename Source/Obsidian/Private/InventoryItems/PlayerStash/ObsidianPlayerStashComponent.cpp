@@ -11,6 +11,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
@@ -303,6 +304,60 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 	return Result;
 }
 
+FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride)
+{
+	FObsidianAddingStacksResult Result = FObsidianAddingStacksResult();
+	Result.StacksLeft = AddingFromItemDefCurrentStacks;
+	
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef."));
+		return Result; 
+	}
+
+	if(CanOwnerModifyPlayerStashState() == false)
+	{
+		return Result; 
+	}
+	
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetInstanceFromTabAtPosition(AtPosition);
+	if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, AddingFromItemDef) == false)
+	{
+		return Result;
+	}
+	
+	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef(GetOwner(), AddingFromItemDef, AddingFromItemDefCurrentStacks, InstanceToAddTo);
+	if(AmountThatCanBeAddedToInstance <= 0)
+	{
+		return Result;
+	}
+	
+	if(StackToAddOverride != -1)
+	{
+		AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((FMath::Min<int32>(AmountThatCanBeAddedToInstance, StackToAddOverride)),
+			1, AmountThatCanBeAddedToInstance);
+	}
+
+	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	StashItemList.ChangedEntryStacks(InstanceToAddTo, OldStackCount, AtPosition.GetOwningStashTabTag());
+
+	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
+	Result.AddedStacks = AmountThatCanBeAddedToInstance;
+	Result.LastAddedToInstance = InstanceToAddTo;
+
+	if(AmountThatCanBeAddedToInstance == AddingFromItemDefCurrentStacks)
+	{
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
+	}
+	else
+	{
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
+	}
+	
+	return Result;
+}
+
 FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd, const FGameplayTag& StashTabTag)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
@@ -436,6 +491,70 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 	}
 	
 	Result.AffectedInstance = InstanceToAdd;
+	return Result;
+}
+
+FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride)
+{
+	FObsidianAddingStacksResult Result = FObsidianAddingStacksResult();
+	
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance."));
+		return Result; 
+	}
+
+	if(AddingFromInstance == nullptr)
+	{
+		return Result;
+	}
+	
+	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	Result.StacksLeft = AddingFromInstanceCurrentStacks;
+	
+	if(CanOwnerModifyPlayerStashState() == false)
+	{
+		return Result;
+	}
+	
+	UObsidianInventoryItemInstance* InstanceToAddTo = GetInstanceFromTabAtPosition(AtPosition);
+	if(UObsidianItemsFunctionLibrary::IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
+	{
+		return Result;
+	}
+	
+	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(GetOwner(), AddingFromInstance, InstanceToAddTo);
+	if(AmountThatCanBeAddedToInstance <= 0)
+	{
+		return Result;
+	}
+
+	if(StackToAddOverride != -1)
+	{
+		AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((FMath::Min<int32>(AmountThatCanBeAddedToInstance, StackToAddOverride)),
+			1, AmountThatCanBeAddedToInstance);
+	}
+
+	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	StashItemList.ChangedEntryStacks(InstanceToAddTo, OldStackCount, AtPosition.GetOwningStashTabTag());
+
+	// We should not call the InventoryGrid.ChangedEntryStacks function as the AddingFromInstance is not part of the inventory anyway, let other systems take care of it.
+	AddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	
+	Result.AddedStacks = AmountThatCanBeAddedToInstance;
+	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
+	Result.LastAddedToInstance = InstanceToAddTo;
+	
+	if(AmountThatCanBeAddedToInstance == AddingFromInstanceCurrentStacks)
+	{
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
+	}
+	else
+	{
+		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
+	}
+	
 	return Result;
 }
 

@@ -45,6 +45,7 @@ protected:
 	void ShowStashTab(const FGameplayTag& WithStashTag);
 
 	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
 
 	void OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
 	void OnStashedItemMouseEntered(const UObsidianItem* ItemWidget);

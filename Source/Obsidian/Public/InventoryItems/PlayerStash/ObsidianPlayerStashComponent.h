@@ -73,25 +73,50 @@ public:
 	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
 	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, const FGameplayTag& InTabTag, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
-
+	
 	/** Tries to add Item Definition to the Opened Stash Tab, if the item is stackable will first try to add all the stacks to the same item types if they exist in the Stash Tab. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const int32 StackCount = 1);
 
 	/** Tries to add provided Item Definition to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemPosition& ItemPosition, const int32 StackCount = 1, const int32 StackToAddOverride = -1);
 
-	/** Tries to add Item Instance to the Player Stash, if the item is stackable will first try to add all the stacks to the same item types if they exist in the Stash Tab. */
+	/**
+	 *	Will try to add stacks from provided Item Definition at provided Position.
+	 *
+	 *	@param AddingFromItemDef				The Item Definition that the function will try to add from.
+	 *	@param AddingFromItemDefCurrentStacks	The Current Stacks of the provided Item Definition.
+	 *  @param AtPosition						The clicked Stash location at which the function will search for item to add to.		
+	 *  @param StackToAddOverride				Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
+	 *
+	 *  @return The struct that contains various useful information about the result of the adding process.
+	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride = -1);
+	
+	/** Tries to add Item Instance to the Player Stash, if the item is stackable will first try to add all the stacks to the same item types if they exist in the Stash Tab. */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd, const FGameplayTag& StashTabTag);
 	
 	/** Tries to add provided Item Instance to provided Slot. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FObsidianItemPosition& ItemPosition, const int32 StackToAddOverride = -1);
 
+	/**
+	 *	Will try to add stacks from provided Item Instance at provided Position. 
+	 *
+	 *	@param AddingFromInstance		The Item Instance that the function will try to add from.
+	 *  @param AtPosition				The clicked Stash location at which the function will search for item to add to.
+	 *  @param StackToAddOverride		Optional override for the amount of stacks the function will try to add to the item. Will do nothing if unused.
+	 *
+	 *  @return The struct that contains various useful information about the result of the adding process.
+	 */
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride = -1);
+	
 	/** Removes Item Instance from inventory. */
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
 	//~ Start of UObject interface

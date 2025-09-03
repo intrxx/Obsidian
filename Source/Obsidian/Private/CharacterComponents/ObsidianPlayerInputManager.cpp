@@ -619,21 +619,21 @@ void UObsidianPlayerInputManager::ServerGrabStashedItemToCursor_Implementation(c
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetInstanceFromTabAtPosition(FromPosition);
 	if(InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -651,28 +651,28 @@ void UObsidianPlayerInputManager::ServerTransferItemToInventory_Implementation(c
 	const AController* Controller = GetController<AController>();
 	if (Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if (PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if (InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetInstanceFromTabAtPosition(FromStashPosition);
 	if (InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
@@ -681,6 +681,94 @@ void UObsidianPlayerInputManager::ServerTransferItemToInventory_Implementation(c
 		if (PlayerStashComponent->RemoveItemInstance(InstanceToGrab))
 		{
 			InventoryComponent->AddItemInstance(InstanceToGrab);
+		}
+	}
+}
+
+void UObsidianPlayerInputManager::ServerReplaceItemAtStashPosition_Implementation(const FObsidianItemPosition& AtStashPosition)
+{
+	const AController* Controller = GetController<AController>();
+	if (Controller == nullptr)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+	if (PlayerStashComponent == nullptr)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	if (PlayerStashComponent->CanOwnerModifyPlayerStashState() == false)
+	{
+		return;
+	}
+	
+	const FDraggedItem CachedDraggedItem = DraggedItem;
+	DraggedItem.Clear();
+	StopDraggingItem(Controller);
+	
+	ServerGrabStashedItemToCursor(AtStashPosition);
+
+	bool bSuccess = false;
+	if (UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
+	{
+		bSuccess = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, AtStashPosition);
+	}
+	else if (const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
+	{
+		bSuccess = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, AtStashPosition, CachedDraggedItem.Stacks);
+	}
+	
+	if (bSuccess == false)
+	{
+		ServerAddItemToStashTabAtSlot(AtStashPosition, false);
+		DraggedItem = CachedDraggedItem;
+		StartDraggingItem(Controller);
+	}
+}
+
+void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToStashedItemAtSlot_Implementation(const FObsidianItemPosition& AtPosition, const int32 StacksToAddOverride)
+{
+	if(DraggedItem.IsEmpty())
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("Tried to add Stacks from Dragged Item, but Dragged Item is empty [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	const AController* Controller = GetController<AController>();
+	if(Controller == nullptr)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+	if(PlayerStashComponent == nullptr)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+	
+	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
+	if(Instance && Instance->IsStackable())
+	{
+		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const FObsidianAddingStacksResult AddingStacksResult = PlayerStashComponent->TryAddingStacksToSpecificSlotWithInstance(Instance, AtPosition, StacksToAddOverride);
+		
+		UpdateDraggedItem(AddingStacksResult, CurrentStackCount, Controller);
+	}
+	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+		if(DefaultObject && DefaultObject->IsStackable())
+		{
+			const int32 CurrentStackCount = DraggedItem.Stacks;
+			const FObsidianAddingStacksResult AddingStacksResult = PlayerStashComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, DraggedItem.Stacks, AtPosition, StacksToAddOverride);
+			
+			UpdateDraggedItem(AddingStacksResult, CurrentStackCount, Controller);
 		}
 	}
 }
@@ -807,20 +895,20 @@ void UObsidianPlayerInputManager::ServerTakeoutFromItem_Implementation(const FIn
 void UObsidianPlayerInputManager::ServerReplaceItemAtInventorySlot_Implementation(const FIntPoint& ItemGridPosition)
 {
 	const AController* Controller = GetController<AController>();
-	if(Controller == nullptr)
+	if (Controller == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
-	if(InventoryComponent == nullptr)
+	if (InventoryComponent == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
-	if(InventoryComponent->CanOwnerModifyInventoryState() == false)
+	if (InventoryComponent->CanOwnerModifyInventoryState() == false)
 	{
 		return;
 	}
@@ -832,21 +920,16 @@ void UObsidianPlayerInputManager::ServerReplaceItemAtInventorySlot_Implementatio
 	ServerGrabInventoryItemToCursor(ItemGridPosition);
 
 	bool bSuccess = false;
-	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
+	if (UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
 		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, ItemGridPosition);
 	}
-	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
+	else if (const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
-		const int32 Stacks = CachedDraggedItem.Stacks;
-		int32 StacksLeft = Stacks;
-		if(InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, ItemGridPosition, StacksLeft, Stacks))
-		{
-			bSuccess = true;
-		}
+		bSuccess = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, ItemGridPosition, CachedDraggedItem.Stacks);
 	}
 	
-	if(bSuccess == false)
+	if (bSuccess == false)
 	{
 		ServerAddItemToInventoryAtSlot(ItemGridPosition, false);
 		DraggedItem = CachedDraggedItem;
@@ -922,21 +1005,21 @@ void UObsidianPlayerInputManager::ServerAddItemToStashTabAtSlot_Implementation(c
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
 	
@@ -1570,7 +1653,7 @@ void UObsidianPlayerInputManager::ServerAddItemToInventoryAtSlot_Implementation(
 	}
 }
 
-void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToItemAtSlot_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToAddOverride)
+void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToInventoryItemAtSlot_Implementation(const FIntPoint& ItemGridPosition, const int32 StacksToAddOverride)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -1595,36 +1678,20 @@ void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToItemAtSlot_Imp
 	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
 	if(Instance && Instance->IsStackable())
 	{
+		const int32 PreviousStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(Instance, ItemGridPosition, StacksToAddOverride);
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
-		{
-			DraggedItem.Clear();
-			StopDraggingItem(Controller);
-			return;
-		}
-		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
-		{
-			UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
-			DraggedItem.Stacks = AddingStacksResult.StacksLeft;
-		}
+		
+		UpdateDraggedItem(AddingStacksResult, PreviousStacks, Controller);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
 		const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 		if(DefaultObject && DefaultObject->IsStackable())
 		{
-			const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, DraggedItem.Stacks, ItemGridPosition, StacksToAddOverride);
-			if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
-			{
-				DraggedItem.Clear();
-				StopDraggingItem(Controller);
-				return;
-			}
-			if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
-			{
-				UpdateStacksOnDraggedItemWidget(AddingStacksResult.StacksLeft);
-				DraggedItem.Stacks = AddingStacksResult.StacksLeft;
-			}
+			const int32 PreviousStacks = DraggedItem.Stacks;
+			const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(ItemDef, PreviousStacks, ItemGridPosition, StacksToAddOverride);
+
+			UpdateDraggedItem(AddingStacksResult, PreviousStacks, Controller);
 		}
 	}
 }
@@ -1832,6 +1899,23 @@ void UObsidianPlayerInputManager::UpdateDraggedItem(const FObsidianItemOperation
 		}
 		UpdateStacksOnDraggedItemWidget(OperationResult.StacksLeft);
 		DraggedItem.Stacks = OperationResult.StacksLeft;
+	}
+}
+
+void UObsidianPlayerInputManager::UpdateDraggedItem(const FObsidianAddingStacksResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController)
+{
+	if(CachedNumberOfStack != OperationResult.StacksLeft)
+	{
+		if(OperationResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
+		{
+			DraggedItem.Clear();
+			StopDraggingItem(ForController);
+		}
+		else if(OperationResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
+		{
+			UpdateStacksOnDraggedItemWidget(OperationResult.StacksLeft);
+			DraggedItem.Stacks = OperationResult.StacksLeft;
+		}
 	}
 }
 

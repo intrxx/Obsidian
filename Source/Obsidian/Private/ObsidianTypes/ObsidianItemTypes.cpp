@@ -25,6 +25,11 @@ bool FObsidianSlotDefinition::IsValid() const
 	return SlotTag.IsValid();
 }
 
+bool FObsidianSlotDefinition::HasLimitedStacks() const
+{
+	return SlotStackLimit != INDEX_NONE;
+}
+
 FGameplayTag FObsidianSlotDefinition::GetSlotTag() const
 {
 	return SlotTag;

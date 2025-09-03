@@ -31,6 +31,7 @@ FGameplayTag FObsidianEquipmentSlotDefinition::GetEquipmentSlotTag() const
 
 EObsidianEquipCheckResult FObsidianEquipmentSlotDefinition::CanEquipAtSlot(const FGameplayTag& ItemCategory) const
 {
+	ensureMsgf(BaseSlotDefinition.HasLimitedStacks() == false, TEXT("Equipment Slots shouldn't have limited stacks."));
 	return BaseSlotDefinition.CanPlaceAtSlot(ItemCategory);
 }
 

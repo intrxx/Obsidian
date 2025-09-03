@@ -203,6 +203,8 @@ private:
 
 	/** Checks if the provided Item Definition fits in the inventory at provided slot. */
 	bool CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+
+	bool CheckReplacementPossible(const FIntPoint& AtGridSlot, const FIntPoint& GridSpanAtPosition, const FIntPoint& ReplacingGridSpan) const;
 	
 	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided ItemDef. */
 	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);

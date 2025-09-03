@@ -179,6 +179,7 @@ public:
 	{};
 
 	bool IsValid() const;
+	bool HasLimitedStacks() const;
 
 	FGameplayTag GetSlotTag() const;
 	
@@ -202,6 +203,10 @@ public:
 	/** Items with this Gameplay Tags will not be allowed to be equipped in this slot. Can be used to ban some type of armament as a gameplay mechanic. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTagContainer BannedItemCategories = FGameplayTagContainer::EmptyContainer;
+
+	/** - UNIMPLEMENTED - Amount of Stacks of provided Item the Slot can store. Leave at INDEX_NONE for unlimited storage, this is the default behaviour for Equipment Slots and shouldn't be changed. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	int32 SlotStackLimit = INDEX_NONE;
 
 	static const FObsidianSlotDefinition InvalidSlot;
 };
@@ -439,6 +444,16 @@ public:
 	bool IsEmpty() const
 	{
 		return !Instance && !ItemDef;
+	}
+
+	bool CarriesItemDef() const
+	{
+		return ItemDef != nullptr;
+	}
+
+	bool CarriesInstance() const
+	{
+		return Instance != nullptr;
 	}
 
 	void Clear()

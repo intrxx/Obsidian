@@ -165,6 +165,50 @@ bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FInt
 	return false;
 }
 
+bool UObsidianInventoryComponent::CheckReplacementPossible(const FIntPoint& AtGridSlot, const FIntPoint& GridSpanAtPosition, const FIntPoint& ReplacingGridSpan) const
+{
+	TMap<FIntPoint, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
+	
+	for(int32 SpanX = 0; SpanX < GridSpanAtPosition.X; ++SpanX)
+	{
+		for(int32 SpanY = 0; SpanY < GridSpanAtPosition.Y; ++SpanY)
+		{
+			const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
+			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
+			{
+				*TempLocation = false;
+			}
+#if !UE_BUILD_SHIPPING
+			else
+			{
+				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
+				"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), GridSlotToCheck.X, GridSlotToCheck.Y), ELogVerbosity::Warning);
+			}
+#endif
+		}
+	}
+	
+	bool bCanReplace = false;
+	if(TempInventoryStateMap[AtGridSlot] == false) // Initial location is free
+	{
+		bCanReplace = true;
+		for(int32 SpanX = 0; SpanX < ReplacingGridSpan.X; ++SpanX)
+		{
+			for(int32 SpanY = 0; SpanY < ReplacingGridSpan.Y; ++SpanY)
+			{
+				const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
+				const bool* bExistingOccupied = TempInventoryStateMap.Find(GridSlotToCheck);
+				if(bExistingOccupied == nullptr || *bExistingOccupied)
+				{
+					bCanReplace = false;
+					break;
+				}
+			}
+		}
+	}
+	return bCanReplace;
+}
+
 FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
@@ -646,8 +690,6 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecif
 	Result.AddedStacks = AmountThatCanBeAddedToInstance;
 	Result.LastAddedToInstance = InstanceToAddTo;
 	
-	UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(InstanceToAddTo));
-
 	if(AmountThatCanBeAddedToInstance == AddingFromItemDefCurrentStacks)
 	{
 		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
@@ -1062,9 +1104,15 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const FIntPoint& ItemGr
 	return bCanFit;
 }
 
+bool UObsidianInventoryComponent::CanFitItemInstance(const UObsidianInventoryItemInstance* Instance)
+{
+	FIntPoint AvailablePosition = FIntPoint::NoneValue;
+	return CheckAvailablePosition(AvailablePosition, Instance->GetItemGridSpan());
+}
+
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& AtGridSlot, UObsidianInventoryItemInstance* ReplacingInstance)
 {
-	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
+	const UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
 	if (InstanceAtLocation == nullptr)
 	{
 		return false;
@@ -1076,118 +1124,32 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 		return false;
 	}
 	
-	const FIntPoint ItemGridSpan = InstanceAtLocation->GetItemGridSpan();
-	TMap<FIntPoint, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
-	
-	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
-	{
-		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
-		{
-			const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
-			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
-			{
-				*TempLocation = false;
-			}
-#if !UE_BUILD_SHIPPING
-			else
-			{
-				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
-				"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), GridSlotToCheck.X, GridSlotToCheck.Y), ELogVerbosity::Warning);
-			}
-#endif
-		}
-	}
-	
-	bool bCanReplace = false;
-	const FIntPoint ReplacingItemGridSpan = ReplacingInstance->GetItemGridSpan();
-	
-	if(TempInventoryStateMap[AtGridSlot] == false) // Initial location is free
-	{
-		bCanReplace = true;
-		for(int32 SpanX = 0; SpanX < ReplacingItemGridSpan.X; ++SpanX)
-		{
-			for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
-			{
-				const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
-				const bool* bExistingOccupied = TempInventoryStateMap.Find(GridSlotToCheck);
-				if(bExistingOccupied == nullptr || *bExistingOccupied)
-				{
-					bCanReplace = false;
-					break;
-				}
-			}
-		}
-	}
-	return bCanReplace;
-}
-
-bool UObsidianInventoryComponent::CanFitItemInstance(const UObsidianInventoryItemInstance* Instance)
-{
-	FIntPoint AvailablePosition = FIntPoint::NoneValue;
-	return CheckAvailablePosition(AvailablePosition, Instance->GetItemGridSpan());
+	return CheckReplacementPossible(AtGridSlot, InstanceAtLocation->GetItemGridSpan(), ReplacingInstance->GetItemGridSpan());
 }
 
 bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& AtGridSlot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
 {
-	if(GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount) <= 0)
+	const UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
+	if (InstanceAtLocation == nullptr)
 	{
 		return false;
 	}
 	
-	UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
-	TMap<FIntPoint, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
-	const FIntPoint ItemOrigin = GetItemLocationFromGrid(InstanceAtLocation);
-	const FIntPoint ItemGridSpan = InstanceAtLocation->GetItemGridSpan();
-	
-	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
+	if(GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount) <= 0)
 	{
-		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
-		{
-			const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
-			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
-			{
-				*TempLocation = false;
-			}
-#if !UE_BUILD_SHIPPING
-			else
-			{
-				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to UnMark a Location [x: %d, y: %d] that doesn't"
-				"exist in the TempInventoryStateMap in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlot."), GridSlotToCheck.X, GridSlotToCheck.Y), ELogVerbosity::Warning);
-			}
-#endif
-		}
+		//TODO Limit of stacks reached, add voiceover?
+		return false;
 	}
 	
-	bool bCanReplace = false;
-	
-	const UObsidianInventoryItemDefinition* DefaultItem = ItemDef.GetDefaultObject();
-	if(ensureMsgf(DefaultItem, TEXT("Item Default could not be extracted from provided Item Def in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef")))
+	if(const UObsidianInventoryItemDefinition* DefaultItem = ItemDef.GetDefaultObject())
 	{
-		const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass()));
-		if(ensureMsgf(Appearance, TEXT("Appearance fragment does not exist on provided Item Def in UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef")))
+		if(const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			const FIntPoint ReplacingItemGridSpan = Appearance->GetItemGridSpanFromDesc();
+			return CheckReplacementPossible(AtGridSlot, InstanceAtLocation->GetItemGridSpan(), Appearance->GetItemGridSpanFromDesc());
+		}
+	}
 
-			if(TempInventoryStateMap[AtGridSlot] == false) // Initial location is free
-			{
-				bCanReplace = true;
-				for(int32 SpanX = 0; SpanX < ReplacingItemGridSpan.X; ++SpanX)
-				{
-					for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
-					{
-						const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
-						const bool* bExistingOccupied = TempInventoryStateMap.Find(GridSlotToCheck);
-						if(bExistingOccupied == nullptr || *bExistingOccupied)
-						{
-							bCanReplace = false;
-							break;
-						}
-					}
-				}
-			}
-		}
-	}
-	return bCanReplace;
+	return false;
 }
 
 bool UObsidianInventoryComponent::CanFitItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)

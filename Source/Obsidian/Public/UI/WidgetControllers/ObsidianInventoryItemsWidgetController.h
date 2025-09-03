@@ -85,6 +85,8 @@ public:
 	FGameplayTag GetStashTag() const;
 	int32 GetNumberOfItemsAdded() const;
 
+	UObsidianItem* GetItemWidgetAtPosition(const FObsidianItemPosition& ItemPosition) const;
+
 	/** Tries to add Item widget to internal map, will return false if item position is already occupied. */
 	bool AddItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
 	bool RemoveItemWidget(const FObsidianItemPosition& ItemPosition);
@@ -101,9 +103,7 @@ protected:
 	TMap<FObsidianItemPosition, UObsidianItem*> StashAddedItemWidgetsMap;
 };
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemEquippedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemStashedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 
 /**
@@ -154,7 +154,8 @@ public:
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
 	void RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
 
-	void RegisterStashTabItemWidget(const FGameplayTag& StashTabTag, const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
+	UObsidianItem* GetItemWidgetAtStashPosition(const FObsidianItemPosition& ItemPosition) const;
+	void RegisterStashTabItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
 	void RemoveStashItemWidget(const FObsidianItemPosition& ItemPosition);
 	
 	/** This function takes the primary slot that is causing the other slot to be blocked. */
@@ -191,10 +192,12 @@ public:
 	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);
 	
 public:
-	FOnItemEquippedSignature OnItemEquippedDelegate;
+	FOnItemAddedSignature OnItemEquippedDelegate;
 	FOnItemAddedSignature OnItemAddedDelegate;
-	FOnItemStashedSignature OnItemStashedDelegate;
-	FOnItemChangedSignature OnItemChangedDelegate;
+	FOnItemAddedSignature OnItemStashedDelegate;
+	
+	FOnItemChangedSignature OnInventoryItemChangedDelegate;
+	FOnItemChangedSignature OnStashedItemChangedDelegate;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

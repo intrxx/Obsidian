@@ -21,7 +21,7 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryItemsWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnItemEquipped);
 	
 	InventoryItemsWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
-	InventoryItemsWidgetController->OnItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
+	InventoryItemsWidgetController->OnInventoryItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
 }
 
 void UObsidianInventory::NativeConstruct()
@@ -47,7 +47,7 @@ void UObsidianInventory::NativeDestruct()
 		InventoryItemsWidgetController->RemoveItemUIElements();
 		InventoryItemsWidgetController->OnItemEquippedDelegate.Clear();
 		InventoryItemsWidgetController->OnItemAddedDelegate.Clear();
-		InventoryItemsWidgetController->OnItemChangedDelegate.Clear();
+		InventoryItemsWidgetController->OnInventoryItemChangedDelegate.Clear();
 	}
 	
 	if(InventoryGrid)

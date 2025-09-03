@@ -101,7 +101,7 @@ public:
 	void ServerAddItemToInventoryAtSlot(const FIntPoint& SlotPosition, const bool bShiftDown);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerAddStacksFromDraggedItemToItemAtSlot(const FIntPoint& SlotPosition, const int32 StacksToAddOverride = -1);
+	void ServerAddStacksFromDraggedItemToInventoryItemAtSlot(const FIntPoint& SlotPosition, const int32 StacksToAddOverride = -1);
 
 	UFUNCTION(Server, Reliable)
 	void ServerTakeoutFromItem(const FIntPoint& SlotPosition, const int32 StacksToTake);
@@ -150,10 +150,16 @@ public:
 	void ServerAddItemToStashTabAtSlot(const FObsidianItemPosition& AtPosition, const bool bShiftDown);
 
 	UFUNCTION(Server, Reliable)
+	void ServerAddStacksFromDraggedItemToStashedItemAtSlot(const FObsidianItemPosition& AtPosition, const int32 StacksToAddOverride = -1);
+	
+	UFUNCTION(Server, Reliable)
 	void ServerGrabStashedItemToCursor(const FObsidianItemPosition& FromPosition);
 
 	UFUNCTION(Server, Reliable)
 	void ServerTransferItemToInventory(const FObsidianItemPosition& FromStashPosition);
+
+	UFUNCTION(Server, Reliable)
+	void ServerReplaceItemAtStashPosition(const FObsidianItemPosition& AtStashPosition);
 
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
@@ -246,6 +252,7 @@ private:
 	void StopDraggingItem(const AController* Controller);
 
 	void UpdateDraggedItem(const FObsidianItemOperationResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController);
+	void UpdateDraggedItem(const FObsidianAddingStacksResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController);
 
 	/**
 	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with

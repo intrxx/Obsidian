@@ -53,16 +53,6 @@ bool UObsidianStashTab_Slots::CanReplaceItemAtSpecificPosition(const FObsidianIt
 		return false;
 	}
 	
-	if(ReplacingInstance->IsItemEquippable() == false)
-	{
-		return false;
-	}
-	
-	if(ReplacingInstance->IsItemIdentified() == false)
-	{
-		return false;
-	}
-	
 	return CheckReplacementPossible(SpecifiedPosition, ReplacingInstance->GetItemCategoryTag());
 }
 
@@ -75,16 +65,6 @@ bool UObsidianStashTab_Slots::CanReplaceItemAtSpecificPosition(const FObsidianIt
 
 	const UObsidianInventoryItemDefinition* DefinitionDefault = ReplacingDef.GetDefaultObject();
 	if (DefinitionDefault == nullptr)
-	{
-		return false;
-	}
-	
-	if(DefinitionDefault->IsEquippable() == false)
-	{
-		return false;
-	}
-	
-	if(DefinitionDefault->IsIdentified() == false)
 	{
 		return false;
 	}

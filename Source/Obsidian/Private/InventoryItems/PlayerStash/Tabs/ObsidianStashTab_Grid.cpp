@@ -120,11 +120,12 @@ bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPositio
 	}
 
 	const FIntPoint ItemOrigin = SpecifiedPosition.GetItemGridLocation();
+	const FIntPoint ItemGridSpan = InstanceAtGrid->GetItemGridSpan();
 	TMap<FIntPoint, bool> TempInventoryStateMap = GridStateMap;
 	
-	for(int32 SpanX = 0; SpanX < ReplacingItemGridSpan.X; ++SpanX)
+	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
-		for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
+		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
 			const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
 			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
