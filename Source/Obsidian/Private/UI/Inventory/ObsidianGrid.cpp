@@ -133,7 +133,11 @@ void UObsidianGrid::OnInventorySlotMouseButtonDown(const UObsidianItemSlot_GridS
 void UObsidianGrid::AddItemToGrid(UObsidianItem* ItemWidget, const float ItemSlotPadding)
 {
 	UCanvasPanelSlot* CanvasItem = Root_CanvasPanel->AddChildToCanvas(ItemWidget);
-	CanvasItem->SetSize(ItemWidget->GetItemWidgetSize());
+	const FVector2D ItemSize = FVector2D(
+		(ItemWidget->GetItemGridSpan().X * SlotTileSize) - (ItemSlotPadding * 2),
+		(ItemWidget->GetItemGridSpan().Y * SlotTileSize) - (ItemSlotPadding * 2)
+		);
+	CanvasItem->SetSize(ItemSize);
 	
 	const FVector2D ItemPosition = SlotTileSize * (FVector2D)ItemWidget->GetGridPosition() + ItemSlotPadding;
 	CanvasItem->SetPosition(ItemPosition);
