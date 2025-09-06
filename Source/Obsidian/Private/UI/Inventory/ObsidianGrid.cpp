@@ -139,7 +139,7 @@ void UObsidianGrid::AddItemToGrid(UObsidianItem* ItemWidget, const float ItemSlo
 		);
 	CanvasItem->SetSize(ItemSize);
 	
-	const FVector2D ItemPosition = SlotTileSize * (FVector2D)ItemWidget->GetGridPosition() + ItemSlotPadding;
+	const FVector2D ItemPosition = SlotTileSize * static_cast<FVector2D>(ItemWidget->GetGridPosition()) + ItemSlotPadding;
 	CanvasItem->SetPosition(ItemPosition);
 }
 

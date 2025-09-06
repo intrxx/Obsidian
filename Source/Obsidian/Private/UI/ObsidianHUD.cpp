@@ -148,3 +148,4 @@ FGameplayTag AObsidianHUD::GetActiveStashTabTag() const
 	return FGameplayTag::EmptyTag;
 }
 
+

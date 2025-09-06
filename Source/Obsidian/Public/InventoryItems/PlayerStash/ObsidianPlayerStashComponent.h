@@ -133,6 +133,10 @@ public:
 	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
 	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
 
+	UFUNCTION(Server, Reliable)
+	void ServerRegisterAndValidateCurrentStashTab(const FGameplayTag& StashTab);
+	FGameplayTag GetActiveStashTag() const;
+
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
@@ -172,4 +176,7 @@ private:
 	 */
 	UPROPERTY(Replicated)
 	FObsidianStashItemList StashItemList;
+
+	UPROPERTY(Replicated)
+	FGameplayTag CurrentStashTab = FGameplayTag::EmptyTag;
 };

@@ -249,9 +249,10 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 	}
 	else if(bShowStash == false && IsPlayerStashOpen())
 	{
-		PlayerStash->RemoveFromParent();
+		InventoryItemsWidgetController->RegisterCurrentStashTab(FGameplayTag::EmptyTag);
+		PlayerStash->CloseStash();
 		PlayerStash = nullptr;
-
+		
 		if(IsInventoryOpen())
 		{
 			ToggleInventory();

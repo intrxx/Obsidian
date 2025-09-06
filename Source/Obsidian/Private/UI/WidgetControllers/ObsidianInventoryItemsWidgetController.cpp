@@ -1334,6 +1334,14 @@ void UObsidianInventoryItemsWidgetController::RegisterEquipmentItemWidget(const 
 	}
 }
 
+void UObsidianInventoryItemsWidgetController::RegisterCurrentStashTab(const FGameplayTag& CurrentStashTab)
+{
+	if (PlayerStashComponent)
+	{
+		PlayerStashComponent->ServerRegisterAndValidateCurrentStashTab(CurrentStashTab);
+	}
+}
+
 UObsidianItem* UObsidianInventoryItemsWidgetController::GetItemWidgetAtStashPosition(const FObsidianItemPosition& ItemPosition) const
 {
 	const FGameplayTag StashTabTag = ItemPosition.GetOwningStashTabTag();

@@ -34,6 +34,8 @@ public:
 	virtual void HandleWidgetControllerSet() override;
 	
 	FGameplayTag GetActiveStashTabTag() const;
+
+	void CloseStash();
 	
 protected:
 	virtual void NativeConstruct() override;

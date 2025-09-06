@@ -44,6 +44,7 @@ void UObsidianPlayerStashComponent::GetLifetimeReplicatedProps(TArray<class FLif
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ThisClass, StashItemList);
+	DOREPLIFETIME(ThisClass, CurrentStashTab);
 }
 
 UObsidianStashTabsConfig* UObsidianPlayerStashComponent::GetStashTabConfig() const
@@ -707,6 +708,27 @@ void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* Usin
 	{
 		//TODO Usage failed, Play some VO?
 	}
+}
+
+void UObsidianPlayerStashComponent::ServerRegisterAndValidateCurrentStashTab_Implementation(const FGameplayTag& StashTab)
+{
+	if (StashTab == FGameplayTag::EmptyTag)
+	{
+		CurrentStashTab = FGameplayTag::EmptyTag;
+	}
+	else if (GetStashTabForTag(StashTab)) // Stash exists and is valid
+	{
+		CurrentStashTab = StashTab;
+	}
+	else //TODO Should I do more here?
+	{
+		ensureAlwaysMsgf(false, TEXT("There is no such StashTab found for provided Gameplay Tag for Current Player."));
+	}
+}
+
+FGameplayTag UObsidianPlayerStashComponent::GetActiveStashTag() const
+{
+	return CurrentStashTab;
 }
 
 bool UObsidianPlayerStashComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)

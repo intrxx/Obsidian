@@ -59,6 +59,13 @@ FGameplayTag UObsidianPlayerStashWidget::GetActiveStashTabTag() const
 	return FGameplayTag::EmptyTag;
 }
 
+void UObsidianPlayerStashWidget::CloseStash()
+{
+	ActiveStashTab->HideStashTab();
+	ActiveStashTab = nullptr;
+	RemoveFromParent();
+}
+
 void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	const FGameplayTag StashTabTag = ItemWidgetData.ItemPosition.GetOwningStashTabTag();
@@ -173,6 +180,7 @@ void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& WithStashTag)
 		
 		StashTabToShow->ShowStashTab();
 		ActiveStashTab = StashTabToShow;
+		InventoryItemsWidgetController->RegisterCurrentStashTab(WithStashTag);
 	}
 }
 

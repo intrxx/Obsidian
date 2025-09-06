@@ -55,17 +55,17 @@ void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* Owner
 		if(const AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			DataPack.bStashActive = ObsidianHUD->IsPlayerStashOpened();
-			DataPack.StashTabTag = ObsidianHUD->GetActiveStashTabTag();
 		}
-	}
-	
-	if(DataPack.bStashActive == false)
-	{
-		return;
 	}
 	
 	if(UObsidianPlayerStashComponent* PlayerStashComponent = OwnerPC->FindComponentByClass<UObsidianPlayerStashComponent>())
 	{
+		DataPack.StashTabTag = PlayerStashComponent->GetActiveStashTag();
+		if (DataPack.StashTabTag == FGameplayTag::EmptyTag)
+		{
+			return;
+		}
+		
 		TArray<UObsidianInventoryItemInstance*> Items = PlayerStashComponent->GetAllItemsFromStashTab(DataPack.StashTabTag);
 		for(const UObsidianInventoryItemInstance* Item : Items)
 		{
@@ -182,7 +182,19 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 	const float ColumnWidth = ObjNameSize * 5 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSpanSize + CurrentGridLocationSize;
 	const int NumColumns = FMath::Max(1, FMath::FloorToInt(CanvasWidth / ColumnWidth));
 
-	if (DataPack.bStashActive == false)
+	bool bStashActive = DataPack.bStashActive;
+	if (OwnerPC->HasAuthority() == false) // If we are on the client the check failed on the Server since we check the HUD, recheck here
+	{
+		if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(OwnerPC))
+		{
+			if(const AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
+			{
+				bStashActive = ObsidianHUD->IsPlayerStashOpened();
+			}
+		}
+	}
+	
+	if (bStashActive == false)
 	{
 		CanvasContext.PrintAt((CanvasWidth / 2) - (NoItemsTextSize / 2), CanvasContext.Canvas->SizeY / 2,
 			FString::Printf(TEXT("{red}Player Stash is Closed, to view items open it.")));
