@@ -28,7 +28,8 @@ bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemP
 	const FIntPoint SpecificGridPosition = SpecifiedPosition.GetItemGridLocation();
 	
 	bool bCanFit = false;
-	if(GridStateMap[SpecificGridPosition] == false) // Initial location is free
+	const bool* InitialPositionFreePtr = GridStateMap.Find(SpecificGridPosition);
+	if(InitialPositionFreePtr && *InitialPositionFreePtr == false) // Initial location is free
 	{
 		bCanFit = true;
 		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
@@ -36,8 +37,8 @@ bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemP
 			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 			{
 				const FIntPoint LocationToCheck = SpecificGridPosition + FIntPoint(SpanX, SpanY);
-				const bool* bExistingOccupied = GridStateMap.Find(LocationToCheck);
-				if(bExistingOccupied == nullptr || *bExistingOccupied)
+				const bool* ExistingOccupiedPtr = GridStateMap.Find(LocationToCheck);
+				if(ExistingOccupiedPtr == nullptr || *ExistingOccupiedPtr)
 				{
 					bCanFit = false;
 					break;
@@ -144,7 +145,8 @@ bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPositio
 	
 	bool bCanReplace = false;
 	
-	if(TempInventoryStateMap[ItemOrigin] == false) // Initial location is free
+	const bool* InitialPositionFreePtr = TempInventoryStateMap.Find(ItemOrigin);
+	if(InitialPositionFreePtr && *InitialPositionFreePtr == false) // Initial location is free
 	{
 		bCanReplace = true;
 		for(int32 SpanX = 0; SpanX < ReplacingItemGridSpan.X; ++SpanX)

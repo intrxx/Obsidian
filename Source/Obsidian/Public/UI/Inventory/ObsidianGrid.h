@@ -47,7 +47,7 @@ protected:
 	float SlotTileSize = 68.0f;
 	
 	UPROPERTY()
-	TArray<TObjectPtr<UObsidianItemSlot_GridSlot>> GridSlots;
+	TArray<UObsidianItemSlot_GridSlot*> GridSlots;
 
 	/** Array of slots that are affected by item hover, to clear it later. */
 	UPROPERTY()
@@ -60,6 +60,9 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCanvasPanel> Root_CanvasPanel;
 
+private:
+	void OffsetGridPositionByItemSpan(FIntPoint DraggedItemGridSpan, FIntPoint& OriginalPosition) const;
+	
 private:
 	UPROPERTY()
 	EObsidianGridOwner GridOwner = EObsidianGridOwner::GO_None;

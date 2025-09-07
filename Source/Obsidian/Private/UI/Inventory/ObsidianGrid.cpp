@@ -72,7 +72,8 @@ UObsidianItemSlot_GridSlot* UObsidianGrid::GetSlotByPosition(const FIntPoint& By
 			return A.X < B.X;
 		});
 
-	return Index != INDEX_NONE ? GridSlots[Index] : nullptr;
+	
+	return Index != INDEX_NONE && Index < GridSlots.Num() ? GridSlots[Index] : nullptr;
 }
 
 void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlot, const bool bEntered)
@@ -94,7 +95,9 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 			return; 
 		}
 		
-		const FIntPoint HoveredSlotPosition = AffectedSlot->GetSlotPositionOnGrid();
+		FIntPoint HoveredSlotPosition = AffectedSlot->GetSlotPositionOnGrid();
+		OffsetGridPositionByItemSpan(ItemGridSpan, HoveredSlotPosition);
+		
 		const bool bCanPlace = OwningWidgetController->CanPlaceDraggedItem(GridOwner, HoveredSlotPosition, ItemGridSpan, StashTag);
 		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 		{
@@ -127,7 +130,21 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 
 void UObsidianGrid::OnInventorySlotMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot, const bool bShiftDown) const
 {
-	OnGridSlotPressedDelegate.Broadcast(AffectedSlot->GetSlotPositionOnGrid(), bShiftDown);
+	if (AffectedSlot == nullptr)
+	{
+		return;
+	}
+
+	FIntPoint OriginGridPositionPressed = AffectedSlot->GetSlotPositionOnGrid();
+	
+	FIntPoint OutDraggedItemGridSpan;
+	if (OwningWidgetController.IsValid() && OwningWidgetController->GetDraggedItemGridSpan(OutDraggedItemGridSpan))
+	{
+		// It feels kinda forced :/ Probably will need to rethink the whole thing someday
+		OffsetGridPositionByItemSpan(OutDraggedItemGridSpan, OriginGridPositionPressed);
+	}
+	
+	OnGridSlotPressedDelegate.Broadcast(OriginGridPositionPressed, bShiftDown);
 }
 
 void UObsidianGrid::AddItemToGrid(UObsidianItem* ItemWidget, const float ItemSlotPadding)
@@ -141,5 +158,14 @@ void UObsidianGrid::AddItemToGrid(UObsidianItem* ItemWidget, const float ItemSlo
 	
 	const FVector2D ItemPosition = SlotTileSize * static_cast<FVector2D>(ItemWidget->GetGridPosition()) + ItemSlotPadding;
 	CanvasItem->SetPosition(ItemPosition);
+}
+
+void UObsidianGrid::OffsetGridPositionByItemSpan(FIntPoint DraggedItemGridSpan, FIntPoint& OriginalPosition) const 
+{
+	DraggedItemGridSpan = FIntPoint(
+			(DraggedItemGridSpan.X % 2 == 0) ? (DraggedItemGridSpan.X - 1) / 2 : DraggedItemGridSpan.X / 2,
+			(DraggedItemGridSpan.Y % 2 == 0) ? (DraggedItemGridSpan.Y - 1) / 2 : DraggedItemGridSpan.Y / 2);
+	
+	OriginalPosition -= DraggedItemGridSpan;
 }
 

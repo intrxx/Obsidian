@@ -189,7 +189,8 @@ bool UObsidianInventoryComponent::CheckReplacementPossible(const FIntPoint& AtGr
 	}
 	
 	bool bCanReplace = false;
-	if(TempInventoryStateMap[AtGridSlot] == false) // Initial location is free
+	const bool* InitialPositionFreePtr = TempInventoryStateMap.Find(AtGridSlot);
+	if(InitialPositionFreePtr && *InitialPositionFreePtr == false) // Initial location is free
 	{
 		bCanReplace = true;
 		for(int32 SpanX = 0; SpanX < ReplacingGridSpan.X; ++SpanX)
@@ -1086,8 +1087,9 @@ bool UObsidianInventoryComponent::CheckAvailablePosition(FIntPoint& OutAvailable
 bool UObsidianInventoryComponent::CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FIntPoint& SpecifiedPosition)
 {
 	bool bCanFit = false;
-	
-	if(InventoryGrid.InventoryStateMap[SpecifiedPosition] == false) // Initial location is free
+
+	const bool* InitialPositionFreePtr = InventoryGrid.InventoryStateMap.Find(SpecifiedPosition);
+	if(InitialPositionFreePtr && *InitialPositionFreePtr == false) // Initial location is free
 	{
 		bCanFit = true;
 		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
@@ -1095,8 +1097,8 @@ bool UObsidianInventoryComponent::CheckSpecifiedPosition(const FIntPoint& ItemGr
 			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 			{
 				const FIntPoint LocationToCheck = SpecifiedPosition + FIntPoint(SpanX, SpanY);
-				const bool* bExistingOccupied = InventoryGrid.InventoryStateMap.Find(LocationToCheck);
-				if(bExistingOccupied == nullptr || *bExistingOccupied)
+				const bool* ExistingOccupiedPtr = InventoryGrid.InventoryStateMap.Find(LocationToCheck);
+				if(ExistingOccupiedPtr == nullptr || *ExistingOccupiedPtr)
 				{
 					bCanFit = false;
 					break;
