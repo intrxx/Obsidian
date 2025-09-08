@@ -46,6 +46,8 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
 	UObsidianInventoryItemInstance* GetItemInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition);
 
+	TArray<FObsidianSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory);
+
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
 	
 	/** Finds all stacks in the inventory for given item type with item Def. */

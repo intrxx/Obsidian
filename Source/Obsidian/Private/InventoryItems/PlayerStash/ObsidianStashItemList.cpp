@@ -10,6 +10,7 @@
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
+#include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
 
 // ~ FObsidianStashEntry
 
@@ -105,6 +106,25 @@ UObsidianStashTab* FObsidianStashItemList::GetStashTabForTag(const FGameplayTag&
 		return *StashTabPointer;
 	}
 	return nullptr;
+}
+
+TArray<FObsidianSlotDefinition> FObsidianStashItemList::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const UObsidianStashTab_Slots* SlotStashTab)
+{
+	TArray<FObsidianSlotDefinition> MatchingSlots;
+	if (SlotStashTab == nullptr)
+	{
+		return MatchingSlots;
+	}
+	
+	for (const FObsidianSlotDefinition& Slot : SlotStashTab->GetSlots())
+	{
+		if (Slot.CanPlaceAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip)
+		{
+			MatchingSlots.Add(Slot);
+		}
+	}
+	
+	return MatchingSlots;
 }
 
 UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FObsidianItemPosition& ToPosition)

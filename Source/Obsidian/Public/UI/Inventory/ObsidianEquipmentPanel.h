@@ -27,9 +27,10 @@ class OBSIDIAN_API UObsidianEquipmentPanel : public UObsidianWidgetBase
 public:
 	void InitializeEquipmentPanel(UObsidianInventory* InOwningInventory);
 
-	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
+	UObsidianItemSlot_Equipment* FindEquipmentSlotWidgetForTag(const FGameplayTag& Tag) const;
+	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
 
-	void OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const;
+	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
 	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const;
 	
 private:
@@ -38,4 +39,6 @@ private:
 
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianInventory> OwningInventory;
+
+	bool bRetainPreviousState = false;
 };

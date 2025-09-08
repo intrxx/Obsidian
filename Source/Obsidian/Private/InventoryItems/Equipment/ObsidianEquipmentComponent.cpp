@@ -124,9 +124,9 @@ FObsidianEquipmentSlotDefinition UObsidianEquipmentComponent::FindEquipmentSlotB
 	return EquipmentList.FindEquipmentSlotByTag(SlotTag);
 }
 
-TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory)
+TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& ItemCategory)
 {
-	return EquipmentList.FindMatchingEquipmentSlotsByItemCategory(ItemCategory);
+	return EquipmentList.FindMatchingEquipmentSlotsForItemCategory(ItemCategory);
 }
 
 bool UObsidianEquipmentComponent::IsItemEquippedAtSlot(const FGameplayTag& SlotTag)
@@ -173,7 +173,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(UOb
 
 	const FGameplayTag& ItemCategoryTag = InstanceToEquip->GetItemCategoryTag();
 	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
-	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
+	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsForItemCategory(ItemCategoryTag))
 	{
 		const FGameplayTag SlotTag = Slot.GetEquipmentSlotTag();
 		if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
@@ -421,7 +421,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	
 	const FGameplayTag& ItemCategoryTag = DefaultObject->GetItemCategoryTag();
 	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
-	for(const FObsidianEquipmentSlotDefinition& Slot : FindMatchingEquipmentSlotsByItemCategory(ItemCategoryTag))
+	for(const FObsidianEquipmentSlotDefinition& Slot : FindMatchingEquipmentSlotsForItemCategory(ItemCategoryTag))
 	{
 		const FGameplayTag SlotTag = Slot.GetEquipmentSlotTag();
 		if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))

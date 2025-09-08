@@ -24,6 +24,7 @@ public:
 	UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) override;
+	TArray<FObsidianSlotDefinition> GetSlots() const;
 
 	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& Position) override;
 

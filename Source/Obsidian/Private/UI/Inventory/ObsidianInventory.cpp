@@ -22,6 +22,8 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	
 	InventoryItemsWidgetController->OnItemAddedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
 	InventoryItemsWidgetController->OnInventoryItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
+	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
+	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
 }
 
 void UObsidianInventory::NativeConstruct()
@@ -125,7 +127,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	
 	InventoryItemsWidgetController->RegisterEquipmentItemWidget(DesiredSlot, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
 
-	UObsidianItemSlot_Equipment* EquipmentSlot = EquipmentPanel->FindEquipmentSlotForTag(DesiredSlot);
+	UObsidianItemSlot_Equipment* EquipmentSlot = EquipmentPanel->FindEquipmentSlotWidgetForTag(DesiredSlot);
 	EquipmentSlot->AddItemToSlot(ItemWidget, ItemWidgetData.ItemSlotPadding);
 
 	if(ItemWidgetData.bDoesBlockSisterSlot)
@@ -140,9 +142,9 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		
 		InventoryItemsWidgetController->AddBlockedEquipmentItemWidget(DesiredSlot, BlockedSlotItem, false);
 
-		UObsidianItemSlot_Equipment* SlotToBlock = EquipmentPanel->FindEquipmentSlotForTag(SisterSlotTag);
+		UObsidianItemSlot_Equipment* SlotToBlock = EquipmentPanel->FindEquipmentSlotWidgetForTag(SisterSlotTag);
 		SlotToBlock->AddItemToSlot(BlockedSlotItem, ItemWidgetData.ItemSlotPadding);
-		SlotToBlock->SetSlotState(ISS_Blocked);
+		SlotToBlock->SetSlotState(EObsidianItemSlotState::ISS_Blocked);
 		BlockedSlotItem->SetOwningSlot(SlotToBlock);
 	}
 }
@@ -231,6 +233,31 @@ void UObsidianInventory::OnItemMouseLeave()
 	{
 		InventoryItemsWidgetController->HandleUnhoveringItem();
 	}
+}
+
+void UObsidianInventory::HighlightSlotPlacement(const FGameplayTagContainer& WithTags)
+{
+	for (UObsidianItemSlot_Equipment* SlotWidget : EquipmentPanel->GetSlotWidgets())
+	{
+		if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
+		{
+			SlotWidget->SetSlotState(EObsidianItemSlotState::ISS_GreenLight);
+			CachedHighlightedSlot.Add(SlotWidget);
+		}
+	}
+}
+
+void UObsidianInventory::StopHighlightSlotPlacement()
+{
+	for (UObsidianItemSlot_Equipment* SlotWidget : CachedHighlightedSlot)
+	{
+		if (SlotWidget)
+		{
+			SlotWidget->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
+		}
+	}
+	
+	CachedHighlightedSlot.Empty();
 }
 
 void UObsidianInventory::RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const

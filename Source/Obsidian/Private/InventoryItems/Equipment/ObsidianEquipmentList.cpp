@@ -131,11 +131,11 @@ FObsidianEquipmentSlotDefinition FObsidianEquipmentList::FindEquipmentSlotByTag(
 	return FObsidianEquipmentSlotDefinition::InvalidSlot;
 }
 
-TArray<FObsidianEquipmentSlotDefinition> FObsidianEquipmentList::FindMatchingEquipmentSlotsByItemCategory(const FGameplayTag& ItemCategory)
+TArray<FObsidianEquipmentSlotDefinition> FObsidianEquipmentList::FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& ItemCategory)
 {
 	TArray<FObsidianEquipmentSlotDefinition> MatchingSlots;
 	
-	for(FObsidianEquipmentSlotDefinition Slot : EquipmentSlots)
+	for(const FObsidianEquipmentSlotDefinition& Slot : EquipmentSlots)
 	{
 		if(Slot.CanEquipAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip)
 		{

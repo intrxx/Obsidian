@@ -128,6 +128,8 @@ void UObsidianInventoryItemsWidgetController::OnWidgetControllerSetupCompleted()
 	OwnerPlayerInputManager = UObsidianPlayerInputManager::FindPlayerInputManager(OwningActor);
 	check(OwnerPlayerInputManager);
 	OwnerPlayerInputManager->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableUIContext);
+	OwnerPlayerInputManager->OnStartDraggingItemDelegate.AddUObject(this, &ThisClass::OnStartDraggingItem);
+	OwnerPlayerInputManager->OnStopDraggingItemDelegate.AddUObject(this, &ThisClass::OnStopDraggingItem);
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
@@ -331,6 +333,51 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 		
 		OnStashedItemChangedDelegate.Broadcast(ItemWidgetData);
 	}
+}
+
+void UObsidianInventoryItemsWidgetController::OnStartDraggingItem(const FDraggedItem& DraggedItem)
+{
+	if (ObsidianPlayerController == nullptr)
+	{
+		return;
+	}
+	
+	const AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
+	if (ObsidianHUD == nullptr)
+	{
+		return;
+	}
+	
+	FGameplayTag DraggedItemCategory;
+	FGameplayTagContainer JoinedSlotTags;
+	
+	if (EquipmentComponent && ObsidianHUD->IsInventoryOpened()) // Gather possible equipment slots
+	{
+		DraggedItemCategory = UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(DraggedItem);
+		
+		for (const FObsidianEquipmentSlotDefinition& EquipmentSlot : EquipmentComponent->FindMatchingEquipmentSlotsForItemCategory(DraggedItemCategory))
+		{
+			JoinedSlotTags.AddTag(EquipmentSlot.GetEquipmentSlotTag());
+		}
+	}
+
+	FGameplayTagContainer StashMatchingSlotTags;
+	if (PlayerStashComponent && ObsidianHUD->IsPlayerStashOpened()) // Gather possible functional slots
+	{
+		DraggedItemCategory = DraggedItemCategory == FGameplayTag::EmptyTag ? UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(DraggedItem) : DraggedItemCategory;
+		
+		for (const FObsidianSlotDefinition& FunctionalSlot : PlayerStashComponent->FindMatchingSlotsForItemCategory(DraggedItemCategory))
+		{
+			JoinedSlotTags.AddTag(FunctionalSlot.GetSlotTag());
+		}
+	}
+	
+	OnStartPlacementHighlightDelegate.Broadcast(JoinedSlotTags);
+}
+
+void UObsidianInventoryItemsWidgetController::OnStopDraggingItem()
+{
+	OnStopPlacementHighlightDelegate.Broadcast();
 }
 
 int32 UObsidianInventoryItemsWidgetController::GetInventoryGridWidth() const

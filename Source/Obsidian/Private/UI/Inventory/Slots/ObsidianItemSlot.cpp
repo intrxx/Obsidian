@@ -15,32 +15,42 @@ void UObsidianItemSlot::NativeConstruct()
 	Action_Image->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState) const
+EObsidianItemSlotState UObsidianItemSlot::GetCurrentState() const
 {
-	if(InState == ISS_Neutral)
+	return CurrentState;
+}
+
+void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState)
+{
+	if(InState == EObsidianItemSlotState::ISS_Neutral)
 	{
+		CurrentState = EObsidianItemSlotState::ISS_Neutral;
 		Action_Image->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
-	if(InState == ISS_GreenLight)
+	if(InState == EObsidianItemSlotState::ISS_GreenLight)
 	{
+		CurrentState = EObsidianItemSlotState::ISS_GreenLight;
 		Action_Image->SetBrush(SlotGreenLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
-	if(InState == ISS_Selected)
+	if(InState == EObsidianItemSlotState::ISS_Selected)
 	{
+		CurrentState = EObsidianItemSlotState::ISS_Selected;
 		Action_Image->SetBrush(SlotSelectedLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 	}
-	if(InState == ISS_RedLight)
+	if(InState == EObsidianItemSlotState::ISS_RedLight)
 	{
+		CurrentState = EObsidianItemSlotState::ISS_RedLight;
 		Action_Image->SetBrush(SlotRedLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
-	if(InState == ISS_Blocked)
+	if(InState == EObsidianItemSlotState::ISS_Blocked)
 	{
+		CurrentState = EObsidianItemSlotState::ISS_Blocked;
 		Action_Image->SetBrush(SlotBlockedLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 		return;

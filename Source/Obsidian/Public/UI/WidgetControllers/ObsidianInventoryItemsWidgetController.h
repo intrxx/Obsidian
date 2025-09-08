@@ -106,6 +106,9 @@ protected:
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartPlacementHighlightSignature, const FGameplayTagContainer& ForSlotsWithTag);
+DECLARE_MULTICAST_DELEGATE(FOnStopPlacementHighlightSignature);
+
 /**
  *  
  */
@@ -202,6 +205,10 @@ public:
 	FOnItemChangedSignature OnInventoryItemChangedDelegate;
 	FOnItemChangedSignature OnStashedItemChangedDelegate;
 
+	/** As of now this delegate will fire once with all Slot Tags that are possible to add the Dragged Item to and it is on individual Widget side to parse these. */
+	FOnStartPlacementHighlightSignature OnStartPlacementHighlightDelegate;
+	FOnStopPlacementHighlightSignature OnStopPlacementHighlightDelegate;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
@@ -224,6 +231,9 @@ private:
 	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
 	void OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage);
 	void OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage);
+
+	void OnStartDraggingItem(const FDraggedItem& DraggedItem);
+	void OnStopDraggingItem();
 	
 	void HandleTakingOutStacksFromInventory(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition);
 	void HandleTakingOutStacksFromStash(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition);

@@ -24,7 +24,7 @@ void UObsidianEquipmentPanel::InitializeEquipmentPanel(UObsidianInventory* InOwn
 		});
 }
 
-UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotForTag(const FGameplayTag& Tag) const
+UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotWidgetForTag(const FGameplayTag& Tag) const
 {
 	for(UObsidianItemSlot_Equipment* EquipmentSlot : EquipmentSlots)
 	{
@@ -36,33 +36,50 @@ UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotForTag(co
 	return nullptr;
 }
 
-void UObsidianEquipmentPanel::OnEquipmentSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
+TArray<UObsidianItemSlot_Equipment*> UObsidianEquipmentPanel::GetSlotWidgets() const
+{
+	return EquipmentSlots;
+}
+
+void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)
 {
 	if (OwningInventory == nullptr || OwningInventory.IsValid() == false)
 	{
 		return;
 	}
 	
-	if(bEntered == false)
+	if (bEntered == false)
 	{
-		AffectedSlot->SetSlotState(ISS_Neutral);
+		if (bRetainPreviousState)
+		{
+			bRetainPreviousState = false;
+			return;
+		}
+		
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
+		return;
+	}
+
+	if (AffectedSlot->GetCurrentState() > EObsidianItemSlotState::ISS_Neutral) // Slot State is already handled by other system - should be other way to do it tho.
+	{
+		bRetainPreviousState = true;
 		return;
 	}
 	
 	if(OwningInventory->CanInteractWithEquipment() == false)
 	{
-		AffectedSlot->SetSlotState(ISS_RedLight);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_RedLight);
 		return;
 	}
 
 	if(OwningInventory->IsPlayerDraggingItem() == false)
 	{
-		AffectedSlot->SetSlotState(ISS_Selected);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Selected);
 		return;
 	}
 		
 	const bool bInteractionSuccess = OwningInventory->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
-	const EObsidianItemSlotState SlotState = bInteractionSuccess ? ISS_GreenLight : ISS_RedLight;
+	const EObsidianItemSlotState SlotState = bInteractionSuccess ? EObsidianItemSlotState::ISS_GreenLight : EObsidianItemSlotState::ISS_RedLight;
 	AffectedSlot->SetSlotState(SlotState);
 }
 

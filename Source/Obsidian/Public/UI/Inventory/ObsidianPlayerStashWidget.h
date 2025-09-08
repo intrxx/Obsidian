@@ -13,6 +13,7 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 
+class UObsidianItemSlot_Equipment;
 struct FObsidianItemWidgetData;
 class UObsidianStashButton;
 class UObsidianItem;
@@ -34,7 +35,7 @@ public:
 	virtual void HandleWidgetControllerSet() override;
 	
 	FGameplayTag GetActiveStashTabTag() const;
-
+	
 	void CloseStash();
 	
 protected:
@@ -53,6 +54,9 @@ protected:
 	void OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
 	void OnStashedItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();
+
+	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
+	void StopHighlightSlotPlacement();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
@@ -80,4 +84,7 @@ private:
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
+
+	UPROPERTY()
+	TArray<UObsidianItemSlot_Equipment*> CachedHighlightedSlot;
 };

@@ -77,6 +77,9 @@ private:
 	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
 	void OnItemMouseLeave();
 
+	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
+	void StopHighlightSlotPlacement();
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
@@ -86,4 +89,7 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianSlotBlockadeItem> SlotBlockadeItemClass;
+
+	UPROPERTY()
+	TArray<UObsidianItemSlot_Equipment*> CachedHighlightedSlot;
 };

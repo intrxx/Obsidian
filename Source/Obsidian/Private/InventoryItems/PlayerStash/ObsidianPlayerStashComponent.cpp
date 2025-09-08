@@ -15,6 +15,7 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
+#include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
 
 DEFINE_LOG_CATEGORY(LogPlayerStash)
 
@@ -82,6 +83,16 @@ UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetItemInstanceFr
 		return StashTab->GetInstanceAtPosition(ItemPosition);
 	}
 	return nullptr;
+}
+
+TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory)
+{
+	if (const UObsidianStashTab_Slots* SlotsStashTab = Cast<UObsidianStashTab_Slots>(GetStashTabForTag(GetActiveStashTag())))
+	{
+		return StashItemList.FindMatchingSlotsForItemCategory(ItemCategory, SlotsStashTab);
+	}
+
+	return {};
 }
 
 UObsidianStashTab* UObsidianPlayerStashComponent::GetStashTabForTag(const FGameplayTag& StashTabTag)

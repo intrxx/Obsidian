@@ -1945,6 +1945,8 @@ void UObsidianPlayerInputManager::StartDraggingItem(const AController* Controlle
 			WeakThis->bItemAvailableForDrop = true;
 		}
 	});
+
+	OnStartDraggingItemDelegate.Broadcast(DraggedItem);
 }
 
 void UObsidianPlayerInputManager::StopDraggingItem(const AController* Controller)
@@ -1964,6 +1966,8 @@ void UObsidianPlayerInputManager::StopDraggingItem(const AController* Controller
 	bItemAvailableForDrop = false;
 
 	bJustDroppedItem = true;
+
+	OnStopDraggingItemDelegate.Broadcast();
 }
 
 void UObsidianPlayerInputManager::UpdateDraggedItem(const FObsidianItemOperationResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController)

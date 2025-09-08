@@ -31,6 +31,9 @@ DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartDraggingItemSignature, const FDraggedItem& DraggedItem)
+DECLARE_MULTICAST_DELEGATE(FOnStopDraggingItemSignature)
+
 DECLARE_LOG_CATEGORY_EXTERN(LogInteraction, Log, All);
 
 UENUM()
@@ -174,6 +177,9 @@ public:
 
 public:
 	FOnStopUsingItemSignature OnStopUsingItemDelegate;
+
+	FOnStartDraggingItemSignature OnStartDraggingItemDelegate;
+	FOnStopDraggingItemSignature OnStopDraggingItemDelegate;
 	
 protected:
 	UFUNCTION()

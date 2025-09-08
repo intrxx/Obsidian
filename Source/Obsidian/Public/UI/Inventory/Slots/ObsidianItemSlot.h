@@ -20,7 +20,7 @@ class UImage;
  * Enum which describes different states that the Slot will switch to when interacting with it.
  */
 UENUM()
-enum EObsidianItemSlotState
+enum class EObsidianItemSlotState : uint8
 {
 	/** Normal color of the slot (the action image is hidden). */
 	ISS_Neutral,
@@ -47,9 +47,11 @@ class OBSIDIAN_API UObsidianItemSlot : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
+	EObsidianItemSlotState GetCurrentState() const;
+	
 	/** Sets the slot state, switches the slot highlight based on provided state. */
-	void SetSlotState(EObsidianItemSlotState InState) const;
-
+	void SetSlotState(const EObsidianItemSlotState InState);
+	
 protected:
 	virtual void NativeConstruct() override;
 
@@ -77,5 +79,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush SlotSelectedLightColor;
+
+private:
+	UPROPERTY()
+	EObsidianItemSlotState CurrentState = EObsidianItemSlotState::ISS_Neutral;
 };
 

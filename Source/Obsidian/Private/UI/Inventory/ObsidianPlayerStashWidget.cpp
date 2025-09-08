@@ -12,6 +12,8 @@
 #include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
+#include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
+#include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Grid.h"
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Slots.h"
 #include "UI/Inventory/Stash/ObsidianStashButton.h"
@@ -25,6 +27,8 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 
 	InventoryItemsWidgetController->OnItemStashedDelegate.AddUObject(this, &ThisClass::OnItemStashed);
 	InventoryItemsWidgetController->OnStashedItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
+	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
+	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
 }
 
 void UObsidianPlayerStashWidget::NativeConstruct()
@@ -57,6 +61,34 @@ FGameplayTag UObsidianPlayerStashWidget::GetActiveStashTabTag() const
 		return ActiveStashTab->GetStashTabTag();
 	}
 	return FGameplayTag::EmptyTag;
+}
+
+void UObsidianPlayerStashWidget::HighlightSlotPlacement(const FGameplayTagContainer& WithTags)
+{
+	if(const UObsidianStashTabWidget_Slots* StashTabWidget_Slots = Cast<UObsidianStashTabWidget_Slots>(ActiveStashTab))
+	{
+		for (UObsidianItemSlot_Equipment* SlotWidget : StashTabWidget_Slots->GetSlotWidgets())
+		{
+			if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
+			{
+				SlotWidget->SetSlotState(EObsidianItemSlotState::ISS_GreenLight);
+				CachedHighlightedSlot.Add(SlotWidget);
+			}
+		}
+	}
+}
+
+void UObsidianPlayerStashWidget::StopHighlightSlotPlacement()
+{
+	for (UObsidianItemSlot_Equipment* SlotWidget : CachedHighlightedSlot)
+	{
+		if (SlotWidget)
+		{
+			SlotWidget->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
+		}
+	}
+	
+	CachedHighlightedSlot.Empty();
 }
 
 void UObsidianPlayerStashWidget::CloseStash()

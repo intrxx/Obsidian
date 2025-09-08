@@ -30,6 +30,11 @@ void UObsidianStashTabWidget_Slots::InitializeStashTab(UObsidianInventoryItemsWi
 	}
 }
 
+TArray<UObsidianItemSlot_Equipment*> UObsidianStashTabWidget_Slots::GetSlotWidgets() const
+{
+	return EquipmentSlots;
+}
+
 void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
 	if(InItemWidget == nullptr)
@@ -56,7 +61,7 @@ UObsidianItemSlot_Equipment* UObsidianStashTabWidget_Slots::FindEquipmentSlotFor
 	return nullptr;
 }
 
-void UObsidianStashTabWidget_Slots::OnStashSlotHover(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered) const
+void UObsidianStashTabWidget_Slots::OnStashSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)
 {
 	if (InventoryItemsController == nullptr || AffectedSlot == nullptr)
 	{
@@ -65,24 +70,36 @@ void UObsidianStashTabWidget_Slots::OnStashSlotHover(const UObsidianItemSlot_Equ
 
 	if (bEntered == false)
 	{
-		AffectedSlot->SetSlotState(ISS_Neutral);
+		if (bRetainPreviousState)
+		{
+			bRetainPreviousState = false;
+			return;
+		}
+		
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
 		return;
 	}
 
+	if (AffectedSlot->GetCurrentState() > EObsidianItemSlotState::ISS_Neutral) // Slot State is already handled by other system - should be other way to do it tho.
+	{
+		bRetainPreviousState = true;
+		return;
+	}
+	
 	if(InventoryItemsController->CanInteractWithPlayerStash() == false)
 	{
-		AffectedSlot->SetSlotState(ISS_RedLight);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_RedLight);
 		return;
 	}
 
 	if(InventoryItemsController->IsDraggingAnItem() == false)
 	{
-		AffectedSlot->SetSlotState(ISS_Selected);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Selected);
 		return;
 	}
 		
 	const bool bCanPlace = InventoryItemsController->CanPlaceItemAtStashSlot(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag));
-	const EObsidianItemSlotState SlotState = bCanPlace ? ISS_GreenLight : ISS_RedLight;
+	const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::ISS_GreenLight : EObsidianItemSlotState::ISS_RedLight;
 	AffectedSlot->SetSlotState(SlotState);
 }
 

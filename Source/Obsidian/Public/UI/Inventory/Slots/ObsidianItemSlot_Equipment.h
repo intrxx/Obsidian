@@ -16,7 +16,7 @@ class UObsidianEquipmentPanel;
 class UObsidianSlotBlockadeItem;
 class UObsidianItem;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotHoverSignature, const UObsidianItemSlot_Equipment* HoveredSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotHoverSignature, UObsidianItemSlot_Equipment* HoveredSlot, const bool bEntered);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotPressedSignature, const UObsidianItemSlot_Equipment* HoveredSlot, const bool bShiftDown);
 
 /**
