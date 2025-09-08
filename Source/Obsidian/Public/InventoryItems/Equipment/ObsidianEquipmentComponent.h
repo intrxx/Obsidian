@@ -62,7 +62,9 @@ public:
 	/** Finds Equipment Slot if one exists in the Equipment, might return invalid slot when nothing was found, check IsValid for safety. */
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
 
-	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& ItemCategory);
+	TArray<FObsidianEquipmentSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory);
+	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithInstance(const UObsidianInventoryItemInstance* ForInstance);
+	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef);
 	
 	bool IsItemEquippedAtSlot(const FGameplayTag& SlotTag);
 

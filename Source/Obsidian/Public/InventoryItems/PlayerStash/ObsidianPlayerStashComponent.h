@@ -47,6 +47,8 @@ public:
 	UObsidianInventoryItemInstance* GetItemInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition);
 
 	TArray<FObsidianSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory);
+	TArray<FObsidianSlotDefinition> FindPossibleSlotsForPlacingItem_WithInstance(const UObsidianInventoryItemInstance* ForInstance);
+	TArray<FObsidianSlotDefinition> FindPossibleSlotsForPlacingItem_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef);
 
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
 	

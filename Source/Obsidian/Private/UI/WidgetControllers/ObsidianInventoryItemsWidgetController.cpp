@@ -337,7 +337,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 
 void UObsidianInventoryItemsWidgetController::OnStartDraggingItem(const FDraggedItem& DraggedItem)
 {
-	if (ObsidianPlayerController == nullptr)
+	if (ObsidianPlayerController == nullptr || DraggedItem.IsEmpty())
 	{
 		return;
 	}
@@ -348,27 +348,42 @@ void UObsidianInventoryItemsWidgetController::OnStartDraggingItem(const FDragged
 		return;
 	}
 	
-	FGameplayTag DraggedItemCategory;
 	FGameplayTagContainer JoinedSlotTags;
 	
 	if (EquipmentComponent && ObsidianHUD->IsInventoryOpened()) // Gather possible equipment slots
 	{
-		DraggedItemCategory = UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(DraggedItem);
-		
-		for (const FObsidianEquipmentSlotDefinition& EquipmentSlot : EquipmentComponent->FindMatchingEquipmentSlotsForItemCategory(DraggedItemCategory))
+		if (const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
 		{
-			JoinedSlotTags.AddTag(EquipmentSlot.GetEquipmentSlotTag());
+			for (const FObsidianEquipmentSlotDefinition& EquipmentSlot : EquipmentComponent->FindPossibleSlotsForEquipping_WithInstance(DraggedInstance))
+			{
+				JoinedSlotTags.AddTag(EquipmentSlot.GetEquipmentSlotTag());
+			}
+		}
+		else if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DraggedItem.ItemDef)
+		{
+			for (const FObsidianEquipmentSlotDefinition& EquipmentSlot : EquipmentComponent->FindPossibleSlotsForEquipping_WithItemDef(ItemDef))
+			{
+				JoinedSlotTags.AddTag(EquipmentSlot.GetEquipmentSlotTag());
+			}
 		}
 	}
 
 	FGameplayTagContainer StashMatchingSlotTags;
 	if (PlayerStashComponent && ObsidianHUD->IsPlayerStashOpened()) // Gather possible functional slots
 	{
-		DraggedItemCategory = DraggedItemCategory == FGameplayTag::EmptyTag ? UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(DraggedItem) : DraggedItemCategory;
-		
-		for (const FObsidianSlotDefinition& FunctionalSlot : PlayerStashComponent->FindMatchingSlotsForItemCategory(DraggedItemCategory))
+		if (const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
 		{
-			JoinedSlotTags.AddTag(FunctionalSlot.GetSlotTag());
+			for (const FObsidianSlotDefinition& EquipmentSlot : PlayerStashComponent->FindPossibleSlotsForPlacingItem_WithInstance(DraggedInstance))
+			{
+				JoinedSlotTags.AddTag(EquipmentSlot.GetSlotTag());
+			}
+		}
+		else if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DraggedItem.ItemDef)
+		{
+			for (const FObsidianSlotDefinition& EquipmentSlot : PlayerStashComponent->FindPossibleSlotsForPlacingItem_WithItemDef(ItemDef))
+			{
+				JoinedSlotTags.AddTag(EquipmentSlot.GetSlotTag());
+			}
 		}
 	}
 	

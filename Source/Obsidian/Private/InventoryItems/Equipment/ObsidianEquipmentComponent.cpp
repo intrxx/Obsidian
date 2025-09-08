@@ -124,10 +124,55 @@ FObsidianEquipmentSlotDefinition UObsidianEquipmentComponent::FindEquipmentSlotB
 	return EquipmentList.FindEquipmentSlotByTag(SlotTag);
 }
 
-TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& ItemCategory)
+TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory)
 {
 	return EquipmentList.FindMatchingEquipmentSlotsForItemCategory(ItemCategory);
 }
+
+TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindPossibleSlotsForEquipping_WithInstance(const UObsidianInventoryItemInstance* ForInstance)
+{
+	TArray<FObsidianEquipmentSlotDefinition> MatchingSlots;
+	if (ForInstance == nullptr)
+	{
+		return MatchingSlots;
+	}
+	
+	for (const FObsidianEquipmentSlotDefinition& PossibleSlot : EquipmentList.FindMatchingEquipmentSlotsForItemCategory(ForInstance->GetItemCategoryTag()))
+	{
+		if (CanEquipInstance(ForInstance, PossibleSlot.GetEquipmentSlotTag()) == EObsidianEquipCheckResult::CanEquip)
+		{
+			MatchingSlots.Add(PossibleSlot);
+		}
+	}
+
+	return MatchingSlots;
+}
+
+TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef)
+{
+	TArray<FObsidianEquipmentSlotDefinition> MatchingSlots;
+	if (ForItemDef == nullptr)
+	{
+		return MatchingSlots;
+	}
+
+	const UObsidianInventoryItemDefinition* DefaultObject = ForItemDef.GetDefaultObject();
+	if (DefaultObject == nullptr)
+	{
+		return MatchingSlots;
+	}
+	
+	for (const FObsidianEquipmentSlotDefinition& PossibleSlot : EquipmentList.FindMatchingEquipmentSlotsForItemCategory(DefaultObject->GetItemCategoryTag()))
+	{
+		if (CanEquipTemplate(ForItemDef, PossibleSlot.GetEquipmentSlotTag()) == EObsidianEquipCheckResult::CanEquip)
+		{
+			MatchingSlots.Add(PossibleSlot);
+		}
+	}
+
+	return MatchingSlots;
+}
+
 
 bool UObsidianEquipmentComponent::IsItemEquippedAtSlot(const FGameplayTag& SlotTag)
 {
@@ -173,7 +218,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(UOb
 
 	const FGameplayTag& ItemCategoryTag = InstanceToEquip->GetItemCategoryTag();
 	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
-	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingEquipmentSlotsForItemCategory(ItemCategoryTag))
+	for(FObsidianEquipmentSlotDefinition Slot : FindMatchingSlotsForItemCategory(ItemCategoryTag))
 	{
 		const FGameplayTag SlotTag = Slot.GetEquipmentSlotTag();
 		if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))
@@ -421,7 +466,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	
 	const FGameplayTag& ItemCategoryTag = DefaultObject->GetItemCategoryTag();
 	const bool bIsTwoHanded = UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemCategoryTag, TAG_Obsidian_TwoHand);
-	for(const FObsidianEquipmentSlotDefinition& Slot : FindMatchingEquipmentSlotsForItemCategory(ItemCategoryTag))
+	for(const FObsidianEquipmentSlotDefinition& Slot : FindMatchingSlotsForItemCategory(ItemCategoryTag))
 	{
 		const FGameplayTag SlotTag = Slot.GetEquipmentSlotTag();
 		if(EquipmentList.SlotToEquipmentMap.Contains(SlotTag) || (bIsTwoHanded && EquipmentList.SlotToEquipmentMap.Contains(Slot.SisterSlotTag)))

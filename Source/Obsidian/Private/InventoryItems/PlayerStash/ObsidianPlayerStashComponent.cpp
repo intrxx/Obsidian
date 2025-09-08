@@ -95,6 +95,58 @@ TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindMatchingSlots
 	return {};
 }
 
+TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlotsForPlacingItem_WithInstance(const UObsidianInventoryItemInstance* ForInstance)
+{
+	TArray<FObsidianSlotDefinition> MatchingSlots;
+	if (ForInstance == nullptr)
+	{
+		return MatchingSlots;
+	}
+	
+	if (UObsidianStashTab_Slots* SlotsStashTab = Cast<UObsidianStashTab_Slots>(GetStashTabForTag(GetActiveStashTag())))
+	{
+		const FGameplayTag ItemCategoryTag = ForInstance->GetItemCategoryTag();
+		for (const FObsidianSlotDefinition& PossibleSlot : StashItemList.FindMatchingSlotsForItemCategory(ItemCategoryTag, SlotsStashTab))
+		{
+			if (SlotsStashTab->CanPlaceItemAtSpecificPosition(PossibleSlot.GetSlotTag(), ItemCategoryTag, FIntPoint::NoneValue))
+			{
+				MatchingSlots.Add(PossibleSlot);
+			}
+		}
+	}
+
+	return MatchingSlots;
+}
+
+TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlotsForPlacingItem_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef)
+{
+	TArray<FObsidianSlotDefinition> MatchingSlots;
+	if (ForItemDef == nullptr)
+	{
+		return MatchingSlots;
+	}
+
+	const UObsidianInventoryItemDefinition* DefaultObject = ForItemDef.GetDefaultObject();
+	if (DefaultObject == nullptr)
+	{
+		return MatchingSlots;
+	}
+	
+	if (UObsidianStashTab_Slots* SlotsStashTab = Cast<UObsidianStashTab_Slots>(GetStashTabForTag(GetActiveStashTag())))
+	{
+		const FGameplayTag ItemCategoryTag = DefaultObject->GetItemCategoryTag();
+		for (const FObsidianSlotDefinition& PossibleSlot : StashItemList.FindMatchingSlotsForItemCategory(ItemCategoryTag, SlotsStashTab))
+		{
+			if (SlotsStashTab->CanPlaceItemAtSpecificPosition(PossibleSlot.GetSlotTag(), ItemCategoryTag, FIntPoint::NoneValue))
+			{
+				MatchingSlots.Add(PossibleSlot);
+			}
+		}
+	}
+
+	return MatchingSlots;
+}
+
 UObsidianStashTab* UObsidianPlayerStashComponent::GetStashTabForTag(const FGameplayTag& StashTabTag)
 {
 	return StashItemList.GetStashTabForTag(StashTabTag);
