@@ -45,6 +45,4 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerStashWidget> OwningStashWidget;
-
-	bool bRetainPreviousState = false;
 };

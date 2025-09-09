@@ -71,7 +71,7 @@ void UObsidianPlayerStashWidget::HighlightSlotPlacement(const FGameplayTagContai
 		{
 			if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
 			{
-				SlotWidget->SetSlotState(EObsidianItemSlotState::ISS_GreenLight);
+				SlotWidget->SetSlotState(EObsidianItemSlotState::GreenLight, EObsidianItemSlotStatePriority::High);
 				CachedHighlightedSlot.Add(SlotWidget);
 			}
 		}
@@ -84,7 +84,7 @@ void UObsidianPlayerStashWidget::StopHighlightSlotPlacement()
 	{
 		if (SlotWidget)
 		{
-			SlotWidget->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
+			SlotWidget->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::High);
 		}
 	}
 	

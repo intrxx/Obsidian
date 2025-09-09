@@ -23,19 +23,32 @@ UENUM()
 enum class EObsidianItemSlotState : uint8
 {
 	/** Normal color of the slot (the action image is hidden). */
-	ISS_Neutral,
+	Neutral = 0,
 
 	/** The Player is able to place or take the item he/she is hovering over. */
-	ISS_GreenLight,
+	GreenLight,
 
 	/** The slot is being selected without an item in hands. */
-	ISS_Selected,
+	Selected,
 
 	/** The Player is NOT able to place or take the item he/she is hovering over. */
-	ISS_RedLight,
+	RedLight,
 
 	/** The slot is blocked e.g. Two-Handed item is equipped in the other slot. */
-	ISS_Blocked
+	Blocked
+};
+
+UENUM()
+enum class EObsidianItemSlotStatePriority : uint8
+{
+	/** Used for hover logic. */
+	Low = 0,
+
+	/** Used for tooltip logic (highlighting possible slots for placing dragged item). */
+	High,
+
+	/** Always takes priority, used for blocked slots. */
+	TakePriority
 };
 
 /**
@@ -47,10 +60,8 @@ class OBSIDIAN_API UObsidianItemSlot : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	EObsidianItemSlotState GetCurrentState() const;
-	
 	/** Sets the slot state, switches the slot highlight based on provided state. */
-	void SetSlotState(const EObsidianItemSlotState InState);
+	void SetSlotState(const EObsidianItemSlotState InState, const EObsidianItemSlotStatePriority InPriority);
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -82,6 +93,6 @@ protected:
 
 private:
 	UPROPERTY()
-	EObsidianItemSlotState CurrentState = EObsidianItemSlotState::ISS_Neutral;
+	EObsidianItemSlotStatePriority CurrentStatePriority = EObsidianItemSlotStatePriority::Low;
 };
 

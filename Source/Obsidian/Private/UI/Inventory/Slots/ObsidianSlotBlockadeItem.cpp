@@ -21,7 +21,7 @@ void UObsidianSlotBlockadeItem::NativeDestruct()
 {
 	if(OwningSlot)
 	{
-		OwningSlot->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
+		OwningSlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::TakePriority);
 	}
 	
 	Super::NativeDestruct();

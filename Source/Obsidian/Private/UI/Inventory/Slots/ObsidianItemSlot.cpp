@@ -15,42 +15,42 @@ void UObsidianItemSlot::NativeConstruct()
 	Action_Image->SetVisibility(ESlateVisibility::Hidden);
 }
 
-EObsidianItemSlotState UObsidianItemSlot::GetCurrentState() const
+void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState, const EObsidianItemSlotStatePriority InPriority)
 {
-	return CurrentState;
-}
-
-void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState)
-{
-	if(InState == EObsidianItemSlotState::ISS_Neutral)
+	if (CurrentStatePriority > InPriority)
 	{
-		CurrentState = EObsidianItemSlotState::ISS_Neutral;
+		return;
+	}
+	
+	if(InState == EObsidianItemSlotState::Neutral)
+	{
+		CurrentStatePriority = EObsidianItemSlotStatePriority::Low;
 		Action_Image->SetVisibility(ESlateVisibility::Hidden);
 		return;
 	}
-	if(InState == EObsidianItemSlotState::ISS_GreenLight)
+	if(InState == EObsidianItemSlotState::GreenLight)
 	{
-		CurrentState = EObsidianItemSlotState::ISS_GreenLight;
+		CurrentStatePriority = InPriority;
 		Action_Image->SetBrush(SlotGreenLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
-	if(InState == EObsidianItemSlotState::ISS_Selected)
+	if(InState == EObsidianItemSlotState::Selected)
 	{
-		CurrentState = EObsidianItemSlotState::ISS_Selected;
+		CurrentStatePriority = InPriority;
 		Action_Image->SetBrush(SlotSelectedLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 	}
-	if(InState == EObsidianItemSlotState::ISS_RedLight)
+	if(InState == EObsidianItemSlotState::RedLight)
 	{
-		CurrentState = EObsidianItemSlotState::ISS_RedLight;
+		CurrentStatePriority = InPriority;
 		Action_Image->SetBrush(SlotRedLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 		return;
 	}
-	if(InState == EObsidianItemSlotState::ISS_Blocked)
+	if(InState == EObsidianItemSlotState::Blocked)
 	{
-		CurrentState = EObsidianItemSlotState::ISS_Blocked;
+		CurrentStatePriority = InPriority;
 		Action_Image->SetBrush(SlotBlockedLightColor);
 		Action_Image->SetVisibility(ESlateVisibility::Visible);
 		return;

@@ -39,6 +39,4 @@ private:
 
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianInventory> OwningInventory;
-
-	bool bRetainPreviousState = false;
 };

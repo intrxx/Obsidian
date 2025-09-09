@@ -50,37 +50,25 @@ void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* 
 	
 	if (bEntered == false)
 	{
-		if (bRetainPreviousState)
-		{
-			bRetainPreviousState = false;
-			return;
-		}
-		
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
-		return;
-	}
-
-	if (AffectedSlot->GetCurrentState() > EObsidianItemSlotState::ISS_Neutral) // Slot State is already handled by other system - should be other way to do it tho.
-	{
-		bRetainPreviousState = true;
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
 		return;
 	}
 	
 	if(OwningInventory->CanInteractWithEquipment() == false)
 	{
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_RedLight);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::RedLight, EObsidianItemSlotStatePriority::Low);
 		return;
 	}
 
 	if(OwningInventory->IsPlayerDraggingItem() == false)
 	{
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Selected);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::Selected, EObsidianItemSlotStatePriority::Low);
 		return;
 	}
 		
 	const bool bInteractionSuccess = OwningInventory->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
-	const EObsidianItemSlotState SlotState = bInteractionSuccess ? EObsidianItemSlotState::ISS_GreenLight : EObsidianItemSlotState::ISS_RedLight;
-	AffectedSlot->SetSlotState(SlotState);
+	const EObsidianItemSlotState SlotState = bInteractionSuccess ? EObsidianItemSlotState::GreenLight : EObsidianItemSlotState::RedLight;
+	AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 }
 
 void UObsidianEquipmentPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const

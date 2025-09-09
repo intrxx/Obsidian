@@ -89,8 +89,8 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 		if(OwningWidgetController->GetDraggedItemGridSpan(ItemGridSpan) == false) 
 		{
 			//TODO This isn't quite what I want here since the grid will be used anywhere, should be dealt with other way
-			const EObsidianItemSlotState SlotState = OwningWidgetController->CanInteractWithGrid(GridOwner) ? EObsidianItemSlotState::ISS_Selected : EObsidianItemSlotState::ISS_RedLight;
-			AffectedSlot->SetSlotState(SlotState);
+			const EObsidianItemSlotState SlotState = OwningWidgetController->CanInteractWithGrid(GridOwner) ? EObsidianItemSlotState::Selected : EObsidianItemSlotState::RedLight;
+			AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 			AffectedGridSlots.Add(AffectedSlot);
 			return; 
 		}
@@ -106,8 +106,8 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 				const FIntPoint LocationToCheck = HoveredSlotPosition + FIntPoint(SpanX, SpanY);
 				if(UObsidianItemSlot_GridSlot* LocalSlot = GetSlotByPosition(LocationToCheck))
 				{
-					const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::ISS_GreenLight : EObsidianItemSlotState::ISS_RedLight;
-					LocalSlot->SetSlotState(SlotState);
+					const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight : EObsidianItemSlotState::RedLight;
+					LocalSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 					AffectedGridSlots.Add(LocalSlot);
 				}
 			}	
@@ -122,7 +122,7 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 
 		for(UObsidianItemSlot_GridSlot* InventorySlot : AffectedGridSlots)
 		{
-			InventorySlot->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
+			InventorySlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
 		}
 		AffectedGridSlots.Empty();
 	}

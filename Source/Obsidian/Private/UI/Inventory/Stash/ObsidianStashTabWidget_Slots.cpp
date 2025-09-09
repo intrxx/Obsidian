@@ -70,37 +70,25 @@ void UObsidianStashTabWidget_Slots::OnStashSlotHover(UObsidianItemSlot_Equipment
 
 	if (bEntered == false)
 	{
-		if (bRetainPreviousState)
-		{
-			bRetainPreviousState = false;
-			return;
-		}
-		
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Neutral);
-		return;
-	}
-
-	if (AffectedSlot->GetCurrentState() > EObsidianItemSlotState::ISS_Neutral) // Slot State is already handled by other system - should be other way to do it tho.
-	{
-		bRetainPreviousState = true;
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
 		return;
 	}
 	
 	if(InventoryItemsController->CanInteractWithPlayerStash() == false)
 	{
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_RedLight);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::RedLight, EObsidianItemSlotStatePriority::Low);
 		return;
 	}
 
 	if(InventoryItemsController->IsDraggingAnItem() == false)
 	{
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::ISS_Selected);
+		AffectedSlot->SetSlotState(EObsidianItemSlotState::Selected, EObsidianItemSlotStatePriority::Low);
 		return;
 	}
 		
 	const bool bCanPlace = InventoryItemsController->CanPlaceItemAtStashSlot(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag));
-	const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::ISS_GreenLight : EObsidianItemSlotState::ISS_RedLight;
-	AffectedSlot->SetSlotState(SlotState);
+	const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight : EObsidianItemSlotState::RedLight;
+	AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 }
 
 void UObsidianStashTabWidget_Slots::OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const
