@@ -23,7 +23,7 @@ You can also find a testable packaged game [here](). //todo
 > &nbsp; 2.2 [ObsidianStashTabWidget](#22-obsidianstashtabwidget-h--cpp) \
 > &nbsp;&nbsp; 2.2.1 [ObsidianStashTabWidget_Slots](#221-obsidianstashtabwidget_slots-h--cpp) \
 > &nbsp;&nbsp; 2.2.2 [ObsidianStashTabWidget_Grid](#222-obsidianstashtabwidget_grid-h--cpp) \
-> &nbsp; 2.3 [ObsidianStashButton](#22-obsidianstashbutton-h--cpp) 
+> &nbsp; 2.3 [ObsidianStashButton](#23-obsidianstashbutton-h--cpp) 
 > 3. [Gameplay](#3-gameplay) \
 > &nbsp; 3.1 [ObsidianPlayerStash](#31-obsidianplayerstash-h--cpp) 
 > 4. [Debugging](#4-debugging) \
