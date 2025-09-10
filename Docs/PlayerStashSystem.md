@@ -6,7 +6,7 @@ You can also find a testable packaged game [here](). //todo
 
 *This system is closly coupled with [Inventory](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md) and [Equipment](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md) Systems, press on the links to learn more.*
 
-![Player Stash Showcase](https://github.com/intrxx/Obsidian/tree/main/Docs/Images/PlayerStash/PlayerStashShowcase.jpg)
+![Player Stash Showcase](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/PlayerStash/PlayerStashShowcase.jpg)
 
 <a name="table-of-contents"></a>
 ## Class Structure Overview
