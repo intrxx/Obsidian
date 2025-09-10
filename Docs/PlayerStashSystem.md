@@ -1,6 +1,6 @@
 # Obsidian Player Stash System
 
-Here you can find a [youtube video]() showcasing the System. //todo
+Here you can find a [youtube video](https://www.youtube.com/watch?v=jK_RvB3hMKY) showcasing the System.
 
 You can also find a testable packaged game [here](https://github.com/intrxx/Obsidian/releases/tag/PlayerStashSystem_0.2.0).
 
