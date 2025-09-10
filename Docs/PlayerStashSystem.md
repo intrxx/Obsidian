@@ -91,7 +91,7 @@ Player Stash Actor that can be placed in the world and interacted with to displa
 
 ## 4. Debugging
 
-### 4.1 GameplayDebuggerCategory_Equipment ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.cpp))
+### 4.1 GameplayDebuggerCategory_PlayerStash ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.cpp))
 
 Gameplay Debugger Category that contains number of Items Stashed and its Name, Item Definition Class, Currently
 Stashed Location and Stash Tab information. It also displayes a map of taken fields in Grid Stash Tab or needed information about every Slot in Slot Stash Tab.
