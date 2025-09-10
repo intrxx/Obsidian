@@ -45,7 +45,7 @@ The ```FFastArraySerializer``` structure that holds Stashed Items. It also hold 
 
 Configuration of Stash Tabs in the form of Data Asset that can be asinged on the Player Stash Components, stash tabs are constructed from this config, it can mage it size (Grid Stash Tab) or set up individual item slots (Slots Stash Tab).
 
-![ObsidianStashTabsConfig](https://github.com/intrxx/Obsidian/tree/main/Docs/Images/PlayerStash/stashtabconfig.jpg)
+![ObsidianStashTabsConfig](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/PlayerStash/stashtabconfig.jpg)
 
 ### 1.4 ObsidianStashTab ([h](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Public/InventoryItems/PlayerStash/ObsidianStashTab.h) | [cpp](https://github.com/intrxx/Obsidian/blob/main/Source/Obsidian/Private/InventoryItems/PlayerStash/ObsidianStashTab.cpp))
 
@@ -87,7 +87,7 @@ Stash Tab Button provided the functionality to switch between tabs, in the futur
 
 Player Stash Actor that can be placed in the world and interacted with to display's interacing Player's Stash.
 
-![PlayerStashActor](https://github.com/intrxx/Obsidian/tree/main/Docs/Images/PlayerStash/stashactor.jpg)
+![PlayerStashActor](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/PlayerStash/stashactor.jpg)
 
 ## 4. Debugging
 
@@ -97,10 +97,12 @@ Gameplay Debugger Category that contains number of Items Stashed and its Name, I
 Stashed Location and Stash Tab information. It also displayes a map of taken fields in Grid Stash Tab or needed information about every Slot in Slot Stash Tab.
 
 Grid Stash Tab:
-![Player Stash System Debugging - Grid](https://github.com/intrxx/Obsidian/tree/main/Docs/Images/PlayerStash/gridstashdebbuger.jpg)
+
+![Player Stash System Debugging - Grid](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/PlayerStash/gridstashdebbuger.jpg)
 
 Slot Stash Tab:
-![Player Stash System Debugging - Slot](https://github.com/intrxx/Obsidian/tree/main/Docs/Images/PlayerStash/slotstashdebugger.jpg)
+
+![Player Stash System Debugging - Slot](https://github.com/intrxx/Obsidian/blob/main/Docs/Images/PlayerStash/slotstashdebugger.jpg)
 
 ## 5. The Rest
 
