@@ -14,13 +14,18 @@ As of now, I've already developed some fundamental systems and have slowly start
 build some gameplay content on top of them.
 
 ### These includs:
-- **Grid Inventory System/Inventory Items** - Grid Inventory System built using ```FFastArraySerializer```
- supporting items of various sizes, stacks, limits, item descriptions, and networking.
-  A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).
+- **Grid Inventory System/Inventory Items** - Grid Inventory System built using ```FFastArraySerializer``` to efficiently store and replicate items.
+  Supports items of various sizes, stacks, limits, item descriptions, and networking.
+  *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).*
 
 - **Equipment System** - Closly related to **Grid Inventory System** and **Inventory Items**, also using ```FFastArraySerializer``` to store Equipment Items,
   this System provides a way to equip Items in various Equipment Slots, check for equiping conditions, spawn Mesh Actors on owning Player and give Ability Sets (which can include Gameplay Effects and Gameplay Abilities).
-  A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md).
+  *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/EquipmentSystem.md).*
+
+- **Player Stash System** - Just like two previous systems Player Stash Component is also built on ```FFastArraySerializer```.
+  It supports configurable Stash Tabs with customizable sizes and capacities, such as Grid Stash Tabs and Slot Stash Tabs.
+  This system combines and extends concepts from two previous systems to store and display Stashed Items.
+  *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/PlayerStashSystem.md).*
 
 - **Buff/Debuff display on Health Bars and Player's HUD** - Gameplay Effects mapped to their descriptions (name, description, type, etc.) 
 using Gameplay Tags, which are displayed on the player's HUD.
