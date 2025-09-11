@@ -429,24 +429,29 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 		return Result;
 	}
 
+	Result.bActionSuccessful = true;
 	Result.StacksLeft -= StacksAvailableToAdd;
-	if(Result.StacksLeft > 0)
+	ensure(Result.StacksLeft >= 0);
+
+	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(StacksAvailableToAdd == CurrentHeldItemStacks)
 	{
-		if(UObsidianInventoryItemInstance* NewInstance = UObsidianInventoryItemInstance::DuplicateItem(InstanceToAdd, GetOwner()))
-		{
-			InstanceToAdd = NewInstance;
-		}
+		InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
 	}
-	
-	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
+	else
+	{
+		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
+		
+		Result.bActionSuccessful = false;
+		InstanceToAdd = InventoryGrid.AddEntry(InstanceToAdd->GetItemDef(), StacksAvailableToAdd, AvailablePosition);
+		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
+	}
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(InstanceToAdd);
 	}
 	
-	Result.bActionSuccessful = true;
 	Result.AffectedInstance = InstanceToAdd;
 	return Result;
 }
@@ -501,20 +506,20 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 	Result.bActionSuccessful = true;
 	Result.StacksLeft -= StacksAvailableToAdd;
 	ensure(Result.StacksLeft >= 0);
-	
-	if(Result.StacksLeft > 0)
+
+	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(StacksAvailableToAdd == CurrentHeldItemStacks)
 	{
-		Result.bActionSuccessful = false;
-		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
-		
-		if(UObsidianInventoryItemInstance* NewInstance  = UObsidianInventoryItemInstance::DuplicateItem(InstanceToAdd, GetOwner()))
-		{
-			InstanceToAdd = NewInstance;
-		}
+		InventoryGrid.AddEntry(InstanceToAdd, ToGridSlot);
 	}
-	
-	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	InventoryGrid.AddEntry(InstanceToAdd, ToGridSlot);
+	else
+	{
+		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
+		
+		Result.bActionSuccessful = false;
+		InstanceToAdd = InventoryGrid.AddEntry(InstanceToAdd->GetItemDef(), StacksAvailableToAdd, ToGridSlot);
+		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
+	}
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -546,22 +551,14 @@ FObsidianItemOperationResult UObsidianInventoryComponent::TakeOutFromItemInstanc
 		return Result;
 	}
 	
-	UObsidianInventoryItemInstance* NewInstance = UObsidianInventoryItemInstance::DuplicateItem(TakingFromInstance, GetOwner());
-	if(NewInstance == nullptr)
-	{
-		return Result;
-	}
-	
-	const int32 NewCurrentTakingFromInstanceStacks = CurrentTakingFromInstanceStacks - StacksToTake;
-	TakingFromInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, NewCurrentTakingFromInstanceStacks);
-	InventoryGrid.ChangedEntryStacks(TakingFromInstance, CurrentTakingFromInstanceStacks);
-
 	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
 	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
-	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackToTakeSafe);
-
+	TakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToTake);
+	InventoryGrid.ChangedEntryStacks(TakingFromInstance, CurrentTakingFromInstanceStacks);
+	
 	Result.bActionSuccessful = true;
-	Result.AffectedInstance = NewInstance;
+	Result.AffectedInstance = TakingFromInstance;
+	Result.StacksLeft = StackToTakeSafe;
 	return Result;
 }
 

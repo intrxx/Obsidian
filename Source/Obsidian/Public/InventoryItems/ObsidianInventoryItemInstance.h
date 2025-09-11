@@ -53,12 +53,14 @@ public:
 	{
 		return (T*)FindFragmentByClass(T::StaticClass());
 	}
-
-	static UObsidianInventoryItemInstance* DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer);
-
+	
 	/**
 	 * Item. 
 	 */
+
+	FGuid GetUniqueItemID() const;
+
+	void GenerateUniqueItemID();
 	
 	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const;
 	
@@ -255,6 +257,9 @@ private:
 	/**
 	 * Item.
 	 */
+
+	UPROPERTY(Replicated)
+	FGuid ItemUniqueID;
 	
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;

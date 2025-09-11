@@ -473,15 +473,6 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 		return Result;
 	}
 	
-	if(Result.StacksLeft > 0)
-	{
-		if(UObsidianInventoryItemInstance* NewInstance = UObsidianInventoryItemInstance::DuplicateItem(InstanceToAdd, GetOwner()))
-		{
-			InstanceToAdd = NewInstance;
-		}
-	}
-	
-	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
 	StashItemList.AddEntry(InstanceToAdd, AvailablePosition);
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -535,19 +526,19 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 	Result.StacksLeft -= StacksAvailableToAdd;
 	ensure(Result.StacksLeft >= 0);
 	
-	if(Result.StacksLeft > 0)
+	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(StacksAvailableToAdd == CurrentHeldItemStacks)
 	{
-		Result.bActionSuccessful = false;
-		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
-		
-		if(UObsidianInventoryItemInstance* NewInstance  = UObsidianInventoryItemInstance::DuplicateItem(InstanceToAdd, GetOwner()))
-		{
-			InstanceToAdd = NewInstance;
-		}
+		StashItemList.AddEntry(InstanceToAdd, ItemPosition);
 	}
-	
-	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	StashItemList.AddEntry(InstanceToAdd, ItemPosition);
+	else
+	{
+		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
+		
+		Result.bActionSuccessful = false;
+		InstanceToAdd = StashItemList.AddEntry(InstanceToAdd->GetItemDef(), StacksAvailableToAdd, ItemPosition);
+		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
+	}
 	
 	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -643,23 +634,15 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::TakeOutFromItemInsta
 		return Result;
 	}
 	
-	UObsidianInventoryItemInstance* NewInstance = UObsidianInventoryItemInstance::DuplicateItem(TakingFromInstance, GetOwner());
-	if(NewInstance == nullptr)
-	{
-		return Result;
-	}
-	
-	const int32 NewCurrentTakingFromInstanceStacks = CurrentTakingFromInstanceStacks - StacksToTake;
-	TakingFromInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, NewCurrentTakingFromInstanceStacks);
+	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
+	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
+	TakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToTake);
 	const FObsidianItemPosition ItemPosition = TakingFromInstance->GetItemCurrentPosition();
 	StashItemList.ChangedEntryStacks(TakingFromInstance, CurrentTakingFromInstanceStacks, ItemPosition.GetOwningStashTabTag());
 
-	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
-	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
-	NewInstance->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackToTakeSafe);
-
 	Result.bActionSuccessful = true;
-	Result.AffectedInstance = NewInstance;
+	Result.AffectedInstance = TakingFromInstance;
+	Result.StacksLeft = StackToTakeSafe;
 	return Result;
 }
 

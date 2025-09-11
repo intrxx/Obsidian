@@ -154,6 +154,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	FObsidianStashEntry& NewEntry = Entries.AddDefaulted_GetRef();
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
+	NewEntry.Instance->GenerateUniqueItemID();
 	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);

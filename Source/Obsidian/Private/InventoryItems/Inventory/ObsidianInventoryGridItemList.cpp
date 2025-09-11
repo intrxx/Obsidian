@@ -58,6 +58,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	FObsidianInventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
+	NewEntry.Instance->GenerateUniqueItemID();
 	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);

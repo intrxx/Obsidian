@@ -22,6 +22,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	DOREPLIFETIME(ThisClass, ItemUniqueID);
 	DOREPLIFETIME(ThisClass, ItemDef);
 	DOREPLIFETIME(ThisClass, ItemStackTags);
 	DOREPLIFETIME(ThisClass, bStackable);
@@ -83,20 +84,17 @@ const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragme
 	return nullptr;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryItemInstance::DuplicateItem(const UObsidianInventoryItemInstance* OriginalItem, UObject* Outer)
+FGuid UObsidianInventoryItemInstance::GetUniqueItemID() const
 {
-	if(OriginalItem)
+	return ItemUniqueID;
+}
+
+void UObsidianInventoryItemInstance::GenerateUniqueItemID()
+{
+	if (!ItemUniqueID.IsValid())
 	{
-		UObsidianInventoryItemInstance* NewInstance = DuplicateObject<UObsidianInventoryItemInstance>(OriginalItem, Outer);
-		NewInstance->ItemStackTags.TagToCountMap = OriginalItem->ItemStackTags.TagToCountMap; //@HACK This map does not get copied by the DuplicateObject function, need to copy it manually, there might be more.
-
-#if !UE_BUILD_SHIPPING
-		NewInstance->SetItemDebugName(OriginalItem->GetItemDebugName());
-#endif
-
-		return NewInstance;
+		ItemUniqueID = FGuid::NewGuid();
 	}
-	return nullptr;
 }
 
 TSubclassOf<UObsidianInventoryItemDefinition> UObsidianInventoryItemInstance::GetItemDef() const

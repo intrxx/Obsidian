@@ -165,6 +165,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.EquipmentSlotTag = EquipmentSlotTag;
 	NewEntry.Instance->SetItemDef(ItemDefClass);
+	NewEntry.Instance->GenerateUniqueItemID();
 	NewEntry.Instance->SetItemCurrentPosition(EquipmentSlotTag);
 
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);

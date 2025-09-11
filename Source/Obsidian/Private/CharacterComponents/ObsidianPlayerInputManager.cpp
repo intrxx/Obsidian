@@ -796,18 +796,25 @@ void UObsidianPlayerInputManager::ServerTakeoutFromStashedItem_Implementation(co
 		return;
 	}
 	
-	UObsidianInventoryItemInstance* NewInstance = PlayerStashComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake).AffectedInstance;
-	if(NewInstance == nullptr)
+	const FObsidianItemOperationResult Result = PlayerStashComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
+	const UObsidianInventoryItemInstance* AffectedInstance = Result.AffectedInstance;
+	if(AffectedInstance == nullptr || Result.bActionSuccessful == false)
+	{
+		return;
+	}
+
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = AffectedInstance->GetItemDef();
+	if(ItemDef == nullptr)
 	{
 		return;
 	}
 	
-	DraggedItem = FDraggedItem(NewInstance);
+	DraggedItem = FDraggedItem(ItemDef, Result.StacksLeft);
 	StartDraggingItem(Controller);
 
-	if(NewInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	if(ItemDef && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
-		AddReplicatedSubObject(NewInstance);
+		AddReplicatedSubObject(ItemDef);
 	}
 }
 
@@ -939,19 +946,26 @@ void UObsidianPlayerInputManager::ServerTakeoutFromInventoryItem_Implementation(
 		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return;
 	}
-	
-	UObsidianInventoryItemInstance* NewInstance = InventoryComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake).AffectedInstance;
-	if(NewInstance == nullptr)
+
+	const FObsidianItemOperationResult Result = InventoryComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
+	const UObsidianInventoryItemInstance* AffectedInstance = Result.AffectedInstance;
+	if(AffectedInstance == nullptr || Result.bActionSuccessful == false)
+	{
+		return;
+	}
+
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = AffectedInstance->GetItemDef();
+	if(ItemDef == nullptr)
 	{
 		return;
 	}
 	
-	DraggedItem = FDraggedItem(NewInstance);
+	DraggedItem = FDraggedItem(ItemDef, Result.StacksLeft);
 	StartDraggingItem(Controller);
 
-	if(NewInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	if(ItemDef && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
-		AddReplicatedSubObject(NewInstance);
+		AddReplicatedSubObject(ItemDef);
 	}
 }
 
