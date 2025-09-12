@@ -165,7 +165,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			}
 		}
 
-		//TODO Decide if I want to show damage numbers when Player gets damaged.
+		//TODO(intrxx) Decide if I want to show damage numbers when Player gets damaged.
 		// Show floating text - Logic is performed regardless of damage number because we might want to show blocked or evaded texts
 		if(EffectProps.SourceCharacter != EffectProps.TargetCharacter && !EffectProps.bIsPlayerCharacter)
 		{
@@ -219,7 +219,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 		
 		if(LocalIncomingHealthHealing > 0.0f)
 		{
-			//TODO Handle Energy Shield based on some conditions in the future
+			//TODO(intrxx) Handle Energy Shield based on some conditions in the future
 			const float NewHealth = GetHealth() + LocalIncomingHealthHealing;
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 		}

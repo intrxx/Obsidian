@@ -31,7 +31,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemAffixes);
 	DOREPLIFETIME(ThisClass, SpawnedActors);
 	
-	//TODO Test which of these needs replicating, most of them will need to get only replicated once as they will never change
+	//TODO(intrxx) Test which of these needs replicating, most of them will need to get only replicated once as they will never change
 	DOREPLIFETIME(ThisClass, ActorsToSpawn);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemCurrentPosition);

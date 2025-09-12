@@ -185,7 +185,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 		{
 			if(InventoryChangeMessage.ItemInstance == OwnerPlayerInputManager->GetUsingItem())
 			{
-				OwnerPlayerInputManager->SetUsingItem(false);  //TODO This probably shouldn't be here, its widget controller
+				OwnerPlayerInputManager->SetUsingItem(false);  //TODO(intrxx) This probably shouldn't be here, its widget controller
 			}
 		}
 	}
@@ -319,7 +319,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 		{
 			if(StashChangeMessage.ItemInstance == OwnerPlayerInputManager->GetUsingItem())
 			{
-				OwnerPlayerInputManager->SetUsingItem(false);  //TODO This probably shouldn't be here, its widget controller
+				OwnerPlayerInputManager->SetUsingItem(false);  //TODO(intrxx) This probably shouldn't be here, its widget controller
 			}
 		}
 	}
@@ -473,7 +473,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashOpen()
 {
 	UE_LOG(LogTemp, Display, TEXT("Stash Opened."));
 
-	//TODO This for sure will need to be changed, it will be to heavy on performance.
+	//TODO(intrxx) This for sure will need to be changed, it will be to heavy on performance.
 	TArray<UObsidianInventoryItemInstance*> StashedItems = PlayerStashComponent->GetAllItems();
 	
 	/*
@@ -578,7 +578,7 @@ void UObsidianInventoryItemsWidgetController::HandleRightClickingOnInventoryItem
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComponent->GetAllItems());
 		AllItems.Append(EquipmentComponent->GetAllEquippedItems());
-		AllItems.Append(PlayerStashComponent->GetAllItems()); //TODO This will be hella slow, change later 
+		AllItems.Append(PlayerStashComponent->GetAllItems()); //TODO(intrxx) This will be hella slow, change later 
 	
 		const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
 		for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
@@ -640,9 +640,9 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(
 		}
 
 		AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
-		if (ObsidianHUD && ObsidianHUD->IsPlayerStashOpened()) //TODO For now I support only Inventory <-> Stash
+		if (ObsidianHUD && ObsidianHUD->IsPlayerStashOpened()) //TODO(intrxx) For now I support only Inventory <-> Stash
 		{
-			const FGameplayTag ToStashTab = ObsidianHUD->GetActiveStashTabTag(); //TODO This will need updating when I will support Stash Tab Affinities
+			const FGameplayTag ToStashTab = ObsidianHUD->GetActiveStashTabTag(); //TODO(intrxx) This will need updating when I will support Stash Tab Affinities
 			OwnerPlayerInputManager->ServerTransferItemToPlayerStash(AtGridSlot, ToStashTab);
 		}
 		return;
@@ -734,7 +734,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 	const FGameplayTag SwapSlotTag = FGameplayTag::RequestGameplayTag(TEXT("Item.SwapSlot.Equipment"));
 	if(SlotTag.MatchesTag(SwapSlotTag))
 	{
-		//TODO Cannot left-click on swapped item, add VO?
+		//TODO(intrxx) Cannot left-click on swapped item, add VO?
 		return;
 	}
 	
@@ -769,7 +769,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 		 	}
 		 	else
 		 	{
-		 		//TODO Send Client RPC with some voice over passing EquipResult?
+		 		//TODO(intrxx) Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
 		 		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipmentResult));
 #endif
@@ -786,7 +786,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 		 	}
 		 	else
 		 	{
-		 		//TODO Send Client RPC with some voice over passing EquipResult?
+		 		//TODO(intrxx) Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
 			 	UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipmentResult));
 #endif
@@ -826,7 +826,7 @@ void UObsidianInventoryItemsWidgetController::HandleRightClickingOnStashedItem(c
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComponent->GetAllItems());
 		AllItems.Append(EquipmentComponent->GetAllEquippedItems());
-		AllItems.Append(PlayerStashComponent->GetAllItems()); //TODO This will be hella slow, change later 
+		AllItems.Append(PlayerStashComponent->GetAllItems()); //TODO(intrxx) This will be hella slow, change later 
 	
 		const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
 		for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
@@ -888,7 +888,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(co
 		}
 
 		const AObsidianHUD* ObsidianHUD = ObsidianPlayerController->GetObsidianHUD();
-		if (ObsidianHUD && ObsidianHUD->IsInventoryOpened()) //TODO For now I support only Inventory <-> Stash
+		if (ObsidianHUD && ObsidianHUD->IsInventoryOpened()) //TODO(intrxx) For now I support only Inventory <-> Stash
 		{
 			OwnerPlayerInputManager->ServerTransferItemToInventory(AtItemPosition);
 		}

@@ -35,7 +35,7 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	SpringArmComponent->bInheritPitch = false;
 	SpringArmComponent->bInheritYaw = false;
 
-	//TODO Need to decide if i want to use it later on
+	//TODO(intrxx) Need to decide if i want to use it later on
 	SpringArmComponent->bEnableCameraLag = true;
 	SpringArmComponent->CameraLagSpeed = 15.f;
 	SpringArmComponent->CameraLagMaxDistance = 20.f;

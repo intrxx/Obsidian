@@ -154,13 +154,13 @@ UObsidianStashTab* UObsidianPlayerStashComponent::GetStashTabForTag(const FGamep
 
 int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	//TODO Implement
+	//TODO(intrxx) Implement
 	return 0;
 }
 
 int32 UObsidianPlayerStashComponent::FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance)
 {
-	//TODO Implement
+	//TODO(intrxx) Implement
 	return 0;
 }
 
@@ -285,7 +285,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 	FObsidianItemPosition AvailablePosition;
 	if(CanFitItemDefinition(AvailablePosition, StashTabTag, ItemDef) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Inventory is full!")));
 		if(!OutAddedToInstances.IsEmpty())
 		{
@@ -346,7 +346,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 	
 	if(CanFitItemDefinitionToSpecifiedSlot(ItemPosition, ItemDef) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return Result;
 	}
@@ -468,7 +468,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 	FObsidianItemPosition AvailablePosition;
 	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan(), InstanceToAdd->GetItemCategoryTag(), StashTabTag) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
 		return Result;
 	}
@@ -517,7 +517,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 	
 	if(CheckSpecifiedPosition(ItemPosition, InstanceToAdd->GetItemCategoryTag(), InstanceToAdd->GetItemGridSpan()) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Player Stash is full at specified slot!")));
 		return Result;
 	}
@@ -752,7 +752,7 @@ void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* Usin
 	}
 	else
 	{
-		//TODO Usage failed, Play some VO?
+		//TODO(intrxx) Usage failed, Play some VO?
 	}
 }
 
@@ -766,7 +766,7 @@ void UObsidianPlayerStashComponent::ServerRegisterAndValidateCurrentStashTab_Imp
 	{
 		CurrentStashTab = StashTab;
 	}
-	else //TODO Should I do more here?
+	else //TODO(intrxx) Should I do more here?
 	{
 		ensureAlwaysMsgf(false, TEXT("There is no such StashTab found for provided Gameplay Tag for Current Player."));
 	}

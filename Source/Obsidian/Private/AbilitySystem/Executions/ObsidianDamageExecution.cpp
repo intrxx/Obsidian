@@ -134,7 +134,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	}
 	//~ End of Immunity implementation
 	
-	//TODO Only evade Hits
+	//TODO(intrxx) Only evade Hits
 	// ~ Start of Hit Evasion Calculation
 	float Evasion = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().EvasionDef, EvaluationParameters, Evasion);
@@ -144,7 +144,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AccuracyDef, EvaluationParameters, Accuracy);
 	Accuracy = FMath::Max<float>(Accuracy, 0.0f);
 
-	//TODO Read about entropy hit here: https://pathofexile.fandom.com/wiki/Evasion#cite_note-cite4-2, https://www.pathofexile.com/forum/view-thread/11707#p216024 and maybe implement it
+	//TODO(intrxx) Read about entropy hit here: https://pathofexile.fandom.com/wiki/Evasion#cite_note-cite4-2, https://www.pathofexile.com/forum/view-thread/11707#p216024 and maybe implement it
 	float ChanceToHit = ((Accuracy * 1.25f) / ((Accuracy + FMath::Pow((Evasion * 0.25f), 0.8f)))) * 100.0f;
 	ChanceToHit = FMath::Clamp<float>(ChanceToHit, 5.0f, 100.0f);
 	
@@ -164,7 +164,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	}
 	// ~ End of Evasion Calculation Hit
 
-	//TODO Only attempt to suppress spell damage - in other words see if the GA is a spell and not a Hit
+	//TODO(intrxx) Only attempt to suppress spell damage - in other words see if the GA is a spell and not a Hit
 	// ~ Start of Suppression Spell Damage Calculation
 	float SpellSuppressionChance = 0.0f;
 	float SpellSuppressionMagnitude = 0.0f;
@@ -191,7 +191,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float FireDamage = 0.0f;
 	float ChaosDamage = 0.0f;
 	
-	//TODO This could be refactored to somehow get the actual DamageTypes of this ability that was used. 
+	//TODO(intrxx) This could be refactored to somehow get the actual DamageTypes of this ability that was used. 
 	for(const FGameplayTag DamageType : ObsidianGameplayTags::DamageTypes)
 	{
 		if(DamageType == ObsidianGameplayTags::SetByCaller_DamageType_Physical)
@@ -272,7 +272,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	float ModifiedDamage = FullDamage;
 
-	//TODO Critical Strike Calculation might want to be on the ability itself
+	//TODO(intrxx) Critical Strike Calculation might want to be on the ability itself
 	// ~ Start of Critical Strikes Calculation
 	float CriticalStrikeChance = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeChanceDef, EvaluationParameters, CriticalStrikeChance);
@@ -334,7 +334,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 							
 			SpecHandle.Data.Get()->AppendDynamicAssetTags(ObsidianDamageStatics().UIDataTags);
 
-			//TODO Idk if this is the right way to do it, need research
+			//TODO(intrxx) Idk if this is the right way to do it, need research
 			//TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get(), TargetASC->GetPredictionKeyForNewAction());
 		}
 	}
@@ -347,7 +347,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	ModifiedDamage *= (100.0f + StaggerDamageTakenMultiplier) / 100.0f;
 	
-	//TODO Take Into account the weapon that the Player used to perform the attack
+	//TODO(intrxx) Take Into account the weapon that the Player used to perform the attack
 	float StaggerMagnitude = ((ModifiedDamage / 100.f) * 2.40f) * 100.0f;
 	
 	const FGameplayModifierEvaluatedData& StaggerModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingStaggerMagnitudeAttribute(), EGameplayModOp::Override, StaggerMagnitude);

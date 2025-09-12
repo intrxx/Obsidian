@@ -60,7 +60,7 @@ void UObsidianRegularEnemyHealthBar::MaxEnergyShieldChanged(const float NewValue
    StartWidgetHideTimer();
 }
 
-//TODO: This should probably be an option in the future
+//TODO(intrxx) This should probably be an option in the future
 void UObsidianRegularEnemyHealthBar::StartWidgetHideTimer()
 {
    if(!bShouldHideWidget)

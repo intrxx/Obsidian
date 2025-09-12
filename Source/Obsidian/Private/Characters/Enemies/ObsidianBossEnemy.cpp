@@ -78,7 +78,7 @@ void AObsidianBossEnemy::OnDeathFinished(AActor* OwningActor)
 
 void AObsidianBossEnemy::HandleAdvancedCombatHit(const FHitResult& HitResult)
 {
-	//TODO Verify if I actually use it in the future.
+	//TODO(intrxx) Verify if I actually use it in the future.
 	BP_HandleAdvancedCombatHit(HitResult);
 
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();

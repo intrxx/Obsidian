@@ -237,7 +237,7 @@ void UObsidianStashTab_Grid::Construct(UObsidianPlayerStashComponent* StashCompo
 		}
 	}
 	
-	//TODO Get already added items, mark space
+	//TODO(intrxx) Get already added items, mark space
 }
 
 int32 UObsidianStashTab_Grid::GetGridWidth() const

@@ -44,7 +44,7 @@ void UObsidianItemWorldName::HandleWorldNameHighlightEnd() const
 
 FReply UObsidianItemWorldName::NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	//TODO Maybe some widget animation
+	//TODO(intrxx) Maybe some widget animation
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		const int32 Index = InMouseEvent.GetUserIndex();

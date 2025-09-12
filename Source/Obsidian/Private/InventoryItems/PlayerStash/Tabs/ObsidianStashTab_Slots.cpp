@@ -24,7 +24,7 @@ TArray<FObsidianSlotDefinition> UObsidianStashTab_Slots::GetSlots() const
 
 bool UObsidianStashTab_Slots::DebugVerifyPositionFree(const FObsidianItemPosition& Position)
 {
-	return true; //TODO Implement
+	return true; //TODO(intrxx) Implement
 }
 
 bool UObsidianStashTab_Slots::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
@@ -114,7 +114,7 @@ void UObsidianStashTab_Slots::Construct(UObsidianPlayerStashComponent* StashComp
 		
 	}
 	
-	//TODO Get already added items, mark space
+	//TODO(intrxx) Get already added items, mark space
 }
 
 FObsidianSlotDefinition UObsidianStashTab_Slots::FindSlotByTag(const FGameplayTag& SlotTag) const

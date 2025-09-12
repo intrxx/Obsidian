@@ -126,7 +126,7 @@ protected:
 	virtual void ClearGameplayTags() override;
 	
 	/**
-	 * Callbacks for Attribute change delegates. //TODO Decide what should actually be bind later - check performance
+	 * Callbacks for Attribute change delegates. //TODO(intrxx) Decide what should actually be bind later - check performance
 	 */
 	
 	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;

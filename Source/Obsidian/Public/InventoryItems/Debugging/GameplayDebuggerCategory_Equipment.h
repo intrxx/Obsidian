@@ -37,6 +37,7 @@ protected:
 		struct FEquipmentItemDebug
 		{
 			FString Name;
+			FString ItemUniqueID;
 			FString Item;
 			FGameplayTag SlotTag;
 			TArray<FString> SpawnedEquipmentPieces;

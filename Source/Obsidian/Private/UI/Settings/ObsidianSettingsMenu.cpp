@@ -16,7 +16,7 @@ void UObsidianSettingsMenu::NativeOnInitialized()
 
 void UObsidianSettingsMenu::HandleBackwardsAction()
 {
-	//TODO Apply any changes
+	//TODO(intrxx) Apply any changes
 	
 	DeactivateWidget();
 }

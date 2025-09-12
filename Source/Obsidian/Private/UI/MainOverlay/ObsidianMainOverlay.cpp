@@ -533,14 +533,14 @@ void UObsidianMainOverlay::MoveDroppedItemDescOverlay(const bool bInventoryOpen)
 		const float InventoryWidth = Inventory->GetWindowWidth();
 		if(UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DroppedItemDesc_Overlay))
 		{
-			CanvasSlot->SetPosition(FVector2D(-InventoryWidth, -50.0f)); //TODO Hard coded for now, kinda feeling the need to change it
+			CanvasSlot->SetPosition(FVector2D(-InventoryWidth, -50.0f)); //TODO(intrxx) Hard coded for now, kinda feeling the need to change it
 		}
 	}
 	else
 	{
 		if(UCanvasPanelSlot* CanvasSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(DroppedItemDesc_Overlay))
 		{
-			CanvasSlot->SetPosition(FVector2D(0.0f, -50.0f)); //TODO Hard coded for now, kinda feeling the need to change it
+			CanvasSlot->SetPosition(FVector2D(0.0f, -50.0f)); //TODO(intrxx) Hard coded for now, kinda feeling the need to change it
 		}
 	}
 }

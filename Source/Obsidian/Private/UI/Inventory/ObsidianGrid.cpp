@@ -88,7 +88,7 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 		FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 		if(OwningWidgetController->GetDraggedItemGridSpan(ItemGridSpan) == false) 
 		{
-			//TODO This isn't quite what I want here since the grid will be used anywhere, should be dealt with other way
+			//TODO(intrxx) This isn't quite what I want here since the grid will be used anywhere, should be dealt with other way
 			const EObsidianItemSlotState SlotState = OwningWidgetController->CanInteractWithGrid(GridOwner) ? EObsidianItemSlotState::Selected : EObsidianItemSlotState::RedLight;
 			AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 			AffectedGridSlots.Add(AffectedSlot);

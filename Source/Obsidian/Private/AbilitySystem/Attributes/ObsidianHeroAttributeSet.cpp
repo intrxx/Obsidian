@@ -38,7 +38,7 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			const float NewHealth = CurrentHealth - (OldValue - NewValue);
 			SetHealth(FMath::Max<float>(NewHealth, 1.0f));		
 		}
-		else if(true) //TODO Check if hero in non-combat area (if equipping item)
+		else if(true) //TODO(intrxx) Check if hero in non-combat area (if equipping item)
 		{
 			const float NewHealth = CurrentHealth + (NewValue - OldValue);
 			SetHealth(FMath::Max<float>(NewHealth, 1.0f));		
@@ -53,7 +53,7 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			const float NewEnergyShield = CurrentEnergyShield - (OldValue - NewValue);
 			SetEnergyShield(FMath::Clamp<float>(NewEnergyShield, 1.0f, CurrentMaxEnergyShield));		
 		}
-		else if(true) //TODO Check if hero in non-combat area (if equipping item)
+		else if(true) //TODO(intrxx) Check if hero in non-combat area (if equipping item)
 		{
 			const float NewEnergyShield = CurrentEnergyShield + (NewValue - OldValue);
 			SetEnergyShield(FMath::Clamp<float>(NewEnergyShield, 1.0f, CurrentMaxEnergyShield));
@@ -68,7 +68,7 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			const float NewMana = CurrentMana - (OldValue - NewValue);
 			SetMana(FMath::Clamp<float>(NewMana, 1.0f, CurrentMaxMana));		
 		}
-		else if(true) //TODO Check if hero in non-combat area (if equipping item)
+		else if(true) //TODO(intrxx) Check if hero in non-combat area (if equipping item)
 		{
 			const float NewMana = CurrentMana + (NewValue - OldValue);
 			SetMana(FMath::Clamp<float>(NewMana, 1.0f, CurrentMaxMana));		
@@ -83,7 +83,7 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			const float NewSpecialResource = CurrentSpecialResource - (OldValue - NewValue);
 			SetSpecialResource(FMath::Clamp<float>(NewSpecialResource, 1.0f, CurrentMaxSpecialResource));		
 		}
-		else if(true) //TODO Check if hero in non-combat area (if equipping item)
+		else if(true) //TODO(intrxx) Check if hero in non-combat area (if equipping item)
 		{
 			const float NewSpecialResource = CurrentSpecialResource + (NewValue - OldValue);
 			SetSpecialResource(FMath::Clamp<float>(NewSpecialResource, 1.0f, CurrentMaxSpecialResource));		

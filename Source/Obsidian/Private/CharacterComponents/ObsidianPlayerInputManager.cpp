@@ -808,7 +808,8 @@ void UObsidianPlayerInputManager::ServerTakeoutFromStashedItem_Implementation(co
 	{
 		return;
 	}
-	
+
+	//TODO(intrxx) In this case this are actually StacksToTake, maybe create another struct to reflect that?
 	DraggedItem = FDraggedItem(ItemDef, Result.StacksLeft);
 	StartDraggingItem(Controller);
 
@@ -959,7 +960,8 @@ void UObsidianPlayerInputManager::ServerTakeoutFromInventoryItem_Implementation(
 	{
 		return;
 	}
-	
+
+	//TODO(intrxx) In this case this are actually StacksToTake, maybe create another struct to reflect that?
 	DraggedItem = FDraggedItem(ItemDef, Result.StacksLeft);
 	StartDraggingItem(Controller);
 
@@ -1275,7 +1277,7 @@ void UObsidianPlayerInputManager::ServerHandleDroppingItem_Implementation()
 		return;
 	}
 	
-	//TODO Bias toward Actors forward Vector
+	//TODO(intrxx) Bias toward Actors forward Vector
 	FNavLocation RandomPointLocation;
 	NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation);
 	
@@ -1480,7 +1482,7 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 		return;
 	}
 
-	//TODO Perform validation here, if there is no validation, there is no point of keeping this client -> server -> client logic
+	//TODO(intrxx) Perform validation here, if there is no validation, there is no point of keeping this client -> server -> client logic
 	// HandleOutOfRangeInteraction is some kind of validating
 
 	if(InteractionTarget->CanInteract())

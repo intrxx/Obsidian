@@ -36,7 +36,7 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 		
 		if(EffectProps.bCanHitReact && CurrentHealth > 0.0f)
 		{
-			//TODO As it stands now only damage that damages health will cause a hit react - decide if its okay, I like it for now
+			//TODO(intrxx) As it stands now only damage that damages health will cause a hit react - decide if its okay, I like it for now
 			// Check if we should hit react, small hits shouldn't cause hit reacting
 			const float CombinedHealthPool = GetMaxHealth() + GetMaxEnergyShield();
 			if((LocalIncomingDamage / CombinedHealthPool) * 100.f > GetHitReactThreshold())

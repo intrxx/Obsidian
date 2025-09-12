@@ -76,7 +76,7 @@ void AObsidianPlayerStash::Interact(AObsidianPlayerController* InteractingPlayer
 	
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Opening Chest")));
 
-	//TODO Play sound and stash animation
+	//TODO(intrxx) Play sound and stash animation
 
 	InteractingPlayerController->TogglePlayerStash(true);
 }

@@ -255,7 +255,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(UO
 	const EObsidianEquipCheckResult EquipResult = CanEquipInstance(InstanceToEquip, SlotTag);
 	if(EquipResult != EObsidianEquipCheckResult::CanEquip)
 	{
-		//TODO Send Client RPC with some voice over passing EquipResult?
+		//TODO(intrxx) Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
 		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
@@ -298,7 +298,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	EObsidianEquipCheckResult EquipResult = CanReplaceTemplate(ItemDef, SlotTag);
 	if(EquipResult != EObsidianEquipCheckResult::CanEquip)
 	{
-		//TODO Send Client RPC to add voiceover passing EquipResult
+		//TODO(intrxx) Send Client RPC to add voiceover passing EquipResult
 #if !UE_BUILD_SHIPPING
 		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
@@ -361,7 +361,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	const EObsidianEquipCheckResult EquipResult = CanReplaceInstance(InstanceToEquip, SlotTag);
 	if(EquipResult != EObsidianEquipCheckResult::CanEquip)
 	{
-		//TODO Send Client RPC with some voice over passing EquipResult?
+		//TODO(intrxx) Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
 		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
@@ -507,7 +507,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	EObsidianEquipCheckResult EquipResult = CanEquipTemplate(ItemDef, SlotTag);
 	if(EquipResult != EObsidianEquipCheckResult::CanEquip)
 	{
-		//TODO Send Client RPC to add voiceover passing EquipResult
+		//TODO(intrxx) Send Client RPC to add voiceover passing EquipResult
 #if !UE_BUILD_SHIPPING
 		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif

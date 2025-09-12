@@ -72,6 +72,7 @@ void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* Owner
 			FRepData::FStashedItemsDebug InventoryItems;
 			
 			InventoryItems.Name = Item->GetItemDebugName();
+			InventoryItems.ItemUniqueID = Item->GetUniqueItemID().ToString();
 			InventoryItems.Item = GetNameSafe(Item->GetItemDef());
 			InventoryItems.Item.RemoveFromEnd(TEXT("_C"));
 			InventoryItems.CurrentStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
@@ -150,6 +151,7 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 	constexpr float Padding = 10.0f;
 	static float ObjNameSize = 0.0f;
 	static float ItemNameSize = 0.0f;
+	static float UniqueItemIDSize = 0.0f;
 	static float CurrentStackCountNameSize = 0.0f;
 	static float MaxStackCountSize = 0.0f;
 	static float LimitStackCountSize = 0.0f;
@@ -163,6 +165,7 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 		// We have to actually use representative strings because of the kerning
 		CanvasContext.MeasureString(*LongestDebugObjectName, ObjNameSize, TempSizeY);
 		CanvasContext.MeasureString(*LongestDebugObjectName, ItemNameSize, TempSizeY);
+		CanvasContext.MeasureString(*LongestDebugObjectName, UniqueItemIDSize, TempSizeY);
 		CanvasContext.MeasureString(TEXT("current stack count: 00"), CurrentStackCountNameSize, TempSizeY);
 		CanvasContext.MeasureString(TEXT("max stack count: 00"), MaxStackCountSize, TempSizeY);
 		CanvasContext.MeasureString(TEXT("limit stack count: 00"), LimitStackCountSize, TempSizeY);
@@ -172,11 +175,12 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 		ObjNameSize += Padding;
 	}
 	const float SecondArgConstX = ObjNameSize * 0.7;
-	const float ThirdArgConstX = ObjNameSize * 0.5 + ItemNameSize;
-	const float FourthArgConstX = ObjNameSize * 0.9 + ItemNameSize + CurrentStackCountNameSize;
-	const float FifthArgConstX = ObjNameSize * 1.3 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize;
-	const float SixthArgConstX = ObjNameSize * 1.7 + ItemNameSize +  CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize;
-	const float SeventhArgConstX = ObjNameSize * 2.4 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSpanSize;
+	const float ThirdArgConstX = ObjNameSize * 0.8 + ItemNameSize;
+	const float FourthArgConstX = ObjNameSize * 0.6 + ItemNameSize + UniqueItemIDSize;
+	const float FifthArgConstX = ObjNameSize * 0.9 + ItemNameSize + UniqueItemIDSize + CurrentStackCountNameSize;
+	const float SixthArgConstX = ObjNameSize * 1.2 + ItemNameSize + UniqueItemIDSize + CurrentStackCountNameSize + MaxStackCountSize;
+	const float SeventhArgConstX = ObjNameSize * 1.7 + ItemNameSize + UniqueItemIDSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize;
+	const float EighthArgConstX = ObjNameSize * 2.4 + ItemNameSize + UniqueItemIDSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSpanSize;
 
 
 	const float ColumnWidth = ObjNameSize * 5 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSpanSize + CurrentGridLocationSize;
@@ -218,12 +222,13 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 	TopCursorY = CanvasContext.CursorY;
 	
 	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Item Debug Name:")));
-	CanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
-	CanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Stack Count:")));
-	CanvasContext.PrintAt(TopCursorX + FourthArgConstX, TopCursorY, FString::Printf(TEXT("Max Item Stack Count:")));
-	CanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Item Stack Count Inventory Limit:")));
-	CanvasContext.PrintAt(TopCursorX + SixthArgConstX, TopCursorY, FString::Printf(TEXT("Item Grid Size:")));
-	CanvasContext.PrintAt(TopCursorX + SeventhArgConstX, TopCursorY, FString::Printf(TEXT("Item Location:")));
+	CanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Unique Item ID:")));
+	CanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
+	CanvasContext.PrintAt(TopCursorX + FourthArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Stack Count:")));
+	CanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Max Item Stack Count:")));
+	CanvasContext.PrintAt(TopCursorX + SixthArgConstX, TopCursorY, FString::Printf(TEXT("Item Stack Count Inventory Limit:")));
+	CanvasContext.PrintAt(TopCursorX + SeventhArgConstX, TopCursorY, FString::Printf(TEXT("Item Grid Size:")));
+	CanvasContext.PrintAt(TopCursorX + EighthArgConstX, TopCursorY, FString::Printf(TEXT("Item Location:")));
 
 	CanvasContext.MoveToNewLine();
 	CanvasContext.CursorX += Padding;
@@ -234,18 +239,19 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 
 		// Print positions manually to align them properly
 		CanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, ItemData.Name.Left(35));
-		CanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Emerald, ItemData.Item);
-		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
-		CanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
-		CanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
-		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSpan.X, ItemData.GridSpan.Y));
+		CanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Emerald, ItemData.ItemUniqueID);
+		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FColor::Emerald, ItemData.Item);
+		CanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
+		CanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
+		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
+		CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSpan.X, ItemData.GridSpan.Y));
 		if (ItemData.CurrentGridLocation != FIntPoint::NoneValue)
 		{
-			CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
+			CanvasContext.PrintAt(CursorX + EighthArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
 		}
 		else if (ItemData.CurrentSlotTag != FGameplayTag::EmptyTag)
 		{
-			CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Slot Tag: {yellow}%s"), *ItemData.CurrentSlotTag.GetTagName().ToString()));
+			CanvasContext.PrintAt(CursorX + EighthArgConstX, CursorY, FString::Printf(TEXT("{grey}Slot Tag: {yellow}%s"), *ItemData.CurrentSlotTag.GetTagName().ToString()));
 		}
 		
 		// PrintAt would have reset these values, restore them.

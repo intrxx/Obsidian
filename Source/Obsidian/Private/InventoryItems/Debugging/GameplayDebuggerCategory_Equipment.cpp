@@ -39,22 +39,23 @@ void FGameplayDebuggerCategory_Equipment::CollectData(APlayerController* OwnerPC
 		TArray<UObsidianInventoryItemInstance*> Items = EquipmentComponent->GetAllEquippedItems();
 		for(const UObsidianInventoryItemInstance* Item : Items)
 		{
-			FRepData::FEquipmentItemDebug EquipmentItems;
+			FRepData::FEquipmentItemDebug EquipmentItem;
 			
-			EquipmentItems.Name = Item->GetItemDebugName();
-			EquipmentItems.Item = GetNameSafe(Item->GetItemDef());
-			EquipmentItems.Item.RemoveFromEnd(TEXT("_C"));
-			EquipmentItems.SlotTag = Item->GetItemCurrentPosition().GetItemSlotTag();
+			EquipmentItem.Name = Item->GetItemDebugName();
+			EquipmentItem.ItemUniqueID = Item->GetUniqueItemID().ToString();
+			EquipmentItem.Item = GetNameSafe(Item->GetItemDef());
+			EquipmentItem.Item.RemoveFromEnd(TEXT("_C"));
+			EquipmentItem.SlotTag = Item->GetItemCurrentPosition().GetItemSlotTag();
 			for(const AObsidianSpawnedEquipmentPiece* Piece : Item->GetSpawnedActors())
 			{
-				EquipmentItems.SpawnedEquipmentPieces.Add(GetNameSafe(Piece));
+				EquipmentItem.SpawnedEquipmentPieces.Add(GetNameSafe(Piece));
 			}
 			for(const UObsidianAbilitySet* Set : Item->GetOwningAbilitySets())
 			{
-				EquipmentItems.OwnedAbilitySets.Add(GetNameSafe(Set));
+				EquipmentItem.OwnedAbilitySets.Add(GetNameSafe(Set));
 			}
 			
-			DataPack.Items.Add(EquipmentItems);
+			DataPack.Items.Add(EquipmentItem);
 		}
 
 		for (const FObsidianEquipmentSlotDefinition Slot : EquipmentComponent->Internal_GetEquipmentSlots())
@@ -110,6 +111,7 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 	constexpr float Padding = 10.0f;
 	static float ObjNameSize = 0.0f;
 	static float ItemNameSize = 0.0f;
+	static float UniqueIDSize = 0.0f;
 	static float CurrentSlotTagNameSize = 0.0f;
 	static float SpawnedActorsTagNameSize = 0.0f;
 	static float OwningAbilitySets = 0.0f;
@@ -120,15 +122,17 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 		// We have to actually use representative strings because of the kerning
 		CanvasContext.MeasureString(*LongestDebugObjectName, ObjNameSize, TempSizeY);
 		CanvasContext.MeasureString(*LongestDebugObjectName, ItemNameSize, TempSizeY);
+		CanvasContext.MeasureString(*LongestDebugObjectName, UniqueIDSize, TempSizeY);
 		CanvasContext.MeasureString(*LongestDebugObjectName, CurrentSlotTagNameSize, TempSizeY);
 		CanvasContext.MeasureString(*LongestDebugObjectName, SpawnedActorsTagNameSize, TempSizeY);
 		CanvasContext.MeasureString(*LongestDebugObjectName, OwningAbilitySets, TempSizeY);
 		ObjNameSize += Padding;
 	}
-	const float SecondArgConstX = ObjNameSize * 0.7;
-	const float ThirdArgConstX = ObjNameSize * 0.5 + ItemNameSize;
-	const float ForthArgConstX = ObjNameSize * 0.9 + ItemNameSize + SpawnedActorsTagNameSize;
-	const float FifthArgConstX = ObjNameSize * 1.3 + ItemNameSize + SpawnedActorsTagNameSize + OwningAbilitySets;
+	const float SecondArgConstX = ObjNameSize * 0.9;
+	const float ThirdArgConstX = ObjNameSize * 1 + ItemNameSize;
+	const float ForthArgConstX = ObjNameSize * 0.95 + ItemNameSize + UniqueIDSize;
+	const float FifthArgConstX = ObjNameSize * 1.1 + ItemNameSize + UniqueIDSize + SpawnedActorsTagNameSize;
+	const float SixthArgConstX = ObjNameSize * 1.4 + ItemNameSize + UniqueIDSize + SpawnedActorsTagNameSize + OwningAbilitySets;
 	
 	const float ColumnWidth = ObjNameSize * 5 + ItemNameSize + CurrentSlotTagNameSize;
 	const int NumColumns = FMath::Max(1, FMath::FloorToInt(CanvasWidth / ColumnWidth));
@@ -147,10 +151,11 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 	TopCursorY = CanvasContext.CursorY;
 	
 	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Item Debug Name:")));
-	CanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
-	CanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Slot:")));
-	CanvasContext.PrintAt(TopCursorX + ForthArgConstX, TopCursorY, FString::Printf(TEXT("Spawned Actors:")));
-	CanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Owning Ability Sets:")));
+	CanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Unique Item ID:")));
+	CanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
+	CanvasContext.PrintAt(TopCursorX + ForthArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Slot:")));
+	CanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Spawned Actors:")));
+	CanvasContext.PrintAt(TopCursorX + SixthArgConstX, TopCursorY, FString::Printf(TEXT("Owning Ability Sets:")));
 
 	CanvasContext.MoveToNewLine();
 	CanvasContext.CursorX += Padding;
@@ -161,14 +166,15 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 
 		// Print positions manually to align them properly
 		CanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, ItemData.Name.Left(35));
-		CanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Emerald, ItemData.Item);
-		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FString::Printf(TEXT("{grey}Slot Tag: {yellow}%s"), *ItemData.SlotTag.GetTagName().ToString()));
+		CanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Emerald, ItemData.ItemUniqueID);
+		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FColor::Emerald, ItemData.Item);
+		CanvasContext.PrintAt(CursorX + ForthArgConstX, CursorY, FString::Printf(TEXT("{grey}Slot Tag: {yellow}%s"), *ItemData.SlotTag.GetTagName().ToString()));
 
 		float CachedCursorY = CursorY;
 		for(FString ItemName : ItemData.SpawnedEquipmentPieces)
 		{
 			ItemName.RemoveFromEnd(TEXT("_C"));
-			CanvasContext.PrintAt(CursorX + ForthArgConstX, CachedCursorY, FString::Printf(TEXT("{grey}Actor: {yellow}%s"), *ItemName));
+			CanvasContext.PrintAt(CursorX + FifthArgConstX, CachedCursorY, FString::Printf(TEXT("{grey}Actor: {yellow}%s"), *ItemName));
 			CachedCursorY += CanvasContext.GetLineHeight(); 
 		}
 
@@ -176,7 +182,7 @@ void FGameplayDebuggerCategory_Equipment::DrawItems(APlayerController* OwnerPC, 
 		for(FString SetName : ItemData.OwnedAbilitySets)
 		{
 			SetName.RemoveFromEnd(TEXT("_C"));
-			CanvasContext.PrintAt(CursorX + FifthArgConstX, CachedCursorY, FString::Printf(TEXT("{grey}Ability Set: {yellow}%s"), *SetName));
+			CanvasContext.PrintAt(CursorX + SixthArgConstX, CachedCursorY, FString::Printf(TEXT("{grey}Ability Set: {yellow}%s"), *SetName));
 			CachedCursorY += CanvasContext.GetLineHeight(); 
 		}
 		

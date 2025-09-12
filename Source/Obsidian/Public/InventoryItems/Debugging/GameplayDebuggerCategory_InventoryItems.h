@@ -34,6 +34,7 @@ protected:
 		struct FInventoryItemDebug
 		{
 			FString Name;
+			FString ItemUniqueID;
 			FString Item;
 			int32 CurrentStackCount;
 			int32 MaxStackCount;

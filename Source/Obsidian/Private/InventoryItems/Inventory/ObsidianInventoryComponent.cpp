@@ -257,11 +257,11 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 		}
 	}
 
-	//TODO Shouldn't this be in the aboves if?
+	//TODO(intrxx) Shouldn't this be in the aboves if?
 	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(ItemDef, Result.StacksLeft);
 	if(StacksAvailableToAdd == 0)
 	{
-		//TODO We can no longer add this item to the inventory, add voice over?
+		//TODO(intrxx) We can no longer add this item to the inventory, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 		if(!OutAddedToInstances.IsEmpty())
 		{
@@ -275,7 +275,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	FIntPoint AvailablePosition;
 	if(CanFitItemDefinition(AvailablePosition, ItemDef) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Inventory is full!")));
 		if(!OutAddedToInstances.IsEmpty())
 		{
@@ -347,7 +347,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 	
 	if(CanFitItemDefinitionToSpecifiedSlot(ToGridSlot, ItemDef) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return Result;
 	}
@@ -412,11 +412,11 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 		}
 	}
 	
-	//TODO Shouldn't this be in the aboves if?
+	//TODO(intrxx) Shouldn't this be in the aboves if?
 	const int32 StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(InstanceToAdd);
 	if(StacksAvailableToAdd == 0)
 	{
-		//TODO We can no longer add this item to the inventory, add voice over?
+		//TODO(intrxx) We can no longer add this item to the inventory, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 		return Result;
 	}
@@ -424,7 +424,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 	FIntPoint AvailablePosition;
 	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan()) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
 		return Result;
 	}
@@ -484,7 +484,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 		StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(InstanceToAdd);
 		if(StacksAvailableToAdd == 0)
 		{
-			//TODO We can no longer add this item to the inventory, add voice over?
+			//TODO(intrxx) We can no longer add this item to the inventory, add voice over?
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
 			return Result;
 		}
@@ -498,7 +498,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 	
 	if(CheckSpecifiedPosition(InstanceToAdd->GetItemGridSpan(), ToGridSlot) == false)
 	{
-		//TODO Inventory is full, add voice over?
+		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
 		return Result;
 	}
@@ -841,7 +841,7 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 		return CurrentStacks;
 	}
 
-	//TODO Rethink it, I kinda dont want to limit items in stash
+	//TODO(intrxx) Rethink it, I kinda dont want to limit items in stash
 	int32 AllStacksInStash = 0;
 	if(UObsidianPlayerStashComponent* PlayerStashComponent = UObsidianPlayerStashComponent::FindPlayerStashComponent(GetOwner()))
 	{
@@ -957,7 +957,7 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	}
 	else
 	{
-		//TODO Usage failed, Play some VO?
+		//TODO(intrxx) Usage failed, Play some VO?
 	}
 }
 
@@ -1122,7 +1122,7 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 	
 	if(GetNumberOfStacksAvailableToAddToInventory(ReplacingInstance) <= 0)
 	{
-		//TODO Limit of stacks reached, add voiceover?
+		//TODO(intrxx) Limit of stacks reached, add voiceover?
 		return false;
 	}
 	
@@ -1139,7 +1139,7 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FInt
 	
 	if(GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount) <= 0)
 	{
-		//TODO Limit of stacks reached, add voiceover?
+		//TODO(intrxx) Limit of stacks reached, add voiceover?
 		return false;
 	}
 	

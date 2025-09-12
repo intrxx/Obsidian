@@ -142,7 +142,7 @@ float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGamep
 
 void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bPauseGame)
 {
-	//TODO Check for blocking tag here and clear input if this ASC has it
+	//TODO(intrxx) Check for blocking tag here and clear input if this ASC has it
 	
 	static TArray<FGameplayAbilitySpecHandle> AbilitiesToActivate;
 	AbilitiesToActivate.Reset();

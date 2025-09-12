@@ -31,7 +31,7 @@ void UObsidianGameplayAbility_Death::ActivateAbility(const FGameplayAbilitySpecH
 
 	UObsidianAbilitySystemComponent* ObsidianASC = CastChecked<UObsidianAbilitySystemComponent>(ActorInfo->AbilitySystemComponent.Get());
 
-	//TODO Can change it to cancel specific abilities or ignore some with specific tag in the future
+	//TODO(intrxx) Can change it to cancel specific abilities or ignore some with specific tag in the future
 	ObsidianASC->CancelAllAbilities(this);
 
 	SetCanBeCanceled(false);

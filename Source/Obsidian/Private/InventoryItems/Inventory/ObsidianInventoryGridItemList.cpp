@@ -109,7 +109,7 @@ void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* In
 #endif
 
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(Instance);
-	NewEntry.GridLocation = AvailablePosition; //TODO Add Grid Location to Entry instead of instance?
+	NewEntry.GridLocation = AvailablePosition; //TODO(intrxx) Add Grid Location to Entry instead of instance?
 	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
 	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	

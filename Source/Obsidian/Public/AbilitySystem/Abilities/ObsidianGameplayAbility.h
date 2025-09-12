@@ -32,7 +32,7 @@ enum class EObsidianGameplayAbility_ActivationPolicy : uint8
 	EAP_OnSpawn UMETA(DisplayName = "On Spawn")
 };
 
-//TODO Think about Lyra like AbilityActivationGroup
+//TODO(intrxx) Think about Lyra like AbilityActivationGroup
 
 USTRUCT(BlueprintType)
 struct FObsidianTaggedMontage

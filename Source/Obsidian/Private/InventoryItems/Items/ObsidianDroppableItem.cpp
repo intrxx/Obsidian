@@ -362,7 +362,7 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 
 	FinalItemRotation = GetActorRotation();
 	
-	if(FinalItemRotation == FRotator::ZeroRotator) // If the item was placed in the level it will have Zero Rotation, randomize the Yaw. //TODO This check will fail if someone set the rotation which I don't expect to do but ¯\_(ツ)_/¯ 
+	if(FinalItemRotation == FRotator::ZeroRotator) // If the item was placed in the level it will have Zero Rotation, randomize the Yaw. //TODO(intrxx) This check will fail if someone set the rotation which I don't expect to do but ¯\_(ツ)_/¯ 
 	{
 		FinalItemRotation.Yaw += FMath::FRandRange(0.0f, 180.0f);
 	}

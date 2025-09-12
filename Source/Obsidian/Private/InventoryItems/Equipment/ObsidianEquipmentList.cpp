@@ -312,7 +312,7 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 	{
 		Instance->SetItemCurrentPosition(SwapTag);
 		
-		//TODO Do anything unequipping related
+		//TODO(intrxx) Do anything unequipping related
 
 		const bool bSwappedBothWays = SlotToEquipmentMap.Contains(CurrentWeaponSlotTag) && SlotToEquipmentMap.Contains(SwapTag);
 		const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : CurrentWeaponSlotTag;
@@ -384,7 +384,7 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 	{
 		Instance->SetItemCurrentPosition(MainWeaponSlotTag);
 
-		//TODO Do anything equipping related
+		//TODO(intrxx) Do anything equipping related
 
 		const bool bSwappedBothWays = SlotToEquipmentMap.Contains(CurrentSwapTag) && SlotToEquipmentMap.Contains(MainWeaponSlotTag);
 		const FGameplayTag TagToClear = bSwappedBothWays ? FGameplayTag::EmptyTag : CurrentSwapTag;

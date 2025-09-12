@@ -49,7 +49,7 @@ void UObsidianOverlayExperienceInfo::InitializeExperienceInfo(const float Curren
 
 	if(ExperiencePerHour_TextBlock)
 	{
-		ExperiencePerHour_TextBlock->SetVisibility(ESlateVisibility::Collapsed); //TODO Create logic for XP per h
+		ExperiencePerHour_TextBlock->SetVisibility(ESlateVisibility::Collapsed); //TODO(intrxx) Create logic for XP per h
 	}
 }
 

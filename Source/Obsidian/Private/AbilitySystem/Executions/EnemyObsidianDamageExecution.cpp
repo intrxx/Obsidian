@@ -44,7 +44,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 	
 	const FAggregatorEvaluateParameters EvaluationParameters;
 
-	if(true) //TODO Check if the ability is a hit based
+	if(true) //TODO(intrxx) Check if the ability is hit based
 	{
 		float HitBlockChance = 0.0f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianEnemyDamageStatics().HitBlockChanceDef, EvaluationParameters, HitBlockChance);
@@ -67,7 +67,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 		}
 	}
 
-	if(true) //TODO Check if the ability is a spell
+	if(true) //TODO(intrxx) Check if the ability is a spell
 	{
 		float SpellBlockChance = 0.0f;
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianEnemyDamageStatics().SpellBlockChanceDef, EvaluationParameters, SpellBlockChance);

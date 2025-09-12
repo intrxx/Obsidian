@@ -265,7 +265,7 @@ void UObsidianPlayerStashWidget::CreateStashTabs()
 		}
 	}
 
-	//TODO This is not the best (but at least in Obsidian this will be the case),
+	//TODO(intrxx) This is not the best (but at least in Obsidian this will be the case),
 	// but since I can't think of not an ugly way of getting the first Stash Tab right now this will be here for a little bit
 	ShowStashTab(ObsidianGameplayTags::StashTab_Grid_1);
 }
