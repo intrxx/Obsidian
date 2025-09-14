@@ -98,12 +98,39 @@ void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
 	checkf(false, TEXT("Failed to Initialize Item with neither Item Def nor Instance, something is wrong."));
 }
 
+void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 ItemStacks)
+{
+	if(HasAuthority() == false)
+	{
+		return;
+	}
+
+	if(!ensureMsgf(ItemDef, TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
+	{
+		return;
+	}
+	
+	if(ItemDef)
+	{
+		AddItemDefinition(ItemDef, ItemStacks);
+		return;
+	}
+}
+
 bool AObsidianDroppableItem::InitializeWorldName()
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr || bInitializedItemName)
 	{
 		return false;
+	}
+
+	if (ItemWorldNameClass == nullptr) // Get the default one
+	{
+		ItemWorldNameClass = LoadClass<UUserWidget>(
+			nullptr,
+			TEXT("/Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C")
+		);
 	}
 	
 	checkf(ItemWorldNameClass, TEXT("ItemWorldNameClass is invalid, please make sure it is set in ObsidianDroppableItem instance."));

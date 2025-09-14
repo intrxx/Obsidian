@@ -18,6 +18,7 @@
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Characters/ObsidianDummyMeshActor.h"
+#include "InventoryItems/ObsidianItemDropComponent.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -28,16 +29,6 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
 	MeshComp->SetCustomDepthStencilValue(ObsidianHighlight::Red);
 	MeshComp->SetRenderCustomDepth(false);
 	
-	ObsidianAbilitySystemComponent = CreateDefaultSubobject<UObsidianAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
-	ObsidianAbilitySystemComponent->SetIsReplicated(true);
-	ObsidianAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
-	
-	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
-	
-	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
-	
-	EnemyOverlayBarComponent = CreateDefaultSubobject<UObsidianEnemyOverlayBarComponent>(TEXT("EnemyOverlayBarComponent"));
-	
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
 
@@ -47,8 +38,20 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
 
 	UObsidianCharacterMovementComponent* ObsidianMovementComp = CastChecked<UObsidianCharacterMovementComponent>(GetCharacterMovement());
 	ObsidianMovementComp->bUseControllerDesiredRotation = true;
-	ObsidianMovementComp->RotationRate = FRotator(0.f, 360.f, 0.f);;
+	ObsidianMovementComp->RotationRate = FRotator(0.f, 360.f, 0.f);
+	
+	ObsidianAbilitySystemComponent = CreateDefaultSubobject<UObsidianAbilitySystemComponent>(TEXT("AbilitySystemComponent"));
+	ObsidianAbilitySystemComponent->SetIsReplicated(true);
+	ObsidianAbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Minimal);
+	
+	EnemyAttributeSet = CreateDefaultSubobject<UObsidianEnemyAttributeSet>(TEXT("EnemyAttributeSet"));
+	
+	EnemyAttributesComponent = CreateDefaultSubobject<UObsidianEnemyAttributesComponent>(TEXT("EnemyAttributesComponent"));
 
+	ItemDropComponent = CreateDefaultSubobject<UObsidianItemDropComponent>(TEXT("ItemDropComponent"));
+	
+	EnemyOverlayBarComponent = CreateDefaultSubobject<UObsidianEnemyOverlayBarComponent>(TEXT("EnemyOverlayBarComponent"));
+	
 	// Identifies this class as Enemy character
 	Tags.Emplace(ObsidianActorTags::Enemy);
 }
@@ -170,6 +173,11 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 		{
 			PlayAnimMontage(DeathMontages[RandomIndex]);
 		}
+	}
+
+	if (ItemDropComponent)
+	{
+		ItemDropComponent->DropItems();
 	}
 }
 

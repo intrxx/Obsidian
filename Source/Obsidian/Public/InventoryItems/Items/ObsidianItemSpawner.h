@@ -13,6 +13,7 @@
 #include "ObsidianItemSpawner.generated.h"
 
 class AObsidianDroppableItem;
+class UObsidianItemDropComponent;
 class UObsidianPlayerInputManager;
 
 UCLASS()
@@ -42,19 +43,15 @@ public:
 	void SpawnItem();
 
 protected:
-	/** This can be overridden to manipulate the ItemToDropClass that will be spawned. */
-	void RollItemDrop();
-
+	void OnSpawningItemsFinished();
+	
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianItemDropComponent> ItemDropComponent;
+	
 	UPROPERTY(EditDefaultsOnly,  Category = "Obsidian|Setup")
 	TSubclassOf<AObsidianDroppableItem> ItemToDropClass;
 	
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	bool bRandomizeItem = false;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	int32 MaxSpawnCount = 1;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float InteractionRadius = 150.0f;
 
@@ -64,8 +61,6 @@ private:
 	
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USceneComponent> SpawnPointComp;
-	
-	int32 SpawnedItems = 0;
 	
 	bool bCanInteract = true;
 };

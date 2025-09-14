@@ -61,14 +61,18 @@ public:
 	FGuid GetUniqueItemID() const;
 
 	void GenerateUniqueItemID();
+
+	int32 GetItemLevel() const;
+
+	void SetItemLevel(const int32 InItemLevel);
 	
 	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const;
-	
+
 	void SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FGameplayTag GetItemRarity() const;
-	
+
 	void SetItemRarity(const FGameplayTag& InItemRarityTag);
 
 	FGameplayTag GetItemCategoryTag() const;
@@ -91,13 +95,13 @@ public:
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetUsable(const bool IsUsable);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsItemUsable() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetUsableShard(UObsidianUsableShard* InUsableShard);
-	
+
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	bool UseItem(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingOntoInstance);
 
@@ -260,6 +264,9 @@ private:
 
 	UPROPERTY(Replicated)
 	FGuid ItemUniqueID;
+
+	UPROPERTY(Replicated)
+	int32 ItemLevel = INDEX_NONE;
 	
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;

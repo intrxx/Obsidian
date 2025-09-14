@@ -5,6 +5,7 @@
 // ~ Core
 
 // ~ Project
+#include "InventoryItems/ObsidianItemDropComponent.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -27,36 +28,22 @@ AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectIniti
 
 	SpawnPointComp = CreateDefaultSubobject<USceneComponent>(TEXT("SpawnPointComp"));
 	SpawnPointComp->SetupAttachment(StaticMeshComp);
+
+	ItemDropComponent = CreateDefaultSubobject<UObsidianItemDropComponent>(TEXT("ItemDropComponent"));
 }
 
 void AObsidianItemSpawner::SpawnItem()
 {
-	if(bRandomizeItem)
+	if (ItemDropComponent)
 	{
-		RollItemDrop();
-	}
-	
-	if(UWorld* World = GetWorld())
-	{
-		AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(ItemToDropClass, GetActorTransform());
-
-		const FVector SpawnLocation = GetItemSpawnLocation();
-		const FTransform Transform(FQuat(FRotator(0.0f, 0.0f, 0.0f)),
-			SpawnLocation, FVector(1.0f, 1.0f, 1.0f));
-		
-		Item->FinishSpawning(Transform);
-		SpawnedItems++;
-
-		if(SpawnedItems == MaxSpawnCount)
-		{
-			StaticMeshComp->OnClicked.Clear();
-		}
+		ItemDropComponent->DropItems(GetItemSpawnLocation());
+		ItemDropComponent->OnDroppingItemsFinishedDelegate.AddUObject(this, &ThisClass::OnSpawningItemsFinished);
 	}
 }
 
-void AObsidianItemSpawner::RollItemDrop()
+void AObsidianItemSpawner::OnSpawningItemsFinished()
 {
-	
+	bCanInteract = false;
 }
 
 AActor* AObsidianItemSpawner::GetHighlightAvatarActor()

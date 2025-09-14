@@ -11,6 +11,8 @@
 
 #include "ObsidianInventoryItemDefinition.generated.h"
 
+DECLARE_LOG_CATEGORY_EXTERN(LogItems, Log, All);
+
 class UObsidianInventoryItemFragment;
 
 /**
@@ -35,6 +37,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
 	FGameplayTag GetItemCategoryTag() const;
+
+	int32 GetItemLevel() const;
 	
 	bool HasStacks() const;
 	bool IsStackable() const;
@@ -47,6 +51,9 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.Category"), Category = "Obsidian")
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
+
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
+	int32 ItemLevel = INDEX_NONE;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Debug")
 	FString DebugName;

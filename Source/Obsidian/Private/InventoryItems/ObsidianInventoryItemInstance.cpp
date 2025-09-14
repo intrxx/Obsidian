@@ -22,7 +22,9 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
+	//TODO(intrxx) Test which of these needs replicating, most of them will need to get only replicated once as they will never change
 	DOREPLIFETIME(ThisClass, ItemUniqueID);
+	DOREPLIFETIME(ThisClass, ItemLevel);
 	DOREPLIFETIME(ThisClass, ItemDef);
 	DOREPLIFETIME(ThisClass, ItemStackTags);
 	DOREPLIFETIME(ThisClass, bStackable);
@@ -30,8 +32,6 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemCategory);
 	DOREPLIFETIME(ThisClass, ItemAffixes);
 	DOREPLIFETIME(ThisClass, SpawnedActors);
-	
-	//TODO(intrxx) Test which of these needs replicating, most of them will need to get only replicated once as they will never change
 	DOREPLIFETIME(ThisClass, ActorsToSpawn);
 	DOREPLIFETIME(ThisClass, ItemGridSpan);
 	DOREPLIFETIME(ThisClass, ItemCurrentPosition);
@@ -95,6 +95,22 @@ void UObsidianInventoryItemInstance::GenerateUniqueItemID()
 	{
 		ItemUniqueID = FGuid::NewGuid();
 	}
+}
+
+int32 UObsidianInventoryItemInstance::GetItemLevel() const
+{
+#if !UE_BUILD_SHIPPING
+	if (ItemLevel == INDEX_NONE)
+	{
+		UE_LOG(LogItems, Error, TEXT("Item [%s] has invalid Item Level."), *DebugName);
+	}
+#endif
+	return ItemLevel;
+}
+
+void UObsidianInventoryItemInstance::SetItemLevel(const int32 InItemLevel)
+{
+	ItemLevel = InItemLevel;
 }
 
 TSubclassOf<UObsidianInventoryItemDefinition> UObsidianInventoryItemInstance::GetItemDef() const

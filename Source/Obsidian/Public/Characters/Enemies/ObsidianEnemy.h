@@ -13,6 +13,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianEnemy.generated.h"
 
+class UObsidianItemDropComponent;
 class UObsidianEnemyOverlayBarComponent;
 class UBehaviorTree;
 class UWidgetComponent;
@@ -71,6 +72,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyOverlayBarComponent> EnemyOverlayBarComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianItemDropComponent> ItemDropComponent;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
 	TObjectPtr<UBehaviorTree> DefaultBehaviorTree;

@@ -1277,7 +1277,7 @@ void UObsidianPlayerInputManager::ServerHandleDroppingItem_Implementation()
 		return;
 	}
 	
-	//TODO(intrxx) Bias toward Actors forward Vector
+	//TODO(intrxx) Bias towards Actors forward Vector
 	FNavLocation RandomPointLocation;
 	NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation);
 	

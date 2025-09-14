@@ -10,6 +10,8 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 
+DEFINE_LOG_CATEGORY(LogItems)
+
 UObsidianInventoryItemDefinition::UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -67,6 +69,17 @@ bool UObsidianInventoryItemDefinition::DoesItemNeedsTwoSlots() const
 FGameplayTag UObsidianInventoryItemDefinition::GetItemCategoryTag() const
 {
 	return ItemCategory;
+}
+
+int32 UObsidianInventoryItemDefinition::GetItemLevel() const
+{
+#if !UE_BUILD_SHIPPING
+	if (ItemLevel == INDEX_NONE)
+	{
+		UE_LOG(LogItems, Error, TEXT("Item [%s] has invalid Item Level."), *DebugName);
+	}
+#endif
+	return ItemLevel;
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const

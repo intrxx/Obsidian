@@ -37,6 +37,7 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	void InitializeItem(const FDraggedItem& DraggedItem);
+	void InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 ItemStacks = 1);
 
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks) override;
