@@ -18,6 +18,7 @@
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
+#include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Inventory/Items/ObsidianItemWorldName.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -47,6 +48,33 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	WorldItemNameWidgetComp->SetDrawAtDesiredSize(true);
 	WorldItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	WorldItemNameWidgetComp->SetupAttachment(StaticMeshComp);
+	WorldItemNameWidgetComp->SetVisibility(false);
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> ItemLabelClassFinder(TEXT("/Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C"));
+	if (ItemLabelClassFinder.Succeeded())
+	{
+		WorldItemNameWidgetComp->SetWidgetClass(ItemLabelClassFinder.Class);
+	}
+#if !UE_BUILD_SHIPPING
+	else
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("ItemLabelClassFinder cannot find the default ItemLabelClass for WorldItemNameWidgetComp in AObsidianDroppableItem's constructor"
+													   " previously located in /Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C")), ELogVerbosity::Error);
+	}
+#endif
+	
+	static ConstructorHelpers::FObjectFinder<UCurveFloat> DropCurveClassFinder(TEXT("/Game/Obsidian/Items/ItemDrop/Curves/ItemDrop_FloatCurve.ItemDrop_FloatCurve"));
+	if (DropCurveClassFinder.Succeeded())
+	{
+		DropLocationCurve = DropCurveClassFinder.Object;
+	}
+#if !UE_BUILD_SHIPPING
+	else
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("DropCurveClassFinder cannot find DropLocationCurve in AObsidianDroppableItem's constructor"
+													   " previously located in /Game/Obsidian/Items/ItemDrop/Curves/ItemDrop_FloatCurve.ItemDrop_FloatCurve")), ELogVerbosity::Error);
+	}
+#endif
 }
 
 void AObsidianDroppableItem::BeginPlay()
@@ -125,23 +153,19 @@ bool AObsidianDroppableItem::InitializeWorldName()
 		return false;
 	}
 
-	if (ItemWorldNameClass == nullptr) // Get the default one
+	if (WorldItemNameWidgetComp == nullptr)
 	{
-		ItemWorldNameClass = LoadClass<UUserWidget>(
-			nullptr,
-			TEXT("/Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C")
-		);
+		return false;
 	}
-	
-	checkf(ItemWorldNameClass, TEXT("ItemWorldNameClass is invalid, please make sure it is set in ObsidianDroppableItem instance."));
-	ItemWorldName = CreateWidget<UObsidianItemWorldName>(World, ItemWorldNameClass);
-	ItemWorldName->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
-	ItemWorldName->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
-	const bool bSuccess = InitItemWorldName();
-	
-	WorldItemNameWidgetComp->SetWidget(ItemWorldName);
-	WorldItemNameWidgetComp->InitWidget();
-	WorldItemNameWidgetComp->SetVisibility(false);
+
+	bool bSuccess = false;
+	ItemWorldName = Cast<UObsidianItemWorldName>(WorldItemNameWidgetComp->GetUserWidgetObject());
+	if (ItemWorldName)
+	{
+		ItemWorldName->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
+		ItemWorldName->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
+		bSuccess = InitItemWorldName();
+	}
 	
 	return bSuccess;
 }

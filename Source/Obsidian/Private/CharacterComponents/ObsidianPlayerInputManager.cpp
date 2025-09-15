@@ -1297,7 +1297,7 @@ void UObsidianPlayerInputManager::ServerHandleDroppingItem_Implementation()
 	}
 	
 	const FTransform ItemSpawnTransform = FTransform(ItemRotation, ItemLocation, FVector(1.0f, 1.0f, 1.0f));
-	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(DroppableItemClass, ItemSpawnTransform);
+	AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), ItemSpawnTransform);
 	Item->InitializeItem(DraggedItem);
 	Item->FinishSpawning(ItemSpawnTransform);
 

@@ -117,13 +117,7 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USplineComponent> ItemDropSplineComp;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObsidianItemWorldName> ItemWorldNameClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
-
+	
 	UPROPERTY()
 	TObjectPtr<UObsidianItemWorldName> ItemWorldName;
 
