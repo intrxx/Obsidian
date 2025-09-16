@@ -5,7 +5,7 @@
 // ~ Core
 
 // ~ Project
-#include "InventoryItems/ObsidianItemDropComponent.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"

@@ -18,7 +18,7 @@
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "Characters/ObsidianDummyMeshActor.h"
-#include "InventoryItems/ObsidianItemDropComponent.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
