@@ -43,7 +43,10 @@ void AObsidianItemSpawner::SpawnItem()
 
 void AObsidianItemSpawner::OnSpawningItemsFinished()
 {
-	bCanInteract = false;
+	if (++TimesDropped == TimesToDrop)
+	{
+		bCanInteract = false;
+	}
 }
 
 AActor* AObsidianItemSpawner::GetHighlightAvatarActor()

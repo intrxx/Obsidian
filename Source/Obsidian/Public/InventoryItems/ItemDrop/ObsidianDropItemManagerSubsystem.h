@@ -1,0 +1,38 @@
+// Copyright 2024 out of sCope team - Michał Ogiński
+
+#pragma once
+
+// ~ Core
+#include "CoreMinimal.h"
+
+// ~ Project
+#include "ObsidianTreasureList.h"
+
+#include "Subsystems/GameInstanceSubsystem.h"
+#include "ObsidianDropItemManagerSubsystem.generated.h"
+
+class UObsidianTreasureConfig;
+class UObsidianTreasureList;
+
+/**
+ * 
+ */
+UCLASS()
+class OBSIDIAN_API UObsidianDropItemManagerSubsystem : public UGameInstanceSubsystem
+{
+	GENERATED_BODY()
+
+public:
+	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Deinitialize() override;
+	
+	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const int32 TreasureQuality) const;
+	
+protected:
+	void LoadTreasureConfig();
+	void OnTreasureConfigLoaded();
+	
+protected:
+	UPROPERTY()
+	TObjectPtr<UObsidianTreasureConfig> TreasureConfig;
+};

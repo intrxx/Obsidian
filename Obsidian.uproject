@@ -18,7 +18,8 @@
 				"CommonUI",
 				"AIModule",
 				"CommonGame",
-				"ModularGameplayActors"
+				"ModularGameplayActors",
+				"DeveloperSettings"
 			]
 		}
 	],

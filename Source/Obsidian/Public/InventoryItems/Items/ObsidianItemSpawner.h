@@ -49,11 +49,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianItemDropComponent> ItemDropComponent;
 	
-	UPROPERTY(EditDefaultsOnly,  Category = "Obsidian|Setup")
-	TSubclassOf<AObsidianDroppableItem> ItemToDropClass;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float InteractionRadius = 150.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	int32 TimesToDrop = 1;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
@@ -63,4 +63,6 @@ private:
 	TObjectPtr<USceneComponent> SpawnPointComp;
 	
 	bool bCanInteract = true;
+
+	int32 TimesDropped = 0;
 };

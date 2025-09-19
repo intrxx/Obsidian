@@ -20,7 +20,7 @@ struct FObsidianDropItem
 	
 	/** Actual items/item templates in this Treasure Class. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian")
-	TSubclassOf<UObsidianInventoryItemDefinition> TreasureItemDefinitionClasses;
+	TSoftClassPtr<UObsidianInventoryItemDefinition> TreasureItemDefinitionClass;
 
 	/** Drop Weight [0, 1000], the higher the weight the more likely the item to drop. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
@@ -32,8 +32,11 @@ struct FObsidianTreasureClass
 {
 	GENERATED_BODY()
 
+	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	FName TreasureClassName;
+	
 	/**
-	 * Treasure Quality [0, 90] is an identifier of value of items listed in this Treasure Class.
+	 * Treasure Quality [0, 85] is an identifier of value of items listed in this Treasure Class.
 	 * Once the enemy is killed, the area level is gathered then the rarity of monster gets added to the number,
 	 * [Normal = 0], [Elite = 3], [Boss = 4], [Special Boss = 5]. Once the number is evaluated, all Treasure Classes up
 	 * to this number are gathered and rolling for item begins.
@@ -61,6 +64,10 @@ class OBSIDIAN_API UObsidianTreasureList : public UDataAsset
 public:
 	virtual void PostLoad() override;
 
+	bool ShouldAlwaysRoll() const;
+	void SetShouldAlwaysRoll(const bool InbShouldAlwaysRoll);
+
+	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
 	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const int32 TreasureQuality);
 	const FObsidianTreasureClass* GetTreasureClassOfQuality(const int32 TreasureQuality);
 
@@ -74,4 +81,6 @@ protected:
 
 	/** Map for faster lookups. */
 	TMap<int32, const FObsidianTreasureClass*> TreasureClassMap;
+
+	bool bShouldAlwaysRoll = false;
 };

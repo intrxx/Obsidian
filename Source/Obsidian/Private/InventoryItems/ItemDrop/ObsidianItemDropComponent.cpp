@@ -1,13 +1,16 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-// ~ Core
-
-// ~ Project
 #include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 
+// ~ Core
 #include "NavigationSystem.h"
-#include "InventoryItems/Items/ObsidianDroppableItem.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+
+// ~ Project
+#include "InventoryItems/ItemDrop/ObsidianDropItemManagerSubsystem.h"
+#include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
+#include "InventoryItems/Items/ObsidianDroppableItem.h"
 
 DEFINE_LOG_CATEGORY(LogDropComponent);
 
@@ -33,7 +36,59 @@ void UObsidianItemDropComponent::DropItems(const FVector& InOverrideDropLocation
 		return;
 	}
 	
-	//TODO Get the item
+	TArray<FObsidianTreasureClass> TreasureClasses;
+	
+	bool bRollFromCommonSet = true;
+	for (const FObsidianAdditionalTreasureList& AdditionalTreasureList : AdditionalTreasureLists) 
+	{
+		UObsidianTreasureList* TreasureListToAdd = AdditionalTreasureList.TreasureList.LoadSynchronous();
+		if (TreasureListToAdd == nullptr)
+		{
+			continue;
+		}
+
+		const EObsidianAdditionalTreasureListPolicy Policy = AdditionalTreasureList.TreasureListPolicy;
+		if (Policy == EObsidianAdditionalTreasureListPolicy::OverrideRoll)
+		{
+			
+#if !UE_BUILD_SHIPPING
+			if (TreasureClasses.IsEmpty() == false)
+			{
+				UE_LOG(LogDropComponent, Error, TEXT("AdditionalTreasureList contains an item with OverrideRoll "
+										 "Policy along with more items that are set in the designer to roll from, this "
+										 "setup is incorrect, please consider changing it as it will not work anyway."));
+			}
+#endif
+			
+			TreasureClasses.Empty(); // If the setup is ever wrong there could be added items, clear for safety and warn
+			TreasureClasses.Append(TreasureListToAdd->GetAllTreasureClasses());
+			bRollFromCommonSet = false;
+			break;
+		}
+			
+		if (Policy == EObsidianAdditionalTreasureListPolicy::TryToRoll)
+		{
+			TreasureClasses.Append(TreasureListToAdd->GetAllTreasureClasses());
+		}
+		else if (Policy == EObsidianAdditionalTreasureListPolicy::AlwaysRoll)
+		{
+			TreasureListToAdd->SetShouldAlwaysRoll(true);
+			TreasureClasses.Append(TreasureListToAdd->GetAllTreasureClasses());
+		}
+	}
+
+	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
+	if (GameInstance == nullptr)
+	{
+		UE_LOG(LogDropComponent, Error, TEXT("GameInstance is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return;
+	}
+
+	UObsidianDropItemManagerSubsystem* DropItemManager = GameInstance->GetSubsystem<UObsidianDropItemManagerSubsystem>();
+	if (bRollFromCommonSet && DropItemManager)
+	{
+		TreasureClasses.Append(DropItemManager->GetAllTreasureClassesUpToQuality(/** Temp. */ 100));
+	}
 
 	const AActor* OwningActor = GetOwner();
 	if (OwningActor == nullptr)
@@ -42,19 +97,16 @@ void UObsidianItemDropComponent::DropItems(const FVector& InOverrideDropLocation
 	}
 	
 	const FTransform ItemSpawnTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
-
-	UE_LOG(LogDropComponent, Error, TEXT("Dropped Item! (Debug Sphere) in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
-	DrawDebugSphere(World, ItemSpawnTransform.GetLocation(), 32.0f, 16, FColor::Orange, false, 8.0f);
 	
-	if (!TempItemDropTable.IsEmpty())
+	//TEMP
+	if (!TreasureClasses.IsEmpty())
 	{
 		AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), ItemSpawnTransform);
-		Item->InitializeItem(TempItemDropTable[0]);
+		Item->InitializeItem(TreasureClasses[0].DropItems[0].TreasureItemDefinitionClass.LoadSynchronous());
 		Item->FinishSpawning(ItemSpawnTransform);
-	}
 
-	//TODO Broadcast it when actually finished
-	OnDroppingItemsFinishedDelegate.Broadcast();
+		OnDroppingItemsFinishedDelegate.Broadcast();
+	}
 }
 
 FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation) const

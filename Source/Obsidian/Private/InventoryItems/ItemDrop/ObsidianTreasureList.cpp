@@ -26,6 +26,21 @@ void UObsidianTreasureList::PostLoad()
 	}
 }
 
+bool UObsidianTreasureList::ShouldAlwaysRoll() const
+{
+	return bShouldAlwaysRoll;
+}
+
+void UObsidianTreasureList::SetShouldAlwaysRoll(const bool InbShouldAlwaysRoll)
+{
+	bShouldAlwaysRoll = InbShouldAlwaysRoll;
+}
+
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClasses() const
+{
+	return TreasureClasses;
+}
+
 TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const int32 TreasureQuality)
 {
 	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
@@ -77,7 +92,7 @@ EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContex
 
 	for (int32 i = 0; i < DropItems.Num(); i++)
 	{
-		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DropItems[i].TreasureItemDefinitionClasses;
+		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DropItems[i].TreasureItemDefinitionClass.LoadSynchronous();
 		if (ItemDef == nullptr)
 		{
 			Result = EDataValidationResult::Invalid;
