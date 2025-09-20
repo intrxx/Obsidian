@@ -32,6 +32,11 @@ struct FObsidianTreasureClass
 {
 	GENERATED_BODY()
 
+public:
+	/** Returns Weighted Randomized Item, will be nullptr if NoDrop was chosen. */
+	TSubclassOf<UObsidianInventoryItemDefinition> GetRandomItemFromClass(const float NoDropScale = 1.0f);
+	
+public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian")
 	FName TreasureClassName;
 	
@@ -43,6 +48,9 @@ struct FObsidianTreasureClass
 	 */
 	UPROPERTY(EditAnywhere, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "85"))
 	int32 TreasureQuality = 0;
+
+	UPROPERTY(EditAnywhere, Category = "Obsidian", meta=(ClampMin = "0"))
+	int32 NoDropWeight = 0;
 
 	/** Definition of Drop Item. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian")

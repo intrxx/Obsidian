@@ -10,6 +10,39 @@
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
+// ~ FObsidianTreasureClass
+
+TSubclassOf<UObsidianInventoryItemDefinition> FObsidianTreasureClass::GetRandomItemFromClass(const float NoDropScale)
+{
+	const int32 ScaledNoDropWeight = NoDropWeight * NoDropScale;
+	int32 TotalWeight = ScaledNoDropWeight;
+	for (const FObsidianDropItem& DropItem : DropItems)
+	{
+		TotalWeight += DropItem.DropWeight;
+	}
+
+	const int32 Roll = FMath::RandRange(0, TotalWeight);
+	if (Roll <= ScaledNoDropWeight)
+	{
+		UE_LOG(LogTemp, Display, TEXT("No Drop Weight was rolled."));
+		return nullptr;
+	}
+	
+	int32 Cumulative = 0;
+	for (const FObsidianDropItem& DropItem : DropItems)
+	{
+		Cumulative += DropItem.DropWeight;
+		if (Roll <= (ScaledNoDropWeight + Cumulative))
+		{
+			return DropItem.TreasureItemDefinitionClass.LoadSynchronous();
+		}
+	}
+
+	return nullptr;
+}
+
+// ~ End of FObsidianTreasureClass
+
 void UObsidianTreasureList::PostLoad()
 {
 	Super::PostLoad();

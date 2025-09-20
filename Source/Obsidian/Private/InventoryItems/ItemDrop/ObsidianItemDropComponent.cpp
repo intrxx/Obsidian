@@ -90,19 +90,23 @@ void UObsidianItemDropComponent::DropItems(const FVector& InOverrideDropLocation
 		TreasureClasses.Append(DropItemManager->GetAllTreasureClassesUpToQuality(/** Temp. */ 100));
 	}
 
+	if (TreasureClasses.IsEmpty())
+	{
+		return;
+	}
+
 	const AActor* OwningActor = GetOwner();
 	if (OwningActor == nullptr)
 	{
 		UE_LOG(LogDropComponent, Error, TEXT("OwningActor of ItemDropComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 	}
-	
-	const FTransform ItemSpawnTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
-	
-	//TEMP
-	if (!TreasureClasses.IsEmpty())
+
+	// Roll for Treasure Class first.
+	if (TSubclassOf<UObsidianInventoryItemDefinition> DroppedItemDef = TreasureClasses[0].GetRandomItemFromClass())
 	{
+		const FTransform ItemSpawnTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
 		AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), ItemSpawnTransform);
-		Item->InitializeItem(TreasureClasses[0].DropItems[0].TreasureItemDefinitionClass.LoadSynchronous());
+		Item->InitializeItem(DroppedItemDef);
 		Item->FinishSpawning(ItemSpawnTransform);
 
 		OnDroppingItemsFinishedDelegate.Broadcast();
