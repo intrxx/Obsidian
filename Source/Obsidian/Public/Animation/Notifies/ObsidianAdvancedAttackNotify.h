@@ -27,10 +27,10 @@ public:
 
 protected:
 	UPROPERTY(EditAnywhere, Category = Obsidian)
-	EObsidianTraceType TraceType = EObsidianTraceType::ETT_SimpleLineTrace;
+	EObsidianTraceType TraceType = EObsidianTraceType::SimpleLineTrace;
 
 	UPROPERTY(EditAnywhere, Category = Obsidian)
-	EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::ETMT_CharacterMesh;
+	EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::CharacterMesh;
 
 	/** The trace will only return one hit event to the specific actor hit. */
 	UPROPERTY(EditAnywhere, Category = Obsidian)

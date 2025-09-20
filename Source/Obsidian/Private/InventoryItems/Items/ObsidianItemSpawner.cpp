@@ -36,12 +36,28 @@ void AObsidianItemSpawner::SpawnItem()
 {
 	if (ItemDropComponent)
 	{
-		ItemDropComponent->DropItems(GetItemSpawnLocation());
+		ItemDropComponent->DropItems(ItemSpawnerRarity, GetItemSpawnerLevel(), GetItemSpawnLocation());
 		ItemDropComponent->OnDroppingItemsFinishedDelegate.AddUObject(this, &ThisClass::OnSpawningItemsFinished);
 	}
 }
 
-void AObsidianItemSpawner::OnSpawningItemsFinished()
+uint8 AObsidianItemSpawner::GetItemSpawnerLevel() const
+{
+	if (ItemSpawnerLevelPolicy == EObsidianItemSpawnerLevelPolicy::Static)
+	{
+		return ItemSpawnerStaticLevel;
+	}
+	if (ItemSpawnerLevelPolicy == EObsidianItemSpawnerLevelPolicy::InheritFromArea)
+	{
+		//TODO(intrxx) Get Area Level
+		ensureMsgf(false, TEXT("InheritFromArea is unimplemented"));
+		return 1;
+	}
+	
+	return 0;
+}
+
+void AObsidianItemSpawner::OnSpawningItemsFinished(const bool bDroppedItem)
 {
 	if (++TimesDropped == TimesToDrop)
 	{

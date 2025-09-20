@@ -83,7 +83,7 @@ protected:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Hero")
-	EObsidianHeroClass HeroClass = EObsidianHeroClass::OHC_None;
+	EObsidianHeroClass HeroClass = EObsidianHeroClass::None;
 	
 private:
 	void InitializeHealthBar() const;

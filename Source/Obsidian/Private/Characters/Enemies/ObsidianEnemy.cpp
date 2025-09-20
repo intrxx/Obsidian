@@ -54,6 +54,9 @@ AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
 	
 	// Identifies this class as Enemy character
 	Tags.Emplace(ObsidianActorTags::Enemy);
+
+	//TODO Temporary until I create some spawn and creation system for enemies.
+	EnemyRarity = EObsidianEntityRarity::Normal;
 }
 
 AActor* AObsidianEnemy::GetHighlightAvatarActor()
@@ -84,6 +87,11 @@ bool AObsidianEnemy::IsHighlighted() const
 		return MeshComp->bRenderCustomDepth;
 	}
 	return false;
+}
+
+EObsidianEntityRarity AObsidianEnemy::GetEnemyRarity() const
+{
+	return EnemyRarity;
 }
 
 void AObsidianEnemy::BeginPlay()
@@ -177,7 +185,7 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 
 	if (ItemDropComponent)
 	{
-		ItemDropComponent->DropItems();
+		ItemDropComponent->DropItems(EnemyRarity, EnemyLevel);
 	}
 }
 
@@ -213,5 +221,10 @@ void AObsidianEnemy::SetCombatTarget_Implementation(AActor* InTarget)
 AActor* AObsidianEnemy::GetCombatTarget_Implementation() const
 {
 	return CombatTarget;
+}
+
+EObsidianEntityRarity AObsidianEnemy::GetEnemyRarityFromOwner_Implementation() const
+{
+	return EnemyRarity;
 }
 

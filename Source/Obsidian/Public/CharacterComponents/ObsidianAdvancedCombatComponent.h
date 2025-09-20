@@ -53,10 +53,10 @@ struct FObsidianAdvancedTraceParams
 	}
 	
 	UPROPERTY()
-	EObsidianTraceType TraceType = EObsidianTraceType::ETT_SimpleLineTrace;
+	EObsidianTraceType TraceType = EObsidianTraceType::SimpleLineTrace;
 
 	UPROPERTY()
-	EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::ETMT_CharacterMesh;
+	EObsidianTracedMeshType TracedMeshType = EObsidianTracedMeshType::CharacterMesh;
 
 	UPROPERTY()
 	bool bAllowOneHitPerTrace = true;
@@ -209,7 +209,7 @@ private:
 	TObjectPtr<UPrimitiveComponent> CurrentTracedMesh = nullptr;
 
 	UPROPERTY()
-	EObsidianTraceType CurrentTraceType = EObsidianTraceType::ETT_SimpleLineTrace;
+	EObsidianTraceType CurrentTraceType = EObsidianTraceType::SimpleLineTrace;
 
 	UPROPERTY()
 	FName TraceStartSocketName = "";

@@ -19,7 +19,7 @@ AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectIni
 	RightHandEquipmentMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	RightHandEquipmentMesh->SetIsReplicated(true);
 
-	AdvancedCombatComponent->AddTracedMesh(RightHandEquipmentMesh, EObsidianTracedMeshType::ETMT_RightHandWeaponMesh);
+	AdvancedCombatComponent->AddTracedMesh(RightHandEquipmentMesh, EObsidianTracedMeshType::RightHandWeaponMesh);
 }
 
 void AObsidianBoss_TreeOrc::PostInitializeComponents()

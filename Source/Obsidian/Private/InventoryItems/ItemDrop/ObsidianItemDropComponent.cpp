@@ -6,6 +6,9 @@
 #include "NavigationSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif
 
 // ~ Project
 #include "InventoryItems/ItemDrop/ObsidianDropItemManagerSubsystem.h"
@@ -13,6 +16,56 @@
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 
 DEFINE_LOG_CATEGORY(LogDropComponent);
+
+// ~ ObsidianTreasureStatics
+
+namespace ObsidianTreasureStatics
+{
+	const TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap =
+		{
+			{ EObsidianEntityRarity::Neutral, 1 },
+			{ EObsidianEntityRarity::Normal, 1 },
+			{ EObsidianEntityRarity::Magic, 2 },
+			{ EObsidianEntityRarity::Rare, 3 },
+			{ EObsidianEntityRarity::MiniBoss, 4 },
+			{ EObsidianEntityRarity::MiniBossCompanion, 3 },
+			{ EObsidianEntityRarity::SpecialBoss, 5 },
+		};
+
+	const TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap =
+		{
+			{ EObsidianEntityRarity::Neutral, 0 },
+			{ EObsidianEntityRarity::Normal, 0 },
+			{ EObsidianEntityRarity::Magic, 1 },
+			{ EObsidianEntityRarity::Rare, 3 },
+			{ EObsidianEntityRarity::MiniBoss, 4 },
+			{ EObsidianEntityRarity::MiniBossCompanion, 4 },
+			{ EObsidianEntityRarity::SpecialBoss, 5 },
+		};
+}
+
+// ~ FObsidianAdditionalTreasureList
+
+#if WITH_EDITOR
+EDataValidationResult FObsidianAdditionalTreasureList::ValidateData(FDataValidationContext& Context, const int Index) const
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+	
+	if(TreasureList.IsNull())
+	{
+		Result = EDataValidationResult::Invalid;
+
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Treasure List at index [%i] is empty! \n"
+			"Please fill Treasure List or delete this index entry in Additional Treasure Lists"), Index));
+
+		Context.AddError(ErrorMessage);
+	}
+	
+	return Result;
+}
+#endif
+
+// ~ End of FObsidianAdditionalTreasureList
 
 UObsidianItemDropComponent::UObsidianItemDropComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -22,22 +75,83 @@ UObsidianItemDropComponent::UObsidianItemDropComponent(const FObjectInitializer&
 	
 }
 
-
-void UObsidianItemDropComponent::InitializeWithItemDropComponent()
+void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingEntityRarity, const uint8 DroppingEntityLevel, const FVector& InOverrideDropLocation)
 {
-	//TODO possibly initialize things like treasure class, area level etc.?
-}
-
-void UObsidianItemDropComponent::DropItems(const FVector& InOverrideDropLocation)
-{
+	checkf(DroppingEntityRarity != EObsidianEntityRarity::None, TEXT("Entity Rarity passed to DropItems is None, setup or run time logic is invalid."));
+	
 	UWorld* World = GetWorld();
 	if (World == nullptr)
 	{
 		return;
 	}
+
+	const uint8 TreasureQuality = FMath::Clamp(
+		(DroppingEntityLevel + ObsidianTreasureStatics::DefaultRarityToAddedTreasureQualityMap[DroppingEntityRarity]),
+		1, 90);
 	
 	TArray<FObsidianTreasureClass> TreasureClasses;
+	TArray<FObsidianTreasureClass> MustRollFromTreasureClasses;
+	GetTreasureClassesToRollFrom(TreasureQuality, TreasureClasses, MustRollFromTreasureClasses);
 	
+	if (TreasureClasses.IsEmpty())
+	{
+		UE_LOG(LogDropComponent, Warning, TEXT("TreasureClasses are empty after getting them from both the common"
+									   " set and additional lists, is enemy level to low for drops or something is broken?"));
+		return;
+	}
+
+	const AActor* OwningActor = GetOwner();
+	if (OwningActor == nullptr)
+	{
+		UE_LOG(LogDropComponent, Error, TEXT("OwningActor of ItemDropComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	}
+	
+	uint8 DropRolls = ObsidianTreasureStatics::DefaultRarityToNumberOfDropRollsMap[DroppingEntityRarity];
+	TArray<TSubclassOf<UObsidianInventoryItemDefinition>> ItemsToDrop;
+
+	if (MustRollFromTreasureClasses.IsEmpty() == false && DropRolls > 0)
+	{
+		//TODO(intrxx) Get Random TC in some weighted way?
+		const uint16 RandomRoll = FMath::RandRange(0, (MustRollFromTreasureClasses.Num() - 1));
+		if (const TSubclassOf<UObsidianInventoryItemDefinition> DroppedItemDef = MustRollFromTreasureClasses[RandomRoll].GetRandomItemFromClass())
+		{
+			ItemsToDrop.Add(DroppedItemDef);
+		}
+		
+		DropRolls--;
+	}
+
+	if (DropRolls > 0)
+	{
+		const int32 TreasureClassesCount = TreasureClasses.Num();
+		for (uint8 i = 0; i < DropRolls; i++)
+		{
+			//TODO(intrxx) Get Random TC in some weighted way?
+			const uint16 RandomRoll = FMath::RandRange(0, (TreasureClassesCount - 1));
+			if (TSubclassOf<UObsidianInventoryItemDefinition> DroppedItemDef = TreasureClasses[RandomRoll].GetRandomItemFromClass())
+			{
+				ItemsToDrop.Add(DroppedItemDef);
+			}
+		}
+	}
+
+	bool bDroppedItem = false;
+	for (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop : ItemsToDrop)
+	{
+		//TODO(intrxx) I need some way to cache locations and validate to not drop actors onto each other.
+		const FTransform ItemSpawnTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
+		AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), ItemSpawnTransform);
+		Item->InitializeItem(ItemToDrop);
+		Item->FinishSpawning(ItemSpawnTransform);
+
+		bDroppedItem = true;
+	}
+
+	OnDroppingItemsFinishedDelegate.Broadcast(bDroppedItem);
+}
+
+void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)
+{
 	bool bRollFromCommonSet = true;
 	for (const FObsidianAdditionalTreasureList& AdditionalTreasureList : AdditionalTreasureLists) 
 	{
@@ -50,66 +164,52 @@ void UObsidianItemDropComponent::DropItems(const FVector& InOverrideDropLocation
 		const EObsidianAdditionalTreasureListPolicy Policy = AdditionalTreasureList.TreasureListPolicy;
 		if (Policy == EObsidianAdditionalTreasureListPolicy::OverrideRoll)
 		{
-			
-#if !UE_BUILD_SHIPPING
-			if (TreasureClasses.IsEmpty() == false)
+			TArray<FObsidianTreasureClass> ClassesToAdd = TreasureListToAdd->GetAllTreasureClasses();
+			if (ClassesToAdd.IsEmpty() == false)
 			{
-				UE_LOG(LogDropComponent, Error, TEXT("AdditionalTreasureList contains an item with OverrideRoll "
-										 "Policy along with more items that are set in the designer to roll from, this "
-										 "setup is incorrect, please consider changing it as it will not work anyway."));
+				// This is safe as the AdditionalTreasureLists have strict Data Validation
+				OutTreasureClasses.Append(ClassesToAdd);
+				bRollFromCommonSet = false;
+				continue;
 			}
-#endif
-			
-			TreasureClasses.Empty(); // If the setup is ever wrong there could be added items, clear for safety and warn
-			TreasureClasses.Append(TreasureListToAdd->GetAllTreasureClasses());
-			bRollFromCommonSet = false;
-			break;
+			UE_LOG(LogDropComponent, Error, TEXT("AdditionalTreasureLists contains List with OverrideRoll Policy but is empty."));
 		}
 			
 		if (Policy == EObsidianAdditionalTreasureListPolicy::TryToRoll)
 		{
-			TreasureClasses.Append(TreasureListToAdd->GetAllTreasureClasses());
+			OutTreasureClasses.Append(TreasureListToAdd->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality));
+		}
+		else if (Policy == EObsidianAdditionalTreasureListPolicy::TryToAddAlwaysRoll)
+		{
+			OutMustRollFromTreasureClasses.Append(TreasureListToAdd->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality));
 		}
 		else if (Policy == EObsidianAdditionalTreasureListPolicy::AlwaysRoll)
 		{
-			TreasureListToAdd->SetShouldAlwaysRoll(true);
-			TreasureClasses.Append(TreasureListToAdd->GetAllTreasureClasses());
+			OutMustRollFromTreasureClasses.Append(TreasureListToAdd->GetAllTreasureClasses());
 		}
 	}
 
-	UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
+	if (bRollFromCommonSet == false)
+	{
+		return;
+	}
+
+	const UWorld* World = GetWorld();
+	if (World == nullptr)
+	{
+		return;
+	}
+
+	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
 		UE_LOG(LogDropComponent, Error, TEXT("GameInstance is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
 		return;
 	}
-
-	UObsidianDropItemManagerSubsystem* DropItemManager = GameInstance->GetSubsystem<UObsidianDropItemManagerSubsystem>();
-	if (bRollFromCommonSet && DropItemManager)
+	
+	if (const UObsidianDropItemManagerSubsystem* DropItemManager = GameInstance->GetSubsystem<UObsidianDropItemManagerSubsystem>())
 	{
-		TreasureClasses.Append(DropItemManager->GetAllTreasureClassesUpToQuality(/** Temp. */ 100));
-	}
-
-	if (TreasureClasses.IsEmpty())
-	{
-		return;
-	}
-
-	const AActor* OwningActor = GetOwner();
-	if (OwningActor == nullptr)
-	{
-		UE_LOG(LogDropComponent, Error, TEXT("OwningActor of ItemDropComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
-	}
-
-	// Roll for Treasure Class first.
-	if (TSubclassOf<UObsidianInventoryItemDefinition> DroppedItemDef = TreasureClasses[0].GetRandomItemFromClass())
-	{
-		const FTransform ItemSpawnTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
-		AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), ItemSpawnTransform);
-		Item->InitializeItem(DroppedItemDef);
-		Item->FinishSpawning(ItemSpawnTransform);
-
-		OnDroppingItemsFinishedDelegate.Broadcast();
+		OutTreasureClasses.Append(DropItemManager->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality));
 	}
 }
 
@@ -172,6 +272,46 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 
 	return FTransform(ItemRotation, DropLocation, FVector(1.0f, 1.0f, 1.0f));
 }
+
+#if WITH_EDITOR
+EDataValidationResult UObsidianItemDropComponent::IsDataValid(FDataValidationContext& Context) const
+{
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+
+	uint16 TreasureClassesIndex = 0;
+	TArray<EObsidianAdditionalTreasureListPolicy> Policies;
+	bool bContainsOverridePolicy = false;
+	for (const FObsidianAdditionalTreasureList& Class : AdditionalTreasureLists)
+	{
+		Result = CombineDataValidationResults(Result, Class.ValidateData(Context, TreasureClassesIndex));
+		EObsidianAdditionalTreasureListPolicy ClassPolicy = Class.TreasureListPolicy;
+		if (ClassPolicy == EObsidianAdditionalTreasureListPolicy::OverrideRoll)
+		{
+			bContainsOverridePolicy = true;
+		}
+		Policies.Add(ClassPolicy);
+		TreasureClassesIndex++;
+	}
+
+	if (bContainsOverridePolicy)
+	{
+		for (const EObsidianAdditionalTreasureListPolicy Policy : Policies)
+		{
+			if (Policy != EObsidianAdditionalTreasureListPolicy::OverrideRoll)
+			{
+				Result = CombineDataValidationResults(Result, EDataValidationResult::Invalid);
+				
+				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Additional Treasure Lists contains at least one different Policy (different than OverrideRoll) while containing OverrideRoll Policy! \n"
+							"This is invalid and will lead to undefined behaviour, please make sure to change the setup")));
+
+				Context.AddError(ErrorMessage);
+			}
+		}
+	}
+	
+	return Result;
+}
+#endif
 
 
 

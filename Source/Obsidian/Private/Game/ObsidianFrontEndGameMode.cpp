@@ -15,7 +15,7 @@ void FObsidianHeroClassParams::Reset()
 	bIsHardcore = false;
 	bIsOnline = false;
 	SoftHeroClass = nullptr;
-	Class = EObsidianHeroClass::OHC_None;
+	Class = EObsidianHeroClass::None;
 	TempID = 0;
 }
 
@@ -65,7 +65,7 @@ AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag
 
 bool AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore)
 {
-	if(InName.IsEmpty() || InClass == EObsidianHeroClass::OHC_None)
+	if(InName.IsEmpty() || InClass == EObsidianHeroClass::None)
 	{
 		return false;
 	}

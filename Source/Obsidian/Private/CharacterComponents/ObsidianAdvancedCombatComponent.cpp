@@ -17,11 +17,11 @@ UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObject
 
 	SocketsMap =
 	{
-		{EObsidianTracedMeshType::ETMT_CharacterMesh, FObsidianAdvancedCombatSockets("AdvancedCombat_Start", "AdvancedCombat_End")},
-		{EObsidianTracedMeshType::ETMT_CharacterMesh_LeftHand, FObsidianAdvancedCombatSockets("AdvancedCombat_LeftHandStart", "AdvancedCombat_LeftHandEnd")},
-		{EObsidianTracedMeshType::ETMT_CharacterMesh_RightHand, FObsidianAdvancedCombatSockets("AdvancedCombat_RightHandStart", "AdvancedCombat_RightHandEnd")},
-		{EObsidianTracedMeshType::ETMT_LeftHandWeaponMesh, FObsidianAdvancedCombatSockets("AdvancedCombat_WeaponStart", "AdvancedCombat_WeaponEnd")},
-		{EObsidianTracedMeshType::ETMT_RightHandWeaponMesh, FObsidianAdvancedCombatSockets("AdvancedCombat_WeaponStart", "AdvancedCombat_WeaponEnd")}
+		{EObsidianTracedMeshType::CharacterMesh, FObsidianAdvancedCombatSockets("AdvancedCombat_Start", "AdvancedCombat_End")},
+		{EObsidianTracedMeshType::CharacterMesh_LeftHand, FObsidianAdvancedCombatSockets("AdvancedCombat_LeftHandStart", "AdvancedCombat_LeftHandEnd")},
+		{EObsidianTracedMeshType::CharacterMesh_RightHand, FObsidianAdvancedCombatSockets("AdvancedCombat_RightHandStart", "AdvancedCombat_RightHandEnd")},
+		{EObsidianTracedMeshType::LeftHandWeaponMesh, FObsidianAdvancedCombatSockets("AdvancedCombat_WeaponStart", "AdvancedCombat_WeaponEnd")},
+		{EObsidianTracedMeshType::RightHandWeaponMesh, FObsidianAdvancedCombatSockets("AdvancedCombat_WeaponStart", "AdvancedCombat_WeaponEnd")}
 	};
 }
 
@@ -39,19 +39,19 @@ void UObsidianAdvancedCombatComponent::TickTrace()
 {
 	switch(CurrentTraceType)
 	{
-	case EObsidianTraceType::ETT_SimpleLineTrace:
+	case EObsidianTraceType::SimpleLineTrace:
 		SimpleLineTrace();
 		break;
-	case EObsidianTraceType::ETT_SemiComplexLineTrace:
+	case EObsidianTraceType::SemiComplexLineTrace:
 		SemiComplexLineTrace();
 		break;
-	case EObsidianTraceType::ETT_ComplexLineTrace:
+	case EObsidianTraceType::ComplexLineTrace:
 		ComplexLineTrace();
 		break;
-	case EObsidianTraceType::ETT_SimpleBoxTrace:
+	case EObsidianTraceType::SimpleBoxTrace:
 		SimpleBoxTrace();
 		break;
-	case EObsidianTraceType::ETT_SimpleCapsuleTrace:
+	case EObsidianTraceType::SimpleCapsuleTrace:
 		SimpleCapsuleTrace();
 		break;
 		default:

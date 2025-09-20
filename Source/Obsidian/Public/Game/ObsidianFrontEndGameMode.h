@@ -44,7 +44,7 @@ public:
 
 	// For convenience
 	UPROPERTY()
-	EObsidianHeroClass Class = EObsidianHeroClass::OHC_None;
+	EObsidianHeroClass Class = EObsidianHeroClass::None;
 
 	UPROPERTY()
 	int32 TempID = 0;

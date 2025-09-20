@@ -24,11 +24,11 @@ AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializ
 	check(CharacterMesh);
 	
 	const TMap<EObsidianTracedMeshType, UPrimitiveComponent*> TracedMeshesMap
-	{
-		{EObsidianTracedMeshType::ETMT_CharacterMesh, CharacterMesh},
-		{EObsidianTracedMeshType::ETMT_CharacterMesh_LeftHand, CharacterMesh},
-		{EObsidianTracedMeshType::ETMT_CharacterMesh_RightHand, CharacterMesh}
-	};
+		{
+			{EObsidianTracedMeshType::CharacterMesh, CharacterMesh},
+			{EObsidianTracedMeshType::CharacterMesh_LeftHand, CharacterMesh},
+			{EObsidianTracedMeshType::CharacterMesh_RightHand, CharacterMesh}
+		};
 	AdvancedCombatComponent->AddTracedMeshes(TracedMeshesMap);
 	AdvancedCombatComponent->AddIgnoredActor(this);
 	AdvancedCombatComponent->OnAttackHitDelegate.AddDynamic(this, &ThisClass::HandleAdvancedCombatHit);

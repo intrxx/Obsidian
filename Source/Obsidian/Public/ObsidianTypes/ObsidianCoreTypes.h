@@ -62,12 +62,41 @@ namespace ObsidianMeshSocketNames
 UENUM(BlueprintType)
 enum class EObsidianEnemyClass : uint8
 {
-	EEC_Zombie UMETA(DisplayName = "Zombie"),
-	EEC_Goblin UMETA(DisplayName = "Goblin"),
-	EEC_KurukTheTreeOrc UMETA(DisplayName = "Kuruk The Tree Orc"),
-
-	EEC_MAX UMETA(DisplayName = "Default MAX")
+	None = 0 UMETA(DisplayName = "None"),
 	
+	Zombie UMETA(DisplayName = "Zombie"),
+	Goblin UMETA(DisplayName = "Goblin"),
+	KurukTheTreeOrc UMETA(DisplayName = "Kuruk The Tree Orc"),
+};
+
+/**
+ * Enum that holds the Rarity of Objects the Player interacts with to drop items mainly enemies and stashes placed in the level.
+ */
+UENUM()
+enum class EObsidianEntityRarity : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+
+	/** This entity is roll logic ambiguous, can be used for quest item spawners to just drop one specific item. */
+	Neutral UMETA(DisplayName = "Neutral"),
+
+	/** Normal Enemies, the default rarity of monsters and Item Spawners. */
+	Normal UMETA(DisplayName = "Normal"),
+
+	/** Primary used for Chests, slighly righer chance to get items. */
+	Magic UMETA(DisplayName = "Magic"),
+
+	/** Used for special packs of monsters with extra loot. */
+	Rare UMETA(DisplayName = "Rare"),
+
+	/** Used for companions of Mini Bosses, slightly more loot than Rare enemies. */
+	MiniBossCompanion UMETA(DisplayName = "Mini Boss Companion"),
+
+	/** Used for Mini Bosses in the level, high loot. */
+	MiniBoss UMETA(DisplayName = "Mini Boss"),
+
+	/** Used for Special Act/Area Bosses. */
+	SpecialBoss UMETA(DisplayName = "Special Boss"),
 };
 
 /**
@@ -76,13 +105,14 @@ enum class EObsidianEnemyClass : uint8
 UENUM(BlueprintType)
 enum class EObsidianAbilitySpawnLocation : uint8
 {
-	ASL_DefaultLocation = 0 UMETA(DisplayName = "Default Location"),
-	ASL_LeftHand UMETA(DisplayName = "Left Hand"),
-	ASL_RightHand UMETA(DisplayName = "Right Hand"),
-	ASL_LeftHandEquipment UMETA(DisplayName = "Left Hand Equipment"),
-	ASL_RightHandEquipment UMETA(DisplayName = "Right Hand Equipment"),
+	DefaultLocation = 0 UMETA(DisplayName = "Default Location"),
+	
+	LeftHand UMETA(DisplayName = "Left Hand"),
+	RightHand UMETA(DisplayName = "Right Hand"),
+	LeftHandEquipment UMETA(DisplayName = "Left Hand Equipment"),
+	RightHandEquipment UMETA(DisplayName = "Right Hand Equipment"),
 
-	ASL_MAX UMETA(DisplayName = "Default MAX") 
+	MAX UMETA(DisplayName = "Default MAX") 
 };
 
 /**
@@ -91,11 +121,11 @@ enum class EObsidianAbilitySpawnLocation : uint8
 UENUM(BlueprintType)
 enum class EObsidianTraceType  : uint8
 {
-	ETT_SimpleLineTrace = 0 UMETA(DisplayName = "Simple Line Trace"),
-	ETT_SemiComplexLineTrace UMETA(DisplayName = "Semi Complex Line Trace"),
-	ETT_ComplexLineTrace UMETA(DisplayName = "Complex Line Trace"),
-	ETT_SimpleBoxTrace UMETA(DisplayName = "Simple Box Trace"),
-	ETT_SimpleCapsuleTrace UMETA(DisplayName = "Simple Capsule Trace")
+	SimpleLineTrace = 0 UMETA(DisplayName = "Simple Line Trace"),
+	SemiComplexLineTrace UMETA(DisplayName = "Semi Complex Line Trace"),
+	ComplexLineTrace UMETA(DisplayName = "Complex Line Trace"),
+	SimpleBoxTrace UMETA(DisplayName = "Simple Box Trace"),
+	SimpleCapsuleTrace UMETA(DisplayName = "Simple Capsule Trace")
 };
 
 /**
@@ -104,11 +134,11 @@ enum class EObsidianTraceType  : uint8
 UENUM(BlueprintType)
 enum class EObsidianTracedMeshType  : uint8
 {
-	ETMT_CharacterMesh = 0 UMETA(DisplayName = "Character Mesh"),
-	ETMT_CharacterMesh_LeftHand UMETA(DisplayName = "Character Mesh - Left Hand"),
-	ETMT_CharacterMesh_RightHand UMETA(DisplayName = "Character Mesh - Right Hand"),
-	ETMT_RightHandWeaponMesh UMETA(DisplayName = "Right Hand Weapon Mesh"),
-	ETMT_LeftHandWeaponMesh UMETA(DisplayName = "Left Hand Weapon Mesh")
+	CharacterMesh = 0 UMETA(DisplayName = "Character Mesh"),
+	CharacterMesh_LeftHand UMETA(DisplayName = "Character Mesh - Left Hand"),
+	CharacterMesh_RightHand UMETA(DisplayName = "Character Mesh - Right Hand"),
+	RightHandWeaponMesh UMETA(DisplayName = "Right Hand Weapon Mesh"),
+	LeftHandWeaponMesh UMETA(DisplayName = "Left Hand Weapon Mesh")
 };
 
 /**
@@ -117,12 +147,12 @@ enum class EObsidianTracedMeshType  : uint8
 UENUM(BlueprintType)
 enum class EObsidianHeroClass : uint8
 {
-	OHC_None = 0 UMETA(DisplayName = "None"),
+	None = 0 UMETA(DisplayName = "None"),
 	
-	OHC_Witch UMETA(DisplayName = "Witch"),
-	OHC_Barbarian UMETA(DisplayName = "Barbarian"),
-	OHC_Assassin UMETA(DisplayName = "Assassin"),
-	OHC_Paladin UMETA(DisplayName = "Paladin")
+	Witch UMETA(DisplayName = "Witch"),
+	Barbarian UMETA(DisplayName = "Barbarian"),
+	Assassin UMETA(DisplayName = "Assassin"),
+	Paladin UMETA(DisplayName = "Paladin")
 };
 
 

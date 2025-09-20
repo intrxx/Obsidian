@@ -40,6 +40,7 @@ public:
 	//~ End of HighlightInterface
 
 	bool IsHighlighted() const;
+	EObsidianEntityRarity GetEnemyRarity() const;
 
 public:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Enemy")
@@ -64,6 +65,7 @@ protected:
 	//~ Start of EnemyInterface
 	virtual void SetCombatTarget_Implementation(AActor* InTarget) override;
 	virtual AActor* GetCombatTarget_Implementation() const override;
+	virtual EObsidianEntityRarity GetEnemyRarityFromOwner_Implementation() const override;
 	//~ End of EnemyInterface
 
 protected:
@@ -80,8 +82,11 @@ protected:
 	TObjectPtr<UBehaviorTree> DefaultBehaviorTree;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
-	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::EEC_MAX;
+	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::None;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
+	EObsidianEntityRarity EnemyRarity = EObsidianEntityRarity::None;
+	
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Combat")
 	TObjectPtr<AActor> CombatTarget;
 

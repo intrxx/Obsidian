@@ -35,6 +35,10 @@ struct FObsidianTreasureClass
 public:
 	/** Returns Weighted Randomized Item, will be nullptr if NoDrop was chosen. */
 	TSubclassOf<UObsidianInventoryItemDefinition> GetRandomItemFromClass(const float NoDropScale = 1.0f);
+
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+#endif
 	
 public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian")
@@ -55,10 +59,6 @@ public:
 	/** Definition of Drop Item. */
 	UPROPERTY(EditAnywhere, Category = "Obsidian")
 	TArray<FObsidianDropItem> DropItems;
-
-#if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
-#endif
 };
 
 /**
@@ -71,10 +71,7 @@ class OBSIDIAN_API UObsidianTreasureList : public UDataAsset
 
 public:
 	virtual void PostLoad() override;
-
-	bool ShouldAlwaysRoll() const;
-	void SetShouldAlwaysRoll(const bool InbShouldAlwaysRoll);
-
+	
 	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
 	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const int32 TreasureQuality);
 	const FObsidianTreasureClass* GetTreasureClassOfQuality(const int32 TreasureQuality);
@@ -89,6 +86,4 @@ protected:
 
 	/** Map for faster lookups. */
 	TMap<int32, const FObsidianTreasureClass*> TreasureClassMap;
-
-	bool bShouldAlwaysRoll = false;
 };

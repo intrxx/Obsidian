@@ -28,7 +28,7 @@ struct FObsidianHeroInfo
 
 public:
 	UPROPERTY(EditAnywhere)
-	EObsidianHeroClass Class = EObsidianHeroClass::OHC_None;
+	EObsidianHeroClass Class = EObsidianHeroClass::None;
 	
 	UPROPERTY(EditAnywhere)
 	FText HeroName = FText();
@@ -98,7 +98,7 @@ protected:
 
 	/** Class assigned after pressing on the hero button/hero.*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);
-	EObsidianHeroClass ChosenClass = EObsidianHeroClass::OHC_None;
+	EObsidianHeroClass ChosenClass = EObsidianHeroClass::None;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Input")
 	FDataTableRowHandle BackwardsInputActionData;

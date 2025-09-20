@@ -41,6 +41,22 @@ TSubclassOf<UObsidianInventoryItemDefinition> FObsidianTreasureClass::GetRandomI
 	return nullptr;
 }
 
+#if WITH_EDITOR
+EDataValidationResult UObsidianTreasureList::IsDataValid(FDataValidationContext& Context) const
+{
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+
+	uint16 TreasureClassesIndex = 0;
+	for (const FObsidianTreasureClass& Class : TreasureClasses)
+	{
+		Result =  CombineDataValidationResults(Result, Class.ValidateData(Context, TreasureClassesIndex));
+		TreasureClassesIndex++;
+	}
+	
+	return Result;
+}
+#endif
+
 // ~ End of FObsidianTreasureClass
 
 void UObsidianTreasureList::PostLoad()
@@ -57,16 +73,6 @@ void UObsidianTreasureList::PostLoad()
 	{
 		TreasureClassMap.Add(Class.TreasureQuality, &Class);
 	}
-}
-
-bool UObsidianTreasureList::ShouldAlwaysRoll() const
-{
-	return bShouldAlwaysRoll;
-}
-
-void UObsidianTreasureList::SetShouldAlwaysRoll(const bool InbShouldAlwaysRoll)
-{
-	bShouldAlwaysRoll = InbShouldAlwaysRoll;
 }
 
 TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClasses() const
@@ -139,18 +145,5 @@ EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContex
 
 	return Result;
 }
-
-EDataValidationResult UObsidianTreasureList::IsDataValid(FDataValidationContext& Context) const
-{
-	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
-
-	unsigned int TreasureClassesIndex = 0;
-	for(const FObsidianTreasureClass& Class : TreasureClasses)
-	{
-		Result =  CombineDataValidationResults(Result, Class.ValidateData(Context, TreasureClassesIndex));
-		TreasureClassesIndex++;
-	}
-	
-	return Result;
-}
 #endif
+

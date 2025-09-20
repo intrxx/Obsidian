@@ -354,7 +354,7 @@ namespace ObsidianGameplayTags
 			Item_Slot_Equipment_Boots,
 			Item_Slot_Equipment_Amulet,
 			Item_Slot_Equipment_Ring_RightHand,
-		Item_Slot_Equipment_Ring_LeftHand
+			Item_Slot_Equipment_Ring_LeftHand
 		};
 
 	

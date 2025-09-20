@@ -8,6 +8,7 @@
 // ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "Interaction/ObsidianInteractionInterface.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 #include "GameFramework/Actor.h"
 #include "ObsidianItemSpawner.generated.h"
@@ -15,6 +16,18 @@
 class AObsidianDroppableItem;
 class UObsidianItemDropComponent;
 class UObsidianPlayerInputManager;
+
+UENUM()
+enum class EObsidianItemSpawnerLevelPolicy : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+
+	/** After setting the Policy to Static it will allow for setting the ItemSpawnerStaticLevel which will be used for this spawner intead of Area Level. */
+	Static UMETA(DisplayName = "Static"),
+
+	/** Base level of the Spawner will equal the Area Level where the Spawner resides. */
+	InheritFromArea UMETA(DisplayName = "Inherit From Area"),
+};
 
 UCLASS()
 class OBSIDIAN_API AObsidianItemSpawner : public AActor, public IObsidianHighlightInterface, public IObsidianInteractionInterface
@@ -40,20 +53,32 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemSpawner")
 	FVector GetItemSpawnLocation() const;
 	
-	void SpawnItem();
+	uint8 GetItemSpawnerLevel() const;
 
+	void SpawnItem();
+	
 protected:
-	void OnSpawningItemsFinished();
+	void OnSpawningItemsFinished(const bool bDroppedItem);
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianItemDropComponent> ItemDropComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	EObsidianEntityRarity ItemSpawnerRarity = EObsidianEntityRarity::Neutral;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	EObsidianItemSpawnerLevelPolicy ItemSpawnerLevelPolicy = EObsidianItemSpawnerLevelPolicy::Static;
+
+	/** Level used when ItemSpawnerLevelPolicy is Static. */
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemSpawnerLevelPolicy == EObsidianItemSpawnerLevelPolicy::Static"), Category = "Obsidian|Setup")
+	uint8 ItemSpawnerStaticLevel = 1;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	uint8 TimesToDrop = 1;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float InteractionRadius = 150.0f;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	int32 TimesToDrop = 1;
 
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

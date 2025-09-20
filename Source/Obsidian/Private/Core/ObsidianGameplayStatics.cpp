@@ -9,19 +9,19 @@
 
 FText UObsidianGameplayStatics::GetHeroClassText(const EObsidianHeroClass HeroClass)
 {
-	if(HeroClass == EObsidianHeroClass::OHC_Witch)
+	if(HeroClass == EObsidianHeroClass::Witch)
 	{
 		return FText::FromString(TEXT("Witch"));
 	}
-	if(HeroClass == EObsidianHeroClass::OHC_Barbarian)
+	if(HeroClass == EObsidianHeroClass::Barbarian)
 	{
 		return FText::FromString(TEXT("Barbarian"));
 	}
-	if(HeroClass == EObsidianHeroClass::OHC_Assassin)
+	if(HeroClass == EObsidianHeroClass::Assassin)
 	{
 		return FText::FromString(TEXT("Assassin"));
 	}
-	if(HeroClass == EObsidianHeroClass::OHC_Paladin)
+	if(HeroClass == EObsidianHeroClass::Paladin)
 	{
 		return FText::FromString(TEXT("Paladin"));
 	}

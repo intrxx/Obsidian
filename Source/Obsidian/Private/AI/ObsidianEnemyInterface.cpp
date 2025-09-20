@@ -6,11 +6,3 @@
 
 // ~ Project
 
-void IObsidianEnemyInterface::SetCombatTarget_Implementation(AActor* InTarget)
-{
-}
-
-AActor* IObsidianEnemyInterface::GetCombatTarget_Implementation() const
-{
-	return nullptr;
-}

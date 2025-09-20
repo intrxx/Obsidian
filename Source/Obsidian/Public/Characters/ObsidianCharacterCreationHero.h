@@ -37,7 +37,7 @@ public:
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	EObsidianHeroClass HeroClass = EObsidianHeroClass::OHC_None;
+	EObsidianHeroClass HeroClass = EObsidianHeroClass::None;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TObjectPtr<UAnimMontage> ChooseMeAnimMontage;

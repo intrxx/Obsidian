@@ -35,7 +35,7 @@ void UObsidianCharacterCreationScreen::NativeOnActivated()
 	
 	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
 	{
-		HandleHoverHeroButton(EObsidianHeroClass::OHC_Witch);
+		HandleHoverHeroButton(EObsidianHeroClass::Witch);
 	}
 	else
 	{
@@ -74,7 +74,7 @@ void UObsidianCharacterCreationScreen::NativeOnInitialized()
 
 void UObsidianCharacterCreationScreen::HandleBackwardsAction()
 {
-	ChosenClass = EObsidianHeroClass::OHC_None;
+	ChosenClass = EObsidianHeroClass::None;
 	ResetHeroDetails();
 	DeactivateWidget();
 }
@@ -130,66 +130,66 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 
 void UObsidianCharacterCreationScreen::OnWitchButtonClicked()
 {
-	HandleClickingHeroButton(EObsidianHeroClass::OHC_Witch);
-	ChosenClass = EObsidianHeroClass::OHC_Witch;
+	HandleClickingHeroButton(EObsidianHeroClass::Witch);
+	ChosenClass = EObsidianHeroClass::Witch;
 }
 
 void UObsidianCharacterCreationScreen::OnWitchButtonHovered()
 {
-	HandleHoverHeroButton(EObsidianHeroClass::OHC_Witch);
+	HandleHoverHeroButton(EObsidianHeroClass::Witch);
 }
 
 void UObsidianCharacterCreationScreen::OnWitchButtonUnhovered()
 {
-	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Witch);
+	HandleUnhoverHeroButton(EObsidianHeroClass::Witch);
 }
 
 void UObsidianCharacterCreationScreen::OnPaladinButtonClicked()
 {
-	HandleClickingHeroButton(EObsidianHeroClass::OHC_Paladin);
-	ChosenClass = EObsidianHeroClass::OHC_Paladin;
+	HandleClickingHeroButton(EObsidianHeroClass::Paladin);
+	ChosenClass = EObsidianHeroClass::Paladin;
 }
 
 void UObsidianCharacterCreationScreen::OnPaladinButtonHovered()
 {
-	HandleHoverHeroButton(EObsidianHeroClass::OHC_Paladin);
+	HandleHoverHeroButton(EObsidianHeroClass::Paladin);
 }
 
 void UObsidianCharacterCreationScreen::OnPaladinButtonUnhovered()
 {
-	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Paladin);
+	HandleUnhoverHeroButton(EObsidianHeroClass::Paladin);
 }
 
 void UObsidianCharacterCreationScreen::OnBarbarianButtonClicked()
 {
-	HandleClickingHeroButton(EObsidianHeroClass::OHC_Barbarian);
-	ChosenClass = EObsidianHeroClass::OHC_Barbarian;
+	HandleClickingHeroButton(EObsidianHeroClass::Barbarian);
+	ChosenClass = EObsidianHeroClass::Barbarian;
 }
 
 void UObsidianCharacterCreationScreen::OnBarbarianButtonHovered()
 {
-	HandleHoverHeroButton(EObsidianHeroClass::OHC_Barbarian);
+	HandleHoverHeroButton(EObsidianHeroClass::Barbarian);
 }
 
 void UObsidianCharacterCreationScreen::OnBarbarianButtonUnhovered()
 {
-	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Barbarian);
+	HandleUnhoverHeroButton(EObsidianHeroClass::Barbarian);
 }
 
 void UObsidianCharacterCreationScreen::OnAssassinButtonClicked()
 {
-	HandleClickingHeroButton(EObsidianHeroClass::OHC_Assassin);
-	ChosenClass = EObsidianHeroClass::OHC_Assassin;
+	HandleClickingHeroButton(EObsidianHeroClass::Assassin);
+	ChosenClass = EObsidianHeroClass::Assassin;
 }
 
 void UObsidianCharacterCreationScreen::OnAssassinButtonHovered()
 {
-	HandleHoverHeroButton(EObsidianHeroClass::OHC_Assassin);
+	HandleHoverHeroButton(EObsidianHeroClass::Assassin);
 }
 
 void UObsidianCharacterCreationScreen::OnAssassinButtonUnhovered()
 {
-	HandleUnhoverHeroButton(EObsidianHeroClass::OHC_Assassin);
+	HandleUnhoverHeroButton(EObsidianHeroClass::Assassin);
 }
 
 void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianHeroClass ForClass)
@@ -223,12 +223,12 @@ void UObsidianCharacterCreationScreen::HandleHoverHeroButton(const EObsidianHero
 
 	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
 	{
-		if(ChosenClass != EObsidianHeroClass::OHC_None)
+		if(ChosenClass != EObsidianHeroClass::None)
 		{
 			ResetHeroDetails();
 			HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
 			FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
-			ChosenClass = EObsidianHeroClass::OHC_None;
+			ChosenClass = EObsidianHeroClass::None;
 		}
 		FrontEndGameMode->HighlightCharacterWithTag(ForClass);
 		ShowHeroDescription(ForClass);
