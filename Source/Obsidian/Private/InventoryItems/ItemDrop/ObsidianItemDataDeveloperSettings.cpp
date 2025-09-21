@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "InventoryItems/ItemDrop/ObsidianTreasureConfigDeveloperSettings.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 
 // ~ Core
 

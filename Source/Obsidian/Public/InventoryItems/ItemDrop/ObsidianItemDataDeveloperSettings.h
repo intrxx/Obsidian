@@ -8,15 +8,15 @@
 // ~ Project
 
 #include "Engine/DeveloperSettings.h"
-#include "ObsidianTreasureConfigDeveloperSettings.generated.h"
+#include "ObsidianItemDataDeveloperSettings.generated.h"
 
 class UObsidianTreasureConfig;
 
 /**
  * 
  */
-UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Treasure Config"))
-class OBSIDIAN_API UObsidianTreasureConfigDeveloperSettings : public UDeveloperSettings
+UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Item Data Config"))
+class OBSIDIAN_API UObsidianItemDataDeveloperSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
 

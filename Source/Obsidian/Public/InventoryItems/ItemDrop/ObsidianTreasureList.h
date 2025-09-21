@@ -34,7 +34,7 @@ struct FObsidianTreasureClass
 
 public:
 	/** Returns Weighted Randomized Item, will be nullptr if NoDrop was chosen. */
-	TSubclassOf<UObsidianInventoryItemDefinition> GetRandomItemFromClass(const float NoDropScale = 1.0f);
+	TSoftClassPtr<UObsidianInventoryItemDefinition> GetRandomItemFromClass(const float NoDropScale = 1.0f);
 
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;

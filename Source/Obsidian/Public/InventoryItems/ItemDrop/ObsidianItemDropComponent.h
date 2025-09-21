@@ -94,4 +94,6 @@ protected:
 
 private:
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
+
+	bool bDroppedItem = false;
 };

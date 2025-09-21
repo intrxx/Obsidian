@@ -9,7 +9,7 @@
 #include "ObsidianTreasureList.h"
 
 #include "Subsystems/GameInstanceSubsystem.h"
-#include "ObsidianDropItemManagerSubsystem.generated.h"
+#include "ObsidianItemDataLoaderSubsystem.generated.h"
 
 class UObsidianTreasureConfig;
 class UObsidianTreasureList;
@@ -18,7 +18,7 @@ class UObsidianTreasureList;
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianDropItemManagerSubsystem : public UGameInstanceSubsystem
+class OBSIDIAN_API UObsidianItemDataLoaderSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 

@@ -12,7 +12,7 @@
 
 // ~ FObsidianTreasureClass
 
-TSubclassOf<UObsidianInventoryItemDefinition> FObsidianTreasureClass::GetRandomItemFromClass(const float NoDropScale)
+TSoftClassPtr<UObsidianInventoryItemDefinition> FObsidianTreasureClass::GetRandomItemFromClass(const float NoDropScale)
 {
 	const int32 ScaledNoDropWeight = NoDropWeight * NoDropScale;
 	int32 TotalWeight = ScaledNoDropWeight;
@@ -34,7 +34,7 @@ TSubclassOf<UObsidianInventoryItemDefinition> FObsidianTreasureClass::GetRandomI
 		Cumulative += DropItem.DropWeight;
 		if (Roll <= (ScaledNoDropWeight + Cumulative))
 		{
-			return DropItem.TreasureItemDefinitionClass.LoadSynchronous();
+			return DropItem.TreasureItemDefinitionClass;
 		}
 	}
 

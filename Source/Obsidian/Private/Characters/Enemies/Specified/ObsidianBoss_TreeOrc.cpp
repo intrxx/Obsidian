@@ -20,6 +20,8 @@ AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectIni
 	RightHandEquipmentMesh->SetIsReplicated(true);
 
 	AdvancedCombatComponent->AddTracedMesh(RightHandEquipmentMesh, EObsidianTracedMeshType::RightHandWeaponMesh);
+
+	EnemyRarity = EObsidianEntityRarity::SpecialBoss;
 }
 
 void AObsidianBoss_TreeOrc::PostInitializeComponents()

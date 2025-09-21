@@ -1,27 +1,27 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "InventoryItems/ItemDrop/ObsidianDropItemManagerSubsystem.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 
 // ~ Core
 #include "Engine/AssetManager.h"
 
 // ~ Project
 #include "InventoryItems/ItemDrop/ObsidianTreasureConfig.h"
-#include "InventoryItems/ItemDrop/ObsidianTreasureConfigDeveloperSettings.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 
-void UObsidianDropItemManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UObsidianItemDataLoaderSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
 	LoadTreasureConfig();
 }
 
-void UObsidianDropItemManagerSubsystem::Deinitialize()
+void UObsidianItemDataLoaderSubsystem::Deinitialize()
 {
 	Super::Deinitialize();
 }
 
-TArray<FObsidianTreasureClass> UObsidianDropItemManagerSubsystem::GetAllTreasureClassesUpToQuality(const int32 TreasureQuality) const
+TArray<FObsidianTreasureClass> UObsidianItemDataLoaderSubsystem::GetAllTreasureClassesUpToQuality(const int32 TreasureQuality) const
 {
 	TArray<FObsidianTreasureClass> GatheredClasses;
 	if (TreasureConfig == nullptr)
@@ -40,9 +40,9 @@ TArray<FObsidianTreasureClass> UObsidianDropItemManagerSubsystem::GetAllTreasure
 	return GatheredClasses;
 }
 
-void UObsidianDropItemManagerSubsystem::LoadTreasureConfig()
+void UObsidianItemDataLoaderSubsystem::LoadTreasureConfig()
 {
-	const UObsidianTreasureConfigDeveloperSettings* Settings = GetDefault<UObsidianTreasureConfigDeveloperSettings>();
+	const UObsidianItemDataDeveloperSettings* Settings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (Settings == nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("ObsidianTreasureConfigDeveloperSettings not found!"));
@@ -52,18 +52,18 @@ void UObsidianDropItemManagerSubsystem::LoadTreasureConfig()
 	const TSoftObjectPtr<UObsidianTreasureConfig>& ConfigRef = Settings->TreasureConfig;
 	if (ConfigRef.IsNull() == false)
 	{
-		FSoftObjectPath TreasureConfigPath = Settings->TreasureConfig.ToSoftObjectPath();
+		FSoftObjectPath TreasureConfigPath = ConfigRef.ToSoftObjectPath();
 		
 		UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
 				TreasureConfigPath,
-				FStreamableDelegate::CreateUObject(this, &UObsidianDropItemManagerSubsystem::OnTreasureConfigLoaded)
+				FStreamableDelegate::CreateUObject(this, &UObsidianItemDataLoaderSubsystem::OnTreasureConfigLoaded)
 			);
 	}
 }
 
-void UObsidianDropItemManagerSubsystem::OnTreasureConfigLoaded()
+void UObsidianItemDataLoaderSubsystem::OnTreasureConfigLoaded()
 {
-	const UObsidianTreasureConfigDeveloperSettings* Settings = GetDefault<UObsidianTreasureConfigDeveloperSettings>();
+	const UObsidianItemDataDeveloperSettings* Settings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (Settings && Settings->TreasureConfig)
 	{
 		TreasureConfig = Settings->TreasureConfig.Get();
