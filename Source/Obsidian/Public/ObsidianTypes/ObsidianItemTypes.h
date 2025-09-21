@@ -14,6 +14,46 @@
 class UObsidianInventoryItemInstance;
 
 /**
+ * Enum that holds the Rarity of Objects the Player interacts with to drop items mainly enemies and stashes placed in the level.
+ */
+UENUM()
+enum class EObsidianEntityRarity : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+
+	/** This entity is roll logic ambiguous, can be used for quest item spawners to just drop one specific item. */
+	Neutral UMETA(DisplayName = "Neutral"),
+
+	/** Normal Enemies, the default rarity of monsters and Item Spawners. */
+	Normal UMETA(DisplayName = "Normal"),
+
+	/** Primary used for Chests, slighly righer chance to get items. */
+	Magic UMETA(DisplayName = "Magic"),
+
+	/** Used for special packs of monsters with extra loot. */
+	Rare UMETA(DisplayName = "Rare"),
+
+	/** Used for companions of Mini Bosses, slightly more loot than Rare enemies. */
+	MiniBossCompanion UMETA(DisplayName = "Mini Boss Companion"),
+
+	/** Used for Mini Bosses in the level, high loot. */
+	MiniBoss UMETA(DisplayName = "Mini Boss"),
+
+	/** Used for Special Act/Area Bosses. */
+	SpecialBoss UMETA(DisplayName = "Special Boss"),
+};
+
+/**
+ * 
+ */
+namespace ObsidianTreasureStatics
+{
+	extern const uint8 MaxTreasureQuality;
+	extern const TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap;
+	extern const TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap;
+}
+
+/**
  * 
  */
 namespace ObsidianInventoryItemsStatics

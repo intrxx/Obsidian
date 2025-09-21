@@ -6,9 +6,8 @@
 #include "CoreMinimal.h"
 
 // ~ Project
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
-
-#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UObject/Interface.h"
 #include "ObsidianEnemyInterface.generated.h"
 

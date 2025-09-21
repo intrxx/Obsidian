@@ -14,17 +14,57 @@
 class UObsidianInventoryItemDefinition;
 
 USTRUCT()
-struct FObsidianDropItem
+struct FObsidianStacksToDrop
 {
 	GENERATED_BODY()
 	
+public:
+	FObsidianStacksToDrop(){}
+	FObsidianStacksToDrop(const uint8 InStackSize, const uint16 InDropWeight)
+		: StackSize(InStackSize)
+		, DropWeight(InDropWeight)
+	{}
+	
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	uint8 StackSize = 1;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
+	uint16 DropWeight = 1000; 
+};
+
+USTRUCT()
+struct FObsidianDropItem
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianDropItem();
+
+	bool IsValid() const;
+
+	uint8 GetRandomStackSizeToDrop(const uint8 TreasureQuality) const;
+	
+public:
 	/** Actual items/item templates in this Treasure Class. */
-	UPROPERTY(EditAnywhere, Category = "Obsidian")
-	TSoftClassPtr<UObsidianInventoryItemDefinition> TreasureItemDefinitionClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TSoftClassPtr<UObsidianInventoryItemDefinition> TreasureItemDefinitionClass = nullptr;
 
 	/** Drop Weight [0, 1000], the higher the weight the more likely the item to drop. */
-	UPROPERTY(EditAnywhere, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
-	int32 DropWeight = 1; 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
+	uint16 DropWeight = 1;
+	
+	/** Array of possible weighted stack sizes to drop the Item with. */
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
+	TArray<FObsidianStacksToDrop> StackSizes;
+
+	static const FObsidianDropItem NoDropType;
+
+protected:
+	//TODO(intrxx) Validation of already added items to check if they are actually stackable?
+	/** Flag used for editing the StackSizes Array as not every item is stackable and therefore cares about it. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	bool bStackable = false;
 };
 
 USTRUCT()
@@ -34,14 +74,14 @@ struct FObsidianTreasureClass
 
 public:
 	/** Returns Weighted Randomized Item, will be nullptr if NoDrop was chosen. */
-	TSoftClassPtr<UObsidianInventoryItemDefinition> GetRandomItemFromClass(const float NoDropScale = 1.0f);
+	FObsidianDropItem GetRandomItemFromClass(const float NoDropScale = 1.0f);
 
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
 #endif
 	
 public:
-	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FName TreasureClassName;
 	
 	/**
@@ -50,14 +90,14 @@ public:
 	 * [Normal = 0], [Elite = 3], [Boss = 4], [Special Boss = 5]. Once the number is evaluated, all Treasure Classes up
 	 * to this number are gathered and rolling for item begins.
 	 */
-	UPROPERTY(EditAnywhere, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "85"))
-	int32 TreasureQuality = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "85"))
+	uint8 TreasureQuality = 0;
 
-	UPROPERTY(EditAnywhere, Category = "Obsidian", meta=(ClampMin = "0"))
-	int32 NoDropWeight = 0;
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0"))
+	uint16 NoDropWeight = 0;
 
 	/** Definition of Drop Item. */
-	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianDropItem> DropItems;
 };
 
@@ -70,11 +110,12 @@ class OBSIDIAN_API UObsidianTreasureList : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	virtual void PostInitProperties() override;
 	virtual void PostLoad() override;
 	
 	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
-	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const int32 TreasureQuality);
-	const FObsidianTreasureClass* GetTreasureClassOfQuality(const int32 TreasureQuality);
+	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality);
+	const FObsidianTreasureClass* GetTreasureClassOfQuality(const uint8 TreasureQuality);
 
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;

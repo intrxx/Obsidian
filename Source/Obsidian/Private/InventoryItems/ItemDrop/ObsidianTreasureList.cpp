@@ -9,36 +9,91 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
+
+// ~ FObsidianDropItem
+
+const FObsidianDropItem FObsidianDropItem::NoDropType;
+
+FObsidianDropItem::FObsidianDropItem()
+{
+	if (StackSizes.IsEmpty())
+	{
+		StackSizes.AddDefaulted();
+	}
+}
+
+bool FObsidianDropItem::IsValid() const
+{
+	return !TreasureItemDefinitionClass.IsNull();
+}
+
+uint8 FObsidianDropItem::GetRandomStackSizeToDrop(const uint8 TreasureQuality) const
+{
+	TArray<FObsidianStacksToDrop> AdjustedStackSizes;
+	AdjustedStackSizes.Reserve(StackSizes.Num());
+	AdjustedStackSizes.Append(StackSizes);
+	
+	uint8 MinStack = 255;
+	uint8 MaxStack = 0;
+	for (const FObsidianStacksToDrop& StackSizeConfig : AdjustedStackSizes)
+	{
+		MinStack = FMath::Min(MinStack, StackSizeConfig.StackSize);
+		MaxStack = FMath::Max(MaxStack, StackSizeConfig.StackSize);
+	}
+
+	const float RollBias = TreasureQuality / ObsidianTreasureStatics::MaxTreasureQuality;
+	uint32 TotalAdjustedWeight = 0;
+	for (FObsidianStacksToDrop& AdjustedStackSizeConfig : AdjustedStackSizes)
+	{
+		float StackNorm = (MaxStack > MinStack) ? (static_cast<float>(AdjustedStackSizeConfig.StackSize) - MinStack) / (MaxStack - MinStack) : 1.0f;
+		AdjustedStackSizeConfig.DropWeight = AdjustedStackSizeConfig.DropWeight * FMath::Lerp(1.0f - RollBias, 1.0f + RollBias, StackNorm);
+		TotalAdjustedWeight += AdjustedStackSizeConfig.DropWeight;
+	}
+	
+	const uint32 Roll = FMath::RandRange(0, TotalAdjustedWeight);
+	uint32 Cumulative = 0;
+	
+	for (const FObsidianStacksToDrop& AdjustedStackSizeConfig : AdjustedStackSizes)
+	{
+		Cumulative += AdjustedStackSizeConfig.DropWeight;
+		if (Roll <= Cumulative)
+		{
+			return AdjustedStackSizeConfig.StackSize;
+		}
+	}
+	
+	return 1;
+}
 
 // ~ FObsidianTreasureClass
 
-TSoftClassPtr<UObsidianInventoryItemDefinition> FObsidianTreasureClass::GetRandomItemFromClass(const float NoDropScale)
+FObsidianDropItem FObsidianTreasureClass::GetRandomItemFromClass(const float NoDropScale)
 {
-	const int32 ScaledNoDropWeight = NoDropWeight * NoDropScale;
-	int32 TotalWeight = ScaledNoDropWeight;
+	const uint16 ScaledNoDropWeight = FMath::Max((NoDropWeight * NoDropScale), 0);
+	uint32 TotalWeight = ScaledNoDropWeight;
 	for (const FObsidianDropItem& DropItem : DropItems)
 	{
 		TotalWeight += DropItem.DropWeight;
 	}
 
-	const int32 Roll = FMath::RandRange(0, TotalWeight);
+	const uint32 Roll = FMath::RandRange(0, TotalWeight);
 	if (Roll <= ScaledNoDropWeight)
 	{
-		UE_LOG(LogTemp, Display, TEXT("No Drop Weight was rolled."));
-		return nullptr;
+		return FObsidianDropItem::NoDropType;
 	}
 	
-	int32 Cumulative = 0;
+	uint32 Cumulative = 0;
 	for (const FObsidianDropItem& DropItem : DropItems)
 	{
 		Cumulative += DropItem.DropWeight;
 		if (Roll <= (ScaledNoDropWeight + Cumulative))
 		{
-			return DropItem.TreasureItemDefinitionClass;
+			return DropItem;
 		}
 	}
 
-	return nullptr;
+	return FObsidianDropItem::NoDropType;
 }
 
 #if WITH_EDITOR
@@ -59,15 +114,31 @@ EDataValidationResult UObsidianTreasureList::IsDataValid(FDataValidationContext&
 
 // ~ End of FObsidianTreasureClass
 
-void UObsidianTreasureList::PostLoad()
+void UObsidianTreasureList::PostInitProperties()
 {
-	Super::PostLoad();
-	
+	Super::PostInitProperties();
+
 	TreasureClasses.Sort([](const FObsidianTreasureClass& A, const FObsidianTreasureClass& B)
 		{
 			return A.TreasureQuality < B.TreasureQuality;
 		});
 
+	for (FObsidianTreasureClass& TreasureClass : TreasureClasses)
+	{
+		for (FObsidianDropItem& DropItem : TreasureClass.DropItems)
+		{
+			DropItem.StackSizes.Sort([](const FObsidianStacksToDrop& A, const FObsidianStacksToDrop& B)
+				{
+					return A.DropWeight > B.DropWeight;
+				});
+		}
+	}
+}
+
+void UObsidianTreasureList::PostLoad()
+{
+	Super::PostLoad();
+	
 	TreasureClassMap.Empty(TreasureClasses.Num());
 	for (const FObsidianTreasureClass& Class : TreasureClasses)
 	{
@@ -80,7 +151,7 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClasses() co
 	return TreasureClasses;
 }
 
-TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const int32 TreasureQuality)
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality)
 {
 	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
 	
@@ -95,7 +166,7 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQ
 	return MatchingTreasureClasses;
 }
 
-const FObsidianTreasureClass* UObsidianTreasureList::GetTreasureClassOfQuality(const int32 TreasureQuality)
+const FObsidianTreasureClass* UObsidianTreasureList::GetTreasureClassOfQuality(const uint8 TreasureQuality)
 {
 	if (const FObsidianTreasureClass** TreasureClassPtr = TreasureClassMap.Find(TreasureQuality))
 	{

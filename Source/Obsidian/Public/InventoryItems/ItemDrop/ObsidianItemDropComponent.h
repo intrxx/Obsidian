@@ -6,14 +6,12 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-
-
+#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "ObsidianTreasureList.h"
+
 #include "Components/ActorComponent.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianItemDropComponent.generated.h"
 
-class UObsidianTreasureList;
 class UObsidianInventoryItemDefinition;
 
 UENUM()
@@ -50,12 +48,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftObjectPtr<UObsidianTreasureList> TreasureList;
 };
-
-namespace ObsidianTreasureStatics
-{
-	extern const TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap;
-	extern const TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap;
-}
 
 DECLARE_LOG_CATEGORY_EXTERN(LogDropComponent, Log, All);
 

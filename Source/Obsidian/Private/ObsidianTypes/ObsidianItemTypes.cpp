@@ -9,6 +9,34 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "Obsidian/ObsidianGameModule.h"
 
+// ~ ObsidianTreasureStatics
+
+namespace ObsidianTreasureStatics
+{
+	const uint8 MaxTreasureQuality = 90;
+	const TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap =
+	{
+		{ EObsidianEntityRarity::Neutral, 1 },
+		{ EObsidianEntityRarity::Normal, 1 },
+		{ EObsidianEntityRarity::Magic, 2 },
+		{ EObsidianEntityRarity::Rare, 3 },
+		{ EObsidianEntityRarity::MiniBoss, 4 },
+		{ EObsidianEntityRarity::MiniBossCompanion, 3 },
+		{ EObsidianEntityRarity::SpecialBoss, 5 },
+	};
+
+	const TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap =
+	{
+		{ EObsidianEntityRarity::Neutral, 0 },
+		{ EObsidianEntityRarity::Normal, 0 },
+		{ EObsidianEntityRarity::Magic, 1 },
+		{ EObsidianEntityRarity::Rare, 3 },
+		{ EObsidianEntityRarity::MiniBoss, 4 },
+		{ EObsidianEntityRarity::MiniBossCompanion, 4 },
+		{ EObsidianEntityRarity::SpecialBoss, 5 },
+	};
+}
+
 // ~ FDraggedItem
 
 FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance)
