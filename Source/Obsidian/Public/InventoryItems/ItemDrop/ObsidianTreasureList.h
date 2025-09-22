@@ -43,7 +43,7 @@ public:
 
 	bool IsValid() const;
 
-	uint8 GetRandomStackSizeToDrop(const uint8 TreasureQuality) const;
+	uint8 GetRandomStackSizeToDropAdjusted(const uint8 TreasureQuality) const;
 	
 public:
 	/** Actual items/item templates in this Treasure Class. */

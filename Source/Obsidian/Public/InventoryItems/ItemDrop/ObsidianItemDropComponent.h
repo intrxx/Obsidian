@@ -51,7 +51,10 @@ public:
 
 DECLARE_LOG_CATEGORY_EXTERN(LogDropComponent, Log, All);
 
-/** Broadcasts when the DropItem logic is finished, bDroppedItem will be true if at least one Item was dropped. */
+/**
+ * Broadcasts when the DropItem logic is finished, caution, for now this broadcasts with true after successfully
+ * requesting some items to drop to the manager, not when the items are actually dropped.
+ */
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnDroppingItemsFinishedSignature, const bool bDroppedItem)
 
 /**
@@ -86,6 +89,4 @@ protected:
 
 private:
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
-
-	bool bDroppedItem = false;
 };

@@ -11,9 +11,8 @@
 #endif
 
 // ~ Project
-#include "Engine/AssetManager.h"
-#include "Engine/StreamableManager.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
+#include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 
@@ -53,9 +52,8 @@ UObsidianItemDropComponent::UObsidianItemDropComponent(const FObjectInitializer&
 void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingEntityRarity, const uint8 DroppingEntityLevel, const FVector& InOverrideDropLocation)
 {
 	checkf(DroppingEntityRarity != EObsidianEntityRarity::None, TEXT("Entity Rarity passed to DropItems is None, setup or run time logic is invalid."));
-	bDroppedItem = false;
 	
-	UWorld* World = GetWorld();
+	const UWorld* World = GetWorld();
 	if (World == nullptr)
 	{
 		return;
@@ -69,7 +67,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	TArray<FObsidianTreasureClass> MustRollFromTreasureClasses;
 	GetTreasureClassesToRollFrom(TreasureQuality, TreasureClasses, MustRollFromTreasureClasses);
 	
-	if (TreasureClasses.IsEmpty())
+	if (TreasureClasses.IsEmpty() && MustRollFromTreasureClasses.IsEmpty())
 	{
 		UE_LOG(LogDropComponent, Warning, TEXT("TreasureClasses are empty after getting them from both the common"
 									   " set and additional lists, is enemy level to low for drops or something is broken?"));
@@ -84,7 +82,8 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	
 	uint8 DropRolls = ObsidianTreasureStatics::DefaultRarityToNumberOfDropRollsMap[DroppingEntityRarity];
 	TArray<FObsidianDropItem> ItemsToDrop;
-
+	TArray<FTransform> DropTransforms;
+	
 	if (MustRollFromTreasureClasses.IsEmpty() == false && DropRolls > 0)
 	{
 		//TODO(intrxx) Get Random TC in some weighted way?
@@ -93,12 +92,13 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		if (RolledItem.IsValid())
 		{
 			ItemsToDrop.Add(RolledItem);
+			DropTransforms.Add(GetDropTransformAligned(OwningActor, InOverrideDropLocation));
 		}
 		DropRolls--;
 	}
 
 	const int32 TreasureClassesCount = TreasureClasses.Num();
-	for (uint8 i = 0; i < DropRolls; i++)
+	for (uint8 i = 0; i < DropRolls; ++i)
 	{
 		//TODO(intrxx) Get Random TC in some weighted way?
 		const uint16 RandomRoll = FMath::RandRange(0, (TreasureClassesCount - 1));
@@ -106,6 +106,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		if (RolledItem.IsValid())
 		{
 			ItemsToDrop.Add(RolledItem);
+			DropTransforms.Add(GetDropTransformAligned(OwningActor, InOverrideDropLocation));
 		}
 	}
 
@@ -116,36 +117,11 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		return;
 	}
 	
-	TArray<FSoftObjectPath> ItemsToDropPaths;
-	for (const FObsidianDropItem& RolledItem : ItemsToDrop)
+	if (UObsidianItemManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemManagerSubsystem>())
 	{
-		ItemsToDropPaths.Add(RolledItem.TreasureItemDefinitionClass.ToSoftObjectPath());
+		ManagerSubsystem->RequestDroppingItemsAsync(ItemsToDrop, DropTransforms, TreasureQuality);
+		OnDroppingItemsFinishedDelegate.Broadcast(true);
 	}
-	
-	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
-	StreamableManager.RequestAsyncLoad(ItemsToDropPaths, FStreamableDelegate::CreateLambda([this, ItemsToDrop, TreasureQuality, OwningActor, InOverrideDropLocation, World]()
-		{
-			for (const FObsidianDropItem& RolledItem : ItemsToDrop)
-			{
-				if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = RolledItem.TreasureItemDefinitionClass.Get())
-				{
-					uint8 StacksToDrop = 1;
-					if (const UObsidianInventoryItemDefinition* DefaultObject = ItemToDrop.GetDefaultObject())
-					{
-						StacksToDrop = DefaultObject->IsStackable() == true ? RolledItem.GetRandomStackSizeToDrop(TreasureQuality) : StacksToDrop;
-					}
-					
-					const FTransform ItemSpawnTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
-					AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), ItemSpawnTransform);
-					Item->InitializeItem(ItemToDrop, StacksToDrop);
-					Item->FinishSpawning(ItemSpawnTransform);
-
-					bDroppedItem = true;
-				}
-			}
-		}));
-
-	OnDroppingItemsFinishedDelegate.Broadcast(bDroppedItem);
 }
 
 void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)

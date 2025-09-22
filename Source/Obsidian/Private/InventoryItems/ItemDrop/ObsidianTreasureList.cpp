@@ -28,7 +28,7 @@ bool FObsidianDropItem::IsValid() const
 	return !TreasureItemDefinitionClass.IsNull();
 }
 
-uint8 FObsidianDropItem::GetRandomStackSizeToDrop(const uint8 TreasureQuality) const
+uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQuality) const
 {
 	TArray<FObsidianStacksToDrop> AdjustedStackSizes;
 	AdjustedStackSizes.Reserve(StackSizes.Num());
