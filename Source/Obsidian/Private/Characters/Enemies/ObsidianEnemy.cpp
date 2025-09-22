@@ -140,8 +140,9 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 {
 	Super::OnDeathStarted(OwningActor);
 
-	if(HasAuthority() && IsValid(Controller))
+	if(HasAuthority() && IsValid(Controller) && IsValid(ItemDropComponent))
 	{
+		ItemDropComponent->DropItems(EnemyRarity, EnemyLevel);
 		Controller->UnPossess();
 	}
 
@@ -181,11 +182,6 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 		{
 			PlayAnimMontage(DeathMontages[RandomIndex]);
 		}
-	}
-
-	if (ItemDropComponent)
-	{
-		ItemDropComponent->DropItems(EnemyRarity, EnemyLevel);
 	}
 }
 
