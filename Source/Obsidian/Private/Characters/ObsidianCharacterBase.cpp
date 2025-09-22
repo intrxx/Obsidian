@@ -24,7 +24,7 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	MeshComp->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	MeshComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
+	MeshComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap); //TODO(intrxx) do I want to overlap projectiles from both Mesh and Capsule? Seems wrong
 	MeshComp->SetGenerateOverlapEvents(true);
 	
 	// This seems like a hack now - this fixes incorrect spawning transforms for projectiles which is taken from sockets. //TODO(intrxx) Validate later
@@ -32,7 +32,7 @@ AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectI
 
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	CapsuleComp->SetCollisionResponseToChannel(ECC_Camera, ECR_Ignore);
-	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap);
+	CapsuleComp->SetCollisionResponseToChannel(Obsidian_ObjectChannel_Projectile, ECR_Overlap); //TODO(intrxx) do I want to overlap projectiles from both Mesh and Capsule? Seems wrong
 	CapsuleComp->SetGenerateOverlapEvents(false);
 	
 	MotionWarpingComp = CreateDefaultSubobject<UMotionWarpingComponent>(TEXT("MotionWarpingComponent"));
@@ -113,6 +113,11 @@ void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
 	check(CapsuleComp);
 	CapsuleComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	CapsuleComp->SetCollisionResponseToAllChannels(ECR_Ignore);
+
+	USkeletalMeshComponent* MeshComp = GetMesh();
+	check(MeshComp);
+	MeshComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	MeshComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 
 	UCharacterMovementComponent* CharacterMoveComp = GetCharacterMovement();
 	check(CharacterMoveComp);
