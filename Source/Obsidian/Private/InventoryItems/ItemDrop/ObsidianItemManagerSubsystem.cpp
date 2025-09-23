@@ -17,6 +17,8 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 	{
 		return;
 	}
+
+	TWeakObjectPtr<UWorld> WeakWorld(World);
 	
 	TArray<FSoftObjectPath> ItemsToDropPaths;
 	for (const FObsidianDropItem& RolledItem : ItemsToDrop)
@@ -26,8 +28,13 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 
 	check(ItemsToDrop.Num() == DropLocations.Num());
 	FStreamableManager& StreamableManager = UAssetManager::Get().GetStreamableManager();
-	StreamableManager.RequestAsyncLoad(ItemsToDropPaths, FStreamableDelegate::CreateLambda([ItemsToDrop = MoveTemp(ItemsToDrop), DropLocations = MoveTemp(DropLocations), TreasureQuality, World]()
+	StreamableManager.RequestAsyncLoad(ItemsToDropPaths, FStreamableDelegate::CreateLambda([WeakWorld, ItemsToDrop = MoveTemp(ItemsToDrop), DropLocations = MoveTemp(DropLocations), TreasureQuality]()
 		{
+			if (WeakWorld.IsValid() == false)
+			{
+				return;
+			}
+		
 			uint16 DropIndex = 0;
 			for (const FObsidianDropItem& RolledItem : ItemsToDrop)
 			{
@@ -41,10 +48,11 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 						if (DefaultObject->IsEquippable())
 						{
 							//TODO Roll Affixes
+							// Don't worry about soft Gameplay Effects as they can be loaded by Items in Begin Play
 						}
 					}
 					
-					AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), DropLocations[DropIndex]);
+					AObsidianDroppableItem* Item = WeakWorld.Get()->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), DropLocations[DropIndex]);
 					Item->InitializeItem(ItemToDrop, StacksToDrop);
 					Item->FinishSpawning(DropLocations[DropIndex]);
 					DropIndex++;

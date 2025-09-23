@@ -78,6 +78,9 @@ public:
 	FOnDroppingItemsFinishedSignature OnDroppingItemsFinishedDelegate;
 
 protected:
+	virtual void BeginPlay() override;
+	void LoadAdditionalTreasuresAsync();
+	
 	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
 
 protected:

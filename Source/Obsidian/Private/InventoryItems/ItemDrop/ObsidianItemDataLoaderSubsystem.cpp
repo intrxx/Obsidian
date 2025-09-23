@@ -56,7 +56,7 @@ void UObsidianItemDataLoaderSubsystem::LoadTreasureConfig()
 		
 		UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
 				TreasureConfigPath,
-				FStreamableDelegate::CreateUObject(this, &UObsidianItemDataLoaderSubsystem::OnTreasureConfigLoaded)
+				FStreamableDelegate::CreateUObject(this, &ThisClass::OnTreasureConfigLoaded)
 			);
 	}
 }
@@ -67,6 +67,6 @@ void UObsidianItemDataLoaderSubsystem::OnTreasureConfigLoaded()
 	if (Settings && Settings->TreasureConfig)
 	{
 		TreasureConfig = Settings->TreasureConfig.Get();
-		UE_LOG(LogTemp, Log, TEXT("Loaded asset: %s"), *TreasureConfig->GetName());
+		UE_LOG(LogTemp, Log, TEXT("Loaded Treasure Config: %s"), *TreasureConfig->GetName());
 	}
 }

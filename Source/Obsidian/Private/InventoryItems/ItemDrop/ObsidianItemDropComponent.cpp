@@ -6,6 +6,8 @@
 #include "NavigationSystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Engine/AssetManager.h"
+#include "Engine/StreamableManager.h"
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif
@@ -87,8 +89,8 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	if (MustRollFromTreasureClasses.IsEmpty() == false && DropRolls > 0)
 	{
 		//TODO(intrxx) Get Random TC in some weighted way?
-		const uint16 RandomRoll = FMath::RandRange(0, (MustRollFromTreasureClasses.Num() - 1));
-		const FObsidianDropItem& RolledItem = MustRollFromTreasureClasses[RandomRoll].GetRandomItemFromClass();
+		const uint16 RandomClassIndex = FMath::RandRange(0, (MustRollFromTreasureClasses.Num() - 1));
+		const FObsidianDropItem& RolledItem = MustRollFromTreasureClasses[RandomClassIndex].GetRandomItemFromClass();
 		if (RolledItem.IsValid())
 		{
 			ItemsToDrop.Add(RolledItem);
@@ -101,8 +103,8 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	for (uint8 i = 0; i < DropRolls; ++i)
 	{
 		//TODO(intrxx) Get Random TC in some weighted way?
-		const uint16 RandomRoll = FMath::RandRange(0, (TreasureClassesCount - 1));
-		const FObsidianDropItem& RolledItem = TreasureClasses[RandomRoll].GetRandomItemFromClass();
+		const uint16 RandomClassIndex = FMath::RandRange(0, (TreasureClassesCount - 1));
+		const FObsidianDropItem& RolledItem = TreasureClasses[RandomClassIndex].GetRandomItemFromClass();
 		if (RolledItem.IsValid())
 		{
 			ItemsToDrop.Add(RolledItem);
@@ -117,11 +119,29 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		return;
 	}
 	
-	if (UObsidianItemManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemManagerSubsystem>())
+	if (const UObsidianItemManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemManagerSubsystem>())
 	{
 		ManagerSubsystem->RequestDroppingItemsAsync(MoveTemp(ItemsToDrop), MoveTemp(DropTransforms), TreasureQuality);
 		OnDroppingItemsFinishedDelegate.Broadcast(true);
 	}
+}
+
+void UObsidianItemDropComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	LoadAdditionalTreasuresAsync();
+}
+
+void UObsidianItemDropComponent::LoadAdditionalTreasuresAsync()
+{
+	TArray<FSoftObjectPath> AdditionalTreasureListsPaths;
+	for (const FObsidianAdditionalTreasureList& AdditionalTL : AdditionalTreasureLists)
+	{
+		AdditionalTreasureListsPaths.Add(AdditionalTL.TreasureList.ToSoftObjectPath());
+	}
+	
+	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditionalTreasureListsPaths);
 }
 
 void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)
@@ -129,10 +149,16 @@ void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTre
 	bool bRollFromCommonSet = true;
 	for (const FObsidianAdditionalTreasureList& AdditionalTreasureList : AdditionalTreasureLists) 
 	{
-		UObsidianTreasureList* TreasureListToAdd = AdditionalTreasureList.TreasureList.LoadSynchronous();
+		UObsidianTreasureList* TreasureListToAdd = AdditionalTreasureList.TreasureList.Get();
 		if (TreasureListToAdd == nullptr)
 		{
-			continue;
+			TreasureListToAdd = AdditionalTreasureList.TreasureList.LoadSynchronous();
+			UE_LOG(LogDropComponent, Warning, TEXT("AdditionalTreasureList wasn't loaded correctly and needed to be loaded Synchronously."));
+			if (TreasureListToAdd)
+			{
+				UE_LOG(LogDropComponent, Error, TEXT("AdditionalTreasureList was invalid in [%hs]."), __FUNCDNAME__);
+				continue;
+			}
 		}
 
 		const EObsidianAdditionalTreasureListPolicy Policy = AdditionalTreasureList.TreasureListPolicy;
