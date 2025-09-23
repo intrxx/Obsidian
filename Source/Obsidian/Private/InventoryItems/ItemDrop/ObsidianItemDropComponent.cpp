@@ -119,7 +119,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	
 	if (UObsidianItemManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemManagerSubsystem>())
 	{
-		ManagerSubsystem->RequestDroppingItemsAsync(ItemsToDrop, DropTransforms, TreasureQuality);
+		ManagerSubsystem->RequestDroppingItemsAsync(MoveTemp(ItemsToDrop), MoveTemp(DropTransforms), TreasureQuality);
 		OnDroppingItemsFinishedDelegate.Broadcast(true);
 	}
 }
@@ -181,9 +181,9 @@ void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTre
 		return;
 	}
 	
-	if (const UObsidianItemDataLoaderSubsystem* DropItemManager = GameInstance->GetSubsystem<UObsidianItemDataLoaderSubsystem>())
+	if (const UObsidianItemDataLoaderSubsystem* ItemDataLoader = GameInstance->GetSubsystem<UObsidianItemDataLoaderSubsystem>())
 	{
-		OutTreasureClasses.Append(DropItemManager->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality));
+		OutTreasureClasses.Append(ItemDataLoader->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality));
 	}
 }
 

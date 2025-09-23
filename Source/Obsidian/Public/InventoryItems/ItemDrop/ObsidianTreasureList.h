@@ -13,6 +13,16 @@
 
 class UObsidianInventoryItemDefinition;
 
+/**
+ * Additional data set when rolling the item and used when spawning it.
+ */
+USTRUCT()
+struct FObsidianDropItemData
+{
+	GENERATED_BODY()
+	
+};
+
 USTRUCT()
 struct FObsidianStacksToDrop
 {
@@ -53,18 +63,24 @@ public:
 	/** Drop Weight [0, 1000], the higher the weight the more likely the item to drop. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
 	uint16 DropWeight = 1;
+
+	//TODO(intrxx) Validation of already added items to check if they are actually stackable?
+	/** Flag used for editing the StackSizes Array as not every item is stackable and therefore cares about it. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	bool bStackable = false;
 	
 	/** Array of possible weighted stack sizes to drop the Item with. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
 
-	static const FObsidianDropItem NoDropType;
-
-protected:
-	//TODO(intrxx) Validation of already added items to check if they are actually stackable?
-	/** Flag used for editing the StackSizes Array as not every item is stackable and therefore cares about it. */
+	/** Flag that needs to be set on Equipment Items, the system uses this flag to roll appropriate item stats. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	bool bStackable = false;
+	bool bEquipable = false;
+
+	UPROPERTY()
+	FObsidianDropItemData DropItemData;
+
+	static const FObsidianDropItem NoDropType;
 };
 
 USTRUCT()
