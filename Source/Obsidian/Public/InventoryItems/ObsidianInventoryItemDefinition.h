@@ -11,6 +11,7 @@
 
 #include "ObsidianInventoryItemDefinition.generated.h"
 
+class UOInventoryItemFragment_Affixes;
 DECLARE_LOG_CATEGORY_EXTERN(LogItems, Log, All);
 
 class UObsidianInventoryItemFragment;
@@ -37,6 +38,12 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
 	FGameplayTag GetItemCategoryTag() const;
+
+	/**
+	 * Checks if the Item should be generated at drop (Contains the Affix Fragment and has the flag bGeneratedAtDrop set to true),
+	 * if so, it returns a pointer to mutable Affix Fragment.
+	 */
+	UOInventoryItemFragment_Affixes* ShouldBeGeneratedAtDrop_GetAffixObject() const;
 
 	int32 GetItemLevel() const;
 	

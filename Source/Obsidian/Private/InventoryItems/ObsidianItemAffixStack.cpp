@@ -14,44 +14,47 @@ int32 FObsidianItemAffixStack::GetTotalAffixCount() const
 int32 FObsidianItemAffixStack::GetPrefixCount() const
 {
 	int32 PrefixCount = 0;
-	for(const FObsidianAffixEntry& Entry : Entries)
-	{
-		if(Entry.ItemAffix.AffixType == EObsidianAffixType::Prefix)
-		{
-			PrefixCount++;
-		}
-	}
+	//TODO(intrxx) #AffixRefactor
+	// for(const FObsidianAffixEntry& Entry : Entries)
+	// {
+	// 	if(Entry.ItemAffix.AffixType == EObsidianAffixType::Prefix)
+	// 	{
+	// 		PrefixCount++;
+	// 	}
+	// }
 	return PrefixCount;
 }
 
 int32 FObsidianItemAffixStack::GetSuffixCount() const
 {
 	int32 SuffixCount = 0;
-	for(const FObsidianAffixEntry& Entry : Entries)
-	{
-		if(Entry.ItemAffix.AffixType == EObsidianAffixType::Suffix)
-		{
-			SuffixCount++;
-		}
-	}
+	//TODO(intrxx) #AffixRefactor
+	// for(const FObsidianAffixEntry& Entry : Entries)
+	// {
+	// 	if(Entry.ItemAffix.AffixType == EObsidianAffixType::Suffix)
+	// 	{
+	// 		SuffixCount++;
+	// 	}
+	// }
 	return SuffixCount;
 }
 
 bool FObsidianItemAffixStack::HasImplicit() const
 {
-	for(const FObsidianAffixEntry& Entry : Entries)
-	{
-		if(Entry.ItemAffix.AffixType == EObsidianAffixType::Implicit)
-		{
-			return true;
-		}
-	}
+	//TODO(intrxx) #AffixRefactor
+	// for(const FObsidianAffixEntry& Entry : Entries)
+	// {
+	// 	if(Entry.ItemAffix.AffixType == EObsidianAffixType::Implicit)
+	// 	{
+	// 		return true;
+	// 	}
+	// }
 	return false;
 }
 
-TArray<FObsidianItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() const
+TArray<FObsidianRandomItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() const
 {
-	TArray<FObsidianItemAffix> Affixes;
+	TArray<FObsidianRandomItemAffix> Affixes;
 	Affixes.Reserve(Entries.Num());
 
 	for(const FObsidianAffixEntry& Entry : Entries)
@@ -64,7 +67,7 @@ TArray<FObsidianItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() const
 	return Affixes;
 }
 
-void FObsidianItemAffixStack::AddAffix(const FObsidianItemAffix& ItemAffix)
+void FObsidianItemAffixStack::AddAffix(const FObsidianRandomItemAffix& ItemAffix)
 {
 	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(ItemAffix);
 

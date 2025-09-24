@@ -32,7 +32,7 @@ void UObsidianInventory::NativeConstruct()
 
 	if(InventoryGrid && InventoryItemsWidgetController)
 	{
-		InventoryGrid->ConstructGrid(InventoryItemsWidgetController, EObsidianGridOwner::GO_Inventory, InventoryItemsWidgetController->GetInventoryGridWidth(), InventoryItemsWidgetController->GetInventoryGridHeight());
+		InventoryGrid->ConstructGrid(InventoryItemsWidgetController, EObsidianGridOwner::Inventory, InventoryItemsWidgetController->GetInventoryGridWidth(), InventoryItemsWidgetController->GetInventoryGridHeight());
 		InventoryGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToInventory);
 	}
 	

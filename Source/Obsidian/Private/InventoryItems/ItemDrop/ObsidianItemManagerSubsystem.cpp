@@ -7,8 +7,10 @@
 #include "Engine/StreamableManager.h"
 
 // ~ Project
+#include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDropItem>&& ItemsToDrop, TArray<FTransform>&& DropLocations, const uint8 TreasureQuality) const
 {
@@ -44,11 +46,20 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 					if (const UObsidianInventoryItemDefinition* DefaultObject = ItemToDrop.GetDefaultObject())
 					{
 						StacksToDrop = DefaultObject->IsStackable() == true ? RolledItem.GetRandomStackSizeToDropAdjusted(TreasureQuality) : StacksToDrop;
-
-						if (DefaultObject->IsEquippable())
+						
+						if (UOInventoryItemFragment_Affixes* AffixFragment = DefaultObject->ShouldBeGeneratedAtDrop_GetAffixObject())
 						{
 							//TODO Roll Affixes
 							// Don't worry about soft Gameplay Effects as they can be loaded by Items in Begin Play
+
+							// // Temp
+							// FObsidianRandomItemAffix TempAffix;
+							// TempAffix.AffixDescription = FText::FromString(TEXT("My super duper Temp Affix Desc."));
+							// TempAffix.AffixTag = ObsidianGameplayTags::Item_Affix_Attribute_Dexterity;
+							// TempAffix.AffixType = EObsidianAffixType::Prefix;
+							// TempAffix.AffixTier = 2;
+							// TempAffix.TempAffixMagnitude = 6;
+							// AffixFragment->AddItemAffixes({TempAffix}, ObsidianGameplayTags::Item_Rarity_Magic);
 						}
 					}
 					

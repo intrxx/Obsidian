@@ -12,6 +12,7 @@
 #include "ObsidianItemTypes.generated.h"
 
 class UObsidianInventoryItemInstance;
+class UGameplayEffect;
 
 /**
  * Enum that holds the Rarity of Objects the Player interacts with to drop items mainly enemies and stashes placed in the level.
@@ -122,14 +123,156 @@ namespace ObsidianAffixLimit
 }
 
 /**
+ * 
+ */
+UENUM(BlueprintType)
+enum class EObsidianAffixType : uint8
+{
+	None = 0,
+	Implicit,
+	Prefix,
+	Suffix,
+	Unique
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianAffixTier
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "8"))
+	uint8 AffixTier = 1;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"))
+	uint8 MinItemLevelRequirement = 1;	
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianAffixRange
+{
+	GENERATED_BODY()
+	
+public:
+	UPROPERTY(EditDefaultsOnly)
+	FObsidianAffixTier AffixTier;
+
+	/** Array (as there can be multiple values in a single Affix) of Affix Range to Roll. */
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FFloatRange> AffixRanges; 
+};
+
+UENUM(BlueprintType)
+enum class EObsidianAffixValueType : uint8
+{
+	Int,
+	Float
+};
+
+/**
+ * Item Affix definition used in Affix Tables.
+ */
+USTRUCT(BlueprintType)
+struct FObsidianRandomItemAffix
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianRandomItemAffix(){}
+
+	explicit operator bool() const
+	{
+		return AffixTag.IsValid();
+	}
+	
+public:
+	/** Affix Gameplay Tag Identifier. */
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+
+	/** Contains Category Tags of Items that this Affix can be applied to. */
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
+	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
+
+	/** Unique addition to the Item Name. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
+	FText AffixItemNameAddition = FText();
+
+	/** Row description of the affix. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
+	FText AffixDescription = FText();
+
+	/** Minimum Item Level Requirement to roll this affix. */
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"), Category = "Obsidian|Affix")
+	uint8 MinItemLevelRequirement = 1;
+
+	/** Gameplay Effect Class to Apply. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
+	
+	/** Value type of affix, if set to Int it will be rounded down. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
+
+	/** Possible Affix Ranges to roll from. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	TArray<FObsidianAffixRange> PossibleAffixRanges;
+};
+
+/**
+ * Static Item Affix definition used in the designer to define Affixes.
+ */
+USTRUCT(BlueprintType)
+struct FObsidianStaticItemAffix
+{
+	GENERATED_BODY();
+
+public:
+	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|UI")
+	EObsidianAffixType AffixType = EObsidianAffixType::Unique;
+	
+	/** Unique addition to the Item Name. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
+	FText AffixItemNameAddition = FText();
+
+	/** Row description of the affix. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
+	FText AffixDescription = FText();
+
+	/** Gameplay Effect Class to Apply. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
+
+	/** Gameplay Effect Class to Apply. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	FObsidianAffixRange AffixRange;
+};
+
+/**
+ * Affix that has been added to the Item.
+ */
+USTRUCT()
+struct FObsidianActiveItemAffix
+{
+	GENERATED_BODY()
+	
+};
+
+/**
  * Grid Owner.
  */
 UENUM()
-enum class EObsidianGridOwner
+enum class EObsidianGridOwner : uint8
 {
-	GO_None = 0,
-	GO_Inventory,
-	GO_PlayerStash
+	None = 0,
+	Inventory,
+	PlayerStash
 };
 
 /**
@@ -373,18 +516,6 @@ public:
 
 	UPROPERTY()
 	int32 StacksLeft = INDEX_NONE;
-};
-
-/**
- * 
- */
-UENUM(BlueprintType)
-enum class EObsidianAffixType : uint8
-{
-	None = 0,
-	Implicit,
-	Prefix,
-	Suffix,
 };
 
 /**

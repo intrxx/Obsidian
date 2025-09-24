@@ -1211,14 +1211,14 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 	
 	switch(GridOwner)
 	{
-		case EObsidianGridOwner::GO_Inventory:
+		case EObsidianGridOwner::Inventory:
 			if(InventoryComponent == nullptr)
 			{
 				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 				return false;	
 			}
 			return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSpan, AtGridSlot);
-		case EObsidianGridOwner::GO_PlayerStash:
+		case EObsidianGridOwner::PlayerStash:
 			break;
 	default:
 		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
@@ -1232,14 +1232,14 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 {
 	switch(GridOwner)
 	{
-	case EObsidianGridOwner::GO_Inventory:
+	case EObsidianGridOwner::Inventory:
 		if(InventoryComponent == nullptr)
 		{
 			UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 			return false;	
 		}
 		return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan,AtGridSlot);
-	case EObsidianGridOwner::GO_PlayerStash:
+	case EObsidianGridOwner::PlayerStash:
 		if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
 		{
 			UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
@@ -1272,13 +1272,13 @@ bool UObsidianInventoryItemsWidgetController::CanInteractWithGrid(const EObsidia
 {
 	switch(GridOwner)
 	{
-	case EObsidianGridOwner::GO_Inventory:
+	case EObsidianGridOwner::Inventory:
 		if(InventoryComponent)
 		{
 			return InventoryComponent->CanOwnerModifyInventoryState();
 		}
 		break;
-	case EObsidianGridOwner::GO_PlayerStash:
+	case EObsidianGridOwner::PlayerStash:
 		if(PlayerStashComponent)
 		{
 			return PlayerStashComponent->CanOwnerModifyPlayerStashState();

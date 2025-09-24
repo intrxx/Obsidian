@@ -15,7 +15,7 @@ void UObsidianStashTabWidget_Grid::InitializeStashTab(UObsidianInventoryItemsWid
 	{
 		InventoryItemsController = InventoryItemsWidgetController;
 		StashTabTag = InStashTabTag;
-		StashTabGrid->ConstructGrid(InventoryItemsWidgetController, EObsidianGridOwner::GO_PlayerStash, GridWidth, GridHeight, InStashTabTag);
+		StashTabGrid->ConstructGrid(InventoryItemsWidgetController, EObsidianGridOwner::PlayerStash, GridWidth, GridHeight, InStashTabTag);
 		StashTabGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToStashTab);
 	}
 }

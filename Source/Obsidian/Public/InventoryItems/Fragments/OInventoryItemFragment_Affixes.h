@@ -7,45 +7,10 @@
 #include "GameplayTagContainer.h"
 
 // ~ Project
-#include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Affixes.generated.h"
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FObsidianItemAffix
-{
-	GENERATED_BODY()
-
-public:
-	FObsidianItemAffix(){}
-
-	explicit operator bool() const
-	{
-		return AffixTag.IsValid();
-	}
-	
-public:
-	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Affix"))
-	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
-
-	UPROPERTY(EditDefaultsOnly)
-	EObsidianAffixType AffixType = EObsidianAffixType::None;
-
-	UPROPERTY(EditDefaultsOnly)
-	int32 AffixTier = -1;
-	
-	UPROPERTY(EditDefaultsOnly)
-	FText AffixDescription = FText();
-
-	/**TODO just a simple int for now, will cover more later. */
-	UPROPERTY(EditDefaultsOnly)
-	int32 TempAffixMagnitude = 0;
-};
 
 /**
  * 
@@ -59,6 +24,8 @@ public:
 	//~ Start of UObsidianInventoryItemFragment
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
+	
+	void AddItemAffixes(const TArray<FObsidianRandomItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag);
 
 	bool IsItemIdentified() const;
 
@@ -67,19 +34,26 @@ public:
 		return ItemRarityTag;
 	}
 
+	bool ShouldBeGeneratedAtDrop() const;
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
 
 protected:
-	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */
-	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity"), Category = "Affixes")
-	FGameplayTag ItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
-
+	//TODO(intrxx) bind to changing property, set ItemRarityTag, ItemAffixes and bStartsIdentified to default when switching this back to true
+	/** Whether this item will be generated at drop, uncheck if you want to create a static item template that will be dropped as is (e.g. for unique items). */
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
-	TArray<FObsidianItemAffix> ItemAffixes;
+	bool bGeneratedAtDrop = true;
+	
+	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */
+	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity", EditCondition = "bGeneratedAtDrop==false"),  Category = "Affixes")
+	FGameplayTag ItemRarityTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "bGeneratedAtDrop==false"), Category = "Affixes")
+	TArray<FObsidianRandomItemAffix> ItemAffixes;
 	
 	/** Whether or not the item starts identified, normal, items without any affixes or items with this bool set to true will start as identified. */
-	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "bGeneratedAtDrop==false"), Category = "Affixes")
 	bool bStartsIdentified = false;
 
 private:

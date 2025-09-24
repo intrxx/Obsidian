@@ -151,7 +151,7 @@ public:
 	bool IsItemIdentified() const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void AddAffix(const FObsidianItemAffix& AffixToAdd);
+	void AddAffix(const FObsidianRandomItemAffix& AffixToAdd);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void RemoveAffix(const FGameplayTag& AffixTag);

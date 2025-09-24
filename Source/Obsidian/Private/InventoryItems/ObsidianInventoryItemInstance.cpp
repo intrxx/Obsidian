@@ -196,7 +196,7 @@ bool UObsidianInventoryItemInstance::IsItemIdentified() const
 	return bIdentified;
 }
 
-void UObsidianInventoryItemInstance::AddAffix(const FObsidianItemAffix& AffixToAdd)
+void UObsidianInventoryItemInstance::AddAffix(const FObsidianRandomItemAffix& AffixToAdd)
 {
 	ItemAffixes.AddAffix(AffixToAdd);
 }
@@ -208,21 +208,22 @@ void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
 
 TArray<FObsidianAffixDescriptionRow> UObsidianInventoryItemInstance::GetAffixesAsUIDescription() const
 {
-	TArray<FObsidianItemAffix> Affixes = ItemAffixes.GetAllItemAffixes();
+	TArray<FObsidianRandomItemAffix> Affixes = ItemAffixes.GetAllItemAffixes();
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
 	AffixDescriptionRows.Reserve(Affixes.Num());
 
-	for(FObsidianItemAffix Affix : Affixes)
-	{
-		if(Affix)
-		{
-			FObsidianAffixDescriptionRow Row;
-			Row.AffixTag = Affix.AffixTag;
-			Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
-			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
-			AffixDescriptionRows.Add(Row);
-		}
-	}
+	//TODO(intrxx) #AffixRefactor
+	// for(const FObsidianRandomItemAffix& Affix : Affixes)
+	// {
+	// 	if(Affix)
+	// 	{
+	// 		FObsidianAffixDescriptionRow Row;
+	// 		Row.AffixTag = Affix.AffixTag;
+	// 		Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
+	// 		Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
+	// 		AffixDescriptionRows.Add(Row);
+	// 	}
+	// }
 	return AffixDescriptionRows;
 }
 

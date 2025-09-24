@@ -65,7 +65,7 @@ private:
 	
 private:
 	UPROPERTY()
-	EObsidianGridOwner GridOwner = EObsidianGridOwner::GO_None;
+	EObsidianGridOwner GridOwner = EObsidianGridOwner::None;
 
 	UPROPERTY()
 	FGameplayTag StashTag = FGameplayTag::EmptyTag;

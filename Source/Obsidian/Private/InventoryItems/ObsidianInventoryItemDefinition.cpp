@@ -71,6 +71,24 @@ FGameplayTag UObsidianInventoryItemDefinition::GetItemCategoryTag() const
 	return ItemCategory;
 }
 
+UOInventoryItemFragment_Affixes* UObsidianInventoryItemDefinition::ShouldBeGeneratedAtDrop_GetAffixObject() const
+{
+	UOInventoryItemFragment_Affixes* AffixObject = nullptr;
+	for(UObsidianInventoryItemFragment* Fragment : ItemFragments)
+	{
+		if(Fragment->IsA(UOInventoryItemFragment_Affixes::StaticClass()))
+		{
+			AffixObject = Cast<UOInventoryItemFragment_Affixes>(Fragment);
+		}
+	}
+	
+	if(AffixObject && AffixObject->ShouldBeGeneratedAtDrop())
+	{
+		return AffixObject;
+	}
+	return nullptr;
+}
+
 int32 UObsidianInventoryItemDefinition::GetItemLevel() const
 {
 #if !UE_BUILD_SHIPPING
