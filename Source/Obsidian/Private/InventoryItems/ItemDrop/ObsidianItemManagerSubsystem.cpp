@@ -25,7 +25,7 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 	TArray<FSoftObjectPath> ItemsToDropPaths;
 	for (const FObsidianDropItem& RolledItem : ItemsToDrop)
 	{
-		ItemsToDropPaths.Add(RolledItem.TreasureItemDefinitionClass.ToSoftObjectPath());
+		ItemsToDropPaths.Add(RolledItem.SoftTreasureItemDefinitionClass.ToSoftObjectPath());
 	}
 
 	check(ItemsToDrop.Num() == DropLocations.Num());
@@ -40,7 +40,7 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 			uint16 DropIndex = 0;
 			for (const FObsidianDropItem& RolledItem : ItemsToDrop)
 			{
-				if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = RolledItem.TreasureItemDefinitionClass.Get())
+				if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = RolledItem.SoftTreasureItemDefinitionClass.Get())
 				{
 					uint8 StacksToDrop = 1;
 					if (const UObsidianInventoryItemDefinition* DefaultObject = ItemToDrop.GetDefaultObject())
@@ -49,11 +49,13 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 						
 						if (UOInventoryItemFragment_Affixes* AffixFragment = DefaultObject->ShouldBeGeneratedAtDrop_GetAffixObject())
 						{
+							const EObsidianAffixGenerationType GenerationType = AffixFragment->GetGenerationType();
+							
 							//TODO Roll Affixes
 							// Don't worry about soft Gameplay Effects as they can be loaded by Items in Begin Play
 
 							// // Temp
-							// FObsidianRandomItemAffix TempAffix;
+							// FObsidianDynamicItemAffix TempAffix;
 							// TempAffix.AffixDescription = FText::FromString(TEXT("My super duper Temp Affix Desc."));
 							// TempAffix.AffixTag = ObsidianGameplayTags::Item_Affix_Attribute_Dexterity;
 							// TempAffix.AffixType = EObsidianAffixType::Prefix;

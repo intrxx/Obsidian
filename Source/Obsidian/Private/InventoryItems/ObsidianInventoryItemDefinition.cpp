@@ -82,7 +82,7 @@ UOInventoryItemFragment_Affixes* UObsidianInventoryItemDefinition::ShouldBeGener
 		}
 	}
 	
-	if(AffixObject && AffixObject->ShouldBeGeneratedAtDrop())
+	if(AffixObject && AffixObject->GetGenerationType() > EObsidianAffixGenerationType::NoGeneration)
 	{
 		return AffixObject;
 	}

@@ -13,7 +13,7 @@
 #include "ObsidianItemAffixStack.generated.h"
 
 class UObsidianInventoryItemInstance;
-struct FObsidianRandomItemAffix;
+struct FObsidianDynamicItemAffix;
 struct FObsidianItemAffixStack;
 
 /**
@@ -27,7 +27,7 @@ struct FObsidianAffixEntry : public FFastArraySerializerItem
 public:
 	FObsidianAffixEntry()
 	{}
-	FObsidianAffixEntry(const FObsidianRandomItemAffix& Affix)
+	FObsidianAffixEntry(const FObsidianDynamicItemAffix& Affix)
 		: ItemAffix(Affix)
 	{}
 
@@ -35,7 +35,7 @@ private:
 	friend FObsidianItemAffixStack;
 
 	UPROPERTY()
-	FObsidianRandomItemAffix ItemAffix = FObsidianRandomItemAffix();
+	FObsidianDynamicItemAffix ItemAffix = FObsidianDynamicItemAffix();
 };
 
 
@@ -61,14 +61,14 @@ public:
 
 	bool HasImplicit() const;
 
-	TArray<FObsidianRandomItemAffix> GetAllItemAffixes() const;
+	TArray<FObsidianDynamicItemAffix> GetAllItemAffixes() const;
 	
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianAffixEntry, FObsidianItemAffixStack>(Entries, DeltaParams, *this);
 	}
 
-	void AddAffix(const FObsidianRandomItemAffix& ItemAffix);
+	void AddAffix(const FObsidianDynamicItemAffix& ItemAffix);
 	void RemoveAffix(const FGameplayTag& AffixTag);
 	void AffixChanged(const FGameplayTag& AffixTag);
 

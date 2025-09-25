@@ -10,23 +10,24 @@
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
 	Instance->SetItemRarity(ItemRarityTag);
-	
-	if(!bStartsIdentified && ItemAffixes.Num() > 0)
-	{
-		Instance->SetIdentified(false);
-	}
-	else if (bStartsIdentified || ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Normal || ItemAffixes.IsEmpty())
-	{
-		Instance->SetIdentified(true);
-	}
-	
-	for(const FObsidianRandomItemAffix& Affix : ItemAffixes)
-	{
-		Instance->AddAffix(Affix);
-	}
+
+	//TODO(intrxx) #AffixRefactor
+	// if(!bStartsIdentified && ItemAffixes.Num() > 0)
+	// {
+	// 	Instance->SetIdentified(false);
+	// }
+	// else if (bStartsIdentified || ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Normal || ItemAffixes.IsEmpty())
+	// {
+	// 	Instance->SetIdentified(true);
+	// }
+	//
+	// for(const FObsidianDynamicItemAffix& Affix : ItemAffixes)
+	// {
+	// 	Instance->AddAffix(Affix);
+	// }
 }
 
-void UOInventoryItemFragment_Affixes::AddItemAffixes(const TArray<FObsidianRandomItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag)
+void UOInventoryItemFragment_Affixes::AddItemAffixes(const TArray<FObsidianDynamicItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag)
 {
 	// Change name to initialize/create
 	// Clear item affixes to make sure we are okay\
@@ -34,30 +35,31 @@ void UOInventoryItemFragment_Affixes::AddItemAffixes(const TArray<FObsidianRando
 	
 	ItemRarityTag = InRarityTag;
 	
-	ItemAffixes.Append(InItemAffixes);
+	DynamicItemAffixes.Append(InItemAffixes);
 }
 
 bool UOInventoryItemFragment_Affixes::IsItemIdentified() const
 {
-	if(!bStartsIdentified && ItemAffixes.Num() > 0)
-	{
-		return false;
-	}
+	//TODO(intrxx) #AffixRefactor
+	// if(!bStartsIdentified && ItemAffixes.Num() > 0)
+	// {
+	// 	return false;
+	// }
 	return true;
 }
 
-bool UOInventoryItemFragment_Affixes::ShouldBeGeneratedAtDrop() const
+EObsidianAffixGenerationType UOInventoryItemFragment_Affixes::GetGenerationType() const
 {
-	return bGeneratedAtDrop;
+	return ItemAffixesGenerationType;
 }
 
 TArray<FObsidianAffixDescriptionRow> UOInventoryItemFragment_Affixes::GetAffixesAsUIDescription() const
 {
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
-	AffixDescriptionRows.Reserve(ItemAffixes.Num());
+	//AffixDescriptionRows.Reserve(ItemAffixes.Num());
 
 	//TODO(intrxx) #AffixRefactor
-	// for(const FObsidianRandomItemAffix& Affix : ItemAffixes)
+	// for(const FObsidianDynamicItemAffix& Affix : ItemAffixes)
 	// {
 	// 	if(Affix)
 	// 	{

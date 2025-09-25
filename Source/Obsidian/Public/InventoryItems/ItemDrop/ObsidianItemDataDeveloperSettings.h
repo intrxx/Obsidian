@@ -10,7 +10,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "ObsidianItemDataDeveloperSettings.generated.h"
 
-class UObsidianTreasureConfig;
+class UObsidianItemDataConfig;
 
 /**
  * 
@@ -21,6 +21,6 @@ class OBSIDIAN_API UObsidianItemDataDeveloperSettings : public UDeveloperSetting
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(Config, EditAnywhere, Category = "Config", meta = (AllowedClasses = "ObsidianTreasureConfig"))
-	TSoftObjectPtr<UObsidianTreasureConfig> TreasureConfig;
+	UPROPERTY(Config, EditAnywhere, Category = "Config", meta = (AllowedClasses = "ObsidianItemDataConfig"))
+	TSoftObjectPtr<UObsidianItemDataConfig> ItemDataConfig;
 };

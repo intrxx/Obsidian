@@ -13,16 +13,6 @@
 
 class UObsidianInventoryItemDefinition;
 
-/**
- * Additional data set when rolling the item and used when spawning it.
- */
-USTRUCT()
-struct FObsidianDropItemData
-{
-	GENERATED_BODY()
-	
-};
-
 USTRUCT()
 struct FObsidianStacksToDrop
 {
@@ -58,7 +48,7 @@ public:
 public:
 	/** Actual items/item templates in this Treasure Class. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TSoftClassPtr<UObsidianInventoryItemDefinition> TreasureItemDefinitionClass = nullptr;
+	TSoftClassPtr<UObsidianInventoryItemDefinition> SoftTreasureItemDefinitionClass = nullptr;
 
 	/** Drop Weight [0, 1000], the higher the weight the more likely the item to drop. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
@@ -67,9 +57,6 @@ public:
 	/** Array of possible weighted stack sizes to drop the Item with. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
-
-	UPROPERTY()
-	FObsidianDropItemData DropItemData;
 
 	static const FObsidianDropItem NoDropType;
 
@@ -94,6 +81,7 @@ public:
 #endif
 	
 public:
+	//TODO(intrxx) Currently not used for anything, keep or delete?
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FName TreasureClassName;
 	
@@ -128,7 +116,7 @@ public:
 	
 	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
 	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality);
-	const FObsidianTreasureClass* GetTreasureClassOfQuality(const uint8 TreasureQuality);
+	TArray<FObsidianTreasureClass> GetTreasureClassesOfQuality(const uint8 TreasureQuality) const;
 
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
@@ -137,7 +125,7 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianTreasureClass> TreasureClasses;
-
-	/** Map for faster lookups. */
-	TMap<int32, const FObsidianTreasureClass*> TreasureClassMap;
+	
+	/** MultiMap for faster lookups. */
+	TMultiMap<int32, const FObsidianTreasureClass*> TreasureClassMap;
 };

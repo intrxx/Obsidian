@@ -15,7 +15,7 @@ bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController
 		if(CanUseOnItem(UsingOntoInstance))
 		{
 			//TODO(intrxx) #AffixRefactor
-			// FObsidianRandomItemAffix TempItemAffixToAdd;
+			// FObsidianDynamicItemAffix TempItemAffixToAdd;
 			// TempItemAffixToAdd.AffixTag = ObsidianGameplayTags::Item_Affix_Enchant_MaximumLifePercentage;
 			// TempItemAffixToAdd.AffixTier = 2;
 			// TempItemAffixToAdd.AffixType = EObsidianAffixType::Prefix;

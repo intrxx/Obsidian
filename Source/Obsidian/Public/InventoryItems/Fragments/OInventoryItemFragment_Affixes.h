@@ -8,9 +8,30 @@
 
 // ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
+#include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Affixes.generated.h"
+
+/**
+ * The depth of Item Affix generation.
+ * List of possible Affixes to generate:
+ * - Suffixes
+ * - Prefixes
+ * - Implicit
+ */
+UENUM(BlueprintType)
+enum class EObsidianAffixGenerationType : uint8
+{
+	/** No Affix will be generated upon dropping the item. */
+	NoGeneration = 0,
+
+	/** Default path, only Prefixes and Suffixes will be generated. */
+	DefaultGeneration,
+
+	/** Prefixes, Suffixes and Implicit will be generated. */
+	FullGeneration
+};
 
 /**
  * 
@@ -25,7 +46,7 @@ public:
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
 	
-	void AddItemAffixes(const TArray<FObsidianRandomItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag);
+	void AddItemAffixes(const TArray<FObsidianDynamicItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag);
 
 	bool IsItemIdentified() const;
 
@@ -34,7 +55,7 @@ public:
 		return ItemRarityTag;
 	}
 
-	bool ShouldBeGeneratedAtDrop() const;
+	EObsidianAffixGenerationType GetGenerationType() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
 	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
@@ -43,20 +64,26 @@ protected:
 	//TODO(intrxx) bind to changing property, set ItemRarityTag, ItemAffixes and bStartsIdentified to default when switching this back to true
 	/** Whether this item will be generated at drop, uncheck if you want to create a static item template that will be dropped as is (e.g. for unique items). */
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
-	bool bGeneratedAtDrop = true;
+	EObsidianAffixGenerationType ItemAffixesGenerationType = EObsidianAffixGenerationType::DefaultGeneration;
 	
 	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */
-	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity", EditCondition = "bGeneratedAtDrop==false"),  Category = "Affixes")
+	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity", EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"),  Category = "Affixes")
 	FGameplayTag ItemRarityTag = FGameplayTag::EmptyTag;
 
-	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "bGeneratedAtDrop==false"), Category = "Affixes")
-	TArray<FObsidianRandomItemAffix> ItemAffixes;
+	//TODO(intrxx) Set and enforce the Affix type to Implicit
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
+	FObsidianStaticItemAffix StaticItemImplicit;
+	
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
+	TArray<FObsidianStaticItemAffix> StaticItemAffixes;
 	
 	/** Whether or not the item starts identified, normal, items without any affixes or items with this bool set to true will start as identified. */
-	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "bGeneratedAtDrop==false"), Category = "Affixes")
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
 	bool bStartsIdentified = false;
 
 private:
+	TArray<FObsidianDynamicItemAffix> DynamicItemAffixes;
+	
 	int32 AddedSuffixCount = 0;
 	int32 AddedPrefixCount = 0;
 };

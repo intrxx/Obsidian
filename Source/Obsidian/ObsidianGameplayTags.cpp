@@ -444,8 +444,8 @@ namespace ObsidianGameplayTags
 	 */
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Dexterity, "Item.Affix.Attribute.Dexterity", "Item Tag which represents Dexterity Affix.")
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Intelligence, "Item.Affix.Attribute.Intelligence", "Item Tag which represents Intelligence Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Strenght, "Item.Affix.Attribute.Strenght", "Item Tag which represents Strenght Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Faith, "Item.Affix.Attribute.Dexterity", "Item Tag which represents Faith Affix.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Strength, "Item.Affix.Attribute.Strength", "Item Tag which represents Strength Affix.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Faith, "Item.Affix.Attribute.Faith", "Item Tag which represents Faith Affix.")
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Fire, "Item.Affix.Resistance.Fire", "Item Tag which represents Fire Resistance Affix.")
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Lightning, "Item.Affix.Resistance.Lightning", "Item Tag which represents Lightning Resistance Affix.")

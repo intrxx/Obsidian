@@ -25,7 +25,7 @@ FObsidianDropItem::FObsidianDropItem()
 
 bool FObsidianDropItem::IsValid() const
 {
-	return !TreasureItemDefinitionClass.IsNull();
+	return !SoftTreasureItemDefinitionClass.IsNull();
 }
 
 uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQuality) const
@@ -166,13 +166,20 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQ
 	return MatchingTreasureClasses;
 }
 
-const FObsidianTreasureClass* UObsidianTreasureList::GetTreasureClassOfQuality(const uint8 TreasureQuality)
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQuality(const uint8 TreasureQuality) const
 {
-	if (const FObsidianTreasureClass** TreasureClassPtr = TreasureClassMap.Find(TreasureQuality))
+	TArray<const FObsidianTreasureClass*> MatchingTreasureClassesPtrs;
+	TreasureClassMap.MultiFind(TreasureQuality, MatchingTreasureClassesPtrs);
+
+	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
+	for (const FObsidianTreasureClass* TreasureClassPtr : MatchingTreasureClassesPtrs)
 	{
-		return *TreasureClassPtr;
+		if (TreasureClassPtr)
+		{
+			MatchingTreasureClasses.Add(*TreasureClassPtr);
+		}
 	}
-	return nullptr;
+	return MatchingTreasureClasses;
 }
 
 #if WITH_EDITOR
@@ -202,7 +209,7 @@ EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContex
 
 	for (int32 i = 0; i < DropItems.Num(); i++)
 	{
-		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DropItems[i].TreasureItemDefinitionClass.LoadSynchronous();
+		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DropItems[i].SoftTreasureItemDefinitionClass.LoadSynchronous();
 		if (ItemDef == nullptr)
 		{
 			Result = EDataValidationResult::Invalid;

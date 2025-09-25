@@ -11,8 +11,11 @@
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ObsidianItemDataLoaderSubsystem.generated.h"
 
-class UObsidianTreasureConfig;
+class UObsidianItemDataDeveloperSettings;
+class UObsidianItemDataConfig;
 class UObsidianTreasureList;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogItemDataLoader, Log, All);
 
 /**
  * 
@@ -29,10 +32,10 @@ public:
 	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const int32 TreasureQuality) const;
 	
 protected:
-	void LoadTreasureConfig();
-	void OnTreasureConfigLoaded();
+	void LoadItemDataConfig();
+	void OnItemDataLoaded();
 	
 protected:
 	UPROPERTY()
-	TObjectPtr<UObsidianTreasureConfig> TreasureConfig;
+	TObjectPtr<UObsidianItemDataConfig> ItemDataConfig;
 };

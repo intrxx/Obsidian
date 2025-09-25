@@ -122,52 +122,6 @@ namespace ObsidianAffixLimit
 	}
 }
 
-/**
- * 
- */
-UENUM(BlueprintType)
-enum class EObsidianAffixType : uint8
-{
-	None = 0,
-	Implicit,
-	Prefix,
-	Suffix,
-	Unique
-};
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FObsidianAffixTier
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "8"))
-	uint8 AffixTier = 1;
-
-	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"))
-	uint8 MinItemLevelRequirement = 1;	
-};
-
-/**
- * 
- */
-USTRUCT(BlueprintType)
-struct FObsidianAffixRange
-{
-	GENERATED_BODY()
-	
-public:
-	UPROPERTY(EditDefaultsOnly)
-	FObsidianAffixTier AffixTier;
-
-	/** Array (as there can be multiple values in a single Affix) of Affix Range to Roll. */
-	UPROPERTY(EditDefaultsOnly)
-	TArray<FFloatRange> AffixRanges; 
-};
-
 UENUM(BlueprintType)
 enum class EObsidianAffixValueType : uint8
 {
@@ -176,53 +130,16 @@ enum class EObsidianAffixValueType : uint8
 };
 
 /**
- * Item Affix definition used in Affix Tables.
+ * 
  */
-USTRUCT(BlueprintType)
-struct FObsidianRandomItemAffix
+UENUM(BlueprintType)
+enum class EObsidianAffixType : uint8
 {
-	GENERATED_BODY()
-
-public:
-	FObsidianRandomItemAffix(){}
-
-	explicit operator bool() const
-	{
-		return AffixTag.IsValid();
-	}
-	
-public:
-	/** Affix Gameplay Tag Identifier. */
-	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
-	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
-
-	/** Contains Category Tags of Items that this Affix can be applied to. */
-	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
-	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
-
-	/** Unique addition to the Item Name. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
-	FText AffixItemNameAddition = FText();
-
-	/** Row description of the affix. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
-	FText AffixDescription = FText();
-
-	/** Minimum Item Level Requirement to roll this affix. */
-	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"), Category = "Obsidian|Affix")
-	uint8 MinItemLevelRequirement = 1;
-
-	/** Gameplay Effect Class to Apply. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
-	
-	/** Value type of affix, if set to Int it will be rounded down. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
-
-	/** Possible Affix Ranges to roll from. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TArray<FObsidianAffixRange> PossibleAffixRanges;
+	None = 0,
+	Prefix,
+	Suffix,
+	Implicit,
+	Unique
 };
 
 /**
@@ -249,9 +166,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
 
-	/** Gameplay Effect Class to Apply. */
+	/** Affix range. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	FObsidianAffixRange AffixRange;
+	TArray<FFloatRange> AffixRanges;
 };
 
 /**
