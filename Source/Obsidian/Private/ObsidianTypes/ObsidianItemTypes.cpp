@@ -123,6 +123,18 @@ bool FObsidianItemPosition::IsPositionedAtSlot() const
 	return (GridLocation == FIntPoint::NoneValue) && (SlotTag != FGameplayTag::EmptyTag);
 }
 
+// ~ FObsidianStaticItemAffix
+
+bool FObsidianStaticItemAffix::IsEmptyImplicit() const
+{
+	return AffixType == EObsidianAffixType::Implicit && IsEmptyAffix();
+}
+
+bool FObsidianStaticItemAffix::IsEmptyAffix() const
+{
+	return AffixRanges.IsEmpty();
+}
+
 // ~ FObsidianItemPosition
 
 FIntPoint FObsidianItemPosition::GetItemGridLocation(const bool bWarnIfNotFound) const

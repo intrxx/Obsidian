@@ -50,6 +50,7 @@ void UObsidianItemManagerSubsystem::RequestDroppingItemsAsync(TArray<FObsidianDr
 						if (UOInventoryItemFragment_Affixes* AffixFragment = DefaultObject->ShouldBeGeneratedAtDrop_GetAffixObject())
 						{
 							const EObsidianAffixGenerationType GenerationType = AffixFragment->GetGenerationType();
+							UE_LOG(LogTemp, Error, TEXT("Implement Generating Random Affixes."));
 							
 							//TODO Roll Affixes
 							// Don't worry about soft Gameplay Effects as they can be loaded by Items in Begin Play

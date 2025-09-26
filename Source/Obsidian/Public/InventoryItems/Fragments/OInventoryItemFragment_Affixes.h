@@ -23,25 +23,27 @@
 UENUM(BlueprintType)
 enum class EObsidianAffixGenerationType : uint8
 {
-	/** No Affix will be generated upon dropping the item. */
+	/** No Affix will be generated upon dropping the item. You can specify Affixes in the Definition. */
 	NoGeneration = 0,
 
-	/** Default path, only Prefixes and Suffixes will be generated. */
+	/** Default path, only Prefixes and Suffixes will be generated. You can specify Implicit in the Definition. */
 	DefaultGeneration,
 
-	/** Prefixes, Suffixes and Implicit will be generated. */
+	/** Prefixes, Suffixes and Implicit will be generated. You cannot specify anything. */
 	FullGeneration
 };
 
 /**
  * 
  */
-UCLASS(DisplayName="Affixes")
+UCLASS(DisplayName = "Affixes")
 class OBSIDIAN_API UOInventoryItemFragment_Affixes : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
 
 public:
+    UOInventoryItemFragment_Affixes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+    
 	//~ Start of UObsidianInventoryItemFragment
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
@@ -57,7 +59,7 @@ public:
 
 	EObsidianAffixGenerationType GetGenerationType() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Inventory")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Affixes")
 	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
 
 protected:
@@ -70,8 +72,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity", EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"),  Category = "Affixes")
 	FGameplayTag ItemRarityTag = FGameplayTag::EmptyTag;
 
-	//TODO(intrxx) Set and enforce the Affix type to Implicit
-	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
+	bool bHasImplicitAffix = false;
+	
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration&&bHasImplicitAffix"), Category = "Affixes")
 	FObsidianStaticItemAffix StaticItemImplicit;
 	
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")

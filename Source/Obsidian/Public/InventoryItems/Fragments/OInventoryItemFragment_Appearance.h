@@ -95,7 +95,7 @@ public:
 	
 protected:
 	/** Enum that represents the items predefined grid size, will be later mapped to the actual TArray<FVector2D> containing the 'size'. */
-	UPROPERTY(EditDefaultsOnly, Category = "Grid Size")
+	UPROPERTY(EditDefaultsOnly, Category = "Grid")
 	EObsidianInventoryItemGridSize InventoryItemGridSizeDesc = EObsidianInventoryItemGridSize::IIGS_SingleSquare;
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
@@ -113,6 +113,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	FText AdditionalDescription = FText::GetEmpty();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Grid")
 	float ItemSlotPadding = 4.0f;
 };

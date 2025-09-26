@@ -7,6 +7,12 @@
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
+UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
+{
+	StaticItemImplicit.AffixType = EObsidianAffixType::Implicit;
+}
+
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
 	Instance->SetItemRarity(ItemRarityTag);

@@ -151,6 +151,14 @@ struct FObsidianStaticItemAffix
 	GENERATED_BODY();
 
 public:
+	bool IsEmptyImplicit() const;
+	bool IsEmptyAffix() const;
+	
+public:
+	/** Affix Gameplay Tag Identifier. */
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|UI")
 	EObsidianAffixType AffixType = EObsidianAffixType::Unique;
 	
