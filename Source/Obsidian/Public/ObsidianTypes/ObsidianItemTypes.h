@@ -11,6 +11,8 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "ObsidianItemTypes.generated.h"
 
+struct FObsidianDynamicItemAffix;
+
 class UObsidianInventoryItemInstance;
 class UGameplayEffect;
 
@@ -153,6 +155,13 @@ struct FObsidianStaticItemAffix
 public:
 	bool IsEmptyImplicit() const;
 	bool IsEmptyAffix() const;
+
+	explicit operator bool() const
+	{
+		return AffixTag.IsValid();
+	}
+
+	void RandomizeRanges();
 	
 public:
 	/** Affix Gameplay Tag Identifier. */
@@ -174,9 +183,15 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	EObsidianAffixValueType AffixValueType;
+	
 	/** Affix range. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TArray<FFloatRange> AffixRanges;
+	TArray<FFloatRange> PossibleAffixRanges;
+
+	UPROPERTY()
+	TArray<float> RandomisedRanges;
 };
 
 /**
@@ -186,6 +201,21 @@ USTRUCT()
 struct FObsidianActiveItemAffix
 {
 	GENERATED_BODY()
+
+public:
+	FObsidianActiveItemAffix(){};
+	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
+	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
+
+	explicit operator bool() const
+	{
+		return AffixTag.IsValid();
+	}
+
+public:
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+
+private:
 	
 };
 

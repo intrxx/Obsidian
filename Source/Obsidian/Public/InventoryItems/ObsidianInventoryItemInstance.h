@@ -149,7 +149,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsItemIdentified() const;
-	
+
+	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
 	void AddAffix(const FObsidianDynamicItemAffix& AffixToAdd);
 	void RemoveAffix(const FGameplayTag& AffixTag);
 

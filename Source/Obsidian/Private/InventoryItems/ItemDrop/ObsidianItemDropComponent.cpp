@@ -84,17 +84,17 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	
 	uint8 DropRolls = ObsidianTreasureStatics::DefaultRarityToNumberOfDropRollsMap[DroppingEntityRarity];
 	TArray<FObsidianDropItem> ItemsToDrop;
-	TArray<FTransform> DropTransforms;
 	
 	if (MustRollFromTreasureClasses.IsEmpty() == false && DropRolls > 0)
 	{
 		//TODO(intrxx) Get Random TC in some weighted way?
 		const uint16 RandomClassIndex = FMath::RandRange(0, (MustRollFromTreasureClasses.Num() - 1));
-		const FObsidianDropItem& RolledItem = MustRollFromTreasureClasses[RandomClassIndex].GetRandomItemFromClass();
+		FObsidianDropItem RolledItem = MustRollFromTreasureClasses[RandomClassIndex].GetRandomItemFromClass();
 		if (RolledItem.IsValid())
 		{
+			RolledItem.DropStacks = RolledItem.GetRandomStackSizeToDropAdjusted(TreasureQuality); //TODO(intrxx) shouldn't I just set it in the function?
+			RolledItem.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
 			ItemsToDrop.Add(RolledItem);
-			DropTransforms.Add(GetDropTransformAligned(OwningActor, InOverrideDropLocation));
 		}
 		DropRolls--;
 	}
@@ -104,11 +104,12 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	{
 		//TODO(intrxx) Get Random TC in some weighted way?
 		const uint16 RandomClassIndex = FMath::RandRange(0, (TreasureClassesCount - 1));
-		const FObsidianDropItem& RolledItem = TreasureClasses[RandomClassIndex].GetRandomItemFromClass();
+		FObsidianDropItem RolledItem = TreasureClasses[RandomClassIndex].GetRandomItemFromClass();
 		if (RolledItem.IsValid())
 		{
+			RolledItem.DropStacks = RolledItem.GetRandomStackSizeToDropAdjusted(TreasureQuality); //TODO(intrxx) shouldn't I just set it in the function?
+			RolledItem.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
 			ItemsToDrop.Add(RolledItem);
-			DropTransforms.Add(GetDropTransformAligned(OwningActor, InOverrideDropLocation));
 		}
 	}
 
@@ -121,7 +122,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	
 	if (const UObsidianItemManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemManagerSubsystem>())
 	{
-		ManagerSubsystem->RequestDroppingItemsAsync(MoveTemp(ItemsToDrop), MoveTemp(DropTransforms), TreasureQuality);
+		ManagerSubsystem->RequestDroppingItemsAsync(MoveTemp(ItemsToDrop), TreasureQuality);
 		OnDroppingItemsFinishedDelegate.Broadcast(true);
 	}
 }

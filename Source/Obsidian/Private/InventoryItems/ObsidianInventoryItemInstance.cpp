@@ -196,9 +196,15 @@ bool UObsidianInventoryItemInstance::IsItemIdentified() const
 	return bIdentified;
 }
 
+void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
+{
+	ItemAffixes.InitializeAffixes(AffixesToInitialize);
+}
+
 void UObsidianInventoryItemInstance::AddAffix(const FObsidianDynamicItemAffix& AffixToAdd)
 {
-	ItemAffixes.AddAffix(AffixToAdd);
+	//TODO(intrxx) Affix Refactor
+	//ItemAffixes.AddAffix(AffixToAdd);
 }
 
 void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
@@ -208,7 +214,7 @@ void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
 
 TArray<FObsidianAffixDescriptionRow> UObsidianInventoryItemInstance::GetAffixesAsUIDescription() const
 {
-	TArray<FObsidianDynamicItemAffix> Affixes = ItemAffixes.GetAllItemAffixes();
+	TArray<FObsidianActiveItemAffix> Affixes = ItemAffixes.GetAllItemAffixes();
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
 	AffixDescriptionRows.Reserve(Affixes.Num());
 

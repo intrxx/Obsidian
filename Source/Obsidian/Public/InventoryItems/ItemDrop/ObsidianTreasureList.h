@@ -57,7 +57,10 @@ public:
 	/** Array of possible weighted stack sizes to drop the Item with. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
-
+	
+	FTransform DropTransform = FTransform::Identity;
+	uint8 DropStacks = 1;
+	
 	static const FObsidianDropItem NoDropType;
 
 protected:

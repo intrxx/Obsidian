@@ -48,7 +48,8 @@ public:
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
 	
-	void AddItemAffixes(const TArray<FObsidianDynamicItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag);
+	void InitializeDynamicAffixes(const TArray<FObsidianDynamicItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag);
+	void RandomiseStaticAffixValues();
 
 	bool IsItemIdentified() const;
 
@@ -70,7 +71,7 @@ protected:
 	
 	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */
 	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity", EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"),  Category = "Affixes")
-	FGameplayTag ItemRarityTag = FGameplayTag::EmptyTag;
+	FGameplayTag ItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
 	bool bHasImplicitAffix = false;
@@ -86,7 +87,7 @@ protected:
 	bool bStartsIdentified = false;
 
 private:
-	TArray<FObsidianDynamicItemAffix> DynamicItemAffixes;
+	TArray<FObsidianActiveItemAffix> InitializedDynamicAffixes;
 	
 	int32 AddedSuffixCount = 0;
 	int32 AddedPrefixCount = 0;

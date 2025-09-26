@@ -52,9 +52,9 @@ bool FObsidianItemAffixStack::HasImplicit() const
 	return false;
 }
 
-TArray<FObsidianDynamicItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() const
+TArray<FObsidianActiveItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() const
 {
-	TArray<FObsidianDynamicItemAffix> Affixes;
+	TArray<FObsidianActiveItemAffix> Affixes;
 	Affixes.Reserve(Entries.Num());
 
 	for(const FObsidianAffixEntry& Entry : Entries)
@@ -67,7 +67,19 @@ TArray<FObsidianDynamicItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() c
 	return Affixes;
 }
 
-void FObsidianItemAffixStack::AddAffix(const FObsidianDynamicItemAffix& ItemAffix)
+void FObsidianItemAffixStack::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& InItemAffixes)
+{
+	check(Entries.IsEmpty());
+	
+	for (const FObsidianActiveItemAffix& Affix : InItemAffixes)
+	{
+		FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(Affix);
+
+		MarkItemDirty(AffixEntry);
+	}
+}
+
+void FObsidianItemAffixStack::AddAffix(const FObsidianActiveItemAffix& ItemAffix)
 {
 	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(ItemAffix);
 

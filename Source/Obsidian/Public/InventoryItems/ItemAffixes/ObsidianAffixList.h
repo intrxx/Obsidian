@@ -56,7 +56,9 @@ struct FObsidianDynamicItemAffix
 	GENERATED_BODY()
 
 public:
-	FObsidianDynamicItemAffix(){}
+	FObsidianDynamicItemAffix()
+		: bOverride_MagicItemAffixRollMultiplier(false)
+	{}
 
 	explicit operator bool() const
 	{

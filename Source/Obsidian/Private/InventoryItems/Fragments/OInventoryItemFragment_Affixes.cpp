@@ -16,42 +16,83 @@ UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectIn
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
 	Instance->SetItemRarity(ItemRarityTag);
+	Instance->SetIdentified(IsItemIdentified());
+	
+	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::NoGeneration)
+	{
+		TArray<FObsidianActiveItemAffix> AffixesToInitialize;
+		if (StaticItemImplicit)
+		{
+			FObsidianActiveItemAffix ActiveItemAffix;
+			ActiveItemAffix.InitializeWithStatic(StaticItemImplicit);
+			AffixesToInitialize.Add(ActiveItemAffix);
+		}
 
-	//TODO(intrxx) #AffixRefactor
-	// if(!bStartsIdentified && ItemAffixes.Num() > 0)
-	// {
-	// 	Instance->SetIdentified(false);
-	// }
-	// else if (bStartsIdentified || ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Normal || ItemAffixes.IsEmpty())
-	// {
-	// 	Instance->SetIdentified(true);
-	// }
-	//
-	// for(const FObsidianDynamicItemAffix& Affix : ItemAffixes)
-	// {
-	// 	Instance->AddAffix(Affix);
-	// }
+		for (const FObsidianStaticItemAffix& StaticItemAffix : StaticItemAffixes)
+		{
+			//TODO(intrxx) Validate?
+			FObsidianActiveItemAffix ActiveItemAffix;
+			ActiveItemAffix.InitializeWithStatic(StaticItemAffix);
+			AffixesToInitialize.Add(ActiveItemAffix);
+		}
+			
+		Instance->InitializeAffixes(AffixesToInitialize);
+	}
+	else if (ItemAffixesGenerationType == EObsidianAffixGenerationType::DefaultGeneration || ItemAffixesGenerationType == EObsidianAffixGenerationType::FullGeneration)
+	{
+		Instance->InitializeAffixes(InitializedDynamicAffixes);
+	}
 }
 
-void UOInventoryItemFragment_Affixes::AddItemAffixes(const TArray<FObsidianDynamicItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag)
+void UOInventoryItemFragment_Affixes::InitializeDynamicAffixes(const TArray<FObsidianDynamicItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag)
 {
-	// Change name to initialize/create
-	// Clear item affixes to make sure we are okay\
-	// check against affix/prefix constrains
-	
+	StaticItemAffixes.Empty();
 	ItemRarityTag = InRarityTag;
 	
-	DynamicItemAffixes.Append(InItemAffixes);
+	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::DefaultGeneration && StaticItemImplicit)
+	{
+		FObsidianActiveItemAffix ActiveItemAffix;
+		ActiveItemAffix.InitializeWithStatic(StaticItemImplicit);
+		InitializedDynamicAffixes.Add(ActiveItemAffix);
+	}
+	
+	InitializedDynamicAffixes.Empty(InItemAffixes.Num());
+	for (const FObsidianDynamicItemAffix& DynamicItemAffix : InItemAffixes)
+	{
+		//TODO(intrxx) Validate?
+		FObsidianActiveItemAffix ActiveItemAffix;
+		ActiveItemAffix.InitializeWithDynamic(DynamicItemAffix);
+		InitializedDynamicAffixes.Add(ActiveItemAffix);
+	}
+}
+
+void UOInventoryItemFragment_Affixes::RandomiseStaticAffixValues()
+{
+	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::FullGeneration)
+	{
+		return;
+	}
+
+	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::DefaultGeneration && StaticItemImplicit)
+	{
+		StaticItemImplicit.RandomizeRanges();
+		return;
+	}
+
+	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::NoGeneration)
+	{
+		StaticItemImplicit.RandomizeRanges();
+
+		for (FObsidianStaticItemAffix& StaticAffix : StaticItemAffixes)
+		{
+			StaticAffix.RandomizeRanges();
+		}
+	}
 }
 
 bool UOInventoryItemFragment_Affixes::IsItemIdentified() const
 {
-	//TODO(intrxx) #AffixRefactor
-	// if(!bStartsIdentified && ItemAffixes.Num() > 0)
-	// {
-	// 	return false;
-	// }
-	return true;
+	return bStartsIdentified || ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Normal;
 }
 
 EObsidianAffixGenerationType UOInventoryItemFragment_Affixes::GetGenerationType() const
@@ -62,8 +103,16 @@ EObsidianAffixGenerationType UOInventoryItemFragment_Affixes::GetGenerationType(
 TArray<FObsidianAffixDescriptionRow> UOInventoryItemFragment_Affixes::GetAffixesAsUIDescription() const
 {
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
-	//AffixDescriptionRows.Reserve(ItemAffixes.Num());
-
+	
+	if (InitializedDynamicAffixes.IsEmpty() == false)
+	{
+		AffixDescriptionRows.Reserve(InitializedDynamicAffixes.Num());
+	}
+	else if (StaticItemAffixes.IsEmpty() == false)
+	{
+		AffixDescriptionRows.Reserve(StaticItemAffixes.Num());
+	}
+	
 	//TODO(intrxx) #AffixRefactor
 	// for(const FObsidianDynamicItemAffix& Affix : ItemAffixes)
 	// {
