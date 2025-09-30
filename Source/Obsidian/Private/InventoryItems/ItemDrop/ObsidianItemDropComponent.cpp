@@ -93,6 +93,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		{
 			RolledItem.DropStacks = RolledItem.GetRandomStackSizeToDropAdjusted(TreasureQuality); //TODO(intrxx) shouldn't I just set it in the function?
 			RolledItem.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
+			RollItemAffixes(RolledItem);
 			ItemsToDrop.Add(RolledItem);
 		}
 		DropRolls--;
@@ -108,6 +109,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		{
 			RolledItem.DropStacks = RolledItem.GetRandomStackSizeToDropAdjusted(TreasureQuality); //TODO(intrxx) shouldn't I just set it in the function?
 			RolledItem.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
+			RollItemAffixes(RolledItem);
 			ItemsToDrop.Add(RolledItem);
 		}
 	}
@@ -131,6 +133,59 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	{
 		ManagerSubsystem->RequestDroppingItems(MoveTemp(ItemsToDrop));
 		OnDroppingItemsFinishedDelegate.Broadcast(true);
+	}
+}
+
+void UObsidianItemDropComponent::RollItemAffixes(const FObsidianDropItem& DropItem)
+{
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
+	if (ItemDef == nullptr)
+	{
+		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
+		UE_LOG(LogDropComponent, Error, TEXT("SoftTreasureItemDefinitionClass wasn't loaded correctly, loading synchronously now."));
+	}
+
+	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	if (DefaultObject == nullptr)
+	{
+		UE_LOG(LogDropComponent, Error, TEXT("DefaultObject of SoftTreasureItemDefinitionClass is invalid, abandoning [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		return;
+	}
+
+	UOInventoryItemFragment_Affixes* AffixFragment = DefaultObject->GetAffixFragment_Mutable();
+	if (AffixFragment == nullptr)
+	{
+		return;		
+	}
+
+	switch (AffixFragment->GetGenerationType())
+	{
+		case EObsidianAffixGenerationType::DefaultGeneration:
+			{
+				AffixFragment->RandomiseStaticAffixValues();
+				
+				FGameplayTag ItemRarityTag; 
+				TArray<FObsidianDynamicItemAffix> DynamicAffixes;
+				
+				//TODO(intrxx) roll dynamic affixes for prefixes/suffixes
+				
+				AffixFragment->InitializeDynamicAffixes(DynamicAffixes, ItemRarityTag);
+			} break;
+		case EObsidianAffixGenerationType::FullGeneration:
+			{
+				FGameplayTag ItemRarityTag; 
+				TArray<FObsidianDynamicItemAffix> DynamicAffixes;
+				
+				//TODO(intrxx) roll dynamic affixes for both implicit and prefixes/suffixes
+				
+				AffixFragment->InitializeDynamicAffixes(DynamicAffixes, ItemRarityTag);
+			} break;
+		case EObsidianAffixGenerationType::NoGeneration:
+			{
+				AffixFragment->RandomiseStaticAffixValues();
+			} break;
+			default:
+			{} break;
 	}
 }
 

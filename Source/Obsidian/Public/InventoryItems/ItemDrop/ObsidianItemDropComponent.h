@@ -79,8 +79,10 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	void LoadAdditionalTreasuresAsync();
 	
+	void LoadAdditionalTreasuresAsync();
+
+	static void RollItemAffixes(const FObsidianDropItem& DropItem);
 	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
 
 protected:
