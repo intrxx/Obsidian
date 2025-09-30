@@ -30,6 +30,11 @@ bool FObsidianDropItem::IsValid() const
 
 uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQuality) const
 {
+	if (bStackable == false)
+	{
+		return 1;
+	}
+	
 	TArray<FObsidianStacksToDrop> AdjustedStackSizes;
 	AdjustedStackSizes.Reserve(StackSizes.Num());
 	AdjustedStackSizes.Append(StackSizes);

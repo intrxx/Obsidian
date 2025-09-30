@@ -33,7 +33,8 @@ public:
 	
 protected:
 	void LoadItemDataConfig();
-	void OnItemDataLoaded();
+	void OnItemConfigLoaded();
+	void OnCommonItemsLoaded();
 	
 protected:
 	UPROPERTY()

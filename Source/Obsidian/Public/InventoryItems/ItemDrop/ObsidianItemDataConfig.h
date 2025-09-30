@@ -23,8 +23,8 @@ class OBSIDIAN_API UObsidianItemDataConfig : public UDataAsset
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Treasure")
-	TArray<TSoftObjectPtr<UObsidianTreasureList>> CommonTreasureLists;
+	TArray<TObjectPtr<UObsidianTreasureList>> CommonTreasureLists;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affixes")
-	TArray<TSoftObjectPtr<UObsidianAffixList>> AffixLists;
+	TArray<TObjectPtr<UObsidianAffixList>> AffixLists;
 };

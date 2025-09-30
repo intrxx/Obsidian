@@ -13,10 +13,10 @@
 #endif
 
 // ~ Project
+#include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
-#include "InventoryItems/Items/ObsidianDroppableItem.h"
 
 DEFINE_LOG_CATEGORY(LogDropComponent);
 
@@ -48,7 +48,6 @@ UObsidianItemDropComponent::UObsidianItemDropComponent(const FObjectInitializer&
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
-	
 }
 
 void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingEntityRarity, const uint8 DroppingEntityLevel, const FVector& InOverrideDropLocation)
@@ -119,10 +118,18 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		OnDroppingItemsFinishedDelegate.Broadcast(false);
 		return;
 	}
+
+	for (const FObsidianDropItem& DropItem : ItemsToDrop)
+	{
+		if (!DropItem.SoftTreasureItemDefinitionClass.Get())
+		{
+			UE_LOG(LogDropComponent, Error, TEXT("SoftTreasureItemDefinitionClass was not loaded correctly."));
+		}
+	}
 	
 	if (const UObsidianItemManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemManagerSubsystem>())
 	{
-		ManagerSubsystem->RequestDroppingItemsAsync(MoveTemp(ItemsToDrop), TreasureQuality);
+		ManagerSubsystem->RequestDroppingItems(MoveTemp(ItemsToDrop));
 		OnDroppingItemsFinishedDelegate.Broadcast(true);
 	}
 }

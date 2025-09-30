@@ -64,12 +64,12 @@ void UObsidianItemDataLoaderSubsystem::LoadItemDataConfig()
 
 		UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
 				ConfigPathToLoad,
-				FStreamableDelegate::CreateUObject(this, &ThisClass::OnItemDataLoaded)
+				FStreamableDelegate::CreateUObject(this, &ThisClass::OnItemConfigLoaded)
 			);
 	}
 }
 
-void UObsidianItemDataLoaderSubsystem::OnItemDataLoaded()
+void UObsidianItemDataLoaderSubsystem::OnItemConfigLoaded()
 {
 	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
 	{
@@ -79,4 +79,44 @@ void UObsidianItemDataLoaderSubsystem::OnItemDataLoaded()
 			UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Treasure Config: [%s]."), *ItemDataConfig->GetName());
 		}
 	}
+	
+	TArray<FObsidianTreasureClass> TreasureClasses;
+	for (const UObsidianTreasureList* TreasureList : ItemDataConfig->CommonTreasureLists)
+	{
+		if (TreasureList)
+		{
+			TreasureClasses.Append(TreasureList->GetAllTreasureClasses());
+		}
+	}
+
+	//This is kind of pre-optimization stuff, but I expect this to get big in the future.
+	//TODO(intrxx) Recheck the performance of this compared to regular fors on Game Thread.
+	TQueue<FSoftObjectPath, EQueueMode::Mpsc> CommonItemDefsPathsQueue;
+	ParallelFor(TreasureClasses.Num(), [&CommonItemDefsPathsQueue, &TreasureClasses](int32 Index)
+		{
+			const FObsidianTreasureClass& TreasureClass = TreasureClasses[Index];
+			for (const FObsidianDropItem& DropItem : TreasureClass.DropItems)
+			{
+				CommonItemDefsPathsQueue.Enqueue(DropItem.SoftTreasureItemDefinitionClass.ToSoftObjectPath());
+			}
+		});
+
+	TArray<FSoftObjectPath> CommonItemDefsArray;
+	CommonItemDefsArray.Reserve(TreasureClasses.Num());
+	
+	FSoftObjectPath DequeuedPath;
+	while (CommonItemDefsPathsQueue.Dequeue(DequeuedPath))
+	{
+		CommonItemDefsArray.Add(DequeuedPath);
+	}
+	
+	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
+				CommonItemDefsArray,
+				FStreamableDelegate::CreateUObject(this, &ThisClass::OnCommonItemsLoaded)
+			);
+}
+
+void UObsidianItemDataLoaderSubsystem::OnCommonItemsLoaded()
+{
+	UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Common Items"));
 }
