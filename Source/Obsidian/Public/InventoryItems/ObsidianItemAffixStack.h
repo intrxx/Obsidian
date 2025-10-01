@@ -12,9 +12,54 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianItemAffixStack.generated.h"
 
-class UObsidianInventoryItemInstance;
 struct FObsidianDynamicItemAffix;
 struct FObsidianItemAffixStack;
+
+class UObsidianInventoryItemInstance;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogAffixes, Log, All);
+
+/**
+ * Affix that has been added to the Item.
+ */
+USTRUCT()
+struct FObsidianActiveItemAffix
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianActiveItemAffix(){};
+	
+	explicit operator bool() const
+	{
+		return AffixTag.IsValid();
+	}
+
+public:
+	UPROPERTY()
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	EObsidianAffixType AffixType = EObsidianAffixType::None;
+	
+	UPROPERTY()
+	FText AffixItemNameAddition = FText();
+	
+	UPROPERTY()
+	FText AffixDescription = FText();
+	
+	UPROPERTY()
+	TSubclassOf<UGameplayEffect> GameplayEffectToApply;
+
+	UPROPERTY()
+	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
+	
+	UPROPERTY()
+	TArray<FObsidianAffixRange> PossibleAffixRanges;
+
+	UPROPERTY()
+	TArray<float> RandomisedRanges;
+};
 
 /**
  *	A single Entry in Item affix Stack.
@@ -25,17 +70,22 @@ struct FObsidianAffixEntry : public FFastArraySerializerItem
 	GENERATED_BODY();
 
 public:
-	FObsidianAffixEntry()
+	FObsidianAffixEntry(){}
+	FObsidianAffixEntry(UObsidianInventoryItemInstance* InOwningInstance)
+		: OwningItem(InOwningInstance)
 	{}
-	FObsidianAffixEntry(const FObsidianActiveItemAffix& Affix)
-		: ItemAffix(Affix)
-	{}
+
+	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
+	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
 
 private:
 	friend FObsidianItemAffixStack;
 
 	UPROPERTY()
-	FObsidianActiveItemAffix ItemAffix = FObsidianActiveItemAffix();
+	FObsidianActiveItemAffix ActiveItemAffix = FObsidianActiveItemAffix();
+	
+	UPROPERTY()
+	TObjectPtr<UObsidianInventoryItemInstance> OwningItem = nullptr;
 };
 
 
@@ -68,8 +118,9 @@ public:
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianAffixEntry, FObsidianItemAffixStack>(Entries, DeltaParams, *this);
 	}
 
-	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& InItemAffixes);
-	void AddAffix(const FObsidianActiveItemAffix& ItemAffix);
+	void InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianStaticItemAffix>& StaticAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit = FObsidianStaticItemAffix());
+	void InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianDynamicItemAffix>& DynamicAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit = FObsidianStaticItemAffix());
+	void AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianDynamicItemAffix& ItemAffix);
 	void RemoveAffix(const FGameplayTag& AffixTag);
 	void AffixChanged(const FGameplayTag& AffixTag);
 
@@ -78,6 +129,9 @@ public:
 	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
 	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
 	//~ End of FFastArraySerializer contract
+
+private:
+	void InitializeImplicit(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianStaticItemAffix& StaticImplicit);
 	
 private:
 	/** Replicated list of all affixes. */

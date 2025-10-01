@@ -145,20 +145,6 @@ void FObsidianStaticItemAffix::RandomizeRanges()
 	}
 }
 
-// ~ FObsidianActiveItemAffix
-
-void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix)
-{
-	AffixTag = InDynamicItemAffix.AffixTag;
-}
-
-void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix)
-{
-	AffixTag = InStaticItemAffix.AffixTag;
-}
-
-// ~ FObsidianItemPosition
-
 FIntPoint FObsidianItemPosition::GetItemGridLocation(const bool bWarnIfNotFound) const
 {
 #if !UE_BUILD_SHIPPING

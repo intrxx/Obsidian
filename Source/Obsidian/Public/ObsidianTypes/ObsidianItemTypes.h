@@ -195,31 +195,6 @@ public:
 };
 
 /**
- * Affix that has been added to the Item.
- */
-USTRUCT()
-struct FObsidianActiveItemAffix
-{
-	GENERATED_BODY()
-
-public:
-	FObsidianActiveItemAffix(){};
-	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
-	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
-
-	explicit operator bool() const
-	{
-		return AffixTag.IsValid();
-	}
-
-public:
-	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
-
-private:
-	
-};
-
-/**
  * Grid Owner.
  */
 UENUM()

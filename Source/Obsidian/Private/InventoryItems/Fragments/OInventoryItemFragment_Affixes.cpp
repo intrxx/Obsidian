@@ -20,27 +20,20 @@ void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemI
 	
 	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::NoGeneration)
 	{
-		TArray<FObsidianActiveItemAffix> AffixesToInitialize;
+		TArray<FObsidianStaticItemAffix> AffixesToInitialize;
+		AffixesToInitialize.Reserve(StaticItemAffixes.Num());
+		AffixesToInitialize.Append(StaticItemAffixes);
+		
 		if (StaticItemImplicit)
 		{
-			FObsidianActiveItemAffix ActiveItemAffix;
-			ActiveItemAffix.InitializeWithStatic(StaticItemImplicit);
-			AffixesToInitialize.Add(ActiveItemAffix);
+			AffixesToInitialize.Add(StaticItemImplicit);
 		}
-
-		for (const FObsidianStaticItemAffix& StaticItemAffix : StaticItemAffixes)
-		{
-			//TODO(intrxx) Validate?
-			FObsidianActiveItemAffix ActiveItemAffix;
-			ActiveItemAffix.InitializeWithStatic(StaticItemAffix);
-			AffixesToInitialize.Add(ActiveItemAffix);
-		}
-			
+		
 		Instance->InitializeAffixes(AffixesToInitialize);
 	}
 	else if (ItemAffixesGenerationType == EObsidianAffixGenerationType::DefaultGeneration || ItemAffixesGenerationType == EObsidianAffixGenerationType::FullGeneration)
 	{
-		Instance->InitializeAffixes(InitializedDynamicAffixes);
+		Instance->InitializeAffixes(AddedDynamicItemAffixes, StaticItemImplicit);
 	}
 }
 
@@ -48,22 +41,8 @@ void UOInventoryItemFragment_Affixes::InitializeDynamicAffixes(const TArray<FObs
 {
 	StaticItemAffixes.Empty();
 	ItemRarityTag = InRarityTag;
-	
-	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::DefaultGeneration && StaticItemImplicit)
-	{
-		FObsidianActiveItemAffix ActiveItemAffix;
-		ActiveItemAffix.InitializeWithStatic(StaticItemImplicit);
-		InitializedDynamicAffixes.Add(ActiveItemAffix);
-	}
-	
-	InitializedDynamicAffixes.Empty(InItemAffixes.Num());
-	for (const FObsidianDynamicItemAffix& DynamicItemAffix : InItemAffixes)
-	{
-		//TODO(intrxx) Validate?
-		FObsidianActiveItemAffix ActiveItemAffix;
-		ActiveItemAffix.InitializeWithDynamic(DynamicItemAffix);
-		InitializedDynamicAffixes.Add(ActiveItemAffix);
-	}
+	AddedDynamicItemAffixes.Reserve(InItemAffixes.Num());
+	AddedDynamicItemAffixes.Append(InItemAffixes);
 }
 
 void UOInventoryItemFragment_Affixes::RandomiseStaticAffixValues()
@@ -103,27 +82,45 @@ EObsidianAffixGenerationType UOInventoryItemFragment_Affixes::GetGenerationType(
 TArray<FObsidianAffixDescriptionRow> UOInventoryItemFragment_Affixes::GetAffixesAsUIDescription() const
 {
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
-	
-	if (InitializedDynamicAffixes.IsEmpty() == false)
+	const int32 NumberOfAffixes = AddedDynamicItemAffixes.Num() + StaticItemAffixes.Num() + (StaticItemImplicit ? 1 : 0);
+	AffixDescriptionRows.Reserve(NumberOfAffixes);
+
+	if (StaticItemImplicit)
 	{
-		AffixDescriptionRows.Reserve(InitializedDynamicAffixes.Num());
-	}
-	else if (StaticItemAffixes.IsEmpty() == false)
-	{
-		AffixDescriptionRows.Reserve(StaticItemAffixes.Num());
+		FObsidianAffixDescriptionRow Row;
+		Row.AffixTag = StaticItemImplicit.AffixTag;
+		//TODO(intrxx) #AffixRefactor
+		// Row.SetAffixRowDescription(StaticItemImplicit.AffixDescription, Affix.TempAffixMagnitude);
+		// Row.SetAffixAdditionalDescription(StaticItemImplicit.AffixType, Affix.AffixTier);
+		AffixDescriptionRows.Add(Row);
 	}
 	
-	//TODO(intrxx) #AffixRefactor
-	// for(const FObsidianDynamicItemAffix& Affix : ItemAffixes)
-	// {
-	// 	if(Affix)
-	// 	{
-	// 		FObsidianAffixDescriptionRow Row;
-	// 		Row.AffixTag = Affix.AffixTag;
-	// 		Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
-	// 		Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
-	// 		AffixDescriptionRows.Add(Row);
-	// 	}
-	// }
+	
+	for(const FObsidianDynamicItemAffix& DynamicAffix : AddedDynamicItemAffixes)
+	{
+		if(DynamicAffix)
+		{
+			FObsidianAffixDescriptionRow Row;
+			Row.AffixTag = DynamicAffix.AffixTag;
+			//TODO(intrxx) #AffixRefactor
+			// Row.SetAffixRowDescription(DynamicAffix.AffixDescription, DynamicAffix.TempAffixMagnitude);
+			// Row.SetAffixAdditionalDescription(DynamicAffix.AffixType, DynamicAffix.AffixTier);
+			AffixDescriptionRows.Add(Row);
+		}
+	}
+
+	for(const FObsidianStaticItemAffix& StaticAffix : StaticItemAffixes)
+	{
+		if(StaticAffix)
+		{
+			FObsidianAffixDescriptionRow Row;
+			Row.AffixTag = StaticAffix.AffixTag;
+			//TODO(intrxx) #AffixRefactor
+			// Row.SetAffixRowDescription(StaticAffix.AffixDescription, StaticAffix.TempAffixMagnitude);
+			// Row.SetAffixAdditionalDescription(StaticAffix.AffixType, StaticAffix.AffixTier);
+			AffixDescriptionRows.Add(Row);
+		}
+	}
+	
 	return AffixDescriptionRows;
 }

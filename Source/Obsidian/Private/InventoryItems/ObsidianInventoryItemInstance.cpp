@@ -196,15 +196,19 @@ bool UObsidianInventoryItemInstance::IsItemIdentified() const
 	return bIdentified;
 }
 
-void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
+void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianStaticItemAffix>& StaticAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit)
 {
-	ItemAffixes.InitializeAffixes(AffixesToInitialize);
+	ItemAffixes.InitializeAffixes(this, StaticAffixesToInitialize, StaticImplicit);
+}
+
+void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianDynamicItemAffix>& DynamicAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit)
+{
+	ItemAffixes.InitializeAffixes(this, DynamicAffixesToInitialize, StaticImplicit);
 }
 
 void UObsidianInventoryItemInstance::AddAffix(const FObsidianDynamicItemAffix& AffixToAdd)
 {
-	//TODO(intrxx) Affix Refactor
-	//ItemAffixes.AddAffix(AffixToAdd);
+	ItemAffixes.AddAffix(this, AffixToAdd);
 }
 
 void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
@@ -217,19 +221,19 @@ TArray<FObsidianAffixDescriptionRow> UObsidianInventoryItemInstance::GetAffixesA
 	TArray<FObsidianActiveItemAffix> Affixes = ItemAffixes.GetAllItemAffixes();
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
 	AffixDescriptionRows.Reserve(Affixes.Num());
-
-	//TODO(intrxx) #AffixRefactor
-	// for(const FObsidianDynamicItemAffix& Affix : Affixes)
-	// {
-	// 	if(Affix)
-	// 	{
-	// 		FObsidianAffixDescriptionRow Row;
-	// 		Row.AffixTag = Affix.AffixTag;
-	// 		Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
-	// 		Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
-	// 		AffixDescriptionRows.Add(Row);
-	// 	}
-	// }
+	
+	for(const FObsidianActiveItemAffix& Affix : Affixes)
+	{
+		if(Affix)
+		{
+			FObsidianAffixDescriptionRow Row;
+			Row.AffixTag = Affix.AffixTag;
+			//TODO(intrxx) #AffixRefactor
+			// Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
+			// Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
+			AffixDescriptionRows.Add(Row);
+		}
+	}
 	return AffixDescriptionRows;
 }
 

@@ -37,6 +37,12 @@ USTRUCT()
 struct FObsidianAffixRange
 {
 	GENERATED_BODY()
+
+public:
+	FObsidianAffixRange(){}
+	FObsidianAffixRange(const TArray<FFloatRange>& InRange)
+		: AffixRanges(InRange)
+	{}
 	
 public:
 	UPROPERTY(EditDefaultsOnly)
@@ -70,16 +76,20 @@ public:
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 
+	//TODO(intrxx) actually set it to the list default
+	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|Affix")
+	EObsidianAffixType AffixType = EObsidianAffixType::None;
+
 	/** Contains Category Tags of Items that this Affix can be applied to. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian|AcceptedCategories")
 	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
 
 	/** Unique addition to the Item Name. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FText AffixItemNameAddition = FText();
 
 	/** Row description of the affix. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FText AffixDescription = FText();
 
 	/** Minimum Item Level Requirement to roll this affix. */
@@ -104,6 +114,9 @@ public:
 	/** Possible Affix Ranges to roll from. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	TArray<FObsidianAffixRange> PossibleAffixRanges;
+
+	UPROPERTY()
+	TArray<float> RandomisedRanges;
 };
 
 USTRUCT()

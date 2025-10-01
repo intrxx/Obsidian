@@ -87,7 +87,7 @@ protected:
 	bool bStartsIdentified = false;
 
 private:
-	TArray<FObsidianActiveItemAffix> InitializedDynamicAffixes;
+	TArray<FObsidianDynamicItemAffix> AddedDynamicItemAffixes;
 	
 	int32 AddedSuffixCount = 0;
 	int32 AddedPrefixCount = 0;
