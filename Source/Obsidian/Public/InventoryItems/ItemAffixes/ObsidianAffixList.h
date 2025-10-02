@@ -125,6 +125,10 @@ struct FObsidianAffixClass
 	GENERATED_BODY()
 
 public:
+	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQuality(const int32 UpToTreasureQuality) const;
+	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategory) const;
+	
+public:
 	//TODO(intrxx) Currently not used for anything, keep or delete?
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FName AffixClassName;
@@ -146,6 +150,14 @@ class OBSIDIAN_API UObsidianAffixList : public UDataAsset
 {
 	GENERATED_BODY()
 
+public:
+	UObsidianAffixList(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual void PostInitProperties() override;
+	virtual void PostLoad() override;
+	
+	TArray<FObsidianAffixClass> GetAllAffixClasses() const;
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianAffixClass> AffixClasses;

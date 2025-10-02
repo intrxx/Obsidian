@@ -106,6 +106,9 @@ TArray<FObsidianAffixDescriptionRow> UOInventoryItemFragment_Affixes::GetAffixes
 			// Row.SetAffixRowDescription(DynamicAffix.AffixDescription, DynamicAffix.TempAffixMagnitude);
 			// Row.SetAffixAdditionalDescription(DynamicAffix.AffixType, DynamicAffix.AffixTier);
 			AffixDescriptionRows.Add(Row);
+
+			UE_LOG(LogTemp, Warning, TEXT("Item Affix: [%s], [%s]"), *DynamicAffix.AffixTag.GetTagName().ToString(),
+				*DynamicAffix.AffixItemNameAddition.ToString());
 		}
 	}
 

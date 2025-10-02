@@ -57,6 +57,8 @@ DECLARE_LOG_CATEGORY_EXTERN(LogDropComponent, Log, All);
  */
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnDroppingItemsFinishedSignature, const bool bDroppedItem)
 
+class UObsidianItemDataLoaderSubsystem;
+
 /**
  * 
  */
@@ -82,8 +84,8 @@ protected:
 	
 	void LoadAdditionalTreasuresAsync();
 
-	static void RollItemAffixes(const FObsidianDropItem& DropItem);
-	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
+	void RollItemAffixes(const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const FObsidianDropItem& DropItem, const uint8 MaxTreasureClassQuality);
+	void GetTreasureClassesToRollFrom(const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -94,4 +96,5 @@ protected:
 
 private:
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
+	FGameplayTag RollItemRarity(const FGameplayTag& MaxItemRarityTag = ObsidianGameplayTags::Item_Rarity_Rare);
 };

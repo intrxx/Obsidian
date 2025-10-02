@@ -6,7 +6,9 @@
 #include "CoreMinimal.h"
 
 // ~ Project
+#include "GameplayTagContainer.h"
 #include "ObsidianTreasureList.h"
+#include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "ObsidianItemDataLoaderSubsystem.generated.h"
@@ -29,7 +31,9 @@ public:
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
 	
-	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const int32 TreasureQuality) const;
+	bool GetAllTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass> OutTreasureClass) const;
+	bool GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix> OutPrefixes, TArray<FObsidianDynamicItemAffix> OutSuffixes) const;
+	bool GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix> OutPrefixes, TArray<FObsidianDynamicItemAffix> OutSuffixes, TArray<FObsidianDynamicItemAffix> OutImplicits) const;
 	
 protected:
 	void LoadItemDataConfig();

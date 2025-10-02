@@ -26,5 +26,5 @@ public:
 	TArray<TObjectPtr<UObsidianTreasureList>> CommonTreasureLists;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affixes")
-	TArray<TObjectPtr<UObsidianAffixList>> AffixLists;
+	TArray<TObjectPtr<UObsidianAffixList>> CommonAffixLists;
 };

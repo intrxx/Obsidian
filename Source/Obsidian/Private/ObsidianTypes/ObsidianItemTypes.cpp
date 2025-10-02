@@ -15,26 +15,56 @@ namespace ObsidianTreasureStatics
 {
 	const uint8 MaxTreasureQuality = 90;
 	const TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap =
-	{
-		{ EObsidianEntityRarity::Neutral, 1 },
-		{ EObsidianEntityRarity::Normal, 1 },
-		{ EObsidianEntityRarity::Magic, 2 },
-		{ EObsidianEntityRarity::Rare, 3 },
-		{ EObsidianEntityRarity::MiniBoss, 4 },
-		{ EObsidianEntityRarity::MiniBossCompanion, 3 },
-		{ EObsidianEntityRarity::SpecialBoss, 5 },
-	};
+		{
+			{ EObsidianEntityRarity::Neutral, 1 },
+			{ EObsidianEntityRarity::Normal, 1 },
+			{ EObsidianEntityRarity::Magic, 2 },
+			{ EObsidianEntityRarity::Rare, 3 },
+			{ EObsidianEntityRarity::MiniBoss, 4 },
+			{ EObsidianEntityRarity::MiniBossCompanion, 3 },
+			{ EObsidianEntityRarity::SpecialBoss, 5 }
+		};
 
 	const TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap =
+		{
+			{ EObsidianEntityRarity::Neutral, 0 },
+			{ EObsidianEntityRarity::Normal, 0 },
+			{ EObsidianEntityRarity::Magic, 1 },
+			{ EObsidianEntityRarity::Rare, 3 },
+			{ EObsidianEntityRarity::MiniBoss, 4 },
+			{ EObsidianEntityRarity::MiniBossCompanion, 4 },
+			{ EObsidianEntityRarity::SpecialBoss, 5 }
+		};
+
+	const TMap<FGameplayTag, uint16> DefaultRarityToWeightMap =
+		{
+			{ ObsidianGameplayTags::Item_Rarity_Normal, 85 },
+			{ ObsidianGameplayTags::Item_Rarity_Magic, 10 },
+			{ ObsidianGameplayTags::Item_Rarity_Rare, 5 }
+		};
+
+	const TMap<FGameplayTag, uint8> DefaultRarityToMaxSuffixCount =
 	{
-		{ EObsidianEntityRarity::Neutral, 0 },
-		{ EObsidianEntityRarity::Normal, 0 },
-		{ EObsidianEntityRarity::Magic, 1 },
-		{ EObsidianEntityRarity::Rare, 3 },
-		{ EObsidianEntityRarity::MiniBoss, 4 },
-		{ EObsidianEntityRarity::MiniBossCompanion, 4 },
-		{ EObsidianEntityRarity::SpecialBoss, 5 },
+		{ ObsidianGameplayTags::Item_Rarity_Normal, 0 },
+		{ ObsidianGameplayTags::Item_Rarity_Magic, 2 },
+		{ ObsidianGameplayTags::Item_Rarity_Rare, 3 }
 	};
+
+	const TMap<FGameplayTag, uint8> DefaultRarityToMaxPrefixCount =
+	{
+		{ ObsidianGameplayTags::Item_Rarity_Normal, 0 },
+		{ ObsidianGameplayTags::Item_Rarity_Magic, 2 },
+		{ ObsidianGameplayTags::Item_Rarity_Rare, 3 }
+	};
+
+	const TMap<FGameplayTag, uint8> DefaultRarityToMaxAffixCount =
+	{
+		{ ObsidianGameplayTags::Item_Rarity_Normal, 0 },
+		{ ObsidianGameplayTags::Item_Rarity_Magic, 2 },
+		{ ObsidianGameplayTags::Item_Rarity_Rare, 6 }
+	};
+
+	const uint8 DefaultMaxImplicitCount = 1;
 }
 
 // ~ FDraggedItem
