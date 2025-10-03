@@ -48,11 +48,15 @@ bool UObsidianInventoryItemDefinition::IsEquippable() const
 	return false;
 }
 
-bool UObsidianInventoryItemDefinition::IsIdentified() const
+bool UObsidianInventoryItemDefinition::DoesStartIdentified() const
 {
 	if(const UOInventoryItemFragment_Affixes* AffixesFrag = Cast<UOInventoryItemFragment_Affixes>(FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())))
 	{
-		return AffixesFrag->IsItemIdentified();
+		if (AffixesFrag->DoesStartIdentified())
+		{
+			return true;
+		}
+		return false;
 	}
 	return true;
 }
@@ -69,18 +73,6 @@ bool UObsidianInventoryItemDefinition::DoesItemNeedsTwoSlots() const
 FGameplayTag UObsidianInventoryItemDefinition::GetItemCategoryTag() const
 {
 	return ItemCategory;
-}
-
-UOInventoryItemFragment_Affixes* UObsidianInventoryItemDefinition::GetAffixFragment_Mutable() const
-{
-	for(UObsidianInventoryItemFragment* Fragment : ItemFragments)
-	{
-		if(Fragment->IsA(UOInventoryItemFragment_Affixes::StaticClass()))
-		{
-			return Cast<UOInventoryItemFragment_Affixes>(Fragment);
-		}
-	}
-	return nullptr;
 }
 
 int32 UObsidianInventoryItemDefinition::GetItemLevel() const

@@ -113,11 +113,12 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 	if(const UOInventoryItemFragment_Affixes* AffixesFrag = Cast<UOInventoryItemFragment_Affixes>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())))
 	{
 		OutItemStats.ItemRarity = AffixesFrag->GetItemRarityTag();
-		const bool bIdentified = AffixesFrag->IsItemIdentified();
+		const bool bIdentified = AffixesFrag->DoesStartIdentified();
 		OutItemStats.SetIdentified(bIdentified);
 		if(bIdentified)
 		{
-			OutItemStats.SetAffixDescriptionRows(AffixesFrag->GetAffixesAsUIDescription());
+			//TODO(intrxx) #AffixRefactor
+			//OutItemStats.SetAffixDescriptionRows(AffixesFrag->GetAffixesAsUIDescription());
 		}
 	}
 

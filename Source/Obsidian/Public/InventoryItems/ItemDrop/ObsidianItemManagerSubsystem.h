@@ -20,5 +20,5 @@ class OBSIDIAN_API UObsidianItemManagerSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 public:
-	void RequestDroppingItems(TArray<FObsidianDropItem>&& ItemsToDrop) const;
+	void RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const;
 };

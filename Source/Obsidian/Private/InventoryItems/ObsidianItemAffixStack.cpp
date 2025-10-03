@@ -6,12 +6,28 @@
 #include "GameplayEffect.h"
 
 // ~ Project
+#include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
 DEFINE_LOG_CATEGORY(LogAffixes);
 
-// ~ FObsidianAffixEntry
+// ~ FObsidianActiveItemAffix
 
-void FObsidianAffixEntry::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix)
+bool FObsidianActiveItemAffix::operator==(const FObsidianActiveItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+bool FObsidianActiveItemAffix::operator==(const FObsidianDynamicItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+bool FObsidianActiveItemAffix::operator==(const FObsidianStaticItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix)
 {
 	if (!InDynamicItemAffix)
 	{
@@ -19,27 +35,16 @@ void FObsidianAffixEntry::InitializeWithDynamic(const FObsidianDynamicItemAffix&
 		return;
 	}
 
-	ActiveItemAffix.AffixTag = InDynamicItemAffix.AffixTag;
-	ActiveItemAffix.AffixDescription = InDynamicItemAffix.AffixDescription;
-	ActiveItemAffix.AffixItemNameAddition = InDynamicItemAffix.AffixItemNameAddition;
-	ActiveItemAffix.AffixType = InDynamicItemAffix.AffixType;
-	ActiveItemAffix.AffixValueType = InDynamicItemAffix.AffixValueType;
-	ActiveItemAffix.PossibleAffixRanges = InDynamicItemAffix.PossibleAffixRanges;
-	ActiveItemAffix.RandomisedRanges = InDynamicItemAffix.RandomisedRanges;
-	
-	if (const TSubclassOf<UGameplayEffect>& AffixGameplayEffectRef = InDynamicItemAffix.SoftGameplayEffectToApply.Get())
-	{
-		ActiveItemAffix.GameplayEffectToApply = AffixGameplayEffectRef;
-	}
-	else
-	{
-		UE_LOG(LogAffixes, Warning, TEXT("Soft Gameplay Effect Class of Affix [%s] is not loaded, switching to LoadSynchronous()."),
-			*InDynamicItemAffix.AffixTag.GetTagName().ToString());
-		ActiveItemAffix.GameplayEffectToApply = InDynamicItemAffix.SoftGameplayEffectToApply.LoadSynchronous();
-	}
+	AffixTag = InDynamicItemAffix.AffixTag;
+	AffixDescription = InDynamicItemAffix.AffixDescription;
+	AffixItemNameAddition = InDynamicItemAffix.AffixItemNameAddition;
+	AffixType = InDynamicItemAffix.AffixType;
+	AffixValueType = InDynamicItemAffix.AffixValueType;
+	PossibleAffixRanges = InDynamicItemAffix.PossibleAffixRanges;
+	SoftGameplayEffectToApply = InDynamicItemAffix.SoftGameplayEffectToApply;
 }
 
-void FObsidianAffixEntry::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix)
+void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix)
 {
 	if (!InStaticItemAffix)
 	{
@@ -47,27 +52,40 @@ void FObsidianAffixEntry::InitializeWithStatic(const FObsidianStaticItemAffix& I
 		return;
 	}
 
-	ActiveItemAffix.AffixTag = InStaticItemAffix.AffixTag;
-	ActiveItemAffix.AffixDescription = InStaticItemAffix.AffixDescription;
-	ActiveItemAffix.AffixItemNameAddition = InStaticItemAffix.AffixItemNameAddition;
-	ActiveItemAffix.AffixType = InStaticItemAffix.AffixType;
-	ActiveItemAffix.AffixValueType = InStaticItemAffix.AffixValueType;
-	ActiveItemAffix.PossibleAffixRanges = { FObsidianAffixRange(InStaticItemAffix.PossibleAffixRanges) };
-	ActiveItemAffix.RandomisedRanges = InStaticItemAffix.RandomisedRanges;
-	
-	if (const TSubclassOf<UGameplayEffect>& AffixGameplayEffectRef = InStaticItemAffix.SoftGameplayEffectToApply.Get())
+	AffixTag = InStaticItemAffix.AffixTag;
+	AffixDescription = InStaticItemAffix.AffixDescription;
+	AffixItemNameAddition = InStaticItemAffix.AffixItemNameAddition;
+	AffixType = InStaticItemAffix.AffixType;
+	AffixValueType = InStaticItemAffix.AffixValueType;
+	PossibleAffixRanges = { FObsidianAffixValue(InStaticItemAffix.PossibleAffixRanges) };
+	SoftGameplayEffectToApply = InStaticItemAffix.SoftGameplayEffectToApply;
+}
+
+void FObsidianActiveItemAffix::InitializeAffixTierAndRange()
+{
+	//TODO(intrxx) Get Random Range in weighted way
+	FObsidianAffixValue ChosenAffixValueTier = PossibleAffixRanges[FMath::RandRange(0, PossibleAffixRanges.Num() - 1)];
+	for (const FFloatRange& AffixRange : ChosenAffixValueTier.AffixRanges)
 	{
-		ActiveItemAffix.GameplayEffectToApply = AffixGameplayEffectRef;
+		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
+		RandomisedValue = AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
+		ChosenAffixValueTier.CurrentAffixValues.Add(RandomisedValue);
 	}
-	else
+	CurrentAffixValue = ChosenAffixValueTier;
+}
+
+void FObsidianActiveItemAffix::RandomizeAffixValue()
+{
+	CurrentAffixValue.CurrentAffixValues.Empty();
+	for (const FFloatRange& AffixRange : CurrentAffixValue.AffixRanges)
 	{
-		UE_LOG(LogAffixes, Warning, TEXT("Soft Gameplay Effect Class of Affix [%s] is not loaded, switching to LoadSynchronous()."),
-			*InStaticItemAffix.AffixTag.GetTagName().ToString());
-		ActiveItemAffix.GameplayEffectToApply = InStaticItemAffix.SoftGameplayEffectToApply.LoadSynchronous();
+		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
+		RandomisedValue = AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
+		CurrentAffixValue.CurrentAffixValues.Add(RandomisedValue);
 	}
 }
 
-// ~ End of FObsidianAffixEntry
+// ~ End of FObsidianActiveItemAffix
 
 int32 FObsidianItemAffixStack::GetTotalAffixCount() const
 {
@@ -126,54 +144,30 @@ TArray<FObsidianActiveItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() co
 	return Affixes;
 }
 
-void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianStaticItemAffix>& StaticAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit)
+void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
 {
 	check(Entries.IsEmpty());
-	for (const FObsidianStaticItemAffix& StaticAffix : StaticAffixesToInitialize)
+	for (const FObsidianActiveItemAffix& Affix : AffixesToInitialize)
 	{
-		if (StaticAffix)
+		if (Affix)
 		{
-			FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(InOwningInstance);
-			AffixEntry.InitializeWithStatic(StaticAffix);
+			FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(Affix);
+			AffixEntry.OwningItem = InOwningInstance;
+			
 			//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes
+			
 			MarkItemDirty(AffixEntry);
 		}
 	}
-	InitializeImplicit(InOwningInstance, StaticImplicit);
 }
 
-void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianDynamicItemAffix>& DynamicAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit)
+void FObsidianItemAffixStack::AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianActiveItemAffix& ItemAffix)
 {
-	check(Entries.IsEmpty());
-	for (const FObsidianDynamicItemAffix& DynamicAffix : DynamicAffixesToInitialize)
-	{
-		if (DynamicAffix)
-		{
-			FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(InOwningInstance);
-			AffixEntry.InitializeWithDynamic(DynamicAffix);
-			//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes
-			MarkItemDirty(AffixEntry);
-		}
-	}
-	InitializeImplicit(InOwningInstance, StaticImplicit);
-}
-
-void FObsidianItemAffixStack::InitializeImplicit(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianStaticItemAffix& StaticImplicit)
-{
-	check(HasImplicit() == false)
-	if (StaticImplicit)
-	{
-		FObsidianAffixEntry& ImplicitAffixEntry = Entries.Add_GetRef(InOwningInstance);
-		ImplicitAffixEntry.InitializeWithStatic(StaticImplicit);
-		//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes
-		MarkItemDirty(ImplicitAffixEntry);
-	}
-}
-
-void FObsidianItemAffixStack::AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianDynamicItemAffix& ItemAffix)
-{
-	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(InOwningInstance);
-	AffixEntry.InitializeWithDynamic(ItemAffix);
+	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(ItemAffix);
+	AffixEntry.OwningItem = InOwningInstance;
+	
+	//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes
+	
 	MarkItemDirty(AffixEntry);
 }
 
@@ -185,7 +179,9 @@ void FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& AffixTag)
 		if(Entry.ActiveItemAffix.AffixTag == AffixTag)
 		{
 			It.RemoveCurrent();
+			
 			//TODO(intrxx) Remove Affix Gameplay Effect with correct Magnitude/Magnitudes
+			
 			MarkArrayDirty();
 		}
 	}

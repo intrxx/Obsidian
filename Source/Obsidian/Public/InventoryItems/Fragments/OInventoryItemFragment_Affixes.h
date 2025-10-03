@@ -8,7 +8,6 @@
 
 // ~ Project
 #include "ObsidianTypes/ObsidianItemTypes.h"
-#include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Affixes.generated.h"
@@ -48,20 +47,13 @@ public:
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
 	
-	void InitializeDynamicAffixes(const TArray<FObsidianDynamicItemAffix>& InItemAffixes, const FGameplayTag& InRarityTag);
-	void RandomiseStaticAffixValues();
+	bool HasImplicitAffix() const;
+	bool DoesStartIdentified() const;
 
-	bool IsItemIdentified() const;
-
-	FGameplayTag GetItemRarityTag() const
-	{
-		return ItemRarityTag;
-	}
-
+	FObsidianStaticItemAffix GetStaticImplicitAffix() const;
+	TArray<FObsidianStaticItemAffix> GetStaticAffixes() const;
+	FGameplayTag GetItemRarityTag() const;
 	EObsidianAffixGenerationType GetGenerationType() const;
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Affixes")
-	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
 
 protected:
 	//TODO(intrxx) bind to changing property, set ItemRarityTag, ItemAffixes and bStartsIdentified to default when switching this back to true
@@ -85,10 +77,4 @@ protected:
 	/** Whether or not the item starts identified, normal, items without any affixes or items with this bool set to true will start as identified. */
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
 	bool bStartsIdentified = false;
-
-private:
-	TArray<FObsidianDynamicItemAffix> AddedDynamicItemAffixes;
-	
-	int32 AddedSuffixCount = 0;
-	int32 AddedPrefixCount = 0;
 };

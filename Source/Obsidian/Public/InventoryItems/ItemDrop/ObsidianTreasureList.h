@@ -4,11 +4,13 @@
 
 // ~ Core
 #include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "Engine/DataAsset.h"
 
 // ~ Project
+#include "InventoryItems/ObsidianItemAffixStack.h"
 
-
-#include "Engine/DataAsset.h"
+#include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 #include "ObsidianTreasureList.generated.h"
 
 class UObsidianInventoryItemDefinition;
@@ -58,9 +60,6 @@ public:
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
 	
-	FTransform DropTransform = FTransform::Identity;
-	uint8 DropStacks = 1;
-	
 	static const FObsidianDropItem NoDropType;
 
 protected:
@@ -68,6 +67,31 @@ protected:
 	/** Flag used for editing the StackSizes Array as not every item is stackable and therefore cares about it. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	bool bStackable = false;
+};
+
+/**
+ * Dynamic Item Definition of Item to drop.
+ */
+USTRUCT()
+struct FObsidianItemToDrop
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDefinitionClass;
+
+	UPROPERTY()
+	TArray<FObsidianActiveItemAffix> DropAffixes;
+	
+	UPROPERTY()
+	FTransform DropTransform = FTransform::Identity;
+
+	UPROPERTY()
+	FGameplayTag DropRarity = FGameplayTag::EmptyTag;
+	
+	UPROPERTY()
+	uint8 DropStacks = 1;
 };
 
 USTRUCT()

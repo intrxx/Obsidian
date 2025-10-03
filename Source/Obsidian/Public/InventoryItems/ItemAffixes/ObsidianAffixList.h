@@ -15,45 +15,6 @@
 class UGameplayEffect;
 
 /**
- * 
- */
-USTRUCT()
-struct FObsidianAffixTier
-{
-	GENERATED_BODY()
-
-public:
-	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "8"))
-	uint8 AffixTier = 1;
-
-	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"))
-	uint8 MinItemLevelRequirement = 1;	
-};
-
-/**
- * 
- */
-USTRUCT()
-struct FObsidianAffixRange
-{
-	GENERATED_BODY()
-
-public:
-	FObsidianAffixRange(){}
-	FObsidianAffixRange(const TArray<FFloatRange>& InRange)
-		: AffixRanges(InRange)
-	{}
-	
-public:
-	UPROPERTY(EditDefaultsOnly)
-	FObsidianAffixTier AffixTier;
-
-	/** Array (as there can be multiple values in a single Affix) of Affix Range to Roll. */
-	UPROPERTY(EditDefaultsOnly)
-	TArray<FFloatRange> AffixRanges; 
-};
-
-/**
  * Item Affix definition used in Affix Tables.
  */
 USTRUCT()
@@ -69,6 +30,11 @@ public:
 	explicit operator bool() const
 	{
 		return AffixTag.IsValid();
+	}
+
+	bool operator ==(const FObsidianDynamicItemAffix& Other) const
+	{
+		return AffixTag == Other.AffixTag;
 	}
 	
 public:
@@ -113,10 +79,7 @@ public:
 
 	/** Possible Affix Ranges to roll from. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TArray<FObsidianAffixRange> PossibleAffixRanges;
-
-	UPROPERTY()
-	TArray<float> RandomisedRanges;
+	TArray<FObsidianAffixValue> PossibleAffixRanges;
 };
 
 USTRUCT()

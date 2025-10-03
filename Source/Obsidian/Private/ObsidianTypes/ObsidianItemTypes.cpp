@@ -165,16 +165,6 @@ bool FObsidianStaticItemAffix::IsEmptyAffix() const
 	return PossibleAffixRanges.IsEmpty();
 }
 
-void FObsidianStaticItemAffix::RandomizeRanges()
-{
-	for (const FFloatRange& Range : PossibleAffixRanges)
-	{
-		float RandomisedValue = FMath::FRandRange(Range.GetLowerBoundValue(), Range.GetUpperBoundValue());
-		RandomisedValue = AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
-		RandomisedRanges.Add(RandomisedValue);
-	}
-}
-
 FIntPoint FObsidianItemPosition::GetItemGridLocation(const bool bWarnIfNotFound) const
 {
 #if !UE_BUILD_SHIPPING

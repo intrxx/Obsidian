@@ -9,7 +9,7 @@
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "ObsidianTypes/ObsidianItemTypes.h"
 
-void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianDropItem>&& ItemsToDrop) const
+void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const
 {
 	UWorld* World = GetWorld();
 	if (World == nullptr)
@@ -18,13 +18,13 @@ void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianDropIte
 	}
 
 	//TODO(intrxx) Apply delay after every drop?
-	for (const FObsidianDropItem& RolledItem : ItemsToDrop)
+	for (const FObsidianItemToDrop& Item : ItemsToDrop)
 	{
-		if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = RolledItem.SoftTreasureItemDefinitionClass.Get())
+		if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = Item.ItemDefinitionClass)
 		{
-			AObsidianDroppableItem* Item = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), RolledItem.DropTransform);
-			Item->InitializeItem(ItemToDrop, RolledItem.DropStacks);
-			Item->FinishSpawning(RolledItem.DropTransform);
+			AObsidianDroppableItem* DroppableItem = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), Item.DropTransform);
+			DroppableItem->InitializeItem(ItemToDrop, Item.DropStacks);
+			DroppableItem->FinishSpawning(Item.DropTransform);
 		}
 	}
 }

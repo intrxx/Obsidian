@@ -550,10 +550,12 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipTemplate(const TS
 		return EObsidianEquipCheckResult::ItemUnequippable;
 	}
 	
-	if(DefaultObject->IsIdentified() == false)
+	if(DefaultObject->DoesStartIdentified())
 	{
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}
+
+	//TODO Check for actual identification
 
 	const FGameplayTag ItemCategoryTag = DefaultObject->GetItemCategoryTag();
 	const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
@@ -654,7 +656,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 		return EObsidianEquipCheckResult::ItemUnequippable;
 	}
 	
-	if(DefaultObject->IsIdentified() == false)
+	if(DefaultObject->DoesStartIdentified())
 	{
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}

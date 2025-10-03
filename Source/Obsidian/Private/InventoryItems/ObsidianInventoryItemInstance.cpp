@@ -196,17 +196,12 @@ bool UObsidianInventoryItemInstance::IsItemIdentified() const
 	return bIdentified;
 }
 
-void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianStaticItemAffix>& StaticAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit)
+void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
 {
-	ItemAffixes.InitializeAffixes(this, StaticAffixesToInitialize, StaticImplicit);
+	ItemAffixes.InitializeAffixes(this, AffixesToInitialize);
 }
 
-void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianDynamicItemAffix>& DynamicAffixesToInitialize, const FObsidianStaticItemAffix& StaticImplicit)
-{
-	ItemAffixes.InitializeAffixes(this, DynamicAffixesToInitialize, StaticImplicit);
-}
-
-void UObsidianInventoryItemInstance::AddAffix(const FObsidianDynamicItemAffix& AffixToAdd)
+void UObsidianInventoryItemInstance::AddAffix(const FObsidianActiveItemAffix& AffixToAdd)
 {
 	ItemAffixes.AddAffix(this, AffixToAdd);
 }

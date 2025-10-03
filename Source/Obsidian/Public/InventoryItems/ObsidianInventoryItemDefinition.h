@@ -39,14 +39,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
 	FGameplayTag GetItemCategoryTag() const;
 	
-	UOInventoryItemFragment_Affixes* GetAffixFragment_Mutable() const;
-
 	int32 GetItemLevel() const;
 	
 	bool HasStacks() const;
 	bool IsStackable() const;
 	bool IsEquippable() const;
-	bool IsIdentified() const;
+	bool DoesStartIdentified() const;
 	bool DoesItemNeedsTwoSlots() const;
 
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;

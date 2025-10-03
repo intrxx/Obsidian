@@ -23,7 +23,7 @@ void UObsidianItemDataLoaderSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-bool UObsidianItemDataLoaderSubsystem::GetAllTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass> OutTreasureClass) const
+bool UObsidianItemDataLoaderSubsystem::GetAllTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const
 {
 	if (ItemDataConfig == nullptr)
 	{

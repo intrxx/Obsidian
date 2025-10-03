@@ -84,9 +84,9 @@ protected:
 	
 	void LoadAdditionalTreasuresAsync();
 
-	void RollItemAffixes(const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const FObsidianDropItem& DropItem, const uint8 MaxTreasureClassQuality);
+	void GenerateItem(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const uint8 MaxTreasureClassQuality);
 	void GetTreasureClassesToRollFrom(const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
-
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float ItemDropRadius = 60.0f;
@@ -97,4 +97,7 @@ protected:
 private:
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
 	FGameplayTag RollItemRarity(const FGameplayTag& MaxItemRarityTag = ObsidianGameplayTags::Item_Rarity_Rare);
+
+	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
+	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
 };
