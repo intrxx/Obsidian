@@ -23,6 +23,9 @@ void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemI
 	{
 		Instance->SetIdentified(true);
 	}
+
+	//TODO(intrxx) #AffixRefactorTEMP
+	Instance->SetIdentified(true);
 }
 
 bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const

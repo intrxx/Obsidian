@@ -549,8 +549,9 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipTemplate(const TS
 	{
 		return EObsidianEquipCheckResult::ItemUnequippable;
 	}
-	
-	if(DefaultObject->DoesStartIdentified())
+
+	//TODO(intrxx) #AffixRefactor
+	if(DefaultObject->DoesStartIdentified() == false)
 	{
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}
@@ -655,8 +656,9 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 	{
 		return EObsidianEquipCheckResult::ItemUnequippable;
 	}
-	
-	if(DefaultObject->DoesStartIdentified())
+
+	//TODO(intrxx) #AffixRefactor
+	if(DefaultObject->DoesStartIdentified() == false)
 	{
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}

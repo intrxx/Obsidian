@@ -42,7 +42,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllTreasureClassesUpToQuality(const in
 }
 
 bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 UpToTreasureQuality,
-	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix> OutPrefixes, TArray<FObsidianDynamicItemAffix> OutSuffixes) const
+	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes) const
 {
 	if (ItemDataConfig == nullptr)
 	{
@@ -80,8 +80,8 @@ bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_Defau
 }
 
 bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 UpToTreasureQuality,
-	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix> OutPrefixes, TArray<FObsidianDynamicItemAffix> OutSuffixes,
-	TArray<FObsidianDynamicItemAffix> OutImplicits) const
+	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
+	TArray<FObsidianDynamicItemAffix>& OutImplicits) const
 {
 	if (ItemDataConfig == nullptr)
 	{

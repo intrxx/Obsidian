@@ -32,8 +32,8 @@ public:
 	virtual void Deinitialize() override;
 	
 	bool GetAllTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const;
-	bool GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix> OutPrefixes, TArray<FObsidianDynamicItemAffix> OutSuffixes) const;
-	bool GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix> OutPrefixes, TArray<FObsidianDynamicItemAffix> OutSuffixes, TArray<FObsidianDynamicItemAffix> OutImplicits) const;
+	bool GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes) const;
+	bool GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes, TArray<FObsidianDynamicItemAffix>& OutImplicits) const;
 	
 protected:
 	void LoadItemDataConfig();

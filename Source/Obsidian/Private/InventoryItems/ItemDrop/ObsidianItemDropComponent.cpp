@@ -230,6 +230,9 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					ActiveAffix.InitializeWithStatic(ImplicitAffix);
 					ActiveAffix.InitializeAffixTierAndRange();
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
+
+					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
+						*ImplicitAffix.AffixItemNameAddition.ToString());
 				}
 				HandleDefaultGeneration(ForItemToDrop, FromItemDataLoader, ItemCategory, MaxTreasureClassQuality);
 			} break;
@@ -247,6 +250,9 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					ActiveAffix.InitializeWithStatic(ImplicitAffix);
 					ActiveAffix.InitializeAffixTierAndRange();
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
+
+					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
+						*ImplicitAffix.AffixItemNameAddition.ToString());
 				}
 
 				TArray<FObsidianStaticItemAffix> Affixes = AffixFragment->GetStaticAffixes();
@@ -553,28 +559,29 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 
 FGameplayTag UObsidianItemDropComponent::RollItemRarity(const FGameplayTag& MaxItemRarityTag)
 {
-	TMap<FGameplayTag, uint16> RarityToWeightMap = ObsidianTreasureStatics::DefaultRarityToWeightMap;
-	//TODO(intrxx) Implement MaxItemRarity
-	
-	uint32 MaxWeight = 0;
-	for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
-	{
-		MaxWeight += RarityWithWeight.Value;
-	}
-
-	const uint32 RolledWeight = FMath::RandRange(0, MaxWeight);
-	uint32 Cumulative = 0;
-	for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
-	{
-		Cumulative += RarityWithWeight.Value;
-		if (RolledWeight <= Cumulative)
-		{
-			return RarityWithWeight.Key;
-		}
-	}
-
-	ensureAlways(false);
-	return ObsidianGameplayTags::Item_Rarity_Normal;
+	return ObsidianGameplayTags::Item_Rarity_Rare;
+	// TMap<FGameplayTag, uint16> RarityToWeightMap = ObsidianTreasureStatics::DefaultRarityToWeightMap;
+	// //TODO(intrxx) Implement MaxItemRarity
+	//
+	// uint32 MaxWeight = 0;
+	// for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
+	// {
+	// 	MaxWeight += RarityWithWeight.Value;
+	// }
+	//
+	// const uint32 RolledWeight = FMath::RandRange(0, MaxWeight);
+	// uint32 Cumulative = 0;
+	// for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
+	// {
+	// 	Cumulative += RarityWithWeight.Value;
+	// 	if (RolledWeight <= Cumulative)
+	// 	{
+	// 		return RarityWithWeight.Key;
+	// 	}
+	// }
+	//
+	// ensureAlways(false);
+	// return ObsidianGameplayTags::Item_Rarity_Normal;
 }
 
 #if WITH_EDITOR
