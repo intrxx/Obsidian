@@ -5,10 +5,9 @@
 // ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
 
 // ~ Project
-
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianStashTab.generated.h"
 

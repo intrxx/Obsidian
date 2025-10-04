@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Affixes.generated.h"

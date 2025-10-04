@@ -9,7 +9,7 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 // ~ FObsidianDropItem
 

@@ -7,7 +7,7 @@
 
 // ~ Project
 #include "ObsidianInventoryGridItemList.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"

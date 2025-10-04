@@ -9,6 +9,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"

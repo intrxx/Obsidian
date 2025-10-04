@@ -8,7 +8,7 @@
 // ~ Project
 
 
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemWorldName.generated.h"
 

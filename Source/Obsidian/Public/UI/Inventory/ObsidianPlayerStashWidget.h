@@ -7,9 +7,8 @@
 #include "GameplayTagContainer.h"
 
 // ~ Project
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-
-#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 

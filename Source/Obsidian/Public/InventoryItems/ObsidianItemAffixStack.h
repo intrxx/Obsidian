@@ -7,7 +7,7 @@
 #include "GameplayTagContainer.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianItemAffixStack.generated.h"

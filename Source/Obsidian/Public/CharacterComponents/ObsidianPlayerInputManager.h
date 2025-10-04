@@ -8,7 +8,7 @@
 #include "Components/PawnComponent.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianPlayerInputManager.generated.h"
 

@@ -9,7 +9,7 @@
 #include "Components/Overlay.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 void UObsidianItemDescriptionBase::NativeConstruct()
 {

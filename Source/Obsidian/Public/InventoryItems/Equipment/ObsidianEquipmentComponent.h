@@ -7,7 +7,7 @@
 
 // ~ Project
 #include "ObsidianEquipmentList.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "Components/ActorComponent.h"
 #include "ObsidianEquipmentComponent.generated.h"

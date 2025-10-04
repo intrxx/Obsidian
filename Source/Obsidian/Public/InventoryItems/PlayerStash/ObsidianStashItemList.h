@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianStashItemList.generated.h"

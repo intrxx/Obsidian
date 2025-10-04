@@ -8,7 +8,7 @@
 
 // ~ Project
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianEquipmentList.generated.h"

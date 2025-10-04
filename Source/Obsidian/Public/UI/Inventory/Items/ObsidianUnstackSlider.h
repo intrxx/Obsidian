@@ -6,9 +6,8 @@
 #include "CoreMinimal.h"
 
 // ~ Project
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-
-#include "ObsidianTypes/ObsidianItemTypes.h"
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianUnstackSlider.generated.h"
 

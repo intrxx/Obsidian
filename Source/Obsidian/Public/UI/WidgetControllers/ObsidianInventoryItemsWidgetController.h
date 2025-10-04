@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObsidianInventoryItemsWidgetController.generated.h"

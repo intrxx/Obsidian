@@ -7,7 +7,7 @@
 // ~ Project
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const
 {

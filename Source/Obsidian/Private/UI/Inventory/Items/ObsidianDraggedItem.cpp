@@ -13,7 +13,7 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 void UObsidianDraggedItem::NativeConstruct()
 {

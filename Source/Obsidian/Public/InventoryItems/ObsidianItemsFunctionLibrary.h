@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianItemsFunctionLibrary.generated.h"

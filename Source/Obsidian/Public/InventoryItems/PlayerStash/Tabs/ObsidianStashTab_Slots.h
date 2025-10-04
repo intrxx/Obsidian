@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "ObsidianStashTab_Slots.generated.h"

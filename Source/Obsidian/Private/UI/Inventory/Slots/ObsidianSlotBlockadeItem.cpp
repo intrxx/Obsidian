@@ -7,7 +7,7 @@
 #include "Components/SizeBox.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 
 void UObsidianSlotBlockadeItem::NativeConstruct()

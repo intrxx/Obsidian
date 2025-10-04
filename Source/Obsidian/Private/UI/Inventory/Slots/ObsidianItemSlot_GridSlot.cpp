@@ -6,7 +6,7 @@
 #include "Components/SizeBox.h"
 
 // ~ Project
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "UI/Inventory/ObsidianGrid.h"
 
 void UObsidianItemSlot_GridSlot::NativeConstruct()

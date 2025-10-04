@@ -7,7 +7,7 @@
 
 // ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
-#include "ObsidianTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "Interaction/ObsidianInteractionInterface.h"
 
 #include "Gameplay/ObsidianWorldCollectable.h"
