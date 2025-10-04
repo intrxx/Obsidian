@@ -23,7 +23,7 @@ void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToD
 		if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = Item.ItemDefinitionClass)
 		{
 			AObsidianDroppableItem* DroppableItem = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), Item.DropTransform);
-			DroppableItem->InitializeItem(ItemToDrop, Item.DropStacks);
+			DroppableItem->InitializeItem(ItemToDrop, FObsidianItemGeneratedData(Item.DropStacks, Item.DropRarity, Item.DropAffixes));
 			DroppableItem->FinishSpawning(Item.DropTransform);
 		}
 	}

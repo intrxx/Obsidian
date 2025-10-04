@@ -224,8 +224,8 @@ TArray<FObsidianAffixDescriptionRow> UObsidianInventoryItemInstance::GetAffixesA
 			FObsidianAffixDescriptionRow Row;
 			Row.AffixTag = Affix.AffixTag;
 			//TODO(intrxx) #AffixRefactor
-			// Row.SetAffixRowDescription(Affix.AffixDescription, Affix.TempAffixMagnitude);
-			// Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.AffixTier);
+			Row.SetAffixRowDescription(Affix.AffixDescription, Affix.CurrentAffixValue.CurrentAffixValues[0]);
+			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.CurrentAffixValue.AffixTier.AffixTier);
 			AffixDescriptionRows.Add(Row);
 
 			UE_LOG(LogTemp, Warning, TEXT("Item Affix: [%s], [%s]"), *Affix.AffixTag.GetTagName().ToString(),

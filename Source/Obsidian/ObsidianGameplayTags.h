@@ -366,22 +366,83 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Unique);
 
 	/**
-	 * Affixes
+	 * ---- Affixes ----
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Attribute_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Attribute_Intelligence);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Attribute_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Attribute_Faith);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Resistance_Fire);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Resistance_Lightning);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Resistance_Cold);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Resistance_Chaos);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Basic_FlatLife);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Basic_FlatMana);
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Enchant_MaximumLifePercentage)
+	/**
+	 * Implicits
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Fire);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Lightning);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Cold);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Chaos);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Fire);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Lightning);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Cold);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Chaos);
+
+	/**
+	 * Prefixes
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Life_LifeFlat);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Mana_ManaFlat);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Utility_MagicFind);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_ArmorFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_ArmorPercent);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EvasionFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EvasionPercent);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EnergyShieldFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EnergyShieldPercent);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreasePhysicalDamage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseFireDamage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseColdDamage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseLightningDamage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseChaosDamage);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_PhysicalDamageFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_PhysicalDamagePercentage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_FireDamageFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_FireDamagePercentage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_ColdDamageFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_ColdDamagePercentage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_LightningDamageFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRanger_LightningDamagePercentage);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRanger_ChaosDamageFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRanger_ChaosDamagePercentage);
+	
+	/**
+	 * Suffixes
+	 */
+
+	/**
+	 * Enchanted Affixes
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Dexterity);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Intelligence);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Strength);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Faith);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Fire);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Lightning);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Cold);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Chaos);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Fire);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Lightning);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Cold);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Chaos);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Utility_MagicFind);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Enchant_MaximumLifePercentage)
 }
 
 

@@ -60,6 +60,7 @@ namespace ObsidianTreasureStatics
 	extern const TMap<FGameplayTag, uint8> DefaultRarityToMaxSuffixCount;
 	extern const TMap<FGameplayTag, uint8> DefaultRarityToMaxPrefixCount;
 	extern const TMap<FGameplayTag, uint8> DefaultRarityToMaxAffixCount;
+	extern const TMap<FGameplayTag, uint8> DefaultRarityToNaturalMinAffixCount;
 	extern const uint8 DefaultMaxImplicitCount;
 
 	inline uint8 GetMaxPrefixCountForRarity(const FGameplayTag& RarityTag)
@@ -83,6 +84,15 @@ namespace ObsidianTreasureStatics
 	inline uint8 GetMaxAffixCountForRarity(const FGameplayTag& RarityTag)
 	{
 		if (const uint8* CountPtr = DefaultRarityToMaxAffixCount.Find(RarityTag))
+		{
+			return *CountPtr;
+		}
+		return 0;
+	}
+
+	inline uint8 GetNaturalMinAffixCountForRarity(const FGameplayTag& RarityTag)
+	{
+		if (const uint8* CountPtr = DefaultRarityToNaturalMinAffixCount.Find(RarityTag))
 		{
 			return *CountPtr;
 		}

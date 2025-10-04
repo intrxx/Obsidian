@@ -8,7 +8,6 @@
 #include "Engine/DataAsset.h"
 
 // ~ Project
-#include "InventoryItems/ObsidianItemAffixStack.h"
 
 #include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 #include "ObsidianTreasureList.generated.h"
@@ -88,7 +87,7 @@ public:
 	FTransform DropTransform = FTransform::Identity;
 
 	UPROPERTY()
-	FGameplayTag DropRarity = FGameplayTag::EmptyTag;
+	FGameplayTag DropRarity = ObsidianGameplayTags::Item_Rarity_Normal;
 	
 	UPROPERTY()
 	uint8 DropStacks = 1;

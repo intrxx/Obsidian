@@ -63,6 +63,13 @@ namespace ObsidianTreasureStatics
 		{ ObsidianGameplayTags::Item_Rarity_Rare, 6 }
 	};
 
+	const TMap<FGameplayTag, uint8> DefaultRarityToNaturalMinAffixCount =
+	{
+		{ ObsidianGameplayTags::Item_Rarity_Normal, 0 },
+		{ ObsidianGameplayTags::Item_Rarity_Magic, 1 },
+		{ ObsidianGameplayTags::Item_Rarity_Rare, 3 }
+	};
+
 	const uint8 DefaultMaxImplicitCount = 1;
 }
 

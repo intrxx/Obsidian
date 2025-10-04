@@ -434,27 +434,88 @@ namespace ObsidianGameplayTags
 	/**
 	 * Rarity
 	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Normal, "Item.Rarity.Normal", "Item Tag representing the normal rarity of the item.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Magic, "Item.Rarity.Magic", "Item Tag representing the magic rarity of the item.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Rare, "Item.Rarity.Rare", "Item Tag representing the rare rarity of the item.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Unique, "Item.Rarity.Unique", "Item Tag representing the Unique rarity of the item.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Normal, "Item.Rarity.Normal", "Item Tag representing the normal rarity of the item.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Magic, "Item.Rarity.Magic", "Item Tag representing the magic rarity of the item.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Rare, "Item.Rarity.Rare", "Item Tag representing the rare rarity of the item.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Unique, "Item.Rarity.Unique", "Item Tag representing the Unique rarity of the item.");
 
 	/**
 	 * Affixes
 	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Dexterity, "Item.Affix.Attribute.Dexterity", "Item Tag which represents Dexterity Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Intelligence, "Item.Affix.Attribute.Intelligence", "Item Tag which represents Intelligence Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Strength, "Item.Affix.Attribute.Strength", "Item Tag which represents Strength Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Attribute_Faith, "Item.Affix.Attribute.Faith", "Item Tag which represents Faith Affix.")
+
+	/**
+	 * Implicits
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Fire, "Item.Affix.Implicits.Resistance.Fire", "Item Tag which represents Fire Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Lightning, "Item.Affix.Implicits.Resistance.Lightning", "Item Tag which represents Lightning Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Cold, "Item.Affix.Implicits.Resistance.Cold", "Item Tag which represents Cold Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Chaos, "Item.Affix.Implicits.Resistance.Chaos", "Item Tag which represents Chaos Resistance Implicits.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Fire, "Item.Affix.Implicits.MaxResistance.Fire", "Item Tag which represents Max Fire Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Lightning, "Item.Affix.Implicits.MaxResistance.Lightning", "Item Tag which represents Max Lightning Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Cold, "Item.Affix.Implicits.MaxResistance.Cold", "Item Tag which represents Max Cold Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Chaos, "Item.Affix.Implicits.MaxResistance.Chaos", "Item Tag which represents Max Chaos Resistance Implicits.");
+
+	/**
+	 * Prefixes
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Life_LifeFlat, "Item.Affix.Prefix.Life.LifeFlat", "Item Tag which represents Flat Life Prefix.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Fire, "Item.Affix.Resistance.Fire", "Item Tag which represents Fire Resistance Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Lightning, "Item.Affix.Resistance.Lightning", "Item Tag which represents Lightning Resistance Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Cold, "Item.Affix.Resistance.Cold", "Item Tag which represents Cold Resistance Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Resistance_Chaos, "Item.Affix.Resistance.Chaos", "Item Tag which represents Chaos Resistance Affix.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Mana_ManaFlat, "Item.Affix.Prefix.Mana.ManaFlat", "Item Tag which represents Flat Mana Prefix.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Utility_MagicFind, "Item.Affix.Prefix.Utility.MagicFind", "Item Tag which represents Magic Find Prefix.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Basic_FlatLife, "Item.Affix.Basic.FlatLife", "Item Tag which represents Flat Life Affix.")
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Basic_FlatMana, "Item.Affix.Basic.FlatMana", "Item Tag which represents Flat Mana Affix.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Defence_ArmorFlat, "Item.Affix.Prefix.Defence.ArmorFlat", "Item Tag which represents Flat Armor Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Defence_ArmorPercent, "Item.Affix.Prefix.Defence.ArmorPercent", "Item Tag which represents Percent Armor Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Defence_EvasionFlat, "Item.Affix.Prefix.Defence.EvasionFlat", "Item Tag which represents Flat Evasion Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Defence_EvasionPercent, "Item.Affix.Prefix.Defence.EvasionPercent", "Item Tag which represents Percent Evasion Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Defence_EnergyShieldFlat, "Item.Affix.Prefix.Defence.EnergyShieldFlat", "Item Tag which represents Flat Energy Shield Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Defence_EnergyShieldPercent, "Item.Affix.Prefix.Defence.EnergyShieldPercent", "Item Tag which represents Percent Energy Shield Prefix.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Enchant_MaximumLifePercentage, "Item.Affix.Enchant.MaximumLifePercentage", "Item Tag which represents Enchant that gives Percentage Maximum Life Affix.")
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageMultiplier_IncreasePhysicalDamage, "Item.Affix.Prefix.DamageMultiplier.IncreasePhysicalDamage", "Item Tag which represents Multiplier Physical Damage Increase Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageMultiplier_IncreaseFireDamage, "Item.Affix.Prefix.DamageMultiplier.IncreaseFireDamage", "Item Tag which represents Multiplier Fire Damage Increase Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageMultiplier_IncreaseColdDamage, "Item.Affix.Prefix.DamageMultiplier.IncreaseColdDamage", "Item Tag which represents Multiplier Cold Damage Increase Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageMultiplier_IncreaseLightningDamage, "Item.Affix.Prefix.DamageMultiplier.IncreaseLightningDamage", "Item Tag which represents Multiplier Lightning Damage Increase Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageMultiplier_IncreaseChaosDamage, "Item.Affix.Prefix.DamageMultiplier.IncreaseChaosDamage", "Item Tag which represents Multiplier Chaos Damage Increase Prefix.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRange_PhysicalDamageFlat, "Item.Affix.Prefix.DamageRange.PhysicalDamageFlat", "Item Tag which represents Flat Physical Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRange_PhysicalDamagePercentage, "Item.Affix.Prefix.DamageRange.PhysicalDamagePercentage", "Item Tag which represents Percentage Physical Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRange_FireDamageFlat, "Item.Affix.Prefix.DamageRange.FireDamageFlat", "Item Tag which represents Flat Fire Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRange_FireDamagePercentage, "Item.Affix.Prefix.DamageRange.FireDamagePercentage", "Item Tag which represents Percentage Fire Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRange_ColdDamageFlat, "Item.Affix.Prefix.DamageRange.ColdDamageFlat", "Item Tag which represents Flat Cold Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRange_ColdDamagePercentage, "Item.Affix.Prefix.DamageRange.ColdDamagePercentage", "Item Tag which represents Percentage Cold Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRange_LightningDamageFlat, "Item.Affix.Prefix.DamageRange.LightningDamageFlat", "Item Tag which represents Flat Lightning Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRanger_LightningDamagePercentage, "Item.Affix.Prefix.DamageRange.LightningDamagePercentage", "Item Tag which represents Percentage Lightning Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRanger_ChaosDamageFlat, "Item.Affix.Prefix.DamageRange.ChaosDamageFlat", "Item Tag which represents Flat Chaos Damage Range Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_DamageRanger_ChaosDamagePercentage, "Item.Affix.Prefix.DamageRange.ChaosDamagePercentage", "Item Tag which represents Percentage Chaos Damage Range Prefix.");
+ 
+	/**
+	 * Suffixes
+	 */
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Attribute_Dexterity, "Item.Affix.Suffix.Attribute.Dexterity", "Item Tag which represents Dexterity Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Attribute_Intelligence, "Item.Affix.Suffix.Attribute.Intelligence", "Item Tag which represents Intelligence Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Attribute_Strength, "Item.Affix.Suffix.Attribute.Strength", "Item Tag which represents Strength Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Attribute_Faith, "Item.Affix.Suffix.Attribute.Faith", "Item Tag which represents Faith Suffix.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Resistance_Fire, "Item.Affix.Suffix.Resistance.Fire", "Item Tag which represents Fire Resistance Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Resistance_Lightning, "Item.Affix.Suffix.Resistance.Lightning", "Item Tag which represents Lightning Resistance Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Resistance_Cold, "Item.Affix.Suffix.Resistance.Cold", "Item Tag which represents Cold Resistance Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Resistance_Chaos, "Item.Affix.Suffix.Resistance.Chaos", "Item Tag which represents Chaos Resistance Suffix.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_MaxResistance_Fire, "Item.Affix.Suffix.MaxResistance.Fire", "Item Tag which represents Max Fire Resistance Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_MaxResistance_Lightning, "Item.Affix.Suffix.MaxResistance.Lightning", "Item Tag which represents Max Lightning Resistance Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_MaxResistance_Cold, "Item.Affix.Suffix.MaxResistance.Cold", "Item Tag which represents Max Cold Resistance Suffix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_MaxResistance_Chaos, "Item.Affix.Suffix.MaxResistance.Chaos", "Item Tag which represents Max Chaos Resistance Suffix.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Utility_MagicFind, "Item.Affix.Suffix.Utility.MagicFind", "Item Tag which represents Magic Find Suffix.");
+	
+	/**
+	 * Enchanted Affixes
+	 */
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Enchant_MaximumLifePercentage, "Item.Affix.Suffix.Enchant.MaximumLifePercentage", "Item Tag which represents Enchant that gives Percentage Maximum Life Affix.");
 	
 }
