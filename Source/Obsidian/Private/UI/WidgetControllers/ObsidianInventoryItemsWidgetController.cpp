@@ -674,7 +674,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(
 		{
 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(AtGridSlot);
 		}
-		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, DraggedItem.Stacks))
+		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, DraggedItem.GeneratedData.StackCount))
 		{
 			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
 		}

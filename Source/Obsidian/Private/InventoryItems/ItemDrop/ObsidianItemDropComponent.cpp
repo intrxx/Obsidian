@@ -296,6 +296,8 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 		uint8 AddedSuffixes = 0;
 		const uint8 MaxPrefixCount = ObsidianTreasureStatics::GetMaxPrefixCountForRarity(ItemRarityTag);
 		const uint8 MaxSuffixCount = ObsidianTreasureStatics::GetMaxSuffixCountForRarity(ItemRarityTag);
+		//TODO(intrxx) Roll the number of Prefixes and Affixes to add to the item
+		
 		for (uint8 i = 0; i < ObsidianTreasureStatics::GetMaxAffixCountForRarity(ItemRarityTag); ++i)
 		{
 			if (FMath::RandBool() && AddedPrefixes <= MaxPrefixCount) // Roll Prefix

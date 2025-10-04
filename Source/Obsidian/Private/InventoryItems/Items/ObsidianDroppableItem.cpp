@@ -18,7 +18,6 @@
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Inventory/Items/ObsidianItemWorldName.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -118,8 +117,7 @@ void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
 
 	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
-		const int32 Stacks = DraggedItem.Stacks;
-		AddItemDefinition(ItemDef, Stacks);
+		AddItemDefinition(ItemDef, DraggedItem.GeneratedData);
 		return;
 	}
 
@@ -140,7 +138,26 @@ void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventory
 	
 	if(ItemDef)
 	{
-		AddItemDefinition(ItemDef, ItemStacks);
+		AddItemDefinition(ItemDef, FObsidianItemGeneratedData(ItemStacks));
+		return;
+	}
+}
+
+void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& InGeneratedData)
+{
+	if(HasAuthority() == false)
+	{
+		return;
+	}
+
+	if(!ensureMsgf(ItemDef, TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
+	{
+		return;
+	}
+	
+	if(ItemDef)
+	{
+		AddItemDefinition(ItemDef, InGeneratedData);
 		return;
 	}
 }
@@ -194,9 +211,9 @@ void AObsidianDroppableItem::AddItemInstance(UObsidianInventoryItemInstance* Ins
 	SetupItemAppearanceFromInstance();
 }
 
-void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 ItemStacks)
+void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& InGeneratedData)
 {
-	Super::AddItemDefinition(ItemDef, ItemStacks);
+	Super::AddItemDefinition(ItemDef, InGeneratedData);
 
 	SetupItemAppearanceFromDefinition();
 }
@@ -502,8 +519,8 @@ void AObsidianDroppableItem::CreateItemDescription()
 	
 	if(CarriesItemDef())
 	{
-		const FPickupTemplate PickupTemplate = GetPickupTemplateFromPickupContent();
-		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.StackCount);
+		const FObsidianPickupTemplate PickupTemplate = GetPickupTemplateFromPickupContent();
+		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.ItemGeneratedData.StackCount);
 	}
 	else if(CarriesItemInstance())
 	{

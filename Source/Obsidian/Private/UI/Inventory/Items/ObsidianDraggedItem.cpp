@@ -23,7 +23,7 @@ void UObsidianDraggedItem::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 Stacks)
+void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& GeneratedData)
 {
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	
@@ -33,7 +33,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 		return;
 	}
 	
-	InternalStacks = Stacks;
+	InternalStacks = GeneratedData.StackCount;
 	
 	UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 	if(DefaultObject == nullptr)

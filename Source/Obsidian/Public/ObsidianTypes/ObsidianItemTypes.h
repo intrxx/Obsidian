@@ -266,6 +266,126 @@ public:
 };
 
 /**
+ * Item Affix definition used in Affix Tables.
+ */
+USTRUCT()
+struct FObsidianDynamicItemAffix
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianDynamicItemAffix()
+		: bOverride_MagicItemAffixRollMultiplier(false)
+	{}
+
+	explicit operator bool() const
+	{
+		return AffixTag.IsValid();
+	}
+
+	bool operator ==(const FObsidianDynamicItemAffix& Other) const
+	{
+		return AffixTag == Other.AffixTag;
+	}
+	
+public:
+	/** Affix Gameplay Tag Identifier. */
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+
+	//TODO(intrxx) actually set it to the list default
+	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|Affix")
+	EObsidianAffixType AffixType = EObsidianAffixType::None;
+
+	/** Contains Category Tags of Items that this Affix can be applied to. */
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian|AcceptedCategories")
+	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
+
+	/** Unique addition to the Item Name. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	FText AffixItemNameAddition = FText();
+
+	/** Row description of the affix. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	FText AffixDescription = FText();
+
+	/** Minimum Item Level Requirement to roll this affix. */
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"), Category = "Obsidian|Affix")
+	uint8 MinItemLevelRequirement = 1;
+
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
+	uint8 bOverride_MagicItemAffixRollMultiplier : 1;
+
+	/** Multiplier for Affix roll when rolled on Magic Items. */
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "0", EditCondition = "bOverride_MagicItemAffixRollMultiplier"), Category = "Obsidian|Affix")
+	float MagicItemAffixRollMultiplier = 2.0f;
+
+	/** Gameplay Effect Class to Apply. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
+	
+	/** Value type of affix, if set to Int it will be rounded down. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
+
+	/** Possible Affix Ranges to roll from. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	TArray<FObsidianAffixValue> PossibleAffixRanges;
+};
+
+/**
+ * Affix that has been added to the Item.
+ */
+USTRUCT()
+struct FObsidianActiveItemAffix
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianActiveItemAffix(){};
+	
+	explicit operator bool() const
+	{
+		return AffixTag.IsValid();
+	}
+
+	bool operator==(const FObsidianActiveItemAffix& Other) const;
+	bool operator==(const FObsidianDynamicItemAffix& Other) const;
+	bool operator==(const FObsidianStaticItemAffix& Other) const;
+
+	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
+	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
+
+	void InitializeAffixTierAndRange();
+	void RandomizeAffixValue();
+
+public:
+	UPROPERTY()
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	EObsidianAffixType AffixType = EObsidianAffixType::None;
+	
+	UPROPERTY()
+	FText AffixItemNameAddition = FText();
+	
+	UPROPERTY()
+	FText AffixDescription = FText();
+	
+	UPROPERTY()
+	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
+
+	UPROPERTY()
+	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
+	
+	UPROPERTY()
+	TArray<FObsidianAffixValue> PossibleAffixRanges;
+
+	UPROPERTY()
+	FObsidianAffixValue CurrentAffixValue;
+};
+
+/**
  * Grid Owner.
  */
 UENUM()
@@ -601,6 +721,38 @@ public:
  * 
  */
 USTRUCT(BlueprintType)
+struct FObsidianItemGeneratedData
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianItemGeneratedData(){}
+	FObsidianItemGeneratedData(const int32 InStacks)
+		: StackCount(InStacks)
+	{}
+	FObsidianItemGeneratedData(const int32 InStacks, const FGameplayTag& InRarityTag, const TArray<FObsidianActiveItemAffix>& InAffixes)
+		: StackCount(InStacks)
+		, ItemRarityTag(InRarityTag)
+		, ItemAffixes(InAffixes)
+	{}
+
+	void Reset();
+	
+public:
+	UPROPERTY()
+	int32 StackCount = 1;
+
+	UPROPERTY()
+	FGameplayTag ItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
+
+	UPROPERTY()
+	TArray<FObsidianActiveItemAffix> ItemAffixes;
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
 struct FDraggedItem
 {
 public:
@@ -608,9 +760,9 @@ public:
 	
 	FDraggedItem(){};
 	FDraggedItem(UObsidianInventoryItemInstance* InInstance);
-	FDraggedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const int32 InStacks)
+	FDraggedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InGeneratedData)
 		: ItemDef(InItemDef)
-		, Stacks(InStacks)
+		, GeneratedData(InGeneratedData)
 	{}
 
 	bool IsEmpty() const
@@ -632,7 +784,7 @@ public:
 	{
 		Instance = nullptr;
 		ItemDef = nullptr;
-		Stacks = 0;
+		GeneratedData.Reset();
 	}
 
 public:
@@ -643,7 +795,7 @@ public:
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = nullptr;
 	
 	UPROPERTY()
-	int32 Stacks = 0;
+	FObsidianItemGeneratedData GeneratedData = 0;
 };
 
 /**

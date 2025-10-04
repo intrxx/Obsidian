@@ -235,10 +235,10 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const int32 StackCount)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = StackCount;
+	Result.StacksLeft = ItemGeneratedData.StackCount;
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -298,6 +298,8 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 	
 	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, Result.StacksLeft, AvailablePosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
+	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -309,10 +311,10 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemPosition& ItemPosition, const int32 StackCount, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemPosition& ItemPosition, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = StackCount;
+	Result.StacksLeft = ItemGeneratedData.StackCount;
 
 	ensure((ItemPosition.GetItemGridLocation(false) != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag(false) != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
 	
@@ -358,6 +360,8 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 	
 	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, StacksAvailableToAdd, ItemPosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
+	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{

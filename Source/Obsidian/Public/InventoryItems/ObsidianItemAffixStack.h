@@ -20,58 +20,6 @@ class UObsidianInventoryItemInstance;
 DECLARE_LOG_CATEGORY_EXTERN(LogAffixes, Log, All);
 
 /**
- * Affix that has been added to the Item.
- */
-USTRUCT()
-struct FObsidianActiveItemAffix
-{
-	GENERATED_BODY()
-
-public:
-	FObsidianActiveItemAffix(){};
-	
-	explicit operator bool() const
-	{
-		return AffixTag.IsValid();
-	}
-
-	bool operator==(const FObsidianActiveItemAffix& Other) const;
-	bool operator==(const FObsidianDynamicItemAffix& Other) const;
-	bool operator==(const FObsidianStaticItemAffix& Other) const;
-
-	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
-	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
-
-	void InitializeAffixTierAndRange();
-	void RandomizeAffixValue();
-
-public:
-	UPROPERTY()
-	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
-
-	UPROPERTY()
-	EObsidianAffixType AffixType = EObsidianAffixType::None;
-	
-	UPROPERTY()
-	FText AffixItemNameAddition = FText();
-	
-	UPROPERTY()
-	FText AffixDescription = FText();
-	
-	UPROPERTY()
-	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
-
-	UPROPERTY()
-	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
-	
-	UPROPERTY()
-	TArray<FObsidianAffixValue> PossibleAffixRanges;
-
-	UPROPERTY()
-	FObsidianAffixValue CurrentAffixValue;
-};
-
-/**
  *	A single Entry in Item affix Stack.
  */
 USTRUCT(BlueprintType)

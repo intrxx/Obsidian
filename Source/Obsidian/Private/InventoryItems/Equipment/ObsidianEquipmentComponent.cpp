@@ -274,7 +274,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(UO
 	return Result;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
+FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData, const FGameplayTag& EquipSlotTagOverride)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -332,6 +332,10 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 
 	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, EquipTag);
+	check(ItemGeneratedData.StackCount == 1); //TODO This should always be the case for equipment.
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -438,7 +442,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipInstance(const UO
 	return EObsidianEquipCheckResult::CanEquip;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 StackCount)
+FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -474,7 +478,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 			continue; // We already have an item equipped in this slot, we shouldn't try to equip it. || Initial slot is free but the other one is occupied so we don't want to automatically equip.
 		}
 		
-		if(const FObsidianEquipmentResult& InternalResult = EquipItemToSpecificSlot(ItemDef, SlotTag, StackCount))
+		if(const FObsidianEquipmentResult& InternalResult = EquipItemToSpecificSlot(ItemDef, SlotTag, ItemGeneratedData))
 		{
 			return InternalResult;
 		}
@@ -483,7 +487,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	return Result;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const int32 StackCount)
+FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -515,7 +519,10 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	}
 	
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackCount);
+	check(ItemGeneratedData.StackCount == 1); //TODO This should always be the case for equipment.
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{

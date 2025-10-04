@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-
+#include "ObsidianTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianDraggedItem.generated.h"
@@ -26,7 +26,7 @@ class OBSIDIAN_API UObsidianDraggedItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 Stacks);
+	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& GeneratedData);
 	void InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* ItemInstance);
 	
 	/** Updates the stack count on the dragged item. */

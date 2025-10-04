@@ -210,10 +210,10 @@ bool UObsidianInventoryComponent::CheckReplacementPossible(const FIntPoint& AtGr
 	return bCanReplace;
 }
 
-FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
+FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = StackCount;
+	Result.StacksLeft = ItemGeneratedData.StackCount;
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -290,6 +290,8 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, AvailablePosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
+	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -301,10 +303,10 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, const int32 StackCount, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = StackCount;
+	Result.StacksLeft = ItemGeneratedData.StackCount;
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -331,7 +333,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 	int32 StacksAvailableToAdd = 1;
 	if(DefaultObject->IsStackable())
 	{
-		StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(ItemDef, StackCount);
+		StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(ItemDef, Result.StacksLeft);
 		if(StacksAvailableToAdd == 0)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
@@ -359,6 +361,8 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 	
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, ToGridSlot);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
+	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
