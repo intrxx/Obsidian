@@ -364,6 +364,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Magic);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Rare);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Unique);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Set);
 
 	/**
 	 * ---- Affixes ----
@@ -372,6 +373,10 @@ namespace ObsidianGameplayTags
 	/**
 	 * Implicits
 	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_Life_LifeFlat);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_Mana_ManaFlat);
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Fire);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Lightning);

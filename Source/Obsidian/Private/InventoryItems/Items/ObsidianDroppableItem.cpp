@@ -520,7 +520,7 @@ void AObsidianDroppableItem::CreateItemDescription()
 	if(CarriesItemDef())
 	{
 		const FObsidianPickupTemplate PickupTemplate = GetPickupTemplateFromPickupContent();
-		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.ItemGeneratedData.StackCount);
+		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.ItemGeneratedData);
 	}
 	else if(CarriesItemInstance())
 	{

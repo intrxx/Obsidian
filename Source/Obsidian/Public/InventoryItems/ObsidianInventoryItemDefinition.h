@@ -32,9 +32,6 @@ public:
 	{
 		return DebugName;
 	}
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
-	FGameplayTag GetItemRarityTag() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
 	FGameplayTag GetItemCategoryTag() const;
@@ -58,6 +55,10 @@ public:
 	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Debug")
 	FString DebugName;
+
+	/** Whether, or not the item starts identified. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	bool bStartsIdentified = false;
 
 	/** Collection of Fragments that extends and defines this item. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Instanced, Category = "Obsidian")

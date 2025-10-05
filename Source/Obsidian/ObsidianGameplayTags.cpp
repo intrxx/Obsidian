@@ -438,6 +438,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Magic, "Item.Rarity.Magic", "Item Tag representing the magic rarity of the item.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Rare, "Item.Rarity.Rare", "Item Tag representing the rare rarity of the item.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Unique, "Item.Rarity.Unique", "Item Tag representing the Unique rarity of the item.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Set, "Item.Rarity.Set", "Item Tag representing the Set rarity of the item.");
 
 	/**
 	 * Affixes
@@ -447,6 +448,10 @@ namespace ObsidianGameplayTags
 	 * Implicits
 	 */
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_Life_LifeFlat, "Item.Affix.Implicit.Life.LifeFlat", "Item Tag which represents Flat Life Implicit.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_Mana_ManaFlat, "Item.Affix.Implicit.Mana.ManaFlat", "Item Tag which represents Flat Mana Implicit.");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Fire, "Item.Affix.Implicits.Resistance.Fire", "Item Tag which represents Fire Resistance Implicits.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Lightning, "Item.Affix.Implicits.Resistance.Lightning", "Item Tag which represents Lightning Resistance Implicits.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Cold, "Item.Affix.Implicits.Resistance.Cold", "Item Tag which represents Cold Resistance Implicits.");

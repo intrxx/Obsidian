@@ -50,59 +50,6 @@ enum class EObsidianEntityRarity : uint8
 /**
  * 
  */
-namespace ObsidianTreasureStatics
-{
-	extern const uint8 MaxTreasureQuality;
-	extern const TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap;
-	extern const TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap;
-	
-	extern const TMap<FGameplayTag, uint16> DefaultRarityToWeightMap;
-	extern const TMap<FGameplayTag, uint8> DefaultRarityToMaxSuffixCount;
-	extern const TMap<FGameplayTag, uint8> DefaultRarityToMaxPrefixCount;
-	extern const TMap<FGameplayTag, uint8> DefaultRarityToMaxAffixCount;
-	extern const TMap<FGameplayTag, uint8> DefaultRarityToNaturalMinAffixCount;
-	extern const uint8 DefaultMaxImplicitCount;
-
-	inline uint8 GetMaxPrefixCountForRarity(const FGameplayTag& RarityTag)
-	{
-		if (const uint8* CountPtr = DefaultRarityToMaxPrefixCount.Find(RarityTag))
-		{
-			return *CountPtr;
-		}
-		return 0;
-	}
-	
-	inline uint8 GetMaxSuffixCountForRarity(const FGameplayTag& RarityTag)
-	{
-		if (const uint8* CountPtr = DefaultRarityToMaxSuffixCount.Find(RarityTag))
-		{
-			return *CountPtr;
-		}
-		return 0;
-	}
-	
-	inline uint8 GetMaxAffixCountForRarity(const FGameplayTag& RarityTag)
-	{
-		if (const uint8* CountPtr = DefaultRarityToMaxAffixCount.Find(RarityTag))
-		{
-			return *CountPtr;
-		}
-		return 0;
-	}
-
-	inline uint8 GetNaturalMinAffixCountForRarity(const FGameplayTag& RarityTag)
-	{
-		if (const uint8* CountPtr = DefaultRarityToNaturalMinAffixCount.Find(RarityTag))
-		{
-			return *CountPtr;
-		}
-		return 0;
-	}
-}
-
-/**
- * 
- */
 namespace ObsidianInventoryItemsStatics
 {
 	static const FVector2D InventorySlotSize(64.0f, 64.0f); // TODO Get rid of later

@@ -13,6 +13,7 @@
 #include "ObsidianItemDropComponent.generated.h"
 
 class UObsidianInventoryItemDefinition;
+class UObsidianItemDataDeveloperSettings;
 
 UENUM()
 enum class EObsidianAdditionalTreasureListPolicy : uint8
@@ -84,8 +85,8 @@ protected:
 	
 	void LoadAdditionalTreasuresAsync();
 
-	void GenerateItem(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const uint8 MaxTreasureClassQuality);
-	void GetTreasureClassesToRollFrom(const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
+	void GenerateItem(FObsidianItemToDrop& ForItemToDrop, const uint8 MaxTreasureClassQuality);
+	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -96,8 +97,14 @@ protected:
 
 private:
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
-	FGameplayTag RollItemRarity(const FGameplayTag& MaxItemRarityTag = ObsidianGameplayTags::Item_Rarity_Rare);
+	FGameplayTag RollItemRarity();
 
-	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
-	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
+	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
+
+	//TODO(intrxx) Clean it up
+	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
+
+private:
+	UPROPERTY()
+	UObsidianItemDataLoaderSubsystem* CachedItemDataLoader = nullptr;
 };

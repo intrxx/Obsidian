@@ -81,7 +81,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemIns
 	return true;
 }
 
-bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 TemplateCurrentItemStacks, FObsidianItemStats& OutItemStats)
+bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData, FObsidianItemStats& OutItemStats)
 {
 	if(IsValid(ItemDef) == false)
 	{
@@ -98,7 +98,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 	{
 		if(const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass())))
 		{
-			OutItemStats.SetStacks(TemplateCurrentItemStacks, // Current Item Stacks are not present on ItemDef, they are directly on Pickable Item
+			OutItemStats.SetStacks(ItemGeneratedData.StackCount,
 				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Max));
 		}
 	}
@@ -110,18 +110,9 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 		OutItemStats.SetDescription(AppearanceFrag->GetItemDescription());
 		OutItemStats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());
 	}
-
-	if(const UOInventoryItemFragment_Affixes* AffixesFrag = Cast<UOInventoryItemFragment_Affixes>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())))
-	{
-		OutItemStats.ItemRarity = AffixesFrag->GetItemRarityTag();
-		const bool bIdentified = AffixesFrag->DoesStartIdentified();
-		OutItemStats.SetIdentified(bIdentified);
-		if(bIdentified)
-		{
-			//TODO(intrxx) #AffixRefactor
-			//OutItemStats.SetAffixDescriptionRows(AffixesFrag->GetAffixesAsUIDescription());
-		}
-	}
+	
+	OutItemStats.SetIdentified(IsDefinitionIdentified(ItemDefault, ItemGeneratedData));
+	OutItemStats.ItemRarity = ItemGeneratedData.ItemRarityTag;
 
 	return true;
 }
@@ -243,5 +234,15 @@ FGameplayTag UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(const 
 	}
 	
 	return FGameplayTag::EmptyTag;
+}
+
+bool UObsidianItemsFunctionLibrary::IsDefinitionIdentified(const UObsidianInventoryItemDefinition* ItemDefault, const FObsidianItemGeneratedData& ItemGeneratedData)
+{
+	if (ItemDefault)
+	{
+		/** Add any other conditions form ItemGeneratedData (Corrupted?). */
+		return ItemDefault->DoesStartIdentified() || (ItemGeneratedData.ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Normal);
+	}
+	return false;
 }
 

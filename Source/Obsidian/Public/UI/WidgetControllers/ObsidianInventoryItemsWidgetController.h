@@ -195,7 +195,7 @@ public:
 	void RemoveCurrentItemDescription();
 
 	void CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
-	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks);
+	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData);
 	
 public:
 	FOnItemAddedSignature OnItemEquippedDelegate;

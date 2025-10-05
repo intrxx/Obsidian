@@ -14,6 +14,7 @@
 
 // ~ Project
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
@@ -79,6 +80,13 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		return;
 	}
 
+	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
+	if (ItemDataSettings == nullptr)
+	{
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return;
+	}
+
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
@@ -86,20 +94,20 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		return;
 	}
 
-	const UObsidianItemDataLoaderSubsystem* ItemDataLoader = GameInstance->GetSubsystem<UObsidianItemDataLoaderSubsystem>();
-	if (ItemDataLoader == nullptr)
+	CachedItemDataLoader = CachedItemDataLoader == nullptr ? GameInstance->GetSubsystem<UObsidianItemDataLoaderSubsystem>() : CachedItemDataLoader;
+	if (CachedItemDataLoader == nullptr)
 	{
-		UE_LOG(LogDropComponent, Error, TEXT("ItemDataLoader is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogDropComponent, Error, TEXT("CachedItemDataLoader is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
 		return;
 	}
 	
 	const uint8 TreasureQuality = FMath::Clamp(
-		(DroppingEntityLevel + ObsidianTreasureStatics::DefaultRarityToAddedTreasureQualityMap[DroppingEntityRarity]),
-		1, ObsidianTreasureStatics::MaxTreasureQuality);
+		(DroppingEntityLevel + ItemDataSettings->GetDefaultAddedTreasureQualityForEntityRarity(DroppingEntityRarity)),
+		1, ItemDataSettings->MaxTreasureQuality);
 	
 	TArray<FObsidianTreasureClass> TreasureClasses;
 	TArray<FObsidianTreasureClass> MustRollFromTreasureClasses;
-	GetTreasureClassesToRollFrom(ItemDataLoader, TreasureQuality, TreasureClasses, MustRollFromTreasureClasses);
+	GetTreasureClassesToRollFrom(TreasureQuality, TreasureClasses, MustRollFromTreasureClasses);
 	
 	if (TreasureClasses.IsEmpty() && MustRollFromTreasureClasses.IsEmpty())
 	{
@@ -114,7 +122,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		UE_LOG(LogDropComponent, Error, TEXT("OwningActor of ItemDropComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 	}
 	
-	uint8 DropRolls = ObsidianTreasureStatics::DefaultRarityToNumberOfDropRollsMap[DroppingEntityRarity];
+	uint8 DropRolls = ItemDataSettings->GetDefaultDropRollNumberForEntityRarity(DroppingEntityRarity);
 	TArray<FObsidianItemToDrop> ItemsToDrop;
 	
 	if (MustRollFromTreasureClasses.IsEmpty() == false && DropRolls > 0)
@@ -138,7 +146,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 			
 			ItemToDrop.DropStacks = RolledItem.GetRandomStackSizeToDropAdjusted(TreasureQuality); //TODO(intrxx) shouldn't I just set it in the function?
 			ItemToDrop.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
-			GenerateItem(ItemToDrop, ItemDataLoader, TreasureQuality);
+			GenerateItem(ItemToDrop, TreasureQuality);
 			ItemsToDrop.Add(ItemToDrop);
 		}
 		DropRolls--;
@@ -166,7 +174,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 			
 			ItemToDrop.DropStacks = RolledItem.GetRandomStackSizeToDropAdjusted(TreasureQuality); //TODO(intrxx) shouldn't I just set it in the function?
 			ItemToDrop.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
-			GenerateItem(ItemToDrop, ItemDataLoader, TreasureQuality);
+			GenerateItem(ItemToDrop, TreasureQuality);
 			ItemsToDrop.Add(ItemToDrop);
 		}
 	}
@@ -185,15 +193,8 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	}
 }
 
-void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader,
-	const uint8 MaxTreasureClassQuality)
+void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop, const uint8 MaxTreasureClassQuality)
 {
-	if (FromItemDataLoader == nullptr)
-	{
-		UE_LOG(LogDropComponent, Error, TEXT("ItemDataLoader subsystem is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
-		return;
-	}
-	
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = ForItemToDrop.ItemDefinitionClass;
 	if (ItemDef == nullptr)
 	{
@@ -234,14 +235,21 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
 						*ImplicitAffix.AffixItemNameAddition.ToString());
 				}
-				HandleDefaultGeneration(ForItemToDrop, FromItemDataLoader, ItemCategory, MaxTreasureClassQuality);
+				HandleDefaultGeneration(ForItemToDrop, ItemCategory, MaxTreasureClassQuality);
 			} break;
 		case EObsidianAffixGenerationType::FullGeneration:
 			{
-				HandleFullGeneration(ForItemToDrop, FromItemDataLoader, ItemCategory, MaxTreasureClassQuality);
+				HandleFullGeneration(ForItemToDrop, ItemCategory, MaxTreasureClassQuality);
 			} break;
 		case EObsidianAffixGenerationType::NoGeneration:
 			{
+				//TODO()
+				FGameplayTag OutRarity;
+				if (AffixFragment->IsUniqueOrSet_GetRarity(OutRarity))
+				{
+					ForItemToDrop.DropRarity = OutRarity;
+				}
+				
 				if (AffixFragment->HasImplicitAffix())
 				{
 					FObsidianStaticItemAffix ImplicitAffix = AffixFragment->GetStaticImplicitAffix();
@@ -271,10 +279,19 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 	}
 }
 
-void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader,
-	const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality)
+void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
+	const uint8 MaxTreasureClassQuality)
 {
+	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
+	if (ItemDataSettings == nullptr)
+	{
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return;
+	}
+	
 	const FGameplayTag ItemRarityTag = RollItemRarity();
+	ensureMsgf(ItemRarityTag != ObsidianGameplayTags::Item_Rarity_Set && ItemRarityTag != ObsidianGameplayTags::Item_Rarity_Unique,
+		TEXT("Implement upgrading the item to the respective rarity."));
 	ForItemToDrop.DropRarity = ItemRarityTag;
 	
 	if (ItemRarityTag != ObsidianGameplayTags::Item_Rarity_Normal)
@@ -282,7 +299,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
 					
-		const bool bGatheredAffixes = FromItemDataLoader->GetAllAffixesUpToQualityForCategory_DefaultGeneration(MaxTreasureClassQuality,
+		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_DefaultGeneration(MaxTreasureClassQuality,
 			DropItemCategory, PrefixAffixes, SuffixAffixes);
 		if (bGatheredAffixes == false)
 		{
@@ -290,15 +307,16 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 				*DropItemCategory.GetTagName().ToString(), MaxTreasureClassQuality);
 			return;
 		}
-
 		
-		const uint8 MaxPrefixCount = ObsidianTreasureStatics::GetMaxPrefixCountForRarity(ItemRarityTag);
-		const uint8 MaxSuffixCount = ObsidianTreasureStatics::GetMaxSuffixCountForRarity(ItemRarityTag);
+		const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ItemRarityTag);
+		const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ItemRarityTag);
+
 		
 		//TODO(intrxx) This Roll should be weighted too.
-		const uint8 AffixCountToRoll = FMath::RandRange(ObsidianTreasureStatics::GetNaturalMinAffixCountForRarity(ItemRarityTag),
-			ObsidianTreasureStatics::GetMaxAffixCountForRarity(ItemRarityTag));
-
+		const uint8 AffixCountToRoll = FMath::RandRange(ItemDataSettings->GetNaturalMinAffixCountForRarity(ItemRarityTag),
+			ItemDataSettings->GetMaxAffixCountForRarity(ItemRarityTag));
+		
+		
 		uint8 AddedPrefixes = 0;
 		uint8 AddedSuffixes = 0;
 		for (uint8 i = 0; i < AffixCountToRoll; ++i)
@@ -353,10 +371,19 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 	}				
 }
 
-void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const UObsidianItemDataLoaderSubsystem* FromItemDataLoader,
-	const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality)
+void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
+	const uint8 MaxTreasureClassQuality)
 {
+	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
+	if (ItemDataSettings == nullptr)
+	{
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return;
+	}
+	
 	const FGameplayTag ItemRarityTag = RollItemRarity();
+	ensureMsgf(ItemRarityTag != ObsidianGameplayTags::Item_Rarity_Set && ItemRarityTag != ObsidianGameplayTags::Item_Rarity_Unique,
+		TEXT("Implement upgrading the item to the respective rarity."));
 	ForItemToDrop.DropRarity = ItemRarityTag;
 	
 	if (ItemRarityTag != ObsidianGameplayTags::Item_Rarity_Normal)
@@ -365,7 +392,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
 					
-		const bool bGatheredAffixes = FromItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(MaxTreasureClassQuality,
+		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(MaxTreasureClassQuality,
 			DropItemCategory, PrefixAffixes, SuffixAffixes, ImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
@@ -389,9 +416,9 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 		
 		uint8 AddedPrefixes = 0;
 		uint8 AddedSuffixes = 0;
-		const uint8 MaxPrefixCount = ObsidianTreasureStatics::GetMaxPrefixCountForRarity(ItemRarityTag);
-		const uint8 MaxSuffixCount = ObsidianTreasureStatics::GetMaxSuffixCountForRarity(ItemRarityTag);
-		for (uint8 i = 0; i < ObsidianTreasureStatics::GetMaxAffixCountForRarity(ItemRarityTag); ++i)
+		const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ItemRarityTag);
+		const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ItemRarityTag);
+		for (uint8 i = 0; i < ItemDataSettings->GetMaxAffixCountForRarity(ItemRarityTag); ++i)
 		{
 			if (FMath::RandBool() && AddedPrefixes <= MaxPrefixCount) // Roll Prefix
 			{
@@ -441,7 +468,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 	}				
 }
 
-void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const UObsidianItemDataLoaderSubsystem* FromItemDataLoader, const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)
+void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)
 {
 	bool bRollFromCommonSet = true;
 	for (const FObsidianAdditionalTreasureList& AdditionalTreasureList : AdditionalTreasureLists) 
@@ -491,13 +518,7 @@ void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const UObsidianIte
 		return;
 	}
 	
-	if (FromItemDataLoader == nullptr)
-	{
-		UE_LOG(LogDropComponent, Error, TEXT("ItemDataLoader subsystem is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
-		return;
-	}
-
-	const bool bSuccess = FromItemDataLoader->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality, OutTreasureClasses);
+	const bool bSuccess = CachedItemDataLoader->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality, OutTreasureClasses);
 	if (bSuccess == false)
 	{
 		UE_LOG(LogDropComponent, Error, TEXT("Gathering TreasureClasses failed in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
@@ -564,31 +585,36 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 	return FTransform(ItemRotation, DropLocation, FVector(1.0f, 1.0f, 1.0f));
 }
 
-FGameplayTag UObsidianItemDropComponent::RollItemRarity(const FGameplayTag& MaxItemRarityTag)
+FGameplayTag UObsidianItemDropComponent::RollItemRarity()
 {
-	return ObsidianGameplayTags::Item_Rarity_Rare;
-	// TMap<FGameplayTag, uint16> RarityToWeightMap = ObsidianTreasureStatics::DefaultRarityToWeightMap;
-	// //TODO(intrxx) Implement MaxItemRarity
-	//
-	// uint32 MaxWeight = 0;
-	// for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
-	// {
-	// 	MaxWeight += RarityWithWeight.Value;
-	// }
-	//
-	// const uint32 RolledWeight = FMath::RandRange(0, MaxWeight);
-	// uint32 Cumulative = 0;
-	// for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
-	// {
-	// 	Cumulative += RarityWithWeight.Value;
-	// 	if (RolledWeight <= Cumulative)
-	// 	{
-	// 		return RarityWithWeight.Key;
-	// 	}
-	// }
-	//
-	// ensureAlways(false);
-	// return ObsidianGameplayTags::Item_Rarity_Normal;
+	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
+	if (ItemDataSettings == nullptr)
+	{
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return ObsidianGameplayTags::Item_Rarity_Normal;
+	}
+	
+	TMap<FGameplayTag, uint16> RarityToWeightMap = ItemDataSettings->DefaultRarityToWeightMap;
+	
+	uint32 MaxWeight = 0;
+	for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
+	{
+		MaxWeight += RarityWithWeight.Value;
+	}
+	
+	const uint32 RolledWeight = FMath::RandRange(0, MaxWeight);
+	uint32 Cumulative = 0;
+	for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
+	{
+		Cumulative += RarityWithWeight.Value;
+		if (RolledWeight <= Cumulative)
+		{
+			return RarityWithWeight.Key;
+		}
+	}
+	
+	ensureAlways(false);
+	return ObsidianGameplayTags::Item_Rarity_Normal;
 }
 
 #if WITH_EDITOR

@@ -40,6 +40,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
+	DOREPLIFETIME(ThisClass, bStartsIdentified);
 	DOREPLIFETIME(ThisClass, bIdentified);
 	DOREPLIFETIME(ThisClass, bEquippable);
 	DOREPLIFETIME(ThisClass, bUsable);
@@ -186,6 +187,11 @@ FObsidianItemsMatchingUsableContext UObsidianInventoryItemInstance::FireItemUseU
 	return FObsidianItemsMatchingUsableContext();
 }
 
+void UObsidianInventoryItemInstance::SetStartsIdentified(const bool InStartsIdentified)
+{
+	bStartsIdentified = InStartsIdentified;
+}
+
 void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)
 {
 	bIdentified = InIdentified;
@@ -193,11 +199,21 @@ void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)
 
 bool UObsidianInventoryItemInstance::IsItemIdentified() const
 {
-	return bIdentified;
+	return bStartsIdentified || bIdentified;
+}
+
+TArray<FObsidianActiveItemAffix> UObsidianInventoryItemInstance::GetAllItemAffixes() const
+{
+	return ItemAffixes.GetAllItemAffixes();
 }
 
 void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
 {
+	if (AffixesToInitialize.IsEmpty())
+	{
+		return;
+	}
+	
 	ItemAffixes.InitializeAffixes(this, AffixesToInitialize);
 }
 

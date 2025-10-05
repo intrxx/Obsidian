@@ -14,6 +14,7 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 
 DEFINE_LOG_CATEGORY(LogEquipment);
@@ -336,6 +337,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
 	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
@@ -523,6 +525,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
 	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{

@@ -9,6 +9,8 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 // ~ FObsidianDropItem
@@ -30,6 +32,13 @@ bool FObsidianDropItem::IsValid() const
 
 uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQuality) const
 {
+	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
+	if (ItemDataSettings == nullptr)
+	{
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return 0;
+	}
+	
 	if (bStackable == false)
 	{
 		return 1;
@@ -47,7 +56,7 @@ uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQu
 		MaxStack = FMath::Max(MaxStack, StackSizeConfig.StackSize);
 	}
 
-	const float RollBias = TreasureQuality / ObsidianTreasureStatics::MaxTreasureQuality;
+	const float RollBias = TreasureQuality / ItemDataSettings->MaxTreasureQuality;
 	uint32 TotalAdjustedWeight = 0;
 	for (FObsidianStacksToDrop& AdjustedStackSizeConfig : AdjustedStackSizes)
 	{

@@ -142,13 +142,18 @@ public:
 	/**
 	 * Affixes.
 	 */
-
+	
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	void SetStartsIdentified(const bool InStartsIdentified);
+	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetIdentified(const bool InIdentified);
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsItemIdentified() const;
 
+	TArray<FObsidianActiveItemAffix> GetAllItemAffixes() const;
+	
 	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
 	void AddAffix(const FObsidianActiveItemAffix& AffixToAdd);
 	void RemoveAffix(const FGameplayTag& AffixTag);
@@ -316,7 +321,10 @@ private:
 	 */
 
 	UPROPERTY(Replicated)
-	bool bIdentified = true;
+	bool bStartsIdentified = false;
+
+	UPROPERTY(Replicated)
+	bool bIdentified = false;
 	
 	UPROPERTY(Replicated)
 	FObsidianItemAffixStack ItemAffixes;

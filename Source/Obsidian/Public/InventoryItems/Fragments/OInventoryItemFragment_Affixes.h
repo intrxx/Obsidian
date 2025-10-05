@@ -48,11 +48,12 @@ public:
 	//~ End of UObsidianInventoryItemFragment
 	
 	bool HasImplicitAffix() const;
-	bool DoesStartIdentified() const;
+	
+	/** Returns true if the item is either Unique or Set, fills the Rarity Tag if thats the case. */
+	bool IsUniqueOrSet_GetRarity(FGameplayTag& OutRarity) const;
 
 	FObsidianStaticItemAffix GetStaticImplicitAffix() const;
 	TArray<FObsidianStaticItemAffix> GetStaticAffixes() const;
-	FGameplayTag GetItemRarityTag() const;
 	EObsidianAffixGenerationType GetGenerationType() const;
 
 protected:
@@ -73,8 +74,4 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
 	TArray<FObsidianStaticItemAffix> StaticItemAffixes;
-	
-	/** Whether or not the item starts identified, normal, items without any affixes or items with this bool set to true will start as identified. */
-	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
-	bool bStartsIdentified = false;
 };

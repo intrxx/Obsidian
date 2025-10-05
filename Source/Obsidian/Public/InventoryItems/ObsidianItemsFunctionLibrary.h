@@ -42,7 +42,7 @@ public:
 
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
-	static bool GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 TemplateCurrentItemStacks, FObsidianItemStats& OutItemStats);
+	static bool GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData, FObsidianItemStats& OutItemStats);
 
 	/** Calculates the amount of stacks that can be added to the Item from provided Instance, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
@@ -56,5 +56,8 @@ public:
 	static bool IsItemUnique(const UObsidianInventoryItemInstance* ItemInstance);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
-	static FGameplayTag GetCategoryTagFromDraggedItem(const FDraggedItem& DraggedItem); 
+	static FGameplayTag GetCategoryTagFromDraggedItem(const FDraggedItem& DraggedItem);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
+	static bool IsDefinitionIdentified(const UObsidianInventoryItemDefinition* ItemDefault, const FObsidianItemGeneratedData& ItemGeneratedData);
 };

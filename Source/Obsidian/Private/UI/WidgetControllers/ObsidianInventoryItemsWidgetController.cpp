@@ -1080,7 +1080,7 @@ void UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedIte
 	}
 }
 
-void UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentItemStacks)
+void UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	if(!CanShowDescription())
 	{
@@ -1088,7 +1088,7 @@ void UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedIte
 	}
 	
 	FObsidianItemStats OutItemStats;
-	if(UObsidianItemsFunctionLibrary::GetItemStats_WithDef(ItemDef, CurrentItemStacks, OutItemStats))
+	if(UObsidianItemsFunctionLibrary::GetItemStats_WithDef(ItemDef, ItemGeneratedData, OutItemStats))
 	{
 		CreateDroppedItemDescription(OutItemStats);
 	}

@@ -15,17 +15,10 @@ UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectIn
 
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
-	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::NoGeneration)
-	{
-		Instance->SetItemRarity(ItemRarityTag);
-	}
-	if (DoesStartIdentified())
-	{
-		Instance->SetIdentified(true);
-	}
-
-	//TODO(intrxx) #AffixRefactorTEMP
-	Instance->SetIdentified(true);
+	// if (ItemAffixesGenerationType == EObsidianAffixGenerationType::NoGeneration)
+	// {
+	// 	Instance->SetItemRarity(ItemRarityTag);
+	// }
 }
 
 bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const
@@ -33,9 +26,14 @@ bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const
 	return bHasImplicitAffix && StaticItemImplicit;
 }
 
-bool UOInventoryItemFragment_Affixes::DoesStartIdentified() const
+bool UOInventoryItemFragment_Affixes::IsUniqueOrSet_GetRarity(FGameplayTag& OutRarity) const
 {
-	return bStartsIdentified;
+	if (ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Set || ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Unique)
+	{
+		OutRarity = ItemRarityTag;
+		return true;
+	}
+	return false;
 }
 
 FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticImplicitAffix() const
@@ -46,11 +44,6 @@ FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticImplicitAffix
 TArray<FObsidianStaticItemAffix> UOInventoryItemFragment_Affixes::GetStaticAffixes() const
 {
 	return StaticItemAffixes;
-}
-
-FGameplayTag UOInventoryItemFragment_Affixes::GetItemRarityTag() const
-{
-	return ItemRarityTag;
 }
 
 EObsidianAffixGenerationType UOInventoryItemFragment_Affixes::GetGenerationType() const
