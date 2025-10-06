@@ -11,6 +11,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
@@ -97,16 +98,18 @@ void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* Owner
 			{
 				DataPack.StashTabType = EDebugStashTabType::DSTT_Slots;
 			
-				for(const FObsidianSlotDefinition& SlotDef : SlotsStashTab->TabSlots)
+				for(const FObsidianStashSlotDefinition& SlotDef : SlotsStashTab->TabSlots)
 				{
 					FRepData::FStashSlotsDebug TabSlot;
-					TabSlot.SlotTag = SlotDef.SlotTag.GetTagName().ToString();
-				
-					for(const FGameplayTag& Tag : SlotDef.AcceptedItemCategories)
+					TabSlot.SlotTag = SlotDef.BaseSlotDefinition.SlotTag.GetTagName().ToString();
+
+					//TODO(intrxx) Add Limit from FObsidianStashSlotDefinition;
+					
+					for(const FGameplayTag& Tag : SlotDef.BaseSlotDefinition.AcceptedItemCategories)
 					{
 						TabSlot.AcceptedTags.Add(Tag.GetTagName().ToString());
 					}
-					for(const FGameplayTag& Tag : SlotDef.BannedItemCategories)
+					for(const FGameplayTag& Tag : SlotDef.BaseSlotDefinition.BannedItemCategories)
 					{
 						TabSlot.BannedTags.Add(Tag.GetTagName().ToString());
 					}

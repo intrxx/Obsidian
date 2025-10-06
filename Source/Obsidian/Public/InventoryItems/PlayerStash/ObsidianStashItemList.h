@@ -63,6 +63,46 @@ struct FObsidianStashChangeMessage
 };
 
 /**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianStashSlotDefinition
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianStashSlotDefinition(){}
+
+	bool IsValid() const;
+	bool HasLimitedStacks() const;
+	FGameplayTag GetStashSlotTag() const;
+	
+	EObsidianPlacingAtSlotResult CanStashAtSlot(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType) const;
+
+	void AddBannedStashCategory(const FGameplayTag& InBannedCategory);
+	void AddBannedStashCategories(const FGameplayTagContainer& InBannedCategories);
+	void RemoveBannedStashCategory(const FGameplayTag& BannedCategoryToRemove);
+	void RemoveBannedStashCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
+
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FObsidianSlotDefinition BaseSlotDefinition = FObsidianSlotDefinition();
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	bool bRequireUniqueBaseTypeMatch = false;
+	
+	/** Tag of this type is required on item if bRequireUniqueBaseTypeMatch is checked. */
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bRequireUniqueBaseTypeMatch", Categories = "Item.BaseType"), Category = "Obsidian")
+	FGameplayTag UniqueBaseTypeTag = FGameplayTag::EmptyTag;
+
+	/** Amount of Stacks of provided Item the Slot can store. Leave at INDEX_NONE for unlimited storage, this is the default behaviour. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	int32 SlotStackLimit = INDEX_NONE;
+	
+	static const FObsidianStashSlotDefinition InvalidSlot;
+};
+
+/**
  * A single entry in a Player Stash.
  */
 USTRUCT(BlueprintType)
@@ -119,7 +159,7 @@ public:
 	int32 GetEntriesCount() const;
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
 
-	TArray<FObsidianSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const UObsidianStashTab_Slots* SlotStashTab);
+	TArray<FObsidianStashSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const UObsidianStashTab_Slots* SlotStashTab);
 
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FObsidianItemPosition& ToPosition);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition);

@@ -34,29 +34,24 @@ bool FObsidianSlotDefinition::IsValid() const
 	return SlotTag.IsValid();
 }
 
-bool FObsidianSlotDefinition::HasLimitedStacks() const
-{
-	return SlotStackLimit != INDEX_NONE;
-}
-
 FGameplayTag FObsidianSlotDefinition::GetSlotTag() const
 {
 	return SlotTag;
 }
 
-EObsidianEquipCheckResult FObsidianSlotDefinition::CanPlaceAtSlot(const FGameplayTag& ItemCategory) const
+EObsidianPlacingAtSlotResult FObsidianSlotDefinition::CanPlaceAtSlot(const FGameplayTag& ItemCategory) const
 {
 	if(BannedItemCategories.HasTagExact(ItemCategory))
 	{
-		return EObsidianEquipCheckResult::UnableToEquip_BannedCategory;
+		return EObsidianPlacingAtSlotResult::UnableToPlace_BannedCategory;
 	}
 	
 	if(AcceptedItemCategories.HasTagExact(ItemCategory))
 	{
-		return EObsidianEquipCheckResult::CanEquip;
+		return EObsidianPlacingAtSlotResult::CanPlace;
 	}
 	
-	return EObsidianEquipCheckResult::ItemUnfitForCategory;
+	return EObsidianPlacingAtSlotResult::UnableToPlace_UnfitForCategory;
 }
 
 void FObsidianSlotDefinition::AddBannedItemCategory(const FGameplayTag& InBannedCategory)

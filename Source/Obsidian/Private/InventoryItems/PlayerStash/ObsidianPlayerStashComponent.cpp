@@ -85,19 +85,19 @@ UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetItemInstanceFr
 	return nullptr;
 }
 
-TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory)
+TArray<FObsidianStashSlotDefinition> UObsidianPlayerStashComponent::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType)
 {
 	if (const UObsidianStashTab_Slots* SlotsStashTab = Cast<UObsidianStashTab_Slots>(GetStashTabForTag(GetActiveStashTag())))
 	{
-		return StashItemList.FindMatchingSlotsForItemCategory(ItemCategory, SlotsStashTab);
+		return StashItemList.FindMatchingSlotsForItemCategory(ItemCategory, ItemBaseType, SlotsStashTab);
 	}
 
 	return {};
 }
 
-TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlotsForPlacingItem_WithInstance(const UObsidianInventoryItemInstance* ForInstance)
+TArray<FObsidianStashSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlotsForPlacingItem_WithInstance(const UObsidianInventoryItemInstance* ForInstance)
 {
-	TArray<FObsidianSlotDefinition> MatchingSlots;
+	TArray<FObsidianStashSlotDefinition> MatchingSlots;
 	if (ForInstance == nullptr)
 	{
 		return MatchingSlots;
@@ -106,9 +106,10 @@ TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlots
 	if (UObsidianStashTab_Slots* SlotsStashTab = Cast<UObsidianStashTab_Slots>(GetStashTabForTag(GetActiveStashTag())))
 	{
 		const FGameplayTag ItemCategoryTag = ForInstance->GetItemCategoryTag();
-		for (const FObsidianSlotDefinition& PossibleSlot : StashItemList.FindMatchingSlotsForItemCategory(ItemCategoryTag, SlotsStashTab))
+		const FGameplayTag ItemBaseTypeTag = ForInstance->GetItemBaseTypeTag();
+		for (const FObsidianStashSlotDefinition& PossibleSlot : StashItemList.FindMatchingSlotsForItemCategory(ItemCategoryTag, ItemBaseTypeTag, SlotsStashTab))
 		{
-			if (SlotsStashTab->CanPlaceItemAtSpecificPosition(PossibleSlot.GetSlotTag(), ItemCategoryTag, FIntPoint::NoneValue))
+			if (SlotsStashTab->CanPlaceItemAtSpecificPosition(PossibleSlot.GetStashSlotTag(), ItemCategoryTag, ItemBaseTypeTag, FIntPoint::NoneValue))
 			{
 				MatchingSlots.Add(PossibleSlot);
 			}
@@ -118,9 +119,9 @@ TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlots
 	return MatchingSlots;
 }
 
-TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlotsForPlacingItem_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef)
+TArray<FObsidianStashSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlotsForPlacingItem_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef)
 {
-	TArray<FObsidianSlotDefinition> MatchingSlots;
+	TArray<FObsidianStashSlotDefinition> MatchingSlots;
 	if (ForItemDef == nullptr)
 	{
 		return MatchingSlots;
@@ -135,9 +136,10 @@ TArray<FObsidianSlotDefinition> UObsidianPlayerStashComponent::FindPossibleSlots
 	if (UObsidianStashTab_Slots* SlotsStashTab = Cast<UObsidianStashTab_Slots>(GetStashTabForTag(GetActiveStashTag())))
 	{
 		const FGameplayTag ItemCategoryTag = DefaultObject->GetItemCategoryTag();
-		for (const FObsidianSlotDefinition& PossibleSlot : StashItemList.FindMatchingSlotsForItemCategory(ItemCategoryTag, SlotsStashTab))
+		const FGameplayTag ItemBaseTypeTag = DefaultObject->GetItemBaseTypeTag();
+		for (const FObsidianStashSlotDefinition& PossibleSlot : StashItemList.FindMatchingSlotsForItemCategory(ItemCategoryTag, ItemBaseTypeTag, SlotsStashTab))
 		{
-			if (SlotsStashTab->CanPlaceItemAtSpecificPosition(PossibleSlot.GetSlotTag(), ItemCategoryTag, FIntPoint::NoneValue))
+			if (SlotsStashTab->CanPlaceItemAtSpecificPosition(PossibleSlot.GetStashSlotTag(), ItemCategoryTag, ItemBaseTypeTag, FIntPoint::NoneValue))
 			{
 				MatchingSlots.Add(PossibleSlot);
 			}
@@ -472,7 +474,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 	}
 	
 	FObsidianItemPosition AvailablePosition;
-	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan(), InstanceToAdd->GetItemCategoryTag(), StashTabTag) == false)
+	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan(), InstanceToAdd->GetItemCategoryTag(), InstanceToAdd->GetItemBaseTypeTag(), StashTabTag) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
@@ -521,7 +523,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 		StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)), 1, StacksAvailableToAdd);
 	}
 	
-	if(CheckSpecifiedPosition(ItemPosition, InstanceToAdd->GetItemCategoryTag(), InstanceToAdd->GetItemGridSpan()) == false)
+	if(CheckSpecifiedPosition(ItemPosition, InstanceToAdd->GetItemCategoryTag(), InstanceToAdd->GetItemBaseTypeTag(), InstanceToAdd->GetItemGridSpan()) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Player Stash is full at specified slot!")));
@@ -831,7 +833,7 @@ bool UObsidianPlayerStashComponent::CanFitItemDefinition(FObsidianItemPosition& 
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			return CheckAvailablePosition(OutAvailablePosition, AppearanceFrag->GetItemGridSpanFromDesc(), ItemDefault->GetItemCategoryTag(), StashTabTag);
+			return CheckAvailablePosition(OutAvailablePosition, AppearanceFrag->GetItemGridSpanFromDesc(), ItemDefault->GetItemCategoryTag(), ItemDefault->GetItemBaseTypeTag(), StashTabTag);
 		}
 	}
 	return false;
@@ -843,18 +845,18 @@ bool UObsidianPlayerStashComponent::CanFitItemDefinitionToSpecifiedSlot(const FO
 	{
 		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			return CheckSpecifiedPosition(SpecifiedSlot, ItemDefault->GetItemCategoryTag(), AppearanceFrag->GetItemGridSpanFromDesc());
+			return CheckSpecifiedPosition(SpecifiedSlot, ItemDefault->GetItemCategoryTag(), ItemDefault->GetItemBaseTypeTag(), AppearanceFrag->GetItemGridSpanFromDesc());
 		}
 	}
 	return false;
 }
 
-bool UObsidianPlayerStashComponent::CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& StashTabTag)
+bool UObsidianPlayerStashComponent::CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FGameplayTag& StashTabTag)
 {
 	if (UObsidianStashTab* StashTab = GetStashTabForTag(StashTabTag))
 	{
 		FObsidianItemPosition ItemPosition;
-		if (StashTab->FindFirstAvailablePositionForItem(ItemPosition, ItemCategory, ItemGridSpan))
+		if (StashTab->FindFirstAvailablePositionForItem(ItemPosition, ItemCategory, ItemBaseTypeTag, ItemGridSpan))
 		{
 			ItemPosition.SetOwningStashTab(StashTabTag);
 			OutAvailablePosition = ItemPosition;
@@ -903,19 +905,19 @@ bool UObsidianPlayerStashComponent::CanReplaceItemAtPosition(const FObsidianItem
 	return false;
 }
 
-bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
+bool UObsidianPlayerStashComponent::CheckSpecifiedPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FIntPoint& ItemGridSpan)
 {
 	if (UObsidianStashTab* StashTab = GetStashTabForTag(SpecifiedPosition.GetOwningStashTabTag()))
 	{
-		return StashTab->CanPlaceItemAtSpecificPosition(SpecifiedPosition, ItemCategory, ItemGridSpan);
+		return StashTab->CanPlaceItemAtSpecificPosition(SpecifiedPosition, ItemCategory, ItemBaseTypeTag, ItemGridSpan);
 	}
 	return false;
 }
 
-bool UObsidianPlayerStashComponent::CanFitInstanceInStashTab(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& StashTabTag)
+bool UObsidianPlayerStashComponent::CanFitInstanceInStashTab(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FGameplayTag& StashTabTag)
 {
 	FObsidianItemPosition OutPosition;
-	return CheckAvailablePosition(OutPosition, ItemGridSpan, ItemCategory, StashTabTag);
+	return CheckAvailablePosition(OutPosition, ItemGridSpan, ItemCategory, ItemBaseTypeTag, StashTabTag);
 }
 
 

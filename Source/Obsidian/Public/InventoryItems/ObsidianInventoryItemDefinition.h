@@ -33,11 +33,9 @@ public:
 		return DebugName;
 	}
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemDefinition")
 	FGameplayTag GetItemCategoryTag() const;
-	
+	FGameplayTag GetItemBaseTypeTag() const;
 	int32 GetItemLevel() const;
-	
 	bool HasStacks() const;
 	bool IsStackable() const;
 	bool IsEquippable() const;
@@ -49,6 +47,9 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.Category"), Category = "Obsidian")
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.BaseType"), Category = "Obsidian")
+	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
 	int32 ItemLevel = INDEX_NONE;

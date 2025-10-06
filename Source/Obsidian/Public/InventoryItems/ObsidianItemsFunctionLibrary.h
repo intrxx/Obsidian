@@ -59,5 +59,11 @@ public:
 	static FGameplayTag GetCategoryTagFromDraggedItem(const FDraggedItem& DraggedItem);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
+	static FGameplayTag GetBaseTypeTagFromDraggedItem(const FDraggedItem& DraggedItem);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
+	static void GetItemCategoryAndBaseItemTypeTagsFromDraggedItem(const FDraggedItem& DraggedItem, FGameplayTag& OutCategoryTag, FGameplayTag& OutItemBaseTypeTag);
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool IsDefinitionIdentified(const UObsidianInventoryItemDefinition* ItemDefault, const FObsidianItemGeneratedData& ItemGeneratedData);
 };

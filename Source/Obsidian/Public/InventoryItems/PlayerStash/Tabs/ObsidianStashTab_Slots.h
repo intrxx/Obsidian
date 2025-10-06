@@ -6,11 +6,10 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+#include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
 
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "ObsidianStashTab_Slots.generated.h"
-
 
 /**
  * 
@@ -24,12 +23,12 @@ public:
 	UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) override;
-	TArray<FObsidianSlotDefinition> GetSlots() const;
+	TArray<FObsidianStashSlotDefinition> GetSlots() const;
 
 	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& Position) override;
 
-	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan) override;
-	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan) override;
+	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan) override;
+	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan) override;
 
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance) override;
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef) override;
@@ -39,10 +38,10 @@ public:
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
 
 protected:
-	FObsidianSlotDefinition FindSlotByTag(const FGameplayTag& SlotTag) const;
+	FObsidianStashSlotDefinition FindSlotByTag(const FGameplayTag& SlotTag) const;
 
 private:
-	bool CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ReplacingItemCategory) const;
+	bool CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ReplacingItemCategory, const FGameplayTag& ReplacingItemBaseType) const;
 	
 private:
 
@@ -51,7 +50,7 @@ private:
 #endif
 	
 	UPROPERTY(EditAnywhere, Category = "Obsidian|SlotsSettings")
-	TArray<FObsidianSlotDefinition> TabSlots;
+	TArray<FObsidianStashSlotDefinition> TabSlots;
 
 	UPROPERTY()
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToItemMap;

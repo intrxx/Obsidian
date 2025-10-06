@@ -17,7 +17,7 @@ UObsidianInventoryItemInstance* UObsidianStashTab_Slots::GetInstanceAtPosition(c
 	return SlotToItemMap.FindRef(ItemPosition.GetItemSlotTag());
 }
 
-TArray<FObsidianSlotDefinition> UObsidianStashTab_Slots::GetSlots() const
+TArray<FObsidianStashSlotDefinition> UObsidianStashTab_Slots::GetSlots() const
 {
 	return TabSlots;
 }
@@ -27,24 +27,24 @@ bool UObsidianStashTab_Slots::DebugVerifyPositionFree(const FObsidianItemPositio
 	return true; //TODO(intrxx) Implement
 }
 
-bool UObsidianStashTab_Slots::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
+bool UObsidianStashTab_Slots::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan)
 {
-	const FObsidianSlotDefinition Slot = FindSlotByTag(SpecifiedPosition.GetItemSlotTag());
+	const FObsidianStashSlotDefinition Slot = FindSlotByTag(SpecifiedPosition.GetItemSlotTag());
 	if(Slot.IsValid() == false)
 	{
 		return false;
 	}
 	
-	return Slot.CanPlaceAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip;
+	return Slot.CanStashAtSlot(ItemCategory, ItemBaseType) == EObsidianPlacingAtSlotResult::CanPlace;
 }
 
-bool UObsidianStashTab_Slots::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FIntPoint& ItemGridSpan)
+bool UObsidianStashTab_Slots::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan)
 {
-	for (const FObsidianSlotDefinition& Slot : TabSlots)
+	for (const FObsidianStashSlotDefinition& Slot : TabSlots)
 	{
-		if (Slot.CanPlaceAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip)
+		if (Slot.CanStashAtSlot(ItemCategory, ItemBaseType) == EObsidianPlacingAtSlotResult::CanPlace)
 		{
-			OutFirstAvailablePosition = Slot.GetSlotTag();
+			OutFirstAvailablePosition = Slot.GetStashSlotTag();
 			return true;
 		}
 	}
@@ -58,7 +58,7 @@ bool UObsidianStashTab_Slots::CanReplaceItemAtSpecificPosition(const FObsidianIt
 		return false;
 	}
 	
-	return CheckReplacementPossible(SpecifiedPosition, ReplacingInstance->GetItemCategoryTag());
+	return CheckReplacementPossible(SpecifiedPosition, ReplacingInstance->GetItemCategoryTag(), ReplacingInstance->GetItemBaseTypeTag());
 }
 
 bool UObsidianStashTab_Slots::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef)
@@ -74,18 +74,18 @@ bool UObsidianStashTab_Slots::CanReplaceItemAtSpecificPosition(const FObsidianIt
 		return false;
 	}
 	
-	return CheckReplacementPossible(SpecifiedPosition, DefinitionDefault->GetItemCategoryTag());
+	return CheckReplacementPossible(SpecifiedPosition, DefinitionDefault->GetItemCategoryTag(), DefinitionDefault->GetItemBaseTypeTag());
 }
 
-bool UObsidianStashTab_Slots::CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ReplacingItemCategory) const
+bool UObsidianStashTab_Slots::CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ReplacingItemCategory, const FGameplayTag& ReplacingItemBaseType) const
 {
-	const FObsidianSlotDefinition Slot = FindSlotByTag(SpecifiedPosition.GetItemSlotTag());
+	const FObsidianStashSlotDefinition Slot = FindSlotByTag(SpecifiedPosition.GetItemSlotTag());
 	if(Slot.IsValid() == false)
 	{
 		return false;
 	}
 
-	if (Slot.CanPlaceAtSlot(ReplacingItemCategory) != EObsidianEquipCheckResult::CanEquip)
+	if (Slot.CanStashAtSlot(ReplacingItemCategory, ReplacingItemBaseType) != EObsidianPlacingAtSlotResult::CanPlace)
 	{
 		return false;
 	}
@@ -109,7 +109,7 @@ void UObsidianStashTab_Slots::UnmarkSpaceInTab(UObsidianInventoryItemInstance* I
 
 void UObsidianStashTab_Slots::Construct(UObsidianPlayerStashComponent* StashComponent)
 {
-	for (const FObsidianSlotDefinition& Slot : TabSlots)
+	for (const FObsidianStashSlotDefinition& Slot : TabSlots)
 	{
 		
 	}
@@ -117,17 +117,17 @@ void UObsidianStashTab_Slots::Construct(UObsidianPlayerStashComponent* StashComp
 	//TODO(intrxx) Get already added items, mark space
 }
 
-FObsidianSlotDefinition UObsidianStashTab_Slots::FindSlotByTag(const FGameplayTag& SlotTag) const
+FObsidianStashSlotDefinition UObsidianStashTab_Slots::FindSlotByTag(const FGameplayTag& SlotTag) const
 {
-	for(const FObsidianSlotDefinition& Slot : TabSlots)
+	for(const FObsidianStashSlotDefinition& Slot : TabSlots)
 	{
-		if (Slot.GetSlotTag() == SlotTag)
+		if (Slot.GetStashSlotTag() == SlotTag)
 		{
 			return Slot;
 		}
 	}
 
-	return FObsidianSlotDefinition::InvalidSlot;
+	return FObsidianStashSlotDefinition::InvalidSlot;
 }
 
 

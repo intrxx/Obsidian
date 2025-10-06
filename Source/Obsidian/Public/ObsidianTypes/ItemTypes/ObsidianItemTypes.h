@@ -105,7 +105,7 @@ enum class EObsidianEquipCheckResult : uint8
 	None = 0 UMETA(DisplayName="None"),
 	
 	/** Item cannot be equipped to this Equipment Slot either because it does not fit or this item category was banned by a gameplay mechanic. */
-	ItemUnfitForCategory UMETA(DisplayName="Item Unfit For Category"),
+	CannotEquipToSlot UMETA(DisplayName="Cannot Equip To Slot"),
 	
 	/** Item cannot be equipped, it does not have equipment fragment. */
 	ItemUnequippable UMETA(DisplayName="Item Unequippable"),
@@ -115,9 +115,6 @@ enum class EObsidianEquipCheckResult : uint8
 
 	/** Item cannot be equipped, trying to equip two-handed weapon, two slots are occupied and no sufficient space in inventory. */
 	UnableToEquip_NoSufficientInventorySpace UMETA(DisplayName="Unable To Equip - No Sufficient Inventory Space"),
-
-	/** Item cannot be equipped, category is banned by gameplay mechanic. */
-	UnableToEquip_BannedCategory UMETA(DisplayName="Unable To Equip - Banned Category"),
 	
 	/** Item cannot be equipped, item cannot be equipped together with the item in sister slot. */
 	UnableToEquip_DoesNotFitWithOtherWeaponType UMETA(DisplayName="Unable To Equip - Item Does not fit with other weapon type."),
@@ -144,6 +141,18 @@ enum class EObsidianEquipCheckResult : uint8
 	CanEquip UMETA(DisplayName="Can Equip")
 };
 
+UENUM(BlueprintType)
+enum class EObsidianPlacingAtSlotResult : uint8
+{
+	UnableToPlace_UnfitForCategory UMETA(DisplayName="Item Unfit For Category"),
+	UnableToPlace_BannedCategory UMETA(DisplayName="Item is of Banned Category"),
+	UnableToPlace_BaseTypeDiffers UMETA(DisplayName="Base Type Differs"),
+	CanPlace UMETA(DisplayName="Can Place")
+};
+
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianItemInteractionFlags
 {
@@ -183,11 +192,10 @@ public:
 	{};
 
 	bool IsValid() const;
-	bool HasLimitedStacks() const;
-
+	
 	FGameplayTag GetSlotTag() const;
 	
-	EObsidianEquipCheckResult CanPlaceAtSlot(const FGameplayTag& ItemCategory) const;
+	EObsidianPlacingAtSlotResult CanPlaceAtSlot(const FGameplayTag& ItemCategory) const;
 
 	void AddBannedItemCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedItemCategories(const FGameplayTagContainer& InBannedCategories);
@@ -197,21 +205,17 @@ public:
 
 public:
 	/** Gameplay Tag representing this slot. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Slot"), Category = "Obsidian")
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
 
 	/** Items with this Gameplay Tags will be allowed to be equipped in this slot. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
 	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
 
 	/** Items with this Gameplay Tags will not be allowed to be equipped in this slot. Can be used to ban some type of armament as a gameplay mechanic. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
 	FGameplayTagContainer BannedItemCategories = FGameplayTagContainer::EmptyContainer;
-
-	/** - UNIMPLEMENTED - Amount of Stacks of provided Item the Slot can store. Leave at INDEX_NONE for unlimited storage, this is the default behaviour for Equipment Slots and shouldn't be changed. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	int32 SlotStackLimit = INDEX_NONE;
-
+	
 	static const FObsidianSlotDefinition InvalidSlot;
 };
 

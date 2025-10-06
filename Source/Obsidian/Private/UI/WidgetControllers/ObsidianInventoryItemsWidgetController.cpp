@@ -373,16 +373,16 @@ void UObsidianInventoryItemsWidgetController::OnStartDraggingItem(const FDragged
 	{
 		if (const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
 		{
-			for (const FObsidianSlotDefinition& EquipmentSlot : PlayerStashComponent->FindPossibleSlotsForPlacingItem_WithInstance(DraggedInstance))
+			for (const FObsidianStashSlotDefinition& StashSlot : PlayerStashComponent->FindPossibleSlotsForPlacingItem_WithInstance(DraggedInstance))
 			{
-				JoinedSlotTags.AddTag(EquipmentSlot.GetSlotTag());
+				JoinedSlotTags.AddTag(StashSlot.GetStashSlotTag());
 			}
 		}
 		else if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DraggedItem.ItemDef)
 		{
-			for (const FObsidianSlotDefinition& EquipmentSlot : PlayerStashComponent->FindPossibleSlotsForPlacingItem_WithItemDef(ItemDef))
+			for (const FObsidianStashSlotDefinition& StashSlot : PlayerStashComponent->FindPossibleSlotsForPlacingItem_WithItemDef(ItemDef))
 			{
-				JoinedSlotTags.AddTag(EquipmentSlot.GetSlotTag());
+				JoinedSlotTags.AddTag(StashSlot.GetStashSlotTag());
 			}
 		}
 	}
@@ -1233,24 +1233,31 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 	switch(GridOwner)
 	{
 	case EObsidianGridOwner::Inventory:
-		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
-			return false;	
+			if(InventoryComponent == nullptr)
+			{
+				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+				return false;	
+			}
+			return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan,AtGridSlot);
 		}
-		return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan,AtGridSlot);
 	case EObsidianGridOwner::PlayerStash:
-		if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
 		{
-			UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
-			return false;	
+			if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
+			{
+				UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+				return false;	
+			}
+
+			FGameplayTag CategoryTag;
+			FGameplayTag ItemBaseType;
+			UObsidianItemsFunctionLibrary::GetItemCategoryAndBaseItemTypeTagsFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem(), CategoryTag, ItemBaseType);
+			return PlayerStashComponent->CheckSpecifiedPosition(FObsidianItemPosition(AtGridSlot, StashTag), CategoryTag, ItemBaseType, ItemGridSpan);
 		}
-		
-		return PlayerStashComponent->CheckSpecifiedPosition(FObsidianItemPosition(AtGridSlot, StashTag),
-			UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem()), ItemGridSpan);
 	default:
-		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
-			break;
+		{
+			UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		} break;
 	}
 	
 	return false;
@@ -1263,9 +1270,11 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceItemAtStashSlot(const FObs
 		UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
 		return false;	
 	}
-
-	const FGameplayTag CategoryTag = UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem());
-	return PlayerStashComponent->CheckSpecifiedPosition(ItemPosition, CategoryTag);
+	
+	FGameplayTag CategoryTag;
+	FGameplayTag ItemBaseType;
+	UObsidianItemsFunctionLibrary::GetItemCategoryAndBaseItemTypeTagsFromDraggedItem(OwnerPlayerInputManager->GetDraggedItem(), CategoryTag, ItemBaseType);
+	return PlayerStashComponent->CheckSpecifiedPosition(ItemPosition, CategoryTag, ItemBaseType, FIntPoint::NoneValue);
 }
 
 bool UObsidianInventoryItemsWidgetController::CanInteractWithGrid(const EObsidianGridOwner GridOwner) const

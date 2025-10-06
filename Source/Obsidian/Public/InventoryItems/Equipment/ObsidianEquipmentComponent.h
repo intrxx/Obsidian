@@ -98,7 +98,9 @@ protected:
 	virtual void BeginPlay() override;
 	
 	EObsidianEquipCheckResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
-	void CheckEquipmentPairAcceptance(const FObsidianEquipmentSlotDefinition& PrimarySlot, const FGameplayTag& PrimaryWeaponCategory, EObsidianEquipCheckResult& OutResult);
+	
+	/** Checks weather the item can be equipped with other weapon type already equipped in other hand. */
+	bool CanEquipWithOtherWeaponType(const FObsidianEquipmentSlotDefinition& PrimarySlot, const FGameplayTag& PrimaryWeaponCategory);
 	
 	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
 	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);
@@ -138,10 +140,9 @@ namespace ObsidianEquipmentDebugHelpers
 	const inline TMap<EObsidianEquipCheckResult, FString> EquipResultToStringMap =
 	{
 		{EObsidianEquipCheckResult::None, TEXT("None")},
-		{EObsidianEquipCheckResult::ItemUnfitForCategory, TEXT("Item Unfit For Category")},
+		{EObsidianEquipCheckResult::CannotEquipToSlot, TEXT("Cannot Equip to Slot - Either Banned or not Accepted.")},
 		{EObsidianEquipCheckResult::ItemUnequippable, TEXT("Item Unequippable")},
 		{EObsidianEquipCheckResult::EquipmentActionsBlocked, TEXT("Equipment Actions Blocked")},
-		{EObsidianEquipCheckResult::UnableToEquip_BannedCategory, TEXT("Unable To Equip - Banned Category")},
 		{EObsidianEquipCheckResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
 		{EObsidianEquipCheckResult::UnableToEquip_DoesNotFitWithOtherWeaponType, TEXT("Unable To Equip - Does Not Fit With Other Weapon Type")},
 		{EObsidianEquipCheckResult::ItemUnientified, TEXT("Item Unientified")},

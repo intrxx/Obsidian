@@ -29,9 +29,8 @@ FGameplayTag FObsidianEquipmentSlotDefinition::GetEquipmentSlotTag() const
 	return BaseSlotDefinition.GetSlotTag();
 }
 
-EObsidianEquipCheckResult FObsidianEquipmentSlotDefinition::CanEquipAtSlot(const FGameplayTag& ItemCategory) const
+EObsidianPlacingAtSlotResult FObsidianEquipmentSlotDefinition::CanEquipAtSlot(const FGameplayTag& ItemCategory) const
 {
-	ensureMsgf(BaseSlotDefinition.HasLimitedStacks() == false, TEXT("Equipment Slots shouldn't have limited stacks."));
 	return BaseSlotDefinition.CanPlaceAtSlot(ItemCategory);
 }
 
@@ -108,7 +107,15 @@ TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetEquippedWeapo
 
 UObsidianInventoryItemInstance* FObsidianEquipmentList::GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const
 {
-	return SlotToEquipmentMap.FindRef(SlotTag);
+	for (auto pair : SlotToEquipmentMap)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Item: [%s] At: [%s]"), *pair.Value->GetItemDebugName(), *pair.Key.ToString());
+	}
+	if (UObsidianInventoryItemInstance* const* Item = SlotToEquipmentMap.Find(SlotTag))
+	{
+		return *Item;
+	}
+	return nullptr;
 }
 
 UObsidianAbilitySystemComponent* FObsidianEquipmentList::GetObsidianAbilitySystemComponent() const
@@ -137,7 +144,7 @@ TArray<FObsidianEquipmentSlotDefinition> FObsidianEquipmentList::FindMatchingEqu
 	
 	for(const FObsidianEquipmentSlotDefinition& Slot : EquipmentSlots)
 	{
-		if(Slot.CanEquipAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip)
+		if(Slot.CanEquipAtSlot(ItemCategory) == EObsidianPlacingAtSlotResult::CanPlace)
 		{
 			MatchingSlots.Add(Slot);
 		}
@@ -179,6 +186,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
+	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

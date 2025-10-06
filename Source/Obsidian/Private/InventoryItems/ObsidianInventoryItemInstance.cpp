@@ -144,6 +144,16 @@ void UObsidianInventoryItemInstance::SetItemCategory(const FGameplayTag& InItemC
 	ItemCategory = InItemCategoryTag;
 }
 
+FGameplayTag UObsidianInventoryItemInstance::GetItemBaseTypeTag() const
+{
+	return ItemBaseType;
+}
+
+void UObsidianInventoryItemInstance::SetItemBaseType(const FGameplayTag& InItemBaseTypeTag)
+{
+	ItemBaseType = InItemBaseTypeTag;
+}
+
 void UObsidianInventoryItemInstance::SetUsable(const bool IsUsable)
 {
 	bUsable = IsUsable;

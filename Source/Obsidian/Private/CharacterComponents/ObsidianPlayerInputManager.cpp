@@ -1815,7 +1815,7 @@ void UObsidianPlayerInputManager::ServerTransferItemToPlayerStash_Implementation
 		return;
 	}
 	
-	if (PlayerStashComponent->CanFitInstanceInStashTab(InstanceToGrab->GetItemGridSpan(), InstanceToGrab->GetItemCategoryTag(), ToStashTab))
+	if (PlayerStashComponent->CanFitInstanceInStashTab(InstanceToGrab->GetItemGridSpan(), InstanceToGrab->GetItemCategoryTag(), InstanceToGrab->GetItemBaseTypeTag(), ToStashTab))
 	{
 		if (InventoryComponent->RemoveItemInstance(InstanceToGrab))
 		{

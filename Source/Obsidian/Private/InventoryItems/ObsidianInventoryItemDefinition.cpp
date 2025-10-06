@@ -67,6 +67,11 @@ FGameplayTag UObsidianInventoryItemDefinition::GetItemCategoryTag() const
 	return ItemCategory;
 }
 
+FGameplayTag UObsidianInventoryItemDefinition::GetItemBaseTypeTag() const
+{
+	return ItemBaseType;
+}
+
 int32 UObsidianInventoryItemDefinition::GetItemLevel() const
 {
 #if !UE_BUILD_SHIPPING

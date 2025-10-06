@@ -71,12 +71,13 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FGameplayTag GetItemRarity() const;
-
 	void SetItemRarity(const FGameplayTag& InItemRarityTag);
 
 	FGameplayTag GetItemCategoryTag() const;
-
 	void SetItemCategory(const FGameplayTag& InItemCategoryTag);
+
+	FGameplayTag GetItemBaseTypeTag() const;
+	void SetItemBaseType(const FGameplayTag& InItemBaseTypeTag);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FObsidianItemPosition GetItemCurrentPosition() const;
@@ -275,6 +276,9 @@ private:
 
 	UPROPERTY(Replicated)
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
+
+	UPROPERTY(Replicated)
+	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
 
 	UPROPERTY(Replicated)
 	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;

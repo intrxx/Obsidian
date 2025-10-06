@@ -292,6 +292,7 @@ namespace ObsidianGameplayTags
 	 */
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Resource, "Item.Category.Resource", "Item Tag that represents Resource item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional, "Item.Category.Functional", "Item Tag that represents Functional item category.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Helmet, "Item.Category.Equipment.Helmet", "Item Tag that represents Helmet item category.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_BodyArmor, "Item.Category.Equipment.BodyArmor", "Item Tag that represents Body Armor item category.");
@@ -317,12 +318,12 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Axe_TwoHand, "Item.Category.Equipment.Axe.TwoHand", "Item Tag that represents Two Hand Axe item category.");
 
 	/**
-	 * Individual Item Category Tags.
+	 * Item Base Types.
 	 */
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional_ScrollOfIdentification, "Item.Category.Functional.ScrollOfIdentification", "Item Tag that represents Scroll Of Identification item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional_ScrollOfTeleportation, "Item.Category.Functional.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional_OrbOfEnchantment, "Item.Category.Functional.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_ScrollOfIdentification, "Item.BaseType.ScrollOfIdentification", "Item Tag that represents Scroll Of Identification item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_ScrollOfTeleportation, "Item.BaseType.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_OrbOfEnchantment, "Item.BaseType.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item base type.");
 
 	/**
 	 * Equipment Slots.

@@ -79,7 +79,7 @@ public:
 
 	FGameplayTag GetEquipmentSlotTag() const;
 	
-	EObsidianEquipCheckResult CanEquipAtSlot(const FGameplayTag& ItemCategory) const;
+	EObsidianPlacingAtSlotResult CanEquipAtSlot(const FGameplayTag& ItemCategory) const;
 
 	void AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories);
@@ -88,13 +88,12 @@ public:
 	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
 
 public:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FObsidianSlotDefinition BaseSlotDefinition = FObsidianSlotDefinition();
 	
 	/** Gameplay Tag representing a sister slot (used for weapon set) which will also be checked if the Player tries to equip specific armament (e.g. Two-Handed Weapons). */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTag SisterSlotTag = FGameplayTag::EmptyTag;
-
+	
 	static const FObsidianEquipmentSlotDefinition InvalidSlot;
 };
 

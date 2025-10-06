@@ -236,6 +236,55 @@ FGameplayTag UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(const 
 	return FGameplayTag::EmptyTag;
 }
 
+FGameplayTag UObsidianItemsFunctionLibrary::GetBaseTypeTagFromDraggedItem(const FDraggedItem& DraggedItem)
+{
+	if (DraggedItem.IsEmpty())
+	{
+		return FGameplayTag::EmptyTag;
+	}
+
+	if (const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
+	{
+		return DraggedInstance->GetItemBaseTypeTag();
+	}
+
+	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef)
+	{
+		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(DraggedItemDef))
+		{
+			return ItemDefault->GetItemBaseTypeTag();
+		}
+	}
+	
+	return FGameplayTag::EmptyTag;
+}
+
+void UObsidianItemsFunctionLibrary::GetItemCategoryAndBaseItemTypeTagsFromDraggedItem(const FDraggedItem& DraggedItem, FGameplayTag& OutCategoryTag,
+	FGameplayTag& OutItemBaseTypeTag)
+{
+	if (DraggedItem.IsEmpty())
+	{
+		return;
+	}
+
+	if (const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
+	{
+		OutCategoryTag = DraggedInstance->GetItemCategoryTag();
+		OutItemBaseTypeTag = DraggedInstance->GetItemBaseTypeTag();
+		return;
+	}
+
+	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef)
+	{
+		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(DraggedItemDef))
+		{
+			OutCategoryTag = ItemDefault->GetItemCategoryTag();
+			OutItemBaseTypeTag = ItemDefault->GetItemBaseTypeTag();
+			return;
+		}
+	}
+}
+
 bool UObsidianItemsFunctionLibrary::IsDefinitionIdentified(const UObsidianInventoryItemDefinition* ItemDefault, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	if (ItemDefault)

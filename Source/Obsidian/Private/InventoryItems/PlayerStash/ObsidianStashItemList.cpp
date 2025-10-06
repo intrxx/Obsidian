@@ -12,6 +12,55 @@
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
 
+// ~ FObsidianStashSlotDefinition
+
+FObsidianStashSlotDefinition const FObsidianStashSlotDefinition::InvalidSlot;
+
+bool FObsidianStashSlotDefinition::IsValid() const
+{
+	return BaseSlotDefinition.IsValid();
+}
+
+bool FObsidianStashSlotDefinition::HasLimitedStacks() const
+{
+	return SlotStackLimit != INDEX_NONE;
+}
+
+FGameplayTag FObsidianStashSlotDefinition::GetStashSlotTag() const
+{
+	return BaseSlotDefinition.GetSlotTag();
+}
+
+EObsidianPlacingAtSlotResult FObsidianStashSlotDefinition::CanStashAtSlot(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType) const
+{
+	if (bRequireUniqueBaseTypeMatch)
+	{
+		return UniqueBaseTypeTag == ItemBaseType ? EObsidianPlacingAtSlotResult::CanPlace : EObsidianPlacingAtSlotResult::UnableToPlace_BaseTypeDiffers;
+	}
+	
+	return BaseSlotDefinition.CanPlaceAtSlot(ItemCategory);
+}
+
+void FObsidianStashSlotDefinition::AddBannedStashCategory(const FGameplayTag& InBannedCategory)
+{
+	BaseSlotDefinition.AddBannedItemCategory(InBannedCategory);
+}
+
+void FObsidianStashSlotDefinition::AddBannedStashCategories(const FGameplayTagContainer& InBannedCategories)
+{
+	BaseSlotDefinition.AddBannedItemCategories(InBannedCategories);
+}
+
+void FObsidianStashSlotDefinition::RemoveBannedStashCategory(const FGameplayTag& BannedCategoryToRemove)
+{
+	BaseSlotDefinition.RemoveBannedItemCategory(BannedCategoryToRemove);
+}
+
+void FObsidianStashSlotDefinition::RemoveBannedStashCategories(const FGameplayTagContainer& BannedCategoriesToRemove)
+{
+	BaseSlotDefinition.RemoveBannedItemCategories(BannedCategoriesToRemove);
+}
+
 // ~ FObsidianStashEntry
 
 FString FObsidianStashEntry::GetDebugString() const
@@ -108,17 +157,17 @@ UObsidianStashTab* FObsidianStashItemList::GetStashTabForTag(const FGameplayTag&
 	return nullptr;
 }
 
-TArray<FObsidianSlotDefinition> FObsidianStashItemList::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const UObsidianStashTab_Slots* SlotStashTab)
+TArray<FObsidianStashSlotDefinition> FObsidianStashItemList::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const UObsidianStashTab_Slots* SlotStashTab)
 {
-	TArray<FObsidianSlotDefinition> MatchingSlots;
+	TArray<FObsidianStashSlotDefinition> MatchingSlots;
 	if (SlotStashTab == nullptr)
 	{
 		return MatchingSlots;
 	}
 	
-	for (const FObsidianSlotDefinition& Slot : SlotStashTab->GetSlots())
+	for (const FObsidianStashSlotDefinition& Slot : SlotStashTab->GetSlots())
 	{
-		if (Slot.CanPlaceAtSlot(ItemCategory) == EObsidianEquipCheckResult::CanEquip)
+		if (Slot.CanStashAtSlot(ItemCategory, ItemBaseType) == EObsidianPlacingAtSlotResult::CanPlace)
 		{
 			MatchingSlots.Add(Slot);
 		}
@@ -167,6 +216,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	}
 	
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
+	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.StackCount = StackCount;
 	NewEntry.ItemPosition = ToPosition;
