@@ -291,7 +291,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, AvailablePosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -363,7 +363,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, StacksAvailableToAdd, ToGridSlot);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -449,13 +449,13 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
 		const TArray<FObsidianActiveItemAffix> CachedAffixes = InstanceToAdd->GetAllItemAffixes();
 		const bool bCachedIdentified = InstanceToAdd->IsItemIdentified();
-		const FGameplayTag CachedRarityTag = InstanceToAdd->GetItemRarity();
+		const EObsidianItemRarity CachedRarity = InstanceToAdd->GetItemRarity();
 		
 		Result.bActionSuccessful = false;
 		InstanceToAdd = InventoryGrid.AddEntry(InstanceToAdd->GetItemDef(), StacksAvailableToAdd, AvailablePosition);
 		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 		InstanceToAdd->InitializeAffixes(CachedAffixes);
-		InstanceToAdd->SetItemRarity(CachedRarityTag);
+		InstanceToAdd->SetItemRarity(CachedRarity);
 		InstanceToAdd->SetIdentified(bCachedIdentified);
 	}
 	
@@ -529,13 +529,13 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
 		const TArray<FObsidianActiveItemAffix> CachedAffixes = InstanceToAdd->GetAllItemAffixes();
 		const bool bCachedIdentified = InstanceToAdd->IsItemIdentified();
-		const FGameplayTag CachedRarityTag = InstanceToAdd->GetItemRarity();
+		const EObsidianItemRarity CachedRarity = InstanceToAdd->GetItemRarity();
 		
 		Result.bActionSuccessful = false;
 		InstanceToAdd = InventoryGrid.AddEntry(InstanceToAdd->GetItemDef(), StacksAvailableToAdd, ToGridSlot);
 		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 		InstanceToAdd->InitializeAffixes(CachedAffixes);
-		InstanceToAdd->SetItemRarity(CachedRarityTag);
+		InstanceToAdd->SetItemRarity(CachedRarity);
 		InstanceToAdd->SetIdentified(bCachedIdentified);
 	}
 	

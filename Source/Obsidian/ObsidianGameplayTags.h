@@ -384,16 +384,7 @@ namespace ObsidianGameplayTags
 
 	/** All Stack Types stored for convenience. */
 	OBSIDIAN_API extern const TArray<FGameplayTag> StackTypes;
-
-	/**
-	 * Rarity
-	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Normal);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Magic);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Rare);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Unique);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Rarity_Set);
-
+	
 	/**
 	 * ---- Affixes ----
 	 */

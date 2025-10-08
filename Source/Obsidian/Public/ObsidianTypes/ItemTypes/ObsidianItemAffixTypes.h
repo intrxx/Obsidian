@@ -5,7 +5,6 @@
 // ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "Obsidian/ObsidianGameplayTags.h"
 
 // ~ Project
 
@@ -293,6 +292,18 @@ public:
 	FText AffixAdditionalDescription = FText();
 };
 
+UENUM(BlueprintType)
+enum class EObsidianItemRarity : uint8
+{
+	None = 0,
+	Quest,
+	Normal,
+	Magic,
+	Rare,
+	Unique,
+	Set
+};
+
 USTRUCT(BlueprintType)
 struct FObsidianItemStats
 {
@@ -438,7 +449,7 @@ public:
 	
 public:
 	UPROPERTY()
-	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;
+	EObsidianItemRarity ItemRarity = EObsidianItemRarity::Normal;
 	
 private:
 	UPROPERTY()

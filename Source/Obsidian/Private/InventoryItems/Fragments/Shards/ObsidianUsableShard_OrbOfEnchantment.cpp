@@ -59,8 +59,8 @@ FObsidianItemsMatchingUsableContext UObsidianUsableShard_OrbOfEnchantment::OnIte
 
 bool UObsidianUsableShard_OrbOfEnchantment::CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const
 {
-	return Instance->IsItemEquippable() &&
-				Instance->IsItemIdentified() &&
-				UObsidianItemsFunctionLibrary::IsItemUnique(Instance) == false &&
-				Instance->GetItemAddedAffixCount() < Instance->GetItemCombinedAffixLimit();				
+	const EObsidianItemRarity ItemRarity = Instance->GetItemRarity();
+	const bool bUsableRarity = ItemRarity > EObsidianItemRarity::Normal && ItemRarity < EObsidianItemRarity::Unique;
+	return	bUsableRarity && Instance->IsItemEquippable() && Instance->IsItemIdentified() &&
+				Instance->GetItemAddedAffixCount() < Instance->GetItemCombinedAffixLimit();					
 }

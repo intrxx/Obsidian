@@ -335,7 +335,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, EquipTag);
 	check(ItemGeneratedData.StackCount == 1); //TODO This should always be the case for equipment.
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 
@@ -523,7 +523,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
 	check(ItemGeneratedData.StackCount == 1); //TODO This should always be the case for equipment.
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	

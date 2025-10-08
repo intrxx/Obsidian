@@ -8,7 +8,7 @@
 // ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "Interaction/ObsidianInteractionInterface.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "GameFramework/Actor.h"
 #include "ObsidianItemSpawner.generated.h"

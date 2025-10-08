@@ -458,16 +458,7 @@ namespace ObsidianGameplayTags
 			Item_StackCount_Max,
 			Item_StackCount_Limit
 		};
-
-	/**
-	 * Rarity
-	 */
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Normal, "Item.Rarity.Normal", "Item Tag representing the normal rarity of the item.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Magic, "Item.Rarity.Magic", "Item Tag representing the magic rarity of the item.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Rare, "Item.Rarity.Rare", "Item Tag representing the rare rarity of the item.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Unique, "Item.Rarity.Unique", "Item Tag representing the Unique rarity of the item.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Rarity_Set, "Item.Rarity.Set", "Item Tag representing the Set rarity of the item.");
-
+	
 	/**
 	 * Affixes
 	 */

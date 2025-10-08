@@ -18,6 +18,7 @@
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
 DEFINE_LOG_CATEGORY(LogDropComponent);
 
@@ -176,8 +177,8 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 	}
 
 	TSoftClassPtr<UObsidianInventoryItemDefinition> ItemSoftItemDefinition = DropItem.SoftTreasureItemDefinitionClass;
-	const FGameplayTag RolledRarity = RollItemRarity(DropItem.ItemMaxRarityTag);
-	if (RolledRarity == ObsidianGameplayTags::Item_Rarity_Unique || RolledRarity == ObsidianGameplayTags::Item_Rarity_Set)
+	const EObsidianItemRarity RolledRarity = DropItem.bShouldRandomizeRarity ? RollItemRarity(DropItem.ItemMaxRarity) : EObsidianItemRarity::None;
+	if (RolledRarity >= EObsidianItemRarity::Unique)
 	{
 		FGameplayTag ItemBaseType = DropItem.ItemBaseType;
 		if (DropItem.ItemBaseType.IsValid() == false)
@@ -209,7 +210,7 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 		OutItemToDrop.ItemDefinitionClass = ItemSoftItemDefinition.LoadSynchronous();
 	}
 	
-	OutItemToDrop.DropRarity = RolledRarity;
+	OutItemToDrop.DropRarity = DropItem.bShouldRandomizeRarity ? RolledRarity : GetItemDefaultRarityFromDropItem(DropItem);
 	OutItemToDrop.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
 	OutItemToDrop.DropStacks = DropItem.GetRandomStackSizeToDropAdjusted(TreasureQuality);
 	GenerateItem(OutItemToDrop, TreasureQuality);
@@ -233,6 +234,25 @@ FGameplayTag UObsidianItemDropComponent::GetItemBaseTypeFromDropItem(const FObsi
 	}
 	
 	return FGameplayTag::EmptyTag;
+}
+
+EObsidianItemRarity UObsidianItemDropComponent::GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem)
+{
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
+	if (ItemDef == nullptr)
+	{
+		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
+	}
+
+	if (ItemDef)
+	{
+		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+		{
+			return ItemDefault->GetItemDefaultRarity();
+		}
+	}
+	
+	return EObsidianItemRarity::None;
 }
 
 void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop, const uint8 MaxTreasureClassQuality)
@@ -324,7 +344,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 		return;
 	}
 	
-	if (ForItemToDrop.DropRarity != ObsidianGameplayTags::Item_Rarity_Normal)
+	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
@@ -409,7 +429,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 		return;
 	}
 	
-	if (ForItemToDrop.DropRarity != ObsidianGameplayTags::Item_Rarity_Normal)
+	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> ImplicitAffixes;
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
@@ -615,31 +635,33 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 	return FTransform(ItemRotation, DropLocation, FVector(1.0f, 1.0f, 1.0f));
 }
 
-FGameplayTag UObsidianItemDropComponent::RollItemRarity(const FGameplayTag& MaxRarityTag)
+EObsidianItemRarity UObsidianItemDropComponent::RollItemRarity(const EObsidianItemRarity MaxRarity)
 {
-	const FGameplayTag NormalRarity = ObsidianGameplayTags::Item_Rarity_Normal;
-	if (MaxRarityTag == NormalRarity)
-	{
-		return NormalRarity;
-	}
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
 	{
 		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
-		return NormalRarity;
+		return EObsidianItemRarity::Normal;
 	}
 	
-	TMap<FGameplayTag, uint16> RarityToWeightMap = ItemDataSettings->DefaultRarityToWeightMap;
+	TMap<EObsidianItemRarity, uint16> RarityToWeightMap;
+	for (const TPair<EObsidianItemRarity, uint16>& RarityWithWeight : ItemDataSettings->DefaultRarityToWeightMap)
+	{
+		if (RarityWithWeight.Key <= MaxRarity)
+		{
+			RarityToWeightMap.Add(RarityWithWeight);
+		}
+	}
 	
 	uint32 MaxWeight = 0;
-	for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
+	for (const TPair<EObsidianItemRarity, uint16>& RarityWithWeight : RarityToWeightMap)
 	{
 		MaxWeight += RarityWithWeight.Value;
 	}
 	
 	const uint32 RolledWeight = FMath::RandRange(0, MaxWeight);
 	uint32 Cumulative = 0;
-	for (const TPair<FGameplayTag, uint16>& RarityWithWeight : RarityToWeightMap)
+	for (const TPair<EObsidianItemRarity, uint16>& RarityWithWeight : RarityToWeightMap)
 	{
 		Cumulative += RarityWithWeight.Value;
 		if (RolledWeight <= Cumulative)
@@ -648,8 +670,7 @@ FGameplayTag UObsidianItemDropComponent::RollItemRarity(const FGameplayTag& MaxR
 		}
 	}
 	
-	ensureAlways(false);
-	return NormalRarity;
+	return EObsidianItemRarity::Normal;
 }
 
 #if WITH_EDITOR

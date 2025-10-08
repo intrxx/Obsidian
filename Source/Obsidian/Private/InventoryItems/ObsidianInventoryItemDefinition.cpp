@@ -72,6 +72,11 @@ FGameplayTag UObsidianInventoryItemDefinition::GetItemBaseTypeTag() const
 	return ItemBaseType;
 }
 
+EObsidianItemRarity UObsidianInventoryItemDefinition::GetItemDefaultRarity() const
+{
+	return ItemDefaultRarity;
+}
+
 int32 UObsidianInventoryItemDefinition::GetItemLevel() const
 {
 #if !UE_BUILD_SHIPPING

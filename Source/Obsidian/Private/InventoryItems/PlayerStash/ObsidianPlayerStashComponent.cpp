@@ -301,7 +301,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, Result.StacksLeft, AvailablePosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -364,7 +364,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 	UObsidianInventoryItemInstance* Instance = StashItemList.AddEntry(ItemDef, StacksAvailableToAdd, ItemPosition);
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarityTag);
+	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -544,13 +544,13 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
 		const TArray<FObsidianActiveItemAffix> CachedAffixes = InstanceToAdd->GetAllItemAffixes();
 		const bool bCachedIdentified = InstanceToAdd->IsItemIdentified();
-		const FGameplayTag CachedRarityTag = InstanceToAdd->GetItemRarity();
+		const EObsidianItemRarity CachedRarity = InstanceToAdd->GetItemRarity();
 		
 		Result.bActionSuccessful = false;
 		InstanceToAdd = StashItemList.AddEntry(InstanceToAdd->GetItemDef(), StacksAvailableToAdd, ItemPosition);
 		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 		InstanceToAdd->InitializeAffixes(CachedAffixes);
-		InstanceToAdd->SetItemRarity(CachedRarityTag);
+		InstanceToAdd->SetItemRarity(CachedRarity);
 		InstanceToAdd->SetIdentified(bCachedIdentified);
 	}
 	

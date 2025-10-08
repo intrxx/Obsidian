@@ -31,7 +31,7 @@ class OBSIDIAN_API UObsidianItemDescriptionBase : public UObsidianWidgetBase
 public:
 	void InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats, const bool bDisplayItemImage = false);
 	
-	void SetItemDisplayName(const FText& DisplayName, const FGameplayTag& RarityTag);
+	void SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity);
 	void SetItemDescription(const FText& ItemDescription);
 	void SetAdditionalItemDescription(const FText& AdditionalItemDescription);
 

@@ -112,7 +112,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 	}
 	
 	OutItemStats.SetIdentified(IsDefinitionIdentified(ItemDefault, ItemGeneratedData));
-	OutItemStats.ItemRarity = ItemGeneratedData.ItemRarityTag;
+	OutItemStats.ItemRarity = ItemGeneratedData.ItemRarity;
 
 	return true;
 }
@@ -210,7 +210,7 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef
 
 bool UObsidianItemsFunctionLibrary::IsItemUnique(const UObsidianInventoryItemInstance* ItemInstance)
 {
-	return ItemInstance->GetItemRarity() == ObsidianGameplayTags::Item_Rarity_Unique;
+	return ItemInstance->GetItemRarity() == EObsidianItemRarity::Unique;
 }
 
 FGameplayTag UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(const FDraggedItem& DraggedItem)
@@ -290,7 +290,7 @@ bool UObsidianItemsFunctionLibrary::IsDefinitionIdentified(const UObsidianInvent
 	if (ItemDefault)
 	{
 		/** Add any other conditions form ItemGeneratedData (Corrupted?). */
-		return ItemDefault->DoesStartIdentified() || (ItemGeneratedData.ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Normal);
+		return ItemDefault->DoesStartIdentified() || (ItemGeneratedData.ItemRarity <= EObsidianItemRarity::Normal);
 	}
 	return false;
 }

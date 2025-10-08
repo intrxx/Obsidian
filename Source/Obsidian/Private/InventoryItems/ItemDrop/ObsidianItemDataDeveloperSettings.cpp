@@ -33,46 +33,42 @@ uint8 UObsidianItemDataDeveloperSettings::GetDefaultAddedTreasureQualityForEntit
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetMaxPrefixCountForRarity(const FGameplayTag& RarityTag) const
+uint8 UObsidianItemDataDeveloperSettings::GetMaxPrefixCountForRarity(const EObsidianItemRarity ForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToMaxPrefixCount.Find(RarityTag))
+	if (const uint8* CountPtr = DefaultRarityToMaxPrefixCount.Find(ForRarity))
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag [%s] is not included in the DefaultRarityToMaxPrefixCount!"),
-		*RarityTag.GetTagName().ToString())
+	UE_LOG(LogItemData, Error, TEXT("Provided Rarity is not included in the DefaultRarityToMaxPrefixCount!"));
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetMaxSuffixCountForRarity(const FGameplayTag& RarityTag) const
+uint8 UObsidianItemDataDeveloperSettings::GetMaxSuffixCountForRarity(const EObsidianItemRarity ForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToMaxSuffixCount.Find(RarityTag))
+	if (const uint8* CountPtr = DefaultRarityToMaxSuffixCount.Find(ForRarity))
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag [%s] is not included in the DefaultRarityToMaxSuffixCount!"),
-		*RarityTag.GetTagName().ToString())
+	UE_LOG(LogItemData, Error, TEXT("Provided Rarity is not included in the DefaultRarityToMaxSuffixCount!"));
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetMaxAffixCountForRarity(const FGameplayTag& RarityTag) const
+uint8 UObsidianItemDataDeveloperSettings::GetMaxAffixCountForRarity(const EObsidianItemRarity ForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToMaxAffixCount.Find(RarityTag))
+	if (const uint8* CountPtr = DefaultRarityToMaxAffixCount.Find(ForRarity))
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag [%s] is not included in the DefaultRarityToMaxAffixCount!"),
-		*RarityTag.GetTagName().ToString())
+	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToMaxAffixCount!"));
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetNaturalMinAffixCountForRarity(const FGameplayTag& RarityTag) const
+uint8 UObsidianItemDataDeveloperSettings::GetNaturalMinAffixCountForRarity(const EObsidianItemRarity ForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToNaturalMinAffixCount.Find(RarityTag))
+	if (const uint8* CountPtr = DefaultRarityToNaturalMinAffixCount.Find(ForRarity))
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag [%s] is not included in the DefaultRarityToNaturalMinAffixCount!"),
-		*RarityTag.GetTagName().ToString())
+	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToNaturalMinAffixCount!"));
 	return 0;
 }

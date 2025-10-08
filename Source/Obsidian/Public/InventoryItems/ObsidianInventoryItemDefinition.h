@@ -5,6 +5,7 @@
 // ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 // ~ Project
 
@@ -35,6 +36,8 @@ public:
 	
 	FGameplayTag GetItemCategoryTag() const;
 	FGameplayTag GetItemBaseTypeTag() const;
+	EObsidianItemRarity GetItemDefaultRarity() const;
+	
 	int32 GetItemLevel() const;
 	bool HasStacks() const;
 	bool IsStackable() const;
@@ -48,6 +51,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.Category"), Category = "Obsidian")
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
+	EObsidianItemRarity ItemDefaultRarity = EObsidianItemRarity::None;
+	
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.BaseType"), Category = "Obsidian")
 	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
 

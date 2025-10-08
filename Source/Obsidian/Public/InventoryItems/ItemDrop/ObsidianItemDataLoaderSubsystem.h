@@ -32,7 +32,7 @@ public:
 	virtual void Deinitialize() override;
 	
 	bool GetAllCommonTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const;
-	bool GetAllUniqueOrSetTreasureClassesOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality, const FGameplayTag& RarityToGet, const FGameplayTag& OfBaseType, TArray<FObsidianTreasureClass>& OutTreasureClass) const;
+	bool GetAllUniqueOrSetTreasureClassesOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality, const EObsidianItemRarity RarityToGet, const FGameplayTag& OfBaseType, TArray<FObsidianTreasureClass>& OutTreasureClass) const;
 	
 	bool GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes) const;
 	bool GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes, TArray<FObsidianDynamicItemAffix>& OutImplicits) const;

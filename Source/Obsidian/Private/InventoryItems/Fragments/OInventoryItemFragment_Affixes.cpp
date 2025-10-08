@@ -15,10 +15,6 @@ UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectIn
 
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
-	// if (ItemAffixesGenerationType == EObsidianAffixGenerationType::NoGeneration)
-	// {
-	// 	Instance->SetItemRarity(ItemRarityTag);
-	// }
 }
 
 bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const

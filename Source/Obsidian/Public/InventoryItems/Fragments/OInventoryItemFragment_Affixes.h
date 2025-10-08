@@ -59,10 +59,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
 	EObsidianAffixGenerationType ItemAffixesGenerationType = EObsidianAffixGenerationType::DefaultGeneration;
 	
-	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */
-	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity", EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"),  Category = "Affixes")
-	FGameplayTag StaticItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
-
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
 	bool bHasImplicitAffix = false;
 	

@@ -26,12 +26,12 @@ class OBSIDIAN_API UObsidianItemDataDeveloperSettings : public UDeveloperSetting
 public:
 	UObsidianItemDataDeveloperSettings(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	FORCEINLINE uint8 GetDefaultDropRollNumberForEntityRarity(const EObsidianEntityRarity EntityRarity) const;
-	FORCEINLINE uint8 GetDefaultAddedTreasureQualityForEntityRarity(const EObsidianEntityRarity EntityRarity) const;
-	FORCEINLINE uint8 GetMaxPrefixCountForRarity(const FGameplayTag& RarityTag) const;
-	FORCEINLINE uint8 GetMaxSuffixCountForRarity(const FGameplayTag& RarityTag) const;
-	FORCEINLINE uint8 GetMaxAffixCountForRarity(const FGameplayTag& RarityTag) const;
-	FORCEINLINE uint8 GetNaturalMinAffixCountForRarity(const FGameplayTag& RarityTag) const;
+	uint8 GetDefaultDropRollNumberForEntityRarity(const EObsidianEntityRarity EntityRarity) const;
+	uint8 GetDefaultAddedTreasureQualityForEntityRarity(const EObsidianEntityRarity EntityRarity) const;
+	uint8 GetMaxPrefixCountForRarity(const EObsidianItemRarity ForRarity) const;
+	uint8 GetMaxSuffixCountForRarity(const EObsidianItemRarity ForRarity) const;
+	uint8 GetMaxAffixCountForRarity(const EObsidianItemRarity ForRarity) const;
+	uint8 GetNaturalMinAffixCountForRarity(const EObsidianItemRarity ForRarity) const;
 	
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Config", meta = (AllowedClasses = "ObsidianItemDataConfig"))
@@ -50,19 +50,19 @@ public:
 	TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")
-	TMap<FGameplayTag, uint16> DefaultRarityToWeightMap;
+	TMap<EObsidianItemRarity, uint16> DefaultRarityToWeightMap;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
-	TMap<FGameplayTag, uint8> DefaultRarityToMaxSuffixCount;
+	TMap<EObsidianItemRarity, uint8> DefaultRarityToMaxSuffixCount;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
-	TMap<FGameplayTag, uint8> DefaultRarityToMaxPrefixCount;
+	TMap<EObsidianItemRarity, uint8> DefaultRarityToMaxPrefixCount;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
-	TMap<FGameplayTag, uint8> DefaultRarityToMaxAffixCount;
+	TMap<EObsidianItemRarity, uint8> DefaultRarityToMaxAffixCount;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
-	TMap<FGameplayTag, uint8> DefaultRarityToNaturalMinAffixCount;
+	TMap<EObsidianItemRarity, uint8> DefaultRarityToNaturalMinAffixCount;
 
 	
 };

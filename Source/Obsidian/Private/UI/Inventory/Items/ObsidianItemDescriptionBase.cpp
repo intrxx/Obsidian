@@ -152,31 +152,47 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	}
 }
 
-void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, const FGameplayTag& RarityTag)
+void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity)
 {
 	if(!DisplayName.IsEmpty())
 	{
 		ItemName_TextBlock->SetText(DisplayName);
-		
-		if(RarityTag == ObsidianGameplayTags::Item_Rarity_Normal)
+
+		switch (Rarity)
 		{
-			check(NormalItemName_TextStyle);
-			ItemName_TextBlock->SetStyle(NormalItemName_TextStyle);
-		}
-		else if(RarityTag == ObsidianGameplayTags::Item_Rarity_Magic)
-		{
-			check(MagicItemName_TextStyle);
-			ItemName_TextBlock->SetStyle(MagicItemName_TextStyle);
-		}
-		else if(RarityTag == ObsidianGameplayTags::Item_Rarity_Rare)
-		{
-			check(RareItemName_TextStyle)
-			ItemName_TextBlock->SetStyle(RareItemName_TextStyle);
-		}
-		else if(RarityTag == ObsidianGameplayTags::Item_Rarity_Unique)
-		{
-			check(UniqueItemName_TextStyle);
-			ItemName_TextBlock->SetStyle(UniqueItemName_TextStyle);
+			case EObsidianItemRarity::Normal:
+				{
+					check(NormalItemName_TextStyle);
+					ItemName_TextBlock->SetStyle(NormalItemName_TextStyle);
+				} break;
+			case EObsidianItemRarity::Magic:
+				{
+					check(MagicItemName_TextStyle);
+					ItemName_TextBlock->SetStyle(MagicItemName_TextStyle);
+				} break;
+			case EObsidianItemRarity::Rare:
+				{
+					check(RareItemName_TextStyle)
+					ItemName_TextBlock->SetStyle(RareItemName_TextStyle);
+				} break;
+			case EObsidianItemRarity::Unique:
+				{
+					check(UniqueItemName_TextStyle);
+					ItemName_TextBlock->SetStyle(UniqueItemName_TextStyle);
+				} break;
+			case EObsidianItemRarity::Set:
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Add SetItemName_TextStyle!"));
+				} break;
+			case EObsidianItemRarity::Quest:
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Add QuestItemName_TextStyle!"));
+				} break;
+				default:
+					{
+						check(NormalItemName_TextStyle);
+						ItemName_TextBlock->SetStyle(NormalItemName_TextStyle);
+					} break;
 		}
 	}
 }

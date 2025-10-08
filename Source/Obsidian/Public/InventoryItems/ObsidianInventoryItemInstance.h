@@ -70,8 +70,8 @@ public:
 	void SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	FGameplayTag GetItemRarity() const;
-	void SetItemRarity(const FGameplayTag& InItemRarityTag);
+	EObsidianItemRarity GetItemRarity() const;
+	void SetItemRarity(const EObsidianItemRarity InItemRarity);
 
 	FGameplayTag GetItemCategoryTag() const;
 	void SetItemCategory(const FGameplayTag& InItemCategoryTag);
@@ -281,7 +281,7 @@ private:
 	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
 
 	UPROPERTY(Replicated)
-	FGameplayTag ItemRarity = ObsidianGameplayTags::Item_Rarity_Normal;
+	EObsidianItemRarity ItemRarity = EObsidianItemRarity::None;
 
 	/** Current Item Location on the Grid or in the Slot, will be valid only if the item is placed somewhere. */
 	UPROPERTY(Replicated)

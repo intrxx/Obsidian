@@ -42,14 +42,14 @@ bool UObsidianItemDataLoaderSubsystem::GetAllCommonTreasureClassesUpToQuality(co
 }
 
 bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetTreasureClassesOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality,
-	const FGameplayTag& RarityToGet, const FGameplayTag& OfBaseType, TArray<FObsidianTreasureClass>& OutTreasureClass) const
+	const EObsidianItemRarity RarityToGet, const FGameplayTag& OfBaseType, TArray<FObsidianTreasureClass>& OutTreasureClass) const
 {
 	if (ItemDataConfig == nullptr)
 	{
 		return false;
 	}
 
-	if (RarityToGet == ObsidianGameplayTags::Item_Rarity_Unique)
+	if (RarityToGet == EObsidianItemRarity::Unique)
 	{
 		for (UObsidianTreasureList* TreasureList : ItemDataConfig->UniqueTreasureLists)
 		{
@@ -60,7 +60,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetTreasureClassesOfBaseIte
 			}
 		}
 	}
-	else if (RarityToGet == ObsidianGameplayTags::Item_Rarity_Set)
+	else if (RarityToGet == EObsidianItemRarity::Set)
 	{
 		for (UObsidianTreasureList* TreasureList : ItemDataConfig->SetTreasureLists)
 		{

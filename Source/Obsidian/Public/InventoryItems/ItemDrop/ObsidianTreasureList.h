@@ -58,10 +58,12 @@ public:
 	/** Array of possible weighted stack sizes to drop the Item with. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
-	
-	//TODO(intrxx) implement this as it only works for Normal Rarity rn
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	FGameplayTag ItemMaxRarityTag = ObsidianGameplayTags::Item_Rarity_Set;
+	bool bShouldRandomizeRarity = true;
+	
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bShouldRandomizeRarity", EditConditionHides), Category = "Obsidian")
+	EObsidianItemRarity ItemMaxRarity = EObsidianItemRarity::Set;
 	
 	/** Derived automatically from provided Treasure Item Definition. */
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian")
@@ -95,7 +97,7 @@ public:
 	FTransform DropTransform = FTransform::Identity;
 
 	UPROPERTY()
-	FGameplayTag DropRarity = ObsidianGameplayTags::Item_Rarity_Normal;
+	EObsidianItemRarity DropRarity = EObsidianItemRarity::Normal;
 	
 	UPROPERTY()
 	uint8 DropStacks = 1;

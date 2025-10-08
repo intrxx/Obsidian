@@ -99,7 +99,7 @@ private:
 	bool ConstructItemToDrop(const FObsidianDropItem& DropItem, const FVector& InOverrideDropLocation, const uint8 TreasureQuality, FObsidianItemToDrop& OutItemToDrop);
 	
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
-	FGameplayTag RollItemRarity(const FGameplayTag& MaxRarityTag);
+	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity MaxRarity);
 
 	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
 
@@ -107,6 +107,7 @@ private:
 	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
 
 	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
+	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);
 	
 private:
 	UPROPERTY()

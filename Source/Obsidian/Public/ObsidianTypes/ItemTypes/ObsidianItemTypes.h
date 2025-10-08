@@ -6,14 +6,14 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianItemAffixTypes.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 #include "ObsidianItemTypes.generated.h"
 
-struct FObsidianDynamicItemAffix;
+struct FObsidianActiveItemAffix;
 
+class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 class UGameplayEffect;
 
@@ -401,9 +401,9 @@ public:
 	FObsidianItemGeneratedData(const int32 InStacks)
 		: StackCount(InStacks)
 	{}
-	FObsidianItemGeneratedData(const int32 InStacks, const FGameplayTag& InRarityTag, const TArray<FObsidianActiveItemAffix>& InAffixes)
+	FObsidianItemGeneratedData(const int32 InStacks, const EObsidianItemRarity InRarity, const TArray<FObsidianActiveItemAffix>& InAffixes)
 		: StackCount(InStacks)
-		, ItemRarityTag(InRarityTag)
+		, ItemRarity(InRarity)
 		, ItemAffixes(InAffixes)
 	{}
 
@@ -414,7 +414,7 @@ public:
 	int32 StackCount = 1;
 
 	UPROPERTY()
-	FGameplayTag ItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
+	EObsidianItemRarity ItemRarity = EObsidianItemRarity::Normal;
 
 	UPROPERTY()
 	TArray<FObsidianActiveItemAffix> ItemAffixes;
@@ -436,15 +436,8 @@ public:
 		, GeneratedData(InGeneratedData)
 	{}
 
-	bool IsEmpty() const
-	{
-		return !Instance && !ItemDef;
-	}
-
-	bool CarriesItemDef() const
-	{
-		return ItemDef != nullptr;
-	}
+	bool IsEmpty() const;
+	bool CarriesItemDef() const;
 
 	bool CarriesInstance() const
 	{

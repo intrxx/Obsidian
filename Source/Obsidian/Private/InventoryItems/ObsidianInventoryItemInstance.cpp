@@ -124,14 +124,14 @@ void UObsidianInventoryItemInstance::SetItemDef(const TSubclassOf<UObsidianInven
 	ItemDef = InItemDef;
 }
 
-FGameplayTag UObsidianInventoryItemInstance::GetItemRarity() const
+EObsidianItemRarity UObsidianInventoryItemInstance::GetItemRarity() const
 {
 	return ItemRarity;
 }
 
-void UObsidianInventoryItemInstance::SetItemRarity(const FGameplayTag& InItemRarityTag)
+void UObsidianInventoryItemInstance::SetItemRarity(const EObsidianItemRarity InItemRarity)
 {
-	ItemRarity = InItemRarityTag;
+	ItemRarity = InItemRarity;
 }
 
 FGameplayTag UObsidianInventoryItemInstance::GetItemCategoryTag() const

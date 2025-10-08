@@ -6,6 +6,7 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Obsidian/ObsidianGameModule.h"
 
 
@@ -14,7 +15,7 @@
 void FObsidianItemGeneratedData::Reset()
 {
 	StackCount = 1;
-	ItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
+	ItemRarity = EObsidianItemRarity::None;
 	ItemAffixes.Reset();
 }
 
@@ -24,6 +25,16 @@ FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance)
 	: Instance(InInstance)
 	, GeneratedData(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
 {}
+
+bool FDraggedItem::IsEmpty() const
+{
+	return !Instance && !ItemDef;
+}
+
+bool FDraggedItem::CarriesItemDef() const
+{
+	return ItemDef != nullptr;
+}
 
 // ~ FObsidianSlotDefinition
 
