@@ -180,6 +180,28 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQ
 	return MatchingTreasureClasses;
 }
 
+TArray<FObsidianDropItem> UObsidianTreasureList::GetAllItemsOfBaseTypeUpToQuality(const uint8 TreasureQuality,
+	const FGameplayTag& OfBaseType)
+{
+	TArray<FObsidianDropItem> MatchingItemsToDrop;
+	
+	for (const FObsidianTreasureClass& Class : TreasureClasses)
+	{
+		if (Class.TreasureQuality <= TreasureQuality)
+		{
+			for (const FObsidianDropItem& Item : Class.DropItems)
+			{
+				if (Item.ItemBaseType == OfBaseType)
+				{
+					MatchingItemsToDrop.Add(Item);
+				}
+			}
+		}
+	}
+
+	return MatchingItemsToDrop;
+}
+
 TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQuality(const uint8 TreasureQuality) const
 {
 	TArray<const FObsidianTreasureClass*> MatchingTreasureClassesPtrs;

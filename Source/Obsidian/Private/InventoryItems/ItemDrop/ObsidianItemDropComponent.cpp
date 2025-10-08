@@ -180,25 +180,20 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 	const EObsidianItemRarity RolledRarity = DropItem.bShouldRandomizeRarity ? RollItemRarity(DropItem.ItemMaxRarity) : EObsidianItemRarity::None;
 	if (RolledRarity >= EObsidianItemRarity::Unique)
 	{
-		FGameplayTag ItemBaseType = DropItem.ItemBaseType;
+		FGameplayTag ItemBaseTypeTag = DropItem.ItemBaseType;
 		if (DropItem.ItemBaseType.IsValid() == false)
 		{
-			ItemBaseType = GetItemBaseTypeFromDropItem(DropItem);
+			ItemBaseTypeTag = GetItemBaseTypeFromDropItem(DropItem);
 		}
 		
-		if (CachedItemDataLoader && ItemBaseType.IsValid())
+		if (CachedItemDataLoader && ItemBaseTypeTag.IsValid())
 		{
-			TArray<FObsidianTreasureClass> SpecialTreasureClasses;
-			CachedItemDataLoader->GetAllUniqueOrSetTreasureClassesOfBaseItemTypeUpToQuality(TreasureQuality, RolledRarity,
-				ItemBaseType, SpecialTreasureClasses);
+			FObsidianTreasureClass SpecialItemsTreasureClass;
+			CachedItemDataLoader->GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(TreasureQuality, RolledRarity,
+				ItemBaseTypeTag, SpecialItemsTreasureClass);
 			
-			if (SpecialTreasureClasses.IsEmpty() == false)
-			{
-				//TODO(intrxx) Get Random TC in some weighted way?
-				const uint16 RandomClassIndex = FMath::RandRange(0, (SpecialTreasureClasses.Num() - 1));
-				const FObsidianDropItem RolledSpecialItem = SpecialTreasureClasses[RandomClassIndex].GetRandomItemFromClass();
-				ItemSoftItemDefinition = RolledSpecialItem.SoftTreasureItemDefinitionClass;
-			}
+			const FObsidianDropItem RolledSpecialItem = SpecialItemsTreasureClass.GetRandomItemFromClass();
+			ItemSoftItemDefinition = RolledSpecialItem.SoftTreasureItemDefinitionClass;
 		}
 	}
 	

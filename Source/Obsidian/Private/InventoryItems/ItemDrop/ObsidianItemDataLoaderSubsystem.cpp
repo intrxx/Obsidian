@@ -41,8 +41,8 @@ bool UObsidianItemDataLoaderSubsystem::GetAllCommonTreasureClassesUpToQuality(co
 	return false;
 }
 
-bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetTreasureClassesOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality,
-	const EObsidianItemRarity RarityToGet, const FGameplayTag& OfBaseType, TArray<FObsidianTreasureClass>& OutTreasureClass) const
+bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality,
+	const EObsidianItemRarity RarityToGet, const FGameplayTag& OfBaseType, FObsidianTreasureClass& OutTreasureClass) const
 {
 	if (ItemDataConfig == nullptr)
 	{
@@ -55,7 +55,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetTreasureClassesOfBaseIte
 		{
 			if (TreasureList)
 			{
-				OutTreasureClass.Append(TreasureList->GetAllTreasureClassesUpToQuality(UpToTreasureQuality));
+				OutTreasureClass = FObsidianTreasureClass(TreasureList->GetAllItemsOfBaseTypeUpToQuality(UpToTreasureQuality, OfBaseType));
 				return true;
 			}
 		}
@@ -66,7 +66,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetTreasureClassesOfBaseIte
 		{
 			if (TreasureList)
 			{
-				OutTreasureClass.Append(TreasureList->GetAllTreasureClassesUpToQuality(UpToTreasureQuality));
+				OutTreasureClass = FObsidianTreasureClass(TreasureList->GetAllItemsOfBaseTypeUpToQuality(UpToTreasureQuality, OfBaseType));
 				return true;
 			}
 		}

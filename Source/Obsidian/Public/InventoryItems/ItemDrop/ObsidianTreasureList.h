@@ -109,6 +109,11 @@ struct FObsidianTreasureClass
 	GENERATED_BODY()
 
 public:
+	FObsidianTreasureClass(){}
+	FObsidianTreasureClass(const TArray<FObsidianDropItem>& InDropItems)
+		: DropItems(InDropItems)
+	{}
+	
 	/** Returns Weighted Randomized Item, will be nullptr if NoDrop was chosen. */
 	FObsidianDropItem GetRandomItemFromClass(const float NoDropScale = 1.0f);
 
@@ -153,7 +158,8 @@ public:
 	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
 	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality);
 	TArray<FObsidianTreasureClass> GetTreasureClassesOfQuality(const uint8 TreasureQuality) const;
-
+	TArray<FObsidianDropItem> GetAllItemsOfBaseTypeUpToQuality(const uint8 TreasureQuality, const FGameplayTag& OfBaseType);
+	
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 	
 #if WITH_EDITOR
