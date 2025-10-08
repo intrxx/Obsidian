@@ -25,6 +25,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Treasure")
 	TArray<TObjectPtr<UObsidianTreasureList>> CommonTreasureLists;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Treasure")
+	TArray<TObjectPtr<UObsidianTreasureList>> UniqueTreasureLists;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Treasure")
+	TArray<TObjectPtr<UObsidianTreasureList>> SetTreasureLists;
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affixes")
 	TArray<TObjectPtr<UObsidianAffixList>> CommonAffixLists;
 };

@@ -23,7 +23,7 @@ void UObsidianItemDataLoaderSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-bool UObsidianItemDataLoaderSubsystem::GetAllTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const
+bool UObsidianItemDataLoaderSubsystem::GetAllCommonTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const
 {
 	if (ItemDataConfig == nullptr)
 	{
@@ -36,6 +36,39 @@ bool UObsidianItemDataLoaderSubsystem::GetAllTreasureClassesUpToQuality(const in
 		{
 			OutTreasureClass.Append(TreasureList->GetAllTreasureClassesUpToQuality(UpToTreasureQuality));
 			return true;
+		}
+	}
+	return false;
+}
+
+bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetTreasureClassesOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality,
+	const FGameplayTag& RarityToGet, const FGameplayTag& OfBaseType, TArray<FObsidianTreasureClass>& OutTreasureClass) const
+{
+	if (ItemDataConfig == nullptr)
+	{
+		return false;
+	}
+
+	if (RarityToGet == ObsidianGameplayTags::Item_Rarity_Unique)
+	{
+		for (UObsidianTreasureList* TreasureList : ItemDataConfig->UniqueTreasureLists)
+		{
+			if (TreasureList)
+			{
+				OutTreasureClass.Append(TreasureList->GetAllTreasureClassesUpToQuality(UpToTreasureQuality));
+				return true;
+			}
+		}
+	}
+	else if (RarityToGet == ObsidianGameplayTags::Item_Rarity_Set)
+	{
+		for (UObsidianTreasureList* TreasureList : ItemDataConfig->SetTreasureLists)
+		{
+			if (TreasureList)
+			{
+				OutTreasureClass.Append(TreasureList->GetAllTreasureClassesUpToQuality(UpToTreasureQuality));
+				return true;
+			}
 		}
 	}
 	return false;

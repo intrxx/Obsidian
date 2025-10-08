@@ -59,6 +59,14 @@ public:
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
 	
+	//TODO(intrxx) implement this as it only works for Normal Rarity rn
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FGameplayTag ItemMaxRarityTag = ObsidianGameplayTags::Item_Rarity_Set;
+	
+	/** Derived automatically from provided Treasure Item Definition. */
+	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian")
+	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
+	
 	static const FObsidianDropItem NoDropType;
 
 protected:
@@ -144,7 +152,10 @@ public:
 	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality);
 	TArray<FObsidianTreasureClass> GetTreasureClassesOfQuality(const uint8 TreasureQuality) const;
 
+	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
+	
 #if WITH_EDITOR
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
 #endif
 	

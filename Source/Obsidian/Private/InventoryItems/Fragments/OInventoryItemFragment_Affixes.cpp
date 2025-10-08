@@ -26,16 +26,6 @@ bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const
 	return bHasImplicitAffix && StaticItemImplicit;
 }
 
-bool UOInventoryItemFragment_Affixes::IsUniqueOrSet_GetRarity(FGameplayTag& OutRarity) const
-{
-	if (ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Set || ItemRarityTag == ObsidianGameplayTags::Item_Rarity_Unique)
-	{
-		OutRarity = ItemRarityTag;
-		return true;
-	}
-	return false;
-}
-
 FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticImplicitAffix() const
 {
 	return StaticItemImplicit;

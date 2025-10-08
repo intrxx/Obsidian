@@ -96,14 +96,18 @@ protected:
 	TArray<FObsidianAdditionalTreasureList> AdditionalTreasureLists;
 
 private:
+	bool ConstructItemToDrop(const FObsidianDropItem& DropItem, const FVector& InOverrideDropLocation, const uint8 TreasureQuality, FObsidianItemToDrop& OutItemToDrop);
+	
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
-	FGameplayTag RollItemRarity();
+	FGameplayTag RollItemRarity(const FGameplayTag& MaxRarityTag);
 
 	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
 
 	//TODO(intrxx) Clean it up
 	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
 
+	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
+	
 private:
 	UPROPERTY()
 	UObsidianItemDataLoaderSubsystem* CachedItemDataLoader = nullptr;

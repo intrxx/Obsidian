@@ -49,9 +49,6 @@ public:
 	
 	bool HasImplicitAffix() const;
 	
-	/** Returns true if the item is either Unique or Set, fills the Rarity Tag if thats the case. */
-	bool IsUniqueOrSet_GetRarity(FGameplayTag& OutRarity) const;
-
 	FObsidianStaticItemAffix GetStaticImplicitAffix() const;
 	TArray<FObsidianStaticItemAffix> GetStaticAffixes() const;
 	EObsidianAffixGenerationType GetGenerationType() const;
@@ -64,7 +61,7 @@ protected:
 	
 	/** Item Rarity Tag, although it is exposed it should only be used to design Unique Items. */
 	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Item.Rarity", EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"),  Category = "Affixes")
-	FGameplayTag ItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
+	FGameplayTag StaticItemRarityTag = ObsidianGameplayTags::Item_Rarity_Normal;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
 	bool bHasImplicitAffix = false;

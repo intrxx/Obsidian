@@ -6,12 +6,12 @@
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor
+#include "UObject/ObjectSaveContext.h"
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 // ~ FObsidianDropItem
 
@@ -196,6 +196,29 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQualit
 	return MatchingTreasureClasses;
 }
 
+void UObsidianTreasureList::PreSave(FObjectPreSaveContext SaveContext)
+{
+	Super::PreSave(SaveContext);
+
+	for (auto& TreasureClass : TreasureClasses)
+	{
+		for (auto& DropItem : TreasureClass.DropItems)
+		{
+			if (DropItem.SoftTreasureItemDefinitionClass.IsValid())
+			{
+				if (const UObsidianInventoryItemDefinition* CDO = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous()->GetDefaultObject<UObsidianInventoryItemDefinition>())
+				{
+					DropItem.ItemBaseType = CDO->ItemBaseType;
+				}
+			}
+			else
+			{
+				DropItem.ItemBaseType = FGameplayTag::EmptyTag;
+			}
+		}
+	}
+}
+
 #if WITH_EDITOR
 EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContext& Context, const int Index) const
 {
@@ -236,6 +259,35 @@ EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContex
 	}
 
 	return Result;
+}
+
+void UObsidianTreasureList::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	const FName PropertyName = PropertyChangedEvent.Property ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+	
+	// Refresh derived tags when any TreasureClass changes
+	if (PropertyName == GET_MEMBER_NAME_CHECKED(FObsidianDropItem, SoftTreasureItemDefinitionClass) || PropertyName == NAME_None)
+	{
+		for (auto& TreasureClass : TreasureClasses)
+		{
+			for (auto& DropItem : TreasureClass.DropItems)
+			{
+				if (DropItem.SoftTreasureItemDefinitionClass.IsValid())
+				{
+					if (const UObsidianInventoryItemDefinition* CDO = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous()->GetDefaultObject<UObsidianInventoryItemDefinition>())
+					{
+						DropItem.ItemBaseType = CDO->ItemBaseType;
+					}
+				}
+				else
+				{
+					DropItem.ItemBaseType = FGameplayTag::EmptyTag;
+				}
+			}
+		}
+	}
 }
 #endif
 

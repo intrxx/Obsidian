@@ -325,6 +325,33 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_ScrollOfTeleportation, "Item.BaseType.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_OrbOfEnchantment, "Item.BaseType.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item base type.");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Helmet_Armor, "Item.BaseType.Helmet.Armor", "Item Tag that represents Orb Of Armor Helmet item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Helmet_Evasion, "Item.BaseType.Helmet.Evasion", "Item Tag that represents Evasion Helmet item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Helmet_EnergyShield, "Item.BaseType.Helmet.EnergyShield", "Item Tag that represents Energy Shield Helmet item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_BodyArmor_Armor, "Item.BaseType.BodyArmor.Armor", "Item Tag that represents Armor Body Armor item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_BodyArmor_Evasion, "Item.BaseType.BodyArmor.Evasion", "Item Tag that represents Evasion Body Armor item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_BodyArmor_EnergyShield, "Item.BaseType.BodyArmor.EnergyShield", "Item Tag that represents Energy Shield Body Armor item base type.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Ring, "Item.BaseType.Ring", "Item Tag that represents Ring item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Amulet, "Item.BaseType.Amulet", "Item Tag that represents Amulet item base type.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_OneHand_Faith, "Item.BaseType.Sword.OneHand.Faith", "Item Tag that represents One Hand Faith Sword item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_OneHand_Dexterity, "Item.BaseType.Sword.OneHand.Dexterity", "Item Tag that represents One Hand Dexterity Sword item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_OneHand_Strength, "Item.BaseType.Sword.OneHand.Strength", "Item Tag that represents One Hand Strength Sword item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_OneHand_Intelligence, "Item.BaseType.Sword.OneHand.Intelligence", "Item Tag that represents One Hand Intelligence Sword item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_TwoHand_Faith, "Item.BaseType.Sword.TwoHand.Faith", "Item Tag that represents Two Hand Faith Sword item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_TwoHand_Dexterity, "Item.BaseType.Sword.TwoHand.Dexterity", "Item Tag that represents Two Hand Sword Dexterity item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_TwoHand_Strength, "Item.BaseType.Sword.TwoHand.Strength", "Item Tag that represents Two Hand Strength Sword item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_TwoHand_Intelligence, "Item.BaseType.Sword.TwoHand.Intelligence", "Item Tag that represents Two Hand Intelligence Sword item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Faith, "Item.BaseType.Axe.OneHand.Faith", "Item Tag that represents One Hand Faith Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Dexterity, "Item.BaseType.Axe.OneHand.Dexterity", "Item Tag that represents One Hand Dexterity Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Strength, "Item.BaseType.Axe.OneHand.Strength", "Item Tag that represents One Hand Strength Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Intelligence, "Item.BaseType.Axe.OneHand.Intelligence", "Item Tag that represents One Hand Intelligence Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Faith, "Item.BaseType.Axe.TwoHand.Faith", "Item Tag that represents Two Hand Faith Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Dexterity, "Item.BaseType.Axe.OneHand.Dexterity", "Item Tag that represents Two Hand Dexterity Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Strength, "Item.BaseType.Axe.OneHand.Strength", "Item Tag that represents Two Hand Strength Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Intelligence, "Item.BaseType.Axe.OneHand.Intelligence", "Item Tag that represents Two Hand Intelligence Axe item base type.");
+
 	/**
 	 * Equipment Slots.
 	 */
