@@ -4,6 +4,9 @@
 
 // ~ Core
 #include "UObject/ObjectSaveContext.h"
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif // ~ With Editor
 
 // ~ Project
 
@@ -96,4 +99,85 @@ void UObsidianAffixList::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 		}
 	}
 }
+
+#if WITH_EDITOR
+EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& Context, const FName ClassName, const int Index) const
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+	
+	const FGameplayTag AffixTag = FGameplayTag::RequestGameplayTag(TEXT("Item.Affix"));
+	for (int32 i = 0; i < ItemAffixList.Num(); i++)
+	{
+		const FObsidianDynamicItemAffix DynamicAffix = ItemAffixList[i];
+		
+		if (DynamicAffix.AffixTag.IsValid() == false || DynamicAffix.AffixTag.MatchesTag(AffixTag) == false)
+		{
+			Result = EDataValidationResult::Invalid;
+			
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Affix Tag at index [%i] of [%s] class at index [%i] is invalid! \n"
+				"Please fill correct Affix Tag."), i, *ClassName.ToString(), Index));
+			Context.AddError(ErrorMessage);
+		}
+		
+		if (DynamicAffix.AcceptedItemCategories.IsEmpty())
+		{
+			Result = EDataValidationResult::Invalid;
+
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Accepted Item Categories at index [%i] of [%s] class at index [%i] are empty! \n"
+				"Please fill Accepted Item Categories container with Item Category tags."), i, *ClassName.ToString(), Index));
+			Context.AddError(ErrorMessage);
+		}
+
+		if (DynamicAffix.SoftGameplayEffectToApply.IsNull())
+		{
+			Result = EDataValidationResult::Invalid;
+
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("GameplayEffectToApply at index [%i] of [%s] class at index [%i] is not set! \n"
+				"Please it with proper Gameplay Effect."), i, *ClassName.ToString(), Index));
+			Context.AddError(ErrorMessage);
+		}
+
+		if (DynamicAffix.PossibleAffixRanges.IsEmpty())
+		{
+			Result = EDataValidationResult::Invalid;
+
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("PossibleAffixRanges at index [%i] of [%s] class at index [%i] are not set! \n"
+				"Please fill it with possible affix ranges."), i, *ClassName.ToString(), Index));
+			Context.AddError(ErrorMessage);
+			continue;
+		}
+		
+		uint8 ExpectedCount = DynamicAffix.PossibleAffixRanges[0].AffixRanges.Num();
+		for (int32 y = 0; y < DynamicAffix.PossibleAffixRanges.Num(); y++)
+		{
+			const FObsidianAffixValueRange Range = DynamicAffix.PossibleAffixRanges[y];
+			if (Range.AffixRanges.Num() != ExpectedCount)
+			{
+				Result = EDataValidationResult::Invalid;
+
+				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Number of AffixRanges at index [%i] inside [%i] Affix of [%s] class at index [%i] differs from expected number of [%d]! \n"
+					"Please make sure that every entry has the same number of possible ranges."),y, i, *ClassName.ToString(), Index, ExpectedCount));
+				Context.AddError(ErrorMessage);
+			}
+		}
+	}
+
+	return Result;
+}
+
+EDataValidationResult UObsidianAffixList::IsDataValid(FDataValidationContext& Context) const
+{
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+
+	uint16 TreasureClassesIndex = 0;
+	for (const FObsidianAffixClass& Class : AffixClasses)
+	{
+		Result =  CombineDataValidationResults(Result, Class.ValidateData(Context, Class.AffixClassName, TreasureClassesIndex));
+		TreasureClassesIndex++;
+	}
+	
+	return Result;
+}
+#endif
+
 

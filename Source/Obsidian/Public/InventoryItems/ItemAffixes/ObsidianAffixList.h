@@ -22,6 +22,10 @@ struct FObsidianAffixClass
 public:
 	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQuality(const int32 UpToTreasureQuality) const;
 	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategory) const;
+
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& Context, const FName ClassName, const int Index) const;
+#endif
 	
 public:
 	//TODO(intrxx) Currently not used for anything, keep or delete?
@@ -57,6 +61,7 @@ public:
 	
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
 #endif
 	
 protected:
