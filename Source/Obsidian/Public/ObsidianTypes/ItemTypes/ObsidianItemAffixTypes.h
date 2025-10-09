@@ -58,9 +58,6 @@ struct FObsidianAffixValueRange
 
 public:
 	FObsidianAffixValueRange(){}
-	FObsidianAffixValueRange(const TArray<FFloatRange>& InRange)
-		: AffixRanges(InRange)
-	{}
 
 public:
 	UPROPERTY(EditDefaultsOnly)
@@ -69,7 +66,20 @@ public:
 	/** Array (as there can be multiple values in a single Affix) of Affix Range to Roll. */
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FFloatRange> AffixRanges;
+};
 
+/**
+ * 
+ */
+USTRUCT()
+struct FObsidianActiveAffixValue
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	uint8 AffixTier = -1;
+	
 	UPROPERTY()
 	TArray<float> CurrentAffixValues;
 };
@@ -117,7 +127,7 @@ public:
 	
 	/** Affix ranges. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TArray<FFloatRange> PossibleAffixRanges;
+	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
 };
 
 /**
@@ -211,9 +221,8 @@ public:
 	
 	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
 	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
-
-	void InitializeAffixTierAndRange();
-	void RandomizeAffixValue();
+	
+	void RandomizeAffixValueBoundByRange();
 	
 public:
 	UPROPERTY()
@@ -241,10 +250,11 @@ public:
 	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
 
 	UPROPERTY()
-	FObsidianAffixValueRange CurrentAffixValue;
+	FObsidianActiveAffixValue CurrentAffixValue;
 
 private:
 	void CreateAffixActiveDescription();
+	void InitializeAffixTierAndRange();
 };
 
 /**

@@ -285,7 +285,6 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					
 					FObsidianActiveItemAffix ActiveAffix;
 					ActiveAffix.InitializeWithStatic(ImplicitAffix);
-					ActiveAffix.InitializeAffixTierAndRange();
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
@@ -306,7 +305,6 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					
 					FObsidianActiveItemAffix ActiveAffix;
 					ActiveAffix.InitializeWithStatic(ImplicitAffix);
-					ActiveAffix.InitializeAffixTierAndRange();
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
@@ -319,7 +317,6 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					{
 						FObsidianActiveItemAffix ActiveAffix;
 						ActiveAffix.InitializeWithStatic(StaticAffix);
-						ActiveAffix.InitializeAffixTierAndRange();
 						ForItemToDrop.DropAffixes.Add(ActiveAffix);
 					}
 				}
@@ -376,7 +373,6 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 					
 				FObsidianActiveItemAffix ActiveAffix;
 				ActiveAffix.InitializeWithDynamic(RolledItemPrefix);
-				ActiveAffix.InitializeAffixTierAndRange();
 				ForItemToDrop.DropAffixes.Add(ActiveAffix);
 				PrefixAffixes.Remove(RolledItemPrefix);
 				++AddedPrefixes;
@@ -396,7 +392,6 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 					
 				FObsidianActiveItemAffix ActiveAffix;
 				ActiveAffix.InitializeWithDynamic(RolledItemSuffix);
-				ActiveAffix.InitializeAffixTierAndRange();
 				ForItemToDrop.DropAffixes.Add(ActiveAffix);
 				SuffixAffixes.Remove(RolledItemSuffix);
 				++AddedSuffixes;
@@ -445,7 +440,6 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 			FObsidianDynamicItemAffix RolledItemAffix = ImplicitAffixes[FMath::RandRange(0, ImplicitAffixes.Num() - 1)];
 			FObsidianActiveItemAffix ActiveAffix;
 			ActiveAffix.InitializeWithDynamic(RolledItemAffix);
-			ActiveAffix.InitializeAffixTierAndRange();
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 			UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
@@ -475,7 +469,6 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 					
 				FObsidianActiveItemAffix ActiveAffix;
 				ActiveAffix.InitializeWithDynamic(RolledItemPrefix);
-				ActiveAffix.InitializeAffixTierAndRange();
 				ForItemToDrop.DropAffixes.Add(ActiveAffix);
 				PrefixAffixes.Remove(RolledItemPrefix);
 				++AddedPrefixes;
@@ -495,7 +488,6 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 					
 				FObsidianActiveItemAffix ActiveAffix;
 				ActiveAffix.InitializeWithDynamic(RolledItemSuffix);
-				ActiveAffix.InitializeAffixTierAndRange();
 				ForItemToDrop.DropAffixes.Add(ActiveAffix);
 				SuffixAffixes.Remove(RolledItemSuffix);
 				++AddedSuffixes;
