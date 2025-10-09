@@ -3,6 +3,7 @@
 #include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
 // ~ Core
+#include "UObject/ObjectSaveContext.h"
 
 // ~ Project
 
@@ -66,5 +67,33 @@ void UObsidianAffixList::PostLoad()
 TArray<FObsidianAffixClass> UObsidianAffixList::GetAllAffixClasses() const
 {
 	return AffixClasses;
+}
+
+void UObsidianAffixList::PreSave(FObjectPreSaveContext SaveContext)
+{
+	Super::PreSave(SaveContext);
+	
+	for (FObsidianAffixClass& Class : AffixClasses)
+	{
+		const EObsidianAffixType AffixType = Class.AffixClassType;
+		for (FObsidianDynamicItemAffix& Affix : Class.ItemAffixList)
+		{
+			Affix.AffixType = AffixType;
+		}
+	}
+}
+
+void UObsidianAffixList::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+{
+	Super::PostEditChangeProperty(PropertyChangedEvent);
+
+	for (FObsidianAffixClass& Class : AffixClasses)
+	{
+		const EObsidianAffixType AffixType = Class.AffixClassType;
+		for (FObsidianDynamicItemAffix& Affix : Class.ItemAffixList)
+		{
+			Affix.AffixType = AffixType;
+		}
+	}
 }
 

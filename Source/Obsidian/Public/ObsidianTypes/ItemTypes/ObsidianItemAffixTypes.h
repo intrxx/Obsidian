@@ -42,7 +42,7 @@ struct FObsidianAffixTier
 
 public:
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "8"))
-	uint8 AffixTier = 1;
+	uint8 AffixTierValue = 1;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"))
 	uint8 MinItemLevelRequirement = 1;	
@@ -52,16 +52,16 @@ public:
  * 
  */
 USTRUCT()
-struct FObsidianAffixValue
+struct FObsidianAffixValueRange
 {
 	GENERATED_BODY()
 
 public:
-	FObsidianAffixValue(){}
-	FObsidianAffixValue(const TArray<FFloatRange>& InRange)
+	FObsidianAffixValueRange(){}
+	FObsidianAffixValueRange(const TArray<FFloatRange>& InRange)
 		: AffixRanges(InRange)
 	{}
-	
+
 public:
 	UPROPERTY(EditDefaultsOnly)
 	FObsidianAffixTier AffixTier;
@@ -147,8 +147,7 @@ public:
 	/** Affix Gameplay Tag Identifier. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
-
-	//TODO(intrxx) actually set it to the list default
+	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|Affix")
 	EObsidianAffixType AffixType = EObsidianAffixType::None;
 
@@ -185,7 +184,7 @@ public:
 
 	/** Possible Affix Ranges to roll from. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TArray<FObsidianAffixValue> PossibleAffixRanges;
+	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
 };
 
 /**
@@ -208,12 +207,14 @@ public:
 	bool operator==(const FObsidianDynamicItemAffix& Other) const;
 	bool operator==(const FObsidianStaticItemAffix& Other) const;
 
+	uint8 GetCurrentAffixTier() const;
+	
 	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
 	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
 
 	void InitializeAffixTierAndRange();
 	void RandomizeAffixValue();
-
+	
 public:
 	UPROPERTY()
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
@@ -225,7 +226,10 @@ public:
 	FText AffixItemNameAddition = FText();
 	
 	UPROPERTY()
-	FText AffixDescription = FText();
+	FText ActiveAffixDescription = FText();
+
+	UPROPERTY()
+	FText UnformattedAffixDescription = FText();
 	
 	UPROPERTY()
 	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
@@ -234,10 +238,13 @@ public:
 	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
 	
 	UPROPERTY()
-	TArray<FObsidianAffixValue> PossibleAffixRanges;
+	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
 
 	UPROPERTY()
-	FObsidianAffixValue CurrentAffixValue;
+	FObsidianAffixValueRange CurrentAffixValue;
+
+private:
+	void CreateAffixActiveDescription();
 };
 
 /**
@@ -281,7 +288,6 @@ struct FObsidianAffixDescriptionRow
 {
 	GENERATED_BODY()
 public:
-	void SetAffixRowDescription(const FText& InAffixDescription, const int32 InTempMagnitude);
 	void SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType, const int32 InAffixTier);
 	
 public:

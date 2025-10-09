@@ -9,7 +9,6 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
@@ -75,7 +74,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemIns
 	OutItemStats.SetIdentified(bIdentified);
 	if(bIdentified)
 	{
-		OutItemStats.SetAffixDescriptionRows(ItemInstance->GetAffixesAsUIDescription());
+		OutItemStats.SetAffixDescriptionRows(FormatItemAffixes(ItemInstance->GetAllItemAffixes()));
 	}
 
 	return true;
@@ -110,11 +109,40 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 		OutItemStats.SetDescription(AppearanceFrag->GetItemDescription());
 		OutItemStats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());
 	}
-	
-	OutItemStats.SetIdentified(IsDefinitionIdentified(ItemDefault, ItemGeneratedData));
+
 	OutItemStats.ItemRarity = ItemGeneratedData.ItemRarity;
+	
+	const bool bIdentified = IsDefinitionIdentified(ItemDefault, ItemGeneratedData);
+	OutItemStats.SetIdentified(bIdentified);
+	if (bIdentified)
+	{
+		OutItemStats.SetAffixDescriptionRows(FormatItemAffixes(ItemGeneratedData.ItemAffixes));
+	}
 
 	return true;
+}
+
+TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes)
+{
+	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
+	AffixDescriptionRows.Reserve(ItemAffixes.Num());
+	
+	for(const FObsidianActiveItemAffix& Affix : ItemAffixes)
+	{
+		if(Affix)
+		{
+			//TODO(intrxx) #AffixRefactor
+			FObsidianAffixDescriptionRow Row;
+			Row.AffixTag = Affix.AffixTag;
+			Row.AffixRowDescription = Affix.ActiveAffixDescription;
+			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
+			AffixDescriptionRows.Add(Row);
+
+			UE_LOG(LogTemp, Warning, TEXT("Item Affix: [%s], [%s]. Desc: [%s]"), *Affix.AffixTag.GetTagName().ToString(),
+				*Affix.AffixItemNameAddition.ToString(), *Affix.ActiveAffixDescription.ToString());
+		}
+	}
+	return AffixDescriptionRows;
 }
 
 int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const AActor* Owner, const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo)

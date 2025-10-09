@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool GetItemStats(const UObsidianInventoryItemInstance* ItemInstance, FObsidianItemStats& OutItemStats);
 
+	/** Formats Item Affixes into Affix Row for Item Description. */
+	static TArray<FObsidianAffixDescriptionRow> FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes);
+	
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData, FObsidianItemStats& OutItemStats);

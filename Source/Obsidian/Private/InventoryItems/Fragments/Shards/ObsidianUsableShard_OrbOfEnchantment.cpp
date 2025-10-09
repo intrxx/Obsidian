@@ -17,7 +17,7 @@ bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController
 			//TODO(intrxx) #AffixRefactor
 			// FObsidianDynamicItemAffix TempItemAffixToAdd;
 			// TempItemAffixToAdd.AffixTag = ObsidianGameplayTags::Item_Affix_Enchant_MaximumLifePercentage;
-			// TempItemAffixToAdd.AffixTier = 2;
+			// TempItemAffixToAdd.AffixTierValue = 2;
 			// TempItemAffixToAdd.AffixType = EObsidianAffixType::Prefix;
 			// TempItemAffixToAdd.TempAffixMagnitude = 8;
 			// TempItemAffixToAdd.AffixDescription = FText::FromString(TEXT("To Maximum Life"));

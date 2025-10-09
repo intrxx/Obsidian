@@ -158,10 +158,7 @@ public:
 	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
 	void AddAffix(const FObsidianActiveItemAffix& AffixToAdd);
 	void RemoveAffix(const FGameplayTag& AffixTag);
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	TArray<FObsidianAffixDescriptionRow> GetAffixesAsUIDescription() const;
-
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	int32 GetItemCombinedAffixLimit() const;
 

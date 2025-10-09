@@ -36,6 +36,11 @@ bool FObsidianActiveItemAffix::operator==(const FObsidianStaticItemAffix& Other)
 	return AffixTag == Other.AffixTag;
 }
 
+uint8 FObsidianActiveItemAffix::GetCurrentAffixTier() const
+{
+	return CurrentAffixValue.AffixTier.AffixTierValue;
+}
+
 void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix)
 {
 	if (!InDynamicItemAffix)
@@ -45,7 +50,7 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 	}
 
 	AffixTag = InDynamicItemAffix.AffixTag;
-	AffixDescription = InDynamicItemAffix.AffixDescription;
+	UnformattedAffixDescription = InDynamicItemAffix.AffixDescription;
 	AffixItemNameAddition = InDynamicItemAffix.AffixItemNameAddition;
 	AffixType = InDynamicItemAffix.AffixType;
 	AffixValueType = InDynamicItemAffix.AffixValueType;
@@ -62,18 +67,18 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 	}
 
 	AffixTag = InStaticItemAffix.AffixTag;
-	AffixDescription = InStaticItemAffix.AffixDescription;
+	UnformattedAffixDescription = InStaticItemAffix.AffixDescription;
 	AffixItemNameAddition = InStaticItemAffix.AffixItemNameAddition;
 	AffixType = InStaticItemAffix.AffixType;
 	AffixValueType = InStaticItemAffix.AffixValueType;
-	PossibleAffixRanges = { FObsidianAffixValue(InStaticItemAffix.PossibleAffixRanges) };
+	PossibleAffixRanges = { FObsidianAffixValueRange(InStaticItemAffix.PossibleAffixRanges) };
 	SoftGameplayEffectToApply = InStaticItemAffix.SoftGameplayEffectToApply;
 }
 
 void FObsidianActiveItemAffix::InitializeAffixTierAndRange()
 {
 	//TODO(intrxx) Get Random Range in weighted way
-	FObsidianAffixValue ChosenAffixValueTier = PossibleAffixRanges[FMath::RandRange(0, PossibleAffixRanges.Num() - 1)];
+	FObsidianAffixValueRange ChosenAffixValueTier = PossibleAffixRanges[FMath::RandRange(0, PossibleAffixRanges.Num() - 1)];
 	for (const FFloatRange& AffixRange : ChosenAffixValueTier.AffixRanges)
 	{
 		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
@@ -81,6 +86,7 @@ void FObsidianActiveItemAffix::InitializeAffixTierAndRange()
 		ChosenAffixValueTier.CurrentAffixValues.Add(RandomisedValue);
 	}
 	CurrentAffixValue = ChosenAffixValueTier;
+	CreateAffixActiveDescription();
 }
 
 void FObsidianActiveItemAffix::RandomizeAffixValue()
@@ -92,14 +98,18 @@ void FObsidianActiveItemAffix::RandomizeAffixValue()
 		RandomisedValue = AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
 		CurrentAffixValue.CurrentAffixValues.Add(RandomisedValue);
 	}
+	CreateAffixActiveDescription();
+}
+
+void FObsidianActiveItemAffix::CreateAffixActiveDescription()
+{
+	TArray<FFormatArgumentValue> Args;
+	Args.Append(CurrentAffixValue.CurrentAffixValues);
+
+	ActiveAffixDescription = FText::Format(UnformattedAffixDescription, Args);
 }
 
 // ~ FObsidianDescriptionAffixRow
-
-void FObsidianAffixDescriptionRow::SetAffixRowDescription(const FText& InAffixDescription, const int32 InTempMagnitude)
-{
-	AffixRowDescription = FText::FromString(FString::Printf(TEXT("Adds %d %s"), InTempMagnitude, *InAffixDescription.ToString()));
-}
 
 void FObsidianAffixDescriptionRow::SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType, const int32 InAffixTier)
 {

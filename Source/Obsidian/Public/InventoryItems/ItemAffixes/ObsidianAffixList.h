@@ -53,6 +53,12 @@ public:
 	
 	TArray<FObsidianAffixClass> GetAllAffixClasses() const;
 	
+	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
+	
+#if WITH_EDITOR
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianAffixClass> AffixClasses;
