@@ -135,11 +135,12 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAf
 			FObsidianAffixDescriptionRow Row;
 			Row.AffixTag = Affix.AffixTag;
 			Row.AffixRowDescription = Affix.ActiveAffixDescription;
+			Row.AffixItemNameAddition = Affix.AffixItemNameAddition;
 			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
 			AffixDescriptionRows.Add(Row);
 
 			UE_LOG(LogTemp, Warning, TEXT("Item Affix: [%s], [%s]. Desc: [%s]"), *Affix.AffixTag.GetTagName().ToString(),
-				*Affix.AffixItemNameAddition.ToString(), *Affix.ActiveAffixDescription.ToString());
+				*Affix.AffixItemNameAddition, *Affix.ActiveAffixDescription.ToString());
 		}
 	}
 	return AffixDescriptionRows;

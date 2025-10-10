@@ -65,8 +65,6 @@ UCommonTextBlock* UObsidianItemDescriptionBase::GetFreeSuffixBlock()
 
 void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats, const bool bDisplayItemImage)
 {
-	SetItemDisplayName(ItemStats.GetDisplayName(), ItemStats.ItemRarity);
-
 	if(bDisplayItemImage && ItemStats.ContainsItemImage())
 	{
 		if(UTexture2D* ItemTexture = ItemStats.GetItemImage())
@@ -115,9 +113,27 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		AdditionalItemDescription_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
+	FText ItemDisplayName = ItemStats.GetDisplayName();
 	if(ItemStats.ContainsAffixes() && ItemStats.IsIdentified())
 	{
 		TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows = ItemStats.GetAffixDescriptions();
+		if (ItemStats.ItemRarity == EObsidianItemRarity::Magic && AffixDescriptionRows.IsEmpty() == false)
+		{
+			FString ItemNameString = ItemDisplayName.ToString();
+			for(const FObsidianAffixDescriptionRow& Row : AffixDescriptionRows)
+			{
+				if (Row.AffixType == EObsidianAffixType::Prefix)
+				{
+					ItemNameString = FString::Printf(TEXT("%s "), *Row.AffixItemNameAddition) + ItemNameString;
+				}
+				else if (Row.AffixType == EObsidianAffixType::Suffix)
+				{
+					ItemNameString += FString::Printf(TEXT(" of %s"), *Row.AffixItemNameAddition);
+				}
+			}
+			ItemDisplayName = FText::FromString(ItemNameString);
+		}
+		
 		for(const FObsidianAffixDescriptionRow& Row : AffixDescriptionRows)
 		{
 			if(Row.AffixType == EObsidianAffixType::Implicit)
@@ -150,6 +166,8 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		Unidentified_TextBlock->SetVisibility(ESlateVisibility::Visible);
 		IdentificationHint_TextBlock->SetVisibility(ESlateVisibility::Visible);
 	}
+
+	SetItemDisplayName(ItemDisplayName, ItemStats.ItemRarity);
 }
 
 void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity)

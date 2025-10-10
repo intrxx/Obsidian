@@ -288,7 +288,7 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
-						*ImplicitAffix.AffixItemNameAddition.ToString());
+						*ImplicitAffix.AffixItemNameAddition);
 				}
 				
 				HandleDefaultGeneration(ForItemToDrop, DefaultObject->GetItemCategoryTag(), MaxTreasureClassQuality);
@@ -308,7 +308,7 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
-						*ImplicitAffix.AffixItemNameAddition.ToString());
+						*ImplicitAffix.AffixItemNameAddition);
 				}
 				
 				for (const FObsidianStaticItemAffix& StaticAffix : AffixFragment->GetStaticAffixes())
@@ -378,7 +378,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 				++AddedPrefixes;
 					
 				UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
-					*RolledItemPrefix.AffixItemNameAddition.ToString());
+					*RolledItemPrefix.AffixItemNameAddition);
 			}
 			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes <= MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
 			{
@@ -397,7 +397,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 				++AddedSuffixes;
 					
 				UE_LOG(LogTemp, Warning, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
-					*RolledItemSuffix.AffixItemNameAddition.ToString());
+					*RolledItemSuffix.AffixItemNameAddition);
 			}
 			else
 			{
@@ -443,7 +443,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 			UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
-						*RolledItemAffix.AffixItemNameAddition.ToString());
+						*RolledItemAffix.AffixItemNameAddition);
 		}
 		
 		const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
@@ -474,7 +474,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 				++AddedPrefixes;
 					
 				UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
-					*RolledItemPrefix.AffixItemNameAddition.ToString());
+					*RolledItemPrefix.AffixItemNameAddition);
 			}
 			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes <= MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
 			{
@@ -493,7 +493,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 				++AddedSuffixes;
 					
 				UE_LOG(LogTemp, Warning, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
-					*RolledItemSuffix.AffixItemNameAddition.ToString());
+					*RolledItemSuffix.AffixItemNameAddition);
 			}
 			else
 			{

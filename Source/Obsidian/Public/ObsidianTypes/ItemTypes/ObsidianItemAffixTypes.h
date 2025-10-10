@@ -111,7 +111,7 @@ public:
 	
 	/** Unique addition to the Item Name. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
-	FText AffixItemNameAddition = FText();
+	FString AffixItemNameAddition = FString();
 
 	/** Row description of the affix. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
@@ -167,7 +167,7 @@ public:
 
 	/** Unique addition to the Item Name. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	FText AffixItemNameAddition = FText();
+	FString AffixItemNameAddition = FString();
 
 	/** Row description of the affix. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
@@ -232,7 +232,7 @@ public:
 	EObsidianAffixType AffixType = EObsidianAffixType::None;
 	
 	UPROPERTY()
-	FText AffixItemNameAddition = FText();
+	FString AffixItemNameAddition = FString();
 	
 	UPROPERTY()
 	FText ActiveAffixDescription = FText();
@@ -306,6 +306,7 @@ public:
 	
 	FText AffixRowDescription = FText();
 	FText AffixAdditionalDescription = FText();
+	FString AffixItemNameAddition = FString();
 };
 
 UENUM(BlueprintType)
