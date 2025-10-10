@@ -129,19 +129,13 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAf
 	
 	for(const FObsidianActiveItemAffix& Affix : ItemAffixes)
 	{
-		if(Affix)
-		{
-			//TODO(intrxx) #AffixRefactor
-			FObsidianAffixDescriptionRow Row;
-			Row.AffixTag = Affix.AffixTag;
-			Row.AffixRowDescription = Affix.ActiveAffixDescription;
-			Row.AffixItemNameAddition = Affix.AffixItemNameAddition;
-			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
-			AffixDescriptionRows.Add(Row);
-
-			UE_LOG(LogTemp, Warning, TEXT("Item Affix: [%s], [%s]. Desc: [%s]"), *Affix.AffixTag.GetTagName().ToString(),
-				*Affix.AffixItemNameAddition, *Affix.ActiveAffixDescription.ToString());
-		}
+		check(Affix);
+		FObsidianAffixDescriptionRow Row;
+		Row.AffixTag = Affix.AffixTag;
+		Row.AffixRowDescription = Affix.ActiveAffixDescription;
+		Row.AffixItemNameAddition = Affix.AffixItemNameAddition;
+		Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
+		AffixDescriptionRows.Add(Row);
 	}
 	return AffixDescriptionRows;
 }

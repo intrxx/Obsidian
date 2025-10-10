@@ -361,7 +361,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 		uint8 AddedSuffixes = 0;
 		for (uint8 i = 0; i < AffixCountToRoll; ++i)
 		{
-			if (PrefixAffixes.IsEmpty() == false && FMath::RandBool() && AddedPrefixes <= MaxPrefixCount) // Roll Prefix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
+			if (PrefixAffixes.IsEmpty() == false && FMath::RandBool() && AddedPrefixes < MaxPrefixCount) // Roll Prefix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
 			{
 				//TODO(intrxx) Roll Affixes actually based on their Weights.
 				FObsidianDynamicItemAffix RolledItemPrefix = PrefixAffixes[FMath::RandRange(0, PrefixAffixes.Num() - 1)];
@@ -380,7 +380,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 				UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
 					*RolledItemPrefix.AffixItemNameAddition);
 			}
-			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes <= MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
+			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes < MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
 			{
 				//TODO(intrxx) Roll Affixes actually based on their Weights.
 				FObsidianDynamicItemAffix RolledItemSuffix = SuffixAffixes[FMath::RandRange(0, SuffixAffixes.Num() - 1)];
@@ -457,7 +457,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 		uint8 AddedSuffixes = 0;
 		for (uint8 i = 0; i < AffixCountToRoll; ++i)
 		{
-			if (PrefixAffixes.IsEmpty() == false && FMath::RandBool() && AddedPrefixes <= MaxPrefixCount) // Roll Prefix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
+			if (PrefixAffixes.IsEmpty() == false && FMath::RandBool() && AddedPrefixes < MaxPrefixCount) // Roll Prefix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
 			{
 				//TODO(intrxx) Roll Affixes actually based on their Weights.
 				FObsidianDynamicItemAffix RolledItemPrefix = PrefixAffixes[FMath::RandRange(0, PrefixAffixes.Num() - 1)];
@@ -476,7 +476,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 				UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
 					*RolledItemPrefix.AffixItemNameAddition);
 			}
-			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes <= MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
+			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes < MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
 			{
 				//TODO(intrxx) Roll Affixes actually based on their Weights.
 				FObsidianDynamicItemAffix RolledItemSuffix = SuffixAffixes[FMath::RandRange(0, SuffixAffixes.Num() - 1)];
