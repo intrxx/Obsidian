@@ -37,6 +37,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemCurrentPosition);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
+	DOREPLIFETIME(ThisClass, RareItemDisplayNameAddition);
 	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
@@ -468,6 +469,16 @@ FText UObsidianInventoryItemInstance::GetItemDisplayName() const
 void UObsidianInventoryItemInstance::SetItemDisplayName(const FText& InItemDisplayName)
 {
 	ItemDisplayName = InItemDisplayName;
+}
+
+FString UObsidianInventoryItemInstance::GetRareItemDisplayNameAddition() const
+{
+	return RareItemDisplayNameAddition;
+}
+
+void UObsidianInventoryItemInstance::SetRareItemDisplayNameAddition(const FString& InItemNameAddition)
+{
+	RareItemDisplayNameAddition = InItemNameAddition;
 }
 
 FText UObsidianInventoryItemInstance::GetItemDescription() const

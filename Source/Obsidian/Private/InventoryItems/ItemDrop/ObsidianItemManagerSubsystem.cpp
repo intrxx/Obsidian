@@ -8,6 +8,7 @@
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
 void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const
 {
@@ -23,7 +24,10 @@ void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToD
 		if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = Item.ItemDefinitionClass)
 		{
 			AObsidianDroppableItem* DroppableItem = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), Item.DropTransform);
-			DroppableItem->InitializeItem(ItemToDrop, FObsidianItemGeneratedData(Item.DropStacks, Item.DropRarity, Item.DropAffixes));
+
+			FObsidianItemGeneratedData GeneratedData = FObsidianItemGeneratedData(Item.DropStacks, Item.DropRarity, Item.DropAffixes);
+			GeneratedData.RareItemDisplayNameAddition = Item.DropRareItemDisplayNameAddition;
+			DroppableItem->InitializeItem(ItemToDrop, GeneratedData);
 			DroppableItem->FinishSpawning(Item.DropTransform);
 		}
 	}

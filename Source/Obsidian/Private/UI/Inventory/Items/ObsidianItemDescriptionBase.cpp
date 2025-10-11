@@ -117,9 +117,10 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	if(ItemStats.ContainsAffixes() && ItemStats.IsIdentified())
 	{
 		TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows = ItemStats.GetAffixDescriptions();
-		if (ItemStats.ItemRarity == EObsidianItemRarity::Magic && AffixDescriptionRows.IsEmpty() == false)
+		
+		FString ItemNameString = ItemDisplayName.ToString();
+		if (ItemStats.ItemRarity == EObsidianItemRarity::Magic)
 		{
-			FString ItemNameString = ItemDisplayName.ToString();
 			for(const FObsidianAffixDescriptionRow& Row : AffixDescriptionRows)
 			{
 				if (Row.AffixType == EObsidianAffixType::Prefix)
@@ -131,8 +132,14 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 					ItemNameString += FString::Printf(TEXT(" of %s"), *Row.AffixItemNameAddition);
 				}
 			}
-			ItemDisplayName = FText::FromString(ItemNameString);
 		}
+		else if (ItemStats.ItemRarity == EObsidianItemRarity::Rare)
+		{
+			ensure(ItemStats.ContainsDisplayNameAddition());
+			ItemNameString = FString::Printf(TEXT("%s "), *ItemStats.GetItemDisplayNameAddition()) + ItemNameString;
+		}
+		
+		ItemDisplayName = FText::FromString(ItemNameString);
 		
 		for(const FObsidianAffixDescriptionRow& Row : AffixDescriptionRows)
 		{

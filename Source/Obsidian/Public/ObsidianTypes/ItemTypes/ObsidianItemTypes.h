@@ -418,6 +418,9 @@ public:
 
 	UPROPERTY()
 	TArray<FObsidianActiveItemAffix> ItemAffixes;
+
+	UPROPERTY()
+	FString RareItemDisplayNameAddition = FString();
 };
 
 /**

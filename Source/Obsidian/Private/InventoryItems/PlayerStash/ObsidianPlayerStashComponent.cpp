@@ -302,6 +302,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
+	Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -365,6 +366,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
+	Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())

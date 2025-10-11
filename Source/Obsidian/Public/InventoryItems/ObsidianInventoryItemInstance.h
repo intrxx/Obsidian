@@ -233,6 +233,11 @@ public:
 	void SetItemDisplayName(const FText& InItemDisplayName);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	FString GetRareItemDisplayNameAddition() const;
+	
+	void SetRareItemDisplayNameAddition(const FString& InItemNameAddition);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FText GetItemDescription() const;
 	
 	void SetItemDescription(const FText& InItemDescription);
@@ -355,6 +360,10 @@ private:
 	
 	UPROPERTY(Replicated)
 	FText ItemDisplayName = FText::GetEmpty();
+
+	//TODO(intrxx) This item addition is only generated at drop as of now, if the item will be upgraded to Rare with some gameplay mechanic this will need to be generated too.
+	UPROPERTY(Replicated)
+	FString RareItemDisplayNameAddition = FString();
 
 	UPROPERTY(Replicated)
 	FText ItemDescription = FText::GetEmpty();

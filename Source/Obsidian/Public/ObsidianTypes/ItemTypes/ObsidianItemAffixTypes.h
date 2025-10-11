@@ -10,6 +10,9 @@
 
 #include "ObsidianItemAffixTypes.generated.h"
 
+struct FObsidianActiveItemAffix;
+struct FObsidianDynamicItemAffix;
+
 class UGameplayEffect;
 
 UENUM(BlueprintType)
@@ -96,13 +99,13 @@ public:
 	bool IsEmptyImplicit() const;
 	bool IsEmptyAffix() const;
 
-	explicit operator bool() const
-	{
-		return AffixTag.IsValid();
-	}
+	explicit operator bool() const;
+	bool operator ==(const FObsidianStaticItemAffix& Other) const;
+	bool operator ==(const FObsidianDynamicItemAffix& Other) const;
+	bool operator ==(const FObsidianActiveItemAffix& Other) const;
 
 public:
-	/** Affix Gameplay Tag Identifier. */
+	/** Unique Affix Gameplay Tag Identifier. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 	
@@ -143,18 +146,13 @@ public:
 		: bOverride_MagicItemAffixRollMultiplier(false)
 	{}
 
-	explicit operator bool() const
-	{
-		return AffixTag.IsValid();
-	}
-
-	bool operator ==(const FObsidianDynamicItemAffix& Other) const
-	{
-		return AffixTag == Other.AffixTag;
-	}
+	explicit operator bool() const;
+	bool operator ==(const FObsidianDynamicItemAffix& Other) const;
+	bool operator ==(const FObsidianActiveItemAffix& Other) const;
+	bool operator ==(const FObsidianStaticItemAffix& Other) const;
 	
 public:
-	/** Affix Gameplay Tag Identifier. */
+	/** Unique Affix Gameplay Tag Identifier. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 	
@@ -321,6 +319,59 @@ enum class EObsidianItemRarity : uint8
 	Set
 };
 
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianRareItemNameAddition
+{
+	GENERATED_BODY()
+	
+public:
+	/** Range of item level that this name can be generated for. */
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = 1, ClampMax = 90), Category = "Obsidian")
+	FIntPoint ItemLevelRange = FIntPoint(1, 90);
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<FText> ItemNameAdditions;
+};
+
+/**
+ * 
+ */
+USTRUCT(BlueprintType)
+struct FObsidianRareItemSuffixNameAddition
+{
+	GENERATED_BODY()
+
+public:
+	/** Category of items that this suffix name addition can be applied to. */
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
+	FGameplayTagContainer ForItemCategories = FGameplayTagContainer::EmptyContainer;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<FObsidianRareItemNameAddition> ItemNameAdditions;
+};
+
+USTRUCT()
+struct FObsidianRareItemNameGenerationData
+{
+	GENERATED_BODY()
+
+public:
+	FText GetRandomPrefixNameAddition(const int32 UpToTreasureQuality);
+	FText GetRandomSuffixNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategory);
+	
+public:
+	/** General prefix item name additions. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<FObsidianRareItemNameAddition> PrefixNameAdditions;
+
+	/** Unique per category item suffix name additions. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TArray<FObsidianRareItemSuffixNameAddition> SuffixNameAdditions;
+};
+
 USTRUCT(BlueprintType)
 struct FObsidianItemStats
 {
@@ -336,6 +387,12 @@ public:
 	bool ContainsDisplayName() const
 	{
 		return bContainsDisplayName;
+	}
+
+	/** Checks if Item Stats contain Rare Item Display Name Addition. */
+	bool ContainsDisplayNameAddition() const
+	{
+		return bContainsRareItemDisplayNameAddition;
 	}
 
 	/** Checks if the Item Stats contain Description. */
@@ -383,6 +440,11 @@ public:
 		return DisplayName;
 	}
 
+	FString GetItemDisplayNameAddition() const
+	{
+		return RareItemDisplayNameAddition;
+	}
+
 	FText GetDescription() const
 	{
 		return Description;
@@ -420,6 +482,15 @@ public:
 	{
 		bContainsDisplayName = true;
 		DisplayName = InDisplayName;
+	}
+
+	void SetDisplayNameAddition(const FString& InDisplayNameAddition)
+	{
+		if (InDisplayNameAddition.IsEmpty() == false) // This will be empty for anything other than Rare item.
+		{
+			bContainsRareItemDisplayNameAddition = true;
+			RareItemDisplayNameAddition = InDisplayNameAddition;
+		}
 	}
 
 	void SetDescription(const FText& InDescription)
@@ -483,6 +554,9 @@ private:
 	FText DisplayName = FText::GetEmpty();
 
 	UPROPERTY()
+	FString RareItemDisplayNameAddition = FString();
+
+	UPROPERTY()
 	FText Description = FText::GetEmpty();
 
 	UPROPERTY()
@@ -510,6 +584,7 @@ private:
 
 	bool bContainsItemImage = false;
 	bool bContainsDisplayName = false;
+	bool bContainsRareItemDisplayNameAddition = false;
 	bool bContainsDescription = false;
 	bool bContainsAdditionalDescription = false;
 	bool bContainsStacks = false;

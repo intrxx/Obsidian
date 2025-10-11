@@ -8,6 +8,7 @@
 // ~ Project
 
 #include "Engine/DataAsset.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemAffixTypes.h"
 #include "ObsidianItemDataConfig.generated.h"
 
 class UObsidianAffixList;
@@ -22,6 +23,14 @@ class OBSIDIAN_API UObsidianItemDataConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	UObsidianItemDataConfig(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	
+	FString GetRandomItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag);
+	
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Items")
+	FObsidianRareItemNameGenerationData RareItemNameGenerationData;
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Treasure")
 	TArray<TObjectPtr<UObsidianTreasureList>> CommonTreasureLists;
 

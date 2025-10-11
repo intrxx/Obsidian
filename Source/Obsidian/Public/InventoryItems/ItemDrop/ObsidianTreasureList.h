@@ -101,6 +101,9 @@ public:
 	
 	UPROPERTY()
 	uint8 DropStacks = 1;
+
+	UPROPERTY()
+	FString DropRareItemDisplayNameAddition = FString();
 };
 
 USTRUCT()

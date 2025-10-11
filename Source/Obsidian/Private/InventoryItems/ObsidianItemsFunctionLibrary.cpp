@@ -65,6 +65,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemIns
 
 	OutItemStats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
 	OutItemStats.SetDisplayName(ItemInstance->GetItemDisplayName());
+	OutItemStats.SetDisplayNameAddition(ItemInstance->GetRareItemDisplayNameAddition());
 	OutItemStats.SetDescription(ItemInstance->GetItemDescription());
 	OutItemStats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
 
@@ -106,6 +107,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 	{
 		OutItemStats.SetItemImage(AppearanceFrag->GetItemImage(), AppearanceFrag->GetItemGridSpanFromDesc());
 		OutItemStats.SetDisplayName(AppearanceFrag->GetItemDisplayName());
+		OutItemStats.SetDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
 		OutItemStats.SetDescription(AppearanceFrag->GetItemDescription());
 		OutItemStats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());
 	}

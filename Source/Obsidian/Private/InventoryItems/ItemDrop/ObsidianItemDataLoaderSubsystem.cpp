@@ -155,6 +155,15 @@ bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_FullG
 	return false;
 }
 
+FString UObsidianItemDataLoaderSubsystem::GetRandomRareItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag) const
+{
+	if (ItemDataConfig)
+	{
+		return ItemDataConfig->GetRandomItemNameAddition(UpToTreasureQuality, ForItemCategoryTag);
+	}
+	return FString();
+}
+
 void UObsidianItemDataLoaderSubsystem::LoadItemDataConfig()
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();

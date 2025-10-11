@@ -19,6 +19,48 @@ bool FObsidianStaticItemAffix::IsEmptyAffix() const
 	return PossibleAffixRanges.IsEmpty();
 }
 
+FObsidianStaticItemAffix::operator bool() const
+{
+	return AffixTag.IsValid();
+}
+
+bool FObsidianStaticItemAffix::operator==(const FObsidianStaticItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+bool FObsidianStaticItemAffix::operator==(const FObsidianDynamicItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+bool FObsidianStaticItemAffix::operator==(const FObsidianActiveItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+// ~ FObsidianDynamicItemAffix
+
+FObsidianDynamicItemAffix::operator bool() const
+{
+	return AffixTag.IsValid();
+}
+
+bool FObsidianDynamicItemAffix::operator==(const FObsidianDynamicItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+bool FObsidianDynamicItemAffix::operator==(const FObsidianActiveItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
+bool FObsidianDynamicItemAffix::operator==(const FObsidianStaticItemAffix& Other) const
+{
+	return AffixTag == Other.AffixTag;
+}
+
 // ~ FObsidianActiveItemAffix
 
 bool FObsidianActiveItemAffix::operator==(const FObsidianActiveItemAffix& Other) const
@@ -123,6 +165,52 @@ void FObsidianActiveItemAffix::CreateAffixActiveDescription()
 	Args.Append(CurrentAffixValue.CurrentAffixValues);
 
 	ActiveAffixDescription = FText::Format(UnformattedAffixDescription, Args);
+}
+
+// ~ FObsidianRareItemNameGenerationData
+
+FText FObsidianRareItemNameGenerationData::GetRandomPrefixNameAddition(const int32 UpToTreasureQuality)
+{
+	TArray<FText> PrefixAdditionsCandidates;
+	for (const FObsidianRareItemNameAddition& PrefixAdditions : PrefixNameAdditions)
+	{
+		if (PrefixAdditions.ItemLevelRange.X > UpToTreasureQuality)
+		{
+			continue;
+		}
+
+		PrefixAdditionsCandidates.Append(PrefixAdditions.ItemNameAdditions);
+	}
+
+	check(PrefixAdditionsCandidates.IsEmpty() == false);
+	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num());
+	return PrefixAdditionsCandidates[RandomInt];
+}
+
+FText FObsidianRareItemNameGenerationData::GetRandomSuffixNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategory)
+{
+	TArray<FText> PrefixAdditionsCandidates;
+	for (const FObsidianRareItemSuffixNameAddition& SuffixAdditionClass : SuffixNameAdditions)
+	{
+		if (SuffixAdditionClass.ForItemCategories.HasTagExact(ForItemCategory) == false)
+		{
+			continue;
+		}
+		
+		for (const FObsidianRareItemNameAddition& SuffixAdditions : SuffixAdditionClass.ItemNameAdditions)
+		{
+			if (SuffixAdditions.ItemLevelRange.X > UpToTreasureQuality)
+			{
+				continue;
+			}
+
+			PrefixAdditionsCandidates.Append(SuffixAdditions.ItemNameAdditions);
+		}
+	}
+	
+	check(PrefixAdditionsCandidates.IsEmpty() == false);
+	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num());
+	return PrefixAdditionsCandidates[RandomInt];
 }
 
 // ~ FObsidianDescriptionAffixRow

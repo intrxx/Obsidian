@@ -274,6 +274,12 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 		//NOTE(intrxx) there is no Affix Fragment so there is nothing more to generate.
 		return;		
 	}
+
+	if (ForItemToDrop.DropRarity == EObsidianItemRarity::Rare)
+	{
+		ForItemToDrop.DropRareItemDisplayNameAddition = CachedItemDataLoader->GetRandomRareItemNameAddition(MaxTreasureClassQuality,
+			DefaultObject->GetItemCategoryTag());
+	}
 	
 	switch (AffixFragment->GetGenerationType())
 	{
