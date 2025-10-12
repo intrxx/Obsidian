@@ -183,7 +183,7 @@ FText FObsidianRareItemNameGenerationData::GetRandomPrefixNameAddition(const int
 	}
 
 	check(PrefixAdditionsCandidates.IsEmpty() == false);
-	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num());
+	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num() - 1);
 	return PrefixAdditionsCandidates[RandomInt];
 }
 
@@ -209,7 +209,7 @@ FText FObsidianRareItemNameGenerationData::GetRandomSuffixNameAddition(const int
 	}
 	
 	check(PrefixAdditionsCandidates.IsEmpty() == false);
-	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num());
+	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num() - 1);
 	return PrefixAdditionsCandidates[RandomInt];
 }
 

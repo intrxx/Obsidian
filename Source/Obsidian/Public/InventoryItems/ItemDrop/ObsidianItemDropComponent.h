@@ -102,9 +102,8 @@ private:
 	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity MaxRarity);
 
 	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
-
-	//TODO(intrxx) Clean it up
 	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
+	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes, const TArray<FObsidianDynamicItemAffix>& Suffixes);
 
 	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
 	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);

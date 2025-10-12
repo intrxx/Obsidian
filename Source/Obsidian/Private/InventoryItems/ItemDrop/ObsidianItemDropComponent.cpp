@@ -19,6 +19,7 @@
 #include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogDropComponent);
 
@@ -149,7 +150,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 
 	if (ItemsToDrop.IsEmpty())
 	{
-		UE_LOG(LogTemp, Display, TEXT("No Items Were Rolled To Drop."));
+		UE_LOG(LogDropComponent, Display, TEXT("No Items Were Rolled To Drop."));
 		OnDroppingItemsFinishedDelegate.Broadcast(false);
 		return;
 	}
@@ -335,13 +336,6 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
 	const uint8 MaxTreasureClassQuality)
 {
-	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
-	if (ItemDataSettings == nullptr)
-	{
-		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
-		return;
-	}
-	
 	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
@@ -356,67 +350,44 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 			return;
 		}
 		
-		const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
-		const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
-		
-		//TODO(intrxx) This Roll should be weighted too.
-		const uint8 AffixCountToRoll = FMath::RandRange(ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity),
-			ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity));
-		
-		uint8 AddedPrefixes = 0;
-		uint8 AddedSuffixes = 0;
-		for (uint8 i = 0; i < AffixCountToRoll; ++i)
-		{
-			if (PrefixAffixes.IsEmpty() == false && FMath::RandBool() && AddedPrefixes < MaxPrefixCount) // Roll Prefix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
-			{
-				//TODO(intrxx) Roll Affixes actually based on their Weights.
-				FObsidianDynamicItemAffix RolledItemPrefix = PrefixAffixes[FMath::RandRange(0, PrefixAffixes.Num() - 1)];
-				if (ForItemToDrop.DropAffixes.Contains(RolledItemPrefix))
-				{
-					PrefixAffixes.Remove(RolledItemPrefix);
-					continue;
-				}
-					
-				FObsidianActiveItemAffix ActiveAffix;
-				ActiveAffix.InitializeWithDynamic(RolledItemPrefix);
-				ForItemToDrop.DropAffixes.Add(ActiveAffix);
-				PrefixAffixes.Remove(RolledItemPrefix);
-				++AddedPrefixes;
-					
-				UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
-					*RolledItemPrefix.AffixItemNameAddition);
-			}
-			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes < MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
-			{
-				//TODO(intrxx) Roll Affixes actually based on their Weights.
-				FObsidianDynamicItemAffix RolledItemSuffix = SuffixAffixes[FMath::RandRange(0, SuffixAffixes.Num() - 1)];
-				if (ForItemToDrop.DropAffixes.Contains(RolledItemSuffix))
-				{
-					SuffixAffixes.Remove(RolledItemSuffix);
-					continue;
-				}
-					
-				FObsidianActiveItemAffix ActiveAffix;
-				ActiveAffix.InitializeWithDynamic(RolledItemSuffix);
-				ForItemToDrop.DropAffixes.Add(ActiveAffix);
-				SuffixAffixes.Remove(RolledItemSuffix);
-				++AddedSuffixes;
-					
-				UE_LOG(LogTemp, Warning, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
-					*RolledItemSuffix.AffixItemNameAddition);
-			}
-			else
-			{
-				UE_LOG(LogDropComponent, Error, TEXT("Both Prefix and Suffix count is reached or there are no affixes to chose from!"
-										 "Please make sure the logic is right."));
-				break;
-			}
-		}
+		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes);
 	}				
 }
 
 void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
 	const uint8 MaxTreasureClassQuality)
+{
+	TArray<FObsidianDynamicItemAffix> ImplicitAffixes;
+	TArray<FObsidianDynamicItemAffix> PrefixAffixes;
+	TArray<FObsidianDynamicItemAffix> SuffixAffixes;
+					
+	const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(MaxTreasureClassQuality,
+		DropItemCategory, PrefixAffixes, SuffixAffixes, ImplicitAffixes);
+	if (bGatheredAffixes == false)
+	{
+		UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
+			*DropItemCategory.GetTagName().ToString(), MaxTreasureClassQuality);
+		return;
+	}
+		
+	if (ImplicitAffixes.IsEmpty() == false)
+	{
+		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(ImplicitAffixes);
+		FObsidianActiveItemAffix ActiveAffix;
+		ActiveAffix.InitializeWithDynamic(RolledItemAffix);
+		ForItemToDrop.DropAffixes.Add(ActiveAffix);
+
+		UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
+					*RolledItemAffix.AffixItemNameAddition);
+	}
+	
+	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
+	{
+		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes);
+	}				
+}
+
+void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes, const TArray<FObsidianDynamicItemAffix>& Suffixes)
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
@@ -425,90 +396,58 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 		return;
 	}
 	
-	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
-	{
-		TArray<FObsidianDynamicItemAffix> ImplicitAffixes;
-		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
-		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
-					
-		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(MaxTreasureClassQuality,
-			DropItemCategory, PrefixAffixes, SuffixAffixes, ImplicitAffixes);
-		if (bGatheredAffixes == false)
-		{
-			UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
-				*DropItemCategory.GetTagName().ToString(), MaxTreasureClassQuality);
-			return;
-		}
+	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
+	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
 		
-		if (ImplicitAffixes.IsEmpty() == false)
+	//TODO(intrxx) This Roll should be weighted too.
+	const uint8 AffixCountToRoll = FMath::RandRange(ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity),
+		ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity));
+		
+	uint8 AddedPrefixes = 0;
+	uint8 AddedSuffixes = 0;
+	const bool bContainsPrefixes = !Prefixes.IsEmpty();
+	const bool bContainsSuffixes = !Suffixes.IsEmpty();
+	for (uint8 i = 0; i < AffixCountToRoll; ++i)
+	{ 
+		if (bContainsPrefixes && FMath::RandBool() && AddedPrefixes < MaxPrefixCount) // Roll Prefix
 		{
-			//TODO(intrxx) Roll Affixes actually based on their Weights.
-			FObsidianDynamicItemAffix RolledItemAffix = ImplicitAffixes[FMath::RandRange(0, ImplicitAffixes.Num() - 1)];
+			FObsidianDynamicItemAffix RolledItemPrefix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Prefixes);
+			if (ForItemToDrop.DropAffixes.Contains(RolledItemPrefix))
+			{
+				continue;
+			}
+					
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithDynamic(RolledItemAffix);
+			ActiveAffix.InitializeWithDynamic(RolledItemPrefix);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
-
-			UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
-						*RolledItemAffix.AffixItemNameAddition);
+			++AddedPrefixes;
+					
+			UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
+				*RolledItemPrefix.AffixItemNameAddition);
 		}
-		
-		const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
-		const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
-
-		//TODO(intrxx) This Roll should be weighted too.
-		const uint8 AffixCountToRoll = FMath::RandRange(ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity),
-			ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity));
-		
-		uint8 AddedPrefixes = 0;
-		uint8 AddedSuffixes = 0;
-		for (uint8 i = 0; i < AffixCountToRoll; ++i)
+		else if (bContainsSuffixes && AddedSuffixes < MaxSuffixCount) // Roll Suffix
 		{
-			if (PrefixAffixes.IsEmpty() == false && FMath::RandBool() && AddedPrefixes < MaxPrefixCount) // Roll Prefix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
+			FObsidianDynamicItemAffix RolledItemSuffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Suffixes);
+			if (ForItemToDrop.DropAffixes.Contains(RolledItemSuffix))
 			{
-				//TODO(intrxx) Roll Affixes actually based on their Weights.
-				FObsidianDynamicItemAffix RolledItemPrefix = PrefixAffixes[FMath::RandRange(0, PrefixAffixes.Num() - 1)];
-				if (ForItemToDrop.DropAffixes.Contains(RolledItemPrefix))
-				{
-					PrefixAffixes.Remove(RolledItemPrefix);
-					continue;
-				}
-					
-				FObsidianActiveItemAffix ActiveAffix;
-				ActiveAffix.InitializeWithDynamic(RolledItemPrefix);
-				ForItemToDrop.DropAffixes.Add(ActiveAffix);
-				PrefixAffixes.Remove(RolledItemPrefix);
-				++AddedPrefixes;
-					
-				UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
-					*RolledItemPrefix.AffixItemNameAddition);
+				continue;
 			}
-			else if (SuffixAffixes.IsEmpty() == false && AddedSuffixes < MaxSuffixCount) // Roll Suffix //TODO(intrxx) It should be progressively more difficult to roll the same type of affix.
-			{
-				//TODO(intrxx) Roll Affixes actually based on their Weights.
-				FObsidianDynamicItemAffix RolledItemSuffix = SuffixAffixes[FMath::RandRange(0, SuffixAffixes.Num() - 1)];
-				if (ForItemToDrop.DropAffixes.Contains(RolledItemSuffix))
-				{
-					SuffixAffixes.Remove(RolledItemSuffix);
-					continue;
-				}
 					
-				FObsidianActiveItemAffix ActiveAffix;
-				ActiveAffix.InitializeWithDynamic(RolledItemSuffix);
-				ForItemToDrop.DropAffixes.Add(ActiveAffix);
-				SuffixAffixes.Remove(RolledItemSuffix);
-				++AddedSuffixes;
+			FObsidianActiveItemAffix ActiveAffix;
+			ActiveAffix.InitializeWithDynamic(RolledItemSuffix);
+			ForItemToDrop.DropAffixes.Add(ActiveAffix);
+			++AddedSuffixes;
 					
-				UE_LOG(LogTemp, Warning, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
-					*RolledItemSuffix.AffixItemNameAddition);
-			}
-			else
-			{
-				UE_LOG(LogDropComponent, Error, TEXT("Both Prefix and Suffix count is reached or there are no affixes to chose from!"
-										 "Please make sure the logic is right."));
-				break;
-			}
+			UE_LOG(LogTemp, Warning, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
+				*RolledItemSuffix.AffixItemNameAddition);
 		}
-	}				
+		else
+		{
+			UE_LOG(LogDropComponent, Error, TEXT("Both Prefix and Suffix count is reached or there are no affixes to chose from!"
+				"Please make sure the logic is right."));
+			break;
+		}
+	}
 }
 
 void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)

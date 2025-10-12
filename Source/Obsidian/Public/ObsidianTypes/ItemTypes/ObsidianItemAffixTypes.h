@@ -155,6 +155,9 @@ public:
 	/** Unique Affix Gameplay Tag Identifier. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "1000"), Category = "Obsidian")
+	uint16 AffixWeight = 1;
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|Affix")
 	EObsidianAffixType AffixType = EObsidianAffixType::None;

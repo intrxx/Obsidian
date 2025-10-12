@@ -142,6 +142,34 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAf
 	return AffixDescriptionRows;
 }
 
+FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(const TArray<FObsidianDynamicItemAffix>& DynamicAffixes)
+{
+	if (DynamicAffixes.IsEmpty())
+	{
+		return FObsidianDynamicItemAffix();
+	}
+
+	uint32 TotalWeight = 0;
+	for (const FObsidianDynamicItemAffix& Affix : DynamicAffixes)
+	{
+		TotalWeight += Affix.AffixWeight;
+	}
+
+	const uint32 Roll = FMath::RandRange(0, TotalWeight);
+	uint32 Cumulative = 0;
+	for (const FObsidianDynamicItemAffix& Affix : DynamicAffixes)
+	{
+		Cumulative += Affix.AffixWeight;
+		if (Roll <= Cumulative)
+		{
+			return Affix;
+		}
+	}
+
+	checkf(false, TEXT("No Affix was returned from GetRandomDynamicAffix."))
+	return FObsidianDynamicItemAffix();
+}
+
 int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const AActor* Owner, const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo)
 {
 	if(Owner == nullptr)
