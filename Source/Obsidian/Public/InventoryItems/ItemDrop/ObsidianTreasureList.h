@@ -23,15 +23,15 @@ public:
 	FObsidianStacksToDrop(){}
 	FObsidianStacksToDrop(const uint8 InStackSize, const uint16 InDropWeight)
 		: StackSize(InStackSize)
-		, DropWeight(InDropWeight)
+		, StackTierWeight(InDropWeight)
 	{}
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	uint8 StackSize = 1;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
-	uint16 DropWeight = 1000; 
+	UPROPERTY(EditDefaultsOnly, meta=(ClampMin = "0", ClampMax = "1000"), Category = "Obsidian")
+	uint16 StackTierWeight = 1000; 
 };
 
 USTRUCT()

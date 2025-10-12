@@ -103,7 +103,7 @@ private:
 
 	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
 	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
-	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes, const TArray<FObsidianDynamicItemAffix>& Suffixes);
+	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes, const TArray<FObsidianDynamicItemAffix>& Suffixes, const uint8 MaxTreasureClassQuality);
 
 	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
 	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);

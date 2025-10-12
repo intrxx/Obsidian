@@ -66,6 +66,9 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	FObsidianAffixTier AffixTier;
 
+	UPROPERTY(EditDefaultsOnly, meta=(ClampMin = "0", ClampMax = "1000"), Category = "Obsidian")
+	uint16 AffixTierWeight = 1000; 
+
 	/** Array (as there can be multiple values in a single Affix) of Affix Range to Roll. */
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FFloatRange> AffixRanges;
@@ -157,7 +160,7 @@ public:
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "1000"), Category = "Obsidian")
-	uint16 AffixWeight = 1;
+	uint16 AffixWeight = 1000;
 	
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|Affix")
 	EObsidianAffixType AffixType = EObsidianAffixType::None;
@@ -220,11 +223,10 @@ public:
 
 	uint8 GetCurrentAffixTier() const;
 	
-	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix);
-	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix);
+	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality);
+	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality);
 	
 	void RandomizeAffixValueBoundByRange();
-	
 public:
 	UPROPERTY()
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
@@ -255,7 +257,8 @@ public:
 
 private:
 	void CreateAffixActiveDescription();
-	void InitializeAffixTierAndRange();
+	void InitializeAffixTierAndRange(const uint8 UpToTreasureQuality);
+	FObsidianAffixValueRange GetRandomAffixRange(const uint8 UpToTreasureQuality);
 };
 
 /**

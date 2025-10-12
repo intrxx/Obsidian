@@ -61,8 +61,8 @@ uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQu
 	for (FObsidianStacksToDrop& AdjustedStackSizeConfig : AdjustedStackSizes)
 	{
 		float StackNorm = (MaxStack > MinStack) ? (static_cast<float>(AdjustedStackSizeConfig.StackSize) - MinStack) / (MaxStack - MinStack) : 1.0f;
-		AdjustedStackSizeConfig.DropWeight = AdjustedStackSizeConfig.DropWeight * FMath::Lerp(1.0f - RollBias, 1.0f + RollBias, StackNorm);
-		TotalAdjustedWeight += AdjustedStackSizeConfig.DropWeight;
+		AdjustedStackSizeConfig.StackTierWeight = AdjustedStackSizeConfig.StackTierWeight * FMath::Lerp(1.0f - RollBias, 1.0f + RollBias, StackNorm);
+		TotalAdjustedWeight += AdjustedStackSizeConfig.StackTierWeight;
 	}
 	
 	const uint32 Roll = FMath::RandRange(0, TotalAdjustedWeight);
@@ -70,7 +70,7 @@ uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQu
 	
 	for (const FObsidianStacksToDrop& AdjustedStackSizeConfig : AdjustedStackSizes)
 	{
-		Cumulative += AdjustedStackSizeConfig.DropWeight;
+		Cumulative += AdjustedStackSizeConfig.StackTierWeight;
 		if (Roll <= Cumulative)
 		{
 			return AdjustedStackSizeConfig.StackSize;
@@ -143,7 +143,7 @@ void UObsidianTreasureList::PostInitProperties()
 		{
 			DropItem.StackSizes.Sort([](const FObsidianStacksToDrop& A, const FObsidianStacksToDrop& B)
 				{
-					return A.DropWeight > B.DropWeight;
+					return A.StackTierWeight > B.StackTierWeight;
 				});
 		}
 	}

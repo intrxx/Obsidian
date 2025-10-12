@@ -291,7 +291,7 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					FObsidianStaticItemAffix ImplicitAffix = AffixFragment->GetStaticImplicitAffix();
 					
 					FObsidianActiveItemAffix ActiveAffix;
-					ActiveAffix.InitializeWithStatic(ImplicitAffix);
+					ActiveAffix.InitializeWithStatic(ImplicitAffix, MaxTreasureClassQuality);
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
@@ -311,7 +311,7 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					FObsidianStaticItemAffix ImplicitAffix = AffixFragment->GetStaticImplicitAffix();
 					
 					FObsidianActiveItemAffix ActiveAffix;
-					ActiveAffix.InitializeWithStatic(ImplicitAffix);
+					ActiveAffix.InitializeWithStatic(ImplicitAffix, MaxTreasureClassQuality);
 					ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 					UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
@@ -323,7 +323,7 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 					if (StaticAffix)
 					{
 						FObsidianActiveItemAffix ActiveAffix;
-						ActiveAffix.InitializeWithStatic(StaticAffix);
+						ActiveAffix.InitializeWithStatic(StaticAffix, MaxTreasureClassQuality);
 						ForItemToDrop.DropAffixes.Add(ActiveAffix);
 					}
 				}
@@ -350,7 +350,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 			return;
 		}
 		
-		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes);
+		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes, MaxTreasureClassQuality);
 	}				
 }
 
@@ -374,7 +374,7 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 	{
 		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(ImplicitAffixes);
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithDynamic(RolledItemAffix);
+		ActiveAffix.InitializeWithDynamic(RolledItemAffix, MaxTreasureClassQuality);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
@@ -383,11 +383,12 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 	
 	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
 	{
-		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes);
+		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes, MaxTreasureClassQuality);
 	}				
 }
 
-void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes, const TArray<FObsidianDynamicItemAffix>& Suffixes)
+void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes,
+	const TArray<FObsidianDynamicItemAffix>& Suffixes, const uint8 MaxTreasureClassQuality)
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
@@ -418,7 +419,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 			}
 					
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithDynamic(RolledItemPrefix);
+			ActiveAffix.InitializeWithDynamic(RolledItemPrefix, MaxTreasureClassQuality);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 			++AddedPrefixes;
 					
@@ -434,7 +435,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 			}
 					
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithDynamic(RolledItemSuffix);
+			ActiveAffix.InitializeWithDynamic(RolledItemSuffix, MaxTreasureClassQuality);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 			++AddedSuffixes;
 					
@@ -591,12 +592,12 @@ EObsidianItemRarity UObsidianItemDropComponent::RollItemRarity(const EObsidianIt
 		MaxWeight += RarityWithWeight.Value;
 	}
 	
-	const uint32 RolledWeight = FMath::RandRange(0, MaxWeight);
+	const uint32 Roll = FMath::RandRange(0, MaxWeight);
 	uint32 Cumulative = 0;
 	for (const TPair<EObsidianItemRarity, uint16>& RarityWithWeight : RarityToWeightMap)
 	{
 		Cumulative += RarityWithWeight.Value;
-		if (RolledWeight <= Cumulative)
+		if (Roll <= Cumulative)
 		{
 			return RarityWithWeight.Key;
 		}
