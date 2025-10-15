@@ -32,6 +32,7 @@ enum class EObsidianAffixType : uint8
 	Prefix,
 	Suffix,
 	Implicit,
+	SkillImplicit,
 	Unique
 };
 

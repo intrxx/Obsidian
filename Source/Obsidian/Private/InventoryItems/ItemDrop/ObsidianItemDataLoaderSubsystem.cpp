@@ -75,7 +75,8 @@ bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetItemsOfBaseItemTypeUpToQ
 }
 
 bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 UpToTreasureQuality,
-	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes) const
+	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
+	TArray<FObsidianDynamicItemAffix>& OutSkillImplicits) const
 {
 	if (ItemDataConfig == nullptr)
 	{
@@ -90,6 +91,10 @@ bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_Defau
 			{
 				switch (Class.AffixClassType)
 				{
+					case EObsidianAffixType::SkillImplicit:
+						{
+							OutSkillImplicits.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality, ForCategoryTag));
+						} break;
 					case EObsidianAffixType::Prefix:
 						{
 							OutPrefixes.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality, ForCategoryTag));
@@ -114,7 +119,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_Defau
 
 bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 UpToTreasureQuality,
 	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
-	TArray<FObsidianDynamicItemAffix>& OutImplicits) const
+	TArray<FObsidianDynamicItemAffix>& OutImplicits, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits) const
 {
 	if (ItemDataConfig == nullptr)
 	{
@@ -132,6 +137,10 @@ bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_FullG
 					case EObsidianAffixType::Implicit:
 						{
 							OutImplicits.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality, ForCategoryTag));
+						} break;
+					case EObsidianAffixType::SkillImplicit:
+						{
+							OutSkillImplicits.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality, ForCategoryTag));
 						} break;
 					case EObsidianAffixType::Prefix:
 						{

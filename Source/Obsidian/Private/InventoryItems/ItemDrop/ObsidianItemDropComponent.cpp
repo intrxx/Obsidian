@@ -340,9 +340,10 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 	{
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
+		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
 					
 		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_DefaultGeneration(MaxTreasureClassQuality,
-			DropItemCategory, PrefixAffixes, SuffixAffixes);
+			DropItemCategory, PrefixAffixes, SuffixAffixes, SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
@@ -360,9 +361,10 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 	TArray<FObsidianDynamicItemAffix> ImplicitAffixes;
 	TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 	TArray<FObsidianDynamicItemAffix> SuffixAffixes;
+	TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
 					
 	const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(MaxTreasureClassQuality,
-		DropItemCategory, PrefixAffixes, SuffixAffixes, ImplicitAffixes);
+		DropItemCategory, PrefixAffixes, SuffixAffixes, ImplicitAffixes, SkillImplicitAffixes);
 	if (bGatheredAffixes == false)
 	{
 		UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
@@ -400,7 +402,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
 	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
 		
-	//TODO(intrxx) This Roll should be weighted too.
+	//TODO(intrxx) This Roll should be weighted too. Should it?
 	const uint8 AffixCountToRoll = FMath::RandRange(ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity),
 		ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity));
 		

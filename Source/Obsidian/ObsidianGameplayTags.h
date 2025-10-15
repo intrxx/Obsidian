@@ -390,6 +390,39 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Skill Implicits
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Witch_FireBall);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Barbarian_Slash);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Assassin_FlyingKnife);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Paladin_BlessedHammer);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_MagmaBarrier);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_FrozenArmor);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_TransientArmor);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_SparklingBarrier);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_RaisedShield);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_VivitRegeneration);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Roll);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Jump);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_ShieldCharge);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Blink);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Teleport);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Defiance);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Hatred);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_FoulPresence);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Domination);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_ElementalConflux);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_VoidSphere);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_Combustion);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_Shatter);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_Electrocution);
+	
+	/**
 	 * Implicits
 	 */
 

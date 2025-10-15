@@ -464,6 +464,39 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Skill Implicits
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Witch_FireBall, "Item.Affix.SkillImplicits.Attack.Witch.FireBall", "Item Tag which represents Fire Ball Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Barbarian_Slash, "Item.Affix.SkillImplicits.Attack.Barbarian.Slash", "Item Tag which represents Slash Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Assassin_FlyingKnife, "Item.Affix.SkillImplicits.Attack.Assassin.FlyingKnife", "Item Tag which represents Flying Knife Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Paladin_BlessedHammer, "Item.Affix.SkillImplicits.Attack.Paladin.BlessedHammer", "Item Tag which represents Blessed Hammer Skill Implicit.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_MagmaBarrier, "Item.Affix.SkillImplicits.Defence.MagmaBarrier", "Item Tag which represents Magma Barrier Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_FrozenArmor, "Item.Affix.SkillImplicits.Defence.FrozenArmor", "Item Tag which represents Frozen Armor Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_TransientArmor, "Item.Affix.SkillImplicits.Defence.TransientArmor", "Item Tag which represents Transient Armor Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_SparklingBarrier, "Item.Affix.SkillImplicits.Defence.SparklingBarrier", "Item Tag which represents Sparkling Barrier Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_RaisedShield, "Item.Affix.SkillImplicits.Defence.RaisedShield", "Item Tag which represents Raised Shield Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_VivitRegeneration, "Item.Affix.SkillImplicits.Defence.VivitRegeneration", "Item Tag which represents Vivit Regeneration Skill Implicit.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Roll, "Item.Affix.SkillImplicits.Movement.Roll", "Item Tag which represents Roll Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Jump, "Item.Affix.SkillImplicits.Movement.Jump", "Item Tag which represents Jump Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_ShieldCharge, "Item.Affix.SkillImplicits.Movement.ShieldCharge", "Item Tag which represents Shield Charge Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Blink, "Item.Affix.SkillImplicits.Movement.Blink", "Item Tag which represents Blink Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Teleport, "Item.Affix.SkillImplicits.Movement.Teleport", "Item Tag which represents Teleport Skill Implicit.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Defiance, "Item.Affix.SkillImplicits.Aura.Defiance", "Item Tag which represents Defiance Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Hatred, "Item.Affix.SkillImplicits.Aura.Hatred", "Item Tag which represents Hatred Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_FoulPresence, "Item.Affix.SkillImplicits.Aura.FoulPresence", "Item Tag which represents Foul Presence Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Domination, "Item.Affix.SkillImplicits.Aura.Domination", "Item Tag which represents Domination Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_ElementalConflux, "Item.Affix.SkillImplicits.Aura.ElementalConflux", "Item Tag which represents Elemental Conflux Skill Implicit.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_VoidSphere, "Item.Affix.SkillImplicits.Ultimate.VoidSphere", "Item Tag which represents Void Sphere Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_Combustion, "Item.Affix.SkillImplicits.Ultimate.Combustion", "Item Tag which represents Combustion Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_Shatter, "Item.Affix.SkillImplicits.Ultimate.Shatter", "Item Tag which represents Shatter Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_Electrocution, "Item.Affix.SkillImplicits.Ultimate.Electrocution", "Item Tag which represents Electrocution Skill Implicit.");
+
+	/**
 	 * Implicits
 	 */
 
