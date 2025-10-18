@@ -29,17 +29,12 @@ void UObsidianItemDescriptionBase::NativeConstruct()
 
 UCommonTextBlock* UObsidianItemDescriptionBase::GetFreePrefixBlock()
 {
-	if(!Prefix1_TextBlock->IsVisible() && Prefix1_TextBlock->GetText().IsEmpty())
+	for (UCommonTextBlock* Block : {Prefix1_TextBlock, Prefix2_TextBlock, Prefix3_TextBlock})
 	{
-		return Prefix1_TextBlock;
-	}
-	if(!Prefix2_TextBlock->IsVisible() && Prefix2_TextBlock->GetText().IsEmpty())
-	{
-		return Prefix2_TextBlock;
-	}
-	if(!Prefix3_TextBlock->IsVisible() && Prefix3_TextBlock->GetText().IsEmpty())
-	{
-		return Prefix3_TextBlock;
+		if (Block && !Block->IsVisible() && Block->GetText().IsEmpty())
+		{
+			return Block;
+		}
 	}
 	ensureMsgf(false, TEXT("Not a single prefix box is free, this should never happen!"));
 	return nullptr;
@@ -47,19 +42,29 @@ UCommonTextBlock* UObsidianItemDescriptionBase::GetFreePrefixBlock()
 
 UCommonTextBlock* UObsidianItemDescriptionBase::GetFreeSuffixBlock()
 {
-	if(!Suffix1_TextBlock->IsVisible() && Suffix1_TextBlock->GetText().IsEmpty())
+	for (UCommonTextBlock* Block : {Suffix1_TextBlock, Suffix2_TextBlock, Suffix3_TextBlock})
 	{
-		return Suffix1_TextBlock;
-	}
-	if(!Suffix2_TextBlock->IsVisible() && Suffix2_TextBlock->GetText().IsEmpty())
-	{
-		return Suffix2_TextBlock;
-	}
-	if(!Suffix3_TextBlock->IsVisible() && Suffix3_TextBlock->GetText().IsEmpty())
-	{
-		return Suffix3_TextBlock;
+		if (Block && !Block->IsVisible() && Block->GetText().IsEmpty())
+		{
+			return Block;
+		}
 	}
 	ensureMsgf(false, TEXT("Not a single suffix box is free, this should never happen!"));
+	return nullptr;
+}
+
+UCommonTextBlock* UObsidianItemDescriptionBase::GetFreeBlockForUniqueItem()
+{
+	const TArray<UCommonTextBlock*> AffixBlocks = {Prefix1_TextBlock, Prefix2_TextBlock, Prefix3_TextBlock,
+		Suffix1_TextBlock, Suffix2_TextBlock, Suffix3_TextBlock};
+	for (UCommonTextBlock* Block : AffixBlocks)
+	{
+		if (Block && !Block->IsVisible() && Block->GetText().IsEmpty())
+		{
+			return Block;
+		}
+	}
+	ensureMsgf(false, TEXT("Not a single affix block is free, this should never happen!"));
 	return nullptr;
 }
 
@@ -143,28 +148,44 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		
 		for(const FObsidianAffixDescriptionRow& Row : AffixDescriptionRows)
 		{
-			if(Row.AffixType == EObsidianAffixType::Implicit)
+			switch (Row.AffixType)
 			{
-				Implicit_TextBlock->SetText(Row.AffixRowDescription);
-				Implicit_TextBlock->SetVisibility(ESlateVisibility::Visible);
-			}
-
-			if(Row.AffixType == EObsidianAffixType::Prefix)
-			{
-				if(UCommonTextBlock* FreePrefixBlock = GetFreePrefixBlock())
-				{
-					FreePrefixBlock->SetText(Row.AffixRowDescription);
-					FreePrefixBlock->SetVisibility(ESlateVisibility::Visible);
-				}
-			}
-
-			if(Row.AffixType == EObsidianAffixType::Suffix)
-			{
-				if(UCommonTextBlock* FreeSuffixBlock = GetFreeSuffixBlock())
-				{
-					FreeSuffixBlock->SetText(Row.AffixRowDescription);
-					FreeSuffixBlock->SetVisibility(ESlateVisibility::Visible);
-				}
+				case EObsidianAffixType::SkillImplicit:
+					{
+						SkillImplicit_TextBlock->SetText(Row.AffixRowDescription);
+						SkillImplicit_TextBlock->SetVisibility(ESlateVisibility::Visible);
+					} break;
+				case EObsidianAffixType::Implicit:
+					{
+						Implicit_TextBlock->SetText(Row.AffixRowDescription);
+						Implicit_TextBlock->SetVisibility(ESlateVisibility::Visible);
+					} break;
+				case EObsidianAffixType::Prefix:
+					{
+						if(UCommonTextBlock* FreePrefixBlock = GetFreePrefixBlock())
+						{
+							FreePrefixBlock->SetText(Row.AffixRowDescription);
+							FreePrefixBlock->SetVisibility(ESlateVisibility::Visible);
+						}
+					} break;
+				case EObsidianAffixType::Suffix:
+					{
+						if(UCommonTextBlock* FreeSuffixBlock = GetFreeSuffixBlock())
+						{
+							FreeSuffixBlock->SetText(Row.AffixRowDescription);
+							FreeSuffixBlock->SetVisibility(ESlateVisibility::Visible);
+						}
+					} break;
+				case EObsidianAffixType::Unique:
+					{
+						if(UCommonTextBlock* FreeSuffixBlock = GetFreeBlockForUniqueItem())
+						{
+							FreeSuffixBlock->SetText(Row.AffixRowDescription);
+							FreeSuffixBlock->SetVisibility(ESlateVisibility::Visible);
+						}
+					} break;
+				default:
+				{} break;
 			}
 		}
 	}

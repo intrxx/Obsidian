@@ -11,6 +11,7 @@ UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectIn
 	: Super(ObjectInitializer)
 {
 	StaticItemImplicit.AffixType = EObsidianAffixType::Implicit;
+	StaticItemSkillImplicit.AffixType = EObsidianAffixType::SkillImplicit;
 }
 
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
@@ -25,6 +26,11 @@ bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const
 FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticImplicitAffix() const
 {
 	return StaticItemImplicit;
+}
+
+FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticSkillImplicitAffix() const
+{
+	return StaticItemSkillImplicit;
 }
 
 TArray<FObsidianStaticItemAffix> UOInventoryItemFragment_Affixes::GetStaticAffixes() const

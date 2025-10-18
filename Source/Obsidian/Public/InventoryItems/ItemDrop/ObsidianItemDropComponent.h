@@ -12,6 +12,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianItemDropComponent.generated.h"
 
+class UOInventoryItemFragment_Affixes;
 class UObsidianInventoryItemDefinition;
 class UObsidianItemDataDeveloperSettings;
 
@@ -86,7 +87,8 @@ protected:
 	void LoadAdditionalTreasuresAsync();
 
 	void GenerateItem(FObsidianItemToDrop& ForItemToDrop, const uint8 MaxTreasureClassQuality);
-	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
+	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses,
+		TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -101,9 +103,15 @@ private:
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
 	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity MaxRarity);
 
-	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
+	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const UOInventoryItemFragment_Affixes* AffixFragment,
+		const uint8 MaxTreasureClassQuality);
 	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
-	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes, const TArray<FObsidianDynamicItemAffix>& Suffixes, const uint8 MaxTreasureClassQuality);
+	void HandleNoGeneration(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
+	
+	void RollSkillImplicits(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& SkillImplicits, const uint8 MaxTreasureClassQuality);
+	void RollImplicit(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Implicits, const uint8 MaxTreasureClassQuality);
+	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes, const TArray<FObsidianDynamicItemAffix>& Suffixes,
+		const uint8 MaxTreasureClassQuality);
 
 	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
 	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);

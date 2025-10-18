@@ -164,6 +164,73 @@ bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_FullG
 	return false;
 }
 
+bool UObsidianItemDataLoaderSubsystem::GetAllAffixesUpToQualityForCategory_NormalItemGeneration(const int32 UpToTreasureQuality,
+	const FGameplayTag& ForCategoryTag, TArray<FObsidianDynamicItemAffix>& OutImplicits, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits)
+{
+	if (ItemDataConfig == nullptr)
+	{
+		return false;
+	}
+
+	for (const UObsidianAffixList* AffixLists : ItemDataConfig->CommonAffixLists)
+	{
+		if (AffixLists)
+		{
+			for (const FObsidianAffixClass& Class : AffixLists->GetAllAffixClasses())
+			{
+				switch (Class.AffixClassType)
+				{
+				case EObsidianAffixType::Implicit:
+					{
+						OutImplicits.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality, ForCategoryTag));
+					} break;
+				case EObsidianAffixType::SkillImplicit:
+					{
+						OutSkillImplicits.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality, ForCategoryTag));
+					} break;
+				default:
+					{} break;
+				}
+			}
+		}
+	}
+
+	if (!OutImplicits.IsEmpty() || !OutSkillImplicits.IsEmpty())
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UObsidianItemDataLoaderSubsystem::GetAllSkillImplicitsUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
+	TArray<FObsidianDynamicItemAffix>& OutSkillImplicits)
+{
+	if (ItemDataConfig == nullptr)
+	{
+		return false;
+	}
+
+	for (const UObsidianAffixList* AffixLists : ItemDataConfig->CommonAffixLists)
+	{
+		if (AffixLists)
+		{
+			for (const FObsidianAffixClass& Class : AffixLists->GetAllAffixClasses())
+			{
+				if (Class.AffixClassType == EObsidianAffixType::SkillImplicit)
+				{
+					OutSkillImplicits.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality, ForCategoryTag));
+				}
+			}
+		}
+	}
+
+	if (!OutSkillImplicits.IsEmpty())
+	{
+		return true;
+	}
+	return false;
+}
+
 FString UObsidianItemDataLoaderSubsystem::GetRandomRareItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag) const
 {
 	if (ItemDataConfig)

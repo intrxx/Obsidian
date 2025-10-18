@@ -50,6 +50,7 @@ public:
 	bool HasImplicitAffix() const;
 	
 	FObsidianStaticItemAffix GetStaticImplicitAffix() const;
+	FObsidianStaticItemAffix GetStaticSkillImplicitAffix() const;
 	TArray<FObsidianStaticItemAffix> GetStaticAffixes() const;
 	EObsidianAffixGenerationType GetGenerationType() const;
 
@@ -64,6 +65,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration&&bHasImplicitAffix"), Category = "Affixes")
 	FObsidianStaticItemAffix StaticItemImplicit;
+
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
+	FObsidianStaticItemAffix StaticItemSkillImplicit;
 	
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
 	TArray<FObsidianStaticItemAffix> StaticItemAffixes;

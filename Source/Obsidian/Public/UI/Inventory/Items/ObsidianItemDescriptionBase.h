@@ -4,7 +4,6 @@
 
 // ~ Core
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 
 // ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
@@ -59,6 +58,7 @@ protected:
 
 	UCommonTextBlock* GetFreePrefixBlock();
 	UCommonTextBlock* GetFreeSuffixBlock();
+	UCommonTextBlock* GetFreeBlockForUniqueItem();
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -88,6 +88,9 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> Unidentified_TextBlock;
 
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCommonTextBlock> SkillImplicit_TextBlock;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> Implicit_TextBlock;
 	
