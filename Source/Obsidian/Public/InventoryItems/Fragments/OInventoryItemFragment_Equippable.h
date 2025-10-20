@@ -56,10 +56,7 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
-	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySetsToGrant;
-
+	
 	/** Should this item block the other equipment slot, e.g. Two-Handed Weapons. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	bool bShouldBlockOtherSlot = false;

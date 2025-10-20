@@ -11,11 +11,12 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianStashItemList.generated.h"
 
+struct FObsidianStashItemList;
+struct FObsidianItemGeneratedData;
+
 class UObsidianStashTab_Slots;
 class UObsidianStashTabsConfig;
 class UObsidianStashTab;
-struct FObsidianStashItemList;
-
 class UObsidianPlayerStashComponent;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryItemDefinition;
@@ -161,7 +162,8 @@ public:
 
 	TArray<FObsidianStashSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const UObsidianStashTab_Slots* SlotStashTab);
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FObsidianItemPosition& ToPosition);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
+		const int32 StackCount, const FObsidianItemPosition& ToPosition);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount, const FGameplayTag& StashTabTag);

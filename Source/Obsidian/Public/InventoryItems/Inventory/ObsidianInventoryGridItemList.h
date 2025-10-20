@@ -12,6 +12,7 @@
 #include "ObsidianInventoryGridItemList.generated.h"
 
 struct FObsidianInventoryGridItemList;
+struct FObsidianItemGeneratedData;
 
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
@@ -112,7 +113,8 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	int32 GetEntriesCount() const;
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FIntPoint& AvailablePosition);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
+		const int32 StackCount, const FIntPoint& AvailablePosition);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FIntPoint& AvailablePosition);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);

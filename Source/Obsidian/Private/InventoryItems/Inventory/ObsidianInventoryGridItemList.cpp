@@ -47,7 +47,8 @@ int32 FObsidianInventoryGridItemList::GetEntriesCount() const
 	return Entries.Num();
 }
 
-UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FIntPoint& AvailablePosition)
+UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass,
+	const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FIntPoint& AvailablePosition)
 {
 	check(ItemDefClass != nullptr);
 	check(OwnerComponent);
@@ -59,8 +60,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
 	NewEntry.Instance->GenerateUniqueItemID();
-	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
-
+	
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
 	{
@@ -70,11 +70,15 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 		}
 	}
 	
+	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
 	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.StackCount = StackCount;
 	NewEntry.GridLocation = AvailablePosition;
+	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
+	NewEntry.Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

@@ -332,14 +332,11 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	}
 
 	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;
-	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, EquipTag);
-	check(ItemGeneratedData.StackCount == 1); //TODO This should always be the case for equipment.
+	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, ItemGeneratedData, EquipTag);
+	checkf(ItemGeneratedData.StackCount == 1, TEXT("Equipment Items should have 1 stack only."));
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
-	Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
-	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
-
+	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
 		AddReplicatedSubObject(Instance);
@@ -521,12 +518,9 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 		return Result;
 	}
 	
-	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, SlotTag);
-	check(ItemGeneratedData.StackCount == 1); //TODO This should always be the case for equipment.
+	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, ItemGeneratedData, SlotTag);
+	checkf(ItemGeneratedData.StackCount == 1, TEXT("Equipment Items should have 1 stack only."));
 	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
-	Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
-	Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
-	Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())

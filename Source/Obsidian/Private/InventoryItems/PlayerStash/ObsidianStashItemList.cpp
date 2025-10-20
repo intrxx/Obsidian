@@ -7,6 +7,8 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
@@ -176,7 +178,8 @@ TArray<FObsidianStashSlotDefinition> FObsidianStashItemList::FindMatchingSlotsFo
 	return MatchingSlots;
 }
 
-UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const int32 StackCount, const FObsidianItemPosition& ToPosition)
+UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass,
+	const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FObsidianItemPosition& ToPosition)
 {
 	check(ItemDefClass != nullptr);
 	check(OwnerComponent);
@@ -204,8 +207,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	NewEntry.Instance->SetItemDef(ItemDefClass);
 	NewEntry.Instance->GenerateUniqueItemID();
-	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
-
+	
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
 	{
@@ -214,12 +216,16 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 			Fragment->OnInstancedCreated(NewEntry.Instance);
 		}
 	}
-	
+
+	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
 	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.StackCount = StackCount;
 	NewEntry.ItemPosition = ToPosition;
+	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
+	NewEntry.Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

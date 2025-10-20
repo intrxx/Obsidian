@@ -153,7 +153,8 @@ TArray<FObsidianEquipmentSlotDefinition> FObsidianEquipmentList::FindMatchingEqu
 	return MatchingSlots;
 }
 
-UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag)
+UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass,
+	const FObsidianItemGeneratedData& ItemGeneratedData, const FGameplayTag& EquipmentSlotTag)
 {
 	check(ItemDefClass != nullptr);
 	check(OwnerComponent);
@@ -173,8 +174,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	NewEntry.EquipmentSlotTag = EquipmentSlotTag;
 	NewEntry.Instance->SetItemDef(ItemDefClass);
 	NewEntry.Instance->GenerateUniqueItemID();
-	NewEntry.Instance->SetItemCurrentPosition(EquipmentSlotTag);
-
+	
 	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
 	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
 	{
@@ -183,10 +183,14 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 			Fragment->OnInstancedCreated(NewEntry.Instance);
 		}
 	}
-
+	
+	NewEntry.Instance->SetItemCurrentPosition(EquipmentSlotTag);
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
 	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
+	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
+	NewEntry.Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
+	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
@@ -258,6 +262,41 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	MarkItemDirty(NewEntry);
 
 	BroadcastChangeMessage(NewEntry, EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
+}
+
+void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instance)
+{
+	const AActor* OwningActor = OwnerComponent->GetOwner();
+	check(OwningActor);
+	
+	for(auto It = Entries.CreateIterator(); It; ++It)
+	{
+		FObsidianEquipmentEntry& Entry = *It;
+		if(Entry.Instance == Instance)
+		{
+			const FGameplayTag CachedSlotTag = Entry.EquipmentSlotTag;
+			
+			SlotToEquipmentMap.Remove(CachedSlotTag);
+			Instance->ResetItemCurrentPosition();
+			
+			if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
+			{
+				Entry.GrantedHandles.TakeFromAbilitySystem(ObsidianASC);
+			}
+			else
+			{
+				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability Sytem Component is invalid on Owning Actor [%s]."),
+					*GetNameSafe(OwningActor)), ELogVerbosity::Error);
+			}
+			Instance->DestroyEquipmentActors();
+			
+			
+			It.RemoveCurrent();
+			MarkArrayDirty();
+
+			BroadcastChangeMessage(Instance, FGameplayTag::EmptyTag, CachedSlotTag, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
+		}
+	}
 }
 
 void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance)
@@ -404,41 +443,6 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 		if(bSwappedBothWays == false)
 		{
 			SlotToEquipmentMap.Remove(CurrentSwapTag);	
-		}
-	}
-}
-
-void FObsidianEquipmentList::RemoveEntry(UObsidianInventoryItemInstance* Instance)
-{
-	const AActor* OwningActor = OwnerComponent->GetOwner();
-	check(OwningActor);
-	
-	for(auto It = Entries.CreateIterator(); It; ++It)
-	{
-		FObsidianEquipmentEntry& Entry = *It;
-		if(Entry.Instance == Instance)
-		{
-			const FGameplayTag CachedSlotTag = Entry.EquipmentSlotTag;
-			
-			SlotToEquipmentMap.Remove(CachedSlotTag);
-			Instance->ResetItemCurrentPosition();
-			
-			if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
-			{
-				Entry.GrantedHandles.TakeFromAbilitySystem(ObsidianASC);
-			}
-			else
-			{
-				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability Sytem Component is invalid on Owning Actor [%s]."),
-					*GetNameSafe(OwningActor)), ELogVerbosity::Error);
-			}
-			Instance->DestroyEquipmentActors();
-			
-			
-			It.RemoveCurrent();
-			MarkArrayDirty();
-
-			BroadcastChangeMessage(Instance, FGameplayTag::EmptyTag, CachedSlotTag, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
 		}
 	}
 }

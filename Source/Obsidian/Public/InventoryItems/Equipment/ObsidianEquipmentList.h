@@ -13,11 +13,13 @@
 #include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianEquipmentList.generated.h"
 
+struct FObsidianEquipmentList;
+struct FObsidianItemGeneratedData;
+
 class UObsidianAbilitySystemComponent;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryItemDefinition;
 class UObsidianEquipmentComponent;
-struct FObsidianEquipmentList;
 
 /**
  * 
@@ -164,7 +166,8 @@ public:
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& ItemCategory);
 	
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FGameplayTag& EquipmentSlotTag);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
+		const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	
