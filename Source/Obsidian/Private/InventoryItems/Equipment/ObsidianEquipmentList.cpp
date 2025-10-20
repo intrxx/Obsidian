@@ -205,7 +205,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	}
 	else
 	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability Sytem Component is invalid on Owning Actor [%s]."),
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability System Component is invalid on Owning Actor [%s]."),
 			*GetNameSafe(OwningActor)), ELogVerbosity::Error);
 	}
 

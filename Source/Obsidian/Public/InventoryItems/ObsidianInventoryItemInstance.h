@@ -136,8 +136,7 @@ public:
 	void SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors);
 	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
 	void DestroyEquipmentActors();
-
-	void SetAbilitySets(const TArray<UObsidianAbilitySet*>& InAbilitySets);
+	
 	TArray<UObsidianAbilitySet*> GetOwningAbilitySets() const;
 	
 	/**
@@ -318,9 +317,6 @@ private:
 
 	UPROPERTY(Replicated)
 	TArray<TObjectPtr<AObsidianSpawnedEquipmentPiece>> SpawnedActors;
-
-	/** Does not need to be replicate since the attributes will replicate, idk about abilities, will need to check. */
-	TArray<TObjectPtr<UObsidianAbilitySet>> AbilitySetsToGive;
 	
 	/**
 	 * Affixes.

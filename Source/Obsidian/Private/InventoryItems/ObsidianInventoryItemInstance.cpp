@@ -12,6 +12,7 @@
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "AbilitySystem/Data/ObsidianAbilitySet.h"
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -435,20 +436,16 @@ void UObsidianInventoryItemInstance::DestroyEquipmentActors()
 	SpawnedActors.Empty();
 }
 
-void UObsidianInventoryItemInstance::SetAbilitySets(const TArray<UObsidianAbilitySet*>& InAbilitySets)
-{
-	if(InAbilitySets.IsEmpty())
-	{
-		return;
-	}
-
-	AbilitySetsToGive.Empty(InAbilitySets.Num());
-	AbilitySetsToGive.Append(InAbilitySets);
-}
-
 TArray<UObsidianAbilitySet*> UObsidianInventoryItemInstance::GetOwningAbilitySets() const
 {
-	return AbilitySetsToGive;
+	TArray<UObsidianAbilitySet*> SetsToReturn;
+	for (const FObsidianActiveItemAffix& Affix : GetAllItemAffixes())
+	{
+		check(Affix);
+		//TODO(intrxx) Preload at item drop?
+		SetsToReturn.Add(Affix.SoftAbilitySetToApply.LoadSynchronous());
+	}
+	return SetsToReturn;
 }
 
 UStaticMesh* UObsidianInventoryItemInstance::GetItemDroppedMesh() const
