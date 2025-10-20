@@ -97,7 +97,7 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 	AffixType = InDynamicItemAffix.AffixType;
 	AffixValueType = InDynamicItemAffix.AffixValueType;
 	PossibleAffixRanges = InDynamicItemAffix.PossibleAffixRanges;
-	SoftGameplayEffectToApply = InDynamicItemAffix.SoftGameplayEffectToApply;
+	SoftAbilitySetToApply = InDynamicItemAffix.SoftAbilitySetToApply;
 
 	InitializeAffixTierAndRange(UpToTreasureQuality);
 }
@@ -116,7 +116,7 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 	AffixType = InStaticItemAffix.AffixType;
 	AffixValueType = InStaticItemAffix.AffixValueType;
 	PossibleAffixRanges = InStaticItemAffix.PossibleAffixRanges;
-	SoftGameplayEffectToApply = InStaticItemAffix.SoftGameplayEffectToApply;
+	SoftAbilitySetToApply = InStaticItemAffix.SoftAbilitySetToApply;
 
 	InitializeAffixTierAndRange(UpToTreasureQuality);
 }

@@ -343,6 +343,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_TwoHand_Dexterity, "Item.BaseType.Sword.TwoHand.Dexterity", "Item Tag that represents Two Hand Sword Dexterity item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_TwoHand_Strength, "Item.BaseType.Sword.TwoHand.Strength", "Item Tag that represents Two Hand Strength Sword item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Sword_TwoHand_Intelligence, "Item.BaseType.Sword.TwoHand.Intelligence", "Item Tag that represents Two Hand Intelligence Sword item base type.");
+
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Faith, "Item.BaseType.Axe.OneHand.Faith", "Item Tag that represents One Hand Faith Axe item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Dexterity, "Item.BaseType.Axe.OneHand.Dexterity", "Item Tag that represents One Hand Dexterity Axe item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Strength, "Item.BaseType.Axe.OneHand.Strength", "Item Tag that represents One Hand Strength Axe item base type.");
@@ -352,6 +353,16 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Strength, "Item.BaseType.Axe.OneHand.Strength", "Item Tag that represents Two Hand Strength Axe item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Intelligence, "Item.BaseType.Axe.OneHand.Intelligence", "Item Tag that represents Two Hand Intelligence Axe item base type.");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Dagger_Faith, "Item.BaseType.Dagger.Faith", "Item Tag that represents Faith Dagger item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Dagger_Dexterity, "Item.BaseType.Dagger.Dexterity", "Item Tag that represents Dexterity Dagger item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Dagger_Strength, "Item.BaseType.Dagger.Strength", "Item Tag that represents Strength Dagger item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Dagger_Intelligence, "Item.BaseType.Dagger.Intelligence", "Item Tag that represents Intelligence Dagger item base type.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Wand_Faith, "Item.BaseType.Wand.Faith", "Item Tag that represents Faith Wand item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Wand_Dexterity, "Item.BaseType.Wand.Dexterity", "Item Tag that represents Dexterity Wand item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Wand_Strength, "Item.BaseType.Wand.Strength", "Item Tag that represents Strength Wand item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Wand_Intelligence, "Item.BaseType.Wand.Intelligence", "Item Tag that represents Intelligence Wand item base type.");
+	
 	/**
 	 * Equipment Slots.
 	 */

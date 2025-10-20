@@ -128,12 +128,12 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 			Context.AddError(ErrorMessage);
 		}
 
-		if (DynamicAffix.SoftGameplayEffectToApply.IsNull())
+		if (DynamicAffix.SoftAbilitySetToApply.IsNull())
 		{
 			Result = EDataValidationResult::Invalid;
 
-			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("GameplayEffectToApply at index [%i] of [%s] class at index [%i] is not set! \n"
-				"Please it with proper Gameplay Effect."), i, *ClassName.ToString(), Index));
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] class at index [%i] is not set! \n"
+				"Please provide a valid AbilitySet to apply!"), i, *ClassName.ToString(), Index));
 			Context.AddError(ErrorMessage);
 		}
 

@@ -16,15 +16,6 @@ void UObsidianItemDescriptionBase::NativeConstruct()
 	Super::NativeConstruct();
 
 	SetVisibility(ESlateVisibility::HitTestInvisible);
-	// Unidentified_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-	//
-	// Implicit_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-	// Prefix1_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-	// Prefix2_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-	// Prefix3_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-	// Suffix1_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-	// Suffix2_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
-	// Suffix3_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 UCommonTextBlock* UObsidianItemDescriptionBase::GetFreePrefixBlock()

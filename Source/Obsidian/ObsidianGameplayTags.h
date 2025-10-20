@@ -319,6 +319,7 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_TwoHand_Dexterity);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_TwoHand_Strength);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_TwoHand_Intelligence);
+
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_OneHand_Faith);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_OneHand_Dexterity);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_OneHand_Strength);
@@ -327,6 +328,16 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_TwoHand_Dexterity);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_TwoHand_Strength);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_TwoHand_Intelligence);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Faith);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Dexterity);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Strength);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Intelligence);
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Faith);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Dexterity);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Strength);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Intelligence);
 	
 	/**
 	 * Equipment Slots.

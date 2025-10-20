@@ -10,6 +10,7 @@
 
 #include "ObsidianItemAffixTypes.generated.h"
 
+class UObsidianAbilitySet;
 struct FObsidianActiveItemAffix;
 struct FObsidianDynamicItemAffix;
 
@@ -124,9 +125,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
 	FText AffixDescription = FText();
 
-	/** Gameplay Effect Class to Apply. */
+	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
+	TSoftObjectPtr<UObsidianAbilitySet> SoftAbilitySetToApply;
 	
 	/** Value type of affix, if set to Int it will be rounded down. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
@@ -189,9 +190,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "0", EditCondition = "bOverride_MagicItemAffixRollMultiplier"), Category = "Obsidian|Affix")
 	float MagicItemAffixRollMultiplier = 2.0f;
 
-	/** Gameplay Effect Class to Apply. */
+	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
+	TSoftObjectPtr<UObsidianAbilitySet> SoftAbilitySetToApply;
 	
 	/** Value type of affix, if set to Int it will be rounded down. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
@@ -245,7 +246,7 @@ public:
 	FText UnformattedAffixDescription = FText();
 	
 	UPROPERTY()
-	TSoftClassPtr<UGameplayEffect> SoftGameplayEffectToApply;
+	TSoftObjectPtr<UObsidianAbilitySet> SoftAbilitySetToApply;
 
 	UPROPERTY()
 	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
