@@ -401,6 +401,14 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Affix Values
+	 */
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_AffixValue_SingleValue);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_AffixValue_MinValue);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_AffixValue_MaxValue);
+
+	/**
 	 * Skill Implicits
 	 */
 

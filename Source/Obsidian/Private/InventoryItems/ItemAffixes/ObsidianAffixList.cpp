@@ -137,7 +137,7 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 			Context.AddError(ErrorMessage);
 		}
 
-		if (DynamicAffix.PossibleAffixRanges.IsEmpty())
+		if (DynamicAffix.AffixValuesDefinition.IsValid() == false)
 		{
 			Result = EDataValidationResult::Invalid;
 
@@ -147,10 +147,10 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 			continue;
 		}
 		
-		uint8 ExpectedCount = DynamicAffix.PossibleAffixRanges[0].AffixRanges.Num();
-		for (int32 y = 0; y < DynamicAffix.PossibleAffixRanges.Num(); y++)
+		uint8 ExpectedCount = DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers.Num();
+		for (int32 y = 0; y < DynamicAffix.AffixValuesDefinition.PossibleAffixRanges.Num(); y++)
 		{
-			const FObsidianAffixValueRange Range = DynamicAffix.PossibleAffixRanges[y];
+			const FObsidianAffixValueRange Range = DynamicAffix.AffixValuesDefinition.PossibleAffixRanges[y];
 			if (Range.AffixRanges.Num() != ExpectedCount)
 			{
 				Result = EDataValidationResult::Invalid;

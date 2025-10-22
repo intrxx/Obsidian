@@ -475,6 +475,14 @@ namespace ObsidianGameplayTags
 	 */
 
 	/**
+	 * Affix Values
+	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_AffixValue_SingleValue, "Item.AffixValue.SingleValue", "Single Affix Value identifier which is passed as SetByCaller data to GEs.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_AffixValue_MinValue, "Item.AffixValue.MinValue", "Range MinValue Affix Value identifier which is passed as SetByCaller data to GEs.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_AffixValue_MaxValue, "Item.AffixValue.MaxValue", "Range MaxValue Affix Value identifier which is passed as SetByCaller data to GEs.");
+
+	/**
 	 * Skill Implicits
 	 */
 

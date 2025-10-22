@@ -2,10 +2,14 @@
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemAffixTypes.h"
 
-// ~ Core
 
-// ~ Project
 #include "InventoryItems/ObsidianItemAffixStack.h"
+
+
+bool FObsidianAffixValues::IsValid() const
+{
+	return AffixValuesIdentifiers.IsEmpty() == false && PossibleAffixRanges.IsEmpty() == false;
+}
 
 // ~ FObsidianStaticItemAffix
 
@@ -16,7 +20,7 @@ bool FObsidianStaticItemAffix::IsEmptyImplicit() const
 
 bool FObsidianStaticItemAffix::IsEmptyAffix() const
 {
-	return PossibleAffixRanges.IsEmpty();
+	return AffixValuesDefinition.IsValid();
 }
 
 FObsidianStaticItemAffix::operator bool() const
@@ -95,8 +99,7 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 	UnformattedAffixDescription = InDynamicItemAffix.AffixDescription;
 	AffixItemNameAddition = InDynamicItemAffix.AffixItemNameAddition;
 	AffixType = InDynamicItemAffix.AffixType;
-	AffixValueType = InDynamicItemAffix.AffixValueType;
-	PossibleAffixRanges = InDynamicItemAffix.PossibleAffixRanges;
+	AffixValuesDefinition = InDynamicItemAffix.AffixValuesDefinition;
 	SoftAbilitySetToApply = InDynamicItemAffix.SoftAbilitySetToApply;
 
 	InitializeAffixTierAndRange(UpToTreasureQuality);
@@ -114,8 +117,7 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 	UnformattedAffixDescription = InStaticItemAffix.AffixDescription;
 	AffixItemNameAddition = InStaticItemAffix.AffixItemNameAddition;
 	AffixType = InStaticItemAffix.AffixType;
-	AffixValueType = InStaticItemAffix.AffixValueType;
-	PossibleAffixRanges = InStaticItemAffix.PossibleAffixRanges;
+	AffixValuesDefinition = InStaticItemAffix.AffixValuesDefinition;
 	SoftAbilitySetToApply = InStaticItemAffix.SoftAbilitySetToApply;
 
 	InitializeAffixTierAndRange(UpToTreasureQuality);
@@ -123,13 +125,15 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 
 void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreasureQuality)
 {
-	//TODO(intrxx) Get Random Range in weighted way bound by Treasure Quality
 	FObsidianAffixValueRange ChosenAffixValueTier = GetRandomAffixRange(UpToTreasureQuality);
-	for (const FFloatRange& AffixRange : ChosenAffixValueTier.AffixRanges)
+	for (int32 i = 0; i < ChosenAffixValueTier.AffixRanges.Num(); ++i)
 	{
+		FFloatRange& AffixRange = ChosenAffixValueTier.AffixRanges[i];
 		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
-		RandomisedValue = AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
-		CurrentAffixValue.CurrentAffixValues.Add(RandomisedValue);
+		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
+
+		const FGameplayTag AffixTagIdentifier = AffixValuesDefinition.AffixValuesIdentifiers[i];
+		CurrentAffixValue.CurrentAffixValues.Add(AffixTagIdentifier, RandomisedValue);	
 	}
 	CurrentAffixValue.AffixTier = ChosenAffixValueTier.AffixTier.AffixTierValue;
 	CreateAffixActiveDescription();
@@ -137,10 +141,8 @@ void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreas
 
 void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 {
-	CurrentAffixValue.CurrentAffixValues.Empty();
-
 	TArray<FFloatRange> CurrentPossibleFloatRanges;
-	for (const FObsidianAffixValueRange& AffixValueRange : PossibleAffixRanges)
+	for (const FObsidianAffixValueRange& AffixValueRange : AffixValuesDefinition.PossibleAffixRanges)
 	{
 		if (AffixValueRange.AffixTier.AffixTierValue == CurrentAffixValue.AffixTier)
 		{
@@ -149,11 +151,14 @@ void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 	}
 	check(CurrentPossibleFloatRanges.IsEmpty() == false);
 	
-	for (const FFloatRange& AffixRange : CurrentPossibleFloatRanges)
+	for (int32 i = 0; i < CurrentPossibleFloatRanges.Num(); ++i)
 	{
+		FFloatRange& AffixRange = CurrentPossibleFloatRanges[i];
 		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
-		RandomisedValue = AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
-		CurrentAffixValue.CurrentAffixValues.Add(RandomisedValue);
+		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
+
+		const FGameplayTag AffixTagIdentifier = AffixValuesDefinition.AffixValuesIdentifiers[i];
+		CurrentAffixValue.CurrentAffixValues.Emplace(AffixTagIdentifier, RandomisedValue);
 	}
 	
 	CreateAffixActiveDescription();
@@ -163,7 +168,7 @@ FObsidianAffixValueRange FObsidianActiveItemAffix::GetRandomAffixRange(const uin
 {
 	uint32 TotalWeight = 0;
 	TArray<FObsidianAffixValueRange> CanRollFromAffixRanges;
-	for (const FObsidianAffixValueRange& Value : PossibleAffixRanges)
+	for (const FObsidianAffixValueRange& Value : AffixValuesDefinition.PossibleAffixRanges)
 	{
 		if (Value.AffixTier.MinItemLevelRequirement <= UpToTreasureQuality)
 		{
@@ -191,8 +196,10 @@ FObsidianAffixValueRange FObsidianActiveItemAffix::GetRandomAffixRange(const uin
 void FObsidianActiveItemAffix::CreateAffixActiveDescription()
 {
 	TArray<FFormatArgumentValue> Args;
-	Args.Append(CurrentAffixValue.CurrentAffixValues);
-
+	for (const TPair<FGameplayTag, float>& AffixValue : CurrentAffixValue.CurrentAffixValues)
+	{
+		Args.Add(AffixValue.Value);
+	}
 	ActiveAffixDescription = FText::Format(UnformattedAffixDescription, Args);
 }
 

@@ -2,10 +2,6 @@
 
 #include "AbilitySystem/ObsidianGameplayEffect.h"
 
-// ~ Core
-
-// ~ Project
-
 UObsidianGameplayEffect::UObsidianGameplayEffect(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

@@ -67,11 +67,39 @@ public:
 	FObsidianAffixTier AffixTier;
 
 	UPROPERTY(EditDefaultsOnly, meta=(ClampMin = "0", ClampMax = "1000"), Category = "Obsidian")
-	uint16 AffixTierWeight = 1000; 
-
+	uint16 AffixTierWeight = 1000;
+	
 	/** Array (as there can be multiple values in a single Affix) of Affix Range to Roll. */
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FFloatRange> AffixRanges;
+};
+
+/**
+ * 
+ */
+USTRUCT()
+struct FObsidianAffixValues
+{
+	GENERATED_BODY()
+
+public:
+	bool IsValid() const;
+	
+public:
+	/** Value type of affix, if set to Int it will be rounded down. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
+	
+	/**
+	 * Array of affix range value identifiers which is mapped 1 to 1 to Affix Range entries, meaning that the first entry
+	 * from this array will be a GameplayTag identifier of the first entry in AffixRanges.
+	 */
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.AffixValue"))
+	TArray<FGameplayTag> AffixValuesIdentifiers;
+	
+	/** Affix ranges that will be rolled on the item. Count of AffixRanges must equal provided AffixValuesIdentifiers. */
+	UPROPERTY(EditDefaultsOnly)
+	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
 };
 
 /**
@@ -87,7 +115,7 @@ public:
 	uint8 AffixTier = -1;
 	
 	UPROPERTY()
-	TArray<float> CurrentAffixValues;
+	TMap<FGameplayTag, float> CurrentAffixValues;
 };
 
 /**
@@ -127,13 +155,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
 	
-	/** Value type of affix, if set to Int it will be rounded down. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
-	
 	/** Affix ranges. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
+	FObsidianAffixValues AffixValuesDefinition;
 };
 
 /**
@@ -192,13 +216,9 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
 	
-	/** Value type of affix, if set to Int it will be rounded down. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
-
 	/** Possible Affix Ranges to roll from. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
+	FObsidianAffixValues AffixValuesDefinition;
 };
 
 /**
@@ -245,12 +265,9 @@ public:
 	
 	UPROPERTY()
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
-
-	UPROPERTY()
-	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
 	
 	UPROPERTY()
-	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
+	FObsidianAffixValues AffixValuesDefinition;
 
 	UPROPERTY()
 	FObsidianActiveAffixValue CurrentAffixValue;
