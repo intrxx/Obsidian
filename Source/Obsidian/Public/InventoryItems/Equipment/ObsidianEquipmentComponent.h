@@ -109,7 +109,8 @@ protected:
 	void RemoveBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& ItemCategoriesToRemove);
 
 protected:
-	UPROPERTY(EditAnywhere, Category = "Obsidian|Default")
+	/** THIS IS NOT SUPPORTED WITH NEW DYNAMIC GENERATED ITEM TYPES. */
+	UPROPERTY(EditAnywhere, meta=(DeprecatedProperty), Category = "Obsidian|Default")
 	TArray<FObsidianDefaultEquipmentTemplate> DefaultEquipmentItems;
 	
 private:

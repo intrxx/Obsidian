@@ -2,17 +2,15 @@
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
-// ~ Core
-#include "Net/UnrealNetwork.h"
-#include "GameFramework/Character.h"
+#include <Net/UnrealNetwork.h>
+#include <GameFramework/Character.h>
 
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+#include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "AbilitySystem/Data/ObsidianAbilitySet.h"
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -436,9 +434,9 @@ void UObsidianInventoryItemInstance::DestroyEquipmentActors()
 	SpawnedActors.Empty();
 }
 
-TArray<UObsidianAbilitySet*> UObsidianInventoryItemInstance::GetOwningAbilitySets() const
+TArray<UObsidianAffixAbilitySet*> UObsidianInventoryItemInstance::GetAffixAbilitySetsFromItem() const
 {
-	TArray<UObsidianAbilitySet*> SetsToReturn;
+	TArray<UObsidianAffixAbilitySet*> SetsToReturn;
 	for (const FObsidianActiveItemAffix& Affix : GetAllItemAffixes())
 	{
 		check(Affix);

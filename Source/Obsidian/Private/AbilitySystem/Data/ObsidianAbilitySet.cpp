@@ -2,12 +2,10 @@
 
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 
-// ~ Core
 #if WITH_EDITOR
-#include "Misc/DataValidation.h"
+#include <Misc/DataValidation.h>
 #endif // ~ With Editor
 
-// ~ Project
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/ObsidianGameModule.h"

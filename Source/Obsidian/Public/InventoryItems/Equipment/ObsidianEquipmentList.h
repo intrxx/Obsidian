@@ -2,15 +2,13 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
-// ~ Project
-#include "AbilitySystem/Data/ObsidianAbilitySet.h"
+#include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Net/Serialization/FastArraySerializer.h"
+#include <Net/Serialization/FastArraySerializer.h>
 #include "ObsidianEquipmentList.generated.h"
 
 struct FObsidianEquipmentList;
@@ -137,7 +135,7 @@ private:
 	
 	/** Authority-only list of granted handles to remove when Item unequipped. **/
 	UPROPERTY(NotReplicated)
-	FObsidianAbilitySet_GrantedHandles GrantedHandles;
+	FObsidianAffixAbilitySet_GrantedHandles GrantedHandles;
 };
 
 /**

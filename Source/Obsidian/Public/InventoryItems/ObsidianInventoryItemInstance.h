@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianItemAffixStack.h"
 #include "InventoryItems/ObsidianGameplayTagStack.h"
 #include "Fragments/OInventoryItemFragment_Equippable.h"
@@ -137,7 +135,7 @@ public:
 	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
 	void DestroyEquipmentActors();
 	
-	TArray<UObsidianAbilitySet*> GetOwningAbilitySets() const;
+	TArray<UObsidianAffixAbilitySet*> GetAffixAbilitySetsFromItem() const;
 	
 	/**
 	 * Affixes.

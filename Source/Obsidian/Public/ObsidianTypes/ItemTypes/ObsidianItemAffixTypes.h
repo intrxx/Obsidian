@@ -2,18 +2,16 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
-// ~ Project
 
 #include "ObsidianItemAffixTypes.generated.h"
 
-class UObsidianAbilitySet;
 struct FObsidianActiveItemAffix;
 struct FObsidianDynamicItemAffix;
 
+class UObsidianAffixAbilitySet;
 class UGameplayEffect;
 
 UENUM(BlueprintType)
@@ -127,7 +125,7 @@ public:
 
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TSoftObjectPtr<UObsidianAbilitySet> SoftAbilitySetToApply;
+	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
 	
 	/** Value type of affix, if set to Int it will be rounded down. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
@@ -192,7 +190,7 @@ public:
 
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TSoftObjectPtr<UObsidianAbilitySet> SoftAbilitySetToApply;
+	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
 	
 	/** Value type of affix, if set to Int it will be rounded down. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
@@ -246,7 +244,7 @@ public:
 	FText UnformattedAffixDescription = FText();
 	
 	UPROPERTY()
-	TSoftObjectPtr<UObsidianAbilitySet> SoftAbilitySetToApply;
+	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
 
 	UPROPERTY()
 	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;

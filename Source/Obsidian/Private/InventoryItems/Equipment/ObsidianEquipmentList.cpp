@@ -2,12 +2,9 @@
 
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 
-// ~ Core
-#include "AbilitySystemGlobals.h"
+#include <AbilitySystemGlobals.h>
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "GameFramework/GameplayMessageSubsystem.h"
@@ -198,7 +195,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	
 	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 	{
-		for(UObsidianAbilitySet*& AbilitySet : Item->GetOwningAbilitySets())
+		for(UObsidianAffixAbilitySet*& AbilitySet : Item->GetAffixAbilitySetsFromItem())
 		{
 			AbilitySet->GiveToAbilitySystem(ObsidianASC, &NewEntry.GrantedHandles, Item);
 		}
@@ -246,14 +243,14 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 
 	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 	{
-		for(UObsidianAbilitySet*& AbilitySet : Instance->GetOwningAbilitySets())
+		for(UObsidianAffixAbilitySet*& AbilitySet : Instance->GetAffixAbilitySetsFromItem())
 		{
 			AbilitySet->GiveToAbilitySystem(ObsidianASC, &NewEntry.GrantedHandles, Instance);
 		}
 	}
 	else
 	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability Sytem Component is invalid on Owning Actor [%s]."),
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability System Component is invalid on Owning Actor [%s]."),
 			*GetNameSafe(OwningActor)), ELogVerbosity::Error);
 	}
 	
@@ -410,7 +407,7 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 			
 			if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 			{
-				for(UObsidianAbilitySet*& AbilitySet : Instance->GetOwningAbilitySets())
+				for(UObsidianAffixAbilitySet*& AbilitySet : Instance->GetAffixAbilitySetsFromItem())
 				{
 					AbilitySet->GiveToAbilitySystem(ObsidianASC, &Entry.GrantedHandles, Instance);
 				}
