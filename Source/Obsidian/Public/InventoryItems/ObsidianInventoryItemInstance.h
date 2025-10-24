@@ -4,7 +4,7 @@
 
 #include <CoreMinimal.h>
 
-#include "ObsidianItemAffixStack.h"
+#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 #include "InventoryItems/ObsidianGameplayTagStack.h"
 #include "Fragments/OInventoryItemFragment_Equippable.h"
 #include "Fragments/OInventoryItemFragment_Usable.h"

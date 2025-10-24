@@ -9,11 +9,14 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include <Net/Serialization/FastArraySerializer.h>
+
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianEquipmentList.generated.h"
 
 struct FObsidianEquipmentList;
 struct FObsidianItemGeneratedData;
 
+class UObsidianAffixAbilitySet;
 class UObsidianAbilitySystemComponent;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryItemDefinition;
@@ -188,6 +191,9 @@ public:
 private:
 	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& SlotTagToClear, const EObsidianEquipmentChangeType ChangeType) const;
 
+	void AddItemAffixesToOwner(UObsidianInventoryItemInstance* FromItemInstance, FObsidianAffixAbilitySet_GrantedHandles* ItemGrantedHandles);
+	UObsidianAffixAbilitySet* GetDefaultAffixSet();
+	
 private:
 	friend UObsidianEquipmentComponent;
 	
@@ -197,6 +203,9 @@ private:
 
 	UPROPERTY(NotReplicated)
 	TObjectPtr<UActorComponent> OwnerComponent;
+
+	UPROPERTY()
+	UObsidianAffixAbilitySet* CachedDefaultAbilitySet = nullptr;
 	
 	TArray<FObsidianEquipmentSlotDefinition> EquipmentSlots;
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToEquipmentMap;

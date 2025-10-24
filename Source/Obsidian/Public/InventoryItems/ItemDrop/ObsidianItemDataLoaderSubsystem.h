@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "GameplayTagContainer.h"
 #include "ObsidianTreasureList.h"
 #include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
@@ -45,10 +43,14 @@ public:
 	
 	
 	FString GetRandomRareItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag) const;
+
+public:
+	UPROPERTY()
+	TObjectPtr<UObsidianAffixAbilitySet> DefaultAffixAbilitySet;
 	
 protected:
-	void LoadItemDataConfig();
-	void OnItemConfigLoaded();
+	void LoadItemData();
+	void OnItemDataLoaded();
 	void OnCommonItemsLoaded();
 	
 protected:

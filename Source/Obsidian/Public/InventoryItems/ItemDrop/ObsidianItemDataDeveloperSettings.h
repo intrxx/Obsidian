@@ -39,9 +39,6 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")
 	uint8 MaxTreasureQuality = 90;
-
-	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
-	uint8 DefaultMaxImplicitCount = 1;
 	
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")
 	TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap;
@@ -52,6 +49,12 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")
 	TMap<EObsidianItemRarity, uint16> DefaultRarityToWeightMap;
 
+	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
+	TSoftObjectPtr<UObsidianAffixAbilitySet> DefaultAffixAbilitySet;
+	
+	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
+	uint8 DefaultMaxImplicitCount = 1;
+	
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	TMap<EObsidianItemRarity, uint8> DefaultRarityToMaxSuffixCount;
 

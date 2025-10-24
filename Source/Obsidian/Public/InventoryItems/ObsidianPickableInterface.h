@@ -6,7 +6,7 @@
 #include "CoreMinimal.h"
 
 // ~ Project
-#include "ObsidianItemAffixStack.h"
+#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 
 #include "UObject/Interface.h"
 #include "ObsidianPickableInterface.generated.h"

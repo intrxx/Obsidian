@@ -2,10 +2,9 @@
 
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 
-// ~ Core
-#include "Engine/AssetManager.h"
+#include <Engine/AssetManager.h>
 
-// ~ Project
+#include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataConfig.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 
@@ -15,7 +14,7 @@ void UObsidianItemDataLoaderSubsystem::Initialize(FSubsystemCollectionBase& Coll
 {
 	Super::Initialize(Collection);
 
-	LoadItemDataConfig();
+	LoadItemData();
 }
 
 void UObsidianItemDataLoaderSubsystem::Deinitialize()
@@ -240,7 +239,7 @@ FString UObsidianItemDataLoaderSubsystem::GetRandomRareItemNameAddition(const in
 	return FString();
 }
 
-void UObsidianItemDataLoaderSubsystem::LoadItemDataConfig()
+void UObsidianItemDataLoaderSubsystem::LoadItemData()
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
@@ -251,18 +250,24 @@ void UObsidianItemDataLoaderSubsystem::LoadItemDataConfig()
 
 	
 	const TSoftObjectPtr<UObsidianItemDataConfig>& ItemDataConfigRef = ItemDataSettings->ItemDataConfig;
+	const TSoftObjectPtr<UObsidianAffixAbilitySet>& AffixAbilitySet = ItemDataSettings->DefaultAffixAbilitySet;
+	TArray<FSoftObjectPath> PathsToLoad;
 	if (ItemDataConfigRef.IsNull() == false)
 	{
-		FSoftObjectPath ConfigPathToLoad = ItemDataConfigRef.ToSoftObjectPath();
-
-		UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
-				ConfigPathToLoad,
-				FStreamableDelegate::CreateUObject(this, &ThisClass::OnItemConfigLoaded)
-			);
+		PathsToLoad.Add(ItemDataConfigRef.ToSoftObjectPath());
 	}
+	if (AffixAbilitySet.IsNull() == false)
+	{
+		PathsToLoad.Add(AffixAbilitySet.ToSoftObjectPath());
+	}
+
+	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(
+				PathsToLoad,
+				FStreamableDelegate::CreateUObject(this, &ThisClass::OnItemDataLoaded)
+			);
 }
 
-void UObsidianItemDataLoaderSubsystem::OnItemConfigLoaded()
+void UObsidianItemDataLoaderSubsystem::OnItemDataLoaded()
 {
 	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
 	{
@@ -270,6 +275,11 @@ void UObsidianItemDataLoaderSubsystem::OnItemConfigLoaded()
 		{
 			ItemDataConfig = ItemDataSettings->ItemDataConfig.Get();
 			UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Treasure Config: [%s]."), *ItemDataConfig->GetName());
+		}
+		if (ItemDataSettings->DefaultAffixAbilitySet)
+		{
+			DefaultAffixAbilitySet = ItemDataSettings->DefaultAffixAbilitySet.Get();
+			UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Default Affix Ability Set: [%s]."), *ItemDataConfig->GetName());
 		}
 	}
 	

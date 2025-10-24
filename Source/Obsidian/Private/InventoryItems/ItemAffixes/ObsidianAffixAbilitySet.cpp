@@ -2,6 +2,7 @@
 
 #include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 
+#include <AbilitySystemBlueprintLibrary.h>
 #if WITH_EDITOR
 #include <Misc/DataValidation.h>
 #endif // ~ WITH_EDITOR
@@ -9,6 +10,7 @@
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 #if WITH_EDITOR
 // ~ FObsidianAffixAbilitySet_GameplayAbility
@@ -124,7 +126,8 @@ UObsidianAffixAbilitySet::UObsidianAffixAbilitySet(const FObjectInitializer& Obj
 	: Super(ObjectInitializer)
 {}
 
-void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
+void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const FGameplayTag& AffixTag,
+	const FObsidianActiveAffixValue& AffixValue, FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
 {
 	check(ObsidianASC);
 
@@ -147,7 +150,12 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 
 		UObsidianGameplayAbility* AbilityCDO = AbilityToGrant.Ability->GetDefaultObject<UObsidianGameplayAbility>();
 
-		const float AbilityLevel = 1; //TODO(intrxx) get rolled quality here
+		checkf(AffixValue.CurrentAffixValues.Num() == 1, TEXT("Affix that gives abilities should have one Affix Value!"));
+		float AbilityLevel = 1;
+		if (const float* AbilityQualityValue = AffixValue.CurrentAffixValues.Find(ObsidianGameplayTags::Item_AffixValue_SingleValue))
+		{
+			AbilityLevel = *AbilityQualityValue;	
+		}
 		FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilityLevel);
 		AbilitySpec.SourceObject = SourceObject;
 		AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityToGrant.OptionalInputTag);
@@ -167,18 +175,29 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 
 		if(!IsValid(EffectToGrant.GameplayEffect))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Effect [%d] on Ablity Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
+			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Effect [%d] on Ability Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
 			continue;	
 		}
 		
-		const UGameplayEffect* EffectCDO = EffectToGrant.GameplayEffect->GetDefaultObject<UGameplayEffect>();
 		FGameplayEffectContextHandle ContextHandle = ObsidianASC->MakeEffectContext();
 		ContextHandle.AddSourceObject(SourceObject);
-		const FActiveGameplayEffectHandle GameplayEffectHandle = ObsidianASC->ApplyGameplayEffectToSelf(EffectCDO, 1.0f, ContextHandle);
+		
+		const FGameplayEffectSpecHandle SpecHandle = ObsidianASC->MakeOutgoingSpec(EffectToGrant.GameplayEffect, 1, ContextHandle);
+		for (const TPair<FGameplayTag, float>& AffixValuePair : AffixValue.CurrentAffixValues)
+		{
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AffixValuePair.Key, AffixValuePair.Value);
+		}
+		
+		const FActiveGameplayEffectHandle ActiveSpecHandle = ObsidianASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 
 		if(GrantedHandles)
 		{
-			GrantedHandles->AddActiveGameplayEffectSpecHandle(GameplayEffectHandle);
+			GrantedHandles->AddActiveGameplayEffectSpecHandle(ActiveSpecHandle);
 		}
 	}
+}
+
+void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes, FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
+{
+	//TODO(intrxx) Implement batched Affix applying.
 }

@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "InventoryItems/ObsidianItemAffixStack.h"
+#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 
 // ~ Core
 #include "GameplayEffect.h"

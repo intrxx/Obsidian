@@ -3,7 +3,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemAffixTypes.h"
 
 
-#include "InventoryItems/ObsidianItemAffixStack.h"
+#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 
 
 bool FObsidianAffixValues::IsValid() const

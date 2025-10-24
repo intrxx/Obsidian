@@ -7,6 +7,7 @@
 #include <GameplayAbilitySpecHandle.h>
 #include <GameplayTagContainer.h>
 
+#include "ObsidianTypes/ItemTypes/ObsidianItemAffixTypes.h"
 
 #include <Engine/DataAsset.h>
 #include "ObsidianAffixAbilitySet.generated.h"
@@ -95,10 +96,15 @@ public:
 	 * Grants the Ability Set.
 	 * @param ObsidianASC Specified Ability System Component to grant the Ability Set.
 	 * @param GrantedHandles Handles that can be later used to take away anything that was granted.
+	 * @param AffixTag Tag identifier of particular Affix.
+	 * @param AffixValue Value/Values of Affix that are applied to the owner.
 	 * @param SourceObject Used for Gameplay Ability Spec Handle to specify its Source Object
 	 */
-	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
-
+	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const FGameplayTag& AffixTag, const FObsidianActiveAffixValue& AffixValue,
+		FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
+	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes,
+			FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
+	
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
 #endif

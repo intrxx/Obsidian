@@ -10,6 +10,8 @@
 #include "GameFramework/GameplayMessageSubsystem.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 // ~ FObsidianEquipmentSlotDefinition
@@ -193,19 +195,8 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Item);
 	
-	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
-	{
-		for(UObsidianAffixAbilitySet*& AbilitySet : Item->GetAffixAbilitySetsFromItem())
-		{
-			AbilitySet->GiveToAbilitySystem(ObsidianASC, &NewEntry.GrantedHandles, Item);
-		}
-	}
-	else
-	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability System Component is invalid on Owning Actor [%s]."),
-			*GetNameSafe(OwningActor)), ELogVerbosity::Error);
-	}
-
+	AddItemAffixesToOwner(Item, &NewEntry.GrantedHandles);
+	
 	Item->SpawnEquipmentActors(EquipmentSlotTag);
 
 	MarkItemDirty(NewEntry);
@@ -241,18 +232,7 @@ void FObsidianEquipmentList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Instance);
 	Instance->SetItemCurrentPosition(EquipmentSlotTag);
 
-	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
-	{
-		for(UObsidianAffixAbilitySet*& AbilitySet : Instance->GetAffixAbilitySetsFromItem())
-		{
-			AbilitySet->GiveToAbilitySystem(ObsidianASC, &NewEntry.GrantedHandles, Instance);
-		}
-	}
-	else
-	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability System Component is invalid on Owning Actor [%s]."),
-			*GetNameSafe(OwningActor)), ELogVerbosity::Error);
-	}
+	AddItemAffixesToOwner(Instance, &NewEntry.GrantedHandles);
 	
 	Instance->SpawnEquipmentActors(EquipmentSlotTag);
 
@@ -405,18 +385,8 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 			Entry.EquipmentSlotTag = MainWeaponSlotTag;
 			Entry.bSwappedOut = false;
 			
-			if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
-			{
-				for(UObsidianAffixAbilitySet*& AbilitySet : Instance->GetAffixAbilitySetsFromItem())
-				{
-					AbilitySet->GiveToAbilitySystem(ObsidianASC, &Entry.GrantedHandles, Instance);
-				}
-			}
-			else
-			{
-				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability Sytem Component is invalid on Owning Actor [%s]."),
-					*GetNameSafe(OwningActor)), ELogVerbosity::Error);
-			}
+			AddItemAffixesToOwner(Instance, &Entry.GrantedHandles);
+			
 			Instance->SpawnEquipmentActors(MainWeaponSlotTag);
 			
 			MarkItemDirty(Entry);
@@ -510,6 +480,73 @@ void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> Change
 	}
 }
 
+void FObsidianEquipmentList::AddItemAffixesToOwner(UObsidianInventoryItemInstance* FromItemInstance, FObsidianAffixAbilitySet_GrantedHandles* ItemGrantedHandles)
+{
+	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
+	if(ObsidianASC == nullptr)
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Ability System Component is invalid on Owner [%s]."),
+			*GetNameSafe(OwnerComponent)), ELogVerbosity::Error);
+		return;
+	}
+
+	TArray<FObsidianActiveItemAffix> BatchedAffixesToAdd;
+	for(const FObsidianActiveItemAffix& ItemAffix : FromItemInstance->GetAllItemAffixes())
+	{
+		if (const UObsidianAffixAbilitySet* AffixAbilitySet = ItemAffix.SoftAbilitySetToApply.LoadSynchronous()) // Item has a unique Ability Set, add from it.
+		{
+			AffixAbilitySet->GiveToAbilitySystem(ObsidianASC, ItemAffix.AffixTag, ItemAffix.CurrentAffixValue, ItemGrantedHandles, FromItemInstance);
+			continue;
+		}
+		BatchedAffixesToAdd.Add(ItemAffix);
+	}
+
+	if (BatchedAffixesToAdd.IsEmpty() == false)
+	{
+		CachedDefaultAbilitySet = CachedDefaultAbilitySet == nullptr ? GetDefaultAffixSet() : CachedDefaultAbilitySet;
+		if (CachedDefaultAbilitySet)
+		{
+			// ~ TEMP
+			for (const FObsidianActiveItemAffix& ItemAffix : BatchedAffixesToAdd)
+			{
+				CachedDefaultAbilitySet->GiveToAbilitySystem(ObsidianASC, ItemAffix.AffixTag, ItemAffix.CurrentAffixValue, ItemGrantedHandles, FromItemInstance);
+			}
+			// ~ End of TEMP
+			
+			CachedDefaultAbilitySet->GiveToAbilitySystem(ObsidianASC, BatchedAffixesToAdd, ItemGrantedHandles, FromItemInstance);
+		}
+	}
+}
+
+UObsidianAffixAbilitySet* FObsidianEquipmentList::GetDefaultAffixSet()
+{
+	if (OwnerComponent == nullptr)
+	{
+		UE_LOG(LogAffixes, Error, TEXT("OwnerComponent is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return nullptr;
+	}
+	
+	const UWorld* World = OwnerComponent->GetWorld();
+	if (World == nullptr)
+	{
+		UE_LOG(LogAffixes, Error, TEXT("World is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return nullptr;
+	}
+	
+	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
+	if (GameInstance == nullptr)
+	{
+		UE_LOG(LogAffixes, Error, TEXT("GameInstance is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		return nullptr;
+	}
+	
+	if (const UObsidianItemDataLoaderSubsystem* DataLoaderSubsystem = GameInstance->GetSubsystem<UObsidianItemDataLoaderSubsystem>())
+	{
+		return DataLoaderSubsystem->DefaultAffixAbilitySet;
+	}
+	return nullptr;
+}
+
 void FObsidianEquipmentList::BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& SlotTagToClear, const EObsidianEquipmentChangeType ChangeType) const
 {
 	FObsidianEquipmentChangeMessage Message;
@@ -522,4 +559,6 @@ void FObsidianEquipmentList::BroadcastChangeMessage(const FObsidianEquipmentEntr
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
 	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message_Equipment_Changed, Message);
 }
+
+
 
