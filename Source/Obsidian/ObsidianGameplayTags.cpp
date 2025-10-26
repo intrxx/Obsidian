@@ -523,6 +523,8 @@ namespace ObsidianGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_Mana_ManaFlat, "Item.Affix.Implicit.Mana.ManaFlat", "Item Tag which represents Flat Mana Implicit.");
 	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_EnergyShield_EnergyShieldFlat, "Item.Affix.Implicit.EnergyShield.EnergyShieldFlat", "Item Tag which represents Flat Energy shield Implicit.");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Fire, "Item.Affix.Implicits.Resistance.Fire", "Item Tag which represents Fire Resistance Implicits.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Lightning, "Item.Affix.Implicits.Resistance.Lightning", "Item Tag which represents Lightning Resistance Implicits.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Cold, "Item.Affix.Implicits.Resistance.Cold", "Item Tag which represents Cold Resistance Implicits.");
@@ -538,6 +540,8 @@ namespace ObsidianGameplayTags
 	 */
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Life_LifeFlat, "Item.Affix.Prefix.Life.LifeFlat", "Item Tag which represents Flat Life Prefix.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_EnergyShield_EnergyShieldFlat, "Item.Affix.Prefix.EnergyShield.EnergyShieldFlat", "Item Tag which represents Flat Energy Shield Prefix.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Mana_ManaFlat, "Item.Affix.Prefix.Mana.ManaFlat", "Item Tag which represents Flat Mana Prefix.");
 
@@ -570,6 +574,12 @@ namespace ObsidianGameplayTags
 	/**
 	 * Suffixes
 	 */
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Life_LifeRegeneration, "Item.Affix.Suffix.Life.LifeRegeneration", "Item Tag which represents Life Regeneration Suffix.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_EnergyShield_EnergyShieldRegeneration, "Item.Affix.Suffix.EnergyShield.EnergyShieldRegeneration", "Item Tag which represents Energy Shield Regeneration Suffix.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Mana_ManaRegeneration, "Item.Affix.Suffix.Mana.ManaRegeneration", "Item Tag which represents Mana Regeneration Suffix.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Attribute_Dexterity, "Item.Affix.Suffix.Attribute.Dexterity", "Item Tag which represents Dexterity Suffix.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Suffix_Attribute_Intelligence, "Item.Affix.Suffix.Attribute.Intelligence", "Item Tag which represents Intelligence Suffix.");

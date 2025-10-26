@@ -130,7 +130,8 @@ void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreas
 	{
 		FFloatRange& AffixRange = ChosenAffixValueTier.AffixRanges[i];
 		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
-		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
+		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ?
+				FMath::FloorToInt(RandomisedValue) : FMath::RoundToFloat(RandomisedValue * 100.0f) / 100.0f;
 		
 		CurrentAffixValue.AffixValuesIdentifiers.Add(AffixValuesDefinition.AffixValuesIdentifiers[i]);	
 		CurrentAffixValue.AffixValues.Add(RandomisedValue);	
@@ -155,7 +156,8 @@ void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 	{
 		FFloatRange& AffixRange = CurrentPossibleFloatRanges[i];
 		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
-		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
+		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ?
+				FMath::FloorToInt(RandomisedValue) : FMath::RoundToFloat(RandomisedValue * 100.0f) / 100.0f;
 		
 		CurrentAffixValue.AffixValuesIdentifiers.Add(AffixValuesDefinition.AffixValuesIdentifiers[i]);	
 		CurrentAffixValue.AffixValues.Add(RandomisedValue);	

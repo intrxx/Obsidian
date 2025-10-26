@@ -448,6 +448,8 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_Life_LifeFlat);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_Mana_ManaFlat);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_EnergyShield_EnergyShieldFlat);
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Fire);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Lightning);
@@ -464,6 +466,8 @@ namespace ObsidianGameplayTags
 	 */
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Life_LifeFlat);
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_EnergyShield_EnergyShieldFlat);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Mana_ManaFlat);
 	
@@ -496,11 +500,13 @@ namespace ObsidianGameplayTags
 	/**
 	 * Suffixes
 	 */
+	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Life_LifeRegeneration);
 
-	/**
-	 * Enchanted Affixes
-	 */
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_EnergyShield_EnergyShieldRegeneration);
 
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Mana_ManaRegeneration);
+	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Dexterity);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Intelligence);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Strength);
@@ -517,6 +523,10 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Chaos);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Utility_MagicFind);
+
+	/**
+	 * Enchanted Affixes
+	 */
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Enchant_MaximumLifePercentage)
 }
