@@ -131,9 +131,9 @@ void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreas
 		FFloatRange& AffixRange = ChosenAffixValueTier.AffixRanges[i];
 		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
 		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
-
-		const FGameplayTag AffixTagIdentifier = AffixValuesDefinition.AffixValuesIdentifiers[i];
-		CurrentAffixValue.CurrentAffixValues.Add(AffixTagIdentifier, RandomisedValue);	
+		
+		CurrentAffixValue.AffixValuesIdentifiers.Add(AffixValuesDefinition.AffixValuesIdentifiers[i]);	
+		CurrentAffixValue.AffixValues.Add(RandomisedValue);	
 	}
 	CurrentAffixValue.AffixTier = ChosenAffixValueTier.AffixTier.AffixTierValue;
 	CreateAffixActiveDescription();
@@ -156,9 +156,9 @@ void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 		FFloatRange& AffixRange = CurrentPossibleFloatRanges[i];
 		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
 		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ? FMath::FloorToInt(RandomisedValue) : RandomisedValue;
-
-		const FGameplayTag AffixTagIdentifier = AffixValuesDefinition.AffixValuesIdentifiers[i];
-		CurrentAffixValue.CurrentAffixValues.Emplace(AffixTagIdentifier, RandomisedValue);
+		
+		CurrentAffixValue.AffixValuesIdentifiers.Add(AffixValuesDefinition.AffixValuesIdentifiers[i]);	
+		CurrentAffixValue.AffixValues.Add(RandomisedValue);	
 	}
 	
 	CreateAffixActiveDescription();
@@ -196,9 +196,9 @@ FObsidianAffixValueRange FObsidianActiveItemAffix::GetRandomAffixRange(const uin
 void FObsidianActiveItemAffix::CreateAffixActiveDescription()
 {
 	TArray<FFormatArgumentValue> Args;
-	for (const TPair<FGameplayTag, float>& AffixValue : CurrentAffixValue.CurrentAffixValues)
+	for (const float AffixValue : CurrentAffixValue.AffixValues)
 	{
-		Args.Add(AffixValue.Value);
+		Args.Add(AffixValue);
 	}
 	ActiveAffixDescription = FText::Format(UnformattedAffixDescription, Args);
 }

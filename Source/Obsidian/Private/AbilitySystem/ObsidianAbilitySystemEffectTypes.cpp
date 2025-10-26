@@ -6,8 +6,37 @@
 
 // ~ Project
 
-FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(
-	FGameplayEffectContextHandle Handle)
+bool FObsidianEffectAffixValue::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
+{
+	uint16 RepBits = 0;
+	if (Ar.IsSaving())
+	{
+		if (AffixTag != FGameplayTag::EmptyTag)
+		{
+			RepBits |= 1 << 0;
+		}
+		if (CurrentAffixValues.Num() > 0)
+		{
+			RepBits |= 1 << 1;
+		}
+	}
+
+	Ar.SerializeBits(&RepBits, 2);
+
+	if (RepBits & (1 << 0))
+	{
+		Ar << AffixTag;
+	}
+	if (RepBits & (1 << 1))
+	{
+		SafeNetSerializeTArray_Default<2>(Ar, CurrentAffixValues);
+	}
+
+	bOutSuccess = true;
+	return true;
+}
+
+FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(FGameplayEffectContextHandle Handle)
 {
 	FGameplayEffectContext* BaseEffectContext = Handle.Get();
 	if(((BaseEffectContext != nullptr) && BaseEffectContext->GetScriptStruct()->IsChildOf(StaticStruct())))
@@ -15,6 +44,11 @@ FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectCon
 		return (FObsidianGameplayEffectContext*)BaseEffectContext;
 	}
 	return nullptr;
+}
+
+void FObsidianGameplayEffectContext::InitializeAffixValues(const TArray<FObsidianEffectAffixValue>& EffectAffixValues)
+{
+	AffixValues.Append(EffectAffixValues);
 }
 
 bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
@@ -71,9 +105,13 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 		{
 			RepBits |= 1 << 11;
 		}
+		if (AffixValues.Num() > 0)
+		{
+			RepBits |= 1 << 12;
+		}
 	}
 
-	Ar.SerializeBits(&RepBits, 10);
+	Ar.SerializeBits(&RepBits, 13);
 
 	if (RepBits & (1 << 0))
 	{
@@ -134,6 +172,17 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 	if(RepBits & (1 << 11))
 	{
 		Ar << bIsTargetImmune;
+	}
+	if (RepBits & (1 << 12))
+	{
+#if UE_BUILD_SHIPPING
+		SafeNetSerializeTArray_Default<8>(Ar, AffixValues)
+#else
+		if (SafeNetSerializeTArray_WithNetSerialize<8>(Ar, AffixValues, Map) == false)
+		{
+			UE_LOG(LogTemp, Error, TEXT("Array serialization of AffixValues in FObsidianGameplayEffectContext failed!"))
+		}
+#endif
 	}
 
 	if (Ar.IsLoading())

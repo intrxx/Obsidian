@@ -87,7 +87,16 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, PhysicalDamageMultiplier, COND_None, REPNOTIFY_Always);
 	
 	// Base Damage Attributes
-
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MinFlatPhysicalDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxFlatPhysicalDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MinFlatFireDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxFlatFireDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MinFlatColdDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxFlatColdDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MinFlatLightningDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxFlatLightningDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MinFlatChaosDamage, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxFlatChaosDamage, COND_None, REPNOTIFY_Always);
 #if WITH_EDITOR // It fixes a crash with Abilities Gameplay Debugger, need more investigation why exactly
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, BaseDamage, COND_None, REPNOTIFY_Always);
 #else
@@ -490,6 +499,56 @@ void UObsidianCommonAttributeSet::OnRep_ChaosDamageMultiplier(const FGameplayAtt
 void UObsidianCommonAttributeSet::OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, PhysicalDamageMultiplier, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MinFlatPhysicalDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatPhysicalDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MaxFlatPhysicalDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatPhysicalDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MinFlatFireDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatFireDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MaxFlatFireDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatFireDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MinFlatColdDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatColdDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MaxFlatColdDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatColdDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MinFlatLightningDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatLightningDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MaxFlatLightningDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatLightningDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MinFlatChaosDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatChaosDamage, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_MaxFlatChaosDamage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatChaosDamage, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_BaseDamage(const FGameplayAttributeData& OldValue)

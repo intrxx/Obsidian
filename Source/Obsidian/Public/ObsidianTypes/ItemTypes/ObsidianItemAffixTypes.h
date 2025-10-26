@@ -4,7 +4,7 @@
 
 #include <CoreMinimal.h>
 #include <GameplayTagContainer.h>
-
+#include <AttributeSet.h>
 
 #include "ObsidianItemAffixTypes.generated.h"
 
@@ -75,6 +75,22 @@ public:
 };
 
 /**
+ *
+ */
+USTRUCT()
+struct FObsidianAffixIdentifier
+{
+	GENERATED_BODY()
+	
+public:
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.AffixValue"))
+	FGameplayTag AffixValueID;
+
+	UPROPERTY(EditDefaultsOnly)
+	FGameplayAttribute AttributeToModify;
+};
+
+/**
  * 
  */
 USTRUCT()
@@ -91,11 +107,11 @@ public:
 	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
 	
 	/**
-	 * Array of affix range value identifiers which is mapped 1 to 1 to Affix Range entries, meaning that the first entry
-	 * from this array will be a GameplayTag identifier of the first entry in AffixRanges.
+	 * Array of affix range value identifiers which is mapped 1 to 1 to Affix Range entries and to the corresponding FGameplayAttribute that it modifies,
+	 * meaning that the first entry from this array will be a GameplayTag identifier + GameplayAttribute mapped to the first entry in AffixRanges.
 	 */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.AffixValue"))
-	TArray<FGameplayTag> AffixValuesIdentifiers;
+	TArray<FObsidianAffixIdentifier> AffixValuesIdentifiers;
 	
 	/** Affix ranges that will be rolled on the item. Count of AffixRanges must equal provided AffixValuesIdentifiers. */
 	UPROPERTY(EditDefaultsOnly)
@@ -113,9 +129,12 @@ struct FObsidianActiveAffixValue
 public:
 	UPROPERTY()
 	uint8 AffixTier = -1;
+
+	UPROPERTY()
+	TArray<FObsidianAffixIdentifier> AffixValuesIdentifiers;
 	
 	UPROPERTY()
-	TMap<FGameplayTag, float> CurrentAffixValues;
+	TArray<float> AffixValues;
 };
 
 /**

@@ -513,7 +513,7 @@ void FObsidianEquipmentList::AddItemAffixesToOwner(UObsidianInventoryItemInstanc
 			}
 			// ~ End of TEMP
 			
-			CachedDefaultAbilitySet->GiveToAbilitySystem(ObsidianASC, BatchedAffixesToAdd, ItemGrantedHandles, FromItemInstance);
+			CachedDefaultAbilitySet->GiveItemAffixesToAbilitySystem(ObsidianASC, BatchedAffixesToAdd, ItemGrantedHandles, FromItemInstance);
 		}
 	}
 }

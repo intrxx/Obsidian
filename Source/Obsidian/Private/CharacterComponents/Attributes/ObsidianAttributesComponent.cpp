@@ -674,6 +674,106 @@ FGameplayAttribute UObsidianAttributesComponent::GetPhysicalDamageMultiplierAttr
 	return (CommonAttributeSet ? CommonAttributeSet->GetPhysicalDamageMultiplierAttribute() : nullptr);
 }
 
+float UObsidianAttributesComponent::GetMinFlatPhysicalDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatPhysicalDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMinFlatPhysicalDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatPhysicalDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMaxFlatPhysicalDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatPhysicalDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMaxFlatPhysicalDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatPhysicalDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMinFlatFireDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatFireDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMinFlatFireDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatFireDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMaxFlatFireDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatFireDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMaxFlatFireDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatFireDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMinFlatColdDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatColdDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMinFlatColdDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatColdDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMaxFlatColdDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatColdDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMaxFlatColdDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatColdDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMinFlatLightningDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatLightningDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMinFlatLightningDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatLightningDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMaxFlatLightningDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatLightningDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMaxFlatLightningDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatLightningDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMinFlatChaosDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatChaosDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMinFlatChaosDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMinFlatChaosDamageAttribute() : nullptr);
+}
+
+float UObsidianAttributesComponent::GetMaxFlatChaosDamage() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatChaosDamage() : 0.0f);
+}
+
+FGameplayAttribute UObsidianAttributesComponent::GetMaxFlatChaosDamageAttribute() const
+{
+	return (CommonAttributeSet ? CommonAttributeSet->GetMaxFlatChaosDamageAttribute() : nullptr);
+}
+
 float UObsidianAttributesComponent::GetMovementSpeed() const
 {
 	return (CommonAttributeSet ? CommonAttributeSet->GetMovementSpeed() : 0.0f);

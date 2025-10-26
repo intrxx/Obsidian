@@ -76,7 +76,8 @@ static const FObsidianDamageStatics& ObsidianDamageStatics()
 	return ObsidianDamageStatics;
 }
 
-UObsidianDamageExecution::UObsidianDamageExecution()
+UObsidianDamageExecution::UObsidianDamageExecution(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	// Source
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AccuracyDef);
@@ -104,7 +105,6 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 #if WITH_SERVER_CODE
-
 	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
 	FObsidianGameplayEffectContext* ObsidianEffectContext = FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(Spec.GetContext());
 	checkf(ObsidianEffectContext, TEXT("Obsidian Gameplay Effect Context is invalid in Obsidian Damage Execution"));

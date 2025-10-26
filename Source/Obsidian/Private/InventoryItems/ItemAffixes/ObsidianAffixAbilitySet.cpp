@@ -9,8 +9,9 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
+#include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Obsidian/ObsidianGameModule.h"
-#include "Obsidian/ObsidianGameplayTags.h"
 
 #if WITH_EDITOR
 // ~ FObsidianAffixAbilitySet_GameplayAbility
@@ -150,12 +151,8 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 
 		UObsidianGameplayAbility* AbilityCDO = AbilityToGrant.Ability->GetDefaultObject<UObsidianGameplayAbility>();
 
-		checkf(AffixValue.CurrentAffixValues.Num() == 1, TEXT("Affix that gives abilities should have one Affix Value!"));
-		float AbilityLevel = 1;
-		if (const float* AbilityQualityValue = AffixValue.CurrentAffixValues.Find(ObsidianGameplayTags::Item_AffixValue_SingleValue))
-		{
-			AbilityLevel = *AbilityQualityValue;	
-		}
+		checkf(AffixValue.AffixValues.Num() == 1, TEXT("Affix that gives abilities should have one Affix Value!"));
+		float AbilityLevel = AffixValue.AffixValues[0];
 		FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilityLevel);
 		AbilitySpec.SourceObject = SourceObject;
 		AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityToGrant.OptionalInputTag);
@@ -183,9 +180,12 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 		ContextHandle.AddSourceObject(SourceObject);
 		
 		const FGameplayEffectSpecHandle SpecHandle = ObsidianASC->MakeOutgoingSpec(EffectToGrant.GameplayEffect, 1, ContextHandle);
-		for (const TPair<FGameplayTag, float>& AffixValuePair : AffixValue.CurrentAffixValues)
+		uint8 Index = 0;
+		for (const float Value : AffixValue.AffixValues)
 		{
-			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, AffixValuePair.Key, AffixValuePair.Value);
+			const FGameplayTag TagPair = AffixValue.AffixValuesIdentifiers[Index].AffixValueID;
+			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, TagPair, Value);
+			++Index;
 		}
 		
 		const FActiveGameplayEffectHandle ActiveSpecHandle = ObsidianASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
@@ -197,7 +197,50 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 	}
 }
 
-void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes, FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
+void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes,
+	FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
 {
-	//TODO(intrxx) Implement batched Affix applying.
+	check(ObsidianASC);
+
+	if(!ObsidianASC->IsOwnerActorAuthoritative())
+	{
+		// Must be authoritative to give or take ability sets.
+		return;
+	}
+
+	// Do not grant abilities with this function, it is made for Affix batching
+	ensureMsgf(GrantedGameplayAbilities.IsEmpty(), TEXT("This function should only be used to Grant Gameplay Effects, Gameplay Abilities will not be granted!"));
+
+	// Grant Batched Gameplay Effects
+	checkf(GrantedGameplayEffects.Num() == 1, TEXT("This should give just one batched Gameplay Effect"));
+	const FObsidianAffixAbilitySet_GameplayEffect& EffectToGrant = GrantedGameplayEffects[0];
+	if(!IsValid(EffectToGrant.GameplayEffect))
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Effect [0] on Ability Set [%s] is not valid."), *GetNameSafe(this));
+		return;	
+	}
+
+	//NOTE(intrxx) IDK if that's safe, it seems to work both on server and client, but need extensive tests I guess
+	FGameplayEffectContextHandle ContextHandle = ObsidianASC->MakeEffectContext();
+	ContextHandle.AddSourceObject(SourceObject);
+	const UGameplayEffect* BaseGE = EffectToGrant.GameplayEffect->GetDefaultObject<UGameplayEffect>();
+	UGameplayEffect* DynamicAffixGE = DuplicateObject<UGameplayEffect>(BaseGE, GetTransientPackage());
+		
+	for (const FObsidianActiveItemAffix& Affix : ItemAffixes)
+	{
+		for (int32 i = 0; i < Affix.CurrentAffixValue.AffixValuesIdentifiers.Num(); ++i)
+		{
+			FGameplayModifierInfo NewModifierInfo;
+			NewModifierInfo.Attribute = Affix.CurrentAffixValue.AffixValuesIdentifiers[i].AttributeToModify;
+			NewModifierInfo.ModifierOp = EGameplayModOp::AddFinal; //TODO(intrxx) don't want to AddFinal for all, need to take it from ItemAffix as well
+			NewModifierInfo.ModifierMagnitude = FScalableFloat(Affix.CurrentAffixValue.AffixValues[i]);
+			DynamicAffixGE->Modifiers.Add(NewModifierInfo);
+		}
+	}
+	const FActiveGameplayEffectHandle ActiveSpecHandle = ObsidianASC->ApplyGameplayEffectToSelf(DynamicAffixGE, 1.0f, ContextHandle);
+		
+	if(GrantedHandles)
+	{
+		GrantedHandles->AddActiveGameplayEffectSpecHandle(ActiveSpecHandle);
+	}
 }

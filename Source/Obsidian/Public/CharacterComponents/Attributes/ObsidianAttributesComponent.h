@@ -258,6 +258,46 @@ public:
 	/** Getters for Physical Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */	
 	float GetPhysicalDamageMultiplier() const;
 	FGameplayAttribute GetPhysicalDamageMultiplierAttribute() const;
+
+	/** Getters for Min Flat Physical Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMinFlatPhysicalDamage() const;
+	FGameplayAttribute GetMinFlatPhysicalDamageAttribute() const;
+
+	/** Getters for Max Flat Physical Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMaxFlatPhysicalDamage() const;
+	FGameplayAttribute GetMaxFlatPhysicalDamageAttribute() const;
+
+	/** Getters for Min Flat Fire Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMinFlatFireDamage() const;
+	FGameplayAttribute GetMinFlatFireDamageAttribute() const;
+
+	/** Getters for Max Flat Fire Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMaxFlatFireDamage() const;
+	FGameplayAttribute GetMaxFlatFireDamageAttribute() const;
+
+	/** Getters for Min Flat Cold Damage and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMinFlatColdDamage() const;
+	FGameplayAttribute GetMinFlatColdDamageAttribute() const;
+
+	/** Getters for Min Flat Cold Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMaxFlatColdDamage() const;
+	FGameplayAttribute GetMaxFlatColdDamageAttribute() const;
+
+	/** Getters for Min Flat Lightning Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMinFlatLightningDamage() const;
+	FGameplayAttribute GetMinFlatLightningDamageAttribute() const;
+
+	/** Getters for Max Flat Lightning Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMaxFlatLightningDamage() const;
+	FGameplayAttribute GetMaxFlatLightningDamageAttribute() const;
+
+	/** Getters for Min Flat Chaos Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMinFlatChaosDamage() const;
+	FGameplayAttribute GetMinFlatChaosDamageAttribute() const;
+
+	/** Getters for Max Flat Chaos Damage Value and Attribute from UObsidianCommonAttributeSet. */	
+	float GetMaxFlatChaosDamage() const;
+	FGameplayAttribute GetMaxFlatChaosDamageAttribute() const;
 	
 	/** Getters for Movement Speed Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetMovementSpeed() const;

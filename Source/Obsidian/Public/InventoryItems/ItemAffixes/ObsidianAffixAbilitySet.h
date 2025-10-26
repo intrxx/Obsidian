@@ -102,7 +102,7 @@ public:
 	 */
 	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const FGameplayTag& AffixTag, const FObsidianActiveAffixValue& AffixValue,
 		FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
-	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes,
+	void GiveItemAffixesToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes,
 			FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
 	
 #if WITH_EDITOR

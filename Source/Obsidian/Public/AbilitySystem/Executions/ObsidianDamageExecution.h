@@ -20,7 +20,7 @@ class OBSIDIAN_API UObsidianDamageExecution : public UGameplayEffectExecutionCal
 	GENERATED_BODY()
 	
 public:
-	UObsidianDamageExecution();
+	UObsidianDamageExecution(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 protected:
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;

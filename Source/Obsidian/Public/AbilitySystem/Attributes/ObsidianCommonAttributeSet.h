@@ -110,6 +110,16 @@ public:
 	 * Base Attributes
 	 */
 	
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatPhysicalDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFlatPhysicalDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatFireDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFlatFireDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatColdDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFlatColdDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatLightningDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFlatLightningDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatChaosDamage);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFlatChaosDamage);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, BaseDamage);
 	
 	/**
@@ -263,6 +273,31 @@ protected:
 	/**
 	 * Base Attributes
 	 */
+
+	UFUNCTION()
+	void OnRep_MinFlatPhysicalDamage(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxFlatPhysicalDamage(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MinFlatFireDamage(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxFlatFireDamage(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MinFlatColdDamage(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxFlatColdDamage(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MinFlatLightningDamage(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxFlatLightningDamage(const FGameplayAttributeData& OldValue);
+
+	UFUNCTION()
+	void OnRep_MinFlatChaosDamage(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxFlatChaosDamage(const FGameplayAttributeData& OldValue);
 	
 	UFUNCTION()
 	void OnRep_BaseDamage(const FGameplayAttributeData& OldValue);
@@ -496,8 +531,43 @@ private:
 	FGameplayAttributeData PhysicalDamageMultiplier;
 	
 	/**
-	 * Base Attributes
+	 * Base Damage Attributes
 	 */
+
+	/** The current Min Flat Physical Damage attribute. Base flat Physical damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MinFlatPhysicalDamage, Category = "Obsidian|CAttributes|FlatPhysicalDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MinFlatPhysicalDamage;
+	/** The current Max Flat Physical Damage attribute. Base flat Physical damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatPhysicalDamage, Category = "Obsidian|CAttributes|FlatPhysicalDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxFlatPhysicalDamage;
+	
+	/** The current Min Flat Fire Damage attribute. Base flat Fire damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MinFlatFireDamage, Category = "Obsidian|CAttributes|FlatFireDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MinFlatFireDamage;
+	/** The current Max Flat Fire Damage attribute. Base flat Fire damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatFireDamage, Category = "Obsidian|CAttributes|FlatFireDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxFlatFireDamage;
+	
+	/** The current Min Flat Cold Damage attribute. Base flat Cold damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MinFlatColdDamage, Category = "Obsidian|CAttributes|FlatColdDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MinFlatColdDamage;
+	/** The current Max Flat Cold Damage attribute. Base flat Cold damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatColdDamage, Category = "Obsidian|CAttributes|FlatColdDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxFlatColdDamage;
+
+	/** The current Min Flat Lightning Damage attribute. Base flat Lightning damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MinFlatLightningDamage, Category = "Obsidian|CAttributes|FlatLightningDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MinFlatLightningDamage;
+	/** The current Max Flat Lightning Damage attribute. Base flat Lightning damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatLightningDamage, Category = "Obsidian|CAttributes|FlatLightningDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxFlatLightningDamage;
+
+	/** The current Min Flat Chaos Damage attribute. Base flat Chaos damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MinFlatChaosDamage, Category = "Obsidian|CAttributes|FlatChaosDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MinFlatChaosDamage;
+	/** The current Max Flat Chaos Damage attribute. Base flat Chaos damage. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatChaosDamage, Category = "Obsidian|CAttributes|FlatChaosDamage", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxFlatChaosDamage;
 	
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BaseDamage, Category = "Obsidian|CAttributes|BaseDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData BaseDamage;

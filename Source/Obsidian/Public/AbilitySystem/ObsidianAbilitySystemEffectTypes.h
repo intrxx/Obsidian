@@ -2,14 +2,38 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
-#include "GameplayEffectTypes.h"
+#include <GameplayEffectTypes.h>
 #include "ObsidianAbilitySystemEffectTypes.generated.h"
+
+USTRUCT()
+struct FObsidianEffectAffixValue
+{
+	GENERATED_BODY()
+
+public:
+	virtual ~FObsidianEffectAffixValue(){}
+	
+	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess);
+
+public:
+	UPROPERTY()
+	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
+	
+	UPROPERTY()
+	TArray<float> CurrentAffixValues;
+};
+
+template<>
+struct TStructOpsTypeTraits<FObsidianEffectAffixValue> : public TStructOpsTypeTraitsBase2<FObsidianEffectAffixValue>
+{
+	enum
+	{
+		WithNetSerializer = true,
+	};
+};
 
 USTRUCT(BlueprintType)
 struct FObsidianGameplayEffectContext : public FGameplayEffectContext
@@ -59,6 +83,12 @@ public:
 		return bIsTargetImmune;
 	}
 	
+	/** Returns the Affix Values set on the GameplayEffectContext, used for Item Affix calculations. */
+	TArray<FObsidianEffectAffixValue> GetEffectAffixValues() const
+	{
+		return AffixValues;
+	}
+	
 	/** Returns the actual struct used for serialization, subclasses must override this! */
 	virtual UScriptStruct* GetScriptStruct() const override
 	{
@@ -95,6 +125,9 @@ public:
 		bIsTargetImmune = bInIsTargetImmune;
 	}
 
+	/** Initializes the Affix Values on the GameplayEffectContext, used for Item Affix calculations. */
+	void InitializeAffixValues(const TArray<FObsidianEffectAffixValue>& EffectAffixValues);
+
 	/** Creates a copy of this context, used to duplicate for later modifications */ // I'm not sure if override should be here since I changed the return type
 	virtual FObsidianGameplayEffectContext* Duplicate() const override
 	{
@@ -125,6 +158,9 @@ protected:
 
 	UPROPERTY()
 	bool bIsTargetImmune = false;
+
+	UPROPERTY()
+	TArray<FObsidianEffectAffixValue> AffixValues;
 };
 
 template<>
