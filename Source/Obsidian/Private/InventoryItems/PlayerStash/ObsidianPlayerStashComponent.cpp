@@ -543,9 +543,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 		Result.bActionSuccessful = false;
 		
 		FObsidianItemGeneratedData CachedGeneratedData;
-		CachedGeneratedData.ItemRarity = InstanceToAdd->GetItemRarity();
-		CachedGeneratedData.ItemAffixes = InstanceToAdd->GetAllItemAffixes();
-		CachedGeneratedData.RareItemDisplayNameAddition = InstanceToAdd->GetRareItemDisplayNameAddition();
+		UObsidianItemsFunctionLibrary::FillItemGeneratedData(CachedGeneratedData, InstanceToAdd);
 		InstanceToAdd = StashItemList.AddEntry(InstanceToAdd->GetItemDef(), CachedGeneratedData,  StacksAvailableToAdd, ItemPosition);
 		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
 		InstanceToAdd->SetIdentified(bCachedIdentified);

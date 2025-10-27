@@ -188,7 +188,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
 	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
 	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
-	NewEntry.Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
+	NewEntry.Instance->SetGeneratedNameAdditions(ItemGeneratedData.NameData);
 	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	

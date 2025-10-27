@@ -78,7 +78,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	NewEntry.GridLocation = AvailablePosition;
 	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
 	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
-	NewEntry.Instance->SetRareItemDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
+	NewEntry.Instance->SetGeneratedNameAdditions(ItemGeneratedData.NameData);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

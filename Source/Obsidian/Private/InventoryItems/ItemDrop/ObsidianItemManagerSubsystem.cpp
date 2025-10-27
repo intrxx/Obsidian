@@ -26,7 +26,11 @@ void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToD
 			AObsidianDroppableItem* DroppableItem = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), Item.DropTransform);
 
 			FObsidianItemGeneratedData GeneratedData = FObsidianItemGeneratedData(Item.DropStacks, Item.DropRarity, Item.DropAffixes);
-			GeneratedData.RareItemDisplayNameAddition = Item.DropRareItemDisplayNameAddition;
+			FObsidianItemGeneratedNameData NewNameData;
+			NewNameData.MagicItemDisplayNameAddition = Item.DropMagicItemDisplayNameAddition;
+			NewNameData.RareItemDisplayNameAddition = Item.DropRareItemDisplayNameAddition;
+			GeneratedData.NameData = NewNameData;
+
 			DroppableItem->InitializeItem(ItemToDrop, GeneratedData);
 			DroppableItem->FinishSpawning(Item.DropTransform);
 		}

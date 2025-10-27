@@ -36,7 +36,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemCurrentPosition);
 	DOREPLIFETIME(ThisClass, ItemImage);
 	DOREPLIFETIME(ThisClass, ItemDisplayName);
-	DOREPLIFETIME(ThisClass, RareItemDisplayNameAddition);
+	DOREPLIFETIME(ThisClass, ItemNameAdditionsData);
 	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
@@ -466,14 +466,29 @@ void UObsidianInventoryItemInstance::SetItemDisplayName(const FText& InItemDispl
 	ItemDisplayName = InItemDisplayName;
 }
 
+void UObsidianInventoryItemInstance::SetGeneratedNameAdditions(const FObsidianItemGeneratedNameData& InNameData)
+{
+	ItemNameAdditionsData = InNameData;
+}
+
 FString UObsidianInventoryItemInstance::GetRareItemDisplayNameAddition() const
 {
-	return RareItemDisplayNameAddition;
+	return ItemNameAdditionsData.RareItemDisplayNameAddition;
 }
 
 void UObsidianInventoryItemInstance::SetRareItemDisplayNameAddition(const FString& InItemNameAddition)
 {
-	RareItemDisplayNameAddition = InItemNameAddition;
+	ItemNameAdditionsData.RareItemDisplayNameAddition = InItemNameAddition;
+}
+
+FString UObsidianInventoryItemInstance::GetMagicAffixMultiplierItemDisplayNameAddition() const
+{
+	return ItemNameAdditionsData.MagicItemDisplayNameAddition;
+}
+
+void UObsidianInventoryItemInstance::SetMagicAffixMultiplierItemDisplayNameAddition(const FString& InItemNameAddition)
+{
+	ItemNameAdditionsData.MagicItemDisplayNameAddition = InItemNameAddition;
 }
 
 FText UObsidianInventoryItemInstance::GetItemDescription() const

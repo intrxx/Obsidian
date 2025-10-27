@@ -389,6 +389,27 @@ public:
 };
 
 /**
+ *
+ */
+USTRUCT(BlueprintType)
+struct FObsidianItemGeneratedNameData
+{
+	GENERATED_BODY()
+
+	FObsidianItemGeneratedNameData(){}
+	FObsidianItemGeneratedNameData(const FString& InRareAddition, const FString& InMagicAddition)
+		: RareItemDisplayNameAddition(InRareAddition)
+		, MagicItemDisplayNameAddition(InMagicAddition)
+	{}
+public:
+	UPROPERTY()
+	FString RareItemDisplayNameAddition = FString();
+
+	UPROPERTY()
+	FString MagicItemDisplayNameAddition = FString();
+};
+
+/**
  * 
  */
 USTRUCT(BlueprintType)
@@ -420,7 +441,7 @@ public:
 	TArray<FObsidianActiveItemAffix> ItemAffixes;
 
 	UPROPERTY()
-	FString RareItemDisplayNameAddition = FString();
+	FObsidianItemGeneratedNameData NameData = FObsidianItemGeneratedNameData();
 };
 
 /**

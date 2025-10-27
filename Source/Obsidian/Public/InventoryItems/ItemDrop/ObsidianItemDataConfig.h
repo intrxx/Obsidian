@@ -30,6 +30,10 @@ public:
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Items")
 	FObsidianRareItemNameGenerationData RareItemNameGenerationData;
+
+	/** Unique addition to Magic Item that was rolled with increased Affix multiplier. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Items")
+	FString MultiplierItemNameAddition = FString(TEXT("High"));
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Treasure")
 	TArray<TObjectPtr<UObsidianTreasureList>> CommonTreasureLists;

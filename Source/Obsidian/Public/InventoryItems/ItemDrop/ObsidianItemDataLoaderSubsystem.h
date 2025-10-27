@@ -43,6 +43,7 @@ public:
 	
 	
 	FString GetRandomRareItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag) const;
+	FString GetAffixMultiplierMagicItemNameAddition() const;
 
 public:
 	UPROPERTY()

@@ -2,17 +2,15 @@
 
 #include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 
-// ~ Core
-#include "NavigationSystem.h"
-#include "Kismet/GameplayStatics.h"
-#include "Kismet/KismetMathLibrary.h"
-#include "Engine/AssetManager.h"
-#include "Engine/StreamableManager.h"
+#include <NavigationSystem.h>
+#include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetMathLibrary.h>
+#include <Engine/AssetManager.h>
+#include <Engine/StreamableManager.h>
 #if WITH_EDITOR
-#include "Misc/DataValidation.h"
+#include <Misc/DataValidation.h>
 #endif
 
-// ~ Project
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
@@ -22,6 +20,25 @@
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
 DEFINE_LOG_CATEGORY(LogDropComponent);
+
+namespace DropComponentDebugHelpers
+{
+	const inline TMap<EObsidianItemRarity, FString> ItemRarityToDebugStringMap =
+	{
+		{EObsidianItemRarity::None, TEXT("None")},
+		{EObsidianItemRarity::Quest, TEXT("Quest")},
+		{EObsidianItemRarity::Normal, TEXT("Normal")},
+		{EObsidianItemRarity::Magic, TEXT("Magic")},
+		{EObsidianItemRarity::Rare, TEXT("Rare")},
+		{EObsidianItemRarity::Unique, TEXT("Unique")},
+		{EObsidianItemRarity::Set, TEXT("Set")},
+	};
+
+	inline FString GetRarityDebugString(const EObsidianItemRarity Rarity)
+	{
+		return ItemRarityToDebugStringMap[Rarity];
+	}
+}
 
 // ~ FObsidianAdditionalTreasureList
 
@@ -207,6 +224,7 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 	}
 	
 	OutItemToDrop.DropRarity = DropItem.bShouldRandomizeRarity ? RolledRarity : GetItemDefaultRarityFromDropItem(DropItem);
+	OutItemToDrop.bShouldApplyMultiplier = UObsidianItemsFunctionLibrary::ShouldApplyAffixValueMultiplier(OutItemToDrop.DropRarity);
 	OutItemToDrop.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
 	OutItemToDrop.DropStacks = DropItem.GetRandomStackSizeToDropAdjusted(TreasureQuality);
 	GenerateItem(OutItemToDrop, TreasureQuality);
@@ -281,6 +299,10 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 		ForItemToDrop.DropRareItemDisplayNameAddition = CachedItemDataLoader->GetRandomRareItemNameAddition(MaxTreasureClassQuality,
 			DefaultObject->GetItemCategoryTag());
 	}
+	else if (ForItemToDrop.bShouldApplyMultiplier) // Only magic items can apply affix multiplier, that's why it's else if.
+	{
+		ForItemToDrop.DropMagicItemDisplayNameAddition = CachedItemDataLoader->GetAffixMultiplierMagicItemNameAddition();
+	}
 	
 	switch (AffixFragment->GetGenerationType())
 	{
@@ -307,9 +329,9 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 	if (AffixFragment->HasImplicitAffix())
 	{
 		FObsidianStaticItemAffix ImplicitAffix = AffixFragment->GetStaticImplicitAffix();
-					
+		
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithStatic(ImplicitAffix, MaxTreasureClassQuality);
+		ActiveAffix.InitializeWithStatic(ImplicitAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
@@ -395,7 +417,7 @@ void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItem
 	if (FObsidianStaticItemAffix SkillImplicitAffix = AffixFragment->GetStaticSkillImplicitAffix())
 	{
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithStatic(SkillImplicitAffix, MaxTreasureClassQuality);
+		ActiveAffix.InitializeWithStatic(SkillImplicitAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(LogTemp, Warning, TEXT("Adding Static Skill Implicit Affix: [%s], [%s]"), *SkillImplicitAffix.AffixTag.GetTagName().ToString(),
@@ -407,7 +429,7 @@ void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItem
 		if (FObsidianStaticItemAffix StaticImplicitAffix = AffixFragment->GetStaticImplicitAffix())
 		{
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithStatic(StaticImplicitAffix, MaxTreasureClassQuality);
+			ActiveAffix.InitializeWithStatic(StaticImplicitAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 			UE_LOG(LogTemp, Warning, TEXT("Adding Static Implicit Affix: [%s], [%s]"), *StaticImplicitAffix.AffixTag.GetTagName().ToString(),
@@ -420,7 +442,7 @@ void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItem
 		if (StaticAffix)
 		{
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithStatic(StaticAffix, MaxTreasureClassQuality);
+			ActiveAffix.InitializeWithStatic(StaticAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 						
 			UE_LOG(LogTemp, Warning, TEXT("Adding Static Affix: [%s], [%s]"), *StaticAffix.AffixTag.GetTagName().ToString(),
@@ -435,7 +457,7 @@ void UObsidianItemDropComponent::RollSkillImplicits(FObsidianItemToDrop& ForItem
 	{
 		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(SkillImplicits);
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithDynamic(RolledItemAffix, MaxTreasureClassQuality);
+		ActiveAffix.InitializeWithDynamic(RolledItemAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(LogTemp, Warning, TEXT("Adding Skill Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
@@ -450,7 +472,7 @@ void UObsidianItemDropComponent::RollImplicit(FObsidianItemToDrop& ForItemToDrop
 	{
 		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Implicits);
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithDynamic(RolledItemAffix, MaxTreasureClassQuality);
+		ActiveAffix.InitializeWithDynamic(RolledItemAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
@@ -458,9 +480,14 @@ void UObsidianItemDropComponent::RollImplicit(FObsidianItemToDrop& ForItemToDrop
 	}
 }
 
-void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Prefixes,
-                                                        const TArray<FObsidianDynamicItemAffix>& Suffixes, const uint8 MaxTreasureClassQuality)
+void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, TArray<FObsidianDynamicItemAffix>& Prefixes,
+	TArray<FObsidianDynamicItemAffix>& Suffixes, const uint8 MaxTreasureClassQuality)
 {
+	if (Prefixes.IsEmpty() && Suffixes.IsEmpty())
+	{
+		return;
+	}
+	
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
 	{
@@ -470,44 +497,70 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 	
 	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
 	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
-		
-	//TODO(intrxx) This Roll should be weighted too. Should it?
-	const uint8 AffixCountToRoll = FMath::RandRange(ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity),
-		ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity));
-		
+	
+	uint8 MinAffixCount = ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity);
+	uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity);
+
+	//TODO(intrxx) should this roll be weighted?
+	uint8 AffixCountToRoll = FMath::RandRange(MinAffixCount, MaxAffixCount);
+	
+	const uint8 MaximumNumberOfAffixesAvailableToAdd = FMath::Min<uint8>(MaxSuffixCount, Suffixes.Num()) + FMath::Min<uint8>(MaxPrefixCount, Prefixes.Num());
+	if (ensureMsgf(AffixCountToRoll <= MaximumNumberOfAffixesAvailableToAdd,
+		TEXT("Cannot safely add affixes: requested [%d], available [%d] (Prefixes [%d], Suffixes [%d]). "
+	   "Falling back to the available count."),
+		AffixCountToRoll, MaximumNumberOfAffixesAvailableToAdd, Prefixes.Num(), Suffixes.Num()))
+	{
+		AffixCountToRoll = MaximumNumberOfAffixesAvailableToAdd;
+	}
+	
 	uint8 AddedPrefixes = 0;
 	uint8 AddedSuffixes = 0;
-	const bool bContainsPrefixes = !Prefixes.IsEmpty();
-	const bool bContainsSuffixes = !Suffixes.IsEmpty();
-	for (uint8 i = 0; i < AffixCountToRoll; ++i)
-	{ 
-		if (bContainsPrefixes && FMath::RandBool() && AddedPrefixes < MaxPrefixCount) // Roll Prefix
+	while (AddedPrefixes + AddedSuffixes != AffixCountToRoll)
+	{
+		bool bCanRollPrefix = !Prefixes.IsEmpty() && (AddedPrefixes < MaxPrefixCount);
+		bool bCanRollSuffix = !Suffixes.IsEmpty() && (AddedSuffixes < MaxSuffixCount);
+		if (bCanRollPrefix == false && bCanRollSuffix == false)
+		{
+			break;
+		}
+		
+		const uint8 PrefixWeight = bCanRollPrefix ? MaxPrefixCount - AddedPrefixes : 0;
+		const uint8 SuffixWeight = bCanRollSuffix ? MaxSuffixCount - AddedSuffixes : 0;
+		bool bRollPrefix = FMath::FRandRange(0, (float)PrefixWeight + (float)SuffixWeight) < PrefixWeight;
+		bRollPrefix = (bRollPrefix && bCanRollPrefix) || (!bRollPrefix && !bCanRollSuffix);
+		if (bRollPrefix) 
 		{
 			FObsidianDynamicItemAffix RolledItemPrefix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Prefixes);
-			if (ForItemToDrop.DropAffixes.Contains(RolledItemPrefix))
+			checkf(!ForItemToDrop.DropAffixes.Contains(RolledItemPrefix), TEXT("Item already contains this affix."));
+			if (ForItemToDrop.DropAffixes.Contains(RolledItemPrefix)) // For shipping builds I don't want to crash but want to skip this affix.
 			{
+				UE_LOG(LogDropComponent, Warning, TEXT("Skipped duplicate affix [%s]."), *RolledItemPrefix.AffixTag.GetTagName().ToString());
 				continue;
 			}
-					
+			
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithDynamic(RolledItemPrefix, MaxTreasureClassQuality);
+			ActiveAffix.InitializeWithDynamic(RolledItemPrefix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
+			Prefixes.Remove(RolledItemPrefix);
 			++AddedPrefixes;
-					
+			
 			UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
 				*RolledItemPrefix.AffixItemNameAddition);
 		}
-		else if (bContainsSuffixes && AddedSuffixes < MaxSuffixCount) // Roll Suffix
+		else if (bCanRollSuffix)
 		{
 			FObsidianDynamicItemAffix RolledItemSuffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Suffixes);
-			if (ForItemToDrop.DropAffixes.Contains(RolledItemSuffix))
+			checkf(!ForItemToDrop.DropAffixes.Contains(RolledItemSuffix), TEXT("Item already contains this affix."));
+			if (ForItemToDrop.DropAffixes.Contains(RolledItemSuffix)) // For shipping builds I don't want to crash but want to skip this affix.
 			{
+				UE_LOG(LogDropComponent, Warning, TEXT("Skipped duplicate affix [%s]."), *RolledItemSuffix.AffixTag.GetTagName().ToString());
 				continue;
 			}
-					
+			
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithDynamic(RolledItemSuffix, MaxTreasureClassQuality);
+			ActiveAffix.InitializeWithDynamic(RolledItemSuffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
+			Suffixes.Remove(RolledItemSuffix);
 			++AddedSuffixes;
 					
 			UE_LOG(LogTemp, Warning, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
@@ -515,9 +568,16 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		}
 		else
 		{
-			UE_LOG(LogDropComponent, Error, TEXT("Both Prefix and Suffix count is reached or there are no affixes to chose from!"
-				"Please make sure the logic is right."));
-			break;
+			UE_LOG(LogDropComponent, Error, TEXT("Error why trying to roll affixes, both roll prefix and roll suffix branch was not chosen. \n"
+											"Item [%s],\n"
+											"Rarity [%s],\n"
+											"Affix to add in this operation [%d],\n"
+											"Affixes already added [%d],\n"
+											"Possible Prefixes to add [%d], already added Prefixes [%d]\n"
+											"Possible Suffixes to add [%d], already added Suffixes [%d]\n"
+											"Please make sure the logic is right."),
+											*GetNameSafe(ForItemToDrop.ItemDefinitionClass), *DropComponentDebugHelpers::GetRarityDebugString(ForItemToDrop.DropRarity),
+											AffixCountToRoll, AddedSuffixes + AddedPrefixes, Prefixes.Num(), AddedPrefixes, Suffixes.Num(), AddedSuffixes);
 		}
 	}
 }

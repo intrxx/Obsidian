@@ -92,6 +92,9 @@ public:
 
 	UPROPERTY()
 	TArray<FObsidianActiveItemAffix> DropAffixes;
+
+	UPROPERTY()
+	bool bShouldApplyMultiplier = false;
 	
 	UPROPERTY()
 	FTransform DropTransform = FTransform::Identity;
@@ -104,6 +107,9 @@ public:
 
 	UPROPERTY()
 	FString DropRareItemDisplayNameAddition = FString();
+
+	UPROPERTY()
+	FString DropMagicItemDisplayNameAddition = FString();
 };
 
 USTRUCT()

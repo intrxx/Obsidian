@@ -208,9 +208,6 @@ void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySy
 		return;
 	}
 
-	// Do not grant abilities with this function, it is made for Affix batching
-	ensureMsgf(GrantedGameplayAbilities.IsEmpty(), TEXT("This function should only be used to Grant Gameplay Effects, Gameplay Abilities will not be granted!"));
-
 	// Grant Batched Gameplay Effects
 	checkf(GrantedGameplayEffects.Num() == 1, TEXT("This should give just one batched Gameplay Effect"));
 	const FObsidianAffixAbilitySet_GameplayEffect& EffectToGrant = GrantedGameplayEffects[0];
@@ -232,7 +229,7 @@ void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySy
 		{
 			FGameplayModifierInfo NewModifierInfo;
 			NewModifierInfo.Attribute = Affix.CurrentAffixValue.AffixValuesIdentifiers[i].AttributeToModify;
-			NewModifierInfo.ModifierOp = EGameplayModOp::AddFinal; //TODO(intrxx) don't want to AddFinal for all, need to take it from ItemAffix as well
+			NewModifierInfo.ModifierOp = EGameplayModOp::AddBase; //TODO(intrxx) don't want to AddFinal for all, need to take it from ItemAffix as well
 			NewModifierInfo.ModifierMagnitude = FScalableFloat(Affix.CurrentAffixValue.AffixValues[i]);
 			DynamicAffixGE->Modifiers.Add(NewModifierInfo);
 		}

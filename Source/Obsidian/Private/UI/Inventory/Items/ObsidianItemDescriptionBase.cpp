@@ -109,6 +109,7 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		AdditionalItemDescription_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	}
 
+	//TODO(intrxx) maybe the creation of items name should be done inside the item logic? This might potentially be expensive if spammed.
 	FText ItemDisplayName = ItemStats.GetDisplayName();
 	if(ItemStats.ContainsAffixes() && ItemStats.IsIdentified())
 	{
@@ -128,11 +129,16 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 					ItemNameString += FString::Printf(TEXT(" of %s"), *Row.AffixItemNameAddition);
 				}
 			}
+
+			if (ItemStats.ContainsMagicDisplayNameAddition())
+			{
+				ItemNameString = FString::Printf(TEXT("%s "), *ItemStats.GetMagicItemDisplayNameAddition()) + ItemNameString;
+			}
 		}
 		else if (ItemStats.ItemRarity == EObsidianItemRarity::Rare)
 		{
-			ensure(ItemStats.ContainsDisplayNameAddition());
-			ItemNameString = FString::Printf(TEXT("%s "), *ItemStats.GetItemDisplayNameAddition()) + ItemNameString;
+			ensure(ItemStats.ContainsRareDisplayNameAddition());
+			ItemNameString = FString::Printf(TEXT("%s "), *ItemStats.GetRareItemDisplayNameAddition()) + ItemNameString;
 		}
 		
 		ItemDisplayName = FText::FromString(ItemNameString);

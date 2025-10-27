@@ -65,7 +65,8 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemIns
 
 	OutItemStats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
 	OutItemStats.SetDisplayName(ItemInstance->GetItemDisplayName());
-	OutItemStats.SetDisplayNameAddition(ItemInstance->GetRareItemDisplayNameAddition());
+	OutItemStats.SetRareDisplayNameAddition(ItemInstance->GetRareItemDisplayNameAddition());
+	OutItemStats.SetMagicDisplayNameAddition(ItemInstance->GetMagicAffixMultiplierItemDisplayNameAddition());
 	OutItemStats.SetDescription(ItemInstance->GetItemDescription());
 	OutItemStats.SetAdditionalDescription(ItemInstance->GetItemAdditionalDescription());
 
@@ -107,7 +108,8 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 	{
 		OutItemStats.SetItemImage(AppearanceFrag->GetItemImage(), AppearanceFrag->GetItemGridSpanFromDesc());
 		OutItemStats.SetDisplayName(AppearanceFrag->GetItemDisplayName());
-		OutItemStats.SetDisplayNameAddition(ItemGeneratedData.RareItemDisplayNameAddition);
+		OutItemStats.SetRareDisplayNameAddition(ItemGeneratedData.NameData.RareItemDisplayNameAddition);
+		OutItemStats.SetMagicDisplayNameAddition(ItemGeneratedData.NameData.MagicItemDisplayNameAddition);
 		OutItemStats.SetDescription(AppearanceFrag->GetItemDescription());
 		OutItemStats.SetAdditionalDescription(AppearanceFrag->GetItemAdditionalDescription());
 	}
@@ -168,6 +170,29 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(c
 
 	checkf(false, TEXT("No Affix was returned from GetRandomDynamicAffix."))
 	return FObsidianDynamicItemAffix();
+}
+
+bool UObsidianItemsFunctionLibrary::ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity)
+{
+	if (ForItemRarity == EObsidianItemRarity::Magic)
+	{
+		return FMath::FRandRange(0.0f, 1.0f) >= 0.8f;
+	}
+	return false;
+}
+
+bool UObsidianItemsFunctionLibrary::FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* FromInstance)
+{
+	if (FromInstance)
+	{
+		OutGeneratedData.ItemAffixes = FromInstance->GetAllItemAffixes();
+		OutGeneratedData.ItemRarity = FromInstance->GetItemRarity();
+		OutGeneratedData.StackCount = FromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		OutGeneratedData.NameData = FObsidianItemGeneratedNameData(FromInstance->GetRareItemDisplayNameAddition(),
+			FromInstance->GetMagicAffixMultiplierItemDisplayNameAddition());
+		return true;
+	}
+	return false;
 }
 
 int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const AActor* Owner, const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo)

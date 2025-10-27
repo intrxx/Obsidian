@@ -21,3 +21,4 @@ FString UObsidianItemDataConfig::GetRandomItemNameAddition(const int32 UpToTreas
 	return RareItemNameGenerationData.GetRandomPrefixNameAddition(UpToTreasureQuality).ToString() +
 		FString::Printf(TEXT(" %s"), *RareItemNameGenerationData.GetRandomSuffixNameAddition(UpToTreasureQuality, ForItemCategoryTag).ToString());
 }
+

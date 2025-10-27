@@ -239,6 +239,15 @@ FString UObsidianItemDataLoaderSubsystem::GetRandomRareItemNameAddition(const in
 	return FString();
 }
 
+FString UObsidianItemDataLoaderSubsystem::GetAffixMultiplierMagicItemNameAddition() const
+{
+	if (ItemDataConfig)
+	{
+		return ItemDataConfig->MultiplierItemNameAddition;
+	}
+	return FString();
+}
+
 void UObsidianItemDataLoaderSubsystem::LoadItemData()
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();

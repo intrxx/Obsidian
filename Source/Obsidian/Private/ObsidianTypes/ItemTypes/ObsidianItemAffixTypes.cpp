@@ -87,7 +87,8 @@ uint8 FObsidianActiveItemAffix::GetCurrentAffixTier() const
 	return CurrentAffixValue.AffixTier;
 }
 
-void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality)
+void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality,
+	const bool bApplyMultiplier)
 {
 	if (!InDynamicItemAffix)
 	{
@@ -102,10 +103,11 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 	AffixValuesDefinition = InDynamicItemAffix.AffixValuesDefinition;
 	SoftAbilitySetToApply = InDynamicItemAffix.SoftAbilitySetToApply;
 
-	InitializeAffixTierAndRange(UpToTreasureQuality);
+	InitializeAffixTierAndRange(UpToTreasureQuality, bApplyMultiplier);
 }
 
-void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality)
+void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality,
+	const bool bApplyMultiplier)
 {
 	if (!InStaticItemAffix)
 	{
@@ -120,16 +122,17 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 	AffixValuesDefinition = InStaticItemAffix.AffixValuesDefinition;
 	SoftAbilitySetToApply = InStaticItemAffix.SoftAbilitySetToApply;
 
-	InitializeAffixTierAndRange(UpToTreasureQuality);
+	InitializeAffixTierAndRange(UpToTreasureQuality, bApplyMultiplier);
 }
 
-void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreasureQuality)
+void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreasureQuality, const bool bApplyMultiplier)
 {
 	FObsidianAffixValueRange ChosenAffixValueTier = GetRandomAffixRange(UpToTreasureQuality);
+	const float AffixMultiplier = bApplyMultiplier ? AffixValuesDefinition.MagicItemAffixRollMultiplier : 1.0f;
 	for (int32 i = 0; i < ChosenAffixValueTier.AffixRanges.Num(); ++i)
 	{
 		FFloatRange& AffixRange = ChosenAffixValueTier.AffixRanges[i];
-		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue());
+		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue()) * AffixMultiplier;
 		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ?
 				FMath::FloorToInt(RandomisedValue) : FMath::RoundToFloat(RandomisedValue * 100.0f) / 100.0f;
 		
@@ -150,8 +153,8 @@ void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 			CurrentPossibleFloatRanges = AffixValueRange.AffixRanges;
 		}
 	}
-	check(CurrentPossibleFloatRanges.IsEmpty() == false);
 	
+	check(CurrentPossibleFloatRanges.IsEmpty() == false);
 	for (int32 i = 0; i < CurrentPossibleFloatRanges.Num(); ++i)
 	{
 		FFloatRange& AffixRange = CurrentPossibleFloatRanges[i];

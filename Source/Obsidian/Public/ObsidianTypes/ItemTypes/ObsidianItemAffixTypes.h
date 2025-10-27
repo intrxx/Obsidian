@@ -35,6 +35,18 @@ enum class EObsidianAffixType : uint8
 	Unique
 };
 
+UENUM(BlueprintType)
+enum class EObsidianItemRarity : uint8
+{
+	None = 0,
+	Quest,
+	Normal,
+	Magic,
+	Rare,
+	Unique,
+	Set
+};
+
 /**
  * 
  */
@@ -105,6 +117,13 @@ public:
 	/** Value type of affix, if set to Int it will be rounded down. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
+
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
+	uint8 bOverride_MagicItemAffixRollMultiplier : 1;
+
+	/** Drop only multiplier for Affix roll when rolled on Magic Items. The chance of rolling this increased multiplier is 1/4 now. */
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", EditCondition = "bOverride_MagicItemAffixRollMultiplier"), Category = "Obsidian|Affix")
+	float MagicItemAffixRollMultiplier = 2.0f;
 	
 	/**
 	 * Array of affix range value identifiers which is mapped 1 to 1 to Affix Range entries and to the corresponding FGameplayAttribute that it modifies,
@@ -172,11 +191,11 @@ public:
 
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
+	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply = nullptr;
 	
 	/** Affix ranges. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	FObsidianAffixValues AffixValuesDefinition;
+	FObsidianAffixValues AffixValuesDefinition = FObsidianAffixValues();
 };
 
 /**
@@ -188,9 +207,7 @@ struct FObsidianDynamicItemAffix
 	GENERATED_BODY()
 
 public:
-	FObsidianDynamicItemAffix()
-		: bOverride_MagicItemAffixRollMultiplier(false)
-	{}
+	FObsidianDynamicItemAffix(){}
 
 	explicit operator bool() const;
 	bool operator ==(const FObsidianDynamicItemAffix& Other) const;
@@ -212,10 +229,10 @@ public:
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian|AcceptedCategories")
 	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
 
-	/** Unique addition to the Item Name. */
+	/** Unique addition to Magic Item Name based on Affixes. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FString AffixItemNameAddition = FString();
-
+	
 	/** Row description of the affix. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FText AffixDescription = FText();
@@ -223,21 +240,14 @@ public:
 	/** Minimum Item Level Requirement to roll this affix. */
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"), Category = "Obsidian|Affix")
 	uint8 MinItemLevelRequirement = 1;
-
-	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
-	uint8 bOverride_MagicItemAffixRollMultiplier : 1;
-
-	/** Multiplier for Affix roll when rolled on Magic Items. */
-	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "0", EditCondition = "bOverride_MagicItemAffixRollMultiplier"), Category = "Obsidian|Affix")
-	float MagicItemAffixRollMultiplier = 2.0f;
-
+	
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
+	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply = nullptr;
 	
 	/** Possible Affix Ranges to roll from. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
-	FObsidianAffixValues AffixValuesDefinition;
+	FObsidianAffixValues AffixValuesDefinition = FObsidianAffixValues();
 };
 
 /**
@@ -262,8 +272,8 @@ public:
 
 	uint8 GetCurrentAffixTier() const;
 	
-	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality);
-	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality);
+	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
+	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
 	
 	void RandomizeAffixValueBoundByRange();
 public:
@@ -286,14 +296,14 @@ public:
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
 	
 	UPROPERTY()
-	FObsidianAffixValues AffixValuesDefinition;
+	FObsidianAffixValues AffixValuesDefinition = FObsidianAffixValues();
 
 	UPROPERTY()
-	FObsidianActiveAffixValue CurrentAffixValue;
+	FObsidianActiveAffixValue CurrentAffixValue = FObsidianActiveAffixValue();
 
 private:
 	void CreateAffixActiveDescription();
-	void InitializeAffixTierAndRange(const uint8 UpToTreasureQuality);
+	void InitializeAffixTierAndRange(const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
 	FObsidianAffixValueRange GetRandomAffixRange(const uint8 UpToTreasureQuality);
 };
 
@@ -347,18 +357,7 @@ public:
 	FText AffixRowDescription = FText();
 	FText AffixAdditionalDescription = FText();
 	FString AffixItemNameAddition = FString();
-};
-
-UENUM(BlueprintType)
-enum class EObsidianItemRarity : uint8
-{
-	None = 0,
-	Quest,
-	Normal,
-	Magic,
-	Rare,
-	Unique,
-	Set
+	FString Affix = FString();
 };
 
 /**
@@ -432,9 +431,15 @@ public:
 	}
 
 	/** Checks if Item Stats contain Rare Item Display Name Addition. */
-	bool ContainsDisplayNameAddition() const
+	bool ContainsRareDisplayNameAddition() const
 	{
 		return bContainsRareItemDisplayNameAddition;
+	}
+
+	/** Checks if Item Stats contain Magic Item Display Name Addition. */
+	bool ContainsMagicDisplayNameAddition() const
+	{
+		return bContainsMagicItemDisplayNameAddition;
 	}
 
 	/** Checks if the Item Stats contain Description. */
@@ -482,9 +487,14 @@ public:
 		return DisplayName;
 	}
 
-	FString GetItemDisplayNameAddition() const
+	FString GetRareItemDisplayNameAddition() const
 	{
 		return RareItemDisplayNameAddition;
+	}
+
+	FString GetMagicItemDisplayNameAddition() const
+	{
+		return MagicItemDisplayNameAddition;
 	}
 
 	FText GetDescription() const
@@ -526,12 +536,21 @@ public:
 		DisplayName = InDisplayName;
 	}
 
-	void SetDisplayNameAddition(const FString& InDisplayNameAddition)
+	void SetRareDisplayNameAddition(const FString& InDisplayNameAddition)
 	{
-		if (InDisplayNameAddition.IsEmpty() == false) // This will be empty for anything other than Rare item.
+		if (InDisplayNameAddition.IsEmpty() == false) // This will be empty for anything other than Rare or Magic item.
 		{
 			bContainsRareItemDisplayNameAddition = true;
 			RareItemDisplayNameAddition = InDisplayNameAddition;
+		}
+	}
+	
+	void SetMagicDisplayNameAddition(const FString& InDisplayNameAddition)
+	{
+		if (InDisplayNameAddition.IsEmpty() == false) // This will be empty for anything other than Rare or Magic item.
+		{
+			bContainsMagicItemDisplayNameAddition = true;
+			MagicItemDisplayNameAddition = InDisplayNameAddition;
 		}
 	}
 
@@ -599,6 +618,9 @@ private:
 	FString RareItemDisplayNameAddition = FString();
 
 	UPROPERTY()
+	FString MagicItemDisplayNameAddition = FString();
+
+	UPROPERTY()
 	FText Description = FText::GetEmpty();
 
 	UPROPERTY()
@@ -627,6 +649,7 @@ private:
 	bool bContainsItemImage = false;
 	bool bContainsDisplayName = false;
 	bool bContainsRareItemDisplayNameAddition = false;
+	bool bContainsMagicItemDisplayNameAddition = false;
 	bool bContainsDescription = false;
 	bool bContainsAdditionalDescription = false;
 	bool bContainsStacks = false;
