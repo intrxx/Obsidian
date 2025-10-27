@@ -115,6 +115,7 @@ private:
 
 	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
 	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);
+	bool ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity);
 	
 private:
 	UPROPERTY()

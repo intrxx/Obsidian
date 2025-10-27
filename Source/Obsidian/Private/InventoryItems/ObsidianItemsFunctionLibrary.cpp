@@ -172,15 +172,6 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(c
 	return FObsidianDynamicItemAffix();
 }
 
-bool UObsidianItemsFunctionLibrary::ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity)
-{
-	if (ForItemRarity == EObsidianItemRarity::Magic)
-	{
-		return FMath::FRandRange(0.0f, 1.0f) >= 0.8f;
-	}
-	return false;
-}
-
 bool UObsidianItemsFunctionLibrary::FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* FromInstance)
 {
 	if (FromInstance)

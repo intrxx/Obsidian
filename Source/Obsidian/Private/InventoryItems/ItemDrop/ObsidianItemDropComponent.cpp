@@ -224,7 +224,7 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 	}
 	
 	OutItemToDrop.DropRarity = DropItem.bShouldRandomizeRarity ? RolledRarity : GetItemDefaultRarityFromDropItem(DropItem);
-	OutItemToDrop.bShouldApplyMultiplier = UObsidianItemsFunctionLibrary::ShouldApplyAffixValueMultiplier(OutItemToDrop.DropRarity);
+	OutItemToDrop.bShouldApplyMultiplier = ShouldApplyAffixValueMultiplier(OutItemToDrop.DropRarity);
 	OutItemToDrop.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
 	OutItemToDrop.DropStacks = DropItem.GetRandomStackSizeToDropAdjusted(TreasureQuality);
 	GenerateItem(OutItemToDrop, TreasureQuality);
@@ -267,6 +267,15 @@ EObsidianItemRarity UObsidianItemDropComponent::GetItemDefaultRarityFromDropItem
 	}
 	
 	return EObsidianItemRarity::None;
+}
+
+bool UObsidianItemDropComponent::ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity)
+{
+	if (ForItemRarity == EObsidianItemRarity::Magic)
+	{
+		return FMath::FRandRange(0.0f, 1.0f) >= 0.8f;
+	}
+	return false;
 }
 
 void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop, const uint8 MaxTreasureClassQuality)
@@ -334,7 +343,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 		ActiveAffix.InitializeWithStatic(ImplicitAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
-		UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
+		UE_LOG(LogTemp, Display, TEXT("Adding Implicit Affix: [%s], [%s]"), *ImplicitAffix.AffixTag.GetTagName().ToString(),
 			*ImplicitAffix.AffixItemNameAddition);
 	}
 	
@@ -420,7 +429,7 @@ void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItem
 		ActiveAffix.InitializeWithStatic(SkillImplicitAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
-		UE_LOG(LogTemp, Warning, TEXT("Adding Static Skill Implicit Affix: [%s], [%s]"), *SkillImplicitAffix.AffixTag.GetTagName().ToString(),
+		UE_LOG(LogTemp, Display, TEXT("Adding Static Skill Implicit Affix: [%s], [%s]"), *SkillImplicitAffix.AffixTag.GetTagName().ToString(),
 			*SkillImplicitAffix.AffixItemNameAddition);
 	}
 				
@@ -432,7 +441,7 @@ void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItem
 			ActiveAffix.InitializeWithStatic(StaticImplicitAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
-			UE_LOG(LogTemp, Warning, TEXT("Adding Static Implicit Affix: [%s], [%s]"), *StaticImplicitAffix.AffixTag.GetTagName().ToString(),
+			UE_LOG(LogTemp, Display, TEXT("Adding Static Implicit Affix: [%s], [%s]"), *StaticImplicitAffix.AffixTag.GetTagName().ToString(),
 				*StaticImplicitAffix.AffixItemNameAddition);
 		}
 	}
@@ -445,7 +454,7 @@ void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItem
 			ActiveAffix.InitializeWithStatic(StaticAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 			ForItemToDrop.DropAffixes.Add(ActiveAffix);
 						
-			UE_LOG(LogTemp, Warning, TEXT("Adding Static Affix: [%s], [%s]"), *StaticAffix.AffixTag.GetTagName().ToString(),
+			UE_LOG(LogTemp, Display, TEXT("Adding Static Affix: [%s], [%s]"), *StaticAffix.AffixTag.GetTagName().ToString(),
 				*StaticAffix.AffixItemNameAddition);
 		}
 	}
@@ -460,7 +469,7 @@ void UObsidianItemDropComponent::RollSkillImplicits(FObsidianItemToDrop& ForItem
 		ActiveAffix.InitializeWithDynamic(RolledItemAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
-		UE_LOG(LogTemp, Warning, TEXT("Adding Skill Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
+		UE_LOG(LogTemp, Display, TEXT("Adding Skill Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
 					*RolledItemAffix.AffixItemNameAddition);
 	}
 }
@@ -475,7 +484,7 @@ void UObsidianItemDropComponent::RollImplicit(FObsidianItemToDrop& ForItemToDrop
 		ActiveAffix.InitializeWithDynamic(RolledItemAffix, MaxTreasureClassQuality, ForItemToDrop.bShouldApplyMultiplier);
 		ForItemToDrop.DropAffixes.Add(ActiveAffix);
 
-		UE_LOG(LogTemp, Warning, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
+		UE_LOG(LogTemp, Display, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
 					*RolledItemAffix.AffixItemNameAddition);
 	}
 }
@@ -495,27 +504,28 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		return;
 	}
 	
-	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
-	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
-	
-	uint8 MinAffixCount = ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity);
-	uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity);
+	const uint8 MinAffixCount = ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity);
+	const uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity);
 
 	//TODO(intrxx) should this roll be weighted?
+	UE_LOG(LogTemp, Warning, TEXT("MinAffixCount [%d], MaxSuffixCount: [%d]"), MinAffixCount, MaxAffixCount);
 	uint8 AffixCountToRoll = FMath::RandRange(MinAffixCount, MaxAffixCount);
+	UE_LOG(LogTemp, Warning, TEXT("AffixCountToRoll [%d]"), AffixCountToRoll);
 	
+	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
+	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
 	const uint8 MaximumNumberOfAffixesAvailableToAdd = FMath::Min<uint8>(MaxSuffixCount, Suffixes.Num()) + FMath::Min<uint8>(MaxPrefixCount, Prefixes.Num());
-	if (ensureMsgf(AffixCountToRoll <= MaximumNumberOfAffixesAvailableToAdd,
-		TEXT("Cannot safely add affixes: requested [%d], available [%d] (Prefixes [%d], Suffixes [%d]). "
-	   "Falling back to the available count."),
-		AffixCountToRoll, MaximumNumberOfAffixesAvailableToAdd, Prefixes.Num(), Suffixes.Num()))
+	if (AffixCountToRoll > MaximumNumberOfAffixesAvailableToAdd)
 	{
+		UE_LOG(LogDropComponent, Error, TEXT("Cannot safely add affixes: requested [%d], available [%d] (Prefixes [%d], Suffixes [%d]).\n"
+		    "Falling back to maximum available count."),
+			AffixCountToRoll, MaximumNumberOfAffixesAvailableToAdd, Prefixes.Num(), Suffixes.Num());
 		AffixCountToRoll = MaximumNumberOfAffixesAvailableToAdd;
 	}
 	
 	uint8 AddedPrefixes = 0;
 	uint8 AddedSuffixes = 0;
-	while (AddedPrefixes + AddedSuffixes != AffixCountToRoll)
+	while (AddedPrefixes + AddedSuffixes < AffixCountToRoll)
 	{
 		bool bCanRollPrefix = !Prefixes.IsEmpty() && (AddedPrefixes < MaxPrefixCount);
 		bool bCanRollSuffix = !Suffixes.IsEmpty() && (AddedSuffixes < MaxSuffixCount);
@@ -544,7 +554,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 			Prefixes.Remove(RolledItemPrefix);
 			++AddedPrefixes;
 			
-			UE_LOG(LogTemp, Warning, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
+			UE_LOG(LogTemp, Display, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
 				*RolledItemPrefix.AffixItemNameAddition);
 		}
 		else if (bCanRollSuffix)
@@ -563,7 +573,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 			Suffixes.Remove(RolledItemSuffix);
 			++AddedSuffixes;
 					
-			UE_LOG(LogTemp, Warning, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
+			UE_LOG(LogTemp, Display, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
 				*RolledItemSuffix.AffixItemNameAddition);
 		}
 		else
@@ -579,6 +589,8 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 											*GetNameSafe(ForItemToDrop.ItemDefinitionClass), *DropComponentDebugHelpers::GetRarityDebugString(ForItemToDrop.DropRarity),
 											AffixCountToRoll, AddedSuffixes + AddedPrefixes, Prefixes.Num(), AddedPrefixes, Suffixes.Num(), AddedSuffixes);
 		}
+
+		UE_LOG(LogTemp, Warning, TEXT("End of iteration AddedPrefixes [%d], AddedSuffixes: [%d], CountToReach: [%d]"), AddedPrefixes, AddedSuffixes, AffixCountToRoll);
 	}
 }
 

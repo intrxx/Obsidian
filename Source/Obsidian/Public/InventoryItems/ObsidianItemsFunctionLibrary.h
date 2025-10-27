@@ -43,7 +43,6 @@ public:
 	/** Formats Item Affixes into Affix Row for Item Description. */
 	static TArray<FObsidianAffixDescriptionRow> FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes);
 	static FObsidianDynamicItemAffix GetRandomDynamicAffix(const TArray<FObsidianDynamicItemAffix>& DynamicAffixes);
-	static bool ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity);
 	static bool FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* FromInstance);
 	
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
