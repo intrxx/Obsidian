@@ -6,6 +6,7 @@
 #include <GameplayTagContainer.h>
 #include <AttributeSet.h>
 
+#include "GameplayEffectTypes.h"
 #include "ObsidianItemAffixTypes.generated.h"
 
 struct FObsidianActiveItemAffix;
@@ -117,6 +118,9 @@ public:
 	/** Value type of affix, if set to Int it will be rounded down. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	TEnumAsByte<EGameplayModOp::Type> ApplyingRule = EGameplayModOp::AddBase;
 
 	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
 	uint8 bOverride_MagicItemAffixRollMultiplier : 1;

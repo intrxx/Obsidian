@@ -9,7 +9,6 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Obsidian/ObsidianGameModule.h"
 
@@ -229,8 +228,16 @@ void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySy
 		{
 			FGameplayModifierInfo NewModifierInfo;
 			NewModifierInfo.Attribute = Affix.CurrentAffixValue.AffixValuesIdentifiers[i].AttributeToModify;
-			NewModifierInfo.ModifierOp = EGameplayModOp::AddBase; //TODO(intrxx) don't want to AddFinal for all, need to take it from ItemAffix as well
-			NewModifierInfo.ModifierMagnitude = FScalableFloat(Affix.CurrentAffixValue.AffixValues[i]);
+			NewModifierInfo.ModifierOp = Affix.AffixValuesDefinition.ApplyingRule;
+			
+			 //TODO(intrxx) kind of temporary solution, idk how to solve it cleanly yet.
+			float Value = Affix.CurrentAffixValue.AffixValues[i];
+			if (NewModifierInfo.ModifierOp == EGameplayModOp::MultiplyAdditive || NewModifierInfo.ModifierOp == EGameplayModOp::MultiplyCompound)
+			{
+				Value = 1.0f + (Value / 100.0f);
+			}
+			NewModifierInfo.ModifierMagnitude = FScalableFloat(Value);
+			
 			DynamicAffixGE->Modifiers.Add(NewModifierInfo);
 		}
 	}

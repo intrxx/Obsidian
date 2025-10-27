@@ -508,9 +508,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 	const uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity);
 
 	//TODO(intrxx) should this roll be weighted?
-	UE_LOG(LogTemp, Warning, TEXT("MinAffixCount [%d], MaxSuffixCount: [%d]"), MinAffixCount, MaxAffixCount);
 	uint8 AffixCountToRoll = FMath::RandRange(MinAffixCount, MaxAffixCount);
-	UE_LOG(LogTemp, Warning, TEXT("AffixCountToRoll [%d]"), AffixCountToRoll);
 	
 	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
 	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
@@ -576,6 +574,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 			UE_LOG(LogTemp, Display, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
 				*RolledItemSuffix.AffixItemNameAddition);
 		}
+#if !UE_BUILD_SHIPPING
 		else
 		{
 			UE_LOG(LogDropComponent, Error, TEXT("Error why trying to roll affixes, both roll prefix and roll suffix branch was not chosen. \n"
@@ -589,8 +588,8 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 											*GetNameSafe(ForItemToDrop.ItemDefinitionClass), *DropComponentDebugHelpers::GetRarityDebugString(ForItemToDrop.DropRarity),
 											AffixCountToRoll, AddedSuffixes + AddedPrefixes, Prefixes.Num(), AddedPrefixes, Suffixes.Num(), AddedSuffixes);
 		}
-
 		UE_LOG(LogTemp, Warning, TEXT("End of iteration AddedPrefixes [%d], AddedSuffixes: [%d], CountToReach: [%d]"), AddedPrefixes, AddedSuffixes, AffixCountToRoll);
+#endif
 	}
 }
 

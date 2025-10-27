@@ -540,10 +540,10 @@ namespace ObsidianGameplayTags
 	 */
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Life_LifeFlat, "Item.Affix.Prefix.Life.LifeFlat", "Item Tag which represents Flat Life Prefix.");
-	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_EnergyShield_EnergyShieldFlat, "Item.Affix.Prefix.EnergyShield.EnergyShieldFlat", "Item Tag which represents Flat Energy Shield Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Life_LifePercent, "Item.Affix.Prefix.Life.LifePercent", "Item Tag which represents Percent Life Prefix.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Mana_ManaFlat, "Item.Affix.Prefix.Mana.ManaFlat", "Item Tag which represents Flat Mana Prefix.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Mana_ManaPercent, "Item.Affix.Prefix.Mana.ManaPercent", "Item Tag which represents Percent Mana Prefix.");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Prefix_Utility_MagicFind, "Item.Affix.Prefix.Utility.MagicFind", "Item Tag which represents Magic Find Prefix.");
 	

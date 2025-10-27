@@ -466,10 +466,10 @@ namespace ObsidianGameplayTags
 	 */
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Life_LifeFlat);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_EnergyShield_EnergyShieldFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Life_LifePercent);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Mana_ManaFlat);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Mana_ManaPercent);
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Utility_MagicFind);
 	
