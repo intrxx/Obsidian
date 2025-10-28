@@ -108,6 +108,7 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Mana, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxMana, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, IncreasedManaPercentage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, SpecialResource, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxSpecialResource, COND_None, REPNOTIFY_Always);
 
@@ -221,6 +222,11 @@ void UObsidianHeroAttributeSet::OnRep_Mana(const FGameplayAttributeData& OldValu
 void UObsidianHeroAttributeSet::OnRep_MaxMana(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxMana, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_IncreasedManaPercentage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, IncreasedManaPercentage, OldValue);
 }
 
 void UObsidianHeroAttributeSet::OnRep_SpecialResource(const FGameplayAttributeData& OldValue)

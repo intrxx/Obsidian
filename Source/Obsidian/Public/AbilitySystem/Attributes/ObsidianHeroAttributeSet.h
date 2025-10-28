@@ -43,6 +43,7 @@ public:
 	
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxMana);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, IncreasedManaPercentage);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, SpecialResource);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxSpecialResource);
 
@@ -100,6 +101,8 @@ protected:
 	void OnRep_Mana(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_IncreasedManaPercentage(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_SpecialResource(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -169,6 +172,10 @@ private:
 	/** The current Max Mana attribute. Max Mana is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Obsidian|HAttributes|Mana", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxMana;
+
+	/** Kind of Meta attribute - The current Increased Mana Percentage attribute. Used in calculation for increasing Max Health attribute. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_IncreasedManaPercentage, Category = "Obsidian|CAttributes|Mana", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncreasedManaPercentage;
 
 	/** The current Special Resource attribute. The Special Resource will be capped by the Max Special Resource attribute. Special Resource is hidden from modifiers so only Executions can modify it. */
 	/** ------------------------------------------------------------------------------------------------------ HideFromModifiers */

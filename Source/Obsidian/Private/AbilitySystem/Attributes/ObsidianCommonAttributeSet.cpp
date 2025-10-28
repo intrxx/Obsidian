@@ -31,8 +31,10 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	// Vital
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Health, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxHealth, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, IncreasedHealthPercentage, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, EnergyShield, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxEnergyShield, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, IncreasedEnergyShieldPercentage, COND_None, REPNOTIFY_Always);
 
 	// Statuses
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, HealthRegeneration, COND_None, REPNOTIFY_Always);
@@ -291,6 +293,11 @@ void UObsidianCommonAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& 
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxHealth, OldValue);
 }
 
+void UObsidianCommonAttributeSet::OnRep_IncreasedHealthPercentage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedHealthPercentage, OldValue);
+}
+
 void UObsidianCommonAttributeSet::OnRep_EnergyShield(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, EnergyShield, OldValue);
@@ -299,6 +306,11 @@ void UObsidianCommonAttributeSet::OnRep_EnergyShield(const FGameplayAttributeDat
 void UObsidianCommonAttributeSet::OnRep_MaxEnergyShield(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxEnergyShield, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_IncreasedEnergyShieldPercentage(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEnergyShieldPercentage, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_HealthRegeneration(const FGameplayAttributeData& OldValue)

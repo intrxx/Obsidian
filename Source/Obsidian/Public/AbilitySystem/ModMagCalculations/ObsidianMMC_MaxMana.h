@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
-#include "GameplayModMagnitudeCalculation.h"
+#include <GameplayModMagnitudeCalculation.h>
 #include "ObsidianMMC_MaxMana.generated.h"
 
 /**
@@ -20,7 +17,7 @@ class OBSIDIAN_API UObsidianMMC_MaxMana : public UGameplayModMagnitudeCalculatio
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_MaxMana();
+	UObsidianMMC_MaxMana(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
 

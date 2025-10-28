@@ -33,8 +33,10 @@ public:
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedHealthPercentage);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, EnergyShield);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxEnergyShield);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedEnergyShieldPercentage);
 
 	/**
 	 * Status
@@ -153,11 +155,15 @@ protected:
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
+	void OnRep_IncreasedHealthPercentage(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
 	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_EnergyShield(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxEnergyShield(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_IncreasedEnergyShieldPercentage(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Status
@@ -329,6 +335,10 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxHealth, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
 
+	/** Kind of Meta attribute - The current Increased Health Percentage attribute. Used in calculation for increasing Max Health attribute. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_IncreasedHealthPercentage, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncreasedHealthPercentage;
+
 	/** The current Energy Shield attribute. The Energy Shield will be capped by the Max Energy Shield attribute. Energy Shield is hidden from modifiers so only Executions can modify it. */
 	/** ---------------------------------------------------------------------------------------------------------------------- HideFromModifiers */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (AllowPrivateAccess = true))
@@ -337,6 +347,10 @@ private:
 	/** The current Max Energy Shield attribute. Defines cap for Energy Shield, Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxEnergyShield, Category = "Obsidian|CAttributes|EnergyShield", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxEnergyShield;
+
+	/** Kind of Meta attribute - The current Increased EnergyShield Percentage attribute. Used in calculation for increasing Max Energy Shield attribute. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_IncreasedEnergyShieldPercentage, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncreasedEnergyShieldPercentage;
 
 	/**
 	 * Status

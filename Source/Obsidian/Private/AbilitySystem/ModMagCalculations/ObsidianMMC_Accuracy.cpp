@@ -2,10 +2,7 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_Accuracy.h"
 
-// ~ Core
 
-
-// ~ Project
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 struct SObsidian_AccuracyStatics
@@ -24,7 +21,8 @@ static const SObsidian_AccuracyStatics& AccuracyStatics()
 	return AccuracyStatics;
 }
 
-UObsidianMMC_Accuracy::UObsidianMMC_Accuracy()
+UObsidianMMC_Accuracy::UObsidianMMC_Accuracy(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(AccuracyStatics().DexterityDef);
 }

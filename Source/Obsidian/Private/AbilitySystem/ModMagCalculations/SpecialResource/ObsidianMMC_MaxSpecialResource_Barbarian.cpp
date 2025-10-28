@@ -1,7 +1,7 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource_Barbarian.h"
+
 
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
@@ -21,7 +21,8 @@ static const SObsidianMMC_MaxSpecialResource_Barbarian& MaxSpecialResource_Barba
 	return MaxSpecialResource_WitchStatics;
 }
 
-UObsidianMMC_MaxSpecialResource_Barbarian::UObsidianMMC_MaxSpecialResource_Barbarian()
+UObsidianMMC_MaxSpecialResource_Barbarian::UObsidianMMC_MaxSpecialResource_Barbarian(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxSpecialResource_BarbarianStatics().StrengthDef);
 }

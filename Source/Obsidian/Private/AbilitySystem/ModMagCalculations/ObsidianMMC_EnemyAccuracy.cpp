@@ -2,10 +2,7 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_EnemyAccuracy.h"
 
-// ~ Core
 
-
-// ~ Project
 #include "Combat/ObsidianCombatInterface.h"
 #include "Obsidian/ObsidianGameModule.h"
 

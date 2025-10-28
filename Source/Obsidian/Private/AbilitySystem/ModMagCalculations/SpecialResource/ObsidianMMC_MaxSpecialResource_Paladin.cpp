@@ -2,6 +2,7 @@
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource_Paladin.h"
 
+
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 struct SObsidianMMC_MaxSpecialResource_Paladin
@@ -20,7 +21,8 @@ static const SObsidianMMC_MaxSpecialResource_Paladin& MaxSpecialResource_Paladin
 	return MaxSpecialResource_WitchStatics;
 }
 
-UObsidianMMC_MaxSpecialResource_Paladin::UObsidianMMC_MaxSpecialResource_Paladin()
+UObsidianMMC_MaxSpecialResource_Paladin::UObsidianMMC_MaxSpecialResource_Paladin(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxSpecialResource_PaladinStatics().FaithDef);
 }

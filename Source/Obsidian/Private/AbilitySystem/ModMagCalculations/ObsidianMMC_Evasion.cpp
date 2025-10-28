@@ -2,10 +2,7 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_Evasion.h"
 
-// ~ Core
 
-
-// ~ Project
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
@@ -25,7 +22,8 @@ static const SObsidian_EvasionStatics& EvasionStatics()
 	return EvasionStatics;
 }
 
-UObsidianMMC_Evasion::UObsidianMMC_Evasion()
+UObsidianMMC_Evasion::UObsidianMMC_Evasion(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(EvasionStatics().DexterityDef);
 }

@@ -2,9 +2,7 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_ChaosResistance.h"
 
-// ~ Core
 
-// ~ Project
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 struct SObsidian_ChaosResistanceStatics
@@ -23,7 +21,8 @@ static const SObsidian_ChaosResistanceStatics& ChaosResistanceStatics()
 	return ChaosResistanceStatics;
 }
 
-UObsidianMMC_ChaosResistance::UObsidianMMC_ChaosResistance()
+UObsidianMMC_ChaosResistance::UObsidianMMC_ChaosResistance(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(ChaosResistanceStatics().FaithDef);
 }

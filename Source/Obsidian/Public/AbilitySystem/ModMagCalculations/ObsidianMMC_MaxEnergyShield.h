@@ -6,18 +6,18 @@
 
 
 #include <GameplayModMagnitudeCalculation.h>
-#include "ObsidianMMC_Evasion.generated.h"
+#include "ObsidianMMC_MaxEnergyShield.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianMMC_Evasion : public UGameplayModMagnitudeCalculation
+class OBSIDIAN_API UObsidianMMC_MaxEnergyShield : public UGameplayModMagnitudeCalculation
 {
 	GENERATED_BODY()
-
+	
 public:
-	UObsidianMMC_Evasion(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_MaxEnergyShield(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
 };

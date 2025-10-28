@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 
-
-#include "GameplayModMagnitudeCalculation.h"
+#include <GameplayModMagnitudeCalculation.h>
 #include "ObsidianMMC_Accuracy.generated.h"
 
 /**
@@ -20,7 +17,7 @@ class OBSIDIAN_API UObsidianMMC_Accuracy : public UGameplayModMagnitudeCalculati
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_Accuracy();
+	UObsidianMMC_Accuracy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
 };

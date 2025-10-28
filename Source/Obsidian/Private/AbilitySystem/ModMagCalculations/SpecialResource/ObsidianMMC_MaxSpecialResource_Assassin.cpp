@@ -1,6 +1,8 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource_Assassin.h"
+
+
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 struct SObsidianMMC_MaxSpecialResource_Assassin
@@ -21,7 +23,8 @@ static const SObsidianMMC_MaxSpecialResource_Assassin& MaxSpecialResource_Assass
 	return MaxSpecialResource_WitchStatics;
 }
 
-UObsidianMMC_MaxSpecialResource_Assassin::UObsidianMMC_MaxSpecialResource_Assassin()
+UObsidianMMC_MaxSpecialResource_Assassin::UObsidianMMC_MaxSpecialResource_Assassin(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxSpecialResource_AssassinStatics().DexterityDef);
 	RelevantAttributesToCapture.Add(MaxSpecialResource_AssassinStatics().IntelligenceDef);

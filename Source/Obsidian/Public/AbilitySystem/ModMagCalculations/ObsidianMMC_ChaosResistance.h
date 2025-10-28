@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
-#include "GameplayModMagnitudeCalculation.h"
+#include <GameplayModMagnitudeCalculation.h>
 #include "ObsidianMMC_ChaosResistance.generated.h"
 
 /**
@@ -20,7 +17,7 @@ class OBSIDIAN_API UObsidianMMC_ChaosResistance : public UGameplayModMagnitudeCa
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_ChaosResistance();
+	UObsidianMMC_ChaosResistance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
 	

@@ -2,9 +2,7 @@
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource_Witch.h"
 
-// ~ Core
 
-// ~ Project
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 struct SObsidian_MaxSpecialResource_Witch
@@ -23,7 +21,8 @@ static const SObsidian_MaxSpecialResource_Witch& MaxSpecialResource_WitchStatics
 	return MaxSpecialResource_WitchStatics;
 }
 
-UObsidianMMC_MaxSpecialResource_Witch::UObsidianMMC_MaxSpecialResource_Witch()
+UObsidianMMC_MaxSpecialResource_Witch::UObsidianMMC_MaxSpecialResource_Witch(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxSpecialResource_WitchStatics().IntelligenceDef);
 }

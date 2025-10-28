@@ -2,12 +2,9 @@
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource.h"
 
-// ~ Core
 
-// ~ Project
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
-#include "Combat/ObsidianCombatInterface.h"
-#include "Obsidian/ObsidianGameModule.h"
+
 
 float UObsidianMMC_MaxSpecialResource::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {

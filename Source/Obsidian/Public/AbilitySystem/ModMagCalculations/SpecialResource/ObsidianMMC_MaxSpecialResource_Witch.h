@@ -2,10 +2,7 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource.h"
@@ -20,7 +17,7 @@ class OBSIDIAN_API UObsidianMMC_MaxSpecialResource_Witch : public UObsidianMMC_M
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_MaxSpecialResource_Witch();
+	UObsidianMMC_MaxSpecialResource_Witch(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
 };
