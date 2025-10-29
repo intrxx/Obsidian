@@ -3,15 +3,16 @@
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 
 #include <AbilitySystemGlobals.h>
+#include <GameFramework/GameplayMessageSubsystem.h>
+#include <Kismet/GameplayStatics.h>
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "GameFramework/GameplayMessageSubsystem.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
-#include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 // ~ FObsidianEquipmentSlotDefinition
@@ -187,9 +188,7 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
 	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
-	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
-	NewEntry.Instance->SetGeneratedNameAdditions(ItemGeneratedData.NameData);
-	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
+	UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(NewEntry.Instance, ItemGeneratedData);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

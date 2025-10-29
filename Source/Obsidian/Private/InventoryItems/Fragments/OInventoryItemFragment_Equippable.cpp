@@ -29,3 +29,8 @@ void UOInventoryItemFragment_Equippable::OnInstancedCreated(UObsidianInventoryIt
 	Instance->SetEquipmentActors(ActorsToSpawn);
 	Instance->SetEquippable(true);
 }
+
+FObsidianItemRequirements UOInventoryItemFragment_Equippable::GetItemDefaultEquippingRequirements() const
+{
+	return DefaultEquippingRequirements;
+}

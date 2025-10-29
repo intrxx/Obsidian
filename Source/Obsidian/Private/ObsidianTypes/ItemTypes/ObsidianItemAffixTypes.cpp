@@ -11,6 +11,13 @@ bool FObsidianAffixValues::IsValid() const
 	return AffixValuesIdentifiers.IsEmpty() == false && PossibleAffixRanges.IsEmpty() == false;
 }
 
+// ~ FObsidianActiveAffixValue
+
+bool FObsidianActiveAffixValue::IsValid() const
+{
+	return !AffixValues.IsEmpty();
+}
+
 // ~ FObsidianStaticItemAffix
 
 bool FObsidianStaticItemAffix::IsEmptyImplicit() const
@@ -84,11 +91,16 @@ bool FObsidianActiveItemAffix::operator==(const FObsidianStaticItemAffix& Other)
 
 uint8 FObsidianActiveItemAffix::GetCurrentAffixTier() const
 {
-	return CurrentAffixValue.AffixTier;
+	return CurrentAffixValue.AffixTier.AffixTierValue;
+}
+
+uint8 FObsidianActiveItemAffix::GetCurrentAffixTierItemLevelRequirement() const
+{
+	return CurrentAffixValue.AffixTier.MinItemLevelRequirement;
 }
 
 void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality,
-	const bool bApplyMultiplier)
+                                                     const bool bApplyMultiplier)
 {
 	if (!InDynamicItemAffix)
 	{
@@ -139,7 +151,7 @@ void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreas
 		CurrentAffixValue.AffixValuesIdentifiers.Add(AffixValuesDefinition.AffixValuesIdentifiers[i]);	
 		CurrentAffixValue.AffixValues.Add(RandomisedValue);	
 	}
-	CurrentAffixValue.AffixTier = ChosenAffixValueTier.AffixTier.AffixTierValue;
+	CurrentAffixValue.AffixTier = ChosenAffixValueTier.AffixTier;
 	CreateAffixActiveDescription();
 }
 
@@ -148,7 +160,7 @@ void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 	TArray<FFloatRange> CurrentPossibleFloatRanges;
 	for (const FObsidianAffixValueRange& AffixValueRange : AffixValuesDefinition.PossibleAffixRanges)
 	{
-		if (AffixValueRange.AffixTier.AffixTierValue == CurrentAffixValue.AffixTier)
+		if (AffixValueRange.AffixTier.AffixTierValue == CurrentAffixValue.AffixTier.AffixTierValue)
 		{
 			CurrentPossibleFloatRanges = AffixValueRange.AffixRanges;
 		}

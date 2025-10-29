@@ -2,12 +2,10 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
-// ~ Project
-
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Equippable.generated.h"
@@ -53,6 +51,8 @@ public:
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
 
+	FObsidianItemRequirements GetItemDefaultEquippingRequirements() const;
+
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;
@@ -60,5 +60,7 @@ protected:
 	/** Should this item block the other equipment slot, e.g. Two-Handed Weapons. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	bool bShouldBlockOtherSlot = false;
-	
+
+	UPROPERTY(EditDefaultsOnly, Category = "Equipping")
+	FObsidianItemRequirements DefaultEquippingRequirements = FObsidianItemRequirements();
 };

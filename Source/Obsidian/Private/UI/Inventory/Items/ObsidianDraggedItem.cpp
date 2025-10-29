@@ -33,7 +33,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 		return;
 	}
 	
-	InternalStacks = GeneratedData.StackCount;
+	InternalStacks = GeneratedData.AvailableStackCount;
 	
 	UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 	if(DefaultObject == nullptr)

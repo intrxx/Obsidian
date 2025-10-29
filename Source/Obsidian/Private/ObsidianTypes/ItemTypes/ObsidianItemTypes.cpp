@@ -5,6 +5,7 @@
 // ~ Core
 
 // ~ Project
+#include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Obsidian/ObsidianGameModule.h"
@@ -14,16 +15,18 @@
 
 void FObsidianItemGeneratedData::Reset()
 {
-	StackCount = 1;
+	AvailableStackCount = 1;
 	ItemRarity = EObsidianItemRarity::None;
 	ItemAffixes.Reset();
+	NameData = FObsidianItemGeneratedNameData();
+	ItemEquippingRequirements = FObsidianItemRequirements();
 }
 
 // ~ FDraggedItem
 
-FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance)
+FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance) 
 	: Instance(InInstance)
-	, GeneratedData(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
+	, GeneratedData(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current)) //TODO(intrxx) do I really need stacks here?
 {}
 
 bool FDraggedItem::IsEmpty() const
@@ -39,6 +42,21 @@ bool FDraggedItem::CarriesItemDef() const
 // ~ FObsidianSlotDefinition
 
 FObsidianSlotDefinition const FObsidianSlotDefinition::InvalidSlot;
+
+// ~ FObsidianItemRequirement
+
+FObsidianItemRequirements::FObsidianItemRequirements()
+{
+	AttributeRequirements =
+		{
+			{FObsidianAttributeRequirement(UObsidianHeroAttributeSet::GetStrengthAttribute(), 0)},
+			{FObsidianAttributeRequirement(UObsidianHeroAttributeSet::GetIntelligenceAttribute(), 0)},
+			{FObsidianAttributeRequirement(UObsidianHeroAttributeSet::GetDexterityAttribute(), 0)},
+			{FObsidianAttributeRequirement(UObsidianHeroAttributeSet::GetFaithAttribute(), 0)}
+		};
+}
+
+// ~ FObsidianItemRequirement
 
 bool FObsidianSlotDefinition::IsValid() const
 {

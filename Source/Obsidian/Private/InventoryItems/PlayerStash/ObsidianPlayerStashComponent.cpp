@@ -240,7 +240,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = ItemGeneratedData.StackCount;
+	Result.StacksLeft = ItemGeneratedData.AvailableStackCount;
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -315,7 +315,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemPosition& ItemPosition, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = ItemGeneratedData.StackCount;
+	Result.StacksLeft = ItemGeneratedData.AvailableStackCount;
 
 	ensure((ItemPosition.GetItemGridLocation(false) != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag(false) != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
 	

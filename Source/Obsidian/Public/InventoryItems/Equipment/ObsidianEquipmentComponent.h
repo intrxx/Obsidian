@@ -64,17 +64,18 @@ public:
 
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory);
 	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithInstance(const UObsidianInventoryItemInstance* ForInstance);
-	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef);
+	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef,
+		const FObsidianItemGeneratedData& ItemGeneratedData);
 	
 	bool IsItemEquippedAtSlot(const FGameplayTag& SlotTag);
 
 	bool CanOwnerModifyEquipmentState();
 	
 	EObsidianEquipCheckResult CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
-	EObsidianEquipCheckResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+	EObsidianEquipCheckResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData);
 	
 	EObsidianEquipCheckResult CanReplaceInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
-	EObsidianEquipCheckResult CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag);
+	EObsidianEquipCheckResult CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData);
 	
 	FObsidianEquipmentResult AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData);
 	FObsidianEquipmentResult AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
@@ -121,6 +122,9 @@ private:
 
 	TArray<FObsidianEquipmentSlotDefinition> Internal_GetEquipmentSlots() const;
 
+	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemInstance* Instance);
+	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemDefinition* Definition, const FObsidianItemGeneratedData& ItemGeneratedData);
+	
 private:
 #if WITH_GAMEPLAY_DEBUGGER
 	friend class FGameplayDebuggerCategory_Equipment;

@@ -18,6 +18,7 @@
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 
 DEFINE_LOG_CATEGORY(LogDropComponent);
 
@@ -179,7 +180,8 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	}
 }
 
-bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& DropItem, const FVector& InOverrideDropLocation, const uint8 TreasureQuality, FObsidianItemToDrop& OutItemToDrop)
+bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& DropItem, const FVector& InOverrideDropLocation,
+	const uint8 TreasureQuality, FObsidianItemToDrop& OutItemToDrop)
 {
 	if (DropItem.IsValid() == false)
 	{
@@ -229,53 +231,6 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 	OutItemToDrop.DropStacks = DropItem.GetRandomStackSizeToDropAdjusted(TreasureQuality);
 	GenerateItem(OutItemToDrop, TreasureQuality);
 	return true;
-}
-
-FGameplayTag UObsidianItemDropComponent::GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem)
-{
-	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
-	if (ItemDef == nullptr)
-	{
-		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
-	}
-
-	if (ItemDef)
-	{
-		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
-		{
-			return ItemDefault->GetItemBaseTypeTag();
-		}
-	}
-	
-	return FGameplayTag::EmptyTag;
-}
-
-EObsidianItemRarity UObsidianItemDropComponent::GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem)
-{
-	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
-	if (ItemDef == nullptr)
-	{
-		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
-	}
-
-	if (ItemDef)
-	{
-		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
-		{
-			return ItemDefault->GetItemDefaultRarity();
-		}
-	}
-	
-	return EObsidianItemRarity::None;
-}
-
-bool UObsidianItemDropComponent::ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity)
-{
-	if (ForItemRarity == EObsidianItemRarity::Magic)
-	{
-		return FMath::FRandRange(0.0f, 1.0f) >= 0.8f;
-	}
-	return false;
 }
 
 void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop, const uint8 MaxTreasureClassQuality)
@@ -330,6 +285,17 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 			default:
 			{} break;
 	}
+
+	const UOInventoryItemFragment_Equippable* EquippableFragment = Cast<UOInventoryItemFragment_Equippable>(
+		DefaultObject->FindFragmentByClass(UOInventoryItemFragment_Equippable::StaticClass()));
+	if (EquippableFragment == nullptr)
+	{
+		return;		
+	}
+
+	FObsidianItemRequirements DefaultRequirements = EquippableFragment->GetItemDefaultEquippingRequirements();
+	AdjustItemRequirementsBasedOnAddedAffixes(DefaultRequirements, ForItemToDrop);
+	ForItemToDrop.DropItemRequirements = DefaultRequirements;
 }
 
 void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
@@ -590,6 +556,70 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		}
 		UE_LOG(LogTemp, Warning, TEXT("End of iteration AddedPrefixes [%d], AddedSuffixes: [%d], CountToReach: [%d]"), AddedPrefixes, AddedSuffixes, AffixCountToRoll);
 #endif
+	}
+}
+
+FGameplayTag UObsidianItemDropComponent::GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem)
+{
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
+	if (ItemDef == nullptr)
+	{
+		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
+	}
+
+	if (ItemDef)
+	{
+		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+		{
+			return ItemDefault->GetItemBaseTypeTag();
+		}
+	}
+	
+	return FGameplayTag::EmptyTag;
+}
+
+EObsidianItemRarity UObsidianItemDropComponent::GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem)
+{
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
+	if (ItemDef == nullptr)
+	{
+		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
+	}
+
+	if (ItemDef)
+	{
+		if (const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+		{
+			return ItemDefault->GetItemDefaultRarity();
+		}
+	}
+	
+	return EObsidianItemRarity::None;
+}
+
+bool UObsidianItemDropComponent::ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity)
+{
+	if (ForItemRarity == EObsidianItemRarity::Magic)
+	{
+		return FMath::FRandRange(0.0f, 1.0f) >= 0.8f;
+	}
+	return false;
+}
+
+void UObsidianItemDropComponent::AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements,
+	const FObsidianItemToDrop& FromItemToDrop)
+{
+	for (const FObsidianActiveItemAffix& Affix : FromItemToDrop.DropAffixes)
+	{
+		check(Affix.CurrentAffixValue.IsValid());
+
+		const uint8 AffixMinLevelRequirement = Affix.CurrentAffixValue.AffixTier.MinItemLevelRequirement;
+		if (AffixMinLevelRequirement > OutRequirements.RequiredLevel)
+		{
+			OutRequirements.RequiredLevel = AffixMinLevelRequirement;
+		}
+
+		//TODO(intrxx) Adjust the Attribute Magnitude requirements based on Affixes too?
 	}
 }
 

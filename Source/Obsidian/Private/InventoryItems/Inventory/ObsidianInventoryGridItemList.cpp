@@ -2,13 +2,12 @@
 
 #include "InventoryItems/Inventory/ObsidianInventoryGridItemList.h"
 
-// ~ Core
-#include "GameFramework/GameplayMessageSubsystem.h"
+#include <GameFramework/GameplayMessageSubsystem.h>
 
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
@@ -76,9 +75,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.StackCount = StackCount;
 	NewEntry.GridLocation = AvailablePosition;
-	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
-	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
-	NewEntry.Instance->SetGeneratedNameAdditions(ItemGeneratedData.NameData);
+	UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(NewEntry.Instance, ItemGeneratedData);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

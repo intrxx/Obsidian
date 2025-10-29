@@ -213,7 +213,7 @@ bool UObsidianInventoryComponent::CheckReplacementPossible(const FIntPoint& AtGr
 FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = ItemGeneratedData.StackCount;
+	Result.StacksLeft = ItemGeneratedData.AvailableStackCount;
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -305,7 +305,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	Result.StacksLeft = ItemGeneratedData.StackCount;
+	Result.StacksLeft = ItemGeneratedData.AvailableStackCount;
 	
 	if(!GetOwner()->HasAuthority())
 	{

@@ -2,9 +2,7 @@
 
 #include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
 
-// ~ Core
 
-// ~ Project
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
@@ -25,7 +23,12 @@ void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToD
 		{
 			AObsidianDroppableItem* DroppableItem = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), Item.DropTransform);
 
-			FObsidianItemGeneratedData GeneratedData = FObsidianItemGeneratedData(Item.DropStacks, Item.DropRarity, Item.DropAffixes);
+			FObsidianItemGeneratedData GeneratedData;
+			GeneratedData.AvailableStackCount = Item.DropStacks;
+			GeneratedData.ItemRarity = Item.DropRarity;
+			GeneratedData.ItemAffixes = Item.DropAffixes;
+			GeneratedData.ItemEquippingRequirements = Item.DropItemRequirements;
+			
 			FObsidianItemGeneratedNameData NewNameData;
 			NewNameData.MagicItemDisplayNameAddition = Item.DropMagicItemDisplayNameAddition;
 			NewNameData.RareItemDisplayNameAddition = Item.DropRareItemDisplayNameAddition;

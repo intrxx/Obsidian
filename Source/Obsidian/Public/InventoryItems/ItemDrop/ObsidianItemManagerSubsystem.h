@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTreasureList.h"
 
-#include "Subsystems/WorldSubsystem.h"
+#include <Subsystems/WorldSubsystem.h>
 #include "ObsidianItemManagerSubsystem.generated.h"
 
 /**

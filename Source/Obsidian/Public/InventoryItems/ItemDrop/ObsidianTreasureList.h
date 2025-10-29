@@ -110,6 +110,9 @@ public:
 
 	UPROPERTY()
 	FString DropMagicItemDisplayNameAddition = FString();
+
+	UPROPERTY()
+	FObsidianItemRequirements DropItemRequirements = FObsidianItemRequirements();
 };
 
 USTRUCT()

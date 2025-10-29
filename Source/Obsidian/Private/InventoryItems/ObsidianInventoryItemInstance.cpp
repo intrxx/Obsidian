@@ -434,6 +434,16 @@ void UObsidianInventoryItemInstance::DestroyEquipmentActors()
 	SpawnedActors.Empty();
 }
 
+FObsidianItemRequirements UObsidianInventoryItemInstance::GetEquippingRequirements() const
+{
+	return EquippingRequirements;
+}
+
+void UObsidianInventoryItemInstance::InitializeEquippingRequirements(const FObsidianItemRequirements& InRequirements)
+{
+	EquippingRequirements = InRequirements;
+}
+
 TArray<UObsidianAffixAbilitySet*> UObsidianInventoryItemInstance::GetAffixAbilitySetsFromItem() const
 {
 	TArray<UObsidianAffixAbilitySet*> SetsToReturn;

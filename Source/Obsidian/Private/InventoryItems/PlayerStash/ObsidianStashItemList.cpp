@@ -223,9 +223,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
 	NewEntry.StackCount = StackCount;
 	NewEntry.ItemPosition = ToPosition;
-	NewEntry.Instance->InitializeAffixes(ItemGeneratedData.ItemAffixes);
-	NewEntry.Instance->SetItemRarity(ItemGeneratedData.ItemRarity);
-	NewEntry.Instance->SetGeneratedNameAdditions(ItemGeneratedData.NameData);
+	UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(NewEntry.Instance, ItemGeneratedData);
 	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;

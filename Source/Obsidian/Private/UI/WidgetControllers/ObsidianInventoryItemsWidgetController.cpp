@@ -361,7 +361,7 @@ void UObsidianInventoryItemsWidgetController::OnStartDraggingItem(const FDragged
 		}
 		else if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef = DraggedItem.ItemDef)
 		{
-			for (const FObsidianEquipmentSlotDefinition& EquipmentSlot : EquipmentComponent->FindPossibleSlotsForEquipping_WithItemDef(ItemDef))
+			for (const FObsidianEquipmentSlotDefinition& EquipmentSlot : EquipmentComponent->FindPossibleSlotsForEquipping_WithItemDef(ItemDef, DraggedItem.GeneratedData))
 			{
 				JoinedSlotTags.AddTag(EquipmentSlot.GetEquipmentSlotTag());
 			}
@@ -674,7 +674,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(
 		{
 			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(AtGridSlot);
 		}
-		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, DraggedItem.GeneratedData.StackCount))
+		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, DraggedItem.GeneratedData.AvailableStackCount))
 		{
 			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
 		}
@@ -779,7 +779,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(
 		
 		 if(const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
 		 {
-		 	const EObsidianEquipCheckResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
+		 	const EObsidianEquipCheckResult EquipmentResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag, DraggedItem.GeneratedData);
 		 	if(EquipmentResult == EObsidianEquipCheckResult::CanEquip)
 		 	{
 		 		OwnerPlayerInputManager->ServerReplaceItemAtEquipmentSlot(SlotTag, EquipSlotTagOverride);
@@ -1546,11 +1546,11 @@ bool UObsidianInventoryItemsWidgetController::CanEquipDraggedItem(const FGamepla
 		EObsidianEquipCheckResult EquipResult;
 		if(bSlotOccupied)
 		{
-			EquipResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag);
+			EquipResult = EquipmentComponent->CanReplaceTemplate(DraggedItemDef, SlotTag, DraggedItem.GeneratedData);
 		}
 		else
 		{
-			EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag);
+			EquipResult = EquipmentComponent->CanEquipTemplate(DraggedItemDef, SlotTag, DraggedItem.GeneratedData);
 		}
 		
 		return EquipResult == EObsidianEquipCheckResult::CanEquip;

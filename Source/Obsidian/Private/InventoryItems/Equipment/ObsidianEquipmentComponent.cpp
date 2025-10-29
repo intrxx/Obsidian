@@ -149,7 +149,8 @@ TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindPossib
 	return MatchingSlots;
 }
 
-TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef)
+TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef,
+	const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	TArray<FObsidianEquipmentSlotDefinition> MatchingSlots;
 	if (ForItemDef == nullptr)
@@ -165,7 +166,7 @@ TArray<FObsidianEquipmentSlotDefinition> UObsidianEquipmentComponent::FindPossib
 	
 	for (const FObsidianEquipmentSlotDefinition& PossibleSlot : EquipmentList.FindMatchingEquipmentSlotsForItemCategory(DefaultObject->GetItemCategoryTag()))
 	{
-		if (CanEquipTemplate(ForItemDef, PossibleSlot.GetEquipmentSlotTag()) == EObsidianEquipCheckResult::CanEquip)
+		if (CanEquipTemplate(ForItemDef, PossibleSlot.GetEquipmentSlotTag(), ItemGeneratedData) == EObsidianEquipCheckResult::CanEquip)
 		{
 			MatchingSlots.Add(PossibleSlot);
 		}
@@ -275,7 +276,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(UO
 	return Result;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData, const FGameplayTag& EquipSlotTagOverride)
+FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData, const FGameplayTag& EquipSlotTagOverride)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -296,7 +298,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 		return Result;
 	}
 
-	EObsidianEquipCheckResult EquipResult = CanReplaceTemplate(ItemDef, SlotTag);
+	EObsidianEquipCheckResult EquipResult = CanReplaceTemplate(ItemDef, SlotTag, ItemGeneratedData);
 	if(EquipResult != EObsidianEquipCheckResult::CanEquip)
 	{
 		//TODO(intrxx) Send Client RPC to add voiceover passing EquipResult
@@ -333,8 +335,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 
 	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, ItemGeneratedData, EquipTag);
-	checkf(ItemGeneratedData.StackCount == 1, TEXT("Equipment Items should have 1 stack only."));
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
+	checkf(ItemGeneratedData.AvailableStackCount == 1, TEXT("Equipment Items should have 1 stack only."));
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.AvailableStackCount);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -347,7 +349,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	return Result;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
+FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip,
+	const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -410,39 +413,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	return Result;
 }
 
-EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag)
-{
-	if(Instance == nullptr)
-	{
-		return EObsidianEquipCheckResult::None;
-	}
-
-	if(CanOwnerModifyEquipmentState() == false)
-	{
-		return EObsidianEquipCheckResult::EquipmentActionsBlocked;
-	}
-	
-	if(Instance->IsItemEquippable() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnequippable;
-	}
-	
-	if(Instance->IsItemIdentified() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnientified;
-	}
-
-	const FGameplayTag ItemCategoryTag = Instance->GetItemCategoryTag();
-	const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
-	if(Result != EObsidianEquipCheckResult::CanEquip)
-	{
-		return Result;
-	}
-	
-	return EObsidianEquipCheckResult::CanEquip;
-}
-
-FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData)
+FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -487,7 +459,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::AutomaticallyEquipItem(con
 	return Result;
 }
 
-FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData)
+FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	FObsidianEquipmentResult Result = FObsidianEquipmentResult();
 	
@@ -508,7 +481,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 		return Result;
 	}
 
-	EObsidianEquipCheckResult EquipResult = CanEquipTemplate(ItemDef, SlotTag);
+	EObsidianEquipCheckResult EquipResult = CanEquipTemplate(ItemDef, SlotTag, ItemGeneratedData);
 	if(EquipResult != EObsidianEquipCheckResult::CanEquip)
 	{
 		//TODO(intrxx) Send Client RPC to add voiceover passing EquipResult
@@ -519,8 +492,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	}
 	
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, ItemGeneratedData, SlotTag);
-	checkf(ItemGeneratedData.StackCount == 1, TEXT("Equipment Items should have 1 stack only."));
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.StackCount);
+	checkf(ItemGeneratedData.AvailableStackCount == 1, TEXT("Equipment Items should have 1 stack only."));
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.AvailableStackCount);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -533,36 +506,38 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	return Result;
 }
 
-EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
+EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag)
+{
+	const EObsidianEquipCheckResult PossibilityResult = IsItemEquippingPossible(Instance);
+	if (PossibilityResult != EObsidianEquipCheckResult::CanEquip)
+	{
+		return PossibilityResult;
+	}
+
+	const FGameplayTag ItemCategoryTag = Instance->GetItemCategoryTag();
+	const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
+	if(Result != EObsidianEquipCheckResult::CanEquip)
+	{
+		return Result;
+	}
+	
+	return EObsidianEquipCheckResult::CanEquip;
+}
+
+EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	if(ItemDef == nullptr)
 	{
 		return EObsidianEquipCheckResult::None;
 	}
 
-	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
-	if(DefaultObject == nullptr)
+	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDef);
+	const EObsidianEquipCheckResult PossibilityResult = IsItemEquippingPossible(DefaultObject, ItemGeneratedData);
+	if (PossibilityResult != EObsidianEquipCheckResult::CanEquip)
 	{
-		return EObsidianEquipCheckResult::None;
+		return PossibilityResult;
 	}
-
-	if(CanOwnerModifyEquipmentState() == false)
-	{
-		return EObsidianEquipCheckResult::EquipmentActionsBlocked;
-	}
-	
-	if(DefaultObject->IsEquippable() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnequippable;
-	}
-
-	//TODO(intrxx) #AffixRefactor
-	if(DefaultObject->DoesStartIdentified() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnientified;
-	}
-
-	//TODO Check for actual identification
 
 	const FGameplayTag ItemCategoryTag = DefaultObject->GetItemCategoryTag();
 	const EObsidianEquipCheckResult Result = CanPlaceItemAtEquipmentSlot(SlotTag, ItemCategoryTag);
@@ -576,26 +551,12 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanEquipTemplate(const TS
 
 EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag)
 {
-	if(Instance == nullptr)
+	const EObsidianEquipCheckResult PossibilityResult = IsItemEquippingPossible(Instance);
+	if (PossibilityResult != EObsidianEquipCheckResult::CanEquip)
 	{
-		return EObsidianEquipCheckResult::None;
-	}
-
-	if(CanOwnerModifyEquipmentState() == false)
-	{
-		return EObsidianEquipCheckResult::EquipmentActionsBlocked;
+		return PossibilityResult;
 	}
 	
-	if(Instance->IsItemEquippable() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnequippable;
-	}
-	
-	if(Instance->IsItemIdentified() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnientified;
-	}
-
 	const FGameplayTag ItemCategory = Instance->GetItemCategoryTag();
 	const FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
 	
@@ -634,33 +595,19 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceInstance(const 
 	return EObsidianEquipCheckResult::CanEquip;
 }
 
-EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag)
+EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData)
 {
 	if(ItemDef == nullptr)
 	{
 		return EObsidianEquipCheckResult::None;
 	}
 
-	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
-	if(DefaultObject == nullptr)
+	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDef);
+	const EObsidianEquipCheckResult PossibilityResult = IsItemEquippingPossible(DefaultObject, ItemGeneratedData);
+	if (PossibilityResult != EObsidianEquipCheckResult::CanEquip)
 	{
-		return EObsidianEquipCheckResult::None;
-	}
-
-	if(CanOwnerModifyEquipmentState() == false)
-	{
-		return EObsidianEquipCheckResult::EquipmentActionsBlocked;
-	}
-	
-	if(DefaultObject->IsEquippable() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnequippable;
-	}
-
-	//TODO(intrxx) #AffixRefactor
-	if(DefaultObject->DoesStartIdentified() == false)
-	{
-		return EObsidianEquipCheckResult::ItemUnientified;
+		return PossibilityResult;
 	}
 
 	const FGameplayTag ItemCategory = DefaultObject->GetItemCategoryTag();
@@ -698,6 +645,77 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CanReplaceTemplate(const 
 		return EObsidianEquipCheckResult::UnableToEquip_DoesNotFitWithOtherWeaponType;
 	}
 	
+	return EObsidianEquipCheckResult::CanEquip;
+}
+
+EObsidianEquipCheckResult UObsidianEquipmentComponent::IsItemEquippingPossible(const UObsidianInventoryItemInstance* Instance)
+{
+	if(Instance == nullptr)
+	{
+		return EObsidianEquipCheckResult::None;
+	}
+	
+	if(CanOwnerModifyEquipmentState() == false)
+	{
+		return EObsidianEquipCheckResult::EquipmentActionsBlocked;
+	}
+	
+	if(Instance->IsItemEquippable() == false)
+	{
+		return EObsidianEquipCheckResult::ItemUnequippable;
+	}
+	
+	if(Instance->IsItemIdentified() == false)
+	{
+		return EObsidianEquipCheckResult::ItemUnientified;
+	}
+
+	FObsidianItemRequirements ItemRequirements = Instance->GetEquippingRequirements();
+	UE_LOG(LogTemp, Display, TEXT("Item Requirements: \n"
+								"Level: [%d]\n"
+								"HeroClass: [%d]\n"), ItemRequirements.RequiredLevel, ItemRequirements.HeroClassRequirement);
+	for (const auto& AttributeReq : ItemRequirements.AttributeRequirements)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Attribute [%s], Magnitude [%d]: \n"), *AttributeReq.RequiredAttribute.GetName(),
+			AttributeReq.RequiredAttributeMagnitude);
+	}
+
+	return EObsidianEquipCheckResult::CanEquip;
+}
+
+EObsidianEquipCheckResult UObsidianEquipmentComponent::IsItemEquippingPossible(const UObsidianInventoryItemDefinition* Definition,
+	const FObsidianItemGeneratedData& ItemGeneratedData)
+{
+	if (Definition == nullptr)
+	{
+		return EObsidianEquipCheckResult::None;
+	}
+
+	if(CanOwnerModifyEquipmentState() == false)
+	{
+		return EObsidianEquipCheckResult::EquipmentActionsBlocked;
+	}
+	
+	if(Definition->IsEquippable() == false)
+	{
+		return EObsidianEquipCheckResult::ItemUnequippable;
+	}
+	
+	if(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(Definition, ItemGeneratedData) == false)
+	{
+		return EObsidianEquipCheckResult::ItemUnientified;
+	}
+
+	FObsidianItemRequirements ItemRequirements = ItemGeneratedData.ItemEquippingRequirements;
+	UE_LOG(LogTemp, Display, TEXT("Item Requirements: \n"
+								"Level: [%d]\n"
+								"HeroClass: [%d]\n"), ItemRequirements.RequiredLevel, ItemRequirements.HeroClassRequirement);
+	for (const auto& AttributeReq : ItemRequirements.AttributeRequirements)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Attribute [%s], Magnitude [%d]: \n"), *AttributeReq.RequiredAttribute.GetName(),
+			AttributeReq.RequiredAttributeMagnitude);
+	}
+
 	return EObsidianEquipCheckResult::CanEquip;
 }
 

@@ -99,7 +99,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 	{
 		if(const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass())))
 		{
-			OutItemStats.SetStacks(ItemGeneratedData.StackCount,
+			OutItemStats.SetStacks(ItemGeneratedData.AvailableStackCount,
 				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Max));
 		}
 	}
@@ -176,14 +176,28 @@ bool UObsidianItemsFunctionLibrary::FillItemGeneratedData(FObsidianItemGenerated
 {
 	if (FromInstance)
 	{
+		//NOTE(intrx) Do not initialize OutGeneratedData.AvailableStackCount here!! Stacks are handled in Stash/Inventory Components.
 		OutGeneratedData.ItemAffixes = FromInstance->GetAllItemAffixes();
 		OutGeneratedData.ItemRarity = FromInstance->GetItemRarity();
-		OutGeneratedData.StackCount = FromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		OutGeneratedData.NameData = FObsidianItemGeneratedNameData(FromInstance->GetRareItemDisplayNameAddition(),
 			FromInstance->GetMagicAffixMultiplierItemDisplayNameAddition());
+		OutGeneratedData.ItemEquippingRequirements = FromInstance->GetEquippingRequirements();
 		return true;
 	}
 	return false;
+}
+
+void UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(UObsidianInventoryItemInstance* Instance,
+	const FObsidianItemGeneratedData& GeneratedData)
+{
+	if (Instance)
+	{
+		//NOTE(intrx) Do not initialize GeneratedData.AvailableStackCount here!! Stacks are handled in Stash/Inventory Components.
+		Instance->InitializeAffixes(GeneratedData.ItemAffixes);
+		Instance->SetItemRarity(GeneratedData.ItemRarity);
+		Instance->SetGeneratedNameAdditions(GeneratedData.NameData);
+		Instance->InitializeEquippingRequirements(GeneratedData.ItemEquippingRequirements);
+	}
 }
 
 int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const AActor* Owner, const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo)

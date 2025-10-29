@@ -77,7 +77,7 @@ void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 NewItemStacks
 {
 	if(PickupContent.Template.IsValid())
 	{
-		PickupContent.Template.ItemGeneratedData.StackCount = NewItemStacks;
+		PickupContent.Template.ItemGeneratedData.AvailableStackCount = NewItemStacks;
 	}
 }
 

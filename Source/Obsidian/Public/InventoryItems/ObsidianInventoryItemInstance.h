@@ -134,8 +134,9 @@ public:
 	void SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors);
 	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
 	void DestroyEquipmentActors();
-	
-	TArray<UObsidianAffixAbilitySet*> GetAffixAbilitySetsFromItem() const;
+
+	FObsidianItemRequirements GetEquippingRequirements() const;
+	void InitializeEquippingRequirements(const FObsidianItemRequirements& InRequirements);
 	
 	/**
 	 * Affixes.
@@ -172,19 +173,21 @@ public:
 	void SetItemAddedSuffixCount(const int32 InAddedSuffixes);
 	void SetItemAddedPrefixCount(const int32 InAddedPrefixes);
 
+	TArray<UObsidianAffixAbilitySet*> GetAffixAbilitySetsFromItem() const;
+	
 	/**
 	 * Stacks.
 	 */
 
-	/** Adds a specified number of stacks to the tag (does nothing if StackCount is below 1). */
+	/** Adds a specified number of stacks to the tag (does nothing if AvailableStackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount);
 
-	/** Removes a specified number of stacks to the tag (does nothing if StackCount is below 1). */
+	/** Removes a specified number of stacks to the tag (does nothing if AvailableStackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void RemoveItemStackCount(const FGameplayTag FromTag, const int32 StackCount);
 
-	/** Overrides stacks on provided tag (does nothing if StackCount is below 1). */
+	/** Overrides stacks on provided tag (does nothing if AvailableStackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void OverrideItemStackCount(const FGameplayTag Tag, const int32 NewStackCount);
 	
@@ -322,6 +325,9 @@ private:
 
 	UPROPERTY(Replicated)
 	TArray<TObjectPtr<AObsidianSpawnedEquipmentPiece>> SpawnedActors;
+
+	UPROPERTY(Replicated)
+	FObsidianItemRequirements EquippingRequirements = FObsidianItemRequirements();
 	
 	/**
 	 * Affixes.

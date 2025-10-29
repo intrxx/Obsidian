@@ -124,25 +124,6 @@ void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
 	checkf(false, TEXT("Failed to Initialize Item with neither Item Def nor Instance, something is wrong."));
 }
 
-void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 ItemStacks)
-{
-	if(HasAuthority() == false)
-	{
-		return;
-	}
-
-	if(!ensureMsgf(ItemDef, TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
-	{
-		return;
-	}
-	
-	if(ItemDef)
-	{
-		AddItemDefinition(ItemDef, FObsidianItemGeneratedData(ItemStacks));
-		return;
-	}
-}
-
 void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& InGeneratedData)
 {
 	if(HasAuthority() == false)

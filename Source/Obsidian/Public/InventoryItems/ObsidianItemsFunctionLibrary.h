@@ -44,6 +44,7 @@ public:
 	static TArray<FObsidianAffixDescriptionRow> FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes);
 	static FObsidianDynamicItemAffix GetRandomDynamicAffix(const TArray<FObsidianDynamicItemAffix>& DynamicAffixes);
 	static bool FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* FromInstance);
+	static void InitializeItemInstanceWithGeneratedData(UObsidianInventoryItemInstance* Instance, const FObsidianItemGeneratedData& GeneratedData);
 	
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")

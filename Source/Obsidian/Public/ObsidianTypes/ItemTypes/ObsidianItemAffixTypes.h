@@ -57,6 +57,9 @@ struct FObsidianAffixTier
 	GENERATED_BODY()
 
 public:
+	FObsidianAffixTier(){};
+	
+public:
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "8"))
 	uint8 AffixTierValue = 1;
 
@@ -150,8 +153,11 @@ struct FObsidianActiveAffixValue
 	GENERATED_BODY()
 
 public:
+	bool IsValid() const;
+	
+public:
 	UPROPERTY()
-	uint8 AffixTier = -1;
+	FObsidianAffixTier AffixTier = FObsidianAffixTier();
 
 	UPROPERTY()
 	TArray<FObsidianAffixIdentifier> AffixValuesIdentifiers;
@@ -275,6 +281,7 @@ public:
 	bool operator==(const FObsidianStaticItemAffix& Other) const;
 
 	uint8 GetCurrentAffixTier() const;
+	uint8 GetCurrentAffixTierItemLevelRequirement() const;
 	
 	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
 	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality, const bool bApplyMultiplier);

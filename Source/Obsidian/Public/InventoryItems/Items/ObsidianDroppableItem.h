@@ -37,7 +37,6 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
 	void InitializeItem(const FDraggedItem& DraggedItem);
-	void InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 ItemStacks = 1);
 	void InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& InGeneratedData);
 
 	//TODO(intrxx) this shouldn't be public?

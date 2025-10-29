@@ -2,12 +2,11 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianItemAffixTypes.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 #include "ObsidianItemTypes.generated.h"
 
@@ -148,6 +147,51 @@ enum class EObsidianPlacingAtSlotResult : uint8
 	UnableToPlace_BannedCategory UMETA(DisplayName="Item is of Banned Category"),
 	UnableToPlace_BaseTypeDiffers UMETA(DisplayName="Base Type Differs"),
 	CanPlace UMETA(DisplayName="Can Place")
+};
+
+/**
+ *
+ */
+USTRUCT(BlueprintType)
+struct FObsidianAttributeRequirement
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianAttributeRequirement(){}
+	FObsidianAttributeRequirement(const FGameplayAttribute& InAttribute, const uint16 InMagnitude)
+		: RequiredAttribute(InAttribute)
+		, RequiredAttributeMagnitude(InMagnitude)
+	{}
+	
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Attribute")
+	FGameplayAttribute RequiredAttribute;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Magnitude")
+	uint16 RequiredAttributeMagnitude = 0;
+};
+
+/**
+ *
+ */
+USTRUCT(BlueprintType)
+struct FObsidianItemRequirements
+{
+	GENERATED_BODY()
+	
+public:
+	FObsidianItemRequirements();
+	
+public:
+	UPROPERTY(EditDefaultsOnly, Category = "Requirement")
+	EObsidianHeroClass HeroClassRequirement = EObsidianHeroClass::None;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Requirement")
+	TArray<FObsidianAttributeRequirement> AttributeRequirements;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = 0, ClampMax = 90), Category = "Requirement")
+	uint8 RequiredLevel = 0;
 };
 
 /**
@@ -420,19 +464,20 @@ struct FObsidianItemGeneratedData
 public:
 	FObsidianItemGeneratedData(){}
 	FObsidianItemGeneratedData(const int32 InStacks)
-		: StackCount(InStacks)
+		: AvailableStackCount(InStacks)
 	{}
-	FObsidianItemGeneratedData(const int32 InStacks, const EObsidianItemRarity InRarity, const TArray<FObsidianActiveItemAffix>& InAffixes)
-		: StackCount(InStacks)
-		, ItemRarity(InRarity)
-		, ItemAffixes(InAffixes)
-	{}
-
+	
 	void Reset();
 	
 public:
+	/**
+	 *	Stacks data is handled very uniquely. This number represents the Stack Number of the Item that we Templating,
+	 * this does not mean that we will add this amount of stacks to the item Instance so we shouldn't initialize the Item
+	 * with this amount of stacks.
+	 *	Item stacks initialization is handled in Inventory/Stash.
+	 */
 	UPROPERTY()
-	int32 StackCount = 1;
+	int32 AvailableStackCount = 1;
 
 	UPROPERTY()
 	EObsidianItemRarity ItemRarity = EObsidianItemRarity::Normal;
@@ -442,6 +487,9 @@ public:
 
 	UPROPERTY()
 	FObsidianItemGeneratedNameData NameData = FObsidianItemGeneratedNameData();
+
+	UPROPERTY()
+	FObsidianItemRequirements ItemEquippingRequirements = FObsidianItemRequirements();
 };
 
 /**
@@ -483,7 +531,7 @@ public:
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = nullptr;
 	
 	UPROPERTY()
-	FObsidianItemGeneratedData GeneratedData = 0;
+	FObsidianItemGeneratedData GeneratedData = FObsidianItemGeneratedData();
 };
 
 

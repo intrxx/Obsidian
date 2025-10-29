@@ -71,7 +71,7 @@ public:
 	FObsidianPickupInstance Instance = FObsidianPickupInstance(nullptr);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	FObsidianPickupTemplate Template = FObsidianPickupTemplate(nullptr, 1);
+	FObsidianPickupTemplate Template = FObsidianPickupTemplate(nullptr, FObsidianItemGeneratedData());
 };
 
 /**
