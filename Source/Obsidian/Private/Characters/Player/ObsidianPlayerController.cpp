@@ -65,6 +65,15 @@ void AObsidianPlayerController::PostProcessInput(const float DeltaTime, const bo
 	Super::PostProcessInput(DeltaTime, bGamePaused);
 }
 
+EObsidianHeroClass AObsidianPlayerController::GetHeroClass() const
+{
+	if (const AObsidianHero* ObsidianHero = GetObsidianHero())
+	{
+		return ObsidianHero->GetHeroClass();
+	}
+	return EObsidianHeroClass::None;
+}
+
 AObsidianPlayerState* AObsidianPlayerController::GetObsidianPlayerState() const
 {
 	return CastChecked<AObsidianPlayerState>(PlayerState, ECastCheckedType::NullAllowed);

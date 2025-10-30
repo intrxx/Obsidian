@@ -2,11 +2,9 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
-
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
 #include "CommonPlayerController.h"
 #include "ObsidianPlayerController.generated.h"
@@ -56,6 +54,9 @@ public:
 	{
 		return PlayerStashComponent;
 	}
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
+	EObsidianHeroClass GetHeroClass() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianPlayerState* GetObsidianPlayerState() const;

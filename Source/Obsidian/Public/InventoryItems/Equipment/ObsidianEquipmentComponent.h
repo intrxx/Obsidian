@@ -2,16 +2,15 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianEquipmentList.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Components/ActorComponent.h"
+#include <Components/ActorComponent.h>
 #include "ObsidianEquipmentComponent.generated.h"
 
+class AObsidianPlayerState;
 class AObsidianPlayerController;
 class UObsidianInventoryComponent;
 
@@ -53,7 +52,10 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UObsidianInventoryComponent* GetInventoryComponentFromOwner() const;
-
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponentFromOwner() const;
+	AObsidianPlayerState* GetObsidianPlayerStateFromOwner() const;
+	AObsidianPlayerController* GetOwnerPlayerController() const;
+	
 	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag) const;
 	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot) const;
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
@@ -124,6 +126,7 @@ private:
 
 	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemInstance* Instance);
 	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemDefinition* Definition, const FObsidianItemGeneratedData& ItemGeneratedData);
+	EObsidianEquipCheckResult CheckItemRequirements(const FObsidianItemRequirements& ItemRequirements) const;
 	
 private:
 #if WITH_GAMEPLAY_DEBUGGER
@@ -151,7 +154,8 @@ namespace ObsidianEquipmentDebugHelpers
 		{EObsidianEquipCheckResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
 		{EObsidianEquipCheckResult::UnableToEquip_DoesNotFitWithOtherWeaponType, TEXT("Unable To Equip - Does Not Fit With Other Weapon Type")},
 		{EObsidianEquipCheckResult::ItemUnientified, TEXT("Item Unientified")},
-		{EObsidianEquipCheckResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
+		{EObsidianEquipCheckResult::WrongHeroClass, TEXT("Wrong Hero Class")},
+		{EObsidianEquipCheckResult::HeroLevelTooLow, TEXT("Hero Level Too Low")},
 		{EObsidianEquipCheckResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},
 		{EObsidianEquipCheckResult::NotEnoughIntelligence, TEXT("Not Enough Intelligence")},
 		{EObsidianEquipCheckResult::NotEnoughStrength, TEXT("Not Enough Strength")},
