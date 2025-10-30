@@ -12,6 +12,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianEquipmentComponent.generated.h"
 
+class AObsidianPlayerState;
 class AObsidianPlayerController;
 class UObsidianInventoryComponent;
 
@@ -53,6 +54,9 @@ public:
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UObsidianInventoryComponent* GetInventoryComponentFromOwner() const;
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponentFromOwner() const;
+	AObsidianPlayerState* GetObsidianPlayerStateFromOwner() const;
+	AObsidianPlayerController* GetOwnerPlayerController() const;
 
 	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag) const;
 	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot) const;
@@ -151,7 +155,8 @@ namespace ObsidianEquipmentDebugHelpers
 		{EObsidianEquipCheckResult::UnableToEquip_NoSufficientInventorySpace, TEXT("Unable To Equip - No Sufficient Inventory Space")},
 		{EObsidianEquipCheckResult::UnableToEquip_DoesNotFitWithOtherWeaponType, TEXT("Unable To Equip - Does Not Fit With Other Weapon Type")},
 		{EObsidianEquipCheckResult::ItemUnientified, TEXT("Item Unientified")},
-		{EObsidianEquipCheckResult::NotEnoughHeroLevel, TEXT("Not Enough Hero Level")},
+		{EObsidianEquipCheckResult::WrongHeroClass, TEXT("Wrong Hero Class")},
+		{EObsidianEquipCheckResult::HeroLevelTooLow, TEXT("Not Enough Hero Level")},
 		{EObsidianEquipCheckResult::NotEnoughDexterity, TEXT("Not Enough Dexterity")},
 		{EObsidianEquipCheckResult::NotEnoughIntelligence, TEXT("Not Enough Intelligence")},
 		{EObsidianEquipCheckResult::NotEnoughStrength, TEXT("Not Enough Strength")},

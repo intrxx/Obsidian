@@ -86,6 +86,15 @@ AObsidianHero* AObsidianPlayerController::GetObsidianHero() const
 	return CastChecked<AObsidianHero>(GetCharacter(), ECastCheckedType::NullAllowed);
 }
 
+EObsidianHeroClass AObsidianPlayerController::GetHeroClass() const
+{
+	if (const AObsidianHero* ObsidianHero = GetObsidianHero())
+	{
+		return ObsidianHero->GetHeroClass();
+	}
+	return EObsidianHeroClass::None;
+}
+
 void AObsidianPlayerController::TogglePlayerStash(const bool bShowStash) const
 {
 	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
