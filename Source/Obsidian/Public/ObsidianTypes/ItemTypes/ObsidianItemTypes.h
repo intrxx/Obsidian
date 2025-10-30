@@ -121,11 +121,8 @@ enum class EObsidianEquipCheckResult : uint8
 	/** Item cannot be equipped, it needs to be identified first. */
 	ItemUnientified UMETA(DisplayName="Item Unientified"),
 
-	/** Item cannot be equipped, wrong Hero class. */
-	WrongHeroClass UMETA(DisplayName="Wrong Hero Class"),
-	
 	/** Item cannot be equipped, no sufficient hero level. */
-	HeroLevelTooLow UMETA(DisplayName="Not Enough Hero Level"),
+	NotEnoughHeroLevel UMETA(DisplayName="Not Enough Hero Level"),
 
 	/** Item cannot be equipped, no sufficient Dexterity. */
 	NotEnoughDexterity UMETA(DisplayName="Not Enough Dexterity"),

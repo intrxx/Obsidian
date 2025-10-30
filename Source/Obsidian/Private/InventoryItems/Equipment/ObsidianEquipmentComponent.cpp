@@ -8,9 +8,7 @@
 
 // ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Characters/Player/ObsidianPlayerState.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -24,25 +22,9 @@ DEFINE_LOG_CATEGORY(LogEquipment);
 /** Defined to use in matches. */
 UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Obsidian_TwoHand, "TwoHand");
 
-namespace EquipmentHelpers
-{
-	const inline TMap<FGameplayAttribute, EObsidianEquipCheckResult> AttributeToResultMap =
-	{
-		{UObsidianHeroAttributeSet::GetDexterityAttribute(), EObsidianEquipCheckResult::NotEnoughDexterity},
-		{UObsidianHeroAttributeSet::GetIntelligenceAttribute(), EObsidianEquipCheckResult::NotEnoughIntelligence},
-		{UObsidianHeroAttributeSet::GetStrengthAttribute(), EObsidianEquipCheckResult::NotEnoughStrength},
-		{UObsidianHeroAttributeSet::GetFaithAttribute(), EObsidianEquipCheckResult::NotEnoughFaith},
-	};
-
-	inline EObsidianEquipCheckResult GetResultBasedOnAttribute(const FGameplayAttribute& Attribute)
-	{
-		if (const EObsidianEquipCheckResult* Result = AttributeToResultMap.Find(Attribute))
-		{
-			return *Result;
-		}
-		return EObsidianEquipCheckResult::None;
-	}
-}
+//
+// Equipment Component 
+//
 
 UObsidianEquipmentComponent::UObsidianEquipmentComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -97,33 +79,6 @@ UObsidianInventoryComponent* UObsidianEquipmentComponent::GetInventoryComponentF
 	if(const AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner()))
 	{
 		return OwningPlayerController->GetInventoryComponent();
-	}
-	return nullptr;
-}
-
-UObsidianAbilitySystemComponent* UObsidianEquipmentComponent::GetObsidianAbilitySystemComponentFromOwner() const
-{
-	if(const AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner()))
-	{
-		return OwningPlayerController->GetObsidianAbilitySystemComponent();
-	}
-	return nullptr;
-}
-
-AObsidianPlayerState* UObsidianEquipmentComponent::GetObsidianPlayerStateFromOwner() const
-{
-	if(const AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner()))
-	{
-		return OwningPlayerController->GetObsidianPlayerState();
-	}
-	return nullptr;
-}
-
-AObsidianPlayerController* UObsidianEquipmentComponent::GetOwnerPlayerController() const
-{
-	if(AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner()))
-	{
-		return OwningPlayerController;
 	}
 	return nullptr;
 }
@@ -715,47 +670,16 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::IsItemEquippingPossible(c
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}
 
-	const FObsidianItemRequirements ItemRequirements = Instance->GetEquippingRequirements();
-	const AObsidianPlayerController* ObsidianPC = GetOwnerPlayerController();
-	if (ObsidianPC == nullptr)
+	FObsidianItemRequirements ItemRequirements = Instance->GetEquippingRequirements();
+	UE_LOG(LogTemp, Display, TEXT("Item Requirements: \n"
+								"Level: [%d]\n"
+								"HeroClass: [%d]\n"), ItemRequirements.RequiredLevel, ItemRequirements.HeroClassRequirement);
+	for (const auto& AttributeReq : ItemRequirements.AttributeRequirements)
 	{
-		return EObsidianEquipCheckResult::None;
-	}
-	
-	UE_LOG(LogTemp, Display, TEXT("Checking Req: Hero Class: [%d]"), ItemRequirements.HeroClassRequirement);
-	if (ItemRequirements.HeroClassRequirement != EObsidianHeroClass::None && ItemRequirements.HeroClassRequirement != ObsidianPC->GetHeroClass())
-	{
-		return EObsidianEquipCheckResult::WrongHeroClass;
-	}
-	
-	const AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState();
-	if (ObsidianPS == nullptr)
-	{
-		return EObsidianEquipCheckResult::None;
+		UE_LOG(LogTemp, Display, TEXT("Attribute [%s], Magnitude [%d]: \n"), *AttributeReq.RequiredAttribute.GetName(),
+			AttributeReq.RequiredAttributeMagnitude);
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Checking Req: Hero Level: [%d]"), ItemRequirements.RequiredLevel);
-	if (ObsidianPS->GetHeroLevel() < ItemRequirements.RequiredLevel)
-	{
-		return EObsidianEquipCheckResult::HeroLevelTooLow;
-	}
-
-	const UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
-	if (ObsidianASC == nullptr)
-	{
-		return EObsidianEquipCheckResult::None;
-	}
-	
-	for (const FObsidianAttributeRequirement& AttributeReq : ItemRequirements.AttributeRequirements)
-	{
-		if (ObsidianASC->GetNumericAttribute(AttributeReq.RequiredAttribute) < AttributeReq.RequiredAttributeMagnitude)
-		{
-			UE_LOG(LogTemp, Display, TEXT("Checking: Attribute [%s], Magnitude [%d]: \n"), *AttributeReq.RequiredAttribute.GetName(),
-				AttributeReq.RequiredAttributeMagnitude);
-			return EquipmentHelpers::GetResultBasedOnAttribute(AttributeReq.RequiredAttribute);
-		}
-	}
-	
 	return EObsidianEquipCheckResult::CanEquip;
 }
 
@@ -781,46 +705,15 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::IsItemEquippingPossible(c
 	{
 		return EObsidianEquipCheckResult::ItemUnientified;
 	}
-	
-	const AObsidianPlayerController* ObsidianPC = GetOwnerPlayerController();
-	if (ObsidianPC == nullptr)
-	{
-		return EObsidianEquipCheckResult::None;
-	}
-	
-	UE_LOG(LogTemp, Display, TEXT("Checking Req: Hero Class: [%d]"), ItemGeneratedData.ItemEquippingRequirements.HeroClassRequirement);
-	if (ItemGeneratedData.ItemEquippingRequirements.HeroClassRequirement != EObsidianHeroClass::None &&
-		ItemGeneratedData.ItemEquippingRequirements.HeroClassRequirement != ObsidianPC->GetHeroClass())
-	{
-		return EObsidianEquipCheckResult::WrongHeroClass;
-	}
-	
-	const AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState();
-	if (ObsidianPS == nullptr)
-	{
-		return EObsidianEquipCheckResult::None;
-	}
 
-	UE_LOG(LogTemp, Display, TEXT("Checking Req: Hero Level: [%d]"), ItemGeneratedData.ItemEquippingRequirements.RequiredLevel);
-	if (ObsidianPS->GetHeroLevel() < ItemGeneratedData.ItemEquippingRequirements.RequiredLevel)
+	FObsidianItemRequirements ItemRequirements = ItemGeneratedData.ItemEquippingRequirements;
+	UE_LOG(LogTemp, Display, TEXT("Item Requirements: \n"
+								"Level: [%d]\n"
+								"HeroClass: [%d]\n"), ItemRequirements.RequiredLevel, ItemRequirements.HeroClassRequirement);
+	for (const auto& AttributeReq : ItemRequirements.AttributeRequirements)
 	{
-		return EObsidianEquipCheckResult::HeroLevelTooLow;
-	}
-
-	const UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
-	if (ObsidianASC == nullptr)
-	{
-		return EObsidianEquipCheckResult::None;
-	}
-	
-	for (const FObsidianAttributeRequirement& AttributeReq : ItemGeneratedData.ItemEquippingRequirements.AttributeRequirements)
-	{
-		if (ObsidianASC->GetNumericAttribute(AttributeReq.RequiredAttribute) < AttributeReq.RequiredAttributeMagnitude)
-		{
-			UE_LOG(LogTemp, Display, TEXT("Checking: Attribute [%s], Magnitude [%d]: \n"), *AttributeReq.RequiredAttribute.GetName(),
-				AttributeReq.RequiredAttributeMagnitude);
-			return EquipmentHelpers::GetResultBasedOnAttribute(AttributeReq.RequiredAttribute);
-		}
+		UE_LOG(LogTemp, Display, TEXT("Attribute [%s], Magnitude [%d]: \n"), *AttributeReq.RequiredAttribute.GetName(),
+			AttributeReq.RequiredAttributeMagnitude);
 	}
 
 	return EObsidianEquipCheckResult::CanEquip;

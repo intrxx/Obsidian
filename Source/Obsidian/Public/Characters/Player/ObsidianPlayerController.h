@@ -9,7 +9,6 @@
 
 
 #include "CommonPlayerController.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianPlayerController.generated.h"
 
 class AObsidianHero;
@@ -70,9 +69,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianHero* GetObsidianHero() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
-	EObsidianHeroClass GetHeroClass() const;
-	
 	void TogglePlayerStash(const bool bShowStash) const;
 	
 	UFUNCTION(Client, Reliable)
