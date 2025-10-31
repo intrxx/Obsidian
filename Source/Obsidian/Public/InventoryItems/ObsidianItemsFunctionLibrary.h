@@ -42,6 +42,7 @@ public:
 
 	/** Formats Item Affixes into Affix Row for Item Description. */
 	static TArray<FObsidianAffixDescriptionRow> FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes);
+	static TArray<FObsidianAffixDescriptionRow> FormatUnidentifiedItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes);
 	static FObsidianDynamicItemAffix GetRandomDynamicAffix(const TArray<FObsidianDynamicItemAffix>& DynamicAffixes);
 	static bool FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* FromInstance);
 	static void InitializeItemInstanceWithGeneratedData(UObsidianInventoryItemInstance* Instance, const FObsidianItemGeneratedData& GeneratedData);

@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Engine/DataAsset.h"
-#include "ObsidianTypes/ItemTypes/ObsidianItemAffixTypes.h"
+#include <Engine/DataAsset.h>
 #include "ObsidianItemDataConfig.generated.h"
 
 class UObsidianAffixList;

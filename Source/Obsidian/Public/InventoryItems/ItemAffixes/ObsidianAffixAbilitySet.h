@@ -7,7 +7,7 @@
 #include <GameplayAbilitySpecHandle.h>
 #include <GameplayTagContainer.h>
 
-#include "ObsidianTypes/ItemTypes/ObsidianItemAffixTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include <Engine/DataAsset.h>
 #include "ObsidianAffixAbilitySet.generated.h"

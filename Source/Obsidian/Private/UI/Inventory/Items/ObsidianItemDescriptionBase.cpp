@@ -10,6 +10,7 @@
 
 // ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+#include "UI/Components/ObsidianAffixRow.h"
 
 void UObsidianItemDescriptionBase::NativeConstruct()
 {
@@ -18,41 +19,43 @@ void UObsidianItemDescriptionBase::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-UCommonTextBlock* UObsidianItemDescriptionBase::GetFreePrefixBlock()
+UObsidianAffixRow* UObsidianItemDescriptionBase::GetFreePrefixBlock()
 {
-	for (UCommonTextBlock* Block : {Prefix1_TextBlock, Prefix2_TextBlock, Prefix3_TextBlock})
+	for (UObsidianAffixRow* AffixRow : {Prefix1_AffixRow, Prefix2_AffixRow, Prefix3_AffixRow})
 	{
-		if (Block && !Block->IsVisible() && Block->GetText().IsEmpty())
+		if (AffixRow && AffixRow->IsFree())
 		{
-			return Block;
+			return AffixRow;
 		}
 	}
 	ensureMsgf(false, TEXT("Not a single prefix box is free, this should never happen!"));
 	return nullptr;
 }
 
-UCommonTextBlock* UObsidianItemDescriptionBase::GetFreeSuffixBlock()
+UObsidianAffixRow* UObsidianItemDescriptionBase::GetFreeSuffixBlock()
 {
-	for (UCommonTextBlock* Block : {Suffix1_TextBlock, Suffix2_TextBlock, Suffix3_TextBlock})
+	for (UObsidianAffixRow* AffixRow : {Suffix1_AffixRow, Suffix2_AffixRow, Suffix3_AffixRow})
 	{
-		if (Block && !Block->IsVisible() && Block->GetText().IsEmpty())
+		if (AffixRow && AffixRow->IsFree())
 		{
-			return Block;
+			return AffixRow;
 		}
 	}
 	ensureMsgf(false, TEXT("Not a single suffix box is free, this should never happen!"));
 	return nullptr;
 }
 
-UCommonTextBlock* UObsidianItemDescriptionBase::GetFreeBlockForUniqueItem()
+UObsidianAffixRow* UObsidianItemDescriptionBase::GetFreeBlockForUniqueItem()
 {
-	const TArray<UCommonTextBlock*> AffixBlocks = {Prefix1_TextBlock, Prefix2_TextBlock, Prefix3_TextBlock,
-		Suffix1_TextBlock, Suffix2_TextBlock, Suffix3_TextBlock};
-	for (UCommonTextBlock* Block : AffixBlocks)
+	const TArray<UObsidianAffixRow*> AffixRows = {
+		Prefix1_AffixRow, Prefix2_AffixRow, Prefix3_AffixRow,
+		Suffix1_AffixRow, Suffix2_AffixRow, Suffix3_AffixRow
+	};
+	for (UObsidianAffixRow* AffixRow : AffixRows)
 	{
-		if (Block && !Block->IsVisible() && Block->GetText().IsEmpty())
+		if (AffixRow && AffixRow->IsFree())
 		{
-			return Block;
+			return AffixRow;
 		}
 	}
 	ensureMsgf(false, TEXT("Not a single affix block is free, this should never happen!"));
@@ -111,7 +114,24 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 
 	//TODO(intrxx) maybe the creation of items name should be done inside the item logic? This might potentially be expensive if spammed.
 	FText ItemDisplayName = ItemStats.GetDisplayName();
-	if(ItemStats.ContainsAffixes() && ItemStats.IsIdentified())
+	if(ItemStats.SupportsIdentification() && !ItemStats.IsIdentified())
+	{
+		Unidentified_TextBlock->SetVisibility(ESlateVisibility::Visible);
+		IdentificationHint_TextBlock->SetVisibility(ESlateVisibility::Visible);
+
+		if (ItemStats.ContainsAffixes()) // We always want to show Skill Implicit if we got one.
+		{
+			for(const FObsidianAffixDescriptionRow& Row : ItemStats.GetAffixDescriptions()) 
+			{
+				if (Row.AffixType == EObsidianAffixType::SkillImplicit)
+				{
+					SkillImplicit_AffixRow->InitializeAffixRow(Row.AffixRowDescription);
+					break;
+				}
+			}
+		}
+	}
+	else if(ItemStats.ContainsAffixes())
 	{
 		TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows = ItemStats.GetAffixDescriptions();
 		
@@ -149,36 +169,31 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 			{
 				case EObsidianAffixType::SkillImplicit:
 					{
-						SkillImplicit_TextBlock->SetText(Row.AffixRowDescription);
-						SkillImplicit_TextBlock->SetVisibility(ESlateVisibility::Visible);
+						SkillImplicit_AffixRow->InitializeAffixRow(Row.AffixRowDescription);
 					} break;
 				case EObsidianAffixType::Implicit:
 					{
-						Implicit_TextBlock->SetText(Row.AffixRowDescription);
-						Implicit_TextBlock->SetVisibility(ESlateVisibility::Visible);
+						Implicit_AffixRow->InitializeAffixRow(Row.AffixRowDescription);
 					} break;
 				case EObsidianAffixType::Prefix:
 					{
-						if(UCommonTextBlock* FreePrefixBlock = GetFreePrefixBlock())
+						if(UObsidianAffixRow* FreePrefixRow = GetFreePrefixBlock())
 						{
-							FreePrefixBlock->SetText(Row.AffixRowDescription);
-							FreePrefixBlock->SetVisibility(ESlateVisibility::Visible);
+							FreePrefixRow->InitializeAffixRow(Row.AffixRowDescription);
 						}
 					} break;
 				case EObsidianAffixType::Suffix:
 					{
-						if(UCommonTextBlock* FreeSuffixBlock = GetFreeSuffixBlock())
+						if(UObsidianAffixRow* FreeSuffixRow = GetFreeSuffixBlock())
 						{
-							FreeSuffixBlock->SetText(Row.AffixRowDescription);
-							FreeSuffixBlock->SetVisibility(ESlateVisibility::Visible);
+							FreeSuffixRow->InitializeAffixRow(Row.AffixRowDescription);
 						}
 					} break;
 				case EObsidianAffixType::Unique:
 					{
-						if(UCommonTextBlock* FreeSuffixBlock = GetFreeBlockForUniqueItem())
+						if(UObsidianAffixRow* FreeAffixRow = GetFreeBlockForUniqueItem())
 						{
-							FreeSuffixBlock->SetText(Row.AffixRowDescription);
-							FreeSuffixBlock->SetVisibility(ESlateVisibility::Visible);
+							FreeAffixRow->InitializeAffixRow(Row.AffixRowDescription);
 						}
 					} break;
 				default:
@@ -186,13 +201,13 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 			}
 		}
 	}
-	else if(ItemStats.SupportsIdentification() && !ItemStats.IsIdentified())
-	{
-		Unidentified_TextBlock->SetVisibility(ESlateVisibility::Visible);
-		IdentificationHint_TextBlock->SetVisibility(ESlateVisibility::Visible);
-	}
-
+	
 	SetItemDisplayName(ItemDisplayName, ItemStats.ItemRarity);
+
+	if (ItemStats.HasHeroClassRequirement())
+	{
+		
+	}
 }
 
 void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity)

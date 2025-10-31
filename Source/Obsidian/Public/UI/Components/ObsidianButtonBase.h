@@ -43,7 +43,7 @@ protected:
 	
 private:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Button", meta = (InlineEditConditionToggle))
-	uint8 bOverride_ButtonText : 1;
+	uint8 bOverride_ButtonText:1;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Button", meta=(EditCondition="bOverride_ButtonText"))
 	FText ButtonText;

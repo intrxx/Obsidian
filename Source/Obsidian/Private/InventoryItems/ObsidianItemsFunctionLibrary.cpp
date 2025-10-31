@@ -78,11 +78,18 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemIns
 	{
 		OutItemStats.SetAffixDescriptionRows(FormatItemAffixes(ItemInstance->GetAllItemAffixes()));
 	}
+	else
+	{
+		OutItemStats.SetAffixDescriptionRows(FormatUnidentifiedItemAffixes(ItemInstance->GetAllItemAffixes()));
+	}
+
+	OutItemStats.InitializeItemEquippingRequirements(ItemInstance->GetEquippingRequirements());
 
 	return true;
 }
 
-bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData, FObsidianItemStats& OutItemStats)
+bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData,
+	FObsidianItemStats& OutItemStats)
 {
 	if(IsValid(ItemDef) == false)
 	{
@@ -123,6 +130,8 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 		OutItemStats.SetAffixDescriptionRows(FormatItemAffixes(ItemGeneratedData.ItemAffixes));
 	}
 
+	OutItemStats.InitializeItemEquippingRequirements(ItemGeneratedData.ItemEquippingRequirements);
+	
 	return true;
 }
 
@@ -140,6 +149,26 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAf
 		Row.AffixItemNameAddition = Affix.AffixItemNameAddition;
 		Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
 		AffixDescriptionRows.Add(Row);
+	}
+	return AffixDescriptionRows;
+}
+
+TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatUnidentifiedItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes)
+{
+	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
+	
+	for(const FObsidianActiveItemAffix& Affix : ItemAffixes)
+	{
+		check(Affix);
+		if (Affix.AffixType == EObsidianAffixType::SkillImplicit)
+		{
+			FObsidianAffixDescriptionRow Row;
+			Row.AffixTag = Affix.AffixTag;
+			Row.AffixRowDescription = Affix.ActiveAffixDescription;
+			Row.AffixItemNameAddition = Affix.AffixItemNameAddition;
+			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
+			AffixDescriptionRows.Add(Row);
+		}
 	}
 	return AffixDescriptionRows;
 }

@@ -12,10 +12,12 @@
 #include "ObsidianItemDescriptionBase.generated.h"
 
 struct FGameplayTag;
+struct FObsidianItemStats;
+
+class UObsidianAffixRow;
 class UCommonTextStyle;
 class UVerticalBox;
 class UHorizontalBox;
-struct FObsidianItemStats;
 class UCommonTextBlock;
 class UImage;
 
@@ -56,9 +58,9 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
-	UCommonTextBlock* GetFreePrefixBlock();
-	UCommonTextBlock* GetFreeSuffixBlock();
-	UCommonTextBlock* GetFreeBlockForUniqueItem();
+	UObsidianAffixRow* GetFreePrefixBlock();
+	UObsidianAffixRow* GetFreeSuffixBlock();
+	UObsidianAffixRow* GetFreeBlockForUniqueItem();
 
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -89,28 +91,28 @@ protected:
 	TObjectPtr<UCommonTextBlock> Unidentified_TextBlock;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> SkillImplicit_TextBlock;
+	TObjectPtr<UObsidianAffixRow> SkillImplicit_AffixRow;
 	
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Implicit_TextBlock;
+	TObjectPtr<UObsidianAffixRow> Implicit_AffixRow;
 	
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Prefix1_TextBlock;
+	TObjectPtr<UObsidianAffixRow> Prefix1_AffixRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Prefix2_TextBlock;
+	TObjectPtr<UObsidianAffixRow> Prefix2_AffixRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Prefix3_TextBlock;
+	TObjectPtr<UObsidianAffixRow> Prefix3_AffixRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Suffix1_TextBlock;
+	TObjectPtr<UObsidianAffixRow> Suffix1_AffixRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Suffix2_TextBlock;
+	TObjectPtr<UObsidianAffixRow> Suffix2_AffixRow;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UCommonTextBlock> Suffix3_TextBlock;
+	TObjectPtr<UObsidianAffixRow> Suffix3_AffixRow;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> IdentificationHint_TextBlock;
