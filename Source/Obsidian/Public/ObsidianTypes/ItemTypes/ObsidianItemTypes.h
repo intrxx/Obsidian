@@ -210,6 +210,11 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = 0, ClampMax = 90), Category = "Requirement")
 	uint8 RequiredLevel = 0;
+	
+	uint8 bHasAnyRequirements:1;
+
+	/** This flag gets set when the Requirements get initialized and adjusted in Item drop logic. */ 
+	uint8 bInitialized:1;
 };
 
 /**
@@ -950,6 +955,61 @@ public:
 };
 
 USTRUCT(BlueprintType)
+struct FObsidianItemRequirementsUIDescription
+{
+	GENERATED_BODY()
+
+	FObsidianItemRequirementsUIDescription()
+		: bHasHeroClassRequirement(false)
+		, bHasLevelRequirement(false)
+		, bHasStrengthRequirement(false)
+		, bHasDexterityRequirement(false)
+		, bHasFaithRequirement(false)
+		, bHasIntelligenceRequirement(false)
+		, bMeetHeroClassRequirement(false)
+		, bMeetLevelRequirement(false)
+		, bMeetStrengthRequirement(false)
+		, bMeetDexterityRequirement(false)
+		, bMeetFaithRequirement(false)
+		, bMeetIntelligenceRequirement(false)
+	{}
+
+	void SetHeroLevelRequirement(const uint8 RequiredMagnitude, const uint8 OwnerMagnitude);
+	void SetHeroClassRequirement(const EObsidianHeroClass RequiredClass, const EObsidianHeroClass OwnerClass);
+	void SetAttributeRequirement(const FGameplayAttribute& Attribute, const float RequirementMagnitude, const float OwnerMagnitude);
+	
+public:
+	uint8 bHasHeroClassRequirement:1;
+	uint8 bHasLevelRequirement:1;
+	uint8 bHasStrengthRequirement:1;
+	uint8 bHasDexterityRequirement:1;
+	uint8 bHasFaithRequirement:1;
+	uint8 bHasIntelligenceRequirement:1;
+	
+	uint8 bMeetHeroClassRequirement:1;
+	uint8 bMeetLevelRequirement:1;
+	uint8 bMeetStrengthRequirement:1;
+	uint8 bMeetDexterityRequirement:1;
+	uint8 bMeetFaithRequirement:1;
+	uint8 bMeetIntelligenceRequirement:1;
+	
+	UPROPERTY()
+	FText HeroClassRequirementText;
+
+	UPROPERTY()
+	uint8 LevelRequirement = 0;
+
+	UPROPERTY()
+	uint16 StrengthRequirement = 0;
+	UPROPERTY()
+	uint16 DexterityRequirement = 0;
+	UPROPERTY()
+	uint16 FaithRequirement = 0;
+	UPROPERTY()
+	uint16 IntelligenceRequirement = 0;
+};
+
+USTRUCT(BlueprintType)
 struct FObsidianItemStats
 {
 	GENERATED_BODY()
@@ -965,9 +1025,7 @@ public:
 		, bContainsStacks(false)
 		, bContainsAffixes(false)
 		, bSupportIdentification(false)
-		, bHasClassRequirement(false)
-		, bHasLevelRequirement(false)
-		, bHasAttributeRequirement(false)
+		, bHasItemEquippingRequirements(false)
 	{}
 
 	// ----------------------- Containers hehe (checks) ----------------------- 
@@ -1025,22 +1083,10 @@ public:
 		return bSupportIdentification;
 	}
 
-	/** Checks if the Item has class requirement. */
-	bool HasHeroClassRequirement() const
+	/** Checks if the Item has equipping requirements. */
+	bool HasItemEquippingRequirements() const
 	{
-		return bHasClassRequirement;
-	}
-
-	/** Checks if the Item has level requirement. */
-	bool HasHeroLevelRequirement() const
-	{
-		return bHasLevelRequirement;
-	}
-
-	/** Checks if the Item has some (or any) attribute requirements. */
-	bool HasSomeAttributeRequirement() const
-	{
-		return bHasAttributeRequirement;
+		return bHasItemEquippingRequirements;
 	}
 
 	// ----------------------- Getters ----------------------- 
@@ -1095,20 +1141,11 @@ public:
 		return AffixDescriptionRows;
 	}
 
-	EObsidianHeroClass GetHeroClassRequirement() const
+	FObsidianItemRequirementsUIDescription GetItemEquippingRequirements() const
 	{
-		return HeroClassRequirement;
+		return ItemEquippingRequirements;
 	}
-
-	uint8 GetLevelRequirement() const
-	{
-		return LevelRequirement;
-	}
-
-	TArray<FObsidianAttributeRequirement> GetAttributesRequirements() const
-	{
-		return AttributeRequirements;
-	}
+	
 
 	// ----------------------- Setters ----------------------- 
 
@@ -1124,7 +1161,7 @@ public:
 	void SetMaxStacks(const int32 InMaxStacks);
 	void SetIdentified(const bool InIdentified);
 	void SetAffixDescriptionRows(const TArray<FObsidianAffixDescriptionRow>& AffixRows);
-	void InitializeItemEquippingRequirements(const FObsidianItemRequirements& Requirements);
+	void SetItemEquippingRequirements(const FObsidianItemRequirementsUIDescription& Requirements);
 	
 public:
 	UPROPERTY()
@@ -1178,13 +1215,7 @@ private:
 	 */
 
 	UPROPERTY()
-	EObsidianHeroClass HeroClassRequirement = EObsidianHeroClass::None;
-
-	UPROPERTY()
-	uint8 LevelRequirement = 0;
-
-	UPROPERTY()
-	TArray<FObsidianAttributeRequirement> AttributeRequirements;
+	FObsidianItemRequirementsUIDescription ItemEquippingRequirements = FObsidianItemRequirementsUIDescription();
 	
 	/**
 	 * Contains booleans.
@@ -1199,9 +1230,7 @@ private:
 	uint8 bContainsStacks:1;
 	uint8 bContainsAffixes:1;
 	uint8 bSupportIdentification:1;
-	uint8 bHasClassRequirement:1;
-	uint8 bHasLevelRequirement:1;
-	uint8 bHasAttributeRequirement:1;
+	uint8 bHasItemEquippingRequirements:1;
 };
 
 

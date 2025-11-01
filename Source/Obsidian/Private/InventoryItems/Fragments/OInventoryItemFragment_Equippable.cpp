@@ -7,6 +7,7 @@
 // ~ Project
 #include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
 //
 // Equipment Actor
@@ -34,3 +35,4 @@ FObsidianItemRequirements UOInventoryItemFragment_Equippable::GetItemDefaultEqui
 {
 	return DefaultEquippingRequirements;
 }
+

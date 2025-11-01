@@ -11,6 +11,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemDescriptionBase.generated.h"
 
+class UObsidianItemDescRequirementsBlock;
 struct FGameplayTag;
 struct FObsidianItemStats;
 
@@ -77,6 +78,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> StacksContainer_HorizontalBox;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianItemDescRequirementsBlock> ItemRequirements_RequirementsBlock;
 	
 	UPROPERTY(meta=(BindWidget))	
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;

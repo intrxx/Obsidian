@@ -294,8 +294,13 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 	}
 
 	FObsidianItemRequirements DefaultRequirements = EquippableFragment->GetItemDefaultEquippingRequirements();
-	AdjustItemRequirementsBasedOnAddedAffixes(DefaultRequirements, ForItemToDrop);
-	ForItemToDrop.DropItemRequirements = DefaultRequirements;
+	if (UObsidianItemsFunctionLibrary::HasEquippingRequirements(DefaultRequirements))
+	{
+		DefaultRequirements.bInitialized = true;
+		DefaultRequirements.bHasAnyRequirements = true;
+		AdjustItemRequirementsBasedOnAddedAffixes(DefaultRequirements, ForItemToDrop);
+		ForItemToDrop.DropItemRequirements = DefaultRequirements;
+	}
 }
 
 void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,

@@ -5,6 +5,7 @@
 
 #include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Obsidian/ObsidianGameModule.h"
@@ -44,6 +45,8 @@ FObsidianSlotDefinition const FObsidianSlotDefinition::InvalidSlot;
 // ~ FObsidianItemRequirement
 
 FObsidianItemRequirements::FObsidianItemRequirements()
+	: bHasAnyRequirements(false)
+	, bInitialized(false)
 {
 	AttributeRequirements =
 		{
@@ -450,6 +453,65 @@ FText FObsidianRareItemNameGenerationData::GetRandomSuffixNameAddition(const int
 	return PrefixAdditionsCandidates[RandomInt];
 }
 
+void FObsidianItemRequirementsUIDescription::SetHeroLevelRequirement(const uint8 RequiredMagnitude, const uint8 OwnerMagnitude)
+{
+	if (RequiredMagnitude > 0)
+	{
+		bHasLevelRequirement = true;
+		LevelRequirement = RequiredMagnitude;
+		bMeetLevelRequirement = OwnerMagnitude >= RequiredMagnitude;
+	}
+}
+
+void FObsidianItemRequirementsUIDescription::SetHeroClassRequirement(const EObsidianHeroClass RequiredClass, const EObsidianHeroClass OwnerClass)
+{
+	if (RequiredClass > EObsidianHeroClass::None)
+	{
+		bHasHeroClassRequirement = true;
+		HeroClassRequirementText = UObsidianGameplayStatics::GetHeroClassText(RequiredClass);
+		bMeetHeroClassRequirement = OwnerClass == RequiredClass;
+	}
+}
+
+void FObsidianItemRequirementsUIDescription::SetAttributeRequirement(const FGameplayAttribute& Attribute, const float RequirementMagnitude,
+                                                                     const float OwnerMagnitude)
+{
+	if (RequirementMagnitude <= 0)
+	{
+		return;
+	}
+	
+	ensureMsgf(Attribute.GetAttributeSetClass() == UObsidianHeroAttributeSet::StaticClass(),
+		TEXT("Attribute [%s] belongs to [%s], assumed ObsidianHeroAttributeSet, "
+	    "please update FObsidianItemRequirementsUIDescription::SetAttributeRequirement logic."),
+		*Attribute.GetName(), *GetNameSafe(Attribute.GetAttributeSetClass()));
+	
+	if (Attribute == UObsidianHeroAttributeSet::GetStrengthAttribute())
+	{
+		bHasStrengthRequirement = true;
+		StrengthRequirement = RequirementMagnitude;
+		bMeetStrengthRequirement = OwnerMagnitude >= RequirementMagnitude;
+	}
+	else if (Attribute == UObsidianHeroAttributeSet::GetDexterityAttribute())
+	{
+		bHasDexterityRequirement = true;
+		DexterityRequirement = RequirementMagnitude;
+		bMeetDexterityRequirement = OwnerMagnitude >= RequirementMagnitude;
+	}
+	else if (Attribute == UObsidianHeroAttributeSet::GetFaithAttribute())
+	{
+		bHasFaithRequirement = true;
+		FaithRequirement = RequirementMagnitude;
+		bMeetFaithRequirement = OwnerMagnitude >= RequirementMagnitude;
+	}
+	else if (Attribute == UObsidianHeroAttributeSet::GetIntelligenceAttribute())
+	{
+		bHasIntelligenceRequirement = true;
+		IntelligenceRequirement = RequirementMagnitude;
+		bMeetIntelligenceRequirement = OwnerMagnitude >= RequirementMagnitude;
+	}
+}
+
 // ~ FObsidianDescriptionAffixRow
 
 void FObsidianAffixDescriptionRow::SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType, const int32 InAffixTier)
@@ -551,28 +613,10 @@ void FObsidianItemStats::SetAffixDescriptionRows(const TArray<FObsidianAffixDesc
 	AffixDescriptionRows = AffixRows;
 }
 
-void FObsidianItemStats::InitializeItemEquippingRequirements(const FObsidianItemRequirements& Requirements)
+void FObsidianItemStats::SetItemEquippingRequirements(const FObsidianItemRequirementsUIDescription& Requirements)
 {
-	if (Requirements.HeroClassRequirement != EObsidianHeroClass::None)
-	{
-		bHasClassRequirement = true;
-		HeroClassRequirement = Requirements.HeroClassRequirement;
-	}
-
-	if (Requirements.RequiredLevel > 0)
-	{
-		bHasLevelRequirement = true;
-		LevelRequirement = Requirements.RequiredLevel;
-	}
-
-	for (const FObsidianAttributeRequirement& AttributeReq : Requirements.AttributeRequirements)
-	{
-		if (AttributeReq.RequiredAttributeMagnitude > 0)
-		{
-			bHasAttributeRequirement = true;
-			AttributeRequirements.Add(AttributeReq);
-		}
-	}
+	bHasItemEquippingRequirements = true;
+	ItemEquippingRequirements = Requirements;
 }
 
 // ~ End of FObsidianDescriptionAffixRow

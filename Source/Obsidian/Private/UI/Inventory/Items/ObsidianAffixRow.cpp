@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/Components/ObsidianAffixRow.h"
+#include "UI/Inventory/Items/ObsidianAffixRow.h"
 
 #include <CommonTextBlock.h>
 

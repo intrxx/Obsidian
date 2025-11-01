@@ -135,6 +135,7 @@ public:
 	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
 	void DestroyEquipmentActors();
 
+	bool HasEquippingRequirements() const;
 	FObsidianItemRequirements GetEquippingRequirements() const;
 	void InitializeEquippingRequirements(const FObsidianItemRequirements& InRequirements);
 	

@@ -990,7 +990,7 @@ void UObsidianInventoryItemsWidgetController::HandleHoveringOverInventoryItem(co
 	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 
 	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
 	
 	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
@@ -1009,7 +1009,7 @@ void UObsidianInventoryItemsWidgetController::HandleHoveringOverInventoryItem(co
 	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
 
 	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
 
 	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
@@ -1028,7 +1028,7 @@ void UObsidianInventoryItemsWidgetController::HandleHoveringOverEquipmentItem(co
 	const UObsidianInventoryItemInstance* ItemInstance = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
 
 	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
 
 	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
@@ -1047,7 +1047,7 @@ void UObsidianInventoryItemsWidgetController::HandleHoveringOverStashedItem(cons
 	if (const UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(ItemPosition))
 	{
 		FObsidianItemStats OutItemStats;
-		const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ItemInstance, OutItemStats);
+		const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
 
 		if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 		{
@@ -1074,7 +1074,7 @@ void UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedIte
 	}
 	
 	FObsidianItemStats OutItemStats;
-	if(UObsidianItemsFunctionLibrary::GetItemStats(Instance, OutItemStats))
+	if(UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, Instance, OutItemStats))
 	{
 		CreateDroppedItemDescription(OutItemStats);
 	}
@@ -1088,7 +1088,7 @@ void UObsidianInventoryItemsWidgetController::CreateItemDescriptionForDroppedIte
 	}
 	
 	FObsidianItemStats OutItemStats;
-	if(UObsidianItemsFunctionLibrary::GetItemStats_WithDef(ItemDef, ItemGeneratedData, OutItemStats))
+	if(UObsidianItemsFunctionLibrary::GetItemStats_WithDef(ObsidianPlayerController, ItemDef, ItemGeneratedData, OutItemStats))
 	{
 		CreateDroppedItemDescription(OutItemStats);
 	}

@@ -10,7 +10,8 @@
 
 // ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-#include "UI/Components/ObsidianAffixRow.h"
+#include "UI/Inventory/Items/ObsidianAffixRow.h"
+#include "UI/Inventory/Items/ObsidianItemDescRequirementsBlock.h"
 
 void UObsidianItemDescriptionBase::NativeConstruct()
 {
@@ -204,9 +205,13 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	
 	SetItemDisplayName(ItemDisplayName, ItemStats.ItemRarity);
 
-	if (ItemStats.HasHeroClassRequirement())
+	if (ItemStats.HasItemEquippingRequirements())
 	{
-		
+		ItemRequirements_RequirementsBlock->InitializeRequirementsBlock(ItemStats.GetItemEquippingRequirements());
+	}
+	else
+	{
+		ItemRequirements_RequirementsBlock->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 

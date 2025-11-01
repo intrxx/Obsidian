@@ -7,6 +7,7 @@
 
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
@@ -432,6 +433,16 @@ void UObsidianInventoryItemInstance::DestroyEquipmentActors()
 	}
 	
 	SpawnedActors.Empty();
+}
+
+bool UObsidianInventoryItemInstance::HasEquippingRequirements() const
+{
+	if (EquippingRequirements.bInitialized)
+	{
+		return EquippingRequirements.bHasAnyRequirements;
+	}
+
+	return UObsidianItemsFunctionLibrary::HasEquippingRequirements(EquippingRequirements);
 }
 
 FObsidianItemRequirements UObsidianInventoryItemInstance::GetEquippingRequirements() const

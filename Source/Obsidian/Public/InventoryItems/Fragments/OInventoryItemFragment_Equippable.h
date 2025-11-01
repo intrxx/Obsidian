@@ -50,7 +50,7 @@ public:
 	//~ Start of UObsidianInventoryItemFragment
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
-
+	
 	FObsidianItemRequirements GetItemDefaultEquippingRequirements() const;
 
 protected:

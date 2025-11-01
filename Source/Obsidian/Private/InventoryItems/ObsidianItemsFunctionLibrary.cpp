@@ -5,6 +5,9 @@
 // ~ Core
 
 // ~ Project
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/Player/ObsidianPlayerController.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
@@ -50,7 +53,8 @@ bool UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(const UObsidianInvento
 	return false;
 }
 
-bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemInstance* ItemInstance, FObsidianItemStats& OutItemStats)
+bool UObsidianItemsFunctionLibrary::GetItemStats(const AObsidianPlayerController* OwnerPC, const UObsidianInventoryItemInstance* ItemInstance,
+	FObsidianItemStats& OutItemStats)
 {
 	if(ItemInstance == nullptr)
 	{
@@ -83,15 +87,22 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const UObsidianInventoryItemIns
 		OutItemStats.SetAffixDescriptionRows(FormatUnidentifiedItemAffixes(ItemInstance->GetAllItemAffixes()));
 	}
 
-	OutItemStats.InitializeItemEquippingRequirements(ItemInstance->GetEquippingRequirements());
-
+	if (ItemInstance->HasEquippingRequirements())
+	{
+		FObsidianItemRequirementsUIDescription RequirementsUIDescription;
+		if (GenerateItemEquippingRequirementsAsUIDesc(OwnerPC, ItemInstance->GetEquippingRequirements(), RequirementsUIDescription))
+		{
+			OutItemStats.SetItemEquippingRequirements(RequirementsUIDescription);
+		}
+	}
+	
 	return true;
 }
 
-bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData,
-	FObsidianItemStats& OutItemStats)
+bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const AObsidianPlayerController* OwnerPC, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	const FObsidianItemGeneratedData& ItemGeneratedData, FObsidianItemStats& OutItemStats)
 {
-	if(IsValid(ItemDef) == false)
+	if(IsValid(ItemDef) == false || OwnerPC == nullptr)
 	{
 		return false;
 	}
@@ -130,8 +141,54 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const TSubclassOf<UObsi
 		OutItemStats.SetAffixDescriptionRows(FormatItemAffixes(ItemGeneratedData.ItemAffixes));
 	}
 
-	OutItemStats.InitializeItemEquippingRequirements(ItemGeneratedData.ItemEquippingRequirements);
+	if (HasEquippingRequirements(ItemGeneratedData.ItemEquippingRequirements))
+	{
+		FObsidianItemRequirementsUIDescription RequirementsUIDescription;
+		if (GenerateItemEquippingRequirementsAsUIDesc(OwnerPC, ItemGeneratedData.ItemEquippingRequirements, RequirementsUIDescription))
+		{
+			OutItemStats.SetItemEquippingRequirements(RequirementsUIDescription);
+		}
+	}
 	
+	return true;
+}
+
+bool UObsidianItemsFunctionLibrary::GenerateItemEquippingRequirementsAsUIDesc(const AObsidianPlayerController* OwnerPC,
+	const FObsidianItemRequirements& Requirements, FObsidianItemRequirementsUIDescription& OutRequirementsUIDescription)
+{
+	if (OwnerPC == nullptr)
+	{
+		return false;
+	}
+	
+	if (Requirements.bInitialized == false || Requirements.bHasAnyRequirements == false)
+	{
+		return false;
+	}
+	
+	OutRequirementsUIDescription.SetHeroClassRequirement(Requirements.HeroClassRequirement, OwnerPC->GetHeroClass());
+
+	const AObsidianPlayerState* OwnerPS = OwnerPC->GetObsidianPlayerState();
+	if (OwnerPS == nullptr)
+	{
+		return false;
+	}
+	
+	OutRequirementsUIDescription.SetHeroLevelRequirement(Requirements.RequiredLevel, OwnerPS->GetHeroLevel());
+
+	const UObsidianAbilitySystemComponent* OwnerASC = OwnerPS->GetObsidianAbilitySystemComponent();
+	if (OwnerASC == nullptr)
+	{
+		return false;
+	}
+
+	for (const FObsidianAttributeRequirement& AttributeReq : Requirements.AttributeRequirements)
+	{
+		OutRequirementsUIDescription.SetAttributeRequirement(AttributeReq.RequiredAttribute,
+												AttributeReq.RequiredAttributeMagnitude,
+												OwnerASC->GetNumericAttribute(AttributeReq.RequiredAttribute));
+	}
+
 	return true;
 }
 
@@ -171,6 +228,29 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatUniden
 		}
 	}
 	return AffixDescriptionRows;
+}
+
+bool UObsidianItemsFunctionLibrary::HasEquippingRequirements(const FObsidianItemRequirements& Requirements)
+{
+	if (Requirements.RequiredLevel > 0)
+	{
+		return true;
+	}
+
+	if (Requirements.HeroClassRequirement > EObsidianHeroClass::None)
+	{
+		return true;
+	}
+
+	for (const FObsidianAttributeRequirement& AttributeReq : Requirements.AttributeRequirements)
+	{
+		if (AttributeReq.RequiredAttributeMagnitude > 0)
+		{
+			return true;
+		}
+	}
+	
+	return false;
 }
 
 FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(const TArray<FObsidianDynamicItemAffix>& DynamicAffixes)
