@@ -59,6 +59,7 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 
+	UObsidianAffixRow* GetFreePrimaryItemAffixBlock();
 	UObsidianAffixRow* GetFreePrefixBlock();
 	UObsidianAffixRow* GetFreeSuffixBlock();
 	UObsidianAffixRow* GetFreeBlockForUniqueItem();
@@ -75,6 +76,15 @@ protected:
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ItemName_TextBlock;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianAffixRow> PrimaryItemAffix1_AffixRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianAffixRow> PrimaryItemAffix2_AffixRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianAffixRow> PrimaryItemAffix3_AffixRow;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> StacksContainer_HorizontalBox;

@@ -20,6 +20,19 @@ void UObsidianItemDescriptionBase::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
+UObsidianAffixRow* UObsidianItemDescriptionBase::GetFreePrimaryItemAffixBlock()
+{
+	for (UObsidianAffixRow* AffixRow : {PrimaryItemAffix1_AffixRow, PrimaryItemAffix2_AffixRow, PrimaryItemAffix3_AffixRow})
+	{
+		if (AffixRow && AffixRow->IsFree())
+		{
+			return AffixRow;
+		}
+	}
+	ensureMsgf(false, TEXT("Not a single primary affix box is free, this should never happen!"));
+	return nullptr;
+}
+
 UObsidianAffixRow* UObsidianItemDescriptionBase::GetFreePrefixBlock()
 {
 	for (UObsidianAffixRow* AffixRow : {Prefix1_AffixRow, Prefix2_AffixRow, Prefix3_AffixRow})
@@ -120,14 +133,20 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		Unidentified_TextBlock->SetVisibility(ESlateVisibility::Visible);
 		IdentificationHint_TextBlock->SetVisibility(ESlateVisibility::Visible);
 
-		if (ItemStats.ContainsAffixes()) // We always want to show Skill Implicit if we got one.
+		if (ItemStats.ContainsAffixes()) // We always want to show Skill Implicit and Primary Item Affix if we got them.
 		{
 			for(const FObsidianAffixDescriptionRow& Row : ItemStats.GetAffixDescriptions()) 
 			{
 				if (Row.AffixType == EObsidianAffixType::SkillImplicit)
 				{
 					SkillImplicit_AffixRow->InitializeAffixRow(Row.AffixRowDescription);
-					break;
+				}
+				else if (Row.AffixType == EObsidianAffixType::PrimaryItemAffix)
+				{
+					if(UObsidianAffixRow* PrimarySkillImplicitRow = GetFreePrimaryItemAffixBlock())
+					{
+						PrimarySkillImplicitRow->InitializeAffixRow(Row.AffixRowDescription);
+					}
 				}
 			}
 		}
@@ -171,6 +190,13 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 				case EObsidianAffixType::SkillImplicit:
 					{
 						SkillImplicit_AffixRow->InitializeAffixRow(Row.AffixRowDescription);
+					} break;
+				case EObsidianAffixType::PrimaryItemAffix:
+					{
+						if(UObsidianAffixRow* PrimarySkillImplicitRow = GetFreePrimaryItemAffixBlock())
+						{
+							PrimarySkillImplicitRow->InitializeAffixRow(Row.AffixRowDescription);
+						}
 					} break;
 				case EObsidianAffixType::Implicit:
 					{

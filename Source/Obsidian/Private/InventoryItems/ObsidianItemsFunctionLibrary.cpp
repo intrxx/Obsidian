@@ -217,7 +217,7 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatUniden
 	for(const FObsidianActiveItemAffix& Affix : ItemAffixes)
 	{
 		check(Affix);
-		if (Affix.AffixType == EObsidianAffixType::SkillImplicit)
+		if (Affix.AffixType == EObsidianAffixType::SkillImplicit || Affix.AffixType == EObsidianAffixType::PrimaryItemAffix)
 		{
 			FObsidianAffixDescriptionRow Row;
 			Row.AffixTag = Affix.AffixTag;

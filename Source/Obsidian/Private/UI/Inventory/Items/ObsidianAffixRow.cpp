@@ -47,8 +47,6 @@ void UObsidianAffixRow::InitializeAffixRow(const FText& InText)
 	{
 		bIsOccupied = true;
 		ShowAffixRow(true);
-		
-		UE_LOG(LogTemp, Warning, TEXT("Affix row: [%s] on [%s]"), *InText.ToString(), *GetNameSafe(this));
 		AffixText_TextBlock->SetText(InText);
 	}
 }
