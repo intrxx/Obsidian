@@ -2,11 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
@@ -14,10 +11,14 @@
 
 /**
  * The depth of Item Affix generation.
+ * 
  * List of possible Affixes to generate:
- * - Suffixes
- * - Prefixes
- * - Implicit
+ * - Suffixes,
+ * - Prefixes,
+ * - Implicit,
+ * - Skill Implicits.
+ *
+ * PrimaryItemAffixes are always static constructed and will be given to an item despite AffixGenerationType.
  */
 UENUM(BlueprintType)
 enum class EObsidianAffixGenerationType : uint8
@@ -46,9 +47,14 @@ public:
 	//~ Start of UObsidianInventoryItemFragment
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
 	//~ End of UObsidianInventoryItemFragment
+
+	virtual void PostInitProperties() override;
+	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 	
+	bool HasPrimaryItemAffix() const;
 	bool HasImplicitAffix() const;
 	
+	TArray<FObsidianStaticItemAffix> GetPrimaryItemAffixes() const;
 	FObsidianStaticItemAffix GetStaticImplicitAffix() const;
 	FObsidianStaticItemAffix GetStaticSkillImplicitAffix() const;
 	TArray<FObsidianStaticItemAffix> GetStaticAffixes() const;
@@ -59,6 +65,12 @@ protected:
 	/** Whether this item will be generated at drop, uncheck if you want to create a static item template that will be dropped as is (e.g. for unique items). */
 	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
 	EObsidianAffixGenerationType ItemAffixesGenerationType = EObsidianAffixGenerationType::DefaultGeneration;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Affixes")
+	bool bHasPrimaryItemAffix = false;
+
+	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "bHasPrimaryItemAffix"), Category = "Affixes")
+	TArray<FObsidianStaticItemAffix> PrimaryItemAffixes;
 	
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
 	bool bHasImplicitAffix = false;

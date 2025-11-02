@@ -2,9 +2,8 @@
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 
-// ~ Core
+#include <UObject/ObjectSaveContext.h>
 
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectInitializer& ObjectInitializer)
@@ -18,9 +17,39 @@ void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemI
 {
 }
 
+void UOInventoryItemFragment_Affixes::PostInitProperties()
+{
+	Super::PostInitProperties();
+
+	for (FObsidianStaticItemAffix& PrimaryAffix : PrimaryItemAffixes)
+	{
+		PrimaryAffix.AffixType = EObsidianAffixType::PrimaryItemAffix;
+	}
+}
+
+void UOInventoryItemFragment_Affixes::PreSave(FObjectPreSaveContext SaveContext)
+{
+	Super::PreSave(SaveContext);
+
+	for (FObsidianStaticItemAffix& PrimaryAffix : PrimaryItemAffixes)
+	{
+		PrimaryAffix.AffixType = EObsidianAffixType::PrimaryItemAffix;
+	}
+}
+
+bool UOInventoryItemFragment_Affixes::HasPrimaryItemAffix() const
+{
+	return bHasPrimaryItemAffix && PrimaryItemAffixes.IsEmpty() == false;
+}
+
 bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const
 {
 	return bHasImplicitAffix && StaticItemImplicit;
+}
+
+TArray<FObsidianStaticItemAffix> UOInventoryItemFragment_Affixes::GetPrimaryItemAffixes() const
+{
+	return PrimaryItemAffixes;
 }
 
 FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticImplicitAffix() const

@@ -112,13 +112,16 @@ private:
 
 	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const UOInventoryItemFragment_Affixes* AffixFragment,
 		const uint8 MaxTreasureClassQuality);
-	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const uint8 MaxTreasureClassQuality);
+	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const UOInventoryItemFragment_Affixes* AffixFragment,
+		const uint8 MaxTreasureClassQuality);
 	void HandleNoGeneration(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
 	
 	void RollSkillImplicits(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& SkillImplicits, const uint8 MaxTreasureClassQuality);
 	void RollImplicit(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Implicits, const uint8 MaxTreasureClassQuality);
 	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, TArray<FObsidianDynamicItemAffix>& Prefixes, TArray<FObsidianDynamicItemAffix>& Suffixes,
 		const uint8 MaxTreasureClassQuality);
+	void TryToGiveStaticImplicit(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
+	void TryToGivePrimaryItemAffix(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
 
 	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
 	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);
