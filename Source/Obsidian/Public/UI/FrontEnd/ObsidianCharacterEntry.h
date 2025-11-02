@@ -27,7 +27,8 @@ class OBSIDIAN_API UObsidianCharacterEntry : public UCommonButtonBase
 	GENERATED_BODY()
 
 public:
-	void InitializeCharacterEntry(const FText& InPlayerName, const int32 InPlayerLevel, const FText& InPlayerClass, const bool InIsOnline, const bool InIsHardcore);
+	void InitializeCharacterEntry(const FText& InPlayerName, const int32 InPlayerLevel, const FText& InPlayerClass, const bool InIsOnline,
+		const bool InIsHardcore);
 	
 	TSoftClassPtr<AObsidianHero> TempObsidianHeroClass;
 	FText TempHeroName;

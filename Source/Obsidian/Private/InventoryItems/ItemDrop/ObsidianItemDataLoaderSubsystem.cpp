@@ -28,16 +28,17 @@ bool UObsidianItemDataLoaderSubsystem::GetAllCommonTreasureClassesUpToQuality(co
 	{
 		return false;
 	}
-	
+
+	bool bSuccess = false;
 	for (UObsidianTreasureList* TreasureList : ItemDataConfig->CommonTreasureLists)
 	{
 		if (TreasureList)
 		{
 			OutTreasureClass.Append(TreasureList->GetAllTreasureClassesUpToQuality(UpToTreasureQuality));
-			return true;
+			bSuccess = true;
 		}
 	}
-	return false;
+	return bSuccess;
 }
 
 bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality,
@@ -330,5 +331,20 @@ void UObsidianItemDataLoaderSubsystem::OnItemDataLoaded()
 
 void UObsidianItemDataLoaderSubsystem::OnCommonItemsLoaded()
 {
+#if !UE_BUILD_SHIPPING
 	UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Common Items"));
+
+	UE_LOG(LogItemDataLoader, Log, TEXT("Treasure Classes Available in the game:"));
+	for (const UObsidianTreasureList* TL : ItemDataConfig->CommonTreasureLists)
+	{
+		if (TL)
+		{
+			UE_LOG(LogItemDataLoader, Log, TEXT("TL: [%s]"), *GetNameSafe(TL));
+			for (const FObsidianTreasureClass& TC : TL->GetAllTreasureClasses())
+			{
+				UE_LOG(LogItemDataLoader, Log, TEXT("TC:	-[%s]"), *TC.TreasureClassName.ToString());
+			}
+		}
+	}
+#endif
 }

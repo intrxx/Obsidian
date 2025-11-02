@@ -137,6 +137,15 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	}
 	
 	uint8 DropRolls = ItemDataSettings->GetDefaultDropRollNumberForEntityRarity(DroppingEntityRarity);
+
+	for (const FObsidianTreasureClass& TC : TreasureClasses)
+	{
+		UE_LOG(LogDropComponent, Display, TEXT("Rolling Items from: [%s]"), *TC.TreasureClassName.ToString());
+	}
+	for (const FObsidianTreasureClass& TC : MustRollFromTreasureClasses)
+	{
+		UE_LOG(LogDropComponent, Display, TEXT("Rolling Items from: [%s]"), *TC.TreasureClassName.ToString());
+	}
 	
 	TArray<FObsidianItemToDrop> ItemsToDrop;
 	if (MustRollFromTreasureClasses.IsEmpty() == false && DropRolls > 0)

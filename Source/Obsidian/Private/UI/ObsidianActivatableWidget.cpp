@@ -46,7 +46,7 @@ void UObsidianActivatableWidget::ValidateCompiledWidgetTree(const UWidgetTree& B
 		}
 		else
 		{
-			//TODO(intrxx) - Note for now, because we can't guarantee it isn't implemented in a native subclass of this one.
+			//TODO - Note for now, because we can't guarantee it isn't implemented in a native subclass of this one.
 			CompileLog.Note(LOCTEXT("ValidateGetDesiredFocusTarget_Note", "GetDesiredFocusTarget wasn't implemented, you're going to have trouble using gamepads on this screen.  If it was implemented in the native base class you can ignore this message."));
 		}
 	}
