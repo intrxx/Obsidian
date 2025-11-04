@@ -9,7 +9,8 @@
 
 // ~ Project
 
-UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility()
+UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility(const FObjectInitializer& ObjectInitializer)
+    : Super(ObjectInitializer)
 {
     InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }

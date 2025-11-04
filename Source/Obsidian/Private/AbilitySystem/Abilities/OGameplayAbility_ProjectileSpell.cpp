@@ -1,15 +1,17 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-
 #include "AbilitySystem/Abilities/OGameplayAbility_ProjectileSpell.h"
-#include "AbilitySystemBlueprintLibrary.h"
-#include "AbilitySystemComponent.h"
-#include "Combat/ObsidianCombatInterface.h"
+
+#include <AbilitySystemBlueprintLibrary.h>
+#include <AbilitySystemComponent.h>
+
 #include "Combat/Projectile/ObsidianProjectile.h"
-#include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianMacros.h"
 
-UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell()
+DEFINE_LOG_CATEGORY(LogProjectileAbility)
+
+UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell(const FObjectInitializer& ObjectInitializer)
+	: Super(ObjectInitializer)
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }

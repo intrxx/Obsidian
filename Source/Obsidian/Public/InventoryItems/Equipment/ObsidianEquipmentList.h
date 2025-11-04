@@ -13,6 +13,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianEquipmentList.generated.h"
 
+class AObsidianHero;
 struct FObsidianEquipmentList;
 struct FObsidianItemGeneratedData;
 
@@ -163,6 +164,7 @@ public:
 	UObsidianInventoryItemInstance* GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const;
 
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
+	AObsidianHero* GetObsidianHero() const;
 	
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& ItemCategory);

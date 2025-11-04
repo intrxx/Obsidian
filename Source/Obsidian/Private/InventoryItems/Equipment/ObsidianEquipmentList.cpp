@@ -6,6 +6,7 @@
 #include <GameFramework/GameplayMessageSubsystem.h>
 #include <Kismet/GameplayStatics.h>
 
+#include "Characters/Heroes/ObsidianHero.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
@@ -123,6 +124,13 @@ UObsidianAbilitySystemComponent* FObsidianEquipmentList::GetObsidianAbilitySyste
 	check(OwnerComponent);
 	const AObsidianPlayerController* OwningController = Cast<AObsidianPlayerController>(OwnerComponent->GetOwner());
 	return OwningController ? OwningController->GetObsidianAbilitySystemComponent() : nullptr;
+}
+
+AObsidianHero* FObsidianEquipmentList::GetObsidianHero() const
+{
+	check(OwnerComponent);
+	const AObsidianPlayerController* OwningController = Cast<AObsidianPlayerController>(OwnerComponent->GetOwner());
+	return OwningController ? OwningController->GetObsidianHero() : nullptr;
 }
 
 FObsidianEquipmentSlotDefinition FObsidianEquipmentList::FindEquipmentSlotByTag(const FGameplayTag& SlotTag)
@@ -489,12 +497,20 @@ void FObsidianEquipmentList::AddItemAffixesToOwner(UObsidianInventoryItemInstanc
 		return;
 	}
 
+	AObsidianHero* ObsidianHero = GetObsidianHero();
+	if(ObsidianHero == nullptr)
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Obsidian Hero Owner is invalid on Owner [%s]."),
+			*GetNameSafe(OwnerComponent)), ELogVerbosity::Error);
+		return;
+	}
+
 	TArray<FObsidianActiveItemAffix> BatchedAffixesToAdd;
 	for(const FObsidianActiveItemAffix& ItemAffix : FromItemInstance->GetAllItemAffixes())
 	{
 		if (const UObsidianAffixAbilitySet* AffixAbilitySet = ItemAffix.SoftAbilitySetToApply.LoadSynchronous()) // Item has a unique Ability Set, add from it.
 		{
-			AffixAbilitySet->GiveToAbilitySystem(ObsidianASC, ItemAffix.AffixTag, ItemAffix.CurrentAffixValue, ItemGrantedHandles, FromItemInstance);
+			AffixAbilitySet->GiveToAbilitySystem(ObsidianASC, ItemAffix.AffixTag, ItemAffix.CurrentAffixValue, ItemGrantedHandles, ObsidianHero);
 			continue;
 		}
 		BatchedAffixesToAdd.Add(ItemAffix);
@@ -505,14 +521,7 @@ void FObsidianEquipmentList::AddItemAffixesToOwner(UObsidianInventoryItemInstanc
 		CachedDefaultAbilitySet = CachedDefaultAbilitySet == nullptr ? GetDefaultAffixSet() : CachedDefaultAbilitySet;
 		if (CachedDefaultAbilitySet)
 		{
-			// ~ TEMP
-			for (const FObsidianActiveItemAffix& ItemAffix : BatchedAffixesToAdd)
-			{
-				CachedDefaultAbilitySet->GiveToAbilitySystem(ObsidianASC, ItemAffix.AffixTag, ItemAffix.CurrentAffixValue, ItemGrantedHandles, FromItemInstance);
-			}
-			// ~ End of TEMP
-			
-			CachedDefaultAbilitySet->GiveItemAffixesToAbilitySystem(ObsidianASC, BatchedAffixesToAdd, ItemGrantedHandles, FromItemInstance);
+			CachedDefaultAbilitySet->GiveItemAffixesToAbilitySystem(ObsidianASC, BatchedAffixesToAdd, ItemGrantedHandles, ObsidianHero);
 		}
 	}
 }

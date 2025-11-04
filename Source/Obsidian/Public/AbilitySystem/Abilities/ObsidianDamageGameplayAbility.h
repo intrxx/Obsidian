@@ -36,7 +36,7 @@ class OBSIDIAN_API UObsidianDamageGameplayAbility : public UObsidianGameplayAbil
 	GENERATED_BODY()
 
 public:
-	UObsidianDamageGameplayAbility();
+	UObsidianDamageGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 protected:
 	/** Given the Array of Actors, damages all of them with the damage provided in the ability. */

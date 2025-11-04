@@ -79,15 +79,15 @@ void UObsidianCharacterScreen::NativeOnDeactivated()
 
 void UObsidianCharacterScreen::OnPlayClicked()
 {
-	if(bIsOnline)
+	if (bIsOnline)
 	{
 		UCommonUIExtensions::PushContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI_Layer_MainMenu, OnlineLobbyWidgetClass);
 	}
 	else
 	{
-		if(UWorld* World = GetWorld())
+		if (const UWorld* World = GetWorld())
 		{
-			if(UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(UGameplayStatics::GetGameInstance(World)))
+			if (UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(UGameplayStatics::GetGameInstance(World)))
 			{
 				ObsidianGameInstance->ChosenHero = FrontEndGameMode->ChosenHeroClass;
 				ObsidianGameInstance->TempHeroName = CachedChosenCharacterEntry->TempHeroName;

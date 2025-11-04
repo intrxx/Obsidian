@@ -219,3 +219,13 @@ UAnimMontage* UObsidianGameplayAbility::GetAnimMontage()
 
 	return AbilityMontages[0].AbilityMontage;
 }
+
+FVector UObsidianGameplayAbility::GetRandomPointInCircleAroundOrigin(const FVector& Origin, const float Radius, const float FixedHeight)
+{
+	const float Angle = FMath::RandRange(0.0f, 2.0f * PI);
+
+	const float X = FMath::Cos(Angle) * Radius;
+	const float Y = FMath::Sin(Angle) * Radius;
+
+	return Origin + FVector(X, Y, FixedHeight);
+}

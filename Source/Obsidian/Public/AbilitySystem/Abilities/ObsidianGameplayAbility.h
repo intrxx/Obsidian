@@ -105,6 +105,8 @@ protected:
 	/** Grabs the first Anim Montage from ability, useful when there is only one. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
 	UAnimMontage* GetAnimMontage();
+
+	FVector GetRandomPointInCircleAroundOrigin(const FVector& Origin, const float Radius, const float FixedHeight);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")

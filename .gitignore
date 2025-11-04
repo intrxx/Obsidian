@@ -107,3 +107,6 @@ Content/StarterContent
 Content/Obsidian/Assets
 Obsidian.png
 Content/Splash
+
+# Ignore raddbg files
+raddbg_obsidian_target.txt

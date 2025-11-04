@@ -2,16 +2,15 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
 #include "ObsidianDamageGameplayAbility.h"
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
 class AObsidianProjectile;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogProjectileAbility, Log, All);
 
 /**
  * 
@@ -21,7 +20,7 @@ class OBSIDIAN_API UOGameplayAbility_ProjectileSpell : public UObsidianDamageGam
 {
 	GENERATED_BODY()
 public:
-	UOGameplayAbility_ProjectileSpell();
+	UOGameplayAbility_ProjectileSpell(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProjectileSpell")
 	void SpawnProjectile(const FVector& SpawnLocation, const FVector& TargetLocation, const bool bWithDebug);

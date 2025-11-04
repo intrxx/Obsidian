@@ -173,6 +173,7 @@ namespace ObsidianGameplayTags
 	 * Hero
 	 */
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_Firebolt, "GameplayEvent.AbilityMontage.Player.Firebolt", "Tag used for triggering gameplay event for spawning firebolt.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_FlyingKnifes, "GameplayEvent.AbilityMontage.Player.FlyingKnifes", "Tag used for triggering gameplay event for spawning flying knifes.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_Aura, "GameplayEvent.AbilityMontage.Player.Aura", "Tag used for triggering gameplay event for applying aura.");
 
 	/**
