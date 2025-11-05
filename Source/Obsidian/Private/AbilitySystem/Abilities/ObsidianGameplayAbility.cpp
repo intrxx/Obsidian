@@ -62,7 +62,7 @@ UObsidianAbilitySystemComponent* UObsidianGameplayAbility::GetObsidianAbilitySys
 
 FVector UObsidianGameplayAbility::GetOwnerLocationFromActorInfo() const
 {
-	return (CurrentActorInfo ? GetOwningActorFromActorInfo()->GetActorLocation() : FVector::ZeroVector);
+	return (CurrentActorInfo ? GetAvatarActorFromActorInfo()->GetActorLocation() : FVector::ZeroVector);
 }
 
 bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent,
@@ -227,5 +227,33 @@ FVector UObsidianGameplayAbility::GetRandomPointInCircleAroundOrigin(const FVect
 	const float X = FMath::Cos(Angle) * Radius;
 	const float Y = FMath::Sin(Angle) * Radius;
 
-	return Origin + FVector(X, Y, FixedHeight);
+	const FVector OriginZeroZ = FVector(Origin.X, Origin.Y, 0.0f);
+	return OriginZeroZ + FVector(X, Y, FixedHeight);
+}
+
+TArray<FVector> UObsidianGameplayAbility::GetPointsOnCircleAroundOriginNormalized(const FVector& Origin, const float NumberOfPoints,
+	const float Radius, const float FixedHeight)
+{
+	TArray<FVector> Points;
+	Points.Reserve(NumberOfPoints);
+	
+	if (NumberOfPoints == 0)
+	{
+		return Points;
+	}
+
+	const FVector OriginZeroZ = FVector(Origin.X, Origin.Y, 0.0f);
+	const float AngleStep = (2.0f * PI) / NumberOfPoints;
+
+	for (uint16 i = 0; i < NumberOfPoints; ++i)
+	{
+		const float Angle = AngleStep * static_cast<float>(i);
+
+		const float X = FMath::Cos(Angle) * Radius;
+		const float Y = FMath::Sin(Angle) * Radius;
+
+		Points.Add(OriginZeroZ + FVector(X, Y, FixedHeight));
+	}
+
+	return Points;
 }

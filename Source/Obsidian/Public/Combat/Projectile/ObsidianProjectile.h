@@ -11,6 +11,13 @@
 #include "GameFramework/Actor.h"
 #include "ObsidianProjectile.generated.h"
 
+UENUM()
+enum class EObsidianProjectileCleanupMethod : uint8
+{
+	LifeSpan,
+	DistanceTraveled
+};
+
 class UNiagaraSystem;
 class UOProjectileMovementComponent;
 class USphereComponent;
@@ -64,7 +71,15 @@ private:
 	bool bServerHit = false;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
+	EObsidianProjectileCleanupMethod ProjectileCleanupMethod = EObsidianProjectileCleanupMethod::LifeSpan;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="ProjectileCleanupMethod==EObsidianProjectileCleanupMethod::LifeSpan"), Category = "Obsidian|Projectile")
 	float ProjectileLifeSpan = 15.f;
+
+	//This will only be accurate for projectiles with the same initial and max speed,
+	//for more accurate information I need to use tick which I was planning to avoid here
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="ProjectileCleanupMethod==EObsidianProjectileCleanupMethod::DistanceTraveled"), Category = "Obsidian|Projectile")
+	float DistanceToTravel = 300.0f;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
 	bool bDestroyOnHit = true;

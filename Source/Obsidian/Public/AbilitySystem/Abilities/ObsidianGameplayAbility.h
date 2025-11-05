@@ -107,6 +107,9 @@ protected:
 	UAnimMontage* GetAnimMontage();
 
 	FVector GetRandomPointInCircleAroundOrigin(const FVector& Origin, const float Radius, const float FixedHeight);
+
+	/** Gets set number of points on circle around origin which are equally distributed. */
+	TArray<FVector> GetPointsOnCircleAroundOriginNormalized(const FVector& Origin, const float NumberOfPoints, const float Radius, const float FixedHeight);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")

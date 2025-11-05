@@ -15,11 +15,11 @@ void UObGameplayAbility_FlyingKnife::FireFlyingKnifeProjectiles()
 	{
 		UE_LOG(LogProjectileAbility, Warning, TEXT("OwnerLocation is ZeroVector in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
 	}
-	
-	for (uint8 i = 0; i < NumberOfProjectiles; ++i)
+
+	const FVector SpawnPoint = FVector(OwnerLocation.X, OwnerLocation.Y, SpawnHeight);
+	const TArray<FVector> RandomPoints = GetPointsOnCircleAroundOriginNormalized(OwnerLocation, NumberOfProjectiles, SpawnRadius, SpawnHeight);
+	for (uint8 i = 0; i < RandomPoints.Num(); ++i)
 	{
-		const FVector RandomPoint = GetRandomPointInCircleAroundOrigin(OwnerLocation, SpawnRadius, SpawnHeight);
-		const FVector ProjectileTargetLocation = FVector(RandomPoint.X * 5.0f, RandomPoint.Y * 5.0f, RandomPoint.Z);
-		SpawnProjectile(RandomPoint, ProjectileTargetLocation, true);
+		SpawnProjectile(SpawnPoint, RandomPoints[i], false);
 	}
 }

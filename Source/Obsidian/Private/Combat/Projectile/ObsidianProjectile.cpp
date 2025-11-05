@@ -38,11 +38,19 @@ AObsidianProjectile::AObsidianProjectile(const FObjectInitializer& ObjectInitial
 	ObsidianProjectileMovementComponent->ProjectileGravityScale = 0.f;
 }
 
+
 void AObsidianProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	SetLifeSpan(ProjectileLifeSpan);
+	float LifeSpan = ProjectileLifeSpan;
+	if (ProjectileCleanupMethod == EObsidianProjectileCleanupMethod::DistanceTraveled)
+	{
+		//TODO(intrxx) this will only be accurate for projectiles with the same initial and max speed,
+		//for more accurate information I need to use tick which I was planning to avoid here
+		LifeSpan = DistanceToTravel / ObsidianProjectileMovementComponent->InitialSpeed;
+	}
+	SetLifeSpan(LifeSpan);
 	SetReplicateMovement(true);
 	
 	SphereComponent->OnComponentBeginOverlap.AddDynamic(this, &ThisClass::OnSphereOverlap);
