@@ -8,7 +8,7 @@
 #include "ObsidianDamageGameplayAbility.h"
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
-class AObsidianProjectile;
+class AObsidianProjectileBase;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogProjectileAbility, Log, All);
 
@@ -34,6 +34,6 @@ protected:
 	
 	/** Projectile class to spawn by this ability. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
-	TSubclassOf<AObsidianProjectile> ProjectileClass;
+	TSubclassOf<AObsidianProjectileBase> ProjectileClass;
 };
 

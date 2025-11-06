@@ -6,18 +6,18 @@
 
 
 #include "AbilitySystem/Abilities/OGameplayAbility_ProjectileSpell.h"
-#include "ObGameplayAbility_FlyingKnife.generated.h"
+#include "ObsidianGA_FlyingKnifes.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObGameplayAbility_FlyingKnife : public UOGameplayAbility_ProjectileSpell
+class OBSIDIAN_API UObsidianGA_FlyingKnifes : public UOGameplayAbility_ProjectileSpell
 {
 	GENERATED_BODY()
 
 public:
-	UObGameplayAbility_FlyingKnife(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianGA_FlyingKnifes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|FlyingKnifes")
 	void FireFlyingKnifeProjectiles();

@@ -174,6 +174,8 @@ namespace ObsidianGameplayTags
 	 */
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_Firebolt, "GameplayEvent.AbilityMontage.Player.Firebolt", "Tag used for triggering gameplay event for spawning firebolt.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_FlyingKnifes, "GameplayEvent.AbilityMontage.Player.FlyingKnifes", "Tag used for triggering gameplay event for spawning flying knifes.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_MagneticHammer, "GameplayEvent.AbilityMontage.Player.MagneticHammer", "Tag used for triggering gameplay event for spawning magnetic hammer.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_Slash, "GameplayEvent.AbilityMontage.Player.Slash", "Tag used for triggering gameplay event for spawning slash.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_Aura, "GameplayEvent.AbilityMontage.Player.Aura", "Tag used for triggering gameplay event for applying aura.");
 
 	/**
@@ -594,6 +596,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Barbarian_Slash, "Item.Affix.SkillImplicits.Attack.Barbarian.Slash", "Item Tag which represents Slash Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Assassin_FlyingKnife, "Item.Affix.SkillImplicits.Attack.Assassin.FlyingKnife", "Item Tag which represents Flying Knife Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Paladin_BlessedHammer, "Item.Affix.SkillImplicits.Attack.Paladin.BlessedHammer", "Item Tag which represents Blessed Hammer Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Attack_Paladin_MagneticHammer, "Item.Affix.SkillImplicits.Attack.Paladin.MagneticHammer", "Item Tag which represents Magnetic Hammer Skill Implicit.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_MagmaBarrier, "Item.Affix.SkillImplicits.Defence.MagmaBarrier", "Item Tag which represents Magma Barrier Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_FrozenArmor, "Item.Affix.SkillImplicits.Defence.FrozenArmor", "Item Tag which represents Frozen Armor Skill Implicit.");

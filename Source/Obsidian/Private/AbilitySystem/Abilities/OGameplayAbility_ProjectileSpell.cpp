@@ -5,7 +5,7 @@
 #include <AbilitySystemBlueprintLibrary.h>
 #include <AbilitySystemComponent.h>
 
-#include "Combat/Projectile/ObsidianProjectile.h"
+#include "Combat/Projectile/ObsidianProjectileBase.h"
 #include "Obsidian/ObsidianMacros.h"
 
 DEFINE_LOG_CATEGORY(LogProjectileAbility)
@@ -47,7 +47,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 	SpawnTransform.SetLocation(StartLocation);
 	SpawnTransform.SetRotation(Rotation.Quaternion()); 
 	
-	AObsidianProjectile* Projectile = GetWorld()->SpawnActorDeferred<AObsidianProjectile>(ProjectileClass, SpawnTransform,
+	AObsidianProjectileBase* Projectile = GetWorld()->SpawnActorDeferred<AObsidianProjectileBase>(ProjectileClass, SpawnTransform,
 		GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
 	const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo();

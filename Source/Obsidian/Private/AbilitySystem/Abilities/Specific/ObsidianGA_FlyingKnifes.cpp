@@ -1,14 +1,14 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "AbilitySystem/Abilities/Specific/ObGameplayAbility_FlyingKnife.h"
+#include "AbilitySystem/Abilities/Specific/ObsidianGA_FlyingKnifes.h"
 
 
-UObGameplayAbility_FlyingKnife::UObGameplayAbility_FlyingKnife(const FObjectInitializer& ObjectInitializer)
+UObsidianGA_FlyingKnifes::UObsidianGA_FlyingKnifes(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
 }
 
-void UObGameplayAbility_FlyingKnife::FireFlyingKnifeProjectiles()
+void UObsidianGA_FlyingKnifes::FireFlyingKnifeProjectiles()
 {
 	const FVector OwnerLocation = GetOwnerLocationFromActorInfo();
 	if (OwnerLocation == FVector::ZeroVector)
