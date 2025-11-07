@@ -370,6 +370,9 @@ void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 
 FObsidianAffixValueRange FObsidianActiveItemAffix::GetRandomAffixRange(const uint8 UpToTreasureQuality)
 {
+	checkf(!AffixValuesDefinition.PossibleAffixRanges.IsEmpty(), TEXT("Item Affix [%s] has no possible Affix Ranges filled."),
+		*AffixTag.GetTagName().ToString());
+	
 	uint32 TotalWeight = 0;
 	TArray<FObsidianAffixValueRange> CanRollFromAffixRanges;
 	for (const FObsidianAffixValueRange& Value : AffixValuesDefinition.PossibleAffixRanges)

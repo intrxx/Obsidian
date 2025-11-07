@@ -356,6 +356,15 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Strength, "Item.BaseType.Axe.OneHand.Strength", "Item Tag that represents Two Hand Strength Axe item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Intelligence, "Item.BaseType.Axe.OneHand.Intelligence", "Item Tag that represents Two Hand Intelligence Axe item base type.");
 
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_OneHand_Faith, "Item.BaseType.Mace.OneHand.Faith", "Item Tag that represents One Hand Faith Mace item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_OneHand_Dexterity, "Item.BaseType.Mace.OneHand.Dexterity", "Item Tag that represents One Hand Dexterity Mace item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_OneHand_Strength, "Item.BaseType.Mace.OneHand.Strength", "Item Tag that represents One Hand Strength Mace item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_OneHand_Intelligence, "Item.BaseType.Mace.OneHand.Intelligence", "Item Tag that represents One Hand Intelligence Mace item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_TwoHand_Faith, "Item.BaseType.Mace.TwoHand.Faith", "Item Tag that represents Two Hand Faith Mace item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_TwoHand_Dexterity, "Item.BaseType.Mace.OneHand.Dexterity", "Item Tag that represents Two Hand Dexterity Mace item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_TwoHand_Strength, "Item.BaseType.Mace.OneHand.Strength", "Item Tag that represents Two Hand Strength Mace item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_TwoHand_Intelligence, "Item.BaseType.Mace.OneHand.Intelligence", "Item Tag that represents Two Hand Intelligence Mace item base type.");
+	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Dagger_Faith, "Item.BaseType.Dagger.Faith", "Item Tag that represents Faith Dagger item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Dagger_Dexterity, "Item.BaseType.Dagger.Dexterity", "Item Tag that represents Dexterity Dagger item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Dagger_Strength, "Item.BaseType.Dagger.Strength", "Item Tag that represents Strength Dagger item base type.");
