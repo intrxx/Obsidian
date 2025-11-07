@@ -526,12 +526,20 @@ USTRUCT()
 struct FObsidianAffixIdentifier
 {
 	GENERATED_BODY()
+
+public:
+	FObsidianAffixIdentifier()
+		: bOverride_AttributeToModify(true)
+	{}
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.AffixValue"))
 	FGameplayTag AffixValueID;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
+	uint8 bOverride_AttributeToModify : 1;
+	
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bOverride_AttributeToModify"))
 	FGameplayAttribute AttributeToModify;
 };
 
@@ -604,6 +612,10 @@ struct FObsidianStaticItemAffix
 	GENERATED_BODY();
 
 public:
+	FObsidianStaticItemAffix()
+	: bOverride_AffixAbilitySet(false)
+	{}
+	
 	bool IsEmptyImplicit() const;
 	bool IsEmptyAffix() const;
 
@@ -611,6 +623,10 @@ public:
 	bool operator ==(const FObsidianStaticItemAffix& Other) const;
 	bool operator ==(const FObsidianDynamicItemAffix& Other) const;
 	bool operator ==(const FObsidianActiveItemAffix& Other) const;
+
+#if WITH_EDITOR
+	EDataValidationResult IsStaticAffixValid(FDataValidationContext& Context, const int32 Index, const FString& AffixTypeName) const;
+#endif
 
 public:
 	/** Unique Affix Gameplay Tag Identifier. */
@@ -628,8 +644,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
 	FText AffixDescription = FText();
 
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
+	uint8 bOverride_AffixAbilitySet : 1;
+	
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bOverride_AffixAbilitySet"), Category = "Obsidian|Affix")
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply = nullptr;
 	
 	/** Affix ranges. */
@@ -646,7 +665,9 @@ struct FObsidianDynamicItemAffix
 	GENERATED_BODY()
 
 public:
-	FObsidianDynamicItemAffix(){}
+	FObsidianDynamicItemAffix()
+		: bOverride_AffixAbilitySet(false)
+	{}
 
 	explicit operator bool() const;
 	bool operator ==(const FObsidianDynamicItemAffix& Other) const;
@@ -679,9 +700,12 @@ public:
 	/** Minimum Item Level Requirement to roll this affix. */
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"), Category = "Obsidian|Affix")
 	uint8 MinItemLevelRequirement = 1;
+
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
+	uint8 bOverride_AffixAbilitySet : 1;
 	
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bOverride_AffixAbilitySet"), Category = "Obsidian|Affix")
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply = nullptr;
 	
 	/** Possible Affix Ranges to roll from. */

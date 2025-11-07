@@ -50,6 +50,10 @@ public:
 
 	virtual void PostInitProperties() override;
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
+
+#if WITH_EDITOR
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+#endif
 	
 	bool HasPrimaryItemAffix() const;
 	bool HasImplicitAffix() const;

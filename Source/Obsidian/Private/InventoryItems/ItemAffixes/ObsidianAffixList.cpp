@@ -2,13 +2,11 @@
 
 #include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
-// ~ Core
-#include "UObject/ObjectSaveContext.h"
+#include <UObject/ObjectSaveContext.h>
 #if WITH_EDITOR
-#include "Misc/DataValidation.h"
-#endif // ~ With Editor
+#include <Misc/DataValidation.h>
+#endif 
 
-// ~ Project
 
 // ~ FObsidianAffixClass
 
@@ -127,16 +125,23 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 				"Please fill Accepted Item Categories container with Item Category tags."), i, *ClassName.ToString(), Index));
 			Context.AddError(ErrorMessage);
 		}
-
-		// Most Affixes get the default AffixAbilitySets from ItemDataDeveloperSettings
-		// if (DynamicAffix.SoftAbilitySetToApply.IsNull())
-		// {
-		// 	Result = EDataValidationResult::Invalid;
-		//
-		// 	const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] class at index [%i] is not set! \n"
-		// 		"Please provide a valid AbilitySet to apply!"), i, *ClassName.ToString(), Index));
-		// 	Context.AddError(ErrorMessage);
-		// }
+		
+		if (DynamicAffix.bOverride_AffixAbilitySet && DynamicAffix.SoftAbilitySetToApply.IsNull())
+		{
+			Result = EDataValidationResult::Invalid;
+		
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] class at index [%i] is not set! \n"
+				"Please provide a valid AbilitySet to apply!"), i, *ClassName.ToString(), Index));
+			Context.AddError(ErrorMessage);
+		}
+		else if (DynamicAffix.bOverride_AffixAbilitySet == false && DynamicAffix.SoftAbilitySetToApply.IsNull() == false)
+		{
+			Result = EDataValidationResult::Invalid;
+		
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] class at index [%i] is set but the Affix does not Override it! \n"
+				"Please re-check the asset!"), i, *ClassName.ToString(), Index));
+			Context.AddError(ErrorMessage);
+		}
 
 		if (DynamicAffix.AffixValuesDefinition.IsValid() == false)
 		{
@@ -149,6 +154,35 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 		}
 		
 		uint8 ExpectedCount = DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers.Num();
+		for (int32 x = 0; x < ExpectedCount; x++)
+		{
+			if (DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].AffixValueID.IsValid() == false)
+			{
+				Result = EDataValidationResult::Invalid;
+
+				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AffixValueID at index [%i] inside [%i] Affix of [%s] class at index [%i] of AffixValuesIdentifiers is not set! \n"
+					"Please make sure to fill the AffixValueID tag."),x, i, *ClassName.ToString(), Index));
+				Context.AddError(ErrorMessage);
+			}
+			
+			if (DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify && DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid() == false)
+			{
+				Result = EDataValidationResult::Invalid;
+
+				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%i] Affix of [%s] class at index [%i] of AffixValuesIdentifiers is not set! \n"
+					"Please make sure to either correct the bOverride_AttributeToModify or fill the Attribute."),x, i, *ClassName.ToString(), Index));
+				Context.AddError(ErrorMessage);
+			}
+			else if (DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify == false && DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid())
+			{
+				Result = EDataValidationResult::Invalid;
+
+				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%i] Affix of [%s] class at index [%i] of AffixValuesIdentifiers is set but the Affix does not Override it! \n"
+					"Please re-check the asset!"),x, i, *ClassName.ToString(), Index));
+				Context.AddError(ErrorMessage);
+			}
+		}
+		
 		for (int32 y = 0; y < DynamicAffix.AffixValuesDefinition.PossibleAffixRanges.Num(); y++)
 		{
 			const FObsidianAffixValueRange Range = DynamicAffix.AffixValuesDefinition.PossibleAffixRanges[y];
@@ -173,7 +207,7 @@ EDataValidationResult UObsidianAffixList::IsDataValid(FDataValidationContext& Co
 	uint16 TreasureClassesIndex = 0;
 	for (const FObsidianAffixClass& Class : AffixClasses)
 	{
-		Result =  CombineDataValidationResults(Result, Class.ValidateData(Context, Class.AffixClassName, TreasureClassesIndex));
+		Result = CombineDataValidationResults(Result, Class.ValidateData(Context, Class.AffixClassName, TreasureClassesIndex));
 		TreasureClassesIndex++;
 	}
 	

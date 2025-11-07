@@ -2,6 +2,9 @@
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
+#if WITH_EDITOR
+#include <Misc/DataValidation.h>
+#endif
 
 #include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
@@ -236,6 +239,94 @@ bool FObsidianStaticItemAffix::operator==(const FObsidianActiveItemAffix& Other)
 {
 	return AffixTag == Other.AffixTag;
 }
+
+#if WITH_EDITOR
+EDataValidationResult FObsidianStaticItemAffix::IsStaticAffixValid(FDataValidationContext& Context, const int32 Index,
+	const FString& AffixTypeName) const
+{
+	EDataValidationResult Result = EDataValidationResult::Valid;
+	
+	if (AffixTag.IsValid() == false || AffixTag.MatchesTag(FGameplayTag::RequestGameplayTag(TEXT("Item.Affix"))) == false)
+	{
+		Result = EDataValidationResult::Invalid;
+			
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Affix Tag at index [%i] of [%s] Affix is invalid! \n"
+			"Please fill correct Affix Tag."), Index, *AffixTypeName));
+		Context.AddError(ErrorMessage);
+	}
+		
+	if (bOverride_AffixAbilitySet && SoftAbilitySetToApply.IsNull())
+	{
+		Result = EDataValidationResult::Invalid;
+		
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] Affix is not set! \n"
+			"Please provide a valid AbilitySet to apply!"), Index, *AffixTypeName));
+		Context.AddError(ErrorMessage);
+	}
+	else if (bOverride_AffixAbilitySet == false && SoftAbilitySetToApply.IsNull() == false)
+	{
+		Result = EDataValidationResult::Invalid;
+		
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] Affix is set but the Affix does not Override it! \n"
+			"Please re-check the asset!"), Index, *AffixTypeName));
+		Context.AddError(ErrorMessage);
+	}
+
+	if (AffixValuesDefinition.IsValid() == false)
+	{
+		Result = EDataValidationResult::Invalid;
+
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("PossibleAffixRanges at index [%i] of [%s] Affix are not set! \n"
+			"Please fill it with possible affix ranges."), Index, *AffixTypeName));
+		Context.AddError(ErrorMessage);
+	}
+		
+	uint8 ExpectedCount = AffixValuesDefinition.AffixValuesIdentifiers.Num();
+	for (int32 x = 0; x < ExpectedCount; x++)
+	{
+		if (AffixValuesDefinition.AffixValuesIdentifiers[x].AffixValueID.IsValid() == false)
+		{
+			Result = EDataValidationResult::Invalid;
+
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AffixValueID at index [%i] inside [%s] Affix at index [%i] of AffixValuesIdentifiers is not set! \n"
+				"Please make sure to fill the AffixValueID tag."),x, *AffixTypeName, Index));
+			Context.AddError(ErrorMessage);
+		}
+			
+		if (AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify && AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid() == false)
+		{
+			Result = EDataValidationResult::Invalid;
+
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%s] Affix at index [%i] of AffixValuesIdentifiers is not set! \n"
+				"Please make sure to either correct the bOverride_AttributeToModify or fill the Attribute."),x, *AffixTypeName, Index));
+			Context.AddError(ErrorMessage);
+		}
+		else if (AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify == false && AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid())
+		{
+			Result = EDataValidationResult::Invalid;
+
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%s] Affix at index [%i] of AffixValuesIdentifiers is set but the Affix does not Override it! \n"
+				"Please re-check the asset!"),x, *AffixTypeName, Index));
+			Context.AddError(ErrorMessage);
+		}
+	}
+		
+	for (int32 y = 0; y < AffixValuesDefinition.PossibleAffixRanges.Num(); y++)
+	{
+		const FObsidianAffixValueRange Range = AffixValuesDefinition.PossibleAffixRanges[y];
+		if (Range.AffixRanges.Num() != ExpectedCount)
+		{
+			Result = EDataValidationResult::Invalid;
+
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Number of AffixRanges at index [%i] inside [%s] Affix at index [%i] differs from expected number of [%d]! \n"
+				"Please make sure that every entry has the same number of possible ranges."),y, *AffixTypeName, Index, ExpectedCount));
+			Context.AddError(ErrorMessage);
+		}
+	}
+
+	return Result;
+}
+#endif
 
 // ~ FObsidianDynamicItemAffix
 
