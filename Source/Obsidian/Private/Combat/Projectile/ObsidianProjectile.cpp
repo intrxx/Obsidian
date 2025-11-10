@@ -21,7 +21,7 @@ void AObsidianProjectile::BeginPlay()
 		float LifeSpan = ProjectileLifeSpan;
 		if (ProjectileCleanupMethod == EObsidianProjectileCleanupMethod::DistanceTraveled)
 		{
-			LifeSpan = DistanceToTravel / ObsidianProjectileMovementComponent->InitialSpeed;
+			LifeSpan = DistanceToTravel / ProjectileMovementComponent->InitialSpeed;
 		}
 		
 		SetLifeSpan(LifeSpan);

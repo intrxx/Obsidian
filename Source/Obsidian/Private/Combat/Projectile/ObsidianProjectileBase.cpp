@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // ~ Project
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "Combat/Projectile/OProjectileMovementComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
@@ -30,11 +31,11 @@ AObsidianProjectileBase::AObsidianProjectileBase(const FObjectInitializer& Objec
 	SphereComponent->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Overlap);
 	SphereComponent->SetCollisionResponseToChannel(ECC_Pawn, ECR_Overlap);
 
-	ObsidianProjectileMovementComponent = CreateDefaultSubobject<UOProjectileMovementComponent>(TEXT("ProjectileMovement"));
-	ObsidianProjectileMovementComponent->SetIsReplicated(true);
-	ObsidianProjectileMovementComponent->InitialSpeed = 550.f;
-	ObsidianProjectileMovementComponent->MaxSpeed = 550.f;
-	ObsidianProjectileMovementComponent->ProjectileGravityScale = 0.f;
+	ProjectileMovementComponent = CreateDefaultSubobject<UOProjectileMovementComponent>(TEXT("ProjectileMovement"));
+	ProjectileMovementComponent->SetIsReplicated(true);
+	ProjectileMovementComponent->InitialSpeed = 550.f;
+	ProjectileMovementComponent->MaxSpeed = 550.f;
+	ProjectileMovementComponent->ProjectileGravityScale = 0.f;
 }
 
 void AObsidianProjectileBase::BeginPlay()

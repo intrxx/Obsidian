@@ -10,6 +10,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Game/ObsidianGameInstance.h"
 
 AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& ObjectInitializer)
@@ -30,6 +31,20 @@ void AObsidianPlayerState::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>&
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	
 	DOREPLIFETIME(ThisClass, HeroLevel);
+}
+
+AObsidianPlayerController* AObsidianPlayerState::GetObsidianPlayerController() const
+{
+	return CastChecked<AObsidianPlayerController>(GetPlayerController(), ECastCheckedType::NullAllowed);
+}
+
+AObsidianHero* AObsidianPlayerState::GetObsidianHero() const
+{
+	if (const AObsidianPlayerController* ObsidianPC = CastChecked<AObsidianPlayerController>(GetPlayerController()))
+	{
+		return ObsidianPC->GetObsidianHero();
+	}
+	return nullptr;
 }
 
 UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const

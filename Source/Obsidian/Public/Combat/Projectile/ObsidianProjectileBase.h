@@ -11,6 +11,8 @@
 #include "GameFramework/Actor.h"
 #include "ObsidianProjectileBase.generated.h"
 
+class AObsidianHero;
+
 UENUM()
 enum class EObsidianProjectileCleanupMethod : uint8
 {
@@ -44,7 +46,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
 	UOProjectileMovementComponent* GetObsidianProjectileMovementComponent()
 	{
-		return ObsidianProjectileMovementComponent;
+		return ProjectileMovementComponent;
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
@@ -71,7 +73,7 @@ protected:
 	TObjectPtr<USphereComponent> SphereComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Projectile")
-	TObjectPtr<UOProjectileMovementComponent> ObsidianProjectileMovementComponent;
+	TObjectPtr<UOProjectileMovementComponent> ProjectileMovementComponent;
 	
 	/**
 	 * Boolean to indicate that the projectile hit on the server, used to play cosmetic effects if the destruction happened on the server before the overlap on client.

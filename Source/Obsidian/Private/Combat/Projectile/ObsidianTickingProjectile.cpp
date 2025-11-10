@@ -29,7 +29,7 @@ void AObsidianTickingProjectile::Tick(float DeltaSeconds)
 
 	if (ProjectileCleanupMethod == EObsidianProjectileCleanupMethod::DistanceTraveled)
 	{
-		if (DistanceToTravel > FVector::Dist(ProjectileSpawnLocation, GetActorLocation()))
+		if (DistanceToTravel < FVector::Dist(ProjectileSpawnLocation, GetActorLocation()))
 		{
 			Destroy();
 		}

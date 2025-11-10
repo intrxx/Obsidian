@@ -12,6 +12,8 @@
 #include "ModularPlayerState.h"
 #include "ObsidianPlayerState.generated.h"
 
+class AObsidianHero;
+class AObsidianPlayerController;
 class UObsidianCommonAttributeSet;
 class UObsidianHeroAttributeSet;
 class UObsidianAbilitySystemComponent;
@@ -37,6 +39,9 @@ public:
 	{
 		return AbilitySystemComponent;
 	}
+
+	AObsidianPlayerController* GetObsidianPlayerController() const;
+	AObsidianHero* GetObsidianHero() const;
 	
 	int32 GetHeroLevel() const
 	{

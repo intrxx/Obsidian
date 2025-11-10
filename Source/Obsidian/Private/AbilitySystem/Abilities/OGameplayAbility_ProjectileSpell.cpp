@@ -6,6 +6,7 @@
 #include <AbilitySystemComponent.h>
 
 #include "Combat/Projectile/ObsidianProjectileBase.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "Obsidian/ObsidianMacros.h"
 
 DEFINE_LOG_CATEGORY(LogProjectileAbility)

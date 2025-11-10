@@ -29,7 +29,7 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	: Super(ObjectInitializer)
 {
 	RootSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("RootSceneComponent"));
-	RootSceneComponent->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+	RootSceneComponent->SetRelativeRotation(FRotator::ZeroRotator);
 	SetRootComponent(RootSceneComponent);
 	
 	StaticMeshComp = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMeshComponent"));
@@ -399,12 +399,7 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 		const FVector CurrentActorLocation = GetActorLocation();
 		const FVector InitialLocation = FVector(CurrentActorLocation.X, CurrentActorLocation.Y, CurrentActorLocation.Z + 75.0f);
 		const FVector MidPointLocation = FMath::Lerp(InitialLocation, CurrentActorLocation, 0.50f) + FVector(0.0f, 0.0f, 100.0f);
-		const TArray<FVector> ItemDropRoute =
-			{
-				InitialLocation,
-				MidPointLocation,
-				CurrentActorLocation
-			};
+		const TArray<FVector> ItemDropRoute = {InitialLocation, MidPointLocation, CurrentActorLocation};
 		
 		ItemDropSplineComp->SetSplinePoints(ItemDropRoute, ESplineCoordinateSpace::World, true);
 	}
@@ -463,11 +458,11 @@ void AObsidianDroppableItem::UpdateItemDropAnimation(float UpdateAlpha)
 	const float NewRoll = FMath::Lerp(InitialItemRotation.Roll, FinalItemRotation.Roll + 270.0f, UpdateAlpha);
 	const FRotator NewRotation = FRotator(FinalItemRotation.Pitch, NewYaw, NewRoll);
 
-	// SetActorLocationAndRotation(NewLocation, NewRotation); We can't just use the Actor's Location and Rotation as this will replicate to Clients
+	//NOTE(intrxx) SetActorLocationAndRotation(NewLocation, NewRotation); We can't just use the Actor's Location and Rotation as this will replicate to Clients
 	// when set on Listen Server as we want to play the anim for Local PLayer Controller which in one case happens to be Listen Server.
 	// In order to bypass this I needed to create SceneComponent and make it RootComponent so the Mesh wouldn't affect
 	// actual Actor Transform (as it was previously RootComponent) and then just set the location on the Mesh, additionally this might be faster
-	// due to using this NoPhysics version - I don't use physics on dropped items anyway. //Learn
+	// due to using this NoPhysics version - I don't use physics on dropped items anyway.
 	// https://github.com/intrxx/Obsidian/commit/d000d45c49bfeae0597347f75d9e4dc8c8e61642
 	StaticMeshComp->SetWorldLocationAndRotationNoPhysics(NewLocation, NewRotation);
 }
