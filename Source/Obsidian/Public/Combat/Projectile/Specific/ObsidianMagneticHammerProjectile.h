@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Combat/Projectile/ObsidianProjectile.h"
+#include "Combat/Projectile/ObsidianTickingProjectile.h"
 #include "ObsidianMagneticHammerProjectile.generated.h"
 
 class UTimelineComponent;
@@ -12,7 +12,7 @@ class USplineComponent;
  * 
  */
 UCLASS()
-class OBSIDIAN_API AObsidianMagneticHammerProjectile : public AObsidianProjectile
+class OBSIDIAN_API AObsidianMagneticHammerProjectile : public AObsidianTickingProjectile
 {
 	GENERATED_BODY()
 
@@ -21,7 +21,8 @@ public:
 	
 protected:
 	virtual void BeginPlay() override;
-
+	virtual void Tick(float DeltaTime) override;
+	
 protected:
 	void StartHammerRoute();
 
@@ -39,6 +40,8 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCurveFloat> HammerRouteCurve;
 
+	FVector HammerMidwayLocation = FVector::ZeroVector;
 	float HammerDistance = 500.0f;
+	uint8 bReturning:1;
 };
 

@@ -16,10 +16,14 @@ AObsidianMagneticHammerProjectile::AObsidianMagneticHammerProjectile(const FObje
 {
 	HammerRouteTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("HammerRouteTimeline"));
 	HammerRouteTimelineComponent->SetLooping(false);
+
+	//ProjectileMovementComponent->bAutoActivate = false;
+	ProjectileMovementComponent->InitialSpeed = 500.0f;
+	ProjectileMovementComponent->MaxSpeed = 500.0f;
 	
-	ProjectileMovementComponent->bAutoActivate = false;
 	ProjectileCleanupMethod = EObsidianProjectileCleanupMethod::Custom;
 	bDestroyOnHit = false;
+	bReturning = false;
 }
 
 void AObsidianMagneticHammerProjectile::BeginPlay()
@@ -31,9 +35,32 @@ void AObsidianMagneticHammerProjectile::BeginPlay()
 		UE_LOG(LogTemp, Display, TEXT("Movement Comp is Active"));
 	}
 	
+	ProjectileSpawnLocation = GetActorLocation();
+	HammerMidwayLocation = ProjectileSpawnLocation + (GetActorForwardVector() * HammerDistance);
+	
 	if (HasAuthority())
 	{
-		StartHammerRoute();
+		//StartHammerRoute();
+	}
+}
+
+void AObsidianMagneticHammerProjectile::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+	if (bReturning == false && FVector::Dist(ProjectileSpawnLocation, GetActorLocation()) > HammerDistance)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Projectile needs to turn back"));
+		UE_LOG(LogTemp, Display, TEXT("Distance form spawn to current loc: %f"), FVector::Dist(ProjectileSpawnLocation, GetActorLocation()));
+		bReturning = true;
+		ProjectileMovementComponent->Velocity *= -1.0f;
+	}
+
+	if (bReturning && FVector::Dist(HammerMidwayLocation, GetActorLocation()) > HammerDistance)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Distance form midwaypoint to current loc: %f"), FVector::Dist(HammerMidwayLocation, GetActorLocation()));
+		UE_LOG(LogTemp, Display, TEXT("Projectile is back"));
+		Destroy();		
 	}
 }
 

@@ -23,6 +23,6 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaSeconds) override;
 
-private:
+protected:
 	FVector ProjectileSpawnLocation = FVector::ZeroVector;
 };
