@@ -92,6 +92,9 @@ protected:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
 	bool bDestroyOnHit = true;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
+	bool bAllowMultiHit = false;
 	
 	/**
 	 * Cosmetics

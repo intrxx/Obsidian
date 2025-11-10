@@ -96,8 +96,9 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 		}
 		else
 		{
-			if(!AlreadyHitActors.Contains(OtherActor))
+			if(bAllowMultiHit || !AlreadyHitActors.Contains(OtherActor))
 			{
+				// Leaving it here despite bAllowMultiHit==true as this can be useful for something else
 				AlreadyHitActors.Add(OtherActor);
 				
 				if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
