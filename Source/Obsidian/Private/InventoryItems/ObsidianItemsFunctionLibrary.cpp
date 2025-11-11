@@ -2,9 +2,7 @@
 
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
-// ~ Core
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"

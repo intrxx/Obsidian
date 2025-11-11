@@ -2,14 +2,12 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "ObsidianTreasureList.h"
 
-#include "Components/ActorComponent.h"
+#include <Components/ActorComponent.h>
 #include "ObsidianItemDropComponent.generated.h"
 
 class UOInventoryItemFragment_Affixes;

@@ -11,7 +11,6 @@
 #include "Kismet/GameplayStatics.h"
 
 // ~ Project
-#include "Characters/Player/ObsidianPlayerState.h"
 #include "Combat/Projectile/OProjectileMovementComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
@@ -77,6 +76,11 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 		return;
 	}
 
+	if (OverlappedComponent)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Hit Comp: [%s]"), *GetNameSafe(OverlappedComponent));
+	}
+
 	if(!bServerHit)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ProjImpactSound, GetActorLocation(), FRotator::ZeroRotator);
@@ -87,30 +91,32 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		if(bDestroyOnHit)
 		{
-			if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-			{
-				TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-			}
-			
+			ApplyProjectileDamageToActor(OtherActor);
 			Destroy();	
 		}
 		else
 		{
-			if(bAllowMultiHit || !AlreadyHitActors.Contains(OtherActor))
+			const bool bAlreadyDamaged = AlreadyHitActors.Contains(OtherActor);
+			if(bAllowMultiHit || bAlreadyDamaged == false)
 			{
 				// Leaving it here despite bAllowMultiHit==true as this can be useful for something else
 				AlreadyHitActors.Add(OtherActor);
-				
-				if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(OtherActor))
-				{
-					TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-				}
+				ApplyProjectileDamageToActor(OtherActor);
 			}
 		}
 	}
 	else
 	{		
 		bServerHit = true;	
+	}
+}
+
+void AObsidianProjectileBase::ApplyProjectileDamageToActor(AActor* ActorToDamage) const
+{
+	if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToDamage))
+	{
+		TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
+		UE_LOG(LogTemp, Display, TEXT("Applying Projectile Damage"));
 	}
 }
 

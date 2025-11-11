@@ -49,7 +49,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 	SpawnTransform.SetRotation(Rotation.Quaternion()); 
 	
 	AObsidianProjectileBase* Projectile = GetWorld()->SpawnActorDeferred<AObsidianProjectileBase>(ProjectileClass, SpawnTransform,
-		GetOwningActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
+		GetAvatarActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
 	const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo();
 	

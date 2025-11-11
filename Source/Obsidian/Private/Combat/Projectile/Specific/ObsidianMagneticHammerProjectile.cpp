@@ -2,45 +2,42 @@
 
 #include "Combat/Projectile/Specific/ObsidianMagneticHammerProjectile.h"
 
-#include <Components/SplineComponent.h>
-#include <Components/TimelineComponent.h>
 
-#include "Characters/Player/ObsidianPlayerState.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Combat/Projectile/OProjectileMovementComponent.h"
-#include "Core/ObsidianBlueprintFunctionLibrary.h"
-#include "Obsidian/ObsidianMacros.h"
 
 AObsidianMagneticHammerProjectile::AObsidianMagneticHammerProjectile(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	HammerRouteTimelineComponent = CreateDefaultSubobject<UTimelineComponent>(TEXT("HammerRouteTimeline"));
-	HammerRouteTimelineComponent->SetLooping(false);
-
-	//ProjectileMovementComponent->bAutoActivate = false;
-	ProjectileMovementComponent->InitialSpeed = 500.0f;
-	ProjectileMovementComponent->MaxSpeed = 500.0f;
+	HammerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hammer Mesh"));
+	HammerMeshComponent->SetupAttachment(GetRootComponent());
+	HammerMeshComponent->SetCollisionResponseToAllChannels(ECR_Ignore);
+	HammerMeshComponent->SetCollisionEnabled(ECollisionEnabled::Type::NoCollision);
+	HammerMeshComponent->SetGenerateOverlapEvents(false);
 	
 	ProjectileCleanupMethod = EObsidianProjectileCleanupMethod::Custom;
 	bDestroyOnHit = false;
 	bReturning = false;
+	
+	ProjectileMovementComponent->InitialSpeed = 500.0f;
+	ProjectileMovementComponent->MaxSpeed = 500.0f;
+	ProjectileMovementComponent->bIsHomingProjectile = true;
+	ProjectileMovementComponent->HomingAccelerationMagnitude = 5000.0f;
 }
 
 void AObsidianMagneticHammerProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-
-	if (ProjectileMovementComponent->IsActive())
-	{
-		UE_LOG(LogTemp, Display, TEXT("Movement Comp is Active"));
-	}
 	
 	ProjectileSpawnLocation = GetActorLocation();
-	HammerMidwayLocation = ProjectileSpawnLocation + (GetActorForwardVector() * HammerDistance);
-	
-	if (HasAuthority())
+	HammerMidwayLocation = ProjectileSpawnLocation + (GetActorForwardVector() * HammerRange);
+	HammerMaxRotationSpeed = HammerRotationSpeed;
+	HammerMaxSpeed = ProjectileMovementComponent->MaxSpeed;
+	HeroOwner = Cast<AObsidianHero>(GetOwner());
+
+	if (HammerMeshComponent)
 	{
-		//StartHammerRoute();
+		HammerInitialScaleValue = HammerMeshComponent->GetRelativeScale3D();
 	}
 }
 
@@ -48,92 +45,74 @@ void AObsidianMagneticHammerProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bReturning == false && FVector::Dist(ProjectileSpawnLocation, GetActorLocation()) > HammerDistance)
-	{
-		UE_LOG(LogTemp, Display, TEXT("Projectile needs to turn back"));
-		UE_LOG(LogTemp, Display, TEXT("Distance form spawn to current loc: %f"), FVector::Dist(ProjectileSpawnLocation, GetActorLocation()));
-		bReturning = true;
-		ProjectileMovementComponent->Velocity *= -1.0f;
-	}
-
-	if (bReturning && FVector::Dist(HammerMidwayLocation, GetActorLocation()) > HammerDistance)
-	{
-		UE_LOG(LogTemp, Display, TEXT("Distance form midwaypoint to current loc: %f"), FVector::Dist(HammerMidwayLocation, GetActorLocation()));
-		UE_LOG(LogTemp, Display, TEXT("Projectile is back"));
-		Destroy();		
-	}
+	UpdateHammerRoute(DeltaTime);
 }
 
-void AObsidianMagneticHammerProjectile::StartHammerRoute()
+void AObsidianMagneticHammerProjectile::UpdateHammerRoute(const float DeltaTime)
 {
-	if (HammerRouteSplineComponent == nullptr || HammerRouteTimelineComponent == nullptr || HammerRouteCurve == nullptr || Owner == nullptr)
+	if (HeroOwner.IsValid() == false)
 	{
+		FFrame::KismetExecutionMessage(TEXT("Projectile Owner Hero is no longer valid, destroying projectile. "),
+			ELogVerbosity::Error);
+		Destroy();
 		return;
 	}
+
+	const AObsidianHero* HeroOwnerPtr = HeroOwner.Get();
+	const FVector HammerFinalDestination = HeroOwnerPtr->GetActorLocation();
+	const FVector CurrentHammerPosition = GetActorLocation();
 	
-	const AObsidianPlayerState* OwningPS = Cast<AObsidianPlayerState>(Owner);
-	if (OwningPS == nullptr)
+	if (bReturning == false)
 	{
-		return;
-	}
-
-	const AObsidianHero* HeroOwner = OwningPS->GetObsidianHero();
-	if (HeroOwner == nullptr)
-	{
-		return;
-	}
-
-	HammerRouteSplineComponent = Cast<USplineComponent>(
-		AddComponentByClass(USplineComponent::StaticClass(), true, FTransform::Identity, false)
-		);
-	if (HammerRouteSplineComponent == nullptr)
-	{
-		return;
-	}
-	
-	const FVector StartingPosition = HeroOwner->GetActorLocation();
-	DEBUG_SPHERE(StartingPosition);
-	UObsidianBlueprintFunctionLibrary::PrintVector3D(this, StartingPosition, TEXT("Starting Location: "));
-	const FVector MidWayPosition = StartingPosition + (HeroOwner->GetActorForwardVector() * HammerDistance);
-	DEBUG_SPHERE(MidWayPosition);
-	UObsidianBlueprintFunctionLibrary::PrintVector3D(this, MidWayPosition, TEXT("Midway Location: "));
-	DEBUG_LINE(StartingPosition, MidWayPosition);
-	const FVector FinishPosition = StartingPosition;
-	UObsidianBlueprintFunctionLibrary::PrintVector3D(this, FinishPosition, TEXT("Finish Location: "));
-	DEBUG_SPHERE(FinishPosition);
-	const TArray<FVector> HammerRouteSplinePoints = {StartingPosition, MidWayPosition, FinishPosition};
-	HammerRouteSplineComponent->SetSplinePoints(HammerRouteSplinePoints, ESplineCoordinateSpace::World, true);
-	HammerRouteSplineComponent->UpdateSpline();
-
-	for (int32 i = 0; i < HammerRouteSplineComponent->GetNumberOfSplinePoints(); ++i)
-	{
-		const FVector Point = HammerRouteSplineComponent->GetLocationAtSplinePoint(i, ESplineCoordinateSpace::World);
-		UE_LOG(LogTemp, Warning, TEXT("Spline Point %d: %s"), i, *Point.ToString());
-	}
-
-	FOnTimelineFloat ProgressUpdate;
-	ProgressUpdate.BindDynamic(this, &ThisClass::UpdateHammerRoute);
-	HammerRouteTimelineComponent->AddInterpFloat(HammerRouteCurve, ProgressUpdate);
-
-	FOnTimelineEventStatic OnFinished;
-	OnFinished.BindLambda([this]()
+		const float DistanceTraveled = FVector::Dist(ProjectileSpawnLocation, CurrentHammerPosition);
+		if (DistanceTraveled > HammerRange)
 		{
-			OnHammerRouteFinished();
-		});
-
-	HammerRouteTimelineComponent->SetTimelineFinishedFunc(OnFinished);
-	HammerRouteTimelineComponent->PlayFromStart();
-}
-
-void AObsidianMagneticHammerProjectile::UpdateHammerRoute(float UpdateAlpha)
-{
-	UE_LOG(LogTemp, Warning, TEXT("Update Alpha: %f"), UpdateAlpha);
-	const FVector NewLocation = HammerRouteSplineComponent->GetLocationAtTime(UpdateAlpha, ESplineCoordinateSpace::World);
-	UObsidianBlueprintFunctionLibrary::PrintVector3D(this, NewLocation, TEXT("New Proj Location: "));
-	SetActorLocationAndRotation(NewLocation, GetActorRotation());
+			bReturning = true;
+			ProjectileMovementComponent->Velocity *= -1.0f;
+			ProjectileMovementComponent->HomingTargetComponent = HeroOwnerPtr->GetRootComponent();
+		}
+		
+		const float ForwardsDistanceTraveledPercent = FMath::Lerp(0.0f, 0.5f, DistanceTraveled / HammerRange);
+		const float SpeedPercent = HammerRouteCurve->GetFloatValue(ForwardsDistanceTraveledPercent);
+		HammerScaleValue = 2.0f - SpeedPercent;
+		ProjectileMovementComponent->MaxSpeed = HammerMaxSpeed * SpeedPercent;
+		HammerRotationSpeed = HammerMaxRotationSpeed * SpeedPercent;
+	}
+	else
+	{
+		const float DistanceToTravelBack = FVector::Dist(HammerMidwayLocation, HammerFinalDestination);
+		const float DistanceTraveled = FVector::Dist(HammerMidwayLocation, CurrentHammerPosition);
+		if (DistanceTraveled > DistanceToTravelBack)
+		{
+			Destroy();	
+		}
+		
+		const float BackwardsTraveledDistancePercent = FMath::Lerp(0.5f, 1.0f, DistanceTraveled / (DistanceToTravelBack));
+		const float SpeedPercent = HammerRouteCurve->GetFloatValue(BackwardsTraveledDistancePercent);
+		HammerScaleValue = 2.0f - SpeedPercent;
+		ProjectileMovementComponent->MaxSpeed = HammerMaxSpeed * SpeedPercent;
+		HammerRotationSpeed = HammerMaxRotationSpeed * SpeedPercent;
+	}
+	
+	if (HammerMeshComponent)
+	{
+		HammerMeshComponent->SetRelativeScale3D(HammerInitialScaleValue * FVector(HammerScaleValue));
+		
+		if (bReturning)
+		{
+			const FVector Direction = (HammerFinalDestination - CurrentHammerPosition).GetSafeNormal();
+			const FRotator CurrentHammerRotation = GetActorRotation();
+			const FRotator TargetRotation = FRotator(0.0f, Direction.Rotation().Yaw, 0.0f);
+			const FRotator NewRotation = FMath::RInterpTo(CurrentHammerRotation, TargetRotation, DeltaTime, 5.0f);
+			SetActorRotation(NewRotation);
+		}
+		
+		HammerMeshComponent->AddLocalRotation(FRotator(HammerRotationSpeed * DeltaTime, 0.0f, 0.0f));
+	}
 }
 
 void AObsidianMagneticHammerProjectile::OnHammerRouteFinished()
 {
 	Destroy();
 }
+
