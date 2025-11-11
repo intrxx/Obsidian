@@ -5,6 +5,7 @@
 
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Combat/Projectile/OProjectileMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AObsidianMagneticHammerProjectile::AObsidianMagneticHammerProjectile(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -76,7 +77,6 @@ void AObsidianMagneticHammerProjectile::UpdateHammerRoute(const float DeltaTime)
 		const float SpeedPercent = HammerRouteCurve->GetFloatValue(ForwardsDistanceTraveledPercent);
 		HammerScaleValue = 2.0f - SpeedPercent;
 		ProjectileMovementComponent->MaxSpeed = HammerMaxSpeed * SpeedPercent;
-		HammerRotationSpeed = HammerMaxRotationSpeed * SpeedPercent;
 	}
 	else
 	{
@@ -91,23 +91,19 @@ void AObsidianMagneticHammerProjectile::UpdateHammerRoute(const float DeltaTime)
 		const float SpeedPercent = HammerRouteCurve->GetFloatValue(BackwardsTraveledDistancePercent);
 		HammerScaleValue = 2.0f - SpeedPercent;
 		ProjectileMovementComponent->MaxSpeed = HammerMaxSpeed * SpeedPercent;
-		HammerRotationSpeed = HammerMaxRotationSpeed * SpeedPercent;
 	}
 	
 	if (HammerMeshComponent)
 	{
-		HammerMeshComponent->SetRelativeScale3D(HammerInitialScaleValue * FVector(HammerScaleValue));
-		
 		if (bReturning)
 		{
-			const FVector Direction = (HammerFinalDestination - CurrentHammerPosition).GetSafeNormal();
-			const FRotator CurrentHammerRotation = GetActorRotation();
-			const FRotator TargetRotation = FRotator(0.0f, Direction.Rotation().Yaw, 0.0f);
-			const FRotator NewRotation = FMath::RInterpTo(CurrentHammerRotation, TargetRotation, DeltaTime, 5.0f);
+			const FRotator TargetRotation = UKismetMathLibrary::FindLookAtRotation(CurrentHammerPosition, HammerFinalDestination);
+			FRotator NewRotation = GetActorRotation();
+			NewRotation.Yaw = TargetRotation.Yaw - 180.0f; // -180.0f cuz we are going backwards back to Owner
 			SetActorRotation(NewRotation);
 		}
-		
 		HammerMeshComponent->AddLocalRotation(FRotator(HammerRotationSpeed * DeltaTime, 0.0f, 0.0f));
+		HammerMeshComponent->SetRelativeScale3D(HammerInitialScaleValue * FVector(HammerScaleValue));
 	}
 }
 
