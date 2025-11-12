@@ -6,7 +6,6 @@
 #include <AbilitySystemComponent.h>
 
 #include "Combat/Projectile/ObsidianProjectileBase.h"
-#include "Characters/Heroes/ObsidianHero.h"
 #include "Obsidian/ObsidianMacros.h"
 
 DEFINE_LOG_CATEGORY(LogProjectileAbility)
@@ -31,6 +30,12 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 		return;
 	}
 
+	UWorld* World = GetWorld();
+	if (World == nullptr)
+	{
+		return;
+	}
+
 	if(bWithDebug)
 	{
 		DEBUG_SPHERE(TargetLocation);
@@ -48,7 +53,7 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 	SpawnTransform.SetLocation(StartLocation);
 	SpawnTransform.SetRotation(Rotation.Quaternion()); 
 	
-	AObsidianProjectileBase* Projectile = GetWorld()->SpawnActorDeferred<AObsidianProjectileBase>(ProjectileClass, SpawnTransform,
+	AObsidianProjectileBase* Projectile = World->SpawnActorDeferred<AObsidianProjectileBase>(ProjectileClass, SpawnTransform,
 		GetAvatarActorFromActorInfo(), Cast<APawn>(GetOwningActorFromActorInfo()), ESpawnActorCollisionHandlingMethod::AlwaysSpawn);
 	
 	const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo();
