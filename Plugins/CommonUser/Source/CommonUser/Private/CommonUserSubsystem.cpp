@@ -2288,7 +2288,7 @@ FText UCommonUserSubsystem::GetPrivilegeDescription(ECommonUserPrivilege Privile
 	case ECommonUserPrivilege::CanUseCrossPlay:
 		return NSLOCTEXT("CommonUser", "PrivilegeCanUseCrossPlay", "play with other platforms");
 	default:
-		return NSLOCTEXT("CommonUser", "PrivilegeInvalid", "");
+		return NSLOCTEXT("CommonUser", "PrivilegeInvalid", "Invalid");
 	}
 }
 
@@ -2318,7 +2318,7 @@ FText UCommonUserSubsystem::GetPrivilegeResultDescription(ECommonUserPrivilegeRe
 	case ECommonUserPrivilegeResult::PlatformFailure:
 		return NSLOCTEXT("CommonUser", "ResultPlatformFailure", "Not allowed");
 	default:
-		return NSLOCTEXT("CommonUser", "ResultInvalid", "");
+		return NSLOCTEXT("CommonUser", "ResultInvalid", "Invalid");
 
 	}
 }

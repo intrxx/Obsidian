@@ -72,6 +72,10 @@
 		{
 			"Name": "CommonGame",
 			"Enabled": true
+		},
+		{
+			"Name": "AIAssistant",
+			"Enabled": true
 		}
 	]
 }
