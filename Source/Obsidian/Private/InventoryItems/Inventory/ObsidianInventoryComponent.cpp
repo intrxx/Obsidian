@@ -547,7 +547,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::TakeOutFromItemInstanc
 	
 	if(!GetOwner()->HasAuthority())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
 		return Result; 
 	}
 
@@ -906,13 +906,13 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	if(UsingInstance->IsItemUsable() == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"), *UsingInstance->GetItemDebugName(), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"), *UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 	
@@ -925,7 +925,7 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(CurrentUsingInstanceStacks <= 0)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"), *UsingInstance->GetItemDebugName(), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"), *UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 
@@ -935,7 +935,7 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	{
 		if(UsingOntoInstance == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), __FUNCTION__);
 			return;
 		}
 		

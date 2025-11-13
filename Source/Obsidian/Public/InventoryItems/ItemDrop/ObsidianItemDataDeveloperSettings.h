@@ -32,7 +32,7 @@ public:
 	uint8 GetNaturalMinAffixCountForRarity(const EObsidianItemRarity ForRarity) const;
 	
 public:
-	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Config", meta = (AllowedClasses = "ObsidianItemDataConfig"))
+	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Config", meta = (AllowedClasses = "/Script/Obsidian.ObsidianItemDataConfig"))
 	TSoftObjectPtr<UObsidianItemDataConfig> ItemDataConfig;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")

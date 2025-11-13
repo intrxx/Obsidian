@@ -103,21 +103,21 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
 	{
-		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
-		UE_LOG(LogDropComponent, Error, TEXT("GameInstance is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogDropComponent, Error, TEXT("GameInstance is nullptr in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	CachedItemDataLoader = CachedItemDataLoader == nullptr ? GameInstance->GetSubsystem<UObsidianItemDataLoaderSubsystem>() : CachedItemDataLoader;
 	if (CachedItemDataLoader == nullptr)
 	{
-		UE_LOG(LogDropComponent, Error, TEXT("CachedItemDataLoader is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogDropComponent, Error, TEXT("CachedItemDataLoader is nullptr in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -201,7 +201,7 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 	if (OwningActor == nullptr)
 	{
 		UE_LOG(LogDropComponent, Error, TEXT("OwningActor of ItemDropComponent is null in [%hs]"),
-			ANSI_TO_TCHAR(__FUNCTION__));
+			__FUNCTION__);
 		return false;
 	}
 
@@ -230,7 +230,7 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 	if (OutItemToDrop.ItemDefinitionClass == nullptr)
 	{
 		UE_LOG(LogDropComponent, Warning, TEXT("ItemToDrop was not loaded previously, falling back to LoadSynchronous in [%hs]."),
-			ANSI_TO_TCHAR(__FUNCTION__));
+			__FUNCTION__);
 		OutItemToDrop.ItemDefinitionClass = ItemSoftItemDefinition.LoadSynchronous();
 	}
 	
@@ -247,7 +247,7 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = ForItemToDrop.ItemDefinitionClass;
 	if (ItemDef == nullptr)
 	{
-		UE_LOG(LogDropComponent, Error, TEXT("ItemDef is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogDropComponent, Error, TEXT("ItemDef is invalid in [%hs]."), __FUNCTION__);
 		return;
 	}
 
@@ -255,7 +255,7 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 	if (DefaultObject == nullptr)
 	{
 		UE_LOG(LogDropComponent, Error, TEXT("DefaultObject of SoftTreasureItemDefinitionClass is invalid,"
-									   " abandoning [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+									   " abandoning [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -468,7 +468,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
 	{
-		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -716,7 +716,7 @@ void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTre
 	const bool bSuccess = CachedItemDataLoader->GetAllCommonTreasureClassesUpToQuality(MaxTreasureClassQuality, OutTreasureClasses);
 	if (bSuccess == false)
 	{
-		UE_LOG(LogDropComponent, Error, TEXT("Gathering TreasureClasses failed in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogDropComponent, Error, TEXT("Gathering TreasureClasses failed in [%hs]."), __FUNCTION__);
 	}
 }
 
@@ -732,7 +732,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 	
 	if (DroppingActor == nullptr)
 	{
-		UE_LOG(LogDropComponent, Error, TEXT("DroppingActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogDropComponent, Error, TEXT("DroppingActor is null in [%hs]"), __FUNCTION__);
 		return InvalidTransform;
 	}
 
@@ -744,7 +744,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 
 		if(NavigationSystem == nullptr)
 		{
-			UE_LOG(LogDropComponent, Error, TEXT("NavigationSystem is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogDropComponent, Error, TEXT("NavigationSystem is null in [%hs]"), __FUNCTION__);
 			return InvalidTransform;
 		}
 		
@@ -753,7 +753,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 		if (bFound == false)
 		{
 			//TODO Change the location to somewhere valid.
-			UE_LOG(LogDropComponent, Error, TEXT("Could not initially find a valid drop location in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogDropComponent, Error, TEXT("Could not initially find a valid drop location in [%hs]"), __FUNCTION__);
 		}
 		
 		DropLocation = RandomPointLocation.Location;
@@ -785,7 +785,7 @@ EObsidianItemRarity UObsidianItemDropComponent::RollItemRarity(const EObsidianIt
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
 	{
-		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), __FUNCTION__);
 		return EObsidianItemRarity::Normal;
 	}
 	

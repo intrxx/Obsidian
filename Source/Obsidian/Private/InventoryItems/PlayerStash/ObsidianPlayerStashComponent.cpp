@@ -174,7 +174,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 	
 	if (!GetOwner()->HasAuthority())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
 		return Result; 
 	}
 
@@ -193,7 +193,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 	{
 		if (!IsValid(Instance))
 		{
-			UE_LOG(LogPlayerStash, Error, TEXT("Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogPlayerStash, Error, TEXT("Instance is invalid in [%hs]"), __FUNCTION__);
 			continue;
 		}
 		
@@ -497,7 +497,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 	
 	if(!GetOwner()->HasAuthority())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
 		return Result; 
 	}
 	
@@ -628,7 +628,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::TakeOutFromItemInsta
 	
 	if(!GetOwner()->HasAuthority())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
 		return Result; 
 	}
 
@@ -661,7 +661,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(U
 	
 	if(!GetOwner()->HasAuthority())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
 		return Result; 
 	}
 	
@@ -672,7 +672,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(U
 
 	if(InstanceToRemove == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("Passed InstanceToRemove is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("Passed InstanceToRemove is invalid in [%hs]"), __FUNCTION__);
 		return Result;
 	}
 
@@ -698,13 +698,13 @@ void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* Usin
 	
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("UsingInstance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	if(UsingInstance->IsItemUsable() == false)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"), *UsingInstance->GetItemDebugName(), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"), *UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 	
@@ -717,7 +717,7 @@ void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* Usin
 	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(CurrentUsingInstanceStacks <= 0)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"), *UsingInstance->GetItemDebugName(), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"), *UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 
@@ -727,7 +727,7 @@ void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* Usin
 	{
 		if(UsingOntoInstance == nullptr)
 		{
-			UE_LOG(LogPlayerStash, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogPlayerStash, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), __FUNCTION__);
 			return;
 		}
 		

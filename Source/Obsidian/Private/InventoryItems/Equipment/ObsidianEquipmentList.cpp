@@ -530,21 +530,21 @@ UObsidianAffixAbilitySet* FObsidianEquipmentList::GetDefaultAffixSet()
 {
 	if (OwnerComponent == nullptr)
 	{
-		UE_LOG(LogAffixes, Error, TEXT("OwnerComponent is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogAffixes, Error, TEXT("OwnerComponent is nullptr in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 	
 	const UWorld* World = OwnerComponent->GetWorld();
 	if (World == nullptr)
 	{
-		UE_LOG(LogAffixes, Error, TEXT("World is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogAffixes, Error, TEXT("World is nullptr in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 	
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
-		UE_LOG(LogAffixes, Error, TEXT("GameInstance is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogAffixes, Error, TEXT("GameInstance is nullptr in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 	

@@ -139,7 +139,7 @@ FIntPoint FObsidianItemPosition::GetItemGridLocation(const bool bWarnIfNotFound)
 #if !UE_BUILD_SHIPPING
 	if(bWarnIfNotFound && GridLocation == FIntPoint::NoneValue)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Grid Location is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogObsidian, Error, TEXT("Grid Location is invalid in [%hs]."), __FUNCTION__);
 	}
 #endif
 	return GridLocation;
@@ -150,7 +150,7 @@ FGameplayTag FObsidianItemPosition::GetItemSlotTag(const bool bWarnIfNotFound) c
 #if !UE_BUILD_SHIPPING
 	if(bWarnIfNotFound && SlotTag == FGameplayTag::EmptyTag)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Slot Tag is invalid in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogObsidian, Error, TEXT("Slot Tag is invalid in [%hs]."), __FUNCTION__);
 	}
 #endif
 	return SlotTag;

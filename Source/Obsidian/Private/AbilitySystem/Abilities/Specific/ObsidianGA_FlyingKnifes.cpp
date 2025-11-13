@@ -13,7 +13,7 @@ void UObsidianGA_FlyingKnifes::FireFlyingKnifeProjectiles()
 	const FVector OwnerLocation = GetOwnerLocationFromActorInfo();
 	if (OwnerLocation == FVector::ZeroVector)
 	{
-		UE_LOG(LogProjectileAbility, Warning, TEXT("OwnerLocation is ZeroVector in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogProjectileAbility, Warning, TEXT("OwnerLocation is ZeroVector in [%hs]"), __FUNCTION__);
 	}
 
 	const FVector SpawnPoint = FVector(OwnerLocation.X, OwnerLocation.Y, SpawnHeight);

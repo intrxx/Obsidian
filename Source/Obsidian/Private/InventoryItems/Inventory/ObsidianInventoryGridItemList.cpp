@@ -84,7 +84,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	if(GridLocationToItemMap.Contains(AvailablePosition))
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the GridLocationToItemMap in [%ls]"), AvailablePosition.X, AvailablePosition.Y, ANSI_TO_TCHAR(__FUNCTION__)), ELogVerbosity::Error);
+			 "exist in the GridLocationToItemMap in [%hs]"), AvailablePosition.X, AvailablePosition.Y, __FUNCTION__), ELogVerbosity::Error);
 	}
 #endif
 
@@ -106,7 +106,7 @@ void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* In
 	if(GridLocationToItemMap.Contains(AvailablePosition))
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the GridLocationToItemMap in [%ls]"), AvailablePosition.X, AvailablePosition.Y, ANSI_TO_TCHAR(__FUNCTION__)), ELogVerbosity::Error);
+			 "exist in the GridLocationToItemMap in [%hs]"), AvailablePosition.X, AvailablePosition.Y, __FUNCTION__), ELogVerbosity::Error);
 	}
 #endif
 

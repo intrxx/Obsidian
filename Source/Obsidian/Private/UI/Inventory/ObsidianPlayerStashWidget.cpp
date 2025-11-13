@@ -177,7 +177,7 @@ void UObsidianPlayerStashWidget::CreateStashTabButton(const FGameplayTag& StashT
 {
 	if(StashTag.IsValid() == false)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to create Stash Tab Button without valid Stash Tag in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to create Stash Tab Button without valid Stash Tag in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -193,7 +193,7 @@ void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& WithStashTag)
 {
 	if(WithStashTag.IsValid() == false)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to show Stash Tab with invalid tag in [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to show Stash Tab with invalid tag in [%hs]."), __FUNCTION__);
 		return;
 	}
 	

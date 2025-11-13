@@ -48,6 +48,6 @@ void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryIns
 
 #if !UE_BUILD_SHIPPING
 	UE_LOG(LogObsidian, Error, TEXT("Context [%hs] failed to provide Player Context for [%s]."),
-		ANSI_TO_TCHAR(__FUNCTION__), *GetNameSafe(QueryInstance.Owner.Get()));
+		__FUNCTION__, *GetNameSafe(QueryInstance.Owner.Get()));
 #endif
 }

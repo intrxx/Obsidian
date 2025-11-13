@@ -35,7 +35,7 @@ uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQu
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
 	{
-		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), ANSI_TO_TCHAR(__FUNCDNAME__));
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), __FUNCTION__);
 		return 0;
 	}
 	

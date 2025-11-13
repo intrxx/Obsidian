@@ -15,7 +15,7 @@ void UObsidianGrid::ConstructGrid(UObsidianInventoryItemsWidgetController* InOwn
 {
 	if(InOwningWidgetController == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InOwningWidgetController is nullptr in [%hs], please fix it."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Error, TEXT("InOwningWidgetController is nullptr in [%hs], please fix it."), __FUNCTION__);
 		return;
 	}
 

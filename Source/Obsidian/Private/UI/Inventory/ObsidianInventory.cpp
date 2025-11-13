@@ -5,10 +5,10 @@
 // ~ Core
 
 // ~ Project
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
+#include "UI/Inventory/Slots/ObsidianItemSlot.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
+#include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 #include "UI/Inventory/ObsidianEquipmentPanel.h"
 #include "UI/Inventory/ObsidianGrid.h"
@@ -62,11 +62,11 @@ void UObsidianInventory::NativeDestruct()
 
 bool UObsidianInventory::IsPlayerDraggingItem() const
 {
-	if(InventoryItemsWidgetController == false)
+	if(InventoryItemsWidgetController)
 	{
-		return false;
+		return InventoryItemsWidgetController->IsDraggingAnItem();
 	}
-	return InventoryItemsWidgetController->IsDraggingAnItem();
+	return false;
 }
 
 bool UObsidianInventory::CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const

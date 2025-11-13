@@ -190,7 +190,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	UObsidianStashTab* StashTab = GetStashTabForTag(ToPosition.GetOwningStashTabTag());
 	if(StashTab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 
@@ -198,7 +198,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	if(StashTab->DebugVerifyPositionFree(ToPosition) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the StashTab's Map in [%ls]"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y, ANSI_TO_TCHAR(__FUNCTION__)),
+			 "exist in the StashTab's Map in [%hs]"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y, __FUNCTION__),
 			 ELogVerbosity::Error);
 	}
 #endif
@@ -243,7 +243,7 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	UObsidianStashTab* StashTab = GetStashTabForTag(ToPosition.GetOwningStashTabTag());
 	if(StashTab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -251,7 +251,7 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	if(StashTab->DebugVerifyPositionFree(ToPosition) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the StashTab's Map in [%ls]"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y, ANSI_TO_TCHAR(__FUNCTION__)),
+			 "exist in the StashTab's Map in [%hs]"), ToPosition.GetItemGridLocation().X, ToPosition.GetItemGridLocation().Y, __FUNCTION__),
 			 ELogVerbosity::Error);
 	}
 #endif
@@ -272,7 +272,7 @@ void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 	UObsidianStashTab* StashTab = GetStashTabForTag(StashTabTag);
 	if(StashTab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	

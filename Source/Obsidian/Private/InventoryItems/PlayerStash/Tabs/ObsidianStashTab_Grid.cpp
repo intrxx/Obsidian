@@ -6,6 +6,7 @@
 
 // ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 
 UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectInitializer)
@@ -182,7 +183,7 @@ void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* Item
 			else
 			{
 				FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Trying to Mark a Location [x: %d, y: %d] that doesn't"
-				 "exist in the InventoryStateMap in [%ls]."), LocationToMark.X, LocationToMark.Y, ANSI_TO_TCHAR(__FUNCTION__)), ELogVerbosity::Error);
+				 "exist in the InventoryStateMap in [%hs]."), LocationToMark.X, LocationToMark.Y, __FUNCTION__), ELogVerbosity::Error);
 			}
 #endif
 		}

@@ -149,7 +149,7 @@ void UObsidianInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayT
 	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -211,7 +211,7 @@ void UObsidianInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayT
 	const UObsidianInventoryItemInstance* Instance = EquipmentChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Inventory Item Instance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -283,7 +283,7 @@ void UObsidianInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag 
 	const UObsidianInventoryItemInstance* Instance = StashChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -402,7 +402,7 @@ int32 UObsidianInventoryItemsWidgetController::GetInventoryGridWidth() const
 		return InventoryComponent->GetInventoryGridWidth();
 	}
 	
-	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Grid Width but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Grid Width but Inventory Component is invalid in [%hs]"), __FUNCTION__);
 	return 0;
 }
 
@@ -413,7 +413,7 @@ int32 UObsidianInventoryItemsWidgetController::GetInventoryGridHeight() const
 		return InventoryComponent->GetInventoryGridHeight();
 	}
 	
-	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid in [%hs]"), __FUNCTION__);
 	return 0;
 }
 
@@ -424,7 +424,7 @@ UObsidianStashTabsConfig* UObsidianInventoryItemsWidgetController::GetStashTabCo
 		return PlayerStashComponent->GetStashTabConfig();
 	}
 	
-	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Stash Config but Player Stash Component is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Stash Config but Player Stash Component is invalid in [%hs]"), __FUNCTION__);
 	return nullptr;
 }
 
@@ -651,7 +651,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(
 	const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
 	if (InstanceToAddTo == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 		
@@ -899,7 +899,7 @@ void UObsidianInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(co
 	const UObsidianInventoryItemInstance* InstanceToAddTo = PlayerStashComponent->GetItemInstanceFromTabAtPosition(AtItemPosition);
 	if (InstanceToAddTo == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 		
@@ -1214,14 +1214,14 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 		case EObsidianGridOwner::Inventory:
 			if(InventoryComponent == nullptr)
 			{
-				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), __FUNCTION__);
 				return false;	
 			}
 			return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSpan, AtGridSlot);
 		case EObsidianGridOwner::PlayerStash:
 			break;
 	default:
-		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), __FUNCTION__);
 			break;
 	}
 	
@@ -1236,7 +1236,7 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 		{
 			if(InventoryComponent == nullptr)
 			{
-				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), __FUNCTION__);
 				return false;	
 			}
 			return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan,AtGridSlot);
@@ -1245,7 +1245,7 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 		{
 			if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
 			{
-				UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+				UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), __FUNCTION__);
 				return false;	
 			}
 
@@ -1256,7 +1256,7 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidia
 		}
 	default:
 		{
-			UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), __FUNCTION__);
 		} break;
 	}
 	
@@ -1267,7 +1267,7 @@ bool UObsidianInventoryItemsWidgetController::CanPlaceItemAtStashSlot(const FObs
 {
 	if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("OwnerPlayerInputManager or PlayerStashComponent is invalid in [%hs]"), __FUNCTION__);
 		return false;	
 	}
 	
@@ -1294,7 +1294,7 @@ bool UObsidianInventoryItemsWidgetController::CanInteractWithGrid(const EObsidia
 		}
 		break;
 	default:
-		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), __FUNCTION__);
 		break;
 	}
 	return false;

@@ -25,7 +25,7 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 	HeroAttributeSet = AbilitySystemComponent->GetSet<UObsidianHeroAttributeSet>();
 	if (!HeroAttributeSet)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("[%hs] Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), ANSI_TO_TCHAR(__FUNCTION__), *GetNameSafe(Owner));
+		UE_LOG(LogObsidian, Error, TEXT("[%hs] Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), __FUNCTION__, *GetNameSafe(Owner));
 		return;
 	}
 

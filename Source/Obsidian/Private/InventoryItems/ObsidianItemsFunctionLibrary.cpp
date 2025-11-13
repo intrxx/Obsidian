@@ -311,7 +311,7 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const A
 {
 	if(Owner == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Owner is nullptr in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("Owner is nullptr in [%hs]"), __FUNCTION__);
 		return 0; 
 	}
 	

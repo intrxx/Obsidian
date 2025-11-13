@@ -33,14 +33,14 @@ bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehavi
 	const AAIController* AIController = OwnerComp.GetAIOwner();
 	if(AIController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AI Controller is invalid on [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogObsidian, Error, TEXT("AI Controller is invalid on [%hs]."), __FUNCTION__);
 		return false;
 	}
 
 	const UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
 	if(BlackboardComponent == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Blackboard Component is invalid on [%hs]."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogObsidian, Error, TEXT("Blackboard Component is invalid on [%hs]."), __FUNCTION__);
 		return false;
 	}
 

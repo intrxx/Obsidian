@@ -619,21 +619,21 @@ void UObsidianPlayerInputManager::ServerGrabStashedItemToCursor_Implementation(c
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(FromPosition);
 	if(InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -651,28 +651,28 @@ void UObsidianPlayerInputManager::ServerTransferItemToInventory_Implementation(c
 	const AController* Controller = GetController<AController>();
 	if (Controller == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if (PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if (InventoryComponent == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(FromStashPosition);
 	if (InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -690,14 +690,14 @@ void UObsidianPlayerInputManager::ServerReplaceItemAtStashPosition_Implementatio
 	const AController* Controller = GetController<AController>();
 	if (Controller == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if (PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -734,21 +734,21 @@ void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToStashedItemAtS
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("Tried to add Stacks from Dragged Item, but Dragged Item is empty [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("Tried to add Stacks from Dragged Item, but Dragged Item is empty [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -778,21 +778,21 @@ void UObsidianPlayerInputManager::ServerTakeoutFromStashedItem_Implementation(co
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(AtStashPosition);
 	if(ItemInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -823,21 +823,21 @@ void UObsidianPlayerInputManager::ServerActivateUsableItemFromStash_Implementati
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -901,7 +901,7 @@ void UObsidianPlayerInputManager::OnRep_DraggedItem(const FDraggedItem& OldDragg
 		const AController* Controller = GetController<AController>();
 		if(Controller == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 		StopDraggingItem(Controller);
@@ -911,7 +911,7 @@ void UObsidianPlayerInputManager::OnRep_DraggedItem(const FDraggedItem& OldDragg
 		const AController* Controller = GetController<AController>();
 		if(Controller == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 		StartDraggingItem(Controller);
@@ -931,21 +931,21 @@ void UObsidianPlayerInputManager::ServerTakeoutFromInventoryItem_Implementation(
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(ItemGridPosition);
 	if(ItemInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -977,14 +977,14 @@ void UObsidianPlayerInputManager::ServerReplaceItemAtInventorySlot_Implementatio
 	const AController* Controller = GetController<AController>();
 	if (Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if (InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1022,14 +1022,14 @@ void UObsidianPlayerInputManager::ServerReplaceItemAtEquipmentSlot_Implementatio
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1067,14 +1067,14 @@ void UObsidianPlayerInputManager::ServerWeaponSwap_Implementation()
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1085,21 +1085,21 @@ void UObsidianPlayerInputManager::ServerAddItemToStashTabAtSlot_Implementation(c
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1125,14 +1125,14 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 {
 	if(ItemToPickup == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Controller is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("Controller is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1147,7 +1147,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = Template.ItemDef;
 		if(ItemDef == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("ItemDef is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("ItemDef is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -1158,7 +1158,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 				UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 				if(EquipmentComponent == nullptr)
 				{
-					UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+					UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in [%hs]"), __FUNCTION__);
 					return;
 				}
 			
@@ -1173,7 +1173,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 		
@@ -1191,7 +1191,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 		UObsidianInventoryItemInstance* ItemInstance = Instance.Item;
 		if(ItemInstance == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("ItemInstance is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -1200,7 +1200,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 			UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 			if(EquipmentComponent == nullptr)
 			{
-				UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+				UE_LOG(LogInventory, Error, TEXT("EquipmentComponent is null in [%hs]"), __FUNCTION__);
 				return;
 			}
 			
@@ -1214,7 +1214,7 @@ void UObsidianPlayerInputManager::ServerPickupItem_Implementation(AObsidianDropp
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -1240,14 +1240,14 @@ void UObsidianPlayerInputManager::ServerHandleDroppingItem_Implementation()
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	AActor* Hero = GetOwner();
 	if (Hero == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Hero is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("Hero is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1273,7 +1273,7 @@ void UObsidianPlayerInputManager::ServerHandleDroppingItem_Implementation()
 	UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
 	if(NavigationSystem == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("NavigationSystem is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("NavigationSystem is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1310,14 +1310,14 @@ void UObsidianPlayerInputManager::ServerGrabDroppableItemToCursor_Implementation
 {
 	if(ItemToPickup == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("ItemToPickup is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1354,13 +1354,13 @@ bool UObsidianPlayerInputManager::HandlePickUpIfItemOutOfRange(AObsidianDroppabl
 	const AActor* OwnerActor = GetOwner();
 	if(OwnerActor == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), __FUNCTION__);
 		return false;
 	}
 
 	if(OwnerActor->HasAuthority() == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), __FUNCTION__);
 		return false;
 	}
 
@@ -1382,13 +1382,13 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 	const AActor* OwnerActor = GetOwner();
 	if(OwnerActor == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), __FUNCTION__);
 		return false;
 	}
 
 	if(OwnerActor->HasAuthority() == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), __FUNCTION__);
 		return false;
 	}
 
@@ -1401,7 +1401,7 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 #if !UE_BUILD_SHIPPING
 	if(bDebugInteraction)
 	{
-		UE_LOG(LogInteraction, Display, TEXT("Calculating Distance to Interaction Target in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInteraction, Display, TEXT("Calculating Distance to Interaction Target in [%hs]"), __FUNCTION__);
 
 		if(const UWorld* World = GetWorld())
 		{
@@ -1459,14 +1459,14 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 {
 	if(InteractionTarget == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AActor* InteractionActor = InteractionTarget->GetInteractionActor();
 	if(InteractionActor == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1594,21 +1594,21 @@ void UObsidianPlayerInputManager::ServerGrabInventoryItemToCursor_Implementation
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(ItemGridPosition);
 	if(InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1626,21 +1626,21 @@ void UObsidianPlayerInputManager::ServerEquipItemAtSlot_Implementation(const FGa
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogEquipment, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogEquipment, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("EquipmentComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogEquipment, Error, TEXT("EquipmentComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1667,21 +1667,21 @@ void UObsidianPlayerInputManager::ServerGrabEquippedItemToCursor_Implementation(
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogEquipment, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 	if(EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogEquipment, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
 	if(InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogEquipment, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1696,21 +1696,21 @@ void UObsidianPlayerInputManager::ServerAddItemToInventoryAtSlot_Implementation(
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1736,21 +1736,21 @@ void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToInventoryItemA
 {
 	if(DraggedItem.IsEmpty())
 	{
-		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot but the Dragged Item is Empty in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1790,28 +1790,28 @@ void UObsidianPlayerInputManager::ServerTransferItemToPlayerStash_Implementation
 	const AController* Controller = GetController<AController>();
 	if (Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if (PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if (InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(FromInventoryPosition);
 	if (InstanceToGrab == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -1828,14 +1828,14 @@ void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventor
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1845,7 +1845,7 @@ void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventor
 		UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 		if(PlayerStashComponent == nullptr)
 		{
-			UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -1857,7 +1857,7 @@ void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventor
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -1870,21 +1870,21 @@ void UObsidianPlayerInputManager::ServerActivateUsableItemFromInventory_Implemen
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AController* Controller = GetController<AController>();
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), ANSI_TO_TCHAR(__FUNCTION__));
+		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
