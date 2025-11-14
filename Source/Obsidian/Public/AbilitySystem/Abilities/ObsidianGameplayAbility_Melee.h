@@ -2,10 +2,7 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
 #include "AbilitySystem/Abilities/ObsidianDamageGameplayAbility.h"
@@ -18,5 +15,7 @@ UCLASS()
 class OBSIDIAN_API UObsidianGameplayAbility_Melee : public UObsidianDamageGameplayAbility
 {
 	GENERATED_BODY()
-	
+
+protected:
+	FGameplayEffectSpecHandle MakeMeleeDamageSpec(const UObject* SourceObject);
 };
