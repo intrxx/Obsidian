@@ -35,4 +35,7 @@ protected:
 	/** The offset of the slash trace from the Hero Owner. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Slash")
 	float SlashStartOffset = 100.0f;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Debug")
+	bool bDrawSlashDebug = false;
 };

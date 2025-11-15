@@ -17,23 +17,33 @@ UENUM()
 enum class EObsidianProjectileCleanupMethod : uint8
 {
 	/** The projectile will be cleaned up after set LifeSpan. */
-	LifeSpan,
+	LifeSpan UMETA(DisplayName = "Life Span"),
 
 	/**
 	 * The Projectile will be cleaned up after the set Distance Traveled,
 	 * remember that this will only be accurate for ticking projectiles.
 	 */
-	DistanceTraveled,
+	DistanceTraveled UMETA(DisplayName = "Distance Traveled"),
 
 	/** Custom way of cleaning the projectile, it needs to be provided in child class. */
-	Custom
+	Custom UMETA(DisplayName = "Custom Cleanup")
+};
+
+UENUM()
+enum class EObsidianMultiHitCooldownType : uint8
+{
+	/** Hit cooldown will be applied globally for all hit targets. */
+	GlobalMultiHitCooldown UMETA(DisplayName = "Global Multi Hit Cooldown"),
+	
+	/** Hit cooldown will be applied per hit target so targets could be hit in the same global cooldown window. */
+	PerEnemyMultiHitCooldown UMETA(DisplayName = "Per Enemy Multi Hit Cooldown"),
 };
 
 class UNiagaraSystem;
 class UOProjectileMovementComponent;
 class USphereComponent;
 
-UCLASS(Abstract, NotBlueprintable)
+UCLASS(Abstract)
 class OBSIDIAN_API AObsidianProjectileBase : public AActor
 {
 	GENERATED_BODY()
@@ -68,7 +78,7 @@ protected:
 	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
 		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-	void ApplyProjectileDamageToActor(AActor* ActorToDamage) const;
+	bool ApplyProjectileDamageToActor(AActor* ActorToDamage) const;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Projectile")
@@ -95,8 +105,15 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
 	bool bDestroyOnHit = true;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
+	/** Allow the projectile to hit the target multiple times, target can be hit once every MultiHitCooldown. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile|MultiHit")
 	bool bAllowMultiHit = false;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="bAllowMultiHit"), Category = "Obsidian|Projectile|MultiHit")
+	EObsidianMultiHitCooldownType MultiHitCooldownType = EObsidianMultiHitCooldownType::GlobalMultiHitCooldown;
+	
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="bAllowMultiHit", ClampMin="0.01"), Category = "Obsidian|Projectile|MultiHit")
+	float MultiHitCooldown = 0.25f;
 	
 	/**
 	 * Cosmetics
@@ -122,8 +139,22 @@ protected:
 	FGameplayEffectSpecHandle DamageEffectSpecHandle;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
-	UClass* ClassToIgnore = nullptr;
+	TObjectPtr<UClass> ClassToIgnore = nullptr;
 
 	UPROPERTY()
-	TArray<AActor*> AlreadyHitActors;
+	TArray<TWeakObjectPtr<AActor>> AlreadyHitActors;
+
+private:
+	void HandleMultiHitGlobalCooldown();
+	void HandleMultiHitPerActorCooldown(AActor* ForHitActor);
+
+	bool CanApplyCosmeticMultiHit(AActor* ForHitActor);
+	
+private:
+	FTimerHandle GlobalMultiHitCooldownTimerHandle;
+	bool bGlobalMultiHitCanHit = true;
+
+	//TODO(intrxx) For projectiles with very high lifetime this can accumulate a lot of destroyed actors, consider implementing
+	// periodic cleanup to destroy dangling WeakPtrs
+	TMap<TWeakObjectPtr<AActor>, bool> CanHitPerHitActorMap;
 };

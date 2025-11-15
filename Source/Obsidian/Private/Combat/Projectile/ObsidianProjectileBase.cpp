@@ -54,10 +54,15 @@ void AObsidianProjectileBase::BeginPlay()
 
 void AObsidianProjectileBase::Destroyed()
 {
-	if(!bServerHit && !HasAuthority())
+	if(bAllowMultiHit == false && bServerHit == false && !HasAuthority())
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ProjImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ProjImpactEffect, GetActorLocation());
+	}
+
+	if (HasAuthority())
+	{
+		GetWorldTimerManager().ClearAllTimersForObject(this);
 	}
 	
 	Super::Destroyed();
@@ -76,12 +81,8 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 		return;
 	}
 
-	if (OverlappedComponent)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Hit Comp: [%s]"), *GetNameSafe(OverlappedComponent));
-	}
-
-	if(!bServerHit)
+	//TODO(intrxx) As for now this will only work for the server
+	if(bServerHit == false && bAllowMultiHit == false || (bAllowMultiHit && CanApplyCosmeticMultiHit(OtherActor)))
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ProjImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ProjImpactEffect, GetActorLocation());
@@ -91,17 +92,40 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		if(bDestroyOnHit)
 		{
-			ApplyProjectileDamageToActor(OtherActor);
-			Destroy();	
+			ApplyProjectileDamageToActor(OtherActor); // In this can we want to Destroy regardless of if ApplyDamage succeeds 
+			Destroy();
+			return;
 		}
-		else
+		
+		if(bAllowMultiHit)
 		{
-			const bool bAlreadyDamaged = AlreadyHitActors.Contains(OtherActor);
-			if(bAllowMultiHit || bAlreadyDamaged == false)
+			if (MultiHitCooldownType == EObsidianMultiHitCooldownType::GlobalMultiHitCooldown && bGlobalMultiHitCanHit)
 			{
-				// Leaving it here despite bAllowMultiHit==true as this can be useful for something else
-				AlreadyHitActors.Add(OtherActor);
-				ApplyProjectileDamageToActor(OtherActor);
+				if (ApplyProjectileDamageToActor(OtherActor))
+				{
+					AlreadyHitActors.AddUnique(TWeakObjectPtr<AActor>(OtherActor));
+					bGlobalMultiHitCanHit = false;
+					HandleMultiHitGlobalCooldown();
+				}
+			}
+			else if (MultiHitCooldownType == EObsidianMultiHitCooldownType::PerEnemyMultiHitCooldown)
+			{
+				bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(OtherActor));
+				if (CanHitPtr == nullptr || (CanHitPtr && *CanHitPtr))
+				{
+					if (ApplyProjectileDamageToActor(OtherActor))
+					{
+						AlreadyHitActors.AddUnique(TWeakObjectPtr<AActor>(OtherActor));
+						HandleMultiHitPerActorCooldown(OtherActor);
+					}
+				}
+			}
+		}
+		else if (AlreadyHitActors.Contains(TWeakObjectPtr<AActor>(OtherActor)) == false)
+		{
+			if (ApplyProjectileDamageToActor(OtherActor))
+			{
+				AlreadyHitActors.Add(TWeakObjectPtr<AActor>(OtherActor));
 			}
 		}
 	}
@@ -111,13 +135,73 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 	}
 }
 
-void AObsidianProjectileBase::ApplyProjectileDamageToActor(AActor* ActorToDamage) const
+bool AObsidianProjectileBase::ApplyProjectileDamageToActor(AActor* ActorToDamage) const
 {
 	if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToDamage))
 	{
 		TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
-		UE_LOG(LogTemp, Display, TEXT("Applying Projectile Damage"));
+		return true;
 	}
+	return false;
+}
+
+void AObsidianProjectileBase::HandleMultiHitGlobalCooldown()
+{
+	GetWorldTimerManager().SetTimer(GlobalMultiHitCooldownTimerHandle,
+		FTimerDelegate::CreateWeakLambda(this, [this]()
+			{
+				bGlobalMultiHitCanHit = true;
+			}),
+			MultiHitCooldown, false);
+}
+
+void AObsidianProjectileBase::HandleMultiHitPerActorCooldown(AActor* ForHitActor)
+{
+	bool& bNewCanHit = CanHitPerHitActorMap.FindOrAdd(TWeakObjectPtr<AActor>(ForHitActor));
+	bNewCanHit = false;
+	UE_LOG(LogTemp, Warning, TEXT("Applying Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));
+
+	FTimerHandle PerActorMultiHitTimerHandle;
+	GetWorldTimerManager().SetTimer(PerActorMultiHitTimerHandle,
+		FTimerDelegate::CreateWeakLambda(this, [this, ForHitActor]()
+			{
+				if (IsValid(ForHitActor) == false)
+				{
+					return;
+				}
+			
+				if (bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(ForHitActor)))
+				{
+					*CanHitPtr = true;
+					UE_LOG(LogTemp, Warning, TEXT("Removing Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));	
+				}
+			}),
+			MultiHitCooldown, false);
+}
+
+bool AObsidianProjectileBase::CanApplyCosmeticMultiHit(AActor* ForHitActor)
+{
+	if (MultiHitCooldownType == EObsidianMultiHitCooldownType::GlobalMultiHitCooldown)
+	{
+		return bGlobalMultiHitCanHit;
+	}
+	
+	if (MultiHitCooldownType == EObsidianMultiHitCooldownType::PerEnemyMultiHitCooldown)
+	{
+		if (ForHitActor == nullptr)
+		{
+			return false;
+		}
+
+		if (const bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(ForHitActor)))
+		{
+			return *CanHitPtr;
+		}
+		
+		return true;
+	}
+
+	return false;
 }
 
 

@@ -29,27 +29,31 @@ void UObsidianGA_Melee_Slash::FireSlash()
 	const FVector SweepStart = BaseLocation + OwnerRightVec * (SlashWidth * 0.5f);
 	const FVector SweepEnd = BaseLocation - OwnerRightVec * (SlashWidth * 0.5f);
 	const FRotator Rotation = FRotator(-90.0f, ObsidianHero->GetActorRotation().Yaw, 0.0f);
-	const FQuat CapsuleQuat = Rotation.Quaternion();
-	const float CapsuleHalfHeight = SlashHeight * 0.5;
 	
 	if (SlashSystem)
 	{
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(World, SlashSystem, SweepStart, Rotation, FVector(1.f),
-		true, true, ENCPoolMethod::None, true);
+			true, true, ENCPoolMethod::None, true);
 	}
 	
+	const float CapsuleHalfHeight = SlashHeight * 0.5;
 	const FCollisionShape SweepShape = FCollisionShape::MakeCapsule(SlashTraceCapsuleRadius, CapsuleHalfHeight);
  
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(ObsidianHero);
 	
+	const FQuat CapsuleQuat = Rotation.Quaternion();
+	
 	TArray<FHitResult> Hits;
 	bool bHit = World->SweepMultiByChannel(Hits, SweepStart, SweepEnd, CapsuleQuat, ECC_Pawn, SweepShape, Params);
 	
 #if !UE_BUILD_SHIPPING
-	DrawDebugCapsule(World, SweepStart, CapsuleHalfHeight, SlashTraceCapsuleRadius, CapsuleQuat, FColor::Red, false, 1.0f);
-	DrawDebugCapsule(World, SweepEnd, CapsuleHalfHeight, SlashTraceCapsuleRadius, CapsuleQuat, FColor::Blue, false, 1.0f);
-	DrawDebugLine(World, SweepStart, SweepEnd, FColor::Green, false, 1.0f, 0, 2.0f);
+	if (bDrawSlashDebug)
+	{
+		DrawDebugCapsule(World, SweepStart, CapsuleHalfHeight, SlashTraceCapsuleRadius, CapsuleQuat, FColor::Red, false, 1.0f);
+		DrawDebugCapsule(World, SweepEnd, CapsuleHalfHeight, SlashTraceCapsuleRadius, CapsuleQuat, FColor::Blue, false, 1.0f);
+		DrawDebugLine(World, SweepStart, SweepEnd, FColor::Green, false, 1.0f, 0, 2.0f);
+	}
 #endif
 
 	if (bHit == false)
