@@ -28,7 +28,7 @@ class OBSIDIAN_API IObsidianCombatInterface
 	GENERATED_BODY()
 
 public:
-	virtual int32 GetCharacterLevel();
+	virtual uint8 GetCharacterLevel();
 
 	/** Returns true if the owning character is dead. */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")

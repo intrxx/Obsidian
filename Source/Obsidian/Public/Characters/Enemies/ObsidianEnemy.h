@@ -59,7 +59,7 @@ protected:
 	//~ Start of CombatInterface
 	virtual bool IsDeadOrDying_Implementation() const override;
 	virtual AActor* GetAvatarActor_Implementation() override;
-	virtual int32 GetCharacterLevel() override;
+	virtual uint8 GetCharacterLevel() override;
 	//~ End of CombatInterface
 	
 	//~ Start of EnemyInterface

@@ -3,7 +3,7 @@
 #include "UI/WidgetControllers/MainOverlayWidgetController.h"
 
 // ~ Core
-#include "Core/ObsidianUIFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 
 // ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"

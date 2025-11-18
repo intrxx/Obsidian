@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Core/ObsidianAbilitySystemFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianAbilitySystemFunctionLibrary.h"
 
 // ~ Core
 #include "AbilitySystemBlueprintLibrary.h"

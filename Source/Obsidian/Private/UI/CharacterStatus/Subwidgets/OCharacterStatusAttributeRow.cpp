@@ -28,10 +28,9 @@ void UOCharacterStatusAttributeRow::InitialSetup() const
 
 void UOCharacterStatusAttributeRow::SetAttributeValue(const float Value) const
 {
-	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d"), FMath::FloorToInt(Value)));
 	if(AttributeValue_TextBlock)
 	{
-		AttributeValue_TextBlock->SetText(TextValue);
+		AttributeValue_TextBlock->SetText(FText::AsNumber(FMath::FloorToInt(Value)));
 	}
 }
 

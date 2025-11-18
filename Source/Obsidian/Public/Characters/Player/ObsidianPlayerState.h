@@ -18,7 +18,7 @@ class UObsidianCommonAttributeSet;
 class UObsidianHeroAttributeSet;
 class UObsidianAbilitySystemComponent;
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHeroLevelUp, const int32, NewLevel);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHeroLevelUp, const uint8, NewLevel);
 
 /**
  * 
@@ -43,7 +43,7 @@ public:
 	AObsidianPlayerController* GetObsidianPlayerController() const;
 	AObsidianHero* GetObsidianHero() const;
 	
-	int32 GetHeroLevel() const
+	uint8 GetHeroLevel() const
 	{
 		return HeroLevel;
 	}
@@ -69,7 +69,7 @@ private:
 	TObjectPtr<UObsidianHeroAttributeSet> HeroAttributeSet;
 
 	UPROPERTY(VisibleAnywhere, ReplicatedUsing = OnRep_HeroLevel)
-	int32 HeroLevel = 1;
+	uint8 HeroLevel = 1;
 
 	UPROPERTY(VisibleAnywhere)
 	FText PlayerName = FText();

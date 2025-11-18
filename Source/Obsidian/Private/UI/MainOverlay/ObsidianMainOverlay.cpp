@@ -14,7 +14,7 @@
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
-#include "Core/ObsidianUIFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 #include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUITypes.h"

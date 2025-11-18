@@ -89,7 +89,7 @@ protected:
 
 	/** Character */
 	UFUNCTION()
-	void HeroLevelUp(const int32 NewLevel);
+	void HeroLevelUp(const uint8 NewLevel);
 	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
 	

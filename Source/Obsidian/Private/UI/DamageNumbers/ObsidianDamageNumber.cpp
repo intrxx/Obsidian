@@ -28,7 +28,7 @@ void UObsidianDamageNumber::InitializeDamageNumber(const FObsidianDamageTextProp
 		return;
 	}
 
-	const FText DamageNumberText = FText::FromString(FString::Printf(TEXT("%d"), FMath::FloorToInt(DamageTextProps.DamageMagnitude)));
+	const FText DamageNumberText = FText::AsNumber(FMath::FloorToInt(DamageTextProps.DamageMagnitude));
 	
 	if(DamageTextProps.bIsSuppressedSpell)
 	{

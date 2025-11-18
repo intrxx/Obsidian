@@ -149,12 +149,11 @@ void UObsidianCharacterStatus::SetExperienceProgressBar() const
 	}
 }
 
-void UObsidianCharacterStatus::OnHeroLevelUp(const int32 NewLevel)
+void UObsidianCharacterStatus::OnHeroLevelUp(const uint8 NewLevel)
 {
 	if(HeroLevel_TextBlock)
 	{
-		const FText NewLevelText = FText::FromString(FString::FromInt(NewLevel));
-		HeroLevel_TextBlock->SetText(NewLevelText);
+		HeroLevel_TextBlock->SetText(FText::AsNumber(NewLevel));
 	}
 }
 

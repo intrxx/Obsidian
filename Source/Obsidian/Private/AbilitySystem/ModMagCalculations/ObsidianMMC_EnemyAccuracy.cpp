@@ -15,7 +15,7 @@ float UObsidianMMC_EnemyAccuracy::CalculateBaseMagnitude_Implementation(const FG
 		return Super::CalculateBaseMagnitude_Implementation(Spec);
 	}
 	
-	const int32 CharacterLevel = CombatInterface->GetCharacterLevel();
+	const uint8 CharacterLevel = CombatInterface->GetCharacterLevel();
 
 	return (25.0f + (CharacterLevel * 6));
 }

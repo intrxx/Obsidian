@@ -13,7 +13,7 @@ void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)
 	EffectStackCount = Count;
 	if(StackCount_TextBlock)
 	{
-		StackCount_TextBlock->SetText(FText::FromString(FString::Printf(TEXT("%d"), Count)));
+		StackCount_TextBlock->SetText(FText::AsNumber(Count));
 	}
 }
 

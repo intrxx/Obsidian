@@ -53,7 +53,7 @@ public:
 	}
 	
 	//~ Start of CombatInterface
-	virtual int32 GetCharacterLevel() override;
+	virtual uint8 GetCharacterLevel() override;
 	virtual bool IsDeadOrDying_Implementation() const override;
 	virtual AActor* GetAvatarActor_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
@@ -65,7 +65,7 @@ public:
 	void ClientUpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer);
 
 	void IncreaseHeroLevel() const;
-	int32 GetHeroLevel() const;
+	uint8 GetHeroLevel() const;
 
 protected:
 	//~ Start of AObsidianCharacterBase

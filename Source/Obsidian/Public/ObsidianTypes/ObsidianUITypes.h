@@ -17,7 +17,7 @@ class UOStackingDurationalEffectInfo;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAttributeValueChangedSignature, float, NewValue);
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeroLevelUpSignature, const int32 NewLevel);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeroLevelUpSignature, const uint8 NewLevel);
 DECLARE_DELEGATE_OneParam(FOnAttributeValueChangedOneParam, const float /** Value */);
 DECLARE_DELEGATE_TwoParams(FOnAttributeValueChangedTwoParams, const float /** Value 1 */, const float /** Value 2 */);
 

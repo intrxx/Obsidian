@@ -143,7 +143,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	SpellBlockChanceChangedDelegate.Execute(AttributesComponent->GetSpellBlockChance(), AttributesComponent->GetMaxSpellBlockChance());
 }
 
-void UOCharacterStatusWidgetController::HeroLevelUp(const int32 NewLevel)
+void UOCharacterStatusWidgetController::HeroLevelUp(const uint8 NewLevel)
 {
 	if(HeroLevelUpDelegate.IsBound())
 	{

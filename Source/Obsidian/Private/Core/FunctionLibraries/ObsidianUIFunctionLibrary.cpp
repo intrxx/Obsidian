@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Core/ObsidianUIFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 
 // ~ Core
 #include "Kismet/GameplayStatics.h"

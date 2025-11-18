@@ -204,7 +204,7 @@ AActor* AObsidianEnemy::GetAvatarActor_Implementation()
 	return this;
 }
 
-int32 AObsidianEnemy::GetCharacterLevel()
+uint8 AObsidianEnemy::GetCharacterLevel()
 {
 	return EnemyLevel;
 }

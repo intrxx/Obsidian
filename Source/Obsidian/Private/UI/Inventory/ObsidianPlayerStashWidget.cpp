@@ -242,7 +242,7 @@ void UObsidianPlayerStashWidget::CreateStashTabs()
 				StashTab_Overlay->AddChildToOverlay(GridStashTabWidget);
 				StashTabsMap.Add(Definition.StashTag, GridStashTabWidget);
 				
-				CreateStashTabButton(Definition.StashTag, FText::FromString(FString::Printf(TEXT("%d"), StashTabCounter)));
+				CreateStashTabButton(Definition.StashTag, FText::AsNumber(StashTabCounter));
 				StashTabCounter++;
 			}
 		}
@@ -260,7 +260,7 @@ void UObsidianPlayerStashWidget::CreateStashTabs()
 			StashTab_Overlay->AddChildToOverlay(SlotStashTabWidget);
 			StashTabsMap.Add(Definition.StashTag, SlotStashTabWidget);
 
-			CreateStashTabButton(Definition.StashTag, FText::FromString(FString::Printf(TEXT("%d"), StashTabCounter)));
+			CreateStashTabButton(Definition.StashTag, FText::AsNumber(StashTabCounter));
 			StashTabCounter++;
 		}
 	}

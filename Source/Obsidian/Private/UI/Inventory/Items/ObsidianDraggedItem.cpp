@@ -66,7 +66,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 		}
 		else
 		{
-			const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), InternalStacks));
+			const FText StackCountText = FText::AsNumber(InternalStacks);
 			StackCount_TextBlock->SetText(StackCountText);
 			StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 		}
@@ -99,7 +99,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(const UObsidianI
 		return;
 	}
 	const int32 CurrentStack = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), CurrentStack));
+	const FText StackCountText = FText::AsNumber(CurrentStack);
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
@@ -117,7 +117,7 @@ void UObsidianDraggedItem::UpdateStackCount(const int32 NewStackCount)
 	}
 	
 	InternalStacks = NewStackCount;
-	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d"), InternalStacks));
+	const FText StackCountText = FText::AsNumber(InternalStacks);
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }

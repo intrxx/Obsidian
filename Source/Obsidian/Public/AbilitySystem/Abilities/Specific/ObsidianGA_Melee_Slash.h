@@ -21,7 +21,7 @@ public:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Slash")
-	TObjectPtr<UNiagaraSystem> SlashSystem;
+	TObjectPtr<UNiagaraSystem> SlashNiagaraSystem;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Slash")
 	float SlashWidth = 200.0f;

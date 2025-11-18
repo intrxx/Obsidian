@@ -189,7 +189,7 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 			}
 			
 			float NewMaxExperience;
-			const int32 CurrentHeroLevel = HeroCharacter->GetHeroLevel();
+			const uint8 CurrentHeroLevel = HeroCharacter->GetHeroLevel();
 			if(CurrentHeroLevel <= 50)
 			{
 				NewMaxExperience = 125.0f * FMath::Pow(CurrentHeroLevel, 1.4) + 350.0f * CurrentHeroLevel;

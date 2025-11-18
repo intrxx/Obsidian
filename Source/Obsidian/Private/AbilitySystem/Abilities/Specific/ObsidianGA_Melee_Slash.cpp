@@ -30,9 +30,9 @@ void UObsidianGA_Melee_Slash::FireSlash()
 	const FVector SweepEnd = BaseLocation - OwnerRightVec * (SlashWidth * 0.5f);
 	const FRotator Rotation = FRotator(-90.0f, ObsidianHero->GetActorRotation().Yaw, 0.0f);
 	
-	if (SlashSystem)
+	if (SlashNiagaraSystem)
 	{
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(World, SlashSystem, SweepStart, Rotation, FVector(1.f),
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(World, SlashNiagaraSystem, SweepStart, Rotation, FVector(1.f),
 			true, true, ENCPoolMethod::None, true);
 	}
 	

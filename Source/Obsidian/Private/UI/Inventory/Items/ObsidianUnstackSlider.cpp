@@ -36,9 +36,9 @@ void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 CurrentItemStac
 	StackToLeave = MaxStacks - 1;
 	StackToTake = 1;
 	
-	const FText CurrentItemStacksText = FText::FromString(FString::Printf(TEXT("%d"), StackToLeave));
+	const FText CurrentItemStacksText = FText::AsNumber(StackToLeave);
 	StacksToLeave_TextBlock->SetText(CurrentItemStacksText);
-	StacksToTake_TextBlock->SetText(FText::FromString(TEXT("1")));
+	StacksToTake_TextBlock->SetText(FText::AsNumber(1));
 
 	Stacks_Slider->SetMaxValue(MaxStacks);
 	Stacks_Slider->SetValue(1);
@@ -71,9 +71,9 @@ void UObsidianUnstackSlider::UpdateStacksValues(float NewValue)
 	StackToTake = IntValue;
 	StackToLeave = MaxStacks - StackToTake;
 
-	const FText StacksToTakeText = FText::FromString(FString::Printf(TEXT("%d"), StackToTake));
+	const FText StacksToTakeText = FText::AsNumber(StackToTake);
 	StacksToTake_TextBlock->SetText(StacksToTakeText);
 	
-	const FText StacksToLeaveText = FText::FromString(FString::Printf(TEXT("%d"), StackToLeave));
+	const FText StacksToLeaveText = FText::AsNumber(StackToLeave);
 	StacksToLeave_TextBlock->SetText(StacksToLeaveText);
 }

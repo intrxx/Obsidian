@@ -14,7 +14,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/SplineComponent.h"
 #include "Components/TimelineComponent.h"
-#include "Core/ObsidianUIFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"

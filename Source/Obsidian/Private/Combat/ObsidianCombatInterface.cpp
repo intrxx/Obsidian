@@ -7,9 +7,9 @@
 
 // ~ Project
 
-int32 IObsidianCombatInterface::GetCharacterLevel()
+uint8 IObsidianCombatInterface::GetCharacterLevel()
 {
-	return 1;
+	return 0;
 }
 
 bool IObsidianCombatInterface::IsDeadOrDying_Implementation() const

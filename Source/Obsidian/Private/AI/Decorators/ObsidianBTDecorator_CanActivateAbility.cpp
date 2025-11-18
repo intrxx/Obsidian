@@ -11,7 +11,7 @@
 
 // ~ Project
 #include "Characters/Enemies/ObsidianEnemy.h"
-#include "Core/ObsidianAbilitySystemFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianAbilitySystemFunctionLibrary.h"
 #include "Obsidian/ObsidianGameModule.h"
 
 UObsidianBTDecorator_CanActivateAbility::UObsidianBTDecorator_CanActivateAbility()

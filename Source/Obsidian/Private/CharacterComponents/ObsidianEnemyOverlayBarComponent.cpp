@@ -7,7 +7,7 @@
 // ~ Project
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Core/ObsidianUIFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
 
 UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent(const FObjectInitializer& ObjectInitializer)

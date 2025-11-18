@@ -30,7 +30,7 @@ void UObsidianCharacterEntry::InitializeCharacterEntry(const FText& InPlayerName
 {
 	TempHeroName = InPlayerName;
 	PlayerName_TextBlock->SetText(InPlayerName);
-	PlayerLevel_TextBlock->SetText(FText::FromString(FString::Printf(TEXT("%d"), InPlayerLevel)));
+	PlayerLevel_TextBlock->SetText(FText::AsNumber(InPlayerLevel));
 	PlayerClass_TextBlock->SetText(InPlayerClass);
 
 	const FString IsOnlineString = InIsOnline ? TEXT("Online") : TEXT("Offline");

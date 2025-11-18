@@ -29,7 +29,7 @@ void UObsidianSkillPointsNotification::SetSkillPointsCount(const float NewPoints
 {
 	if(SkillPointsCounter_TextBlock)
 	{
-		const FText	SkillPointsCountText = FText::FromString(FString::Printf(TEXT("%d"), FMath::TruncToInt(NewPoints)));
+		const FText	SkillPointsCountText = FText::AsNumber(FMath::TruncToInt(NewPoints));
 		SkillPointsCounter_TextBlock->SetText(SkillPointsCountText);
 	}
 }

@@ -131,9 +131,13 @@ UObsidianPlayerInputManager* AObsidianHero::GetPlayerInputManager() const
 	return PlayerInputManager;
 }
 
-int32 AObsidianHero::GetCharacterLevel()
+uint8 AObsidianHero::GetCharacterLevel()
 {
-	return GetObsidianPlayerState() == nullptr ? GetObsidianPlayerState()->GetHeroLevel() : 1;
+	if (const AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
+	{
+		return ObsidianPS->GetHeroLevel();
+	}
+	return 0;
 }
 
 bool AObsidianHero::IsDeadOrDying_Implementation() const
@@ -196,9 +200,9 @@ void AObsidianHero::IncreaseHeroLevel() const
 	ObsidianPS->IncreaseHeroLevel();
 }
 
-int32 AObsidianHero::GetHeroLevel() const
+uint8 AObsidianHero::GetHeroLevel() const
 {
-	if(AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
+	if(const AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
 	{
 		return ObsidianPS->GetHeroLevel();
 	}

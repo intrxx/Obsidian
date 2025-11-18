@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Core/ObsidianBlueprintFunctionLibrary.h"
+#include "Core/FunctionLibraries/ObsidianBlueprintFunctionLibrary.h"
 
 // ~ Core
 #include "Engine/Console.h"
