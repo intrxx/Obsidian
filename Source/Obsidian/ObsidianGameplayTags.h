@@ -73,6 +73,7 @@ namespace ObsidianGameplayTags
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_MainMenu);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_Action_Backwards);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_OpenGameplayMenu);
 	
 	/**
 	 * Ability

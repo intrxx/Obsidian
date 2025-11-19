@@ -26,6 +26,7 @@ class IObsidianHighlightInterface;
 class UObsidianDraggedItem;
 class UObsidianInventoryItemDefinition;
 class IObsidianInteractionInterface;
+class UCommonActivatableWidget;
 
 DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
@@ -203,6 +204,8 @@ protected:
 	void Input_Interact();
 
 	void Input_WeaponSwap();
+
+	void Input_OpenGameplayMenu();
 	
 protected:
 	/** Time Threshold to know if it was a short press */
@@ -308,6 +311,9 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem_Simple> DraggedUsableItemWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
+	TSoftClassPtr<UCommonActivatableWidget> GameplayMenuClass;
 	
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
 	FHitResult CursorHit;

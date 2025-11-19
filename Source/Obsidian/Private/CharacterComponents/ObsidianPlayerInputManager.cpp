@@ -15,6 +15,7 @@
 #include "Kismet/KismetMathLibrary.h"
 
 // ~ Project
+#include "CommonUIExtensions.h"
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Input/OEnhancedInputUserSettings.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem_Simple.h"
@@ -306,6 +307,9 @@ void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputCo
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_WeaponSwap,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_WeaponSwap, false);
+
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_UI_OpenGameplayMenu,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_OpenGameplayMenu, false);
 			}
 		}
 	}
@@ -556,6 +560,38 @@ void UObsidianPlayerInputManager::Input_Interact()
 void UObsidianPlayerInputManager::Input_WeaponSwap()
 {
 	ServerWeaponSwap();
+}
+
+void UObsidianPlayerInputManager::Input_OpenGameplayMenu()
+{
+	if (GameplayMenuClass.IsNull())
+	{
+		return;
+	}
+	
+	const APawn* Pawn = GetPawn<APawn>();
+	if (Pawn == nullptr)
+	{
+		return;
+	}
+	
+	const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(Pawn->GetController());
+	if (ObsidianPC == nullptr)
+	{
+		return;
+	}
+
+	const ULocalPlayer* LocalPlayer = ObsidianPC->GetLocalPlayer();
+	if (LocalPlayer == nullptr)
+	{
+		return;
+	}
+
+	//TODO(intrxx) Close all Gameplay Menus First
+	// This actually need some more work, Gameplay UI like Inventory, Stash etc. should be handled with Common UI first
+	
+	UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(LocalPlayer, ObsidianGameplayTags::UI_Layer_GameplayMenu,
+		GameplayMenuClass);
 }
 
 void UObsidianPlayerInputManager::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget, UObsidianInventoryItemInstance* UsingInstance)

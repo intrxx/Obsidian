@@ -2,13 +2,11 @@
 
 #include "UI/FrontEnd/ObsidianCharacterScreen.h"
 
-// ~ Core
-#include "CommonHierarchicalScrollBox.h"
-#include "CommonTextBlock.h"
-#include "CommonUIExtensions.h"
-#include "Kismet/GameplayStatics.h"
+#include <CommonHierarchicalScrollBox.h>
+#include <CommonTextBlock.h>
+#include <CommonUIExtensions.h>
+#include <Kismet/GameplayStatics.h>
 
-// ~ Project
 #include "UI/FrontEnd/ObsidianCharacterEntry.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
@@ -16,33 +14,15 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
 
-UWidget* UObsidianCharacterScreen::NativeGetDesiredFocusTarget() const
-{
-	if(CharacterEntries.IsEmpty())
-	{
-		return Create_Button;
-	}
-	return Play_Button;
-}
-
-void UObsidianCharacterScreen::InitializeOnlineCharacterScreen()
-{
-	TabName_TextBlock->SetText(FText::FromString(TEXT("Online Character Screen")));
-	bIsOnline = true;
-}
-
-void UObsidianCharacterScreen::InitializeOfflineCharacterScreen()
-{
-	TabName_TextBlock->SetText(FText::FromString(TEXT("Character Screen")));
-	bIsOnline = false;
-}
-
 void UObsidianCharacterScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
-	Delete_Button->OnClicked().AddUObject(this, &ThisClass::OnDeleteClicked);
+	if(Play_Button && Delete_Button)
+	{
+		Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
+		Delete_Button->OnClicked().AddUObject(this, &ThisClass::OnDeleteClicked);
+	}
 	
 	FrontEndGameMode = Cast<AObsidianFrontEndGameMode>(UGameplayStatics::GetGameMode(this));
 	ensureMsgf(FrontEndGameMode, TEXT("FrontEndGameMode is invalid in UObsidianCharacterCreationScreen::NativeOnActivated()"));
@@ -50,9 +30,10 @@ void UObsidianCharacterScreen::NativeConstruct()
 
 void UObsidianCharacterScreen::NativeDestruct()
 {
-	if(Play_Button)
+	if(Play_Button && Delete_Button)
 	{
 		Play_Button->OnClicked().Clear();
+		Delete_Button->OnClicked().Clear();
 	}
 	
 	Super::NativeDestruct();
@@ -75,6 +56,27 @@ void UObsidianCharacterScreen::NativeOnDeactivated()
 	}
 	
 	Super::NativeOnDeactivated();
+}
+
+UWidget* UObsidianCharacterScreen::NativeGetDesiredFocusTarget() const
+{
+	if(CharacterEntries.IsEmpty())
+	{
+		return Create_Button;
+	}
+	return Play_Button;
+}
+
+void UObsidianCharacterScreen::InitializeOnlineCharacterScreen()
+{
+	TabName_TextBlock->SetText(FText::FromString(TEXT("Online Character Screen")));
+	bIsOnline = true;
+}
+
+void UObsidianCharacterScreen::InitializeOfflineCharacterScreen()
+{
+	TabName_TextBlock->SetText(FText::FromString(TEXT("Character Screen")));
+	bIsOnline = false;
 }
 
 void UObsidianCharacterScreen::OnPlayClicked()
