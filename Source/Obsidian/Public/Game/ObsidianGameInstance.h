@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 
-
-#include "CommonGameInstance.h"
+#include <CommonGameInstance.h>
 #include "ObsidianGameInstance.generated.h"
 
 class AObsidianHero;
@@ -23,10 +20,5 @@ class OBSIDIAN_API UObsidianGameInstance : public UCommonGameInstance
 
 public:
 	UObsidianGameInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
-	UPROPERTY()
-	TSoftClassPtr<AObsidianHero> ChosenHero;
-
-	UPROPERTY()
-	FText TempHeroName = FText();
+	
 };

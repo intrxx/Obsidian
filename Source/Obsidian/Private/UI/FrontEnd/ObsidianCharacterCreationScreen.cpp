@@ -14,6 +14,8 @@
 
 // ~ Project
 #include "Game/ObsidianFrontEndGameMode.h"
+#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "UI/Components/ObsidianButtonBase.h"
 
 void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const bool bIsOnline)
@@ -118,13 +120,34 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 
 	const ECheckBoxState CheckBoxState = Hardcore_CheckBox->GetCheckedState();
 	const bool bIsHardcoreChecked = CheckBoxState == ECheckBoxState::Checked;
-	if(FrontEndGameMode->CreateHeroClass(ChosenClass, PlayerName_EditableTextBox->GetText(), bIsOnlineCharacter, bIsHardcoreChecked))
+	const FObsidianHeroClassParams Params = FrontEndGameMode->CreateHeroClass(ChosenClass, PlayerName_EditableTextBox->GetText(),
+		bIsOnlineCharacter, bIsHardcoreChecked);
+	if(Params.IsValid())
 	{
-		HandleBackwardsAction();
+		if (const UGameInstance* GameInstance = GetGameInstance())
+		{
+			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+			{
+				SaveGameSubsystem->CreateSaveGameObject();
+				
+				FObsidianHeroInitializationSaveData InitializationSaveData;
+				InitializationSaveData.PlayerHeroName = Params.ObsidianPlayerName;
+				InitializationSaveData.HeroObjectClass = Params.SoftHeroClass;
+				InitializationSaveData.HeroClass = Params.Class;
+				InitializationSaveData.bHardcore = Params.bIsHardcore;
+				InitializationSaveData.HeroID = Params.TempID;
+				
+				SaveGameSubsystem->RequestSaveInitialHeroSave(true, InitializationSaveData);
+				SaveGameSubsystem->FOnSavingFinishedDelegate.AddLambda([this](UObsidianSaveGame* SaveGame)
+					{
+						HandleBackwardsAction();
+					});
+			}
+		}
 	}
 	else
 	{
-		// Notify user of any errors
+		//TODO(intrxx) Notify user of any errors
 	}
 }
 

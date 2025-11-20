@@ -52,6 +52,8 @@ public:
 
 	void IncreaseHeroLevel();
 
+	// Loading purposes, don't really like it like this
+	void SetHeroLevel(const uint8 InLevel);
 	void SetObsidianPlayerName(const FText& InName);
 
 public:

@@ -40,6 +40,7 @@ protected:
 	void OnDeleteClicked();
 
 	void PopulateCharacterScreen();
+	void InitCharacterScreen();
 
 	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked);
 

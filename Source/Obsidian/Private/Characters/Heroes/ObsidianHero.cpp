@@ -18,6 +18,8 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -68,6 +70,35 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	
 	// Identifies this class as a Player character
 	Tags.Emplace(ObsidianActorTags::Player);
+}
+
+void AObsidianHero::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->RegisterSaveable(this);
+
+			//TODO(intrxx) probably don't want to do it this late
+			SaveGameSubsystem->RequestLoadDataForObject(this);
+		}
+	}
+}
+
+void AObsidianHero::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->UnregisterSaveable(this);
+		}
+	}
+	
+	Super::EndPlay(EndPlayReason);
 }
 
 void AObsidianHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -182,6 +213,37 @@ FVector AObsidianHero::GetAbilitySocketLocationFromRHWeapon_Implementation()
 		}
 	}
 	return FVector::ZeroVector;
+}
+
+void AObsidianHero::SaveData(UObsidianSaveGame* SaveObject)
+{
+	if (SaveObject == nullptr)
+	{
+		return;
+	}
+	
+	FObsidianHeroGameplaySaveData HeroSaveData;
+	HeroSaveData.CurrentLocation = GetActorLocation();
+	HeroSaveData.HeroLevel = GetHeroLevel();
+	
+	SaveObject->SetHeroGameplayData(HeroSaveData);
+}
+
+void AObsidianHero::LoadData(UObsidianSaveGame* SaveObject)
+{
+	if (SaveObject == nullptr)
+	{
+		return;
+	}
+
+	const FObsidianHeroSaveData HeroSaveData = SaveObject->GetHeroSaveData();
+	SetActorLocation(HeroSaveData.GameplaySaveData.CurrentLocation);
+	
+	if(AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
+	{
+		ObsidianPS->SetHeroLevel(HeroSaveData.GameplaySaveData.HeroLevel);
+		ObsidianPS->SetObsidianPlayerName(HeroSaveData.InitializationSaveData.PlayerHeroName);
+	}
 }
 
 void AObsidianHero::ClientUpdateBossDetectingPlayer_Implementation(AActor* BossActor, const bool bSeenPlayer)

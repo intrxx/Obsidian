@@ -2,9 +2,6 @@
 
 #include "Game/ObsidianGameInstance.h"
 
-// ~ Core
-
-// ~ Project
 
 UObsidianGameInstance::UObsidianGameInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

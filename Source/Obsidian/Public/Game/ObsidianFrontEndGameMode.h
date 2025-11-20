@@ -28,6 +28,7 @@ public:
 	FObsidianHeroClassParams(){};
 
 	void Reset();
+	bool IsValid() const;
 	
 public:
 	UPROPERTY()
@@ -75,7 +76,7 @@ public:
 		return CreatedHeroes;
 	}
 	
-	bool CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
+	FObsidianHeroClassParams CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
 	bool DeleteHeroClass(const int32 WithID);
 
 	void GatherSavedHeroes();

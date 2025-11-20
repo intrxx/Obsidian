@@ -11,6 +11,8 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Game/ObsidianGameInstance.h"
+#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
 
@@ -83,19 +85,23 @@ void UObsidianCharacterScreen::OnPlayClicked()
 {
 	if (bIsOnline)
 	{
-		UCommonUIExtensions::PushContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI_Layer_MainMenu, OnlineLobbyWidgetClass);
+		UCommonUIExtensions::PushContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI_Layer_MainMenu,
+			OnlineLobbyWidgetClass);
+		return;
 	}
-	else
+	
+	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
-		if (const UWorld* World = GetWorld())
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 		{
-			if (UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(UGameplayStatics::GetGameInstance(World)))
-			{
-				ObsidianGameInstance->ChosenHero = FrontEndGameMode->ChosenHeroClass;
-				ObsidianGameInstance->TempHeroName = CachedChosenCharacterEntry->TempHeroName;
-			}
-			
-			UGameplayStatics::OpenLevel(World, FName("L_Tutorial_01"));
+			SaveGameSubsystem->RequestLoadGame(true);
+			SaveGameSubsystem->FOnLoadingFinishedDelegate.AddLambda([this](UObsidianSaveGame* SaveGame)
+				{
+					if (const UWorld* World = GetWorld())
+					{
+						UGameplayStatics::OpenLevel(World, FName("L_Tutorial_01"));
+					}
+				});
 		}
 	}
 }
@@ -148,22 +154,50 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 	}
 	else
 	{
-		// Get Saved Heroes
-
-		// Get Created Heroes, should automatically be saved later so it won't matter
-		for(const FObsidianHeroClassParams Params : FrontEndGameMode->GetCreatedHeroes())
+		if (const UGameInstance* GameInstance = GetGameInstance())
 		{
-			checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
-			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
-			Entry->InitializeCharacterEntry(Params.ObsidianPlayerName, 1, UObsidianGameplayStatics::GetHeroClassText(Params.Class), false, Params.bIsHardcore);
-			Entry->TempObsidianHeroClass = Params.SoftHeroClass;
-			Entry->TempSaveID = Params.TempID;
-			
-			CharacterList_ScrollBox->AddChild(Entry);
-			CharacterEntries.Add(Entry);
+			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+			{
+				SaveGameSubsystem->RequestLoadGame(true);
+				SaveGameSubsystem->FOnLoadingFinishedDelegate.AddLambda([this, PlayerController](UObsidianSaveGame* SaveGame)
+					{
+						if (SaveGame)
+						{
+							const FObsidianHeroSaveData HeroSaveData = SaveGame->GetHeroSaveData();
+							checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
+							UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
+							Entry->InitializeCharacterEntry(HeroSaveData.InitializationSaveData.PlayerHeroName, HeroSaveData.GameplaySaveData.HeroLevel,
+								UObsidianGameplayStatics::GetHeroClassText(HeroSaveData.InitializationSaveData.HeroClass),
+								false, HeroSaveData.InitializationSaveData.bHardcore);
+							Entry->TempObsidianHeroClass = HeroSaveData.InitializationSaveData.HeroObjectClass;
+							Entry->TempSaveID = HeroSaveData.InitializationSaveData.HeroID;
+							
+							CharacterList_ScrollBox->AddChild(Entry);
+							CharacterEntries.Add(Entry);
+						}
+					
+						InitCharacterScreen();
+					});
+			}	
 		}
+		
+		// // Get Created Heroes, should automatically be saved later so it won't matter
+		// for(const FObsidianHeroClassParams Params : FrontEndGameMode->GetCreatedHeroes())
+		// {
+		// 	checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
+		// 	UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
+		// 	Entry->InitializeCharacterEntry(Params.ObsidianPlayerName, 1, UObsidianGameplayStatics::GetHeroClassText(Params.Class), false, Params.bIsHardcore);
+		// 	Entry->TempObsidianHeroClass = Params.SoftHeroClass;
+		// 	Entry->TempSaveID = Params.TempID;
+		// 	
+		// 	CharacterList_ScrollBox->AddChild(Entry);
+		// 	CharacterEntries.Add(Entry);
+		// }
 	}
+}
 
+void UObsidianCharacterScreen::InitCharacterScreen()
+{
 	for(UObsidianCharacterEntry* Entry : CharacterEntries)
 	{
 		if(Entry && Entry->OnClicked().IsBound() == false)

@@ -9,6 +9,7 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 #include "Characters/ObsidianCharacterBase.h"
+#include "Game/Save/ObsidianSaveableInterface.h"
 #include "ObsidianHero.generated.h"
 
 class AObsidianDroppableItem;
@@ -27,7 +28,7 @@ class UObsidianPlayerInputManager;
  * Main class for Hero characters in Obsidian.
  */
 UCLASS()
-class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase
+class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase, public IObsidianSaveableInterface
 {
 	GENERATED_BODY()
 public:
@@ -60,6 +61,11 @@ public:
 	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
 	//~ End of CombatInterface
 
+	//~ Start of SaveableInterface
+	virtual void SaveData(UObsidianSaveGame* SaveObject) override;
+	virtual void LoadData(UObsidianSaveGame* SaveObject) override;
+	//~ End of SaveableInterface
+
 	/** Updates when boss sees Player, BossActor will be nullptr when Boss lost sight of Player, this is by design and might change. */
 	UFUNCTION(Client, Reliable)
 	void ClientUpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer);
@@ -68,6 +74,9 @@ public:
 	uint8 GetHeroLevel() const;
 
 protected:
+	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;

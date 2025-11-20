@@ -19,6 +19,11 @@ void FObsidianHeroClassParams::Reset()
 	TempID = 0;
 }
 
+bool FObsidianHeroClassParams::IsValid() const
+{
+	return SoftHeroClass.IsNull() == false;
+}
+
 AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
@@ -63,11 +68,12 @@ AObsidianCharacterCreationHero* AObsidianFrontEndGameMode::GetCreationHeroForTag
 	return nullptr;
 }
 
-bool AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore)
+FObsidianHeroClassParams AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName,
+	const bool InIsOnline, const bool InIsHardcore)
 {
 	if(InName.IsEmpty() || InClass == EObsidianHeroClass::None)
 	{
-		return false;
+		return FObsidianHeroClassParams();
 	}
 	
 	check(ClassToSoftClassMap.Contains(InClass));
@@ -81,7 +87,7 @@ bool AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass InClass
 	HeroClassParams.TempID = CreatedHeroes.Num();
 	
 	CreatedHeroes.Add(HeroClassParams);
-	return true;
+	return HeroClassParams;
 }
 
 bool AObsidianFrontEndGameMode::DeleteHeroClass(const int32 WithID)

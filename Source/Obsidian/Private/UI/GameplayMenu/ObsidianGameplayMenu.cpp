@@ -4,6 +4,7 @@
 
 #include <CommonUIExtensions.h>
 
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
@@ -54,8 +55,18 @@ void UObsidianGameplayMenu::OnOptionsClicked()
 
 void UObsidianGameplayMenu::OnSaveAndExitClicked()
 {
-	//TODO(intrxx) Handle save
-	
-	//TODO(intrxx) Handle network cases
-	UGameplayStatics::OpenLevel(GetWorld(), FName("L_FrontEnd"), true);
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->RequestSaveGame(true);
+			SaveGameSubsystem->FOnSavingFinishedDelegate.AddLambda([this](UObsidianSaveGame* ObsidianSaveGame)
+				{
+					if (const UWorld* World = GetWorld())
+					{
+						UGameplayStatics::OpenLevel(World, FName("L_FrontEnd"), true);
+					}
+				});
+		}
+	}
 }

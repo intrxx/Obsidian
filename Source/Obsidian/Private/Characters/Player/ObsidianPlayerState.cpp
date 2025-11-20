@@ -54,15 +54,6 @@ UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const
 
 FText AObsidianPlayerState::GetObsidianPlayerName()
 {
-	// Temp
-	if(PlayerName.IsEmpty())
-	{
-		if(const UObsidianGameInstance* GameInstance = Cast<UObsidianGameInstance>(UGameplayStatics::GetGameInstance(this)))
-		{
-			SetObsidianPlayerName(GameInstance->TempHeroName);
-		}
-	}
-	// Temp
 	return PlayerName;
 }
 
@@ -71,6 +62,11 @@ void AObsidianPlayerState::IncreaseHeroLevel()
 	HeroLevel++;
 	
 	OnHeroLevelUp.Broadcast(HeroLevel);
+}
+
+void AObsidianPlayerState::SetHeroLevel(const uint8 InLevel)
+{
+	HeroLevel = InLevel;
 }
 
 void AObsidianPlayerState::OnRep_HeroLevel()

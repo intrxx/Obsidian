@@ -1,21 +1,26 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Game/ObsidianGameMode.h"
+#include <Game/ObsidianGameMode.h>
 
-// ~ Core
 
-// ~ Project
 #include "Characters/Heroes/ObsidianHero.h"
-#include "Game/ObsidianGameInstance.h"
+#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "InventoryItems/Items/ItemSpecific/ObsidianTownPortal.h"
 
 void AObsidianGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
 {
-	if(const UObsidianGameInstance* ObsidianGameInstance = Cast<UObsidianGameInstance>(GetGameInstance()))
+	if(const UGameInstance* GameInstance = GetGameInstance())
 	{
-		if(const TSubclassOf<AObsidianHero> HeroClass = ObsidianGameInstance->ChosenHero.LoadSynchronous())
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 		{
-			DefaultPawnClass = HeroClass;
+			if(UObsidianSaveGame* SaveGameObject = SaveGameSubsystem->GetSaveGameObject())
+			{
+				if (const TSubclassOf<AObsidianHero> HeroClass = SaveGameObject->GetHeroSaveData().InitializationSaveData.HeroObjectClass.LoadSynchronous())
+				{
+					DefaultPawnClass = HeroClass;
+				}
+			}
 		}
 	}
 	

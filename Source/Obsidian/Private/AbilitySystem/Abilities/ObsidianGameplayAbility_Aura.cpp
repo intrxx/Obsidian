@@ -25,9 +25,11 @@ void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHa
 	{
 		if(AuraEffectHandle.IsValid())
 		{
-			ObsidianASC = ObsidianASC == nullptr ? Cast<UObsidianAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()) : ObsidianASC;
+			ObsidianASC = ObsidianASC == nullptr
+			 ? TObjectPtr<UObsidianAbilitySystemComponent>(Cast<UObsidianAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()))
+				: ObsidianASC;
 			
-			BP_RemoveGameplayEffectFromOwnerWithHandle(AuraEffectHandle);
+			ObsidianASC->RemoveActiveGameplayEffect(AuraEffectHandle);
 			AuraEffectHandle.Invalidate();
 			ObsidianASC->OnAuraDisabledDelegate.ExecuteIfBound(EffectUIInfoTag);
 		}

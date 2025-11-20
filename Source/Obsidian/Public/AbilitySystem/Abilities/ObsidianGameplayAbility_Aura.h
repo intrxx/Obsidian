@@ -37,5 +37,6 @@ protected:
 private:
 	FActiveGameplayEffectHandle AuraEffectHandle;
 
-	TObjectPtr<const UObsidianAbilitySystemComponent> ObsidianASC;
+	UPROPERTY()
+	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianASC;
 };
