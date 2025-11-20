@@ -122,6 +122,7 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 	const bool bIsHardcoreChecked = CheckBoxState == ECheckBoxState::Checked;
 	const FObsidianHeroClassParams Params = FrontEndGameMode->CreateHeroClass(ChosenClass, PlayerName_EditableTextBox->GetText(),
 		bIsOnlineCharacter, bIsHardcoreChecked);
+	
 	if(Params.IsValid())
 	{
 		if (const UGameInstance* GameInstance = GetGameInstance())
@@ -138,12 +139,10 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 				InitializationSaveData.HeroID = Params.TempID;
 				
 				SaveGameSubsystem->RequestSaveInitialHeroSave(true, InitializationSaveData);
-				SaveGameSubsystem->FOnSavingFinishedDelegate.AddLambda([this](UObsidianSaveGame* SaveGame)
-					{
-						HandleBackwardsAction();
-					});
+				OnCreateSavingFinishedHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
+					&ThisClass::OnCreateSavingFinished);
 			}
-		}
+		} 
 	}
 	else
 	{
@@ -279,6 +278,19 @@ void UObsidianCharacterCreationScreen::ResetHeroDetails() const
 {
 	Hardcore_CheckBox->SetCheckedState(ECheckBoxState::Unchecked);
 	PlayerName_EditableTextBox->SetText(FText());
+}
+
+void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianSaveGame* SaveGame)
+{
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnCreateSavingFinishedHandle);
+		}
+	}
+	
+	HandleBackwardsAction();
 }
 
 

@@ -98,7 +98,7 @@ void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* LoadActor)
 void UObsidianSaveGameSubsystem::SaveGameForPlayer()
 {
 	UGameplayStatics::SaveGameToSlot(ObsidianSaveGame, SaveSlotName, 0);
-	FOnSavingFinishedDelegate.Broadcast(ObsidianSaveGame);
+	OnSavingFinishedDelegate.Broadcast(ObsidianSaveGame);
 }
 
 void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync()
@@ -108,7 +108,7 @@ void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync()
 			{
 				if (bSuccess)
 				{
-					FOnSavingFinishedDelegate.Broadcast(ObsidianSaveGame);
+					OnSavingFinishedDelegate.Broadcast(ObsidianSaveGame);
 				}
 			}));
 }
@@ -116,7 +116,7 @@ void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync()
 void UObsidianSaveGameSubsystem::LoadGameForPlayer()
 {
 	ObsidianSaveGame = Cast<UObsidianSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
-	FOnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame);
+	OnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame);
 }
 
 void UObsidianSaveGameSubsystem::LoadGameForPlayerAsync()
@@ -127,7 +127,7 @@ void UObsidianSaveGameSubsystem::LoadGameForPlayerAsync()
 				if (SaveGame)
 				{
 					ObsidianSaveGame = Cast<UObsidianSaveGame>(SaveGame);
-					FOnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame);
+					OnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame);
 				}
 			}));
 }

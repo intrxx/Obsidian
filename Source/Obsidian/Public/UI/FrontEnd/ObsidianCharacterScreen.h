@@ -8,6 +8,7 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterScreen.generated.h"
 
+class UObsidianSaveGame;
 class UObsidianCharacterEntry;
 class AObsidianFrontEndGameMode;
 class UCommonHierarchicalScrollBox;
@@ -44,6 +45,9 @@ protected:
 
 	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked);
 
+	void OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame);
+	void OnPlayLoadingFinished(UObsidianSaveGame* SaveGame);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UCommonActivatableWidget> OnlineLobbyWidgetClass;
@@ -62,6 +66,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianCharacterEntry> CachedChosenCharacterEntry;
+	
+	FDelegateHandle OnPopulateLoadingFinishedDelegateHandle;
+	FDelegateHandle OnPlayLoadingFinishedDelegateHandle;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

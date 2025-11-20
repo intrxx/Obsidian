@@ -11,6 +11,7 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterCreationScreen.generated.h"
 
+class UObsidianSaveGame;
 class AObsidianFrontEndGameMode;
 class UEditableTextBox;
 class UCheckBox;
@@ -89,6 +90,8 @@ protected:
 
 	void ResetHeroDetails() const;
 
+	void OnCreateSavingFinished(UObsidianSaveGame* SaveGame);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianHeroInfo> HeroInfos;
@@ -107,6 +110,8 @@ protected:
 	
 	bool bIsOnlineCharacter = false;
 	bool bInitialGamepadFocusSet = false;
+
+	FDelegateHandle OnCreateSavingFinishedHandle;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

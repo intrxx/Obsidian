@@ -36,8 +36,8 @@ public:
 	void RequestLoadDataForObject(AActor* LoadActor);
 	
 public:
-	FOnSaveActionFinishedSignature FOnSavingFinishedDelegate;
-	FOnSaveActionFinishedSignature FOnLoadingFinishedDelegate;
+	FOnSaveActionFinishedSignature OnSavingFinishedDelegate;
+	FOnSaveActionFinishedSignature OnLoadingFinishedDelegate;
 
 protected:
 	void SaveGameForPlayer();

@@ -60,13 +60,24 @@ void UObsidianGameplayMenu::OnSaveAndExitClicked()
 		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 		{
 			SaveGameSubsystem->RequestSaveGame(true);
-			SaveGameSubsystem->FOnSavingFinishedDelegate.AddLambda([this](UObsidianSaveGame* ObsidianSaveGame)
-				{
-					if (const UWorld* World = GetWorld())
-					{
-						UGameplayStatics::OpenLevel(World, FName("L_FrontEnd"), true);
-					}
-				});
+			OnSaveFinishedDelegateHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
+				&ThisClass::OnSaveFinished);
 		}
+	}
+}
+
+void UObsidianGameplayMenu::OnSaveFinished(UObsidianSaveGame* SaveGame)
+{
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnSaveFinishedDelegateHandle);
+		}
+	}
+	
+	if (const UWorld* World = GetWorld())
+	{
+		UGameplayStatics::OpenLevel(World, FName("L_FrontEnd"), true);
 	}
 }

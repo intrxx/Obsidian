@@ -21,7 +21,7 @@ struct FObsidianHeroGameplaySaveData
 
 public:
 	UPROPERTY()
-	uint8 HeroLevel = 0;
+	uint8 HeroLevel = 1;
 	
 	UPROPERTY()
 	FVector CurrentLocation = FVector::ZeroVector;
