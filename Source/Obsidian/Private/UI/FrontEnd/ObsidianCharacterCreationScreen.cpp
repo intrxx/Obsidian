@@ -129,18 +129,23 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 		{
 			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 			{
+				if (OnCreateSavingFinishedHandle.IsValid())
+				{
+					SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnCreateSavingFinishedHandle);
+				}
+				
 				SaveGameSubsystem->CreateSaveGameObject();
 				
 				FObsidianHeroInitializationSaveData InitializationSaveData;
 				InitializationSaveData.PlayerHeroName = Params.ObsidianPlayerName;
-				InitializationSaveData.HeroObjectClass = Params.SoftHeroClass;
+				InitializationSaveData.HeroObjectClass = Params.HeroObjectClass;
 				InitializationSaveData.HeroClass = Params.Class;
 				InitializationSaveData.bHardcore = Params.bIsHardcore;
 				InitializationSaveData.HeroID = Params.TempID;
-				
-				SaveGameSubsystem->RequestSaveInitialHeroSave(true, InitializationSaveData);
+
 				OnCreateSavingFinishedHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
 					&ThisClass::OnCreateSavingFinished);
+				SaveGameSubsystem->RequestSaveInitialHeroSave(true, InitializationSaveData);
 			}
 		} 
 	}
@@ -280,7 +285,7 @@ void UObsidianCharacterCreationScreen::ResetHeroDetails() const
 	PlayerName_EditableTextBox->SetText(FText());
 }
 
-void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianSaveGame* SaveGame)
+void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianSaveGame* SaveGame, bool bSuccess)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -289,8 +294,11 @@ void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianSaveGame*
 			SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnCreateSavingFinishedHandle);
 		}
 	}
-	
-	HandleBackwardsAction();
+
+	if (bSuccess)
+	{
+		HandleBackwardsAction();
+	}
 }
 
 

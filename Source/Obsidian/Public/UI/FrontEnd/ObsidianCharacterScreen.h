@@ -45,8 +45,7 @@ protected:
 
 	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked);
 
-	void OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame);
-	void OnPlayLoadingFinished(UObsidianSaveGame* SaveGame);
+	void OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame, bool bSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

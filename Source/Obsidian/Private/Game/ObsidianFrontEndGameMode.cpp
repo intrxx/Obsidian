@@ -14,14 +14,14 @@ void FObsidianHeroClassParams::Reset()
 	ObsidianPlayerName = FText();
 	bIsHardcore = false;
 	bIsOnline = false;
-	SoftHeroClass = nullptr;
+	HeroObjectClass = nullptr;
 	Class = EObsidianHeroClass::None;
 	TempID = 0;
 }
 
 bool FObsidianHeroClassParams::IsValid() const
 {
-	return SoftHeroClass.IsNull() == false;
+	return HeroObjectClass.IsNull() == false;
 }
 
 AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
@@ -79,7 +79,7 @@ FObsidianHeroClassParams AObsidianFrontEndGameMode::CreateHeroClass(const EObsid
 	check(ClassToSoftClassMap.Contains(InClass));
 	
 	FObsidianHeroClassParams HeroClassParams = FObsidianHeroClassParams();
-	HeroClassParams.SoftHeroClass = ClassToSoftClassMap[InClass];
+	HeroClassParams.HeroObjectClass = ClassToSoftClassMap[InClass];
 	HeroClassParams.Class = InClass;
 	HeroClassParams.ObsidianPlayerName = InName;
 	HeroClassParams.bIsOnline = InIsOnline;

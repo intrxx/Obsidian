@@ -41,7 +41,7 @@ public:
 	bool bIsOnline = false;
 
 	UPROPERTY()
-	TSoftClassPtr<AObsidianHero> SoftHeroClass = nullptr;
+	TSoftClassPtr<AObsidianHero> HeroObjectClass = nullptr;
 
 	// For convenience
 	UPROPERTY()

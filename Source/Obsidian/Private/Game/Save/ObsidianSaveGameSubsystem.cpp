@@ -48,11 +48,9 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const bool bAsync)
 	if (bAsync)
 	{
 		SaveGameForPlayerAsync();
+		return;
 	}
-	else
-	{
-		SaveGameForPlayer();
-	}
+	SaveGameForPlayer();
 }
 
 void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const bool bAsync, const FObsidianHeroInitializationSaveData& HeroInitializationSaveData)
@@ -65,11 +63,9 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const bool bAsync, c
 	if (bAsync)
 	{
 		SaveGameForPlayerAsync();
+		return;
 	}
-	else
-	{
-		SaveGameForPlayer();
-	}
+	SaveGameForPlayer();
 }
 
 void UObsidianSaveGameSubsystem::RequestLoadGame(const bool bAsync)
@@ -84,7 +80,9 @@ void UObsidianSaveGameSubsystem::RequestLoadGame(const bool bAsync)
 		{
 			LoadGameForPlayer();
 		}
+		return;
 	}
+	OnLoadingFinishedDelegate.Broadcast(nullptr, false);
 }
 
 void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* LoadActor)
@@ -97,8 +95,12 @@ void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* LoadActor)
 
 void UObsidianSaveGameSubsystem::SaveGameForPlayer()
 {
-	UGameplayStatics::SaveGameToSlot(ObsidianSaveGame, SaveSlotName, 0);
-	OnSavingFinishedDelegate.Broadcast(ObsidianSaveGame);
+	if (UGameplayStatics::SaveGameToSlot(ObsidianSaveGame, SaveSlotName, 0))
+	{
+		OnSavingFinishedDelegate.Broadcast(ObsidianSaveGame, true);
+		return;
+	}
+	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
 void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync()
@@ -108,26 +110,40 @@ void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync()
 			{
 				if (bSuccess)
 				{
-					OnSavingFinishedDelegate.Broadcast(ObsidianSaveGame);
+					OnSavingFinishedDelegate.Broadcast(ObsidianSaveGame, true);
+					return;
 				}
+				OnSavingFinishedDelegate.Broadcast(nullptr, false);
 			}));
 }
 
 void UObsidianSaveGameSubsystem::LoadGameForPlayer()
 {
 	ObsidianSaveGame = Cast<UObsidianSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, 0));
-	OnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame);
+	if (ObsidianSaveGame)
+	{
+		OnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame, true);
+		return;
+	}
+	OnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame, false);
 }
 
 void UObsidianSaveGameSubsystem::LoadGameForPlayerAsync()
 {
+	UE_LOG(LogTemp, Warning, TEXT("LoadGameForPlayerAsync CALLED"));
+	
 	UGameplayStatics::AsyncLoadGameFromSlot(SaveSlotName, 0,
 		FAsyncLoadGameFromSlotDelegate::CreateLambda([this](const FString& SlotName, const int32 UserIndex, USaveGame* SaveGame)
 			{
 				if (SaveGame)
 				{
 					ObsidianSaveGame = Cast<UObsidianSaveGame>(SaveGame);
-					OnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame);
+					if (ObsidianSaveGame)
+					{
+						OnLoadingFinishedDelegate.Broadcast(ObsidianSaveGame, true);
+						return;
+					}
+					OnLoadingFinishedDelegate.Broadcast(nullptr, false);
 				}
 			}));
 }

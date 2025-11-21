@@ -30,7 +30,7 @@ protected:
 	void OnOptionsClicked();
 	void OnSaveAndExitClicked();
 
-	void OnSaveFinished(UObsidianSaveGame* SaveGame);
+	void OnSaveFinished(UObsidianSaveGame* SaveGame, bool bSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

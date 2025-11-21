@@ -90,7 +90,7 @@ protected:
 
 	void ResetHeroDetails() const;
 
-	void OnCreateSavingFinished(UObsidianSaveGame* SaveGame);
+	void OnCreateSavingFinished(UObsidianSaveGame* SaveGame, bool bSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

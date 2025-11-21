@@ -88,16 +88,8 @@ void UObsidianCharacterScreen::OnPlayClicked()
 			OnlineLobbyWidgetClass);
 		return;
 	}
-	
-	if (const UGameInstance* GameInstance = GetGameInstance())
-	{
-		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
-		{
-			SaveGameSubsystem->RequestLoadGame(true);
-			OnPlayLoadingFinishedDelegateHandle = SaveGameSubsystem->OnLoadingFinishedDelegate.AddUObject(this,
-				&ThisClass::OnPlayLoadingFinished);
-		}
-	}
+
+	UGameplayStatics::OpenLevel(GetWorld(), FName("L_Tutorial_01"));
 }
 
 void UObsidianCharacterScreen::OnDeleteClicked()
@@ -113,7 +105,6 @@ void UObsidianCharacterScreen::OnDeleteClicked()
 			if(UObsidianCharacterEntry* NewEntry = CharacterEntries[0])
 			{
 				NewEntry->SetIsChosen();
-				FrontEndGameMode->ChosenHeroClass = NewEntry->TempObsidianHeroClass;
 				CachedChosenCharacterEntry = NewEntry;
 			}
 		}
@@ -144,16 +135,22 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 	
 	if(bIsOnline == false)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Populating Offline Characters"));
+		
 		if (const UGameInstance* GameInstance = GetGameInstance())
 		{
 			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 			{
-				SaveGameSubsystem->RequestLoadGame(true);
+				if (OnPopulateLoadingFinishedDelegateHandle.IsValid())
+				{
+					SaveGameSubsystem->OnLoadingFinishedDelegate.Remove(OnPopulateLoadingFinishedDelegateHandle);
+				}
+
 				OnPopulateLoadingFinishedDelegateHandle = SaveGameSubsystem->OnLoadingFinishedDelegate.AddUObject(this,
-					&ThisClass::OnPopulateCharacterLoadingFinished);
+						&ThisClass::OnPopulateCharacterLoadingFinished);
+				SaveGameSubsystem->RequestLoadGame(true);
 			}	
 		}
-
 		return;
 	}
 }
@@ -172,7 +169,6 @@ void UObsidianCharacterScreen::InitCharacterScreen()
 	{
 		CachedChosenCharacterEntry = CharacterEntries[0];
 		CachedChosenCharacterEntry->SetIsChosen();
-		FrontEndGameMode->ChosenHeroClass = CachedChosenCharacterEntry->TempObsidianHeroClass;
 
 		if(Play_Button->GetIsEnabled() == false)
 		{
@@ -209,24 +205,21 @@ void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacter
 
 	EntryClicked->SetIsChosen();
 	CachedChosenCharacterEntry = EntryClicked;
-	
-	if(FrontEndGameMode)
-	{
-		FrontEndGameMode->ChosenHeroClass = EntryClicked->TempObsidianHeroClass;
-	}
 }
 
-void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame)
+void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame, bool bSuccess)
 {
+	UE_LOG(LogTemp, Warning, TEXT("OnPopulateCharacterLoadingFinished"));
+	
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
 		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 		{
-			SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnPopulateLoadingFinishedDelegateHandle);
+			SaveGameSubsystem->OnLoadingFinishedDelegate.Remove(OnPopulateLoadingFinishedDelegateHandle);
 		}
 	}
 	
-	if (SaveGame)
+	if (bSuccess && SaveGame)
 	{
 		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 		if(PlayerController == nullptr)
@@ -241,7 +234,6 @@ void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianSaveG
 		Entry->InitializeCharacterEntry(HeroSaveData.InitializationSaveData.PlayerHeroName, HeroSaveData.GameplaySaveData.HeroLevel,
 			UObsidianGameplayStatics::GetHeroClassText(HeroSaveData.InitializationSaveData.HeroClass),
 			false, HeroSaveData.InitializationSaveData.bHardcore);
-		Entry->TempObsidianHeroClass = HeroSaveData.InitializationSaveData.HeroObjectClass;
 		Entry->TempSaveID = HeroSaveData.InitializationSaveData.HeroID;
 							
 		CharacterList_ScrollBox->AddChild(Entry);
@@ -249,20 +241,4 @@ void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianSaveG
 	}
 					
 	InitCharacterScreen();
-}
-
-void UObsidianCharacterScreen::OnPlayLoadingFinished(UObsidianSaveGame* SaveGame)
-{
-	if (const UGameInstance* GameInstance = GetGameInstance())
-	{
-		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
-		{
-			SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnPlayLoadingFinishedDelegateHandle);
-		}
-	}
-
-	if (const UWorld* World = GetWorld())
-	{
-		UGameplayStatics::OpenLevel(World, FName("L_Tutorial_01"));
-	}
 }

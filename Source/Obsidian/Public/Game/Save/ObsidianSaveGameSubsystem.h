@@ -11,7 +11,7 @@ struct FObsidianHeroInitializationSaveData;
 class AObsidianPlayerController;
 class UObsidianSaveGame;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnSaveActionFinishedSignature, UObsidianSaveGame* SaveObject)
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveActionFinishedSignature, UObsidianSaveGame* SaveObject, bool bSuccess)
 
 /**
  * 
