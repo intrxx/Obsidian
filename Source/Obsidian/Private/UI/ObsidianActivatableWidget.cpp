@@ -36,14 +36,22 @@ TOptional<FUIInputConfig> UObsidianActivatableWidget::GetDesiredInputConfig() co
 	switch(InputConfig)
 	{
 	case EObsidianWidgetInputMode::GameAndMenu:
-		return FUIInputConfig(ECommonInputMode::All, GameMouseCaptureMode);
+		{
+			return FUIInputConfig(ECommonInputMode::All, GameMouseCaptureMode);
+		}
 	case EObsidianWidgetInputMode::Game:
-		return FUIInputConfig(ECommonInputMode::Game, GameMouseCaptureMode);
+		{
+			return FUIInputConfig(ECommonInputMode::Game, GameMouseCaptureMode);
+		}
 	case EObsidianWidgetInputMode::Menu:
-		return FUIInputConfig(ECommonInputMode::Menu, GameMouseCaptureMode);
+		{
+			return FUIInputConfig(ECommonInputMode::Menu, GameMouseCaptureMode);
+		}
 	case EObsidianWidgetInputMode::Default:
 	default:
-		return TOptional<FUIInputConfig>(); 
+		{
+			return TOptional<FUIInputConfig>(); 
+		}
 	}
 }
 

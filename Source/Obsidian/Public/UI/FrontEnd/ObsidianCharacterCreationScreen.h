@@ -18,6 +18,7 @@ class UCheckBox;
 class UObsidianButtonBase;
 class USizeBox;
 class UCommonTextBlock;
+class UObCharacterSelectionWidgetController;
 
 /**
  * 
@@ -58,6 +59,8 @@ protected:
 	virtual void NativeOnActivated() override;
 	virtual void NativeOnInitialized() override;
 
+	virtual void HandleWidgetControllerSet() override;
+	
 	void HandleBackwardsAction();
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian")
@@ -152,5 +155,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> HeroInfo_HeroDescription_SizeBox;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UObCharacterSelectionWidgetController> CharacterSelectionWidgetController;
 };
 

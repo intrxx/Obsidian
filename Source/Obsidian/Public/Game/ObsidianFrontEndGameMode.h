@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include "GameFramework/GameModeBase.h"
+#include <GameFramework/GameModeBase.h>
 #include "ObsidianFrontEndGameMode.generated.h"
 
 class AObsidianHero;
@@ -61,32 +59,10 @@ class OBSIDIAN_API AObsidianFrontEndGameMode : public AGameModeBase
 
 public:
 	AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void HighlightCharacterWithTag(const EObsidianHeroClass WithClass);
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass WithClass);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass ForClass);
-
-	TArray<FObsidianHeroClassParams> GetCreatedHeroes() const
-	{
-		return CreatedHeroes;
-	}
-	
-	FObsidianHeroClassParams CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline, const bool InIsHardcore);
+	FObsidianHeroClassParams CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline,
+		const bool InIsHardcore);
 	bool DeleteHeroClass(const int32 WithID);
-
-	void GatherSavedHeroes();
-
-public:
-	UPROPERTY()
-	TSoftClassPtr<AObsidianHero> ChosenHeroClass;
-	
-protected:
-	virtual void BeginPlay() override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|FrontEnd") 
@@ -97,11 +73,4 @@ protected:
 
 	UPROPERTY()
 	TArray<FObsidianHeroClassParams> CreatedHeroes;
-
-private:
-	void GatherCreationHeroes();
-
-private:
-	UPROPERTY()
-	TArray<TObjectPtr<AObsidianCharacterCreationHero>> CreationHeroes;
 };

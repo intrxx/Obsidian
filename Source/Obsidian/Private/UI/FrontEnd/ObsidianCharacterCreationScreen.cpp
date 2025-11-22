@@ -17,6 +17,13 @@
 #include "Game/Save/ObsidianSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "UI/Components/ObsidianButtonBase.h"
+#include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
+
+void UObsidianCharacterCreationScreen::HandleWidgetControllerSet()
+{
+	CharacterSelectionWidgetController = Cast<UObCharacterSelectionWidgetController>(WidgetController);
+	check(CharacterSelectionWidgetController);
+}
 
 void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const bool bIsOnline)
 {
@@ -115,7 +122,7 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 		return;
 	}
 
-	FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
+	CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ChosenClass);
 	HideHeroDescription();
 
 	const ECheckBoxState CheckBoxState = Hardcore_CheckBox->GetCheckedState();
@@ -221,11 +228,6 @@ void UObsidianCharacterCreationScreen::OnAssassinButtonUnhovered()
 
 void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianHeroClass ForClass)
 {
-	if(FrontEndGameMode == nullptr)
-	{
-		return;
-	}
-
 	ResetHeroDetails();
 	HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Visible);
 	
@@ -235,45 +237,35 @@ void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianH
 	}
 	else
 	{
-		FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
-		FrontEndGameMode->HighlightCharacterWithTag(ForClass);
+		CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ChosenClass);
+		CharacterSelectionWidgetController->HighlightCharacterWithTag(ForClass);
 		ShowHeroDescription(ForClass);
 	}
 }
 
 void UObsidianCharacterCreationScreen::HandleHoverHeroButton(const EObsidianHeroClass ForClass)
 {
-	if(FrontEndGameMode == nullptr)
-	{
-		return;
-	}
-
 	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
 	{
 		if(ChosenClass != EObsidianHeroClass::None)
 		{
 			ResetHeroDetails();
 			HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
-			FrontEndGameMode->ResetHighlightForCharacterWithTag(ChosenClass);
+			CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ChosenClass);
 			ChosenClass = EObsidianHeroClass::None;
 		}
-		FrontEndGameMode->HighlightCharacterWithTag(ForClass);
+		CharacterSelectionWidgetController->HighlightCharacterWithTag(ForClass);
 		ShowHeroDescription(ForClass);
 	}
 }
 
 void UObsidianCharacterCreationScreen::HandleUnhoverHeroButton(const EObsidianHeroClass ForClass)
 {
-	if(FrontEndGameMode == nullptr)
-	{
-		return;
-	}
-
 	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
 	{
 		if(ChosenClass != ForClass)
 		{
-			FrontEndGameMode->ResetHighlightForCharacterWithTag(ForClass);
+			CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ForClass);
 			HideHeroDescription();
 		}
 	}

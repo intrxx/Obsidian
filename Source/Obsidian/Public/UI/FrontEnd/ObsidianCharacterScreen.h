@@ -14,6 +14,7 @@ class AObsidianFrontEndGameMode;
 class UCommonHierarchicalScrollBox;
 class UCommonTextBlock;
 class UObsidianButtonBase;
+class UObCharacterSelectionWidgetController;
 
 /**
  * 
@@ -37,8 +38,11 @@ protected:
 	virtual void NativeOnActivated() override;
 	virtual void NativeOnDeactivated() override;
 
+	void HandleWidgetControllerSet() override;
+
 	void OnPlayClicked();
 	void OnDeleteClicked();
+	void OnCreateClicked();
 
 	void PopulateCharacterScreen();
 	void InitCharacterScreen();
@@ -49,7 +53,13 @@ protected:
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TSubclassOf<UCommonActivatableWidget> OnlineLobbyWidgetClass;
+	TSoftClassPtr<UCommonActivatableWidget> SoftOnlineLobbyWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TSoftClassPtr<UCommonActivatableWidget> SoftCharacterCreationScreenClass;
+
+	UPROPERTY()
+	TSubclassOf<UCommonActivatableWidget> LoadedCharacterCreationScreenClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UObsidianCharacterEntry> CharacterEntryWidgetClass;
@@ -84,4 +94,8 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> TabName_TextBlock;
+
+private:
+	UPROPERTY()
+	TObjectPtr<UObCharacterSelectionWidgetController> CharacterSelectionWidgetController;
 };

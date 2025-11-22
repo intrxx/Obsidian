@@ -8,6 +8,8 @@
 #include <Kismet/GameplayStatics.h>
 
 #include "UI/FrontEnd/ObsidianCharacterEntry.h"
+#include "UI/FrontEnd/ObsidianCharacterCreationScreen.h"
+#include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Game/Save/ObsidianSaveGame.h"
@@ -15,15 +17,19 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
 
+void UObsidianCharacterScreen::HandleWidgetControllerSet()
+{
+	CharacterSelectionWidgetController = Cast<UObCharacterSelectionWidgetController>(WidgetController);
+	check(CharacterSelectionWidgetController);
+}
+
 void UObsidianCharacterScreen::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if(Play_Button && Delete_Button)
-	{
-		Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
-		Delete_Button->OnClicked().AddUObject(this, &ThisClass::OnDeleteClicked);
-	}
+	Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
+	Delete_Button->OnClicked().AddUObject(this, &ThisClass::OnDeleteClicked);
+	Create_Button->OnClicked().AddUObject(this, &ThisClass::OnCreateClicked);
 	
 	FrontEndGameMode = Cast<AObsidianFrontEndGameMode>(UGameplayStatics::GetGameMode(this));
 	ensureMsgf(FrontEndGameMode, TEXT("FrontEndGameMode is invalid in UObsidianCharacterCreationScreen::NativeOnActivated()"));
@@ -31,10 +37,11 @@ void UObsidianCharacterScreen::NativeConstruct()
 
 void UObsidianCharacterScreen::NativeDestruct()
 {
-	if(Play_Button && Delete_Button)
+	if (Play_Button && Delete_Button && Create_Button)
 	{
 		Play_Button->OnClicked().Clear();
 		Delete_Button->OnClicked().Clear();
+		Create_Button->OnClicked().Clear();
 	}
 	
 	Super::NativeDestruct();
@@ -53,7 +60,6 @@ void UObsidianCharacterScreen::NativeOnDeactivated()
 	{
 		CachedChosenCharacterEntry->ResetChosenState();
 		CachedChosenCharacterEntry = nullptr;
-		FrontEndGameMode->ChosenHeroClass = nullptr;
 	}
 	
 	Super::NativeOnDeactivated();
@@ -84,8 +90,8 @@ void UObsidianCharacterScreen::OnPlayClicked()
 {
 	if (bIsOnline)
 	{
-		UCommonUIExtensions::PushContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI_Layer_MainMenu,
-			OnlineLobbyWidgetClass);
+		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI_Layer_MainMenu,
+			SoftOnlineLobbyWidgetClass);
 		return;
 	}
 
@@ -110,9 +116,29 @@ void UObsidianCharacterScreen::OnDeleteClicked()
 		}
 		else
 		{
-			FrontEndGameMode->ChosenHeroClass = nullptr;
 			Play_Button->SetIsEnabled(false);
 		}
+	}
+}
+
+void UObsidianCharacterScreen::OnCreateClicked()
+{
+	if (LoadedCharacterCreationScreenClass == nullptr)
+	{
+		LoadedCharacterCreationScreenClass = SoftCharacterCreationScreenClass.LoadSynchronous();
+		UE_LOG(LogTemp, Warning, TEXT("Needed to load CharacterSelectionWidgetClass Synchronously!"));
+	}
+	
+	UObsidianCharacterCreationScreen* CharacterCreationScreen = Cast<UObsidianCharacterCreationScreen>(
+		UCommonUIExtensions::PushContentToLayer_ForPlayer(GetOwningLocalPlayer(),
+			ObsidianGameplayTags::UI_Layer_MainMenu,
+			LoadedCharacterCreationScreenClass));
+
+	if (CharacterCreationScreen)
+	{
+		CharacterCreationScreen->InitializeCharacterCreationScreen(bIsOnline);
+		CharacterCreationScreen->SetWidgetController(CharacterSelectionWidgetController);
+		CharacterSelectionWidgetController->SetupCameraForCreationPanel();
 	}
 }
 

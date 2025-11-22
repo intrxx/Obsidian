@@ -34,6 +34,10 @@ namespace ObsidianActorTags
 
 	static inline FName RegularEnemy = FName("RegularEnemy");
 	static inline FName BossEnemy = FName("BossEnemy");
+
+	static inline FName ViewTarget = FName("ViewTarget");
+	static inline FName CharacterCreationViewTarget = FName("CharacterCreationViewTarget");
+	static inline FName DefaultMainMenuViewTarget = FName("DefaultMainMenuViewTarget");
 }
 
 /**

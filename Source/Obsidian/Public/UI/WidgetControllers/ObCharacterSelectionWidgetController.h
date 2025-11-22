@@ -7,6 +7,8 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObCharacterSelectionWidgetController.generated.h"
 
+class AObsidianCharacterCreationHero;
+
 /**
  * 
  */
@@ -17,6 +19,33 @@ class OBSIDIAN_API UObCharacterSelectionWidgetController : public UObsidianHeroW
 
 public:
 	// ~ Start of WidgetControllerBase
-	void OnWidgetControllerSetupCompleted() override;
+	virtual void OnWidgetControllerSetupCompleted() override;
 	// ~ End of WidgetControllerBase
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
+	void HighlightCharacterWithTag(const EObsidianHeroClass WithClass);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
+	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass WithClass);
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
+	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass ForClass);
+
+	void SetupCameraForCreationPanel();
+	void ResetCameraToDefaultViewTarget();
+
+private:
+	void GatherCreationHeroes();
+	void GatherViewTargets();
+	
+private:
+	UPROPERTY()
+	TArray<TObjectPtr<AObsidianCharacterCreationHero>> CreationHeroes;
+
+	UPROPERTY()
+	TObjectPtr<AActor> MainMenuDefaultViewTarget = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<AActor> CharacterCreationViewTarget = nullptr;
 };
+

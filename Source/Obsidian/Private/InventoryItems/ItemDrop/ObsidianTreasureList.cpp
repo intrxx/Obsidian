@@ -60,8 +60,11 @@ uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQu
 	uint32 TotalAdjustedWeight = 0;
 	for (FObsidianStacksToDrop& AdjustedStackSizeConfig : AdjustedStackSizes)
 	{
-		float StackNorm = (MaxStack > MinStack) ? (static_cast<float>(AdjustedStackSizeConfig.StackSize) - MinStack) / (MaxStack - MinStack) : 1.0f;
-		AdjustedStackSizeConfig.StackTierWeight = AdjustedStackSizeConfig.StackTierWeight * FMath::Lerp(1.0f - RollBias, 1.0f + RollBias, StackNorm);
+		float StackNorm = (MaxStack > MinStack)
+			? (static_cast<float>(AdjustedStackSizeConfig.StackSize) - MinStack) / (MaxStack - MinStack)
+			: 1.0f;
+		const float WeightModifier = FMath::Lerp(1.0f - RollBias, 1.0f + RollBias, StackNorm);
+		AdjustedStackSizeConfig.StackTierWeight = AdjustedStackSizeConfig.StackTierWeight * WeightModifier;
 		TotalAdjustedWeight += AdjustedStackSizeConfig.StackTierWeight;
 	}
 	
@@ -118,7 +121,7 @@ EDataValidationResult UObsidianTreasureList::IsDataValid(FDataValidationContext&
 	uint16 TreasureClassesIndex = 0;
 	for (const FObsidianTreasureClass& Class : TreasureClasses)
 	{
-		Result =  CombineDataValidationResults(Result, Class.ValidateData(Context, TreasureClassesIndex));
+		Result = CombineDataValidationResults(Result, Class.ValidateData(Context, TreasureClassesIndex));
 		TreasureClassesIndex++;
 	}
 	
