@@ -13,7 +13,7 @@
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
 #include "ObsidianProgressGlobeBase.generated.h"
 
-class UMainOverlayWidgetController;
+class UObMainOverlayWidgetController;
 class UHorizontalBox;
 class UProgressBar;
 class UCommonTextBlock;
@@ -84,7 +84,7 @@ protected:
 	
 protected:
 	UPROPERTY()
-	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	TObjectPtr<UObMainOverlayWidgetController> MainOverlayWidgetController;
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	float CurrentPercentage;

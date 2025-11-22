@@ -11,7 +11,7 @@
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
 #include "ObsidianOverlayExperienceBar.generated.h"
 
-class UMainOverlayWidgetController;
+class UObMainOverlayWidgetController;
 class UObsidianOverlayExperienceInfo;
 class USizeBox;
 class UProgressBar;
@@ -52,7 +52,7 @@ protected:
 	
 private:
 	UPROPERTY()
-	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	TObjectPtr<UObMainOverlayWidgetController> MainOverlayWidgetController;
 	
 	float Experience = 0.f;
 	float MaxExperience = 0.f;

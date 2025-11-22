@@ -8,7 +8,7 @@
 #include "Components/ScrollBox.h"
 
 // ~ Project
-#include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
+#include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow_WithToolTip.h"
 
 void UObsidianCharacterStatus::NativeConstruct()
@@ -25,7 +25,7 @@ void UObsidianCharacterStatus::NativeConstruct()
 
 void UObsidianCharacterStatus::HandleWidgetControllerSet()
 {
-	CharacterStatusWidgetController = Cast<UOCharacterStatusWidgetController>(WidgetController);
+	CharacterStatusWidgetController = Cast<UObCharacterStatusWidgetController>(WidgetController);
 	if(CharacterStatusWidgetController == nullptr)
 	{
 		return;

@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
-#include "CommonLocalPlayer.h"
+#include <CommonLocalPlayer.h>
 #include "ObsidianLocalPlayer.generated.h"
 
 /**

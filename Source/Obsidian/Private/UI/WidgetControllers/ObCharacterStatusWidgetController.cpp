@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
+#include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 
 // ~ Core
 
@@ -13,7 +13,7 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "Obsidian/ObsidianGameModule.h"
 
-void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
+void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(ObsidianAbilitySystemComponent);
 	check(AttributesComponent);
@@ -32,11 +32,11 @@ void UOCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 	HeroNameText = ObsidianPlayerState->GetObsidianPlayerName();
 }
 
-void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
+void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
 {
 	if(ObsidianASC == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("UObsidianAbilitySystemComponent is invalid in UOCharacterStatusWidgetController::HandleBindingCallbacks."));
+		UE_LOG(LogObsidian, Error, TEXT("UObsidianAbilitySystemComponent is invalid in UObCharacterStatusWidgetController::HandleBindingCallbacks."));
 		return;
 	}
 	
@@ -93,7 +93,7 @@ void UOCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilityS
 	MaxSpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxSpellBlockChanceChanged);
 }
 
-void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
+void UObCharacterStatusWidgetController::SetInitialAttributeValues() const
 {
 	/** Character */
 	HeroLevelUpDelegate.Broadcast(ObsidianPlayerState->GetHeroLevel());
@@ -143,7 +143,7 @@ void UOCharacterStatusWidgetController::SetInitialAttributeValues() const
 	SpellBlockChanceChangedDelegate.Execute(AttributesComponent->GetSpellBlockChance(), AttributesComponent->GetMaxSpellBlockChance());
 }
 
-void UOCharacterStatusWidgetController::HeroLevelUp(const uint8 NewLevel)
+void UObCharacterStatusWidgetController::HeroLevelUp(const uint8 NewLevel)
 {
 	if(HeroLevelUpDelegate.IsBound())
 	{
@@ -151,7 +151,7 @@ void UOCharacterStatusWidgetController::HeroLevelUp(const uint8 NewLevel)
 	}
 }
 
-void UOCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const
 {
 	if(StrengthValueChangedDelegate.IsBound())
 	{
@@ -159,7 +159,7 @@ void UOCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChange
 	}
 }
 
-void UOCharacterStatusWidgetController::IntelligenceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::IntelligenceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(IntelligenceValueChangedDelegate.IsBound())
 	{
@@ -167,7 +167,7 @@ void UOCharacterStatusWidgetController::IntelligenceChanged(const FOnAttributeCh
 	}
 }
 
-void UOCharacterStatusWidgetController::DexterityChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::DexterityChanged(const FOnAttributeChangeData& Data) const
 {
 	if(DexterityValueChangedDelegate.IsBound())
 	{
@@ -175,7 +175,7 @@ void UOCharacterStatusWidgetController::DexterityChanged(const FOnAttributeChang
 	}
 }
 
-void UOCharacterStatusWidgetController::FaithChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FaithChanged(const FOnAttributeChangeData& Data) const
 {
 	if(FaithValueChangedDelegate.IsBound())
 	{
@@ -183,7 +183,7 @@ void UOCharacterStatusWidgetController::FaithChanged(const FOnAttributeChangeDat
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxHealthChangedDelegate.IsBound())
 	{
@@ -191,7 +191,7 @@ void UOCharacterStatusWidgetController::MaxHealthChanged(const FOnAttributeChang
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxManaChangedDelegate.IsBound())
 	{
@@ -199,7 +199,7 @@ void UOCharacterStatusWidgetController::MaxManaChanged(const FOnAttributeChangeD
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxSpecialResourceChangedDelegate.IsBound())
 	{
@@ -207,7 +207,7 @@ void UOCharacterStatusWidgetController::MaxSpecialResourceChanged(const FOnAttri
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxEnergyShieldChangedDelegate.IsBound())
 	{
@@ -215,7 +215,7 @@ void UOCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttribut
 	}
 }
 
-void UOCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ExperienceChangedDelegate.IsBound())
 	{
@@ -223,7 +223,7 @@ void UOCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChan
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
+void UObCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
 {
 	MaxExperienceOldValue = Data.OldValue;
 	
@@ -233,7 +233,7 @@ void UOCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeC
 	}
 }
 
-void UOCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& Data) const
 {
 	if(AccuracyChangedDelegate.IsBound())
 	{
@@ -241,7 +241,7 @@ void UOCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChange
 	}
 }
 
-void UOCharacterStatusWidgetController::AttackSpeedChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::AttackSpeedChanged(const FOnAttributeChangeData& Data) const
 {
 	if(AttackSpeedChangedDelegate.IsBound())
 	{
@@ -249,7 +249,7 @@ void UOCharacterStatusWidgetController::AttackSpeedChanged(const FOnAttributeCha
 	}
 }
 
-void UOCharacterStatusWidgetController::CastSpeedChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::CastSpeedChanged(const FOnAttributeChangeData& Data) const
 {
 	if(CastSpeedChangedDelegate.IsBound())
 	{
@@ -257,7 +257,7 @@ void UOCharacterStatusWidgetController::CastSpeedChanged(const FOnAttributeChang
 	}
 }
 
-void UOCharacterStatusWidgetController::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(CriticalStrikeChanceChangedDelegate.IsBound())
 	{
@@ -265,7 +265,7 @@ void UOCharacterStatusWidgetController::CriticalStrikeChanceChanged(const FOnAtt
 	}
 }
 
-void UOCharacterStatusWidgetController::CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
 	if(CriticalStrikeDamageMultiplierChangedDelegate.IsBound())
 	{
@@ -273,7 +273,7 @@ void UOCharacterStatusWidgetController::CriticalStrikeDamageMultiplierChanged(co
 	}
 }
 
-void UOCharacterStatusWidgetController::PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
 	if(PhysicalDamageMultiplierChangedDelegate.IsBound())
 	{
@@ -281,7 +281,7 @@ void UOCharacterStatusWidgetController::PhysicalDamageMultiplierChanged(const FO
 	}
 }
 
-void UOCharacterStatusWidgetController::FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
 	if(FireDamageMultiplierChangedDelegate.IsBound())
 	{
@@ -289,7 +289,7 @@ void UOCharacterStatusWidgetController::FireDamageMultiplierChanged(const FOnAtt
 	}
 }
 
-void UOCharacterStatusWidgetController::LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
 	if(LightningDamageMultiplierChangedDelegate.IsBound())
 	{
@@ -297,7 +297,7 @@ void UOCharacterStatusWidgetController::LightningDamageMultiplierChanged(const F
 	}
 }
 
-void UOCharacterStatusWidgetController::ColdDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ColdDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ColdDamageMultiplierChangedDelegate.IsBound())
 	{
@@ -305,7 +305,7 @@ void UOCharacterStatusWidgetController::ColdDamageMultiplierChanged(const FOnAtt
 	}
 }
 
-void UOCharacterStatusWidgetController::ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ChaosDamageMultiplierChangedDelegate.IsBound())
 	{
@@ -313,7 +313,7 @@ void UOCharacterStatusWidgetController::ChaosDamageMultiplierChanged(const FOnAt
 	}
 }
 
-void UOCharacterStatusWidgetController::FirePenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FirePenetrationChanged(const FOnAttributeChangeData& Data) const
 {
 	if(FirePenetrationChangedDelegate.IsBound())
 	{
@@ -321,7 +321,7 @@ void UOCharacterStatusWidgetController::FirePenetrationChanged(const FOnAttribut
 	}
 }
 
-void UOCharacterStatusWidgetController::LightningPenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::LightningPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
 	if(LightningPenetrationChangedDelegate.IsBound())
 	{
@@ -329,7 +329,7 @@ void UOCharacterStatusWidgetController::LightningPenetrationChanged(const FOnAtt
 	}
 }
 
-void UOCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ColdPenetrationChangedDelegate.IsBound())
 	{
@@ -337,7 +337,7 @@ void UOCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttribut
 	}
 }
 
-void UOCharacterStatusWidgetController::ChaosPenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ChaosPenetrationChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ChaosPenetrationChangedDelegate.IsBound())
 	{
@@ -345,7 +345,7 @@ void UOCharacterStatusWidgetController::ChaosPenetrationChanged(const FOnAttribu
 	}
 }
 
-void UOCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ArmorChangedDelegate.IsBound())
 	{
@@ -353,7 +353,7 @@ void UOCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeDat
 	}
 }
 
-void UOCharacterStatusWidgetController::EvasionChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::EvasionChanged(const FOnAttributeChangeData& Data) const
 {
 	if(EvasionChangedDelegate.IsBound())
 	{
@@ -361,7 +361,7 @@ void UOCharacterStatusWidgetController::EvasionChanged(const FOnAttributeChangeD
 	}
 }
 
-void UOCharacterStatusWidgetController::HealthRegenerationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::HealthRegenerationChanged(const FOnAttributeChangeData& Data) const
 {
 	if(HealthRegenerationChangedDelegate.IsBound())
 	{
@@ -369,7 +369,7 @@ void UOCharacterStatusWidgetController::HealthRegenerationChanged(const FOnAttri
 	}
 }
 
-void UOCharacterStatusWidgetController::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) const
 {
 	if(EnergyShieldRegenerationChangedDelegate.IsBound())
 	{
@@ -377,7 +377,7 @@ void UOCharacterStatusWidgetController::EnergyShieldRegenerationChanged(const FO
 	}
 }
 
-void UOCharacterStatusWidgetController::FireResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FireResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(FireResistanceChangedDelegate.IsBound())
 	{
@@ -385,7 +385,7 @@ void UOCharacterStatusWidgetController::FireResistanceChanged(const FOnAttribute
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxFireResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxFireResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxFireResistanceChangedDelegate.IsBound())
 	{
@@ -393,7 +393,7 @@ void UOCharacterStatusWidgetController::MaxFireResistanceChanged(const FOnAttrib
 	}
 }
 
-void UOCharacterStatusWidgetController::ColdResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ColdResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ColdResistanceChangedDelegate.IsBound())
 	{
@@ -401,7 +401,7 @@ void UOCharacterStatusWidgetController::ColdResistanceChanged(const FOnAttribute
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxColdResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxColdResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxColdResistanceChangedDelegate.IsBound())
 	{
@@ -409,7 +409,7 @@ void UOCharacterStatusWidgetController::MaxColdResistanceChanged(const FOnAttrib
 	}
 }
 
-void UOCharacterStatusWidgetController::LightningResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::LightningResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(LightningResistanceChangedDelegate.IsBound())
 	{
@@ -417,7 +417,7 @@ void UOCharacterStatusWidgetController::LightningResistanceChanged(const FOnAttr
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxLightningResistanceChangedDelegate.IsBound())
 	{
@@ -425,7 +425,7 @@ void UOCharacterStatusWidgetController::MaxLightningResistanceChanged(const FOnA
 	}
 }
 
-void UOCharacterStatusWidgetController::ChaosResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ChaosResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(ChaosResistanceChangedDelegate.IsBound())
 	{
@@ -433,7 +433,7 @@ void UOCharacterStatusWidgetController::ChaosResistanceChanged(const FOnAttribut
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxChaosResistanceChangedDelegate.IsBound())
 	{
@@ -441,7 +441,7 @@ void UOCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttri
 	}
 }
 
-void UOCharacterStatusWidgetController::SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(SpellSuppressionChanceChangedDelegate.IsBound())
 	{
@@ -449,7 +449,7 @@ void UOCharacterStatusWidgetController::SpellSuppressionChanceChanged(const FOnA
 	}
 }
 
-void UOCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const
 {
 	if(SpellSuppressionMagnitudeChangedDelegate.IsBound())
 	{
@@ -457,7 +457,7 @@ void UOCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const F
 	}
 }
 
-void UOCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(HitBlockChanceChangedDelegate.IsBound())
 	{
@@ -465,7 +465,7 @@ void UOCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttribute
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxHitBlockChanceChangedDelegate.IsBound())
 	{
@@ -473,7 +473,7 @@ void UOCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttrib
 	}
 }
 
-void UOCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(SpellBlockChanceChangedDelegate.IsBound())
 	{
@@ -481,7 +481,7 @@ void UOCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttribu
 	}
 }
 
-void UOCharacterStatusWidgetController::MaxSpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxSpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(MaxSpellBlockChanceChangedDelegate.IsBound())
 	{

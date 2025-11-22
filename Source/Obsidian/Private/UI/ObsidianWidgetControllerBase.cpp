@@ -9,6 +9,7 @@
 void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	ObsidianPlayerController = WidgetControllerParams.ObsidianPlayerController;
+	ObsidianLocalPlayer = WidgetControllerParams.ObsidianLocalPlayer;
 	ObsidianPlayerState = WidgetControllerParams.ObsidianPlayerState;
 	ObsidianAbilitySystemComponent = WidgetControllerParams.ObsidianAbilitySystemComponent;
 	AttributesComponent = WidgetControllerParams.AttributesComponent;
@@ -25,6 +26,3 @@ void UObsidianHeroWidgetControllerBase::HandleBindingCallbacks(UObsidianAbilityS
 {
 }
 
-void UObsidianHeroWidgetControllerBase::SetInitialAttributeValues() const
-{
-}

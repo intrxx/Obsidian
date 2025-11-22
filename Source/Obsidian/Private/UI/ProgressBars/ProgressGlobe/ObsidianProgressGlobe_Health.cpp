@@ -9,7 +9,7 @@
 
 // ~ Project
 #include "UI/Components/ObsidianRadialProgressBar.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe_Health::HandleWidgetControllerSet()
 {

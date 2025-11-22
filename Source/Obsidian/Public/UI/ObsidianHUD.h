@@ -13,10 +13,10 @@
 
 struct FObsidianHeroWidgetControllerParams;
 
-class UObsidianInventoryItemsWidgetController;
-class UOCharacterStatusWidgetController;
+class UObInventoryItemsWidgetController;
+class UObCharacterStatusWidgetController;
 class UObsidianHeroAttributesComponent;
-class UMainOverlayWidgetController;
+class UObMainOverlayWidgetController;
 class UObsidianMainOverlay;
 class UObsidianWidgetBase;
 class AObsidianPlayerController;
@@ -32,9 +32,9 @@ class OBSIDIAN_API AObsidianHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
-	UMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
-	UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
-	UObsidianInventoryItemsWidgetController* GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	UObMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
 
 	UObsidianMainOverlay* GetMainOverlay()
 	{
@@ -66,20 +66,20 @@ private:
 	 */
 	
 	UPROPERTY()
-	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	TObjectPtr<UObMainOverlayWidgetController> MainOverlayWidgetController;
 
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")
-	TSubclassOf<UMainOverlayWidgetController> MainOverlayWidgetControllerClass;
+	TSubclassOf<UObMainOverlayWidgetController> MainOverlayWidgetControllerClass;
 
 	UPROPERTY()
-	TObjectPtr<UOCharacterStatusWidgetController> CharacterStatusWidgetController;
+	TObjectPtr<UObCharacterStatusWidgetController> CharacterStatusWidgetController;
 
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|CharacterStatus")
-	TSubclassOf<UOCharacterStatusWidgetController> CharacterStatusWidgetControllerClass;
+	TSubclassOf<UObCharacterStatusWidgetController> CharacterStatusWidgetControllerClass;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
+	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
 	
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|Inventory")
-	TSubclassOf<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetControllerClass;
+	TSubclassOf<UObInventoryItemsWidgetController> InventoryItemsWidgetControllerClass;
 };

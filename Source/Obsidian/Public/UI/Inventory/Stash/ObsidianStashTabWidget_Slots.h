@@ -24,7 +24,7 @@ class OBSIDIAN_API UObsidianStashTabWidget_Slots : public UObsidianStashTabWidge
 	GENERATED_BODY()
 
 public:
-	void InitializeStashTab(UObsidianInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag);
+	void InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag);
 
 	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
 	
@@ -38,7 +38,7 @@ protected:
 	
 private:
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsController;
+	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsController;
 	
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianItemSlot_Equipment>> EquipmentSlots;

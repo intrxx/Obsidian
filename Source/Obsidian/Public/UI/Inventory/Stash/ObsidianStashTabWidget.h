@@ -13,7 +13,7 @@
 
 struct FObsidianItemWidgetData;
 class UObsidianItem;
-class UObsidianInventoryItemsWidgetController;
+class UObInventoryItemsWidgetController;
 
 /**
  * 

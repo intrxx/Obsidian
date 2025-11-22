@@ -14,6 +14,23 @@ UObsidianActivatableWidget::UObsidianActivatableWidget(const FObjectInitializer&
 {
 }
 
+void UObsidianActivatableWidget::SetWidgetController(UObject* InWidgetController)
+{
+	WidgetController = InWidgetController;
+	HandleWidgetControllerSet();
+	BP_HandleWidgetControllerSet();
+
+	PostHandleWidgetControllerSet();
+}
+
+void UObsidianActivatableWidget::HandleWidgetControllerSet()
+{
+}
+
+void UObsidianActivatableWidget::PostHandleWidgetControllerSet()
+{
+}
+
 TOptional<FUIInputConfig> UObsidianActivatableWidget::GetDesiredInputConfig() const
 {
 	switch(InputConfig)

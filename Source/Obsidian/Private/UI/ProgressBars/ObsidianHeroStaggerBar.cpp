@@ -5,11 +5,11 @@
 // ~ Core
 
 // ~ Project
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 void UObsidianHeroStaggerBar::HandleWidgetControllerSet()
 {
-	UMainOverlayWidgetController* WC = Cast<UMainOverlayWidgetController>(WidgetController);
+	UObMainOverlayWidgetController* WC = Cast<UObMainOverlayWidgetController>(WidgetController);
 	if(WC == nullptr)
 	{
 		return;

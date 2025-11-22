@@ -3,13 +3,13 @@
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Grid.h"
 
 #include "UI/Inventory/ObsidianGrid.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
 // ~ Core
 
 // ~ Project
 
-void UObsidianStashTabWidget_Grid::InitializeStashTab(UObsidianInventoryItemsWidgetController* InventoryItemsWidgetController, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)
+void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)
 {
 	if(StashTabGrid && InventoryItemsWidgetController)
 	{

@@ -6,12 +6,14 @@
 #include "CoreMinimal.h"
 
 // ~ Project
+#include "Characters/Player/ObsidianLocalPlayer.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 
 #include "ObsidianWidgetControllerBase.generated.h"
 
+ class UObsidianLocalPlayer;
  class UObsidianPlayerStashComponent;
 class AObsidianPlayerController;
 class AObsidianPlayerState;
@@ -28,7 +30,8 @@ struct FObsidianWidgetControllerParams
 	GENERATED_BODY()
 	
 	FObsidianWidgetControllerParams(AObsidianPlayerController* OPC = nullptr, AObsidianPlayerState* OPS = nullptr, UObsidianAbilitySystemComponent* ObsidianASC = nullptr,
-		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr, UObsidianEquipmentComponent* EC = nullptr, UObsidianPlayerStashComponent* PSC = nullptr)
+		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr, UObsidianEquipmentComponent* EC = nullptr, UObsidianPlayerStashComponent* PSC = nullptr,
+		UObsidianLocalPlayer* LP = nullptr)
 	: ObsidianPlayerController(OPC)
 	, ObsidianPlayerState(OPS)
 	, ObsidianAbilitySystemComponent(ObsidianASC)
@@ -36,6 +39,7 @@ struct FObsidianWidgetControllerParams
 	, InventoryComponent(IC)
 	, EquipmentComponent(EC)
 	, PlayerStashComponent(PSC)
+	, ObsidianLocalPlayer(LP)
 	{};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -58,6 +62,9 @@ struct FObsidianWidgetControllerParams
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UObsidianLocalPlayer> ObsidianLocalPlayer = nullptr;
 };
 
 /**
@@ -85,14 +92,15 @@ public:
 		return ObsidianPlayerState;
 	}
 
-	virtual void SetInitialAttributeValues() const;
-
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<AObsidianPlayerController> ObsidianPlayerController;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
+	TObjectPtr<UObsidianLocalPlayer> ObsidianLocalPlayer;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<AObsidianPlayerState> ObsidianPlayerState;

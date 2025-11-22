@@ -9,9 +9,9 @@
 // ~ Project
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_GridSlot.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
-void UObsidianGrid::ConstructGrid(UObsidianInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& OptionalStashTag)
+void UObsidianGrid::ConstructGrid(UObInventoryItemsWidgetController* InOwningWidgetController, const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& OptionalStashTag)
 {
 	if(InOwningWidgetController == nullptr)
 	{

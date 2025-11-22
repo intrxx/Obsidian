@@ -9,7 +9,7 @@
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
-#include "OCharacterStatusWidgetController.generated.h"
+#include "ObCharacterStatusWidgetController.generated.h"
 
 struct FOnAttributeChangeData;
 
@@ -17,16 +17,17 @@ struct FOnAttributeChangeData;
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class OBSIDIAN_API UOCharacterStatusWidgetController : public UObsidianHeroWidgetControllerBase
+class OBSIDIAN_API UObCharacterStatusWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 
 public:
 	// ~ Start of UObsidianWidgetController
 	virtual void OnWidgetControllerSetupCompleted() override;
-	virtual void SetInitialAttributeValues() const override;
 	// ~ End of UObsidianWidgetController
-
+	
+	void SetInitialAttributeValues() const;
+	
 public:
 	FText HeroClassText = FText();
 	FText HeroNameText = FText();

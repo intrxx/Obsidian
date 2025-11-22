@@ -8,7 +8,7 @@
 
 // ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianMainOverlay.generated.h"
@@ -133,7 +133,7 @@ protected:
 	APlayerController* OwningPlayerController = nullptr;
 	
 	UPROPERTY()
-	TObjectPtr<UMainOverlayWidgetController> MainOverlayWidgetController;
+	TObjectPtr<UObMainOverlayWidgetController> MainOverlayWidgetController;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay|HealthBars")
 	TSubclassOf<UObsidianOverlayEnemyBar> RegularEnemyOverlayHealthBarClass;
@@ -196,7 +196,7 @@ private:
 	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
 
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
+	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
 	
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerInputManager> PlayerInputManager;

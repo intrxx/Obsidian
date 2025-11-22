@@ -8,18 +8,18 @@
 #include "Characters/Heroes/ObsidianHero.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
-#include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
-UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
+UObMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	// If the overlay controller is a nullptr we need to construct one
 	if(MainOverlayWidgetController == nullptr)
 	{
 		if(ensureMsgf(MainOverlayWidgetControllerClass, TEXT("Main Overlay Widget Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 		{
-			MainOverlayWidgetController = NewObject<UMainOverlayWidgetController>(this, MainOverlayWidgetControllerClass);
+			MainOverlayWidgetController = NewObject<UObMainOverlayWidgetController>(this, MainOverlayWidgetControllerClass);
 			MainOverlayWidgetController->SetWidgetControllerParams(WidgetControllerParams);
 			
 			return MainOverlayWidgetController;
@@ -28,14 +28,14 @@ UMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const
 	return MainOverlayWidgetController;
 }
 
-UOCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
+UObCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	// If the character status controller is a nullptr we need to construct one
 	if(CharacterStatusWidgetController == nullptr)
 	{
 		if(ensureMsgf(CharacterStatusWidgetControllerClass, TEXT("Character Status Widget Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 		{
-			CharacterStatusWidgetController = NewObject<UOCharacterStatusWidgetController>(this, CharacterStatusWidgetControllerClass);
+			CharacterStatusWidgetController = NewObject<UObCharacterStatusWidgetController>(this, CharacterStatusWidgetControllerClass);
 			CharacterStatusWidgetController->SetWidgetControllerParams(WidgetControllerParams);
 			CharacterStatusWidgetController->OnWidgetControllerSetupCompleted();
 
@@ -45,14 +45,14 @@ UOCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetControl
 	return CharacterStatusWidgetController;
 }
 
-UObsidianInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
+UObInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
 	// If the character status controller is a nullptr we need to construct one
 	if(InventoryItemsWidgetController == nullptr)
 	{
 		if(ensureMsgf(InventoryItemsWidgetControllerClass, TEXT("Inventory Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 		{
-			InventoryItemsWidgetController = NewObject<UObsidianInventoryItemsWidgetController>(this, InventoryItemsWidgetControllerClass);
+			InventoryItemsWidgetController = NewObject<UObInventoryItemsWidgetController>(this, InventoryItemsWidgetControllerClass);
 			InventoryItemsWidgetController->SetWidgetControllerParams(WidgetControllerParams);
 			InventoryItemsWidgetController->OnWidgetControllerSetupCompleted();
 			
@@ -69,7 +69,7 @@ void AObsidianHUD::InitOverlay(AObsidianPlayerController* PC, AObsidianPlayerSta
 		MainOverlayWidget = CreateWidget<UObsidianMainOverlay>(GetWorld(), MainOverlayWidgetClass);
 
 		const FObsidianWidgetControllerParams Params(PC, PS, ASC, AC);
-		UMainOverlayWidgetController* WidgetController = GetMainOverlayWidgetController(Params);
+		UObMainOverlayWidgetController* WidgetController = GetMainOverlayWidgetController(Params);
 
 		MainOverlayWidget->SetWidgetController(WidgetController);
 		WidgetController->OnWidgetControllerSetupCompleted();

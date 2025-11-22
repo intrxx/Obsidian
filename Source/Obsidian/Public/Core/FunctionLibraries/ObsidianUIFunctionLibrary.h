@@ -2,21 +2,20 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTags.h"
-
-// ~ Project
+#include <CoreMinimal.h>
+#include <GameplayTags.h>
 
 
-#include "Kismet/BlueprintFunctionLibrary.h"
+#include <Kismet/BlueprintFunctionLibrary.h>
 #include "ObsidianUIFunctionLibrary.generated.h"
 
-class UObsidianInventoryItemsWidgetController;
-class UObsidianEnemyOverlayWidgetController;
 struct FObsidianEnemyWidgetControllerParams;
-class UOCharacterStatusWidgetController;
-class UMainOverlayWidgetController;
+
+class UObCharacterSelectionWidgetController;
+class UObInventoryItemsWidgetController;
+class UObsidianEnemyOverlayWidgetController;
+class UObCharacterStatusWidgetController;
+class UObMainOverlayWidgetController;
 
 /**
  * 
@@ -28,13 +27,16 @@ class OBSIDIAN_API UObsidianUIFunctionLibrary : public UBlueprintFunctionLibrary
 
 public:
 	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UMainOverlayWidgetController* GetOverlayWidgetController(const UObject* WorldContextObject);
+	static UObMainOverlayWidgetController* GetOverlayWidgetController(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UOCharacterStatusWidgetController* GetCharacterStatusWidgetController(const UObject* WorldContextObject);
+	static UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const UObject* WorldContextObject);
 
 	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UObsidianInventoryItemsWidgetController* GetInventoryItemsWidgetController(const UObject* WorldContextObject);
+	static UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const UObject* WorldContextObject);
+
+	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
+	static UObCharacterSelectionWidgetController* GetCharacterSelectionWidgetController(const UObject* WorldContextObject);
 
 	static FVector2D GetGameViewportSize();
 	

@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 // ~ Core
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
@@ -11,7 +11,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
-void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
+void UObMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 {
 	check(ObsidianAbilitySystemComponent);
 	check(AttributesComponent);
@@ -29,7 +29,7 @@ void UMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	ObsidianAbilitySystemComponent->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
 }
 
-FObsidianSpecialResourceVisuals UMainOverlayWidgetController::GetSpecialResourceVisuals() const
+FObsidianSpecialResourceVisuals UObMainOverlayWidgetController::GetSpecialResourceVisuals() const
 {
 	if(AttributesComponent)
 	{
@@ -38,7 +38,7 @@ FObsidianSpecialResourceVisuals UMainOverlayWidgetController::GetSpecialResource
 	return FObsidianSpecialResourceVisuals();
 }
 
-void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
+void UObMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
 {
 	/** Hero Set */
 	ManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
@@ -59,7 +59,7 @@ void UMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystem
 	MaxStaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxStaggerMeterAttribute()).AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
 }
 
-void UMainOverlayWidgetController::SetInitialAttributeValues() const
+void UObMainOverlayWidgetController::SetInitialAttributeValues() const
 {
 	OnHealthChangedDelegate.Broadcast(AttributesComponent->GetHealth());
 	OnMaxHealthChangedDelegate.Broadcast(AttributesComponent->GetMaxHealth());
@@ -75,19 +75,19 @@ void UMainOverlayWidgetController::SetInitialAttributeValues() const
 	OnAscensionPointsChangedDelegate.Broadcast(AttributesComponent->GetAscensionPoints());
 }
 
-void UMainOverlayWidgetController::SetInitialStaggerMeter() const
+void UObMainOverlayWidgetController::SetInitialStaggerMeter() const
 {
 	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
 	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
 }
 
-void UMainOverlayWidgetController::SetInitialExperienceValues() const
+void UObMainOverlayWidgetController::SetInitialExperienceValues() const
 {
 	OnExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
 	OnMaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience(), MaxExperienceOldValue);
 }
 
-void UMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIData& UIData)
+void UObMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIData& UIData)
 {
 	for(const FGameplayTag& Tag : UIData.AssetTags)
 	{
@@ -123,27 +123,27 @@ void UMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIDa
 	}
 }
 
-void UMainOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::ManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnManaChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxManaChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::SpecialResourceChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::SpecialResourceChanged(const FOnAttributeChangeData& Data) const
 {
 	OnSpecialResourceChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxSpecialResourceChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
 {
 	if(OnExperienceChangedDelegate.IsBound())
 	{
@@ -151,7 +151,7 @@ void UMainOverlayWidgetController::ExperienceChanged(const FOnAttributeChangeDat
 	}
 }
 
-void UMainOverlayWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
+void UObMainOverlayWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
 {
 	if(OnMaxExperienceChangedDelegate.IsBound())
 	{
@@ -160,57 +160,57 @@ void UMainOverlayWidgetController::MaxExperienceChanged(const FOnAttributeChange
 	}
 }
 
-void UMainOverlayWidgetController::PassiveSkillPointsChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::PassiveSkillPointsChanged(const FOnAttributeChangeData& Data) const
 {
 	OnPassiveSkillPointsChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::AscensionPointsChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::AscensionPointsChanged(const FOnAttributeChangeData& Data) const
 {
 	OnAscensionPointsChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnHealthChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxHealthChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::EnergyShieldChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::EnergyShieldChanged(const FOnAttributeChangeData& Data) const
 {
 	OnEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::StaggerMeterChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::StaggerMeterChanged(const FOnAttributeChangeData& Data) const
 {
 	OnStaggerMeterChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const
+void UObMainOverlayWidgetController::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const
 {
 	OnMaxStaggerMeterChangedDelegate.Broadcast(Data.NewValue);
 }
 
-void UMainOverlayWidgetController::UpdateHoveringOverTarget(AActor* TargetActor, const bool bHoveredOver)
+void UObMainOverlayWidgetController::UpdateHoveringOverTarget(AActor* TargetActor, const bool bHoveredOver)
 {
 	OnUpdateRegularEnemyTargetForHealthBarDelegate.Broadcast(TargetActor, bHoveredOver);
 }
 
-void UMainOverlayWidgetController::UpdateBossDetectionInfo(AActor* BossActor, const bool bSeen)
+void UObMainOverlayWidgetController::UpdateBossDetectionInfo(AActor* BossActor, const bool bSeen)
 {
 	OnUpdateBossEnemyTargetForHealthBarDelegate.Broadcast(BossActor, bSeen);
 }
 
-void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidgetTag)
+void UObMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidgetTag)
 {
 	if(OnAuraWidgetDestructionInfoReceivedDelegate.IsBound())
 	{
@@ -218,12 +218,12 @@ void UMainOverlayWidgetController::DestroyAuraWidget(const FGameplayTag AuraWidg
 	}
 }
 
-void UMainOverlayWidgetController::UpdateHealthInfoGlobe(const float Magnitude) const
+void UObMainOverlayWidgetController::UpdateHealthInfoGlobe(const float Magnitude) const
 {
 	EffectUIHealthGlobeDataDelegate.Broadcast(0, Magnitude);
 }
 
-void UMainOverlayWidgetController::UpdateManaInfoGlobe(const float Magnitude) const 
+void UObMainOverlayWidgetController::UpdateManaInfoGlobe(const float Magnitude) const 
 {
 	EffectUIManaGlobeDataDelegate.Broadcast(0, Magnitude);
 }

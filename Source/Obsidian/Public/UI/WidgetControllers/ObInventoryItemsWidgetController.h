@@ -9,7 +9,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
-#include "ObsidianInventoryItemsWidgetController.generated.h"
+#include "ObInventoryItemsWidgetController.generated.h"
 
 DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_Items, Log, All);
 
@@ -113,7 +113,7 @@ DECLARE_MULTICAST_DELEGATE(FOnStopPlacementHighlightSignature);
  *  
  */
 UCLASS(BlueprintType, Blueprintable)
-class OBSIDIAN_API UObsidianInventoryItemsWidgetController : public UObsidianHeroWidgetControllerBase
+class OBSIDIAN_API UObInventoryItemsWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 

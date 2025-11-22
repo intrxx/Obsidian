@@ -9,7 +9,7 @@
 #include "Kismet/KismetMathLibrary.h"
 
 // ~ Project
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe::NativePreConstruct()
 {
@@ -50,7 +50,7 @@ FReply UObsidianProgressGlobe::NativeOnMouseButtonDoubleClick(const FGeometry& I
 
 void UObsidianProgressGlobe::HandleWidgetControllerSet()
 {
-	MainOverlayWidgetController = Cast<UMainOverlayWidgetController>(WidgetController);
+	MainOverlayWidgetController = Cast<UObMainOverlayWidgetController>(WidgetController);
 	check(WidgetController);
 }
 

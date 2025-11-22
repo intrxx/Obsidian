@@ -18,7 +18,7 @@ class UScrollBox;
 class UOCharacterStatusAttributeRow;
 class UImage;
 class UCommonTextBlock;
-class UOCharacterStatusWidgetController;
+class UObCharacterStatusWidgetController;
 
 /**
  * 
@@ -265,7 +265,7 @@ private:
 	TObjectPtr<UScrollBox> CurrentlyShownTab;
 
 	UPROPERTY()
-	TObjectPtr<UOCharacterStatusWidgetController> CharacterStatusWidgetController;
+	TObjectPtr<UObCharacterStatusWidgetController> CharacterStatusWidgetController;
 
 	/**
 	 * Cached attributes

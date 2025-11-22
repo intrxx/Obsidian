@@ -10,7 +10,7 @@
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
-#include "MainOverlayWidgetController.generated.h"
+#include "ObMainOverlayWidgetController.generated.h"
 
 struct FObsidianEffectUIData;
 
@@ -31,7 +31,7 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraWidgetDestructionInfoReceived, const FG
  * 
  */
 UCLASS(BlueprintType, Blueprintable)
-class OBSIDIAN_API UMainOverlayWidgetController : public UObsidianHeroWidgetControllerBase
+class OBSIDIAN_API UObMainOverlayWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 
@@ -48,9 +48,9 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Mana")
 	void UpdateManaInfoGlobe(const float Magnitude) const;
 
-	virtual void SetInitialAttributeValues() const override;
-	virtual void SetInitialStaggerMeter() const;
-	virtual void SetInitialExperienceValues() const;
+	void SetInitialAttributeValues() const;
+	void SetInitialStaggerMeter() const;
+	void SetInitialExperienceValues() const;
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")

@@ -15,8 +15,8 @@
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
-#include "UI/WidgetControllers/OCharacterStatusWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
@@ -24,7 +24,7 @@
 #include "UI/PassiveSkillTree/ObsidianPassiveSkillTree.h"
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
 #include "UI/Inventory/ObsidianInventory.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
@@ -35,7 +35,7 @@
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {
-	MainOverlayWidgetController = CastChecked<UMainOverlayWidgetController>(WidgetController);
+	MainOverlayWidgetController = CastChecked<UObMainOverlayWidgetController>(WidgetController);
 	MainOverlayWidgetController->EffectUIDataWidgetRowDelegate.AddDynamic(this, &ThisClass::HandleUIData);
 	MainOverlayWidgetController->EffectStackingUIDataDelegate.AddDynamic(this, &ThisClass::HandleStackingUIData);
 
@@ -109,7 +109,7 @@ void UObsidianMainOverlay::ToggleCharacterStatus()
 	
 	if(IsCharacterStatusOpen() == false)
 	{
-		UOCharacterStatusWidgetController* CharacterStatusWidgetController = UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this);
+		UObCharacterStatusWidgetController* CharacterStatusWidgetController = UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(this);
 		check(CharacterStatusWidgetController);
 		
 		checkf(CharacterStatusClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::ToggleCharacterStatus, fill it in ObsidianMainOverlay instance."));

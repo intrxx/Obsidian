@@ -9,7 +9,7 @@
 
 // ~ Project
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 void UObsidianProgressGlobe_Mana::HandleWidgetControllerSet()
 {

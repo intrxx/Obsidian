@@ -8,9 +8,9 @@
 // ~ Project
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
-void UObsidianStashTabWidget_Slots::InitializeStashTab(UObsidianInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag)
+void UObsidianStashTabWidget_Slots::InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag)
 {
 	if (InInventoryItemsWidgetController && InOwningStashWidget && InStashTabTag.IsValid())
 	{

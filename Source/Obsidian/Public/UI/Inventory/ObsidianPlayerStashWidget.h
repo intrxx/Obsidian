@@ -20,7 +20,7 @@ class UOverlay;
 class UScrollBox;
 class UObsidianStashTabWidget;
 class UObsidianGrid;
-class UObsidianInventoryItemsWidgetController;
+class UObInventoryItemsWidgetController;
 
 /**
  * 
@@ -82,7 +82,7 @@ private:
 	
 private:
 	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemsWidgetController> InventoryItemsWidgetController;
+	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
 
 	UPROPERTY()
 	TArray<UObsidianItemSlot_Equipment*> CachedHighlightedSlot;

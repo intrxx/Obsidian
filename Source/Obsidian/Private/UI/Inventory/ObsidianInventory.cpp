@@ -9,13 +9,13 @@
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "UI/Inventory/ObsidianEquipmentPanel.h"
 #include "UI/Inventory/ObsidianGrid.h"
 
 void UObsidianInventory::HandleWidgetControllerSet()
 {
-	InventoryItemsWidgetController = Cast<UObsidianInventoryItemsWidgetController>(WidgetController);
+	InventoryItemsWidgetController = Cast<UObInventoryItemsWidgetController>(WidgetController);
 	check(InventoryItemsWidgetController);
 
 	InventoryItemsWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnItemEquipped);

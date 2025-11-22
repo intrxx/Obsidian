@@ -130,8 +130,6 @@ void UObsidianSaveGameSubsystem::LoadGameForPlayer()
 
 void UObsidianSaveGameSubsystem::LoadGameForPlayerAsync()
 {
-	UE_LOG(LogTemp, Warning, TEXT("LoadGameForPlayerAsync CALLED"));
-	
 	UGameplayStatics::AsyncLoadGameFromSlot(SaveSlotName, 0,
 		FAsyncLoadGameFromSlotDelegate::CreateLambda([this](const FString& SlotName, const int32 UserIndex, USaveGame* SaveGame)
 			{

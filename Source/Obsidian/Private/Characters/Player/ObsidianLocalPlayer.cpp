@@ -2,7 +2,3 @@
 
 #include "Characters/Player/ObsidianLocalPlayer.h"
 
-// ~ Core
-
-// ~ Project
-

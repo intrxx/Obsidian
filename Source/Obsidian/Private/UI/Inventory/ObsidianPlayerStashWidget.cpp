@@ -9,7 +9,7 @@
 // ~ Project
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
@@ -22,7 +22,7 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 {
 	Super::HandleWidgetControllerSet();
 	
-	InventoryItemsWidgetController = Cast<UObsidianInventoryItemsWidgetController>(WidgetController);
+	InventoryItemsWidgetController = Cast<UObInventoryItemsWidgetController>(WidgetController);
 	check(InventoryItemsWidgetController);
 
 	InventoryItemsWidgetController->OnItemStashedDelegate.AddUObject(this, &ThisClass::OnItemStashed);

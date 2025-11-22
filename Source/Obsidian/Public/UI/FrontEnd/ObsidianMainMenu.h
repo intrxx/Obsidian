@@ -8,6 +8,7 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianMainMenu.generated.h"
 
+class UObsidianButtonBase;
 /**
  * 
  */
@@ -18,8 +19,42 @@ class OBSIDIAN_API UObsidianMainMenu : public UObsidianActivatableWidget
 
 public:
 	UObsidianMainMenu(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
+
+protected:
+	virtual void NativeOnActivated() override;
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+
+	void OnPlayClicked();
+	void OnOnlineClicked();
+	void OnOptionsClicked();
+	void OnQuitClicked();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TSoftClassPtr<UCommonActivatableWidget> SettingsMenuWidgetClass;
+	TSoftClassPtr<UCommonActivatableWidget> SoftCharacterSelectionWidgetClass;
+
+	UPROPERTY()
+	TSubclassOf<UCommonActivatableWidget> LoadedCharacterSelectionWidgetClass;
+	
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	TSoftClassPtr<UCommonActivatableWidget> SoftSettingsMenuWidgetClass;
+
+protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianButtonBase> Play_Button;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianButtonBase> Online_Button;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianButtonBase> Options_Button;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianButtonBase> Quit_Button;
+
+private:
+	void LoadCharacterSelectionClass();
 };

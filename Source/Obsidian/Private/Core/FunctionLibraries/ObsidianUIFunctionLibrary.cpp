@@ -2,18 +2,17 @@
 
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 
-// ~ Core
-#include "Kismet/GameplayStatics.h"
+#include <Kismet/GameplayStatics.h>
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetControllerBase.h"
+#include "UI/FrontEnd/ObsidianFrontEndHUD.h"
 
-UMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
+UObMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
 {
 	if(WorldContextObject == nullptr)
 	{
@@ -36,7 +35,7 @@ UMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetContro
 	return nullptr;
 }
 
-UOCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(const UObject* WorldContextObject)
+UObCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(const UObject* WorldContextObject)
 {
 	if(WorldContextObject == nullptr)
 	{
@@ -60,7 +59,7 @@ UOCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatu
 	return nullptr;
 }
 
-UObsidianInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(const UObject* WorldContextObject)
+UObInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(const UObject* WorldContextObject)
 {
 	if(WorldContextObject == nullptr)
 	{
@@ -79,6 +78,27 @@ UObsidianInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventor
 				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, nullptr, nullptr, InventoryComponent, EquipmentComponent, PlayerStashComponent);
 				return ObsidianHUD->GetInventoryItemsWidgetController(Params);
 			}
+		}
+	}
+	return nullptr;
+}
+
+UObCharacterSelectionWidgetController* UObsidianUIFunctionLibrary::GetCharacterSelectionWidgetController(const UObject* WorldContextObject)
+{
+	if(WorldContextObject == nullptr)
+	{
+		return nullptr;
+	}
+
+	if(AObsidianPlayerController* PlayerController = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+	{
+		if(AObsidianFrontEndHUD* FrontEndHUD = Cast<AObsidianFrontEndHUD>(PlayerController->GetHUD()))
+		{
+			FObsidianWidgetControllerParams Params;
+			Params.ObsidianPlayerController = PlayerController;
+			Params.ObsidianLocalPlayer = Cast<UObsidianLocalPlayer>(PlayerController->GetLocalPlayer());
+			
+			return FrontEndHUD->GetCharacterSelectionWidgetController(Params);
 		}
 	}
 	return nullptr;

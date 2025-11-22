@@ -11,7 +11,7 @@
 #include "ObsidianAttributesComponent.h"
 #include "ObsidianHeroAttributesComponent.generated.h"
 
-class UMainOverlayWidgetController;
+class UObMainOverlayWidgetController;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeroAttributeValueChangedSignature, const float /** New Value */);
 
 /**

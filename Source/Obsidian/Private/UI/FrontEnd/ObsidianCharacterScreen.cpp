@@ -209,8 +209,6 @@ void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacter
 
 void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame, bool bSuccess)
 {
-	UE_LOG(LogTemp, Warning, TEXT("OnPopulateCharacterLoadingFinished"));
-	
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
 		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())

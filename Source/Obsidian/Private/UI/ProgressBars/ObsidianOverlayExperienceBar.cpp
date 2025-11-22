@@ -10,11 +10,11 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianOverlayExperienceInfo.h"
-#include "UI/WidgetControllers/MainOverlayWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 void UObsidianOverlayExperienceBar::HandleWidgetControllerSet()
 {
-	MainOverlayWidgetController = Cast<UMainOverlayWidgetController>(WidgetController);
+	MainOverlayWidgetController = Cast<UObMainOverlayWidgetController>(WidgetController);
 	check(MainOverlayWidgetController);
 
 	MainOverlayWidgetController->OnExperienceChangedDelegate.BindUObject(this, &ThisClass::ExperienceChanged);

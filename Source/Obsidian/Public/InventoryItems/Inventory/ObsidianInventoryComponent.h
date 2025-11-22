@@ -14,7 +14,7 @@
 
 class AObsidianPlayerController;
 class FGameplayDebuggerCategory_InventoryItems;
-class UObsidianInventoryItemsWidgetController;
+class UObInventoryItemsWidgetController;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
 
@@ -222,7 +222,7 @@ private:
 	TMap<FIntPoint, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
 
 private:
-	friend UObsidianInventoryItemsWidgetController;
+	friend UObInventoryItemsWidgetController;
 
 #if WITH_GAMEPLAY_DEBUGGER
 	friend FGameplayDebuggerCategory_InventoryItems;

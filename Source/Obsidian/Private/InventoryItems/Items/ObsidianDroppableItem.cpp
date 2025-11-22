@@ -23,7 +23,7 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
-#include "UI/WidgetControllers/ObsidianInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
