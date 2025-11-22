@@ -84,6 +84,7 @@ void UObsidianAffixList::PreSave(FObjectPreSaveContext SaveContext)
 	}
 }
 
+#if WITH_EDITOR
 void UObsidianAffixList::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
 {
 	Super::PostEditChangeProperty(PropertyChangedEvent);
@@ -98,7 +99,6 @@ void UObsidianAffixList::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	}
 }
 
-#if WITH_EDITOR
 EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& Context, const FName ClassName, const int Index) const
 {
 	EDataValidationResult Result = EDataValidationResult::Valid;
