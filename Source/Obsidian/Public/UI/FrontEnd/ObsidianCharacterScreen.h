@@ -29,6 +29,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterScreen")
 	void InitializeOnlineCharacterScreen();
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterScreen")
 	void InitializeOfflineCharacterScreen();
 
@@ -38,8 +39,10 @@ protected:
 	virtual void NativeOnActivated() override;
 	virtual void NativeOnDeactivated() override;
 
-	void HandleWidgetControllerSet() override;
-
+	// ~ Start of WidgetController Interface
+	virtual void HandleWidgetControllerSet() override;
+	// ~ End of WidgetController Interface
+	
 	void OnPlayClicked();
 	void OnDeleteClicked();
 	void OnCreateClicked();
@@ -65,6 +68,9 @@ protected:
 	TSubclassOf<UObsidianCharacterEntry> CharacterEntryWidgetClass;
 
 	UPROPERTY()
+	TObjectPtr<UObsidianCharacterEntry> CachedChosenCharacterEntry;
+	
+	UPROPERTY()
 	TObjectPtr<AObsidianFrontEndGameMode> FrontEndGameMode;
 
 	UPROPERTY()
@@ -72,9 +78,6 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsOnline = false;
-
-	UPROPERTY()
-	TObjectPtr<UObsidianCharacterEntry> CachedChosenCharacterEntry;
 	
 	FDelegateHandle OnPopulateLoadingFinishedDelegateHandle;
 	FDelegateHandle OnPlayLoadingFinishedDelegateHandle;

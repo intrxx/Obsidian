@@ -9,6 +9,7 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianSaveGame.generated.h"
 
+class UObsidianSaveGameSubsystem;
 class AObsidianHero;
 
 /**
@@ -77,12 +78,20 @@ class OBSIDIAN_API UObsidianSaveGame : public ULocalPlayerSaveGame
 	GENERATED_BODY()
 
 public:
+	void InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem);
+	
 	void InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData);
 	void SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData);
 	
 	FObsidianHeroSaveData GetHeroSaveData();
+	
+	virtual void HandlePostSave(bool bSuccess) override;
+	virtual void HandlePostLoad() override;
 		
 protected:
 	UPROPERTY()
 	FObsidianHeroSaveData HeroSaveData;
+
+private:
+	TSoftObjectPtr<UObsidianSaveGameSubsystem> SaveGameSubsystem;
 };

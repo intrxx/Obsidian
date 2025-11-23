@@ -174,7 +174,7 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 
 				OnPopulateLoadingFinishedDelegateHandle = SaveGameSubsystem->OnLoadingFinishedDelegate.AddUObject(this,
 						&ThisClass::OnPopulateCharacterLoadingFinished);
-				SaveGameSubsystem->RequestLoadGame(true);
+				SaveGameSubsystem->RequestLoadGame(true, GetOwningLocalPlayer<UObsidianLocalPlayer>());
 			}	
 		}
 		return;

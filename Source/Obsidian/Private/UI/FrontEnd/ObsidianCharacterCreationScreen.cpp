@@ -141,7 +141,7 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 					SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnCreateSavingFinishedHandle);
 				}
 				
-				SaveGameSubsystem->CreateSaveGameObject();
+				SaveGameSubsystem->CreateSaveGameObject(GetOwningLocalPlayer<UObsidianLocalPlayer>());
 				
 				FObsidianHeroInitializationSaveData InitializationSaveData;
 				InitializationSaveData.PlayerHeroName = Params.ObsidianPlayerName;
@@ -152,7 +152,8 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 
 				OnCreateSavingFinishedHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
 					&ThisClass::OnCreateSavingFinished);
-				SaveGameSubsystem->RequestSaveInitialHeroSave(true, InitializationSaveData);
+				SaveGameSubsystem->RequestSaveInitialHeroSave(true, InitializationSaveData,
+					GetOwningLocalPlayer<UObsidianLocalPlayer>());
 			}
 		} 
 	}
@@ -290,6 +291,10 @@ void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianSaveGame*
 	if (bSuccess)
 	{
 		HandleBackwardsAction();
+	}
+	else
+	{
+		UE_LOG(LogObsidianSaveSystem, Error, TEXT("Create Save failed in [%hs]"), __FUNCTION__);
 	}
 }
 

@@ -7,11 +7,14 @@
 #include <Subsystems/GameInstanceSubsystem.h>
 #include "ObsidianSaveGameSubsystem.generated.h"
 
+class UObsidianLocalPlayer;
 struct FObsidianHeroInitializationSaveData;
 class AObsidianPlayerController;
 class UObsidianSaveGame;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveActionFinishedSignature, UObsidianSaveGame* SaveObject, bool bSuccess)
+
+DECLARE_LOG_CATEGORY_EXTERN(LogObsidianSaveSystem, Log, All)
 
 /**
  * 
@@ -24,15 +27,16 @@ class OBSIDIAN_API UObsidianSaveGameSubsystem : public UGameInstanceSubsystem
 public:
 	UObsidianSaveGame* GetSaveGameObject();
 	
-	void CreateSaveGameObject();
+	void CreateSaveGameObject(const UObsidianLocalPlayer* LocalPlayer);
 	
 	void RegisterSaveable(AActor* SaveActor);
 	void UnregisterSaveable(AActor* SaveActor);
 	
-	void RequestSaveGame(const bool bAsync);
-	void RequestSaveInitialHeroSave(const bool bAsync, const FObsidianHeroInitializationSaveData& HeroInitializationSaveData);
+	void RequestSaveGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer);
+	void RequestSaveInitialHeroSave(const bool bAsync, const FObsidianHeroInitializationSaveData& HeroInitializationSaveData ,
+		const UObsidianLocalPlayer* LocalPlayer);
 	
-	void RequestLoadGame(const bool bAsync);
+	void RequestLoadGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer);
 	void RequestLoadDataForObject(AActor* LoadActor);
 	
 public:
@@ -40,11 +44,11 @@ public:
 	FOnSaveActionFinishedSignature OnLoadingFinishedDelegate;
 
 protected:
-	void SaveGameForPlayer();
-	void SaveGameForPlayerAsync();
+	void SaveGameForPlayer(const UObsidianLocalPlayer* LocalPlayer);
+	void SaveGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer);
 	
-	void LoadGameForPlayer();
-	void LoadGameForPlayerAsync();
+	void LoadGameForPlayer(const UObsidianLocalPlayer* LocalPlayer);
+	void LoadGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer);
 	
 protected:
 	UPROPERTY()
@@ -55,4 +59,11 @@ protected:
 
 	UPROPERTY()
 	FString SaveSlotName = FString();
+
+private:
+	void HandleLoadingFinished(UObsidianSaveGame* SaveGame);
+	void HandleSavingFinished(const bool bSuccess, UObsidianSaveGame* SaveGame);
+
+private:
+	friend UObsidianSaveGame;
 };

@@ -8,6 +8,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
+#include "Characters/Player/ObsidianLocalPlayer.h"
 
 void UObsidianGameplayMenu::NativeConstruct()
 {
@@ -61,7 +62,7 @@ void UObsidianGameplayMenu::OnSaveAndExitClicked()
 		{
 			OnSaveFinishedDelegateHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
 				&ThisClass::OnSaveFinished);
-			SaveGameSubsystem->RequestSaveGame(true);
+			SaveGameSubsystem->RequestSaveGame(true, GetOwningLocalPlayer<UObsidianLocalPlayer>());
 		}
 	}
 }
