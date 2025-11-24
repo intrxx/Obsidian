@@ -5,33 +5,56 @@
 
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Game/Save/ObsidianSaveableInterface.h"
-#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianHeroSaveGame.h"
+#include "Game/Save/ObsidianMasterSaveGame.h"
 
 DEFINE_LOG_CATEGORY(LogObsidianSaveSystem)
 
-UObsidianSaveGame* UObsidianSaveGameSubsystem::GetSaveGameObject()
+UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::GetCurrentHeroSaveGameObject()
 {
-	return ObsidianSaveGame;
+	return CurrentHeroSaveGame;
 }
 
-void UObsidianSaveGameSubsystem::CreateSaveGameObject(const UObsidianLocalPlayer* LocalPlayer)
+void UObsidianSaveGameSubsystem::LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer)
+{
+	if (ensure(LocalPlayer))
+	{
+		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Creating or loading existing Master Save Object for [%s]. "),
+			*GetNameSafe(LocalPlayer));
+		
+		ULocalPlayerSaveGame* SaveGame = UObsidianHeroSaveGame::LoadOrCreateSaveGameForLocalPlayer(
+			UObsidianMasterSaveGame::StaticClass(),
+			LocalPlayer,
+			ObsidianMasterSaveStatics::MasterSaveName);
+
+		check(SaveGame);
+		ObsidianMasterSaveGame = Cast<UObsidianMasterSaveGame>(SaveGame);
+		return;
+	}
+	
+	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to create or load Master Save Object for LocalPlayer!"));
+}
+
+UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::CreateHeroSaveGameObject(const UObsidianLocalPlayer* LocalPlayer,
+	const FString& SlotName)
 {
 	if (ensure(LocalPlayer))
 	{
 		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Creating Save Object for [%s]. "),
 			*GetNameSafe(LocalPlayer));
 		
-		SaveSlotName = FString("MySlotName");
-		if (ULocalPlayerSaveGame* LocalSaveGame = UObsidianSaveGame::CreateNewSaveGameForLocalPlayer(
-			UObsidianSaveGame::StaticClass(), LocalPlayer, SaveSlotName))
+		if (ULocalPlayerSaveGame* LocalSaveGame = UObsidianHeroSaveGame::CreateNewSaveGameForLocalPlayer(
+			UObsidianHeroSaveGame::StaticClass(), LocalPlayer, SlotName))
 		{
-			ObsidianSaveGame = Cast<UObsidianSaveGame>(LocalSaveGame);
-			ObsidianSaveGame->InitWithSaveSystem(this);
-			return;
+			UObsidianHeroSaveGame* ObsidianHeroSaveGame = Cast<UObsidianHeroSaveGame>(LocalSaveGame);
+			ObsidianHeroSaveGame->InitWithSaveSystem(this);
+			ObsidianHeroSaveGames.Add(ObsidianHeroSaveGame);
+			return ObsidianHeroSaveGame;
 		}
 	}
 
 	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to create Save Object for LocalPlayer!"));
+	return nullptr;
 }
 
 void UObsidianSaveGameSubsystem::RegisterSaveable(AActor* SaveActor)
@@ -52,6 +75,7 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const bool bAsync, const UObsid
 	if (ensure(LocalPlayer))
 	{
 		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Save for [%s]. "), *GetNameSafe(LocalPlayer));
+		check(CurrentHeroSaveGame);
 		
 		for (TWeakObjectPtr<AActor> SaveActor : SaveableActors)
 		{
@@ -62,23 +86,23 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const bool bAsync, const UObsid
 
 			if (IObsidianSaveableInterface* SaveableInterface = Cast<IObsidianSaveableInterface>(SaveActor))
 			{
-				SaveableInterface->SaveData(ObsidianSaveGame);
+				SaveableInterface->SaveData(CurrentHeroSaveGame);
 			}
 		}
 	
 		if (bAsync)
 		{
-			SaveGameForPlayerAsync(LocalPlayer);
+			SaveGameForPlayerAsync();
 			return;
 		}
-		SaveGameForPlayer(LocalPlayer);
+		SaveGameForPlayer();
 	}
 
 	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Save for invalid LocalPlayer!"));
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const bool bAsync,
+void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const bool bAsync, const bool bOnline,
 	const FObsidianHeroInitializationSaveData& HeroInitializationSaveData, const UObsidianLocalPlayer* LocalPlayer)
 {
 	if (ensure(LocalPlayer))
@@ -86,37 +110,31 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const bool bAsync,
 		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Initial Hero Save for [%s]. "),
 			*GetNameSafe(LocalPlayer));
 		
-		if (ObsidianSaveGame)
-		{
-			ObsidianSaveGame->InitializeHeroSaveData(HeroInitializationSaveData);
-		}
-	
+		check(ObsidianMasterSaveGame);
+		const FObsidianAddHeroSaveResult Result = ObsidianMasterSaveGame->AddHero(bOnline, HeroInitializationSaveData);
+		UObsidianHeroSaveGame* NewHeroSaveGame = CreateHeroSaveGameObject(LocalPlayer, Result.SaveName);
+		NewHeroSaveGame->InitializeHeroSaveData(HeroInitializationSaveData);
+		CurrentHeroSaveGame = NewHeroSaveGame;
+		
 		if (bAsync)
 		{
-			SaveGameForPlayerAsync(LocalPlayer);
+			SaveGameForPlayerAsync();
 		}
 		else
 		{
-			SaveGameForPlayer(LocalPlayer);
+			SaveGameForPlayer();
 		}
+		
+		return;
 	}
-	else
-	{
-#if !UE_BUILD_SHIPPING
-	const bool bValidLocalPlayer = LocalPlayer == nullptr;
-	const bool bValidSaveGame = ObsidianSaveGame == nullptr;
-	const FString ValidityLocalPlayer = bValidLocalPlayer ? FString("[Local Player Invalid]") : FString("");
-	const FString ValiditySaveGame = bValidSaveGame ? FString(", [Save Game Object Invalid]") : FString("");
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to perform Initial Hero Save, invalid: %s %s"),
-		*ValidityLocalPlayer, *ValiditySaveGame);
-#endif
+	
+	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to perform Initial Hero Save for invalid Local Player. "));
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
-	}
 }
 
 void UObsidianSaveGameSubsystem::RequestLoadGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(LocalPlayer) && CurrentHeroSaveGame)
 	{
 		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Load Game for [%s]. "),
 			*GetNameSafe(LocalPlayer));
@@ -131,8 +149,15 @@ void UObsidianSaveGameSubsystem::RequestLoadGame(const bool bAsync, const UObsid
 		}
 		return;
 	}
-
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Load for invalid LocalPlayer!"));
+#if !UE_BUILD_SHIPPING
+	else
+	{
+		const FString LocalPlayerValid = LocalPlayer == nullptr ? TEXT("LocalPlayer") : FString();
+		const FString CurrentHeroSaveGameValid = CurrentHeroSaveGame == nullptr ? TEXT("Current Hero Save Game") : FString();
+		UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Load for invalid %s %s!"), *LocalPlayerValid,
+			*CurrentHeroSaveGameValid);
+	}
+#endif
 	OnLoadingFinishedDelegate.Broadcast(nullptr, false);
 }
 
@@ -140,25 +165,25 @@ void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* LoadActor)
 {
 	if (IObsidianSaveableInterface* SaveableInterface = Cast<IObsidianSaveableInterface>(LoadActor))
 	{
-		SaveableInterface->LoadData(ObsidianSaveGame);
+		SaveableInterface->LoadData(CurrentHeroSaveGame);
 	}
 }
 
-void UObsidianSaveGameSubsystem::SaveGameForPlayer(const UObsidianLocalPlayer* LocalPlayer)
+void UObsidianSaveGameSubsystem::SaveGameForPlayer()
 {
-	if (ObsidianSaveGame)
+	if (CurrentHeroSaveGame)
 	{
-		ObsidianSaveGame->SaveGameToSlotForLocalPlayer();
+		CurrentHeroSaveGame->SaveGameToSlotForLocalPlayer();
 		return;
 	}
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer)
+void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync()
 {
-	if (ObsidianSaveGame)
+	if (CurrentHeroSaveGame)
 	{
-		ObsidianSaveGame->AsyncSaveGameToSlotForLocalPlayer();
+		CurrentHeroSaveGame->AsyncSaveGameToSlotForLocalPlayer();
 		return;
 	}
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
@@ -166,19 +191,21 @@ void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync(const UObsidianLocalPlay
 
 void UObsidianSaveGameSubsystem::LoadGameForPlayer(const UObsidianLocalPlayer* LocalPlayer)
 {
-	UObsidianSaveGame::LoadOrCreateSaveGameForLocalPlayer(UObsidianSaveGame::StaticClass(), LocalPlayer, SaveSlotName);
+	UObsidianHeroSaveGame::LoadOrCreateSaveGameForLocalPlayer(UObsidianHeroSaveGame::StaticClass(), LocalPlayer,
+		CurrentHeroSaveGame->GetSaveSlotName());
 }
 
 void UObsidianSaveGameSubsystem::LoadGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer)
 {
-	UObsidianSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(UObsidianSaveGame::StaticClass(), LocalPlayer, SaveSlotName,
+	UObsidianHeroSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(UObsidianHeroSaveGame::StaticClass(), LocalPlayer,
+		CurrentHeroSaveGame->GetSaveSlotName(),
 		FOnLocalPlayerSaveGameLoadedNative::CreateLambda([this](ULocalPlayerSaveGame* SaveGame)
 			{
-				HandleLoadingFinished(Cast<UObsidianSaveGame>(SaveGame));
+				HandleLoadingFinished(Cast<UObsidianHeroSaveGame>(SaveGame));
 			}));
 }
 
-void UObsidianSaveGameSubsystem::HandleLoadingFinished(UObsidianSaveGame* SaveGame)
+void UObsidianSaveGameSubsystem::HandleLoadingFinished(UObsidianHeroSaveGame* SaveGame)
 {
 	if (SaveGame)
 	{
@@ -188,7 +215,7 @@ void UObsidianSaveGameSubsystem::HandleLoadingFinished(UObsidianSaveGame* SaveGa
 	OnLoadingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::HandleSavingFinished(const bool bSuccess, UObsidianSaveGame* SaveGame)
+void UObsidianSaveGameSubsystem::HandleSavingFinished(const bool bSuccess, UObsidianHeroSaveGame* SaveGame)
 {
 	if (bSuccess && SaveGame)
 	{

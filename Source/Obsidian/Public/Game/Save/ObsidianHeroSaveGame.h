@@ -7,7 +7,7 @@
 #include <GameFramework/SaveGame.h>
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
-#include "ObsidianSaveGame.generated.h"
+#include "ObsidianHeroSaveGame.generated.h"
 
 class UObsidianSaveGameSubsystem;
 class AObsidianHero;
@@ -73,7 +73,7 @@ public:
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianSaveGame : public ULocalPlayerSaveGame
+class OBSIDIAN_API UObsidianHeroSaveGame : public ULocalPlayerSaveGame
 {
 	GENERATED_BODY()
 

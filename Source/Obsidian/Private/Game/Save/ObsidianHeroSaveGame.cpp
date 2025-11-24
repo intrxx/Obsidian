@@ -1,32 +1,32 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianHeroSaveGame.h"
 
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 
 
-void UObsidianSaveGame::InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem)
+void UObsidianHeroSaveGame::InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem)
 {
 	SaveGameSubsystem = InSaveGameSubsystem;
 }
 
-void UObsidianSaveGame::InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData)
+void UObsidianHeroSaveGame::InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData)
 {
 	HeroSaveData.InitializationSaveData = InInitializationSaveData;
 }
 
-void UObsidianSaveGame::SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData)
+void UObsidianHeroSaveGame::SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData)
 {
 	HeroSaveData.GameplaySaveData = InGameplaySaveData;
 }
 
-FObsidianHeroSaveData UObsidianSaveGame::GetHeroSaveData()
+FObsidianHeroSaveData UObsidianHeroSaveGame::GetHeroSaveData()
 {
 	return HeroSaveData;
 }
 
-void UObsidianSaveGame::HandlePostSave(bool bSuccess)
+void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)
 {
 	if (SaveGameSubsystem.IsValid())
 	{
@@ -54,7 +54,7 @@ void UObsidianSaveGame::HandlePostSave(bool bSuccess)
 	Super::HandlePostSave(bSuccess);
 }
 
-void UObsidianSaveGame::HandlePostLoad()
+void UObsidianHeroSaveGame::HandlePostLoad()
 {
 	if (SaveGameSubsystem.IsValid())
 	{

@@ -67,7 +67,7 @@ void UObsidianGameplayMenu::OnSaveAndExitClicked()
 	}
 }
 
-void UObsidianGameplayMenu::OnSaveFinished(UObsidianSaveGame* SaveGame, bool bSuccess)
+void UObsidianGameplayMenu::OnSaveFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{

@@ -4,7 +4,7 @@
 
 
 #include "Characters/Heroes/ObsidianHero.h"
-#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "InventoryItems/Items/ItemSpecific/ObsidianTownPortal.h"
 
@@ -14,7 +14,7 @@ void AObsidianGameMode::InitGame(const FString& MapName, const FString& Options,
 	{
 		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 		{
-			if(UObsidianSaveGame* SaveGameObject = SaveGameSubsystem->GetSaveGameObject())
+			if(UObsidianHeroSaveGame* SaveGameObject = SaveGameSubsystem->GetCurrentHeroSaveGameObject())
 			{
 				if (const TSubclassOf<AObsidianHero> HeroClass = SaveGameObject->GetHeroSaveData().InitializationSaveData.HeroObjectClass.LoadSynchronous())
 				{

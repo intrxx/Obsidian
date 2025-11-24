@@ -11,7 +11,7 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterCreationScreen.generated.h"
 
-class UObsidianSaveGame;
+class UObsidianHeroSaveGame;
 class AObsidianFrontEndGameMode;
 class UEditableTextBox;
 class UCheckBox;
@@ -93,7 +93,7 @@ protected:
 
 	void ResetHeroDetails() const;
 
-	void OnCreateSavingFinished(UObsidianSaveGame* SaveGame, bool bSuccess);
+	void OnCreateSavingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

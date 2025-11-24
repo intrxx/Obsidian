@@ -14,7 +14,7 @@
 
 // ~ Project
 #include "Game/ObsidianFrontEndGameMode.h"
-#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "UI/Components/ObsidianButtonBase.h"
 #include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
@@ -127,8 +127,8 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 
 	const ECheckBoxState CheckBoxState = Hardcore_CheckBox->GetCheckedState();
 	const bool bIsHardcoreChecked = CheckBoxState == ECheckBoxState::Checked;
-	const FObsidianHeroClassParams Params = FrontEndGameMode->CreateHeroClass(ChosenClass, PlayerName_EditableTextBox->GetText(),
-		bIsOnlineCharacter, bIsHardcoreChecked);
+	const FObsidianHeroClassParams Params = FrontEndGameMode->CreateHeroClass(ChosenClass,
+		PlayerName_EditableTextBox->GetText(), bIsOnlineCharacter, bIsHardcoreChecked);
 	
 	if(Params.IsValid())
 	{
@@ -141,8 +141,6 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 					SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnCreateSavingFinishedHandle);
 				}
 				
-				SaveGameSubsystem->CreateSaveGameObject(GetOwningLocalPlayer<UObsidianLocalPlayer>());
-				
 				FObsidianHeroInitializationSaveData InitializationSaveData;
 				InitializationSaveData.PlayerHeroName = Params.ObsidianPlayerName;
 				InitializationSaveData.HeroObjectClass = Params.HeroObjectClass;
@@ -152,7 +150,7 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 
 				OnCreateSavingFinishedHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
 					&ThisClass::OnCreateSavingFinished);
-				SaveGameSubsystem->RequestSaveInitialHeroSave(true, InitializationSaveData,
+				SaveGameSubsystem->RequestSaveInitialHeroSave(true, bIsOnlineCharacter, InitializationSaveData,
 					GetOwningLocalPlayer<UObsidianLocalPlayer>());
 			}
 		} 
@@ -278,7 +276,7 @@ void UObsidianCharacterCreationScreen::ResetHeroDetails() const
 	PlayerName_EditableTextBox->SetText(FText());
 }
 
-void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianSaveGame* SaveGame, bool bSuccess)
+void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{

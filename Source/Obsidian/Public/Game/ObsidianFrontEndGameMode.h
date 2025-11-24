@@ -65,6 +65,9 @@ public:
 	bool DeleteHeroClass(const int32 WithID);
 
 protected:
+	virtual void BeginPlay() override;
+	
+protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|FrontEnd") 
 	TSubclassOf<UCommonActivatableWidget> MainMenuWidgetClass;
 

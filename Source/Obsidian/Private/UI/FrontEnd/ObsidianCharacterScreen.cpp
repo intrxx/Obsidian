@@ -12,7 +12,7 @@
 #include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
-#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
@@ -233,7 +233,7 @@ void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacter
 	CachedChosenCharacterEntry = EntryClicked;
 }
 
-void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame, bool bSuccess)
+void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{

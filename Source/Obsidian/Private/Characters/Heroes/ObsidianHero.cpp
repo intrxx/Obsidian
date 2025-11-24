@@ -18,7 +18,7 @@
 #include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
-#include "Game/Save/ObsidianSaveGame.h"
+#include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
@@ -215,7 +215,7 @@ FVector AObsidianHero::GetAbilitySocketLocationFromRHWeapon_Implementation()
 	return FVector::ZeroVector;
 }
 
-void AObsidianHero::SaveData(UObsidianSaveGame* SaveObject)
+void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
 {
 	if (SaveObject == nullptr)
 	{
@@ -229,7 +229,7 @@ void AObsidianHero::SaveData(UObsidianSaveGame* SaveObject)
 	SaveObject->SetHeroGameplayData(HeroSaveData);
 }
 
-void AObsidianHero::LoadData(UObsidianSaveGame* SaveObject)
+void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 {
 	if (SaveObject == nullptr)
 	{

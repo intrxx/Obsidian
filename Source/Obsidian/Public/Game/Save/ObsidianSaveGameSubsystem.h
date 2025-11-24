@@ -7,12 +7,14 @@
 #include <Subsystems/GameInstanceSubsystem.h>
 #include "ObsidianSaveGameSubsystem.generated.h"
 
-class UObsidianLocalPlayer;
 struct FObsidianHeroInitializationSaveData;
-class AObsidianPlayerController;
-class UObsidianSaveGame;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveActionFinishedSignature, UObsidianSaveGame* SaveObject, bool bSuccess)
+class UObsidianLocalPlayer;
+class AObsidianPlayerController;
+class UObsidianHeroSaveGame;
+class UObsidianMasterSaveGame;
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveActionFinishedSignature, UObsidianHeroSaveGame* SaveObject, bool bSuccess)
 
 DECLARE_LOG_CATEGORY_EXTERN(LogObsidianSaveSystem, Log, All)
 
@@ -25,15 +27,17 @@ class OBSIDIAN_API UObsidianSaveGameSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-	UObsidianSaveGame* GetSaveGameObject();
-	
-	void CreateSaveGameObject(const UObsidianLocalPlayer* LocalPlayer);
+	UObsidianHeroSaveGame* GetCurrentHeroSaveGameObject();
+
+	//TODO(intrxx) Currently called before pushing main menu in GameMode, call in some better place
+	void LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer);
 	
 	void RegisterSaveable(AActor* SaveActor);
 	void UnregisterSaveable(AActor* SaveActor);
 	
 	void RequestSaveGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer);
-	void RequestSaveInitialHeroSave(const bool bAsync, const FObsidianHeroInitializationSaveData& HeroInitializationSaveData ,
+	void RequestSaveInitialHeroSave(const bool bAsync, const bool bOnline,
+		const FObsidianHeroInitializationSaveData& HeroInitializationSaveData,
 		const UObsidianLocalPlayer* LocalPlayer);
 	
 	void RequestLoadGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer);
@@ -44,26 +48,31 @@ public:
 	FOnSaveActionFinishedSignature OnLoadingFinishedDelegate;
 
 protected:
-	void SaveGameForPlayer(const UObsidianLocalPlayer* LocalPlayer);
-	void SaveGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer);
+	void SaveGameForPlayer();
+	void SaveGameForPlayerAsync();
 	
 	void LoadGameForPlayer(const UObsidianLocalPlayer* LocalPlayer);
 	void LoadGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer);
+
+	UObsidianHeroSaveGame* CreateHeroSaveGameObject(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName);
 	
 protected:
 	UPROPERTY()
 	TArray<TWeakObjectPtr<AActor>> SaveableActors;
 	
 	UPROPERTY()
-	TObjectPtr<UObsidianSaveGame> ObsidianSaveGame;
+	TArray<TObjectPtr<UObsidianHeroSaveGame>> ObsidianHeroSaveGames;
 
 	UPROPERTY()
-	FString SaveSlotName = FString();
+	TObjectPtr<UObsidianHeroSaveGame> CurrentHeroSaveGame;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianMasterSaveGame> ObsidianMasterSaveGame;
 
 private:
-	void HandleLoadingFinished(UObsidianSaveGame* SaveGame);
-	void HandleSavingFinished(const bool bSuccess, UObsidianSaveGame* SaveGame);
+	void HandleLoadingFinished(UObsidianHeroSaveGame* SaveGame);
+	void HandleSavingFinished(const bool bSuccess, UObsidianHeroSaveGame* SaveGame);
 
 private:
-	friend UObsidianSaveGame;
+	friend UObsidianHeroSaveGame;
 };

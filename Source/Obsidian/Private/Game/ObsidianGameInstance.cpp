@@ -7,3 +7,4 @@ UObsidianGameInstance::UObsidianGameInstance(const FObjectInitializer& ObjectIni
 	: Super(ObjectInitializer)
 {
 }
+

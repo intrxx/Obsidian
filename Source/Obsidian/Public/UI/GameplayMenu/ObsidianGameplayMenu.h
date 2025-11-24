@@ -7,7 +7,7 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianGameplayMenu.generated.h"
 
-class UObsidianSaveGame;
+class UObsidianHeroSaveGame;
 class UObsidianButtonBase;
 class UCommonActivatableWidget;
 
@@ -30,7 +30,7 @@ protected:
 	void OnOptionsClicked();
 	void OnSaveAndExitClicked();
 
-	void OnSaveFinished(UObsidianSaveGame* SaveGame, bool bSuccess);
+	void OnSaveFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

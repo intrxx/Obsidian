@@ -3,7 +3,10 @@
 #include "Game/ObsidianFrontEndGameMode.h"
 
 
+#include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
+#include "Kismet/GameplayStatics.h"
 
 void FObsidianHeroClassParams::Reset()
 {
@@ -60,6 +63,15 @@ bool AObsidianFrontEndGameMode::DeleteHeroClass(const int32 WithID)
 		}
 	}
 	return false;
+}
+
+void AObsidianFrontEndGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+	
+	UObsidianSaveGameSubsystem* SaveGameSubsystem = GetGameInstance()->GetSubsystem<UObsidianSaveGameSubsystem>();
+	const APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	SaveGameSubsystem->LoadOrCreateMasterSaveObject(Cast<UObsidianLocalPlayer>(PlayerController->GetLocalPlayer()));
 }
 
 

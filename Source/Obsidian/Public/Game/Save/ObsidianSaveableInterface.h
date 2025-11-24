@@ -8,7 +8,7 @@
 #include <UObject/Interface.h>
 #include "ObsidianSaveableInterface.generated.h"
 
-class UObsidianSaveGame;
+class UObsidianHeroSaveGame;
 
 UINTERFACE(MinimalAPI)
 class UObsidianSaveableInterface : public UInterface
@@ -24,6 +24,6 @@ class OBSIDIAN_API IObsidianSaveableInterface
 	GENERATED_BODY()
 
 public:
-	virtual void SaveData(UObsidianSaveGame* SaveObject) = 0;
-	virtual void LoadData(UObsidianSaveGame* SaveObject) = 0;
+	virtual void SaveData(UObsidianHeroSaveGame* SaveObject) = 0;
+	virtual void LoadData(UObsidianHeroSaveGame* SaveObject) = 0;
 };

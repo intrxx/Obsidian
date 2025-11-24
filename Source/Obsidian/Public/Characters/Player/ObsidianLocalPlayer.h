@@ -15,5 +15,7 @@ UCLASS()
 class OBSIDIAN_API UObsidianLocalPlayer : public UCommonLocalPlayer
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void PostInitProperties() override;
 };

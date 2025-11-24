@@ -1,0 +1,65 @@
+// Copyright 2024 out of sCope team - Michał Ogiński
+
+#include "Game/Save/ObsidianMasterSaveGame.h"
+
+void UObsidianMasterSaveGame::InitializeMasterSave()
+{
+}
+
+FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddHero(const bool bOnline,
+	const FObsidianHeroInitializationSaveData& HeroSaveData)
+{
+	if (bOnline)
+	{
+		return AddOnlineHero(HeroSaveData);
+	}
+	return AddOfflineHero(HeroSaveData);
+}
+
+FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddOfflineHero(const FObsidianHeroInitializationSaveData& HeroSaveData)
+{
+	FObsidianHeroSaveInfo HeroSaveInfo;
+	HeroSaveInfo.SaveID = GetMaxOfflineSaveID();
+	HeroSaveInfo.SaveName = FString::Printf(TEXT("offline_hero_%d"), HeroSaveInfo.SaveID), 
+	HeroSaveInfo.bOnline = false;
+
+	FObsidianHeroDescription HeroDescription;
+	HeroDescription.HeroName = HeroSaveData.PlayerHeroName;
+	HeroDescription.HeroClass = HeroSaveData.HeroClass;
+	HeroDescription.HeroLevel = 1;
+	HeroDescription.bHardcore = HeroSaveData.bHardcore;
+
+	HeroSaveInfo.HeroDescription = HeroDescription;
+	MasterSaveParams.OfflineSavedHeroes.Add(HeroSaveInfo);
+
+	return FObsidianAddHeroSaveResult(HeroSaveInfo.SaveName, HeroSaveInfo.SaveID);
+}
+
+FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddOnlineHero(const FObsidianHeroInitializationSaveData& HeroSaveData)
+{
+	FObsidianHeroSaveInfo HeroSaveInfo;
+	HeroSaveInfo.SaveID = GetMaxOnlineSaveID();
+	HeroSaveInfo.SaveName = FString::Printf(TEXT("online_hero_%d"), HeroSaveInfo.SaveID);
+	HeroSaveInfo.bOnline = true;
+
+	FObsidianHeroDescription HeroDescription;
+	HeroDescription.HeroName = HeroSaveData.PlayerHeroName;
+	HeroDescription.HeroClass = HeroSaveData.HeroClass;
+	HeroDescription.HeroLevel = 1;
+	HeroDescription.bHardcore = HeroSaveData.bHardcore;
+
+	HeroSaveInfo.HeroDescription = HeroDescription;
+	MasterSaveParams.OfflineSavedHeroes.Add(HeroSaveInfo);
+
+	return FObsidianAddHeroSaveResult(HeroSaveInfo.SaveName, HeroSaveInfo.SaveID);
+}
+
+uint16 UObsidianMasterSaveGame::GetMaxOfflineSaveID() const
+{
+	return MasterSaveParams.OfflineSavedHeroes.Num();
+}
+
+uint16 UObsidianMasterSaveGame::GetMaxOnlineSaveID() const
+{
+	return MasterSaveParams.OnlineSavedHeroes.Num();
+}

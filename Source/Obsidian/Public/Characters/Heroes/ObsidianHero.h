@@ -62,8 +62,8 @@ public:
 	//~ End of CombatInterface
 
 	//~ Start of SaveableInterface
-	virtual void SaveData(UObsidianSaveGame* SaveObject) override;
-	virtual void LoadData(UObsidianSaveGame* SaveObject) override;
+	virtual void SaveData(UObsidianHeroSaveGame* SaveObject) override;
+	virtual void LoadData(UObsidianHeroSaveGame* SaveObject) override;
 	//~ End of SaveableInterface
 
 	/** Updates when boss sees Player, BossActor will be nullptr when Boss lost sight of Player, this is by design and might change. */

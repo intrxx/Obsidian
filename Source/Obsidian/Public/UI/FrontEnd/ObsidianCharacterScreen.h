@@ -8,7 +8,7 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterScreen.generated.h"
 
-class UObsidianSaveGame;
+class UObsidianHeroSaveGame;
 class UObsidianCharacterEntry;
 class AObsidianFrontEndGameMode;
 class UCommonHierarchicalScrollBox;
@@ -52,7 +52,7 @@ protected:
 
 	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked);
 
-	void OnPopulateCharacterLoadingFinished(UObsidianSaveGame* SaveGame, bool bSuccess);
+	void OnPopulateCharacterLoadingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
