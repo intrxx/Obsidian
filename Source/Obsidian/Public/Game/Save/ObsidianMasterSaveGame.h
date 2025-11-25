@@ -111,6 +111,8 @@ class OBSIDIAN_API UObsidianMasterSaveGame : public ULocalPlayerSaveGame
 public:
 	void InitializeMasterSave();
 
+	TArray<FObsidianHeroSaveInfo> GetHeroSaveInfos(const bool bOnline);
+
 	FObsidianAddHeroSaveResult AddHero(const bool bOnline, const FObsidianHeroInitializationSaveData& HeroSaveData);
 
 	uint16 GetMaxOfflineSaveID() const; 

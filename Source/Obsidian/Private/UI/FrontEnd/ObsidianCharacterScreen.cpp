@@ -13,6 +13,7 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Game/Save/ObsidianHeroSaveGame.h"
+#include "Game/Save/ObsidianMasterSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
@@ -144,12 +145,6 @@ void UObsidianCharacterScreen::OnCreateClicked()
 
 void UObsidianCharacterScreen::PopulateCharacterScreen()
 {
-	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-	if(PlayerController == nullptr)
-	{
-		return;
-	}
-
 	if(CharacterEntries.IsEmpty() == false)
 	{
 		for(UObsidianCharacterEntry* Entry : CharacterEntries)
@@ -158,26 +153,22 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 		}
 		CharacterEntries.Reset();
 	}
-	
-	if(bIsOnline == false)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Populating Offline Characters"));
-		
-		if (const UGameInstance* GameInstance = GetGameInstance())
-		{
-			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
-			{
-				if (OnPopulateLoadingFinishedDelegateHandle.IsValid())
-				{
-					SaveGameSubsystem->OnLoadingFinishedDelegate.Remove(OnPopulateLoadingFinishedDelegateHandle);
-				}
 
-				OnPopulateLoadingFinishedDelegateHandle = SaveGameSubsystem->OnLoadingFinishedDelegate.AddUObject(this,
-						&ThisClass::OnPopulateCharacterLoadingFinished);
-				SaveGameSubsystem->RequestLoadGame(true, GetOwningLocalPlayer<UObsidianLocalPlayer>());
-			}	
-		}
-		return;
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			TArray<FObsidianHeroSaveInfo> SaveInfos;
+			const bool bSuccess = SaveGameSubsystem->FillSaveInfosFromMasterSave(
+				bIsOnline,
+				Cast<UObsidianLocalPlayer>(GetOwningLocalPlayer()),
+				/** OUT */ SaveInfos);
+			
+			if (bSuccess)
+			{
+				CreateHeroEntries(SaveInfos);
+			}
+		}	
 	}
 }
 
@@ -212,6 +203,33 @@ void UObsidianCharacterScreen::InitCharacterScreen()
 	}
 }
 
+void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveInfo>& SaveInfos)
+{
+	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
+	if(PlayerController == nullptr)
+	{
+		return;
+	}
+
+	checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
+	if (CharacterEntryWidgetClass)
+	{
+		for (const FObsidianHeroSaveInfo& SaveInfo : SaveInfos)
+		{
+			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
+			Entry->InitializeCharacterEntry(SaveInfo.HeroDescription.HeroName, SaveInfo.HeroDescription.HeroLevel,
+				UObsidianGameplayStatics::GetHeroClassText(SaveInfo.HeroDescription.HeroClass),
+				false, SaveInfo.HeroDescription.bHardcore);
+			Entry->TempSaveID = SaveInfo.SaveID;
+							
+			CharacterList_ScrollBox->AddChild(Entry);
+			CharacterEntries.Add(Entry);
+		}
+	}
+		
+	InitCharacterScreen();
+}
+
 void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked)
 {
 	if(EntryClicked == nullptr)
@@ -233,36 +251,3 @@ void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacter
 	CachedChosenCharacterEntry = EntryClicked;
 }
 
-void UObsidianCharacterScreen::OnPopulateCharacterLoadingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess)
-{
-	if (const UGameInstance* GameInstance = GetGameInstance())
-	{
-		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
-		{
-			SaveGameSubsystem->OnLoadingFinishedDelegate.Remove(OnPopulateLoadingFinishedDelegateHandle);
-		}
-	}
-	
-	if (bSuccess && SaveGame)
-	{
-		APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
-		if(PlayerController == nullptr)
-		{
-			return;
-		}
-		
-		const FObsidianHeroSaveData HeroSaveData = SaveGame->GetHeroSaveData();
-		
-		checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
-		UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
-		Entry->InitializeCharacterEntry(HeroSaveData.InitializationSaveData.PlayerHeroName, HeroSaveData.GameplaySaveData.HeroLevel,
-			UObsidianGameplayStatics::GetHeroClassText(HeroSaveData.InitializationSaveData.HeroClass),
-			false, HeroSaveData.InitializationSaveData.bHardcore);
-		Entry->TempSaveID = HeroSaveData.InitializationSaveData.HeroID;
-							
-		CharacterList_ScrollBox->AddChild(Entry);
-		CharacterEntries.Add(Entry);
-	}
-					
-	InitCharacterScreen();
-}

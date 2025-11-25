@@ -15,6 +15,24 @@ UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::GetCurrentHeroSaveGameObject(
 	return CurrentHeroSaveGame;
 }
 
+bool UObsidianSaveGameSubsystem::FillSaveInfosFromMasterSave(const bool bOnline, const UObsidianLocalPlayer* LocalPlayer,
+	TArray<FObsidianHeroSaveInfo>& OutHeroInfos)
+{
+	if (ensure(LocalPlayer))
+	{
+		if (ObsidianMasterSaveGame == nullptr)
+		{
+			UE_LOG(LogObsidianSaveSystem, Error, TEXT("ObsidianMasterSaveGame isn't loaded yet in [%hs],"
+											 " need to load or create it now!"), __FUNCTION__);
+			LoadOrCreateMasterSaveObject(LocalPlayer);
+		}
+
+		OutHeroInfos.Append(ObsidianMasterSaveGame->GetHeroSaveInfos(bOnline));
+		return !OutHeroInfos.IsEmpty();
+	}
+	return false;
+}
+
 void UObsidianSaveGameSubsystem::LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer)
 {
 	if (ensure(LocalPlayer))
@@ -72,10 +90,9 @@ void UObsidianSaveGameSubsystem::UnregisterSaveable(AActor* SaveActor)
 
 void UObsidianSaveGameSubsystem::RequestSaveGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(LocalPlayer) && ensure(CurrentHeroSaveGame))
 	{
 		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Save for [%s]. "), *GetNameSafe(LocalPlayer));
-		check(CurrentHeroSaveGame);
 		
 		for (TWeakObjectPtr<AActor> SaveActor : SaveableActors)
 		{
@@ -92,10 +109,10 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const bool bAsync, const UObsid
 	
 		if (bAsync)
 		{
-			SaveGameForPlayerAsync();
+			SaveHeroGameForPlayerAsync();
 			return;
 		}
-		SaveGameForPlayer();
+		SaveHeroGameForPlayer();
 	}
 
 	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Save for invalid LocalPlayer!"));
@@ -115,14 +132,17 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const bool bAsync, c
 		UObsidianHeroSaveGame* NewHeroSaveGame = CreateHeroSaveGameObject(LocalPlayer, Result.SaveName);
 		NewHeroSaveGame->InitializeHeroSaveData(HeroInitializationSaveData);
 		CurrentHeroSaveGame = NewHeroSaveGame;
+
+		//TODO(intrxx) Make it async 
+		ObsidianMasterSaveGame->SaveGameToSlotForLocalPlayer();
 		
 		if (bAsync)
 		{
-			SaveGameForPlayerAsync();
+			SaveHeroGameForPlayerAsync();
 		}
 		else
 		{
-			SaveGameForPlayer();
+			SaveHeroGameForPlayer();
 		}
 		
 		return;
@@ -169,7 +189,7 @@ void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* LoadActor)
 	}
 }
 
-void UObsidianSaveGameSubsystem::SaveGameForPlayer()
+void UObsidianSaveGameSubsystem::SaveHeroGameForPlayer()
 {
 	if (CurrentHeroSaveGame)
 	{
@@ -179,7 +199,7 @@ void UObsidianSaveGameSubsystem::SaveGameForPlayer()
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::SaveGameForPlayerAsync()
+void UObsidianSaveGameSubsystem::SaveHeroGameForPlayerAsync()
 {
 	if (CurrentHeroSaveGame)
 	{

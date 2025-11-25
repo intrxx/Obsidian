@@ -8,6 +8,8 @@
 #include "UI/ObsidianActivatableWidget.h"
 #include "ObsidianCharacterScreen.generated.h"
 
+struct FObsidianHeroSaveInfo;
+
 class UObsidianHeroSaveGame;
 class UObsidianCharacterEntry;
 class AObsidianFrontEndGameMode;
@@ -52,7 +54,7 @@ protected:
 
 	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked);
 
-	void OnPopulateCharacterLoadingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess);
+	void CreateHeroEntries(const TArray<FObsidianHeroSaveInfo>& SaveInfos);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
