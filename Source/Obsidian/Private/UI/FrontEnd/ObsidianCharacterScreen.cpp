@@ -78,25 +78,35 @@ UWidget* UObsidianCharacterScreen::NativeGetDesiredFocusTarget() const
 void UObsidianCharacterScreen::InitializeOnlineCharacterScreen()
 {
 	TabName_TextBlock->SetText(FText::FromString(TEXT("Online Character Screen")));
-	bIsOnline = true;
+	bOnline = true;
 }
 
 void UObsidianCharacterScreen::InitializeOfflineCharacterScreen()
 {
 	TabName_TextBlock->SetText(FText::FromString(TEXT("Character Screen")));
-	bIsOnline = false;
+	bOnline = false;
 }
 
 void UObsidianCharacterScreen::OnPlayClicked()
 {
-	if (bIsOnline)
+	if (ensure(CachedChosenCharacterEntry))
 	{
-		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI_Layer_MainMenu,
-			SoftOnlineLobbyWidgetClass);
-		return;
-	}
+		if (const UGameInstance* GameInstance = GetGameInstance())
+		{
+			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+			{
+				if (OnPlayLoadingFinishedDelegateHandle.IsValid())
+				{
+					SaveGameSubsystem->OnLoadingFinishedDelegate.Remove(OnPlayLoadingFinishedDelegateHandle);
+				}
 
-	UGameplayStatics::OpenLevel(GetWorld(), FName("L_Tutorial_01"));
+				OnPlayLoadingFinishedDelegateHandle = SaveGameSubsystem->OnLoadingFinishedDelegate.AddUObject(this,
+					&ThisClass::OnPlayHeroLoadFinished);
+				SaveGameSubsystem->RequestLoadHeroSaveGameWithID(true, CachedChosenCharacterEntry->GetSaveID(),
+					bOnline, GetOwningLocalPlayer<UObsidianLocalPlayer>());
+			}
+		} 
+	}
 }
 
 void UObsidianCharacterScreen::OnDeleteClicked()
@@ -105,7 +115,7 @@ void UObsidianCharacterScreen::OnDeleteClicked()
 	{
 		CharacterEntries.Remove(CachedChosenCharacterEntry);
 		CachedChosenCharacterEntry->RemoveFromParent();
-		FrontEndGameMode->DeleteHeroClass(CachedChosenCharacterEntry->TempSaveID);
+		FrontEndGameMode->DeleteHeroClass(CachedChosenCharacterEntry->GetSaveID());
 
 		if(CharacterEntries.IsEmpty() == false)
 		{
@@ -137,7 +147,7 @@ void UObsidianCharacterScreen::OnCreateClicked()
 
 	if (CharacterCreationScreen)
 	{
-		CharacterCreationScreen->InitializeCharacterCreationScreen(bIsOnline);
+		CharacterCreationScreen->InitializeCharacterCreationScreen(bOnline);
 		CharacterCreationScreen->SetWidgetController(CharacterSelectionWidgetController);
 		CharacterSelectionWidgetController->SetupCameraForCreationPanel();
 	}
@@ -159,10 +169,8 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 		{
 			TArray<FObsidianHeroSaveInfo> SaveInfos;
-			const bool bSuccess = SaveGameSubsystem->FillSaveInfosFromMasterSave(
-				bIsOnline,
-				Cast<UObsidianLocalPlayer>(GetOwningLocalPlayer()),
-				/** OUT */ SaveInfos);
+			const bool bSuccess = SaveGameSubsystem->FillSaveInfosFromMasterSave(bOnline,
+				Cast<UObsidianLocalPlayer>(GetOwningLocalPlayer()), /** OUT */ SaveInfos);
 			
 			if (bSuccess)
 			{
@@ -210,17 +218,16 @@ void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveI
 	{
 		return;
 	}
-
+	
 	checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
 	if (CharacterEntryWidgetClass)
 	{
 		for (const FObsidianHeroSaveInfo& SaveInfo : SaveInfos)
 		{
 			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
-			Entry->InitializeCharacterEntry(SaveInfo.HeroDescription.HeroName, SaveInfo.HeroDescription.HeroLevel,
+			Entry->InitializeCharacterEntry(SaveInfo.SaveID, SaveInfo.HeroDescription.HeroName, SaveInfo.HeroDescription.HeroLevel,
 				UObsidianGameplayStatics::GetHeroClassText(SaveInfo.HeroDescription.HeroClass),
 				false, SaveInfo.HeroDescription.bHardcore);
-			Entry->TempSaveID = SaveInfo.SaveID;
 							
 			CharacterList_ScrollBox->AddChild(Entry);
 			CharacterEntries.Add(Entry);
@@ -228,6 +235,30 @@ void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveI
 	}
 		
 	InitCharacterScreen();
+}
+
+void UObsidianCharacterScreen::OnPlayHeroLoadFinished(UObsidianHeroSaveGame* SaveObject, bool bSuccess)
+{
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnPlayLoadingFinishedDelegateHandle);
+		}
+	}
+	
+	if (bSuccess && SaveObject)
+	{
+		if (bOnline)
+		{
+			UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(),
+				ObsidianGameplayTags::UI_Layer_MainMenu, SoftOnlineLobbyWidgetClass);
+		}
+		else
+		{
+			UGameplayStatics::OpenLevel(GetWorld(), FName("L_Tutorial_01"));
+		}
+	}	
 }
 
 void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked)

@@ -115,6 +115,7 @@ public:
 
 	FObsidianAddHeroSaveResult AddHero(const bool bOnline, const FObsidianHeroInitializationSaveData& HeroSaveData);
 
+	FString GetSaveNameForID(const uint16 SaveID, const bool bOnline) const; 
 	uint16 GetMaxOfflineSaveID() const; 
 	uint16 GetMaxOnlineSaveID() const; 
 

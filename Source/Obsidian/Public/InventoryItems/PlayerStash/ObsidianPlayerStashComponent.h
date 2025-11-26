@@ -46,7 +46,8 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
 	UObsidianInventoryItemInstance* GetItemInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition);
 
-	TArray<FObsidianStashSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType);
+	TArray<FObsidianStashSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory,
+		const FGameplayTag& ItemBaseType);
 	TArray<FObsidianStashSlotDefinition> FindPossibleSlotsForPlacingItem_WithInstance(const UObsidianInventoryItemInstance* ForInstance);
 	TArray<FObsidianStashSlotDefinition> FindPossibleSlotsForPlacingItem_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef);
 
@@ -59,9 +60,11 @@ public:
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 
 	/** Checks if the item fits in the provided spot. */
-	bool CheckSpecifiedPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FIntPoint& ItemGridSpan);
+	bool CheckSpecifiedPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory,
+		const FGameplayTag& ItemBaseTypeTag, const FIntPoint& ItemGridSpan);
 
-	bool CanFitInstanceInStashTab(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FGameplayTag& StashTabTag);
+	bool CanFitInstanceInStashTab(const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag,
+		const FGameplayTag& StashTabTag);
 	
 	bool CanReplaceItemAtPosition(const FObsidianItemPosition& AtItemPosition, const UObsidianInventoryItemInstance* ReplacingInstance);
 	bool CanReplaceItemAtPosition(const FObsidianItemPosition& AtItemPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef);
@@ -76,15 +79,18 @@ public:
 	 *
 	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
-	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, const FGameplayTag& InTabTag, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
+	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef,
+		const int32 StacksToAdd, const FGameplayTag& InTabTag, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
 	
 	/** Tries to add Item Definition to the Opened Stash Tab, if the item is stackable will first try to add all the stacks to the same item types if they exist in the Stash Tab. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
-	FObsidianItemOperationResult AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FGameplayTag& StashTabTag, const FObsidianItemGeneratedData& ItemGeneratedData);
+	FObsidianItemOperationResult AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+		const FGameplayTag& StashTabTag, const FObsidianItemGeneratedData& ItemGeneratedData);
 
 	/** Tries to add provided Item Definition to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
-	FObsidianItemOperationResult AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemPosition& ItemPosition, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride = -1);
+	FObsidianItemOperationResult AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+		const FObsidianItemPosition& ItemPosition, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Will try to add stacks from provided Item Definition at provided Position.
@@ -97,7 +103,8 @@ public:
 	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride = -1);
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef,
+		const int32 AddingFromItemDefCurrentStacks, const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride = -1);
 	
 	/** Tries to add Item Instance to the Player Stash, if the item is stackable will first try to add all the stacks to the same item types if they exist in the Stash Tab. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
@@ -105,7 +112,8 @@ public:
 	
 	/** Tries to add provided Item Instance to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
-	FObsidianItemOperationResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FObsidianItemPosition& ItemPosition, const int32 StackToAddOverride = -1);
+	FObsidianItemOperationResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd,
+		const FObsidianItemPosition& ItemPosition, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Will try to add stacks from provided Item Instance at provided Position. 
@@ -117,7 +125,8 @@ public:
 	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
-	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride = -1);
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance,
+		const FObsidianItemPosition& AtPosition, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Provides a copied Item with the amount of stacks to take. Shouldn't ever be called to take out full item stacks or 0 stacks.
@@ -128,7 +137,8 @@ public:
 	 *	@return New, duplicated item instance with StacksToTake number of stacks.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianItemOperationResult TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake);
+	FObsidianItemOperationResult TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance,
+		const int32 StacksToTake);
 	
 	/** Removes Item Instance from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
@@ -150,13 +160,16 @@ protected:
 	virtual void BeginPlay() override;
 	
 	/** Checks if the provided Item Definition fits anywhere in the Stash Tab (for tag). Provides Available Position. */
-	bool CanFitItemDefinition(FObsidianItemPosition& OutAvailablePosition, const FGameplayTag& StashTabTag, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	bool CanFitItemDefinition(FObsidianItemPosition& OutAvailablePosition, const FGameplayTag& StashTabTag,
+		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
 	/** Checks if the provided Item Definition fits in the Stash Tab (for tag) at provided slot. */
-	bool CanFitItemDefinitionToSpecifiedSlot(const FObsidianItemPosition& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	bool CanFitItemDefinitionToSpecifiedSlot(const FObsidianItemPosition& SpecifiedSlot,
+		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
-	bool CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FGameplayTag& StashTabTag);
+	bool CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan,
+		const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FGameplayTag& StashTabTag);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

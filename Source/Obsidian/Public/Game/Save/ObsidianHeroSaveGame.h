@@ -45,10 +45,7 @@ public:
 
 	UPROPERTY()
 	EObsidianHeroClass HeroClass = EObsidianHeroClass::None;
- 
-	UPROPERTY()
-	uint8 HeroID = INDEX_NONE;
-
+	
 	UPROPERTY()
 	uint8 bHardcore:1 = false;
 };
@@ -67,6 +64,9 @@ public:
 
 	UPROPERTY()
 	FObsidianHeroGameplaySaveData GameplaySaveData;
+
+	UPROPERTY()
+	uint16 SaveID = INDEX_NONE;
 };
 
 /**
@@ -84,6 +84,9 @@ public:
 	void SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData);
 	
 	FObsidianHeroSaveData GetHeroSaveData();
+
+	void SetSaveID(const uint16 InSaveID);
+	uint16 GetSaveID() const;
 	
 	virtual void HandlePostSave(bool bSuccess) override;
 	virtual void HandlePostLoad() override;

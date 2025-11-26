@@ -44,7 +44,8 @@ public:
 		const FObsidianHeroInitializationSaveData& HeroInitializationSaveData,
 		const UObsidianLocalPlayer* LocalPlayer);
 	
-	void RequestLoadGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer);
+	void RequestLoadHeroSaveGameWithID(const bool bAsync, const uint16 SaveID, const bool bOnline, const UObsidianLocalPlayer* LocalPlayer);
+	void RequestLoadGame(const bool bAsync, const FString& SlotName, const UObsidianLocalPlayer* LocalPlayer);
 	void RequestLoadDataForObject(AActor* LoadActor);
 	
 public:
@@ -55,18 +56,16 @@ protected:
 	void SaveHeroGameForPlayer();
 	void SaveHeroGameForPlayerAsync();
 	
-	void LoadGameForPlayer(const UObsidianLocalPlayer* LocalPlayer);
-	void LoadGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer);
+	void LoadGameForPlayer(const FString& SlotName, const UObsidianLocalPlayer* LocalPlayer);
+	void LoadGameForPlayerAsync(const FString& SlotName, const UObsidianLocalPlayer* LocalPlayer);
 
-	UObsidianHeroSaveGame* CreateHeroSaveGameObject(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName);
+	UObsidianHeroSaveGame* CreateHeroSaveGameObject(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName,
+		const uint16 SaveID);
 	
 protected:
 	UPROPERTY()
 	TArray<TWeakObjectPtr<AActor>> SaveableActors;
 	
-	UPROPERTY()
-	TArray<TObjectPtr<UObsidianHeroSaveGame>> ObsidianHeroSaveGames;
-
 	UPROPERTY()
 	TObjectPtr<UObsidianHeroSaveGame> CurrentHeroSaveGame;
 
@@ -74,8 +73,8 @@ protected:
 	TObjectPtr<UObsidianMasterSaveGame> ObsidianMasterSaveGame;
 
 private:
-	void HandleLoadingFinished(UObsidianHeroSaveGame* SaveGame);
-	void HandleSavingFinished(const bool bSuccess, UObsidianHeroSaveGame* SaveGame);
+	void HandleLoadingHeroSaveFinished(UObsidianHeroSaveGame* SaveGame);
+	void HandleSavingHeroSaveFinished(const bool bSuccess, UObsidianHeroSaveGame* SaveGame);
 
 private:
 	friend UObsidianHeroSaveGame;

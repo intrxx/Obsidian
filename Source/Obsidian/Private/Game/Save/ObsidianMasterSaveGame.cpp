@@ -25,6 +25,32 @@ FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddHero(const bool bOnline,
 	return AddOfflineHero(HeroSaveData);
 }
 
+FString UObsidianMasterSaveGame::GetSaveNameForID(const uint16 SaveID, const bool bOnline) const
+{
+	if (bOnline)
+	{
+		for (const FObsidianHeroSaveInfo& SaveInfo : MasterSaveParams.OnlineSavedHeroes)
+		{
+			if (SaveInfo.SaveID == SaveID)
+			{
+				return SaveInfo.SaveName;
+			}
+		}
+		
+		return FString();
+	}
+
+	for (const FObsidianHeroSaveInfo& SaveInfo : MasterSaveParams.OfflineSavedHeroes)
+	{
+		if (SaveInfo.SaveID == SaveID)
+		{
+			return SaveInfo.SaveName;
+		}
+	}
+		
+	return FString();
+}
+
 FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddOfflineHero(const FObsidianHeroInitializationSaveData& HeroSaveData)
 {
 	FObsidianHeroSaveInfo HeroSaveInfo;

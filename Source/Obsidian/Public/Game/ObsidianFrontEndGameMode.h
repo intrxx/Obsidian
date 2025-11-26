@@ -46,7 +46,7 @@ public:
 	EObsidianHeroClass Class = EObsidianHeroClass::None;
 
 	UPROPERTY()
-	int32 TempID = 0;
+	int32 HeroID = 0;
 };
 
 /**

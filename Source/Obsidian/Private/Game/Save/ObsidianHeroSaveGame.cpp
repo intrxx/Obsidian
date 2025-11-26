@@ -26,11 +26,21 @@ FObsidianHeroSaveData UObsidianHeroSaveGame::GetHeroSaveData()
 	return HeroSaveData;
 }
 
+void UObsidianHeroSaveGame::SetSaveID(const uint16 InSaveID)
+{
+	HeroSaveData.SaveID = InSaveID;
+}
+
+uint16 UObsidianHeroSaveGame::GetSaveID() const
+{
+	return HeroSaveData.SaveID;
+}
+
 void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)
 {
 	if (SaveGameSubsystem.IsValid())
 	{
-		SaveGameSubsystem->HandleSavingFinished(bSuccess, this);
+		SaveGameSubsystem->HandleSavingHeroSaveFinished(bSuccess, this);
 	}
 	else if (const ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{
@@ -41,7 +51,7 @@ void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)
 				if (UObsidianSaveGameSubsystem* ObSaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 				{
 					SaveGameSubsystem = ObSaveGameSubsystem;
-					SaveGameSubsystem->HandleSavingFinished(bSuccess, this);
+					SaveGameSubsystem->HandleSavingHeroSaveFinished(bSuccess, this);
 				}
 			}
 		}
@@ -58,7 +68,7 @@ void UObsidianHeroSaveGame::HandlePostLoad()
 {
 	if (SaveGameSubsystem.IsValid())
 	{
-		SaveGameSubsystem->HandleLoadingFinished(this);
+		SaveGameSubsystem->HandleLoadingHeroSaveFinished(this);
 	}
 	else if (const ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{
@@ -69,7 +79,7 @@ void UObsidianHeroSaveGame::HandlePostLoad()
 				if (UObsidianSaveGameSubsystem* ObSaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 				{
 					SaveGameSubsystem = ObSaveGameSubsystem;
-					SaveGameSubsystem->HandleLoadingFinished(this);
+					SaveGameSubsystem->HandleLoadingHeroSaveFinished(this);
 				}
 			}
 		}

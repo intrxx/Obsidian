@@ -56,6 +56,8 @@ protected:
 
 	void CreateHeroEntries(const TArray<FObsidianHeroSaveInfo>& SaveInfos);
 
+	void OnPlayHeroLoadFinished(UObsidianHeroSaveGame* SaveObject, bool bSuccess);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UCommonActivatableWidget> SoftOnlineLobbyWidgetClass;
@@ -78,8 +80,9 @@ protected:
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianCharacterEntry>> CharacterEntries; 
 
+	//TODO(intrxx) Change this to some general call into network subsystem?
 	UPROPERTY(BlueprintReadOnly)
-	bool bIsOnline = false;
+	bool bOnline = false;
 	
 	FDelegateHandle OnPopulateLoadingFinishedDelegateHandle;
 	FDelegateHandle OnPlayLoadingFinishedDelegateHandle;

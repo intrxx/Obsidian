@@ -15,7 +15,7 @@ void FObsidianHeroClassParams::Reset()
 	bIsOnline = false;
 	HeroObjectClass = nullptr;
 	Class = EObsidianHeroClass::None;
-	TempID = 0;
+	HeroID = 0;
 }
 
 bool FObsidianHeroClassParams::IsValid() const
@@ -45,7 +45,6 @@ FObsidianHeroClassParams AObsidianFrontEndGameMode::CreateHeroClass(const EObsid
 	HeroClassParams.ObsidianPlayerName = InName;
 	HeroClassParams.bIsOnline = InIsOnline;
 	HeroClassParams.bIsHardcore = InIsHardcore;
-	HeroClassParams.TempID = CreatedHeroes.Num();
 	
 	CreatedHeroes.Add(HeroClassParams);
 	return HeroClassParams;
@@ -56,7 +55,7 @@ bool AObsidianFrontEndGameMode::DeleteHeroClass(const int32 WithID)
 	for(auto It = CreatedHeroes.CreateIterator(); It; ++It)
 	{
 		FObsidianHeroClassParams& Params = *It;
-		if(Params.TempID == WithID)
+		if(Params.HeroID == WithID)
 		{
 			It.RemoveCurrent();
 			return true;

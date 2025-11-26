@@ -146,7 +146,6 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 				InitializationSaveData.HeroObjectClass = Params.HeroObjectClass;
 				InitializationSaveData.HeroClass = Params.Class;
 				InitializationSaveData.bHardcore = Params.bIsHardcore;
-				InitializationSaveData.HeroID = Params.TempID;
 
 				OnCreateSavingFinishedHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
 					&ThisClass::OnCreateSavingFinished);
