@@ -26,19 +26,11 @@ protected:
 	virtual void NativeOnActivated() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-
-	void OnPlayClicked();
-	void OnOnlineClicked();
+	
 	void OnOptionsClicked();
 	void OnQuitClicked();
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TSoftClassPtr<UCommonActivatableWidget> SoftCharacterSelectionWidgetClass;
-
-	UPROPERTY()
-	TSubclassOf<UCommonActivatableWidget> LoadedCharacterSelectionWidgetClass;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UCommonActivatableWidget> SoftSettingsMenuWidgetClass;
 

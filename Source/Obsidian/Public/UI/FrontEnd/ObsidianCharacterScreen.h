@@ -47,7 +47,6 @@ protected:
 	
 	void OnPlayClicked();
 	void OnDeleteClicked();
-	void OnCreateClicked();
 
 	void PopulateCharacterScreen();
 	void InitCharacterScreen();
@@ -61,12 +60,6 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UCommonActivatableWidget> SoftOnlineLobbyWidgetClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	TSoftClassPtr<UCommonActivatableWidget> SoftCharacterCreationScreenClass;
-
-	UPROPERTY()
-	TSubclassOf<UCommonActivatableWidget> LoadedCharacterCreationScreenClass;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UObsidianCharacterEntry> CharacterEntryWidgetClass;
@@ -103,7 +96,7 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> TabName_TextBlock;
 
-private:
-	UPROPERTY()
+protected:
+	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UObCharacterSelectionWidgetController> CharacterSelectionWidgetController;
 };

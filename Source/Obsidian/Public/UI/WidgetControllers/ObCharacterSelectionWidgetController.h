@@ -31,7 +31,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
 	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass ForClass);
 
+	UFUNCTION(BlueprintCallable, Category = "Obisidan")
 	void SetupCameraForCreationPanel();
+	UFUNCTION(BlueprintCallable, Category = "Obisidan")
 	void ResetCameraToDefaultViewTarget();
 
 private:

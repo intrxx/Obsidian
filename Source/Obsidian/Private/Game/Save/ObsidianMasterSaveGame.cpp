@@ -84,7 +84,7 @@ FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddOnlineHero(const FObsidia
 	HeroDescription.bHardcore = HeroSaveData.bHardcore;
 
 	HeroSaveInfo.HeroDescription = HeroDescription;
-	MasterSaveParams.OfflineSavedHeroes.Add(HeroSaveInfo);
+	MasterSaveParams.OnlineSavedHeroes.Add(HeroSaveInfo);
 
 	return FObsidianAddHeroSaveResult(HeroSaveInfo.SaveName, HeroSaveInfo.SaveID);
 }

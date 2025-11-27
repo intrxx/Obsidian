@@ -22,6 +22,7 @@ void UObsidianCharacterScreen::HandleWidgetControllerSet()
 {
 	CharacterSelectionWidgetController = Cast<UObCharacterSelectionWidgetController>(WidgetController);
 	check(CharacterSelectionWidgetController);
+	
 }
 
 void UObsidianCharacterScreen::NativeConstruct()
@@ -30,7 +31,6 @@ void UObsidianCharacterScreen::NativeConstruct()
 
 	Play_Button->OnClicked().AddUObject(this, &ThisClass::OnPlayClicked);
 	Delete_Button->OnClicked().AddUObject(this, &ThisClass::OnDeleteClicked);
-	Create_Button->OnClicked().AddUObject(this, &ThisClass::OnCreateClicked);
 	
 	FrontEndGameMode = Cast<AObsidianFrontEndGameMode>(UGameplayStatics::GetGameMode(this));
 	ensureMsgf(FrontEndGameMode, TEXT("FrontEndGameMode is invalid in UObsidianCharacterCreationScreen::NativeOnActivated()"));
@@ -42,7 +42,6 @@ void UObsidianCharacterScreen::NativeDestruct()
 	{
 		Play_Button->OnClicked().Clear();
 		Delete_Button->OnClicked().Clear();
-		Create_Button->OnClicked().Clear();
 	}
 	
 	Super::NativeDestruct();
@@ -51,7 +50,7 @@ void UObsidianCharacterScreen::NativeDestruct()
 void UObsidianCharacterScreen::NativeOnActivated()
 {
 	Super::NativeOnActivated();
-	
+
 	PopulateCharacterScreen();
 }
 
@@ -132,27 +131,6 @@ void UObsidianCharacterScreen::OnDeleteClicked()
 	}
 }
 
-void UObsidianCharacterScreen::OnCreateClicked()
-{
-	if (LoadedCharacterCreationScreenClass == nullptr)
-	{
-		LoadedCharacterCreationScreenClass = SoftCharacterCreationScreenClass.LoadSynchronous();
-		UE_LOG(LogTemp, Warning, TEXT("Needed to load CharacterSelectionWidgetClass Synchronously!"));
-	}
-	
-	UObsidianCharacterCreationScreen* CharacterCreationScreen = Cast<UObsidianCharacterCreationScreen>(
-		UCommonUIExtensions::PushContentToLayer_ForPlayer(GetOwningLocalPlayer(),
-			ObsidianGameplayTags::UI_Layer_MainMenu,
-			LoadedCharacterCreationScreenClass));
-
-	if (CharacterCreationScreen)
-	{
-		CharacterCreationScreen->InitializeCharacterCreationScreen(bOnline);
-		CharacterCreationScreen->SetWidgetController(CharacterSelectionWidgetController);
-		CharacterSelectionWidgetController->SetupCameraForCreationPanel();
-	}
-}
-
 void UObsidianCharacterScreen::PopulateCharacterScreen()
 {
 	if(CharacterEntries.IsEmpty() == false)
@@ -163,7 +141,7 @@ void UObsidianCharacterScreen::PopulateCharacterScreen()
 		}
 		CharacterEntries.Reset();
 	}
-
+	
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
 		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
@@ -228,7 +206,7 @@ void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveI
 			Entry->InitializeCharacterEntry(SaveInfo.SaveID, SaveInfo.HeroDescription.HeroName, SaveInfo.HeroDescription.HeroLevel,
 				UObsidianGameplayStatics::GetHeroClassText(SaveInfo.HeroDescription.HeroClass),
 				false, SaveInfo.HeroDescription.bHardcore);
-							
+			
 			CharacterList_ScrollBox->AddChild(Entry);
 			CharacterEntries.Add(Entry);
 		}
