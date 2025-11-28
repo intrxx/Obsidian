@@ -25,6 +25,34 @@ FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddHero(const bool bOnline,
 	return AddOfflineHero(HeroSaveData);
 }
 
+bool UObsidianMasterSaveGame::DeleteHero(const uint16 SaveID, const bool bOnline)
+{
+	if (bOnline)
+	{
+		for(auto It = MasterSaveParams.OnlineSavedHeroes.CreateIterator(); It; ++It)
+		{
+			FObsidianHeroSaveInfo& Params = *It;
+			if(Params.SaveID == SaveID)
+			{
+				It.RemoveCurrent();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	for(auto It = MasterSaveParams.OfflineSavedHeroes.CreateIterator(); It; ++It)
+	{
+		FObsidianHeroSaveInfo& Params = *It;
+		if(Params.SaveID == SaveID)
+		{
+			It.RemoveCurrent();
+			return true;
+		}
+	}
+	return false;
+}
+
 FString UObsidianMasterSaveGame::GetSaveNameForID(const uint16 SaveID, const bool bOnline) const
 {
 	if (bOnline)

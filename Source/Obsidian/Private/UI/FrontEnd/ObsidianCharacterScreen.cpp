@@ -110,23 +110,35 @@ void UObsidianCharacterScreen::OnPlayClicked()
 
 void UObsidianCharacterScreen::OnDeleteClicked()
 {
-	if(CachedChosenCharacterEntry && FrontEndGameMode && CharacterEntries.Contains(CachedChosenCharacterEntry))
+	if (ensure(CachedChosenCharacterEntry))
 	{
-		CharacterEntries.Remove(CachedChosenCharacterEntry);
-		CachedChosenCharacterEntry->RemoveFromParent();
-		FrontEndGameMode->DeleteHeroClass(CachedChosenCharacterEntry->GetSaveID());
-
-		if(CharacterEntries.IsEmpty() == false)
+		bool bSuccess = false;
+		if (const UGameInstance* GameInstance = GetGameInstance())
 		{
-			if(UObsidianCharacterEntry* NewEntry = CharacterEntries[0])
+			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 			{
-				NewEntry->SetIsChosen();
-				CachedChosenCharacterEntry = NewEntry;
+				bSuccess = SaveGameSubsystem->DeleteHeroSave(CachedChosenCharacterEntry->GetSaveID(), bOnline);
 			}
-		}
-		else
+		} 
+	
+		if(bSuccess && FrontEndGameMode && CharacterEntries.Contains(CachedChosenCharacterEntry))
 		{
-			Play_Button->SetIsEnabled(false);
+			CachedChosenCharacterEntry->RemoveFromParent();
+			FrontEndGameMode->DeleteHeroClass(CachedChosenCharacterEntry->GetSaveID());
+			CharacterEntries.Remove(CachedChosenCharacterEntry);
+		
+			if(CharacterEntries.IsEmpty() == false)
+			{
+				if(UObsidianCharacterEntry* NewEntry = CharacterEntries[0])
+				{
+					NewEntry->SetIsChosen();
+					CachedChosenCharacterEntry = NewEntry;
+				}
+			}
+			else
+			{
+				Play_Button->SetIsEnabled(false);
+			}
 		}
 	}
 }
@@ -204,8 +216,8 @@ void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveI
 		{
 			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
 			Entry->InitializeCharacterEntry(SaveInfo.SaveID, SaveInfo.HeroDescription.HeroName, SaveInfo.HeroDescription.HeroLevel,
-				UObsidianGameplayStatics::GetHeroClassText(SaveInfo.HeroDescription.HeroClass),
-				false, SaveInfo.HeroDescription.bHardcore);
+				UObsidianGameplayStatics::GetHeroClassText(SaveInfo.HeroDescription.HeroClass), false,
+				SaveInfo.HeroDescription.bHardcore);
 			
 			CharacterList_ScrollBox->AddChild(Entry);
 			CharacterEntries.Add(Entry);

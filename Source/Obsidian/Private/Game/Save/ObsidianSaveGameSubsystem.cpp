@@ -7,6 +7,7 @@
 #include "Game/Save/ObsidianSaveableInterface.h"
 #include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianMasterSaveGame.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogObsidianSaveSystem)
 
@@ -190,6 +191,36 @@ void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* LoadActor)
 	{
 		SaveableInterface->LoadData(CurrentHeroSaveGame);
 	}
+}
+
+bool UObsidianSaveGameSubsystem::DeleteHeroSave(const uint16 SaveID, const bool bOnline)
+{
+	check(ObsidianMasterSaveGame)
+	const FString SlotNameToDelete = ObsidianMasterSaveGame->GetSaveNameForID(SaveID, bOnline);
+	const bool bSuccess = UGameplayStatics::DeleteGameInSlot(SlotNameToDelete, 0);
+	if (bSuccess)
+	{
+		if (!ObsidianMasterSaveGame->DeleteHero(SaveID, bOnline))
+		{
+			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s],"
+				" could not be deleted on Master Save Object."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID,
+				*SlotNameToDelete)
+		}
+	}
+	else
+	{
+		if (!UGameplayStatics::DoesSaveGameExist(SlotNameToDelete, 0))
+		{
+			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s] does not exist,"
+				" and could not be deleted."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID, *SlotNameToDelete)
+		}
+		else
+		{
+			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s], could not be deleted."),
+				bOnline ? TEXT("Online") : TEXT("Offline"), SaveID, *SlotNameToDelete)
+		}
+	}
+	return bSuccess;
 }
 
 void UObsidianSaveGameSubsystem::SaveHeroGameForPlayer()

@@ -114,6 +114,7 @@ public:
 	TArray<FObsidianHeroSaveInfo> GetHeroSaveInfos(const bool bOnline);
 
 	FObsidianAddHeroSaveResult AddHero(const bool bOnline, const FObsidianHeroInitializationSaveData& HeroSaveData);
+	bool DeleteHero(const uint16 SaveID, const bool bOnline);
 
 	FString GetSaveNameForID(const uint16 SaveID, const bool bOnline) const; 
 	uint16 GetMaxOfflineSaveID() const; 

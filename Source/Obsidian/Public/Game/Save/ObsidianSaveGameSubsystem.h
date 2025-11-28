@@ -47,6 +47,8 @@ public:
 	void RequestLoadHeroSaveGameWithID(const bool bAsync, const uint16 SaveID, const bool bOnline, const UObsidianLocalPlayer* LocalPlayer);
 	void RequestLoadGame(const bool bAsync, const FString& SlotName, const UObsidianLocalPlayer* LocalPlayer);
 	void RequestLoadDataForObject(AActor* LoadActor);
+
+	bool DeleteHeroSave(const uint16 SaveID, const bool bOnline);
 	
 public:
 	FOnSaveActionFinishedSignature OnSavingFinishedDelegate;
