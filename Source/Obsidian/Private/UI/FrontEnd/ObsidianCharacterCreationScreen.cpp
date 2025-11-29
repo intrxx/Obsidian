@@ -147,8 +147,8 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 
 				OnCreateSavingFinishedHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
 					&ThisClass::OnCreateSavingFinished);
-				SaveGameSubsystem->RequestSaveInitialHeroSave(true, bIsOnlineCharacter, InitializationSaveData,
-					GetOwningLocalPlayer<UObsidianLocalPlayer>());
+				SaveGameSubsystem->RequestSaveInitialHeroSave(GetOwningLocalPlayer<UObsidianLocalPlayer>(),
+					true, bIsOnlineCharacter, InitializationSaveData);
 			}
 		} 
 	}

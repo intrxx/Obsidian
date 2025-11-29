@@ -33,18 +33,18 @@ public:
 	bool FillSaveInfosFromMasterSave(const bool bOnline, const UObsidianLocalPlayer* LocalPlayer,
 		TArray<FObsidianHeroSaveInfo>& OutHeroInfos);
 	
-	void LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer);
-	
 	void RegisterSaveable(AActor* SaveActor);
 	void UnregisterSaveable(AActor* SaveActor);
+
+	void LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer);
 	
-	void RequestSaveGame(const bool bAsync, const UObsidianLocalPlayer* LocalPlayer);
-	void RequestSaveInitialHeroSave(const bool bAsync, const bool bOnline,
-		const FObsidianHeroInitializationSaveData& HeroInitializationSaveData,
-		const UObsidianLocalPlayer* LocalPlayer);
+	void RequestSaveGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync);
+	void RequestSaveInitialHeroSave(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync, const bool bOnline,
+		const FObsidianHeroInitializationSaveData& HeroInitializationSaveData);
 	
-	void RequestLoadHeroSaveGameWithID(const bool bAsync, const uint16 SaveID, const bool bOnline, const UObsidianLocalPlayer* LocalPlayer);
-	void RequestLoadGame(const bool bAsync, const FString& SlotName, const UObsidianLocalPlayer* LocalPlayer);
+	void RequestLoadHeroSaveGameWithID(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync, const uint16 SaveID,
+		const bool bOnline);
+	void RequestLoadGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync, const FString& SlotName);
 	void RequestLoadDataForObject(AActor* LoadActor);
 
 	bool DeleteHeroSave(const uint16 SaveID, const bool bOnline);
@@ -57,8 +57,8 @@ protected:
 	void SaveHeroGameForPlayer();
 	void SaveHeroGameForPlayerAsync();
 	
-	void LoadGameForPlayer(const FString& SlotName, const UObsidianLocalPlayer* LocalPlayer);
-	void LoadGameForPlayerAsync(const FString& SlotName, const UObsidianLocalPlayer* LocalPlayer);
+	void LoadGameForPlayer(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName);
+	void LoadGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName);
 
 	UObsidianHeroSaveGame* CreateHeroSaveGameObject(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName,
 		const uint16 SaveID);

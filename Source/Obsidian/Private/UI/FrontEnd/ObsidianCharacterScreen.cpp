@@ -101,8 +101,8 @@ void UObsidianCharacterScreen::OnPlayClicked()
 
 				OnPlayLoadingFinishedDelegateHandle = SaveGameSubsystem->OnLoadingFinishedDelegate.AddUObject(this,
 					&ThisClass::OnPlayHeroLoadFinished);
-				SaveGameSubsystem->RequestLoadHeroSaveGameWithID(true, CachedChosenCharacterEntry->GetSaveID(),
-					bOnline, GetOwningLocalPlayer<UObsidianLocalPlayer>());
+				SaveGameSubsystem->RequestLoadHeroSaveGameWithID(GetOwningLocalPlayer<UObsidianLocalPlayer>(),
+					true, CachedChosenCharacterEntry->GetSaveID(), bOnline);
 			}
 		} 
 	}

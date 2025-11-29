@@ -11,11 +11,11 @@ void UObsidianHeroSaveGame::InitWithSaveSystem(UObsidianSaveGameSubsystem* InSav
 	SaveGameSubsystem = InSaveGameSubsystem;
 }
 
-void UObsidianHeroSaveGame::InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData,
-	const bool InbOnline)
+void UObsidianHeroSaveGame::InitializeHeroSaveData(const bool InbOnline,
+	const FObsidianHeroInitializationSaveData& InInitializationSaveData)
 {
-	HeroSaveData.InitializationSaveData = InInitializationSaveData;
 	HeroSaveData.bOnline = InbOnline;
+	HeroSaveData.InitializationSaveData = InInitializationSaveData;
 }
 
 void UObsidianHeroSaveGame::SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData)

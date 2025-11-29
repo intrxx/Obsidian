@@ -62,7 +62,7 @@ void UObsidianGameplayMenu::OnSaveAndExitClicked()
 		{
 			OnSaveFinishedDelegateHandle = SaveGameSubsystem->OnSavingFinishedDelegate.AddUObject(this,
 				&ThisClass::OnSaveFinished);
-			SaveGameSubsystem->RequestSaveGame(true, GetOwningLocalPlayer<UObsidianLocalPlayer>());
+			SaveGameSubsystem->RequestSaveGame(GetOwningLocalPlayer<UObsidianLocalPlayer>(), true);
 		}
 	}
 }

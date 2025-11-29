@@ -83,7 +83,7 @@ class OBSIDIAN_API UObsidianHeroSaveGame : public ULocalPlayerSaveGame
 public:
 	void InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem);
 	
-	void InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData, const bool InbOnline);
+	void InitializeHeroSaveData(const bool InbOnline, const FObsidianHeroInitializationSaveData& InInitializationSaveData);
 	void SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData);
 	
 	FObsidianHeroSaveData GetHeroSaveData();

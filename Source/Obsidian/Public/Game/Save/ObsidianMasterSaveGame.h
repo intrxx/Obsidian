@@ -76,12 +76,12 @@ public:
 	
 	UPROPERTY()
 	FString SaveName = FString();
+
+	UPROPERTY()
+	uint8 bOnline:1 = false;
 	
 	UPROPERTY()
 	FObsidianHeroDescription HeroDescription = FObsidianHeroDescription();
-	
-	UPROPERTY()
-	uint8 bOnline:1 = false;
 };
 
 /**
@@ -109,14 +109,11 @@ class OBSIDIAN_API UObsidianMasterSaveGame : public ULocalPlayerSaveGame
 	GENERATED_BODY()
 
 public:
-	void InitializeMasterSave();
-
-	TArray<FObsidianHeroSaveInfo> GetHeroSaveInfos(const bool bOnline);
-
 	FObsidianAddHeroSaveResult AddHero(const bool bOnline, const FObsidianHeroInitializationSaveData& HeroSaveData);
 	bool DeleteHero(const uint16 SaveID, const bool bOnline);
 	bool UpdateHeroSave(const uint16 SaveID, const bool bOnline, const uint8 HeroLevel);
-
+	
+	TArray<FObsidianHeroSaveInfo> GetHeroSaveInfos(const bool bOnline);
 	FString GetSaveNameForID(const uint16 SaveID, const bool bOnline) const; 
 	uint16 GetMaxOfflineSaveID() const; 
 	uint16 GetMaxOnlineSaveID() const; 

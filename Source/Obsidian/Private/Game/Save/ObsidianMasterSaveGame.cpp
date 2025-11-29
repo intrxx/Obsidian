@@ -2,19 +2,6 @@
 
 #include "Game/Save/ObsidianMasterSaveGame.h"
 
-void UObsidianMasterSaveGame::InitializeMasterSave()
-{
-}
-
-TArray<FObsidianHeroSaveInfo> UObsidianMasterSaveGame::GetHeroSaveInfos(const bool bOnline)
-{
-	if (bOnline)
-	{
-		return MasterSaveParams.OnlineSavedHeroes;
-	}
-	return MasterSaveParams.OfflineSavedHeroes;
-}
-
 FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddHero(const bool bOnline,
                                                             const FObsidianHeroInitializationSaveData& HeroSaveData)
 {
@@ -61,6 +48,15 @@ bool UObsidianMasterSaveGame::UpdateHeroSave(const uint16 SaveID, const bool bOn
 		return true;
 	}
 	return false;
+}
+
+TArray<FObsidianHeroSaveInfo> UObsidianMasterSaveGame::GetHeroSaveInfos(const bool bOnline)
+{
+	if (bOnline)
+	{
+		return MasterSaveParams.OnlineSavedHeroes;
+	}
+	return MasterSaveParams.OfflineSavedHeroes;
 }
 
 FString UObsidianMasterSaveGame::GetSaveNameForID(const uint16 SaveID, const bool bOnline) const
