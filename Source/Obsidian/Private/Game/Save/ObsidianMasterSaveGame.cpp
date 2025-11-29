@@ -53,6 +53,16 @@ bool UObsidianMasterSaveGame::DeleteHero(const uint16 SaveID, const bool bOnline
 	return false;
 }
 
+bool UObsidianMasterSaveGame::UpdateHeroSave(const uint16 SaveID, const bool bOnline, const uint8 HeroLevel)
+{
+	if (FObsidianHeroSaveInfo* SaveInfo = GetHeroSaveInfo(SaveID, bOnline))
+	{
+		SaveInfo->HeroDescription.HeroLevel = HeroLevel;
+		return true;
+	}
+	return false;
+}
+
 FString UObsidianMasterSaveGame::GetSaveNameForID(const uint16 SaveID, const bool bOnline) const
 {
 	if (bOnline)
@@ -115,6 +125,32 @@ FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddOnlineHero(const FObsidia
 	MasterSaveParams.OnlineSavedHeroes.Add(HeroSaveInfo);
 
 	return FObsidianAddHeroSaveResult(HeroSaveInfo.SaveName, HeroSaveInfo.SaveID);
+}
+
+FObsidianHeroSaveInfo* UObsidianMasterSaveGame::GetHeroSaveInfo(const uint16 SaveID, const bool bOnline)
+{
+	if (bOnline)
+	{
+		for (FObsidianHeroSaveInfo& SaveInfo : MasterSaveParams.OnlineSavedHeroes)
+		{
+			if (SaveInfo.SaveID == SaveID)
+			{
+				return &SaveInfo;
+			}
+		}
+
+		return nullptr;
+	}
+	
+	for (FObsidianHeroSaveInfo& SaveInfo : MasterSaveParams.OfflineSavedHeroes)
+	{
+		if (SaveInfo.SaveID == SaveID)
+		{
+			return &SaveInfo;
+		}
+	}
+
+	return nullptr;
 }
 
 uint16 UObsidianMasterSaveGame::GetMaxOfflineSaveID() const

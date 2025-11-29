@@ -117,10 +117,8 @@ void UObsidianCharacterCreationScreen::OnHardcoreCheckboxStatusChanged(bool InBo
 
 void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 {
-	if(FrontEndGameMode == nullptr)
-	{
-		return;
-	}
+	FrontEndGameMode = FrontEndGameMode == nullptr ? Cast<AObsidianFrontEndGameMode>(
+		UGameplayStatics::GetGameMode(this)) : FrontEndGameMode;
 
 	CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ChosenClass);
 	HideHeroDescription();

@@ -105,7 +105,21 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const bool bAsync, const UObsid
 				SaveableInterface->SaveData(CurrentHeroSaveGame);
 			}
 		}
-	
+
+		check(ObsidianMasterSaveGame)
+		check(CurrentHeroSaveGame)
+		const bool bUpdateSuccess = ObsidianMasterSaveGame->UpdateHeroSave(CurrentHeroSaveGame->GetSaveID(),
+			CurrentHeroSaveGame->IsOnline(), CurrentHeroSaveGame->GetHeroLevel());
+		if (bUpdateSuccess)
+		{
+			ObsidianMasterSaveGame->AsyncSaveGameToSlotForLocalPlayer();
+		}
+		else
+		{
+			UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to update Save Info in Master Save."));
+		}
+		
+			
 		if (bAsync)
 		{
 			SaveHeroGameForPlayerAsync();
@@ -129,7 +143,7 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const bool bAsync, c
 		check(ObsidianMasterSaveGame);
 		const FObsidianAddHeroSaveResult Result = ObsidianMasterSaveGame->AddHero(bOnline, HeroInitializationSaveData);
 		UObsidianHeroSaveGame* NewHeroSaveGame = CreateHeroSaveGameObject(LocalPlayer, Result.SaveName, Result.SaveID);
-		NewHeroSaveGame->InitializeHeroSaveData(HeroInitializationSaveData);
+		NewHeroSaveGame->InitializeHeroSaveData(HeroInitializationSaveData, bOnline);
 		CurrentHeroSaveGame = NewHeroSaveGame;
 
 		//TODO(intrxx) Make it async 

@@ -11,9 +11,11 @@ void UObsidianHeroSaveGame::InitWithSaveSystem(UObsidianSaveGameSubsystem* InSav
 	SaveGameSubsystem = InSaveGameSubsystem;
 }
 
-void UObsidianHeroSaveGame::InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData)
+void UObsidianHeroSaveGame::InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData,
+	const bool InbOnline)
 {
 	HeroSaveData.InitializationSaveData = InInitializationSaveData;
+	HeroSaveData.bOnline = InbOnline;
 }
 
 void UObsidianHeroSaveGame::SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData)
@@ -26,6 +28,11 @@ FObsidianHeroSaveData UObsidianHeroSaveGame::GetHeroSaveData()
 	return HeroSaveData;
 }
 
+bool UObsidianHeroSaveGame::IsOnline() const
+{
+	return HeroSaveData.bOnline;
+}
+
 void UObsidianHeroSaveGame::SetSaveID(const uint16 InSaveID)
 {
 	HeroSaveData.SaveID = InSaveID;
@@ -34,6 +41,11 @@ void UObsidianHeroSaveGame::SetSaveID(const uint16 InSaveID)
 uint16 UObsidianHeroSaveGame::GetSaveID() const
 {
 	return HeroSaveData.SaveID;
+}
+
+uint8 UObsidianHeroSaveGame::GetHeroLevel() const
+{
+	return HeroSaveData.GameplaySaveData.HeroLevel;
 }
 
 void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)

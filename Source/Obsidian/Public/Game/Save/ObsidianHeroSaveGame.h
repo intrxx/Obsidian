@@ -67,6 +67,9 @@ public:
 
 	UPROPERTY()
 	uint16 SaveID = INDEX_NONE;
+
+	UPROPERTY()
+	bool bOnline = false;
 };
 
 /**
@@ -80,13 +83,15 @@ class OBSIDIAN_API UObsidianHeroSaveGame : public ULocalPlayerSaveGame
 public:
 	void InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem);
 	
-	void InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData);
+	void InitializeHeroSaveData(const FObsidianHeroInitializationSaveData& InInitializationSaveData, const bool InbOnline);
 	void SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData);
 	
 	FObsidianHeroSaveData GetHeroSaveData();
 
+	bool IsOnline() const;
 	void SetSaveID(const uint16 InSaveID);
 	uint16 GetSaveID() const;
+	uint8 GetHeroLevel() const;
 	
 	virtual void HandlePostSave(bool bSuccess) override;
 	virtual void HandlePostLoad() override;

@@ -67,7 +67,8 @@ void UObCharacterSelectionWidgetController::GatherCreationHeroes()
 	CreationHeroes.Empty();
 	
 	TArray<AActor*> CharacterCreationActors; 
-	UGameplayStatics::GetAllActorsOfClass(this, AObsidianCharacterCreationHero::StaticClass(), CharacterCreationActors);
+	UGameplayStatics::GetAllActorsOfClass(this, AObsidianCharacterCreationHero::StaticClass(),
+		CharacterCreationActors);
 
 	for(AActor* Actor : CharacterCreationActors)
 	{

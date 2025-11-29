@@ -33,7 +33,6 @@ public:
 	bool FillSaveInfosFromMasterSave(const bool bOnline, const UObsidianLocalPlayer* LocalPlayer,
 		TArray<FObsidianHeroSaveInfo>& OutHeroInfos);
 	
-	//TODO(intrxx) Currently called before pushing main menu in GameMode, call in some better place
 	void LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer);
 	
 	void RegisterSaveable(AActor* SaveActor);

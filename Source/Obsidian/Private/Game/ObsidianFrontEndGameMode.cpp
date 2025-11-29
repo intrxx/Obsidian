@@ -67,7 +67,8 @@ bool AObsidianFrontEndGameMode::DeleteHeroClass(const int32 WithID)
 void AObsidianFrontEndGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	//TODO(intrxx) call in some better place, possibly earlier
 	UObsidianSaveGameSubsystem* SaveGameSubsystem = GetGameInstance()->GetSubsystem<UObsidianSaveGameSubsystem>();
 	const APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
 	SaveGameSubsystem->LoadOrCreateMasterSaveObject(Cast<UObsidianLocalPlayer>(PlayerController->GetLocalPlayer()));

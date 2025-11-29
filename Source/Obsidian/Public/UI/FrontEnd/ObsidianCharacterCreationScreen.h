@@ -100,7 +100,7 @@ protected:
 	TArray<FObsidianHeroInfo> HeroInfos;
 	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian")
-	TObjectPtr<AObsidianFrontEndGameMode> FrontEndGameMode;
+	AObsidianFrontEndGameMode* FrontEndGameMode;
 
 	/** Class assigned after pressing on the hero button/hero.*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly);

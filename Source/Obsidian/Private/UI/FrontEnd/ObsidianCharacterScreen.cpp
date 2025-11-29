@@ -216,7 +216,7 @@ void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveI
 		{
 			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
 			Entry->InitializeCharacterEntry(SaveInfo.SaveID, SaveInfo.HeroDescription.HeroName, SaveInfo.HeroDescription.HeroLevel,
-				UObsidianGameplayStatics::GetHeroClassText(SaveInfo.HeroDescription.HeroClass), false,
+				UObsidianGameplayStatics::GetHeroClassText(SaveInfo.HeroDescription.HeroClass), SaveInfo.bOnline,
 				SaveInfo.HeroDescription.bHardcore);
 			
 			CharacterList_ScrollBox->AddChild(Entry);

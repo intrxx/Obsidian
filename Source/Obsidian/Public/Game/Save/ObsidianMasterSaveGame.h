@@ -115,6 +115,7 @@ public:
 
 	FObsidianAddHeroSaveResult AddHero(const bool bOnline, const FObsidianHeroInitializationSaveData& HeroSaveData);
 	bool DeleteHero(const uint16 SaveID, const bool bOnline);
+	bool UpdateHeroSave(const uint16 SaveID, const bool bOnline, const uint8 HeroLevel);
 
 	FString GetSaveNameForID(const uint16 SaveID, const bool bOnline) const; 
 	uint16 GetMaxOfflineSaveID() const; 
@@ -125,6 +126,8 @@ protected:
 	FObsidianAddHeroSaveResult AddOfflineHero(const FObsidianHeroInitializationSaveData& HeroSaveData);
 	/** Adds new Online Hero, returns new generated Save name as well as its ID. */
 	FObsidianAddHeroSaveResult AddOnlineHero(const FObsidianHeroInitializationSaveData& HeroSaveData);
+
+	FObsidianHeroSaveInfo* GetHeroSaveInfo(const uint16 SaveID, const bool bOnline);
 	
 protected:
 	UPROPERTY()
