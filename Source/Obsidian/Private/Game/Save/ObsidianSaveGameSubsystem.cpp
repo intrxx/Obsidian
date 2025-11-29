@@ -67,7 +67,7 @@ void UObsidianSaveGameSubsystem::UnregisterSaveable(AActor* SaveActor)
 
 void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync)
 {
-	if (ensure(LocalPlayer) && ensure(CurrentHeroSaveGame))
+	if (ensure(LocalPlayer) && ensure(CurrentHeroSaveGame) && ensure(ObsidianMasterSaveGame))
 	{
 		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Save for [%s]. "), *GetNameSafe(LocalPlayer));
 		
@@ -83,9 +83,7 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 				SaveableInterface->SaveData(CurrentHeroSaveGame);
 			}
 		}
-
-		check(ObsidianMasterSaveGame)
-		check(CurrentHeroSaveGame)
+		
 		const bool bUpdateSuccess = ObsidianMasterSaveGame->UpdateHeroSave(CurrentHeroSaveGame->GetSaveID(),
 			CurrentHeroSaveGame->IsOnline(), CurrentHeroSaveGame->GetHeroLevel());
 		if (bUpdateSuccess)
@@ -106,19 +104,19 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 		SaveHeroGameForPlayer();
 	}
 
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Save for invalid LocalPlayer!"));
+	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Save for invalid LocalPlayer, CurrentHeroSaveGame or "
+		"ObsidianMasterSaveGame!"));
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
 void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync,
 	const bool bOnline, const FObsidianHeroInitializationSaveData& HeroInitializationSaveData)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(LocalPlayer) && ensure(ObsidianMasterSaveGame))
 	{
 		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Initial Hero Save for [%s]. "),
 			*GetNameSafe(LocalPlayer));
 		
-		check(ObsidianMasterSaveGame);
 		const FObsidianAddHeroSaveResult Result = ObsidianMasterSaveGame->AddHero(bOnline, HeroInitializationSaveData);
 		UObsidianHeroSaveGame* NewHeroSaveGame = CreateHeroSaveGameObject(LocalPlayer, Result.SaveName, Result.SaveID);
 		NewHeroSaveGame->InitializeHeroSaveData(bOnline, HeroInitializationSaveData);
@@ -139,7 +137,7 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const UObsidianLocal
 		return;
 	}
 	
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to perform Initial Hero Save for invalid Local Player. "));
+	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to perform Initial Hero Save for invalid Local Player."));
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
