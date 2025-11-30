@@ -2,15 +2,15 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 #include "Characters/ObsidianCharacterBase.h"
 #include "Game/Save/ObsidianSaveableInterface.h"
 #include "ObsidianHero.generated.h"
+
+struct FObsidianGenericAttributes;
 
 class AObsidianDroppableItem;
 class UObsidianHeroHealthBar_Simple;
@@ -89,6 +89,8 @@ protected:
 	//~ End of AObsidianCharacterBase
 
 	void InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) const;
+
+	void FillGenericAttribures(FObsidianGenericAttributes& GenericAttributes);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Hero")

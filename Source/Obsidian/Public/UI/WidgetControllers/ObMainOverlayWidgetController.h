@@ -50,7 +50,7 @@ public:
 
 	void SetInitialAttributeValues() const;
 	void SetInitialStaggerMeter() const;
-	void SetInitialExperienceValues() const;
+	void SetInitialExperienceValues();
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")

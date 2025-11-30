@@ -2,7 +2,4 @@
 
 #include "Combat/Projectile/OProjectileMovementComponent.h"
 
-// ~ Core
-
-// ~ Project
 

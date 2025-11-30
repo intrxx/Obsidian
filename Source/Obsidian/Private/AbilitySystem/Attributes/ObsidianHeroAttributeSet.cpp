@@ -188,23 +188,22 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 				}
 			}
 			
-			float NewMaxExperience;
-			const uint8 CurrentHeroLevel = HeroCharacter->GetHeroLevel();
-			if(CurrentHeroLevel <= 50)
-			{
-				NewMaxExperience = 125.0f * FMath::Pow(CurrentHeroLevel, 1.4) + 350.0f * CurrentHeroLevel;
-			}
-			else
-			{
-				NewMaxExperience = 250.0f * FMath::Pow(CurrentHeroLevel, 1.8) + 500.0f * CurrentHeroLevel;
-			}
-
+			const float NewMaxExperience = GetMaxExperienceForLevel(HeroCharacter->GetHeroLevel());
 			SetMaxExperience(NewMaxExperience);
 		}
 	}
 
 	ResetMetaAttributes();
 	EffectProps.Reset();
+}
+
+float UObsidianHeroAttributeSet::GetMaxExperienceForLevel(const uint8 HeroLevel)
+{
+	if(HeroLevel <= 50)
+	{
+		return 125.0f * FMath::Pow(HeroLevel, 1.4) + 350.0f * HeroLevel;
+	}
+	return 250.0f * FMath::Pow(HeroLevel, 1.8) + 500.0f * HeroLevel;
 }
 
 void UObsidianHeroAttributeSet::ResetMetaAttributes()

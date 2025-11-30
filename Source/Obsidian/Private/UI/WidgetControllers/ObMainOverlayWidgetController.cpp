@@ -7,8 +7,10 @@
 
 // ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 void UObMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
@@ -16,6 +18,7 @@ void UObMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	check(ObsidianAbilitySystemComponent);
 	check(AttributesComponent);
 	check(ObsidianPlayerController);
+	check(ObsidianPlayerState);
 	
 	HandleBindingCallbacks(ObsidianAbilitySystemComponent);
 	
@@ -81,8 +84,14 @@ void UObMainOverlayWidgetController::SetInitialStaggerMeter() const
 	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
 }
 
-void UObMainOverlayWidgetController::SetInitialExperienceValues() const
+void UObMainOverlayWidgetController::SetInitialExperienceValues()
 {
+	const uint8 LastHeroLevel = ObsidianPlayerState->GetHeroLevel() - 1;
+	if (ObsidianPlayerState && LastHeroLevel > 1)
+	{
+		MaxExperienceOldValue = UObsidianHeroAttributeSet::GetMaxExperienceForLevel(LastHeroLevel);
+	}
+	
 	OnExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
 	OnMaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience(), MaxExperienceOldValue);
 }

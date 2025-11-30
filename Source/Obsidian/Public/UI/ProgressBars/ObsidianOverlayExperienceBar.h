@@ -39,6 +39,8 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UObsidianOverlayExperienceInfo> ExperienceInfoWidgetClass;
+
+	UPROPERTY()
 	TObjectPtr<UObsidianOverlayExperienceInfo> ExperienceInfo;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))

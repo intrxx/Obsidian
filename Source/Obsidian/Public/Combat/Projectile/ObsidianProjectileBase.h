@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-#include "GameplayEffectTypes.h"
+#include <GameplayEffectTypes.h>
 
-#include "GameFramework/Actor.h"
+#include <GameFramework/Actor.h>
 #include "ObsidianProjectileBase.generated.h"
 
 class AObsidianHero;

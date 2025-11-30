@@ -2,15 +2,13 @@
 
 #include "Combat/Projectile/ObsidianProjectileBase.h"
 
-// ~ Core
-#include "AbilitySystemBlueprintLibrary.h"
-#include "AbilitySystemComponent.h"
-#include "NiagaraFunctionLibrary.h"
-#include "Components/AudioComponent.h"
-#include "Components/SphereComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include <AbilitySystemBlueprintLibrary.h>
+#include <AbilitySystemComponent.h>
+#include <NiagaraFunctionLibrary.h>
+#include <Components/AudioComponent.h>
+#include <Components/SphereComponent.h>
+#include <Kismet/GameplayStatics.h>
 
-// ~ Project
 #include "Combat/Projectile/OProjectileMovementComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 

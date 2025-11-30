@@ -2,10 +2,8 @@
 
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 
-// ~ Core
-#include "Net/UnrealNetwork.h"
+#include <Net/UnrealNetwork.h>
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/ObsidianPawnData.h"
 
@@ -50,6 +48,7 @@ void UObsidianPawnExtensionComponent::InitializeAbilitySystem(UObsidianAbilitySy
 	if(AbilitySystemComponent)
 	{
 		// TODO if the ASC is valid there is a pawn acting as the ASC's avatar and it needs to be kicked
+		// but this most likely will not happen in Obsidian
 	}
 
 	AbilitySystemComponent = InASC;

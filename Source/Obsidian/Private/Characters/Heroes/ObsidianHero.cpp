@@ -2,14 +2,13 @@
 
 #include "Characters/Heroes/ObsidianHero.h"
 
-// ~ Core
-#include "Camera/CameraComponent.h"
-#include "Components/WidgetComponent.h"
-#include "GameFramework/CharacterMovementComponent.h"
-#include "GameFramework/SpringArmComponent.h"
+#include <Camera/CameraComponent.h>
+#include <Components/WidgetComponent.h>
+#include <GameFramework/CharacterMovementComponent.h>
+#include <GameFramework/SpringArmComponent.h>
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
@@ -75,17 +74,6 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 void AObsidianHero::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	if (const UGameInstance* GameInstance = GetGameInstance())
-	{
-		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
-		{
-			SaveGameSubsystem->RegisterSaveable(this);
-
-			//TODO(intrxx) probably don't want to do it this late
-			SaveGameSubsystem->RequestLoadDataForObject(this);
-		}
-	}
 }
 
 void AObsidianHero::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -225,6 +213,10 @@ void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
 	FObsidianHeroGameplaySaveData HeroSaveData;
 	HeroSaveData.CurrentLocation = GetActorLocation();
 	HeroSaveData.HeroLevel = GetHeroLevel();
+
+	FObsidianGenericAttributes GenericAttributes;
+	FillGenericAttribures(GenericAttributes);
+	HeroSaveData.GenericStatAttributes = GenericAttributes;
 	
 	SaveObject->SetHeroGameplayData(HeroSaveData);
 }
@@ -243,6 +235,13 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 	{
 		ObsidianPS->SetHeroLevel(HeroSaveData.GameplaySaveData.HeroLevel);
 		ObsidianPS->SetObsidianPlayerName(HeroSaveData.InitializationSaveData.PlayerHeroName);
+
+		if (UObsidianHeroAttributeSet* AttributeSet = ObsidianPS->GetObsidianAttributeSet())
+		{
+			const FObsidianGenericAttributes LoadedGenericAttributes = HeroSaveData.GameplaySaveData.GenericStatAttributes;
+			AttributeSet->SetExperience(LoadedGenericAttributes.CurrentExperience);
+			AttributeSet->SetMaxExperience(LoadedGenericAttributes.MaxExperience);
+		}
 	}
 }
 
@@ -288,6 +287,17 @@ void AObsidianHero::OnAbilitySystemInitialized()
 			{
 				AbilitySet->GiveToAbilitySystem(ObsidianASC, nullptr, this);
 			}
+		}
+	}
+
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->RegisterSaveable(this);
+
+			//TODO(intrxx) probably don't want to do it this late
+			SaveGameSubsystem->RequestLoadDataForObject(this);
 		}
 	}
 
@@ -337,6 +347,15 @@ void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) c
 		{
 			ObsidianHUD->InitOverlay(ObsidianPC, ObsidianPS, ObsidianASC, HeroAttributesComponent);
 		}
+	}
+}
+
+void AObsidianHero::FillGenericAttribures(FObsidianGenericAttributes& GenericAttributes)
+{
+	if (HeroAttributesComponent)
+	{
+		GenericAttributes.CurrentExperience = HeroAttributesComponent->GetExperience();
+		GenericAttributes.MaxExperience = HeroAttributesComponent->GetMaxExperience();
 	}
 }
 

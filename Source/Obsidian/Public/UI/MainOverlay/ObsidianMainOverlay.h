@@ -2,11 +2,9 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
@@ -33,12 +31,6 @@ class UOStackingDurationalEffectInfo;
 class UObsidianCharacterStatus;
 class UObsidianPlayerInputManager;
 class UObsidianPlayerStashWidget;
-
-UENUM()
-enum EObsidianAddingWindowRule
-{
-	
-};
 
 /**
  * 

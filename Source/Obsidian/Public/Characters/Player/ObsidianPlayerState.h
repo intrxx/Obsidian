@@ -40,6 +40,11 @@ public:
 		return AbilitySystemComponent;
 	}
 
+	TObjectPtr<UObsidianHeroAttributeSet> GetObsidianAttributeSet() const
+	{
+		return HeroAttributeSet;
+	}
+
 	AObsidianPlayerController* GetObsidianPlayerController() const;
 	AObsidianHero* GetObsidianHero() const;
 	

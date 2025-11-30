@@ -13,6 +13,23 @@ class UObsidianSaveGameSubsystem;
 class AObsidianHero;
 
 /**
+ * Hero Attributes that can be saved in generic way like Experience.
+ * They must not depend on any other attribute.
+ */
+USTRUCT()
+struct FObsidianGenericAttributes
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY()
+	float CurrentExperience = 0.0f;
+	
+	UPROPERTY()
+	float MaxExperience = 0.0f;
+};
+
+/**
  * Hero SaveData that will update during Gameplay.
  */
 USTRUCT()
@@ -26,6 +43,9 @@ public:
 	
 	UPROPERTY()
 	FVector CurrentLocation = FVector::ZeroVector;
+
+	UPROPERTY()
+	FObsidianGenericAttributes GenericStatAttributes;
 };
 
 /**
@@ -84,6 +104,7 @@ public:
 	void InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem);
 	
 	void InitializeHeroSaveData(const bool InbOnline, const FObsidianHeroInitializationSaveData& InInitializationSaveData);
+	
 	void SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData);
 	
 	FObsidianHeroSaveData GetHeroSaveData();
