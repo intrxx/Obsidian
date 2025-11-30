@@ -43,7 +43,7 @@ class UNiagaraSystem;
 class UOProjectileMovementComponent;
 class USphereComponent;
 
-UCLASS(Abstract)
+UCLASS(Abstract, NotBlueprintable)
 class OBSIDIAN_API AObsidianProjectileBase : public AActor
 {
 	GENERATED_BODY()
