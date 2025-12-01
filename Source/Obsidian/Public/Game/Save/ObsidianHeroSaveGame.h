@@ -27,6 +27,12 @@ public:
 	
 	UPROPERTY()
 	float MaxExperience = 0.0f;
+
+	UPROPERTY()
+	float PassiveSkillPoints = 0.0f;
+
+	UPROPERTY()
+	float AscensionPoints = 0.0f;
 };
 
 /**

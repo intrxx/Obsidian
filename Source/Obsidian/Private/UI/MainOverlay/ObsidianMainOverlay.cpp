@@ -421,7 +421,7 @@ void UObsidianMainOverlay::UpdatePassiveSkillPointsNotification(float NewSkillPo
 {
 	if(PassiveSkillPointsNotification && NewSkillPoints <= 0)
 	{
-		PassiveSkillPointsNotification->OnSkillPointsNotificationPressed.RemoveAll(this);
+		PassiveSkillPointsNotification->OnSkillPointsNotificationPressedDelegate.RemoveAll(this);
 		PassiveSkillPointsNotification->RemoveFromParent();
 		PassiveSkillPointsNotification = nullptr;
 		return;
@@ -440,7 +440,7 @@ void UObsidianMainOverlay::UpdatePassiveSkillPointsNotification(float NewSkillPo
 		checkf(PassiveSkillPointsNotificationClass, TEXT("PassiveSkillPointsNotificationClass is not set in UObsidianMainOverlay."));
 		PassiveSkillPointsNotification = CreateWidget<UObsidianSkillPointsNotification>(this, PassiveSkillPointsNotificationClass);
 		PassiveSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
-		PassiveSkillPointsNotification->OnSkillPointsNotificationPressed.AddUObject(this, &ThisClass::TogglePassiveSkillTree);
+		PassiveSkillPointsNotification->OnSkillPointsNotificationPressedDelegate.AddUObject(this, &ThisClass::TogglePassiveSkillTree);
 		PassiveSkillPoints_WrapBox->AddChildToWrapBox(PassiveSkillPointsNotification);
 	}
 }

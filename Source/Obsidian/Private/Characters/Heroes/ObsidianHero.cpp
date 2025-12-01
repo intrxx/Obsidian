@@ -241,6 +241,8 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 			const FObsidianGenericAttributes LoadedGenericAttributes = HeroSaveData.GameplaySaveData.GenericStatAttributes;
 			AttributeSet->SetExperience(LoadedGenericAttributes.CurrentExperience);
 			AttributeSet->SetMaxExperience(LoadedGenericAttributes.MaxExperience);
+			AttributeSet->SetPassiveSkillPoints(LoadedGenericAttributes.PassiveSkillPoints);
+			AttributeSet->SetAscensionPoints(LoadedGenericAttributes.AscensionPoints);
 		}
 	}
 }
@@ -356,6 +358,8 @@ void AObsidianHero::FillGenericAttribures(FObsidianGenericAttributes& GenericAtt
 	{
 		GenericAttributes.CurrentExperience = HeroAttributesComponent->GetExperience();
 		GenericAttributes.MaxExperience = HeroAttributesComponent->GetMaxExperience();
+		GenericAttributes.PassiveSkillPoints = HeroAttributesComponent->GetPassiveSkillPoints();
+		GenericAttributes.AscensionPoints = HeroAttributesComponent->GetAscensionPoints();
 	}
 }
 

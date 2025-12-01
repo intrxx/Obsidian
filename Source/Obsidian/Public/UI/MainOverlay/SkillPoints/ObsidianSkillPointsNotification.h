@@ -28,7 +28,7 @@ public:
 	void SetSkillPointsCount(const float NewPoints) const;
 
 public:
-	FOnSkillPointsNotificationPressedSignature OnSkillPointsNotificationPressed;
+	FOnSkillPointsNotificationPressedSignature OnSkillPointsNotificationPressedDelegate;
 
 protected:
 	virtual void NativeConstruct() override;

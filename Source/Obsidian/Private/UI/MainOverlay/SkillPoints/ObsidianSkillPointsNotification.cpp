@@ -21,8 +21,8 @@ void UObsidianSkillPointsNotification::NativeConstruct()
 
 void UObsidianSkillPointsNotification::OnPressed()
 {
-	checkf(OnSkillPointsNotificationPressed.IsBound(), TEXT("OpenTree_Button OnClicked delegate should be bound."));
-	OnSkillPointsNotificationPressed.Broadcast();
+	checkf(OnSkillPointsNotificationPressedDelegate.IsBound(), TEXT("OpenTree_Button OnClicked delegate should be bound."));
+	OnSkillPointsNotificationPressedDelegate.Broadcast();
 }
 
 void UObsidianSkillPointsNotification::SetSkillPointsCount(const float NewPoints) const
