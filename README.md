@@ -14,6 +14,11 @@ As of now, I've already developed some fundamental systems and have slowly start
 build some gameplay content on top of them.
 
 ### These includs:
+- **Procedural Item Generation** - many moving parts of dropped Items like their name, granted affixes, granted abilities,
+  damage/defense ranges and so on are proceduraly generated from network of Data Assets that hold defenitions to
+  generate these parts. This system is heavly inspired by Diablo 2 item generation. </br>
+  *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/ProceduralItemGeneration.md) (TODO).*
+  
 - **Grid Inventory System/Inventory Items** - Grid Inventory System built using ```FFastArraySerializer``` to efficiently store and replicate items.
   Supports items of various sizes, stacks, limits, item descriptions, and networking. </br>
   *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/InventoryItemsSystem.md).*
@@ -26,6 +31,9 @@ build some gameplay content on top of them.
   It supports configurable Stash Tabs with customizable sizes and capacities, such as Grid Stash Tabs and Slot Stash Tabs.
   This system combines and extends concepts from two previous systems to store and display Stashed Items. </br>
   *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/PlayerStashSystem.md).*
+
+- **Save System** - Robust save system, each created Hero is saved into its own save slot with one master save slot present for common stuff like settings or character selection display info.
+  *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/SaveSystem.md) (TODO).*
 
 - **Buff/Debuff display on Health Bars and Player's HUD** - Gameplay Effects mapped to their descriptions (name, description, type, etc.) 
 using Gameplay Tags, which are displayed on the player's HUD. </br>
@@ -57,8 +65,6 @@ using Gameplay Tags, which are displayed on the player's HUD. </br>
 *A more detailed presentation can be found [here](https://github.com/intrxx/Obsidian/blob/main/Docs/Abilities_Root.md) (TODO).*
 
 ## What am I planning to implement?
-
-- **Item stats**
 
 - **Character Passive Skill Tree**
 
