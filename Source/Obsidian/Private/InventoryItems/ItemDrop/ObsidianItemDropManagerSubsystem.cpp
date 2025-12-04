@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDropManagerSubsystem.h"
 
 
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
@@ -8,7 +8,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
-void UObsidianItemManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const
+void UObsidianItemDropManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const
 {
 	UWorld* World = GetWorld();
 	if (World == nullptr)

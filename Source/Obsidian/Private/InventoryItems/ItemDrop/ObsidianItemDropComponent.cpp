@@ -14,7 +14,7 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
-#include "InventoryItems/ItemDrop/ObsidianItemManagerSubsystem.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDropManagerSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
@@ -182,7 +182,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		return;
 	}
 	
-	if (const UObsidianItemManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemManagerSubsystem>())
+	if (const UObsidianItemDropManagerSubsystem* ManagerSubsystem = World->GetSubsystem<UObsidianItemDropManagerSubsystem>())
 	{
 		ManagerSubsystem->RequestDroppingItems(MoveTemp(ItemsToDrop));
 		OnDroppingItemsFinishedDelegate.Broadcast(true);

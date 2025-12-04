@@ -7,13 +7,13 @@
 #include "ObsidianTreasureList.h"
 
 #include <Subsystems/WorldSubsystem.h>
-#include "ObsidianItemManagerSubsystem.generated.h"
+#include "ObsidianItemDropManagerSubsystem.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemManagerSubsystem : public UWorldSubsystem
+class OBSIDIAN_API UObsidianItemDropManagerSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
