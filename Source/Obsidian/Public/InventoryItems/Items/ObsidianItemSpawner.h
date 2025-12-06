@@ -73,7 +73,8 @@ protected:
 	/** Level used when ItemSpawnerLevelPolicy is Static. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemSpawnerLevelPolicy == EObsidianItemSpawnerLevelPolicy::Static"), Category = "Obsidian|Setup")
 	uint8 ItemSpawnerStaticLevel = 1;
-	
+
+	/** Items to drop count, 0 for infinite. */ 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	uint8 TimesToDrop = 1;
 	

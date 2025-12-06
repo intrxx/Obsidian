@@ -2,11 +2,7 @@
 
 #include "InventoryItems/Items/ObsidianItemSpawner.h"
 
-// ~ Core
-
-// ~ Project
 #include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
-#include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
@@ -59,9 +55,14 @@ uint8 AObsidianItemSpawner::GetItemSpawnerLevel() const
 
 void AObsidianItemSpawner::OnSpawningItemsFinished(const bool bDroppedItem)
 {
-	if (++TimesDropped == TimesToDrop)
+	++TimesDropped;
+	
+	if (TimesToDrop > 0)
 	{
-		bCanInteract = false;
+		if (TimesDropped == TimesToDrop)
+		{
+			bCanInteract = false;
+		}
 	}
 }
 
