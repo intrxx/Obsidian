@@ -295,31 +295,35 @@ namespace ObsidianGameplayTags
 	 * Item Category.
 	 */
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Resource, "Item.Category.Resource", "Item Tag that represents Resource item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Functional, "Item.Category.Functional", "Item Tag that represents Functional item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Currency_Resource, "Item.Category.Currency.Resource", "Item Tag that represents Resource item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Currency_Functional, "Item.Category.Currency.Functional", "Item Tag that represents Functional item category.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Helmet, "Item.Category.Equipment.Helmet", "Item Tag that represents Helmet item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_BodyArmor, "Item.Category.Equipment.BodyArmor", "Item Tag that represents Body Armor item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Belt, "Item.Category.Equipment.Belt", "Item Tag that represents Belt item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Gloves, "Item.Category.Equipment.Gloves", "Item Tag that represents Gloves item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Boots, "Item.Category.Equipment.Boots", "Item Tag that represents Boots item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Shield, "Item.Category.Equipment.Shield", "Item Tag that represents Shield item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Quiver, "Item.Category.Equipment.Quiver", "Item Tag that represents Quiver item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Armor_Helmet, "Item.Category.Equipment.Armor.Helmet", "Item Tag that represents Helmet item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Armor_BodyArmor, "Item.Category.Equipment.Armor.BodyArmor", "Item Tag that represents Body Armor item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Armor_Belt, "Item.Category.Equipment.Armor.Belt", "Item Tag that represents Belt item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Armor_Gloves, "Item.Category.Equipment.Armor.Gloves", "Item Tag that represents Gloves item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Armor_Boots, "Item.Category.Equipment.Armor.Boots", "Item Tag that represents Boots item category.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Amulet, "Item.Category.Equipment.Amulet", "Item Tag that represents Amulet item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Ring, "Item.Category.Equipment.Ring", "Item Tag that represents Ring item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Offhand_Shield, "Item.Category.Equipment.Offhand.Shield", "Item Tag that represents Shield item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Offhand_Quiver, "Item.Category.Equipment.Offhand.Quiver", "Item Tag that represents Quiver item category.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Dagger, "Item.Category.Equipment.Dagger", "Item Tag that represents Dagger item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Wand, "Item.Category.Equipment.Wand", "Item Tag that represents Wand item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Flail, "Item.Category.Equipment.Flail", "Item Tag that represents Flail item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Bow, "Item.Category.Equipment.Bow", "Item Tag that represents Bow item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Staff_TwoHand, "Item.Category.Equipment.Staff.TwoHand", "Item Tag that represents Staff item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Mace_OneHand, "Item.Category.Equipment.Mace.OneHand", "Item Tag that represents One Hand Mace item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Mace_TwoHand, "Item.Category.Equipment.Mace.TwoHand", "Item Tag that represents Two Hand Mace item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Sword_OneHand, "Item.Category.Equipment.Sword.OneHand", "Item Tag that represents One Hand Sword item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Sword_TwoHand, "Item.Category.Equipment.Sword.TwoHand", "Item Tag that represents Two Hand Sword item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Axe_OneHand, "Item.Category.Equipment.Axe.OneHand", "Item Tag that represents One Hand Axe item category.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Axe_TwoHand, "Item.Category.Equipment.Axe.TwoHand", "Item Tag that represents Two Hand Axe item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Jewellery_Amulet, "Item.Category.Equipment.Jewellery.Amulet", "Item Tag that represents Amulet item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Jewellery_Ring, "Item.Category.Equipment.Jewellery.Ring", "Item Tag that represents Ring item category.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_OneHand_Dagger, "Item.Category.Equipment.Weapon.Melee.OneHand.Dagger", "Item Tag that represents Dagger item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_OneHand_Flail, "Item.Category.Equipment.Weapon.Melee.OneHand.Flail", "Item Tag that represents Flail item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_OneHand_Mace, "Item.Category.Equipment.Weapon.Melee.OneHand.Mace", "Item Tag that represents One Hand Mace item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_OneHand_Sword, "Item.Category.Equipment.Weapon.Melee.OneHand.Sword", "Item Tag that represents One Hand Sword item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_OneHand_Axe, "Item.Category.Equipment.Weapon.Melee.OneHand.Axe", "Item Tag that represents One Hand Axe item category.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_TwoHand_Mace, "Item.Category.Equipment.Weapon.Melee.TwoHand.Mace", "Item Tag that represents Two Hand Mace item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_TwoHand_Sword, "Item.Category.Equipment.Weapon.Melee.TwoHand.Sword", "Item Tag that represents Two Hand Sword item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Melee_TwoHand_Axe, "Item.Category.Equipment.Weapon.Melee.TwoHand.Axe", "Item Tag that represents Two Hand Axe item category.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Ranged_OneHand_Wand, "Item.Category.Equipment.Weapon.Ranged.OneHand.Wand", "Item Tag that represents Wand item category.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Ranged_OneHand_Bow, "Item.Category.Equipment.Weapon.Ranged.OneHand.Bow", "Item Tag that represents Bow item category.");
+
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Category_Equipment_Weapon_Ranged_TwoHand_Staff, "Item.Category.Equipment.Weapon.Ranged.TwoHand.Staff", "Item Tag that represents Staff item category.");
 
 	/**
 	 * Item Base Types.
@@ -425,26 +429,27 @@ namespace ObsidianGameplayTags
 	{
 		static const TArray<FGameplayTag> OneHandAcceptedEquipmentCategories =
 		{
-			Item_Category_Equipment_Dagger, Item_Category_Equipment_Wand, Item_Category_Equipment_Flail,
-			Item_Category_Equipment_Mace_OneHand, Item_Category_Equipment_Sword_OneHand,
-			Item_Category_Equipment_Axe_OneHand, Item_Category_Equipment_Shield
+			Item_Category_Equipment_Weapon_Melee_OneHand_Dagger, Item_Category_Equipment_Weapon_Ranged_OneHand_Wand,
+			Item_Category_Equipment_Weapon_Melee_OneHand_Flail, Item_Category_Equipment_Weapon_Melee_OneHand_Mace,
+			Item_Category_Equipment_Weapon_Melee_OneHand_Sword, Item_Category_Equipment_Weapon_Melee_OneHand_Axe,
+			Item_Category_Equipment_Offhand_Shield
 		};
 
 		static const TMap<FGameplayTag, FGameplayTagContainer> SisterSlotAcceptedEquipmentCategoriesForWeaponCategory =
 		{
-			{Item_Category_Equipment_Dagger, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Equipment_Wand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Equipment_Flail, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Equipment_Bow, FGameplayTagContainer(Item_Category_Equipment_Quiver)},
-			{Item_Category_Equipment_Quiver, FGameplayTagContainer(Item_Category_Equipment_Bow)},
-			{Item_Category_Equipment_Staff_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Equipment_Mace_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Equipment_Mace_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Equipment_Sword_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Equipment_Sword_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Equipment_Axe_OneHand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
-			{Item_Category_Equipment_Axe_TwoHand, FGameplayTagContainer::EmptyContainer},
-			{Item_Category_Equipment_Shield, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)}	
+			{Item_Category_Equipment_Weapon_Melee_OneHand_Dagger, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Weapon_Ranged_OneHand_Wand, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Weapon_Melee_OneHand_Flail, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Weapon_Ranged_OneHand_Bow, FGameplayTagContainer(Item_Category_Equipment_Offhand_Quiver)},
+			{Item_Category_Equipment_Offhand_Quiver, FGameplayTagContainer(Item_Category_Equipment_Weapon_Ranged_OneHand_Bow)},
+			{Item_Category_Equipment_Weapon_Ranged_TwoHand_Staff, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Weapon_Melee_OneHand_Mace, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Weapon_Melee_TwoHand_Mace, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Weapon_Melee_OneHand_Sword, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Weapon_Melee_TwoHand_Sword, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Weapon_Melee_OneHand_Axe, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)},
+			{Item_Category_Equipment_Weapon_Melee_TwoHand_Axe, FGameplayTagContainer::EmptyContainer},
+			{Item_Category_Equipment_Offhand_Shield, FGameplayTagContainer::CreateFromArray(OneHandAcceptedEquipmentCategories)}	
 		};
 
 		return SisterSlotAcceptedEquipmentCategoriesForWeaponCategory;

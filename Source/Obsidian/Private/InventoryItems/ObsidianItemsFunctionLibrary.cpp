@@ -6,6 +6,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
@@ -13,6 +14,8 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
+
+UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Obsidian_TwoHand, "TwoHand");
 
 const UObsidianInventoryItemFragment* UObsidianItemsFunctionLibrary::FindItemDefinitionFragment(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass)
 {
@@ -401,6 +404,25 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef
 bool UObsidianItemsFunctionLibrary::IsItemUnique(const UObsidianInventoryItemInstance* ItemInstance)
 {
 	return ItemInstance->GetItemRarity() == EObsidianItemRarity::Unique;
+}
+
+bool UObsidianItemsFunctionLibrary::IsTwoHanded(const UObsidianInventoryItemInstance* ItemInstance)
+{
+	if (ItemInstance)
+	{
+		return UObsidianGameplayStatics::DoesTagMatchesAnySubTag(ItemInstance->GetItemCategoryTag(),
+			TAG_Obsidian_TwoHand);
+	}
+	return false;
+}
+
+bool UObsidianItemsFunctionLibrary::IsTwoHanded_WithCategory(const FGameplayTag& CategoryTag)
+{
+	if (CategoryTag.IsValid())
+	{
+		return UObsidianGameplayStatics::DoesTagMatchesAnySubTag(CategoryTag, TAG_Obsidian_TwoHand);
+	}
+	return false;
 }
 
 FGameplayTag UObsidianItemsFunctionLibrary::GetCategoryTagFromDraggedItem(const FDraggedItem& DraggedItem)

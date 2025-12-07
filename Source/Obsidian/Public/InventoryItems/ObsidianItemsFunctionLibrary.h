@@ -75,6 +75,11 @@ public:
 	static bool IsItemUnique(const UObsidianInventoryItemInstance* ItemInstance);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
+	static bool IsTwoHanded(const UObsidianInventoryItemInstance* ItemInstance);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
+	static bool IsTwoHanded_WithCategory(const FGameplayTag& CategoryTag);
+	
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static FGameplayTag GetCategoryTagFromDraggedItem(const FDraggedItem& DraggedItem);
 
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")

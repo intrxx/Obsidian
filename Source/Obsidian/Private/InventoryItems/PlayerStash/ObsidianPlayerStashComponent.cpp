@@ -2,11 +2,9 @@
 
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 
-// ~ Core
-#include "Net/UnrealNetwork.h"
-#include "Engine/ActorChannel.h"
+#include <Net/UnrealNetwork.h>
+#include <Engine/ActorChannel.h>
 
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Characters/Player/ObsidianPlayerController.h"
