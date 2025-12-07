@@ -140,11 +140,11 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 
 	for (const FObsidianTreasureClass& TC : TreasureClasses)
 	{
-		UE_LOG(LogDropComponent, Display, TEXT("Rolling Items from: [%s]"), *TC.TreasureClassName.ToString());
+		UE_LOG(LogDropComponent, Display, TEXT("Rolling Items from: [%s]"), *TC.DebugName);
 	}
 	for (const FObsidianTreasureClass& TC : MustRollFromTreasureClasses)
 	{
-		UE_LOG(LogDropComponent, Display, TEXT("Rolling Items from: [%s]"), *TC.TreasureClassName.ToString());
+		UE_LOG(LogDropComponent, Display, TEXT("Rolling Items from: [%s]"), *TC.DebugName);
 	}
 	
 	TArray<FObsidianItemToDrop> ItemsToDrop;
@@ -713,10 +713,15 @@ void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTre
 		return;
 	}
 	
-	const bool bSuccess = CachedItemDataLoader->GetAllCommonTreasureClassesUpToQuality(MaxTreasureClassQuality, OutTreasureClasses);
-	if (bSuccess == false)
+	if (bLimitCommonTreasureCategory && LimitCommonTreasureCategoryTag.IsValid())
 	{
-		UE_LOG(LogDropComponent, Error, TEXT("Gathering TreasureClasses failed in [%hs]."), __FUNCTION__);
+		ensureMsgf(CachedItemDataLoader->GetAllCommonTreasureClassesUpToQualityForCategory(MaxTreasureClassQuality, OutTreasureClasses,
+			LimitCommonTreasureCategoryTag), TEXT("Gathering TreasureClasses failed in [%hs]."), __FUNCTION__);
+	}
+	else
+	{
+		ensureMsgf(CachedItemDataLoader->GetAllCommonTreasureClassesUpToQuality(MaxTreasureClassQuality, OutTreasureClasses),
+			TEXT("Gathering TreasureClasses failed in [%hs]."), __FUNCTION__);
 	}
 }
 

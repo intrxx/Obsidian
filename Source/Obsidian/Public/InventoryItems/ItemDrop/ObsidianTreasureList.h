@@ -126,7 +126,7 @@ public:
 		: DropItems(InDropItems)
 	{}
 	
-	/** Returns Weighted Randomized Item, will be nullptr if NoDrop was chosen. */
+	/** Returns Weighted Randomized Item, will be FObsidianDropItem::NoDropType if NoDrop was chosen. */
 	FObsidianDropItem GetRandomItemFromClass(const float NoDropScale = 1.0f);
 
 #if WITH_EDITOR
@@ -134,9 +134,8 @@ public:
 #endif
 	
 public:
-	//TODO(intrxx) Currently not used for anything, keep or delete?
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	FName TreasureClassName;
+	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
+	FGameplayTag TreasureCategoryTag = FGameplayTag::EmptyTag;
 	
 	/**
 	 * Treasure Quality [0, 85] is an identifier of value of items listed in this Treasure Class.
@@ -153,6 +152,9 @@ public:
 	/** Definition of Drop Item. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianDropItem> DropItems;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	FString DebugName = FString();
 };
 
 /**
@@ -168,9 +170,10 @@ public:
 	virtual void PostLoad() override;
 	
 	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
-	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality);
+	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality) const;
 	TArray<FObsidianTreasureClass> GetTreasureClassesOfQuality(const uint8 TreasureQuality) const;
-	TArray<FObsidianDropItem> GetAllItemsOfBaseTypeUpToQuality(const uint8 TreasureQuality, const FGameplayTag& OfBaseType);
+	TArray<FObsidianTreasureClass> GetTreasureClassesOfQualityWithCategory(const uint8 TreasureQuality, const FGameplayTag& FromCategory) const;
+	TArray<FObsidianDropItem> GetAllItemsOfBaseTypeUpToQuality(const uint8 TreasureQuality, const FGameplayTag& OfBaseType) const;
 	
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 	

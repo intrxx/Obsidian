@@ -356,6 +356,9 @@ namespace ObsidianGameplayTags
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Strength);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Intelligence);
 	
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Shield_Strength);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Shield_Dexterity);
+	
 	/**
 	 * Equipment Slots.
 	 */

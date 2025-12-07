@@ -22,7 +22,10 @@ enum class EObsidianItemSpawnerLevelPolicy : uint8
 {
 	None = 0 UMETA(DisplayName = "None"),
 
-	/** After setting the Policy to Static it will allow for setting the ItemSpawnerStaticLevel which will be used for this spawner intead of Area Level. */
+	/**
+	 * After setting the Policy to Static it will allow for setting the ItemSpawnerStaticLevel which will be used for
+	 * this spawner intead of Area Level.
+	 */
 	Static UMETA(DisplayName = "Static"),
 
 	/** Base level of the Spawner will equal the Area Level where the Spawner resides. */

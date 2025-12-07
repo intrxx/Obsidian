@@ -30,7 +30,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllCommonTreasureClassesUpToQuality(co
 	}
 
 	bool bSuccess = false;
-	for (UObsidianTreasureList* TreasureList : ItemDataConfig->CommonTreasureLists)
+	for (const UObsidianTreasureList* TreasureList : ItemDataConfig->CommonTreasureLists)
 	{
 		if (TreasureList)
 		{
@@ -41,8 +41,28 @@ bool UObsidianItemDataLoaderSubsystem::GetAllCommonTreasureClassesUpToQuality(co
 	return bSuccess;
 }
 
+bool UObsidianItemDataLoaderSubsystem::GetAllCommonTreasureClassesUpToQualityForCategory(const int32 UpToTreasureQuality,
+	TArray<FObsidianTreasureClass>& OutTreasureClass, const FGameplayTag& ForCategory) const
+{
+	if (ItemDataConfig == nullptr)
+	{
+		return false;
+	}
+
+	bool bSuccess = false;
+	for (const UObsidianTreasureList* TreasureList : ItemDataConfig->CommonTreasureLists)
+	{
+		if (TreasureList)
+		{
+			OutTreasureClass.Append(TreasureList->GetTreasureClassesOfQualityWithCategory(UpToTreasureQuality, ForCategory));
+			bSuccess = true;
+		}
+	}
+	return bSuccess;
+}
+
 bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality,
-	const EObsidianItemRarity RarityToGet, const FGameplayTag& OfBaseType, FObsidianTreasureClass& OutTreasureClass) const
+                                                                                       const EObsidianItemRarity RarityToGet, const FGameplayTag& OfBaseType, FObsidianTreasureClass& OutTreasureClass) const
 {
 	if (ItemDataConfig == nullptr)
 	{
@@ -51,7 +71,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetItemsOfBaseItemTypeUpToQ
 
 	if (RarityToGet == EObsidianItemRarity::Unique)
 	{
-		for (UObsidianTreasureList* TreasureList : ItemDataConfig->UniqueTreasureLists)
+		for (const UObsidianTreasureList* TreasureList : ItemDataConfig->UniqueTreasureLists)
 		{
 			if (TreasureList)
 			{
@@ -62,7 +82,7 @@ bool UObsidianItemDataLoaderSubsystem::GetAllUniqueOrSetItemsOfBaseItemTypeUpToQ
 	}
 	else if (RarityToGet == EObsidianItemRarity::Set)
 	{
-		for (UObsidianTreasureList* TreasureList : ItemDataConfig->SetTreasureLists)
+		for (const UObsidianTreasureList* TreasureList : ItemDataConfig->SetTreasureLists)
 		{
 			if (TreasureList)
 			{
@@ -342,7 +362,7 @@ void UObsidianItemDataLoaderSubsystem::OnCommonItemsLoaded()
 			UE_LOG(LogItemDataLoader, Log, TEXT("TL: [%s]"), *GetNameSafe(TL));
 			for (const FObsidianTreasureClass& TC : TL->GetAllTreasureClasses())
 			{
-				UE_LOG(LogItemDataLoader, Log, TEXT("TC:	-[%s]"), *TC.TreasureClassName.ToString());
+				UE_LOG(LogItemDataLoader, Log, TEXT("TC:	-[%s]"), *TC.DebugName);
 			}
 		}
 	}

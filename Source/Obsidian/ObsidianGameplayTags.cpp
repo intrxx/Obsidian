@@ -380,6 +380,9 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Wand_Strength, "Item.BaseType.Wand.Strength", "Item Tag that represents Strength Wand item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Wand_Intelligence, "Item.BaseType.Wand.Intelligence", "Item Tag that represents Intelligence Wand item base type.");
 	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Shield_Strength, "Item.BaseType.Shield.Strength", "Item Tag that represents Strength Shield item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Shield_Dexterity, "Item.BaseType.Shield.Dexterity", "Item Tag that represents Dexterity Shield item base type.");
+	
 	/**
 	 * Equipment Slots.
 	 */

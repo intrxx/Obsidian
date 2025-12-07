@@ -168,7 +168,7 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClasses() co
 	return TreasureClasses;
 }
 
-TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality)
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality) const
 {
 	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
 	
@@ -184,7 +184,7 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQ
 }
 
 TArray<FObsidianDropItem> UObsidianTreasureList::GetAllItemsOfBaseTypeUpToQuality(const uint8 TreasureQuality,
-	const FGameplayTag& OfBaseType)
+	const FGameplayTag& OfBaseType) const
 {
 	TArray<FObsidianDropItem> MatchingItemsToDrop;
 	
@@ -214,6 +214,23 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQualit
 	for (const FObsidianTreasureClass* TreasureClassPtr : MatchingTreasureClassesPtrs)
 	{
 		if (TreasureClassPtr)
+		{
+			MatchingTreasureClasses.Add(*TreasureClassPtr);
+		}
+	}
+	return MatchingTreasureClasses;
+}
+
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQualityWithCategory(const uint8 TreasureQuality,
+	const FGameplayTag& FromCategory) const
+{
+	TArray<const FObsidianTreasureClass*> MatchingTreasureClassesPtrs;
+	TreasureClassMap.MultiFind(TreasureQuality, MatchingTreasureClassesPtrs);
+
+	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
+	for (const FObsidianTreasureClass* TreasureClassPtr : MatchingTreasureClassesPtrs)
+	{
+		if (TreasureClassPtr && TreasureClassPtr->TreasureCategoryTag.MatchesTag(FromCategory))
 		{
 			MatchingTreasureClasses.Add(*TreasureClassPtr);
 		}

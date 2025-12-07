@@ -97,6 +97,14 @@ protected:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float ItemDropRadius = 60.0f;
+
+	/** Lets you specify GameplayTag to limit the common treasure classes to drop, this does not work for AdditionalTreasureLists by design. */
+	UPROPERTY(EditAnywhere, Category = "Obsidian")
+	uint8 bLimitCommonTreasureCategory:1 = false;
+
+	/** Limits the drop items to be specific Category of Treasure Lists, e.g. "Item.Category.Equipment.Weapon". */
+	UPROPERTY(EditAnywhere, Meta = (Categories = "Item.Category", EditCondition = "bLimitCommonTreasureCategory", EditConditionHides), Category = "Obsidian")
+	FGameplayTag LimitCommonTreasureCategoryTag = FGameplayTag::EmptyTag;
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianAdditionalTreasureList> AdditionalTreasureLists;
