@@ -527,15 +527,15 @@ namespace ObsidianGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_EnergyShield_EnergyShieldFlat, "Item.Affix.Implicit.EnergyShield.EnergyShieldFlat", "Item Tag which represents Flat Energy shield Implicit.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Fire, "Item.Affix.Implicits.Resistance.Fire", "Item Tag which represents Fire Resistance Implicits.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Lightning, "Item.Affix.Implicits.Resistance.Lightning", "Item Tag which represents Lightning Resistance Implicits.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Cold, "Item.Affix.Implicits.Resistance.Cold", "Item Tag which represents Cold Resistance Implicits.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_Resistance_Chaos, "Item.Affix.Implicits.Resistance.Chaos", "Item Tag which represents Chaos Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_Resistance_Fire, "Item.Affix.Implicit.Resistance.Fire", "Item Tag which represents Fire Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_Resistance_Lightning, "Item.Affix.Implicit.Resistance.Lightning", "Item Tag which represents Lightning Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_Resistance_Cold, "Item.Affix.Implicit.Resistance.Cold", "Item Tag which represents Cold Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_Resistance_Chaos, "Item.Affix.Implicit.Resistance.Chaos", "Item Tag which represents Chaos Resistance Implicits.");
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Fire, "Item.Affix.Implicits.MaxResistance.Fire", "Item Tag which represents Max Fire Resistance Implicits.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Lightning, "Item.Affix.Implicits.MaxResistance.Lightning", "Item Tag which represents Max Lightning Resistance Implicits.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Cold, "Item.Affix.Implicits.MaxResistance.Cold", "Item Tag which represents Max Cold Resistance Implicits.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicits_MaxResistance_Chaos, "Item.Affix.Implicits.MaxResistance.Chaos", "Item Tag which represents Max Chaos Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_MaxResistance_Fire, "Item.Affix.Implicit.MaxResistance.Fire", "Item Tag which represents Max Fire Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_MaxResistance_Lightning, "Item.Affix.Implicit.MaxResistance.Lightning", "Item Tag which represents Max Lightning Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_MaxResistance_Cold, "Item.Affix.Implicit.MaxResistance.Cold", "Item Tag which represents Max Cold Resistance Implicits.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_Implicit_MaxResistance_Chaos, "Item.Affix.Implicit.MaxResistance.Chaos", "Item Tag which represents Max Chaos Resistance Implicits.");
 
 	/**
 	 * Prefixes
