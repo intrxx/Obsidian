@@ -1,5 +1,9 @@
 # Procedural Item Generation
 
+Here you can find a [youtube video](https://www.youtube.com/watch?v=HcLxNVmMXsk) showcasing the System.
+
+You can also find a testable packaged game [here](https://github.com/intrxx/Obsidian/releases/tag/Procedural_Item_Generation_Showcase_v0.1.0).
+
 <a name="table-of-contents"></a>
 ## Class Structure Overview
 
