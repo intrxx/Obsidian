@@ -106,9 +106,15 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianAffixRow> SkillImplicit_AffixRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UImage> ImplicitSeparator_Image;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianAffixRow> Implicit_AffixRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UImage> SkillImplicitSeparator_Image;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianAffixRow> Prefix1_AffixRow;

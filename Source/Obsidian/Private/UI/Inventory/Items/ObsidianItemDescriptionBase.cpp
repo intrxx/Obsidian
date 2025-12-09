@@ -193,6 +193,7 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 					} break;
 				case EObsidianAffixType::PrimaryItemAffix:
 					{
+						SkillImplicitSeparator_Image->SetVisibility(ESlateVisibility::Visible);
 						if(UObsidianAffixRow* PrimarySkillImplicitRow = GetFreePrimaryItemAffixBlock())
 						{
 							PrimarySkillImplicitRow->InitializeAffixRow(Row.AffixRowDescription);
@@ -200,6 +201,7 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 					} break;
 				case EObsidianAffixType::Implicit:
 					{
+						ImplicitSeparator_Image->SetVisibility(ESlateVisibility::Visible);
 						Implicit_AffixRow->InitializeAffixRow(Row.AffixRowDescription);
 					} break;
 				case EObsidianAffixType::Prefix:
