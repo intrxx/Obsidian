@@ -30,7 +30,7 @@ public:
 	
 public:
 	FText HeroClassText = FText();
-	FText HeroNameText = FText();
+	FString HeroNameString = FString();
 	
 	/** Character */
 	FOnHeroLevelUpSignature HeroLevelUpDelegate;

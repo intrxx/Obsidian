@@ -25,12 +25,12 @@ void UObsidianCharacterEntry::NativeOnClicked()
 	Super::NativeOnClicked();
 }
 
-void UObsidianCharacterEntry::InitializeCharacterEntry(const uint16 InSaveID, const FText& InPlayerName, const int32 InPlayerLevel,
+void UObsidianCharacterEntry::InitializeCharacterEntry(const uint16 InSaveID, const FString& InPlayerName, const int32 InPlayerLevel,
 	const FText& InPlayerClass, const bool InIsOnline, const bool InIsHardcore)
 {
 	SaveID = InSaveID;
 	bOnline = InIsOnline;
-	PlayerName_TextBlock->SetText(InPlayerName);
+	PlayerName_TextBlock->SetText(FText::FromString(InPlayerName));
 	PlayerLevel_TextBlock->SetText(FText::AsNumber(InPlayerLevel));
 	PlayerClass_TextBlock->SetText(InPlayerClass);
 

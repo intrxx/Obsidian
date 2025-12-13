@@ -5,6 +5,7 @@
 #include <Net/UnrealNetwork.h>
 #include <GameFramework/Character.h>
 
+#include "Game/Save/ObsidianHeroSaveGame.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
@@ -99,7 +100,7 @@ void UObsidianInventoryItemInstance::GenerateUniqueItemID()
 	}
 }
 
-int32 UObsidianInventoryItemInstance::GetItemLevel() const
+uint8 UObsidianInventoryItemInstance::GetItemLevel() const
 {
 #if !UE_BUILD_SHIPPING
 	if (ItemLevel == INDEX_NONE)
@@ -550,5 +551,128 @@ FString UObsidianInventoryItemInstance::GetItemDebugName() const
 void UObsidianInventoryItemInstance::SetItemDebugName(const FString& InItemDebugName)
 {
 	DebugName = InItemDebugName;
+}
+
+void UObsidianInventoryItemInstance::ConstructSaveItem(FObsidianSavedItem& OutSavedItem)
+{
+	// General
+	OutSavedItem.UniqueItemID = ItemUniqueID.ToString();
+	OutSavedItem.ItemLevel = ItemLevel;
+	OutSavedItem.SoftItemDef = ItemDef;
+	OutSavedItem.ItemCategory = ItemCategory;
+	OutSavedItem.ItemBaseType = ItemBaseType;
+	OutSavedItem.ItemRarity = ItemRarity;
+	OutSavedItem.ItemCurrentPosition = ItemCurrentPosition;
+
+	// Usability
+	OutSavedItem.bUsable = bUsable;
+	if (OutSavedItem.bUsable)
+	{
+		OutSavedItem.UsableItemType = UsableItemType;
+		OutSavedItem.UsableShard = UsableShard;
+	}
+	
+	// Equipping
+	OutSavedItem.bEquippable = bEquippable;
+	if (OutSavedItem.bEquippable)
+	{
+		OutSavedItem.bNeedsTwoSlots = bNeedsTwoSlots;
+		OutSavedItem.SavedEquipmentPieces.Append(ActorsToSpawn);
+		OutSavedItem.EquippingRequirements = EquippingRequirements;
+	}
+
+	// Affixes
+	OutSavedItem.bIdentified = bIdentified;
+	//TODO(intrxx) Do actual affixes here. 
+
+	// Stacks
+	OutSavedItem.bStackable = bStackable;
+	if (OutSavedItem.bStackable)
+	{
+		OutSavedItem.ItemCurrentStacks = ItemStackTags.GetStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		OutSavedItem.ItemMaxStacks = ItemStackTags.GetStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+		OutSavedItem.ItemLimitStacks = ItemStackTags.GetStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+	}
+	
+	// Appearance
+	OutSavedItem.ItemGridSpan = ItemGridSpan;
+	OutSavedItem.SoftItemImage = ItemImage;
+	OutSavedItem.SoftItemDroppedMesh = ItemDroppedMesh;
+	OutSavedItem.ItemDisplayName = ItemDisplayName.ToString();
+	OutSavedItem.ItemNameAdditionsData_RareItemDisplayNameAddition = ItemNameAdditionsData.RareItemDisplayNameAddition;
+	OutSavedItem.ItemNameAdditionsData_MagicItemDisplayNameAddition = ItemNameAdditionsData.MagicItemDisplayNameAddition;
+	OutSavedItem.ItemDescription = ItemDescription.ToString();
+	OutSavedItem.ItemAdditionalDescription = ItemAdditionalDescription.ToString();
+	OutSavedItem.ItemSlotPadding = ItemSlotPadding;
+	
+	// Debug
+	OutSavedItem.DebugItemName = DebugName;
+}
+
+void UObsidianInventoryItemInstance::ConstructFromSavedItem(const FObsidianSavedItem& SavedItem)
+{
+	// General
+	if (FGuid::Parse(SavedItem.UniqueItemID, ItemUniqueID) == false)
+	{
+		UE_LOG(LogItems, Error, TEXT("Fail to load unique item ID from string [%s]"), *SavedItem.UniqueItemID);
+	}
+	ItemLevel = SavedItem.ItemLevel;
+	ItemDef = SavedItem.SoftItemDef.LoadSynchronous();
+	ItemCategory = SavedItem.ItemCategory;
+	ItemBaseType = SavedItem.ItemBaseType;
+	ItemRarity = SavedItem.ItemRarity;
+	ItemCurrentPosition = SavedItem.ItemCurrentPosition;
+
+	// Usability
+	bUsable = SavedItem.bUsable;
+	if (bUsable)
+	{
+		UsableItemType = SavedItem.UsableItemType;
+		UsableShard = SavedItem.UsableShard.LoadSynchronous();
+	}
+
+	// Equipping
+	bEquippable = SavedItem.bEquippable;
+	if (bEquippable)
+	{
+		bNeedsTwoSlots = SavedItem.bNeedsTwoSlots;
+		ActorsToSpawn.Append(SavedItem.SavedEquipmentPieces);
+		EquippingRequirements = SavedItem.EquippingRequirements;
+	}
+
+	// Affixes
+	bIdentified = SavedItem.bIdentified;
+	//TODO(intrxx) Do actual affixes here.
+
+	// Stacks
+	bStackable = SavedItem.bStackable;
+	if (bStackable)
+	{
+		ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Current, SavedItem.ItemCurrentStacks);
+
+		if (SavedItem.ItemMaxStacks > 0)
+		{
+			ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Max, SavedItem.ItemMaxStacks);
+		}
+		if (SavedItem.ItemLimitStacks > 0)
+		{
+			ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Limit, SavedItem.ItemLimitStacks);
+		}
+	}
+
+	// Appearance
+	ItemGridSpan = SavedItem.ItemGridSpan;
+	ItemImage = SavedItem.SoftItemImage.LoadSynchronous();
+	ItemDroppedMesh = SavedItem.SoftItemDroppedMesh.LoadSynchronous();
+	ItemDisplayName = FText::FromString(SavedItem.ItemDisplayName);
+	ItemNameAdditionsData = FObsidianItemGeneratedNameData(
+		SavedItem.ItemNameAdditionsData_RareItemDisplayNameAddition,
+		SavedItem.ItemNameAdditionsData_MagicItemDisplayNameAddition);
+	ItemDescription = FText::FromString(SavedItem.ItemDescription);
+	ItemAdditionalDescription = FText::FromString(SavedItem.ItemAdditionalDescription);
+	ItemSlotPadding = SavedItem.ItemSlotPadding;
+	
+	// Debug
+	DebugName = SavedItem.DebugItemName;
 }
 

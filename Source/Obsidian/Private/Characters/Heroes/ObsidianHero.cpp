@@ -217,6 +217,36 @@ void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
 	FObsidianGenericAttributes GenericAttributes;
 	FillGenericAttribures(GenericAttributes);
 	HeroSaveData.GenericStatAttributes = GenericAttributes;
+
+	// This should probably be multithreaded
+	if (const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
+	{
+		if (const UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent())
+		{
+			for (UObsidianInventoryItemInstance* ItemInstance : InventoryComponent->GetAllItems())
+			{
+				if (ItemInstance)
+				{
+					FObsidianSavedItem SavedItem;
+					ItemInstance->ConstructSaveItem(SavedItem);
+					HeroSaveData.InventorySavedItems.Add(SavedItem);
+				}
+			}
+		}
+
+		if (const UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
+		{
+			for (UObsidianInventoryItemInstance* ItemInstance : EquipmentComponent->GetAllEquippedItems())
+			{
+				if (ItemInstance)
+				{
+					FObsidianSavedItem SavedItem;
+					ItemInstance->ConstructSaveItem(SavedItem);
+					HeroSaveData.EquipmentSavedItems.Add(SavedItem);
+				}
+			}
+		}
+	}
 	
 	SaveObject->SetHeroGameplayData(HeroSaveData);
 }
@@ -243,6 +273,31 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 			AttributeSet->SetMaxExperience(LoadedGenericAttributes.MaxExperience);
 			AttributeSet->SetPassiveSkillPoints(LoadedGenericAttributes.PassiveSkillPoints);
 			AttributeSet->SetAscensionPoints(LoadedGenericAttributes.AscensionPoints);
+		}
+	}
+	
+	if (AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
+	{
+		if (UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Loading Inventory Items:"));
+			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.InventorySavedItems)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName);
+
+				InventoryComponent->LoadInventorizedItem(SavedItem);
+			}
+		}
+
+		if (UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Loading Equipped Items:"));
+			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.EquipmentSavedItems)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)
+
+				EquipmentComponent->LoadEquippedItem(SavedItem);
+			}
 		}
 	}
 }

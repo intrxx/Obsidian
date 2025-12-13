@@ -30,7 +30,7 @@ public:
 	
 public:
 	UPROPERTY()
-	FText ObsidianPlayerName = FText();
+	FString ObsidianPlayerName = FString();
 
 	UPROPERTY()
 	bool bIsHardcore = false;
@@ -60,7 +60,7 @@ class OBSIDIAN_API AObsidianFrontEndGameMode : public AGameModeBase
 public:
 	AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
-	FObsidianHeroClassParams CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName, const bool InIsOnline,
+	FObsidianHeroClassParams CreateHeroClass(const EObsidianHeroClass InClass, const FString& InName, const bool InIsOnline,
 		const bool InIsHardcore);
 	bool DeleteHeroClass(const int32 WithID);
 

@@ -2,9 +2,20 @@
 
 #include "Game/Save/ObsidianHeroSaveGame.h"
 
-#include "Game/Save/ObsidianSaveGameSubsystem.h"
-#include "Kismet/GameplayStatics.h"
+#include <Kismet/GameplayStatics.h>
 
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
+#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
+
+// ~ Start of FObsidianSavedEquipmentPiece
+FObsidianSavedEquipmentPiece::FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& EquipmentActor)
+	: SoftActorToSpawn(EquipmentActor.ActorToSpawn)
+	, bOverrideAttachSocket(EquipmentActor.bOverrideAttachSocket)
+	, AttachSocketName(EquipmentActor.AttachSocket.ToString())
+	, AttachTransform(EquipmentActor.AttachTransform)
+{
+}
+// ~ End of FObsidianSavedEquipmentPiece
 
 void UObsidianHeroSaveGame::InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem)
 {

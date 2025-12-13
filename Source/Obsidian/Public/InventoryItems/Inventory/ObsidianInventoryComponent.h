@@ -12,6 +12,8 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
+struct FObsidianSavedItem;
+
 class AObsidianPlayerController;
 class FGameplayDebuggerCategory_InventoryItems;
 class UObInventoryItemsWidgetController;
@@ -176,6 +178,8 @@ public:
 
 	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
 	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
+
+	void LoadInventorizedItem(const FObsidianSavedItem& InventorizedSavedItem);
 	
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;

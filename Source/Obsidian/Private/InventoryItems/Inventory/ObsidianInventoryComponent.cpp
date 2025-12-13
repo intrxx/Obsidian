@@ -972,6 +972,22 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	}
 }
 
+void UObsidianInventoryComponent::LoadInventorizedItem(const FObsidianSavedItem& InventorizedSavedItem)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogInventory, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
+		return; 
+	}
+	
+	UObsidianInventoryItemInstance* LoadedInstance = InventoryGrid.LoadEntry(InventorizedSavedItem);
+
+	if(LoadedInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(LoadedInstance);
+	}
+}
+
 bool UObsidianInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
 	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);

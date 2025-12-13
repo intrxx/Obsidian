@@ -10,6 +10,8 @@
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "OInventoryItemFragment_Equippable.generated.h"
 
+struct FObsidianSavedEquipmentPiece;
+
 class UObsidianAbilitySet;
 class AObsidianSpawnedEquipmentPiece;
 
@@ -20,7 +22,8 @@ struct FObsidianEquipmentActor
 
 public:
 	FObsidianEquipmentActor(){}
-
+	FObsidianEquipmentActor(const FObsidianSavedEquipmentPiece& SavedEquipmentActor);
+	
 	void OverrideAttachSocket(const FGameplayTag& SlotTag);
 	
 public:

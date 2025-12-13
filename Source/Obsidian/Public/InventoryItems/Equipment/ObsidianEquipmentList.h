@@ -13,10 +13,11 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianEquipmentList.generated.h"
 
-class AObsidianHero;
+struct FObsidianSavedItem;
 struct FObsidianEquipmentList;
 struct FObsidianItemGeneratedData;
 
+class AObsidianHero;
 class UObsidianAffixAbilitySet;
 class UObsidianAbilitySystemComponent;
 class UObsidianInventoryItemInstance;
@@ -172,6 +173,7 @@ public:
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
 		const FGameplayTag& EquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
+	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& EquippedSavedItem);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	
 	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);

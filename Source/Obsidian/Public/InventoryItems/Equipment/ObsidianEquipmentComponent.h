@@ -10,6 +10,8 @@
 #include <Components/ActorComponent.h>
 #include "ObsidianEquipmentComponent.generated.h"
 
+struct FObsidianSavedItem;
+
 class AObsidianPlayerState;
 class AObsidianPlayerController;
 class UObsidianInventoryComponent;
@@ -92,6 +94,8 @@ public:
 
 	FObsidianEquipmentResult UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip);
 
+	void LoadEquippedItem(const FObsidianSavedItem& EquippedSavedItem);
+	
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;

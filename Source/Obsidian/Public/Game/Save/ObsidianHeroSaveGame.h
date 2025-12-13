@@ -4,13 +4,193 @@
 
 #include <CoreMinimal.h>
 
-#include <GameFramework/SaveGame.h>
 
+#include "InventoryItems/Fragments/OInventoryItemFragment_Usable.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
+#include <GameFramework/SaveGame.h>
 #include "ObsidianHeroSaveGame.generated.h"
+
+struct FObsidianEquipmentActor;
 
 class UObsidianSaveGameSubsystem;
 class AObsidianHero;
+class AObsidianSpawnedEquipmentPiece;
+
+USTRUCT()
+struct FObsidianSavedItemRequirements
+{
+	GENERATED_BODY()
+
+public:
+	EObsidianHeroClass HeroClassRequirement = EObsidianHeroClass::None;
+
+	UPROPERTY()
+	TArray<FObsidianAttributeRequirement> AttributeRequirements;
+
+	UPROPERTY()
+	uint8 RequiredLevel = 0;
+
+	UPROPERTY()
+	uint8 bHasAnyRequirements:1;
+
+	UPROPERTY()
+	uint8 bInitialized:1;
+};
+
+USTRUCT()
+struct FObsidianSavedEquipmentPiece
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianSavedEquipmentPiece(){}
+	FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& EquipmentActor);
+	
+public:
+	UPROPERTY()
+	TSoftClassPtr<AObsidianSpawnedEquipmentPiece> SoftActorToSpawn = nullptr;
+	
+	UPROPERTY()
+	bool bOverrideAttachSocket = true;
+
+	UPROPERTY()
+	FString AttachSocketName;
+
+	UPROPERTY()
+	FTransform AttachTransform;
+};
+
+/**
+ * 
+ */
+USTRUCT()
+struct FObsidianSavedItem
+{
+	GENERATED_BODY()
+
+public:
+	/**
+	 * General 
+	 */
+	
+	UPROPERTY()
+	FString UniqueItemID = FString();
+
+	UPROPERTY()
+	uint8 ItemLevel = INDEX_NONE;
+	
+	UPROPERTY()
+	TSoftClassPtr<UObsidianInventoryItemDefinition> SoftItemDef;
+
+	UPROPERTY()
+	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
+
+	UPROPERTY()
+	EObsidianItemRarity ItemRarity = EObsidianItemRarity::None;
+	
+	UPROPERTY()
+	FObsidianItemPosition ItemCurrentPosition = FObsidianItemPosition();
+
+	/**
+	 * Usability
+	 */
+
+	UPROPERTY()
+	bool bUsable = false;
+	
+	UPROPERTY()
+	EObsidianUsableItemType UsableItemType = EObsidianUsableItemType::UIT_None;
+
+	UPROPERTY()
+	TSoftObjectPtr<UObsidianUsableShard> UsableShard = nullptr;
+
+	/**
+	 * Equipping.
+	 */
+
+	UPROPERTY()
+	bool bEquippable = false;
+	
+	UPROPERTY()
+	bool bNeedsTwoSlots = false;
+
+	UPROPERTY()
+	TArray<FObsidianSavedEquipmentPiece> SavedEquipmentPieces;
+	
+	UPROPERTY()
+	FObsidianItemRequirements EquippingRequirements = FObsidianItemRequirements();
+
+	/**
+	 * Affixes.
+	 */
+
+	UPROPERTY()
+	bool bIdentified = false;
+
+	//TODO(intrxx) Do actual affixes here. 
+
+	/**
+	 * Stacks.
+	 */
+
+	UPROPERTY()
+	bool bStackable = false;
+	
+	UPROPERTY()
+	int32 ItemCurrentStacks = 0;
+
+	UPROPERTY()
+	int32 ItemMaxStacks = 0;
+
+	UPROPERTY()
+	int32 ItemLimitStacks = 0;
+
+	/**
+	 * Appearance.
+	 */
+
+	UPROPERTY()
+	FIntPoint ItemGridSpan = FIntPoint::NoneValue;
+
+	UPROPERTY()
+	TSoftObjectPtr<UTexture2D> SoftItemImage = nullptr;
+
+	UPROPERTY()
+	TSoftObjectPtr<UStaticMesh> SoftItemDroppedMesh = nullptr;
+
+	UPROPERTY()
+	FString ItemDisplayName = FString();
+
+	// ~ Start of ItemNameAdditionsData
+	UPROPERTY()
+	FString ItemNameAdditionsData_RareItemDisplayNameAddition = FString();
+
+	UPROPERTY()
+	FString ItemNameAdditionsData_MagicItemDisplayNameAddition = FString();
+	// ~ End of ItemNameAdditionsData
+
+	UPROPERTY()
+	FString ItemDescription = FString();
+
+	UPROPERTY()
+	FString ItemAdditionalDescription = FString();
+	
+	UPROPERTY()
+	float ItemSlotPadding = 0.0f;
+
+	/**
+	 * Debug
+	 */
+
+	UPROPERTY()
+	FString DebugItemName = FString();
+};
 
 /**
  * Hero Attributes that can be saved in generic way like Experience.
@@ -52,6 +232,12 @@ public:
 
 	UPROPERTY()
 	FObsidianGenericAttributes GenericStatAttributes;
+
+	UPROPERTY()
+	TArray<FObsidianSavedItem> InventorySavedItems;
+
+	UPROPERTY()
+	TArray<FObsidianSavedItem> EquipmentSavedItems;
 };
 
 /**
@@ -64,7 +250,7 @@ struct FObsidianHeroInitializationSaveData
 
 public:
 	UPROPERTY()
-	FText PlayerHeroName = FText();
+	FString PlayerHeroName = FString();
 
 	UPROPERTY()
 	TSoftClassPtr<AObsidianHero> HeroObjectClass;

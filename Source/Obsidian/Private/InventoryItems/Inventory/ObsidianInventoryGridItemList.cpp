@@ -122,6 +122,26 @@ void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* In
 	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, AvailablePosition, EObsidianInventoryChangeType::ICT_ItemAdded);
 }
 
+UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::LoadEntry(const FObsidianSavedItem& EquippedSavedItem)
+{
+	check(OwnerComponent);
+	
+	UObsidianInventoryItemInstance* LoadedInstance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
+	LoadedInstance->ConstructFromSavedItem(EquippedSavedItem);
+
+	const FIntPoint GridLocationToAddTo = LoadedInstance->GetItemCurrentPosition().GetItemGridLocation();
+	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, GridLocationToAddTo);
+	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	
+	GridLocationToItemMap.Add(GridLocationToAddTo, LoadedInstance);
+	Item_MarkSpace(LoadedInstance, GridLocationToAddTo);
+	MarkItemDirty(NewEntry);
+	
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, GridLocationToAddTo, EObsidianInventoryChangeType::ICT_ItemAdded);
+
+	return LoadedInstance;
+}
+
 void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance* Instance)
 {
 	bool bSuccess = false;

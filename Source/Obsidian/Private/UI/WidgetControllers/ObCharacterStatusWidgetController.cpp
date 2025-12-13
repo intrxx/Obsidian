@@ -29,7 +29,7 @@ void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 		HeroClassText = UObsidianGameplayStatics::GetHeroClassText(Hero->GetHeroClass());
 	}
 
-	HeroNameText = ObsidianPlayerState->GetObsidianPlayerName();
+	HeroNameString = ObsidianPlayerState->GetObsidianPlayerName();
 }
 
 void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)

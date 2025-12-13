@@ -10,7 +10,7 @@
 
 void FObsidianHeroClassParams::Reset()
 {
-	ObsidianPlayerName = FText();
+	ObsidianPlayerName = FString();
 	bIsHardcore = false;
 	bIsOnline = false;
 	HeroObjectClass = nullptr;
@@ -29,7 +29,7 @@ AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& O
 	PlayerControllerClass = AObsidianPlayerController::StaticClass();
 }
 
-FObsidianHeroClassParams AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass InClass, const FText& InName,
+FObsidianHeroClassParams AObsidianFrontEndGameMode::CreateHeroClass(const EObsidianHeroClass InClass, const FString& InName,
 	const bool InIsOnline, const bool InIsHardcore)
 {
 	if(InName.IsEmpty() || InClass == EObsidianHeroClass::None)

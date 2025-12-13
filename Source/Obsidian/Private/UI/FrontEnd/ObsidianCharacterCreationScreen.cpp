@@ -126,7 +126,7 @@ void UObsidianCharacterCreationScreen::OnCreateButtonClicked()
 	const ECheckBoxState CheckBoxState = Hardcore_CheckBox->GetCheckedState();
 	const bool bIsHardcoreChecked = CheckBoxState == ECheckBoxState::Checked;
 	const FObsidianHeroClassParams Params = FrontEndGameMode->CreateHeroClass(ChosenClass,
-		PlayerName_EditableTextBox->GetText(), bIsOnlineCharacter, bIsHardcoreChecked);
+		PlayerName_EditableTextBox->GetText().ToString(), bIsOnlineCharacter, bIsHardcoreChecked);
 	
 	if(Params.IsValid())
 	{

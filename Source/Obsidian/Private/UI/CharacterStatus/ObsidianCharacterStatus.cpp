@@ -102,7 +102,7 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 
 	if(PlayerName_TextBlock)
 	{
-		PlayerName_TextBlock->SetText(CharacterStatusWidgetController->HeroNameText);
+		PlayerName_TextBlock->SetText(FText::FromString(CharacterStatusWidgetController->HeroNameString));
 	}
 }
 

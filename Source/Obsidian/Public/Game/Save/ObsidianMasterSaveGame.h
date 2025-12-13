@@ -47,7 +47,7 @@ struct FObsidianHeroDescription
 
 public:
 	UPROPERTY()
-	FText HeroName = FText();
+	FString HeroName = FString();
 
 	UPROPERTY()
 	EObsidianHeroClass HeroClass = EObsidianHeroClass::None;

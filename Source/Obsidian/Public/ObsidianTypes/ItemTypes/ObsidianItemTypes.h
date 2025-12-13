@@ -159,12 +159,12 @@ UENUM(BlueprintType)
 enum class EObsidianItemRarity : uint8
 {
 	None = 0,
-	Quest,
-	Normal,
-	Magic,
-	Rare,
-	Unique,
-	Set
+	Quest = 1,
+	Normal = 2,
+	Magic = 3,
+	Rare = 4,
+	Unique = 5,
+	Set = 6
 };
 
 /**

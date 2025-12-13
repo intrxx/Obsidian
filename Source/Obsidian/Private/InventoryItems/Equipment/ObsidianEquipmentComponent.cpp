@@ -859,6 +859,22 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::UnequipItem(UObsidianInven
 	return Result;
 }
 
+void UObsidianEquipmentComponent::LoadEquippedItem(const FObsidianSavedItem& EquippedSavedItem)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogEquipment, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
+		return; 
+	}
+	
+	UObsidianInventoryItemInstance* LoadedInstance = EquipmentList.LoadEntry(EquippedSavedItem);
+
+	if(LoadedInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(LoadedInstance);
+	}
+}
+
 bool UObsidianEquipmentComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
 	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);

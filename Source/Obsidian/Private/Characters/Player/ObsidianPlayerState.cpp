@@ -52,7 +52,7 @@ UAbilitySystemComponent* AObsidianPlayerState::GetAbilitySystemComponent() const
 	return GetObsidianAbilitySystemComponent();
 }
 
-FText AObsidianPlayerState::GetObsidianPlayerName()
+FString AObsidianPlayerState::GetObsidianPlayerName()
 {
 	return PlayerName;
 }
@@ -74,7 +74,7 @@ void AObsidianPlayerState::OnRep_HeroLevel()
 	OnHeroLevelUp.Broadcast(HeroLevel);
 }
 
-void AObsidianPlayerState::SetObsidianPlayerName(const FText& InName)
+void AObsidianPlayerState::SetObsidianPlayerName(const FString& InName)
 {
 	PlayerName = InName;
 }

@@ -53,13 +53,13 @@ public:
 		return HeroLevel;
 	}
 
-	FText GetObsidianPlayerName();
+	FString GetObsidianPlayerName();
 
 	void IncreaseHeroLevel();
 
 	// Loading purposes, don't really like it like this
 	void SetHeroLevel(const uint8 InLevel);
-	void SetObsidianPlayerName(const FText& InName);
+	void SetObsidianPlayerName(const FString& InName);
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|PlayerState")
@@ -79,5 +79,5 @@ private:
 	uint8 HeroLevel = 1;
 
 	UPROPERTY(VisibleAnywhere)
-	FText PlayerName = FText();
+	FString PlayerName = FString();
 };

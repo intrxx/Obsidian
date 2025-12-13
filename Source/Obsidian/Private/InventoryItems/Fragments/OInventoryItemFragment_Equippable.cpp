@@ -2,16 +2,24 @@
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 
-// ~ Core
-
-// ~ Project
+#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "Core/ObsidianGameplayStatics.h"
+#include "Game/Save/ObsidianHeroSaveGame.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
 //
 // Equipment Actor
 //
+
+// ~ Start of FObsidianEquipmentActor
+FObsidianEquipmentActor::FObsidianEquipmentActor(const FObsidianSavedEquipmentPiece& SavedEquipmentActor)
+	: ActorToSpawn(SavedEquipmentActor.SoftActorToSpawn.LoadSynchronous())
+	, bOverrideAttachSocket(SavedEquipmentActor.bOverrideAttachSocket)
+	, AttachSocket(SavedEquipmentActor.AttachSocketName)
+	, AttachTransform(SavedEquipmentActor.AttachTransform)
+{
+}
+// ~ End of FObsidianEquipmentActor
 
 void FObsidianEquipmentActor::OverrideAttachSocket(const FGameplayTag& SlotTag)
 {

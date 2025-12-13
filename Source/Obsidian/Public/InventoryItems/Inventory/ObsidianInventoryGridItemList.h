@@ -13,6 +13,7 @@
 
 struct FObsidianInventoryGridItemList;
 struct FObsidianItemGeneratedData;
+struct FObsidianSavedItem;
 
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
@@ -74,6 +75,10 @@ struct FObsidianInventoryEntry : public FFastArraySerializerItem
 	FObsidianInventoryEntry(UObsidianInventoryItemInstance* InInstance)
 		: Instance(InInstance)
 	{}
+	FObsidianInventoryEntry(UObsidianInventoryItemInstance* InInstance, const FIntPoint& InGridLocation)
+		: Instance(InInstance)
+		, GridLocation(InGridLocation)
+	{}
 
 	FString GetDebugString() const;
 
@@ -116,6 +121,7 @@ public:
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
 		const int32 StackCount, const FIntPoint& AvailablePosition);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FIntPoint& AvailablePosition);
+	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& EquippedSavedItem);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);
 	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance);

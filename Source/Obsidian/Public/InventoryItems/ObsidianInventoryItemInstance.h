@@ -13,6 +13,8 @@
 
 #include "ObsidianInventoryItemInstance.generated.h"
 
+struct FObsidianSavedItem;
+
 class AObsidianPlayerController;
 class UObsidianUsableShard;
 class UObsidianInventoryItemFragment;
@@ -59,7 +61,7 @@ public:
 
 	void GenerateUniqueItemID();
 
-	int32 GetItemLevel() const;
+	uint8 GetItemLevel() const;
 
 	void SetItemLevel(const int32 InItemLevel);
 	
@@ -270,6 +272,13 @@ public:
 
 	void SetItemDebugName(const FString& InItemDebugName);
 
+	/**
+	 * Saving.
+	 */
+
+	void ConstructSaveItem(FObsidianSavedItem& OutSavedItem);
+	void ConstructFromSavedItem(const FObsidianSavedItem& SavedItem);
+
 private:
 	/**
 	 * Item.
@@ -279,7 +288,7 @@ private:
 	FGuid ItemUniqueID;
 
 	UPROPERTY(Replicated)
-	int32 ItemLevel = INDEX_NONE;
+	uint8 ItemLevel = INDEX_NONE;
 	
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;

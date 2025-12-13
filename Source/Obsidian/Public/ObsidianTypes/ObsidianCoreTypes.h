@@ -123,10 +123,10 @@ enum class EObsidianHeroClass : uint8
 {
 	None = 0 UMETA(DisplayName = "None"),
 	
-	Witch UMETA(DisplayName = "Witch"),
-	Barbarian UMETA(DisplayName = "Barbarian"),
-	Assassin UMETA(DisplayName = "Assassin"),
-	Paladin UMETA(DisplayName = "Paladin")
+	Witch = 1 UMETA(DisplayName = "Witch"),
+	Barbarian = 2 UMETA(DisplayName = "Barbarian"),
+	Assassin = 3 UMETA(DisplayName = "Assassin"),
+	Paladin = 4 UMETA(DisplayName = "Paladin")
 };
 
 
