@@ -589,9 +589,13 @@ void UObsidianInventoryItemInstance::ConstructSaveItem(FObsidianSavedItem& OutSa
 	OutSavedItem.bStackable = bStackable;
 	if (OutSavedItem.bStackable)
 	{
-		OutSavedItem.ItemCurrentStacks = ItemStackTags.GetStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		OutSavedItem.ItemMaxStacks = ItemStackTags.GetStackCount(ObsidianGameplayTags::Item_StackCount_Max);
-		OutSavedItem.ItemLimitStacks = ItemStackTags.GetStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+		OutSavedItem.ItemCurrentStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		OutSavedItem.ItemMaxStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+		OutSavedItem.ItemLimitStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+	}
+	else
+	{
+		OutSavedItem.ItemCurrentStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	}
 	
 	// Appearance
@@ -658,6 +662,10 @@ void UObsidianInventoryItemInstance::ConstructFromSavedItem(const FObsidianSaved
 		{
 			ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Limit, SavedItem.ItemLimitStacks);
 		}
+	}
+	else
+	{
+		ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Current, SavedItem.ItemCurrentStacks);
 	}
 
 	// Appearance

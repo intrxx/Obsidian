@@ -42,7 +42,7 @@ public:
 	UFUNCTION(BlueprintPure, Category=Equipment)
 	APawn* GetPawn() const;
 
-	UWorld* GetWorld() const override final;
+	virtual UWorld* GetWorld() const override final;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, meta=(DeterminesOutputType = FragmentClass))
 	const UObsidianInventoryItemFragment* FindFragmentByClass(TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const;
