@@ -31,6 +31,7 @@ UCLASS()
 class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase, public IObsidianSaveableInterface
 {
 	GENERATED_BODY()
+	
 public:
 	AObsidianHero(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	

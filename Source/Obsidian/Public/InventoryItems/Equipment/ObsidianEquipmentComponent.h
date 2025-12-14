@@ -53,6 +53,10 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	void InitSaveData(const bool bReceivedInitialItems);
+	
+	bool DidReceiveInitialEquipmentItems() const;
+
 	UObsidianInventoryComponent* GetInventoryComponentFromOwner() const;
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponentFromOwner() const;
 	AObsidianPlayerState* GetObsidianPlayerStateFromOwner() const;
@@ -143,6 +147,10 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
+
+	UPROPERTY()
+	bool bReceivedInitialEquipmentItems = false;
+	FDelegateHandle AddDefaultItemsDelegateHandle;
 };
 
 #if !UE_BUILD_SHIPPING

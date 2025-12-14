@@ -237,7 +237,13 @@ public:
 	TArray<FObsidianSavedItem> InventorySavedItems;
 
 	UPROPERTY()
+	bool bReceivedInitialInventoryItems = false;
+
+	UPROPERTY()
 	TArray<FObsidianSavedItem> EquipmentSavedItems;
+
+	UPROPERTY()
+	bool bReceivedInitialEquipmentItems = false;
 };
 
 /**

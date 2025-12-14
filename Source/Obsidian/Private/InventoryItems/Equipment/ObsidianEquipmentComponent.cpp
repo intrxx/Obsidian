@@ -8,6 +8,7 @@
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "Core/ObsidianGameplayStatics.h"
@@ -60,13 +61,26 @@ void UObsidianEquipmentComponent::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ThisClass, EquipmentList);
+	DOREPLIFETIME(ThisClass, bReceivedInitialEquipmentItems); //TODO(intrxx) Test replicating only once?
+}
+
+void UObsidianEquipmentComponent::InitSaveData(const bool bReceivedInitialItems)
+{
+	bReceivedInitialEquipmentItems = bReceivedInitialItems;
+	if (bReceivedInitialEquipmentItems == false)
+	{
+		EquipDefaultItems();
+	}
+}
+
+bool UObsidianEquipmentComponent::DidReceiveInitialEquipmentItems() const
+{
+	return bReceivedInitialEquipmentItems;
 }
 
 void UObsidianEquipmentComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	EquipDefaultItems();
 }
 
 void UObsidianEquipmentComponent::EquipDefaultItems()
@@ -84,6 +98,7 @@ void UObsidianEquipmentComponent::EquipDefaultItems()
 			const FObsidianEquipmentResult Result = EquipItemToSpecificSlot(DefaultEquipmentTemplate.DefaultItemDef, DefaultEquipmentTemplate.EquipmentSlotTag, DefaultEquipmentTemplate.StackCount);
 			ensureMsgf(Result, TEXT("Were unable to equip default item in UObsidianEquipmentComponent::EquipDefaultItems()."));
 		}
+		bReceivedInitialEquipmentItems = true;
 	}
 }
 

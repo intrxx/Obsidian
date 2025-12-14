@@ -232,6 +232,7 @@ void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
 					HeroSaveData.InventorySavedItems.Add(SavedItem);
 				}
 			}
+			HeroSaveData.bReceivedInitialInventoryItems = InventoryComponent->DidReceiveInitialInventoryItems();
 		}
 
 		if (const UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
@@ -245,6 +246,7 @@ void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
 					HeroSaveData.EquipmentSavedItems.Add(SavedItem);
 				}
 			}
+			HeroSaveData.bReceivedInitialEquipmentItems = EquipmentComponent->DidReceiveInitialEquipmentItems();
 		}
 	}
 	
@@ -276,11 +278,12 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 		}
 	}
 	
-	if (AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
+	if (const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
 	{
 		if (UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Loading Inventory Items:"));
+			InventoryComponent->InitSaveData(HeroSaveData.GameplaySaveData.bReceivedInitialInventoryItems);
 			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.InventorySavedItems)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName);
@@ -292,6 +295,7 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 		if (UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Loading Equipped Items:"));
+			EquipmentComponent->InitSaveData(HeroSaveData.GameplaySaveData.bReceivedInitialEquipmentItems);
 			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.EquipmentSavedItems)
 			{
 				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)

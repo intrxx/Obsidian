@@ -8,6 +8,7 @@
 
 // ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
@@ -36,13 +37,26 @@ void UObsidianInventoryComponent::GetLifetimeReplicatedProps(TArray< FLifetimePr
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 
 	DOREPLIFETIME(ThisClass, InventoryGrid);
+	DOREPLIFETIME(ThisClass, bReceivedInitialInventoryItems); //TODO(intrxx) Test replicating only once?
+}
+
+void UObsidianInventoryComponent::InitSaveData(const bool bReceivedInitialItems)
+{
+	bReceivedInitialInventoryItems = bReceivedInitialItems;
+	if (bReceivedInitialInventoryItems == false)
+	{
+		AddDefaultItems();
+	}
+}
+
+bool UObsidianInventoryComponent::DidReceiveInitialInventoryItems() const
+{
+	return bReceivedInitialInventoryItems;
 }
 
 void UObsidianInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	AddDefaultItems();
 }
 
 void UObsidianInventoryComponent::AddDefaultItems()
@@ -62,6 +76,7 @@ void UObsidianInventoryComponent::AddDefaultItems()
 			}
 			AddItemDefinition(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.StackCount);
 		}
+		bReceivedInitialInventoryItems = true;
 	}
 }
 

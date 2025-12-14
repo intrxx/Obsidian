@@ -66,6 +66,10 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
+	void InitSaveData(const bool bReceivedInitialItems);
+	
+	bool DidReceiveInitialInventoryItems() const;
+
 	int32 GetInventoryGridWidth() const;
 	int32 GetInventoryGridHeight() const;
 
@@ -252,4 +256,8 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
+
+	UPROPERTY()
+	bool bReceivedInitialInventoryItems = false;
+	FDelegateHandle AddDefaultItemsDelegateHandle;
 };
