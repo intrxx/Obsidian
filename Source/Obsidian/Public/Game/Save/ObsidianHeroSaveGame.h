@@ -133,7 +133,8 @@ public:
 	UPROPERTY()
 	bool bIdentified = false;
 
-	//TODO(intrxx) Do actual affixes here. 
+	UPROPERTY()
+	TArray<FObsidianActiveItemAffix> SavedAffixes;
 
 	/**
 	 * Stacks.

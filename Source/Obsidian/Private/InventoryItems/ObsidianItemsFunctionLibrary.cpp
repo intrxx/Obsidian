@@ -203,7 +203,7 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAf
 		check(Affix);
 		FObsidianAffixDescriptionRow Row;
 		Row.AffixTag = Affix.AffixTag;
-		Row.AffixRowDescription = Affix.ActiveAffixDescription;
+		Row.AffixRowDescription = FText::FromString(Affix.ActiveAffixDescription);
 		Row.AffixItemNameAddition = Affix.AffixItemNameAddition;
 		Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
 		AffixDescriptionRows.Add(Row);
@@ -222,7 +222,7 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatUniden
 		{
 			FObsidianAffixDescriptionRow Row;
 			Row.AffixTag = Affix.AffixTag;
-			Row.AffixRowDescription = Affix.ActiveAffixDescription;
+			Row.AffixRowDescription = FText::FromString(Affix.ActiveAffixDescription);
 			Row.AffixItemNameAddition = Affix.AffixItemNameAddition;
 			Row.SetAffixAdditionalDescription(Affix.AffixType, Affix.GetCurrentAffixTier());
 			AffixDescriptionRows.Add(Row);

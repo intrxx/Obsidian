@@ -387,7 +387,7 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 	}
 
 	AffixTag = InDynamicItemAffix.AffixTag;
-	UnformattedAffixDescription = InDynamicItemAffix.AffixDescription;
+	UnformattedAffixDescription = InDynamicItemAffix.AffixDescription.ToString();
 	AffixItemNameAddition = InDynamicItemAffix.AffixItemNameAddition;
 	AffixType = InDynamicItemAffix.AffixType;
 	AffixValuesDefinition = InDynamicItemAffix.AffixValuesDefinition;
@@ -406,7 +406,7 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 	}
 
 	AffixTag = InStaticItemAffix.AffixTag;
-	UnformattedAffixDescription = InStaticItemAffix.AffixDescription;
+	UnformattedAffixDescription = InStaticItemAffix.AffixDescription.ToString();
 	AffixItemNameAddition = InStaticItemAffix.AffixItemNameAddition;
 	AffixType = InStaticItemAffix.AffixType;
 	AffixValuesDefinition = InStaticItemAffix.AffixValuesDefinition;
@@ -493,12 +493,19 @@ FObsidianAffixValueRange FObsidianActiveItemAffix::GetRandomAffixRange(const uin
 
 void FObsidianActiveItemAffix::CreateAffixActiveDescription()
 {
-	TArray<FFormatArgumentValue> Args;
+	FStringFormatOrderedArguments Args;
 	for (const float AffixValue : CurrentAffixValue.AffixValues)
 	{
-		Args.Add(AffixValue);
+		if (AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int)
+		{
+			Args.Add(static_cast<int32>(AffixValue));
+		}
+		else
+		{
+			Args.Add(AffixValue);
+		}
 	}
-	ActiveAffixDescription = FText::Format(UnformattedAffixDescription, Args);
+	ActiveAffixDescription = FString::Format(*UnformattedAffixDescription, Args);
 }
 
 // ~ FObsidianRareItemNameGenerationData

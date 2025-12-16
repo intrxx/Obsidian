@@ -740,6 +740,7 @@ public:
 	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
 	
 	void RandomizeAffixValueBoundByRange();
+	
 public:
 	UPROPERTY()
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
@@ -751,10 +752,10 @@ public:
 	FString AffixItemNameAddition = FString();
 	
 	UPROPERTY()
-	FText ActiveAffixDescription = FText();
+	FString ActiveAffixDescription = FString();
 
 	UPROPERTY()
-	FText UnformattedAffixDescription = FText();
+	FString UnformattedAffixDescription = FString();
 	
 	UPROPERTY()
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;

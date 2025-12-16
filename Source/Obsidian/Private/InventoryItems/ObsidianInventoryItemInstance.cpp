@@ -583,7 +583,7 @@ void UObsidianInventoryItemInstance::ConstructSaveItem(FObsidianSavedItem& OutSa
 
 	// Affixes
 	OutSavedItem.bIdentified = bIdentified;
-	//TODO(intrxx) Do actual affixes here. 
+	OutSavedItem.SavedAffixes = GetAllItemAffixes();
 
 	// Stacks
 	OutSavedItem.bStackable = bStackable;
@@ -646,7 +646,7 @@ void UObsidianInventoryItemInstance::ConstructFromSavedItem(const FObsidianSaved
 
 	// Affixes
 	bIdentified = SavedItem.bIdentified;
-	//TODO(intrxx) Do actual affixes here.
+	InitializeAffixes(SavedItem.SavedAffixes);
 
 	// Stacks
 	bStackable = SavedItem.bStackable;
