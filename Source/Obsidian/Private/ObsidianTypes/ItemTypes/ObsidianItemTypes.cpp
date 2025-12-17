@@ -124,25 +124,46 @@ void FObsidianSlotDefinition::RemoveBannedItemCategories(const FGameplayTagConta
 
 // ~ FObsidianItemPosition
 
-bool FObsidianItemPosition::IsPositionedOnGrid() const
+bool FObsidianItemPosition::IsValid() const
 {
-	return (GridLocation != FIntPoint::NoneValue) && (SlotTag == FGameplayTag::EmptyTag);
+	return (Type != EObsidianItemPositionType::None)
+		&& ((GridPosition != FIntPoint::NoneValue) || (SlotTag != FGameplayTag::EmptyTag));
 }
 
-bool FObsidianItemPosition::IsPositionedAtSlot() const
+bool FObsidianItemPosition::IsOnInventoryGrid() const
 {
-	return (GridLocation == FIntPoint::NoneValue) && (SlotTag != FGameplayTag::EmptyTag);
+	return (Type == EObsidianItemPositionType::InventoryGrid) && (GridPosition != FIntPoint::NoneValue);
 }
 
-FIntPoint FObsidianItemPosition::GetItemGridLocation(const bool bWarnIfNotFound) const
+bool FObsidianItemPosition::IsOnEquipmentSlot() const
+{
+	return (Type == EObsidianItemPositionType::EquipmentSlot) && (SlotTag != FGameplayTag::EmptyTag);
+}
+
+bool FObsidianItemPosition::IsInStash() const
+{
+	return IsOnStashGrid() || IsOnStashSlot();
+}
+
+bool FObsidianItemPosition::IsOnStashGrid() const
+{
+	return (Type == EObsidianItemPositionType::StashGrid) && (GridPosition != FIntPoint::NoneValue);
+}
+
+bool FObsidianItemPosition::IsOnStashSlot() const
+{
+	return (Type == EObsidianItemPositionType::StashSlot) && (SlotTag != FGameplayTag::EmptyTag);
+}
+
+FIntPoint FObsidianItemPosition::GetItemGridPosition(const bool bWarnIfNotFound) const
 {
 #if !UE_BUILD_SHIPPING
-	if(bWarnIfNotFound && GridLocation == FIntPoint::NoneValue)
+	if(bWarnIfNotFound && GridPosition == FIntPoint::NoneValue)
 	{
 		UE_LOG(LogObsidian, Error, TEXT("Grid Location is invalid in [%hs]."), __FUNCTION__);
 	}
 #endif
-	return GridLocation;
+	return GridPosition;
 }
 
 FGameplayTag FObsidianItemPosition::GetItemSlotTag(const bool bWarnIfNotFound) const
@@ -161,11 +182,6 @@ FGameplayTag FObsidianItemPosition::GetOwningStashTabTag() const
 	return OwningStashTabTag;
 }
 
-void FObsidianItemPosition::SetOwningStashTab(const FGameplayTag& InOwningStashTab)
-{
-	OwningStashTabTag = InOwningStashTab;
-}
-
 FString FObsidianItemPosition::GetDebugStringPosition() const
 {
 	if (OwningStashTabTag != FGameplayTag::EmptyTag)
@@ -174,9 +190,9 @@ FString FObsidianItemPosition::GetDebugStringPosition() const
 		{
 			return FString::Printf(TEXT("Stash Tab: [%s], Slot: [%s]"), *OwningStashTabTag.GetTagName().ToString(), *SlotTag.GetTagName().ToString());
 		}
-		if (GridLocation != FIntPoint::NoneValue)
+		if (GridPosition != FIntPoint::NoneValue)
 		{
-			return FString::Printf(TEXT("Stash Tab: [%s], Grid Location: [%d, %d]"), *OwningStashTabTag.GetTagName().ToString(), GridLocation.X, GridLocation.Y);
+			return FString::Printf(TEXT("Stash Tab: [%s], Grid Location: [%d, %d]"), *OwningStashTabTag.GetTagName().ToString(), GridPosition.X, GridPosition.Y);
 		}
 	}
 	else
@@ -185,9 +201,9 @@ FString FObsidianItemPosition::GetDebugStringPosition() const
 		{
 			return FString::Printf(TEXT("Equipment Slot: [%s]"), *SlotTag.GetTagName().ToString());
 		}
-		if (GridLocation != FIntPoint::NoneValue)
+		if (GridPosition != FIntPoint::NoneValue)
 		{
-			return FString::Printf(TEXT("Inventory Grid Location: [%d, %d]"), GridLocation.X, GridLocation.Y);
+			return FString::Printf(TEXT("Inventory Grid Location: [%d, %d]"), GridPosition.X, GridPosition.Y);
 		}
 	}
 

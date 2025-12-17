@@ -45,7 +45,7 @@ FObsidianItemsMatchingUsableContext UObsidianUsableShard_OrbOfEnchantment::OnIte
 				continue;
 			}
 			
-			const FIntPoint GridLocation = CurrentPosition.GetItemGridLocation();
+			const FIntPoint GridLocation = CurrentPosition.GetItemGridPosition();
 			if(GridLocation != FIntPoint::NoneValue)
 			{
 				ItemsMatchingContext.InventoryItemsMatchingContext.Add(GridLocation);

@@ -36,7 +36,7 @@ FObsidianItemsMatchingUsableContext UObsidianUsableShard_Identification::OnItemU
 				continue;
 			}
 			
-			const FIntPoint GridLocation = CurrentPosition.GetItemGridLocation();
+			const FIntPoint GridLocation = CurrentPosition.GetItemGridPosition();
 			if(GridLocation != FIntPoint::NoneValue)
 			{
 				ItemsMatchingContext.InventoryItemsMatchingContext.Add(GridLocation);

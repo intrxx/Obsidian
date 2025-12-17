@@ -129,7 +129,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::LoadEntry(const 
 	UObsidianInventoryItemInstance* LoadedInstance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	LoadedInstance->ConstructFromSavedItem(EquippedSavedItem);
 
-	const FIntPoint GridLocationToAddTo = LoadedInstance->GetItemCurrentPosition().GetItemGridLocation();
+	const FIntPoint GridLocationToAddTo = LoadedInstance->GetItemCurrentPosition().GetItemGridPosition();
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, GridLocationToAddTo);
 	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	
@@ -158,7 +158,7 @@ void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance*
 
 	if(bSuccess)
 	{
-		const FIntPoint CachedLocation = Instance->GetItemCurrentPosition().GetItemGridLocation();
+		const FIntPoint CachedLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
 		Instance->ResetItemCurrentPosition();
 		
 		GridLocationToItemMap.Remove(CachedLocation);
@@ -188,7 +188,7 @@ void FObsidianInventoryGridItemList::ChangedEntryStacks(UObsidianInventoryItemIn
 
 	if(bSuccess)
 	{
-		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridLocation();
+		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
 		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
 		return;
 	}
@@ -209,7 +209,7 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 	
 	if(bSuccess)
 	{
-		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridLocation();
+		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
 		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		BroadcastChangeMessage(Instance, Count, Count, GridLocation, EObsidianInventoryChangeType::ICT_GeneralItemChanged);
 		return;

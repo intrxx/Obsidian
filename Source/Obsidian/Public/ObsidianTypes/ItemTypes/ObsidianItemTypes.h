@@ -286,6 +286,17 @@ public:
 	static const FObsidianSlotDefinition InvalidSlot;
 };
 
+UENUM(BlueprintType)
+enum class EObsidianItemPositionType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+
+	InventoryGrid = 1 UMETA(DisplayName = "Inventory Grid"),
+	EquipmentSlot = 2 UMETA(DisplayName = "Equipment Slot"),
+	StashGrid = 3 UMETA(DisplayName = "Stash Grid"),
+	StashSlot = 4 UMETA(DisplayName = "Stash Slot")
+};
+
 USTRUCT(BlueprintType)
 struct FObsidianItemPosition
 {
@@ -293,64 +304,67 @@ struct FObsidianItemPosition
 
 public:
 	FObsidianItemPosition(){}
-	FObsidianItemPosition(const FGameplayTag& InSlotTag)
-		: SlotTag(InSlotTag)
-		, GridLocation(FIntPoint::NoneValue)
-		, OwningStashTabTag(FGameplayTag::EmptyTag)
-	{}
-	FObsidianItemPosition(const FGameplayTag& InSlotTag, const FGameplayTag& InOwningStashTabTag)
-		: SlotTag(InSlotTag)
-		, GridLocation(FIntPoint::NoneValue)
-		, OwningStashTabTag(InOwningStashTabTag)
-	{}
 	FObsidianItemPosition(const FIntPoint& InGridLocation)
-		: SlotTag(FGameplayTag::EmptyTag)
-		, GridLocation(InGridLocation)
-		, OwningStashTabTag(FGameplayTag::EmptyTag)
+		: Type(EObsidianItemPositionType::InventoryGrid)
+		, GridPosition(InGridLocation) 
+	{}
+	FObsidianItemPosition(const FGameplayTag& InSlotTag)
+		: Type(EObsidianItemPositionType::EquipmentSlot)
+		, SlotTag(InSlotTag)
 	{}
 	FObsidianItemPosition(const FIntPoint& InGridLocation, const FGameplayTag& InOwningStashTabTag)
-		: SlotTag(FGameplayTag::EmptyTag)
-		, GridLocation(InGridLocation)
+		: Type(EObsidianItemPositionType::StashGrid)
+		, GridPosition(InGridLocation)
+		, OwningStashTabTag(InOwningStashTabTag)
+	{}
+	FObsidianItemPosition(const FGameplayTag& InSlotTag, const FGameplayTag& InOwningStashTabTag)
+		: Type(EObsidianItemPositionType::StashSlot)
+		, SlotTag(InSlotTag)
 		, OwningStashTabTag(InOwningStashTabTag)
 	{}
 
-	bool IsPositionedOnGrid() const;
-	bool IsPositionedAtSlot() const;
+	bool IsValid() const;
+	bool IsOnInventoryGrid() const;
+	bool IsOnEquipmentSlot() const;
+	bool IsInStash() const;
+	bool IsOnStashGrid() const;
+	bool IsOnStashSlot() const;
 
-	FIntPoint GetItemGridLocation(const bool bWarnIfNotFound = true) const;
+	FIntPoint GetItemGridPosition(const bool bWarnIfNotFound = true) const;
 	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
 	FGameplayTag GetOwningStashTabTag() const;
-
-	void SetOwningStashTab(const FGameplayTag& InOwningStashTab);
 	
 	// Type Hash (required for TMap)
 	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& ItemPosition)
 	{
-		uint32 Hash = 0;
+		uint32 Hash = GetTypeHash(ItemPosition.Type);
 		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.SlotTag));
-		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.GridLocation));
+		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.GridPosition));
+		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.OwningStashTabTag));
 		return Hash;
 	}
 
 	// Equality operator (required for TMap)
 	FORCEINLINE bool operator==(const FObsidianItemPosition& Other) const
 	{
-		if (SlotTag.IsValid() && Other.SlotTag.IsValid())
-		{
-			return SlotTag == Other.SlotTag;
-		}
-		return GridLocation == Other.GridLocation;
+		return Type == Other.Type
+			&& GridPosition == Other.GridPosition
+			&& SlotTag == Other.SlotTag
+			&& OwningStashTabTag == Other.OwningStashTabTag;
 	}
 
 	FString GetDebugStringPosition() const;
 
 private:
 	UPROPERTY()
-	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+	EObsidianItemPositionType Type = EObsidianItemPositionType::None;
 
 	UPROPERTY()
-	FIntPoint GridLocation = FIntPoint::NoneValue;
-
+	FIntPoint GridPosition = FIntPoint::NoneValue;
+	
+	UPROPERTY()
+	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
+	
 	UPROPERTY()
 	FGameplayTag OwningStashTabTag = FGameplayTag::EmptyTag;
 };

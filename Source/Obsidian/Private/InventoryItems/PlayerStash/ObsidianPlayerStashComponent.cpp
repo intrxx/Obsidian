@@ -315,7 +315,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = ItemGeneratedData.AvailableStackCount;
 
-	ensure((ItemPosition.GetItemGridLocation(false) != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag(false) != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
+	ensure((ItemPosition.GetItemGridPosition(false) != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag(false) != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -491,7 +491,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 
-	ensure((ItemPosition.GetItemGridLocation(false) != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag(false) != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
+	ensure((ItemPosition.GetItemGridPosition(false) != FIntPoint::NoneValue || ItemPosition.GetItemSlotTag(false) != FGameplayTag::EmptyTag) && ItemPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag);
 	
 	if(!GetOwner()->HasAuthority())
 	{
@@ -851,7 +851,6 @@ bool UObsidianPlayerStashComponent::CheckAvailablePosition(FObsidianItemPosition
 		FObsidianItemPosition ItemPosition;
 		if (StashTab->FindFirstAvailablePositionForItem(ItemPosition, ItemCategory, ItemBaseTypeTag, ItemGridSpan))
 		{
-			ItemPosition.SetOwningStashTab(StashTabTag);
 			OutAvailablePosition = ItemPosition;
 			return true;
 		}

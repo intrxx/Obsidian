@@ -121,7 +121,7 @@ FObsidianItemPosition UObsidianItem::GetItemPosition() const
 
 FIntPoint UObsidianItem::GetGridPosition() const
 {
-	return ItemPosition.GetItemGridLocation();
+	return ItemPosition.GetItemGridPosition();
 }
 
 FGameplayTag UObsidianItem::GetSlotTag() const

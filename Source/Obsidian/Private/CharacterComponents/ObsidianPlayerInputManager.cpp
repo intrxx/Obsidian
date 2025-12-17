@@ -1897,7 +1897,7 @@ void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventor
 			return;
 		}
 
-		UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(OnPosition.GetItemGridLocation());
+		UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(OnPosition.GetItemGridPosition());
 		InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
 	}
 }

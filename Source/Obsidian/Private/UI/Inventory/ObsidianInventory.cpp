@@ -89,7 +89,7 @@ bool UObsidianInventory::CanInteractWithEquipment() const
 
 void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FIntPoint DesiredPosition = ItemWidgetData.ItemPosition.GetItemGridLocation();
+	const FIntPoint DesiredPosition = ItemWidgetData.ItemPosition.GetItemGridPosition();
 	const FIntPoint GridSpan = ItemWidgetData.GridSpan;
 	
 	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded, fill it in ObsidianInventory instance."));
@@ -151,7 +151,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 
 void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	const FIntPoint ItemPosition = ItemWidgetData.ItemPosition.GetItemGridLocation();
+	const FIntPoint ItemPosition = ItemWidgetData.ItemPosition.GetItemGridPosition();
 	if(UObsidianItem* ItemWidget = InventoryItemsWidgetController->GetItemWidgetAtInventoryGridSlot(ItemPosition))
 	{
 		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);

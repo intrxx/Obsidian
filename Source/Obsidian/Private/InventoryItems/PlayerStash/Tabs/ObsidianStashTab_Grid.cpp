@@ -2,9 +2,7 @@
 
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 
-// ~ Core
 
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
@@ -16,17 +14,17 @@ UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectI
 
 UObsidianInventoryItemInstance* UObsidianStashTab_Grid::GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition)
 {
-	return GridLocationToItemMap.FindRef(ItemPosition.GetItemGridLocation());
+	return GridLocationToItemMap.FindRef(ItemPosition.GetItemGridPosition());
 }
 
 bool UObsidianStashTab_Grid::DebugVerifyPositionFree(const FObsidianItemPosition& Position)
 {
-	return !GridLocationToItemMap.Contains(Position.GetItemGridLocation());
+	return !GridLocationToItemMap.Contains(Position.GetItemGridPosition());
 }
 
 bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan)
 {
-	const FIntPoint SpecificGridPosition = SpecifiedPosition.GetItemGridLocation();
+	const FIntPoint SpecificGridPosition = SpecifiedPosition.GetItemGridPosition();
 	
 	bool bCanFit = false;
 	const bool* InitialPositionFreePtr = GridStateMap.Find(SpecificGridPosition);
@@ -76,7 +74,7 @@ bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosi
 			
 			if(bCanFit) // Return if we get Available Position
 			{
-				OutFirstAvailablePosition = Location.Key;
+				OutFirstAvailablePosition = FObsidianItemPosition(Location.Key, StashTabTag);
 				return bCanFit;
 			}
 		}
@@ -115,13 +113,13 @@ bool UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition(const FObsidianIte
 
 bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ReplacingItemGridSpan) const
 {
-	UObsidianInventoryItemInstance* InstanceAtGrid = GridLocationToItemMap.FindRef(SpecifiedPosition.GetItemGridLocation());
+	UObsidianInventoryItemInstance* InstanceAtGrid = GridLocationToItemMap.FindRef(SpecifiedPosition.GetItemGridPosition());
 	if (InstanceAtGrid == nullptr )
 	{
 		return false; 
 	}
 
-	const FIntPoint ItemOrigin = SpecifiedPosition.GetItemGridLocation();
+	const FIntPoint ItemOrigin = SpecifiedPosition.GetItemGridPosition();
 	const FIntPoint ItemGridSpan = InstanceAtGrid->GetItemGridSpan();
 	TMap<FIntPoint, bool> TempInventoryStateMap = GridStateMap;
 	
@@ -174,7 +172,7 @@ void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* Item
 	{
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			const FIntPoint LocationToMark = AtPosition.GetItemGridLocation() + FIntPoint(SpanX, SpanY);
+			const FIntPoint LocationToMark = AtPosition.GetItemGridPosition() + FIntPoint(SpanX, SpanY);
 			if(bool* Location = GridStateMap.Find(LocationToMark))
 			{
 				*Location = true;
@@ -189,7 +187,7 @@ void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* Item
 		}
 	}
 
-	GridLocationToItemMap.Add(AtPosition.GetItemGridLocation(), ItemInstance);
+	GridLocationToItemMap.Add(AtPosition.GetItemGridPosition(), ItemInstance);
 }
 
 void UObsidianStashTab_Grid::UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)
@@ -199,7 +197,7 @@ void UObsidianStashTab_Grid::UnmarkSpaceInTab(UObsidianInventoryItemInstance* It
 	{
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			const FIntPoint LocationToUnmark = AtPosition.GetItemGridLocation() + FIntPoint(SpanX, SpanY);
+			const FIntPoint LocationToUnmark = AtPosition.GetItemGridPosition() + FIntPoint(SpanX, SpanY);
 			if(bool* Location = GridStateMap.Find(LocationToUnmark))
 			{
 				*Location = false;
@@ -214,7 +212,7 @@ void UObsidianStashTab_Grid::UnmarkSpaceInTab(UObsidianInventoryItemInstance* It
 		}
 	}
 
-	GridLocationToItemMap.Remove(AtPosition.GetItemGridLocation());
+	GridLocationToItemMap.Remove(AtPosition.GetItemGridPosition());
 }
 
 void UObsidianStashTab_Grid::Construct(UObsidianPlayerStashComponent* StashComponent)

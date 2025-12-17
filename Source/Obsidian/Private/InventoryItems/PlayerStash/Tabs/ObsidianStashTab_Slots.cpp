@@ -2,10 +2,9 @@
 
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
 
-// ~ Core
 
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
 UObsidianStashTab_Slots::UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -44,7 +43,7 @@ bool UObsidianStashTab_Slots::FindFirstAvailablePositionForItem(FObsidianItemPos
 	{
 		if (Slot.CanStashAtSlot(ItemCategory, ItemBaseType) == EObsidianPlacingAtSlotResult::CanPlace)
 		{
-			OutFirstAvailablePosition = Slot.GetStashSlotTag();
+			OutFirstAvailablePosition = FObsidianItemPosition(Slot.GetStashSlotTag(), StashTabTag);
 			return true;
 		}
 	}

@@ -45,6 +45,6 @@ public:
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
 
-private:
+protected:
 	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
 };

@@ -11,6 +11,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
@@ -80,7 +81,7 @@ void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* Owner
 			InventoryItems.MaxStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
 			InventoryItems.LimitStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
 			InventoryItems.GridSpan = Item->GetItemGridSpan();
-			InventoryItems.CurrentGridLocation = Item->GetItemCurrentPosition().GetItemGridLocation(false);
+			InventoryItems.CurrentGridLocation = Item->GetItemCurrentPosition().GetItemGridPosition(false);
 			InventoryItems.CurrentSlotTag = Item->GetItemCurrentPosition().GetItemSlotTag(false);
 			
 			DataPack.Items.Add(InventoryItems);

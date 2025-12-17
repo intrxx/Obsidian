@@ -98,7 +98,7 @@ void FObsidianStashAddedItemWidgets::DebugPrintAllAddedItems()
 	
 	for (const TPair<FObsidianItemPosition, UObsidianItem*>& Pair : StashAddedItemWidgetsMap)
 	{
-		FIntPoint GridLocation = Pair.Key.GetItemGridLocation(false);
+		FIntPoint GridLocation = Pair.Key.GetItemGridPosition(false);
 		FGameplayTag SlotTag = Pair.Key.GetItemSlotTag(false);
 		if (GridLocation != FIntPoint::NoneValue)
 		{
@@ -1103,7 +1103,7 @@ void UObInventoryItemsWidgetController::HandleTakingOutStacksFromInventory(const
 		return;
 	}
 
-	const FIntPoint GridPosition = ItemPosition.GetItemGridLocation();
+	const FIntPoint GridPosition = ItemPosition.GetItemGridPosition();
 	
 	if(const UObsidianInventoryItemInstance* Instance = InventoryComponent->GetItemInstanceAtLocation(GridPosition))
 	{
