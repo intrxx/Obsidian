@@ -25,6 +25,15 @@ class UObsidianItem;
 class UObsidianDraggedItem;
 class UObsidianSlotBlockadeItem;
 
+USTRUCT()
+struct FObsidianStashTabWidgetData
+{
+	GENERATED_BODY()
+
+public:
+	
+};
+
 
 /**
  * 
@@ -132,9 +141,10 @@ public:
 		return ActiveItemDescription;
 	}
 
+	TConstArrayView<TObjectPtr<UObsidianStashTab>> GetAllStashTabs() const;
+
 	int32 GetInventoryGridWidth() const;
 	int32 GetInventoryGridHeight() const;
-	UObsidianStashTabsConfig* GetStashTabConfig() const;
 
 	void OnInventoryOpen();
 	void OnPlayerStashOpen();
@@ -153,6 +163,8 @@ public:
 	UObsidianItem* GetItemWidgetAtInventoryGridSlot(const FIntPoint& AtGridSlot) const;
 	void RegisterInventoryItemWidget(const FIntPoint& GridSlot, UObsidianItem* ItemWidget);
 	void RemoveInventoryItemWidget(const FIntPoint& GridSlot);
+
+	FString GetStashTabName(const FGameplayTag StashTabTag) const;
 
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
 	void RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);

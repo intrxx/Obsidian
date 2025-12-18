@@ -7,6 +7,7 @@
 #include "Components/ScrollBox.h"
 
 // ~ Project
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
@@ -218,54 +219,62 @@ void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& WithStashTag)
 
 void UObsidianPlayerStashWidget::CreateStashTabs()
 {
-	const UObsidianStashTabsConfig* StashConfig = InventoryItemsWidgetController->GetStashTabConfig();
-	const TArray<FObsidianStashTabDefinition> StashTabDefinitions = StashConfig->GetStashTabDefinitions();
-	StashTabsMap.Empty(StashTabDefinitions.Num());
+	check(InventoryItemsWidgetController);
+
+	const TConstArrayView<TObjectPtr<UObsidianStashTab>> StashTabs = InventoryItemsWidgetController->GetAllStashTabs();
+	StashTabsMap.Empty(StashTabs.Num());
 
 	int32 StashTabCounter = 1;
 	
-	for(const FObsidianStashTabDefinition& Definition : StashTabDefinitions)
+	for(const UObsidianStashTab* Tab : StashTabs)
 	{
-		if(Definition.StashTabType == EObsidianStashTabType::STT_GridType)
+		if (Tab == nullptr)
 		{
-			if(Definition.StashTabClass == nullptr)
+			continue;
+		}
+		
+		if(Tab->GetStashTabType() == EObsidianStashTabType::STT_GridType)
+		{
+			if(const UObsidianStashTab_Grid* GridStashTab = Cast<UObsidianStashTab_Grid>(Tab))
 			{
-				continue;
-			}
+				checkf(Tab->GetWidgetClass(), TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
+				UObsidianStashTabWidget_Grid* GridStashTabWidget = CreateWidget<UObsidianStashTabWidget_Grid>(this,
+					Tab->GetWidgetClass());
 
-			if(const UObsidianStashTab_Grid* GridStashTab = GetDefault<UObsidianStashTab_Grid>(Definition.StashTabClass))
-			{
-				checkf(Definition.StashTabWidgetClass, TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
-				UObsidianStashTabWidget_Grid* GridStashTabWidget = CreateWidget<UObsidianStashTabWidget_Grid>(this, Definition.StashTabWidgetClass);
-				GridStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, GridStashTab->GetGridWidth(), GridStashTab->GetGridHeight(), Definition.StashTag);
+				const FGameplayTag StashTabTag = Tab->GetStashTabTag();
+				GridStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, GridStashTab->GetGridWidth(),
+					GridStashTab->GetGridHeight(), StashTabTag);
 
 				StashTab_Overlay->AddChildToOverlay(GridStashTabWidget);
-				StashTabsMap.Add(Definition.StashTag, GridStashTabWidget);
+				StashTabsMap.Add(StashTabTag, GridStashTabWidget);
 				
-				CreateStashTabButton(Definition.StashTag, FText::AsNumber(StashTabCounter));
+				CreateStashTabButton(StashTabTag, FText::FromString(Tab->GetStashTabName()));
 				StashTabCounter++;
 			}
 		}
-		else if(Definition.StashTabType == EObsidianStashTabType::STT_SlotType)
+		else if(Tab->GetStashTabType() == EObsidianStashTabType::STT_SlotType)
 		{
-			if(Definition.StashTabClass == nullptr)
-			{
-				return;
-			}
-			
-			checkf(Definition.StashTabWidgetClass, TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
-			UObsidianStashTabWidget_Slots* SlotStashTabWidget = CreateWidget<UObsidianStashTabWidget_Slots>(this, Definition.StashTabWidgetClass);
-			SlotStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, this, Definition.StashTag);
+			checkf(Tab->GetWidgetClass(), TEXT("Trying to create Grid Stash Tab without valid Widget Class"));
+			UObsidianStashTabWidget_Slots* SlotStashTabWidget = CreateWidget<UObsidianStashTabWidget_Slots>(this,
+				Tab->GetWidgetClass());
+
+			const FGameplayTag StashTabTag = Tab->GetStashTabTag();
+			SlotStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, this, StashTabTag);
 
 			StashTab_Overlay->AddChildToOverlay(SlotStashTabWidget);
-			StashTabsMap.Add(Definition.StashTag, SlotStashTabWidget);
+			StashTabsMap.Add(StashTabTag, SlotStashTabWidget);
 
-			CreateStashTabButton(Definition.StashTag, FText::AsNumber(StashTabCounter));
+			CreateStashTabButton(StashTabTag, FText::FromString(Tab->GetStashTabName()));
 			StashTabCounter++;
 		}
 	}
-
-	//TODO(intrxx) This is not the best (but at least in Obsidian this will be the case),
-	// but since I can't think of not an ugly way of getting the first Stash Tab right now this will be here for a little bit
-	ShowStashTab(ObsidianGameplayTags::StashTab_Grid_1);
+	
+	if (StashTabs.IsEmpty() == false)
+	{
+		if (const UObsidianStashTab* StashTab = StashTabs[0])
+		{
+			ShowStashTab(StashTab->GetStashTabTag());
+		}
+	}
+	
 }

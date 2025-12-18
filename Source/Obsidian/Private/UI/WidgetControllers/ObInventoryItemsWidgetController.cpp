@@ -20,6 +20,7 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
+#include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
@@ -395,6 +396,12 @@ void UObInventoryItemsWidgetController::OnStopDraggingItem()
 	OnStopPlacementHighlightDelegate.Broadcast();
 }
 
+TConstArrayView<TObjectPtr<UObsidianStashTab>> UObInventoryItemsWidgetController::GetAllStashTabs() const
+{
+	check(PlayerStashComponent);
+	return PlayerStashComponent->GetAllStashTabs();
+}
+
 int32 UObInventoryItemsWidgetController::GetInventoryGridWidth() const
 {
 	if(InventoryComponent)
@@ -415,17 +422,6 @@ int32 UObInventoryItemsWidgetController::GetInventoryGridHeight() const
 	
 	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Grid Height but Inventory Component is invalid in [%hs]"), __FUNCTION__);
 	return 0;
-}
-
-UObsidianStashTabsConfig* UObInventoryItemsWidgetController::GetStashTabConfig() const
-{
-	if(PlayerStashComponent)
-	{
-		return PlayerStashComponent->GetStashTabConfig();
-	}
-	
-	UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to return Stash Config but Player Stash Component is invalid in [%hs]"), __FUNCTION__);
-	return nullptr;
 }
 
 void UObInventoryItemsWidgetController::OnInventoryOpen()
@@ -1384,6 +1380,19 @@ void UObInventoryItemsWidgetController::RemoveInventoryItemWidget(const FIntPoin
 	}
 }
 
+FString UObInventoryItemsWidgetController::GetStashTabName(const FGameplayTag StashTabTag) const
+{
+	if (PlayerStashComponent)
+	{
+		if (UObsidianStashTab* StashTab = PlayerStashComponent->GetStashTabForTag(StashTabTag))
+		{
+			
+		}
+	}
+	
+	return FString();
+}
+
 UObsidianItem* UObInventoryItemsWidgetController::GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const
 {
 	if(EquippedItemWidgetMap.Contains(Slot))
@@ -1614,10 +1623,15 @@ UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateDroppedIt
 
 void UObInventoryItemsWidgetController::RegisterInitialStashTabs()
 {
-	UObsidianStashTabsConfig* StashConfig = PlayerStashComponent->GetStashTabConfig();
-	for(const FObsidianStashTabDefinition& Definition : StashConfig->GetStashTabDefinitions())
+	if (ensure(PlayerStashComponent))
 	{
-		StashAddedItemWidgets.Add(FObsidianStashAddedItemWidgets(Definition.StashTag));
+		for(const UObsidianStashTab* StashTab : PlayerStashComponent->GetAllStashTabs())
+		{
+			if (StashTab)
+			{
+				StashAddedItemWidgets.Add(FObsidianStashAddedItemWidgets(StashTab->GetStashTabTag()));
+			}
+		}
 	}
 }
 

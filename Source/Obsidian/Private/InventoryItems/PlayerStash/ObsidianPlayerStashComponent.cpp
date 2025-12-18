@@ -46,9 +46,9 @@ void UObsidianPlayerStashComponent::GetLifetimeReplicatedProps(TArray<class FLif
 	DOREPLIFETIME(ThisClass, CurrentStashTab);
 }
 
-UObsidianStashTabsConfig* UObsidianPlayerStashComponent::GetStashTabConfig() const
+TConstArrayView<TObjectPtr<UObsidianStashTab>> UObsidianPlayerStashComponent::GetAllStashTabs() const
 {
-	return StashTabsConfig;
+	return StashTabs;
 }
 
 bool UObsidianPlayerStashComponent::CanOwnerModifyPlayerStashState()

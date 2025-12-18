@@ -38,7 +38,7 @@ public:
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
-	UObsidianStashTabsConfig* GetStashTabConfig() const;
+	TConstArrayView<TObjectPtr<UObsidianStashTab>> GetAllStashTabs() const;
 	
 	bool CanOwnerModifyPlayerStashState();
 	

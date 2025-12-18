@@ -105,10 +105,9 @@ TArray<UObsidianStashTab*> FObsidianStashItemList::InitializeStashTabs(const UOb
 
 		UObsidianStashTab* NewTab = NewObject<UObsidianStashTab>(OwnerComponent, Definition.StashTabClass);
 		check(NewTab);
-		
-		NewTab->SetStashTabTag(Definition.StashTag);
+		NewTab->SetStashData(Definition);
 		NewTab->Construct(StashTabComponent);
-
+		
 		StashTabsMap.Add(Definition.StashTag, NewTab);
 		InitializedStashTabs.Add(NewTab);
 	}

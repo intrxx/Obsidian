@@ -2,11 +2,10 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
-// ~ Project
+#include "ObsidianStashTabsConfig.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianStashTab.generated.h"
@@ -27,8 +26,12 @@ class OBSIDIAN_API UObsidianStashTab : public UObject
 public:
 	UObsidianStashTab(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
+	FString GetStashTabName() const;
 	FGameplayTag GetStashTabTag() const;
-	void SetStashTabTag(const FGameplayTag& InTag);
+	EObsidianStashTabAccessability GetStashAccessabilityType() const;
+	EObsidianStashTabType GetStashTabType() const;
+	TSubclassOf<UObsidianStashTabWidget> GetWidgetClass() const;
+	void SetStashData(const FObsidianStashTabDefinition& InDefinition);
 
 	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) {return nullptr;}
 
@@ -46,5 +49,9 @@ public:
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
 
 protected:
+	FString StashTabName = FString();
 	FGameplayTag StashTabTag = FGameplayTag::EmptyTag;
+	EObsidianStashTabAccessability StashTabAccessabilityType = EObsidianStashTabAccessability::None;
+	EObsidianStashTabType StashTabType = EObsidianStashTabType::STT_None;
+	TSubclassOf<UObsidianStashTabWidget> StashTabWidgetClass;
 };

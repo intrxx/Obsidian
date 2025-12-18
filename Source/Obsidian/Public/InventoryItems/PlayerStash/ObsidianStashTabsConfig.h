@@ -30,6 +30,21 @@ enum class EObsidianStashTabType : uint8
 /**
  * 
  */
+UENUM(BlueprintType)
+enum class EObsidianStashTabAccessability : uint8
+{
+	None = 0,
+
+	/** Items stored in this stash tab are personal to the played hero. */
+	Personal,
+
+	/** Items stored in this stash tab are shared among all heroes (but not between offline/online gamemodes). */
+	Shared 
+};
+
+/**
+ * 
+ */
 USTRUCT(BlueprintType)
 struct FObsidianStashTabDefinition
 {
@@ -38,6 +53,12 @@ struct FObsidianStashTabDefinition
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EObsidianStashTabType StashTabType = EObsidianStashTabType::STT_None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	EObsidianStashTabAccessability StashTabAccessabilityType = EObsidianStashTabAccessability::None;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	FString StashTabName = FString();
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UObsidianStashTab> StashTabClass;
