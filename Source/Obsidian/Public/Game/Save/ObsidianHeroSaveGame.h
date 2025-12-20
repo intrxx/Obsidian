@@ -245,6 +245,9 @@ public:
 
 	UPROPERTY()
 	bool bReceivedInitialEquipmentItems = false;
+
+	UPROPERTY()
+	TArray<FObsidianSavedItem> PersonalStashedItems;
 };
 
 /**

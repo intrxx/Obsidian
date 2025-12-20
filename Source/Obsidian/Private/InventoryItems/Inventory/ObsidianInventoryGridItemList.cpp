@@ -129,15 +129,15 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::LoadEntry(const 
 	UObsidianInventoryItemInstance* LoadedInstance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	LoadedInstance->ConstructFromSavedItem(EquippedSavedItem);
 
-	const FIntPoint GridLocationToAddTo = LoadedInstance->GetItemCurrentPosition().GetItemGridPosition();
-	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, GridLocationToAddTo);
+	const FIntPoint LoadedGridPosition = LoadedInstance->GetItemCurrentPosition().GetItemGridPosition();
+	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, LoadedGridPosition);
 	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	
-	GridLocationToItemMap.Add(GridLocationToAddTo, LoadedInstance);
-	Item_MarkSpace(LoadedInstance, GridLocationToAddTo);
+	GridLocationToItemMap.Add(LoadedGridPosition, LoadedInstance);
+	Item_MarkSpace(LoadedInstance, LoadedGridPosition);
 	MarkItemDirty(NewEntry);
 	
-	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, GridLocationToAddTo, EObsidianInventoryChangeType::ICT_ItemAdded);
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, LoadedGridPosition, EObsidianInventoryChangeType::ICT_ItemAdded);
 
 	return LoadedInstance;
 }

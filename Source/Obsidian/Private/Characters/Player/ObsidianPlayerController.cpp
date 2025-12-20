@@ -65,6 +65,16 @@ void AObsidianPlayerController::PostProcessInput(const float DeltaTime, const bo
 	Super::PostProcessInput(DeltaTime, bGamePaused);
 }
 
+void AObsidianPlayerController::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	if (PlayerStashComponent)
+	{
+		PlayerStashComponent->InitializeStashTabs();
+	}
+}
+
 EObsidianHeroClass AObsidianPlayerController::GetHeroClass() const
 {
 	if (const AObsidianHero* ObsidianHero = GetObsidianHero())

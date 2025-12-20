@@ -255,17 +255,17 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::LoadEntry(const FObsidia
 	UObsidianInventoryItemInstance* LoadedInstance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
 	LoadedInstance->ConstructFromSavedItem(EquippedSavedItem);
 
-	const FGameplayTag SlotTagToAddTo = LoadedInstance->GetItemCurrentPosition().GetItemSlotTag();
-	FObsidianEquipmentEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, SlotTagToAddTo);
-	SlotToEquipmentMap.Add(SlotTagToAddTo, LoadedInstance);
+	const FGameplayTag LoadedSlotTag = LoadedInstance->GetItemCurrentPosition().GetItemSlotTag();
+	FObsidianEquipmentEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, LoadedSlotTag);
+	SlotToEquipmentMap.Add(LoadedSlotTag, LoadedInstance);
 	
 	AddItemAffixesToOwner(LoadedInstance, &NewEntry.GrantedHandles);
 	
-	LoadedInstance->SpawnEquipmentActors(SlotTagToAddTo);
+	LoadedInstance->SpawnEquipmentActors(LoadedSlotTag);
 
 	MarkItemDirty(NewEntry);
 
-	BroadcastChangeMessage(NewEntry, SlotTagToAddTo, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
+	BroadcastChangeMessage(NewEntry, LoadedSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
 
 	return LoadedInstance;
 }

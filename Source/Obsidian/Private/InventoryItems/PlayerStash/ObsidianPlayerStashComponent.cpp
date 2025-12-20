@@ -27,17 +27,6 @@ UObsidianPlayerStashComponent::UObsidianPlayerStashComponent(const FObjectInitia
 	
 }
 
-void UObsidianPlayerStashComponent::BeginPlay()
-{
-	Super::BeginPlay();
-
-	if (ensure(StashTabsConfig))
-	{
-		StashTabs.Empty(StashTabsConfig->StashTabCount());
-		StashTabs = StashItemList.InitializeStashTabs(StashTabsConfig);
-	}
-}
-
 void UObsidianPlayerStashComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -69,6 +58,11 @@ TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllIte
 	return StashItemList.GetAllItems();
 }
 
+TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllPersonalItems() const
+{
+	return StashItemList.GetAllPersonalItems();	
+}
+
 TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllItemsFromStashTab(const FGameplayTag& StashTabTag)
 {
 	return StashItemList.GetAllItemsFromStashTab(StashTabTag);
@@ -81,6 +75,15 @@ UObsidianInventoryItemInstance* UObsidianPlayerStashComponent::GetItemInstanceFr
 		return StashTab->GetInstanceAtPosition(ItemPosition);
 	}
 	return nullptr;
+}
+
+void UObsidianPlayerStashComponent::InitializeStashTabs()
+{
+	if (ensure(StashTabsConfig))
+	{
+		StashTabs.Empty(StashTabsConfig->StashTabCount());
+		StashTabs = StashItemList.InitializeStashTabs(StashTabsConfig);
+	}
 }
 
 TArray<FObsidianStashSlotDefinition> UObsidianPlayerStashComponent::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType)
@@ -782,6 +785,22 @@ void UObsidianPlayerStashComponent::ServerRegisterAndValidateCurrentStashTab_Imp
 FGameplayTag UObsidianPlayerStashComponent::GetActiveStashTag() const
 {
 	return CurrentStashTab;
+}
+
+void UObsidianPlayerStashComponent::LoadStashedItem(const FObsidianSavedItem& StashedSavedItem)
+{
+	if(!GetOwner()->HasAuthority())
+	{
+		UE_LOG(LogPlayerStash, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
+		return; 
+	}
+
+	UObsidianInventoryItemInstance* LoadedInstance = StashItemList.LoadEntry(StashedSavedItem);
+	
+	if(LoadedInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	{
+		AddReplicatedSubObject(LoadedInstance);
+	}
 }
 
 bool UObsidianPlayerStashComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)

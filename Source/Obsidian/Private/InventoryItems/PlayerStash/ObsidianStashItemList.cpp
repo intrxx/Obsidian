@@ -80,6 +80,8 @@ FString FObsidianStashEntry::GetDebugString() const
 
 TArray<UObsidianStashTab*> FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig)
 {
+	UE_LOG(LogTemp, Display, TEXT("Initializing Stash Tabs"));
+	
 	TArray<UObsidianStashTab*> InitializedStashTabs;
 	
 	if(StashTabsConfig == nullptr || OwnerComponent == nullptr)
@@ -127,6 +129,22 @@ TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItems() co
 			Items.Add(Entry.Instance);
 		}
 	}
+	
+	return Items;
+}
+
+TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllPersonalItems() const
+{
+	TArray<UObsidianInventoryItemInstance*> Items;
+
+	for(const FObsidianStashEntry& Entry : Entries)
+	{
+		if(Entry.Instance && Entry.OwningStashTab && Entry.OwningStashTab->GetStashAccessabilityType() == EObsidianStashTabAccessability::Personal)
+		{
+			Items.Add(Entry.Instance);
+		}
+	}
+	
 	return Items;
 }
 
@@ -220,6 +238,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
 	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
 	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
+	NewEntry.OwningStashTab = StashTab;
 	NewEntry.StackCount = StackCount;
 	NewEntry.ItemPosition = ToPosition;
 	UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(NewEntry.Instance, ItemGeneratedData);
@@ -257,6 +276,7 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 
 	FObsidianStashEntry& NewEntry = Entries.Emplace_GetRef(Instance);
 	NewEntry.ItemPosition = ToPosition;
+	NewEntry.OwningStashTab = StashTab;
 	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
 	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	
@@ -264,6 +284,35 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	MarkItemDirty(NewEntry);
 	
 	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, ToPosition, EObsidianStashChangeType::ICT_ItemAdded);
+}
+
+UObsidianInventoryItemInstance* FObsidianStashItemList::LoadEntry(const FObsidianSavedItem& EquippedSavedItem)
+{
+	check(OwnerComponent);
+	
+	UObsidianInventoryItemInstance* LoadedInstance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
+	LoadedInstance->ConstructFromSavedItem(EquippedSavedItem);
+
+	const FObsidianItemPosition LoadedPosition = LoadedInstance->GetItemCurrentPosition();
+	UObsidianStashTab* StashTab = GetStashTabForTag(LoadedPosition.GetOwningStashTabTag());
+	if(StashTab == nullptr)
+	{
+		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
+		return nullptr;
+	}
+	
+	FObsidianStashEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance);
+	NewEntry.ItemPosition = LoadedPosition;
+	NewEntry.OwningStashTab = StashTab;
+	NewEntry.Instance->SetItemCurrentPosition(LoadedPosition);
+	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	
+	StashTab->MarkSpaceInTab(LoadedInstance, LoadedPosition);
+	MarkItemDirty(NewEntry);
+	
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, LoadedPosition, EObsidianStashChangeType::ICT_ItemAdded);
+
+	return LoadedInstance;
 }
 
 void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag)

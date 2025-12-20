@@ -13,6 +13,7 @@
 
 struct FObsidianStashItemList;
 struct FObsidianItemGeneratedData;
+struct FObsidianSavedItem;
 
 class UObsidianStashTab_Slots;
 class UObsidianStashTabsConfig;
@@ -135,6 +136,9 @@ private:
 
 	UPROPERTY()
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
+
+	UPROPERTY()
+	UObsidianStashTab* OwningStashTab = nullptr;
 };
 
 /**
@@ -156,6 +160,7 @@ public:
 	TArray<UObsidianStashTab*> InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig);
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
+	TArray<UObsidianInventoryItemInstance*> GetAllPersonalItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
 	int32 GetEntriesCount() const;
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
@@ -165,6 +170,7 @@ public:
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
 		const int32 StackCount, const FObsidianItemPosition& ToPosition);
 	void AddEntry(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition);
+	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& EquippedSavedItem);
 	void RemoveEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
 	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount, const FGameplayTag& StashTabTag);
 	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);

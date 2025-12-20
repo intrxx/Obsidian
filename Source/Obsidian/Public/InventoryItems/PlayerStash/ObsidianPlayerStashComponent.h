@@ -13,6 +13,8 @@
 
 DECLARE_LOG_CATEGORY_EXTERN(LogPlayerStash, Display, All);
 
+struct FObsidianSavedItem;
+
 class UObsidianStashTabsConfig;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
@@ -43,8 +45,11 @@ public:
 	bool CanOwnerModifyPlayerStashState();
 	
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
+	TArray<UObsidianInventoryItemInstance*> GetAllPersonalItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
 	UObsidianInventoryItemInstance* GetItemInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition);
+
+	void InitializeStashTabs();
 
 	TArray<FObsidianStashSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory,
 		const FGameplayTag& ItemBaseType);
@@ -151,14 +156,14 @@ public:
 	void ServerRegisterAndValidateCurrentStashTab(const FGameplayTag& StashTab);
 	FGameplayTag GetActiveStashTag() const;
 
+	void LoadStashedItem(const FObsidianSavedItem& StashedSavedItem);
+
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
 
 protected:
-	virtual void BeginPlay() override;
-	
 	/** Checks if the provided Item Definition fits anywhere in the Stash Tab (for tag). Provides Available Position. */
 	bool CanFitItemDefinition(FObsidianItemPosition& OutAvailablePosition, const FGameplayTag& StashTabTag,
 		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);

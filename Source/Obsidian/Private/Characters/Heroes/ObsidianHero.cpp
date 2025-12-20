@@ -248,6 +248,19 @@ void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
 			}
 			HeroSaveData.bReceivedInitialEquipmentItems = EquipmentComponent->DidReceiveInitialEquipmentItems();
 		}
+
+		if (const UObsidianPlayerStashComponent* PlayerStashComponent = ObsidianPC->GetPlayerStashComponent())
+		{
+			for (UObsidianInventoryItemInstance* ItemInstance : PlayerStashComponent->GetAllPersonalItems())
+			{
+				if (ItemInstance)
+				{
+					FObsidianSavedItem SavedItem;
+					ItemInstance->ConstructSaveItem(SavedItem);
+					HeroSaveData.PersonalStashedItems.Add(SavedItem);
+				}
+			}
+		}
 	}
 	
 	SaveObject->SetHeroGameplayData(HeroSaveData);
@@ -301,6 +314,17 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)
 
 				EquipmentComponent->LoadEquippedItem(SavedItem);
+			}
+		}
+
+		if (UObsidianPlayerStashComponent* PlayerStashComponent = ObsidianPC->GetPlayerStashComponent())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Loading Personal Stash Items:"));
+			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.PersonalStashedItems)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)
+
+				PlayerStashComponent->LoadStashedItem(SavedItem);
 			}
 		}
 	}

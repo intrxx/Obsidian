@@ -36,7 +36,8 @@ public:
 	AObsidianPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
-
+	virtual void PostInitializeComponents() override;
+	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
 	UObsidianInventoryComponent* GetInventoryComponent() const
 	{
