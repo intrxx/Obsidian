@@ -12,11 +12,6 @@
 
 struct FObsidianHeroInitializationSaveData;
 
-namespace ObsidianMasterSaveStatics
-{
-	const inline FString MasterSaveName = FString("ObsidianSaveGame");
-}
-
 USTRUCT()
 struct FObsidianAddHeroSaveResult
 {

@@ -2,15 +2,12 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-#include "Kismet/GameplayStatics.h"
-
-// ~ Project
-
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
+#include <Kismet/GameplayStatics.h>
 #include "ObsidianGameplayStatics.generated.h"
 
 /**
@@ -26,5 +23,8 @@ public:
 
 	static bool DoesTagMatchesAnySubTag(const FGameplayTag TagToCheck, const FGameplayTag& SubTagToCheck);
 	
-	static FGameplayTag GetOpposedEuipmentTagForTag(const FGameplayTag MainTag);
+	static FGameplayTag GetOpposedEquipmentTagForTag(const FGameplayTag MainTag);
+
+	static EObsidianGameNetworkType GetCurrentNetworkType(const UObject* WorldContextObject);
+	static bool IsOfflineNetworkType(const EObsidianGameNetworkType NetworkType);
 };

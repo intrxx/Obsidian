@@ -2,11 +2,9 @@
 
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 
-// ~ Core
-#include "Components/Button.h"
-#include "Components/SizeBox.h"
+#include <Components/Button.h>
+#include <Components/SizeBox.h>
 
-// ~ Project
 
 void UObsidianMainOverlayWidgetBase::NativePreConstruct()
 {
@@ -37,6 +35,10 @@ void UObsidianMainOverlayWidgetBase::NativeDestruct()
 	Super::NativeDestruct();
 }
 
+void UObsidianMainOverlayWidgetBase::PreCloseButtonPressed()
+{
+}
+
 FReply UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	// This widgets won't take any input, don't want to pass gameplay input through
@@ -51,5 +53,7 @@ FReply UObsidianMainOverlayWidgetBase::NativeOnMouseButtonDoubleClick(const FGeo
 
 void UObsidianMainOverlayWidgetBase::OnCloseButtonClicked()
 {
+	PreCloseButtonPressed();
+	
 	RemoveFromParent();
 }

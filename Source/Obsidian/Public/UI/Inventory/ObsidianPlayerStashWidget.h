@@ -40,6 +40,7 @@ public:
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+	virtual void PreCloseButtonPressed() override;
 
 	UObsidianStashTabWidget* GetActiveStashTab() const;
 	
@@ -48,6 +49,7 @@ protected:
 
 	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnItemRemoved();
 
 	void OnStashedItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
 	void OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
@@ -56,6 +58,8 @@ protected:
 
 	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
 	void StopHighlightSlotPlacement();
+
+	void SavePlayerStash();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
@@ -77,6 +81,8 @@ protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> StashTab_Overlay;
 
+	bool bStashChanged = false;
+	
 private:
 	void CreateStashTabs();
 	

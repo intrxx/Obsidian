@@ -136,10 +136,26 @@ TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItems() co
 TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllPersonalItems() const
 {
 	TArray<UObsidianInventoryItemInstance*> Items;
-
+	
 	for(const FObsidianStashEntry& Entry : Entries)
 	{
 		if(Entry.Instance && Entry.OwningStashTab && Entry.OwningStashTab->GetStashAccessabilityType() == EObsidianStashTabAccessability::Personal)
+		{
+			Items.Add(Entry.Instance);
+		}
+	}
+	
+	return Items;
+}
+
+TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllSharedItems() const
+{
+	TArray<UObsidianInventoryItemInstance*> Items;
+	Items.Reserve(Entries.Num());
+	
+	for(const FObsidianStashEntry& Entry : Entries)
+	{
+		if(Entry.Instance && Entry.OwningStashTab && Entry.OwningStashTab->GetStashAccessabilityType() == EObsidianStashTabAccessability::Shared)
 		{
 			Items.Add(Entry.Instance);
 		}

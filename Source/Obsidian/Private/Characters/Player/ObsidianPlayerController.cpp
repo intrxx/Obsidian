@@ -2,19 +2,21 @@
 
 #include "Characters/Player/ObsidianPlayerController.h"
 
-// ~ Core
 
-// ~ Project
 #include "UI/ObsidianHUD.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "Core/ObsidianGameplayStatics.h"
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
+#include "Game/Save/ObsidianSharedStashSaveGame.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/Items/ObsidianItemSpawner.h"
+#include "ObsidianTypes/ObsidianSavedTypes.h"
 
 AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -72,6 +74,44 @@ void AObsidianPlayerController::PostInitializeComponents()
 	if (PlayerStashComponent)
 	{
 		PlayerStashComponent->InitializeStashTabs();
+
+		if (const UGameInstance* GameInstance = GetGameInstance())
+		{
+			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+			{
+				const EObsidianGameNetworkType CurrentNetworkType = UObsidianGameplayStatics::GetCurrentNetworkType(this);
+				if (UObsidianSharedStashSaveGame* SharedStashSaveGame =  SaveGameSubsystem->GetStashSaveGameObject(CurrentNetworkType))
+				{
+					LoadSharedStashData(SharedStashSaveGame);
+				}
+				else
+				{
+					SharedStashDataLoadDelegateHandle = SaveGameSubsystem->OnSharedStashDataLoadedDelegate.AddUObject(
+						this, &ThisClass::LoadSharedStashData);
+				}
+			}
+		}
+	}
+}
+
+void AObsidianPlayerController::LoadSharedStashData(UObsidianSharedStashSaveGame* SharedStashSaveGame)
+{
+	if (PlayerStashComponent && SharedStashSaveGame)
+	{
+		for (const FObsidianSavedItem& SavedItem : SharedStashSaveGame->SharedStashData.StashedSavedItems)
+		{
+			PlayerStashComponent->LoadStashedItem(SavedItem);
+		}
+
+		//TODO(intrxx) Load Stash Tab Names
+	}
+
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->OnSharedStashDataLoadedDelegate.Remove(SharedStashDataLoadDelegateHandle);
+		}
 	}
 }
 

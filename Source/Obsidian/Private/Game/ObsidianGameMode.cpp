@@ -16,15 +16,35 @@ void AObsidianGameMode::InitGame(const FString& MapName, const FString& Options,
 		{
 			if(UObsidianHeroSaveGame* SaveGameObject = SaveGameSubsystem->GetCurrentHeroSaveGameObject())
 			{
-				if (const TSubclassOf<AObsidianHero> HeroClass = SaveGameObject->GetHeroSaveData().InitializationSaveData.HeroObjectClass.LoadSynchronous())
+				FObsidianHeroSaveData HeroSaveData = SaveGameObject->GetHeroSaveData();
+				if (const TSubclassOf<AObsidianHero> HeroClass = HeroSaveData.InitializationSaveData.HeroObjectClass.LoadSynchronous())
 				{
 					DefaultPawnClass = HeroClass;
+				}
+
+				if (HeroSaveData.bOnline)
+				{
+					CurrentNetworkType = EObsidianGameNetworkType::OnlineCoop;
+				}
+				else
+				{
+					CurrentNetworkType = EObsidianGameNetworkType::OfflineSolo;
 				}
 			}
 		}
 	}
 	
 	Super::InitGame(MapName, Options, ErrorMessage);
+}
+
+EObsidianGameNetworkType AObsidianGameMode::GetCurrentNetworkType() const
+{
+	return CurrentNetworkType;
+}
+
+UObsidianEnemyTypeInfo* AObsidianGameMode::GetEnemyTypeInfo() const
+{
+	return EnemyTypeInfo;
 }
 
 void AObsidianGameMode::RegisterPortal(AObsidianTownPortal* InNewTownPortal)

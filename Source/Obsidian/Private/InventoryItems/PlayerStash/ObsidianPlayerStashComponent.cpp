@@ -63,6 +63,11 @@ TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllPer
 	return StashItemList.GetAllPersonalItems();	
 }
 
+TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllSharedItems() const
+{
+	return StashItemList.GetAllSharedItems();
+}
+
 TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetAllItemsFromStashTab(const FGameplayTag& StashTabTag)
 {
 	return StashItemList.GetAllItemsFromStashTab(StashTabTag);

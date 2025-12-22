@@ -9,6 +9,7 @@
 #include "CommonPlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class UObsidianSharedStashSaveGame;
 class AObsidianHero;
 class UObsidianStash;
 class UObsidianEquipmentComponent;
@@ -89,6 +90,8 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	void LoadSharedStashData(UObsidianSharedStashSaveGame* SharedStashSaveGame);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Cursor")
 	TObjectPtr<UUserWidget> DefaultCursor;
@@ -105,5 +108,6 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent;
-	
+
+	FDelegateHandle SharedStashDataLoadDelegateHandle;
 };

@@ -189,6 +189,8 @@ void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Cha
 				OwnerPlayerInputManager->SetUsingItem(false);  //TODO(intrxx) This probably shouldn't be here, its widget controller
 			}
 		}
+
+		OnInventorizedItemRemovedDelegate.Broadcast();
 	}
 	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemStacksChanged)
 	{
@@ -244,6 +246,8 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 		{
 			RemoveBlockedSlotItemWidget(SlotTagToClear);
 		}
+
+		OnEquippedItemRemovedDelegate.Broadcast();
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
 	{
@@ -257,7 +261,7 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 
 		if(Instance->DoesItemNeedTwoSlots())
 		{
-			const FGameplayTag EquipmentTag = SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
+			const FGameplayTag EquipmentTag = SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEquipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
 			RemoveBlockedSlotItemWidget(EquipmentTag);
 		}
 		
@@ -323,6 +327,8 @@ void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channe
 				OwnerPlayerInputManager->SetUsingItem(false);  //TODO(intrxx) This probably shouldn't be here, its widget controller
 			}
 		}
+
+		OnStashedItemRemovedDeletage.Broadcast();
 	}
 	else if (StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemStacksChanged)
 	{

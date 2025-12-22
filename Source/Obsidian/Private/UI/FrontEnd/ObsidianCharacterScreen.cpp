@@ -78,12 +78,30 @@ void UObsidianCharacterScreen::InitializeOnlineCharacterScreen()
 {
 	TabName_TextBlock->SetText(FText::FromString(TEXT("Online Character Screen")));
 	bOnline = true;
+
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->AsyncLoadOrCreateSharedStashDataSaveObject(GetOwningLocalPlayer<UObsidianLocalPlayer>(),
+				true);
+		}
+	}
 }
 
 void UObsidianCharacterScreen::InitializeOfflineCharacterScreen()
 {
 	TabName_TextBlock->SetText(FText::FromString(TEXT("Character Screen")));
 	bOnline = false;
+
+	if (const UGameInstance* GameInstance = GetGameInstance())
+	{
+		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+		{
+			SaveGameSubsystem->AsyncLoadOrCreateSharedStashDataSaveObject(GetOwningLocalPlayer<UObsidianLocalPlayer>(),
+				false);
+		}
+	}
 }
 
 void UObsidianCharacterScreen::OnPlayClicked()

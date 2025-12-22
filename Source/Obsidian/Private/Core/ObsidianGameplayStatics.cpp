@@ -5,6 +5,7 @@
 // ~ Core
 
 // ~ Project
+#include "Game/ObsidianGameMode.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 FText UObsidianGameplayStatics::GetHeroClassText(const EObsidianHeroClass HeroClass)
@@ -33,7 +34,7 @@ bool UObsidianGameplayStatics::DoesTagMatchesAnySubTag(const FGameplayTag TagToC
 	return TagToCheck.ToString().Contains(SubTagToCheck.ToString());
 }
 
-FGameplayTag UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(const FGameplayTag MainTag)
+FGameplayTag UObsidianGameplayStatics::GetOpposedEquipmentTagForTag(const FGameplayTag MainTag)
 {
 	if(MainTag == ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand)
 	{
@@ -53,4 +54,23 @@ FGameplayTag UObsidianGameplayStatics::GetOpposedEuipmentTagForTag(const FGamepl
 	}
 	
 	return FGameplayTag::EmptyTag;
+}
+
+EObsidianGameNetworkType UObsidianGameplayStatics::GetCurrentNetworkType(const UObject* WorldContextObject)
+{
+	if (const AObsidianGameMode* ObsidianGameMode = Cast<AObsidianGameMode>(GetGameMode(WorldContextObject)))
+	{
+		return ObsidianGameMode->GetCurrentNetworkType();
+	}
+	return EObsidianGameNetworkType::None;
+}
+
+bool UObsidianGameplayStatics::IsOfflineNetworkType(const EObsidianGameNetworkType NetworkType)
+{
+	if (NetworkType == EObsidianGameNetworkType::None)
+	{
+		return false;
+	}
+	
+	return NetworkType >= EObsidianGameNetworkType::OfflineSolo;
 }

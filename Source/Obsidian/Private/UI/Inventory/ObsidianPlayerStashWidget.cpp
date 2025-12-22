@@ -2,12 +2,11 @@
 
 #include "UI/Inventory/ObsidianPlayerStashWidget.h"
 
-// ~ Core
-#include "Components/Overlay.h"
-#include "Components/ScrollBox.h"
+#include <Components/Overlay.h>
+#include <Components/ScrollBox.h>
 
-// ~ Project
-#include "Characters/Player/ObsidianPlayerController.h"
+#include "Core/ObsidianGameplayStatics.h"
+#include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
@@ -28,6 +27,7 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 
 	InventoryItemsWidgetController->OnItemStashedDelegate.AddUObject(this, &ThisClass::OnItemStashed);
 	InventoryItemsWidgetController->OnStashedItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
+	InventoryItemsWidgetController->OnStashedItemRemovedDeletage.AddUObject(this, &ThisClass::OnItemRemoved);
 	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
 	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
 }
@@ -48,6 +48,16 @@ void UObsidianPlayerStashWidget::NativeDestruct()
 	}
 	
 	Super::NativeDestruct();
+}
+
+void UObsidianPlayerStashWidget::PreCloseButtonPressed()
+{
+	SavePlayerStash();
+
+	ActiveStashTab->HideStashTab();
+	ActiveStashTab = nullptr;
+	
+	Super::PreCloseButtonPressed();
 }
 
 UObsidianStashTabWidget* UObsidianPlayerStashWidget::GetActiveStashTab() const
@@ -92,8 +102,27 @@ void UObsidianPlayerStashWidget::StopHighlightSlotPlacement()
 	CachedHighlightedSlot.Empty();
 }
 
+void UObsidianPlayerStashWidget::SavePlayerStash()
+{
+	if (bStashChanged)
+	{
+		if (const UGameInstance* GameInstance = GetGameInstance())
+		{
+			if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
+			{
+				SaveGameSubsystem->AsyncSaveSharedStashData(InventoryItemsWidgetController->GetOwningPlayerController(), 
+					UObsidianGameplayStatics::GetCurrentNetworkType(this));
+			}
+		}
+		
+		bStashChanged = false;
+	}
+}
+
 void UObsidianPlayerStashWidget::CloseStash()
 {
+	SavePlayerStash();
+	
 	ActiveStashTab->HideStashTab();
 	ActiveStashTab = nullptr;
 	RemoveFromParent();
@@ -122,6 +151,8 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 		
 		InventoryItemsWidgetController->RegisterStashTabItemWidget(ItemWidgetData.ItemPosition, ItemWidget);
 		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData.ItemSlotPadding);
+
+		bStashChanged = true;
 	}
 }
 
@@ -130,7 +161,14 @@ void UObsidianPlayerStashWidget::OnItemChanged(const FObsidianItemWidgetData& It
 	if(UObsidianItem* ItemWidget = InventoryItemsWidgetController->GetItemWidgetAtStashPosition(ItemWidgetData.ItemPosition))
 	{
 		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+
+		bStashChanged = true;
 	}
+}
+
+void UObsidianPlayerStashWidget::OnItemRemoved()
+{
+	bStashChanged = true;
 }
 
 void UObsidianPlayerStashWidget::OnStashedItemRightMouseButtonPressed(UObsidianItem* ItemWidget)

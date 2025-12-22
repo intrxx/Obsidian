@@ -161,6 +161,7 @@ public:
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllPersonalItems() const;
+	TArray<UObsidianInventoryItemInstance*> GetAllSharedItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
 	int32 GetEntriesCount() const;
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);

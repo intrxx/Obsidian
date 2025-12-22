@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 
-
-#include "GameFramework/GameModeBase.h"
+#include <GameFramework/GameModeBase.h>
 #include "ObsidianGameMode.generated.h"
 
 class AObsidianTownPortal;
@@ -24,14 +22,16 @@ class OBSIDIAN_API AObsidianGameMode : public AGameModeBase
 
 public:
 	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
-	
-	UObsidianEnemyTypeInfo* GetEnemyTypeInfo() const
-	{
-		return EnemyTypeInfo;
-	}
+
+	EObsidianGameNetworkType GetCurrentNetworkType() const;
+	UObsidianEnemyTypeInfo* GetEnemyTypeInfo() const;
 
 	void RegisterPortal(AObsidianTownPortal* InNewTownPortal);
 	bool CanCreatePortal() const;
+
+protected:
+	UPROPERTY()
+	EObsidianGameNetworkType CurrentNetworkType = EObsidianGameNetworkType::None;
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")

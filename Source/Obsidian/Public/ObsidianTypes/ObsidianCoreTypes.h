@@ -129,5 +129,22 @@ enum class EObsidianHeroClass : uint8
 	Paladin = 4 UMETA(DisplayName = "Paladin")
 };
 
+/**
+ * Enum that holds the game network type.
+ */
+UENUM()
+enum class EObsidianGameNetworkType : uint8
+{
+	None = 0 UMETA(DisplayName = "None"),
+	
+	OnlineCoop UMETA(DisplayName = "Online Coop"),
+	
+	// ~ Fill any Online Network Type here.
+	
+	OfflineSolo UMETA(DisplayName = "Offline Solo"),
+
+	// ~ Fill any Offline Network Type here.
+};
+
 
 

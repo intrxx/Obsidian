@@ -46,6 +46,7 @@ public:
 	
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllPersonalItems() const;
+	TArray<UObsidianInventoryItemInstance*> GetAllSharedItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
 	UObsidianInventoryItemInstance* GetItemInstanceFromTabAtPosition(const FObsidianItemPosition& ItemPosition);
 

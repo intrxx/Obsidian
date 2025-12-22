@@ -114,6 +114,7 @@ protected:
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
+DECLARE_MULTICAST_DELEGATE(FOnItemRemovedSignature);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartPlacementHighlightSignature, const FGameplayTagContainer& ForSlotsWithTag);
 DECLARE_MULTICAST_DELEGATE(FOnStopPlacementHighlightSignature);
@@ -216,6 +217,10 @@ public:
 	
 	FOnItemChangedSignature OnInventoryItemChangedDelegate;
 	FOnItemChangedSignature OnStashedItemChangedDelegate;
+
+	FOnItemRemovedSignature OnEquippedItemRemovedDelegate;
+	FOnItemRemovedSignature OnInventorizedItemRemovedDelegate;
+	FOnItemRemovedSignature OnStashedItemRemovedDeletage;
 
 	/** As of now this delegate will fire once with all Slot Tags that are possible to add the Dragged Item to and it is on individual Widget side to parse these. */
 	FOnStartPlacementHighlightSignature OnStartPlacementHighlightDelegate;
