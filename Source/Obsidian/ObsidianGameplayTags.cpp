@@ -131,6 +131,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_ManaHealing, "UI.EffectData.Flask.ManaHealing", "Tag used for displaying Mana healing from Flasks Info on the UI.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Defiance, "UI.EffectData.Aura.Defiance", "Tag used for displaying Defiance Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_HealthRegeneration, "UI.EffectData.Aura.HealthRegeneration", "Tag used for displaying Health Regeneration Aura Info on the UI.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Effect_Poison, "UI.EffectData.Effect.Poison", "Tag used for displaying Poison Effect Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Effect_Chill, "UI.EffectData.Effect.Chill", "Tag used for displaying Chill Effect Info on the UI.");
@@ -177,7 +178,6 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_FlyingKnifes, "GameplayEvent.AbilityMontage.Player.FlyingKnifes", "Tag used for triggering gameplay event for spawning flying knifes.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_MagneticHammer, "GameplayEvent.AbilityMontage.Player.MagneticHammer", "Tag used for triggering gameplay event for spawning magnetic hammer.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_Slash, "GameplayEvent.AbilityMontage.Player.Slash", "Tag used for triggering gameplay event for spawning slash.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(GameplayEvent_AbilityMontage_Player_Aura, "GameplayEvent.AbilityMontage.Player.Aura", "Tag used for triggering gameplay event for applying aura.");
 
 	/**
 	 * Tree Orc
