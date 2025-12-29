@@ -132,6 +132,7 @@ namespace ObsidianGameplayTags
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Defiance, "UI.EffectData.Aura.Defiance", "Tag used for displaying Defiance Aura Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_HealthRegeneration, "UI.EffectData.Aura.HealthRegeneration", "Tag used for displaying Health Regeneration Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_ManaRegeneration, "UI.EffectData.Aura.ManaRegeneration", "Tag used for displaying Mana Regeneration Aura Info on the UI.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Effect_Poison, "UI.EffectData.Effect.Poison", "Tag used for displaying Poison Effect Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Effect_Chill, "UI.EffectData.Effect.Chill", "Tag used for displaying Chill Effect Info on the UI.");
@@ -621,7 +622,8 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_TransientArmor, "Item.Affix.SkillImplicits.Defence.TransientArmor", "Item Tag which represents Transient Armor Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_SparklingBarrier, "Item.Affix.SkillImplicits.Defence.SparklingBarrier", "Item Tag which represents Sparkling Barrier Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_RaisedShield, "Item.Affix.SkillImplicits.Defence.RaisedShield", "Item Tag which represents Raised Shield Skill Implicit.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_VivitRegeneration, "Item.Affix.SkillImplicits.Defence.VivitRegeneration", "Item Tag which represents Vivit Regeneration Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_HealthRegeneration, "Item.Affix.SkillImplicits.Defence.HealthRegeneration", "Item Tag which represents Health Regeneration Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_ManaRegeneration, "Item.Affix.SkillImplicits.Defence.ManaRegeneration", "Item Tag which represents Mana Regeneration Skill Implicit.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Roll, "Item.Affix.SkillImplicits.Movement.Roll", "Item Tag which represents Roll Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Jump, "Item.Affix.SkillImplicits.Movement.Jump", "Item Tag which represents Jump Skill Implicit.");

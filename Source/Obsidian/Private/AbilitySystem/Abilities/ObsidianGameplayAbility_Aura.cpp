@@ -47,6 +47,12 @@ void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHa
 			AuraEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo,
 			AuraEffectClass.GetDefaultObject(), GetAbilityLevel());
 		}
+		else
+		{
+			const bool bReplicateEndAbility = true;
+			const bool bWasCancelled = true;
+			EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+		}
 	}
 }
 
