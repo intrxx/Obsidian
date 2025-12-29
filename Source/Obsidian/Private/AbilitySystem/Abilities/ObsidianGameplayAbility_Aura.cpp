@@ -11,8 +11,7 @@
 
 UObsidianGameplayAbility_Aura::UObsidianGameplayAbility_Aura()
 {
-	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
-	
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor; 
 	ActivationPolicy = EObsidianGameplayAbility_ActivationPolicy::EAP_OnInputTriggered;
 }
 
@@ -23,21 +22,41 @@ void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHa
 	
 	if(AuraEffectClass)
 	{
-		if(AuraEffectHandle.IsValid())
+		// If the AuraEffectHandle is valid, the Aura effect is currently active, and we need to disable it.
+		if (AuraEffectHandle.IsValid())
 		{
 			ObsidianASC = ObsidianASC == nullptr
-			 ? TObjectPtr<UObsidianAbilitySystemComponent>(Cast<UObsidianAbilitySystemComponent>(GetAbilitySystemComponentFromActorInfo()))
+			 ? TObjectPtr<UObsidianAbilitySystemComponent>(Cast<UObsidianAbilitySystemComponent>(
+			 	GetAbilitySystemComponentFromActorInfo()))
 				: ObsidianASC;
 			
 			ObsidianASC->RemoveActiveGameplayEffect(AuraEffectHandle);
 			AuraEffectHandle.Invalidate();
 			ObsidianASC->OnAuraDisabledDelegate.ExecuteIfBound(EffectUIInfoTag);
+
+			if (ensureMsgf(AuraCostEffectHandle.IsValid(), TEXT("Cost Gameplay Effect Handle is invalid in [%hs]"), __FUNCTION__))
+			{
+				ObsidianASC->RemoveActiveGameplayEffect(AuraCostEffectHandle);
+				AuraCostEffectHandle.Invalidate();
+			}
+			return;
 		}
-		else
+
+		if (CommitAbility(Handle, ActorInfo, ActivationInfo))
 		{
-			AuraEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, AuraEffectClass.GetDefaultObject(),
-				GetAbilityLevel(), 1);
+			AuraEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo,
+			AuraEffectClass.GetDefaultObject(), GetAbilityLevel());
 		}
+	}
+}
+
+void UObsidianGameplayAbility_Aura::ApplyCost(const FGameplayAbilitySpecHandle Handle,
+	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
+{
+	if (const UGameplayEffect* CostGE = GetCostGameplayEffect())
+	{
+		const_cast<FActiveGameplayEffectHandle&>(AuraCostEffectHandle) = ApplyGameplayEffectToOwner(Handle, ActorInfo,
+			ActivationInfo, CostGE, GetAbilityLevel(Handle, ActorInfo));
 	}
 }
 

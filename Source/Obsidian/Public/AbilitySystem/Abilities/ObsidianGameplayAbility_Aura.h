@@ -24,7 +24,8 @@ public:
 	
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
-
+	virtual void ApplyCost(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const override;
+	
 protected:
 	/** Aura effect that will be applied to user */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
@@ -36,6 +37,7 @@ protected:
 
 private:
 	FActiveGameplayEffectHandle AuraEffectHandle;
+	FActiveGameplayEffectHandle AuraCostEffectHandle;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianASC;
