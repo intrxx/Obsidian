@@ -130,7 +130,16 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_HealthHealing, "UI.EffectData.Flask.HealthHealing", "Tag used for displaying Health healing from Flasks Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_ManaHealing, "UI.EffectData.Flask.ManaHealing", "Tag used for displaying Mana healing from Flasks Info on the UI.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Defiance, "UI.EffectData.Aura.Defiance", "Tag used for displaying Defiance Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Life, "UI.EffectData.Aura.Life", "Tag used for displaying Life Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Mana, "UI.EffectData.Aura.Mana", "Tag used for displaying Mana Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Energy, "UI.EffectData.Aura.Energy", "Tag used for displaying Energy Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Evasion, "UI.EffectData.Aura.Evasion", "Tag used for displaying Evasion Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Armor, "UI.EffectData.Aura.Armor", "Tag used for displaying Armor Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_CriticalDamage, "UI.EffectData.Aura.CriticalDamage", "Tag used for displaying Critical Damage Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_CriticalChance, "UI.EffectData.Aura.CriticalChance", "Tag used for displaying Critical Chance Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_ChaosDamage, "UI.EffectData.Aura.ChaosDamage", "Tag used for displaying Chaos Damage Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_PhysicalDamage, "UI.EffectData.Aura.PhysicalDamage", "Tag used for displaying Physical Damage Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_CirclingElementalDamage, "UI.EffectData.Aura.CirclingElementalDamage", "Tag used for displaying Circling Elemental Damage Aura Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_HealthRegeneration, "UI.EffectData.Aura.HealthRegeneration", "Tag used for displaying Health Regeneration Aura Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_ManaRegeneration, "UI.EffectData.Aura.ManaRegeneration", "Tag used for displaying Mana Regeneration Aura Info on the UI.");
 	
@@ -622,8 +631,6 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_TransientArmor, "Item.Affix.SkillImplicits.Defence.TransientArmor", "Item Tag which represents Transient Armor Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_SparklingBarrier, "Item.Affix.SkillImplicits.Defence.SparklingBarrier", "Item Tag which represents Sparkling Barrier Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_RaisedShield, "Item.Affix.SkillImplicits.Defence.RaisedShield", "Item Tag which represents Raised Shield Skill Implicit.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_HealthRegeneration, "Item.Affix.SkillImplicits.Defence.HealthRegeneration", "Item Tag which represents Health Regeneration Skill Implicit.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Defence_ManaRegeneration, "Item.Affix.SkillImplicits.Defence.ManaRegeneration", "Item Tag which represents Mana Regeneration Skill Implicit.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Roll, "Item.Affix.SkillImplicits.Movement.Roll", "Item Tag which represents Roll Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Jump, "Item.Affix.SkillImplicits.Movement.Jump", "Item Tag which represents Jump Skill Implicit.");
@@ -631,11 +638,18 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Blink, "Item.Affix.SkillImplicits.Movement.Blink", "Item Tag which represents Blink Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Teleport, "Item.Affix.SkillImplicits.Movement.Teleport", "Item Tag which represents Teleport Skill Implicit.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Defiance, "Item.Affix.SkillImplicits.Aura.Defiance", "Item Tag which represents Defiance Skill Implicit.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Hatred, "Item.Affix.SkillImplicits.Aura.Hatred", "Item Tag which represents Hatred Skill Implicit.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_FoulPresence, "Item.Affix.SkillImplicits.Aura.FoulPresence", "Item Tag which represents Foul Presence Skill Implicit.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Domination, "Item.Affix.SkillImplicits.Aura.Domination", "Item Tag which represents Domination Skill Implicit.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_ElementalConflux, "Item.Affix.SkillImplicits.Aura.ElementalConflux", "Item Tag which represents Elemental Conflux Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Life, "Item.Affix.SkillImplicits.Aura.Life", "Item Tag which represents Life Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Mana, "Item.Affix.SkillImplicits.Aura.Mana", "Item Tag which represents Mana Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Energy, "Item.Affix.SkillImplicits.Aura.Energy", "Item Tag which represents Energy Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Evasion, "Item.Affix.SkillImplicits.Aura.Evasion", "Item Tag which represents Evasion Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Armor, "Item.Affix.SkillImplicits.Aura.Armor", "Item Tag which represents Armor Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_CirclingElementalDamage, "Item.Affix.SkillImplicits.Aura.CirclingElementalDamage", "Item Tag which represents Circling Elemental Damage Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_CriticalDamage, "Item.Affix.SkillImplicits.Aura.CriticalDamage", "Item Tag which represents Critical Damage Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_CriticalChance, "Item.Affix.SkillImplicits.Aura.CriticalChance", "Item Tag which represents Critical Chance Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_ChaosDamage, "Item.Affix.SkillImplicits.Aura.ChaosDamage", "Item Tag which represents Chaos Damage Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_PhysicalDamage, "Item.Affix.SkillImplicits.Aura.PhysicalDamage", "Item Tag which represents Physical Damage Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_ManaRegeneration, "Item.Affix.SkillImplicits.Aura.ManaRegeneration", "Item Tag which represents Mana Regeneration Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_HealthRegeneration, "Item.Affix.SkillImplicits.Aura.HealthRegeneration", "Item Tag which represents Health Regeneration Skill Implicit.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_VoidSphere, "Item.Affix.SkillImplicits.Ultimate.VoidSphere", "Item Tag which represents Void Sphere Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_Combustion, "Item.Affix.SkillImplicits.Ultimate.Combustion", "Item Tag which represents Combustion Skill Implicit.");
