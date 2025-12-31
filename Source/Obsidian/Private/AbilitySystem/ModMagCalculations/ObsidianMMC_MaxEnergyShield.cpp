@@ -50,7 +50,8 @@ float UObsidianMMC_MaxEnergyShield::CalculateBaseMagnitude_Implementation(const 
 	GetCapturedAttributeMagnitude(MaxEnergyShieldStatics().IncreasedEnergyShieldPercentage, Spec, EvaluationParameters, IncreasedEnergyShieldPercentage);
 	IncreasedEnergyShieldPercentage = FMath::Max<float>(IncreasedEnergyShieldPercentage, 0.f);
 
-	const float EnergyShieldIncreaseMagnitude = FMath::FloorToInt((MaxEnergyShield * IncreasedEnergyShieldPercentage / 100.0f));
-	const float EnergyShieldBonus = (3 * Intelligence) + EnergyShieldIncreaseMagnitude;
-	return EnergyShieldBonus;
+	const float EnergyShieldMagnitude = FMath::FloorToInt((MaxEnergyShield * IncreasedEnergyShieldPercentage / 100.0f));
+	const float EnergyShieldBonus = (3 * Intelligence);
+	const float FinalEnergyShield = EnergyShieldMagnitude + EnergyShieldBonus;
+	return FinalEnergyShield;
 }

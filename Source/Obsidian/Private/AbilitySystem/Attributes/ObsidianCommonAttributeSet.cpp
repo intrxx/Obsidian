@@ -46,7 +46,9 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 
 	// Defence Attributes
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Armor, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, IncreasedArmorPercent, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Evasion, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, IncreasedEvasionPercent, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, SpellSuppressionChance, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, SpellSuppressionMagnitude, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, AilmentThreshold, COND_None, REPNOTIFY_Always);
@@ -348,9 +350,19 @@ void UObsidianCommonAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldV
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Armor, OldValue);
 }
 
+void UObsidianCommonAttributeSet::OnRep_IncreasedArmorPercent(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedArmorPercent, OldValue);
+}
+
 void UObsidianCommonAttributeSet::OnRep_Evasion(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Evasion, OldValue);
+}
+
+void UObsidianCommonAttributeSet::OnRep_IncreasedEvasionPercent(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEvasionPercent, OldValue);
 }
 
 void UObsidianCommonAttributeSet::OnRep_SpellSuppressionChance(const FGameplayAttributeData& OldValue)

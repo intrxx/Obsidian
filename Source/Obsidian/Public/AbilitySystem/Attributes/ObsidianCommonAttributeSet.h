@@ -54,7 +54,9 @@ public:
 	 */
 	
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Armor);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedArmorPercent);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
+	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedEvasionPercent);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, SpellSuppressionChance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, SpellSuppressionMagnitude);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AilmentThreshold);
@@ -189,7 +191,11 @@ protected:
 	UFUNCTION()
 	void OnRep_Armor(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
+	void OnRep_IncreasedArmorPercent(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
 	void OnRep_Evasion(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_IncreasedEvasionPercent(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_SpellSuppressionChance(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
@@ -388,9 +394,17 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor, Category = "Obsidian|CAttributes|Armor", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Armor;
 
+	/** Kind of Meta attribute - The current Increased Armor Percent attribute. Used in calculation for increasing Armor attribute. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Armor, Category = "Obsidian|CAttributes|Armor", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncreasedArmorPercent;
+
 	/** The current Evasion attribute. Evasion grants a chance to evade attacks. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Evasion, Category = "Obsidian|CAttributes|Evasion", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Evasion;
+
+	/** Kind of Meta attribute - The current Increased Evasion Percent attribute. Used in calculation for increasing Evasion attribute. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Evasion, Category = "Obsidian|CAttributes|Evasion", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData IncreasedEvasionPercent;
 
 	/** The current Armor Spell Suppression Chance Attribute [0% - 100%]. Chance to suppress Spell Damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpellSuppressionChance, Category = "Obsidian|CAttributes|SpellSuppressionChance", Meta = (AllowPrivateAccess = true))
