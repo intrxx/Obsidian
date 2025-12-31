@@ -53,8 +53,7 @@ float UObsidianMMC_Evasion::CalculateBaseMagnitude_Implementation(const FGamepla
 	GetCapturedAttributeMagnitude(EvasionStatics().IncreasedEvasionPercentage, Spec, EvaluationParameters, IncreasedEvasionPercentage);
 	IncreasedEvasionPercentage = FMath::Max<float>(IncreasedEvasionPercentage, 0.f);
 
-	const float EvasionMagnitude = FMath::FloorToInt((Evasion * IncreasedEvasionPercentage / 100.0f));
-	const float EvasionBonus = (FMath::FloorToInt(Dexterity / 2) * 3);
-	const float FinalEvasion = EvasionMagnitude + EvasionBonus;
-	return FinalEvasion;
+	const float EvasionIncreaseMagnitude = FMath::FloorToInt((Evasion * IncreasedEvasionPercentage / 100.0f));
+	const float EvasionBonus = (FMath::FloorToInt(Dexterity / 2) * 3) + EvasionIncreaseMagnitude;
+	return EvasionBonus;
 }
