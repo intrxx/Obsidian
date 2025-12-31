@@ -130,7 +130,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_HealthHealing, "UI.EffectData.Flask.HealthHealing", "Tag used for displaying Health healing from Flasks Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Flask_ManaHealing, "UI.EffectData.Flask.ManaHealing", "Tag used for displaying Mana healing from Flasks Info on the UI.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Life, "UI.EffectData.Aura.Life", "Tag used for displaying Life Aura Info on the UI.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Health, "UI.EffectData.Aura.Health", "Tag used for displaying Health Aura Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Mana, "UI.EffectData.Aura.Mana", "Tag used for displaying Mana Aura Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Energy, "UI.EffectData.Aura.Energy", "Tag used for displaying Energy Aura Info on the UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(UI_EffectData_Aura_Evasion, "UI.EffectData.Aura.Evasion", "Tag used for displaying Evasion Aura Info on the UI.");
@@ -638,7 +638,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Blink, "Item.Affix.SkillImplicits.Movement.Blink", "Item Tag which represents Blink Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Movement_Teleport, "Item.Affix.SkillImplicits.Movement.Teleport", "Item Tag which represents Teleport Skill Implicit.");
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Life, "Item.Affix.SkillImplicits.Aura.Life", "Item Tag which represents Life Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Health, "Item.Affix.SkillImplicits.Aura.Health", "Item Tag which represents Life Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Mana, "Item.Affix.SkillImplicits.Aura.Mana", "Item Tag which represents Mana Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Energy, "Item.Affix.SkillImplicits.Aura.Energy", "Item Tag which represents Energy Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Evasion, "Item.Affix.SkillImplicits.Aura.Evasion", "Item Tag which represents Evasion Skill Implicit.");
