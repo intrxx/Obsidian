@@ -27,7 +27,7 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 
 	InventoryItemsWidgetController->OnItemStashedDelegate.AddUObject(this, &ThisClass::OnItemStashed);
 	InventoryItemsWidgetController->OnStashedItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
-	InventoryItemsWidgetController->OnStashedItemRemovedDeletage.AddUObject(this, &ThisClass::OnItemRemoved);
+	InventoryItemsWidgetController->OnStashedItemRemovedDelegate.AddUObject(this, &ThisClass::OnItemRemoved);
 	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
 	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
 }

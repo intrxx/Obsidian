@@ -62,6 +62,9 @@ class OBSIDIAN_API UObsidianItemSlot : public UObsidianWidgetBase
 public:
 	/** Sets the slot state, switches the slot highlight based on provided state. */
 	void SetSlotState(const EObsidianItemSlotState InState, const EObsidianItemSlotStatePriority InPriority);
+
+	bool ContainsItem() const;
+	FObsidianItemPosition GetContainedItemsPosition() const;
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -90,6 +93,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush SlotSelectedLightColor;
+
+protected:
+	bool bContainsItem = false;
+	FObsidianItemPosition ContainedItemPosition = FObsidianItemPosition();
 
 private:
 	UPROPERTY()

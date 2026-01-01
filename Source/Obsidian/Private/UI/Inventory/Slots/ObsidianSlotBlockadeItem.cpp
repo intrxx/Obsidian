@@ -27,7 +27,7 @@ void UObsidianSlotBlockadeItem::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& InEquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
+void UObsidianSlotBlockadeItem::InitializeItemWidget(const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
 {
 	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
 	
@@ -40,29 +40,6 @@ void UObsidianSlotBlockadeItem::InitializeItemWidget(const FGameplayTag& InEquip
 	Brush.SetImageSize(FVector2D(WidthOverride, HeightOverride));
 	Brush.SetResourceObject(ItemImage);
 	Item_Image->SetBrush(Brush);
-	
-	ItemEquipmentSlot = InEquipmentSlot;
-	PrimaryWeaponSlot = InPrimaryWeaponSlot;
-}
-
-FReply UObsidianSlotBlockadeItem::NativeOnMouseButtonDown(const FGeometry& InGeometry,const FPointerEvent& InMouseEvent)
-{
-	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
-	{
-		OnSlotBlockadeItemLeftMouseButtonPressedDelegate.Broadcast(this);
-	}
-	
-	return FReply::Handled();
-}
-
-void UObsidianSlotBlockadeItem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
-	OnSlotBlockadeItemMouseEnterDelegate.Broadcast(this);
-}
-
-void UObsidianSlotBlockadeItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
-{
-	OnSlotBlockadeItemMouseLeaveDelegate.Broadcast();
 }
 
 

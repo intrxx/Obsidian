@@ -67,7 +67,7 @@ void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& DesiredPos
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
+void UObsidianItem::InitializeItemWidget(const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
 {
 	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
 		
@@ -81,7 +81,6 @@ void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& EquipmentS
 	Brush.SetResourceObject(ItemImage);
 	Item_Image->SetBrush(Brush);
 	
-	ItemPosition = EquipmentSlot;
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
 
@@ -122,11 +121,6 @@ FObsidianItemPosition UObsidianItem::GetItemPosition() const
 FIntPoint UObsidianItem::GetGridPosition() const
 {
 	return ItemPosition.GetItemGridPosition();
-}
-
-FGameplayTag UObsidianItem::GetSlotTag() const
-{
-	return ItemPosition.GetItemSlotTag();
 }
 
 FSlateBrush UObsidianItem::GetItemImage() const

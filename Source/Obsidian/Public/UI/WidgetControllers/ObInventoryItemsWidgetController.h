@@ -114,6 +114,7 @@ protected:
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquippedItemRemovedSignature, const FGameplayTag& PrimarySlotTag, const bool bBlocksOtherSlot);
 DECLARE_MULTICAST_DELEGATE(FOnItemRemovedSignature);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartPlacementHighlightSignature, const FGameplayTagContainer& ForSlotsWithTag);
@@ -200,7 +201,7 @@ public:
 
 	void HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot);
 	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);
-	void HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget);
+	void HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget, const FObsidianItemPosition& ItemPosition);
 	void HandleHoveringOverStashedItem(const UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem();
 
@@ -218,9 +219,9 @@ public:
 	FOnItemChangedSignature OnInventoryItemChangedDelegate;
 	FOnItemChangedSignature OnStashedItemChangedDelegate;
 
-	FOnItemRemovedSignature OnEquippedItemRemovedDelegate;
+	FOnEquippedItemRemovedSignature OnEquippedItemRemovedDelegate;
 	FOnItemRemovedSignature OnInventorizedItemRemovedDelegate;
-	FOnItemRemovedSignature OnStashedItemRemovedDeletage;
+	FOnItemRemovedSignature OnStashedItemRemovedDelegate;
 
 	/** As of now this delegate will fire once with all Slot Tags that are possible to add the Dragged Item to and it is on individual Widget side to parse these. */
 	FOnStartPlacementHighlightSignature OnStartPlacementHighlightDelegate;

@@ -31,18 +31,8 @@ class OBSIDIAN_API UObsidianSlotBlockadeItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidget(const FGameplayTag& InEquipmentSlot, const FGameplayTag& InPrimaryWeaponSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot);
-
-	FGameplayTag GetEquipmentSlotTag() const
-	{
-		return ItemEquipmentSlot;
-	}
-
-	FGameplayTag GetPrimaryWeaponSlotTag() const
-	{
-		return PrimaryWeaponSlot;
-	}
-
+	void InitializeItemWidget(const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot);
+	
 	void SetOwningSlot(UObsidianItemSlot_Equipment* InSlot)
 	{
 		OwningSlot = InSlot;
@@ -52,20 +42,11 @@ public:
 	{
 		return OwningSlot;
 	}
-	
-public:
-	FOnSlotBlockadeItemLeftMouseButtonPressedSignature OnSlotBlockadeItemLeftMouseButtonPressedDelegate;
-	FOnSlotBlockadeItemMouseEnterSignature OnSlotBlockadeItemMouseEnterDelegate;
-	FOnSlotBlockadeItemMouseLeaveSignature OnSlotBlockadeItemMouseLeaveDelegate;
 
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-	
 protected:
 	/** Opacity to set for this blocking item. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -74,11 +55,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float SwapSlotSizeMultiplier = 0.5f;
 	
-	UPROPERTY()
-	FGameplayTag ItemEquipmentSlot = FGameplayTag::EmptyTag;
-	UPROPERTY()
-	FGameplayTag PrimaryWeaponSlot = FGameplayTag::EmptyTag;
-
 	UPROPERTY()
 	TObjectPtr<UObsidianItemSlot_Equipment> OwningSlot;
 

@@ -21,7 +21,6 @@
 #include "UI/ObsidianHUD.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
-#include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
@@ -235,19 +234,21 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemUnequipped)
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Unequipping item: [%s]"), *Instance->GetItemDisplayName().ToString());
-
+		
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
 		{
 			RemoveEquipmentItemWidget(SlotTagToClear);
-		}
 
-		if(Instance->DoesItemNeedTwoSlots())
-		{
-			RemoveBlockedSlotItemWidget(SlotTagToClear);
-		}
+			bool bBlocksOtherSlot = false;
+			if(Instance->DoesItemNeedTwoSlots())
+			{
+				RemoveBlockedSlotItemWidget(SlotTagToClear);
+				bBlocksOtherSlot = true;
+			}
 
-		OnEquippedItemRemovedDelegate.Broadcast();
+			OnEquippedItemRemovedDelegate.Broadcast(SlotTagToClear, bBlocksOtherSlot);
+		}
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
 	{
@@ -328,7 +329,7 @@ void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channe
 			}
 		}
 
-		OnStashedItemRemovedDeletage.Broadcast();
+		OnStashedItemRemovedDelegate.Broadcast();
 	}
 	else if (StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemStacksChanged)
 	{
@@ -1019,18 +1020,20 @@ void UObInventoryItemsWidgetController::HandleHoveringOverInventoryItem(const UO
 	}
 }
 
-void UObInventoryItemsWidgetController::HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget)
+void UObInventoryItemsWidgetController::HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget,
+	const FObsidianItemPosition& ItemPosition)
 {
 	if(ItemWidget == nullptr || !CanShowDescription())
 	{
 		return;
 	}
 	
-	const FGameplayTag SlotTag = ItemWidget->GetSlotTag();
+	const FGameplayTag SlotTag = ItemPosition.GetItemSlotTag();
 	const UObsidianInventoryItemInstance* ItemInstance = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
 
 	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
+	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance,
+		OutItemStats);
 
 	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
 	{
@@ -1390,9 +1393,9 @@ FString UObInventoryItemsWidgetController::GetStashTabName(const FGameplayTag St
 {
 	if (PlayerStashComponent)
 	{
-		if (UObsidianStashTab* StashTab = PlayerStashComponent->GetStashTabForTag(StashTabTag))
+		if (const UObsidianStashTab* StashTab = PlayerStashComponent->GetStashTabForTag(StashTabTag))
 		{
-			
+			return StashTab->GetStashTabName();
 		}
 	}
 	
@@ -1582,7 +1585,8 @@ bool UObInventoryItemsWidgetController::CanInteractWithEquipment() const
 	return false;
 }
 
-UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateInventoryItemDescription(const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats)
+UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateInventoryItemDescription(const UObsidianItem* ForItemWidget,
+	const FObsidianItemStats& ItemStats)
 {
 	RemoveCurrentItemDescription(); // Clear any other Item Description
 	
@@ -1685,18 +1689,17 @@ FVector2D UObInventoryItemsWidgetController::CalculateUnstackSliderPosition(cons
 
 FVector2D UObInventoryItemsWidgetController::CalculateDescriptionPosition(const UObsidianItem* ItemWidget) const
 {
-	FVector2D FinalPosition = FVector2D::Zero();
-	UWorld* World = GetWorld();
+	const UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
 		UE_LOG(LogWidgetController_Items, Error, TEXT("Failed to calculate Description Position"));
-		return FinalPosition;
+		return FVector2D::Zero();
 	}
 
 	if(ItemWidget == nullptr || ActiveItemDescription == nullptr)
 	{
 		UE_LOG(LogWidgetController_Items, Error, TEXT("Failed to calculate Description Position"));
-		return FinalPosition;
+		return FVector2D::Zero();
 	}
 
 	// @HACK this is quite ugly, but without prepass the desired size is [0, 0], if the performance is the problem,

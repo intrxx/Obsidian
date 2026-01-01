@@ -45,7 +45,7 @@ void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget, 
 	const FObsidianItemPosition ItemPosition = InItemWidget->GetItemPosition();
 	if (UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(ItemPosition.GetItemSlotTag()))
 	{
-		EquipmentSlot->AddItemToSlot(InItemWidget, ItemSlotPadding);
+		EquipmentSlot->AddItemToSlot(InItemWidget, ItemPosition, ItemSlotPadding);
 	}
 }
 

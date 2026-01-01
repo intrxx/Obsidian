@@ -60,6 +60,7 @@ private:
 	void RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const;
 	
 	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnItemUnequipped(const FGameplayTag& SlotTag, const bool bBlocksOtherSlot);
 	
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
 	void OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
@@ -67,14 +68,14 @@ private:
 	
 	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
 	void OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
-	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
+	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItemSlot_Equipment* PressedSlot, const FObsidianItemPosition& ItemPosition,
+		const FObsidianItemInteractionFlags& InteractionFlags);
+	void OnSlotBlockadeItemLeftMouseButtonPressed(const UObsidianItemSlot_Equipment* PressedSlot, const FObsidianItemPosition& ItemPosition,
+		const FObsidianItemInteractionFlags& InteractionFlags);
 	
-	void OnSlotBlockadeItemLeftMouseButtonPressed(const UObsidianSlotBlockadeItem* SlotBlockadeItem);
-	void OnSlotBlockadeItemMouseEntered(const UObsidianSlotBlockadeItem* ItemWidget);
-	
-	void OnEquipmentItemMouseEntered(const UObsidianItem* ItemWidget);
+	void OnBlockedSlotItemHover(const FObsidianItemPosition& PrimaryItemPosition, const bool bEntered);
+	void OnEquippedItemHover(const FObsidianItemPosition& ItemPosition, const bool bEntered);
 	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
-	void OnItemMouseLeave();
 
 	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
 	void StopHighlightSlotPlacement();

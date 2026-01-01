@@ -33,7 +33,7 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 
 public:
 	void InitializeItemWidget(const FObsidianItemPosition& DesiredPosition, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
-	void InitializeItemWidget(const FObsidianItemPosition& EquipmentSlot, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot = false);
+	void InitializeItemWidget(const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot = false);
 	
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
@@ -45,7 +45,6 @@ public:
 
 	FObsidianItemPosition GetItemPosition() const;
 	FIntPoint GetGridPosition() const;
-	FGameplayTag GetSlotTag() const;
 
 	FSlateBrush GetItemImage() const;
 

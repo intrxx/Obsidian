@@ -2,11 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-
-// ~ Project
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
 
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
@@ -19,6 +16,10 @@ class UObsidianItem;
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotHoverSignature, UObsidianItemSlot_Equipment* HoveredSlot, const bool bEntered);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotPressedSignature, const UObsidianItemSlot_Equipment* HoveredSlot, const bool bShiftDown);
 
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquippedItemHoverSignature, const FObsidianItemPosition& ItemPosition, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnEquippedItemLeftButtonPressedSignature, const UObsidianItemSlot_Equipment* PressedSlot,
+	const FObsidianItemPosition& ItemPosition, const FObsidianItemInteractionFlags& InteractionFlags);
+
 /**
  * 
  */
@@ -30,27 +31,26 @@ class OBSIDIAN_API UObsidianItemSlot_Equipment : public UObsidianItemSlot
 public:
 	void InitializeSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag = FGameplayTag::EmptyTag);
 
-	FGameplayTag GetSlotTag() const
-	{
-		return SlotTag;
-	}
+	void Reset();
+	
+	FObsidianItemPosition GetPrimaryItemPosition() const;
+	FGameplayTag GetSlotTag() const;
+	FGameplayTag GetSisterSlotTag() const;
+	bool IsBlocked() const;
+	void SetIsBlocked(const bool bInIsBlocked);
 
-	FGameplayTag GetSisterSlotTag() const
-	{
-		return SisterSlotTag;
-	}
-
-	void SetIsBlocked(const bool bInIsBlocked)
-	{
-		bIsBlocked = bInIsBlocked;
-	}
-
-	void AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f);
-	void AddItemToSlot(UObsidianSlotBlockadeItem* InItemWidget, const float ItemSlotPadding = 0.0f);
+	void AddItemToSlot(UObsidianItem* InItemWidget, const FObsidianItemPosition& InItemPosition, const float ItemSlotPadding = 0.0f);
+	void AddBlockadeItemToSlot(UObsidianSlotBlockadeItem* InItemWidget, const FObsidianItemPosition& InPrimaryItemPosition,
+		const float ItemSlotPadding = 0.0f);
 
 public:
 	FOnEquipmentSlotHoverSignature OnEquipmentSlotHoverDelegate;
 	FOnEquipmentSlotPressedSignature OnEquipmentSlotPressedDelegate;
+
+	FOnEquippedItemHoverSignature OnEquippedItemHoverDelegate;
+	FOnEquippedItemHoverSignature OnBlockedSlotHoverDelegate;
+	FOnEquippedItemLeftButtonPressedSignature OnEquippedItemLeftButtonPressedDelegate;
+	FOnEquippedItemLeftButtonPressedSignature OnBlockedSlotLeftButtonPressedDelegate;
 	
 protected:
 	virtual void NativePreConstruct() override;
@@ -80,4 +80,5 @@ private:
 	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
 
 	bool bIsBlocked = false;
+	FObsidianItemPosition PrimaryItemPosition = FObsidianItemPosition();
 };
