@@ -367,9 +367,9 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Strength, "Item.BaseType.Axe.OneHand.Strength", "Item Tag that represents One Hand Strength Axe item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_OneHand_Intelligence, "Item.BaseType.Axe.OneHand.Intelligence", "Item Tag that represents One Hand Intelligence Axe item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Faith, "Item.BaseType.Axe.TwoHand.Faith", "Item Tag that represents Two Hand Faith Axe item base type.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Dexterity, "Item.BaseType.Axe.OneHand.Dexterity", "Item Tag that represents Two Hand Dexterity Axe item base type.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Strength, "Item.BaseType.Axe.OneHand.Strength", "Item Tag that represents Two Hand Strength Axe item base type.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Intelligence, "Item.BaseType.Axe.OneHand.Intelligence", "Item Tag that represents Two Hand Intelligence Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Dexterity, "Item.BaseType.Axe.TwoHand.Dexterity", "Item Tag that represents Two Hand Dexterity Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Strength, "Item.BaseType.Axe.TwoHand.Strength", "Item Tag that represents Two Hand Strength Axe item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Axe_TwoHand_Intelligence, "Item.BaseType.Axe.TwoHand.Intelligence", "Item Tag that represents Two Hand Intelligence Axe item base type.");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_OneHand_Faith, "Item.BaseType.Mace.OneHand.Faith", "Item Tag that represents One Hand Faith Mace item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Mace_OneHand_Dexterity, "Item.BaseType.Mace.OneHand.Dexterity", "Item Tag that represents One Hand Dexterity Mace item base type.");
