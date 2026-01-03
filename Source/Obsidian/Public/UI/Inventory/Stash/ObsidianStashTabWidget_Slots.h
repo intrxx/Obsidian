@@ -34,7 +34,8 @@ protected:
 	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
 	
 	void OnStashSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-	void OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const;
+	void OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
+		const FObsidianItemInteractionFlags& InteractionFlags) const;
 	
 private:
 	UPROPERTY()

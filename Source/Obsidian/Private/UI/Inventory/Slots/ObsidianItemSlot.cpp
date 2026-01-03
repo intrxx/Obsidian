@@ -57,15 +57,5 @@ void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState, const
 	}
 }
 
-bool UObsidianItemSlot::ContainsItem() const
-{
-	return bContainsItem;
-}
-
-FObsidianItemPosition UObsidianItemSlot::GetContainedItemsPosition() const
-{
-	return ContainedItemPosition;
-}
-
 
 

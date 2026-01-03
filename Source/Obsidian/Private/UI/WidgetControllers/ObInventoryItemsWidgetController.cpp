@@ -23,8 +23,6 @@
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
-#include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "Obsidian/Public/UI/Inventory/Items/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
@@ -238,32 +236,17 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
 		{
-			RemoveEquipmentItemWidget(SlotTagToClear);
-
-			bool bBlocksOtherSlot = false;
-			if(Instance->DoesItemNeedTwoSlots())
-			{
-				RemoveBlockedSlotItemWidget(SlotTagToClear);
-				bBlocksOtherSlot = true;
-			}
-
-			OnEquippedItemRemovedDelegate.Broadcast(SlotTagToClear, bBlocksOtherSlot);
+			OnEquippedItemRemovedDelegate.Broadcast(SlotTagToClear, Instance->DoesItemNeedTwoSlots());
 		}
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Equipment Swapping item: [%s]"), *Instance->GetItemDisplayName().ToString());
-		
+
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
 		{
-			RemoveEquipmentItemWidget(SlotTagToClear);
-		}
-
-		if(Instance->DoesItemNeedTwoSlots())
-		{
-			const FGameplayTag EquipmentTag = SlotTagToClear == FGameplayTag::EmptyTag ? UObsidianGameplayStatics::GetOpposedEquipmentTagForTag(EquipmentChangeMessage.SlotTag) : EquipmentChangeMessage.SlotTagToClear;
-			RemoveBlockedSlotItemWidget(EquipmentTag);
+			OnEquippedItemRemovedDelegate.Broadcast(SlotTagToClear, Instance->DoesItemNeedTwoSlots());
 		}
 		
 		FObsidianItemWidgetData ItemWidgetData;
@@ -403,6 +386,11 @@ void UObInventoryItemsWidgetController::OnStopDraggingItem()
 	OnStopPlacementHighlightDelegate.Broadcast();
 }
 
+UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::GetActiveDroppedItemDescription()
+{
+	return ActiveDroppedItemDescription;
+}
+
 TConstArrayView<TObjectPtr<UObsidianStashTab>> UObInventoryItemsWidgetController::GetAllStashTabs() const
 {
 	check(PlayerStashComponent);
@@ -453,9 +441,7 @@ void UObInventoryItemsWidgetController::OnInventoryOpen()
 	}
 
 	TArray<UObsidianInventoryItemInstance*> EquippedItems = EquipmentComponent->GetAllEquippedItems();
-	EquippedItemWidgetMap.Empty(EquippedItems.Num());
-	BlockedSlotsWidgetMap.Empty();
-
+	
 	for(const UObsidianInventoryItemInstance* Item : EquippedItems)
 	{
 		if(ensure(Item))
@@ -594,11 +580,12 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const
 		}
 		for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
 		{
-			if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
-			{
-				Item->HighlightItem();
-				CachedItemsMatchingUsableContext.Add(Item);
-			}
+			//TODO(intrxx) implement hightlight
+			// if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
+			// {
+			// 	Item->HighlightItem();
+			// 	CachedItemsMatchingUsableContext.Add(Item);
+			// }
 		}
 		for(const FObsidianItemPosition& StashPosition : MatchingUsableContext.StashItemsMatchingContext)
 		{
@@ -842,11 +829,12 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const F
 		}
 		for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
 		{
-			if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
-			{
-				Item->HighlightItem();
-				CachedItemsMatchingUsableContext.Add(Item);
-			}
+			//TODO(intrxx) implement hightlight
+			// if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
+			// {
+			// 	Item->HighlightItem();
+			// 	CachedItemsMatchingUsableContext.Add(Item);
+			// }
 		}
 		for(const FObsidianItemPosition& StashPosition : MatchingUsableContext.StashItemsMatchingContext)
 		{
@@ -989,15 +977,13 @@ void UObInventoryItemsWidgetController::HandleHoveringOverInventoryItem(const FI
 		return;
 	}
 	
-	const FIntPoint SlotPosition = ItemWidget->GetGridPosition();
-	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
-
-	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
-	
-	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
+	if (const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot))
 	{
-		ActiveItemDescription->SetAssociatedItemPosition(SlotPosition);
+		FObsidianItemStats OutItemStats;
+		if (UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats))
+		{
+			CreateInventoryItemDescription(AtGridSlot, ItemWidget, OutItemStats);
+		}
 	}
 }
 
@@ -1009,35 +995,32 @@ void UObInventoryItemsWidgetController::HandleHoveringOverInventoryItem(const UO
 	}
 
 	const FIntPoint SlotPosition = ItemWidget->GetGridPosition();
-	const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
-
-	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
-
-	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
+	if (const UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition))
 	{
-		ActiveItemDescription->SetAssociatedItemPosition(SlotPosition);
+		FObsidianItemStats OutItemStats;
+		if (UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats))
+		{
+			CreateInventoryItemDescription(SlotPosition, ItemWidget, OutItemStats);
+		}
 	}
 }
 
-void UObInventoryItemsWidgetController::HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget,
-	const FObsidianItemPosition& ItemPosition)
+void UObInventoryItemsWidgetController::HandleHoveringOverEquipmentItem(const FObsidianItemPosition& ItemPosition,
+	const UObsidianItem* ItemWidget)
 {
 	if(ItemWidget == nullptr || !CanShowDescription())
 	{
 		return;
 	}
 	
-	const FGameplayTag SlotTag = ItemPosition.GetItemSlotTag();
-	const UObsidianInventoryItemInstance* ItemInstance = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
-
-	FObsidianItemStats OutItemStats;
-	const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance,
-		OutItemStats);
-
-	if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
+	if (const UObsidianInventoryItemInstance* ItemInstance = EquipmentComponent->GetEquippedInstanceAtSlot(
+		ItemPosition.GetItemSlotTag()))
 	{
-		ActiveItemDescription->SetAssociatedItemPosition(SlotTag);
+		FObsidianItemStats OutItemStats;
+		if(UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats))
+		{
+			CreateInventoryItemDescription(ItemPosition, ItemWidget, OutItemStats);
+		}
 	}
 }
 
@@ -1052,11 +1035,9 @@ void UObInventoryItemsWidgetController::HandleHoveringOverStashedItem(const UObs
 	if (const UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(ItemPosition))
 	{
 		FObsidianItemStats OutItemStats;
-		const bool bSuccess = UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats);
-
-		if(bSuccess && CreateInventoryItemDescription(ItemWidget, OutItemStats))
+		if(UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ItemInstance, OutItemStats))
 		{
-			ActiveItemDescription->SetAssociatedItemPosition(ItemPosition);
+			CreateInventoryItemDescription(ItemPosition, ItemWidget, OutItemStats);
 		}
 	}
 }
@@ -1066,9 +1047,21 @@ bool UObInventoryItemsWidgetController::CanShowDescription() const
 	return !bUnstackSliderActive;
 }
 
-void UObInventoryItemsWidgetController::HandleUnhoveringItem()
+void UObInventoryItemsWidgetController::HandleUnhoveringItem(const FObsidianItemPosition& FromPosition)
 {
-	RemoveCurrentItemDescription();
+	ClearItemDescriptionForPosition(FromPosition);
+}
+
+void UObInventoryItemsWidgetController::ClearItemDescriptionForPosition(const FObsidianItemPosition& ForPosition)
+{
+	UObsidianItemDescriptionBase* RemovedDescription = nullptr;
+	if (ActiveItemDescriptions.RemoveAndCopyValue(ForPosition, RemovedDescription))
+	{
+		if (RemovedDescription)
+		{
+			RemovedDescription->DestroyDescriptionWidget();
+		}
+	}
 }
 
 void UObInventoryItemsWidgetController::CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance)
@@ -1144,7 +1137,8 @@ void UObInventoryItemsWidgetController::HandleTakingOutStacksFromStash(const int
 void UObInventoryItemsWidgetController::RemoveItemUIElements()
 {
 	RemoveUnstackSlider();
-	RemoveCurrentItemDescription();
+	RemoveCurrentDroppedItemDescription();
+	//TODO(intrxx) Remove all Active Descriptions? 
 }
 
 void UObInventoryItemsWidgetController::RemoveUnstackSlider()
@@ -1166,13 +1160,13 @@ void UObInventoryItemsWidgetController::RemoveUnstackSlider()
 	}
 }
 
-void UObInventoryItemsWidgetController::RemoveCurrentItemDescription()
+void UObInventoryItemsWidgetController::RemoveCurrentDroppedItemDescription()
 {
-	if(bDescriptionActive && ActiveItemDescription)
+	if(bDroppedDescriptionActive && ActiveDroppedItemDescription)
 	{
-		ActiveItemDescription->DestroyDescriptionWidget();
-		ActiveItemDescription = nullptr;
-		bDescriptionActive = false;
+		ActiveDroppedItemDescription->DestroyDescriptionWidget();
+		ActiveDroppedItemDescription = nullptr;
+		bDroppedDescriptionActive = false;
 	}
 }
 
@@ -1356,6 +1350,12 @@ bool UObInventoryItemsWidgetController::GetDraggedItemGridSpan(FIntPoint& OutIte
 	return false;
 }
 
+UObsidianItem* UObInventoryItemsWidgetController::GetItemWidgetFromEquipmentPanel(
+	const FObsidianItemPosition& AtItemPosition) const
+{
+	return nullptr; //TODO(intrxx) implement
+}
+
 UObsidianItem* UObInventoryItemsWidgetController::GetItemWidgetAtInventoryGridSlot(const FIntPoint& AtGridSlot) const
 {
 	if(AddedItemWidgetMap.Contains(AtGridSlot))
@@ -1379,10 +1379,11 @@ void UObInventoryItemsWidgetController::RemoveInventoryItemWidget(const FIntPoin
 	{
 		if(UObsidianItem* Item = AddedItemWidgetMap[GridSlot])
 		{
-			if(ActiveItemDescription && ActiveItemDescription->IsInventoryItemDescription() && ActiveItemDescription->GetAssociatedItemPosition() == GridSlot)
-			{
-				RemoveCurrentItemDescription();
-			}
+			ClearItemDescriptionForPosition(GridSlot);
+			// if(ActiveItemDescription && ActiveItemDescription->IsInventoryItemDescription() && ActiveItemDescription->GetAssociatedItemPosition() == GridSlot)
+			// {
+			// 	RemoveCurrentItemDescription();
+			// }
 			Item->RemoveFromParent();
 		}
 		AddedItemWidgetMap.Remove(GridSlot);
@@ -1400,27 +1401,6 @@ FString UObInventoryItemsWidgetController::GetStashTabName(const FGameplayTag St
 	}
 	
 	return FString();
-}
-
-UObsidianItem* UObInventoryItemsWidgetController::GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const
-{
-	if(EquippedItemWidgetMap.Contains(Slot))
-	{
-		return EquippedItemWidgetMap[Slot];
-	}
-	return nullptr;
-}
-
-void UObInventoryItemsWidgetController::RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother)
-{
-	if(bSwappedWithAnother)
-	{
-		RemoveEquipmentItemWidget(Slot);
-	}
-	if(!EquippedItemWidgetMap.Contains(Slot))
-	{
-		EquippedItemWidgetMap.Add(Slot, ItemWidget);
-	}
 }
 
 void UObInventoryItemsWidgetController::RegisterCurrentStashTab(const FGameplayTag& CurrentStashTab)
@@ -1491,55 +1471,12 @@ void UObInventoryItemsWidgetController::RemoveStashItemWidget(const FObsidianIte
 	}
 }
 
-void UObInventoryItemsWidgetController::AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother)
-{
-	if(bSwappedWithAnother)
-	{
-		RemoveBlockedSlotItemWidget(PrimarySlot);
-	}
-	if(!BlockedSlotsWidgetMap.Contains(PrimarySlot))
-	{
-		BlockedSlotsWidgetMap.Add(PrimarySlot, ItemWidget);
-	}
-}
-
-void UObInventoryItemsWidgetController::RemoveEquipmentItemWidget(const FGameplayTag& Slot)
-{
-	if(EquippedItemWidgetMap.Contains(Slot))
-	{
-		if(UObsidianItem* Item = EquippedItemWidgetMap[Slot])
-		{
-			if(ActiveItemDescription && ActiveItemDescription->IsEquipmentDescription() && ActiveItemDescription->GetAssociatedItemPosition() == Slot)
-			{
-				RemoveCurrentItemDescription();
-			}
-			Item->RemoveFromParent();
-		}
-		EquippedItemWidgetMap.Remove(Slot);
-	}
-}
-
-void UObInventoryItemsWidgetController::RemoveBlockedSlotItemWidget(const FGameplayTag& Slot)
-{
-	if(BlockedSlotsWidgetMap.Contains(Slot))
-	{
-		if(UObsidianSlotBlockadeItem* Item = BlockedSlotsWidgetMap[Slot])
-		{
-			if(UObsidianItemSlot_Equipment* BlockedSlot = Item->GetOwningSlot())
-			{
-				BlockedSlot->SetIsBlocked(false);
-			}
-			Item->RemoveFromParent();
-		}
-		BlockedSlotsWidgetMap.Remove(Slot);
-	}
-}
-
 bool UObInventoryItemsWidgetController::CanEquipDraggedItem(const FGameplayTag& SlotTag) const
 {
 	if(OwnerPlayerInputManager == nullptr || EquipmentComponent == nullptr)
 	{
-		UE_LOG(LogEquipment, Error, TEXT("OwnerPlayerInputManager or EquipmentComponent is invalid in UObInventoryItemsWidgetController::CanEquipDraggedItem."))
+		UE_LOG(LogEquipment, Error, TEXT("OwnerPlayerInputManager or EquipmentComponent is invalid in [%hs]."),
+			__FUNCTION__);
 		return false; 
 	}
 
@@ -1585,21 +1522,24 @@ bool UObInventoryItemsWidgetController::CanInteractWithEquipment() const
 	return false;
 }
 
-UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateInventoryItemDescription(const UObsidianItem* ForItemWidget,
-	const FObsidianItemStats& ItemStats)
+UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateInventoryItemDescription(const FObsidianItemPosition& AtPosition,
+	const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats)
 {
-	RemoveCurrentItemDescription(); // Clear any other Item Description
+	ClearItemDescriptionForPosition(AtPosition); //TODO(intrxx) will it be necessary?
 	
-	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class, fill it in UObInventoryItemsWidgetController instance."));
-	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
-	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats);
-	ActiveItemDescription->AddToViewport();
+	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class, fill it in "
+								   "UObInventoryItemsWidgetController instance."));
+	UObsidianItemDescriptionBase* NewItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController,
+		ItemDescriptionClass);
+	NewItemDescription->InitializeWidgetWithItemStats(ItemStats);
+	NewItemDescription->AddToViewport();
 	
-	const FVector2D DescriptionViewportPosition = CalculateDescriptionPosition(ForItemWidget);
-	ActiveItemDescription->SetPositionInViewport(DescriptionViewportPosition);
-	bDescriptionActive = true;
+	const FVector2D DescriptionViewportPosition = CalculateDescriptionPosition(ForItemWidget, NewItemDescription);
+	NewItemDescription->SetPositionInViewport(DescriptionViewportPosition);
 
-	return ActiveItemDescription;
+	ActiveItemDescriptions.Add(AtPosition, NewItemDescription);
+	
+	return NewItemDescription;
 }
 
 UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateDroppedItemDescription(const FObsidianItemStats& ItemStats)
@@ -1620,15 +1560,15 @@ UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateDroppedIt
 		return nullptr;
 	}
 
-	RemoveCurrentItemDescription(); // Clear any other Item Description
+	RemoveCurrentDroppedItemDescription(); // Clear any other Item Description
 
 	checkf(ItemDescriptionClass, TEXT("Tried to create widget without valid widget class, fill it in UObInventoryItemsWidgetController instance."));
-	ActiveItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
-	ActiveItemDescription->InitializeWidgetWithItemStats(ItemStats, true);
-	MainOverlay->AddItemDescriptionToOverlay(ActiveItemDescription);
-	bDescriptionActive = true;
+	ActiveDroppedItemDescription = CreateWidget<UObsidianItemDescriptionBase>(ObsidianPlayerController, ItemDescriptionClass);
+	ActiveDroppedItemDescription->InitializeWidgetWithItemStats(ItemStats, true);
+	MainOverlay->AddItemDescriptionToOverlay(ActiveDroppedItemDescription);
+	bDroppedDescriptionActive = true;
 	
-	return ActiveItemDescription;
+	return ActiveDroppedItemDescription;
 }
 
 void UObInventoryItemsWidgetController::RegisterInitialStashTabs()
@@ -1687,7 +1627,8 @@ FVector2D UObInventoryItemsWidgetController::CalculateUnstackSliderPosition(cons
 	return GetItemUIElementPositionBoundByViewport(ViewportSize, ItemPixelPosition, ItemLocalSize, SliderSize);
 }
 
-FVector2D UObInventoryItemsWidgetController::CalculateDescriptionPosition(const UObsidianItem* ItemWidget) const
+FVector2D UObInventoryItemsWidgetController::CalculateDescriptionPosition(const UObsidianItem* ItemWidget,
+	UObsidianItemDescriptionBase* ForDescription) const
 {
 	const UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -1696,7 +1637,7 @@ FVector2D UObInventoryItemsWidgetController::CalculateDescriptionPosition(const 
 		return FVector2D::Zero();
 	}
 
-	if(ItemWidget == nullptr || ActiveItemDescription == nullptr)
+	if(ItemWidget == nullptr || ForDescription == nullptr)
 	{
 		UE_LOG(LogWidgetController_Items, Error, TEXT("Failed to calculate Description Position"));
 		return FVector2D::Zero();
@@ -1705,8 +1646,8 @@ FVector2D UObInventoryItemsWidgetController::CalculateDescriptionPosition(const 
 	// @HACK this is quite ugly, but without prepass the desired size is [0, 0], if the performance is the problem,
 	// I could delay the calculation for a frame and see how reliable it is to retrieve the sie information,
 	// Other system with delegates could be implemented to get the size reliably, but it just needs testing cuz if it's not bad I don't really care for now.
-	ActiveItemDescription->ForceLayoutPrepass();
-	FVector2D DescriptionSize = ActiveItemDescription->GetDesiredSize();
+	ForDescription->ForceLayoutPrepass();
+	FVector2D DescriptionSize = ForDescription->GetDesiredSize();
 		
 	const FGeometry& CachedGeometry = ItemWidget->GetCachedGeometry();
 	FVector2D ItemLocalSize = ItemWidget->GetItemWidgetSize();

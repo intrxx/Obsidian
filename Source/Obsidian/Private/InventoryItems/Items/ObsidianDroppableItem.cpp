@@ -512,7 +512,7 @@ void AObsidianDroppableItem::DestroyItemDescription()
 	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController)
 	{
-		CachedInventoryWidgetController->RemoveCurrentItemDescription();
+		CachedInventoryWidgetController->RemoveCurrentDroppedItemDescription();
 		return;	
 	}
 	UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::DestroyItemDescription."));
@@ -527,7 +527,7 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidian
 		return;	
 	}
 	
-	if(UObsidianItemDescriptionBase* ActiveItemDescription = CachedInventoryWidgetController->GetActiveItemDescription())
+	if(UObsidianItemDescriptionBase* ActiveItemDescription = CachedInventoryWidgetController->GetActiveDroppedItemDescription())
 	{
 		int32 CurrentStacks = 0;
 		if(!ensureMsgf(ItemInstance, TEXT("Item Instance is invalid in AObsidianDroppableItem::UpdateStacksOnActiveItemDescription, stacks were set to 0.")))
@@ -547,7 +547,7 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 Sta
 		return;	
 	}
 	
-	if(UObsidianItemDescriptionBase* ActiveItemDescription = CachedInventoryWidgetController->GetActiveItemDescription())
+	if(UObsidianItemDescriptionBase* ActiveItemDescription = CachedInventoryWidgetController->GetActiveDroppedItemDescription())
 	{
 		ActiveItemDescription->UpdateCurrentStackCount(StacksToSet);
 	}

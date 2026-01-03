@@ -133,16 +133,8 @@ public:
 	virtual void OnWidgetControllerSetupCompleted() override;
 	//~ End of UObsidianWidgetController
 	
-	bool IsDescriptionActive() const
-	{
-		return bDescriptionActive;
-	}
-
-	UObsidianItemDescriptionBase* GetActiveItemDescription()
-	{
-		return ActiveItemDescription;
-	}
-
+	UObsidianItemDescriptionBase* GetActiveDroppedItemDescription();
+	
 	TConstArrayView<TObjectPtr<UObsidianStashTab>> GetAllStashTabs() const;
 
 	int32 GetInventoryGridWidth() const;
@@ -162,14 +154,13 @@ public:
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
 	
+	UObsidianItem* GetItemWidgetFromEquipmentPanel(const FObsidianItemPosition& AtItemPosition) const;
+	
 	UObsidianItem* GetItemWidgetAtInventoryGridSlot(const FIntPoint& AtGridSlot) const;
 	void RegisterInventoryItemWidget(const FIntPoint& GridSlot, UObsidianItem* ItemWidget);
 	void RemoveInventoryItemWidget(const FIntPoint& GridSlot);
 
 	FString GetStashTabName(const FGameplayTag StashTabTag) const;
-
-	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& Slot) const;
-	void RegisterEquipmentItemWidget(const FGameplayTag& Slot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
 	
 	void RegisterCurrentStashTab(const FGameplayTag& CurrentStashTab);
 
@@ -177,11 +168,6 @@ public:
 	void RegisterStashTabItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
 	void RemoveStashItemWidget(const FObsidianItemPosition& ItemPosition);
 	
-	/** This function takes the primary slot that is causing the other slot to be blocked. */
-	void AddBlockedEquipmentItemWidget(const FGameplayTag& PrimarySlot, UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother);
-	void RemoveEquipmentItemWidget(const FGameplayTag& Slot);
-	void RemoveBlockedSlotItemWidget(const FGameplayTag& Slot);
-
 	bool CanEquipDraggedItem(const FGameplayTag& SlotTag) const;
 	bool CanInteractWithEquipment() const;
 	
@@ -201,12 +187,14 @@ public:
 
 	void HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot);
 	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);
-	void HandleHoveringOverEquipmentItem(const UObsidianItem* ItemWidget, const FObsidianItemPosition& ItemPosition);
+	void HandleHoveringOverEquipmentItem(const FObsidianItemPosition& ItemPosition, const UObsidianItem* ItemWidget);
 	void HandleHoveringOverStashedItem(const UObsidianItem* ItemWidget);
-	void HandleUnhoveringItem();
+	void HandleUnhoveringItem(const FObsidianItemPosition& FromPosition);
+
+	void ClearItemDescriptionForPosition(const FObsidianItemPosition& ForPosition);
 
 	void RemoveItemUIElements();
-	void RemoveCurrentItemDescription();
+	void RemoveCurrentDroppedItemDescription();
 
 	void CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
 	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData);
@@ -237,12 +225,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianItemDescriptionBase> ItemDescriptionClass;
 
-	UPROPERTY()
-	TObjectPtr<UObsidianUnstackSlider> ActiveUnstackSlider = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<UObsidianItemDescriptionBase> ActiveItemDescription = nullptr;
-
 private:
 	void StopUsingItem();
 	
@@ -262,35 +244,38 @@ private:
 	bool CanShowDescription() const;
 
 	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const;
-	FVector2D CalculateDescriptionPosition(const UObsidianItem* ItemWidget) const;
+	FVector2D CalculateDescriptionPosition(const UObsidianItem* ItemWidget, UObsidianItemDescriptionBase* ForDescription) const;
 	FVector2D GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize, const FVector2D& ItemPosition, const FVector2D& ItemSize, const FVector2D& UIElementSize) const;
 
-	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats);
+	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const FObsidianItemPosition& AtPosition,
+		const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats);
 	UObsidianItemDescriptionBase* CreateDroppedItemDescription(const FObsidianItemStats& ItemStats);
 
 	void RegisterInitialStashTabs();
 	void EmptyRegisteredItems();
 
 private:
-	bool bDescriptionActive = false;
-	bool bUnstackSliderActive = false;
-	
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerInputManager> OwnerPlayerInputManager = nullptr;
 	
 	UPROPERTY()
 	TMap<FIntPoint, UObsidianItem*> AddedItemWidgetMap;
-
-	UPROPERTY()
-	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;
-
+	
 	UPROPERTY()
 	TArray<FObsidianStashAddedItemWidgets> StashAddedItemWidgets;
-
-	UPROPERTY()
-	TMap<FGameplayTag, UObsidianSlotBlockadeItem*> BlockedSlotsWidgetMap;
-
+	
 	UPROPERTY()
 	TArray<UObsidianItem*> CachedItemsMatchingUsableContext;
+
+	UPROPERTY()
+	TObjectPtr<UObsidianUnstackSlider> ActiveUnstackSlider = nullptr;
+	bool bUnstackSliderActive = false;
+	
+	UPROPERTY()
+	TObjectPtr<UObsidianItemDescriptionBase> ActiveDroppedItemDescription = nullptr;
+	bool bDroppedDescriptionActive = false;
+	
+	UPROPERTY()
+	TMap<FObsidianItemPosition, UObsidianItemDescriptionBase*> ActiveItemDescriptions;
 };
 

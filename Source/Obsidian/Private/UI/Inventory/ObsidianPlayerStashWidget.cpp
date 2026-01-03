@@ -208,7 +208,7 @@ void UObsidianPlayerStashWidget::OnItemMouseLeave()
 {
 	if(InventoryItemsWidgetController)
 	{
-		InventoryItemsWidgetController->HandleUnhoveringItem();
+		InventoryItemsWidgetController->HandleUnhoveringItem(FObsidianItemPosition());
 	}
 }
 
@@ -216,7 +216,8 @@ void UObsidianPlayerStashWidget::CreateStashTabButton(const FGameplayTag& StashT
 {
 	if(StashTag.IsValid() == false)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to create Stash Tab Button without valid Stash Tag in [%hs]"), __FUNCTION__);
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to create Stash Tab Button without valid Stash"
+												" Tag in [%hs]"), __FUNCTION__);
 		return;
 	}
 

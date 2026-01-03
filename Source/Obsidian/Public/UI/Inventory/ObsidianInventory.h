@@ -68,13 +68,7 @@ private:
 	
 	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
 	void OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
-	void OnEquipmentItemLeftMouseButtonPressed(const UObsidianItemSlot_Equipment* PressedSlot, const FObsidianItemPosition& ItemPosition,
-		const FObsidianItemInteractionFlags& InteractionFlags);
-	void OnSlotBlockadeItemLeftMouseButtonPressed(const UObsidianItemSlot_Equipment* PressedSlot, const FObsidianItemPosition& ItemPosition,
-		const FObsidianItemInteractionFlags& InteractionFlags);
 	
-	void OnBlockedSlotItemHover(const FObsidianItemPosition& PrimaryItemPosition, const bool bEntered);
-	void OnEquippedItemHover(const FObsidianItemPosition& ItemPosition, const bool bEntered);
 	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
 
 	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
@@ -86,9 +80,6 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianItem> ItemWidgetClass;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianSlotBlockadeItem> SlotBlockadeItemClass;
 
 	UPROPERTY()
 	TArray<UObsidianItemSlot_Equipment*> CachedHighlightedSlot;

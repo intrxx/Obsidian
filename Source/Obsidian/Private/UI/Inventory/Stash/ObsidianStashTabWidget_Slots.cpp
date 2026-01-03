@@ -91,10 +91,12 @@ void UObsidianStashTabWidget_Slots::OnStashSlotHover(UObsidianItemSlot_Equipment
 	AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 }
 
-void UObsidianStashTabWidget_Slots::OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot, const bool bShiftDown) const
+void UObsidianStashTabWidget_Slots::OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
+	const FObsidianItemInteractionFlags& InteractionFlags) const
 {
 	if (InventoryItemsController && AffectedSlot)
 	{
-		InventoryItemsController->RequestAddingItemToStashTab(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag), bShiftDown);
+		InventoryItemsController->RequestAddingItemToStashTab(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag),
+			InteractionFlags.bItemStacksInteraction);
 	}
 }
