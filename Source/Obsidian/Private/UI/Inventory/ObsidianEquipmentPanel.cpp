@@ -94,7 +94,7 @@ void UObsidianEquipmentPanel::AddItemWidget(UObsidianItem* ItemWidget, const FOb
 		return;
 	}
 
-	EquipmentSlot->AddItemToSlot(ItemWidget, ItemWidgetData.ItemPosition, ItemWidgetData.ItemSlotPadding);
+	EquipmentSlot->AddItemToSlot(ItemWidget, ItemWidgetData.ItemSlotPadding);
 	RegisterEquipmentItemWidget(DesiredSlotTag, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
 
 	if(ItemWidgetData.bDoesBlockSisterSlot) // Item blocks sister slot, add blockade item
@@ -125,7 +125,7 @@ void UObsidianEquipmentPanel::AddItemWidget(UObsidianItem* ItemWidget, const FOb
 		BlockedSlotItem->SetVisibility(ESlateVisibility::HitTestInvisible); //TODO(intrxx) Item Widget Handling Refactor quick hack
 		BlockedSlotItem->SetOwningSlot(SlotToBlock);
 		
-		SlotToBlock->AddBlockadeItemToSlot(BlockedSlotItem, ItemWidgetData.ItemPosition, ItemWidgetData.ItemSlotPadding);
+		SlotToBlock->AddBlockadeItemToSlot(BlockedSlotItem, ItemWidgetData.ItemSlotPadding);
 		SlotToBlock->SetSlotState(EObsidianItemSlotState::Blocked, EObsidianItemSlotStatePriority::TakePriority);
 		RegisterBlockedEquipmentItemWidget(SisterSlotTag, BlockedSlotItem, false);
 	}
