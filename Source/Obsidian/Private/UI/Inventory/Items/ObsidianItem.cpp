@@ -48,27 +48,31 @@ void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 	OnItemMouseLeaveDelegate.Broadcast();
 }
 
-void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& DesiredPosition, const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
+void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& DesiredPosition, const FIntPoint& InItemGridSpan,
+	UTexture2D* ItemImage, const int32 CurrentStack)
 {
+	ItemGridSpan = InItemGridSpan;
+	ItemPosition = DesiredPosition;
+	InternalStacks = CurrentStack;
+	
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 	Item_Image->SetBrushFromTexture(ItemImage);
-
-	ItemDesiredGridSpan = ItemGridSpan;
-	ItemPosition = DesiredPosition;
-	InternalStacks = CurrentStack;
 	
 	if(CurrentStack == 0)
 	{
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
+	
 	StackCount_TextBlock->SetText(FText::AsNumber(CurrentStack));
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianItem::InitializeItemWidget(const FIntPoint& ItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
+void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
 {
+	ItemGridSpan = InItemGridSpan;
+	
 	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
 		
 	const float WidthOverride = (ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X) * SlotSizeMultiplier;
@@ -113,6 +117,11 @@ void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
+FIntPoint UObsidianItem::GetItemGridSpan() const
+{
+	return ItemGridSpan;
+}
+
 FObsidianItemPosition UObsidianItem::GetItemPosition() const
 {
 	return ItemPosition;
@@ -135,12 +144,6 @@ FSlateBrush UObsidianItem::GetItemImage() const
 FVector2D UObsidianItem::GetItemWidgetSize() const
 {
 	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
-}
-
-void UObsidianItem::SetSize(const FIntPoint& ItemGridSpan)
-{
-	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
-	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 }
 
 void UObsidianItem::SetUsingItemProperties()

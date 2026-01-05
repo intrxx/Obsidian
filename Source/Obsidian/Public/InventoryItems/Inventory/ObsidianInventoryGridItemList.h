@@ -41,7 +41,8 @@ USTRUCT(BlueprintType)
 struct FObsidianInventoryChangeMessage
 {
 	GENERATED_BODY()
-	
+
+public:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	TObjectPtr<UActorComponent> InventoryOwner = nullptr;
 

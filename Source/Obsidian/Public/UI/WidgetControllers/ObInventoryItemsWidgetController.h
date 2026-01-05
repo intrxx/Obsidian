@@ -66,7 +66,7 @@ public:
 	float ItemSlotPadding = 0.0f;
 	
 	UPROPERTY()
-	int32 StackCount = 0;
+	uint8 StackCount = 0;
 	
 	UPROPERTY()
 	bool bUsable = false;
@@ -114,8 +114,10 @@ protected:
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemovedSignature, const FObsidianItemPosition& FromItemPosition);
+
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquippedItemRemovedSignature, const FGameplayTag& PrimarySlotTag, const bool bBlocksOtherSlot);
-DECLARE_MULTICAST_DELEGATE(FOnItemRemovedSignature);
+
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartPlacementHighlightSignature, const FGameplayTagContainer& ForSlotsWithTag);
 DECLARE_MULTICAST_DELEGATE(FOnStopPlacementHighlightSignature);
@@ -154,12 +156,9 @@ public:
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
 	
-	UObsidianItem* GetItemWidgetFromEquipmentPanel(const FObsidianItemPosition& AtItemPosition) const;
+	UObsidianItem* GetItemWidgetFromEquipmentPanelAtSlot(const FObsidianItemPosition& AtItemPosition) const;
+	UObsidianItem* GetItemWidgetFromInventoryAtGridPosition(const FIntPoint& AtGridSlot) const;
 	
-	UObsidianItem* GetItemWidgetAtInventoryGridSlot(const FIntPoint& AtGridSlot) const;
-	void RegisterInventoryItemWidget(const FIntPoint& GridSlot, UObsidianItem* ItemWidget);
-	void RemoveInventoryItemWidget(const FIntPoint& GridSlot);
-
 	FString GetStashTabName(const FGameplayTag StashTabTag) const;
 	
 	void RegisterCurrentStashTab(const FGameplayTag& CurrentStashTab);
@@ -185,10 +184,7 @@ public:
 	void HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, const bool bAddToOtherWindow);
 	void HandleLeftClickingOnStashedItemWithShiftDown(const FObsidianItemPosition& AtItemPosition, const UObsidianItem* ItemWidget);
 
-	void HandleHoveringOverInventoryItem(const FIntPoint& AtGridSlot);
-	void HandleHoveringOverInventoryItem(const UObsidianItem* ItemWidget);
-	void HandleHoveringOverEquipmentItem(const FObsidianItemPosition& ItemPosition, const UObsidianItem* ItemWidget);
-	void HandleHoveringOverStashedItem(const UObsidianItem* ItemWidget);
+	void HandleHoveringOverItem(const FObsidianItemPosition& ItemPosition, const UObsidianItem* ItemWidget);
 	void HandleUnhoveringItem(const FObsidianItemPosition& FromPosition);
 
 	void ClearItemDescriptionForPosition(const FObsidianItemPosition& ForPosition);
@@ -257,9 +253,6 @@ private:
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerInputManager> OwnerPlayerInputManager = nullptr;
-	
-	UPROPERTY()
-	TMap<FIntPoint, UObsidianItem*> AddedItemWidgetMap;
 	
 	UPROPERTY()
 	TArray<FObsidianStashAddedItemWidgets> StashAddedItemWidgets;

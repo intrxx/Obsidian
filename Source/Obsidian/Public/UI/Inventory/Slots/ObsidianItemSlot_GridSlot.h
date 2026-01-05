@@ -2,14 +2,14 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
-
+#include <CoreMinimal.h>
 
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
 #include "ObsidianItemSlot_GridSlot.generated.h"
+
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnGridSlotHoverSignature, UObsidianItemSlot_GridSlot* HoveredSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnGridSlotPressedSignature, const UObsidianItemSlot_GridSlot* HoveredSlot,
+	const FObsidianItemInteractionFlags& InteractionFlags);
 
 /**
  * 
@@ -20,12 +20,14 @@ class OBSIDIAN_API UObsidianItemSlot_GridSlot : public UObsidianItemSlot
 	GENERATED_BODY()
 	
 public:
-	void InitializeSlot(UObsidianGrid* InOwningGrid, const FIntPoint& InSlotGridPosition);
+	void InitializeSlot(const FIntPoint& InGridSlotPosition);
+
+	FIntPoint GetGridSlotPosition() const;
 	
-	FIntPoint GetSlotPositionOnGrid() const
-	{
-		return GridPosition;
-	}
+public:
+	FOnGridSlotHoverSignature OnGridSlotHoverDelegate;
+	FOnGridSlotPressedSignature OnGridSlotLeftButtonPressedDelegate;
+	FOnGridSlotPressedSignature OnGridSlotRightButtonPressedDelegate;
 	
 protected:
 	virtual void NativeConstruct() override;
@@ -33,10 +35,7 @@ protected:
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
-protected:
-	FIntPoint GridPosition;
 
-	UPROPERTY()
-	TObjectPtr<UObsidianGrid> OwningGrid;
+private:
+	FIntPoint GridSlotPosition = FIntPoint::NoneValue;
 };

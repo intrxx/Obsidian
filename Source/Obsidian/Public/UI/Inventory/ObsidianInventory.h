@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianMainOverlayWidgetBase.h"
@@ -43,8 +41,6 @@ public:
 	bool CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const;
 	bool CanInteractWithEquipment() const;
 
-	void RequestEquippingItem(const FGameplayTag& ToSlot) const;
-
 protected:
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
@@ -57,20 +53,14 @@ protected:
 	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
 	
 private:
-	void RequestAddingItemToInventory(const FIntPoint& ToPosition, const bool bShiftDown) const;
-	
 	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnItemUnequipped(const FGameplayTag& SlotTag, const bool bBlocksOtherSlot);
 	
 	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
 	void OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnItemRemoved(const FObsidianItemPosition& FromPosition);
 	
-	void OnInventoryItemLeftMouseButtonPressed(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
-	void OnInventoryItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
-	
-	void OnInventoryItemMouseEntered(const UObsidianItem* ItemWidget);
-
 	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
 	void StopHighlightSlotPlacement();
 

@@ -233,12 +233,15 @@ public:
 	{}
 
 public:
+	/** This interaction is triggered by CTRL down in the context of clicking the item in some window. */
 	UPROPERTY()
 	uint8 bMoveBetweenNextOpenedWindow:1;
 
+	/** This interaction is triggered by CTRL down in the context of clicking the item on the ground. */
 	UPROPERTY()
 	uint8 bAutomaticallyAddToWindow:1;
 
+	/** This interaction is triggered by SHIFT down. */
 	UPROPERTY()
 	uint8 bItemStacksInteraction:1;
 };

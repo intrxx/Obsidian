@@ -15,8 +15,9 @@ void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetCon
 	{
 		InventoryItemsController = InventoryItemsWidgetController;
 		StashTabTag = InStashTabTag;
-		StashTabGrid->ConstructGrid(InventoryItemsWidgetController, EObsidianGridOwner::PlayerStash, GridWidth, GridHeight, InStashTabTag);
-		StashTabGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToStashTab);
+		StashTabGrid->SetWidgetController(InventoryItemsWidgetController);
+		StashTabGrid->ConstructGrid(EObsidianGridOwner::PlayerStash, GridWidth, GridHeight, InStashTabTag);
+		//StashTabGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToStashTab);
 	}
 }
 
@@ -24,7 +25,7 @@ void UObsidianStashTabWidget_Grid::AddItemToStash(UObsidianItem* InItemWidget, c
 {
 	if (StashTabGrid)
 	{
-		StashTabGrid->AddItemToGrid(InItemWidget, ItemSlotPadding);
+		StashTabGrid->AddItemWidget(InItemWidget, FObsidianItemWidgetData() /** ItemSlotPadding */);
 	}
 }
 

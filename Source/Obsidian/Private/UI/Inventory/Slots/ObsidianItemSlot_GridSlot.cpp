@@ -2,12 +2,9 @@
 
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_GridSlot.h"
 
-// ~ Core
-#include "Components/SizeBox.h"
+#include <Components/SizeBox.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-#include "UI/Inventory/ObsidianGrid.h"
 
 void UObsidianItemSlot_GridSlot::NativeConstruct()
 {
@@ -20,34 +17,41 @@ void UObsidianItemSlot_GridSlot::NativeConstruct()
 	}
 }
 
-void UObsidianItemSlot_GridSlot::InitializeSlot(UObsidianGrid* InOwningGrid, const FIntPoint& InSlotGridPosition)
+void UObsidianItemSlot_GridSlot::InitializeSlot(const FIntPoint& InGridSlotPosition)
 {
-	OwningGrid = InOwningGrid;
-	GridPosition = InSlotGridPosition;
+	GridSlotPosition = InGridSlotPosition;
+}
+
+FIntPoint UObsidianItemSlot_GridSlot::GetGridSlotPosition() const
+{
+	return GridSlotPosition;
 }
 
 void UObsidianItemSlot_GridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(OwningGrid)
-	{
-		OwningGrid->OnInventorySlotHover(this, true);
-	}
+	OnGridSlotHoverDelegate.Broadcast(this, true);
 }
 
 void UObsidianItemSlot_GridSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	if(OwningGrid)
-	{
-		OwningGrid->OnInventorySlotHover(this, false);
-	}
+	OnGridSlotHoverDelegate.Broadcast(this, false);
 }
 
 FReply UObsidianItemSlot_GridSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	if(OwningGrid && InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
+	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
-		const bool bShiftDown = InMouseEvent.IsShiftDown();
-		OwningGrid->OnInventorySlotMouseButtonDown(this, bShiftDown);
+		FObsidianItemInteractionFlags ItemInteractionFlags;
+		ItemInteractionFlags.bItemStacksInteraction = InMouseEvent.IsShiftDown();
+		ItemInteractionFlags.bMoveBetweenNextOpenedWindow = InMouseEvent.IsControlDown();
+		OnGridSlotLeftButtonPressedDelegate.Broadcast(this, ItemInteractionFlags);
+	}
+	else if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+	{
+		FObsidianItemInteractionFlags ItemInteractionFlags;
+		ItemInteractionFlags.bItemStacksInteraction = InMouseEvent.IsShiftDown();
+		ItemInteractionFlags.bMoveBetweenNextOpenedWindow = InMouseEvent.IsControlDown();
+		OnGridSlotRightButtonPressedDelegate.Broadcast(this, ItemInteractionFlags);
 	}
 	
 	return FReply::Handled();

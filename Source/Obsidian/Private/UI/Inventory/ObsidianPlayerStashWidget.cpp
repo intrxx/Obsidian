@@ -166,7 +166,7 @@ void UObsidianPlayerStashWidget::OnItemChanged(const FObsidianItemWidgetData& It
 	}
 }
 
-void UObsidianPlayerStashWidget::OnItemRemoved()
+void UObsidianPlayerStashWidget::OnItemRemoved(const FObsidianItemPosition& FromPosition)
 {
 	bStashChanged = true;
 }
@@ -200,7 +200,7 @@ void UObsidianPlayerStashWidget::OnStashedItemMouseEntered(const UObsidianItem* 
 	ensureMsgf(ItemWidget, TEXT("Item Widget is invalid in UObsidianPlayerStashWidget::OnStashedItemMouseEntered"));
 	if(InventoryItemsWidgetController)
 	{
-		InventoryItemsWidgetController->HandleHoveringOverStashedItem(ItemWidget);
+		InventoryItemsWidgetController->HandleHoveringOverItem(ItemWidget->GetItemPosition(), ItemWidget);
 	}
 }
 

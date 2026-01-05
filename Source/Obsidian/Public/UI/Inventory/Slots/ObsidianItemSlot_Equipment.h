@@ -60,8 +60,4 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SlottedItemAdditionalPadding = 0.0f;
-
-private:
-	UPROPERTY()
-	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
 };

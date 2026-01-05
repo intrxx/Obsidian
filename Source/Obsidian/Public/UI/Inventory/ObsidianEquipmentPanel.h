@@ -32,9 +32,9 @@ public:
 	UObsidianItemSlot_Equipment* FindEquipmentSlotWidgetForTag(const FGameplayTag& Tag) const;
 	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
 	
-	bool IsItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const;
+	bool IsEquipmentSlotOccupiedByItem(const FGameplayTag& AtSlot) const;
 	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const;
-	bool IsBlockadeItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const;
+	bool IsEquipmentSlotOccupiedByBlockade(const FGameplayTag& AtSlot) const;
 	UObsidianSlotBlockadeItem* GetBlockadeItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const;
 
 	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData);
@@ -42,6 +42,8 @@ public:
 	void HandleItemUnequipped(const FGameplayTag& SlotToClearTag, const bool bBlocksOtherSlot);
 	
 protected:
+	virtual void NativeDestruct() override;
+	
 	void InitializeEquipmentPanel();
 	
 	void RegisterEquipmentItemWidget(const FGameplayTag& AtSlot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
