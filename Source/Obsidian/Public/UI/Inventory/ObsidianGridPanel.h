@@ -8,7 +8,7 @@
 #include "Slots/ObsidianItemSlot.h"
 
 #include "UI/ObsidianWidgetBase.h"
-#include "ObsidianGrid.generated.h"
+#include "ObsidianGridPanel.generated.h"
 
 struct FObsidianItemWidgetData;
 
@@ -54,7 +54,7 @@ protected:
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianGrid : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianGridPanel : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 

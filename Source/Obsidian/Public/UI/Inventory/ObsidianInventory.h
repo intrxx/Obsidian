@@ -23,8 +23,8 @@ class USizeBox;
 class UOverlay;
 class UGridSlot;
 class UObInventoryItemsWidgetController;
-class UObsidianEquipmentPanel;
-class UObsidianGrid;
+class UObsidianSlotPanel;
+class UObsidianGridPanel;
 
 /**
  * 
@@ -47,10 +47,10 @@ protected:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianGrid> InventoryGrid;
+	TObjectPtr<UObsidianGridPanel> InventoryGrid;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianEquipmentPanel> EquipmentPanel;
+	TObjectPtr<UObsidianSlotPanel> EquipmentPanel;
 	
 private:
 	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);

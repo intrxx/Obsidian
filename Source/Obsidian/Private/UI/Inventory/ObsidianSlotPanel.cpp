@@ -1,6 +1,6 @@
 ﻿// Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "UI/Inventory/ObsidianEquipmentPanel.h"
+#include "UI/Inventory/ObsidianSlotPanel.h"
 
 #include <Blueprint/WidgetTree.h>
 
@@ -10,7 +10,7 @@
 #include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
-void UObsidianEquipmentPanel::HandleWidgetControllerSet()
+void UObsidianSlotPanel::HandleWidgetControllerSet()
 {
 	InventoryItemsWidgetController = Cast<UObInventoryItemsWidgetController>(WidgetController);
 	check(InventoryItemsWidgetController);
@@ -18,7 +18,7 @@ void UObsidianEquipmentPanel::HandleWidgetControllerSet()
 	InitializeEquipmentPanel();
 }
 
-void UObsidianEquipmentPanel::InitializeEquipmentPanel()
+void UObsidianSlotPanel::InitializeEquipmentPanel()
 {
 	WidgetTree->ForEachWidget([this](UWidget* Widget)
 		{
@@ -31,7 +31,7 @@ void UObsidianEquipmentPanel::InitializeEquipmentPanel()
 		});
 }
 
-void UObsidianEquipmentPanel::NativeDestruct()
+void UObsidianSlotPanel::NativeDestruct()
 {
 	for (UObsidianItemSlot_Equipment* EquipmentSlot : EquipmentSlots)
 	{
@@ -45,7 +45,7 @@ void UObsidianEquipmentPanel::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotWidgetForTag(const FGameplayTag& Tag) const
+UObsidianItemSlot_Equipment* UObsidianSlotPanel::FindEquipmentSlotWidgetForTag(const FGameplayTag& Tag) const
 {
 	for(UObsidianItemSlot_Equipment* EquipmentSlot : EquipmentSlots)
 	{
@@ -57,17 +57,17 @@ UObsidianItemSlot_Equipment* UObsidianEquipmentPanel::FindEquipmentSlotWidgetFor
 	return nullptr;
 }
 
-TArray<UObsidianItemSlot_Equipment*> UObsidianEquipmentPanel::GetSlotWidgets() const
+TArray<UObsidianItemSlot_Equipment*> UObsidianSlotPanel::GetSlotWidgets() const
 {
 	return EquipmentSlots;
 }
 
-bool UObsidianEquipmentPanel::IsEquipmentSlotOccupiedByItem(const FGameplayTag& AtSlot) const
+bool UObsidianSlotPanel::IsEquipmentSlotOccupiedByItem(const FGameplayTag& AtSlot) const
 {
 	return EquippedItemWidgetMap.Contains(AtSlot);
 }
 
-UObsidianItem* UObsidianEquipmentPanel::GetItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const
+UObsidianItem* UObsidianSlotPanel::GetItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const
 {
 	if(UObsidianItem* const* ItemWidgetValuePtr = EquippedItemWidgetMap.Find(AtSlot))
 	{
@@ -76,12 +76,12 @@ UObsidianItem* UObsidianEquipmentPanel::GetItemWidgetAtEquipmentSlot(const FGame
 	return nullptr;
 }
 
-bool UObsidianEquipmentPanel::IsEquipmentSlotOccupiedByBlockade(const FGameplayTag& AtSlot) const
+bool UObsidianSlotPanel::IsEquipmentSlotOccupiedByBlockade(const FGameplayTag& AtSlot) const
 {
 	return BlockedSlotsWidgetMap.Contains(AtSlot);
 }
 
-UObsidianSlotBlockadeItem* UObsidianEquipmentPanel::GetBlockadeItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const
+UObsidianSlotBlockadeItem* UObsidianSlotPanel::GetBlockadeItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const
 {
 	if(UObsidianSlotBlockadeItem* const* ItemBlockadeWidgetValuePtr = BlockedSlotsWidgetMap.Find(AtSlot))
 	{
@@ -90,7 +90,7 @@ UObsidianSlotBlockadeItem* UObsidianEquipmentPanel::GetBlockadeItemWidgetAtEquip
 	return nullptr;
 }
 
-void UObsidianEquipmentPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData)
 {
 	if (ItemWidget == nullptr)
 	{
@@ -152,7 +152,7 @@ void UObsidianEquipmentPanel::AddItemWidget(UObsidianItem* ItemWidget, const FOb
 	}
 }
 
-void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)
+void UObsidianSlotPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
@@ -217,7 +217,7 @@ void UObsidianEquipmentPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* 
 	}
 }
 
-void UObsidianEquipmentPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
+void UObsidianSlotPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags) const
 {
 	if(InventoryItemsWidgetController == nullptr)
@@ -250,7 +250,7 @@ void UObsidianEquipmentPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItem
 	}
 }
 
-void UObsidianEquipmentPanel::HandleItemUnequipped(const FGameplayTag& SlotToClearTag, const bool bBlocksOtherSlot)
+void UObsidianSlotPanel::HandleItemUnequipped(const FGameplayTag& SlotToClearTag, const bool bBlocksOtherSlot)
 {
 	if (const UObsidianItemSlot_Equipment* SlotToClear = FindEquipmentSlotWidgetForTag(SlotToClearTag))
 	{
@@ -263,7 +263,7 @@ void UObsidianEquipmentPanel::HandleItemUnequipped(const FGameplayTag& SlotToCle
 	}
 }
 
-void UObsidianEquipmentPanel::RegisterEquipmentItemWidget(const FGameplayTag& AtSlot, UObsidianItem* ItemWidget,
+void UObsidianSlotPanel::RegisterEquipmentItemWidget(const FGameplayTag& AtSlot, UObsidianItem* ItemWidget,
                                                           const bool bSwappedWithAnother)
 {
 	if (ensureMsgf(ItemWidget && AtSlot.IsValid(), TEXT("ItemWidget or AtSlot are invalid in [%hs]. "),
@@ -287,7 +287,7 @@ void UObsidianEquipmentPanel::RegisterEquipmentItemWidget(const FGameplayTag& At
 	}
 }
 
-void UObsidianEquipmentPanel::RemoveEquipmentItemWidget(const FGameplayTag& AtSlot)
+void UObsidianSlotPanel::RemoveEquipmentItemWidget(const FGameplayTag& AtSlot)
 {
 	if  (ensureMsgf(AtSlot.IsValid(), TEXT("AtSlot is invalid in [%hs]. "), __FUNCTION__))
 	{
@@ -313,7 +313,7 @@ void UObsidianEquipmentPanel::RemoveEquipmentItemWidget(const FGameplayTag& AtSl
 	}
 }
 
-void UObsidianEquipmentPanel::RegisterBlockedEquipmentItemWidget(const FGameplayTag& AtSlot,
+void UObsidianSlotPanel::RegisterBlockedEquipmentItemWidget(const FGameplayTag& AtSlot,
 	UObsidianSlotBlockadeItem* ItemWidget, const bool bSwappedWithAnother)
 {
 	if (ensureMsgf(ItemWidget && AtSlot.IsValid(), TEXT("ItemWidget or AtSlot are invalid in [%hs]. "),
@@ -337,7 +337,7 @@ void UObsidianEquipmentPanel::RegisterBlockedEquipmentItemWidget(const FGameplay
 	}
 }
 
-void UObsidianEquipmentPanel::RemoveBlockedSlotItemWidget(const FGameplayTag& AtSlot)
+void UObsidianSlotPanel::RemoveBlockedSlotItemWidget(const FGameplayTag& AtSlot)
 {
 	UObsidianSlotBlockadeItem* RemovedItemWidget = nullptr;
 	if (BlockedSlotsWidgetMap.RemoveAndCopyValue(AtSlot, RemovedItemWidget))

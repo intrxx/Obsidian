@@ -7,8 +7,8 @@
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
-#include "UI/Inventory/ObsidianEquipmentPanel.h"
-#include "UI/Inventory/ObsidianGrid.h"
+#include "UI/Inventory/ObsidianSlotPanel.h"
+#include "UI/Inventory/ObsidianGridPanel.h"
 
 void UObsidianInventory::HandleWidgetControllerSet()
 {

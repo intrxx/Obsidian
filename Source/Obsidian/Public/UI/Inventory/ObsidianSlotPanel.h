@@ -6,7 +6,7 @@
 #include <GameplayTagContainer.h>
 
 #include "UI/ObsidianWidgetBase.h"
-#include "ObsidianEquipmentPanel.generated.h"
+#include "ObsidianSlotPanel.generated.h"
 
 struct FObsidianItemInteractionFlags;
 struct FGameplayTag;
@@ -22,7 +22,7 @@ class UObInventoryItemsWidgetController;
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianEquipmentPanel : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianSlotPanel : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 

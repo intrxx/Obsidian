@@ -13,7 +13,7 @@
 #include "ObsidianStashTabWidget_Grid.generated.h"
 
 class UObInventoryItemsWidgetController;
-class UObsidianGrid;
+class UObsidianGridPanel;
 
 /**
  * 
@@ -31,7 +31,7 @@ public:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianGrid> StashTabGrid;
+	TObjectPtr<UObsidianGridPanel> StashTabGrid;
 
 private:
 	UPROPERTY()

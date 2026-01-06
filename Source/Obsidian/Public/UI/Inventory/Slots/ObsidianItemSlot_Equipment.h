@@ -9,7 +9,7 @@
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
 #include "ObsidianItemSlot_Equipment.generated.h"
 
-class UObsidianEquipmentPanel;
+class UObsidianSlotPanel;
 class UObsidianSlotBlockadeItem;
 class UObsidianItem;
 

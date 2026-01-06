@@ -17,11 +17,6 @@ class UImage;
 class UObsidianItemSlot_Equipment;
 class UObsidianSlotBlockadeItem;
 
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnSlotBlockadeItemLeftMouseButtonPressedSignature, const UObsidianSlotBlockadeItem* ItemWidget);
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnSlotBlockadeItemMouseEnterSignature, const UObsidianSlotBlockadeItem* ItemWidget);
-DECLARE_MULTICAST_DELEGATE(FOnSlotBlockadeItemMouseLeaveSignature);
-
 /**
  * 
  */

@@ -2,7 +2,7 @@
 
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Grid.h"
 
-#include "UI/Inventory/ObsidianGrid.h"
+#include "UI/Inventory/ObsidianGridPanel.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
 // ~ Core

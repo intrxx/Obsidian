@@ -19,7 +19,7 @@ class UObsidianItem;
 class UOverlay;
 class UScrollBox;
 class UObsidianStashTabWidget;
-class UObsidianGrid;
+class UObsidianGridPanel;
 class UObInventoryItemsWidgetController;
 
 /**
