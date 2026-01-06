@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
@@ -24,16 +22,6 @@ class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 class UObsidianSlotBlockadeItem;
-
-USTRUCT()
-struct FObsidianStashTabWidgetData
-{
-	GENERATED_BODY()
-
-public:
-	
-};
-
 
 /**
  * 
@@ -149,26 +137,27 @@ public:
 	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
 	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
 	bool CanPlaceItemAtStashSlot(const FObsidianItemPosition& ItemPosition) const;
+
 	bool CanInteractWithGrid(const EObsidianGridOwner GridOwner) const;
 	bool CanInteractWithInventory() const;
 	bool CanInteractWithPlayerStash() const;
-
+	bool CanInteractWithEquipment() const;
+	
 	/** Fills the item grid size, returns false if the grid size could not be found, most likely because item is invalid. */
 	bool GetDraggedItemGridSpan(FIntPoint& OutItemGridSpan) const;
+	FIntPoint GetItemGridSpanByPosition(const FObsidianItemPosition& ItemPosition) const;
 	
 	UObsidianItem* GetItemWidgetFromEquipmentPanelAtSlot(const FObsidianItemPosition& AtItemPosition) const;
-	UObsidianItem* GetItemWidgetFromInventoryAtGridPosition(const FIntPoint& AtGridSlot) const;
+	UObsidianItem* GetItemWidgetFromInventoryAtGridPosition(const FObsidianItemPosition& AtGridSlot) const;
+	UObsidianItem* GetItemWidgetAtStashPosition(const FObsidianItemPosition& ItemPosition) const;
 	
 	FString GetStashTabName(const FGameplayTag StashTabTag) const;
 	
 	void RegisterCurrentStashTab(const FGameplayTag& CurrentStashTab);
-
-	UObsidianItem* GetItemWidgetAtStashPosition(const FObsidianItemPosition& ItemPosition) const;
 	void RegisterStashTabItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget);
 	void RemoveStashItemWidget(const FObsidianItemPosition& ItemPosition);
 	
 	bool CanEquipDraggedItem(const FGameplayTag& SlotTag) const;
-	bool CanInteractWithEquipment() const;
 	
 	void RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown);
 	void RequestEquippingItem(const FGameplayTag& SlotTag);

@@ -9,14 +9,15 @@
 
 // ~ Project
 
-void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)
+void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController,
+	const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)
 {
 	if(StashTabGrid && InventoryItemsWidgetController)
 	{
 		InventoryItemsController = InventoryItemsWidgetController;
 		StashTabTag = InStashTabTag;
 		StashTabGrid->SetWidgetController(InventoryItemsWidgetController);
-		StashTabGrid->ConstructGrid(EObsidianGridOwner::PlayerStash, GridWidth, GridHeight, InStashTabTag);
+		StashTabGrid->ConstructStashTabGrid(GridWidth, GridHeight, InStashTabTag);
 		//StashTabGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToStashTab);
 	}
 }

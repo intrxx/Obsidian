@@ -32,6 +32,7 @@
 #include "Interaction/ObsidianInteractionInterface.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+#include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
@@ -594,10 +595,17 @@ void UObsidianPlayerInputManager::Input_OpenGameplayMenu()
 		GameplayMenuClass);
 }
 
-void UObsidianPlayerInputManager::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget, UObsidianInventoryItemInstance* UsingInstance)
+void UObsidianPlayerInputManager::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget,
+	UObsidianInventoryItemInstance* UsingInstance)
 {
 	if(InbUsingItem && ItemWidget)
 	{
+		if (UsingInstance == nullptr)
+		{
+			UE_LOG(LogObsidian, Error, TEXT("UsingInstance is invalid in [%hs]."), __FUNCTION__);
+			return;
+		}
+		
 		UWorld* World = GetWorld();
 		if(World == nullptr)
 		{
@@ -612,9 +620,10 @@ void UObsidianPlayerInputManager::SetUsingItem(const bool InbUsingItem, UObsidia
 		ItemWidget->SetUsingItemProperties();
 		CachedUsingInventoryItemWidget = ItemWidget;
 
-		checkf(DraggedUsableItemWidgetClass, TEXT("DraggedUsableItemWidgetClass is invalid in UObsidianPlayerInputManager::SetUsingItem please fill it."));
+		checkf(DraggedUsableItemWidgetClass, TEXT("DraggedUsableItemWidgetClass is invalid in [%hs] please fill it."),
+			__FUNCTION__);
 		DraggedUsableItemWidget = CreateWidget<UObsidianDraggedItem_Simple>(World, DraggedUsableItemWidgetClass);
-		DraggedUsableItemWidget->InitializeDraggedItem(ItemWidget->GetItemImage(), ItemWidget->GetItemGridSpan());
+		DraggedUsableItemWidget->InitializeDraggedItem(ItemWidget->GetItemImage(), UsingInstance->GetItemGridSpan());
 		DraggedUsableItemWidget->AddToViewport();
 
 		UsingItemInstance = UsingInstance;

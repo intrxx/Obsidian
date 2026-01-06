@@ -4,6 +4,7 @@
 
 #include <CoreMinimal.h>
 
+
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetBase.h"
@@ -36,12 +37,8 @@ public:
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
 	
-	FIntPoint GetItemGridSpan() const;
 	FObsidianItemPosition GetItemPosition() const;
-	FIntPoint GetGridPosition() const;
-
 	FSlateBrush GetItemImage() const;
-
 	FVector2D GetItemWidgetSize() const;
 
 	void SetUsingItemProperties();
@@ -82,9 +79,6 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
-	
-	UPROPERTY()
-	FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 
 	UPROPERTY()
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();

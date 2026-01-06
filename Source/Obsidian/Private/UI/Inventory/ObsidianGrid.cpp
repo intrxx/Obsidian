@@ -10,60 +10,104 @@
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
-// ~ Start of FObsidianOccupiedPlacement
+// ~ Start of FObsidianGridSlotData
 
-void FObsidianOccupiedPlacement::Reset()
+bool FObsidianGridSlotData::IsOccupied() const
 {
+	return bOccupied;
+}
+
+void FObsidianGridSlotData::AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget,
+	const FIntPoint InItemGridSpan)
+{
+	OriginPosition = InPosition;
+	ItemWidget = InItemWidget;
+	ItemGridSpan = InItemGridSpan;
+	bOccupied = true;
+}
+
+void FObsidianGridSlotData::Reset()
+{
+	OriginPosition.Reset();
 	ItemWidget = nullptr;
-	OriginPosition = FIntPoint::NoneValue;
 	ItemGridSpan = FIntPoint::NoneValue;
 	bOccupied = false;
 }
 
-// ~ End of FObsidianOccupiedPlacement
+// ~ End of FObsidianGridSlotData
 
 void UObsidianGrid::HandleWidgetControllerSet()
 {
 	InventoryItemsWidgetController = Cast<UObInventoryItemsWidgetController>(WidgetController);
 	check(InventoryItemsWidgetController);
-	
 }
 
-void UObsidianGrid::ConstructGrid(const EObsidianGridOwner InGridOwner, const int32 GridWidth, const int32 GridHeight,
-	const FGameplayTag& OptionalStashTag)
+void UObsidianGrid::NativeDestruct()
+{
+	for (const TPair<FIntPoint, FObsidianGridSlotData>& GridSlotPair : GridSlotDataMap)
+	{
+		if (UObsidianItemSlot_GridSlot* GridSlot = GridSlotPair.Value.OwningGridSlot)
+		{
+			GridSlot->OnGridSlotHoverDelegate.Clear();
+			GridSlot->OnGridSlotLeftButtonPressedDelegate.Clear();
+			GridSlot->OnGridSlotRightButtonPressedDelegate.Clear();
+		}
+	}
+	
+	Super::NativeDestruct();
+}
+
+void UObsidianGrid::ConstructInventoryGrid()
+{
+	check(InventoryItemsWidgetController);
+	
+	GridOwner = EObsidianGridOwner::Inventory;
+
+	ConstructGrid(InventoryItemsWidgetController->GetInventoryGridWidth(),
+		InventoryItemsWidgetController->GetInventoryGridHeight());
+}
+
+void UObsidianGrid::ConstructStashTabGrid(const int32 GridWidthOverride, const int32 GridHeightOverride,
+	const FGameplayTag& InStashTag)
+{
+	GridOwner = EObsidianGridOwner::PlayerStash;
+	StashTag = InStashTag;
+
+	ConstructGrid(GridWidthOverride, GridHeightOverride);
+}
+
+void UObsidianGrid::ConstructGrid(const int32 GridWidth, const int32 GridHeight)
 {
 	checkf(GridSlotClass, TEXT("Tried to create widget without valid widget class in [%hs],"
 							 " fill it in ObsidianInventory instance."), __FUNCTION__);
-	
-	GridOwner = InGridOwner;
-	StashTag = OptionalStashTag;
 	
 	if(Root_CanvasPanel->HasAnyChildren())
 	{
 		Root_CanvasPanel->ClearChildren();
 	}
 	
-	const int32 InventoryGridSize = GridHeight * GridWidth;
-	GridSlotsMap.Empty(InventoryGridSize);
+	const int32 GridSize = GridWidth * GridHeight;
+	GridSlotDataMap.Empty(GridSize);
 	
 	int16 GridX = 0;
 	int16 GridY = 0;
-	for(int32 i = 0; i < InventoryGridSize; i++)
+	for(int32 i = 0; i < GridSize; i++)
 	{
 		const FIntPoint SlotPosition = FIntPoint(GridX, GridY);
 		
-		UObsidianItemSlot_GridSlot* InventorySlot = CreateWidget<UObsidianItemSlot_GridSlot>(this, GridSlotClass);
-		InventorySlot->InitializeSlot(SlotPosition);
-		InventorySlot->OnGridSlotHoverDelegate.AddUObject(this, &ThisClass::OnInventorySlotHover);
-		InventorySlot->OnGridSlotLeftButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventorySlotLeftMouseButtonDown);
-		InventorySlot->OnGridSlotRightButtonPressedDelegate.AddUObject(this, &ThisClass::OnInventorySlotRightMouseButtonDown);
+		UObsidianItemSlot_GridSlot* GridSlot = CreateWidget<UObsidianItemSlot_GridSlot>(this, GridSlotClass);
+		GridSlot->InitializeSlot(SlotPosition);
+		GridSlot->OnGridSlotHoverDelegate.AddUObject(this, &ThisClass::OnGridSlotHover);
+		GridSlot->OnGridSlotLeftButtonPressedDelegate.AddUObject(this, &ThisClass::OnGridSlotLeftMouseButtonDown);
+		GridSlot->OnGridSlotRightButtonPressedDelegate.AddUObject(this, &ThisClass::OnGridSlotRightMouseButtonDown);
 
-		UCanvasPanelSlot* AddedSlot = Root_CanvasPanel->AddChildToCanvas(InventorySlot);
+		UCanvasPanelSlot* AddedSlot = Root_CanvasPanel->AddChildToCanvas(GridSlot);
 		AddedSlot->SetSize(FVector2D(SlotTileSize));
 		AddedSlot->SetPosition(SlotPosition * SlotTileSize);
 		
-		GridSlotsMap.Add(SlotPosition, InventorySlot);
-		InventorizedItemWidgetMap.Add(SlotPosition, FObsidianOccupiedPlacement());
+		FObsidianGridSlotData NewData;
+		NewData.OwningGridSlot = GridSlot;
+		GridSlotDataMap.Add(SlotPosition, NewData);
 		
 		if(GridX == GridWidth - 1)
 		{
@@ -77,49 +121,35 @@ void UObsidianGrid::ConstructGrid(const EObsidianGridOwner InGridOwner, const in
 	}
 }
 
-void UObsidianGrid::NativeDestruct()
-{
-	for (const TPair<FIntPoint, UObsidianItemSlot_GridSlot*>& GridSlotPair : GridSlotsMap)
-	{
-		if (GridSlotPair.Value)
-		{
-			GridSlotPair.Value->OnGridSlotHoverDelegate.Clear();
-			GridSlotPair.Value->OnGridSlotLeftButtonPressedDelegate.Clear();
-			GridSlotPair.Value->OnGridSlotRightButtonPressedDelegate.Clear();
-		}
-	}
-	
-	Super::NativeDestruct();
-}
-
 UObsidianItemSlot_GridSlot* UObsidianGrid::GetSlotByPosition(const FIntPoint& BySlotPosition)
 {
-	if (UObsidianItemSlot_GridSlot** GridSlotValuePtr = GridSlotsMap.Find(BySlotPosition))
+	if (const FObsidianGridSlotData* GridSlotData = GridSlotDataMap.Find(BySlotPosition))
 	{
-		return *GridSlotValuePtr;
+		return GridSlotData->OwningGridSlot;
 	}
 	return nullptr;
 }
 
-FObsidianOccupiedPlacement* UObsidianGrid::GetSlotPlacementAtGridPosition(const FIntPoint& AtGridPosition)
+FObsidianGridSlotData* UObsidianGrid::GetSlotDataAtGridPosition(const FIntPoint& AtGridPosition)
 {
-	return InventorizedItemWidgetMap.Find(AtGridPosition);
+	return GridSlotDataMap.Find(AtGridPosition);
 }
 
 UObsidianItem* UObsidianGrid::GetItemWidgetAtGridPosition(const FIntPoint& AtGridPosition)
 {
-	if(const FObsidianOccupiedPlacement* OccupiedPlacement = InventorizedItemWidgetMap.Find(AtGridPosition))
+	const FObsidianGridSlotData* GridSlotData = GridSlotDataMap.Find(AtGridPosition);
+	if(GridSlotData && GridSlotData->IsOccupied())
 	{
-		return OccupiedPlacement->ItemWidget;
+		return GridSlotData->ItemWidget;
 	}
 	return nullptr;
 }
 
 bool UObsidianGrid::IsGridSlotOccupied(const FIntPoint& AtGridPosition) const
 {
-	if(const FObsidianOccupiedPlacement* OccupiedPlacement = InventorizedItemWidgetMap.Find(AtGridPosition))
+	if(const FObsidianGridSlotData* GridSlotData = GridSlotDataMap.Find(AtGridPosition))
 	{
-		return OccupiedPlacement->bOccupied;
+		return GridSlotData->IsOccupied();
 	}
 	return false;
 }
@@ -141,21 +171,22 @@ void UObsidianGrid::AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItem
 		return;
 	}
 
+	const FIntPoint ItemGridSpan = ItemWidgetData.GridSpan;
 	const float ItemSlotPadding = ItemWidgetData.ItemSlotPadding;
 	UCanvasPanelSlot* CanvasItem = Root_CanvasPanel->AddChildToCanvas(ItemWidget);
 	const FVector2D ItemSize = FVector2D(
-		(ItemWidget->GetItemGridSpan().X * SlotTileSize) - (ItemSlotPadding * 2),
-		(ItemWidget->GetItemGridSpan().Y * SlotTileSize) - (ItemSlotPadding * 2)
+		(ItemGridSpan.X * SlotTileSize) - (ItemSlotPadding * 2),
+		(ItemGridSpan.Y * SlotTileSize) - (ItemSlotPadding * 2)
 		);
 	CanvasItem->SetSize(ItemSize);
 	
 	const FVector2D ItemPosition = SlotTileSize * static_cast<FVector2D>(ItemGridPosition) + ItemSlotPadding;
 	CanvasItem->SetPosition(ItemPosition);
 
-	RegisterInventoryItemWidget(ItemGridPosition, ItemWidget);
+	RegisterGridItemWidget(ItemWidgetData.ItemPosition, ItemWidget, ItemGridSpan);
 }
 
-void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlot, const bool bEntered)
+void UObsidianGrid::OnGridSlotHover(UObsidianItemSlot_GridSlot* AffectedSlot, const bool bEntered)
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
@@ -174,15 +205,17 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 
 	const bool bCanInteractWithGrid = InventoryItemsWidgetController->CanInteractWithGrid(GridOwner);
 	const bool bIsDraggingAnItem = InventoryItemsWidgetController->IsDraggingAnItem();
-	const FObsidianOccupiedPlacement* Placement = GetSlotPlacementAtGridPosition(GridSlotPosition);
-	const bool bIsSlotOccupied = Placement && Placement->bOccupied;
+	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridSlotPosition);
+	const bool bIsSlotOccupied = SlotData && SlotData->IsOccupied();
+	const FIntPoint OriginGridSlotPosition = bIsSlotOccupied ? SlotData->OriginPosition.GetItemGridPosition() :
+		FIntPoint::NoneValue;
 	
 	if(bEntered)
 	{
 		if (bIsSlotOccupied)
 		{
-			InventoryItemsWidgetController->HandleHoveringOverItem(Placement->OriginPosition,
-				Placement->ItemWidget);
+			InventoryItemsWidgetController->HandleHoveringOverItem(SlotData->OriginPosition,
+				SlotData->ItemWidget);
 		}
 
 		if (bIsDraggingAnItem)
@@ -199,22 +232,10 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 				bCanPlace = InventoryItemsWidgetController->CanPlaceDraggedItem(GridOwner, GridSlotPosition, ItemGridSpan,
 					StashTag);
 			}
-			
-			for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
-			{
-				for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
-				{
-					const FIntPoint LocationToCheck = GridSlotPosition + FIntPoint(SpanX, SpanY);
-					if(UObsidianItemSlot_GridSlot* LocalSlot = GetSlotByPosition(LocationToCheck))
-					{
-						const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight :
-							EObsidianItemSlotState::RedLight;
-						LocalSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
-						AffectedGridSlots.Add(LocalSlot);
-					}
-				}	
-			}
-			
+
+			const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight :
+				EObsidianItemSlotState::RedLight;
+			SetSlotStateForGridSlots(GridSlotPosition, ItemGridSpan, SlotState);
 			return;
 		}
 
@@ -225,6 +246,12 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 			return;
 		}
 
+		if (bIsSlotOccupied)
+		{
+			SetSlotStateForGridSlots(OriginGridSlotPosition, SlotData->ItemGridSpan, EObsidianItemSlotState::Selected);
+			return;
+		}
+		
 		AffectedSlot->SetSlotState(EObsidianItemSlotState::Selected, EObsidianItemSlotStatePriority::Low);
 		AffectedGridSlots.Add(AffectedSlot);
 	}
@@ -233,21 +260,14 @@ void UObsidianGrid::OnInventorySlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 		if (bIsSlotOccupied)
 		{
 			//TODO(intrxx) this will not work for stash
-			InventoryItemsWidgetController->HandleUnhoveringItem(Placement->OriginPosition);
+			InventoryItemsWidgetController->HandleUnhoveringItem(SlotData->OriginPosition);
 		}
 		
-		if(AffectedGridSlots.IsEmpty() == false)
-		{
-			for(UObsidianItemSlot_GridSlot* InventorySlot : AffectedGridSlots)
-			{
-				InventorySlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
-			}
-			AffectedGridSlots.Empty();
-		}
+		ResetGridSlotsState();
 	}
 }
 
-void UObsidianGrid::OnInventorySlotLeftMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
+void UObsidianGrid::OnGridSlotLeftMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	if(InventoryItemsWidgetController == nullptr)
@@ -272,18 +292,18 @@ void UObsidianGrid::OnInventorySlotLeftMouseButtonDown(const UObsidianItemSlot_G
 		OffsetGridPositionByItemSpan(OutDraggedItemGridSpan, OriginGridPositionPressed);
 	}
 
-	const FObsidianOccupiedPlacement* Placement = GetSlotPlacementAtGridPosition(OriginGridPositionPressed);
-	if (Placement && Placement->bOccupied)
+	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(OriginGridPositionPressed);
+	if (SlotData && SlotData->IsOccupied())
 	{
 		if(InteractionFlags.bItemStacksInteraction)
 		{
-			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(Placement->OriginPosition,
-				Placement->ItemWidget);
+			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(SlotData->OriginPosition.GetItemGridPosition(),
+				SlotData->ItemWidget);
 		}
 		else
 		{
 			//TODO(intrxx) Override for the actual clicked position
-			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItem(Placement->OriginPosition,
+			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItem(SlotData->OriginPosition.GetItemGridPosition(),
 				InteractionFlags.bMoveBetweenNextOpenedWindow);	
 		}
 	}
@@ -295,7 +315,7 @@ void UObsidianGrid::OnInventorySlotLeftMouseButtonDown(const UObsidianItemSlot_G
 	}
 }
 
-void UObsidianGrid::OnInventorySlotRightMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
+void UObsidianGrid::OnGridSlotRightMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	if(InventoryItemsWidgetController == nullptr)
@@ -313,33 +333,30 @@ void UObsidianGrid::OnInventorySlotRightMouseButtonDown(const UObsidianItemSlot_
 	const FIntPoint GridSlotPosition = AffectedSlot->GetGridSlotPosition();
 	check(GridSlotPosition != FIntPoint::NoneValue);
 
-	const FObsidianOccupiedPlacement* Placement = GetSlotPlacementAtGridPosition(GridSlotPosition);
-	if (Placement && Placement->bOccupied)
+	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridSlotPosition);
+	if (SlotData && SlotData->IsOccupied())
 	{
-		InventoryItemsWidgetController->HandleRightClickingOnInventoryItem(Placement->OriginPosition, Placement->ItemWidget);
+		InventoryItemsWidgetController->HandleRightClickingOnInventoryItem(SlotData->OriginPosition.GetItemGridPosition(),
+			SlotData->ItemWidget);
 	}
 }
 
-void UObsidianGrid::RegisterInventoryItemWidget(const FIntPoint& GridSlot, UObsidianItem* ItemWidget)
+void UObsidianGrid::RegisterGridItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
+	const FIntPoint GridSpan)
 {
-	if (ensureMsgf(ItemWidget && GridSlot != FIntPoint::NoneValue, TEXT("ItemWidget or GridSlot are invalid in [%hs]."),
+	if (ensureMsgf(ItemWidget && ItemPosition.IsValid(), TEXT("ItemWidget or ItemPosition are invalid in [%hs]."),
 		__FUNCTION__))
 	{
-		FObsidianOccupiedPlacement OccupiedPlacement;
-		OccupiedPlacement.ItemWidget = ItemWidget;
-		OccupiedPlacement.OriginPosition = GridSlot;
-		OccupiedPlacement.ItemGridSpan = ItemWidget->GetItemGridSpan();
-		OccupiedPlacement.bOccupied = true;
-			
-		for(int32 SpanX = 0; SpanX < OccupiedPlacement.ItemGridSpan.X; ++SpanX)
+		const FIntPoint GridSlotPosition = ItemPosition.GetItemGridPosition();
+		for(int32 SpanX = 0; SpanX < GridSpan.X; ++SpanX)
 		{
-			for(int32 SpanY = 0; SpanY < OccupiedPlacement.ItemGridSpan.Y; ++SpanY)
+			for(int32 SpanY = 0; SpanY < GridSpan.Y; ++SpanY)
 			{
-				const FIntPoint LocationToOccupy = GridSlot + FIntPoint(SpanX, SpanY);
-				if(FObsidianOccupiedPlacement* Placement = InventorizedItemWidgetMap.Find(LocationToOccupy))
+				const FIntPoint LocationToOccupy = GridSlotPosition + FIntPoint(SpanX, SpanY);
+				if(FObsidianGridSlotData* SlotData = GridSlotDataMap.Find(LocationToOccupy))
 				{
-					ensure(Placement->bOccupied == false);
-					*Placement = OccupiedPlacement;
+					ensure(SlotData->IsOccupied() == false);
+					SlotData->AddNewItem(ItemPosition, ItemWidget, GridSpan);
 				}
 			}	
 		}
@@ -350,9 +367,9 @@ void UObsidianGrid::HandleItemRemoved(const FIntPoint& GridSlot)
 {
 	if (ensureMsgf(GridSlot != FIntPoint::NoneValue, TEXT("GridSlot is invalid in [%hs]."), __FUNCTION__))
 	{
-		if (const FObsidianOccupiedPlacement* FoundPlacement = InventorizedItemWidgetMap.Find(GridSlot))
+		if (const FObsidianGridSlotData* FoundPlacement = GridSlotDataMap.Find(GridSlot))
 		{
-			check(FoundPlacement->bOccupied);
+			check(FoundPlacement->IsOccupied());
 			
 			if (FoundPlacement->ItemWidget == nullptr)
 			{
@@ -369,9 +386,9 @@ void UObsidianGrid::HandleItemRemoved(const FIntPoint& GridSlot)
 				for(int32 SpanY = 0; SpanY < OccupiedGridSpan.Y; ++SpanY)
 				{
 					const FIntPoint LocationToReset = GridSlot + FIntPoint(SpanX, SpanY);
-					if(FObsidianOccupiedPlacement* Placement = InventorizedItemWidgetMap.Find(LocationToReset))
+					if(FObsidianGridSlotData* SlotData = GridSlotDataMap.Find(LocationToReset))
 					{
-						Placement->Reset();
+						SlotData->Reset();
 					}
 				}	
 			}
@@ -400,5 +417,34 @@ void UObsidianGrid::OffsetGridPositionByItemSpan(FIntPoint DraggedItemGridSpan, 
 			(DraggedItemGridSpan.Y % 2 == 0) ? (DraggedItemGridSpan.Y - 1) / 2 : DraggedItemGridSpan.Y / 2);
 	
 	OriginalPosition -= DraggedItemGridSpan;
+}
+
+void UObsidianGrid::SetSlotStateForGridSlots(const FIntPoint OriginPosition, const FIntPoint ItemGridSpan,
+	const EObsidianItemSlotState SlotState)
+{
+	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
+	{
+		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
+		{
+			const FIntPoint SlotPosition = OriginPosition + FIntPoint(SpanX, SpanY);
+			if(UObsidianItemSlot_GridSlot* LocalSlot = GetSlotByPosition(SlotPosition))
+			{
+				LocalSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
+				AffectedGridSlots.Add(LocalSlot);
+			}
+		}	
+	}
+}
+
+void UObsidianGrid::ResetGridSlotsState()
+{
+	if(AffectedGridSlots.IsEmpty() == false)
+	{
+		for(UObsidianItemSlot_GridSlot* InventorySlot : AffectedGridSlots)
+		{
+			InventorySlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
+		}
+		AffectedGridSlots.Reset();
+	}
 }
 

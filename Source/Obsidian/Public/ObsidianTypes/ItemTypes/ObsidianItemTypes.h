@@ -333,6 +333,8 @@ public:
 	bool IsOnStashGrid() const;
 	bool IsOnStashSlot() const;
 
+	void Reset();
+
 	FIntPoint GetItemGridPosition(const bool bWarnIfNotFound = true) const;
 	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
 	FGameplayTag GetOwningStashTabTag() const;

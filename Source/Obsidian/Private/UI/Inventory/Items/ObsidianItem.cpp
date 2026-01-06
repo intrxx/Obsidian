@@ -2,18 +2,17 @@
 
 #include "UI/Inventory/Items/ObsidianItem.h"
 
-// ~ Core
-#include "CommonTextBlock.h"
-#include "Components/Image.h"
-#include "Components/SizeBox.h"
-
-// ~ Project
+#include <CommonTextBlock.h>
+#include <Components/Image.h>
+#include <Components/SizeBox.h>
 
 
 void UObsidianItem::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	SetVisibility(ESlateVisibility::HitTestInvisible);
+	
 	if(Highlight_Image)
 	{
 		Highlight_Image->SetVisibility(ESlateVisibility::Hidden);
@@ -51,12 +50,11 @@ void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& DesiredPosition, const FIntPoint& InItemGridSpan,
 	UTexture2D* ItemImage, const int32 CurrentStack)
 {
-	ItemGridSpan = InItemGridSpan;
 	ItemPosition = DesiredPosition;
 	InternalStacks = CurrentStack;
 	
-	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
-	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
+	Root_SizeBox->SetWidthOverride(InItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
+	Root_SizeBox->SetHeightOverride(InItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 	Item_Image->SetBrushFromTexture(ItemImage);
 	
 	if(CurrentStack == 0)
@@ -71,12 +69,10 @@ void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& DesiredPos
 
 void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
 {
-	ItemGridSpan = InItemGridSpan;
-	
 	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
 		
-	const float WidthOverride = (ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X) * SlotSizeMultiplier;
-	const float HeightOverride = (ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y) * SlotSizeMultiplier;
+	const float WidthOverride = (InItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X) * SlotSizeMultiplier;
+	const float HeightOverride = (InItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y) * SlotSizeMultiplier;
 	Root_SizeBox->SetWidthOverride(WidthOverride);
 	Root_SizeBox->SetHeightOverride(HeightOverride);
 
@@ -117,19 +113,9 @@ void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-FIntPoint UObsidianItem::GetItemGridSpan() const
-{
-	return ItemGridSpan;
-}
-
 FObsidianItemPosition UObsidianItem::GetItemPosition() const
 {
 	return ItemPosition;
-}
-
-FIntPoint UObsidianItem::GetGridPosition() const
-{
-	return ItemPosition.GetItemGridPosition();
 }
 
 FSlateBrush UObsidianItem::GetItemImage() const

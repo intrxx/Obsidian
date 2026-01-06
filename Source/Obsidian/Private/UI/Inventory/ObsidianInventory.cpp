@@ -33,8 +33,7 @@ void UObsidianInventory::NativeConstruct()
 	if(InventoryGrid && InventoryItemsWidgetController)
 	{
 		InventoryGrid->SetWidgetController(InventoryItemsWidgetController);
-		InventoryGrid->ConstructGrid(EObsidianGridOwner::Inventory, InventoryItemsWidgetController->GetInventoryGridWidth(),
-			InventoryItemsWidgetController->GetInventoryGridHeight());
+		InventoryGrid->ConstructInventoryGrid();
 	}
 	
 	if(EquipmentPanel)
@@ -49,8 +48,14 @@ void UObsidianInventory::NativeDestruct()
 	{
 		InventoryItemsWidgetController->RemoveItemUIElements();
 		InventoryItemsWidgetController->OnItemEquippedDelegate.Clear();
+		InventoryItemsWidgetController->OnEquippedItemRemovedDelegate.Clear();
+		
 		InventoryItemsWidgetController->OnItemAddedDelegate.Clear();
 		InventoryItemsWidgetController->OnInventoryItemChangedDelegate.Clear();
+		InventoryItemsWidgetController->OnInventorizedItemRemovedDelegate.Clear();
+
+		InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.Clear();
+		InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.Clear();
 	}
 	
 	Super::NativeDestruct();
@@ -98,7 +103,6 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetDa
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
-	ItemWidget->SetVisibility(ESlateVisibility::HitTestInvisible); //TODO(intrxx) Item Widget Handling Refactor quick hack
 	InventoryGrid->AddItemWidget(ItemWidget, ItemWidgetData);
 }
 
@@ -114,7 +118,6 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.IsItemForSwapSlot());
-	ItemWidget->SetVisibility(ESlateVisibility::HitTestInvisible); //TODO(intrxx) Item Widget Handling Refactor quick hack
 	EquipmentPanel->AddItemWidget(ItemWidget, ItemWidgetData);
 }
 

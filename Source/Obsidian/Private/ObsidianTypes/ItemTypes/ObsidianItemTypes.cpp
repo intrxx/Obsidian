@@ -155,6 +155,14 @@ bool FObsidianItemPosition::IsOnStashSlot() const
 	return (Type == EObsidianItemPositionType::StashSlot) && (SlotTag != FGameplayTag::EmptyTag);
 }
 
+void FObsidianItemPosition::Reset()
+{
+	Type = EObsidianItemPositionType::None;
+	GridPosition = FIntPoint::NoneValue;
+	SlotTag = FGameplayTag::EmptyTag;
+	OwningStashTabTag = FGameplayTag::EmptyTag;
+}
+
 FIntPoint FObsidianItemPosition::GetItemGridPosition(const bool bWarnIfNotFound) const
 {
 #if !UE_BUILD_SHIPPING

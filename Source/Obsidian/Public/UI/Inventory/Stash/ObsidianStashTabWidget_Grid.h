@@ -24,7 +24,8 @@ class OBSIDIAN_API UObsidianStashTabWidget_Grid : public UObsidianStashTabWidget
 	GENERATED_BODY()
 
 public:
-	void InitializeStashTab(UObInventoryItemsWidgetController* WidgetController, const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag);
+	void InitializeStashTab(UObInventoryItemsWidgetController* WidgetController, const int32 GridWidth, const int32 GridHeight,
+		const FGameplayTag& InStashTabTag);
 
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding) override;
 	
