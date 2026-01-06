@@ -7,7 +7,6 @@
 #include <Components/OverlaySlot.h>
 
 #include "UI/Inventory/Items/ObsidianItem.h"
-#include "UI/Inventory/Slots/ObsidianSlotBlockadeItem.h"
 
 void UObsidianItemSlot_Equipment::NativePreConstruct()
 {
@@ -53,7 +52,7 @@ FGameplayTag UObsidianItemSlot_Equipment::GetSisterSlotTag() const
 
 void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
-	if(Main_Overlay)
+	if(ensure(Main_Overlay && InItemWidget))
 	{
 		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
@@ -64,10 +63,12 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget, con
 	}
 }
 
-void UObsidianItemSlot_Equipment::AddBlockadeItemToSlot(UObsidianSlotBlockadeItem* InItemWidget, const float ItemSlotPadding)
+void UObsidianItemSlot_Equipment::AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
-	if(Main_Overlay)
+	if(ensure(Main_Overlay && InItemWidget))
 	{
+		InItemWidget->SetBlockadeItemProperties();
+		
 		UOverlaySlot* ItemSlot = Main_Overlay->AddChildToOverlay(InItemWidget);
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
@@ -75,6 +76,11 @@ void UObsidianItemSlot_Equipment::AddBlockadeItemToSlot(UObsidianSlotBlockadeIte
 		const float ItemPadding = SlottedItemAdditionalPadding + ItemSlotPadding;
 		ItemSlot->SetPadding(ItemPadding);
 	}
+}
+
+void UObsidianItemSlot_Equipment::ResetSlotState()
+{
+	SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::TakePriority);
 }
 
 void UObsidianItemSlot_Equipment::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)

@@ -41,6 +41,9 @@ public:
 	FSlateBrush GetItemImage() const;
 	FVector2D GetItemWidgetSize() const;
 
+	void SetBlockadeItemProperties();
+	void ResetBlockadeItemProperties();
+	
 	void SetUsingItemProperties();
 	void ResetUsingItemProperties();
 
@@ -61,6 +64,10 @@ protected:
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
 protected:
+	/** Opacity to set when item is added a blocking slot item. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	float BlockingItemOpacity = 0.5f;
+	
 	/** Opacity to set when item is being used (right-clicked). */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float UsingItemOpacity = 0.6f;

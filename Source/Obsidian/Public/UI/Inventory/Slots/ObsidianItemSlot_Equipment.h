@@ -32,7 +32,9 @@ public:
 	FGameplayTag GetSisterSlotTag() const;
 	
 	void AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f);
-	void AddBlockadeItemToSlot(UObsidianSlotBlockadeItem* InItemWidget, const float ItemSlotPadding = 0.0f);
+	void AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f);
+
+	void ResetSlotState();
 
 public:
 	FOnEquipmentSlotHoverSignature OnEquipmentSlotHoverDelegate;

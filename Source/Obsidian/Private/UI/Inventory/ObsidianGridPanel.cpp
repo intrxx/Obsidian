@@ -130,12 +130,12 @@ UObsidianItemSlot_GridSlot* UObsidianGridPanel::GetSlotByPosition(const FIntPoin
 	return nullptr;
 }
 
-FObsidianGridSlotData* UObsidianGridPanel::GetSlotDataAtGridPosition(const FIntPoint& AtGridPosition)
+const FObsidianGridSlotData* UObsidianGridPanel::GetSlotDataAtGridPosition(const FIntPoint& AtGridPosition) const
 {
 	return GridSlotDataMap.Find(AtGridPosition);
 }
 
-UObsidianItem* UObsidianGridPanel::GetItemWidgetAtGridPosition(const FIntPoint& AtGridPosition)
+UObsidianItem* UObsidianGridPanel::GetItemWidgetAtGridPosition(const FIntPoint& AtGridPosition) const
 {
 	const FObsidianGridSlotData* GridSlotData = GridSlotDataMap.Find(AtGridPosition);
 	if(GridSlotData && GridSlotData->IsOccupied())
@@ -355,7 +355,7 @@ void UObsidianGridPanel::RegisterGridItemWidget(const FObsidianItemPosition& Ite
 				const FIntPoint LocationToOccupy = GridSlotPosition + FIntPoint(SpanX, SpanY);
 				if(FObsidianGridSlotData* SlotData = GridSlotDataMap.Find(LocationToOccupy))
 				{
-					ensure(SlotData->IsOccupied() == false);
+					check(SlotData->IsOccupied() == false);
 					SlotData->AddNewItem(ItemPosition, ItemWidget, GridSpan);
 				}
 			}	
@@ -363,40 +363,35 @@ void UObsidianGridPanel::RegisterGridItemWidget(const FObsidianItemPosition& Ite
 	}
 }
 
-void UObsidianGridPanel::HandleItemRemoved(const FIntPoint& GridSlot)
+void UObsidianGridPanel::HandleItemRemoved(const FObsidianItemPosition& FromPosition)
 {
-	if (ensureMsgf(GridSlot != FIntPoint::NoneValue, TEXT("GridSlot is invalid in [%hs]."), __FUNCTION__))
+	if (ensureMsgf(FromPosition.IsValid(), TEXT("FromPosition is invalid in [%hs]."), __FUNCTION__))
 	{
-		if (const FObsidianGridSlotData* FoundPlacement = GridSlotDataMap.Find(GridSlot))
+		const FIntPoint GridPosition = FromPosition.GetItemGridPosition();
+		if (const FObsidianGridSlotData* SlotData = GridSlotDataMap.Find(GridPosition))
 		{
-			check(FoundPlacement->IsOccupied());
+			check(SlotData->IsOccupied());
 			
-			if (FoundPlacement->ItemWidget == nullptr)
+			if (SlotData->ItemWidget == nullptr)
 			{
 				UE_LOG(LogTemp, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
-					*GridSlot.ToString());
+					*GridPosition.ToString());
 				return;
 			}
 
-			FoundPlacement->ItemWidget->RemoveFromParent();
+			SlotData->ItemWidget->RemoveFromParent();
 
-			const FIntPoint OccupiedGridSpan = FoundPlacement->ItemGridSpan;
+			const FIntPoint OccupiedGridSpan = SlotData->ItemGridSpan;
 			for(int32 SpanX = 0; SpanX < OccupiedGridSpan.X; ++SpanX)
 			{
 				for(int32 SpanY = 0; SpanY < OccupiedGridSpan.Y; ++SpanY)
 				{
-					const FIntPoint LocationToReset = GridSlot + FIntPoint(SpanX, SpanY);
-					if(FObsidianGridSlotData* SlotData = GridSlotDataMap.Find(LocationToReset))
+					const FIntPoint LocationToReset = GridPosition + FIntPoint(SpanX, SpanY);
+					if(FObsidianGridSlotData* NextSlotData = GridSlotDataMap.Find(LocationToReset))
 					{
-						SlotData->Reset();
+						NextSlotData->Reset();
 					}
 				}	
-			}
-			
-			if (ensure(InventoryItemsWidgetController))
-			{
-				//TODO(intrxx) this will not work for Stash Tabs
-				InventoryItemsWidgetController->ClearItemDescriptionForPosition(GridSlot);
 			}
 		}
 	}

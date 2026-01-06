@@ -119,6 +119,13 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.IsItemForSwapSlot());
 	EquipmentPanel->AddItemWidget(ItemWidget, ItemWidgetData);
+
+	if (ItemWidgetData.bDoesBlockSisterSlot)
+	{
+		UObsidianItem* BlockingItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
+		BlockingItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.IsItemForSwapSlot());
+		EquipmentPanel->AddItemWidget(BlockingItemWidget, ItemWidgetData, true);
+	}
 }
 
 void UObsidianInventory::OnItemUnequipped(const FGameplayTag& SlotTag, const bool bBlocksOtherSlot)
@@ -141,13 +148,13 @@ void UObsidianInventory::OnItemRemoved(const FObsidianItemPosition& FromPosition
 {
 	if (ensure(InventoryGrid && FromPosition.IsOnInventoryGrid()))
 	{
-		InventoryGrid->HandleItemRemoved(FromPosition.GetItemGridPosition());
+		InventoryGrid->HandleItemRemoved(FromPosition);
 	}
 }
 
 void UObsidianInventory::HighlightSlotPlacement(const FGameplayTagContainer& WithTags)
 {
-	for (UObsidianItemSlot_Equipment* SlotWidget : EquipmentPanel->GetSlotWidgets())
+	for (UObsidianItemSlot_Equipment* SlotWidget : EquipmentPanel->GetAllSlots())
 	{
 		if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
 		{

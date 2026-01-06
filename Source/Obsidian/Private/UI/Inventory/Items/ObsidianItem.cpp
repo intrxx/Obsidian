@@ -132,6 +132,16 @@ FVector2D UObsidianItem::GetItemWidgetSize() const
 	return FVector2D(Root_SizeBox->GetWidthOverride(), Root_SizeBox->GetHeightOverride());
 }
 
+void UObsidianItem::SetBlockadeItemProperties()
+{
+	SetRenderOpacity(BlockingItemOpacity);
+}
+
+void UObsidianItem::ResetBlockadeItemProperties()
+{
+	SetRenderOpacity(1.0f);
+}
+
 void UObsidianItem::SetUsingItemProperties()
 {
 	SetRenderOpacity(UsingItemOpacity);

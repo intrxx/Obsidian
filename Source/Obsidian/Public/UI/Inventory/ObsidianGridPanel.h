@@ -63,12 +63,12 @@ public:
 	void ConstructStashTabGrid(const int32 GridWidthOverride, const int32 GridHeightOverride, const FGameplayTag& InStashTag);
 	
 	UObsidianItemSlot_GridSlot* GetSlotByPosition(const FIntPoint& BySlotPosition);
-	FObsidianGridSlotData* GetSlotDataAtGridPosition(const FIntPoint& AtGridPosition);
-	UObsidianItem* GetItemWidgetAtGridPosition(const FIntPoint& AtGridPosition);
+	const FObsidianGridSlotData* GetSlotDataAtGridPosition(const FIntPoint& AtGridPosition) const;
+	UObsidianItem* GetItemWidgetAtGridPosition(const FIntPoint& AtGridPosition) const;
 	bool IsGridSlotOccupied(const FIntPoint& AtGridPosition) const;
 	
 	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData);
-	void HandleItemRemoved(const FIntPoint& GridSlot);
+	void HandleItemRemoved(const FObsidianItemPosition& FromPosition);
 	void HandleItemStackChanged(const FIntPoint& AtGridSlot, const uint8 NewStackCount);
 
 protected:

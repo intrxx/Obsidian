@@ -5,6 +5,8 @@
 #include <CoreMinimal.h>
 #include <GameplayTagContainer.h>
 
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianSlotPanel.generated.h"
 
@@ -18,6 +20,36 @@ class UObsidianSlotBlockadeItem;
 class UObsidianItemSlot_Equipment;
 class UObInventoryItemsWidgetController;
 
+USTRUCT()
+struct FObsidianSlotData
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianSlotData(){}
+
+	bool IsOccupied() const;
+	void AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget, const bool bBlockSlot);
+	void Reset();
+
+public:
+	UPROPERTY()
+	FObsidianItemPosition OriginPosition = FObsidianItemPosition();
+	
+	UPROPERTY()
+	UObsidianItemSlot_Equipment* OwningSlot = nullptr;
+
+	UPROPERTY()
+	UObsidianItem* ItemWidget = nullptr;
+	
+	UPROPERTY()
+	bool bBlocked = false;
+
+protected:
+	UPROPERTY()
+	bool bOccupied = false;
+};
+
 /**
  * 
  */
@@ -29,16 +61,15 @@ class OBSIDIAN_API UObsidianSlotPanel : public UObsidianWidgetBase
 public:
 	virtual void HandleWidgetControllerSet() override;
 
-	UObsidianItemSlot_Equipment* FindEquipmentSlotWidgetForTag(const FGameplayTag& Tag) const;
-	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
+	TArray<UObsidianItemSlot_Equipment*> GetAllSlots() const;
+	UObsidianItemSlot_Equipment* GetSlotByPosition(const FGameplayTag& AtSlotTag);
+	const FObsidianSlotData* GetSlotDataAtGridPosition(const FGameplayTag& AtSlotTag) const;
+	UObsidianItem* GetItemWidgetAtSlot(const FGameplayTag& AtSlotTag) const;
+	bool IsSlotOccupied(const FGameplayTag& AtSlotTag) const;
+	bool IsSlotBlocked(const FGameplayTag& AtSlotTag) const;
 	
-	bool IsEquipmentSlotOccupiedByItem(const FGameplayTag& AtSlot) const;
-	UObsidianItem* GetItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const;
-	bool IsEquipmentSlotOccupiedByBlockade(const FGameplayTag& AtSlot) const;
-	UObsidianSlotBlockadeItem* GetBlockadeItemWidgetAtEquipmentSlot(const FGameplayTag& AtSlot) const;
-
-	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData);
-	
+	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData,
+		const bool bBlockSlot = false);
 	void HandleItemUnequipped(const FGameplayTag& SlotToClearTag, const bool bBlocksOtherSlot);
 	
 protected:
@@ -46,32 +77,19 @@ protected:
 	
 	void InitializeEquipmentPanel();
 	
-	void RegisterEquipmentItemWidget(const FGameplayTag& AtSlot, UObsidianItem* ItemWidget, const bool bSwappedWithAnother);
-	void RemoveEquipmentItemWidget(const FGameplayTag& AtSlot);
-
-	/** This function takes the primary slot that is causing the other slot to be blocked. */
-	void RegisterBlockedEquipmentItemWidget(const FGameplayTag& AtSlot, UObsidianSlotBlockadeItem* ItemWidget,
-		const bool bSwappedWithAnother);
-	void RemoveBlockedSlotItemWidget(const FGameplayTag& AtSlot);
-
+	void RegisterSlotItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
+		const bool bSwappedWithAnother, const bool bBlocksSlot = false,
+		const FObsidianItemPosition& ItemOriginPosition = FObsidianItemPosition());
+	void UnregisterSlotItemWidget(const FGameplayTag& SlotTag);
+	
 	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
 	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
-		const FObsidianItemInteractionFlags& InteractionFlags) const;
-
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianSlotBlockadeItem> SlotBlockadeItemClass;
+		const FObsidianItemInteractionFlags& InteractionFlags);
 	
 private:
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
 	
 	UPROPERTY()
-	TArray<TObjectPtr<UObsidianItemSlot_Equipment>> EquipmentSlots;
-
-	UPROPERTY()
-	TMap<FGameplayTag, UObsidianItem*> EquippedItemWidgetMap;
-
-	UPROPERTY()
-	TMap<FGameplayTag, UObsidianSlotBlockadeItem*> BlockedSlotsWidgetMap;
+	TMap<FGameplayTag, FObsidianSlotData> SlotDataMap;
 };
