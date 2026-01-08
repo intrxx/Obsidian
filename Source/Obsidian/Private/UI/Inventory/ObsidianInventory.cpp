@@ -24,22 +24,26 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	
 	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
 	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
+
+	if(Inventory_GridPanel)
+	{
+		Inventory_GridPanel->SetWidgetController(InventoryItemsWidgetController);
+		const bool bSuccess = Inventory_GridPanel->ConstructInventoryPanel();
+		ensureMsgf(bSuccess, TEXT("Inventory_GridPanel was unable to construct the InventoryGrid!"));
+	}
+	
+	if(Equipment_SlotPanel)
+	{
+		Equipment_SlotPanel->SetWidgetController(InventoryItemsWidgetController);
+		const bool bSuccess = Equipment_SlotPanel->ConstructEquipmentPanel();
+		ensureMsgf(bSuccess, TEXT("Equipment_SlotPanel was unable to construct the EquipmentSlots!"));
+	}
 }
 
 void UObsidianInventory::NativeConstruct()
 {
 	Super::NativeConstruct();
-
-	if(InventoryGrid && InventoryItemsWidgetController)
-	{
-		InventoryGrid->SetWidgetController(InventoryItemsWidgetController);
-		InventoryGrid->ConstructInventoryGrid();
-	}
 	
-	if(EquipmentPanel)
-	{
-		EquipmentPanel->SetWidgetController(InventoryItemsWidgetController);
-	}
 }
 
 void UObsidianInventory::NativeDestruct()
@@ -90,9 +94,9 @@ bool UObsidianInventory::CanInteractWithEquipment() const
 
 void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if(InventoryGrid == nullptr)
+	if(Inventory_GridPanel == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("InventoryGrid is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(LogObsidian, Error, TEXT("Inventory_GridPanel is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -103,14 +107,14 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetDa
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
-	InventoryGrid->AddItemWidget(ItemWidget, ItemWidgetData);
+	Inventory_GridPanel->AddItemWidget(ItemWidget, ItemWidgetData);
 }
 
 void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if(EquipmentPanel == nullptr)
+	if(Equipment_SlotPanel == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("EquipmentPanel is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(LogObsidian, Error, TEXT("Equipment_SlotPanel is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -118,21 +122,21 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.IsItemForSwapSlot());
-	EquipmentPanel->AddItemWidget(ItemWidget, ItemWidgetData);
+	Equipment_SlotPanel->AddItemWidget(ItemWidget, ItemWidgetData);
 
 	if (ItemWidgetData.bDoesBlockSisterSlot)
 	{
 		UObsidianItem* BlockingItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 		BlockingItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.IsItemForSwapSlot());
-		EquipmentPanel->AddItemWidget(BlockingItemWidget, ItemWidgetData, true);
+		Equipment_SlotPanel->AddItemWidget(BlockingItemWidget, ItemWidgetData, true);
 	}
 }
 
 void UObsidianInventory::OnItemUnequipped(const FGameplayTag& SlotTag, const bool bBlocksOtherSlot)
 {
-	if (ensure(EquipmentPanel))
+	if (ensure(Equipment_SlotPanel))
 	{
-		EquipmentPanel->HandleItemUnequipped(SlotTag, bBlocksOtherSlot);
+		Equipment_SlotPanel->HandleItemUnequipped(SlotTag, bBlocksOtherSlot);
 	}
 }
 
@@ -140,21 +144,21 @@ void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidget
 {
 	if (ensure(ItemWidgetData.ItemPosition.IsOnInventoryGrid()))
 	{
-		InventoryGrid->HandleItemStackChanged(ItemWidgetData.ItemPosition.GetItemGridPosition(), ItemWidgetData.StackCount);
+		Inventory_GridPanel->HandleItemStackChanged(ItemWidgetData.ItemPosition.GetItemGridPosition(), ItemWidgetData.StackCount);
 	}
 }
 
 void UObsidianInventory::OnItemRemoved(const FObsidianItemPosition& FromPosition)
 {
-	if (ensure(InventoryGrid && FromPosition.IsOnInventoryGrid()))
+	if (ensure(Inventory_GridPanel && FromPosition.IsOnInventoryGrid()))
 	{
-		InventoryGrid->HandleItemRemoved(FromPosition);
+		Inventory_GridPanel->HandleItemRemoved(FromPosition);
 	}
 }
 
 void UObsidianInventory::HighlightSlotPlacement(const FGameplayTagContainer& WithTags)
 {
-	for (UObsidianItemSlot_Equipment* SlotWidget : EquipmentPanel->GetAllSlots())
+	for (UObsidianItemSlot_Equipment* SlotWidget : Equipment_SlotPanel->GetAllSlots())
 	{
 		if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
 		{

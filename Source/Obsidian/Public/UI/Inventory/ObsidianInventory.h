@@ -47,10 +47,10 @@ protected:
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianGridPanel> InventoryGrid;
+	TObjectPtr<UObsidianGridPanel> Inventory_GridPanel;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UObsidianSlotPanel> EquipmentPanel;
+	TObjectPtr<UObsidianSlotPanel> Equipment_SlotPanel;
 	
 private:
 	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);

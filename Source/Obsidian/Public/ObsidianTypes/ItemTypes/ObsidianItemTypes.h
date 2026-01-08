@@ -91,10 +91,11 @@ namespace ObsidianDefaultStackCounts
  * Grid Owner.
  */
 UENUM()
-enum class EObsidianGridOwner : uint8
+enum class EObsidianPanelOwner : uint8
 {
 	None = 0,
 	Inventory,
+	Equipment,
 	PlayerStash
 };
 

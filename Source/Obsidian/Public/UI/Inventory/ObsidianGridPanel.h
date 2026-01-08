@@ -7,7 +7,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "Slots/ObsidianItemSlot.h"
 
-#include "UI/ObsidianWidgetBase.h"
+#include "ObsidianItemStoragePanelBase.h"
 #include "ObsidianGridPanel.generated.h"
 
 struct FObsidianItemWidgetData;
@@ -54,13 +54,13 @@ protected:
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianGridPanel : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianGridPanel : public UObsidianItemStoragePanelBase
 {
 	GENERATED_BODY()
 
 public:
-	void ConstructInventoryGrid();
-	void ConstructStashTabGrid(const int32 GridWidthOverride, const int32 GridHeightOverride, const FGameplayTag& InStashTag);
+	bool ConstructInventoryPanel();
+	bool ConstructStashPanel(const int32 GridWidthOverride, const int32 GridHeightOverride, const FGameplayTag& InStashTag);
 	
 	UObsidianItemSlot_GridSlot* GetSlotByPosition(const FIntPoint& BySlotPosition);
 	const FObsidianGridSlotData* GetSlotDataAtGridPosition(const FIntPoint& AtGridPosition) const;
@@ -76,7 +76,7 @@ protected:
 	
 	virtual void HandleWidgetControllerSet() override;
 
-	void ConstructGrid(const int32 GridWidth, const int32 GridHeight);
+	bool ConstructGrid(const int32 GridWidth, const int32 GridHeight);
 	
 	void RegisterGridItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
 		const FIntPoint GridSpan);
@@ -111,12 +111,6 @@ private:
 	UPROPERTY()
 	TMap<FIntPoint, FObsidianGridSlotData> GridSlotDataMap;
 	
-	UPROPERTY()
-	EObsidianGridOwner GridOwner = EObsidianGridOwner::None;
-
-	UPROPERTY()
-	FGameplayTag StashTag = FGameplayTag::EmptyTag;
-
 	/** Array of slots that are affected by item hover, to clear it later. */
 	UPROPERTY()
 	TArray<UObsidianItemSlot_GridSlot*> AffectedGridSlots;

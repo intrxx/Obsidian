@@ -7,7 +7,7 @@
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "UI/ObsidianWidgetBase.h"
+#include "ObsidianItemStoragePanelBase.h"
 #include "ObsidianSlotPanel.generated.h"
 
 struct FObsidianItemInteractionFlags;
@@ -54,12 +54,15 @@ protected:
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianSlotPanel : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianSlotPanel : public UObsidianItemStoragePanelBase
 {
 	GENERATED_BODY()
 
 public:
 	virtual void HandleWidgetControllerSet() override;
+
+	bool ConstructEquipmentPanel();
+	bool ConstructStashPanel(const FGameplayTag& InStashTabTag);
 
 	TArray<UObsidianItemSlot_Equipment*> GetAllSlots() const;
 	UObsidianItemSlot_Equipment* GetSlotByPosition(const FGameplayTag& AtSlotTag);
@@ -75,7 +78,7 @@ public:
 protected:
 	virtual void NativeDestruct() override;
 	
-	void InitializeEquipmentPanel();
+	bool ConstructSlots();
 	
 	void RegisterSlotItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
 		const bool bSwappedWithAnother, const bool bBlocksSlot = false,

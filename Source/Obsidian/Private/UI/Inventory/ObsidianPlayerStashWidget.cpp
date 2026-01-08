@@ -298,7 +298,7 @@ void UObsidianPlayerStashWidget::CreateStashTabs()
 				Tab->GetWidgetClass());
 
 			const FGameplayTag StashTabTag = Tab->GetStashTabTag();
-			SlotStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, this, StashTabTag);
+			SlotStashTabWidget->InitializeStashTab(InventoryItemsWidgetController, StashTabTag);
 
 			StashTab_Overlay->AddChildToOverlay(SlotStashTabWidget);
 			StashTabsMap.Add(StashTabTag, SlotStashTabWidget);

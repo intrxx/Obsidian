@@ -2,16 +2,14 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-
-// ~ Project
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
 
 #include "UI/Inventory/Stash/ObsidianStashTabWidget.h"
 #include "ObsidianStashTabWidget_Slots.generated.h"
 
+class UObsidianSlotPanel;
 class UObsidianPlayerStashWidget;
 class UObsidianItemSlot_Equipment;
 
@@ -24,26 +22,24 @@ class OBSIDIAN_API UObsidianStashTabWidget_Slots : public UObsidianStashTabWidge
 	GENERATED_BODY()
 
 public:
-	void InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag);
+	void InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController,
+		const FGameplayTag& InStashTabTag);
 
 	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
 	
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding) override;
 	
 protected:
-	UObsidianItemSlot_Equipment* FindEquipmentSlotForTag(const FGameplayTag& Tag) const;
-	
 	void OnStashSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
 	void OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
 		const FObsidianItemInteractionFlags& InteractionFlags) const;
+
+protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianSlotPanel> StashTab_SlotPanel;
 	
 private:
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsController;
 	
-	UPROPERTY()
-	TArray<TObjectPtr<UObsidianItemSlot_Equipment>> EquipmentSlots;
-
-	UPROPERTY()
-	TObjectPtr<UObsidianPlayerStashWidget> OwningStashWidget;
 };

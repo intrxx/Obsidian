@@ -39,8 +39,57 @@ void UObsidianSlotPanel::HandleWidgetControllerSet()
 {
 	InventoryItemsWidgetController = Cast<UObInventoryItemsWidgetController>(WidgetController);
 	check(InventoryItemsWidgetController);
+}
+
+bool UObsidianSlotPanel::ConstructEquipmentPanel()
+{
+	PanelOwner = EObsidianPanelOwner::Equipment;
+	return ConstructSlots();
+}
+
+bool UObsidianSlotPanel::ConstructStashPanel(const FGameplayTag& InStashTabTag)
+{
+	if (InStashTabTag.IsValid() == false)
+	{
+		return false;
+	}
+
+	StashTag = InStashTabTag;
+	PanelOwner = EObsidianPanelOwner::PlayerStash;
+	return ConstructSlots();
+}
+
+bool UObsidianSlotPanel::ConstructSlots()
+{
+	bool bSuccess = false;
+	WidgetTree->ForEachWidget([this, &bSuccess](UWidget* Widget)
+		{
+			if(UObsidianItemSlot_Equipment* EquipmentSlot = Cast<UObsidianItemSlot_Equipment>(Widget))
+			{
+				EquipmentSlot->OnEquipmentSlotHoverDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotHover);
+				EquipmentSlot->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
+				
+				FObsidianSlotData NewData;
+				NewData.OwningSlot = EquipmentSlot;
+				SlotDataMap.Add(EquipmentSlot->GetSlotTag(), NewData);
+				bSuccess = true;
+			}
+		});
+	return bSuccess;
+}
+
+void UObsidianSlotPanel::NativeDestruct()
+{
+	for (const TPair<FGameplayTag, FObsidianSlotData>& SlotDataPair : SlotDataMap)
+	{
+		if (UObsidianItemSlot_Equipment* EquipmentSlot = SlotDataPair.Value.OwningSlot)
+		{
+			EquipmentSlot->OnEquipmentSlotHoverDelegate.Clear();
+			EquipmentSlot->OnEquipmentSlotPressedDelegate.Clear();
+		}
+	}
 	
-	InitializeEquipmentPanel();
+	Super::NativeDestruct();
 }
 
 TArray<UObsidianItemSlot_Equipment*> UObsidianSlotPanel::GetAllSlots() const
@@ -58,37 +107,6 @@ TArray<UObsidianItemSlot_Equipment*> UObsidianSlotPanel::GetAllSlots() const
 
 	return Slots;
 }
-
-void UObsidianSlotPanel::InitializeEquipmentPanel()
-{
-	WidgetTree->ForEachWidget([this](UWidget* Widget)
-		{
-			if(UObsidianItemSlot_Equipment* EquipmentSlot = Cast<UObsidianItemSlot_Equipment>(Widget))
-			{
-				EquipmentSlot->OnEquipmentSlotHoverDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotHover);
-				EquipmentSlot->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
-				
-				FObsidianSlotData NewData;
-				NewData.OwningSlot = EquipmentSlot;
-				SlotDataMap.Add(EquipmentSlot->GetSlotTag(), NewData);
-			}
-		});
-}
-
-void UObsidianSlotPanel::NativeDestruct()
-{
-	for (const TPair<FGameplayTag, FObsidianSlotData>& SlotDataPair : SlotDataMap)
-	{
-		if (UObsidianItemSlot_Equipment* EquipmentSlot = SlotDataPair.Value.OwningSlot)
-		{
-			EquipmentSlot->OnEquipmentSlotHoverDelegate.Clear();
-			EquipmentSlot->OnEquipmentSlotPressedDelegate.Clear();
-		}
-	}
-	
-	Super::NativeDestruct();
-}
-
 
 UObsidianItemSlot_Equipment* UObsidianSlotPanel::GetSlotByPosition(const FGameplayTag& AtSlotTag)
 {

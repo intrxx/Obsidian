@@ -2,37 +2,28 @@
 
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Slots.h"
 
-// ~ Core
-#include "Blueprint/WidgetTree.h"
-
-// ~ Project
+#include "UI/Inventory/ObsidianSlotPanel.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
-void UObsidianStashTabWidget_Slots::InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController, UObsidianPlayerStashWidget* InOwningStashWidget, const FGameplayTag& InStashTabTag)
+void UObsidianStashTabWidget_Slots::InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController,
+	const FGameplayTag& InStashTabTag)
 {
-	if (InInventoryItemsWidgetController && InOwningStashWidget && InStashTabTag.IsValid())
+	if (InInventoryItemsWidgetController && InStashTabTag.IsValid())
 	{
 		InventoryItemsController = InInventoryItemsWidgetController;
-		OwningStashWidget = InOwningStashWidget;
 		StashTabTag = InStashTabTag;
-	
-		WidgetTree->ForEachWidget([this](UWidget* Widget)
-			{
-				if(UObsidianItemSlot_Equipment* EquipmentSlot = Cast<UObsidianItemSlot_Equipment>(Widget))
-				{
-					EquipmentSlot->OnEquipmentSlotHoverDelegate.AddUObject(this, &ThisClass::OnStashSlotHover);
-					EquipmentSlot->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::OnStashSlotMouseButtonDown);
-					EquipmentSlots.Add(EquipmentSlot);
-				}
-			});
+
+		StashTab_SlotPanel->SetWidgetController(InInventoryItemsWidgetController);
+		const bool bSuccess = StashTab_SlotPanel->ConstructStashPanel(InStashTabTag);
+		ensureMsgf(bSuccess, TEXT("StashTab_SlotPanel was unable to construct the SlotPanel!"));
 	}
 }
 
 TArray<UObsidianItemSlot_Equipment*> UObsidianStashTabWidget_Slots::GetSlotWidgets() const
 {
-	return EquipmentSlots;
+	return {};
 }
 
 void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding)
@@ -42,23 +33,11 @@ void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget, 
 		return;
 	}
 
-	const FObsidianItemPosition ItemPosition = InItemWidget->GetItemPosition();
-	if (UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(ItemPosition.GetItemSlotTag()))
-	{
-		EquipmentSlot->AddItemToSlot(InItemWidget, ItemSlotPadding);
-	}
-}
-
-UObsidianItemSlot_Equipment* UObsidianStashTabWidget_Slots::FindEquipmentSlotForTag(const FGameplayTag& Tag) const
-{
-	for(UObsidianItemSlot_Equipment* EquipmentSlot : EquipmentSlots)
-	{
-		if(EquipmentSlot->GetSlotTag() == Tag)
-		{
-			return EquipmentSlot;
-		}
-	}
-	return nullptr;
+	// const FObsidianItemPosition ItemPosition = InItemWidget->GetItemPosition();
+	// if (UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(ItemPosition.GetItemSlotTag()))
+	// {
+	// 	EquipmentSlot->AddItemToSlot(InItemWidget, ItemSlotPadding);
+	// }
 }
 
 void UObsidianStashTabWidget_Slots::OnStashSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)

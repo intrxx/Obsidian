@@ -1171,7 +1171,7 @@ bool UObInventoryItemsWidgetController::IsDraggingAnItem() const
 	return false;
 }
 
-bool UObInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag) const
+bool UObInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianPanelOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag) const
 {
 	FIntPoint LocalItemGridSpan;
 	if(!GetDraggedItemGridSpan(LocalItemGridSpan))
@@ -1181,14 +1181,14 @@ bool UObInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianGridO
 	
 	switch(GridOwner)
 	{
-		case EObsidianGridOwner::Inventory:
+		case EObsidianPanelOwner::Inventory:
 			if(InventoryComponent == nullptr)
 			{
 				UE_LOG(LogWidgetController_Items, Error, TEXT("InventoryComponent is invalid in [%hs]"), __FUNCTION__);
 				return false;	
 			}
 			return InventoryComponent->CheckSpecifiedPosition(LocalItemGridSpan, AtGridSlot);
-		case EObsidianGridOwner::PlayerStash:
+		case EObsidianPanelOwner::PlayerStash:
 			break;
 	default:
 		UE_LOG(LogWidgetController_Items, Error, TEXT("There is no valid GridOwner in [%hs]"), __FUNCTION__);
@@ -1198,12 +1198,12 @@ bool UObInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianGridO
 	return false;
 }
 
-bool UObInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot,
+bool UObInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianPanelOwner GridOwner, const FIntPoint& AtGridSlot,
 	const FIntPoint& ItemGridSpan, const FGameplayTag& StashTag) const
 {
 	switch(GridOwner)
 	{
-	case EObsidianGridOwner::Inventory:
+	case EObsidianPanelOwner::Inventory:
 		{
 			if(InventoryComponent == nullptr)
 			{
@@ -1212,7 +1212,7 @@ bool UObInventoryItemsWidgetController::CanPlaceDraggedItem(const EObsidianGridO
 			}
 			return InventoryComponent->CheckSpecifiedPosition(ItemGridSpan,AtGridSlot);
 		}
-	case EObsidianGridOwner::PlayerStash:
+	case EObsidianPanelOwner::PlayerStash:
 		{
 			if(OwnerPlayerInputManager == nullptr || PlayerStashComponent == nullptr)
 			{
@@ -1248,17 +1248,17 @@ bool UObInventoryItemsWidgetController::CanPlaceItemAtStashSlot(const FObsidianI
 	return PlayerStashComponent->CheckSpecifiedPosition(ItemPosition, CategoryTag, ItemBaseType, FIntPoint::NoneValue);
 }
 
-bool UObInventoryItemsWidgetController::CanInteractWithGrid(const EObsidianGridOwner GridOwner) const
+bool UObInventoryItemsWidgetController::CanInteractWithGrid(const EObsidianPanelOwner GridOwner) const
 {
 	switch(GridOwner)
 	{
-	case EObsidianGridOwner::Inventory:
+	case EObsidianPanelOwner::Inventory:
 		if(InventoryComponent)
 		{
 			return InventoryComponent->CanOwnerModifyInventoryState();
 		}
 		break;
-	case EObsidianGridOwner::PlayerStash:
+	case EObsidianPanelOwner::PlayerStash:
 		if(PlayerStashComponent)
 		{
 			return PlayerStashComponent->CanOwnerModifyPlayerStashState();

@@ -57,26 +57,32 @@ void UObsidianGridPanel::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianGridPanel::ConstructInventoryGrid()
+bool UObsidianGridPanel::ConstructInventoryPanel()
 {
-	check(InventoryItemsWidgetController);
+	if (InventoryItemsWidgetController == nullptr)
+	{
+		return false;
+	}
 	
-	GridOwner = EObsidianGridOwner::Inventory;
-
-	ConstructGrid(InventoryItemsWidgetController->GetInventoryGridWidth(),
-		InventoryItemsWidgetController->GetInventoryGridHeight());
+	PanelOwner = EObsidianPanelOwner::Inventory;
+	return ConstructGrid(InventoryItemsWidgetController->GetInventoryGridWidth(),
+				InventoryItemsWidgetController->GetInventoryGridHeight());
 }
 
-void UObsidianGridPanel::ConstructStashTabGrid(const int32 GridWidthOverride, const int32 GridHeightOverride,
+bool UObsidianGridPanel::ConstructStashPanel(const int32 GridWidthOverride, const int32 GridHeightOverride,
 	const FGameplayTag& InStashTag)
 {
-	GridOwner = EObsidianGridOwner::PlayerStash;
+	if (InStashTag.IsValid() == false)
+	{
+		return false;
+	}
+	
 	StashTag = InStashTag;
-
-	ConstructGrid(GridWidthOverride, GridHeightOverride);
+	PanelOwner = EObsidianPanelOwner::PlayerStash;
+	return ConstructGrid(GridWidthOverride, GridHeightOverride);
 }
 
-void UObsidianGridPanel::ConstructGrid(const int32 GridWidth, const int32 GridHeight)
+bool UObsidianGridPanel::ConstructGrid(const int32 GridWidth, const int32 GridHeight)
 {
 	checkf(GridSlotClass, TEXT("Tried to create widget without valid widget class in [%hs],"
 							 " fill it in ObsidianInventory instance."), __FUNCTION__);
@@ -119,6 +125,12 @@ void UObsidianGridPanel::ConstructGrid(const int32 GridWidth, const int32 GridHe
 			GridX++;
 		}
 	}
+
+	if (GridSize == GridSlotDataMap.Num())
+	{
+		return true;
+	}
+	return false;
 }
 
 UObsidianItemSlot_GridSlot* UObsidianGridPanel::GetSlotByPosition(const FIntPoint& BySlotPosition)
@@ -203,7 +215,7 @@ void UObsidianGridPanel::OnGridSlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 	FIntPoint GridSlotPosition = AffectedSlot->GetGridSlotPosition();
 	check(GridSlotPosition != FIntPoint::NoneValue);
 
-	const bool bCanInteractWithGrid = InventoryItemsWidgetController->CanInteractWithGrid(GridOwner);
+	const bool bCanInteractWithGrid = InventoryItemsWidgetController->CanInteractWithGrid(PanelOwner);
 	const bool bIsDraggingAnItem = InventoryItemsWidgetController->IsDraggingAnItem();
 	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridSlotPosition);
 	const bool bIsSlotOccupied = SlotData && SlotData->IsOccupied();
@@ -229,7 +241,7 @@ void UObsidianGridPanel::OnGridSlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 			if (bCanInteractWithGrid)
 			{
 				//TODO(intrxx) Override for the actual clicked position
-				bCanPlace = InventoryItemsWidgetController->CanPlaceDraggedItem(GridOwner, GridSlotPosition, ItemGridSpan,
+				bCanPlace = InventoryItemsWidgetController->CanPlaceDraggedItem(PanelOwner, GridSlotPosition, ItemGridSpan,
 					StashTag);
 			}
 

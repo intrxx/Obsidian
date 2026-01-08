@@ -12,21 +12,23 @@
 void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController,
 	const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)
 {
-	if(StashTabGrid && InventoryItemsWidgetController)
+	if(StashTab_GridPanel && InventoryItemsWidgetController)
 	{
 		InventoryItemsController = InventoryItemsWidgetController;
 		StashTabTag = InStashTabTag;
-		StashTabGrid->SetWidgetController(InventoryItemsWidgetController);
-		StashTabGrid->ConstructStashTabGrid(GridWidth, GridHeight, InStashTabTag);
-		//StashTabGrid->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToStashTab);
+		
+		StashTab_GridPanel->SetWidgetController(InventoryItemsWidgetController);
+		const bool bSuccess = StashTab_GridPanel->ConstructStashPanel(GridWidth, GridHeight, InStashTabTag);
+		ensureMsgf(bSuccess, TEXT("StashTab_GridPanel was unable to construct the GridPanel!"));
+		//StashTab_GridPanel->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToStashTab);
 	}
 }
 
 void UObsidianStashTabWidget_Grid::AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
-	if (StashTabGrid)
+	if (StashTab_GridPanel)
 	{
-		StashTabGrid->AddItemWidget(InItemWidget, FObsidianItemWidgetData() /** ItemSlotPadding */);
+		StashTab_GridPanel->AddItemWidget(InItemWidget, FObsidianItemWidgetData() /** ItemSlotPadding */);
 	}
 }
 

@@ -134,11 +134,11 @@ public:
 	void OnPlayerStashOpen();
 	
 	bool IsDraggingAnItem() const;
-	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
-	bool CanPlaceDraggedItem(const EObsidianGridOwner GridOwner, const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
+	bool CanPlaceDraggedItem(const EObsidianPanelOwner GridOwner, const FIntPoint& AtGridSlot, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
+	bool CanPlaceDraggedItem(const EObsidianPanelOwner GridOwner, const FIntPoint& AtGridSlot, const FIntPoint& ItemGridSpan, const FGameplayTag& StashTag = FGameplayTag::EmptyTag) const;
 	bool CanPlaceItemAtStashSlot(const FObsidianItemPosition& ItemPosition) const;
 
-	bool CanInteractWithGrid(const EObsidianGridOwner GridOwner) const;
+	bool CanInteractWithGrid(const EObsidianPanelOwner GridOwner) const;
 	bool CanInteractWithInventory() const;
 	bool CanInteractWithPlayerStash() const;
 	bool CanInteractWithEquipment() const;
