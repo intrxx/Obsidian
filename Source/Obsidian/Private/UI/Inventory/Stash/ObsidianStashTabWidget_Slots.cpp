@@ -2,6 +2,7 @@
 
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Slots.h"
 
+#include "Obsidian/ObsidianGameModule.h"
 #include "UI/Inventory/ObsidianSlotPanel.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
@@ -23,59 +24,35 @@ void UObsidianStashTabWidget_Slots::InitializeStashTab(UObInventoryItemsWidgetCo
 
 TArray<UObsidianItemSlot_Equipment*> UObsidianStashTabWidget_Slots::GetSlotWidgets() const
 {
+	if (StashTab_SlotPanel)
+	{
+		return StashTab_SlotPanel->GetAllSlots();
+	}
 	return {};
 }
 
-void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding)
+void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget,
+	const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if(InItemWidget == nullptr)
+	if(ensure(StashTab_SlotPanel && InItemWidget && ItemWidgetData.ItemPosition.IsOnStashSlot()))
 	{
-		return;
-	}
+		StashTab_SlotPanel->AddItemWidget(InItemWidget, ItemWidgetData);
 
-	// const FObsidianItemPosition ItemPosition = InItemWidget->GetItemPosition();
-	// if (UObsidianItemSlot_Equipment* EquipmentSlot = FindEquipmentSlotForTag(ItemPosition.GetItemSlotTag()))
-	// {
-	// 	EquipmentSlot->AddItemToSlot(InItemWidget, ItemSlotPadding);
-	// }
+		if (ItemWidgetData.bDoesBlockSisterSlot)
+		{
+			if (const TSubclassOf<UObsidianItem> ItemClass = InItemWidget->GetClass())
+			{
+				UObsidianItem* BlockingItemWidget = CreateWidget<UObsidianItem>(this, ItemClass);
+				BlockingItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage,
+					ItemWidgetData.IsItemForSwapSlot());
+				StashTab_SlotPanel->AddItemWidget(BlockingItemWidget, ItemWidgetData, true);
+			}
+			else
+			{
+				UE_LOG(LogObsidian, Error, TEXT("Unable to construct blockade Item from ItemClass in [%hs]."),
+					__FUNCTION__);
+			}
+		}
+	}
 }
 
-void UObsidianStashTabWidget_Slots::OnStashSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)
-{
-	if (InventoryItemsController == nullptr || AffectedSlot == nullptr)
-	{
-		return;
-	}
-
-	if (bEntered == false)
-	{
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
-		return;
-	}
-	
-	if(InventoryItemsController->CanInteractWithPlayerStash() == false)
-	{
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::RedLight, EObsidianItemSlotStatePriority::Low);
-		return;
-	}
-
-	if(InventoryItemsController->IsDraggingAnItem() == false)
-	{
-		AffectedSlot->SetSlotState(EObsidianItemSlotState::Selected, EObsidianItemSlotStatePriority::Low);
-		return;
-	}
-		
-	const bool bCanPlace = InventoryItemsController->CanPlaceItemAtStashSlot(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag));
-	const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight : EObsidianItemSlotState::RedLight;
-	AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
-}
-
-void UObsidianStashTabWidget_Slots::OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
-	const FObsidianItemInteractionFlags& InteractionFlags) const
-{
-	if (InventoryItemsController && AffectedSlot)
-	{
-		InventoryItemsController->RequestAddingItemToStashTab(FObsidianItemPosition(AffectedSlot->GetSlotTag(), StashTabTag),
-			InteractionFlags.bItemStacksInteraction);
-	}
-}

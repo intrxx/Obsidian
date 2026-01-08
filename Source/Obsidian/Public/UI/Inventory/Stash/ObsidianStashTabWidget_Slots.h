@@ -27,12 +27,7 @@ public:
 
 	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
 	
-	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding) override;
-	
-protected:
-	void OnStashSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-	void OnStashSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
-		const FObsidianItemInteractionFlags& InteractionFlags) const;
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) override;
 
 protected:
 	UPROPERTY(meta=(BindWidget))

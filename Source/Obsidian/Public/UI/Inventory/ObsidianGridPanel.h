@@ -68,14 +68,13 @@ public:
 	bool IsGridSlotOccupied(const FIntPoint& AtGridPosition) const;
 	
 	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData);
-	void HandleItemRemoved(const FObsidianItemPosition& FromPosition);
+	void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
 	void HandleItemStackChanged(const FIntPoint& AtGridSlot, const uint8 NewStackCount);
 
 protected:
+	virtual void HandleWidgetControllerSet() override;
 	virtual void NativeDestruct() override;
 	
-	virtual void HandleWidgetControllerSet() override;
-
 	bool ConstructGrid(const int32 GridWidth, const int32 GridHeight);
 	
 	void RegisterGridItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,

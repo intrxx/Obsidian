@@ -102,10 +102,7 @@ protected:
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemovedSignature, const FObsidianItemPosition& FromItemPosition);
-
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquippedItemRemovedSignature, const FGameplayTag& PrimarySlotTag, const bool bBlocksOtherSlot);
-
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemovedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartPlacementHighlightSignature, const FGameplayTagContainer& ForSlotsWithTag);
 DECLARE_MULTICAST_DELEGATE(FOnStopPlacementHighlightSignature);
@@ -186,13 +183,14 @@ public:
 	
 public:
 	FOnItemAddedSignature OnItemEquippedDelegate;
-	FOnItemAddedSignature OnItemAddedDelegate;
+	FOnItemAddedSignature OnItemInventorizedDelegate;
 	FOnItemAddedSignature OnItemStashedDelegate;
-	
+
+	FOnItemChangedSignature OnEquippedItemChangedDelegate;
 	FOnItemChangedSignature OnInventoryItemChangedDelegate;
 	FOnItemChangedSignature OnStashedItemChangedDelegate;
 
-	FOnEquippedItemRemovedSignature OnEquippedItemRemovedDelegate;
+	FOnItemRemovedSignature OnEquippedItemRemovedDelegate;
 	FOnItemRemovedSignature OnInventorizedItemRemovedDelegate;
 	FOnItemRemovedSignature OnStashedItemRemovedDelegate;
 

@@ -34,15 +34,8 @@ class OBSIDIAN_API UObsidianInventory : public UObsidianMainOverlayWidgetBase
 {
 	GENERATED_BODY()
 
-public:
-	virtual void HandleWidgetControllerSet() override;
-
-	bool IsPlayerDraggingItem() const;
-	bool CanEquipDraggedItem(const FGameplayTag& ToSlotTag) const;
-	bool CanInteractWithEquipment() const;
-
 protected:
-	virtual void NativeConstruct() override;
+	virtual void HandleWidgetControllerSet() override;
 	virtual void NativeDestruct() override;
 	
 protected:
@@ -53,24 +46,23 @@ protected:
 	TObjectPtr<UObsidianSlotPanel> Equipment_SlotPanel;
 	
 private:
-	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemUnequipped(const FGameplayTag& SlotTag, const bool bBlocksOtherSlot);
-	
-	/** Function that triggers when automatically adding item. E.g. from the ground when inventory is hidden. */
 	void OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemRemoved(const FObsidianItemPosition& FromPosition);
+	void OnItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
+	
+	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnItemUnequipped(const FObsidianItemWidgetData& ItemWidgetData);
 	
 	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
 	void StopHighlightSlotPlacement();
 
 private:
-	UPROPERTY()
-	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
-
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianItem> ItemWidgetClass;
-
+	
+	UPROPERTY()
+	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
+	
 	UPROPERTY()
 	TArray<UObsidianItemSlot_Equipment*> CachedHighlightedSlot;
 };

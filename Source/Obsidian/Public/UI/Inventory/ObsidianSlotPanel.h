@@ -29,6 +29,7 @@ public:
 	FObsidianSlotData(){}
 
 	bool IsOccupied() const;
+	bool IsBlocked() const;
 	void AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget, const bool bBlockSlot);
 	void Reset();
 
@@ -41,11 +42,11 @@ public:
 
 	UPROPERTY()
 	UObsidianItem* ItemWidget = nullptr;
-	
-	UPROPERTY()
-	bool bBlocked = false;
 
 protected:
+	UPROPERTY()
+	bool bBlocked = false;
+	
 	UPROPERTY()
 	bool bOccupied = false;
 };
@@ -59,8 +60,6 @@ class OBSIDIAN_API UObsidianSlotPanel : public UObsidianItemStoragePanelBase
 	GENERATED_BODY()
 
 public:
-	virtual void HandleWidgetControllerSet() override;
-
 	bool ConstructEquipmentPanel();
 	bool ConstructStashPanel(const FGameplayTag& InStashTabTag);
 
@@ -73,9 +72,10 @@ public:
 	
 	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData,
 		const bool bBlockSlot = false);
-	void HandleItemUnequipped(const FGameplayTag& SlotToClearTag, const bool bBlocksOtherSlot);
+	void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
 	
 protected:
+	virtual void HandleWidgetControllerSet() override;
 	virtual void NativeDestruct() override;
 	
 	bool ConstructSlots();

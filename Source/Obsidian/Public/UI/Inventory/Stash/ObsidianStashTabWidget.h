@@ -24,7 +24,7 @@ class OBSIDIAN_API UObsidianStashTabWidget : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f) {};
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) {};
 	
 	FGameplayTag GetStashTabTag() const;
 	

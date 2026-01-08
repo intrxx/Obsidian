@@ -375,30 +375,31 @@ void UObsidianGridPanel::RegisterGridItemWidget(const FObsidianItemPosition& Ite
 	}
 }
 
-void UObsidianGridPanel::HandleItemRemoved(const FObsidianItemPosition& FromPosition)
+void UObsidianGridPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if (ensureMsgf(FromPosition.IsValid(), TEXT("FromPosition is invalid in [%hs]."), __FUNCTION__))
+	const FIntPoint GridPositionToClear = ItemWidgetData.ItemPosition.GetItemGridPosition();
+	if (ensureMsgf(GridPositionToClear != FIntPoint::NoneValue, TEXT("FromPosition is invalid in [%hs]."), __FUNCTION__))
 	{
-		const FIntPoint GridPosition = FromPosition.GetItemGridPosition();
-		if (const FObsidianGridSlotData* SlotData = GridSlotDataMap.Find(GridPosition))
+		if (const FObsidianGridSlotData* SlotData = GridSlotDataMap.Find(GridPositionToClear))
 		{
 			check(SlotData->IsOccupied());
-			
-			if (SlotData->ItemWidget == nullptr)
+
+			UObsidianItem* SlottedItemWidget = SlotData->ItemWidget;
+			if (SlottedItemWidget == nullptr)
 			{
 				UE_LOG(LogTemp, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
-					*GridPosition.ToString());
+					*GridPositionToClear.ToString());
 				return;
 			}
 
-			SlotData->ItemWidget->RemoveFromParent();
+			SlottedItemWidget->RemoveFromParent();
 
 			const FIntPoint OccupiedGridSpan = SlotData->ItemGridSpan;
 			for(int32 SpanX = 0; SpanX < OccupiedGridSpan.X; ++SpanX)
 			{
 				for(int32 SpanY = 0; SpanY < OccupiedGridSpan.Y; ++SpanY)
 				{
-					const FIntPoint LocationToReset = GridPosition + FIntPoint(SpanX, SpanY);
+					const FIntPoint LocationToReset = GridPositionToClear + FIntPoint(SpanX, SpanY);
 					if(FObsidianGridSlotData* NextSlotData = GridSlotDataMap.Find(LocationToReset))
 					{
 						NextSlotData->Reset();

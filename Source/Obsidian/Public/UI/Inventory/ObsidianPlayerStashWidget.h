@@ -49,7 +49,7 @@ protected:
 
 	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemRemoved(const FObsidianItemPosition& FromPosition);
+	void OnItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
 
 	void OnStashedItemRightMouseButtonPressed(UObsidianItem* ItemWidget);
 	void OnStashedItemLeftMouseButtonDown(const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);

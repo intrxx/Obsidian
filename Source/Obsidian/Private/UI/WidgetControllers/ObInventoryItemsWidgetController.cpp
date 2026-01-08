@@ -171,7 +171,7 @@ void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Cha
 		ItemWidgetData.bUsable = Instance->IsItemUsable();
 		ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
 		
-		OnItemAddedDelegate.Broadcast(ItemWidgetData);
+		OnItemInventorizedDelegate.Broadcast(ItemWidgetData);
 	}
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
@@ -186,7 +186,10 @@ void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Cha
 		}
 		
 		ClearItemDescriptionForPosition(InventoryChangeMessage.GridItemPosition);
-		OnInventorizedItemRemovedDelegate.Broadcast(InventoryChangeMessage.GridItemPosition);
+
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemPosition = InventoryChangeMessage.GridItemPosition;
+		OnInventorizedItemRemovedDelegate.Broadcast(ItemWidgetData);
 	}
 	else if (InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemStacksChanged)
 	{
@@ -236,7 +239,11 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 		if(SlotTagToClear.IsValid())
 		{
 			ClearItemDescriptionForPosition(SlotTagToClear);
-			OnEquippedItemRemovedDelegate.Broadcast(SlotTagToClear, Instance->DoesItemNeedTwoSlots());
+
+			FObsidianItemWidgetData ItemWidgetData;
+			ItemWidgetData.ItemPosition = SlotTagToClear;
+			ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedTwoSlots();
+			OnEquippedItemRemovedDelegate.Broadcast(ItemWidgetData);
 		}
 	}
 	else if(EquipmentChangeMessage.ChangeType == EObsidianEquipmentChangeType::ECT_ItemSwapped)
@@ -246,7 +253,10 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 		const FGameplayTag SlotTagToClear = EquipmentChangeMessage.SlotTagToClear;
 		if(SlotTagToClear.IsValid())
 		{
-			OnEquippedItemRemovedDelegate.Broadcast(SlotTagToClear, Instance->DoesItemNeedTwoSlots());
+			FObsidianItemWidgetData ItemWidgetData;
+			ItemWidgetData.ItemPosition = SlotTagToClear;
+			ItemWidgetData.bDoesBlockSisterSlot = Instance->DoesItemNeedTwoSlots();
+			OnEquippedItemRemovedDelegate.Broadcast(ItemWidgetData);
 		}
 		
 		FObsidianItemWidgetData ItemWidgetData;
@@ -313,7 +323,9 @@ void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channe
 		}
 
 		ClearItemDescriptionForPosition(StashChangeMessage.ItemPosition);
-		OnStashedItemRemovedDelegate.Broadcast(StashChangeMessage.ItemPosition);
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemPosition = StashChangeMessage.ItemPosition;
+		OnStashedItemRemovedDelegate.Broadcast(ItemWidgetData);
 	}
 	else if (StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemStacksChanged)
 	{
@@ -436,7 +448,7 @@ void UObInventoryItemsWidgetController::OnInventoryOpen()
 			ItemWidgetData.bUsable = Item->IsItemUsable();
 			ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
 
-			OnItemAddedDelegate.Broadcast(ItemWidgetData);
+			OnItemInventorizedDelegate.Broadcast(ItemWidgetData);
 		}
 	}
 

@@ -150,7 +150,7 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 		}
 		
 		InventoryItemsWidgetController->RegisterStashTabItemWidget(ItemWidgetData.ItemPosition, ItemWidget);
-		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData.ItemSlotPadding);
+		StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData);
 
 		bStashChanged = true;
 	}
@@ -166,7 +166,7 @@ void UObsidianPlayerStashWidget::OnItemChanged(const FObsidianItemWidgetData& It
 	}
 }
 
-void UObsidianPlayerStashWidget::OnItemRemoved(const FObsidianItemPosition& FromPosition)
+void UObsidianPlayerStashWidget::OnItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	bStashChanged = true;
 }

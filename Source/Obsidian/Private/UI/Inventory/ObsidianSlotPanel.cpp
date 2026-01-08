@@ -16,8 +16,13 @@ bool FObsidianSlotData::IsOccupied() const
 	return bOccupied;
 }
 
+bool FObsidianSlotData::IsBlocked() const
+{
+	return bBlocked;
+}
+
 void FObsidianSlotData::AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget,
-	const bool bBlockSlot)
+                                   const bool bBlockSlot)
 {
 	OriginPosition = InPosition;
 	ItemWidget = InItemWidget;
@@ -145,7 +150,7 @@ bool UObsidianSlotPanel::IsSlotBlocked(const FGameplayTag& AtSlotTag) const
 {
 	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(AtSlotTag))
 	{
-		return SlotData->bBlocked;
+		return SlotData->IsBlocked();
 	}
 	return false;
 }
@@ -234,7 +239,7 @@ void UObsidianSlotPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 	
 	const bool bCanInteract = InventoryItemsWidgetController->CanInteractWithEquipment();
 	const bool IsSlotOccupied = SlotData->IsOccupied();
-	const bool IsSlotBlocked = SlotData->bBlocked;
+	const bool IsSlotBlocked = SlotData->IsBlocked();
 	const bool IsSlotEmpty = IsSlotBlocked == false && IsSlotOccupied == false;
 	
 	if (bEntered)
@@ -304,7 +309,7 @@ void UObsidianSlotPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_
 		return;
 	}
 	
-	if (SlotData->bBlocked)
+	if (SlotData->IsBlocked())
 	{
 		InventoryItemsWidgetController->HandleLeftClickingOnEquipmentItem(SlotTag,
 			SlotData->OriginPosition.GetItemSlotTag());
@@ -319,13 +324,14 @@ void UObsidianSlotPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_
 	}
 }
 
-void UObsidianSlotPanel::HandleItemUnequipped(const FGameplayTag& SlotToClearTag, const bool bBlocksOtherSlot)
+void UObsidianSlotPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
 {
+	const FGameplayTag SlotToClearTag = ItemWidgetData.ItemPosition.GetItemSlotTag();
 	if (ensureMsgf(SlotToClearTag.IsValid(), TEXT("SlotToClearTag is invalid in [%hs]. "), __FUNCTION__))
 	{
 		UnregisterSlotItemWidget(SlotToClearTag);
 
-		if (bBlocksOtherSlot)
+		if (ItemWidgetData.bDoesBlockSisterSlot)
 		{
 			if (const FObsidianSlotData* SlotData = SlotDataMap.Find(SlotToClearTag))
 			{
@@ -372,14 +378,15 @@ void UObsidianSlotPanel::UnregisterSlotItemWidget(const FGameplayTag& SlotTag)
 		{
 			check(SlotData->IsOccupied());
 
-			if (SlotData->ItemWidget == nullptr)
+			UObsidianItem* SlottedItemWidget = SlotData->ItemWidget;
+			if (SlottedItemWidget == nullptr)
 			{
 				UE_LOG(LogTemp, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
 					*SlotTag.ToString());
 				return;
 			}
 
-			SlotData->ItemWidget->RemoveFromParent();
+			SlottedItemWidget->RemoveFromParent();
 			SlotData->Reset();
 		}
 	}

@@ -2,12 +2,9 @@
 
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Grid.h"
 
+
 #include "UI/Inventory/ObsidianGridPanel.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
-
-// ~ Core
-
-// ~ Project
 
 void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController,
 	const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)
@@ -24,11 +21,11 @@ void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetCon
 	}
 }
 
-void UObsidianStashTabWidget_Grid::AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding)
+void UObsidianStashTabWidget_Grid::AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if (StashTab_GridPanel)
+	if (ensure(StashTab_GridPanel && InItemWidget && ItemWidgetData.ItemPosition.IsInStash()))
 	{
-		StashTab_GridPanel->AddItemWidget(InItemWidget, FObsidianItemWidgetData() /** ItemSlotPadding */);
+		StashTab_GridPanel->AddItemWidget(InItemWidget, ItemWidgetData);
 	}
 }
 

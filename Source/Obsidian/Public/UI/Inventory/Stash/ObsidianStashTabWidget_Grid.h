@@ -27,7 +27,7 @@ public:
 	void InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController, const int32 GridWidth,
 		const int32 GridHeight, const FGameplayTag& InStashTabTag);
 
-	virtual void AddItemToStash(UObsidianItem* InItemWidget, const float ItemSlotPadding) override;
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) override;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
