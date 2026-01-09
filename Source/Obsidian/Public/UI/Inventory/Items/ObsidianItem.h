@@ -5,8 +5,6 @@
 #include <CoreMinimal.h>
 
 
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItem.generated.h"
 
@@ -14,12 +12,6 @@ class UCommonTextBlock;
 class USizeBox;
 class UObsidianItem;
 class UImage;
-
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLeftMouseButtonPressedSignature, const UObsidianItem* ItemWidget, const FObsidianItemInteractionFlags& InteractionFlags);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRightMouseButtonPressedSignature, UObsidianItem* ItemWidget);
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemMouseEnterSignature, const UObsidianItem* ItemWidget);
-DECLARE_MULTICAST_DELEGATE(FOnItemMouseLeaveSignature);
 
 /**
  * Item Widget that is displayed in the inventory.
@@ -30,14 +22,12 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeItemWidget(const FObsidianItemPosition& DesiredPosition, const FIntPoint& InItemGridSpan,
-		UTexture2D* ItemImage, const int32 CurrentStack = 0);
+	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
 	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot = false);
 	
 	void AddCurrentStackCount(const int32 StackCountToAdd);
 	void OverrideCurrentStackCount(const int32 NewStackCount);
 	
-	FObsidianItemPosition GetItemPosition() const;
 	FSlateBrush GetItemImage() const;
 	FVector2D GetItemWidgetSize() const;
 
@@ -50,18 +40,8 @@ public:
 	void HighlightItem();
 	void ResetHighlight();
 	
-public:
-	FOnItemLeftMouseButtonPressedSignature OnItemLeftMouseButtonPressedDelegate;
-	FOnItemRightMouseButtonPressedSignature OnItemRightMouseButtonPressedDelegate;
-	FOnItemMouseEnterSignature OnItemMouseEnterDelegate;
-	FOnItemMouseLeaveSignature OnItemMouseLeaveDelegate;
-	
 protected:
 	virtual void NativeConstruct() override;
-	
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
 protected:
 	/** Opacity to set when item is added a blocking slot item. */
@@ -86,9 +66,6 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
-
-	UPROPERTY()
-	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
 
 private:
 	int32 InternalStacks = 0;

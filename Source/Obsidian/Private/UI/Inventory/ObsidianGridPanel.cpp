@@ -226,23 +226,25 @@ void UObsidianGridPanel::OnGridSlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 	{
 		if (bIsSlotOccupied)
 		{
-			InventoryItemsWidgetController->HandleHoveringOverItem(SlotData->OriginPosition,
-				SlotData->ItemWidget);
+			FObsidianItemInteractionData InteractionData;
+			InteractionData.ItemWidget = SlotData->ItemWidget;
+			InventoryItemsWidgetController->HandleHoveringOverItem(SlotData->OriginPosition, InteractionData,
+				PanelOwner);
 		}
 
 		if (bIsDraggingAnItem)
 		{
-			FIntPoint ItemGridSpan;
-			InventoryItemsWidgetController->GetDraggedItemGridSpan(ItemGridSpan);
 			
+			const FIntPoint ItemGridSpan = InventoryItemsWidgetController->GetDraggedItemGridSpan();
 			OffsetGridPositionByItemSpan(ItemGridSpan, GridSlotPosition);
 
 			bool bCanPlace = false;
 			if (bCanInteractWithGrid)
 			{
 				//TODO(intrxx) Override for the actual clicked position
-				bCanPlace = InventoryItemsWidgetController->CanPlaceDraggedItem(PanelOwner, GridSlotPosition, ItemGridSpan,
-					StashTag);
+				FObsidianItemPosition ItemPosition;
+				ConstructItemPosition(ItemPosition, GridSlotPosition);
+				bCanPlace = InventoryItemsWidgetController->CanPlaceDraggedItemAtPosition(ItemPosition, PanelOwner);
 			}
 
 			const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight :
@@ -297,33 +299,31 @@ void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianItemSlot_G
 	FIntPoint OriginGridPositionPressed = AffectedSlot->GetGridSlotPosition();
 	check(OriginGridPositionPressed != FIntPoint::NoneValue);
 	
-	FIntPoint OutDraggedItemGridSpan;
-	if (InventoryItemsWidgetController && InventoryItemsWidgetController->GetDraggedItemGridSpan(OutDraggedItemGridSpan))
-	{
-		// It feels kinda forced :/ Probably will need to rethink the whole thing someday
-		OffsetGridPositionByItemSpan(OutDraggedItemGridSpan, OriginGridPositionPressed);
-	}
+	// It feels kinda forced :/ Probably will need to rethink the whole thing someday
+	OffsetGridPositionByItemSpan(InventoryItemsWidgetController->GetDraggedItemGridSpan(), OriginGridPositionPressed);
 
 	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(OriginGridPositionPressed);
+	if (SlotData == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
+			*OriginGridPositionPressed.ToString(), __FUNCTION__)
+		return;
+	}
+	
+	FObsidianItemPosition ItemPositionToAddTo;
+	ConstructItemPosition(ItemPositionToAddTo, OriginGridPositionPressed);
+
+	FObsidianItemInteractionData InteractionData;
+	InteractionData.InteractionFlags = InteractionFlags;
+	
 	if (SlotData && SlotData->IsOccupied())
 	{
-		if(InteractionFlags.bItemStacksInteraction)
-		{
-			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItemWithShiftDown(SlotData->OriginPosition.GetItemGridPosition(),
-				SlotData->ItemWidget);
-		}
-		else
-		{
-			//TODO(intrxx) Override for the actual clicked position
-			InventoryItemsWidgetController->HandleLeftClickingOnInventoryItem(SlotData->OriginPosition.GetItemGridPosition(),
-				InteractionFlags.bMoveBetweenNextOpenedWindow);	
-		}
+		InteractionData.ItemWidget = SlotData->ItemWidget;
+		InventoryItemsWidgetController->HandleLeftClickingOnItem(SlotData->OriginPosition, InteractionData, PanelOwner);
 	}
 	else
 	{
-		//TODO(intrxx) Override for the actual clicked position
-		InventoryItemsWidgetController->RequestAddingItemToInventory(OriginGridPositionPressed,
-			InteractionFlags.bItemStacksInteraction);
+		InventoryItemsWidgetController->RequestAddingItem(ItemPositionToAddTo, InteractionData, PanelOwner);
 	}
 }
 
@@ -346,15 +346,37 @@ void UObsidianGridPanel::OnGridSlotRightMouseButtonDown(const UObsidianItemSlot_
 	check(GridSlotPosition != FIntPoint::NoneValue);
 
 	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridSlotPosition);
+	if (SlotData == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
+			*GridSlotPosition.ToString(), __FUNCTION__)
+		return;
+	}
+	
 	if (SlotData && SlotData->IsOccupied())
 	{
-		InventoryItemsWidgetController->HandleRightClickingOnInventoryItem(SlotData->OriginPosition.GetItemGridPosition(),
-			SlotData->ItemWidget);
+		FObsidianItemInteractionData InteractionData;
+		InteractionData.InteractionFlags = InteractionFlags;
+		InteractionData.ItemWidget = SlotData->ItemWidget;
+		
+		InventoryItemsWidgetController->HandleRightClickingOnItem(SlotData->OriginPosition, InteractionData, PanelOwner);
+	}
+}
+
+void UObsidianGridPanel::ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FIntPoint SlotPositionOverride) const
+{
+	if (PanelOwner == EObsidianPanelOwner::Inventory)
+	{
+		ItemPosition = FObsidianItemPosition(SlotPositionOverride);
+	}
+	else if (PanelOwner == EObsidianPanelOwner::PlayerStash)
+	{
+		ItemPosition = FObsidianItemPosition(SlotPositionOverride, StashTag);
 	}
 }
 
 void UObsidianGridPanel::RegisterGridItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
-	const FIntPoint GridSpan)
+                                                const FIntPoint GridSpan)
 {
 	if (ensureMsgf(ItemWidget && ItemPosition.IsValid(), TEXT("ItemWidget or ItemPosition are invalid in [%hs]."),
 		__FUNCTION__))
@@ -410,16 +432,22 @@ void UObsidianGridPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWi
 	}
 }
 
-void UObsidianGridPanel::HandleItemStackChanged(const FIntPoint& AtGridSlot, const uint8 NewStackCount)
+void UObsidianGridPanel::HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
+	const FIntPoint AtGridSlot = ItemWidgetData.ItemPosition.GetItemGridPosition();
 	if(UObsidianItem* ItemWidget = GetItemWidgetAtGridPosition(AtGridSlot))
 	{
-		ItemWidget->OverrideCurrentStackCount(NewStackCount);
+		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
 	}
 }
 
 void UObsidianGridPanel::OffsetGridPositionByItemSpan(FIntPoint DraggedItemGridSpan, FIntPoint& OriginalPosition) const 
 {
+	if (DraggedItemGridSpan == FIntPoint::NoneValue)
+	{
+		return;
+	}
+	
 	DraggedItemGridSpan = FIntPoint(
 			(DraggedItemGridSpan.X % 2 == 0) ? (DraggedItemGridSpan.X - 1) / 2 : DraggedItemGridSpan.X / 2,
 			(DraggedItemGridSpan.Y % 2 == 0) ? (DraggedItemGridSpan.Y - 1) / 2 : DraggedItemGridSpan.Y / 2);

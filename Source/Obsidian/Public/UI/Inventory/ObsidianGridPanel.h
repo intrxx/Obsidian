@@ -8,6 +8,7 @@
 #include "Slots/ObsidianItemSlot.h"
 
 #include "ObsidianItemStoragePanelBase.h"
+#include "Slots/ObsidianItemSlot_GridSlot.h"
 #include "ObsidianGridPanel.generated.h"
 
 struct FObsidianItemWidgetData;
@@ -69,7 +70,7 @@ public:
 	
 	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData);
 	void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
-	void HandleItemStackChanged(const FIntPoint& AtGridSlot, const uint8 NewStackCount);
+	void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
 
 protected:
 	virtual void HandleWidgetControllerSet() override;
@@ -85,6 +86,8 @@ protected:
 		const FObsidianItemInteractionFlags& InteractionFlags);
 	void OnGridSlotRightMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
 		const FObsidianItemInteractionFlags& InteractionFlags);
+	
+	void ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FIntPoint SlotPositionOverride) const;
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")

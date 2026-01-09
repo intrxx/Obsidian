@@ -17,22 +17,31 @@ void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetCon
 		StashTab_GridPanel->SetWidgetController(InventoryItemsWidgetController);
 		const bool bSuccess = StashTab_GridPanel->ConstructStashPanel(GridWidth, GridHeight, InStashTabTag);
 		ensureMsgf(bSuccess, TEXT("StashTab_GridPanel was unable to construct the GridPanel!"));
-		//StashTab_GridPanel->OnGridSlotPressedDelegate.AddUObject(this, &ThisClass::RequestAddingItemToStashTab);
 	}
 }
 
-void UObsidianStashTabWidget_Grid::AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianStashTabWidget_Grid::AddItemToStash(UObsidianItem* InItemWidget,
+	const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if (ensure(StashTab_GridPanel && InItemWidget && ItemWidgetData.ItemPosition.IsInStash()))
+	if (ensure(StashTab_GridPanel && InItemWidget && ItemWidgetData.ItemPosition.IsOnStashGrid()))
 	{
 		StashTab_GridPanel->AddItemWidget(InItemWidget, ItemWidgetData);
 	}
 }
 
-void UObsidianStashTabWidget_Grid::RequestAddingItemToStashTab(const FIntPoint& ToPosition, const bool bShiftDown) const
+void UObsidianStashTabWidget_Grid::HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
-	if (InventoryItemsController)
+	if (ensure(StashTab_GridPanel && ItemWidgetData.ItemPosition.IsOnStashGrid()))
 	{
-		InventoryItemsController->RequestAddingItemToStashTab(FObsidianItemPosition(ToPosition, StashTabTag), bShiftDown);
+		StashTab_GridPanel->HandleItemChanged(ItemWidgetData);
 	}
 }
+
+void UObsidianStashTabWidget_Grid::HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+{
+	if (ensure(StashTab_GridPanel && ItemWidgetData.ItemPosition.IsOnStashGrid()))
+	{
+		StashTab_GridPanel->HandleItemRemoved(ItemWidgetData);
+	}
+}
+

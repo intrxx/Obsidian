@@ -28,7 +28,7 @@ void FObsidianItemGeneratedData::Reset()
 
 FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance) 
 	: Instance(InInstance)
-	, GeneratedData(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current)) //TODO(intrxx) do I really need stacks here?
+	, GeneratedData(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
 {}
 
 bool FDraggedItem::IsEmpty() const
@@ -102,7 +102,8 @@ void FObsidianSlotDefinition::RemoveBannedItemCategory(const FGameplayTag& Banne
 #if !UE_BUILD_SHIPPING
 	if(BannedItemCategories.HasTag(BannedCategoryToRemove) == false)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedItemCategories."), *BannedCategoryToRemove.ToString());
+		UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist"
+							  " in BannedItemCategories."), *BannedCategoryToRemove.ToString());
 	}
 #endif
 	BannedItemCategories.RemoveTag(BannedCategoryToRemove);
@@ -115,7 +116,8 @@ void FObsidianSlotDefinition::RemoveBannedItemCategories(const FGameplayTagConta
 	{
 		if(BannedItemCategories.HasTag(Tag) == false)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist in BannedItemCategories."), *Tag.ToString());
+			UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist"
+							   " in BannedItemCategories."), *Tag.ToString());
 		}
 	}
 #endif
@@ -140,7 +142,7 @@ bool FObsidianItemPosition::IsOnEquipmentSlot() const
 	return (Type == EObsidianItemPositionType::EquipmentSlot) && (SlotTag != FGameplayTag::EmptyTag);
 }
 
-bool FObsidianItemPosition::IsInStash() const
+bool FObsidianItemPosition::IsOnStash() const
 {
 	return IsOnStashGrid() || IsOnStashSlot();
 }
@@ -196,11 +198,13 @@ FString FObsidianItemPosition::GetDebugStringPosition() const
 	{
 		if (SlotTag != FGameplayTag::EmptyTag)
 		{
-			return FString::Printf(TEXT("Stash Tab: [%s], Slot: [%s]"), *OwningStashTabTag.GetTagName().ToString(), *SlotTag.GetTagName().ToString());
+			return FString::Printf(TEXT("Stash Tab: [%s], Slot: [%s]"),
+				*OwningStashTabTag.GetTagName().ToString(), *SlotTag.GetTagName().ToString());
 		}
 		if (GridPosition != FIntPoint::NoneValue)
 		{
-			return FString::Printf(TEXT("Stash Tab: [%s], Grid Location: [%d, %d]"), *OwningStashTabTag.GetTagName().ToString(), GridPosition.X, GridPosition.Y);
+			return FString::Printf(TEXT("Stash Tab: [%s], Grid Location: [%d, %d]"),
+				*OwningStashTabTag.GetTagName().ToString(), GridPosition.X, GridPosition.Y);
 		}
 	}
 	else
@@ -274,8 +278,8 @@ EDataValidationResult FObsidianStaticItemAffix::IsStaticAffixValid(FDataValidati
 	{
 		Result = EDataValidationResult::Invalid;
 			
-		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Affix Tag at index [%i] of [%s] Affix is invalid! \n"
-			"Please fill correct Affix Tag."), Index, *AffixTypeName));
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Affix Tag at index [%i] of [%s] Affix"
+			" is invalid! \n Please fill correct Affix Tag."), Index, *AffixTypeName));
 		Context.AddError(ErrorMessage);
 	}
 		
@@ -283,16 +287,16 @@ EDataValidationResult FObsidianStaticItemAffix::IsStaticAffixValid(FDataValidati
 	{
 		Result = EDataValidationResult::Invalid;
 		
-		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] Affix is not set! \n"
-			"Please provide a valid AbilitySet to apply!"), Index, *AffixTypeName));
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of"
+			" [%s] Affix is not set! \n Please provide a valid AbilitySet to apply!"), Index, *AffixTypeName));
 		Context.AddError(ErrorMessage);
 	}
 	else if (bOverride_AffixAbilitySet == false && SoftAbilitySetToApply.IsNull() == false)
 	{
 		Result = EDataValidationResult::Invalid;
 		
-		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] Affix is set but the Affix does not Override it! \n"
-			"Please re-check the asset!"), Index, *AffixTypeName));
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of"
+			" [%s] Affix is set but the Affix does not Override it! \n Please re-check the asset!"), Index, *AffixTypeName));
 		Context.AddError(ErrorMessage);
 	}
 
@@ -300,8 +304,8 @@ EDataValidationResult FObsidianStaticItemAffix::IsStaticAffixValid(FDataValidati
 	{
 		Result = EDataValidationResult::Invalid;
 
-		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("PossibleAffixRanges at index [%i] of [%s] Affix are not set! \n"
-			"Please fill it with possible affix ranges."), Index, *AffixTypeName));
+		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("PossibleAffixRanges at index [%i] of"
+			" [%s] Affix are not set! \n Please fill it with possible affix ranges."), Index, *AffixTypeName));
 		Context.AddError(ErrorMessage);
 	}
 		
@@ -312,24 +316,29 @@ EDataValidationResult FObsidianStaticItemAffix::IsStaticAffixValid(FDataValidati
 		{
 			Result = EDataValidationResult::Invalid;
 
-			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AffixValueID at index [%i] inside [%s] Affix at index [%i] of AffixValuesIdentifiers is not set! \n"
-				"Please make sure to fill the AffixValueID tag."),x, *AffixTypeName, Index));
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AffixValueID at index [%i] inside"
+				" [%s] Affix at index [%i] of AffixValuesIdentifiers is not set! \n Please make sure to fill the"
+				" AffixValueID tag."),x, *AffixTypeName, Index));
 			Context.AddError(ErrorMessage);
 		}
 			
-		if (AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify && AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid() == false)
+		if (AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify &&
+			AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid() == false)
 		{
 			Result = EDataValidationResult::Invalid;
 
-			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%s] Affix at index [%i] of AffixValuesIdentifiers is not set! \n"
-				"Please make sure to either correct the bOverride_AttributeToModify or fill the Attribute."),x, *AffixTypeName, Index));
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i]"
+				" inside [%s] Affix at index [%i] of AffixValuesIdentifiers is not set! \n Please make sure to either"
+				" correct the bOverride_AttributeToModify or fill the Attribute."),x, *AffixTypeName, Index));
 			Context.AddError(ErrorMessage);
 		}
-		else if (AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify == false && AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid())
+		else if (AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify == false &&
+			AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid())
 		{
 			Result = EDataValidationResult::Invalid;
 
-			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%s] Affix at index [%i] of AffixValuesIdentifiers is set but the Affix does not Override it! \n"
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i]"
+				" inside [%s] Affix at index [%i] of AffixValuesIdentifiers is set but the Affix does not Override it! \n"
 				"Please re-check the asset!"),x, *AffixTypeName, Index));
 			Context.AddError(ErrorMessage);
 		}
@@ -342,8 +351,9 @@ EDataValidationResult FObsidianStaticItemAffix::IsStaticAffixValid(FDataValidati
 		{
 			Result = EDataValidationResult::Invalid;
 
-			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Number of AffixRanges at index [%i] inside [%s] Affix at index [%i] differs from expected number of [%d]! \n"
-				"Please make sure that every entry has the same number of possible ranges."),y, *AffixTypeName, Index, ExpectedCount));
+			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Number of AffixRanges at index [%i]"
+				" inside [%s] Affix at index [%i] differs from expected number of [%d]! \n Please make sure that every"
+				" entry has the same number of possible ranges."), y, *AffixTypeName, Index, ExpectedCount));
 			Context.AddError(ErrorMessage);
 		}
 	}
@@ -401,8 +411,8 @@ uint8 FObsidianActiveItemAffix::GetCurrentAffixTierItemLevelRequirement() const
 	return CurrentAffixValue.AffixTier.MinItemLevelRequirement;
 }
 
-void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality,
-                                                     const bool bApplyMultiplier)
+void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix,
+	const uint8 UpToTreasureQuality, const bool bApplyMultiplier)
 {
 	if (!InDynamicItemAffix)
 	{
@@ -420,8 +430,8 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 	InitializeAffixTierAndRange(UpToTreasureQuality, bApplyMultiplier);
 }
 
-void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality,
-	const bool bApplyMultiplier)
+void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix,
+	const uint8 UpToTreasureQuality, const bool bApplyMultiplier)
 {
 	if (!InStaticItemAffix)
 	{
@@ -446,7 +456,8 @@ void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreas
 	for (int32 i = 0; i < ChosenAffixValueTier.AffixRanges.Num(); ++i)
 	{
 		FFloatRange& AffixRange = ChosenAffixValueTier.AffixRanges[i];
-		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue()) * AffixMultiplier;
+		float RandomisedValue = FMath::FRandRange(AffixRange.GetLowerBoundValue(), AffixRange.GetUpperBoundValue())
+			* AffixMultiplier;
 		RandomisedValue = AffixValuesDefinition.AffixValueType == EObsidianAffixValueType::Int ?
 				FMath::FloorToInt(RandomisedValue) : FMath::RoundToFloat(RandomisedValue * 100.0f) / 100.0f;
 		
@@ -485,8 +496,8 @@ void FObsidianActiveItemAffix::RandomizeAffixValueBoundByRange()
 
 FObsidianAffixValueRange FObsidianActiveItemAffix::GetRandomAffixRange(const uint8 UpToTreasureQuality)
 {
-	checkf(!AffixValuesDefinition.PossibleAffixRanges.IsEmpty(), TEXT("Item Affix [%s] has no possible Affix Ranges filled."),
-		*AffixTag.GetTagName().ToString());
+	checkf(!AffixValuesDefinition.PossibleAffixRanges.IsEmpty(), TEXT("Item Affix [%s] has no possible Affix"
+		" Ranges filled."), *AffixTag.GetTagName().ToString());
 	
 	uint32 TotalWeight = 0;
 	TArray<FObsidianAffixValueRange> CanRollFromAffixRanges;
@@ -552,7 +563,8 @@ FText FObsidianRareItemNameGenerationData::GetRandomPrefixNameAddition(const int
 	return PrefixAdditionsCandidates[RandomInt];
 }
 
-FText FObsidianRareItemNameGenerationData::GetRandomSuffixNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategory)
+FText FObsidianRareItemNameGenerationData::GetRandomSuffixNameAddition(const int32 UpToTreasureQuality,
+	const FGameplayTag& ForItemCategory)
 {
 	TArray<FText> PrefixAdditionsCandidates;
 	for (const FObsidianRareItemSuffixNameAddition& SuffixAdditionClass : SuffixNameAdditions)
@@ -578,7 +590,8 @@ FText FObsidianRareItemNameGenerationData::GetRandomSuffixNameAddition(const int
 	return PrefixAdditionsCandidates[RandomInt];
 }
 
-void FObsidianItemRequirementsUIDescription::SetHeroLevelRequirement(const uint8 RequiredMagnitude, const uint8 OwnerMagnitude)
+void FObsidianItemRequirementsUIDescription::SetHeroLevelRequirement(const uint8 RequiredMagnitude,
+	const uint8 OwnerMagnitude)
 {
 	if (RequiredMagnitude > 0)
 	{
@@ -588,7 +601,8 @@ void FObsidianItemRequirementsUIDescription::SetHeroLevelRequirement(const uint8
 	}
 }
 
-void FObsidianItemRequirementsUIDescription::SetHeroClassRequirement(const EObsidianHeroClass RequiredClass, const EObsidianHeroClass OwnerClass)
+void FObsidianItemRequirementsUIDescription::SetHeroClassRequirement(const EObsidianHeroClass RequiredClass,
+	const EObsidianHeroClass OwnerClass)
 {
 	if (RequiredClass > EObsidianHeroClass::None)
 	{
@@ -598,8 +612,8 @@ void FObsidianItemRequirementsUIDescription::SetHeroClassRequirement(const EObsi
 	}
 }
 
-void FObsidianItemRequirementsUIDescription::SetAttributeRequirement(const FGameplayAttribute& Attribute, const float RequirementMagnitude,
-                                                                     const float OwnerMagnitude)
+void FObsidianItemRequirementsUIDescription::SetAttributeRequirement(const FGameplayAttribute& Attribute,
+	const float RequirementMagnitude, const float OwnerMagnitude)
 {
 	if (RequirementMagnitude <= 0)
 	{
@@ -639,7 +653,8 @@ void FObsidianItemRequirementsUIDescription::SetAttributeRequirement(const FGame
 
 // ~ FObsidianDescriptionAffixRow
 
-void FObsidianAffixDescriptionRow::SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType, const int32 InAffixTier)
+void FObsidianAffixDescriptionRow::SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType,
+	const int32 InAffixTier)
 {
 	AffixType = InAffixType;
 	FText AffixTypeText = FText();
@@ -660,7 +675,8 @@ void FObsidianAffixDescriptionRow::SetAffixAdditionalDescription(const EObsidian
 		break;
 	}
 	
-	AffixAdditionalDescription = FText::FromString(FString::Printf(TEXT("%s tier: %d "), *AffixTypeText.ToString(), InAffixTier));
+	AffixAdditionalDescription = FText::FromString(FString::Printf(TEXT("%s tier: %d "), *AffixTypeText.ToString(),
+		InAffixTier));
 }
 
 // ~ FObsidianItemStats

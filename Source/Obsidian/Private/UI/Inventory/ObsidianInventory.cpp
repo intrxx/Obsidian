@@ -15,12 +15,13 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	InventoryItemsWidgetController = Cast<UObInventoryItemsWidgetController>(WidgetController);
 	check(InventoryItemsWidgetController);
 
-	InventoryItemsWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnItemEquipped);
-	InventoryItemsWidgetController->OnEquippedItemRemovedDelegate.AddUObject(this, &ThisClass::OnItemUnequipped);
+	InventoryItemsWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemAdded);
+	InventoryItemsWidgetController->OnEquippedItemChangedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemRemoved);
+	InventoryItemsWidgetController->OnEquippedItemRemovedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemRemoved);
 	
-	InventoryItemsWidgetController->OnItemInventorizedDelegate.AddUObject(this, &ThisClass::OnItemAdded);
-	InventoryItemsWidgetController->OnInventoryItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
-	InventoryItemsWidgetController->OnInventorizedItemRemovedDelegate.AddUObject(this, &ThisClass::OnItemRemoved);
+	InventoryItemsWidgetController->OnItemInventorizedDelegate.AddUObject(this, &ThisClass::OnInventoryItemAdded);
+	InventoryItemsWidgetController->OnInventoryItemChangedDelegate.AddUObject(this, &ThisClass::OnInventoryItemChanged);
+	InventoryItemsWidgetController->OnInventorizedItemRemovedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRemoved);
 	
 	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
 	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
@@ -59,7 +60,7 @@ void UObsidianInventory::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnInventoryItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	if(Inventory_GridPanel == nullptr)
 	{
@@ -70,23 +71,22 @@ void UObsidianInventory::OnItemAdded(const FObsidianItemWidgetData& ItemWidgetDa
 	const FIntPoint DesiredPosition = ItemWidgetData.ItemPosition.GetItemGridPosition();
 	const FIntPoint GridSpan = ItemWidgetData.GridSpan;
 	
-	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded,"
+	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnInventoryItemAdded,"
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(DesiredPosition, GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
+	ItemWidget->InitializeItemWidget(GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
 	Inventory_GridPanel->AddItemWidget(ItemWidget, ItemWidgetData);
 }
 
-void UObsidianInventory::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnInventoryItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	if (ensure(ItemWidgetData.ItemPosition.IsOnInventoryGrid()))
 	{
-		Inventory_GridPanel->HandleItemStackChanged(ItemWidgetData.ItemPosition.GetItemGridPosition(),
-			ItemWidgetData.StackCount);
+		Inventory_GridPanel->HandleItemChanged(ItemWidgetData);
 	}
 }
 
-void UObsidianInventory::OnItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnInventoryItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	if (ensure(Inventory_GridPanel && ItemWidgetData.ItemPosition.IsOnInventoryGrid()))
 	{
@@ -94,7 +94,7 @@ void UObsidianInventory::OnItemRemoved(const FObsidianItemWidgetData& ItemWidget
 	}
 }
 
-void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnEquipmentItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	if(Equipment_SlotPanel == nullptr)
 	{
@@ -102,7 +102,7 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 		return;
 	}
 	
-	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnItemAdded,"
+	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnInventoryItemAdded,"
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
 	ItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage,
@@ -118,7 +118,15 @@ void UObsidianInventory::OnItemEquipped(const FObsidianItemWidgetData& ItemWidge
 	}
 }
 
-void UObsidianInventory::OnItemUnequipped(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnEquipmentItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+{
+	if (ensure(Equipment_SlotPanel))
+	{
+		Equipment_SlotPanel->HandleItemChanged(ItemWidgetData);
+	}
+}
+
+void UObsidianInventory::OnEquipmentItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
 {
 	if (ensure(Equipment_SlotPanel))
 	{

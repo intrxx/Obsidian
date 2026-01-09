@@ -11,6 +11,7 @@
 
 #include "ObsidianItemTypes.generated.h"
 
+class UObsidianItem;
 struct FObsidianActiveItemAffix;
 struct FObsidianDynamicItemAffix;
 
@@ -231,6 +232,7 @@ public:
 		: bMoveBetweenNextOpenedWindow(false)
 		, bAutomaticallyAddToWindow(false)
 		, bItemStacksInteraction(false)
+		, bInteractWithSisterSlottedItem(false)
 	{}
 
 public:
@@ -245,6 +247,10 @@ public:
 	/** This interaction is triggered by SHIFT down. */
 	UPROPERTY()
 	uint8 bItemStacksInteraction:1;
+
+	/** This interaction switches the target from pressed slot to sister slot (used in case of slot blockage). */
+	UPROPERTY()
+	uint8 bInteractWithSisterSlottedItem:1;
 };
 
 /**
@@ -330,7 +336,7 @@ public:
 	bool IsValid() const;
 	bool IsOnInventoryGrid() const;
 	bool IsOnEquipmentSlot() const;
-	bool IsInStash() const;
+	bool IsOnStash() const;
 	bool IsOnStashGrid() const;
 	bool IsOnStashSlot() const;
 
@@ -373,6 +379,29 @@ private:
 	
 	UPROPERTY()
 	FGameplayTag OwningStashTabTag = FGameplayTag::EmptyTag;
+};
+
+
+/**
+ * 
+ */
+USTRUCT()
+struct FObsidianItemInteractionData
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianItemInteractionData(){};
+	
+public:
+	UPROPERTY()
+	FObsidianItemPosition InteractionTargetPositionOverride = FObsidianItemPosition();
+	
+	UPROPERTY()
+	TObjectPtr<UObsidianItem> ItemWidget = nullptr;
+
+	UPROPERTY()
+	FObsidianItemInteractionFlags InteractionFlags = FObsidianItemInteractionFlags();
 };
 
 /**

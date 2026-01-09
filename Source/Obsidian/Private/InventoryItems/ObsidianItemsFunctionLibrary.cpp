@@ -471,19 +471,19 @@ FGameplayTag UObsidianItemsFunctionLibrary::GetBaseTypeTagFromDraggedItem(const 
 	return FGameplayTag::EmptyTag;
 }
 
-void UObsidianItemsFunctionLibrary::GetItemCategoryAndBaseItemTypeTagsFromDraggedItem(const FDraggedItem& DraggedItem, FGameplayTag& OutCategoryTag,
-	FGameplayTag& OutItemBaseTypeTag)
+bool UObsidianItemsFunctionLibrary::GetItemCategoryAndBaseItemTypeTagsFromDraggedItem(const FDraggedItem& DraggedItem,
+	FGameplayTag& OutCategoryTag, FGameplayTag& OutItemBaseTypeTag)
 {
 	if (DraggedItem.IsEmpty())
 	{
-		return;
+		return false;
 	}
 
 	if (const UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance)
 	{
 		OutCategoryTag = DraggedInstance->GetItemCategoryTag();
 		OutItemBaseTypeTag = DraggedInstance->GetItemBaseTypeTag();
-		return;
+		return true;
 	}
 
 	if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef)
@@ -492,9 +492,36 @@ void UObsidianItemsFunctionLibrary::GetItemCategoryAndBaseItemTypeTagsFromDragge
 		{
 			OutCategoryTag = ItemDefault->GetItemCategoryTag();
 			OutItemBaseTypeTag = ItemDefault->GetItemBaseTypeTag();
-			return;
+			return true;
 		}
 	}
+	return false;
+}
+
+FIntPoint UObsidianItemsFunctionLibrary::GetGridSpanFromDraggedItem(const FDraggedItem& DraggedItem)
+{
+	if (DraggedItem.IsEmpty())
+	{
+		return FIntPoint::NoneValue;
+	}
+	
+	if(const UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
+	{
+		return Instance->GetItemGridSpan();
+	}
+	
+	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
+	{
+		if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
+		{
+			if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(
+				ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+			{
+				return AppearanceFrag->GetItemGridSpanFromDesc();
+			}
+		}
+	}
+	return FIntPoint::NoneValue;
 }
 
 bool UObsidianItemsFunctionLibrary::IsDefinitionIdentified(const UObsidianInventoryItemDefinition* ItemDefault, const FObsidianItemGeneratedData& ItemGeneratedData)

@@ -2,11 +2,9 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 
-// ~ Project
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
 
 #include "UI/Inventory/Stash/ObsidianStashTabWidget.h"
@@ -28,6 +26,8 @@ public:
 		const int32 GridHeight, const FGameplayTag& InStashTabTag);
 
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) override;
+	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) override;
+	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) override;
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -36,7 +36,4 @@ protected:
 private:
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsController;
-	
-private:
-	void RequestAddingItemToStashTab(const FIntPoint& ToPosition, const bool bShiftDown) const;
 };

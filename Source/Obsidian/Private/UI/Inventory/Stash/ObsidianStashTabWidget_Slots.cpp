@@ -56,3 +56,21 @@ void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget,
 	}
 }
 
+void UObsidianStashTabWidget_Slots::HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+{
+	if (ensure(StashTab_SlotPanel && ItemWidgetData.ItemPosition.IsOnStashSlot()))
+	{
+		StashTab_SlotPanel->HandleItemChanged(ItemWidgetData);
+	}
+}
+
+void UObsidianStashTabWidget_Slots::HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+{
+	if (ensure(StashTab_SlotPanel && ItemWidgetData.ItemPosition.IsOnStashSlot()))
+	{
+		StashTab_SlotPanel->HandleItemRemoved(ItemWidgetData);
+	}
+}
+
+
+

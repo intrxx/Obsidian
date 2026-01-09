@@ -8,6 +8,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianItemStoragePanelBase.h"
+#include "Slots/ObsidianItemSlot_Equipment.h"
 #include "ObsidianSlotPanel.generated.h"
 
 struct FObsidianItemInteractionFlags;
@@ -73,6 +74,7 @@ public:
 	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData,
 		const bool bBlockSlot = false);
 	void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
+	void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
 	
 protected:
 	virtual void HandleWidgetControllerSet() override;
@@ -88,6 +90,8 @@ protected:
 	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
 	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
 		const FObsidianItemInteractionFlags& InteractionFlags);
+	
+	void ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FGameplayTag& SlotTagOverride) const;
 	
 private:
 	UPROPERTY()

@@ -28,6 +28,8 @@ public:
 	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
 	
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) override;
+	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) override;
+	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) override;
 
 protected:
 	UPROPERTY(meta=(BindWidget))

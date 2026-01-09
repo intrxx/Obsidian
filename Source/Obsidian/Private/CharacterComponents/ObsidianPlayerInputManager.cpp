@@ -616,7 +616,7 @@ void UObsidianPlayerInputManager::SetUsingItem(const bool InbUsingItem, UObsidia
 		{
 			DraggedUsableItemWidget->RemoveFromParent();
 		}
-
+		
 		ItemWidget->SetUsingItemProperties();
 		CachedUsingInventoryItemWidget = ItemWidget;
 

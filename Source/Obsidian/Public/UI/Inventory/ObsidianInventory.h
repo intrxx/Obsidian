@@ -46,12 +46,13 @@ protected:
 	TObjectPtr<UObsidianSlotPanel> Equipment_SlotPanel;
 	
 private:
-	void OnItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnInventoryItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnInventoryItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnInventoryItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
 	
-	void OnItemEquipped(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemUnequipped(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnEquipmentItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnEquipmentItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnEquipmentItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
 	
 	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
 	void StopHighlightSlotPlacement();

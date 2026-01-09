@@ -349,7 +349,7 @@ bool UObsidianItemDescriptionBase::IsInventoryItemDescription() const
 
 bool UObsidianItemDescriptionBase::IsPlayerStashItemDescription() const
 {
-	return AssociatedItemPosition.IsInStash();
+	return AssociatedItemPosition.IsOnStash();
 }
 
 

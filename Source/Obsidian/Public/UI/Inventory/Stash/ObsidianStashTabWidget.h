@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianWidgetBase.h"
@@ -25,6 +23,8 @@ class OBSIDIAN_API UObsidianStashTabWidget : public UObsidianWidgetBase
 	
 public:
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) {};
+	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) {};
+	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) {};
 	
 	FGameplayTag GetStashTabTag() const;
 	

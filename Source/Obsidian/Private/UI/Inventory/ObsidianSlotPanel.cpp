@@ -205,9 +205,11 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 			return;
 		}
 
+		FObsidianItemPosition ItemPosition;
+		ConstructItemPosition(ItemPosition, SisterSlotTag);
 		SlotToBlock->AddBlockadeItemToSlot(ItemWidget, ItemWidgetData.ItemSlotPadding);
 		SlotToBlock->SetSlotState(EObsidianItemSlotState::Blocked, EObsidianItemSlotStatePriority::TakePriority);
-		RegisterSlotItemWidget(SisterSlotTag, ItemWidget, false, true,
+		RegisterSlotItemWidget(ItemPosition, ItemWidget, false, true,
 			ItemWidgetData.ItemPosition);
 	}
 }
@@ -237,7 +239,7 @@ void UObsidianSlotPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 		return;
 	}
 	
-	const bool bCanInteract = InventoryItemsWidgetController->CanInteractWithEquipment();
+	const bool bCanInteract = InventoryItemsWidgetController->CanInteractWithSlots(PanelOwner);
 	const bool IsSlotOccupied = SlotData->IsOccupied();
 	const bool IsSlotBlocked = SlotData->IsBlocked();
 	const bool IsSlotEmpty = IsSlotBlocked == false && IsSlotOccupied == false;
@@ -246,9 +248,12 @@ void UObsidianSlotPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 	{
 		if (IsSlotEmpty == false)
 		{
-			if (const UObsidianItem* HoverOverItemWidget = SlotData->ItemWidget)
+			if (UObsidianItem* HoverOverItemWidget = SlotData->ItemWidget)
 			{
-				InventoryItemsWidgetController->HandleHoveringOverItem(SlotData->OriginPosition, HoverOverItemWidget);	
+				FObsidianItemInteractionData InteractionData;
+				InteractionData.ItemWidget = HoverOverItemWidget;
+				InventoryItemsWidgetController->HandleHoveringOverItem(SlotData->OriginPosition, InteractionData,
+					PanelOwner);	
 			}
 		}
 		
@@ -264,8 +269,12 @@ void UObsidianSlotPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 			return;
 		}
 		
-		const bool bInteractionSuccess = InventoryItemsWidgetController->CanEquipDraggedItem(AffectedSlot->GetSlotTag());
-		const EObsidianItemSlotState SlotState = bInteractionSuccess ? EObsidianItemSlotState::GreenLight
+		FObsidianItemPosition ItemPosition;
+		ConstructItemPosition(ItemPosition, SlotTag);
+		
+		const bool bCanPlace = InventoryItemsWidgetController->CanPlaceDraggedItemAtPosition(ItemPosition, PanelOwner);
+		
+		const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight
 			: EObsidianItemSlotState::RedLight;
 		AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 	}
@@ -308,19 +317,38 @@ void UObsidianSlotPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_
 			*SlotTag.ToString(), __FUNCTION__)
 		return;
 	}
+
+	FObsidianItemPosition ItemPosition;
+	ConstructItemPosition(ItemPosition, SlotTag);
 	
-	if (SlotData->IsBlocked())
+	FObsidianItemInteractionData InteractionData;
+	InteractionData.InteractionFlags = InteractionFlags;
+	
+	if (SlotData->IsOccupied())
 	{
-		InventoryItemsWidgetController->HandleLeftClickingOnEquipmentItem(SlotTag,
-			SlotData->OriginPosition.GetItemSlotTag());
-	}
-	else if (SlotData->IsOccupied())
-	{
-		InventoryItemsWidgetController->HandleLeftClickingOnEquipmentItem(SlotTag);
+		if (SlotData->IsBlocked())
+		{
+			InteractionData.InteractionFlags.bInteractWithSisterSlottedItem = true;
+			InteractionData.InteractionTargetPositionOverride = SlotData->OriginPosition;
+		}
+		
+		InventoryItemsWidgetController->HandleLeftClickingOnItem(ItemPosition, InteractionData, PanelOwner);
 	}
 	else
 	{
-		InventoryItemsWidgetController->RequestEquippingItem(SlotTag);
+		InventoryItemsWidgetController->RequestAddingItem(ItemPosition, InteractionData, PanelOwner);
+	}
+}
+
+void UObsidianSlotPanel::ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FGameplayTag& SlotTagOverride) const
+{
+	if (PanelOwner == EObsidianPanelOwner::Equipment)
+	{
+		ItemPosition = FObsidianItemPosition(SlotTagOverride);
+	}
+	else if (PanelOwner == EObsidianPanelOwner::PlayerStash)
+	{
+		ItemPosition = FObsidianItemPosition(SlotTagOverride, StashTag);
 	}
 }
 
@@ -350,8 +378,17 @@ void UObsidianSlotPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWi
 	
 }
 
+void UObsidianSlotPanel::HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+{
+	const FGameplayTag AtSlot = ItemWidgetData.ItemPosition.GetItemSlotTag();
+	if(UObsidianItem* ItemWidget = GetItemWidgetAtSlot(AtSlot))
+	{
+		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+	}
+}
+
 void UObsidianSlotPanel::RegisterSlotItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
-	const bool bSwappedWithAnother, const bool bBlocksSlot, const FObsidianItemPosition& ItemOriginPosition)
+                                                const bool bSwappedWithAnother, const bool bBlocksSlot, const FObsidianItemPosition& ItemOriginPosition)
 {
 	if (ensureMsgf(ItemWidget && ItemPosition.IsValid(), TEXT("ItemWidget or ItemPosition are invalid in [%hs]. "),
 		__FUNCTION__))

@@ -6,6 +6,8 @@
 #include <Components/Image.h>
 #include <Components/SizeBox.h>
 
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 
 void UObsidianItem::NativeConstruct()
 {
@@ -19,38 +21,8 @@ void UObsidianItem::NativeConstruct()
 	}
 }
 
-FReply UObsidianItem::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
 {
-	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
-	{
-		FObsidianItemInteractionFlags AddingItemFlags;
-		AddingItemFlags.bItemStacksInteraction = InMouseEvent.IsShiftDown();
-		AddingItemFlags.bMoveBetweenNextOpenedWindow = InMouseEvent.IsControlDown();
-		
-		OnItemLeftMouseButtonPressedDelegate.Broadcast(this, AddingItemFlags);
-	}
-	if(InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
-	{
-		OnItemRightMouseButtonPressedDelegate.Broadcast(this);
-	}
-
-	return FReply::Handled();
-}
-
-void UObsidianItem::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
-{
-	OnItemMouseEnterDelegate.Broadcast(this);
-}
-
-void UObsidianItem::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
-{
-	OnItemMouseLeaveDelegate.Broadcast();
-}
-
-void UObsidianItem::InitializeItemWidget(const FObsidianItemPosition& DesiredPosition, const FIntPoint& InItemGridSpan,
-	UTexture2D* ItemImage, const int32 CurrentStack)
-{
-	ItemPosition = DesiredPosition;
 	InternalStacks = CurrentStack;
 	
 	Root_SizeBox->SetWidthOverride(InItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
@@ -111,11 +83,6 @@ void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
 	
 	StackCount_TextBlock->SetText(FText::AsNumber(NewStackCount));
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
-}
-
-FObsidianItemPosition UObsidianItem::GetItemPosition() const
-{
-	return ItemPosition;
 }
 
 FSlateBrush UObsidianItem::GetItemImage() const

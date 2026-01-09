@@ -2,10 +2,6 @@
 
 #include "UI/Inventory/Stash/ObsidianStashTabWidget.h"
 
-// ~ Core
-
-// ~ Project
-
 void UObsidianStashTabWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
