@@ -165,7 +165,8 @@ void UObsidianMainOverlay::ToggleInventory()
 			
 				if(ensure(InventoryItemsWidgetController))
 				{
-					InventoryItemsWidgetController->RemoveItemUIElements();
+					InventoryItemsWidgetController->RemoveItemUIElements(EObsidianPanelOwner::Inventory);
+					InventoryItemsWidgetController->RemoveItemUIElements(EObsidianPanelOwner::Equipment);
 				}
 				
 				MoveDroppedItemDescOverlay(false);
@@ -241,7 +242,7 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 			
 				if(ensure(InventoryItemsWidgetController))
 				{
-					InventoryItemsWidgetController->RemoveItemUIElements();
+					InventoryItemsWidgetController->RemoveItemUIElements(EObsidianPanelOwner::PlayerStash);
 				}
 			});
 		

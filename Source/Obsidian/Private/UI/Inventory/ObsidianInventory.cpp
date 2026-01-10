@@ -45,7 +45,7 @@ void UObsidianInventory::NativeDestruct()
 {
 	if(InventoryItemsWidgetController)
 	{
-		InventoryItemsWidgetController->RemoveItemUIElements();
+		InventoryItemsWidgetController->RemoveItemUIElements(EObsidianPanelOwner::Inventory);
 		InventoryItemsWidgetController->OnItemEquippedDelegate.Clear();
 		InventoryItemsWidgetController->OnEquippedItemRemovedDelegate.Clear();
 		

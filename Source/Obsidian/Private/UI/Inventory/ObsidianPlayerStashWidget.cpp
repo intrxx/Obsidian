@@ -44,7 +44,7 @@ void UObsidianPlayerStashWidget::NativeDestruct()
 {
 	if(InventoryItemsWidgetController)
 	{
-		InventoryItemsWidgetController->RemoveItemUIElements();
+		InventoryItemsWidgetController->RemoveItemUIElements(EObsidianPanelOwner::PlayerStash);
 		InventoryItemsWidgetController->OnItemStashedDelegate.Clear();
 	}
 	

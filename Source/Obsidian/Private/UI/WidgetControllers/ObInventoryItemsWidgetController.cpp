@@ -711,7 +711,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const 
 		return;
 	}
 	
-	RemoveItemUIElements();
+	RemoveItemUIElements(EObsidianPanelOwner::Inventory);
 
 	if(OwnerPlayerInputManager->IsUsingItem())
 	{
@@ -807,7 +807,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShi
 		return;
 	}
 	
-	RemoveItemUIElements();
+	RemoveItemUIElements(EObsidianPanelOwner::Inventory);
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in fill it in UObInventoryItemsWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(ObsidianPlayerController, UnstackSliderClass);
@@ -840,7 +840,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(const 
 		return;
 	}
 	
-	RemoveItemUIElements();
+	RemoveItemUIElements(EObsidianPanelOwner::Equipment);
 
 	if(OwnerPlayerInputManager->IsUsingItem())
 	{
@@ -972,7 +972,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(const FO
 		return;
 	}
 	
-	RemoveItemUIElements();
+	RemoveItemUIElements(EObsidianPanelOwner::PlayerStash);
 	
 	if (OwnerPlayerInputManager->IsUsingItem())
 	{
@@ -1064,7 +1064,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWithShift
 		return;
 	}
 	
-	RemoveItemUIElements();
+	RemoveItemUIElements(EObsidianPanelOwner::PlayerStash);
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in fill it in UObInventoryItemsWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(ObsidianPlayerController, UnstackSliderClass);
@@ -1137,7 +1137,7 @@ void UObInventoryItemsWidgetController::HandleHoveringOverItem(const FObsidianIt
 	FObsidianItemStats OutItemStats;
 	if (UObsidianItemsFunctionLibrary::GetItemStats(ObsidianPlayerController, ForInstance, OutItemStats))
 	{
-		CreateInventoryItemDescription(ItemPosition, InteractionData.ItemWidget, OutItemStats);
+		CreateInventoryItemDescription(ItemPosition, PanelOwner, InteractionData.ItemWidget, OutItemStats);
 	}
 }
 
@@ -1153,12 +1153,28 @@ void UObInventoryItemsWidgetController::HandleUnhoveringItem(const FObsidianItem
 
 void UObInventoryItemsWidgetController::ClearItemDescriptionForPosition(const FObsidianItemPosition& ForPosition)
 {
-	UObsidianItemDescriptionBase* RemovedDescription = nullptr;
-	if (ActiveItemDescriptions.RemoveAndCopyValue(ForPosition, RemovedDescription))
+	FObsidianActiveItemDescriptionData DescriptionData;
+	if (ActiveItemDescriptions.RemoveAndCopyValue(ForPosition, DescriptionData))
 	{
-		if (RemovedDescription)
+		if (UObsidianItemDescriptionBase* DescriptionWidget = DescriptionData.OwningItemDescription)
 		{
-			RemovedDescription->DestroyDescriptionWidget();
+			DescriptionWidget->DestroyDescriptionWidget();
+		}
+	}
+}
+
+void UObInventoryItemsWidgetController::ClearItemDescriptionsForOwner(const EObsidianPanelOwner ForDescriptionOwner)
+{
+	for(auto It = ActiveItemDescriptions.CreateIterator(); It; ++It)
+	{
+		auto& Entry = *It;
+		if(Entry.Value.DescriptionPanelOwner == ForDescriptionOwner)
+		{
+			if (UObsidianItemDescriptionBase* DescriptionWidget = Entry.Value.OwningItemDescription)
+			{
+				DescriptionWidget->DestroyDescriptionWidget();
+				It.RemoveCurrent();
+			}
 		}
 	}
 }
@@ -1233,10 +1249,10 @@ void UObInventoryItemsWidgetController::HandleTakingOutStacksFromStash(const int
 	}
 }
 
-void UObInventoryItemsWidgetController::RemoveItemUIElements()
+void UObInventoryItemsWidgetController::RemoveItemUIElements(const EObsidianPanelOwner ForPanelOwner)
 {
+	ClearItemDescriptionsForOwner(ForPanelOwner);
 	RemoveUnstackSlider();
-	//TODO(intrxx) Remove all Active Descriptions? 
 }
 
 void UObInventoryItemsWidgetController::RemoveUnstackSlider()
@@ -1627,7 +1643,7 @@ bool UObInventoryItemsWidgetController::CanPlaceDraggedItemInEquipment(const FGa
 }
 
 UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateInventoryItemDescription(const FObsidianItemPosition& AtPosition,
-	const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats)
+	const EObsidianPanelOwner PanelOwner, const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats)
 {
 	ClearItemDescriptionForPosition(AtPosition); //TODO(intrxx) will it be necessary?
 	
@@ -1640,8 +1656,8 @@ UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::CreateInventory
 	
 	const FVector2D DescriptionViewportPosition = CalculateDescriptionPosition(ForItemWidget, NewItemDescription);
 	NewItemDescription->SetPositionInViewport(DescriptionViewportPosition);
-
-	ActiveItemDescriptions.Add(AtPosition, NewItemDescription);
+	
+	ActiveItemDescriptions.Add(AtPosition, FObsidianActiveItemDescriptionData(NewItemDescription, PanelOwner));
 	
 	return NewItemDescription;
 }

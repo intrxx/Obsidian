@@ -66,6 +66,26 @@ public:
 	bool bDoesBlockSisterSlot = false;
 };
 
+USTRUCT()
+struct FObsidianActiveItemDescriptionData
+{
+	GENERATED_BODY()
+
+public:
+	FObsidianActiveItemDescriptionData(){}
+	FObsidianActiveItemDescriptionData(UObsidianItemDescriptionBase* InItemDesc, const EObsidianPanelOwner InPanelOwner)
+		: OwningItemDescription(InItemDesc)
+		, DescriptionPanelOwner(InPanelOwner)
+	{}
+	
+public:
+	UPROPERTY()
+	TObjectPtr<UObsidianItemDescriptionBase> OwningItemDescription = nullptr;
+
+	UPROPERTY()
+	EObsidianPanelOwner DescriptionPanelOwner = EObsidianPanelOwner::None;
+};
+
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemovedSignature, const FObsidianItemWidgetData& ItemWidgetData);
@@ -130,7 +150,7 @@ public:
 		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
 	void HandleUnhoveringItem(const FObsidianItemPosition& FromPosition);
 	
-	void RemoveItemUIElements();
+	void RemoveItemUIElements(const EObsidianPanelOwner ForPanelOwner);
 	void RemoveCurrentDroppedItemDescription();
 
 	void CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
@@ -202,6 +222,7 @@ private:
 	
 	bool CanShowDescription() const;
 	void ClearItemDescriptionForPosition(const FObsidianItemPosition& ForPosition);
+	void ClearItemDescriptionsForOwner(const EObsidianPanelOwner ForDescriptionOwner);
 	
 	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const;
 	FVector2D CalculateDescriptionPosition(const UObsidianItem* ItemWidget, UObsidianItemDescriptionBase* ForDescription) const;
@@ -209,7 +230,7 @@ private:
 		const FVector2D& ItemSize, const FVector2D& UIElementSize) const;
 
 	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const FObsidianItemPosition& AtPosition,
-		const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats);
+		const EObsidianPanelOwner PanelOwner, const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats);
 	UObsidianItemDescriptionBase* CreateDroppedItemDescription(const FObsidianItemStats& ItemStats);
 
 private:
@@ -228,6 +249,6 @@ private:
 	bool bDroppedDescriptionActive = false;
 	
 	UPROPERTY()
-	TMap<FObsidianItemPosition, UObsidianItemDescriptionBase*> ActiveItemDescriptions;
+	TMap<FObsidianItemPosition, FObsidianActiveItemDescriptionData> ActiveItemDescriptions;
 };
 
