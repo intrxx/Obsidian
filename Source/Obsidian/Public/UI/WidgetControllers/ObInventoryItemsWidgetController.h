@@ -179,8 +179,9 @@ private:
 	void RequestAddingItemToEquipment(const FGameplayTag& SlotTag);
 	void RequestAddingItemToStashTab(const FObsidianItemPosition& ToPosition, const bool bShiftDown);
 
-	void HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot, const bool bAddToOtherWindow);
-	void HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot, const UObsidianItem* ItemWidget);
+	void HandleLeftClickingOnInventoryItem(const FIntPoint& ClickedItemPosition, const FIntPoint& ClickedGridPosition,
+		const bool bAddToOtherWindow);
+	void HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& ClickedItemPosition, const UObsidianItem* ItemWidget);
 	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag,
 		const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
 	void HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, const bool bAddToOtherWindow);

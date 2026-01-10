@@ -79,7 +79,10 @@ public:
 	/** Finds all stacks in the inventory for given item type with item Instance. */
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance);
 
-	/** Gets the total amount of items added to the inventory with the same item Definition. This does not include stacks, only individual entries to the inventory. */
+	/**
+	 * Gets the total amount of items added to the inventory with the same item Definition.
+	 * This does not include stacks, only individual entries to the inventory.
+	 */
 	int32 GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const;
 
 	UObsidianInventoryItemInstance* GetItemInstanceAtLocation(const FIntPoint& Location) const;
@@ -100,7 +103,8 @@ public:
 	bool CheckSpecifiedPosition(const FIntPoint& ItemGridSpan, const FIntPoint& SpecifiedPosition);
 	
      /**
-	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
+	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory.
+	 * Returns Array of Instances that stacks were added to.
 	 *
 	 *	@param AddingFromItemDef		The Item Definition that the function will try to add from.
 	 *	@param StacksToAdd				The Current Stacks of the provided Item Definition.
@@ -108,22 +112,30 @@ public:
 	 *
 	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
-	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
+	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef,
+		const int32 StacksToAdd, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
 	
 	/** Checks if the provided Item Definition can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& AtGridSlot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount = 1);
+	bool CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& ClickedInstancePosition,
+		const FIntPoint& ClickedGridPosition, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+		const int32 StackCount = 1);
 
 	/** Checks if the provided Item Definition fits anywhere in the inventory. */
 	bool CanFitItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 	
-	/** Tries to add Item Definition to the inventory, if the item is stackable will first try to add all the stacks to the same item types if they exist in inventory. */
+	/**
+	 * Tries to add Item Definition to the inventory, if the item is stackable will first try to add all the stacks
+	 * to the same item types if they exist in inventory.
+	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianItemOperationResult AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData);
+	FObsidianItemOperationResult AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+		const FObsidianItemGeneratedData& ItemGeneratedData);
 
 	/** Tries to add provided Item Definition to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianItemOperationResult AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FIntPoint& ToGridSlot, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride = -1);
+	FObsidianItemOperationResult AddItemDefinitionToSpecifiedSlot(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+		const FIntPoint& ToGridSlot, const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Will try to add stacks from provided Item Definition at provided Position.
@@ -136,22 +148,29 @@ public:
 	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FIntPoint& AtPosition, const int32 StackToAddOverride = -1);
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(
+		const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks,
+		const FIntPoint& AtPosition, const int32 StackToAddOverride = -1);
 	
 	/** Checks if the provided Item Instance can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	bool CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& AtGridSlot, UObsidianInventoryItemInstance* ReplacingInstance);
+	bool CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& ClickedInstancePosition,
+		const FIntPoint& ClickedGridPosition, UObsidianInventoryItemInstance* ReplacingInstance);
 
 	/** Checks if the provided Item Instance fits anywhere in the inventory. */
 	bool CanFitItemInstance(const UObsidianInventoryItemInstance* Instance);
 	
-	/** Tries to add Item Instance to the inventory, if the item is stackable will first try to add all the stacks to the same item types if they exist in inventory. */
+	/**
+	 * Tries to add Item Instance to the inventory, if the item is stackable will first try to add all the stacks
+	 * to the same item types if they exist in inventory.
+	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	FObsidianItemOperationResult AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd);
 
 	/** Tries to add provided Item Instance to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianItemOperationResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride = -1);
+	FObsidianItemOperationResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd,
+		const FIntPoint& ToGridSlot, const int32 StackToAddOverride = -1);
 	
 	/**
 	 *	Will try to add stacks from provided Item Instance at provided Position. 
@@ -163,7 +182,8 @@ public:
 	 *  @return The struct that contains various useful information about the result of the adding process.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FIntPoint& AtGridSlot, const int32 StackToAddOverride = -1);
+	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance,
+		const FIntPoint& AtGridSlot, const int32 StackToAddOverride = -1);
 
 	/**
 	 *	Provides a copied Item with the amount of stacks to take. Shouldn't ever be called to take out full item stacks or 0 stacks.
@@ -174,7 +194,8 @@ public:
 	 *	@return New, duplicated item instance with StacksToTake number of stacks.
 	 */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
-	FObsidianItemOperationResult TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake);
+	FObsidianItemOperationResult TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance,
+		const int32 StacksToTake);
 
 	/** Removes Item Instance from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
@@ -210,12 +231,15 @@ private:
 	bool CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
 	/** Checks if the provided Item Definition fits in the inventory at provided slot. */
-	bool CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
+	bool CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot,
+		const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 
-	bool CheckReplacementPossible(const FIntPoint& AtGridSlot, const FIntPoint& GridSpanAtPosition, const FIntPoint& ReplacingGridSpan) const;
+	bool CheckReplacementPossible(const FIntPoint& ItemToReplaceOriginPosition, const FIntPoint& AtGridSlot,
+		const FIntPoint& GridSpanAtPosition, const FIntPoint& ReplacingGridSpan) const;
 	
 	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided ItemDef. */
-	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks);
+	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+		const int32 CurrentStacks);
 
 	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided instance. */
 	int32 GetNumberOfStacksAvailableToAddToInventory(const UObsidianInventoryItemInstance* ItemInstance);

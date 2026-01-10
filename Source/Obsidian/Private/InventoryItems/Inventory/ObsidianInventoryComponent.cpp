@@ -180,7 +180,8 @@ bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FInt
 	return false;
 }
 
-bool UObsidianInventoryComponent::CheckReplacementPossible(const FIntPoint& AtGridSlot, const FIntPoint& GridSpanAtPosition, const FIntPoint& ReplacingGridSpan) const
+bool UObsidianInventoryComponent::CheckReplacementPossible(const FIntPoint& ItemToReplaceOriginPosition,
+	const FIntPoint& AtGridSlot, const FIntPoint& GridSpanAtPosition, const FIntPoint& ReplacingGridSpan) const
 {
 	TMap<FIntPoint, bool> TempInventoryStateMap = InventoryGrid.InventoryStateMap;
 	
@@ -188,7 +189,7 @@ bool UObsidianInventoryComponent::CheckReplacementPossible(const FIntPoint& AtGr
 	{
 		for(int32 SpanY = 0; SpanY < GridSpanAtPosition.Y; ++SpanY)
 		{
-			const FIntPoint GridSlotToCheck = AtGridSlot + FIntPoint(SpanX, SpanY);
+			const FIntPoint GridSlotToCheck = ItemToReplaceOriginPosition + FIntPoint(SpanX, SpanY);
 			if(bool* TempLocation = TempInventoryStateMap.Find(GridSlotToCheck))
 			{
 				*TempLocation = false;
@@ -477,7 +478,8 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride)
+FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpecificSlot(
+	UObsidianInventoryItemInstance* InstanceToAdd, const FIntPoint& ToGridSlot, const int32 StackToAddOverride)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
@@ -1154,9 +1156,10 @@ bool UObsidianInventoryComponent::CanFitItemInstance(const UObsidianInventoryIte
 	return CheckAvailablePosition(AvailablePosition, Instance->GetItemGridSpan());
 }
 
-bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& AtGridSlot, UObsidianInventoryItemInstance* ReplacingInstance)
+bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& ClickedInstancePosition,
+	const FIntPoint& ClickedGridPosition, UObsidianInventoryItemInstance* ReplacingInstance)
 {
-	const UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
+	const UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(ClickedInstancePosition);
 	if (InstanceAtLocation == nullptr)
 	{
 		return false;
@@ -1168,12 +1171,15 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithInstance(const
 		return false;
 	}
 	
-	return CheckReplacementPossible(AtGridSlot, InstanceAtLocation->GetItemGridSpan(), ReplacingInstance->GetItemGridSpan());
+	return CheckReplacementPossible(ClickedInstancePosition, ClickedGridPosition,
+		InstanceAtLocation->GetItemGridSpan(), ReplacingInstance->GetItemGridSpan());
 }
 
-bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& AtGridSlot, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const int32 StackCount)
+bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& ClickedInstancePosition,
+	const FIntPoint& ClickedGridPosition, const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+	const int32 StackCount)
 {
-	const UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(AtGridSlot);
+	const UObsidianInventoryItemInstance* InstanceAtLocation = GetItemInstanceAtLocation(ClickedInstancePosition);
 	if (InstanceAtLocation == nullptr)
 	{
 		return false;
@@ -1187,9 +1193,11 @@ bool UObsidianInventoryComponent::CanReplaceItemAtSpecificSlotWithDef(const FInt
 	
 	if(const UObsidianInventoryItemDefinition* DefaultItem = ItemDef.GetDefaultObject())
 	{
-		if(const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		if(const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(
+			DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			return CheckReplacementPossible(AtGridSlot, InstanceAtLocation->GetItemGridSpan(), Appearance->GetItemGridSpanFromDesc());
+			return CheckReplacementPossible(ClickedInstancePosition, ClickedGridPosition,
+				InstanceAtLocation->GetItemGridSpan(), Appearance->GetItemGridSpanFromDesc());
 		}
 	}
 

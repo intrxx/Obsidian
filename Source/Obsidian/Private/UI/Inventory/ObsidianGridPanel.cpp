@@ -296,28 +296,31 @@ void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianItemSlot_G
 		return;
 	}
 
-	FIntPoint OriginGridPositionPressed = AffectedSlot->GetGridSlotPosition();
-	check(OriginGridPositionPressed != FIntPoint::NoneValue);
+	FIntPoint GridPositionPressed = AffectedSlot->GetGridSlotPosition();
+	check(GridPositionPressed != FIntPoint::NoneValue);
 	
 	// It feels kinda forced :/ Probably will need to rethink the whole thing someday
-	OffsetGridPositionByItemSpan(InventoryItemsWidgetController->GetDraggedItemGridSpan(), OriginGridPositionPressed);
+	OffsetGridPositionByItemSpan(InventoryItemsWidgetController->GetDraggedItemGridSpan(), GridPositionPressed);
 
-	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(OriginGridPositionPressed);
+	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridPositionPressed);
 	if (SlotData == nullptr)
 	{
 		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
-			*OriginGridPositionPressed.ToString(), __FUNCTION__)
+			*GridPositionPressed.ToString(), __FUNCTION__)
 		return;
 	}
 	
 	FObsidianItemPosition ItemPositionToAddTo;
-	ConstructItemPosition(ItemPositionToAddTo, OriginGridPositionPressed);
+	ConstructItemPosition(ItemPositionToAddTo, GridPositionPressed);
 
 	FObsidianItemInteractionData InteractionData;
 	InteractionData.InteractionFlags = InteractionFlags;
 	
 	if (SlotData && SlotData->IsOccupied())
 	{
+		FObsidianItemPosition PressedSlot;
+		ConstructItemPosition(PressedSlot, GridPositionPressed);
+		InteractionData.InteractionTargetPositionOverride = PressedSlot;
 		InteractionData.ItemWidget = SlotData->ItemWidget;
 		InventoryItemsWidgetController->HandleLeftClickingOnItem(SlotData->OriginPosition, InteractionData, PanelOwner);
 	}

@@ -1017,7 +1017,8 @@ void UObsidianPlayerInputManager::ServerTakeoutFromInventoryItem_Implementation(
 	}
 }
 
-void UObsidianPlayerInputManager::ServerReplaceItemAtInventorySlot_Implementation(const FIntPoint& ItemGridPosition)
+void UObsidianPlayerInputManager::ServerReplaceItemAtInventorySlot_Implementation(const FIntPoint& ItemGridPosition,
+	const FIntPoint& ClickedGridPosition)
 {
 	const AController* Controller = GetController<AController>();
 	if (Controller == nullptr)
@@ -1047,11 +1048,12 @@ void UObsidianPlayerInputManager::ServerReplaceItemAtInventorySlot_Implementatio
 	bool bSuccess = false;
 	if (UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, ItemGridPosition);
+		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, ClickedGridPosition);
 	}
 	else if (const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
-		bSuccess = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, ItemGridPosition, CachedDraggedItem.GeneratedData);
+		bSuccess = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, ClickedGridPosition,
+			CachedDraggedItem.GeneratedData);
 	}
 	
 	if (bSuccess == false)

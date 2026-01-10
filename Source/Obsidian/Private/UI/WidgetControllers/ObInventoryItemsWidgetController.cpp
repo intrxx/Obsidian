@@ -574,7 +574,12 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnItem(const FObsidian
 				}
 				else
 				{
+					ensureMsgf(InteractionData.InteractionTargetPositionOverride.IsOnInventoryGrid(),
+						TEXT("Trying to handle left click on Inventorized item with invalid Interaction"
+						" Target Position Override."));
+					
 					HandleLeftClickingOnInventoryItem(AtItemPosition.GetItemGridPosition(),
+						InteractionData.InteractionTargetPositionOverride.GetItemGridPosition(),
 						InteractionData.InteractionFlags.bMoveBetweenNextOpenedWindow);	
 				}
 				
@@ -694,7 +699,8 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const
 	}
 }
 
-void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const FIntPoint& AtGridSlot, const bool bAddToOtherWindow)
+void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const FIntPoint& ClickedItemPosition,
+	const FIntPoint& ClickedGridPosition, const bool bAddToOtherWindow)
 {
 	check(InventoryComponent);
 	check(OwnerPlayerInputManager);
@@ -709,7 +715,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const 
 
 	if(OwnerPlayerInputManager->IsUsingItem())
 	{
-		OwnerPlayerInputManager->UseItem(AtGridSlot, false);
+		OwnerPlayerInputManager->UseItem(ClickedItemPosition, false);
 		return;
 	}
 
@@ -717,7 +723,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const 
 	{
 		if (bAddToOtherWindow == false)
 		{
-			OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(AtGridSlot);
+			OwnerPlayerInputManager->ServerGrabInventoryItemToCursor(ClickedItemPosition);
 			return;
 		}
 
@@ -725,12 +731,12 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const 
 		if (ObsidianHUD && ObsidianHUD->IsPlayerStashOpened()) //TODO(intrxx) For now I support only Inventory <-> Stash
 		{
 			const FGameplayTag ToStashTab = ObsidianHUD->GetActiveStashTabTag(); //TODO(intrxx) This will need updating when I will support Stash Tab Affinities
-			OwnerPlayerInputManager->ServerTransferItemToPlayerStash(AtGridSlot, ToStashTab);
+			OwnerPlayerInputManager->ServerTransferItemToPlayerStash(ClickedItemPosition, ToStashTab);
 		}
 		return;
 	}
 	
-	const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
+	const UObsidianInventoryItemInstance* InstanceToAddTo = InventoryComponent->GetItemInstanceAtLocation(ClickedItemPosition);
 	if (InstanceToAddTo == nullptr)
 	{
 		UE_LOG(LogWidgetController_Items, Error, TEXT("Item Instance at pressed Location is invalid in [%hs]"), __FUNCTION__);
@@ -740,30 +746,34 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const 
 	const FDraggedItem DraggedItem = OwnerPlayerInputManager->GetDraggedItem();
 	if (UObsidianInventoryItemInstance* DraggedInstance = DraggedItem.Instance) // We carry item instance.
 	{
-		if (DraggedInstance->IsStackable() && UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance, InstanceToAddTo))
+		if (DraggedInstance->IsStackable() && UObsidianItemsFunctionLibrary::IsTheSameItem(DraggedInstance,
+			InstanceToAddTo))
 		{
-			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(AtGridSlot);
+			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(ClickedItemPosition);
 		}
-		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(AtGridSlot, DraggedInstance))
+		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithInstance(ClickedItemPosition,
+			ClickedGridPosition, DraggedInstance))
 		{
-			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(ClickedItemPosition, ClickedGridPosition);
 		}
 	}
 	else if (const TSubclassOf<UObsidianInventoryItemDefinition> DraggedItemDef = DraggedItem.ItemDef) // We carry item def
 	{
 		const UObsidianInventoryItemDefinition* DefaultObject = DraggedItemDef.GetDefaultObject();
-		if (DefaultObject && DefaultObject->IsStackable() && UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, DraggedItemDef))
+		if (DefaultObject && DefaultObject->IsStackable() && UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(
+																InstanceToAddTo, DraggedItemDef))
 		{
-			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(AtGridSlot);
+			OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(ClickedItemPosition);
 		}
-		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(AtGridSlot, DraggedItemDef, DraggedItem.GeneratedData.AvailableStackCount))
+		else if (InventoryComponent->CanReplaceItemAtSpecificSlotWithDef(ClickedItemPosition,
+			ClickedGridPosition, DraggedItemDef, DraggedItem.GeneratedData.AvailableStackCount))
 		{
-			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(AtGridSlot);
+			OwnerPlayerInputManager->ServerReplaceItemAtInventorySlot(ClickedItemPosition, ClickedGridPosition);
 		}
 	}
 }
 
-void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& AtGridSlot,
+void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& ClickedItemPosition,
 	const UObsidianItem* ItemWidget)
 {
 	check(OwnerPlayerInputManager);
@@ -775,17 +785,17 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShi
 	
 	if(OwnerPlayerInputManager->IsUsingItem())
 	{
-		OwnerPlayerInputManager->UseItem(AtGridSlot, true);
+		OwnerPlayerInputManager->UseItem(ClickedItemPosition, true);
 		return;
 	}
 	
 	if(OwnerPlayerInputManager->IsDraggingAnItem())
 	{
-		OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(AtGridSlot, 1);
+		OwnerPlayerInputManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(ClickedItemPosition, 1);
 		return;
 	}
 	
-	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(AtGridSlot);
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(ClickedItemPosition);
 	if(ItemInstance->IsStackable() == false)
 	{
 		return;
@@ -801,7 +811,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShi
 
 	checkf(UnstackSliderClass, TEXT("Tried to create widget without valid widget class in fill it in UObInventoryItemsWidgetController instance."));
 	ActiveUnstackSlider = CreateWidget<UObsidianUnstackSlider>(ObsidianPlayerController, UnstackSliderClass);
-	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, AtGridSlot);
+	ActiveUnstackSlider->InitializeUnstackSlider(CurrentItemStacks, ClickedItemPosition);
 
 	const FVector2D UnstackSliderViewportPosition = CalculateUnstackSliderPosition(ItemWidget);
 	ActiveUnstackSlider->SetPositionInViewport(UnstackSliderViewportPosition);

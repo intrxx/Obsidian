@@ -111,7 +111,7 @@ public:
 	void ServerTakeoutFromInventoryItem(const FIntPoint& SlotPosition, const int32 StacksToTake);
 
 	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtInventorySlot(const FIntPoint& SlotPosition);
+	void ServerReplaceItemAtInventorySlot(const FIntPoint& ClickedItemPosition, const FIntPoint& ClickedGridPosition);
 	
 	UFUNCTION(Server, Reliable)
 	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
