@@ -24,7 +24,8 @@ class OBSIDIAN_API AObsidianFrontEndHUD : public AHUD
 public:
 	AObsidianFrontEndHUD(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 
-	UObCharacterSelectionWidgetController* GetCharacterSelectionWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	UObCharacterSelectionWidgetController* GetCharacterSelectionWidgetController(
+		const FObsidianWidgetControllerParams& WidgetControllerParams);
 
 protected:
 	/**

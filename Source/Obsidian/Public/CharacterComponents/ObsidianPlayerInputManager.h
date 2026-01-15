@@ -12,6 +12,7 @@
 
 #include "ObsidianPlayerInputManager.generated.h"
 
+class UObsidianCraftingComponent;
 struct FInputActionValue;
 
 class UImage;
@@ -28,7 +29,6 @@ class UObsidianInventoryItemDefinition;
 class IObsidianInteractionInterface;
 class UCommonActivatableWidget;
 
-DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
 
@@ -77,26 +77,14 @@ public:
 	{
 		return DraggedItem;
 	}
-
-	UObsidianInventoryItemInstance* GetUsingItem()
-	{
-		return UsingItemInstance;
-	}
 	
 	bool IsDraggingAnItem() const
 	{
 		return bDraggingItem;
 	}
-
-	bool IsUsingItem() const
-	{
-		return bUsingItem;
-	}
-	
-	void SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget = nullptr, UObsidianInventoryItemInstance* UsingInstance = nullptr);
 	
 	/**
-	 * Inventory Items.
+	 * Inventory Items. //TODO(intrxx) Create ItemHandlingComponent and move this logic there
 	 */
 	
 	bool DropItem();
@@ -121,11 +109,6 @@ public:
 	
 	UFUNCTION(Server, Reliable)
 	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup);
-	
-	void UseItem(const FObsidianItemPosition& OnPosition, const bool bLeftShiftDown);
-
-	UFUNCTION(Server, Reliable)
-	void ServerActivateUsableItemFromInventory(UObsidianInventoryItemInstance* UsingInstance);
 
 	UFUNCTION(Server, Reliable)
 	void ServerTransferItemToPlayerStash(const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab);
@@ -167,18 +150,13 @@ public:
 
 	UFUNCTION(Server, Reliable)
 	void ServerTakeoutFromStashedItem(const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake);
-
-	UFUNCTION(Server, Reliable)
-	void ServerActivateUsableItemFromStash(UObsidianInventoryItemInstance* UsingInstance);
-
+	
 	//~ Start of UObject interface
 	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
 
 public:
-	FOnStopUsingItemSignature OnStopUsingItemDelegate;
-
 	FOnStartDraggingItemSignature OnStartDraggingItemDelegate;
 	FOnStopDraggingItemSignature OnStopDraggingItemDelegate;
 	
@@ -238,12 +216,6 @@ private:
 	bool CanContinuouslyMoveMouse() const;
 	void AutoRun();
 	void AutoRunToClickedLocation();
-
-	/**
-	 * Using Item.
-	 */
-	
-	void DragUsableItemIcon() const;
 	
 	/**
 	 * Item Pick up.
@@ -252,9 +224,6 @@ private:
 	UFUNCTION(Client, Reliable)
 	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
 	
-	UFUNCTION(Server, Reliable)
-	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FObsidianItemPosition& OnPosition);
-
 	void AutomaticallyPickupOutOfRangeItem();
 	void DragOutOfRangeItem();
 
@@ -308,10 +277,7 @@ private:
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObsidianDraggedItem_Simple> DraggedUsableItemWidgetClass;
-
+	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
 	TSoftClassPtr<UCommonActivatableWidget> GameplayMenuClass;
 	
@@ -351,29 +317,27 @@ private:
 	 */
 	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
-
+	
 	/**
 	 * Dragged items.
 	 */
 	UPROPERTY()
 	TObjectPtr<UObsidianDraggedItem> DraggedItemWidget;
-
-	UPROPERTY()
-	TObjectPtr<UObsidianDraggedItem_Simple> DraggedUsableItemWidget;
-
+	
 	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
 	FDraggedItem DraggedItem = FDraggedItem();
 	
 #if 0 // https://github.com/intrxx/Obsidian/commit/e3eda3899a1b39ec1952221a24bce0b40b7be769
 	FVector CachedItemDropLocation = FVector::ZeroVector;
 #endif
-	
-	UPROPERTY()
-	TObjectPtr<UObsidianInventoryItemInstance> UsingItemInstance = nullptr;
-	UPROPERTY()
-	TObjectPtr<UObsidianItem> CachedUsingInventoryItemWidget = nullptr;
 
-	bool bUsingItem = false;
+	/**
+	 * Item Crafting
+	 */
+
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent = nullptr;
+	
 	bool bDraggingItem = false;
 	bool bItemAvailableForDrop = false;
 	bool bJustDroppedItem = false;

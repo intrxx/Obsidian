@@ -12,6 +12,7 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Game/Save/ObsidianSharedStashSaveGame.h"
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
@@ -28,6 +29,7 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 	InventoryComponent = CreateDefaultSubobject<UObsidianInventoryComponent>(TEXT("Inventory Component"));
 	EquipmentComponent = CreateDefaultSubobject<UObsidianEquipmentComponent>(TEXT("Equipment Component"));
 	PlayerStashComponent = CreateDefaultSubobject<UObsidianPlayerStashComponent>(TEXT("Player Stash Component"));
+	CraftingComponent = CreateDefaultSubobject<UObsidianCraftingComponent>(TEXT("Crafting Component"));
 }
 
 void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
@@ -92,6 +94,26 @@ void AObsidianPlayerController::PostInitializeComponents()
 			}
 		}
 	}
+}
+
+UObsidianInventoryComponent* AObsidianPlayerController::GetInventoryComponent() const
+{
+	return InventoryComponent;
+}
+
+UObsidianEquipmentComponent* AObsidianPlayerController::GetEquipmentComponent() const
+{
+	return EquipmentComponent;
+}
+
+UObsidianPlayerStashComponent* AObsidianPlayerController::GetPlayerStashComponent() const
+{
+	return PlayerStashComponent;
+}
+
+UObsidianCraftingComponent* AObsidianPlayerController::GetCraftingComponent() const
+{
+	return CraftingComponent;
 }
 
 void AObsidianPlayerController::LoadSharedStashData(UObsidianSharedStashSaveGame* SharedStashSaveGame)

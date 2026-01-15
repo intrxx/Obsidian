@@ -13,8 +13,9 @@
 
 #include "ObsidianWidgetControllerBase.generated.h"
 
- class UObsidianLocalPlayer;
- class UObsidianPlayerStashComponent;
+class UObsidianLocalPlayer;
+class UObsidianPlayerStashComponent;
+class UObsidianCraftingComponent;
 class AObsidianPlayerController;
 class AObsidianPlayerState;
 class UObsidianEquipmentComponent;
@@ -29,19 +30,7 @@ struct FObsidianWidgetControllerParams
 {
 	GENERATED_BODY()
 	
-	FObsidianWidgetControllerParams(AObsidianPlayerController* OPC = nullptr, AObsidianPlayerState* OPS = nullptr, UObsidianAbilitySystemComponent* ObsidianASC = nullptr,
-		UObsidianHeroAttributesComponent* AC = nullptr, UObsidianInventoryComponent* IC = nullptr, UObsidianEquipmentComponent* EC = nullptr, UObsidianPlayerStashComponent* PSC = nullptr,
-		UObsidianLocalPlayer* LP = nullptr)
-	: ObsidianPlayerController(OPC)
-	, ObsidianPlayerState(OPS)
-	, ObsidianAbilitySystemComponent(ObsidianASC)
-	, AttributesComponent(AC)
-	, InventoryComponent(IC)
-	, EquipmentComponent(EC)
-	, PlayerStashComponent(PSC)
-	, ObsidianLocalPlayer(LP)
-	{};
-
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<AObsidianPlayerController> ObsidianPlayerController = nullptr;
 
@@ -65,6 +54,9 @@ struct FObsidianWidgetControllerParams
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UObsidianLocalPlayer> ObsidianLocalPlayer = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TObjectPtr<UObsidianCraftingComponent> CraftingComponent = nullptr;
 };
 
 /**
@@ -79,7 +71,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|WidgetController")
 	void SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams);
 	
-	/** This function is called when the initial setup for Widget Controller is completed, widget controller contains valid data */
+	/**
+	 * This function is called when the initial setup for Widget Controller is completed,
+	 * widget controller contains valid data.
+     */
 	virtual void OnWidgetControllerSetupCompleted();
 
 	AObsidianPlayerController* GetOwningPlayerController() const
@@ -96,6 +91,8 @@ protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
 
 protected:
+	//TODO(intrxx) replace TObjectPtr with TWeakObjectPtr for these pointers
+	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<AObsidianPlayerController> ObsidianPlayerController;
 
@@ -119,5 +116,8 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
 	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
+	TWeakObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent;
 };
 

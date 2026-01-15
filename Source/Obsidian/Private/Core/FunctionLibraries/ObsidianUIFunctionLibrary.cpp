@@ -4,7 +4,6 @@
 
 #include <Kismet/GameplayStatics.h>
 
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
@@ -19,16 +18,22 @@ UObMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetCont
 		return nullptr;
 	}
 
-	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
+		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
 	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
-			AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState();
-			UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
-			UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(ObsidianPC->GetOwner());
-			
-			const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, ObsidianASC, AttributesComponent);
-			return ObsidianHUD->GetMainOverlayWidgetController(Params);
+			if (AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState())
+			{
+				FObsidianWidgetControllerParams Params;
+				Params.ObsidianPlayerController = ObsidianPC;
+				Params.ObsidianPlayerState = ObsidianPS;
+				Params.ObsidianAbilitySystemComponent = ObsidianPS->GetObsidianAbilitySystemComponent();
+				Params.AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					ObsidianPC->GetOwner());
+				
+				return ObsidianHUD->GetMainOverlayWidgetController(Params);	
+			}
 		}
 	}
 
@@ -42,16 +47,20 @@ UObCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStat
 		return nullptr;
 	}
 
-	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
+		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
 	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			if(AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState())
 			{
-				UObsidianAbilitySystemComponent* ObsidianASC = ObsidianPS->GetObsidianAbilitySystemComponent();
-				UObsidianHeroAttributesComponent* AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(ObsidianPC->GetPawn());
-			
-				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, ObsidianASC, AttributesComponent);
+				FObsidianWidgetControllerParams Params;
+				Params.ObsidianPlayerController = ObsidianPC;
+				Params.ObsidianPlayerState = ObsidianPS;
+				Params.ObsidianAbilitySystemComponent = ObsidianPS->GetObsidianAbilitySystemComponent();
+				Params.AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					ObsidianPC->GetPawn());
+				
 				return ObsidianHUD->GetCharacterStatusWidgetController(Params);
 			}
 		}
@@ -66,16 +75,21 @@ UObInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItems
 		return nullptr;
 	}
 
-	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
+		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
 	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
 			if(AObsidianPlayerState* ObsidianPS = ObsidianPC->GetObsidianPlayerState())
 			{
-				UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent();
-				UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent();
-				UObsidianPlayerStashComponent* PlayerStashComponent = ObsidianPC->GetPlayerStashComponent();
-				const FObsidianWidgetControllerParams Params(ObsidianPC, ObsidianPS, nullptr, nullptr, InventoryComponent, EquipmentComponent, PlayerStashComponent);
+				FObsidianWidgetControllerParams Params;
+				Params.ObsidianPlayerController = ObsidianPC;
+				Params.ObsidianPlayerState = ObsidianPS;
+				Params.InventoryComponent = ObsidianPC->GetInventoryComponent();
+				Params.EquipmentComponent = ObsidianPC->GetEquipmentComponent();
+				Params.PlayerStashComponent = ObsidianPC->GetPlayerStashComponent();
+				Params.CraftingComponent = ObsidianPC->GetCraftingComponent();
+				
 				return ObsidianHUD->GetInventoryItemsWidgetController(Params);
 			}
 		}
@@ -83,14 +97,16 @@ UObInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItems
 	return nullptr;
 }
 
-UObCharacterSelectionWidgetController* UObsidianUIFunctionLibrary::GetCharacterSelectionWidgetController(const UObject* WorldContextObject)
+UObCharacterSelectionWidgetController* UObsidianUIFunctionLibrary::GetCharacterSelectionWidgetController(
+	const UObject* WorldContextObject)
 {
 	if(WorldContextObject == nullptr)
 	{
 		return nullptr;
 	}
 
-	if(AObsidianPlayerController* PlayerController = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+	if(AObsidianPlayerController* PlayerController = Cast<AObsidianPlayerController>(
+		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
 	{
 		if(AObsidianFrontEndHUD* FrontEndHUD = Cast<AObsidianFrontEndHUD>(PlayerController->GetHUD()))
 		{

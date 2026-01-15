@@ -13,6 +13,7 @@
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
@@ -46,16 +47,22 @@ void UObInventoryItemsWidgetController::OnWidgetControllerSetupCompleted()
 	check(EquipmentComponent);
 	check(ObsidianPlayerController);
 	check(PlayerStashComponent);
+	check(OwnerCraftingComponent.IsValid())
 	
 	const AActor* OwningActor = Cast<AActor>(ObsidianPlayerController->GetPawn());
 	check(OwningActor);
 	
 	OwnerPlayerInputManager = UObsidianPlayerInputManager::FindPlayerInputManager(OwningActor);
 	check(OwnerPlayerInputManager);
-	OwnerPlayerInputManager->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableUIContext);
 	OwnerPlayerInputManager->OnStartDraggingItemDelegate.AddUObject(this, &ThisClass::OnStartDraggingItem);
 	OwnerPlayerInputManager->OnStopDraggingItemDelegate.AddUObject(this, &ThisClass::OnStopDraggingItem);
 
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if (ensure(CraftingComp))
+	{
+		CraftingComp->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableUIContext);
+	}
+	
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this, &ThisClass::OnInventoryStateChanged);
 	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Equipment_Changed, this, &ThisClass::OnEquipmentStateChanged);
@@ -105,14 +112,6 @@ void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Cha
 	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s] from Inventory"), *Instance->GetItemDisplayName().ToString());
-		
-		if(OwnerPlayerInputManager->IsUsingItem())
-		{
-			if(InventoryChangeMessage.ItemInstance == OwnerPlayerInputManager->GetUsingItem())
-			{
-				OwnerPlayerInputManager->SetUsingItem(false);  //TODO(intrxx) This probably shouldn't be here, its widget controller
-			}
-		}
 		
 		ClearItemDescriptionForPosition(InventoryChangeMessage.GridItemPosition);
 
@@ -242,14 +241,6 @@ void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channe
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s] from Player Stash"), *Instance->GetItemDisplayName().ToString());
 		//RemoveStashItemWidget(StashChangeMessage.ItemPosition);
-		
-		if(OwnerPlayerInputManager->IsUsingItem())
-		{
-			if(StashChangeMessage.ItemInstance == OwnerPlayerInputManager->GetUsingItem())
-			{
-				OwnerPlayerInputManager->SetUsingItem(false);  //TODO(intrxx) This probably shouldn't be here, its widget controller
-			}
-		}
 
 		ClearItemDescriptionForPosition(StashChangeMessage.ItemPosition);
 		FObsidianItemWidgetData ItemWidgetData;
@@ -433,9 +424,10 @@ void UObInventoryItemsWidgetController::RequestAddingItemToInventory(const FIntP
 {
 	check(OwnerPlayerInputManager);
 
-	if(OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		StopUsingItem();
+		CraftingComp->SetUsingItem(false);
 		return;
 	}
 	
@@ -450,9 +442,10 @@ void UObInventoryItemsWidgetController::RequestAddingItemToEquipment(const FGame
 {
 	check(OwnerPlayerInputManager);
 
-	if(OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		StopUsingItem();
+		CraftingComp->SetUsingItem(false);
 		return;
 	}
 	
@@ -467,9 +460,10 @@ void UObInventoryItemsWidgetController::RequestAddingItemToStashTab(const FObsid
 {
 	check(OwnerPlayerInputManager);
 
-	if(OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		StopUsingItem();
+		CraftingComp->SetUsingItem(false);
 		return;
 	}
 	
@@ -631,6 +625,14 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnItem(const FObsidian
 void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot,
 	UObsidianItem* ItemWidget)
 {
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if (CraftingComp == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to trigger crafting without valid Crafting Comp"
+												" in [%hs]"), __FUNCTION__);
+		return;
+	}
+	
 	check(OwnerPlayerInputManager);
 	if(OwnerPlayerInputManager && OwnerPlayerInputManager->IsDraggingAnItem())
 	{
@@ -658,7 +660,7 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const
 			return;
 		}
 		
-		OwnerPlayerInputManager->SetUsingItem(true, ItemWidget, UsingInstance);
+		CraftingComp->SetUsingItem(true, ItemWidget, UsingInstance);
 
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComponent->GetAllItems());
@@ -695,7 +697,7 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const
 	}
 	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
 	{
-		OwnerPlayerInputManager->ServerActivateUsableItemFromInventory(UsingInstance);
+		CraftingComp->ServerActivateUsableItemFromInventory(UsingInstance);
 	}
 }
 
@@ -713,9 +715,10 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const 
 	
 	RemoveItemUIElements(EObsidianPanelOwner::Inventory);
 
-	if(OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		OwnerPlayerInputManager->UseItem(ClickedItemPosition, false);
+		CraftingComp->UseItem(ClickedItemPosition, false);
 		return;
 	}
 
@@ -783,9 +786,10 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShi
 		return;
 	}
 	
-	if(OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		OwnerPlayerInputManager->UseItem(ClickedItemPosition, true);
+		CraftingComp->UseItem(ClickedItemPosition, true);
 		return;
 	}
 	
@@ -842,10 +846,12 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(const 
 	
 	RemoveItemUIElements(EObsidianPanelOwner::Equipment);
 
-	if(OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("As of now it is imposible to use items onto equipped items, maybe will support it in the future."));
-		StopUsingItem();
+		CraftingComp->SetUsingItem(false);
+		UE_LOG(LogWidgetController_Items, Error, TEXT("As of now it is impossible to use items onto equipped items,"
+												" maybe will support it in the future."));
 		return;
 	}
 	
@@ -894,6 +900,14 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(const 
 void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition,
 	UObsidianItem* ItemWidget)
 {
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if (CraftingComp == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to trigger crafting without valid Crafting Comp"
+												" in [%hs]"), __FUNCTION__);
+		return;
+	}
+	
 	check(OwnerPlayerInputManager);
 	if(OwnerPlayerInputManager && OwnerPlayerInputManager->IsDraggingAnItem())
 	{
@@ -921,7 +935,7 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const F
 			return;
 		}
 		
-		OwnerPlayerInputManager->SetUsingItem(true, ItemWidget, UsingInstance);
+		CraftingComp->SetUsingItem(true, ItemWidget, UsingInstance);
 
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComponent->GetAllItems());
@@ -957,7 +971,7 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const F
 	}
 	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
 	{
-		OwnerPlayerInputManager->ServerActivateUsableItemFromInventory(UsingInstance);
+		CraftingComp->ServerActivateUsableItemFromInventory(UsingInstance);
 	}
 }
 
@@ -974,9 +988,10 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnStashedItem(const FO
 	
 	RemoveItemUIElements(EObsidianPanelOwner::PlayerStash);
 	
-	if (OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		OwnerPlayerInputManager->UseItem(AtItemPosition, false);
+		CraftingComp->UseItem(AtItemPosition, false);
 		return;
 	}
 
@@ -1040,9 +1055,10 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWithShift
 		return;
 	}
 	
-	if(OwnerPlayerInputManager->IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		OwnerPlayerInputManager->UseItem(AtItemPosition, true);
+		CraftingComp->UseItem(AtItemPosition, true);
 		return;
 	}
 	
@@ -1282,11 +1298,6 @@ void UObInventoryItemsWidgetController::RemoveCurrentDroppedItemDescription()
 		ActiveDroppedItemDescription = nullptr;
 		bDroppedDescriptionActive = false;
 	}
-}
-
-void UObInventoryItemsWidgetController::StopUsingItem()
-{
-	OwnerPlayerInputManager->SetUsingItem(false);
 }
 
 void UObInventoryItemsWidgetController::ClearUsableUIContext()

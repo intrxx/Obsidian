@@ -9,6 +9,7 @@
 #include "CommonPlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class UObsidianCraftingComponent;
 class UObsidianSharedStashSaveGame;
 class AObsidianHero;
 class UObsidianStash;
@@ -40,22 +41,13 @@ public:
 	virtual void PostInitializeComponents() override;
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianInventoryComponent* GetInventoryComponent() const
-	{
-		return InventoryComponent;
-	}
-
+	UObsidianInventoryComponent* GetInventoryComponent() const;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianEquipmentComponent* GetEquipmentComponent() const
-	{
-		return EquipmentComponent;
-	}
-
+	UObsidianEquipmentComponent* GetEquipmentComponent() const;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianPlayerStashComponent* GetPlayerStashComponent() const
-	{
-		return PlayerStashComponent;
-	}
+	UObsidianPlayerStashComponent* GetPlayerStashComponent() const;
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
+	UObsidianCraftingComponent* GetCraftingComponent() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	EObsidianHeroClass GetHeroClass() const;
@@ -108,6 +100,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
+	TObjectPtr<UObsidianCraftingComponent> CraftingComponent;
 
 	FDelegateHandle SharedStashDataLoadDelegateHandle;
 };

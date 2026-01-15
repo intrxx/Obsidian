@@ -2,23 +2,20 @@
 
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
 
-// ~ Core
-#include "EnhancedInputSubsystems.h"
-#include "InputMappingContext.h"
-#include "NavigationPath.h"
-#include "Engine/ActorChannel.h"
-#include "NavigationSystem.h"
-#include "Blueprint/WidgetLayoutLibrary.h"
-#include "Components/SplineComponent.h"
-#include "GameFramework/PlayerController.h"
-#include "Net/UnrealNetwork.h"
-#include "Kismet/KismetMathLibrary.h"
+#include <EnhancedInputSubsystems.h>
+#include <InputMappingContext.h>
+#include <NavigationPath.h>
+#include <Engine/ActorChannel.h>
+#include <NavigationSystem.h>
+#include <Components/SplineComponent.h>
+#include <GameFramework/PlayerController.h>
+#include <Net/UnrealNetwork.h>
+#include <Kismet/KismetMathLibrary.h>
 
-// ~ Project
 #include "CommonUIExtensions.h"
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Input/OEnhancedInputUserSettings.h"
-#include "UI/Inventory/Items/ObsidianDraggedItem_Simple.h"
+
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
@@ -31,8 +28,8 @@
 #include "Input/ObsidianEnhancedInputComponent.h"
 #include "Interaction/ObsidianInteractionInterface.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
-#include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/Items/ObsidianDraggedItem.h"
@@ -67,11 +64,6 @@ void UObsidianPlayerInputManager::TickComponent(float DeltaTime, ELevelTick Tick
 	if(bDraggingItem)
 	{
 		DragItem();
-	}
-
-	if(bUsingItem)
-	{
-		DragUsableItemIcon();
 	}
 }
 
@@ -189,30 +181,6 @@ void UObsidianPlayerInputManager::DragItem() const
 		DraggedItemWidget->SetPositionInViewport(ViewportPosition);
 	}
 }
-   
-void UObsidianPlayerInputManager::DragUsableItemIcon() const
-{
-	const APlayerController* PC = GetController<APlayerController>();
-	if(PC == nullptr)
-	{
-		return;
-	}
-
-	float LocationX = 0.0f;
-	float LocationY = 0.0f;
-	if(DraggedUsableItemWidget && PC->GetMousePosition(LocationX, LocationY))
-	{
-		if(UWorld* World = GetWorld())
-		{
-			const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
-			FVector2D ItemSize = DraggedUsableItemWidget->GetItemWidgetSize() + FVector2D(5.0f, -5.0f);
-			ItemSize *= DPIScale;
-			
-			const FVector2D ViewportPosition = FVector2D(LocationX - ItemSize.X, LocationY - ItemSize.Y);
-			DraggedUsableItemWidget->SetPositionInViewport(ViewportPosition);
-		}
-	}
-}
 
 AObsidianHUD* UObsidianPlayerInputManager::GetObsidianHUD() const
 {
@@ -314,6 +282,9 @@ void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputCo
 			}
 		}
 	}
+
+	OwnerCraftingComponent = PC->FindComponentByClass<UObsidianCraftingComponent>();
+	check(OwnerCraftingComponent.Get());
 }
 
 void UObsidianPlayerInputManager::Input_AbilityInputTagPressed(FGameplayTag InputTag)
@@ -382,9 +353,10 @@ void UObsidianPlayerInputManager::Input_MoveStartedMouse()
 		return;
 	}
 
-	if(IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		SetUsingItem(false);
+		CraftingComp->SetUsingItem(false);
 	}
 
 	if(ActiveInteractionTarget && ActiveInteractionTarget->RequiresOngoingInteraction())
@@ -512,9 +484,10 @@ void UObsidianPlayerInputManager::Input_DropItem()
 
 void UObsidianPlayerInputManager::Input_ReleaseUsingItem()
 {
-	if(IsUsingItem())
+	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
+	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		SetUsingItem(false);
+		CraftingComp->SetUsingItem(false);
 	}
 }
 
@@ -593,60 +566,6 @@ void UObsidianPlayerInputManager::Input_OpenGameplayMenu()
 	
 	UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(LocalPlayer, ObsidianGameplayTags::UI_Layer_GameplayMenu,
 		GameplayMenuClass);
-}
-
-void UObsidianPlayerInputManager::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget,
-	UObsidianInventoryItemInstance* UsingInstance)
-{
-	if(InbUsingItem && ItemWidget)
-	{
-		if (UsingInstance == nullptr)
-		{
-			UE_LOG(LogObsidian, Error, TEXT("UsingInstance is invalid in [%hs]."), __FUNCTION__);
-			return;
-		}
-		
-		UWorld* World = GetWorld();
-		if(World == nullptr)
-		{
-			return;
-		}
-		
-		if(DraggedUsableItemWidget)
-		{
-			DraggedUsableItemWidget->RemoveFromParent();
-		}
-		
-		ItemWidget->SetUsingItemProperties();
-		CachedUsingInventoryItemWidget = ItemWidget;
-
-		checkf(DraggedUsableItemWidgetClass, TEXT("DraggedUsableItemWidgetClass is invalid in [%hs] please fill it."),
-			__FUNCTION__);
-		DraggedUsableItemWidget = CreateWidget<UObsidianDraggedItem_Simple>(World, DraggedUsableItemWidgetClass);
-		DraggedUsableItemWidget->InitializeDraggedItem(ItemWidget->GetItemImage(), UsingInstance->GetItemGridSpan());
-		DraggedUsableItemWidget->AddToViewport();
-
-		UsingItemInstance = UsingInstance;
-	}
-	else
-	{
-		if(DraggedUsableItemWidget)
-		{
-			DraggedUsableItemWidget->RemoveFromParent();
-		}
-
-		if(CachedUsingInventoryItemWidget)
-		{
-			CachedUsingInventoryItemWidget->ResetUsingItemProperties();
-		}
-
-		DraggedUsableItemWidget = nullptr;
-		UsingItemInstance = nullptr;
-
-		OnStopUsingItemDelegate.Broadcast();
-	}
-
-	bUsingItem = InbUsingItem;
 }
 
 bool UObsidianPlayerInputManager::DropItem()
@@ -864,34 +783,9 @@ void UObsidianPlayerInputManager::ServerTakeoutFromStashedItem_Implementation(co
 	}
 }
 
-void UObsidianPlayerInputManager::ServerActivateUsableItemFromStash_Implementation(UObsidianInventoryItemInstance* UsingInstance)
-{
-	if(UsingInstance == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-	
-	const AController* Controller = GetController<AController>();
-	if(Controller == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-
-	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
-	if(PlayerStashComponent == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-	
-	PlayerStashComponent->UseItem(UsingInstance, nullptr);
-}
-
 bool UObsidianPlayerInputManager::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
 {
-	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
 
 	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
 	if(Instance && IsValid(Instance))
@@ -904,12 +798,7 @@ bool UObsidianPlayerInputManager::ReplicateSubobjects(UActorChannel* Channel, FO
 	{
 		WroteSomething |= Channel->ReplicateSubobject(ItemDef, *Bunch, *RepFlags);
 	}
-
-	if(UsingItemInstance && IsValid(UsingItemInstance))
-	{
-		WroteSomething |= Channel->ReplicateSubobject(UsingItemInstance, *Bunch, *RepFlags);
-	}
-
+	
 	return WroteSomething;
 }
 
@@ -930,11 +819,6 @@ void UObsidianPlayerInputManager::ReadyForReplication()
 		if(IsValid(ItemDef))
 		{
 			AddReplicatedSubObject(ItemDef);
-		}
-
-		if(IsValid(UsingItemInstance))
-		{
-			AddReplicatedSubObject(UsingItemInstance);
 		}
 	}
 }
@@ -1822,16 +1706,6 @@ void UObsidianPlayerInputManager::ServerAddStacksFromDraggedItemToInventoryItemA
 	}
 }
 
-void UObsidianPlayerInputManager::UseItem(const FObsidianItemPosition& OnPosition, const bool bLeftShiftDown)
-{
-	ServerUseItem(UsingItemInstance, OnPosition);
-
-	if(bLeftShiftDown == false)
-	{
-		SetUsingItem(false);
-	}
-}
-
 void UObsidianPlayerInputManager::ServerTransferItemToPlayerStash_Implementation(const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab)
 {
 	const AController* Controller = GetController<AController>();
@@ -1869,73 +1743,6 @@ void UObsidianPlayerInputManager::ServerTransferItemToPlayerStash_Implementation
 			PlayerStashComponent->AddItemInstance(InstanceToGrab, ToStashTab);
 		}
 	}
-}
-
-void UObsidianPlayerInputManager::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance, const FObsidianItemPosition& OnPosition)
-{
-	if(UsingInstance == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-	
-	const AController* Controller = GetController<AController>();
-	if(Controller == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-
-	const FGameplayTag StashTabTag = OnPosition.GetOwningStashTabTag();
-	if (StashTabTag != FGameplayTag::EmptyTag)
-	{
-		UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
-		if(PlayerStashComponent == nullptr)
-		{
-			UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
-			return;
-		}
-
-		UObsidianInventoryItemInstance* UsingOntoInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(OnPosition);
-		PlayerStashComponent->UseItem(UsingInstance, UsingOntoInstance);
-	}
-	else
-	{
-		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
-		if(InventoryComponent == nullptr)
-		{
-			UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
-			return;
-		}
-
-		UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(OnPosition.GetItemGridPosition());
-		InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
-	}
-}
-
-void UObsidianPlayerInputManager::ServerActivateUsableItemFromInventory_Implementation(UObsidianInventoryItemInstance* UsingInstance)
-{
-	if(UsingInstance == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-	
-	const AController* Controller = GetController<AController>();
-	if(Controller == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-
-	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
-	if(InventoryComponent == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
-		return;
-	}
-	
-	InventoryComponent->UseItem(UsingInstance, nullptr);
 }
 
 void UObsidianPlayerInputManager::UpdateStacksOnDraggedItemWidget(const int32 InStacks)

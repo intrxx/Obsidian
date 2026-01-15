@@ -2,9 +2,7 @@
 
 #include "UI/ObsidianWidgetControllerBase.h"
 
-// ~ Core
-
-// ~ Project
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 
 void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
@@ -16,6 +14,7 @@ void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidia
 	InventoryComponent = WidgetControllerParams.InventoryComponent;
 	EquipmentComponent = WidgetControllerParams.EquipmentComponent;
 	PlayerStashComponent = WidgetControllerParams.PlayerStashComponent;
+	OwnerCraftingComponent = WidgetControllerParams.CraftingComponent.Get();
 }
 
 void UObsidianHeroWidgetControllerBase::OnWidgetControllerSetupCompleted()
