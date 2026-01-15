@@ -2,11 +2,9 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
@@ -17,6 +15,7 @@ struct FObsidianEffectUIData;
 class UOStackingDurationalEffectInfo;
 class UObsidianDurationalEffectInfo;
 class UObsidianAbilitySystemComponent;
+class UObsidianHeroAttributesComponent;
 class UObsidianEffectInfoBase;
 
 /** Delegate used for notifying Progress Globes to display the healing/replenish amount */
@@ -26,6 +25,8 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEffectUIGlobeData, const float, Ef
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateEnemyTargetForHealthBar, AActor*, TargetActor, const bool, bDisplayHealthBar);
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraWidgetDestructionInfoReceived, const FGameplayTag, WidgetTag);
+
+DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_MainOverlay, Log, All);
 
 /**
  * 
@@ -162,5 +163,10 @@ private:
 	void DestroyAuraWidget(const FGameplayTag AuraWidgetTag);
 
 private:
-	float MaxExperienceOldValue = 0.0f;
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianAbilitySystemComponent> OwnerAbilitySystemComponent = nullptr;
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianHeroAttributesComponent> OwnerAttributesComponent = nullptr;
+	
+ 	float MaxExperienceOldValue = 0.0f;
 };

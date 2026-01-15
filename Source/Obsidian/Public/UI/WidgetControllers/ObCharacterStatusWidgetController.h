@@ -13,6 +13,8 @@
 
 struct FOnAttributeChangeData;
 
+DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_CharacterStatus, Log, All);
+
 /**
  * 
  */
@@ -199,5 +201,10 @@ protected:
 	FDelegateHandle MaxSpellBlockChanceChangedDelegateHandle;
 
 private:
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianAbilitySystemComponent> OwnerAbilitySystemComponent = nullptr;
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianHeroAttributesComponent> OwnerAttributesComponent = nullptr;
+	
 	float MaxExperienceOldValue = 0.0f;
 };

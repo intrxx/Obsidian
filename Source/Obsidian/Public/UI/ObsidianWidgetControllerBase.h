@@ -38,25 +38,7 @@ public:
 	TObjectPtr<AObsidianPlayerState> ObsidianPlayerState = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UObsidianHeroAttributesComponent> AttributesComponent = nullptr;
-	
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UObsidianInventoryComponent> InventoryComponent = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<UObsidianLocalPlayer> ObsidianLocalPlayer = nullptr;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TObjectPtr<UObsidianCraftingComponent> CraftingComponent = nullptr;
 };
 
 /**
@@ -79,45 +61,25 @@ public:
 
 	AObsidianPlayerController* GetOwningPlayerController() const
 	{
-		return ObsidianPlayerController;
+		return OwnerPlayerController.Get();
 	}
 
 	AObsidianPlayerState* GetOwningPlayerState() const
 	{
-		return ObsidianPlayerState;
+		return OwnerPlayerState.Get();
 	}
 
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
 
 protected:
-	//TODO(intrxx) replace TObjectPtr with TWeakObjectPtr for these pointers
-	
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<AObsidianPlayerController> ObsidianPlayerController;
+	TWeakObjectPtr<AObsidianPlayerController> OwnerPlayerController;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<UObsidianLocalPlayer> ObsidianLocalPlayer;
+	TWeakObjectPtr<UObsidianLocalPlayer> OwnerLocalPlayer;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<AObsidianPlayerState> ObsidianPlayerState;
-	
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
-	
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<UObsidianHeroAttributesComponent> AttributesComponent;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<UObsidianInventoryComponent> InventoryComponent;
-	
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
-	TObjectPtr<UObsidianPlayerStashComponent> PlayerStashComponent;
-
-	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HeroWidgetController")
-	TWeakObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent;
+	TWeakObjectPtr<AObsidianPlayerState> OwnerPlayerState;
 };
 

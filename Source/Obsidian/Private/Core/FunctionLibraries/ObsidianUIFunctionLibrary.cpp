@@ -28,9 +28,6 @@ UObMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetCont
 				FObsidianWidgetControllerParams Params;
 				Params.ObsidianPlayerController = ObsidianPC;
 				Params.ObsidianPlayerState = ObsidianPS;
-				Params.ObsidianAbilitySystemComponent = ObsidianPS->GetObsidianAbilitySystemComponent();
-				Params.AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
-					ObsidianPC->GetOwner());
 				
 				return ObsidianHUD->GetMainOverlayWidgetController(Params);	
 			}
@@ -57,9 +54,6 @@ UObCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStat
 				FObsidianWidgetControllerParams Params;
 				Params.ObsidianPlayerController = ObsidianPC;
 				Params.ObsidianPlayerState = ObsidianPS;
-				Params.ObsidianAbilitySystemComponent = ObsidianPS->GetObsidianAbilitySystemComponent();
-				Params.AttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
-					ObsidianPC->GetPawn());
 				
 				return ObsidianHUD->GetCharacterStatusWidgetController(Params);
 			}
@@ -85,10 +79,6 @@ UObInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItems
 				FObsidianWidgetControllerParams Params;
 				Params.ObsidianPlayerController = ObsidianPC;
 				Params.ObsidianPlayerState = ObsidianPS;
-				Params.InventoryComponent = ObsidianPC->GetInventoryComponent();
-				Params.EquipmentComponent = ObsidianPC->GetEquipmentComponent();
-				Params.PlayerStashComponent = ObsidianPC->GetPlayerStashComponent();
-				Params.CraftingComponent = ObsidianPC->GetCraftingComponent();
 				
 				return ObsidianHUD->GetInventoryItemsWidgetController(Params);
 			}

@@ -233,7 +233,15 @@ private:
 
 private:
 	UPROPERTY()
-	TObjectPtr<UObsidianPlayerInputManager> OwnerPlayerInputManager = nullptr;
+	TWeakObjectPtr<UObsidianInventoryComponent> OwnerInventoryComponent = nullptr;
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianEquipmentComponent> OwnerEquipmentComponent = nullptr;
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianPlayerStashComponent> OwnerPlayerStashComponent = nullptr;
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent = nullptr;
+	UPROPERTY()
+	TWeakObjectPtr<UObsidianPlayerInputManager> OwnerPlayerInputManager = nullptr;
 	
 	UPROPERTY()
 	TArray<UObsidianItem*> CachedItemsMatchingUsableContext;

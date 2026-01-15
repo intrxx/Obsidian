@@ -7,12 +7,13 @@
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Characters/ObsidianCharacterCreationHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 
 void UObCharacterSelectionWidgetController::OnWidgetControllerSetupCompleted()
 {
-	check(ObsidianLocalPlayer);
-	check(ObsidianPlayerController);
+	check(OwnerLocalPlayer.IsValid());
+	check(OwnerPlayerController.IsValid());
 	
 	GatherCreationHeroes();
 	GatherViewTargets();
@@ -50,16 +51,28 @@ AObsidianCharacterCreationHero* UObCharacterSelectionWidgetController::GetCreati
 
 void UObCharacterSelectionWidgetController::SetupCameraForCreationPanel()
 {
-	check(ObsidianPlayerController)
 	check(CharacterCreationViewTarget)
-	ObsidianPlayerController->SetViewTarget(CharacterCreationViewTarget);
+	if (CharacterCreationViewTarget)
+	{
+		check(OwnerPlayerController.IsValid())
+		if (AObsidianPlayerController* PlayerController = OwnerPlayerController.Get())
+		{
+			PlayerController->SetViewTarget(CharacterCreationViewTarget);
+		}
+	}
 }
 
 void UObCharacterSelectionWidgetController::ResetCameraToDefaultViewTarget()
 {
-	check(ObsidianPlayerController)
 	check(MainMenuDefaultViewTarget)
-	ObsidianPlayerController->SetViewTarget(MainMenuDefaultViewTarget);
+	if (MainMenuDefaultViewTarget)
+	{
+		check(OwnerPlayerController.IsValid())
+		if (AObsidianPlayerController* PlayerController = OwnerPlayerController.Get())
+		{
+			PlayerController->SetViewTarget(MainMenuDefaultViewTarget);
+		}
+	}
 }
 
 void UObCharacterSelectionWidgetController::GatherCreationHeroes()
@@ -81,8 +94,14 @@ void UObCharacterSelectionWidgetController::GatherCreationHeroes()
 
 void UObCharacterSelectionWidgetController::GatherViewTargets()
 {
-	check(ObsidianPlayerController)
-	if (const UWorld* World = ObsidianPlayerController->GetWorld())
+	check(OwnerPlayerController.IsValid())
+	AObsidianPlayerController* PlayerController = OwnerPlayerController.Get();
+	if (PlayerController == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("PlayerController is invalid in [%hs]"), __FUNCTION__);
+	}
+	
+	if (const UWorld* World = OwnerPlayerController->GetWorld())
 	{
 		TArray<AActor*> OutViewTargets;
 		UGameplayStatics::GetAllActorsWithTag(World, ObsidianActorTags::ViewTarget, OutViewTargets);

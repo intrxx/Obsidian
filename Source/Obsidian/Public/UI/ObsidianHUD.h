@@ -41,7 +41,7 @@ public:
 		return MainOverlayWidget;
 	}
 
-	void InitOverlay(AObsidianPlayerController* PC, AObsidianPlayerState* PS, UObsidianAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC);
+	void InitOverlay(AObsidianPlayerController* ForPlayerController, AObsidianPlayerState* ForPlayerState);
 
 	void ToggleCharacterStatus() const;
 	void ToggleInventory() const;

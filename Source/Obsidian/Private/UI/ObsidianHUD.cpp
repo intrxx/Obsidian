@@ -62,13 +62,15 @@ UObInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetControll
 	return InventoryItemsWidgetController;
 }
 
-void AObsidianHUD::InitOverlay(AObsidianPlayerController* PC, AObsidianPlayerState* PS, UObsidianAbilitySystemComponent* ASC, UObsidianHeroAttributesComponent* AC)
+void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, AObsidianPlayerState* ForPlayerState)
 {
 	if(ensureMsgf(MainOverlayWidgetClass, TEXT("Main Overlay Widget Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 	{
 		MainOverlayWidget = CreateWidget<UObsidianMainOverlay>(GetWorld(), MainOverlayWidgetClass);
 
-		const FObsidianWidgetControllerParams Params(PC, PS, ASC, AC);
+		FObsidianWidgetControllerParams Params;
+		Params.ObsidianPlayerController = ForPlayerController;
+		Params.ObsidianPlayerState = ForPlayerState;
 		UObMainOverlayWidgetController* WidgetController = GetMainOverlayWidgetController(Params);
 
 		MainOverlayWidget->SetWidgetController(WidgetController);

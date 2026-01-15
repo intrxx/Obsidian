@@ -430,7 +430,7 @@ void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) c
 	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
-			ObsidianHUD->InitOverlay(ObsidianPC, ObsidianPS, ObsidianASC, HeroAttributesComponent);
+			ObsidianHUD->InitOverlay(ObsidianPC, ObsidianPS);
 		}
 	}
 }

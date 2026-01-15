@@ -2,145 +2,226 @@
 
 #include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 
-// ~ Core
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Core/ObsidianGameplayStatics.h"
-#include "Obsidian/ObsidianGameModule.h"
+
+DEFINE_LOG_CATEGORY(LogWidgetController_CharacterStatus)
 
 void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
-	check(ObsidianAbilitySystemComponent);
-	check(AttributesComponent);
-	check(ObsidianPlayerController);
-	check(ObsidianPlayerState);
-	
-	HandleBindingCallbacks(ObsidianAbilitySystemComponent);
+	check(OwnerPlayerController.IsValid());
+	const AObsidianPlayerController* PlayerController = OwnerPlayerController.Get();
+	if (PlayerController == nullptr)
+	{
+		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("PlayerController is invalid in [%hs]."),
+			__FUNCTION__);
+		return;
+	}
 
-	ObsidianPlayerState->OnHeroLevelUp.AddDynamic(this, &ThisClass::HeroLevelUp);
-
-	if(const AObsidianHero* Hero = Cast<AObsidianHero>(ObsidianPlayerController->GetCharacter()))
+	if(const AObsidianHero* Hero = Cast<AObsidianHero>(PlayerController->GetCharacter()))
 	{
 		HeroClassText = UObsidianGameplayStatics::GetHeroClassText(Hero->GetHeroClass());
 	}
 
-	HeroNameString = ObsidianPlayerState->GetObsidianPlayerName();
+	OwnerAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					PlayerController->GetPawn());
+	check(OwnerAttributesComponent.IsValid());
+
+	OwnerAbilitySystemComponent = PlayerController->GetObsidianAbilitySystemComponent();
+	check(OwnerAbilitySystemComponent.IsValid());
+	if (UObsidianAbilitySystemComponent* ObsidianASC = OwnerAbilitySystemComponent.Get())
+	{
+		HandleBindingCallbacks(ObsidianASC);
+	}
+	
+	check(OwnerPlayerState.IsValid());
+	if (AObsidianPlayerState* PlayerState = OwnerPlayerState.Get())
+	{
+		PlayerState->OnHeroLevelUp.AddDynamic(this, &ThisClass::HeroLevelUp);
+		HeroNameString = PlayerState->GetObsidianPlayerName();
+	}
 }
 
 void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
 {
 	if(ObsidianASC == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("UObsidianAbilitySystemComponent is invalid in UObCharacterStatusWidgetController::HandleBindingCallbacks."));
+		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("ObsidianASC is invalid in [%hs]."), __FUNCTION__);
+		return;
+	}
+
+	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
+	{
+		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+			__FUNCTION__);
 		return;
 	}
 	
 	/** Character */
-	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
-	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
+	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
+	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
 	
 	/** Attributes */
-	StrengthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetStrengthAttribute()).AddUObject(this, &ThisClass::StrengthChanged);
-	IntelligenceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetIntelligenceAttribute()).AddUObject(this, &ThisClass::IntelligenceChanged);
-	DexterityChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetDexterityAttribute()).AddUObject(this, &ThisClass::DexterityChanged);
-	FaithChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFaithAttribute()).AddUObject(this, &ThisClass::FaithChanged);
+	StrengthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetStrengthAttribute()).AddUObject(this, &ThisClass::StrengthChanged);
+	IntelligenceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetIntelligenceAttribute()).AddUObject(this, &ThisClass::IntelligenceChanged);
+	DexterityChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetDexterityAttribute()).AddUObject(this, &ThisClass::DexterityChanged);
+	FaithChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetFaithAttribute()).AddUObject(this, &ThisClass::FaithChanged);
 	
 	/** Vital Attributes */
-	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
-	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
-	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpecialResourceAttribute()).AddUObject(this,  &ThisClass::MaxSpecialResourceChanged);
-	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
+	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
+	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
+	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
 	
 	/** Offence */
-	AccuracyChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAccuracyAttribute()).AddUObject(this, &ThisClass::AccuracyChanged);
-	AttackSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
-	CastSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
-	CriticalStrikeChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
-	CriticalStrikeDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetCriticalStrikeDamageMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeDamageMultiplierChanged);
-	PhysicalDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetPhysicalDamageMultiplierAttribute()).AddUObject(this, &ThisClass::PhysicalDamageMultiplierChanged);
-	FireDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFireDamageMultiplierAttribute()).AddUObject(this, &ThisClass::FireDamageMultiplierChanged);
-	LightningDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningDamageMultiplierAttribute()).AddUObject(this, &ThisClass::LightningDamageMultiplierChanged);
-	ColdDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ColdDamageMultiplierChanged);
-	ChaosDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetChaosDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ChaosDamageMultiplierChanged);
-	FirePenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFirePenetrationAttribute()).AddUObject(this, &ThisClass::FirePenetrationChanged);
-	LightningPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningPenetrationAttribute()).AddUObject(this, &ThisClass::LightningPenetrationChanged);
-	ColdPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdPenetrationAttribute()).AddUObject(this, &ThisClass::ColdPenetrationChanged);
-	ChaosPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetChaosPenetrationAttribute()).AddUObject(this, &ThisClass::ChaosPenetrationChanged);
+	AccuracyChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetAccuracyAttribute()).AddUObject(this, &ThisClass::AccuracyChanged);
+	AttackSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
+	CastSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
+	CriticalStrikeChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
+	CriticalStrikeDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetCriticalStrikeDamageMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeDamageMultiplierChanged);
+	PhysicalDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetPhysicalDamageMultiplierAttribute()).AddUObject(this, &ThisClass::PhysicalDamageMultiplierChanged);
+	FireDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetFireDamageMultiplierAttribute()).AddUObject(this, &ThisClass::FireDamageMultiplierChanged);
+	LightningDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetLightningDamageMultiplierAttribute()).AddUObject(this, &ThisClass::LightningDamageMultiplierChanged);
+	ColdDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetColdDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ColdDamageMultiplierChanged);
+	ChaosDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetChaosDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ChaosDamageMultiplierChanged);
+	FirePenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetFirePenetrationAttribute()).AddUObject(this, &ThisClass::FirePenetrationChanged);
+	LightningPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetLightningPenetrationAttribute()).AddUObject(this, &ThisClass::LightningPenetrationChanged);
+	ColdPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetColdPenetrationAttribute()).AddUObject(this, &ThisClass::ColdPenetrationChanged);
+	ChaosPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetChaosPenetrationAttribute()).AddUObject(this, &ThisClass::ChaosPenetrationChanged);
 	
 	/** Defence */
-	ArmorChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
-	EvasionChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetEvasionAttribute()).AddUObject(this, &ThisClass::EvasionChanged);
-	HealthRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHealthRegenerationAttribute()).AddUObject(this, &ThisClass::HealthRegenerationChanged);
-	EnergyShieldRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetEnergyShieldRegenerationAttribute()).AddUObject(this, &ThisClass::EnergyShieldRegenerationChanged);
-	FireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetFireResistanceAttribute()).AddUObject(this, &ThisClass::FireResistanceChanged);
-	MaxFireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxFireResistanceAttribute()).AddUObject(this, &ThisClass::MaxFireResistanceChanged);
-	ColdResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetColdResistanceAttribute()).AddUObject(this, &ThisClass::ColdResistanceChanged);
-	MaxColdResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxColdResistanceAttribute()).AddUObject(this, &ThisClass::MaxColdResistanceChanged);
-	LightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetLightningResistanceAttribute()).AddUObject(this, &ThisClass::LightningResistanceChanged);
-	MaxLightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxLightningResistanceAttribute()).AddUObject(this, &ThisClass::MaxLightningResistanceChanged);
-	ChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
-	MaxChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
-	SpellSuppressionChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellSuppressionChanceAttribute()).AddUObject(this, &ThisClass::SpellSuppressionChanceChanged);
-	SpellSuppressionMagnitudeChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellSuppressionMagnitudeAttribute()).AddUObject(this, &ThisClass::SpellSuppressionMagnitudeChanged);
-	HitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHitBlockChanceAttribute()).AddUObject(this, &ThisClass::HitBlockChanceChanged);
-	MaxHitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHitBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxHitBlockChanceChanged);
-	SpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::SpellBlockChanceChanged);
-	MaxSpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxSpellBlockChanceChanged);
+	ArmorChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
+	EvasionChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetEvasionAttribute()).AddUObject(this, &ThisClass::EvasionChanged);
+	HealthRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetHealthRegenerationAttribute()).AddUObject(this, &ThisClass::HealthRegenerationChanged);
+	EnergyShieldRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetEnergyShieldRegenerationAttribute()).AddUObject(this, &ThisClass::EnergyShieldRegenerationChanged);
+	FireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetFireResistanceAttribute()).AddUObject(this, &ThisClass::FireResistanceChanged);
+	MaxFireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxFireResistanceAttribute()).AddUObject(this, &ThisClass::MaxFireResistanceChanged);
+	ColdResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetColdResistanceAttribute()).AddUObject(this, &ThisClass::ColdResistanceChanged);
+	MaxColdResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxColdResistanceAttribute()).AddUObject(this, &ThisClass::MaxColdResistanceChanged);
+	LightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetLightningResistanceAttribute()).AddUObject(this, &ThisClass::LightningResistanceChanged);
+	MaxLightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxLightningResistanceAttribute()).AddUObject(this, &ThisClass::MaxLightningResistanceChanged);
+	ChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
+	MaxChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
+	SpellSuppressionChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetSpellSuppressionChanceAttribute()).AddUObject(this, &ThisClass::SpellSuppressionChanceChanged);
+	SpellSuppressionMagnitudeChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetSpellSuppressionMagnitudeAttribute()).AddUObject(this, &ThisClass::SpellSuppressionMagnitudeChanged);
+	HitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetHitBlockChanceAttribute()).AddUObject(this, &ThisClass::HitBlockChanceChanged);
+	MaxHitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxHitBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxHitBlockChanceChanged);
+	SpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::SpellBlockChanceChanged);
+	MaxSpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxSpellBlockChanceChanged);
 }
 
 void UObCharacterStatusWidgetController::SetInitialAttributeValues() const
 {
+	AObsidianPlayerState* PlayerState = OwnerPlayerState.Get();
+	if (PlayerState == nullptr)
+	{
+		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("PlayerState is invalid in [%hs]."),
+				__FUNCTION__);
+		return;
+	}
+	
+	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
+	{
+		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+			__FUNCTION__);
+		return;
+	}
+	
 	/** Character */
-	HeroLevelUpDelegate.Broadcast(ObsidianPlayerState->GetHeroLevel());
-	ExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
-	MaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience(), MaxExperienceOldValue);
+	HeroLevelUpDelegate.Broadcast(PlayerState->GetHeroLevel());
+	ExperienceChangedDelegate.Execute(HeroAttributesComp->GetExperience());
+	MaxExperienceChangedDelegate.Execute(HeroAttributesComp->GetMaxExperience(), MaxExperienceOldValue);
 	
 	/** Attributes */
-	StrengthValueChangedDelegate.Execute(AttributesComponent->GetStrength());
-	IntelligenceValueChangedDelegate.Execute(AttributesComponent->GetIntelligence());
-	DexterityValueChangedDelegate.Execute(AttributesComponent->GetDexterity());
-	FaithValueChangedDelegate.Execute(AttributesComponent->GetFaith());
+	StrengthValueChangedDelegate.Execute(HeroAttributesComp->GetStrength());
+	IntelligenceValueChangedDelegate.Execute(HeroAttributesComp->GetIntelligence());
+	DexterityValueChangedDelegate.Execute(HeroAttributesComp->GetDexterity());
+	FaithValueChangedDelegate.Execute(HeroAttributesComp->GetFaith());
 
 	/** Vital Attributes */
-	MaxHealthChangedDelegate.Execute(AttributesComponent->GetMaxHealth());
-	MaxManaChangedDelegate.Execute(AttributesComponent->GetMaxMana());
-	MaxSpecialResourceChangedDelegate.Execute(AttributesComponent->GetMaxSpecialResource());
-	MaxEnergyShieldChangedDelegate.Execute(AttributesComponent->GetMaxEnergyShield());
+	MaxHealthChangedDelegate.Execute(HeroAttributesComp->GetMaxHealth());
+	MaxManaChangedDelegate.Execute(HeroAttributesComp->GetMaxMana());
+	MaxSpecialResourceChangedDelegate.Execute(HeroAttributesComp->GetMaxSpecialResource());
+	MaxEnergyShieldChangedDelegate.Execute(HeroAttributesComp->GetMaxEnergyShield());
 	
 	/** Offence */
-	AccuracyChangedDelegate.Execute(AttributesComponent->GetAccuracy());
-	AttackSpeedChangedDelegate.Execute(AttributesComponent->GetAttackSpeed());
-	CastSpeedChangedDelegate.Execute(AttributesComponent->GetCastSpeed());
-	CriticalStrikeChanceChangedDelegate.Execute(AttributesComponent->GetCriticalStrikeChance());
-	CriticalStrikeDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetCriticalStrikeDamageMultiplier());
-	PhysicalDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetPhysicalDamageMultiplier());
-	FireDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetFireDamageMultiplier());
-	LightningDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetLightningDamageMultiplier());
-	ColdDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetColdDamageMultiplier());
-	ChaosDamageMultiplierChangedDelegate.Execute(AttributesComponent->GetChaosDamageMultiplier());
-	FirePenetrationChangedDelegate.Execute(AttributesComponent->GetFirePenetration());
-	LightningPenetrationChangedDelegate.Execute(AttributesComponent->GetLightningPenetration());
-	ColdPenetrationChangedDelegate.Execute(AttributesComponent->GetColdPenetration());
-	ChaosPenetrationChangedDelegate.Execute(AttributesComponent->GetChaosPenetration());
+	AccuracyChangedDelegate.Execute(HeroAttributesComp->GetAccuracy());
+	AttackSpeedChangedDelegate.Execute(HeroAttributesComp->GetAttackSpeed());
+	CastSpeedChangedDelegate.Execute(HeroAttributesComp->GetCastSpeed());
+	CriticalStrikeChanceChangedDelegate.Execute(HeroAttributesComp->GetCriticalStrikeChance());
+	CriticalStrikeDamageMultiplierChangedDelegate.Execute(HeroAttributesComp->GetCriticalStrikeDamageMultiplier());
+	PhysicalDamageMultiplierChangedDelegate.Execute(HeroAttributesComp->GetPhysicalDamageMultiplier());
+	FireDamageMultiplierChangedDelegate.Execute(HeroAttributesComp->GetFireDamageMultiplier());
+	LightningDamageMultiplierChangedDelegate.Execute(HeroAttributesComp->GetLightningDamageMultiplier());
+	ColdDamageMultiplierChangedDelegate.Execute(HeroAttributesComp->GetColdDamageMultiplier());
+	ChaosDamageMultiplierChangedDelegate.Execute(HeroAttributesComp->GetChaosDamageMultiplier());
+	FirePenetrationChangedDelegate.Execute(HeroAttributesComp->GetFirePenetration());
+	LightningPenetrationChangedDelegate.Execute(HeroAttributesComp->GetLightningPenetration());
+	ColdPenetrationChangedDelegate.Execute(HeroAttributesComp->GetColdPenetration());
+	ChaosPenetrationChangedDelegate.Execute(HeroAttributesComp->GetChaosPenetration());
 
 	/** Defence */
-	ArmorChangedDelegate.Execute(AttributesComponent->GetArmor());
-	EvasionChangedDelegate.Execute(AttributesComponent->GetEvasion());
-	HealthRegenerationChangedDelegate.Execute(AttributesComponent->GetHealthRegeneration());
-	EnergyShieldRegenerationChangedDelegate.Execute(AttributesComponent->GetEnergyShieldRegeneration());
-	FireResistanceChangedDelegate.Execute(AttributesComponent->GetFireResistance(), AttributesComponent->GetMaxFireResistance());
-	ColdResistanceChangedDelegate.Execute(AttributesComponent->GetColdResistance(), AttributesComponent->GetMaxColdResistance());
-	LightningResistanceChangedDelegate.Execute(AttributesComponent->GetLightningResistance(), AttributesComponent->GetMaxLightningResistance());
-	ChaosResistanceChangedDelegate.Execute(AttributesComponent->GetChaosResistance(), AttributesComponent->GetMaxChaosResistance());
-	SpellSuppressionChanceChangedDelegate.Execute(AttributesComponent->GetSpellSuppressionChance());
-	SpellSuppressionMagnitudeChangedDelegate.Execute(AttributesComponent->GetSpellSuppressionMagnitude());
-	HitBlockChanceChangedDelegate.Execute(AttributesComponent->GetHitBlockChance(), AttributesComponent->GetMaxHitBlockChance());
-	SpellBlockChanceChangedDelegate.Execute(AttributesComponent->GetSpellBlockChance(), AttributesComponent->GetMaxSpellBlockChance());
+	ArmorChangedDelegate.Execute(HeroAttributesComp->GetArmor());
+	EvasionChangedDelegate.Execute(HeroAttributesComp->GetEvasion());
+	HealthRegenerationChangedDelegate.Execute(HeroAttributesComp->GetHealthRegeneration());
+	EnergyShieldRegenerationChangedDelegate.Execute(HeroAttributesComp->GetEnergyShieldRegeneration());
+	FireResistanceChangedDelegate.Execute(HeroAttributesComp->GetFireResistance(), HeroAttributesComp->GetMaxFireResistance());
+	ColdResistanceChangedDelegate.Execute(HeroAttributesComp->GetColdResistance(), HeroAttributesComp->GetMaxColdResistance());
+	LightningResistanceChangedDelegate.Execute(HeroAttributesComp->GetLightningResistance(), HeroAttributesComp->GetMaxLightningResistance());
+	ChaosResistanceChangedDelegate.Execute(HeroAttributesComp->GetChaosResistance(), HeroAttributesComp->GetMaxChaosResistance());
+	SpellSuppressionChanceChangedDelegate.Execute(HeroAttributesComp->GetSpellSuppressionChance());
+	SpellSuppressionMagnitudeChangedDelegate.Execute(HeroAttributesComp->GetSpellSuppressionMagnitude());
+	HitBlockChanceChangedDelegate.Execute(HeroAttributesComp->GetHitBlockChance(), HeroAttributesComp->GetMaxHitBlockChance());
+	SpellBlockChanceChangedDelegate.Execute(HeroAttributesComp->GetSpellBlockChance(), HeroAttributesComp->GetMaxSpellBlockChance());
 }
 
 void UObCharacterStatusWidgetController::HeroLevelUp(const uint8 NewLevel)
@@ -381,7 +462,7 @@ void UObCharacterStatusWidgetController::FireResistanceChanged(const FOnAttribut
 {
 	if(FireResistanceChangedDelegate.IsBound())
 	{
-		FireResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxFireResistance());
+		FireResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxFireResistance());
 	}
 }
 
@@ -389,7 +470,7 @@ void UObCharacterStatusWidgetController::MaxFireResistanceChanged(const FOnAttri
 {
 	if(MaxFireResistanceChangedDelegate.IsBound())
 	{
-		MaxFireResistanceChangedDelegate.Execute(AttributesComponent->GetFireResistance(), Data.NewValue);
+		MaxFireResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetFireResistance(), Data.NewValue);
 	}
 }
 
@@ -397,7 +478,7 @@ void UObCharacterStatusWidgetController::ColdResistanceChanged(const FOnAttribut
 {
 	if(ColdResistanceChangedDelegate.IsBound())
 	{
-		ColdResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxColdResistance());
+		ColdResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxColdResistance());
 	}
 }
 
@@ -405,7 +486,7 @@ void UObCharacterStatusWidgetController::MaxColdResistanceChanged(const FOnAttri
 {
 	if(MaxColdResistanceChangedDelegate.IsBound())
 	{
-		MaxColdResistanceChangedDelegate.Execute(AttributesComponent->GetColdResistance(), Data.NewValue);
+		MaxColdResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetColdResistance(), Data.NewValue);
 	}
 }
 
@@ -413,7 +494,7 @@ void UObCharacterStatusWidgetController::LightningResistanceChanged(const FOnAtt
 {
 	if(LightningResistanceChangedDelegate.IsBound())
 	{
-		LightningResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxLightningResistance());
+		LightningResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxLightningResistance());
 	}
 }
 
@@ -421,7 +502,7 @@ void UObCharacterStatusWidgetController::MaxLightningResistanceChanged(const FOn
 {
 	if(MaxLightningResistanceChangedDelegate.IsBound())
 	{
-		MaxLightningResistanceChangedDelegate.Execute(AttributesComponent->GetLightningResistance(), Data.NewValue);
+		MaxLightningResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetLightningResistance(), Data.NewValue);
 	}
 }
 
@@ -429,7 +510,7 @@ void UObCharacterStatusWidgetController::ChaosResistanceChanged(const FOnAttribu
 {
 	if(ChaosResistanceChangedDelegate.IsBound())
 	{
-		ChaosResistanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxChaosResistance());
+		ChaosResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxChaosResistance());
 	}
 }
 
@@ -437,7 +518,7 @@ void UObCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttr
 {
 	if(MaxChaosResistanceChangedDelegate.IsBound())
 	{
-		MaxChaosResistanceChangedDelegate.Execute(AttributesComponent->GetChaosResistance(), Data.NewValue);
+		MaxChaosResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetChaosResistance(), Data.NewValue);
 	}
 }
 
@@ -461,7 +542,7 @@ void UObCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttribut
 {
 	if(HitBlockChanceChangedDelegate.IsBound())
 	{
-		HitBlockChanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxHitBlockChance());
+		HitBlockChanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxHitBlockChance());
 	}
 }
 
@@ -469,7 +550,7 @@ void UObCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttri
 {
 	if(MaxHitBlockChanceChangedDelegate.IsBound())
 	{
-		MaxHitBlockChanceChangedDelegate.Execute(AttributesComponent->GetHitBlockChance(), Data.NewValue);
+		MaxHitBlockChanceChangedDelegate.Execute(OwnerAttributesComponent->GetHitBlockChance(), Data.NewValue);
 	}
 }
 
@@ -477,7 +558,7 @@ void UObCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttrib
 {
 	if(SpellBlockChanceChangedDelegate.IsBound())
 	{
-		SpellBlockChanceChangedDelegate.Execute(Data.NewValue, AttributesComponent->GetMaxSpellBlockChance());
+		SpellBlockChanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxSpellBlockChance());
 	}
 }
 
@@ -485,7 +566,7 @@ void UObCharacterStatusWidgetController::MaxSpellBlockChanceChanged(const FOnAtt
 {
 	if(MaxSpellBlockChanceChangedDelegate.IsBound())
 	{
-		MaxSpellBlockChanceChangedDelegate.Execute(AttributesComponent->GetSpellBlockChance(), Data.NewValue);
+		MaxSpellBlockChanceChangedDelegate.Execute(OwnerAttributesComponent->GetSpellBlockChance(), Data.NewValue);
 	}
 }
 

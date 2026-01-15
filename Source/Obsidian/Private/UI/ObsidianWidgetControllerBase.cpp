@@ -2,19 +2,16 @@
 
 #include "UI/ObsidianWidgetControllerBase.h"
 
-#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
+#include "Characters/Player/ObsidianLocalPlayer.h"
+#include "Characters/Player/ObsidianPlayerController.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 
-void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams)
+void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(
+	const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
-	ObsidianPlayerController = WidgetControllerParams.ObsidianPlayerController;
-	ObsidianLocalPlayer = WidgetControllerParams.ObsidianLocalPlayer;
-	ObsidianPlayerState = WidgetControllerParams.ObsidianPlayerState;
-	ObsidianAbilitySystemComponent = WidgetControllerParams.ObsidianAbilitySystemComponent;
-	AttributesComponent = WidgetControllerParams.AttributesComponent;
-	InventoryComponent = WidgetControllerParams.InventoryComponent;
-	EquipmentComponent = WidgetControllerParams.EquipmentComponent;
-	PlayerStashComponent = WidgetControllerParams.PlayerStashComponent;
-	OwnerCraftingComponent = WidgetControllerParams.CraftingComponent.Get();
+	OwnerPlayerController = WidgetControllerParams.ObsidianPlayerController.Get();
+	OwnerLocalPlayer = WidgetControllerParams.ObsidianLocalPlayer.Get();
+	OwnerPlayerState = WidgetControllerParams.ObsidianPlayerState.Get();
 }
 
 void UObsidianHeroWidgetControllerBase::OnWidgetControllerSetupCompleted()

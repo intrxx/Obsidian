@@ -2,10 +2,8 @@
 
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
-// ~ Core
-#include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 
-// ~ Project
+#include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
@@ -13,87 +11,185 @@
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
+DEFINE_LOG_CATEGORY(LogWidgetController_MainOverlay)
+
 void UObMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 {
-	check(ObsidianAbilitySystemComponent);
-	check(AttributesComponent);
-	check(ObsidianPlayerController);
-	check(ObsidianPlayerState);
+	check(OwnerPlayerState.IsValid());
+	check(OwnerPlayerController.IsValid());
+	AObsidianPlayerController* PlayerController = OwnerPlayerController.Get();
+	if (PlayerController == nullptr)
+	{
+		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("PlayerController is invalid in [%hs]."),
+			__FUNCTION__);
+		return;
+	}
+
+	PlayerController->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateHoveringOverTarget);
+	PlayerController->OnBossDetectedPlayerDelegate.BindDynamic(this, &ThisClass::UpdateBossDetectionInfo);
+
+	OwnerAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					PlayerController->GetPawn());
+	check(OwnerAttributesComponent.IsValid());
+
+	OwnerAbilitySystemComponent = PlayerController->GetObsidianAbilitySystemComponent();
+	check(OwnerAbilitySystemComponent.IsValid());
+	if (UObsidianAbilitySystemComponent* ObsidianASC = OwnerAbilitySystemComponent.Get())
+	{
+		HandleBindingCallbacks(ObsidianASC);
 	
-	HandleBindingCallbacks(ObsidianAbilitySystemComponent);
-	
-	ObsidianPlayerController->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateHoveringOverTarget);
-	ObsidianPlayerController->OnBossDetectedPlayerDelegate.BindDynamic(this, &ThisClass::UpdateBossDetectionInfo);
-	
-	ObsidianAbilitySystemComponent->OnEffectAppliedAssetTags.AddUObject(this, &ThisClass::HandleEffectApplied);
+		ObsidianASC->OnEffectAppliedAssetTags.AddUObject(this, &ThisClass::HandleEffectApplied);
+		ObsidianASC->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
+	}
 	
 	SetInitialAttributeValues();
-
-	ObsidianAbilitySystemComponent->OnAuraDisabledDelegate.BindDynamic(this, &ThisClass::DestroyAuraWidget);
 }
 
 FObsidianSpecialResourceVisuals UObMainOverlayWidgetController::GetSpecialResourceVisuals() const
 {
-	if(AttributesComponent)
+	UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
 	{
-		return	AttributesComponent->GetSpecialResourceVisuals();
+		if (OwnerPlayerController.IsValid())
+		{
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					OwnerPlayerController.Get()->GetPawn());
+			if (HeroAttributesComp == nullptr)
+			{
+				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+					__FUNCTION__);
+				return FObsidianSpecialResourceVisuals();
+			}
+		}
 	}
-	return FObsidianSpecialResourceVisuals();
+	
+	return	HeroAttributesComp->GetSpecialResourceVisuals();
 }
 
 void UObMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
 {
+	if(ObsidianASC == nullptr)
+	{
+		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("ObsidianASC is invalid in [%hs]."), __FUNCTION__);
+		return;
+	}
+	
+	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
+	{
+		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+			__FUNCTION__);
+		return;
+	}
+	
 	/** Hero Set */
-	ManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
-	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
-	SpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetSpecialResourceAttribute()).AddUObject(this, &ThisClass::SpecialResourceChanged);
-	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
-	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
-	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
-	PassiveSkillPointsChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetPassiveSkillPointsAttribute()).AddUObject(this, &ThisClass::PassiveSkillPointsChanged);
-	AscensionPointsChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetAscensionPointsAttribute()).AddUObject(this, &ThisClass::AscensionPointsChanged);
+	ManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
+	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+	SpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetSpecialResourceAttribute()).AddUObject(this, &ThisClass::SpecialResourceChanged);
+	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
+	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
+	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
+	PassiveSkillPointsChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetPassiveSkillPointsAttribute()).AddUObject(this, &ThisClass::PassiveSkillPointsChanged);
+	AscensionPointsChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetAscensionPointsAttribute()).AddUObject(this, &ThisClass::AscensionPointsChanged);
 		
 	/** Common Set */
-	HealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
-	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
-	EnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
-	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
-	StaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetStaggerMeterAttribute()).AddUObject(this, &ThisClass::StaggerMeterChanged);
-	MaxStaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(AttributesComponent->GetMaxStaggerMeterAttribute()).AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
+	HealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
+	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
+	EnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetEnergyShieldAttribute()).AddUObject(this, &ThisClass::EnergyShieldChanged);
+	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
+	StaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetStaggerMeterAttribute()).AddUObject(this, &ThisClass::StaggerMeterChanged);
+	MaxStaggerMeterChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxStaggerMeterAttribute()).AddUObject(this, &ThisClass::MaxStaggerMeterChanged);
 }
 
 void UObMainOverlayWidgetController::SetInitialAttributeValues() const
 {
-	OnHealthChangedDelegate.Broadcast(AttributesComponent->GetHealth());
-	OnMaxHealthChangedDelegate.Broadcast(AttributesComponent->GetMaxHealth());
-	OnManaChangedDelegate.Broadcast(AttributesComponent->GetMana());
-	OnMaxManaChangedDelegate.Broadcast(AttributesComponent->GetMaxMana());
-	OnEnergyShieldChangedDelegate.Broadcast(AttributesComponent->GetEnergyShield());
-	OnMaxEnergyShieldChangedDelegate.Broadcast(AttributesComponent->GetMaxEnergyShield());
-	OnSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetSpecialResource());
-	OnMaxSpecialResourceChangedDelegate.Broadcast(AttributesComponent->GetMaxSpecialResource());
-	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
-	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
-	OnPassiveSkillPointsChangedDelegate.Broadcast(AttributesComponent->GetPassiveSkillPoints());
-	OnAscensionPointsChangedDelegate.Broadcast(AttributesComponent->GetAscensionPoints());
+	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
+	{
+		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+			__FUNCTION__);
+		return;
+	}
+	
+	OnHealthChangedDelegate.Broadcast(HeroAttributesComp->GetHealth());
+	OnMaxHealthChangedDelegate.Broadcast(HeroAttributesComp->GetMaxHealth());
+	OnManaChangedDelegate.Broadcast(HeroAttributesComp->GetMana());
+	OnMaxManaChangedDelegate.Broadcast(HeroAttributesComp->GetMaxMana());
+	OnEnergyShieldChangedDelegate.Broadcast(HeroAttributesComp->GetEnergyShield());
+	OnMaxEnergyShieldChangedDelegate.Broadcast(HeroAttributesComp->GetMaxEnergyShield());
+	OnSpecialResourceChangedDelegate.Broadcast(HeroAttributesComp->GetSpecialResource());
+	OnMaxSpecialResourceChangedDelegate.Broadcast(HeroAttributesComp->GetMaxSpecialResource());
+	OnStaggerMeterChangedDelegate.Broadcast(HeroAttributesComp->GetStaggerMeter());
+	OnMaxStaggerMeterChangedDelegate.Broadcast(HeroAttributesComp->GetMaxStaggerMeter());
+	OnPassiveSkillPointsChangedDelegate.Broadcast(HeroAttributesComp->GetPassiveSkillPoints());
+	OnAscensionPointsChangedDelegate.Broadcast(HeroAttributesComp->GetAscensionPoints());
 }
 
 void UObMainOverlayWidgetController::SetInitialStaggerMeter() const
 {
-	OnStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetStaggerMeter());
-	OnMaxStaggerMeterChangedDelegate.Broadcast(AttributesComponent->GetMaxStaggerMeter());
+	UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
+	{
+		if (OwnerPlayerController.IsValid())
+		{
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					OwnerPlayerController.Get()->GetPawn());
+			if (HeroAttributesComp == nullptr)
+			{
+				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+					__FUNCTION__);
+				return;
+			}
+		}
+	}
+	
+	OnStaggerMeterChangedDelegate.Broadcast(HeroAttributesComp->GetStaggerMeter());
+	OnMaxStaggerMeterChangedDelegate.Broadcast(HeroAttributesComp->GetMaxStaggerMeter());
 }
 
 void UObMainOverlayWidgetController::SetInitialExperienceValues()
 {
-	const uint8 LastHeroLevel = ObsidianPlayerState->GetHeroLevel() - 1;
-	if (ObsidianPlayerState && LastHeroLevel > 1)
+	UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
 	{
-		MaxExperienceOldValue = UObsidianHeroAttributeSet::GetMaxExperienceForLevel(LastHeroLevel);
+		if (OwnerPlayerController.IsValid())
+		{
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					OwnerPlayerController.Get()->GetPawn());
+			if (HeroAttributesComp == nullptr)
+			{
+				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+					__FUNCTION__);
+				return;
+			}
+		}
 	}
 	
-	OnExperienceChangedDelegate.Execute(AttributesComponent->GetExperience());
-	OnMaxExperienceChangedDelegate.Execute(AttributesComponent->GetMaxExperience(), MaxExperienceOldValue);
+	if (AObsidianPlayerState* PlayerState = OwnerPlayerState.Get())
+	{
+		const uint8 LastHeroLevel = PlayerState->GetHeroLevel() - 1;
+		if (LastHeroLevel > 1)
+		{
+			MaxExperienceOldValue = UObsidianHeroAttributeSet::GetMaxExperienceForLevel(LastHeroLevel);
+		}
+	
+		OnExperienceChangedDelegate.Execute(HeroAttributesComp->GetExperience());
+		OnMaxExperienceChangedDelegate.Execute(HeroAttributesComp->GetMaxExperience(), MaxExperienceOldValue);
+	}
 }
 
 void UObMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUIData& UIData)
@@ -103,7 +199,8 @@ void UObMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUI
 		const FGameplayTag EffectUIDataTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData"));
 		if(Tag.MatchesTag(EffectUIDataTag))
 		{
-			FObsidianEffectUIDataWidgetRow* Row = UObsidianUIFunctionLibrary::GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
+			FObsidianEffectUIDataWidgetRow* Row = UObsidianUIFunctionLibrary::GetDataTableRowByTag<
+				FObsidianEffectUIDataWidgetRow>(UIEffectDataWidgetTable, Tag);
 			Row->EffectDuration = UIData.EffectDuration;
 					
 			if(UIData.bStackingEffect)
