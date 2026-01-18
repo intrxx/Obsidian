@@ -916,11 +916,9 @@ FObsidianItemOperationResult UObsidianInventoryComponent::RemoveItemInstance(UOb
 	return Result;
 }
 
-void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance,
+	UObsidianInventoryItemInstance* UsingOntoInstance)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
-		FString::Printf(TEXT("Warning: Using Items between storage units (e.g. Inventory <-> Player Stash) is broken and needs refactoring.")));
-	
 	if(UsingInstance == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
@@ -942,7 +940,8 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(CurrentUsingInstanceStacks <= 0)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"), *UsingInstance->GetItemDebugName(), __FUNCTION__);
+		UE_LOG(LogInventory, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"),
+			*UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 
@@ -969,10 +968,24 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 
 	if(bUsageSuccessful)
 	{
-		if(CurrentUsingInstanceStacks > 1)
+		UpdateUsingItemAfterUsage(UsingInstance, CurrentUsingInstanceStacks);
+	}
+	else
+	{
+		//TODO(intrxx) Usage failed, Play some VO?
+	}
+}
+
+void UObsidianInventoryComponent::UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance,
+	const int32 CurrentStacks)
+{
+	const FObsidianItemPosition CurrentUsingItemPosition = UsingInstance->GetItemCurrentPosition();
+	if (CurrentUsingItemPosition.IsOnInventoryGrid())
+	{
+		if(CurrentStacks > 1)
 		{
 			UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
-			InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks);
+			InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentStacks);
 			return;
 		}
 	
@@ -983,9 +996,12 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 			RemoveReplicatedSubObject(UsingInstance);
 		}
 	}
-	else
+	else if (CurrentUsingItemPosition.IsOnStash())
 	{
-		//TODO(intrxx) Usage failed, Play some VO?
+		if (UObsidianPlayerStashComponent* PlayerStashComponent = GetStashComponentFromOwner())
+		{
+			PlayerStashComponent->UpdateUsingItemAfterUsage(UsingInstance, CurrentStacks);
+		}
 	}
 }
 
@@ -1062,6 +1078,16 @@ bool UObsidianInventoryComponent::IsLocallyControlled()
 		}
 	}
 	return false;
+}
+
+UObsidianPlayerStashComponent* UObsidianInventoryComponent::GetStashComponentFromOwner() const
+{
+	if(const AObsidianPlayerController* ObsidianPC = CastChecked<AObsidianPlayerController>(GetOwner(),
+		ECastCheckedType::NullAllowed))
+	{
+		return ObsidianPC->GetPlayerStashComponent();
+	}
+	return nullptr;
 }
 
 void UObsidianInventoryComponent::InitInventoryState()

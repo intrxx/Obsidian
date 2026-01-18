@@ -470,7 +470,7 @@ void UObInventoryItemsWidgetController::RequestAddingItemToInventory(const FIntP
 	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
 	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		CraftingComp->SetUsingItem(false);
+		CraftingComp->SetUsingItemWidget(false);
 		return;
 	}
 	
@@ -494,7 +494,7 @@ void UObInventoryItemsWidgetController::RequestAddingItemToEquipment(const FGame
 	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
 	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		CraftingComp->SetUsingItem(false);
+		CraftingComp->SetUsingItemWidget(false);
 		return;
 	}
 	
@@ -518,7 +518,7 @@ void UObInventoryItemsWidgetController::RequestAddingItemToStashTab(const FObsid
 	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
 	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		CraftingComp->SetUsingItem(false);
+		CraftingComp->SetUsingItemWidget(false);
 		return;
 	}
 	
@@ -729,7 +729,7 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const
 			return;
 		}
 		
-		CraftingComp->SetUsingItem(true, ItemWidget, UsingInstance);
+		CraftingComp->SetUsingItemWidget(true, ItemWidget, UsingInstance);
 
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComp->GetAllItems());
@@ -948,7 +948,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnEquipmentItem(const 
 	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
 	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		CraftingComp->SetUsingItem(false);
+		CraftingComp->SetUsingItemWidget(false);
 		UE_LOG(LogWidgetController_Items, Error, TEXT("As of now it is impossible to use items onto equipped items,"
 												" maybe will support it in the future."));
 		return;
@@ -1053,7 +1053,7 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const F
 			return;
 		}
 		
-		CraftingComp->SetUsingItem(true, ItemWidget, UsingInstance);
+		CraftingComp->SetUsingItemWidget(true, ItemWidget, UsingInstance);
 
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComp->GetAllItems());
@@ -1089,7 +1089,7 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const F
 	}
 	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
 	{
-		CraftingComp->ServerActivateUsableItemFromInventory(UsingInstance);
+		CraftingComp->ServerActivateUsableItemFromStash(UsingInstance);
 	}
 }
 

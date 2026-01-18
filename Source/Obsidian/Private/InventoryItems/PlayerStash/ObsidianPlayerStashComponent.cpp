@@ -11,6 +11,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
@@ -38,6 +39,16 @@ void UObsidianPlayerStashComponent::GetLifetimeReplicatedProps(TArray<class FLif
 TConstArrayView<TObjectPtr<UObsidianStashTab>> UObsidianPlayerStashComponent::GetAllStashTabs() const
 {
 	return StashTabs;
+}
+
+UObsidianInventoryComponent* UObsidianPlayerStashComponent::GetInventoryComponentFromOwner() const
+{
+	if(const AObsidianPlayerController* ObsidianPC = CastChecked<AObsidianPlayerController>(GetOwner(),
+		ECastCheckedType::NullAllowed))
+	{
+		return ObsidianPC->GetInventoryComponent();
+	}
+	return nullptr;
 }
 
 bool UObsidianPlayerStashComponent::CanOwnerModifyPlayerStashState()
@@ -699,9 +710,6 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::RemoveItemInstance(U
 
 void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {
-	GEngine->AddOnScreenDebugMessage(-1, 10.0f, FColor::Red,
-		FString::Printf(TEXT("Warning: Using Items between storage units (e.g. Inventory <-> Player Stash) is broken and needs refactoring.")));
-	
 	if(UsingInstance == nullptr)
 	{
 		UE_LOG(LogPlayerStash, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
@@ -750,11 +758,32 @@ void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* Usin
 
 	if(bUsageSuccessful)
 	{
-		const FGameplayTag ItemOwningStashTab = UsingOntoInstance->GetItemCurrentPosition().GetOwningStashTabTag();
-		if(CurrentUsingInstanceStacks > 1)
+		UpdateUsingItemAfterUsage(UsingInstance, CurrentUsingInstanceStacks);
+	}
+	else
+	{
+		//TODO(intrxx) Usage failed, Play some VO?
+	}
+}
+
+void UObsidianPlayerStashComponent::UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance,
+	const int32 CurrentStacks)
+{
+	const FObsidianItemPosition CurrentUsingItemPosition = UsingInstance->GetItemCurrentPosition();
+	if (CurrentUsingItemPosition.IsOnInventoryGrid())
+	{
+		if (UObsidianInventoryComponent* InventoryComponent = GetInventoryComponentFromOwner())
+		{
+			InventoryComponent->UpdateUsingItemAfterUsage(UsingInstance, CurrentStacks);
+		}
+	}
+	else if (CurrentUsingItemPosition.IsOnStash())
+	{
+		const FGameplayTag ItemOwningStashTab = CurrentUsingItemPosition.GetOwningStashTabTag();
+		if(CurrentStacks > 1)
 		{
 			UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
-			StashItemList.ChangedEntryStacks(UsingInstance, CurrentUsingInstanceStacks, ItemOwningStashTab);
+			StashItemList.ChangedEntryStacks(UsingInstance, CurrentStacks, ItemOwningStashTab);
 			return;
 		}
 	
@@ -764,10 +793,6 @@ void UObsidianPlayerStashComponent::UseItem(UObsidianInventoryItemInstance* Usin
 		{
 			RemoveReplicatedSubObject(UsingInstance);
 		}
-	}
-	else
-	{
-		//TODO(intrxx) Usage failed, Play some VO?
 	}
 }
 

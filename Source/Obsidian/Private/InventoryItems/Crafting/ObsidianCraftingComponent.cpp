@@ -9,6 +9,7 @@
 #include "UI/Inventory/Items/ObsidianDraggedItem_Simple.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 
@@ -85,7 +86,7 @@ void UObsidianCraftingComponent::OnInventoryStateChanged(FGameplayTag Channel,
 
 		if(bUsingItem && Instance == CachedUsingItemInstance)
 		{
-			SetUsingItem(false);
+			SetUsingItemWidget(false);
 		}
 	}
 }
@@ -112,7 +113,7 @@ void UObsidianCraftingComponent::OnPlayerStashChanged(FGameplayTag Channel,
 		
 		if(bUsingItem && Instance == CachedUsingItemInstance)
 		{
-			SetUsingItem(false);
+			SetUsingItemWidget(false);
 		}
 	}
 }
@@ -156,7 +157,7 @@ void UObsidianCraftingComponent::UseItem(const FObsidianItemPosition& OnPosition
 
 	if(bLeftShiftDown == false)
 	{
-		SetUsingItem(false);
+		SetUsingItemWidget(false);
 	}
 }
 
@@ -228,20 +229,7 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		return;
 	}
 
-	const FGameplayTag StashTabTag = OnPosition.GetOwningStashTabTag();
-	if (StashTabTag != FGameplayTag::EmptyTag)
-	{
-		UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
-		if(PlayerStashComponent == nullptr)
-		{
-			UE_LOG(LogPlayerStash, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
-			return;
-		}
-
-		UObsidianInventoryItemInstance* UsingOntoInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(OnPosition);
-		PlayerStashComponent->UseItem(UsingInstance, UsingOntoInstance);
-	}
-	else
+	if (OnPosition.IsOnInventoryGrid())
 	{
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
@@ -250,8 +238,41 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 			return;
 		}
 
-		UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(OnPosition.GetItemGridPosition());
+		UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(
+			OnPosition.GetItemGridPosition());
 		InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
+	}
+	else if (OnPosition.IsOnStash())
+	{
+		const FGameplayTag StashTabTag = OnPosition.GetOwningStashTabTag();
+		if (StashTabTag == FGameplayTag::EmptyTag)
+		{
+			UE_LOG(LogCrafting, Error, TEXT("StashTab tag is empty in [%hs]."), __FUNCTION__);
+		}
+
+		UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
+		if(PlayerStashComponent == nullptr)
+		{
+			UE_LOG(LogCrafting, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
+			return;
+		}
+
+		UObsidianInventoryItemInstance* UsingOntoInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(
+			OnPosition);
+		PlayerStashComponent->UseItem(UsingInstance, UsingOntoInstance);
+	}
+	else if (OnPosition.IsOnEquipmentSlot())
+	{
+		UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
+		if(EquipmentComponent == nullptr)
+		{
+			UE_LOG(LogCrafting, Error, TEXT("EquipmentComponent is null in [%hs]"), __FUNCTION__);
+			return;
+		}
+
+		UObsidianInventoryItemInstance* UsingOntoInstance = EquipmentComponent->GetEquippedInstanceAtSlot(
+			OnPosition.GetItemSlotTag());
+		//EquipmentComponent->UseItem(UsingInstance, UsingOntoInstance);
 	}
 }
 
@@ -279,7 +300,7 @@ void UObsidianCraftingComponent::DragUsableItemIcon() const
 	}
 }
 
-void UObsidianCraftingComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget,
+void UObsidianCraftingComponent::SetUsingItemWidget(const bool InbUsingItem, UObsidianItem* ItemWidget,
                                               UObsidianInventoryItemInstance* UsingInstance)
 {
 	if(InbUsingItem && ItemWidget)

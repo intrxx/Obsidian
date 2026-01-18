@@ -12,6 +12,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
+class UObsidianPlayerStashComponent;
 struct FObsidianSavedItem;
 
 class AObsidianPlayerController;
@@ -204,6 +205,9 @@ public:
 	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
 	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
 
+	/** Updates the state of using item after it was used. */
+	void UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance, const int32 CurrentStacks);
+	
 	void LoadInventorizedItem(const FObsidianSavedItem& InventorizedSavedItem);
 	
 	//~ Start of UObject interface
@@ -215,6 +219,7 @@ protected:
 	virtual void BeginPlay() override;
 	
 	bool IsLocallyControlled();
+	UObsidianPlayerStashComponent* GetStashComponentFromOwner() const;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Default")
@@ -226,7 +231,7 @@ private:
 
 	/** Adds default items specified in DefaultInventoryItems. */
 	void AddDefaultItems();
-
+	
 	/** Checks if the provided Item Definition fits anywhere in the inventory. Provides Available Position. */
 	bool CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef);
 

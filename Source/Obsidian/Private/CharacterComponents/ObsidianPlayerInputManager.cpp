@@ -356,7 +356,7 @@ void UObsidianPlayerInputManager::Input_MoveStartedMouse()
 	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
 	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		CraftingComp->SetUsingItem(false);
+		CraftingComp->SetUsingItemWidget(false);
 	}
 
 	if(ActiveInteractionTarget && ActiveInteractionTarget->RequiresOngoingInteraction())
@@ -487,7 +487,7 @@ void UObsidianPlayerInputManager::Input_ReleaseUsingItem()
 	UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get();
 	if(CraftingComp && CraftingComp->IsUsingItem())
 	{
-		CraftingComp->SetUsingItem(false);
+		CraftingComp->SetUsingItemWidget(false);
 	}
 }
 

@@ -11,6 +11,7 @@
 #include "Components/ActorComponent.h"
 #include "ObsidianPlayerStashComponent.generated.h"
 
+class UObsidianInventoryComponent;
 DECLARE_LOG_CATEGORY_EXTERN(LogPlayerStash, Display, All);
 
 struct FObsidianSavedItem;
@@ -152,7 +153,10 @@ public:
 
 	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
 	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
-
+	
+	/** Updates the state of using item after it was used. */
+	void UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance, const int32 CurrentStacks);
+	
 	UFUNCTION(Server, Reliable)
 	void ServerRegisterAndValidateCurrentStashTab(const FGameplayTag& StashTab);
 	FGameplayTag GetActiveStashTag() const;
@@ -176,6 +180,8 @@ protected:
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
 	bool CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan,
 		const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FGameplayTag& StashTabTag);
+
+	UObsidianInventoryComponent* GetInventoryComponentFromOwner() const;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
