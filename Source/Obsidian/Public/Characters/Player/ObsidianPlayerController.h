@@ -9,6 +9,7 @@
 #include "CommonPlayerController.h"
 #include "ObsidianPlayerController.generated.h"
 
+class UObsidianItemManagerComponent;
 class UObsidianCraftingComponent;
 class UObsidianSharedStashSaveGame;
 class AObsidianHero;
@@ -48,7 +49,9 @@ public:
 	UObsidianPlayerStashComponent* GetPlayerStashComponent() const;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
 	UObsidianCraftingComponent* GetCraftingComponent() const;
-
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
+	UObsidianItemManagerComponent* GetItemManagerComponent() const;
+	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	EObsidianHeroClass GetHeroClass() const;
 
@@ -103,6 +106,9 @@ private:
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianCraftingComponent> CraftingComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
+	TObjectPtr<UObsidianItemManagerComponent> ItemManagerComponent;
 
 	FDelegateHandle SharedStashDataLoadDelegateHandle;
 };

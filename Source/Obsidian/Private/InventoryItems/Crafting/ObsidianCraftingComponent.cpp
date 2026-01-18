@@ -86,7 +86,7 @@ void UObsidianCraftingComponent::OnInventoryStateChanged(FGameplayTag Channel,
 
 		if(bUsingItem && Instance == CachedUsingItemInstance)
 		{
-			SetUsingItemWidget(false);
+			SetUsingItem(false);
 		}
 	}
 }
@@ -113,7 +113,7 @@ void UObsidianCraftingComponent::OnPlayerStashChanged(FGameplayTag Channel,
 		
 		if(bUsingItem && Instance == CachedUsingItemInstance)
 		{
-			SetUsingItemWidget(false);
+			SetUsingItem(false);
 		}
 	}
 }
@@ -157,7 +157,7 @@ void UObsidianCraftingComponent::UseItem(const FObsidianItemPosition& OnPosition
 
 	if(bLeftShiftDown == false)
 	{
-		SetUsingItemWidget(false);
+		SetUsingItem(false);
 	}
 }
 
@@ -300,7 +300,7 @@ void UObsidianCraftingComponent::DragUsableItemIcon() const
 	}
 }
 
-void UObsidianCraftingComponent::SetUsingItemWidget(const bool InbUsingItem, UObsidianItem* ItemWidget,
+void UObsidianCraftingComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget,
                                               UObsidianInventoryItemInstance* UsingInstance)
 {
 	if(InbUsingItem && ItemWidget)

@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 
-#include "UObject/Interface.h"
+#include <UObject/Interface.h>
 #include "ObsidianPickableInterface.generated.h"
 
 class UObsidianInventoryComponent;
@@ -25,7 +23,8 @@ struct FObsidianPickupTemplate
 
 public:
 	FObsidianPickupTemplate(){};
-	FObsidianPickupTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InGeneratedData)
+	FObsidianPickupTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
+		const FObsidianItemGeneratedData& InGeneratedData)
 		: ItemDef(InItemDef)
 		, ItemGeneratedData(InGeneratedData)
 	{};
@@ -99,7 +98,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
-	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& InGeneratedData) = 0;
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+		const FObsidianItemGeneratedData& InGeneratedData) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void OverrideTemplateStacks(const int32 TemplateIndex) = 0;
 	

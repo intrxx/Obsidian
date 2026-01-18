@@ -2,10 +2,8 @@
 
 #include "InventoryItems/ObsidianPickableInterface.h"
 
-// ~ Core
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
-// ~ Project
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
 bool FObsidianPickupTemplate::IsValid() const
 {
@@ -32,10 +30,10 @@ TScriptInterface<IObsidianPickableInterface> UObsidianPickableStatics::GetPickab
 	}
 
 	// If the actor isn't pickable, it might have a component that has a pickupable interface.
-	TArray<UActorComponent*> PickupableComponents = Actor ? Actor->GetComponentsByInterface(UObsidianPickableInterface::StaticClass()) : TArray<UActorComponent*>();
-	if(PickupableComponents.Num() > 0)
+	TArray<UActorComponent*> PickupableComponents = Actor ? Actor->GetComponentsByInterface(
+		UObsidianPickableInterface::StaticClass()) : TArray<UActorComponent*>();
+	if(PickupableComponents.IsEmpty() == false)
 	{
-		// Get first pickable, if the user needs more sophisticated pickup distinction, will need to be solved elsewhere.
 		return TScriptInterface<IObsidianPickableInterface>(PickupableComponents[0]);
 	}
 

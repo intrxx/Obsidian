@@ -9,19 +9,19 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 #include "ObInventoryItemsWidgetController.generated.h"
 
-DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_Items, Log, All);
-
 struct FObsidianEquipmentChangeMessage;
 struct FObsidianStashChangeMessage;
 
+class UObsidianItemManagerComponent;
 class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
 class UObsidianUnstackSlider;
-class UObsidianPlayerInputManager;
 class UObsidianItemWidget;
 class UObsidianItem;
 class UObsidianDraggedItem;
 class UObsidianSlotBlockadeItem;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_Items, Log, All);
 
 /**
  * 
@@ -241,7 +241,7 @@ private:
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent = nullptr;
 	UPROPERTY()
-	TWeakObjectPtr<UObsidianPlayerInputManager> OwnerPlayerInputManager = nullptr;
+	TWeakObjectPtr<UObsidianItemManagerComponent> OwnerItemManagerComponent = nullptr;
 	
 	UPROPERTY()
 	TArray<UObsidianItem*> CachedItemsMatchingUsableContext;

@@ -2,19 +2,18 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
-#include "Components/PawnComponent.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
+#include <Components/PawnComponent.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianPlayerInputManager.generated.h"
 
-class UObsidianCraftingComponent;
+class UObsidianItemManagerComponent;
 struct FInputActionValue;
 
+class UObsidianCraftingComponent;
 class UImage;
 class UObsidianItem;
 class UObsidianDraggedItem_Simple;
@@ -31,9 +30,6 @@ class UCommonActivatableWidget;
 
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
-
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartDraggingItemSignature, const FDraggedItem& DraggedItem)
-DECLARE_MULTICAST_DELEGATE(FOnStopDraggingItemSignature)
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInteraction, Log, All);
 
@@ -59,8 +55,8 @@ class OBSIDIAN_API UObsidianPlayerInputManager : public UPawnComponent
 public:
 	UObsidianPlayerInputManager(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+		FActorComponentTickFunction* ThisTickFunction) override;
 
 	void InitializePlayerInput(UInputComponent* InputComponent);
 	
@@ -73,97 +69,7 @@ public:
 	
 	AObsidianHUD* GetObsidianHUD() const;
 	
-	FDraggedItem GetDraggedItem()
-	{
-		return DraggedItem;
-	}
-	
-	bool IsDraggingAnItem() const
-	{
-		return bDraggingItem;
-	}
-	
-	/**
-	 * Inventory Items. //TODO(intrxx) Create ItemHandlingComponent and move this logic there
-	 */
-	
-	bool DropItem();
-	
-	UFUNCTION(Server, Reliable)
-	void ServerAddItemToInventoryAtSlot(const FIntPoint& SlotPosition, const bool bShiftDown);
-	
-	UFUNCTION(Server, Reliable)
-	void ServerAddStacksFromDraggedItemToInventoryItemAtSlot(const FIntPoint& SlotPosition, const int32 StacksToAddOverride = -1);
-
-	UFUNCTION(Server, Reliable)
-	void ServerTakeoutFromInventoryItem(const FIntPoint& SlotPosition, const int32 StacksToTake);
-
-	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtInventorySlot(const FIntPoint& ClickedItemPosition, const FIntPoint& ClickedGridPosition);
-	
-	UFUNCTION(Server, Reliable)
-	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
-	
-	UFUNCTION(Server, Reliable)
-	void ServerGrabInventoryItemToCursor(const FIntPoint& SlotPosition);
-	
-	UFUNCTION(Server, Reliable)
-	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup);
-
-	UFUNCTION(Server, Reliable)
-	void ServerTransferItemToPlayerStash(const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab);
-	
-	/**
-	 * Equipment.
-	 */
-
-	UFUNCTION(Server, Reliable)
-	void ServerEquipItemAtSlot(const FGameplayTag& SlotTag);
-
-	UFUNCTION(Server, Reliable)
-	void ServerGrabEquippedItemToCursor(const FGameplayTag& SlotTag);
-	
-	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
-
-	UFUNCTION(Server, Reliable)
-	void ServerWeaponSwap();
-
-	/**
-	 * Player Stash.
-	 */
-
-	UFUNCTION(Server, Reliable)
-	void ServerAddItemToStashTabAtSlot(const FObsidianItemPosition& AtPosition, const bool bShiftDown);
-
-	UFUNCTION(Server, Reliable)
-	void ServerAddStacksFromDraggedItemToStashedItemAtSlot(const FObsidianItemPosition& AtPosition, const int32 StacksToAddOverride = -1);
-	
-	UFUNCTION(Server, Reliable)
-	void ServerGrabStashedItemToCursor(const FObsidianItemPosition& FromPosition);
-
-	UFUNCTION(Server, Reliable)
-	void ServerTransferItemToInventory(const FObsidianItemPosition& FromStashPosition);
-
-	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtStashPosition(const FObsidianItemPosition& AtStashPosition);
-
-	UFUNCTION(Server, Reliable)
-	void ServerTakeoutFromStashedItem(const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake);
-	
-	//~ Start of UObject interface
-	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
-	virtual void ReadyForReplication() override;
-	//~ End of UObject interface
-
-public:
-	FOnStartDraggingItemSignature OnStartDraggingItemDelegate;
-	FOnStopDraggingItemSignature OnStopDraggingItemDelegate;
-	
 protected:
-	UFUNCTION()
-	void OnRep_DraggedItem(const FDraggedItem& OldDraggedItem);
-	
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
 	
@@ -197,10 +103,6 @@ protected:
 	/** Radius of the sphere in which we allow the Player to interact with the world e.g. open chest, pickup item etc. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
 	float DefaultInteractionRadius = 200.0f;
-
-	/** Radius of the sphere in which we allow the Player to drop item. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
-	float DropRadius = 200.0f;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> AutoRunSplineComp;
@@ -216,43 +118,23 @@ private:
 	bool CanContinuouslyMoveMouse() const;
 	void AutoRun();
 	void AutoRunToClickedLocation();
-	
+
 	/**
 	 * Item Pick up.
 	 */
 	
 	UFUNCTION(Client, Reliable)
-	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
+	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp,
+		const EObsidianItemPickUpType PickUpType);
 	
 	void AutomaticallyPickupOutOfRangeItem();
 	void DragOutOfRangeItem();
 
-	/** If item is out of picking up range, it will handle getting to the item and picking it up. Will return true if item picking up is handled. */
+	/**
+	 * If item is out of picking up range, it will handle getting to the item and picking it up. Will return true
+	 * if item picking up is handled.
+	 */
 	bool HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
-
-	void DragItem() const;
-	
-	void StartDraggingItem(const AController* Controller);
-	void StopDraggingItem(const AController* Controller);
-
-	void UpdateDraggedItem(const FObsidianItemOperationResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController);
-	void UpdateDraggedItem(const FObsidianAddingStacksResult& OperationResult, const int32 CachedNumberOfStack, const AController* ForController);
-
-	/**
-	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
-	 * another item in the inventory in OnRep_DraggedItem. If it sounds useful be careful when using it.
-	 */
-	bool DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const;
-	void UpdateStacksOnDraggedItemWidget(const int32 InStacks);
-	
-	/**
-	 * Item Drop.
-	 */
-
-	UFUNCTION(Server, Reliable)
-	void ServerHandleDroppingItem();
-	
-	bool CanDropItem() const;
 	
 	/**
 	 * Interaction.
@@ -275,9 +157,6 @@ private:
 	bool HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation);
 	
 private:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Items", meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
 	TSoftClassPtr<UCommonActivatableWidget> GameplayMenuClass;
 	
@@ -317,28 +196,18 @@ private:
 	 */
 	IObsidianHighlightInterface* LastHighlightedActor = nullptr;
 	IObsidianHighlightInterface* CurrentHighlightedActor = nullptr;
-	
-	/**
-	 * Dragged items.
-	 */
-	UPROPERTY()
-	TObjectPtr<UObsidianDraggedItem> DraggedItemWidget;
-	
-	UPROPERTY(ReplicatedUsing = OnRep_DraggedItem)
-	FDraggedItem DraggedItem = FDraggedItem();
-	
-#if 0 // https://github.com/intrxx/Obsidian/commit/e3eda3899a1b39ec1952221a24bce0b40b7be769
-	FVector CachedItemDropLocation = FVector::ZeroVector;
-#endif
 
 	/**
 	 * Item Crafting
 	 */
 
 	UPROPERTY()
-	TWeakObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent = nullptr;
-	
-	bool bDraggingItem = false;
-	bool bItemAvailableForDrop = false;
-	bool bJustDroppedItem = false;
+	TObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent = nullptr;
+
+	/**
+	 * Item Manager
+	 */
+
+	UPROPERTY()
+	TObjectPtr<UObsidianItemManagerComponent> OwnerItemManagerComponent = nullptr;
 };

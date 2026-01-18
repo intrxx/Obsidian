@@ -12,6 +12,7 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Game/Save/ObsidianSharedStashSaveGame.h"
+#include "InventoryItems/ObsidianItemManagerComponent.h"
 #include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
@@ -30,6 +31,7 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 	EquipmentComponent = CreateDefaultSubobject<UObsidianEquipmentComponent>(TEXT("Equipment Component"));
 	PlayerStashComponent = CreateDefaultSubobject<UObsidianPlayerStashComponent>(TEXT("Player Stash Component"));
 	CraftingComponent = CreateDefaultSubobject<UObsidianCraftingComponent>(TEXT("Crafting Component"));
+	ItemManagerComponent = CreateDefaultSubobject<UObsidianItemManagerComponent>(TEXT("Item Manager Component"));
 }
 
 void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
@@ -114,6 +116,11 @@ UObsidianPlayerStashComponent* AObsidianPlayerController::GetPlayerStashComponen
 UObsidianCraftingComponent* AObsidianPlayerController::GetCraftingComponent() const
 {
 	return CraftingComponent;
+}
+
+UObsidianItemManagerComponent* AObsidianPlayerController::GetItemManagerComponent() const
+{
+	return ItemManagerComponent;
 }
 
 void AObsidianPlayerController::LoadSharedStashData(UObsidianSharedStashSaveGame* SharedStashSaveGame)

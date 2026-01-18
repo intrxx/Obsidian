@@ -38,7 +38,7 @@ public:
 	UObsidianInventoryItemInstance* GetUsingItem();
 
 	void UseItem(const FObsidianItemPosition& OnPosition, const bool bLeftShiftDown);
-	void SetUsingItemWidget(const bool InbUsingItem, UObsidianItem* ItemWidget = nullptr,
+	void SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget = nullptr,
 		UObsidianInventoryItemInstance* UsingInstance = nullptr);
 	
 	UFUNCTION(Server, Reliable)

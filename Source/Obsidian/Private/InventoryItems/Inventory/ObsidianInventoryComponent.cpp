@@ -927,7 +927,8 @@ void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingI
 
 	if(UsingInstance->IsItemUsable() == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"), *UsingInstance->GetItemDebugName(), __FUNCTION__);
+		UE_LOG(LogInventory, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"),
+			*UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 	

@@ -2,14 +2,11 @@
 
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 
-// ~ Core
-#include "Components/WidgetComponent.h"
-#include "Kismet/GameplayStatics.h"
-#include "Net/UnrealNetwork.h"
+#include <Components/WidgetComponent.h>
+#include <Kismet/GameplayStatics.h>
+#include <Net/UnrealNetwork.h>
 
-// ~ Project
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
-#include "Characters/Heroes/ObsidianHero.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/SplineComponent.h"
@@ -24,6 +21,7 @@
 #include "UI/ObsidianHUD.h"
 #include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+#include "InventoryItems/ObsidianItemManagerComponent.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -104,7 +102,8 @@ void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
 		return;
 	}
 
-	if(!ensureMsgf(DraggedItem.IsEmpty() == false, TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
+	if(!ensureMsgf(DraggedItem.IsEmpty() == false, TEXT("Tried to Initialize Item in [%hs] but the DraggedItem"
+													 " is null."), __FUNCTION__))
 	{
 		return;
 	}
@@ -124,14 +123,16 @@ void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
 	checkf(false, TEXT("Failed to Initialize Item with neither Item Def nor Instance, something is wrong."));
 }
 
-void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& InGeneratedData)
+void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	const FObsidianItemGeneratedData& InGeneratedData)
 {
 	if(HasAuthority() == false)
 	{
 		return;
 	}
 
-	if(!ensureMsgf(ItemDef, TEXT("Tried to Initialize Item in AObsidianDroppableItem::InitializeItem but the DraggedItem is null.")))
+	if(!ensureMsgf(ItemDef, TEXT("Tried to Initialize Item in [%hs] but the DraggedItem is null."),
+		__FUNCTION__))
 	{
 		return;
 	}
@@ -192,7 +193,8 @@ void AObsidianDroppableItem::AddItemInstance(UObsidianInventoryItemInstance* Ins
 	SetupItemAppearanceFromInstance();
 }
 
-void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& InGeneratedData)
+void AObsidianDroppableItem::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+	const FObsidianItemGeneratedData& InGeneratedData)
 {
 	Super::AddItemDefinition(ItemDef, InGeneratedData);
 
@@ -241,7 +243,8 @@ void AObsidianDroppableItem::Interact(AObsidianPlayerController* InteractingPlay
 {
 	if(InteractingPlayerController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Cannot interact with Item Actor, ObsidianPC is invalid in AObsidianDroppableItem::Interact."))
+		UE_LOG(LogInventory, Error, TEXT("Cannot interact with Item Actor, ObsidianPC is invalid in [%hs]."),
+			__FUNCTION__);
 		return;
 	}
 
@@ -273,7 +276,8 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 #if !UE_BUILD_SHIPPING
 	if(NewDroppedItemStacks < 0)
 	{
-		UE_LOG(LogInventory, Error, TEXT("AObsidianDroppableItem::UpdateDroppedItemStacks shouldn't take a negative number of stacks to update."));
+		UE_LOG(LogInventory, Error, TEXT("[%hs] shouldn't take a negative number of stacks to update."),
+			__FUNCTION__);
 	}
 #endif
 	
@@ -287,7 +291,8 @@ void AObsidianDroppableItem::DestroyDroppedItem()
 
 void AObsidianDroppableItem::Destroyed()
 {
-	if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0)))
+	if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
+		UGameplayStatics::GetPlayerController(this, 0)))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Got PC [%s]"), *GetNameSafe(ObsidianPC));
 		if(ObsidianPC->IsLocalPlayerController())
@@ -311,8 +316,8 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance() const
 	UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh();
 	if(DroppedMesh == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition"),
-			*ItemInstance->GetItemDebugName());
+		UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in [%hs]"),
+			*ItemInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 
@@ -322,18 +327,19 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance() const
 void AObsidianDroppableItem::SetupItemAppearanceFromDefinition() const
 {
 	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = GetPickupTemplateFromPickupContent().ItemDef;
-	if(!ensureMsgf(ItemDef, TEXT("Item Def is invalid in AObsidianDroppableItem::SetupItemAppearanceFromDefinition, make sure the logic is correct.")))
+	if(!ensureMsgf(ItemDef, TEXT("Item Def is invalid in [%hs], make sure the logic is correct."), __FUNCTION__))
 	{
 		return;
 	}
 	
 	const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef);
-	if(!ensureMsgf(ItemDefault, TEXT("Failed to extract Default from Item Def in AObsidianDroppableItem::SetupItemAppearanceFromDefinition.")))
+	if(!ensureMsgf(ItemDefault, TEXT("Failed to extract Default from Item Def in [%hs]."), __FUNCTION__))
 	{
 		return;
 	}
 	
-	if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+	if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(
+		ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 	{
 		if(UStaticMesh* DroppedMesh = AppearanceFrag->GetItemDroppedMesh())
 		{
@@ -342,15 +348,15 @@ void AObsidianDroppableItem::SetupItemAppearanceFromDefinition() const
 		}
 	}
 	
-	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in: AObsidianDroppableItem::SetupItemAppearanceFromDefinition."),
-		*ItemDefault->GetDebugName());
+	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in [%hs]."),
+		*ItemDefault->GetDebugName(), __FUNCTION__);
 }
 
 bool AObsidianDroppableItem::InitItemWorldName() const
 {
 	if(!IsValid(ItemWorldName))
 	{
-		UE_LOG(LogInventory, Error, TEXT("Item World Name is invalid in AObsidianDroppableItem::InitItemWorldName."));
+		UE_LOG(LogInventory, Error, TEXT("Item World Name is invalid in [%hs]."), __FUNCTION__);
 		return false;
 	}
 	bool bSuccess = false;
@@ -359,7 +365,8 @@ bool AObsidianDroppableItem::InitItemWorldName() const
 	{
 		if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
 		{
-			if(const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+			if(const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(
+				DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 			{
 				const FText ItemDisplayName = Appearance->GetItemDisplayName();
 				ItemWorldName->SetItemName(ItemDisplayName);
@@ -376,14 +383,15 @@ bool AObsidianDroppableItem::InitItemWorldName() const
 	
 	if(!bSuccess)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Failed to setup Item World Name in AObsidianDroppableItem::InitItemWorldName."));
+		UE_LOG(LogInventory, Error, TEXT("Failed to setup Item World Name in [%hs]."), __FUNCTION__);
 	}
 	return bSuccess;
 }
 
 void AObsidianDroppableItem::InitDropRouteAnimation()
 {
-	const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
+		UGameplayStatics::GetPlayerController(this, 0));
 	if(ObsidianPC == nullptr || ObsidianPC->IsLocalPlayerController() == false)
 	{
 		return;
@@ -391,14 +399,17 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 	
 	// Maybe create it with NewObject like timeline?
 	ItemDropSplineComp = Cast<USplineComponent>(
-		AddComponentByClass(USplineComponent::StaticClass(), true, FTransform::Identity, false)
+		AddComponentByClass(USplineComponent::StaticClass(), true, FTransform::Identity,
+			false)
 		);
 
 	if(ItemDropSplineComp)
 	{
 		const FVector CurrentActorLocation = GetActorLocation();
-		const FVector InitialLocation = FVector(CurrentActorLocation.X, CurrentActorLocation.Y, CurrentActorLocation.Z + 75.0f);
-		const FVector MidPointLocation = FMath::Lerp(InitialLocation, CurrentActorLocation, 0.50f) + FVector(0.0f, 0.0f, 100.0f);
+		const FVector InitialLocation = FVector(CurrentActorLocation.X, CurrentActorLocation.Y,
+			CurrentActorLocation.Z + 75.0f);
+		const FVector MidPointLocation = FMath::Lerp(InitialLocation, CurrentActorLocation, 0.50f)
+			+ FVector(0.0f, 0.0f, 100.0f);
 		const TArray<FVector> ItemDropRoute = {InitialLocation, MidPointLocation, CurrentActorLocation};
 		
 		ItemDropSplineComp->SetSplinePoints(ItemDropRoute, ESplineCoordinateSpace::World, true);
@@ -411,7 +422,10 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 		FinalItemRotation.Yaw += FMath::FRandRange(0.0f, 180.0f);
 	}
 	
-	InitialItemRotation = FRotator(FinalItemRotation.Pitch, FinalItemRotation.Yaw + FMath::FRandRange(-30.0f, 30.0f), FinalItemRotation.Roll);
+	InitialItemRotation = FRotator(
+		FinalItemRotation.Pitch,
+		FinalItemRotation.Yaw + FMath::FRandRange(-30.0f, 30.0f),
+		FinalItemRotation.Roll);
 
 	UTimelineComponent* ItemDropTimelineComp = NewObject<UTimelineComponent>(this);
 	ItemDropTimelineComp->SetLooping(false);
@@ -452,7 +466,8 @@ void AObsidianDroppableItem::UpdateItemDropAnimation(float UpdateAlpha)
 		return;
 	}
 	
-	const FVector NewLocation = ItemDropSplineComp->GetLocationAtTime(UpdateAlpha, ESplineCoordinateSpace::World, false);
+	const FVector NewLocation = ItemDropSplineComp->GetLocationAtTime(UpdateAlpha, ESplineCoordinateSpace::World,
+		false);
 
 	const float NewYaw = FMath::Lerp(InitialItemRotation.Yaw, FinalItemRotation.Yaw, UpdateAlpha);
 	const float NewRoll = FMath::Lerp(InitialItemRotation.Roll, FinalItemRotation.Roll + 270.0f, UpdateAlpha);
@@ -486,21 +501,25 @@ void AObsidianDroppableItem::OnItemMouseHover(const bool bMouseEnter)
 
 void AObsidianDroppableItem::CreateItemDescription()
 {
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr
+		? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this)
+		: CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::CreateItemDescription."));
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 		return;	
 	}
 	
 	if(CarriesItemDef())
 	{
 		const FObsidianPickupTemplate PickupTemplate = GetPickupTemplateFromPickupContent();
-		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef, PickupTemplate.ItemGeneratedData);
+		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(PickupTemplate.ItemDef,
+			PickupTemplate.ItemGeneratedData);
 	}
 	else if(CarriesItemInstance())
 	{
-		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(GetPickupInstanceFromPickupContent().Item);
+		CachedInventoryWidgetController->CreateItemDescriptionForDroppedItem(
+			GetPickupInstanceFromPickupContent().Item);
 	}
 }
 
@@ -509,28 +528,32 @@ void AObsidianDroppableItem::DestroyItemDescription()
 	const bool server = HasAuthority();
 	UE_LOG(LogTemp, Warning, TEXT("%s"), server ? TEXT("Server") : TEXT("Client"));
 	
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr
+		? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this)
+		: CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController)
 	{
 		CachedInventoryWidgetController->RemoveCurrentDroppedItemDescription();
 		return;	
 	}
-	UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::DestroyItemDescription."));
+	UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 }
 
 void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance)
 {
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr
+		? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this)
+		: CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::UpdateStacksOnActiveItemDescription."));
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 		return;	
 	}
 	
 	if(UObsidianItemDescriptionBase* ActiveItemDescription = CachedInventoryWidgetController->GetActiveDroppedItemDescription())
 	{
 		int32 CurrentStacks = 0;
-		if(!ensureMsgf(ItemInstance, TEXT("Item Instance is invalid in AObsidianDroppableItem::UpdateStacksOnActiveItemDescription, stacks were set to 0.")))
+		if(!ensureMsgf(ItemInstance, TEXT("Item Instance is invalid in [%hs], stacks were set to 0."), __FUNCTION__))
 		{
 			CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 		}
@@ -540,10 +563,12 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidian
 
 void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 StacksToSet)
 {
-	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr ? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this) : CachedInventoryWidgetController;
+	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr
+		? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this)
+		: CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in AObsidianDroppableItem::CreateItemDescription."));
+		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 		return;	
 	}
 	
@@ -562,7 +587,8 @@ void AObsidianDroppableItem::OnRep_DroppedItemStacks()
 	UpdateStacksOnActiveItemDescription(DroppedItemStacks);
 }
 
-void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags)
+void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex,
+	const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	const UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -570,8 +596,9 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, cons
 		return;
 	}
 	
-	const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(World, PlayerIndex));
-	if(!ensureMsgf(ObsidianPC, TEXT("Failed to acquire valid ObsidianPlayerController in AObsidianDroppableItem::OnItemMouseButtonDown.")))
+	const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
+		UGameplayStatics::GetPlayerController(World, PlayerIndex));
+	if(!ensureMsgf(ObsidianPC, TEXT("Failed to acquire valid ObsidianPlayerController in [%hs]."), __FUNCTION__))
 	{
 		return;
 	}
@@ -586,38 +613,42 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex, cons
 	}
 }
 
-bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown, const AObsidianPlayerController* PickingPlayerController)
+bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown,
+	const AObsidianPlayerController* PickingPlayerController)
 {
-	AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
-	if(ObsidianHUD == nullptr)
+	if (PickingPlayerController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in AObsidianDroppableItem::PickupItemInstance."))
 		return false;
 	}
 	
-	const AObsidianHero* Hero = Cast<AObsidianHero>(PickingPlayerController->GetCharacter());
-	checkf(Hero, TEXT("Hero acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemDef."));
+	const AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
+	if(ObsidianHUD == nullptr)
+	{
+		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in [%hs]."),
+			__FUNCTION__);
+		return false;
+	}
 	
-	UObsidianPlayerInputManager* PlayerInputManager = Hero->GetPlayerInputManager();
-	checkf(PlayerInputManager, TEXT("PlayerInputManager acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemDef."));
+	UObsidianItemManagerComponent* ItemManager = PickingPlayerController->GetItemManagerComponent();
+	checkf(ItemManager, TEXT("ItemManager acquired from OwningActor is invalid in [%hs]."), __FUNCTION__);
 	
-	const bool bIsDraggingAnItem = PlayerInputManager->IsDraggingAnItem();
+	const bool bIsDraggingAnItem = ItemManager->IsDraggingAnItem();
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press the left control button spawn the item (with its whole stacks) on cursor.
 	{
 		bool bDroppedItem = false;
 		if(bIsDraggingAnItem)
 		{
-			bDroppedItem = PlayerInputManager->DropItem();
+			bDroppedItem = ItemManager->DropItem();
 		}
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			PlayerInputManager->ServerGrabDroppableItemToCursor(this);
+			ItemManager->ServerGrabDroppableItemToCursor(this);
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
 	}
-	PlayerInputManager->ServerPickupItem(this);
+	ItemManager->ServerPickupItem(this);
 	
 	return false; // Added whole Item
 }
@@ -627,33 +658,31 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, const AO
 	AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in AObsidianDroppableItem::PickupItemDef."))
+		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in [%hs]."),
+			__FUNCTION__);
 		return false;
 	}
 	
-	const AObsidianHero* Hero = Cast<AObsidianHero>(PickingPlayerController->GetCharacter());
-	checkf(Hero, TEXT("Hero acquired from ObsidianPC is invalid in AObsidianDroppableItem::PickupItemDef."));
+	UObsidianItemManagerComponent* ItemManager = PickingPlayerController->GetItemManagerComponent();
+	checkf(ItemManager, TEXT("ItemManager acquired from OwningActor is invalid in [%hs]."), __FUNCTION__);
 	
-	UObsidianPlayerInputManager* PlayerInputManager = Hero->GetPlayerInputManager();
-	checkf(PlayerInputManager, TEXT("PlayerInputManager acquired from OwningActor is invalid in AObsidianDroppableItem::PickupItemDef."));
-	
-	const bool bIsDraggingAnItem = PlayerInputManager->IsDraggingAnItem();
+	const bool bIsDraggingAnItem = ItemManager->IsDraggingAnItem();
 	if(ObsidianHUD->IsInventoryOpened() && !bLeftControlDown) // If the inventory is opened, and we don't press left control button, spawn the item on cursor
 	{
 		bool bDroppedItem = false;
 		if(bIsDraggingAnItem)
 		{
-			bDroppedItem = PlayerInputManager->DropItem();
+			bDroppedItem = ItemManager->DropItem();
 		}
 
 		if((!bIsDraggingAnItem) || (bIsDraggingAnItem && bDroppedItem))
 		{
-			PlayerInputManager->ServerGrabDroppableItemToCursor(this);
+			ItemManager->ServerGrabDroppableItemToCursor(this);
 			return true; // Added whole Item
 		}
 		return false; // Added some Item stacks
 	}
-	PlayerInputManager->ServerPickupItem(this);
+	ItemManager->ServerPickupItem(this);
 	
 	return false; // Added whole Item
 }
