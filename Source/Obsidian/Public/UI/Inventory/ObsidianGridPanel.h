@@ -5,10 +5,10 @@
 #include <CoreMinimal.h>
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-#include "Slots/ObsidianItemSlot.h"
+#include "Slots/ObsidianSlotBase.h"
 
 #include "ObsidianItemStoragePanelBase.h"
-#include "Slots/ObsidianItemSlot_GridSlot.h"
+#include "Slots/ObsidianSlot_GridSlot.h"
 #include "ObsidianGridPanel.generated.h"
 
 struct FObsidianItemWidgetData;
@@ -16,7 +16,7 @@ struct FObsidianItemWidgetData;
 class UObInventoryItemsWidgetController;
 class UCanvasPanel;
 class UObsidianItem;
-class UObsidianItemSlot_GridSlot;
+class UObsidianSlot_GridSlot;
 
 USTRUCT()
 struct FObsidianGridSlotData
@@ -37,7 +37,7 @@ public:
 	FObsidianItemPosition OriginPosition = FObsidianItemPosition();
 
 	UPROPERTY()
-	UObsidianItemSlot_GridSlot* OwningGridSlot = nullptr;
+	UObsidianSlot_GridSlot* OwningGridSlot = nullptr;
 	
 	UPROPERTY()
 	UObsidianItem* ItemWidget = nullptr;
@@ -63,7 +63,7 @@ public:
 	bool ConstructInventoryPanel();
 	bool ConstructStashPanel(const int32 GridWidthOverride, const int32 GridHeightOverride, const FGameplayTag& InStashTag);
 	
-	UObsidianItemSlot_GridSlot* GetSlotByPosition(const FIntPoint& BySlotPosition);
+	UObsidianSlot_GridSlot* GetSlotByPosition(const FIntPoint& BySlotPosition);
 	const FObsidianGridSlotData* GetSlotDataAtGridPosition(const FIntPoint& AtGridPosition) const;
 	UObsidianItem* GetItemWidgetAtGridPosition(const FIntPoint& AtGridPosition) const;
 	bool IsGridSlotOccupied(const FIntPoint& AtGridPosition) const;
@@ -81,17 +81,17 @@ protected:
 	void RegisterGridItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
 		const FIntPoint GridSpan);
 
-	void OnGridSlotHover(UObsidianItemSlot_GridSlot* AffectedSlot, const bool bEntered);
-	void OnGridSlotLeftMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
+	void OnGridSlotHover(UObsidianSlot_GridSlot* AffectedSlot, const bool bEntered);
+	void OnGridSlotLeftMouseButtonDown(const UObsidianSlot_GridSlot* AffectedSlot,
 		const FObsidianItemInteractionFlags& InteractionFlags);
-	void OnGridSlotRightMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
+	void OnGridSlotRightMouseButtonDown(const UObsidianSlot_GridSlot* AffectedSlot,
 		const FObsidianItemInteractionFlags& InteractionFlags);
 	
 	void ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FIntPoint SlotPositionOverride) const;
 	
 protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
-	TSubclassOf<UObsidianItemSlot_GridSlot> GridSlotClass;
+	TSubclassOf<UObsidianSlot_GridSlot> GridSlotClass;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SlotTileSize = 68.0f;
@@ -115,5 +115,5 @@ private:
 	
 	/** Array of slots that are affected by item hover, to clear it later. */
 	UPROPERTY()
-	TArray<UObsidianItemSlot_GridSlot*> AffectedGridSlots;
+	TArray<UObsidianSlot_GridSlot*> AffectedGridSlots;
 };

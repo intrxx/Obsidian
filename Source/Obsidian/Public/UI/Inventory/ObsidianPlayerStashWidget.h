@@ -12,7 +12,7 @@
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 
-class UObsidianItemSlot_Equipment;
+class UObsidianSlot_ItemSlot;
 struct FObsidianItemWidgetData;
 class UObsidianStashButton;
 class UObsidianItem;
@@ -86,5 +86,5 @@ private:
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
 
 	UPROPERTY()
-	TArray<UObsidianItemSlot_Equipment*> CachedHighlightedSlot;
+	TArray<UObsidianSlot_ItemSlot*> CachedHighlightedSlot;
 };

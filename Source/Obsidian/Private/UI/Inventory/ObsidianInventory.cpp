@@ -3,9 +3,9 @@
 #include "UI/Inventory/ObsidianInventory.h"
 
 #include "Obsidian/ObsidianGameModule.h"
-#include "UI/Inventory/Slots/ObsidianItemSlot.h"
+#include "UI/Inventory/Slots/ObsidianSlotBase.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
-#include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
+#include "UI/Inventory/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "UI/Inventory/ObsidianSlotPanel.h"
 #include "UI/Inventory/ObsidianGridPanel.h"
@@ -136,7 +136,7 @@ void UObsidianInventory::OnEquipmentItemRemoved(const FObsidianItemWidgetData& I
 
 void UObsidianInventory::HighlightSlotPlacement(const FGameplayTagContainer& WithTags)
 {
-	for (UObsidianItemSlot_Equipment* SlotWidget : Equipment_SlotPanel->GetAllSlots())
+	for (UObsidianSlot_ItemSlot* SlotWidget : Equipment_SlotPanel->GetAllSlots())
 	{
 		if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
 		{
@@ -148,7 +148,7 @@ void UObsidianInventory::HighlightSlotPlacement(const FGameplayTagContainer& Wit
 
 void UObsidianInventory::StopHighlightSlotPlacement()
 {
-	for (UObsidianItemSlot_Equipment* SlotWidget : CachedHighlightedSlot)
+	for (UObsidianSlot_ItemSlot* SlotWidget : CachedHighlightedSlot)
 	{
 		if (SlotWidget)
 		{

@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlot_ItemSlot.h"
 
 #include <Components/SizeBox.h>
 #include <Components/Overlay.h>
@@ -8,7 +8,7 @@
 
 #include "UI/Inventory/Items/ObsidianItem.h"
 
-void UObsidianItemSlot_Equipment::NativePreConstruct()
+void UObsidianSlot_ItemSlot::NativePreConstruct()
 {
 	Super::NativePreConstruct();
 
@@ -19,7 +19,7 @@ void UObsidianItemSlot_Equipment::NativePreConstruct()
 	}
 }
 
-void UObsidianItemSlot_Equipment::InitializeSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag)
+void UObsidianSlot_ItemSlot::InitializeSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag)
 {
 	if(!SlotTag.IsValid()) // Slot Tag has been already set in Blueprint
 	{
@@ -40,17 +40,17 @@ void UObsidianItemSlot_Equipment::InitializeSlot(const FGameplayTag& InSlotTag, 
 	}
 }
 
-FGameplayTag UObsidianItemSlot_Equipment::GetSlotTag() const
+FGameplayTag UObsidianSlot_ItemSlot::GetSlotTag() const
 {
 	return SlotTag;
 }
 
-FGameplayTag UObsidianItemSlot_Equipment::GetSisterSlotTag() const
+FGameplayTag UObsidianSlot_ItemSlot::GetSisterSlotTag() const
 {
 	return SisterSlotTag;
 }
 
-void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
+void UObsidianSlot_ItemSlot::AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
 	if(ensure(Main_Overlay && InItemWidget))
 	{
@@ -63,7 +63,7 @@ void UObsidianItemSlot_Equipment::AddItemToSlot(UObsidianItem* InItemWidget, con
 	}
 }
 
-void UObsidianItemSlot_Equipment::AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
+void UObsidianSlot_ItemSlot::AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
 {
 	if(ensure(Main_Overlay && InItemWidget))
 	{
@@ -78,29 +78,36 @@ void UObsidianItemSlot_Equipment::AddBlockadeItemToSlot(UObsidianItem* InItemWid
 	}
 }
 
-void UObsidianItemSlot_Equipment::ResetSlotState()
+void UObsidianSlot_ItemSlot::ResetSlotState()
 {
 	SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::TakePriority);
 }
 
-void UObsidianItemSlot_Equipment::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UObsidianSlot_ItemSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
-	OnEquipmentSlotHoverDelegate.Broadcast(this, true);
+	OnItemSlotHoverDelegate.Broadcast(this, true);
 }
 
-void UObsidianItemSlot_Equipment::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+void UObsidianSlot_ItemSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
-	OnEquipmentSlotHoverDelegate.Broadcast(this, false);
+	OnItemSlotHoverDelegate.Broadcast(this, false);
 }
 
-FReply UObsidianItemSlot_Equipment::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianSlot_ItemSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if (InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{
 		FObsidianItemInteractionFlags ItemInteractionFlags;
 		ItemInteractionFlags.bItemStacksInteraction = InMouseEvent.IsShiftDown();
 		ItemInteractionFlags.bMoveBetweenNextOpenedWindow = InMouseEvent.IsControlDown();
-		OnEquipmentSlotPressedDelegate.Broadcast(this, ItemInteractionFlags);
+		OnItemSlotLeftButtonPressedDelegate.Broadcast(this, ItemInteractionFlags);
+	}
+	else if (InMouseEvent.GetEffectingButton() == EKeys::RightMouseButton)
+	{
+		FObsidianItemInteractionFlags ItemInteractionFlags;
+		ItemInteractionFlags.bItemStacksInteraction = InMouseEvent.IsShiftDown();
+		ItemInteractionFlags.bMoveBetweenNextOpenedWindow = InMouseEvent.IsControlDown();
+		OnItemSlotRightButtonPressedDelegate.Broadcast(this, ItemInteractionFlags);
 	}
 	
 	return FReply::Handled();

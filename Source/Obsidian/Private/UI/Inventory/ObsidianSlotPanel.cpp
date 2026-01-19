@@ -5,7 +5,7 @@
 #include <Blueprint/WidgetTree.h>
 
 #include "Obsidian/ObsidianGameModule.h"
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
@@ -69,10 +69,11 @@ bool UObsidianSlotPanel::ConstructSlots()
 	bool bSuccess = false;
 	WidgetTree->ForEachWidget([this, &bSuccess](UWidget* Widget)
 		{
-			if(UObsidianItemSlot_Equipment* EquipmentSlot = Cast<UObsidianItemSlot_Equipment>(Widget))
+			if(UObsidianSlot_ItemSlot* EquipmentSlot = Cast<UObsidianSlot_ItemSlot>(Widget))
 			{
-				EquipmentSlot->OnEquipmentSlotHoverDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotHover);
-				EquipmentSlot->OnEquipmentSlotPressedDelegate.AddUObject(this, &ThisClass::OnEquipmentSlotMouseButtonDown);
+				EquipmentSlot->OnItemSlotHoverDelegate.AddUObject(this, &ThisClass::OnItemSlotHover);
+				EquipmentSlot->OnItemSlotLeftButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemSlotLeftMouseButtonDown);
+				EquipmentSlot->OnItemSlotRightButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemSlotRightMouseButtonDown);
 				
 				FObsidianSlotData NewData;
 				NewData.OwningSlot = EquipmentSlot;
@@ -87,24 +88,25 @@ void UObsidianSlotPanel::NativeDestruct()
 {
 	for (const TPair<FGameplayTag, FObsidianSlotData>& SlotDataPair : SlotDataMap)
 	{
-		if (UObsidianItemSlot_Equipment* EquipmentSlot = SlotDataPair.Value.OwningSlot)
+		if (UObsidianSlot_ItemSlot* EquipmentSlot = SlotDataPair.Value.OwningSlot)
 		{
-			EquipmentSlot->OnEquipmentSlotHoverDelegate.Clear();
-			EquipmentSlot->OnEquipmentSlotPressedDelegate.Clear();
+			EquipmentSlot->OnItemSlotHoverDelegate.Clear();
+			EquipmentSlot->OnItemSlotLeftButtonPressedDelegate.Clear();
+			EquipmentSlot->OnItemSlotRightButtonPressedDelegate.Clear();
 		}
 	}
 	
 	Super::NativeDestruct();
 }
 
-TArray<UObsidianItemSlot_Equipment*> UObsidianSlotPanel::GetAllSlots() const
+TArray<UObsidianSlot_ItemSlot*> UObsidianSlotPanel::GetAllSlots() const
 {
-	TArray<UObsidianItemSlot_Equipment*> Slots;
+	TArray<UObsidianSlot_ItemSlot*> Slots;
 	Slots.Reserve(SlotDataMap.Num());
 	
 	for (const TPair<FGameplayTag, FObsidianSlotData>& SlotDataPair : SlotDataMap)
 	{
-		if (UObsidianItemSlot_Equipment* EquipmentSlot = SlotDataPair.Value.OwningSlot)
+		if (UObsidianSlot_ItemSlot* EquipmentSlot = SlotDataPair.Value.OwningSlot)
 		{
 			Slots.Add(EquipmentSlot);
 		}
@@ -113,7 +115,7 @@ TArray<UObsidianItemSlot_Equipment*> UObsidianSlotPanel::GetAllSlots() const
 	return Slots;
 }
 
-UObsidianItemSlot_Equipment* UObsidianSlotPanel::GetSlotByPosition(const FGameplayTag& AtSlotTag)
+UObsidianSlot_ItemSlot* UObsidianSlotPanel::GetSlotByPosition(const FGameplayTag& AtSlotTag)
 {
 	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(AtSlotTag))
 	{
@@ -173,7 +175,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 		return;
 	}
 
-	UObsidianItemSlot_Equipment* EquipmentSlot = GetSlotByPosition(SlotTag);
+	UObsidianSlot_ItemSlot* EquipmentSlot = GetSlotByPosition(SlotTag);
 	if (EquipmentSlot == nullptr)
 	{
 		UE_LOG(LogObsidian, Error, TEXT("Unable to find Equipment Slot for tag [%s] on Equipment Panel in [%hs]"),
@@ -197,7 +199,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 			return;
 		}
 
-		UObsidianItemSlot_Equipment* SlotToBlock = GetSlotByPosition(SisterSlotTag);
+		UObsidianSlot_ItemSlot* SlotToBlock = GetSlotByPosition(SisterSlotTag);
 		if (SlotToBlock == nullptr)
 		{
 			UE_LOG(LogObsidian, Error, TEXT("Unable to find Slot To Block for tag [%s] on Equipment Panel in [%hs]"),
@@ -214,7 +216,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 	}
 }
 
-void UObsidianSlotPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered)
+void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, const bool bEntered)
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
@@ -292,7 +294,7 @@ void UObsidianSlotPanel::OnEquipmentSlotHover(UObsidianItemSlot_Equipment* Affec
 	}
 }
 
-void UObsidianSlotPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
+void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	if(InventoryItemsWidgetController == nullptr)
@@ -340,6 +342,42 @@ void UObsidianSlotPanel::OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_
 	}
 }
 
+void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
+	const FObsidianItemInteractionFlags& InteractionFlags)
+{
+	if(InventoryItemsWidgetController == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
+		return;
+	}
+
+	if (AffectedSlot == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
+		return;
+	}
+
+	const FGameplayTag SlotTag = AffectedSlot->GetSlotTag();
+	check(SlotTag.IsValid());
+
+	const FObsidianSlotData* SlotData = GetSlotDataAtGridPosition(SlotTag);
+	if (SlotData == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for tag [%s] in [%hs]."),
+			*SlotTag.ToString(), __FUNCTION__)
+		return;
+	}
+	
+	if (SlotData && SlotData->IsOccupied())
+	{
+		FObsidianItemInteractionData InteractionData;
+		InteractionData.InteractionFlags = InteractionFlags;
+		InteractionData.ItemWidget = SlotData->ItemWidget;
+		
+		InventoryItemsWidgetController->HandleRightClickingOnItem(SlotData->OriginPosition, InteractionData, PanelOwner);
+	}
+}
+
 void UObsidianSlotPanel::ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FGameplayTag& SlotTagOverride) const
 {
 	if (PanelOwner == EObsidianPanelOwner::Equipment)
@@ -363,10 +401,10 @@ void UObsidianSlotPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWi
 		{
 			if (const FObsidianSlotData* SlotData = SlotDataMap.Find(SlotToClearTag))
 			{
-				if (const UObsidianItemSlot_Equipment* OwningSlot = SlotData->OwningSlot)
+				if (const UObsidianSlot_ItemSlot* OwningSlot = SlotData->OwningSlot)
 				{
 					const FGameplayTag NextSlotTagToClear = OwningSlot->GetSisterSlotTag();
-					if (UObsidianItemSlot_Equipment* SisterSlot = GetSlotByPosition(NextSlotTagToClear))
+					if (UObsidianSlot_ItemSlot* SisterSlot = GetSlotByPosition(NextSlotTagToClear))
 					{
 						UnregisterSlotItemWidget(NextSlotTagToClear);
 						SisterSlot->ResetSlotState();

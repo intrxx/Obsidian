@@ -87,7 +87,8 @@ void UObInventoryItemsWidgetController::OnWidgetControllerSetupCompleted()
 void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Channel,
 	const FObsidianInventoryChangeMessage& InventoryChangeMessage)
 {
-	if(OwnerInventoryComponent != InventoryChangeMessage.InventoryOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	// Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	if(OwnerInventoryComponent != InventoryChangeMessage.InventoryOwner)
 	{
 		return;
 	}
@@ -151,7 +152,8 @@ void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Cha
 void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Channel,
 	const FObsidianEquipmentChangeMessage& EquipmentChangeMessage)
 {
-	if(OwnerEquipmentComponent != EquipmentChangeMessage.EquipmentOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	// Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	if(OwnerEquipmentComponent != EquipmentChangeMessage.EquipmentOwner) 
 	{
 		return;
 	}
@@ -224,7 +226,8 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 
 void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage)
 {
-	if(OwnerPlayerStashComponent != StashChangeMessage.PlayerStashOwner) // Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	// Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
+	if(OwnerPlayerStashComponent != StashChangeMessage.PlayerStashOwner)
 	{
 		return;
 	}

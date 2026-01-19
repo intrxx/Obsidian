@@ -6,23 +6,23 @@
 #include <GameplayTagContainer.h>
 
 
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
-#include "ObsidianItemSlot_Equipment.generated.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlotBase.h"
+#include "ObsidianSlot_ItemSlot.generated.h"
 
 class UObsidianSlotPanel;
 class UObsidianSlotBlockadeItem;
 class UObsidianItem;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotHoverSignature, UObsidianItemSlot_Equipment* HoveredSlot,
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemSlotHoverSignature, UObsidianSlot_ItemSlot* HoveredSlot,
 	const bool bEntered);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnEquipmentSlotPressedSignature, const UObsidianItemSlot_Equipment* HoveredSlot,
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemSlotPressedSignature, const UObsidianSlot_ItemSlot* HoveredSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags);
 
 /**
- * 
+ * Item Slot is a kind of socket that we can place whole item in.
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemSlot_Equipment : public UObsidianItemSlot
+class OBSIDIAN_API UObsidianSlot_ItemSlot : public UObsidianSlotBase
 {
 	GENERATED_BODY()
 
@@ -38,8 +38,9 @@ public:
 	void ResetSlotState();
 
 public:
-	FOnEquipmentSlotHoverSignature OnEquipmentSlotHoverDelegate;
-	FOnEquipmentSlotPressedSignature OnEquipmentSlotPressedDelegate;
+	FOnItemSlotHoverSignature OnItemSlotHoverDelegate;
+	FOnItemSlotPressedSignature OnItemSlotLeftButtonPressedDelegate;
+	FOnItemSlotPressedSignature OnItemSlotRightButtonPressedDelegate;
 
 protected:
 	virtual void NativePreConstruct() override;

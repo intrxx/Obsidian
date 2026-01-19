@@ -14,9 +14,9 @@ struct FGameplayTag;
 
 class UObsidianSlotBlockadeItem;
 class UObsidianItem;
-class UObsidianItemSlot;
+class UObsidianSlotBase;
 class UObsidianInventoryItemDefinition;
-class UObsidianItemSlot_Equipment;
+class UObsidianSlot_ItemSlot;
 class UObsidianInventoryItemInstance;
 class UGridPanel;
 class USizeBox;
@@ -65,5 +65,5 @@ private:
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
 	
 	UPROPERTY()
-	TArray<UObsidianItemSlot_Equipment*> CachedHighlightedSlot;
+	TArray<UObsidianSlot_ItemSlot*> CachedHighlightedSlot;
 };

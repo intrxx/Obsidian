@@ -6,7 +6,7 @@
 #include <Components/CanvasPanelSlot.h>
 
 #include "Obsidian/ObsidianGameModule.h"
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_GridSlot.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlot_GridSlot.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
@@ -46,7 +46,7 @@ void UObsidianGridPanel::NativeDestruct()
 {
 	for (const TPair<FIntPoint, FObsidianGridSlotData>& GridSlotPair : GridSlotDataMap)
 	{
-		if (UObsidianItemSlot_GridSlot* GridSlot = GridSlotPair.Value.OwningGridSlot)
+		if (UObsidianSlot_GridSlot* GridSlot = GridSlotPair.Value.OwningGridSlot)
 		{
 			GridSlot->OnGridSlotHoverDelegate.Clear();
 			GridSlot->OnGridSlotLeftButtonPressedDelegate.Clear();
@@ -101,7 +101,7 @@ bool UObsidianGridPanel::ConstructGrid(const int32 GridWidth, const int32 GridHe
 	{
 		const FIntPoint SlotPosition = FIntPoint(GridX, GridY);
 		
-		UObsidianItemSlot_GridSlot* GridSlot = CreateWidget<UObsidianItemSlot_GridSlot>(this, GridSlotClass);
+		UObsidianSlot_GridSlot* GridSlot = CreateWidget<UObsidianSlot_GridSlot>(this, GridSlotClass);
 		GridSlot->InitializeSlot(SlotPosition);
 		GridSlot->OnGridSlotHoverDelegate.AddUObject(this, &ThisClass::OnGridSlotHover);
 		GridSlot->OnGridSlotLeftButtonPressedDelegate.AddUObject(this, &ThisClass::OnGridSlotLeftMouseButtonDown);
@@ -133,7 +133,7 @@ bool UObsidianGridPanel::ConstructGrid(const int32 GridWidth, const int32 GridHe
 	return false;
 }
 
-UObsidianItemSlot_GridSlot* UObsidianGridPanel::GetSlotByPosition(const FIntPoint& BySlotPosition)
+UObsidianSlot_GridSlot* UObsidianGridPanel::GetSlotByPosition(const FIntPoint& BySlotPosition)
 {
 	if (const FObsidianGridSlotData* GridSlotData = GridSlotDataMap.Find(BySlotPosition))
 	{
@@ -198,7 +198,7 @@ void UObsidianGridPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 	RegisterGridItemWidget(ItemWidgetData.ItemPosition, ItemWidget, ItemGridSpan);
 }
 
-void UObsidianGridPanel::OnGridSlotHover(UObsidianItemSlot_GridSlot* AffectedSlot, const bool bEntered)
+void UObsidianGridPanel::OnGridSlotHover(UObsidianSlot_GridSlot* AffectedSlot, const bool bEntered)
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
@@ -281,7 +281,7 @@ void UObsidianGridPanel::OnGridSlotHover(UObsidianItemSlot_GridSlot* AffectedSlo
 	}
 }
 
-void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
+void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianSlot_GridSlot* AffectedSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	if(InventoryItemsWidgetController == nullptr)
@@ -330,7 +330,7 @@ void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianItemSlot_G
 	}
 }
 
-void UObsidianGridPanel::OnGridSlotRightMouseButtonDown(const UObsidianItemSlot_GridSlot* AffectedSlot,
+void UObsidianGridPanel::OnGridSlotRightMouseButtonDown(const UObsidianSlot_GridSlot* AffectedSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags)
 {
 	if(InventoryItemsWidgetController == nullptr)
@@ -466,7 +466,7 @@ void UObsidianGridPanel::SetSlotStateForGridSlots(const FIntPoint OriginPosition
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
 			const FIntPoint SlotPosition = OriginPosition + FIntPoint(SpanX, SpanY);
-			if(UObsidianItemSlot_GridSlot* LocalSlot = GetSlotByPosition(SlotPosition))
+			if(UObsidianSlot_GridSlot* LocalSlot = GetSlotByPosition(SlotPosition))
 			{
 				LocalSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 				AffectedGridSlots.Add(LocalSlot);
@@ -479,7 +479,7 @@ void UObsidianGridPanel::ResetGridSlotsState()
 {
 	if(AffectedGridSlots.IsEmpty() == false)
 	{
-		for(UObsidianItemSlot_GridSlot* InventorySlot : AffectedGridSlots)
+		for(UObsidianSlot_GridSlot* InventorySlot : AffectedGridSlots)
 		{
 			InventorySlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
 		}

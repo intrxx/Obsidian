@@ -8,7 +8,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianItemStoragePanelBase.h"
-#include "Slots/ObsidianItemSlot_Equipment.h"
+#include "Slots/ObsidianSlot_ItemSlot.h"
 #include "ObsidianSlotPanel.generated.h"
 
 struct FObsidianItemInteractionFlags;
@@ -18,7 +18,7 @@ struct FObsidianItemWidgetData;
 class UObsidianInventory;
 class UObsidianItem;
 class UObsidianSlotBlockadeItem;
-class UObsidianItemSlot_Equipment;
+class UObsidianSlot_ItemSlot;
 class UObInventoryItemsWidgetController;
 
 USTRUCT()
@@ -39,7 +39,7 @@ public:
 	FObsidianItemPosition OriginPosition = FObsidianItemPosition();
 	
 	UPROPERTY()
-	UObsidianItemSlot_Equipment* OwningSlot = nullptr;
+	UObsidianSlot_ItemSlot* OwningSlot = nullptr;
 
 	UPROPERTY()
 	UObsidianItem* ItemWidget = nullptr;
@@ -64,8 +64,8 @@ public:
 	bool ConstructEquipmentPanel();
 	bool ConstructStashPanel(const FGameplayTag& InStashTabTag);
 
-	TArray<UObsidianItemSlot_Equipment*> GetAllSlots() const;
-	UObsidianItemSlot_Equipment* GetSlotByPosition(const FGameplayTag& AtSlotTag);
+	TArray<UObsidianSlot_ItemSlot*> GetAllSlots() const;
+	UObsidianSlot_ItemSlot* GetSlotByPosition(const FGameplayTag& AtSlotTag);
 	const FObsidianSlotData* GetSlotDataAtGridPosition(const FGameplayTag& AtSlotTag) const;
 	UObsidianItem* GetItemWidgetAtSlot(const FGameplayTag& AtSlotTag) const;
 	bool IsSlotOccupied(const FGameplayTag& AtSlotTag) const;
@@ -87,8 +87,10 @@ protected:
 		const FObsidianItemPosition& ItemOriginPosition = FObsidianItemPosition());
 	void UnregisterSlotItemWidget(const FGameplayTag& SlotTag);
 	
-	void OnEquipmentSlotHover(UObsidianItemSlot_Equipment* AffectedSlot, const bool bEntered);
-	void OnEquipmentSlotMouseButtonDown(const UObsidianItemSlot_Equipment* AffectedSlot,
+	void OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, const bool bEntered);
+	void OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
+		const FObsidianItemInteractionFlags& InteractionFlags);
+	void OnItemSlotRightMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
 		const FObsidianItemInteractionFlags& InteractionFlags);
 	
 	void ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FGameplayTag& SlotTagOverride) const;

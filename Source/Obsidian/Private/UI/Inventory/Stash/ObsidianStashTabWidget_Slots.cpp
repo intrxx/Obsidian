@@ -5,7 +5,7 @@
 #include "Obsidian/ObsidianGameModule.h"
 #include "UI/Inventory/ObsidianSlotPanel.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
-#include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
+#include "UI/Inventory/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
 void UObsidianStashTabWidget_Slots::InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController,
@@ -22,7 +22,7 @@ void UObsidianStashTabWidget_Slots::InitializeStashTab(UObInventoryItemsWidgetCo
 	}
 }
 
-TArray<UObsidianItemSlot_Equipment*> UObsidianStashTabWidget_Slots::GetSlotWidgets() const
+TArray<UObsidianSlot_ItemSlot*> UObsidianStashTabWidget_Slots::GetSlotWidgets() const
 {
 	if (StashTab_SlotPanel)
 	{

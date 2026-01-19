@@ -13,7 +13,7 @@
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
-#include "UI/Inventory/Slots/ObsidianItemSlot_Equipment.h"
+#include "UI/Inventory/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Grid.h"
 #include "UI/Inventory/Stash/ObsidianStashTabWidget_Slots.h"
 #include "UI/Inventory/Stash/ObsidianStashButton.h"
@@ -79,7 +79,7 @@ void UObsidianPlayerStashWidget::HighlightSlotPlacement(const FGameplayTagContai
 {
 	if(const UObsidianStashTabWidget_Slots* StashTabWidget_Slots = Cast<UObsidianStashTabWidget_Slots>(ActiveStashTab))
 	{
-		for (UObsidianItemSlot_Equipment* SlotWidget : StashTabWidget_Slots->GetSlotWidgets())
+		for (UObsidianSlot_ItemSlot* SlotWidget : StashTabWidget_Slots->GetSlotWidgets())
 		{
 			if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
 			{
@@ -92,7 +92,7 @@ void UObsidianPlayerStashWidget::HighlightSlotPlacement(const FGameplayTagContai
 
 void UObsidianPlayerStashWidget::StopHighlightSlotPlacement()
 {
-	for (UObsidianItemSlot_Equipment* SlotWidget : CachedHighlightedSlot)
+	for (UObsidianSlot_ItemSlot* SlotWidget : CachedHighlightedSlot)
 	{
 		if (SlotWidget)
 		{

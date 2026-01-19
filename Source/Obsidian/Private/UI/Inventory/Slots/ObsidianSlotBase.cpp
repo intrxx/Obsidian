@@ -1,6 +1,6 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlotBase.h"
 
 // ~ Core
 #include "Components/Image.h"
@@ -8,14 +8,14 @@
 
 // ~ Project
 
-void UObsidianItemSlot::NativeConstruct()
+void UObsidianSlotBase::NativeConstruct()
 {
 	Super::NativeConstruct();
 
 	Action_Image->SetVisibility(ESlateVisibility::Hidden);
 }
 
-void UObsidianItemSlot::SetSlotState(const EObsidianItemSlotState InState, const EObsidianItemSlotStatePriority InPriority)
+void UObsidianSlotBase::SetSlotState(const EObsidianItemSlotState InState, const EObsidianItemSlotStatePriority InPriority)
 {
 	if (CurrentStatePriority > InPriority)
 	{

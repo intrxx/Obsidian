@@ -1,12 +1,12 @@
 // Copyright 2024 out of sCope team - Michał Ogiński
 
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot_GridSlot.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlot_GridSlot.h"
 
 #include <Components/SizeBox.h>
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-void UObsidianItemSlot_GridSlot::NativeConstruct()
+void UObsidianSlot_GridSlot::NativeConstruct()
 {
 	Super::NativeConstruct();
 
@@ -17,27 +17,27 @@ void UObsidianItemSlot_GridSlot::NativeConstruct()
 	}
 }
 
-void UObsidianItemSlot_GridSlot::InitializeSlot(const FIntPoint& InGridSlotPosition)
+void UObsidianSlot_GridSlot::InitializeSlot(const FIntPoint& InGridSlotPosition)
 {
 	GridSlotPosition = InGridSlotPosition;
 }
 
-FIntPoint UObsidianItemSlot_GridSlot::GetGridSlotPosition() const
+FIntPoint UObsidianSlot_GridSlot::GetGridSlotPosition() const
 {
 	return GridSlotPosition;
 }
 
-void UObsidianItemSlot_GridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+void UObsidianSlot_GridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	OnGridSlotHoverDelegate.Broadcast(this, true);
 }
 
-void UObsidianItemSlot_GridSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
+void UObsidianSlot_GridSlot::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 {
 	OnGridSlotHoverDelegate.Broadcast(this, false);
 }
 
-FReply UObsidianItemSlot_GridSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
+FReply UObsidianSlot_GridSlot::NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	if(InMouseEvent.GetEffectingButton() == EKeys::LeftMouseButton)
 	{

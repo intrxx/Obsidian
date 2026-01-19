@@ -4,18 +4,18 @@
 
 #include <CoreMinimal.h>
 
-#include "Obsidian/Public/UI/Inventory/Slots/ObsidianItemSlot.h"
-#include "ObsidianItemSlot_GridSlot.generated.h"
+#include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlotBase.h"
+#include "ObsidianSlot_GridSlot.generated.h"
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnGridSlotHoverSignature, UObsidianItemSlot_GridSlot* HoveredSlot, const bool bEntered);
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnGridSlotPressedSignature, const UObsidianItemSlot_GridSlot* HoveredSlot,
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnGridSlotHoverSignature, UObsidianSlot_GridSlot* HoveredSlot, const bool bEntered);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnGridSlotPressedSignature, const UObsidianSlot_GridSlot* HoveredSlot,
 	const FObsidianItemInteractionFlags& InteractionFlags);
 
 /**
- * 
+ * Grid Slot makes the Grid Panel.
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemSlot_GridSlot : public UObsidianItemSlot
+class OBSIDIAN_API UObsidianSlot_GridSlot : public UObsidianSlotBase
 {
 	GENERATED_BODY()
 	

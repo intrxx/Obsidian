@@ -11,7 +11,7 @@
 
 class UObsidianSlotPanel;
 class UObsidianPlayerStashWidget;
-class UObsidianItemSlot_Equipment;
+class UObsidianSlot_ItemSlot;
 
 /**
  * 
@@ -25,7 +25,7 @@ public:
 	void InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController,
 		const FGameplayTag& InStashTabTag);
 
-	TArray<UObsidianItemSlot_Equipment*> GetSlotWidgets() const;
+	TArray<UObsidianSlot_ItemSlot*> GetSlotWidgets() const;
 	
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) override;
 	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) override;

@@ -9,7 +9,7 @@
 #include "UI/Inventory/ObsidianInventory.h"
 
 #include "UI/ObsidianWidgetBase.h"
-#include "ObsidianItemSlot.generated.h"
+#include "ObsidianSlotBase.generated.h"
 
 class UObsidianGridPanel;
 class UObsidianInventory;
@@ -52,10 +52,10 @@ enum class EObsidianItemSlotStatePriority : uint8
 };
 
 /**
- * 
+ * Base class of different slots which can represent item holding panels.
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemSlot : public UObsidianWidgetBase
+class OBSIDIAN_API UObsidianSlotBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
