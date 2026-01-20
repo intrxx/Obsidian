@@ -1,4 +1,4 @@
-// Copyright 2024 out of sCope team - Michał Ogiński
+// Copyright 2026 out of sCope team - intrxx
 
 #include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 

@@ -1,4 +1,4 @@
-// Copyright 2024 out of sCope team - Michał Ogiński
+// Copyright 2026 out of sCope team - intrxx
 
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility_Aura.h"
