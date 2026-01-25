@@ -64,6 +64,16 @@ public:
 	
 	UPROPERTY()
 	bool bDoesBlockSisterSlot = false;
+	
+	/**
+	 * Change Flags
+	 */
+
+	UPROPERTY()
+	uint8 bUpdateStacks:1 = false;
+
+	UPROPERTY()
+	uint8 bGeneralItemUpdate:1 = false;
 };
 
 USTRUCT()
@@ -89,6 +99,10 @@ public:
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemAddedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemChangedSignature, const FObsidianItemWidgetData& ItemWidgetData);
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemRemovedSignature, const FObsidianItemWidgetData& ItemWidgetData);
+
+using MatchingStashedItemsContainer = const TMultiMap<FGameplayTag, FObsidianItemPosition>&;
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUsableContextFiredForStashSignature, MatchingStashedItemsContainer ItemsMatchingContext);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnUsableContextFiredSignature, const TArray<FObsidianItemPosition>& ItemsMatchingContext);
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartPlacementHighlightSignature, const FGameplayTagContainer& ForSlotsWithTag);
 DECLARE_MULTICAST_DELEGATE(FOnStopPlacementHighlightSignature);
@@ -163,6 +177,10 @@ public:
 	FOnItemRemovedSignature OnInventorizedItemRemovedDelegate;
 	FOnItemRemovedSignature OnStashedItemRemovedDelegate;
 
+	FOnUsableContextFiredSignature OnUsableContextFiredForInventoryDelegate;
+	FOnUsableContextFiredSignature OnUsableContextFiredForEquipmentDelegate;
+	FOnUsableContextFiredForStashSignature OnUsableContextFiredForStashDelegate;
+
 	/** As of now this delegate will fire once with all Slot Tags that are possible to add the Dragged Item to and it is on individual Widget side to parse these. */
 	FOnStartPlacementHighlightSignature OnStartPlacementHighlightDelegate;
 	FOnStopPlacementHighlightSignature OnStopPlacementHighlightDelegate;
@@ -211,7 +229,6 @@ private:
 	void HandleTakingOutStacksFromStash(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition);
 	
 	void RemoveUnstackSlider();
-	void ClearUsableUIContext();
 	void ClearItemDescriptionForPosition(const FObsidianItemPosition& ForPosition);
 	void ClearItemDescriptionsForOwner(const EObsidianPanelOwner ForDescriptionOwner);
 

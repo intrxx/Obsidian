@@ -78,7 +78,8 @@ UWorld* UObsidianInventoryItemInstance::GetWorld() const
 	return nullptr;
 }
 
-const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
+const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(
+	const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
 {
 	if((ItemDef != nullptr) && (FragmentClass != nullptr))
 	{
@@ -171,7 +172,8 @@ void UObsidianInventoryItemInstance::SetUsableShard(UObsidianUsableShard* InUsab
 	UsableShard = InUsableShard;
 }
 
-bool UObsidianInventoryItemInstance::UseItem(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianInventoryItemInstance::UseItem(AObsidianPlayerController* ItemOwner,
+	UObsidianInventoryItemInstance* UsingOntoInstance)
 {
 	if(UsableShard)
 	{
@@ -190,13 +192,14 @@ EObsidianUsableItemType UObsidianInventoryItemInstance::GetUsableItemType() cons
 	return UsableItemType;
 }
 
-FObsidianItemsMatchingUsableContext UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) const
+bool UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) const
 {
 	if(UsableShard)
 	{
-		return UsableShard->OnItemUsed_UIContext(AllItems);
+		UsableShard->OnItemUsed_UIContext(AllItems, OutItemsMatchingContext);
 	}
-	return FObsidianItemsMatchingUsableContext();
+	return OutItemsMatchingContext.HasAnyMatchingItems();
 }
 
 void UObsidianInventoryItemInstance::SetStartsIdentified(const bool InStartsIdentified)

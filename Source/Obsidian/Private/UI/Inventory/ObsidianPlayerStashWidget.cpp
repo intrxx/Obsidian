@@ -5,6 +5,8 @@
 #include <Components/Overlay.h>
 #include <Components/ScrollBox.h>
 
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
@@ -29,8 +31,21 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 	InventoryItemsWidgetController->OnStashedItemChangedDelegate.AddUObject(this, &ThisClass::OnItemChanged);
 	InventoryItemsWidgetController->OnStashedItemRemovedDelegate.AddUObject(this, &ThisClass::OnItemRemoved);
 	
+	InventoryItemsWidgetController->OnUsableContextFiredForStashDelegate.AddUObject(this, &ThisClass::OnUsableContextFiredForStash);
+	
 	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
 	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
+
+	const AObsidianPlayerController* PlayerController = InventoryItemsWidgetController->GetOwningPlayerController();
+	if (PlayerController == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Error, TEXT("PlayerController is invalid in [%hs]."), __FUNCTION__);
+	}
+	
+	if (UObsidianCraftingComponent* CraftingComp = PlayerController->GetCraftingComponent())
+	{
+		CraftingComp->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableItemHighlight);
+	}
 }
 
 void UObsidianPlayerStashWidget::NativeConstruct()
@@ -118,6 +133,33 @@ void UObsidianPlayerStashWidget::SavePlayerStash()
 		
 		bStashChanged = false;
 	}
+}
+
+void UObsidianPlayerStashWidget::OnUsableContextFiredForStash(
+	const TMultiMap<FGameplayTag, FObsidianItemPosition>& MatchingItemPositions)
+{
+	if (ActiveStashTab)
+	{
+		TArray<FObsidianItemPosition> OutItemForCurrentTab;
+		MatchingItemPositions.MultiFind(ActiveStashTab->GetStashTabTag(), OutItemForCurrentTab);
+
+		if (OutItemForCurrentTab.IsEmpty() == false)
+		{
+			ActiveStashTab->HandleHighlightingItems(OutItemForCurrentTab);
+		}
+	}
+
+	CachedItemsToHighlight = MatchingItemPositions;
+}
+
+void UObsidianPlayerStashWidget::ClearUsableItemHighlight()
+{
+	if (ActiveStashTab)
+	{
+		ActiveStashTab->ClearUsableItemHighlight();
+	}
+
+	CachedItemsToHighlight.Empty();
 }
 
 void UObsidianPlayerStashWidget::CloseStash()

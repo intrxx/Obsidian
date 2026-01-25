@@ -26,6 +26,9 @@ public:
 	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) {};
 	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) {};
 	
+	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight) {};
+	virtual void ClearUsableItemHighlight() {};
+	
 	FGameplayTag GetStashTabTag() const;
 	
 	void ShowStashTab();

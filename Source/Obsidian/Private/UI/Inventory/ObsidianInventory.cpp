@@ -2,6 +2,8 @@
 
 #include "UI/Inventory/ObsidianInventory.h"
 
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Obsidian/ObsidianGameModule.h"
 #include "UI/Inventory/Slots/ObsidianSlotBase.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
@@ -16,15 +18,29 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	check(InventoryItemsWidgetController);
 
 	InventoryItemsWidgetController->OnItemEquippedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemAdded);
-	InventoryItemsWidgetController->OnEquippedItemChangedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemRemoved);
+	InventoryItemsWidgetController->OnEquippedItemChangedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemChanged);
 	InventoryItemsWidgetController->OnEquippedItemRemovedDelegate.AddUObject(this, &ThisClass::OnEquipmentItemRemoved);
 	
 	InventoryItemsWidgetController->OnItemInventorizedDelegate.AddUObject(this, &ThisClass::OnInventoryItemAdded);
 	InventoryItemsWidgetController->OnInventoryItemChangedDelegate.AddUObject(this, &ThisClass::OnInventoryItemChanged);
 	InventoryItemsWidgetController->OnInventorizedItemRemovedDelegate.AddUObject(this, &ThisClass::OnInventoryItemRemoved);
+
+	InventoryItemsWidgetController->OnUsableContextFiredForInventoryDelegate.AddUObject(this, &ThisClass::OnUsableContextFiredForInventory);
+	InventoryItemsWidgetController->OnUsableContextFiredForEquipmentDelegate.AddUObject(this, &ThisClass::OnUsableContextFiredForEquipment);
 	
 	InventoryItemsWidgetController->OnStartPlacementHighlightDelegate.AddUObject(this, &ThisClass::HighlightSlotPlacement);
 	InventoryItemsWidgetController->OnStopPlacementHighlightDelegate.AddUObject(this, &ThisClass::StopHighlightSlotPlacement);
+
+	const AObsidianPlayerController* PlayerController = InventoryItemsWidgetController->GetOwningPlayerController();
+	if (PlayerController == nullptr)
+	{
+		UE_LOG(LogWidgetController_Items, Error, TEXT("PlayerController is invalid in [%hs]."), __FUNCTION__);
+	}
+	
+	if (UObsidianCraftingComponent* CraftingComp = PlayerController->GetCraftingComponent())
+	{
+		CraftingComp->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableItemHighlight);
+	}
 
 	if(Inventory_GridPanel)
 	{
@@ -131,6 +147,31 @@ void UObsidianInventory::OnEquipmentItemRemoved(const FObsidianItemWidgetData& I
 	if (ensure(Equipment_SlotPanel))
 	{
 		Equipment_SlotPanel->HandleItemRemoved(ItemWidgetData);
+	}
+}
+
+void UObsidianInventory::OnUsableContextFiredForInventory(const TArray<FObsidianItemPosition>& MatchingItemPositions)
+{
+	if (ensure(Inventory_GridPanel))
+	{
+		Inventory_GridPanel->HandleHighlightingItems(MatchingItemPositions);
+	}
+}
+
+void UObsidianInventory::OnUsableContextFiredForEquipment(const TArray<FObsidianItemPosition>& MatchingItemPositions)
+{
+	if (ensure(Equipment_SlotPanel))
+	{
+		Equipment_SlotPanel->HandleHighlightingItems(MatchingItemPositions);
+	}
+}
+
+void UObsidianInventory::ClearUsableItemHighlight()
+{
+	if (ensure(Equipment_SlotPanel) && ensure(Inventory_GridPanel))
+	{
+		Equipment_SlotPanel->ClearUsableItemHighlight();
+		Inventory_GridPanel->ClearUsableItemHighlight();
 	}
 }
 

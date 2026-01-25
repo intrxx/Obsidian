@@ -51,12 +51,7 @@ void UObInventoryItemsWidgetController::OnWidgetControllerSetupCompleted()
 	}
 	
 	OwnerCraftingComponent = PlayerController->GetCraftingComponent();
-	check(OwnerCraftingComponent.IsValid());
-	if (UObsidianCraftingComponent* CraftingComp = OwnerCraftingComponent.Get())
-	{
-		CraftingComp->OnStopUsingItemDelegate.AddUObject(this, &ThisClass::ClearUsableUIContext);
-	}
-
+	check(OwnerCraftingComponent.IsValid())
 	OwnerInventoryComponent = PlayerController->GetInventoryComponent();
 	check(OwnerInventoryComponent.IsValid())
 	OwnerEquipmentComponent = PlayerController->GetEquipmentComponent();
@@ -100,17 +95,7 @@ void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Cha
 		return;
 	}
 
-	if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_GeneralItemChanged)
-	{
-		//TODO(intrxx) Fix highlight
-		// HandleHoveringOverItem(InventoryChangeMessage.GridItemPosition, nullptr);
-		// if(UObsidianItem* CorrespondingItemWidget = GetItemWidgetFromInventoryAtGridPosition(InventoryChangeMessage.GridItemPosition))
-		// {
-		// 	CorrespondingItemWidget->ResetHighlight();
-		// 	CachedItemsMatchingUsableContext.Remove(CorrespondingItemWidget);
-		// }
-	}
-	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemAdded)
+	if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemAdded)
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Adding item: [%s] to Inventory"),
 			*Instance->GetItemDisplayName().ToString());
@@ -144,6 +129,22 @@ void UObInventoryItemsWidgetController::OnInventoryStateChanged(FGameplayTag Cha
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemPosition = InventoryChangeMessage.GridItemPosition;
 		ItemWidgetData.StackCount = Instance->IsStackable() ? InventoryChangeMessage.NewCount : 0;
+		ItemWidgetData.bUpdateStacks = true;
+		
+		OnInventoryItemChangedDelegate.Broadcast(ItemWidgetData);
+	}
+	else if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_GeneralItemChanged)
+	{
+		//TODO(intrxx) Fix highlight
+		// HandleHoveringOverItem(InventoryChangeMessage.GridItemPosition, nullptr);
+		// if(UObsidianItem* CorrespondingItemWidget = GetItemWidgetFromInventoryAtGridPosition(InventoryChangeMessage.GridItemPosition))
+		// {
+		// 	CorrespondingItemWidget->ResetHighlight();
+		// 	CachedItemsMatchingUsableContext.Remove(CorrespondingItemWidget);
+		// }
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemPosition = InventoryChangeMessage.GridItemPosition;
+		ItemWidgetData.bGeneralItemUpdate = true;
 		
 		OnInventoryItemChangedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -224,7 +225,8 @@ void UObInventoryItemsWidgetController::OnEquipmentStateChanged(FGameplayTag Cha
 	}
 }
 
-void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage)
+void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channel,
+	const FObsidianStashChangeMessage& StashChangeMessage)
 {
 	// Fixes a bug when Items appear in Server's Inventory (Listen Server Character) after picked up by client.
 	if(OwnerPlayerStashComponent != StashChangeMessage.PlayerStashOwner)
@@ -239,16 +241,7 @@ void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channe
 		return;
 	}
 
-	if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_GeneralItemChanged)
-	{
-		// HandleHoveringOverItem(StashChangeMessage.GridItemPosition);
-		// if(UObsidianItem* CorrespondingItemWidget = GetItemWidgetFromInventoryAtGridPosition(InventoryChangeMessage.GridItemPosition))
-		// {
-		// 	CorrespondingItemWidget->ResetHighlight();
-		// 	CachedItemsMatchingUsableContext.Remove(CorrespondingItemWidget);
-		// }
-	}
-	else if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemAdded)
+	if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemAdded)
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Adding item: [%s] to Player Stash"),
 			*Instance->GetItemDisplayName().ToString());
@@ -267,7 +260,6 @@ void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channe
 	{
 		UE_LOG(LogWidgetController_Items, Display, TEXT("[Widget] Removing item: [%s] from Player Stash"),
 			*Instance->GetItemDisplayName().ToString());
-		//RemoveStashItemWidget(StashChangeMessage.ItemPosition);
 
 		ClearItemDescriptionForPosition(StashChangeMessage.ItemPosition);
 		FObsidianItemWidgetData ItemWidgetData;
@@ -282,6 +274,21 @@ void UObInventoryItemsWidgetController::OnPlayerStashChanged(FGameplayTag Channe
 		FObsidianItemWidgetData ItemWidgetData;
 		ItemWidgetData.ItemPosition = StashChangeMessage.ItemPosition;
 		ItemWidgetData.StackCount = Instance->IsStackable() ? StashChangeMessage.NewCount : 0;
+		ItemWidgetData.bUpdateStacks = true;
+		
+		OnStashedItemChangedDelegate.Broadcast(ItemWidgetData);
+	}
+	else if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_GeneralItemChanged)
+	{
+		// HandleHoveringOverItem(StashChangeMessage.GridItemPosition);
+		// if(UObsidianItem* CorrespondingItemWidget = GetItemWidgetFromInventoryAtGridPosition(InventoryChangeMessage.GridItemPosition))
+		// {
+		// 	CorrespondingItemWidget->ResetHighlight();
+		// 	CachedItemsMatchingUsableContext.Remove(CorrespondingItemWidget);
+		// }
+		FObsidianItemWidgetData ItemWidgetData;
+		ItemWidgetData.ItemPosition = StashChangeMessage.ItemPosition;
+		ItemWidgetData.bGeneralItemUpdate = true;
 		
 		OnStashedItemChangedDelegate.Broadcast(ItemWidgetData);
 	}
@@ -529,7 +536,7 @@ bool UObInventoryItemsWidgetController::CanInteractWithSlots(const EObsidianPane
 		check(OwnerPlayerStashComponent.IsValid());
 		if (UObsidianPlayerStashComponent* PlayerStashComp = OwnerPlayerStashComponent.Get())
 		{
-			return OwnerPlayerStashComponent->CanOwnerModifyPlayerStashState();
+			return PlayerStashComp->CanOwnerModifyPlayerStashState();
 		}
 		break;
 	default:
@@ -1499,7 +1506,6 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const
 
 	if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Crafting)
 	{
-		//ItemWidget = ItemWidget == nullptr ? GetItemWidgetFromInventoryAtGridPosition(AtGridSlot) : ItemWidget;
 		if (ItemWidget == nullptr)
 		{
 			UE_LOG(LogWidgetController_Items, Error, TEXT("ItemWidget is invalid in [%hs]."), __FUNCTION__);
@@ -1508,37 +1514,27 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnInventoryItem(const
 		
 		CraftingComp->SetUsingItem(true, ItemWidget, UsingInstance);
 
+		// This Whole thing needs to be multithreaded I think
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComp->GetAllItems());
 		AllItems.Append(EquipmentComp->GetAllEquippedItems());
-		AllItems.Append(PlayerStashComp->GetAllItems()); //TODO(intrxx) This will be hella slow, change later 
-	
-		const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
-		for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
+		AllItems.Append(PlayerStashComp->GetAllItems());
+		
+		FObsidianItemsMatchingUsableContext MatchingUsableContext;
+		if (UsingInstance->FireItemUseUIContext(AllItems, MatchingUsableContext))
 		{
-			//TODO(intrxx) implement hightlight
-			// if(UObsidianItem* Item = GetItemWidgetFromInventoryAtGridPosition(GridLocation))
-			// {
-			// 	Item->HighlightItem();
-			// 	CachedItemsMatchingUsableContext.Add(Item);
-			// }
-		}
-		for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
-		{
-			//TODO(intrxx) implement hightlight
-			// if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
-			// {
-			// 	Item->HighlightItem();
-			// 	CachedItemsMatchingUsableContext.Add(Item);
-			// }
-		}
-		for(const FObsidianItemPosition& StashPosition : MatchingUsableContext.StashItemsMatchingContext)
-		{
-			// if (UObsidianItem* Item = GetItemWidgetAtStashPosition(StashPosition))
-			// {
-			// 	Item->HighlightItem();
-			// 	CachedItemsMatchingUsableContext.Add(Item);
-			// }
+			if (MatchingUsableContext.InventoryItemsMatchingContext.IsEmpty() == false)
+			{
+				OnUsableContextFiredForInventoryDelegate.Broadcast(MatchingUsableContext.InventoryItemsMatchingContext);
+			}
+			if (MatchingUsableContext.EquipmentItemsMatchingContext.IsEmpty() == false)
+			{
+				OnUsableContextFiredForEquipmentDelegate.Broadcast(MatchingUsableContext.EquipmentItemsMatchingContext);
+			}
+			if (MatchingUsableContext.StashItemsMatchingContext.IsEmpty() == false)
+			{
+				OnUsableContextFiredForStashDelegate.Broadcast(MatchingUsableContext.StashItemsMatchingContext);
+			}
 		}
 	}
 	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
@@ -1594,7 +1590,6 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const F
 
 	if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Crafting)
 	{
-		//ItemWidget = ItemWidget == nullptr ? GetItemWidgetAtStashPosition(AtItemPosition) : ItemWidget;
 		if (ItemWidget == nullptr)
 		{
 			UE_LOG(LogWidgetController_Items, Error, TEXT("ItemWidget is invalid in [%hs]."), __FUNCTION__);
@@ -1603,36 +1598,27 @@ void UObInventoryItemsWidgetController::HandleRightClickingOnStashedItem(const F
 		
 		CraftingComp->SetUsingItem(true, ItemWidget, UsingInstance);
 
+		// This Whole thing needs to be multithreaded I think
 		TArray<UObsidianInventoryItemInstance*> AllItems;
 		AllItems.Append(InventoryComp->GetAllItems());
 		AllItems.Append(EquipmentComp->GetAllEquippedItems());
-		AllItems.Append(PlayerStashComp->GetAllItems()); //TODO(intrxx) This will be hella slow, change later 
+		AllItems.Append(PlayerStashComp->GetAllItems());
 	
-		const FObsidianItemsMatchingUsableContext MatchingUsableContext = UsingInstance->FireItemUseUIContext(AllItems);
-		for(const FIntPoint& GridLocation : MatchingUsableContext.InventoryItemsMatchingContext)
+		FObsidianItemsMatchingUsableContext MatchingUsableContext;
+		if (UsingInstance->FireItemUseUIContext(AllItems, MatchingUsableContext))
 		{
-			// if(UObsidianItem* Item = GetItemWidgetFromInventoryAtGridPosition(GridLocation))
-			// {
-			// 	Item->HighlightItem();
-			// 	CachedItemsMatchingUsableContext.Add(Item);
-			// }
-		}
-		for(const FGameplayTag& SlotTag : MatchingUsableContext.EquipmentItemsMatchingContext)
-		{
-			//TODO(intrxx) implement hightlight
-			// if(UObsidianItem* Item = GetItemWidgetAtEquipmentSlot(SlotTag))
-			// {
-			// 	Item->HighlightItem();
-			// 	CachedItemsMatchingUsableContext.Add(Item);
-			// }
-		}
-		for(const FObsidianItemPosition& StashPosition : MatchingUsableContext.StashItemsMatchingContext)
-		{
-			// if (UObsidianItem* Item = GetItemWidgetAtStashPosition(StashPosition))
-			// {
-			// 	Item->HighlightItem();
-			// 	CachedItemsMatchingUsableContext.Add(Item);
-			// }
+			if (MatchingUsableContext.InventoryItemsMatchingContext.IsEmpty() == false)
+			{
+				OnUsableContextFiredForInventoryDelegate.Broadcast(MatchingUsableContext.InventoryItemsMatchingContext);
+			}
+			if (MatchingUsableContext.EquipmentItemsMatchingContext.IsEmpty() == false)
+			{
+				OnUsableContextFiredForEquipmentDelegate.Broadcast(MatchingUsableContext.EquipmentItemsMatchingContext);
+			}
+			if (MatchingUsableContext.StashItemsMatchingContext.IsEmpty() == false)
+			{
+				OnUsableContextFiredForStashDelegate.Broadcast(MatchingUsableContext.StashItemsMatchingContext);
+			}
 		}
 	}
 	else if(UsingInstance->GetUsableItemType() == EObsidianUsableItemType::UIT_Activation)
@@ -1782,22 +1768,6 @@ void UObInventoryItemsWidgetController::RemoveUnstackSlider()
 		ActiveUnstackSlider->DestroyUnstackSlider();
 		ActiveUnstackSlider = nullptr;
 		bUnstackSliderActive = false;
-	}
-}
-
-void UObInventoryItemsWidgetController::ClearUsableUIContext()
-{
-	if(CachedItemsMatchingUsableContext.IsEmpty())
-	{
-		return;
-	}
-
-	for(UObsidianItem* AffectedItem : CachedItemsMatchingUsableContext)
-	{
-		if(AffectedItem)
-		{
-			AffectedItem->ResetHighlight();
-		}
 	}
 }
 

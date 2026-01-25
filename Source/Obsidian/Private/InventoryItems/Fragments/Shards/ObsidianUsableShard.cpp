@@ -2,16 +2,49 @@
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 
-// ~ Core
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 
-// ~ Project
+// ~ Start of FObsidianItemsMatchingUsableContext
 
-bool UObsidianUsableShard::OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+void FObsidianItemsMatchingUsableContext::AddMatchingItem(const UObsidianInventoryItemInstance* InstanceToAdd)
+{
+	if (InstanceToAdd == nullptr)
+	{
+		return;
+	}
+	
+	const FObsidianItemPosition CurrentPosition = InstanceToAdd->GetItemCurrentPosition();
+
+	if (CurrentPosition.IsOnStash())
+	{
+		StashItemsMatchingContext.Add(CurrentPosition.GetOwningStashTabTag(), CurrentPosition);
+	}
+	else if(CurrentPosition.IsOnInventoryGrid())
+	{
+		InventoryItemsMatchingContext.Add(CurrentPosition);
+	}
+	else if(CurrentPosition.IsOnEquipmentSlot())
+	{
+		EquipmentItemsMatchingContext.Add(CurrentPosition);
+	}
+}
+
+bool FObsidianItemsMatchingUsableContext::HasAnyMatchingItems() const
+{
+	return !StashItemsMatchingContext.IsEmpty() ||
+		!InventoryItemsMatchingContext.IsEmpty() ||
+		!EquipmentItemsMatchingContext.IsEmpty();
+}
+
+// ~ End of FObsidianItemsMatchingUsableContext
+
+bool UObsidianUsableShard::OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
+                                      UObsidianInventoryItemInstance* UsingOntoInstance)
 {
 	return false;
 }
 
-FObsidianItemsMatchingUsableContext UObsidianUsableShard::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems)
+void UObsidianUsableShard::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext)
 {
-	return FObsidianItemsMatchingUsableContext();
 }

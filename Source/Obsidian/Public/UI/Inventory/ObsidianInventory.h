@@ -53,10 +53,14 @@ private:
 	void OnEquipmentItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnEquipmentItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
 	void OnEquipmentItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
+
+	void OnUsableContextFiredForInventory(const TArray<FObsidianItemPosition>& MatchingItemPositions);
+	void OnUsableContextFiredForEquipment(const TArray<FObsidianItemPosition>& MatchingItemPositions);
 	
 	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
 	void StopHighlightSlotPlacement();
-
+	void ClearUsableItemHighlight();
+	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianItem> ItemWidgetClass;

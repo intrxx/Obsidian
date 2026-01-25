@@ -440,8 +440,53 @@ void UObsidianGridPanel::HandleItemChanged(const FObsidianItemWidgetData& ItemWi
 	const FIntPoint AtGridSlot = ItemWidgetData.ItemPosition.GetItemGridPosition();
 	if(UObsidianItem* ItemWidget = GetItemWidgetAtGridPosition(AtGridSlot))
 	{
-		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+		if (ItemWidgetData.bUpdateStacks)
+		{
+			ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+		}
+		else if (ItemWidgetData.bGeneralItemUpdate)
+		{
+			if (HighlightedItems.Remove(ItemWidget))
+			{
+				ItemWidget->ResetHighlight();
+
+				if (InventoryItemsWidgetController)
+				{
+					FObsidianItemInteractionData InteractionData;
+					InteractionData.ItemWidget = ItemWidget;
+					InventoryItemsWidgetController->HandleHoveringOverItem(ItemWidgetData.ItemPosition, InteractionData,
+						PanelOwner);
+				}
+			}
+		}
 	}
+}
+
+void UObsidianGridPanel::HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight)
+{
+	HighlightedItems.Reserve(ItemsToHighlight.Num());
+	
+	for (const FObsidianItemPosition& ItemPosition : ItemsToHighlight)
+	{
+		if (UObsidianItem* ItemWidget = GetItemWidgetAtGridPosition(ItemPosition.GetItemGridPosition()))
+		{
+			ItemWidget->HighlightItem();
+			HighlightedItems.Add(ItemWidget);
+		}
+	}
+}
+
+void UObsidianGridPanel::ClearUsableItemHighlight()
+{
+	for (UObsidianItem* HighlightedWidget : HighlightedItems)
+	{
+		if (HighlightedWidget)
+		{
+			HighlightedWidget->ResetHighlight();
+		}
+	}
+
+	HighlightedItems.Empty();
 }
 
 void UObsidianGridPanel::OffsetGridPositionByItemSpan(FIntPoint DraggedItemGridSpan, FIntPoint& OriginalPosition) const 

@@ -2,11 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianUsableShard.generated.h"
@@ -23,14 +20,18 @@ struct FObsidianItemsMatchingUsableContext
 {
 	GENERATED_BODY()
 
+public:
+	void AddMatchingItem(const UObsidianInventoryItemInstance* InstanceToAdd);
+	bool HasAnyMatchingItems() const;
+	
+public:
 	UPROPERTY()
-	TArray<FIntPoint> InventoryItemsMatchingContext;
+	TArray<FObsidianItemPosition> InventoryItemsMatchingContext;
 
 	UPROPERTY()
-	TArray<FGameplayTag> EquipmentItemsMatchingContext;
-
-	UPROPERTY()
-	TArray<FObsidianItemPosition> StashItemsMatchingContext;
+	TArray<FObsidianItemPosition> EquipmentItemsMatchingContext;
+	
+	TMultiMap<FGameplayTag, FObsidianItemPosition> StashItemsMatchingContext;
 };
 
 /**
@@ -42,6 +43,8 @@ class OBSIDIAN_API UObsidianUsableShard : public UObject
 	GENERATED_BODY()
 	
 public:
-	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
-	virtual FObsidianItemsMatchingUsableContext OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems);
+	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
+		UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
+	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext);
 };

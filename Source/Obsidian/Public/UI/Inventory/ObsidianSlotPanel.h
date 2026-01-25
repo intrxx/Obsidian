@@ -75,6 +75,9 @@ public:
 		const bool bBlockSlot = false);
 	void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
 	void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
+
+	void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight);
+	void ClearUsableItemHighlight();
 	
 protected:
 	virtual void HandleWidgetControllerSet() override;
@@ -101,4 +104,7 @@ private:
 	
 	UPROPERTY()
 	TMap<FGameplayTag, FObsidianSlotData> SlotDataMap;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UObsidianItem>> HighlightedItems;
 };

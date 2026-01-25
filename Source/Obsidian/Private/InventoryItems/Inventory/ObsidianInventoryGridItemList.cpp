@@ -211,10 +211,13 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 	{
 		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
 		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		BroadcastChangeMessage(Instance, Count, Count, GridLocation, EObsidianInventoryChangeType::ICT_GeneralItemChanged);
+		BroadcastChangeMessage(Instance, Count, Count, GridLocation,
+			EObsidianInventoryChangeType::ICT_GeneralItemChanged);
 		return;
 	}
-	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
+	
+	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."),
+		ELogVerbosity::Warning);
 }
 
 void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition)

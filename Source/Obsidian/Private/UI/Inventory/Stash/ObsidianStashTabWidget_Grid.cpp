@@ -45,3 +45,19 @@ void UObsidianStashTabWidget_Grid::HandleItemRemoved(const FObsidianItemWidgetDa
 	}
 }
 
+void UObsidianStashTabWidget_Grid::HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight)
+{
+	if (ensure(StashTab_GridPanel))
+	{
+		StashTab_GridPanel->HandleHighlightingItems(ItemsToHighlight);
+	}
+}
+
+void UObsidianStashTabWidget_Grid::ClearUsableItemHighlight()
+{
+	if (ensure(StashTab_GridPanel))
+	{
+		StashTab_GridPanel->ClearUsableItemHighlight();
+	}
+}
+

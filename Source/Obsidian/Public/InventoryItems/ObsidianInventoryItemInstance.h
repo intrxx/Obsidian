@@ -112,7 +112,8 @@ public:
 	EObsidianUsableItemType GetUsableItemType() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	FObsidianItemsMatchingUsableContext FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) const;
+	bool FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) const;
 
 	/**
 	 * Equipping.

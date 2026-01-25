@@ -72,5 +72,21 @@ void UObsidianStashTabWidget_Slots::HandleItemRemoved(const FObsidianItemWidgetD
 	}
 }
 
+void UObsidianStashTabWidget_Slots::HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight)
+{
+	if (ensure(StashTab_SlotPanel))
+	{
+		StashTab_SlotPanel->HandleHighlightingItems(ItemsToHighlight);
+	}
+}
+
+void UObsidianStashTabWidget_Slots::ClearUsableItemHighlight()
+{
+	if (ensure(StashTab_SlotPanel))
+	{
+		StashTab_SlotPanel->ClearUsableItemHighlight();
+	}
+}
+
 
 

@@ -55,6 +55,9 @@ protected:
 	void StopHighlightSlotPlacement();
 
 	void SavePlayerStash();
+
+	void OnUsableContextFiredForStash(const TMultiMap<FGameplayTag, FObsidianItemPosition>& MatchingItemPositions);
+	void ClearUsableItemHighlight();
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
@@ -87,4 +90,6 @@ private:
 
 	UPROPERTY()
 	TArray<UObsidianSlot_ItemSlot*> CachedHighlightedSlot;
+	
+	TMultiMap<FGameplayTag, FObsidianItemPosition> CachedItemsToHighlight;
 };

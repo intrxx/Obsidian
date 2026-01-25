@@ -2,10 +2,7 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
@@ -20,6 +17,8 @@ class OBSIDIAN_API UObsidianUsableShard_Identification : public UObsidianUsableS
 	GENERATED_BODY()
 
 public:
-	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr) override;
-	virtual FObsidianItemsMatchingUsableContext OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) override;
+	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
+		UObsidianInventoryItemInstance* UsingOntoInstance = nullptr) override;
+	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) override;
 };

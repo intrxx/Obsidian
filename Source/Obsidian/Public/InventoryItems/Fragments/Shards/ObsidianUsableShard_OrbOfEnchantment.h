@@ -2,15 +2,13 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "ObsidianUsableShard_OrbOfEnchantment.generated.h"
+
+class UObsidianInventoryItemInstance;
 
 /**
  * 
@@ -21,8 +19,10 @@ class OBSIDIAN_API UObsidianUsableShard_OrbOfEnchantment : public UObsidianUsabl
 	GENERATED_BODY()
 
 public:
-	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr) override;
-	virtual FObsidianItemsMatchingUsableContext OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems) override;
+	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
+		UObsidianInventoryItemInstance* UsingOntoInstance = nullptr) override;
+	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) override;
 
 protected:
 	bool CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const;

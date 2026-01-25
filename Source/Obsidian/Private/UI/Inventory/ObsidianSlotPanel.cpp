@@ -8,6 +8,7 @@
 #include "Obsidian/Public/UI/Inventory/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/Inventory/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
 // ~ Start of FObsidianSlotData
 
@@ -421,8 +422,53 @@ void UObsidianSlotPanel::HandleItemChanged(const FObsidianItemWidgetData& ItemWi
 	const FGameplayTag AtSlot = ItemWidgetData.ItemPosition.GetItemSlotTag();
 	if(UObsidianItem* ItemWidget = GetItemWidgetAtSlot(AtSlot))
 	{
-		ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+		if (ItemWidgetData.bUpdateStacks)
+		{
+			ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+		}
+		else if (ItemWidgetData.bGeneralItemUpdate)
+		{
+			if (HighlightedItems.Remove(ItemWidget))
+			{
+				ItemWidget->ResetHighlight();
+
+				if (InventoryItemsWidgetController)
+				{
+					FObsidianItemInteractionData InteractionData;
+					InteractionData.ItemWidget = ItemWidget;
+					InventoryItemsWidgetController->HandleHoveringOverItem(ItemWidgetData.ItemPosition, InteractionData,
+						PanelOwner);
+				}
+			}
+		}
 	}
+}
+
+void UObsidianSlotPanel::HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight)
+{
+	HighlightedItems.Reserve(ItemsToHighlight.Num());
+	
+	for (const FObsidianItemPosition& ItemPosition : ItemsToHighlight)
+	{
+		if (UObsidianItem* ItemWidget = GetItemWidgetAtSlot(ItemPosition.GetItemSlotTag()))
+		{
+			ItemWidget->HighlightItem();
+			HighlightedItems.Add(ItemWidget);
+		}
+	}
+}
+
+void UObsidianSlotPanel::ClearUsableItemHighlight()
+{
+	for (UObsidianItem* HighlightedWidget : HighlightedItems)
+	{
+		if (HighlightedWidget)
+		{
+			HighlightedWidget->ResetHighlight();
+		}
+	}
+	
+	HighlightedItems.Empty();
 }
 
 void UObsidianSlotPanel::RegisterSlotItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,

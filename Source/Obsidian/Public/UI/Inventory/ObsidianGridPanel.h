@@ -72,6 +72,9 @@ public:
 	void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
 	void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
 
+	void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight);
+	void ClearUsableItemHighlight();
+	
 protected:
 	virtual void HandleWidgetControllerSet() override;
 	virtual void NativeDestruct() override;
@@ -116,4 +119,7 @@ private:
 	/** Array of slots that are affected by item hover, to clear it later. */
 	UPROPERTY()
 	TArray<UObsidianSlot_GridSlot*> AffectedGridSlots;
+
+	UPROPERTY()
+	TArray<TObjectPtr<UObsidianItem>> HighlightedItems;
 };

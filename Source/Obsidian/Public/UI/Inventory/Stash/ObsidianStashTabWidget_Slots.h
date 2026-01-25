@@ -31,6 +31,9 @@ public:
 	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) override;
 	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) override;
 
+	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight) override;
+	virtual void ClearUsableItemHighlight() override;
+	
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianSlotPanel> StashTab_SlotPanel;

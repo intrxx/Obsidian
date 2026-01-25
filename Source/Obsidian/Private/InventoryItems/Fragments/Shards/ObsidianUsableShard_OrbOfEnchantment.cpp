@@ -8,7 +8,8 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
-bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController* ItemOwner,
+	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {
 	if(ItemOwner && UsingInstance && UsingOntoInstance)
 	{
@@ -23,38 +24,24 @@ bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController
 			// TempItemAffixToAdd.AffixDescription = FText::FromString(TEXT("To Maximum Life"));
 			//
 			// UsingOntoInstance->AddAffix(TempItemAffixToAdd);
+
+			UE_LOG(LogTemp, Error, TEXT("Orb Of Enchantment needs implementing."));
 			return true;
 		}
 	}
 	return false;
 }
 
-FObsidianItemsMatchingUsableContext UObsidianUsableShard_OrbOfEnchantment::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems)
+void UObsidianUsableShard_OrbOfEnchantment::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext)
 {
-	FObsidianItemsMatchingUsableContext ItemsMatchingContext;
-	
 	for(const UObsidianInventoryItemInstance* Instance : AllItems)
 	{
 		if(CanUseOnItem(Instance))
 		{
-			const FObsidianItemPosition CurrentPosition = Instance->GetItemCurrentPosition();
-
-			if (CurrentPosition.GetOwningStashTabTag() != FGameplayTag::EmptyTag)
-			{
-				ItemsMatchingContext.StashItemsMatchingContext.Add(CurrentPosition);
-				continue;
-			}
-			
-			const FIntPoint GridLocation = CurrentPosition.GetItemGridPosition();
-			if(GridLocation != FIntPoint::NoneValue)
-			{
-				ItemsMatchingContext.InventoryItemsMatchingContext.Add(GridLocation);
-				continue;
-			}
+			OutItemsMatchingContext.AddMatchingItem(Instance);
 		}
 	}
-	
-	return ItemsMatchingContext;
 }
 
 bool UObsidianUsableShard_OrbOfEnchantment::CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const
