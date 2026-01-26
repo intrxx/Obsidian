@@ -326,7 +326,7 @@ void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianSlot_GridS
 	}
 	else
 	{
-		InventoryItemsWidgetController->RequestAddingItem(ItemPositionToAddTo, InteractionData, PanelOwner);
+		InventoryItemsWidgetController->HandleLeftClickingOnSlot(ItemPositionToAddTo, InteractionData, PanelOwner);
 	}
 }
 
@@ -345,24 +345,31 @@ void UObsidianGridPanel::OnGridSlotRightMouseButtonDown(const UObsidianSlot_Grid
 		return;
 	}
 
-	const FIntPoint GridSlotPosition = AffectedSlot->GetGridSlotPosition();
-	check(GridSlotPosition != FIntPoint::NoneValue);
+	const FIntPoint GridPositionPressed = AffectedSlot->GetGridSlotPosition();
+	check(GridPositionPressed != FIntPoint::NoneValue);
 
-	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridSlotPosition);
+	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridPositionPressed);
 	if (SlotData == nullptr)
 	{
 		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
-			*GridSlotPosition.ToString(), __FUNCTION__)
+			*GridPositionPressed.ToString(), __FUNCTION__)
 		return;
 	}
+
+	FObsidianItemPosition ItemPositionToAddTo;
+	ConstructItemPosition(ItemPositionToAddTo, GridPositionPressed);
+
+	FObsidianItemInteractionData InteractionData;
+	InteractionData.InteractionFlags = InteractionFlags;
 	
 	if (SlotData && SlotData->IsOccupied())
 	{
-		FObsidianItemInteractionData InteractionData;
-		InteractionData.InteractionFlags = InteractionFlags;
 		InteractionData.ItemWidget = SlotData->ItemWidget;
-		
 		InventoryItemsWidgetController->HandleRightClickingOnItem(SlotData->OriginPosition, InteractionData, PanelOwner);
+	}
+	else
+	{
+		InventoryItemsWidgetController->HandleRightClickingOnSlot(ItemPositionToAddTo, InteractionData, PanelOwner);
 	}
 }
 

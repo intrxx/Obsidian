@@ -2,18 +2,17 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
+#include <CoreMinimal.h>
+#include <GameplayTagContainer.h>
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 #include "ObsidianPlayerStashWidget.generated.h"
 
-class UObsidianSlot_ItemSlot;
 struct FObsidianItemWidgetData;
+
+class UObsidianSlot_ItemSlot;
 class UObsidianStashButton;
 class UObsidianItem;
 class UOverlay;

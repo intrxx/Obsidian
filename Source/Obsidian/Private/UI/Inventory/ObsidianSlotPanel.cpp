@@ -339,7 +339,7 @@ void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemS
 	}
 	else
 	{
-		InventoryItemsWidgetController->RequestAddingItem(ItemPosition, InteractionData, PanelOwner);
+		InventoryItemsWidgetController->HandleLeftClickingOnSlot(ItemPosition, InteractionData, PanelOwner);
 	}
 }
 
@@ -368,14 +368,21 @@ void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_Item
 			*SlotTag.ToString(), __FUNCTION__)
 		return;
 	}
+
+	FObsidianItemPosition ItemPosition;
+	ConstructItemPosition(ItemPosition, SlotTag);
+	
+	FObsidianItemInteractionData InteractionData;
+	InteractionData.InteractionFlags = InteractionFlags;
 	
 	if (SlotData && SlotData->IsOccupied())
 	{
-		FObsidianItemInteractionData InteractionData;
-		InteractionData.InteractionFlags = InteractionFlags;
 		InteractionData.ItemWidget = SlotData->ItemWidget;
-		
 		InventoryItemsWidgetController->HandleRightClickingOnItem(SlotData->OriginPosition, InteractionData, PanelOwner);
+	}
+	else
+	{
+		InventoryItemsWidgetController->HandleRightClickingOnSlot(ItemPosition, InteractionData, PanelOwner);
 	}
 }
 

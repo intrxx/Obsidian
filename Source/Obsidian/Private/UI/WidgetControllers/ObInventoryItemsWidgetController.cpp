@@ -614,54 +614,33 @@ bool UObInventoryItemsWidgetController::CanPlaceDraggedItemAtPosition(const FObs
 	}
 }
 
-void UObInventoryItemsWidgetController::RequestAddingItem(const FObsidianItemPosition& AtItemPosition,
+void UObInventoryItemsWidgetController::HandleLeftClickingOnSlot(const FObsidianItemPosition& AtItemPosition,
 	const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner)
 {
-	if (IsDraggingAnItem() == false)
+	check(OwnerCraftingComponent.IsValid());
+	UObsidianCraftingComponent* CraftingComponent = OwnerCraftingComponent.Get();
+	if (CraftingComponent->IsUsingItem())
 	{
+		CraftingComponent->SetUsingItem(false);
 		return;
 	}
-	
-	check((uint8)PanelOwner > 0);
-	switch (PanelOwner)
+
+	RequestAddingItem(AtItemPosition, InteractionData, PanelOwner);
+}
+
+void UObInventoryItemsWidgetController::HandleRightClickingOnSlot(const FObsidianItemPosition& AtItemPosition,
+	const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner)
+{
+	check(OwnerCraftingComponent.IsValid());
+	UObsidianCraftingComponent* CraftingComponent = OwnerCraftingComponent.Get();
+	if (CraftingComponent->IsUsingItem())
 	{
-		case EObsidianPanelOwner::Inventory:
-			{
-				ensureMsgf(AtItemPosition.IsOnInventoryGrid(), TEXT("Trying to add item to Inventory with"
-														" invalid Inventory position."));
-
-				const bool bShiftDown = InteractionData.InteractionFlags.bItemStacksInteraction;
-				RequestAddingItemToInventory(AtItemPosition.GetItemGridPosition(), bShiftDown);
-				break;
-			}
-		case EObsidianPanelOwner::Equipment:
-			{
-				ensureMsgf(AtItemPosition.IsOnEquipmentSlot(), TEXT("Trying to add item to Equipment with"
-														" invalid Equipment position."));
-				
-				RequestAddingItemToEquipment(AtItemPosition.GetItemSlotTag());
-				break;
-			}
-		case EObsidianPanelOwner::PlayerStash:
-			{
-				ensureMsgf(AtItemPosition.IsOnStash(), TEXT("Trying to add item to Stash with"
-														" invalid Stash position."));
-
-				const bool bShiftDown = InteractionData.InteractionFlags.bItemStacksInteraction;
-				RequestAddingItemToStashTab(AtItemPosition, bShiftDown);
-				break;
-			}
-			default:
-			{
-				UE_LOG(LogWidgetController_Items, Error, TEXT("[%d] PanelOwner is invalid in [%hs]."),
-					PanelOwner, __FUNCTION__);
-				break;
-			}
+		CraftingComponent->SetUsingItem(false);
 	}
 }
 
 void UObInventoryItemsWidgetController::HandleRightClickingOnItem(const FObsidianItemPosition& AtItemPosition,
-	const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner)
+                                                                  const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner)
 {
 	check((uint8)PanelOwner > 0);
 	switch (PanelOwner)
@@ -1008,6 +987,52 @@ bool UObInventoryItemsWidgetController::CanPlaceDraggedItemInEquipment(const FGa
 bool UObInventoryItemsWidgetController::CanShowDescription() const
 {
 	return !bUnstackSliderActive;
+}
+
+void UObInventoryItemsWidgetController::RequestAddingItem(const FObsidianItemPosition& AtItemPosition,
+	const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner)
+{
+	if (IsDraggingAnItem() == false)
+	{
+		return;
+	}
+	
+	check((uint8)PanelOwner > 0);
+	switch (PanelOwner)
+	{
+	case EObsidianPanelOwner::Inventory:
+		{
+			ensureMsgf(AtItemPosition.IsOnInventoryGrid(), TEXT("Trying to add item to Inventory with"
+													" invalid Inventory position."));
+
+			const bool bShiftDown = InteractionData.InteractionFlags.bItemStacksInteraction;
+			RequestAddingItemToInventory(AtItemPosition.GetItemGridPosition(), bShiftDown);
+			break;
+		}
+	case EObsidianPanelOwner::Equipment:
+		{
+			ensureMsgf(AtItemPosition.IsOnEquipmentSlot(), TEXT("Trying to add item to Equipment with"
+													" invalid Equipment position."));
+				
+			RequestAddingItemToEquipment(AtItemPosition.GetItemSlotTag());
+			break;
+		}
+	case EObsidianPanelOwner::PlayerStash:
+		{
+			ensureMsgf(AtItemPosition.IsOnStash(), TEXT("Trying to add item to Stash with"
+													" invalid Stash position."));
+
+			const bool bShiftDown = InteractionData.InteractionFlags.bItemStacksInteraction;
+			RequestAddingItemToStashTab(AtItemPosition, bShiftDown);
+			break;
+		}
+	default:
+		{
+			UE_LOG(LogWidgetController_Items, Error, TEXT("[%d] PanelOwner is invalid in [%hs]."),
+				PanelOwner, __FUNCTION__);
+			break;
+		}
+	}
 }
 
 void UObInventoryItemsWidgetController::RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown)

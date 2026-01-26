@@ -141,7 +141,9 @@ public:
 	bool CanPlaceDraggedItemAtPosition(const FObsidianItemPosition& AtPosition,
 		const EObsidianPanelOwner PanelOwner) const;
 	
-	void RequestAddingItem(const FObsidianItemPosition& AtItemPosition,
+	void HandleLeftClickingOnSlot(const FObsidianItemPosition& AtItemPosition,
+		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
+	void HandleRightClickingOnSlot(const FObsidianItemPosition& AtItemPosition,
 		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
 	void HandleRightClickingOnItem(const FObsidianItemPosition& AtItemPosition,
 		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
@@ -205,7 +207,9 @@ private:
 	bool CanPlaceDraggedItemInEquipment(const FGameplayTag& SlotTag) const;
 
 	bool CanShowDescription() const;
-	
+
+	void RequestAddingItem(const FObsidianItemPosition& AtItemPosition,
+		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
 	void RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown);
 	void RequestAddingItemToEquipment(const FGameplayTag& SlotTag);
 	void RequestAddingItemToStashTab(const FObsidianItemPosition& ToPosition, const bool bShiftDown);
