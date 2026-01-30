@@ -809,6 +809,15 @@ void UObsidianPlayerInputManager::StopOngoingInteraction()
 		}
 #endif
 	}
+	else
+	{
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Was unable to stop the ongoing interaction."))	
+		}
+#endif
+	}
 }
 
 bool UObsidianPlayerInputManager::CanMoveMouse() const

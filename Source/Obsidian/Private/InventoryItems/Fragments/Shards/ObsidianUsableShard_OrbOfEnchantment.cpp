@@ -2,11 +2,7 @@
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard_OrbOfEnchantment.h"
 
-// ~ Core
-
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
 bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
@@ -49,5 +45,5 @@ bool UObsidianUsableShard_OrbOfEnchantment::CanUseOnItem(const UObsidianInventor
 	const EObsidianItemRarity ItemRarity = Instance->GetItemRarity();
 	const bool bUsableRarity = ItemRarity > EObsidianItemRarity::Normal && ItemRarity < EObsidianItemRarity::Unique;
 	return	bUsableRarity && Instance->IsItemEquippable() && Instance->IsItemIdentified() &&
-				Instance->GetItemAddedAffixCount() < Instance->GetItemCombinedAffixLimit();					
+				Instance->GetItemAddedAffixCount() < Instance->GetItemCombinedPrefixSuffixLimit();					
 }

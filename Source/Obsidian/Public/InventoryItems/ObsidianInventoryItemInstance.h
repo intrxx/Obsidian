@@ -160,22 +160,27 @@ public:
 	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
 	void AddAffix(const FObsidianActiveItemAffix& AffixToAdd);
 	void RemoveAffix(const FGameplayTag& AffixTag);
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	int32 GetItemCombinedAffixLimit() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	int32 GetItemAddedAffixCount() const;
+	uint8 GetItemCombinedAffixLimit() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	int32 GetItemAddedSuffixCount() const;
+	uint8 GetItemCombinedPrefixSuffixLimit() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	uint8 GetItemPrefixLimit() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	uint8 GetItemSuffixLimit() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	uint8 GetItemAddedAffixCount() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	int32 GetItemAddedPrefixCount() const;
+	uint8 GetItemAddedSuffixCount() const;
 	
-	void SetItemAffixesCountLimit(const int32 InAffixesLimit);
-	void SetItemAddedSuffixCount(const int32 InAddedSuffixes);
-	void SetItemAddedPrefixCount(const int32 InAddedPrefixes);
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	uint8 GetItemAddedPrefixCount() const;
 
 	TArray<UObsidianAffixAbilitySet*> GetAffixAbilitySetsFromItem() const;
 	

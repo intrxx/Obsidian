@@ -12,6 +12,7 @@
 #include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
@@ -242,37 +243,71 @@ void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
 	ItemAffixes.RemoveAffix(AffixTag);
 }
 
-int32 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const
+uint8 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const
 {
-	return 1;
-}
-
-int32 UObsidianInventoryItemInstance::GetItemAddedAffixCount() const
-{
-	return GetItemAddedPrefixCount() + GetItemAddedSuffixCount();
-}
-
-int32 UObsidianInventoryItemInstance::GetItemAddedSuffixCount() const
-{
-	return 0;
-}
-
-int32 UObsidianInventoryItemInstance::GetItemAddedPrefixCount() const
-{
-	return 0;
-}
-
-void UObsidianInventoryItemInstance::SetItemAffixesCountLimit(const int32 InAffixesLimit)
-{
+	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
+	{
+		const uint8 CombinedLimit = ItemDataSettings->GetMaxPrefixCountForRarity(ItemRarity) +
+			ItemDataSettings->GetMaxSuffixCountForRarity(ItemRarity); //TODO(intrxx) Add Skill Affixes and Implicits
+		return CombinedLimit;
+	}
 	
+	ensureAlwaysMsgf(false, TEXT("Could not get ItemDataSettings! Returning INDEX_NONE from [%hs] for [%s]."),
+		__FUNCTION__, *GetNameSafe(this));
+	return INDEX_NONE;
 }
 
-void UObsidianInventoryItemInstance::SetItemAddedSuffixCount(const int32 InAddedSuffixes)
+uint8 UObsidianInventoryItemInstance::GetItemCombinedPrefixSuffixLimit() const
 {
+	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
+	{
+		const uint8 CombinedLimit = ItemDataSettings->GetMaxPrefixCountForRarity(ItemRarity) +
+			ItemDataSettings->GetMaxSuffixCountForRarity(ItemRarity);
+		return CombinedLimit;
+	}
+	
+	ensureAlwaysMsgf(false, TEXT("Could not get ItemDataSettings! Returning INDEX_NONE from [%hs] for [%s]."),
+		__FUNCTION__, *GetNameSafe(this));
+	return INDEX_NONE;
 }
 
-void UObsidianInventoryItemInstance::SetItemAddedPrefixCount(const int32 InAddedPrefixes)
+uint8 UObsidianInventoryItemInstance::GetItemPrefixLimit() const
 {
+	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
+	{
+		return ItemDataSettings->GetMaxPrefixCountForRarity(ItemRarity);
+	}
+	
+	ensureAlwaysMsgf(false, TEXT("Could not get ItemDataSettings! Returning INDEX_NONE from [%hs] for [%s]."),
+		__FUNCTION__, *GetNameSafe(this));
+	return INDEX_NONE;
+}
+
+uint8 UObsidianInventoryItemInstance::GetItemSuffixLimit() const
+{
+	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
+	{
+		return ItemDataSettings->GetMaxSuffixCountForRarity(ItemRarity);
+	}
+	
+	ensureAlwaysMsgf(false, TEXT("Could not get ItemDataSettings! Returning INDEX_NONE from [%hs] for [%s]."),
+		__FUNCTION__, *GetNameSafe(this));
+	return INDEX_NONE;
+}
+
+uint8 UObsidianInventoryItemInstance::GetItemAddedAffixCount() const
+{
+	return ItemAffixes.GetTotalAffixCount();
+}
+
+uint8 UObsidianInventoryItemInstance::GetItemAddedSuffixCount() const
+{
+	return ItemAffixes.GetSuffixCount();
+}
+
+uint8 UObsidianInventoryItemInstance::GetItemAddedPrefixCount() const
+{
+	return ItemAffixes.GetPrefixCount();
 }
 
 void UObsidianInventoryItemInstance::AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount)
