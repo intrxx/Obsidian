@@ -116,10 +116,10 @@ private:
 	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
 	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity MaxRarity);
 
-	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const UOInventoryItemFragment_Affixes* AffixFragment,
-		const uint8 MaxTreasureClassQuality);
-	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const UOInventoryItemFragment_Affixes* AffixFragment,
-		const uint8 MaxTreasureClassQuality);
+	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const FGameplayTag& DropItemBaseTypeTag,
+		const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
+	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const FGameplayTag& DropItemBaseTypeTag,
+		const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
 	void HandleNoGeneration(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
 	
 	void RollSkillImplicits(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& SkillImplicits, const uint8 MaxTreasureClassQuality);

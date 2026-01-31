@@ -21,7 +21,8 @@ struct FObsidianAffixClass
 
 public:
 	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQuality(const int32 UpToTreasureQuality) const;
-	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategory) const;
+	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality,
+		const FGameplayTag& ForCategory, const FGameplayTag& ForBaseType) const;
 
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& Context, const FName ClassName, const int Index) const;
@@ -55,7 +56,7 @@ public:
 	virtual void PostInitProperties() override;
 	virtual void PostLoad() override;
 	
-	TArray<FObsidianAffixClass> GetAllAffixClasses() const;
+	TConstArrayView<FObsidianAffixClass> ReadAllAffixClasses() const;
 	
 	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
 	

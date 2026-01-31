@@ -715,7 +715,8 @@ struct FObsidianDynamicItemAffix
 
 public:
 	FObsidianDynamicItemAffix()
-		: bOverride_AffixAbilitySet(false)
+		: bOverride_HasBaseTypeRequirements(false)
+		, bOverride_AffixAbilitySet(false)
 	{}
 
 	explicit operator bool() const;
@@ -737,6 +738,17 @@ public:
 	/** Contains Category Tags of Items that this Affix can be applied to. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian|AcceptedCategories")
 	FGameplayTagContainer AcceptedItemCategories = FGameplayTagContainer::EmptyContainer;
+
+	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
+	uint8 bOverride_HasBaseTypeRequirements : 1;
+
+	/**
+	 * Contains Required Item Base Type Tags of Items that this Affix can be applied to.
+	 *
+	 * For example Armor affix can be only applied to Armor Item Base Types.
+	 * */
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bOverride_HasBaseTypeRequirements", Categories = "Item.BaseType"), Category = "Obsidian|RequiredBaseItemType")
+	FGameplayTagContainer RequiredItemBaseType = FGameplayTagContainer::EmptyContainer;
 
 	/** Unique addition to Magic Item Name based on Affixes. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")

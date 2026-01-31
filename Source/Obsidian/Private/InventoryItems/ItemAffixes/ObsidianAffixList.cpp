@@ -25,7 +25,8 @@ TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQuality(
 	return MatchingTreasureClasses;
 }
 
-TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategory) const
+TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality,
+	const FGameplayTag& ForCategory, const FGameplayTag& ForBaseType) const
 {
 	TArray<FObsidianDynamicItemAffix> MatchingTreasureClasses;
 	
@@ -33,7 +34,16 @@ TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQualityF
 	{
 		if (Class.MinItemLevelRequirement <= UpToTreasureQuality && Class.AcceptedItemCategories.HasTagExact(ForCategory))
 		{
+			if (Class.bOverride_HasBaseTypeRequirements)
+			{
+				if (Class.RequiredItemBaseType.HasTagExact(ForBaseType) == false)
+				{
+					continue;
+				}
+			}
+			
 			MatchingTreasureClasses.Add(Class);
+			
 		}
 	}
 
@@ -65,7 +75,7 @@ void UObsidianAffixList::PostLoad()
 	Super::PostLoad();
 }
 
-TArray<FObsidianAffixClass> UObsidianAffixList::GetAllAffixClasses() const
+TConstArrayView<FObsidianAffixClass> UObsidianAffixList::ReadAllAffixClasses() const
 {
 	return AffixClasses;
 }

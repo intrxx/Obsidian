@@ -281,11 +281,13 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 	{
 		case EObsidianAffixGenerationType::DefaultGeneration:
 			{
-				HandleDefaultGeneration(ForItemToDrop, DefaultObject->GetItemCategoryTag(), AffixFragment, MaxTreasureClassQuality);
+				HandleDefaultGeneration(ForItemToDrop, DefaultObject->GetItemCategoryTag(), DefaultObject->GetItemBaseTypeTag(),
+					AffixFragment, MaxTreasureClassQuality);
 			} break;
 		case EObsidianAffixGenerationType::FullGeneration:
 			{
-				HandleFullGeneration(ForItemToDrop, DefaultObject->GetItemCategoryTag(), AffixFragment, MaxTreasureClassQuality);
+				HandleFullGeneration(ForItemToDrop, DefaultObject->GetItemCategoryTag(), DefaultObject->GetItemBaseTypeTag(),
+					AffixFragment, MaxTreasureClassQuality);
 			} break;
 		case EObsidianAffixGenerationType::NoGeneration:
 			{
@@ -305,15 +307,13 @@ void UObsidianItemDropComponent::GenerateItem(FObsidianItemToDrop& ForItemToDrop
 	FObsidianItemRequirements DefaultRequirements = EquippableFragment->GetItemDefaultEquippingRequirements();
 	if (UObsidianItemsFunctionLibrary::HasEquippingRequirements(DefaultRequirements))
 	{
-		DefaultRequirements.bInitialized = true;
-		DefaultRequirements.bHasAnyRequirements = true;
 		AdjustItemRequirementsBasedOnAddedAffixes(DefaultRequirements, ForItemToDrop);
 		ForItemToDrop.DropItemRequirements = DefaultRequirements;
 	}
 }
 
 void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
-	const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality)
+	const FGameplayTag& DropItemBaseTypeTag, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality)
 {
 	TryToGivePrimaryItemAffix(ForItemToDrop, AffixFragment, MaxTreasureClassQuality);
 	TryToGiveStaticImplicit(ForItemToDrop, AffixFragment, MaxTreasureClassQuality);
@@ -323,8 +323,11 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
-		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_DefaultGeneration(MaxTreasureClassQuality,
-			DropItemCategory, PrefixAffixes, SuffixAffixes, SkillImplicitAffixes);
+		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_DefaultGeneration(
+			MaxTreasureClassQuality, DropItemCategory, DropItemBaseTypeTag,
+			/** OUT */ PrefixAffixes,
+			/** OUT */ SuffixAffixes,
+			/** OUT */ SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
@@ -338,8 +341,9 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 	else if (ForItemToDrop.DropRarity == EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
-		const bool bGatheredAffixes = CachedItemDataLoader->GetAllSkillImplicitsUpToQualityForCategory(MaxTreasureClassQuality,
-			DropItemCategory, SkillImplicitAffixes);
+		const bool bGatheredAffixes = CachedItemDataLoader->GetAllSkillImplicitsUpToQualityForCategory(
+			MaxTreasureClassQuality, DropItemCategory, DropItemBaseTypeTag,
+			/** OUT */ SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Skill Implicits for [%s] up to [%d] quality level."),
@@ -352,7 +356,7 @@ void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& Fo
 }
 
 void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
-	const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality)
+	const FGameplayTag& DropItemBaseTypeTag, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality)
 {
 	TryToGivePrimaryItemAffix(ForItemToDrop, AffixFragment, MaxTreasureClassQuality);
 	
@@ -362,8 +366,12 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
-		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(MaxTreasureClassQuality,
-			DropItemCategory, PrefixAffixes, SuffixAffixes, ImplicitAffixes, SkillImplicitAffixes);
+		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(
+			MaxTreasureClassQuality, DropItemCategory, DropItemBaseTypeTag,
+			/** OUT */ PrefixAffixes,
+			/** OUT */ SuffixAffixes,
+			/** OUT */ ImplicitAffixes,
+			/** OUT */ SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
@@ -379,8 +387,9 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 	{
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
 		TArray<FObsidianDynamicItemAffix> ImplicitAffixes;
-		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_NormalItemGeneration(MaxTreasureClassQuality,
-			DropItemCategory, ImplicitAffixes, SkillImplicitAffixes);
+		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_NormalItemGeneration(
+			MaxTreasureClassQuality, DropItemCategory, DropItemBaseTypeTag,
+			ImplicitAffixes, SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(LogDropComponent, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
@@ -661,6 +670,9 @@ void UObsidianItemDropComponent::AdjustItemRequirementsBasedOnAddedAffixes(FObsi
 
 		//TODO(intrxx) Adjust the Attribute Magnitude requirements based on Affixes too?
 	}
+
+	OutRequirements.bInitialized = true;
+	OutRequirements.bHasAnyRequirements = true;
 }
 
 void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)
