@@ -243,6 +243,21 @@ void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
 	ItemAffixes.RemoveAffix(AffixTag);
 }
 
+bool UObsidianInventoryItemInstance::CanAddPrefix() const
+{
+	return GetItemPrefixLimit() > GetItemAddedPrefixCount();
+}
+
+bool UObsidianInventoryItemInstance::CanAddSuffix() const
+{
+	return GetItemSuffixLimit() > GetItemAddedSuffixCount();
+}
+
+bool UObsidianInventoryItemInstance::CanAddPrefixOrSuffix() const
+{
+	return GetItemCombinedPrefixSuffixLimit() > (GetItemAddedPrefixCount() + GetItemAddedSuffixCount());
+}
+
 uint8 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const
 {
 	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())

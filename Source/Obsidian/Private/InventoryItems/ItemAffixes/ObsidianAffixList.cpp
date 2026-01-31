@@ -34,16 +34,12 @@ TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQualityF
 	{
 		if (Class.MinItemLevelRequirement <= UpToTreasureQuality && Class.AcceptedItemCategories.HasTagExact(ForCategory))
 		{
-			if (Class.bOverride_HasBaseTypeRequirements)
+			if (Class.bOverride_HasBaseTypeRequirements && Class.RequiredItemBaseType.HasTagExact(ForBaseType) == false)
 			{
-				if (Class.RequiredItemBaseType.HasTagExact(ForBaseType) == false)
-				{
-					continue;
-				}
+				continue;
 			}
 			
 			MatchingTreasureClasses.Add(Class);
-			
 		}
 	}
 

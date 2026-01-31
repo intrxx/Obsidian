@@ -45,6 +45,12 @@ public:
 		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutImplicits, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits);
 	bool GetAllSkillImplicitsUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
 		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits);
+	bool GetAllImplicitsUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
+		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutImplicits);
+	bool GetAllPrefixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
+		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes);
+	bool GetAllSuffixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
+		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutSuffixes);
 	
 	
 	FString GetRandomRareItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag) const;

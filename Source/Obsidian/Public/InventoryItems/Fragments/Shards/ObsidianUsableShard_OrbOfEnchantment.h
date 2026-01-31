@@ -11,7 +11,7 @@
 class UObsidianInventoryItemInstance;
 
 /**
- * 
+ * Orb Of Enchantment add Affix or Suffix to item if possible.
  */
 UCLASS(DisplayName="Orb of Enchantment")
 class OBSIDIAN_API UObsidianUsableShard_OrbOfEnchantment : public UObsidianUsableShard

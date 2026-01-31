@@ -3,6 +3,8 @@
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard_OrbOfEnchantment.h"
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
+#include "Obsidian/ObsidianGameModule.h"
 
 bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
@@ -11,18 +13,38 @@ bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController
 	{
 		if(CanUseOnItem(UsingOntoInstance))
 		{
-			//TODO(intrxx) #AffixRefactor
-			// FObsidianDynamicItemAffix TempItemAffixToAdd;
-			// TempItemAffixToAdd.AffixTag = ObsidianGameplayTags::Item_Affix_Enchant_MaximumLifePercentage;
-			// TempItemAffixToAdd.AffixTierValue = 2;
-			// TempItemAffixToAdd.AffixType = EObsidianAffixType::Prefix;
-			// TempItemAffixToAdd.TempAffixMagnitude = 8;
-			// TempItemAffixToAdd.AffixDescription = FText::FromString(TEXT("To Maximum Life"));
-			//
-			// UsingOntoInstance->AddAffix(TempItemAffixToAdd);
-
-			UE_LOG(LogTemp, Error, TEXT("Orb Of Enchantment needs implementing."));
-			return true;
+			const bool bCanHaveAnotherPrefix = UsingOntoInstance->CanAddPrefix();
+			const bool bCanHaveAnotherSuffix = UsingOntoInstance->CanAddSuffix();
+			const bool bRollPrefix = bCanHaveAnotherPrefix && FMath::RandBool() ? true : !bCanHaveAnotherSuffix;
+			if (bRollPrefix)
+			{
+				check(bCanHaveAnotherPrefix);
+				if (const FObsidianDynamicItemAffix PrefixToAdd = UObsidianItemsFunctionLibrary::GetRandomPrefixForItem(
+					UsingOntoInstance))
+				{
+					FObsidianActiveItemAffix ActiveAffix;
+					ActiveAffix.InitializeWithDynamic(PrefixToAdd, UsingOntoInstance->GetItemLevel());
+					UsingOntoInstance->AddAffix(ActiveAffix);
+					return true;
+				}
+			}
+			else
+			{
+				check(bCanHaveAnotherSuffix);
+				if (const FObsidianDynamicItemAffix SuffixToAdd = UObsidianItemsFunctionLibrary::GetRandomSuffixForItem(
+					UsingOntoInstance))
+				{
+					FObsidianActiveItemAffix ActiveAffix;
+					ActiveAffix.InitializeWithDynamic(SuffixToAdd, UsingOntoInstance->GetItemLevel());
+					UsingOntoInstance->AddAffix(ActiveAffix);
+					return true;
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogObsidian, Warning, TEXT("Item could not be used on provided [%s] Instance."),
+				*GetNameSafe(UsingOntoInstance));
 		}
 	}
 	return false;
@@ -44,6 +66,5 @@ bool UObsidianUsableShard_OrbOfEnchantment::CanUseOnItem(const UObsidianInventor
 {
 	const EObsidianItemRarity ItemRarity = Instance->GetItemRarity();
 	const bool bUsableRarity = ItemRarity > EObsidianItemRarity::Normal && ItemRarity < EObsidianItemRarity::Unique;
-	return	bUsableRarity && Instance->IsItemEquippable() && Instance->IsItemIdentified() &&
-				Instance->GetItemAddedAffixCount() < Instance->GetItemCombinedPrefixSuffixLimit();					
+	return	bUsableRarity && Instance->IsItemEquippable() && Instance->IsItemIdentified() && Instance->CanAddPrefixOrSuffix();					
 }

@@ -16,6 +16,8 @@ class UObsidianInventoryItemFragment;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 
+DECLARE_LOG_CATEGORY_EXTERN(LogItemsFunctionLibrary, Log, All);
+
 /**
  * 
  */
@@ -41,8 +43,15 @@ public:
 	/** Formats Item Affixes into Affix Row for Item Description. */
 	static TArray<FObsidianAffixDescriptionRow> FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes);
 	static TArray<FObsidianAffixDescriptionRow> FormatUnidentifiedItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes);
+	
 	static bool HasEquippingRequirements(const FObsidianItemRequirements& Requirements);
+
+	static FObsidianDynamicItemAffix GetRandomSkillImplicitForItem(const UObsidianInventoryItemInstance* ForItem);
+	static FObsidianDynamicItemAffix GetRandomImplicitForItem(const UObsidianInventoryItemInstance* ForItem);
+	static FObsidianDynamicItemAffix GetRandomPrefixForItem(const UObsidianInventoryItemInstance* ForItem);
+	static FObsidianDynamicItemAffix GetRandomSuffixForItem(const UObsidianInventoryItemInstance* ForItem);
 	static FObsidianDynamicItemAffix GetRandomDynamicAffix(const TArray<FObsidianDynamicItemAffix>& DynamicAffixes);
+	
 	static bool FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* FromInstance);
 	static void InitializeItemInstanceWithGeneratedData(UObsidianInventoryItemInstance* Instance, const FObsidianItemGeneratedData& GeneratedData);
 

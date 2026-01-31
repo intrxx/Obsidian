@@ -797,8 +797,10 @@ public:
 	uint8 GetCurrentAffixTier() const;
 	uint8 GetCurrentAffixTierItemLevelRequirement() const;
 	
-	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
-	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
+	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality,
+		const bool bApplyMagicMultiplier = false);
+	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality,
+		const bool bApplyMagicMultiplier = false);
 	
 	void RandomizeAffixValueBoundByRange();
 	
@@ -829,7 +831,7 @@ public:
 
 private:
 	void CreateAffixActiveDescription();
-	void InitializeAffixTierAndRange(const uint8 UpToTreasureQuality, const bool bApplyMultiplier);
+	void InitializeAffixTierAndRange(const uint8 UpToTreasureQuality, const bool bApplyMagicMultiplier);
 	FObsidianAffixValueRange GetRandomAffixRange(const uint8 UpToTreasureQuality);
 };
 

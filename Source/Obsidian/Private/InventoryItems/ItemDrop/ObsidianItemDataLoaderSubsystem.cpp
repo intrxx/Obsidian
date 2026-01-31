@@ -266,6 +266,99 @@ bool UObsidianItemDataLoaderSubsystem::GetAllSkillImplicitsUpToQualityForCategor
 	return false;
 }
 
+bool UObsidianItemDataLoaderSubsystem::GetAllImplicitsUpToQualityForCategory(const int32 UpToTreasureQuality,
+	const FGameplayTag& ForCategoryTag, const FGameplayTag& ForBaseTypeTag,
+	TArray<FObsidianDynamicItemAffix>& OutImplicits)
+{
+	if (ItemDataConfig == nullptr)
+	{
+		return false;
+	}
+
+	for (const UObsidianAffixList* AffixLists : ItemDataConfig->CommonAffixLists)
+	{
+		if (AffixLists)
+		{
+			for (const FObsidianAffixClass& Class : AffixLists->ReadAllAffixClasses())
+			{
+				if (Class.AffixClassType == EObsidianAffixType::Implicit)
+				{
+					OutImplicits.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality,
+						ForCategoryTag, ForBaseTypeTag));
+				}
+			}
+		}
+	}
+
+	if (!OutImplicits.IsEmpty())
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UObsidianItemDataLoaderSubsystem::GetAllPrefixesUpToQualityForCategory(const int32 UpToTreasureQuality,
+	const FGameplayTag& ForCategoryTag, const FGameplayTag& ForBaseTypeTag,
+	TArray<FObsidianDynamicItemAffix>& OutPrefixes)
+{
+	if (ItemDataConfig == nullptr)
+	{
+		return false;
+	}
+
+	for (const UObsidianAffixList* AffixLists : ItemDataConfig->CommonAffixLists)
+	{
+		if (AffixLists)
+		{
+			for (const FObsidianAffixClass& Class : AffixLists->ReadAllAffixClasses())
+			{
+				if (Class.AffixClassType == EObsidianAffixType::Prefix)
+				{
+					OutPrefixes.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality,
+						ForCategoryTag, ForBaseTypeTag));
+				}
+			}
+		}
+	}
+
+	if (!OutPrefixes.IsEmpty())
+	{
+		return true;
+	}
+	return false;
+}
+
+bool UObsidianItemDataLoaderSubsystem::GetAllSuffixesUpToQualityForCategory(const int32 UpToTreasureQuality,
+	const FGameplayTag& ForCategoryTag, const FGameplayTag& ForBaseTypeTag,
+	TArray<FObsidianDynamicItemAffix>& OutSuffixes)
+{
+	if (ItemDataConfig == nullptr)
+	{
+		return false;
+	}
+
+	for (const UObsidianAffixList* AffixLists : ItemDataConfig->CommonAffixLists)
+	{
+		if (AffixLists)
+		{
+			for (const FObsidianAffixClass& Class : AffixLists->ReadAllAffixClasses())
+			{
+				if (Class.AffixClassType == EObsidianAffixType::Suffix)
+				{
+					OutSuffixes.Append(Class.GetAllAffixesUpToQualityForCategory(UpToTreasureQuality,
+						ForCategoryTag, ForBaseTypeTag));
+				}
+			}
+		}
+	}
+
+	if (!OutSuffixes.IsEmpty())
+	{
+		return true;
+	}
+	return false;
+}
+
 FString UObsidianItemDataLoaderSubsystem::GetRandomRareItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag) const
 {
 	if (ItemDataConfig)

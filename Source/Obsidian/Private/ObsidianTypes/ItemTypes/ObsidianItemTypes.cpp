@@ -412,7 +412,7 @@ uint8 FObsidianActiveItemAffix::GetCurrentAffixTierItemLevelRequirement() const
 }
 
 void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix,
-	const uint8 UpToTreasureQuality, const bool bApplyMultiplier)
+	const uint8 UpToTreasureQuality, const bool bApplyMagicMultiplier)
 {
 	if (!InDynamicItemAffix)
 	{
@@ -427,11 +427,11 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 	AffixValuesDefinition = InDynamicItemAffix.AffixValuesDefinition;
 	SoftAbilitySetToApply = InDynamicItemAffix.SoftAbilitySetToApply;
 
-	InitializeAffixTierAndRange(UpToTreasureQuality, bApplyMultiplier);
+	InitializeAffixTierAndRange(UpToTreasureQuality, bApplyMagicMultiplier);
 }
 
 void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix,
-	const uint8 UpToTreasureQuality, const bool bApplyMultiplier)
+	const uint8 UpToTreasureQuality, const bool bApplyMagicMultiplier)
 {
 	if (!InStaticItemAffix)
 	{
@@ -446,13 +446,13 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 	AffixValuesDefinition = InStaticItemAffix.AffixValuesDefinition;
 	SoftAbilitySetToApply = InStaticItemAffix.SoftAbilitySetToApply;
 
-	InitializeAffixTierAndRange(UpToTreasureQuality, bApplyMultiplier);
+	InitializeAffixTierAndRange(UpToTreasureQuality, bApplyMagicMultiplier);
 }
 
-void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreasureQuality, const bool bApplyMultiplier)
+void FObsidianActiveItemAffix::InitializeAffixTierAndRange(const uint8 UpToTreasureQuality, const bool bApplyMagicMultiplier)
 {
 	FObsidianAffixValueRange ChosenAffixValueTier = GetRandomAffixRange(UpToTreasureQuality);
-	const float AffixMultiplier = bApplyMultiplier ? AffixValuesDefinition.MagicItemAffixRollMultiplier : 1.0f;
+	const float AffixMultiplier = bApplyMagicMultiplier ? AffixValuesDefinition.MagicItemAffixRollMultiplier : 1.0f;
 	for (int32 i = 0; i < ChosenAffixValueTier.AffixRanges.Num(); ++i)
 	{
 		FFloatRange& AffixRange = ChosenAffixValueTier.AffixRanges[i];

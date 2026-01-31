@@ -62,7 +62,8 @@ void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* 
 	}
 }
 
-void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& InGeneratedData)
+void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+	const FObsidianItemGeneratedData& InGeneratedData)
 {
 	checkf(ItemDef, TEXT("Provided ItemDef is invalid in AObsidianWorldCollectable::AddItemDefinition."));
 	PickupContent.Template = FObsidianPickupTemplate(ItemDef, InGeneratedData);

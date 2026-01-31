@@ -162,6 +162,13 @@ public:
 	void RemoveAffix(const FGameplayTag& AffixTag);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	bool CanAddPrefix() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	bool CanAddSuffix() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	bool CanAddPrefixOrSuffix() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	uint8 GetItemCombinedAffixLimit() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
