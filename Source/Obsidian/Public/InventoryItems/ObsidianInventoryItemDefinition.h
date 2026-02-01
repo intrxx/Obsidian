@@ -38,7 +38,6 @@ public:
 	FGameplayTag GetItemBaseTypeTag() const;
 	EObsidianItemRarity GetItemDefaultRarity() const;
 	
-	int32 GetItemLevel() const;
 	bool HasStacks() const;
 	bool IsStackable() const;
 	bool IsEquippable() const;

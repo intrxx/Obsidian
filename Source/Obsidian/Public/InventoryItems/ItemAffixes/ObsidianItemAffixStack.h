@@ -61,12 +61,15 @@ public:
 	{}
 
 	int32 GetTotalAffixCount() const;
+	int32 GetPrefixAndSuffixCount() const;
 	int32 GetPrefixCount() const;
 	int32 GetSuffixCount() const;
 
 	bool HasImplicit() const;
+	bool HasSkillImplicit() const;
 
 	TArray<FObsidianActiveItemAffix> GetAllItemAffixes() const;
+	TArray<FObsidianActiveItemAffix> GetAllItemPrefixesAndSuffixes() const;
 	
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
 	{
@@ -75,9 +78,11 @@ public:
 
 	void InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
 	void AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianActiveItemAffix& ItemAffix);
-	void RemoveAffix(const FGameplayTag& AffixTag);
+	bool RemoveAffix(const FGameplayTag& AffixTag);
+	bool RemoveSkillImplicitAffix();
+	bool RemoveAllPrefixesAndSuffixes();
 	void AffixChanged(const FGameplayTag& AffixTag);
-
+	
 	//~ Start of FFastArraySerializer contract
 	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
 	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);

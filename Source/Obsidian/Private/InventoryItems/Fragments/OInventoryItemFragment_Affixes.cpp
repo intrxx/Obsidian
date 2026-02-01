@@ -18,6 +18,10 @@ UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectIn
 
 void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {
+	if (Instance)
+	{
+		Instance->SetCanHaveAffixes(true);
+	}
 }
 
 void UOInventoryItemFragment_Affixes::PostInitProperties()

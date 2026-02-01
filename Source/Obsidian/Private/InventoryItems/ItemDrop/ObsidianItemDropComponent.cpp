@@ -662,7 +662,7 @@ void UObsidianItemDropComponent::AdjustItemRequirementsBasedOnAddedAffixes(FObsi
 	{
 		check(Affix.CurrentAffixValue.IsValid());
 
-		const uint8 AffixMinLevelRequirement = Affix.CurrentAffixValue.AffixTier.MinItemLevelRequirement;
+		const int8 AffixMinLevelRequirement = Affix.CurrentAffixValue.AffixTier.MinItemLevelRequirement;
 		if (AffixMinLevelRequirement > OutRequirements.RequiredLevel)
 		{
 			OutRequirements.RequiredLevel = AffixMinLevelRequirement;

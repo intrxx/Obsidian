@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "Interaction/ObsidianInteractionInterface.h"

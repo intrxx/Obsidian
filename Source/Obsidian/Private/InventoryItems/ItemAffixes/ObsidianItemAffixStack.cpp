@@ -15,6 +15,20 @@ int32 FObsidianItemAffixStack::GetTotalAffixCount() const
 	return Entries.Num();
 }
 
+int32 FObsidianItemAffixStack::GetPrefixAndSuffixCount() const
+{
+	int32 PrefixAndSuffixCount = 0;
+	for(const FObsidianAffixEntry& Entry : Entries)
+	{
+		const EObsidianAffixType AffixType = Entry.ActiveItemAffix.AffixType;
+		if(AffixType == EObsidianAffixType::Prefix || AffixType == EObsidianAffixType::Suffix)
+		{
+			PrefixAndSuffixCount++;
+		}
+	} 
+	return PrefixAndSuffixCount;
+}
+
 int32 FObsidianItemAffixStack::GetPrefixCount() const
 {
 	int32 PrefixCount = 0;
@@ -53,6 +67,18 @@ bool FObsidianItemAffixStack::HasImplicit() const
 	return false;
 }
 
+bool FObsidianItemAffixStack::HasSkillImplicit() const
+{
+	for(const FObsidianAffixEntry& Entry : Entries)
+	{
+		if(Entry.ActiveItemAffix.AffixType == EObsidianAffixType::SkillImplicit)
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
 TArray<FObsidianActiveItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() const
 {
 	TArray<FObsidianActiveItemAffix> Affixes;
@@ -67,6 +93,25 @@ TArray<FObsidianActiveItemAffix> FObsidianItemAffixStack::GetAllItemAffixes() co
 	return Affixes;
 }
 
+TArray<FObsidianActiveItemAffix> FObsidianItemAffixStack::GetAllItemPrefixesAndSuffixes() const
+{
+	TArray<FObsidianActiveItemAffix> PrefixesAndSuffixes;
+	for(const FObsidianAffixEntry& Entry : Entries)
+	{
+		if (!Entry.ActiveItemAffix)
+		{
+			continue;
+		}
+		
+		const EObsidianAffixType AffixType = Entry.ActiveItemAffix.AffixType;
+		if(AffixType == EObsidianAffixType::Prefix || AffixType == EObsidianAffixType::Suffix)
+		{
+			PrefixesAndSuffixes.Add(Entry.ActiveItemAffix);
+		}
+	}
+	return PrefixesAndSuffixes;
+}
+
 void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
 {
 	check(Entries.IsEmpty());
@@ -77,7 +122,7 @@ void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* 
 			FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(Affix);
 			AffixEntry.OwningItem = InOwningInstance;
 			
-			//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes
+			//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes if supports changing Equipped Items.
 			
 			MarkItemDirty(AffixEntry);
 		}
@@ -89,12 +134,12 @@ void FObsidianItemAffixStack::AddAffix(UObsidianInventoryItemInstance* InOwningI
 	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(ItemAffix);
 	AffixEntry.OwningItem = InOwningInstance;
 	
-	//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes
+	//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes if supports changing Equipped Items.
 	
 	MarkItemDirty(AffixEntry);
 }
 
-void FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& AffixTag)
+bool FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& AffixTag)
 {
 	for(auto It = Entries.CreateIterator(); It; ++It)
 	{
@@ -103,16 +148,61 @@ void FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& AffixTag)
 		{
 			It.RemoveCurrent();
 			
-			//TODO(intrxx) Remove Affix Gameplay Effect with correct Magnitude/Magnitudes
+			//TODO(intrxx) Remove Affix Gameplay Effect with correct Magnitude/Magnitudes if supports changing Equipped Items.
 			
 			MarkArrayDirty();
+			return true;
 		}
 	}
+	return false;
+}
+
+bool FObsidianItemAffixStack::RemoveSkillImplicitAffix()
+{
+	for(auto It = Entries.CreateIterator(); It; ++It)
+	{
+		FObsidianAffixEntry& Entry = *It;
+		// By design there can be only one Skill Implicit Affix, this will never change.
+		if(Entry.ActiveItemAffix.AffixType == EObsidianAffixType::SkillImplicit) 
+		{
+			It.RemoveCurrent();
+			
+			//TODO(intrxx) Remove Affix Gameplay Effect with correct Magnitude/Magnitudes if supports changing Equipped Items.
+			
+			MarkArrayDirty();
+			return true;
+		}
+	}
+	return false;
+}
+
+bool FObsidianItemAffixStack::RemoveAllPrefixesAndSuffixes()
+{
+	bool bSuccess = false;
+	for(auto It = Entries.CreateIterator(); It; ++It)
+	{
+		FObsidianAffixEntry& Entry = *It;
+		const EObsidianAffixType AffixType = Entry.ActiveItemAffix.AffixType;
+		if(AffixType == EObsidianAffixType::Prefix || AffixType == EObsidianAffixType::Suffix) 
+		{
+			It.RemoveCurrent();
+			
+			//TODO(intrxx) Remove Affix Gameplay Effect with correct Magnitude/Magnitudes if supports changing Equipped Items.
+
+			bSuccess = true;
+		}
+	}
+
+	if (bSuccess)
+	{
+		MarkArrayDirty();
+	}
+	return bSuccess;
 }
 
 void FObsidianItemAffixStack::AffixChanged(const FGameplayTag& AffixTag)
 {
-	//TODO(intrxx) Reapply Affix Gameplay Effect with correct new Magnitude/Magnitudes?
+	//TODO(intrxx) Reapply Affix Gameplay Effect with correct new Magnitude/Magnitudes? if supports changing Equipped Items.
 }
 
 void FObsidianItemAffixStack::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)

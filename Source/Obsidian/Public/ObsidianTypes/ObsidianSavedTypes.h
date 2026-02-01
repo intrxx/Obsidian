@@ -60,7 +60,7 @@ public:
 	FString UniqueItemID = FString();
 
 	UPROPERTY()
-	uint8 ItemLevel = INDEX_NONE;
+	int8 ItemLevel = INDEX_NONE;
 	
 	UPROPERTY()
 	TSoftClassPtr<UObsidianInventoryItemDefinition> SoftItemDef;

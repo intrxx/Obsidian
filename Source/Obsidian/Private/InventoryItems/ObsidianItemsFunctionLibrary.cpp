@@ -196,7 +196,8 @@ bool UObsidianItemsFunctionLibrary::GenerateItemEquippingRequirementsAsUIDesc(co
 	return true;
 }
 
-TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes)
+TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAffixes(
+	const TArray<FObsidianActiveItemAffix>& ItemAffixes)
 {
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
 	AffixDescriptionRows.Reserve(ItemAffixes.Num());
@@ -214,7 +215,8 @@ TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatItemAf
 	return AffixDescriptionRows;
 }
 
-TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatUnidentifiedItemAffixes(const TArray<FObsidianActiveItemAffix>& ItemAffixes)
+TArray<FObsidianAffixDescriptionRow> UObsidianItemsFunctionLibrary::FormatUnidentifiedItemAffixes(
+	const TArray<FObsidianActiveItemAffix>& ItemAffixes)
 {
 	TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows;
 	

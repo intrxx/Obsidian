@@ -1,4 +1,4 @@
-// Copyright 2026 out of sCope team - intrxx
+// Copyright 2026 out of sCope - intrxx
 
 #pragma once
 
@@ -6,15 +6,13 @@
 
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
-#include "ObsidianUsableShard_OrbOfEnchantment.generated.h"
-
-class UObsidianInventoryItemInstance;
+#include "ObsidianUsableShard_OrbOfRescription.generated.h"
 
 /**
- * Orb Of Enchantment adds Affix or Suffix to item if possible.
+ * Randomly changes the Skill Implicit of an item.
  */
-UCLASS(DisplayName = "Orb of Enchantment")
-class OBSIDIAN_API UObsidianUsableShard_OrbOfEnchantment : public UObsidianUsableShard
+UCLASS(DisplayName = "Orb of Rescription")
+class OBSIDIAN_API UObsidianUsableShard_OrbOfRescription : public UObsidianUsableShard
 {
 	GENERATED_BODY()
 

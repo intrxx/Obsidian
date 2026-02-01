@@ -315,9 +315,12 @@ namespace ObsidianGameplayTags
 	 * Item Base Types
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_ScrollOfIdentification);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_ScrollOfTeleportation);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_OrbOfEnchantment);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_ScrollOfIdentification);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_ScrollOfTeleportation);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfEnchantment);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfRepentance);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfEradication);
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfRescription);
 
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Helmet_Armor);
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Helmet_Evasion);

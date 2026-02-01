@@ -2,16 +2,16 @@
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard_TownPortal.h"
 
-// ~ Core
+#include <Kismet/GameplayStatics.h>
 
-// ~ Project
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Game/ObsidianGameMode.h"
 #include "InventoryItems/Items/ItemSpecific/ObsidianTownPortal.h"
-#include "Kismet/GameplayStatics.h"
+#include "Obsidian/ObsidianGameModule.h"
 
-bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* ItemOwner,
+                                                 UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {
 	if(ItemOwner == nullptr || UsingInstance == nullptr)
 	{
@@ -41,15 +41,28 @@ bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* Item
 			FHitResult GroundTraceResult;
 			FCollisionQueryParams QueryParams;
 			QueryParams.AddIgnoredActor(ObsidianHero);
-			const FVector GroundTraceEndLocation = FVector(PortalDefaultLocation.X, PortalDefaultLocation.Y, PortalDefaultLocation.Z - 300.0f);
-			World->LineTraceSingleByChannel(GroundTraceResult, PortalDefaultLocation, GroundTraceEndLocation, ECC_Visibility, QueryParams);
+			const FVector GroundTraceEndLocation = FVector(PortalDefaultLocation.X,
+														PortalDefaultLocation.Y,
+														PortalDefaultLocation.Z - 300.0f);
+			World->LineTraceSingleByChannel(GroundTraceResult, PortalDefaultLocation, GroundTraceEndLocation,
+				ECC_Visibility, QueryParams);
 			if(GroundTraceResult.bBlockingHit)
 			{
-				PortalTransform.SetLocation(FVector(GroundTraceResult.Location.X, GroundTraceResult.Location.Y, GroundTraceResult.Location.Z + SpawnTransform.GetLocation().Z));
+				PortalTransform.SetLocation(FVector(GroundTraceResult.Location.X,
+														GroundTraceResult.Location.Y,
+														GroundTraceResult.Location.Z + SpawnTransform.GetLocation().Z));
 			}
 			
-			checkf(TownPortalActorClass, TEXT("TownPortalActorClass is not set on UObsidianUsableShard_TownPortal, please fill it."));
-			AObsidianTownPortal* TownPortal = World->SpawnActorDeferred<AObsidianTownPortal>(TownPortalActorClass, PortalTransform, ItemOwner);
+			checkf(TownPortalActorClass, TEXT("TownPortalActorClass is not set on UObsidianUsableShard_TownPortal,"
+									 " please fill it."));
+			AObsidianTownPortal* TownPortal = World->SpawnActorDeferred<AObsidianTownPortal>(TownPortalActorClass,
+				PortalTransform, ItemOwner);
+			if (TownPortal == nullptr)
+			{
+				UE_LOG(LogObsidian, Error, TEXT("Spawning Town Portal Actor failed in [%hs]."), __FUNCTION__);
+				return false;
+			}
+			
 			TownPortal->InitializePortal();
 			TownPortal->FinishSpawning(PortalTransform);
 

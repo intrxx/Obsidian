@@ -66,7 +66,7 @@ struct FObsidianPickupContent
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	FObsidianPickupInstance Instance = FObsidianPickupInstance(nullptr);
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)

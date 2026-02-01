@@ -406,7 +406,7 @@ uint8 FObsidianActiveItemAffix::GetCurrentAffixTier() const
 	return CurrentAffixValue.AffixTier.AffixTierValue;
 }
 
-uint8 FObsidianActiveItemAffix::GetCurrentAffixTierItemLevelRequirement() const
+int8 FObsidianActiveItemAffix::GetCurrentAffixTierItemLevelRequirement() const
 {
 	return CurrentAffixValue.AffixTier.MinItemLevelRequirement;
 }

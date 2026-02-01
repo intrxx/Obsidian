@@ -43,7 +43,7 @@ bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController
 		}
 		else
 		{
-			UE_LOG(LogObsidian, Warning, TEXT("Item could not be used on provided [%s] Instance."),
+			UE_LOG(LogObsidian, Warning, TEXT("Orb Of Enchantment could not be used on provided [%s] Instance."),
 				*GetNameSafe(UsingOntoInstance));
 		}
 	}
@@ -64,7 +64,12 @@ void UObsidianUsableShard_OrbOfEnchantment::OnItemUsed_UIContext(const TArray<UO
 
 bool UObsidianUsableShard_OrbOfEnchantment::CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const
 {
-	const EObsidianItemRarity ItemRarity = Instance->GetItemRarity();
-	const bool bUsableRarity = ItemRarity > EObsidianItemRarity::Normal && ItemRarity < EObsidianItemRarity::Unique;
-	return	bUsableRarity && Instance->IsItemEquippable() && Instance->IsItemIdentified() && Instance->CanAddPrefixOrSuffix();					
+	if (Instance == nullptr)
+	{
+		return false;
+	}
+	return Instance->CanHaveAffixes() &&
+			Instance->IsItemIdentified() &&
+			Instance->IsMagicOrRare() &&
+			Instance->CanAddPrefixOrSuffix();					
 }

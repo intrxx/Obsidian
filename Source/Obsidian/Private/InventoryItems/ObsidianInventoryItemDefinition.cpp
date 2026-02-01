@@ -77,17 +77,6 @@ EObsidianItemRarity UObsidianInventoryItemDefinition::GetItemDefaultRarity() con
 	return ItemDefaultRarity;
 }
 
-int32 UObsidianInventoryItemDefinition::GetItemLevel() const
-{
-#if !UE_BUILD_SHIPPING
-	if (ItemLevel == INDEX_NONE)
-	{
-		UE_LOG(LogItems, Error, TEXT("Item [%s] has invalid Item Level."), *DebugName);
-	}
-#endif
-	return ItemLevel;
-}
-
 const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const
 {
 	if(FragmentClass == nullptr)

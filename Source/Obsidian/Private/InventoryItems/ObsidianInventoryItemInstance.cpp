@@ -43,6 +43,7 @@ void UObsidianInventoryItemInstance::GetLifetimeReplicatedProps(TArray<FLifetime
 	DOREPLIFETIME(ThisClass, ItemDroppedMesh);
 	DOREPLIFETIME(ThisClass, ItemDescription);
 	DOREPLIFETIME(ThisClass, ItemAdditionalDescription);
+	DOREPLIFETIME(ThisClass, bCanHaveAffixes);
 	DOREPLIFETIME(ThisClass, bStartsIdentified);
 	DOREPLIFETIME(ThisClass, bIdentified);
 	DOREPLIFETIME(ThisClass, bEquippable);
@@ -102,7 +103,7 @@ void UObsidianInventoryItemInstance::GenerateUniqueItemID()
 	}
 }
 
-uint8 UObsidianInventoryItemInstance::GetItemLevel() const
+int8 UObsidianInventoryItemInstance::GetItemLevel() const
 {
 #if !UE_BUILD_SHIPPING
 	if (ItemLevel == INDEX_NONE)
@@ -113,7 +114,7 @@ uint8 UObsidianInventoryItemInstance::GetItemLevel() const
 	return ItemLevel;
 }
 
-void UObsidianInventoryItemInstance::SetItemLevel(const int32 InItemLevel)
+void UObsidianInventoryItemInstance::SetItemLevel(const int8 InItemLevel)
 {
 	ItemLevel = InItemLevel;
 }
@@ -126,6 +127,16 @@ TSubclassOf<UObsidianInventoryItemDefinition> UObsidianInventoryItemInstance::Ge
 void UObsidianInventoryItemInstance::SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef)
 {
 	ItemDef = InItemDef;
+}
+
+bool UObsidianInventoryItemInstance::IsUniqueOrSet() const
+{
+	return ItemRarity == EObsidianItemRarity::Unique || ItemRarity == EObsidianItemRarity::Set;
+}
+
+bool UObsidianInventoryItemInstance::IsMagicOrRare() const
+{
+	return ItemRarity == EObsidianItemRarity::Magic || ItemRarity == EObsidianItemRarity::Rare;
 }
 
 EObsidianItemRarity UObsidianInventoryItemInstance::GetItemRarity() const
@@ -223,6 +234,11 @@ TArray<FObsidianActiveItemAffix> UObsidianInventoryItemInstance::GetAllItemAffix
 	return ItemAffixes.GetAllItemAffixes();
 }
 
+TArray<FObsidianActiveItemAffix> UObsidianInventoryItemInstance::GetAllItemPrefixesAndSuffixes() const
+{
+	return ItemAffixes.GetAllItemPrefixesAndSuffixes();
+}
+
 void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
 {
 	if (AffixesToInitialize.IsEmpty())
@@ -238,9 +254,22 @@ void UObsidianInventoryItemInstance::AddAffix(const FObsidianActiveItemAffix& Af
 	ItemAffixes.AddAffix(this, AffixToAdd);
 }
 
-void UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
+bool UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
 {
-	ItemAffixes.RemoveAffix(AffixTag);
+	const bool bSuccess = ItemAffixes.RemoveAffix(AffixTag);
+	return bSuccess;
+}
+
+bool UObsidianInventoryItemInstance::RemoveSkillImplicitAffix()
+{
+	const bool bSuccess = ItemAffixes.RemoveSkillImplicitAffix();
+	return bSuccess;
+}
+
+bool UObsidianInventoryItemInstance::RemoveAllPrefixesAndSuffixes()
+{
+	const bool bSuccess = ItemAffixes.RemoveAllPrefixesAndSuffixes();
+	return bSuccess;
 }
 
 bool UObsidianInventoryItemInstance::CanAddPrefix() const
@@ -256,6 +285,16 @@ bool UObsidianInventoryItemInstance::CanAddSuffix() const
 bool UObsidianInventoryItemInstance::CanAddPrefixOrSuffix() const
 {
 	return GetItemCombinedPrefixSuffixLimit() > (GetItemAddedPrefixCount() + GetItemAddedSuffixCount());
+}
+
+bool UObsidianInventoryItemInstance::HasSkillImplicitAffix() const
+{
+	return ItemAffixes.HasSkillImplicit();
+}
+
+bool UObsidianInventoryItemInstance::HasImplicitAffix() const
+{
+	return ItemAffixes.HasImplicit();
 }
 
 uint8 UObsidianInventoryItemInstance::GetItemCombinedAffixLimit() const
@@ -310,9 +349,14 @@ uint8 UObsidianInventoryItemInstance::GetItemSuffixLimit() const
 	return INDEX_NONE;
 }
 
-uint8 UObsidianInventoryItemInstance::GetItemAddedAffixCount() const
+uint8 UObsidianInventoryItemInstance::GetItemAddedTotalAffixCount() const
 {
 	return ItemAffixes.GetTotalAffixCount();
+}
+
+uint8 UObsidianInventoryItemInstance::GetItemAddedPrefixAndSuffixCount() const
+{
+	return ItemAffixes.GetPrefixAndSuffixCount();
 }
 
 uint8 UObsidianInventoryItemInstance::GetItemAddedSuffixCount() const
@@ -507,6 +551,16 @@ FObsidianItemRequirements UObsidianInventoryItemInstance::GetEquippingRequiremen
 void UObsidianInventoryItemInstance::InitializeEquippingRequirements(const FObsidianItemRequirements& InRequirements)
 {
 	EquippingRequirements = InRequirements;
+}
+
+void UObsidianInventoryItemInstance::SetCanHaveAffixes(const bool bInCanHaveAffixes)
+{
+	bCanHaveAffixes = bInCanHaveAffixes;
+}
+
+bool UObsidianInventoryItemInstance::CanHaveAffixes() const
+{
+	return bCanHaveAffixes;
 }
 
 TArray<UObsidianAffixAbilitySet*> UObsidianInventoryItemInstance::GetAffixAbilitySetsFromItem() const

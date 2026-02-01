@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "InventoryItems/ObsidianPickableInterface.h"
 
 #include "GameFramework/Actor.h"
@@ -27,7 +25,8 @@ public:
 	//~ Start of IObsidianPickableInterface
 	virtual FObsidianPickupContent GetPickupContent() const override;
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
-	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const FObsidianItemGeneratedData& InGeneratedData) override;
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+		const FObsidianItemGeneratedData& InGeneratedData) override;
 	virtual void OverrideTemplateStacks(const int32 NewItemStacks) override;
 	//~ End of IObsidianPickableInterface
 	

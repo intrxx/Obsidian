@@ -58,16 +58,20 @@ public:
 	 */
 
 	FGuid GetUniqueItemID() const;
-
 	void GenerateUniqueItemID();
 
-	uint8 GetItemLevel() const;
-
-	void SetItemLevel(const int32 InItemLevel);
+	int8 GetItemLevel() const;
+	void SetItemLevel(const int8 InItemLevel);
 	
 	TSubclassOf<UObsidianInventoryItemDefinition> GetItemDef() const;
 
 	void SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool IsUniqueOrSet() const;
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool IsMagicOrRare() const;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	EObsidianItemRarity GetItemRarity() const;
@@ -146,47 +150,62 @@ public:
 	 * Affixes.
 	 */
 	
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	void SetCanHaveAffixes(const bool bInCanHaveAffixes);
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool CanHaveAffixes() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool IsItemIdentified() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool CanAddPrefix() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool CanAddSuffix() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool CanAddPrefixOrSuffix() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool HasSkillImplicitAffix() const;
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	bool HasImplicitAffix() const;
+	
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|ItemAffixes")
 	void SetStartsIdentified(const bool InStartsIdentified);
 	
-	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
+	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|ItemAffixes")
 	void SetIdentified(const bool InIdentified);
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	bool IsItemIdentified() const;
-
 	TArray<FObsidianActiveItemAffix> GetAllItemAffixes() const;
+	TArray<FObsidianActiveItemAffix> GetAllItemPrefixesAndSuffixes() const;
 	
 	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
 	void AddAffix(const FObsidianActiveItemAffix& AffixToAdd);
-	void RemoveAffix(const FGameplayTag& AffixTag);
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	bool CanAddPrefix() const;
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	bool CanAddSuffix() const;
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	bool CanAddPrefixOrSuffix() const;
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	bool RemoveAffix(const FGameplayTag& AffixTag);
+	bool RemoveSkillImplicitAffix();
+	bool RemoveAllPrefixesAndSuffixes();
+	
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
 	uint8 GetItemCombinedAffixLimit() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
 	uint8 GetItemCombinedPrefixSuffixLimit() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
 	uint8 GetItemPrefixLimit() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
 	uint8 GetItemSuffixLimit() const;
 
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	uint8 GetItemAddedAffixCount() const;
+	/** Gets the combined number of added affixes, these include: Skill Implicits, Implicits, Prefixes and Suffixes. */
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	uint8 GetItemAddedTotalAffixCount() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
+	uint8 GetItemAddedPrefixAndSuffixCount() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
 	uint8 GetItemAddedSuffixCount() const;
 	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemAffixes")
 	uint8 GetItemAddedPrefixCount() const;
 
 	TArray<UObsidianAffixAbilitySet*> GetAffixAbilitySetsFromItem() const;
@@ -301,7 +320,7 @@ private:
 	FGuid ItemUniqueID;
 
 	UPROPERTY(Replicated)
-	uint8 ItemLevel = INDEX_NONE;
+	int8 ItemLevel = INDEX_NONE;
 	
 	UPROPERTY(Replicated)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef;
@@ -361,6 +380,9 @@ private:
 
 	UPROPERTY(Replicated)
 	bool bIdentified = false;
+
+	UPROPERTY(Replicated)
+	bool bCanHaveAffixes = false;
 	
 	UPROPERTY(Replicated)
 	FObsidianItemAffixStack ItemAffixes;

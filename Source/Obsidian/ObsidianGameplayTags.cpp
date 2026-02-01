@@ -339,9 +339,12 @@ namespace ObsidianGameplayTags
 	 * Item Base Types.
 	 */
 
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_ScrollOfIdentification, "Item.BaseType.ScrollOfIdentification", "Item Tag that represents Scroll Of Identification item base type.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_ScrollOfTeleportation, "Item.BaseType.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item base type.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_OrbOfEnchantment, "Item.BaseType.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Orb_ScrollOfIdentification, "Item.BaseType.Orb.ScrollOfIdentification", "Item Tag that represents Scroll Of Identification item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Orb_ScrollOfTeleportation, "Item.BaseType.Orb.ScrollOfTeleportation", "Item Tag that represents Scroll Of Teleportation item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Orb_OrbOfEnchantment, "Item.BaseType.Orb.OrbOfEnchantment", "Item Tag that represents Orb Of Enchantment item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Orb_OrbOfRepentance, "Item.BaseType.Orb.OrbOfRepentance", "Item Tag that represents Orb Of Repentance item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Orb_OrbOfEradication, "Item.BaseType.Orb.OrbOfEradication", "Item Tag that represents Orb Of Eradication item base type.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Orb_OrbOfRescription, "Item.BaseType.Orb.OrbOfRescription", "Item Tag that represents Orb Of Rescription item base type.");
 
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Helmet_Armor, "Item.BaseType.Helmet.Armor", "Item Tag that represents Orb Of Armor Helmet item base type.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_BaseType_Helmet_Evasion, "Item.BaseType.Helmet.Evasion", "Item Tag that represents Evasion Helmet item base type.");

@@ -539,10 +539,10 @@ public:
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "8"))
-	uint8 AffixTierValue = 1;
+	int8 AffixTierValue = 1;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"))
-	uint8 MinItemLevelRequirement = 1;	
+	int8 MinItemLevelRequirement = 1;	
 };
 
 /**
@@ -760,7 +760,7 @@ public:
 
 	/** Minimum Item Level Requirement to roll this affix. */
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "90"), Category = "Obsidian|Affix")
-	uint8 MinItemLevelRequirement = 1;
+	int8 MinItemLevelRequirement = 1;
 
 	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
 	uint8 bOverride_AffixAbilitySet : 1;
@@ -795,7 +795,7 @@ public:
 	bool operator==(const FObsidianStaticItemAffix& Other) const;
 
 	uint8 GetCurrentAffixTier() const;
-	uint8 GetCurrentAffixTierItemLevelRequirement() const;
+	int8 GetCurrentAffixTierItemLevelRequirement() const;
 	
 	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality,
 		const bool bApplyMagicMultiplier = false);
