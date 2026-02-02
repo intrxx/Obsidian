@@ -22,6 +22,7 @@ class UObsidianWidgetBase;
 class AObsidianPlayerController;
 class AObsidianPlayerState;
 class UObsidianAbilitySystemComponent;
+class UObsidianItemLabelOverlay;
 
 /**
  * 
@@ -61,6 +62,9 @@ private:
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")
 	TSubclassOf<UObsidianMainOverlay> MainOverlayWidgetClass;
 
+	UPROPERTY(EditAnywhere, Category = "ObsidianUI|ItemLabelOverlay")
+	TSubclassOf<UObsidianItemLabelOverlay> ItemLabelOverlayClass;
+	
 	/**
 	 * Widget Controllers 
 	 */

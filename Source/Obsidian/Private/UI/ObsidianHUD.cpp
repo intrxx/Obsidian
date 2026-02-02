@@ -2,15 +2,15 @@
 
 #include "UI/ObsidianHUD.h"
 
-// ~ Core
 
-// ~ Project
 #include "Characters/Heroes/ObsidianHero.h"
+#include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
 #include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+#include "UI/InventoryItems/ObsidianItemLabelOverlay.h"
 
 UObMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
@@ -64,9 +64,16 @@ UObInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetControll
 
 void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, AObsidianPlayerState* ForPlayerState)
 {
-	if(ensureMsgf(MainOverlayWidgetClass, TEXT("Main Overlay Widget Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
+	UWorld* World = GetWorld();
+	if (World == nullptr)
 	{
-		MainOverlayWidget = CreateWidget<UObsidianMainOverlay>(GetWorld(), MainOverlayWidgetClass);
+		return;
+	}
+	
+	if(ensureMsgf(MainOverlayWidgetClass, TEXT("Main Overlay Widget Class is not set on HUD Class [%s],"
+											" please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
+	{
+		MainOverlayWidget = CreateWidget<UObsidianMainOverlay>(World, MainOverlayWidgetClass);
 
 		FObsidianWidgetControllerParams Params;
 		Params.ObsidianPlayerController = ForPlayerController;
@@ -88,6 +95,17 @@ void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, A
 		}
 		
 		MainOverlayWidget->AddToViewport();
+	}
+
+	if (ensureMsgf(ItemLabelOverlayClass, TEXT("Item Label Overlay Class is not set on HUD Class [%s],"
+											" please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
+	{
+		if (UObsidianItemLabelManagerSubsystem* ItemLabelManagerSubsystem = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
+		{
+			UObsidianItemLabelOverlay* LabelOverlay = CreateWidget<UObsidianItemLabelOverlay>(World, ItemLabelOverlayClass);
+			LabelOverlay->AddToViewport();
+			ItemLabelManagerSubsystem->InitializeItemLabelManager(LabelOverlay);
+		}
 	}
 }
 
