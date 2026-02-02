@@ -6,8 +6,8 @@
 #include <Engine/ActorChannel.h>
 #include <GameFramework/GameplayMessageSubsystem.h>
 
-#include "UI/Inventory/Items/ObsidianDraggedItem_Simple.h"
-#include "UI/Inventory/Items/ObsidianItem.h"
+#include "UI/InventoryItems/Items/ObsidianDraggedItem_Simple.h"
+#include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"

@@ -15,7 +15,7 @@
 #include "InventoryItems/ObsidianPickableInterface.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
-#include "UI/Inventory/Items/ObsidianDraggedItem.h"
+#include "UI/InventoryItems/Items/ObsidianDraggedItem.h"
 
 DEFINE_LOG_CATEGORY(LogItemManager)
 

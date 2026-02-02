@@ -2,14 +2,12 @@
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
-// ~ Core
-#include "Blueprint/WidgetLayoutLibrary.h"
-#include "Components/Overlay.h"
-#include "Components/VerticalBox.h"
-#include "Components/WrapBox.h"
-#include "Components/CanvasPanelSlot.h"
+#include <Blueprint/WidgetLayoutLibrary.h>
+#include <Components/Overlay.h>
+#include <Components/VerticalBox.h>
+#include <Components/WrapBox.h>
+#include <Components/CanvasPanelSlot.h>
 
-// ~ Project
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
@@ -23,15 +21,15 @@
 #include "UI/ProgressBars/ObsidianOverlayBossEnemyBar.h"
 #include "UI/PassiveSkillTree/ObsidianPassiveSkillTree.h"
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
-#include "UI/Inventory/ObsidianInventory.h"
+#include "UI/InventoryItems/ObsidianInventory.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 #include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
-#include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
+#include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
 #include "UI/MainOverlay/SkillPoints/ObsidianSkillPointsNotification.h"
-#include "UI/Inventory/ObsidianPlayerStashWidget.h"
+#include "UI/InventoryItems/ObsidianPlayerStashWidget.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {

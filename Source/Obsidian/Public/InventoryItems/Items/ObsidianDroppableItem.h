@@ -16,7 +16,7 @@ class USplineComponent;
 class UTimelineComponent;
 class AObsidianPlayerController;
 class UObsidianItemDescriptionBase;
-class UObsidianItemWorldName;
+class UObsidianItemLabel;
 class UObsidianItemDragDropOperation;
 class UObsidianDraggedItem;
 class  UWidgetComponent;
@@ -120,7 +120,7 @@ private:
 	TObjectPtr<USplineComponent> ItemDropSplineComp;
 	
 	UPROPERTY()
-	TObjectPtr<UObsidianItemWorldName> ItemWorldName;
+	TObjectPtr<UObsidianItemLabel> ItemWorldName;
 
 	UPROPERTY()
 	UObInventoryItemsWidgetController* CachedInventoryWidgetController;

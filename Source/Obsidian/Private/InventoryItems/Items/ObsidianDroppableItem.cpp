@@ -16,10 +16,10 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "UI/Inventory/Items/ObsidianItemWorldName.h"
+#include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
-#include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
+#include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "InventoryItems/ObsidianItemManagerComponent.h"
 
@@ -158,11 +158,11 @@ bool AObsidianDroppableItem::InitializeWorldName()
 	}
 
 	bool bSuccess = false;
-	ItemWorldName = Cast<UObsidianItemWorldName>(WorldItemNameWidgetComp->GetUserWidgetObject());
+	ItemWorldName = Cast<UObsidianItemLabel>(WorldItemNameWidgetComp->GetUserWidgetObject());
 	if (ItemWorldName)
 	{
-		ItemWorldName->OnItemWorldNameMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
-		ItemWorldName->OnItemWorldNameMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
+		ItemWorldName->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
+		ItemWorldName->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
 		bSuccess = InitItemWorldName();
 	}
 	
@@ -210,7 +210,7 @@ void AObsidianDroppableItem::StartHighlight()
 {
 	if(IsValid(ItemWorldName))
 	{
-		ItemWorldName->HandleWorldNameHighlightBegin();
+		ItemWorldName->HandleItemLabelHighlightBegin();
 	}
 	OnItemMouseHover(true);
 }
@@ -219,7 +219,7 @@ void AObsidianDroppableItem::StopHighlight()
 {
 	if(IsValid(ItemWorldName))
 	{
-		ItemWorldName->HandleWorldNameHighlightEnd();
+		ItemWorldName->HandleItemLabelHighlightEnd();
 	}
 	OnItemMouseHover(false);
 }

@@ -6,7 +6,7 @@
 #include <Blueprint/SlateBlueprintLibrary.h>
 #include <Blueprint/WidgetLayoutLibrary.h>
 
-#include "UI/Inventory/Items/ObsidianItemDescriptionBase.h"
+#include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
@@ -19,9 +19,9 @@
 #include "UI/ObsidianHUD.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
-#include "UI/Inventory/Items/ObsidianDraggedItem.h"
-#include "UI/Inventory/Items/ObsidianItem.h"
-#include "Obsidian/Public/UI/Inventory/Items/ObsidianUnstackSlider.h"
+#include "UI/InventoryItems/Items/ObsidianDraggedItem.h"
+#include "UI/InventoryItems/Items/ObsidianItem.h"
+#include "UI/InventoryItems/Items/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
 DEFINE_LOG_CATEGORY(LogWidgetController_Items);
