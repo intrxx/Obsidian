@@ -8,6 +8,8 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemLabelOverlay.generated.h"
 
+class UCanvasPanelSlot;
+class UObsidianItemLabel;
 class UCanvasPanel;
 
 /**
@@ -19,7 +21,7 @@ class OBSIDIAN_API UObsidianItemLabelOverlay : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-
+	UCanvasPanelSlot* AddItemLabelToOverlay(UObsidianItemLabel* ItemLabelWidget, const FVector2D& AtPosition);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

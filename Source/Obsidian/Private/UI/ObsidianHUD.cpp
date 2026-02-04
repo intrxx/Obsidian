@@ -104,7 +104,7 @@ void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, A
 		{
 			UObsidianItemLabelOverlay* LabelOverlay = CreateWidget<UObsidianItemLabelOverlay>(World, ItemLabelOverlayClass);
 			LabelOverlay->AddToViewport();
-			ItemLabelManagerSubsystem->InitializeItemLabelManager(LabelOverlay);
+			ItemLabelManagerSubsystem->InitializeItemLabelManager(LabelOverlay, ForPlayerController);
 		}
 	}
 }

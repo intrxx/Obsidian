@@ -74,7 +74,7 @@ protected:
 	void OnItemMouseHover(const bool bMouseEnter);
 	void OnItemMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags);
 	
-	bool InitializeWorldName();
+	bool InitializeItemLabel();
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
@@ -89,7 +89,7 @@ private:
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition() const;
 
-	bool InitItemWorldName() const;
+	bool ConstructItemLabelWidget() const;
 	void InitDropRouteAnimation();
 
 	UFUNCTION()
@@ -118,9 +118,11 @@ private:
 	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USplineComponent> ItemDropSplineComp;
-	
+
 	UPROPERTY()
-	TObjectPtr<UObsidianItemLabel> ItemWorldName;
+	TSubclassOf<UObsidianItemLabel> ItemLabelClass;
+	UPROPERTY()
+	TObjectPtr<UObsidianItemLabel> ItemLabel;
 
 	UPROPERTY()
 	UObInventoryItemsWidgetController* CachedInventoryWidgetController;
@@ -128,7 +130,7 @@ private:
 	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
 	int32 DroppedItemStacks = 1;
 
-	bool bInitializedItemName = false;
+	bool bInitializedItemLabel = false;
 
 	/**
 	 * Item Drop Route animation.
