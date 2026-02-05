@@ -64,4 +64,7 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	TMap<EObsidianItemRarity, uint8> DefaultRarityToNaturalMinAffixCount;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|ItemLabels")
+	float DefaultItemLabelGroundZOffset = 30.0f;
 };

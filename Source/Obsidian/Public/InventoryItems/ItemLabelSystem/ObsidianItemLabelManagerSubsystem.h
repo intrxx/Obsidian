@@ -73,6 +73,7 @@ public:
 	void InitializeItemLabelManager(UObsidianItemLabelOverlay* InItemLabelOverlay, AObsidianPlayerController* InObsidianPC);
 
 	void RegisterItemLabel(const FObsidianItemLabelInfo& ItemLabelInfo);
+	void UnregisterItemLabel(UObsidianItemLabel* ItemLabel);
 	
 	// ~ Start of USubsystem
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -91,4 +92,6 @@ private:
 
 	UPROPERTY()
 	TArray<FObsidianItemLabelData> ItemLabelsData;
+
+	float ItemLabelGroundZOffset = 0.0f;
 };

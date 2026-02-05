@@ -9,7 +9,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianItemLabel.generated.h"
 
-class UImage;
+class UBorder;
 class UCommonTextBlock;
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLabelMouseButtonDownSignature, const int32 PlayerIndex,
@@ -25,6 +25,8 @@ class OBSIDIAN_API UObsidianItemLabel : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
+	UObsidianItemLabel();
+	
 	virtual void NativeConstruct() override;
 
 	void SetItemName(const FText& ItemName);
@@ -49,11 +51,11 @@ protected:
 	TObjectPtr<UCommonTextBlock> ItemName_TextBlock;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UImage> Background_Image;
+	TObjectPtr<UBorder> Main_Border;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	FSlateColor HoveredBackgroundColor;
+	FLinearColor HoveredBrushColor;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
-	FSlateColor RegularBackgroundColor;
+	FLinearColor RegularBrushColor;
 };

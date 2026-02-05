@@ -89,7 +89,7 @@ private:
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition() const;
 
-	bool ConstructItemLabelWidget() const;
+	bool ConstructItemLabelWidget(UObsidianItemLabel* Label) const;
 	void InitDropRouteAnimation();
 
 	UFUNCTION()
@@ -110,9 +110,6 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;
 	
-	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UWidgetComponent> WorldItemNameWidgetComp;
-	
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCurveFloat> DropLocationCurve;
 	
@@ -123,14 +120,13 @@ private:
 	TSubclassOf<UObsidianItemLabel> ItemLabelClass;
 	UPROPERTY()
 	TObjectPtr<UObsidianItemLabel> ItemLabel;
-
+	bool bInitializedItemLabel = false;
+	
 	UPROPERTY()
 	UObInventoryItemsWidgetController* CachedInventoryWidgetController;
 	
 	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
 	int32 DroppedItemStacks = 1;
-
-	bool bInitializedItemLabel = false;
 
 	/**
 	 * Item Drop Route animation.

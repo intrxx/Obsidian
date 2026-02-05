@@ -3,16 +3,21 @@
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 
 #include <CommonTextBlock.h>
-#include <Components/Image.h>
+#include <Components/Border.h>
 
+UObsidianItemLabel::UObsidianItemLabel()
+{
+	RegularBrushColor = FLinearColor(1.0f, 1.0f, 1.0f, 0.8f);
+	HoveredBrushColor = FLinearColor(1.0f, 1.0f, 1.0f, 1.0f);
+}
 
 void UObsidianItemLabel::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	if(Background_Image)
+	if(Main_Border)
 	{
-		Background_Image->SetBrushTintColor(RegularBackgroundColor);
+		Main_Border->SetBrushColor(RegularBrushColor);
 	}
 }
 
@@ -26,17 +31,17 @@ void UObsidianItemLabel::SetItemName(const FText& ItemName)
 
 void UObsidianItemLabel::HandleItemLabelHighlightBegin() const
 {
-	if(Background_Image)
+	if(Main_Border)
 	{
-		Background_Image->SetBrushTintColor(HoveredBackgroundColor);
+		Main_Border->SetBrushColor(HoveredBrushColor);
 	}
 }
 
 void UObsidianItemLabel::HandleItemLabelHighlightEnd() const
 {
-	if(Background_Image)
+	if(Main_Border)
 	{
-		Background_Image->SetBrushTintColor(RegularBackgroundColor);
+		Main_Border->SetBrushColor(RegularBrushColor);
 	}
 }
 

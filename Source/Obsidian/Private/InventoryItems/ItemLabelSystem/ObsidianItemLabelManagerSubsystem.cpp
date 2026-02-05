@@ -2,10 +2,12 @@
 
 #include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
 
+#include <Components/CanvasPanelSlot.h>
+#include <Kismet/GameplayStatics.h>
+
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Components/CanvasPanelSlot.h"
-#include "Kismet/GameplayStatics.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "UI/InventoryItems/ObsidianItemLabelOverlay.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 
@@ -41,7 +43,11 @@ UObsidianItemLabelManagerSubsystem::UObsidianItemLabelManagerSubsystem()
 void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
-	
+
+	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
+	{
+		ItemLabelGroundZOffset = ItemDataSettings->DefaultItemLabelGroundZOffset;
+	}
 }
 
 void UObsidianItemLabelManagerSubsystem::Deinitialize()
@@ -82,8 +88,9 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors()
 	{
 		if (LabelData.IsValid())
 		{
-			const FVector OwningItemWorldPosition = LabelData.OwningItemActor->GetActorLocation();
-
+			FVector OwningItemWorldPosition = LabelData.OwningItemActor->GetActorLocation();
+			OwningItemWorldPosition.Z += ItemLabelGroundZOffset;
+			
 			FVector2D OutInitialScreenPosition;
 			const bool bSuccess = UGameplayStatics::ProjectWorldToScreen(ObsidianPC, OwningItemWorldPosition,
 				OutInitialScreenPosition);
@@ -112,9 +119,12 @@ void UObsidianItemLabelManagerSubsystem::RegisterItemLabel(const FObsidianItemLa
 	{
 		return;
 	}
-	
-	const FVector OwningItemWorldPosition = ItemLabelInfo.OwningItemActor->GetActorLocation();
 
+	UObsidianItemLabel* ItemLabel = ItemLabelInfo.ItemLabelWidget;
+	
+	FVector OwningItemWorldPosition = ItemLabelInfo.OwningItemActor->GetActorLocation();
+	OwningItemWorldPosition.Z += ItemLabelGroundZOffset;
+	
 	FVector2D OutInitialScreenPosition;
 	const bool bSuccess = UGameplayStatics::ProjectWorldToScreen(OwningPC.Get(), OwningItemWorldPosition,
 		OutInitialScreenPosition);
@@ -123,7 +133,7 @@ void UObsidianItemLabelManagerSubsystem::RegisterItemLabel(const FObsidianItemLa
 		return;
 	}
 	
-	if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(ItemLabelInfo.ItemLabelWidget,
+	if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(ItemLabel,
 		OutInitialScreenPosition))
 	{
 		FObsidianItemLabelData NewLabelData = FObsidianItemLabelData(ItemLabelInfo);
@@ -131,4 +141,22 @@ void UObsidianItemLabelManagerSubsystem::RegisterItemLabel(const FObsidianItemLa
 		ItemLabelsData.Add(NewLabelData);
 	}
 	
+}
+
+void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(UObsidianItemLabel* ItemLabel)
+{
+	if (ItemLabel == nullptr)
+	{
+		return;
+	}
+	
+	for(auto It = ItemLabelsData.CreateIterator(); It; ++It)
+	{
+		FObsidianItemLabelData& Entry = *It;
+		if(Entry.ItemLabelWidget == ItemLabel)
+		{
+			ItemLabel->RemoveFromParent();
+			It.RemoveCurrent();
+		}
+	}
 }

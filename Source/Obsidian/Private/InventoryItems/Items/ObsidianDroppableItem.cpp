@@ -2,7 +2,6 @@
 
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 
-#include <Components/WidgetComponent.h>
 #include <Kismet/GameplayStatics.h>
 #include <Net/UnrealNetwork.h>
 
@@ -39,20 +38,11 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
 	StaticMeshComp->SetRenderCustomDepth(false);
 	StaticMeshComp->SetupAttachment(RootSceneComponent);
-	
-	WorldItemNameWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("WorldItemNameWidgetComp"));
-	WorldItemNameWidgetComp->SetupAttachment(GetRootComponent());
-	WorldItemNameWidgetComp->SetRelativeLocation(FVector(0.0f, 50.0f, 0.0f));
-	WorldItemNameWidgetComp->SetDrawAtDesiredSize(true);
-	WorldItemNameWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
-	WorldItemNameWidgetComp->SetupAttachment(StaticMeshComp);
-	WorldItemNameWidgetComp->SetVisibility(false);
 
 	static ConstructorHelpers::FClassFinder<UUserWidget> ItemLabelClassFinder(TEXT("/Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C"));
 	if (ItemLabelClassFinder.Succeeded())
 	{
 		ItemLabelClass = ItemLabelClassFinder.Class;
-		//WorldItemNameWidgetComp->SetWidgetClass(ItemLabelClassFinder.Class);
 	}
 #if !UE_BUILD_SHIPPING
 	else
@@ -155,10 +145,13 @@ bool AObsidianDroppableItem::InitializeItemLabel()
 	}
 
 	bool bSuccess = false;
+	
 	if (UObsidianItemLabelManagerSubsystem* ItemLabelManagerSubsystem = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
 	{
 		ItemLabel = CreateWidget<UObsidianItemLabel>(World, ItemLabelClass);
-		bSuccess = ConstructItemLabelWidget();
+		ItemLabel->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
+		ItemLabel->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
+		bSuccess = ConstructItemLabelWidget(ItemLabel);
 
 		FObsidianItemLabelInfo ItemLabelInfo;
 		ItemLabelInfo.ItemLabelWidget = ItemLabel;
@@ -167,22 +160,6 @@ bool AObsidianDroppableItem::InitializeItemLabel()
 	}
 	
 	return bSuccess;
-	
-	// if (WorldItemNameWidgetComp == nullptr)
-	// {
-	// 	return false;
-	// }
-
-	// bool bSuccess = false;
-	// ItemLabel = Cast<UObsidianItemLabel>(WorldItemNameWidgetComp->GetUserWidgetObject());
-	// if (ItemLabel)
-	// {
-	// 	ItemLabel->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
-	// 	ItemLabel->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
-	// 	bSuccess = ConstructItemLabelWidget();
-	// }
-	//
-	// return bSuccess; 
 }
 
 void AObsidianDroppableItem::OnRep_PickupContent()
@@ -302,6 +279,17 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 
 void AObsidianDroppableItem::DestroyDroppedItem()
 {
+	const UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		return;
+	}
+	
+	if (UObsidianItemLabelManagerSubsystem* ItemLabelManagerSubsystem = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
+	{
+		ItemLabelManagerSubsystem->UnregisterItemLabel(ItemLabel);
+	}
+	
 	Destroy();
 }
 
@@ -368,9 +356,9 @@ void AObsidianDroppableItem::SetupItemAppearanceFromDefinition() const
 		*ItemDefault->GetDebugName(), __FUNCTION__);
 }
 
-bool AObsidianDroppableItem::ConstructItemLabelWidget() const
+bool AObsidianDroppableItem::ConstructItemLabelWidget(UObsidianItemLabel* Label) const
 {
-	if(!IsValid(ItemLabel))
+	if(Label == nullptr)
 	{
 		UE_LOG(LogInventory, Error, TEXT("Item World Name is invalid in [%hs]."), __FUNCTION__);
 		return false;
@@ -385,7 +373,7 @@ bool AObsidianDroppableItem::ConstructItemLabelWidget() const
 				DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 			{
 				const FText ItemDisplayName = Appearance->GetItemDisplayName();
-				ItemLabel->SetItemName(ItemDisplayName);
+				Label->SetItemName(ItemDisplayName);
 				bSuccess = true;
 			}
 		}
@@ -393,7 +381,7 @@ bool AObsidianDroppableItem::ConstructItemLabelWidget() const
 	else if(const UObsidianInventoryItemInstance* ItemInstance = GetPickupInstanceFromPickupContent().Item)
     {
 		const FText ItemDisplayName = ItemInstance->GetItemDisplayName();
-		ItemLabel->SetItemName(ItemDisplayName);
+		Label->SetItemName(ItemDisplayName);
 		bSuccess = true;
     }
 	
@@ -463,10 +451,6 @@ void AObsidianDroppableItem::InitDropRouteAnimation()
 				if(ItemDropSplineComp)
 				{
 					ItemDropSplineComp->DestroyComponent();
-				}
-				if(WorldItemNameWidgetComp)
-				{
-					WorldItemNameWidgetComp->SetVisibility(true);
 				}
 			});
 
@@ -541,9 +525,6 @@ void AObsidianDroppableItem::CreateItemDescription()
 
 void AObsidianDroppableItem::DestroyItemDescription()
 {
-	const bool server = HasAuthority();
-	UE_LOG(LogTemp, Warning, TEXT("%s"), server ? TEXT("Server") : TEXT("Client"));
-	
 	CachedInventoryWidgetController = CachedInventoryWidgetController == nullptr
 		? UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(this)
 		: CachedInventoryWidgetController;
