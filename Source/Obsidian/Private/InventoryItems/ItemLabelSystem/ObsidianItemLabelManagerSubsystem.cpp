@@ -262,12 +262,12 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 	
 	if (bHighlight)
 	{
+		bLayoutDirty = true;
 		ItemLabelOverlay->SetVisibility(ESlateVisibility::Visible);
-		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight on."));
+		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight on!"));
 	}
 	else
 	{
-		bLayoutDirty = true;
 		ItemLabelOverlay->SetVisibility(ESlateVisibility::Collapsed);
 		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight off!"));
 	}
