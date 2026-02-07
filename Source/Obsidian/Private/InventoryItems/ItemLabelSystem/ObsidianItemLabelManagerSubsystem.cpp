@@ -3,7 +3,7 @@
 #include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
 
 #include <Components/CanvasPanelSlot.h>
-#include <Kismet/GameplayStatics.h>
+#include <Blueprint/WidgetLayoutLibrary.h>
 
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Characters/Player/ObsidianPlayerController.h"
@@ -12,6 +12,7 @@
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 
 DECLARE_CYCLE_STAT(TEXT("ItemLabelManager"), STAT_ItemLabelManager, STATGROUP_Tickables);
+DEFINE_LOG_CATEGORY(LogItemLabelManager)
 
 // ~ Start of FObsidianItemLabelInfo
 
@@ -44,6 +45,8 @@ void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Co
 {
 	Super::Initialize(Collection);
 
+	OnViewportResizeDelegateHandle = FViewport::ViewportResizedEvent.AddUObject(this, &ThisClass::HandleViewportResize);
+	
 	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
 	{
 		ItemLabelGroundZOffset = ItemDataSettings->DefaultItemLabelGroundZOffset;
@@ -52,6 +55,11 @@ void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Co
 
 void UObsidianItemLabelManagerSubsystem::Deinitialize()
 {
+	if (OnViewportResizeDelegateHandle.IsValid())
+	{
+		FViewport::ViewportResizedEvent.Remove(OnViewportResizeDelegateHandle);
+	}
+	
 	Super::Deinitialize();
 }
 
@@ -59,6 +67,7 @@ void UObsidianItemLabelManagerSubsystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SolveLabelLayout();
 	UpdateLabelAnchors();
 }
 
@@ -75,33 +84,104 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors()
 	}
 
 	const AObsidianPlayerController* ObsidianPC = OwningPC.Get();
-	if (const APawn* Pawn = ObsidianPC->GetPawn())
+
+	if (bLayoutDirty == false)
 	{
-		const float SpeedSquared = Pawn->GetVelocity().SizeSquared();
-		if (SpeedSquared < KINDA_SMALL_NUMBER) // Don't do anything if the Player isn't actually moving
+		if (const APawn* Pawn = ObsidianPC->GetPawn())
 		{
-			return;
-		}
-	}
-	
-	for (const FObsidianItemLabelData& LabelData : ItemLabelsData)
-	{
-		if (LabelData.IsValid())
-		{
-			FVector OwningItemWorldPosition = LabelData.OwningItemActor->GetActorLocation();
-			OwningItemWorldPosition.Z += ItemLabelGroundZOffset;
-			
-			FVector2D OutInitialScreenPosition;
-			const bool bSuccess = UGameplayStatics::ProjectWorldToScreen(ObsidianPC, OwningItemWorldPosition,
-				OutInitialScreenPosition);
-			if (bSuccess == false)
+			const float SpeedSquared = Pawn->GetVelocity().SizeSquared();
+			if (SpeedSquared < KINDA_SMALL_NUMBER) // Don't do anything if the Player isn't actually moving
 			{
 				return;
 			}
-
-			LabelData.CanvasPanelSlot->SetPosition(OutInitialScreenPosition);
 		}
 	}
+	
+	for (FObsidianItemLabelData& LabelData : ItemLabelsData)
+	{
+		if (LabelData.IsValid())
+		{
+			FVector2D OutUpdatedAnchorScreenPosition;
+			const bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
+				LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
+			if (bSuccess == false)
+			{
+				UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
+				return;
+			}
+			
+			LabelData.LabelAnchorPosition = OutUpdatedAnchorScreenPosition;
+
+			const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
+			LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
+		}
+	}
+
+	bLayoutDirty = false;
+}
+
+void UObsidianItemLabelManagerSubsystem::ClusterLabels()
+{
+}
+
+void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
+{
+	if (bLayoutDirty == false)
+	{
+		return;
+	}
+
+	UE_LOG(LogItemLabelManager, Warning, TEXT("Solving Layout!"));
+	
+	SolveVerticalCluster();
+}
+
+void UObsidianItemLabelManagerSubsystem::SolveVerticalCluster()
+{
+	ItemLabelsData.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
+		{
+			return DataA.LabelSolvedPosition.Y < DataB.LabelSolvedPosition.Y;
+		});
+	
+	for (int32 i = 1; i < ItemLabelsData.Num(); ++i)
+	{
+		FObsidianItemLabelData& Current = ItemLabelsData[i];
+		FObsidianItemLabelData& Previous = ItemLabelsData[i - 1];
+		
+		if (/** CheckHorizontalOverlap(Current, Previous) && */ CheckVerticalOverlap(Current, Previous))
+		{
+			const float NewY = Previous.LabelSolvedPosition.Y + Previous.LabelSize.Y;
+
+			Current.LabelSolvedPosition.Y = NewY;
+			Current.LabelSolvedPositionOffset.Y = Current.LabelSolvedPosition.Y - Current.LabelAnchorPosition.Y;
+		}
+	}
+}
+
+bool UObsidianItemLabelManagerSubsystem::CheckVerticalOverlap(const FObsidianItemLabelData& LabelA,
+	const FObsidianItemLabelData& LabelB)
+{
+	const float LabelABottom = LabelA.LabelSolvedPosition.Y;
+	const float LabelATop = LabelABottom - LabelA.LabelSize.Y;
+	
+	const float LabelBBottom = LabelB.LabelSolvedPosition.Y;
+	const float LabelBTop = LabelBBottom - LabelB.LabelSize.Y;
+
+	return !(LabelABottom <= LabelBTop || LabelBBottom <= LabelATop);
+}
+
+bool UObsidianItemLabelManagerSubsystem::CheckHorizontalOverlap(const FObsidianItemLabelData& LabelA,
+	const FObsidianItemLabelData& LabelB)
+{
+	const float LabelAHalfSizeX = LabelA.LabelSize.X / 2;
+	const float LabelALeft = LabelA.LabelSolvedPosition.X - LabelAHalfSizeX;
+	const float LabelARight = LabelA.LabelSolvedPosition.X + LabelAHalfSizeX;
+
+	const float LabelBHalfSizeX = LabelB.LabelSize.X / 2;
+	const float LabelBLeft = LabelB.LabelSolvedPosition.X - LabelBHalfSizeX;
+	const float LabelBRight = LabelB.LabelSolvedPosition.X + LabelBHalfSizeX;
+
+	return !(LabelARight <= LabelBLeft || LabelBRight <= LabelALeft);
 }
 
 void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianItemLabelOverlay* InItemLabelOverlay,
@@ -126,8 +206,8 @@ void UObsidianItemLabelManagerSubsystem::RegisterItemLabel(const FObsidianItemLa
 	OwningItemWorldPosition.Z += ItemLabelGroundZOffset;
 	
 	FVector2D OutInitialScreenPosition;
-	const bool bSuccess = UGameplayStatics::ProjectWorldToScreen(OwningPC.Get(), OwningItemWorldPosition,
-		OutInitialScreenPosition);
+	const bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(OwningPC.Get(),
+				OwningItemWorldPosition, OutInitialScreenPosition, false);
 	if (bSuccess == false)
 	{
 		return;
@@ -136,11 +216,18 @@ void UObsidianItemLabelManagerSubsystem::RegisterItemLabel(const FObsidianItemLa
 	if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(ItemLabel,
 		OutInitialScreenPosition))
 	{
+		UE_LOG(LogItemLabelManager, Display, TEXT("New Label Pos: %s"), *OutInitialScreenPosition.ToString());
 		FObsidianItemLabelData NewLabelData = FObsidianItemLabelData(ItemLabelInfo);
 		NewLabelData.CanvasPanelSlot = CanvasPanelSlot;
+		NewLabelData.LabelSize = CanvasPanelSlot->GetSize();
+		NewLabelData.LabelAdjustedWorldPosition = OwningItemWorldPosition;
+		NewLabelData.LabelAnchorPosition = OutInitialScreenPosition;
+		NewLabelData.LabelSolvedPosition = OutInitialScreenPosition;
 		ItemLabelsData.Add(NewLabelData);
+		
+		// Check if the Layout needs solving first? Item Can be outside any cluster
+		bLayoutDirty = true;
 	}
-	
 }
 
 void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(UObsidianItemLabel* ItemLabel)
@@ -159,4 +246,9 @@ void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(UObsidianItemLabel*
 			It.RemoveCurrent();
 		}
 	}
+}
+
+void UObsidianItemLabelManagerSubsystem::HandleViewportResize(FViewport* Viewport, uint32 /** unused */)
+{
+	bLayoutDirty = true;
 }

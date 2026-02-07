@@ -5,7 +5,7 @@
 #include <CoreMinimal.h>
 
 
-#include "Subsystems/WorldSubsystem.h"
+#include <Subsystems/WorldSubsystem.h>
 #include "ObsidianItemLabelManagerSubsystem.generated.h"
 
 class UCanvasPanelSlot;
@@ -13,6 +13,8 @@ class AObsidianDroppableItem;
 class UObsidianItemLabel;
 class AObsidianPlayerController;
 class UObsidianItemLabelOverlay;
+
+DECLARE_LOG_CATEGORY_EXTERN(LogItemLabelManager, Log, All);
 
 USTRUCT()
 struct FObsidianItemLabelInfo
@@ -52,8 +54,28 @@ public:
 
 	UPROPERTY()
 	TObjectPtr<AObsidianDroppableItem> OwningItemActor;
+
+	/** Vector position which is adjusted by the ItemLabelGroundZOffset. */
+	UPROPERTY()
+	FVector LabelAdjustedWorldPosition = FVector::Zero();
 	
+	UPROPERTY()
+	FVector2D LabelAnchorPosition = FVector2D::Zero();
+
+	UPROPERTY()
+	FVector2D LabelSolvedPositionOffset = FVector2D::Zero();
+	
+	UPROPERTY()
+	FVector2D LabelSolvedPosition = FVector2D::Zero();
+
+	UPROPERTY()
+	FVector2D LabelSize = FVector2D::Zero();
+
+	UPROPERTY()
 	uint8 Priority = 8;
+
+	UPROPERTY()
+	uint8 bVisible:1 = false;
 };
 
 /**
@@ -82,6 +104,15 @@ public:
 
 protected:
 	void UpdateLabelAnchors();
+
+	void ClusterLabels();
+	void SolveLabelLayout();
+	void SolveVerticalCluster();
+
+	static bool CheckVerticalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
+	static bool CheckHorizontalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
+
+	void HandleViewportResize(FViewport* Viewport, uint32 /** unused */);
 	
 private:
 	UPROPERTY()
@@ -94,4 +125,8 @@ private:
 	TArray<FObsidianItemLabelData> ItemLabelsData;
 
 	float ItemLabelGroundZOffset = 0.0f;
+
+	FDelegateHandle OnViewportResizeDelegateHandle;
+
+	bool bLayoutDirty = false;
 };
