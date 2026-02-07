@@ -96,6 +96,8 @@ public:
 
 	void RegisterItemLabel(const FObsidianItemLabelInfo& ItemLabelInfo);
 	void UnregisterItemLabel(UObsidianItemLabel* ItemLabel);
+
+	void ToggleItemLabelHighlight(const bool bHighlight);
 	
 	// ~ Start of USubsystem
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
@@ -129,4 +131,6 @@ private:
 	FDelegateHandle OnViewportResizeDelegateHandle;
 
 	bool bLayoutDirty = false;
+
+	bool bLabelOverlayVisible = true;
 };

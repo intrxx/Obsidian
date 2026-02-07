@@ -103,6 +103,8 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_MainMenu, "Input.UI.MainMenu", "Main Menu Inputs for Layers.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_Action_Backwards, "Input.UI.Action.Backwards", "Input for going back a layer in UI.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_OpenGameplayMenu, "Input.UI.Action.OpenGameplayMenu", "Input for opening Gameplay Menu.");
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_ToggleHighlight, "Input.UI.ToggleHighlight", "Input for toggling the game highlight functionality.");
 
 	/**
 	 * Ability

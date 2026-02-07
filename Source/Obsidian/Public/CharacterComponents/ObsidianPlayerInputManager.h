@@ -90,6 +90,8 @@ protected:
 	void Input_WeaponSwap();
 
 	void Input_OpenGameplayMenu();
+
+	void Input_ToggleHighlight();
 	
 protected:
 	/** Time Threshold to know if it was a short press */

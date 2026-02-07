@@ -24,6 +24,7 @@
 #include "Interaction/ObsidianInteractionInterface.h"
 #include "InventoryItems/ObsidianItemManagerComponent.h"
 #include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
+#include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
 
@@ -242,6 +243,9 @@ void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputCo
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_UI_OpenGameplayMenu,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_OpenGameplayMenu, false);
+
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_UI_ToggleHighlight,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleHighlight, false);
 			}
 		}
 	}
@@ -534,6 +538,20 @@ void UObsidianPlayerInputManager::Input_OpenGameplayMenu()
 	
 	UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(LocalPlayer, ObsidianGameplayTags::UI_Layer_GameplayMenu,
 		GameplayMenuClass);
+}
+
+void UObsidianPlayerInputManager::Input_ToggleHighlight()
+{
+	static bool bHighlight = true;
+	if (const UWorld* World = GetWorld())
+	{
+		if (UObsidianItemLabelManagerSubsystem* ItemLabelManager = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
+		{
+			//TODO(intrxx) Use some global highlight setting
+			bHighlight = !bHighlight;
+			ItemLabelManager->ToggleItemLabelHighlight(bHighlight);
+		}
+	}
 }
 
 bool UObsidianPlayerInputManager::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)

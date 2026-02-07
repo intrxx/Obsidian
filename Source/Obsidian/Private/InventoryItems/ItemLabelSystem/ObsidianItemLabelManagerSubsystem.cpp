@@ -67,8 +67,11 @@ void UObsidianItemLabelManagerSubsystem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	SolveLabelLayout();
-	UpdateLabelAnchors();
+	if (bLabelOverlayVisible)
+	{
+		SolveLabelLayout();
+		UpdateLabelAnchors();
+	}
 }
 
 TStatId UObsidianItemLabelManagerSubsystem::GetStatId() const
@@ -99,7 +102,7 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors()
 	
 	for (FObsidianItemLabelData& LabelData : ItemLabelsData)
 	{
-		if (LabelData.IsValid())
+		if (LabelData.IsValid() && LabelData.bVisible)
 		{
 			FVector2D OutUpdatedAnchorScreenPosition;
 			const bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
@@ -223,6 +226,7 @@ void UObsidianItemLabelManagerSubsystem::RegisterItemLabel(const FObsidianItemLa
 		NewLabelData.LabelAdjustedWorldPosition = OwningItemWorldPosition;
 		NewLabelData.LabelAnchorPosition = OutInitialScreenPosition;
 		NewLabelData.LabelSolvedPosition = OutInitialScreenPosition;
+		NewLabelData.bVisible = true; //TODO(intrxx) Check if highlight is toggled on first
 		ItemLabelsData.Add(NewLabelData);
 		
 		// Check if the Layout needs solving first? Item Can be outside any cluster
@@ -246,6 +250,29 @@ void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(UObsidianItemLabel*
 			It.RemoveCurrent();
 		}
 	}
+}
+
+void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHighlight)
+{
+	if (ItemLabelOverlay == nullptr)
+	{
+		UE_LOG(LogItemLabelManager, Error, TEXT("ItemLabelOverlay is invalid in [%hs]."), __FUNCTION__);
+		return;
+	}
+	
+	if (bHighlight)
+	{
+		ItemLabelOverlay->SetVisibility(ESlateVisibility::Visible);
+		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight on."));
+	}
+	else
+	{
+		bLayoutDirty = true;
+		ItemLabelOverlay->SetVisibility(ESlateVisibility::Collapsed);
+		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight off!"));
+	}
+
+	bLabelOverlayVisible = bHighlight;
 }
 
 void UObsidianItemLabelManagerSubsystem::HandleViewportResize(FViewport* Viewport, uint32 /** unused */)
