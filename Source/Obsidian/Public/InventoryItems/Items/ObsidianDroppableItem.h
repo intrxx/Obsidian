@@ -11,6 +11,7 @@
 #include "Gameplay/ObsidianWorldCollectable.h"
 #include "ObsidianDroppableItem.generated.h"
 
+class UObsidianItemLabelComponent;
 class UObInventoryItemsWidgetController;
 class USplineComponent;
 class UTimelineComponent;
@@ -19,7 +20,9 @@ class UObsidianItemDescriptionBase;
 class UObsidianItemLabel;
 class UObsidianItemDragDropOperation;
 class UObsidianDraggedItem;
-class  UWidgetComponent;
+class UWidgetComponent;
+
+DECLARE_MULTICAST_DELEGATE(FOnItemInitializedSignature)
 
 /**
  * Base class for all droppable items in Obsidian.
@@ -66,15 +69,18 @@ public:
 
 	void DestroyDroppedItem();
 
+	void OnItemMouseHover(const bool bMouseEnter);
+	void OnItemMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags);
+
+	/** Fires when Instance or Definition is set on the Droppable Item. */
+	FOnItemInitializedSignature OnItemInitializedDelegate;
+	
 protected:
 	virtual void BeginPlay() override;
 	virtual void Destroyed() override;
 	virtual void OnRep_PickupContent() override;
-	
-	void OnItemMouseHover(const bool bMouseEnter);
-	void OnItemMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags);
-	
-	bool InitializeItemLabel();
+
+	void InitializeLabelComponent();
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
@@ -88,8 +94,7 @@ private:
 	
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition() const;
-
-	bool ConstructItemLabelWidget(UObsidianItemLabel* Label) const;
+	
 	void InitDropRouteAnimation();
 
 	UFUNCTION()
@@ -116,11 +121,11 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USplineComponent> ItemDropSplineComp;
 
-	UPROPERTY()
-	TSubclassOf<UObsidianItemLabel> ItemLabelClass;
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<UObsidianItemLabelComponent> ItemLabelComponent;
+	
 	UPROPERTY()
 	TObjectPtr<UObsidianItemLabel> ItemLabel;
-	bool bInitializedItemLabel = false;
 	
 	UPROPERTY()
 	UObInventoryItemsWidgetController* CachedInventoryWidgetController;

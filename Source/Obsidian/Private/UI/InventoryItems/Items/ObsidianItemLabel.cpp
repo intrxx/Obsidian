@@ -21,6 +21,34 @@ void UObsidianItemLabel::NativeConstruct()
 	}
 }
 
+FGuid UObsidianItemLabel::GetLabelID() const
+{
+	return LabelID;
+}
+
+bool UObsidianItemLabel::IsInUse() const
+{
+	return bLabelInUse;
+}
+
+void UObsidianItemLabel::MarkInUse(const bool bInUse, const FGuid& WithGuid)
+{
+#if !UE_BUILD_SHIPPING
+	if (bInUse)
+	{
+		checkf(WithGuid.IsValid(), TEXT("Please provide a valid Guid when marking Label in use."));
+	}
+	else
+	{
+		checkf(WithGuid.IsValid() == false, TEXT("Please do not provide a valid Guid when marking Label"
+										   " not longer in use"));
+	}
+#endif
+	
+	LabelID = WithGuid;
+	bLabelInUse = bInUse;
+}
+
 void UObsidianItemLabel::SetItemName(const FText& ItemName)
 {
 	if(ItemName_TextBlock)
@@ -53,8 +81,9 @@ FReply UObsidianItemLabel::NativeOnPreviewMouseButtonDown(const FGeometry& InGeo
 		const int32 Index = InMouseEvent.GetUserIndex();
 		FObsidianItemInteractionFlags InteractionFlags;
 		InteractionFlags.bAutomaticallyAddToWindow = InMouseEvent.IsLeftControlDown();
-		
-		OnItemLabelMouseButtonDownDelegate.Broadcast(Index, InteractionFlags);
+
+		check(LabelID.IsValid())
+		OnItemLabelMouseButtonDownDelegate.Broadcast(Index, InteractionFlags, LabelID);
 	}
 	return FReply::Handled();
 }
@@ -64,7 +93,10 @@ void UObsidianItemLabel::NativeOnMouseEnter(const FGeometry& InGeometry, const F
 	Super::NativeOnMouseEnter(InGeometry, InMouseEvent);
 	
 	HandleItemLabelHighlightBegin();
-	OnItemLabelMouseHoverDelegate.Broadcast(true);
+	if (ensure(LabelID.IsValid()))
+	{
+		OnItemLabelMouseHoverDelegate.Broadcast(true, LabelID);
+	}
 }
 
 void UObsidianItemLabel::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
@@ -72,5 +104,8 @@ void UObsidianItemLabel::NativeOnMouseLeave(const FPointerEvent& InMouseEvent)
 	Super::NativeOnMouseLeave(InMouseEvent);
 	
 	HandleItemLabelHighlightEnd();
-	OnItemLabelMouseHoverDelegate.Broadcast(false);
+	if (LabelID.IsValid())
+	{
+		OnItemLabelMouseHoverDelegate.Broadcast(false, LabelID);
+	}
 }

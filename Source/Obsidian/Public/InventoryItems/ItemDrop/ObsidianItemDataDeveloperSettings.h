@@ -67,4 +67,7 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|ItemLabels")
 	float DefaultItemLabelGroundZOffset = 30.0f;
+
+	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|ItemLabels")
+	float LabelAdjustmentSmoothSpeed = 15.0f;
 };

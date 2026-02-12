@@ -5,40 +5,39 @@
 #include <Components/CanvasPanelSlot.h>
 #include <Blueprint/WidgetLayoutLibrary.h>
 
-#include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
+#include "InventoryItems/Items/ObsidianItemLabelComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "UI/InventoryItems/ObsidianItemLabelOverlay.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 
 DECLARE_CYCLE_STAT(TEXT("ItemLabelManager"), STAT_ItemLabelManager, STATGROUP_Tickables);
 DEFINE_LOG_CATEGORY(LogItemLabelManager)
 
-// ~ Start of FObsidianItemLabelInfo
-
-bool FObsidianItemLabelInfo::IsValid() const
-{
-	return ItemLabelWidget && OwningItemActor;
-}
-
 // ~ Start of FObsidianItemLabelData
-
-FObsidianItemLabelData::FObsidianItemLabelData(const FObsidianItemLabelInfo& ItemLabelInfo)
-	: ItemLabelWidget(ItemLabelInfo.ItemLabelWidget)
-	, OwningItemActor(ItemLabelInfo.OwningItemActor)
-	, Priority(ItemLabelInfo.Priority)
-{
-}
 
 bool FObsidianItemLabelData::IsValid() const
 {
-	return ItemLabelWidget && CanvasPanelSlot && OwningItemActor;
+	return ItemLabelWidget && CanvasPanelSlot && SourceLabelComponent;
 }
 
 // ~ End of FObsidianItemLabelData
 
 UObsidianItemLabelManagerSubsystem::UObsidianItemLabelManagerSubsystem()
 {
+	static ConstructorHelpers::FClassFinder<UUserWidget> ItemLabelClassFinder(TEXT("/Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C"));
+	if (ItemLabelClassFinder.Succeeded())
+	{
+		ItemLabelClass = ItemLabelClassFinder.Class;
+	}
+#if !UE_BUILD_SHIPPING
+	else
+	{
+		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("ItemLabelClassFinder cannot find the default ItemLabelClass for WorldItemNameWidgetComp in AObsidianDroppableItem's constructor"
+													   " previously located in /Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C")), ELogVerbosity::Error);
+	}
+#endif
 }
 
 void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
@@ -50,6 +49,7 @@ void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Co
 	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
 	{
 		ItemLabelGroundZOffset = ItemDataSettings->DefaultItemLabelGroundZOffset;
+		LabelAdjustmentSmoothSpeed = ItemDataSettings->LabelAdjustmentSmoothSpeed;
 	}
 }
 
@@ -70,7 +70,7 @@ void UObsidianItemLabelManagerSubsystem::Tick(float DeltaTime)
 	if (bLabelOverlayVisible)
 	{
 		SolveLabelLayout();
-		UpdateLabelAnchors();
+		UpdateLabelAnchors(DeltaTime);
 	}
 }
 
@@ -79,7 +79,7 @@ TStatId UObsidianItemLabelManagerSubsystem::GetStatId() const
 	RETURN_QUICK_DECLARE_CYCLE_STAT(UItemLabelManagerSubsystem, STATGROUP_Tickables);
 }
 
-void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors()
+void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 {
 	if (OwningPC.IsValid() == false || ItemLabelOverlay == nullptr)
 	{
@@ -100,8 +100,9 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors()
 		}
 	}
 	
-	for (FObsidianItemLabelData& LabelData : ItemLabelsData)
+	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
 	{
+		FObsidianItemLabelData& LabelData = Pair.Value;
 		if (LabelData.IsValid() && LabelData.bVisible)
 		{
 			FVector2D OutUpdatedAnchorScreenPosition;
@@ -113,7 +114,8 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors()
 				return;
 			}
 			
-			LabelData.LabelAnchorPosition = OutUpdatedAnchorScreenPosition;
+			LabelData.LabelAnchorPosition = FMath::Vector2DInterpTo(LabelData.LabelAnchorPosition,
+				OutUpdatedAnchorScreenPosition, DeltaTime, LabelAdjustmentSmoothSpeed);
 
 			const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
 			LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
@@ -123,10 +125,6 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors()
 	bLayoutDirty = false;
 }
 
-void UObsidianItemLabelManagerSubsystem::ClusterLabels()
-{
-}
-
 void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 {
 	if (bLayoutDirty == false)
@@ -134,29 +132,57 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		return;
 	}
 
-	UE_LOG(LogItemLabelManager, Warning, TEXT("Solving Layout!"));
-	
-	SolveVerticalCluster();
-}
+	AObsidianPlayerController* OwningOPC = OwningPC.IsValid()
+		? OwningPC.Get()
+		: Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (OwningOPC == nullptr)
+	{
+		return;
+	}
 
-void UObsidianItemLabelManagerSubsystem::SolveVerticalCluster()
-{
-	ItemLabelsData.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
+	UE_LOG(LogItemLabelManager, Warning, TEXT("Solving Layout!"));
+
+	TArray<FObsidianItemLabelData*> CandidateLabels;
+	CandidateLabels.Reserve(ItemLabelsDataMap.Num());
+
+	FVector CamLoc = OwningOPC->PlayerCameraManager
+		? OwningOPC->PlayerCameraManager->GetCameraLocation()
+		: FVector::Zero();
+
+	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
+	{
+		FObsidianItemLabelData& LabelData = Pair.Value;
+		CandidateLabels.Add(&LabelData);
+	}
+	
+	CandidateLabels.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
 		{
-			return DataA.LabelSolvedPosition.Y < DataB.LabelSolvedPosition.Y;
+			if (DataA.Priority != DataB.Priority)
+			{
+				return DataA.Priority > DataB.Priority;
+			}
+
+			const float AY = DataA.LabelSolvedPosition.Y;
+			const float BY = DataB.LabelSolvedPosition.Y;
+			if (!FMath::IsNearlyEqual(AY, BY))
+			{
+				return AY < BY;
+			}
+		
+			return DataA.Priority > DataB.Priority;
 		});
 	
-	for (int32 i = 1; i < ItemLabelsData.Num(); ++i)
+	for (int32 i = 1; i < CandidateLabels.Num(); ++i)
 	{
-		FObsidianItemLabelData& Current = ItemLabelsData[i];
-		FObsidianItemLabelData& Previous = ItemLabelsData[i - 1];
+		FObsidianItemLabelData* Current = CandidateLabels[i];
+		FObsidianItemLabelData* Previous = CandidateLabels[i - 1];
 		
-		if (/** CheckHorizontalOverlap(Current, Previous) && */ CheckVerticalOverlap(Current, Previous))
+		if (/** CheckHorizontalOverlap(Current, Previous) && */ CheckVerticalOverlap(*Current, *Previous))
 		{
-			const float NewY = Previous.LabelSolvedPosition.Y + Previous.LabelSize.Y;
+			const float NewY = Previous->LabelSolvedPosition.Y + Previous->LabelSize.Y;
 
-			Current.LabelSolvedPosition.Y = NewY;
-			Current.LabelSolvedPositionOffset.Y = Current.LabelSolvedPosition.Y - Current.LabelAnchorPosition.Y;
+			Current->LabelSolvedPosition.Y = NewY;
+			Current->LabelSolvedPositionOffset.Y = Current->LabelSolvedPosition.Y - Current->LabelAnchorPosition.Y;
 		}
 	}
 }
@@ -196,59 +222,66 @@ void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianIte
 	//TODO(intrxx) Gather any items in the world and init it? Or init it in item's Begin Play?
 }
 
-void UObsidianItemLabelManagerSubsystem::RegisterItemLabel(const FObsidianItemLabelInfo& ItemLabelInfo)
+FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent)
 {
-	if (OwningPC.IsValid() == false || ItemLabelOverlay == nullptr || ItemLabelInfo.IsValid() == false)
+	if (OwningPC.IsValid() == false || ItemLabelOverlay == nullptr || SourceLabelComponent == nullptr)
 	{
-		return;
+		return FGuid();
 	}
-
-	UObsidianItemLabel* ItemLabel = ItemLabelInfo.ItemLabelWidget;
 	
-	FVector OwningItemWorldPosition = ItemLabelInfo.OwningItemActor->GetActorLocation();
+	FVector OwningItemWorldPosition = SourceLabelComponent->GetOwningItemActorLocation();
 	OwningItemWorldPosition.Z += ItemLabelGroundZOffset;
-	
+
 	FVector2D OutInitialScreenPosition;
-	const bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(OwningPC.Get(),
+	const bool bVisibleOnScreen = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(OwningPC.Get(),
 				OwningItemWorldPosition, OutInitialScreenPosition, false);
-	if (bSuccess == false)
+
+	FObsidianItemLabelData NewLabelData;
+	NewLabelData.LabelAdjustedWorldPosition = OwningItemWorldPosition;
+	NewLabelData.LabelAnchorPosition = OutInitialScreenPosition;
+	NewLabelData.LabelID = FGuid::NewGuid();
+	NewLabelData.SourceLabelComponent = SourceLabelComponent;
+	NewLabelData.Priority = /**TODO(Switch to it after implementing Prio) InitializationData.Priority; */ FMath::RandRange(0, 8);
+	NewLabelData.LabelSolvedPosition = OutInitialScreenPosition;
+	NewLabelData.bVisible = bVisibleOnScreen;
+	
+	if (bVisibleOnScreen)
 	{
-		return;
+		const FObsidianLabelInitializationData InitializationData = SourceLabelComponent->GetLabelInitializationData();
+		UObsidianItemLabel* ItemLabel = AcquireWidget(NewLabelData.LabelID);
+		ItemLabel->SetItemName(InitializationData.ItemName);
+		ItemLabel->SetVisibility(ESlateVisibility::Visible);
+		NewLabelData.ItemLabelWidget = ItemLabel;
+
+		if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(ItemLabel,
+			OutInitialScreenPosition))
+		{
+			UE_LOG(LogItemLabelManager, Display, TEXT("New Label Pos: %s"), *OutInitialScreenPosition.ToString());
+			
+			NewLabelData.LabelSize = CanvasPanelSlot->GetSize();
+			NewLabelData.CanvasPanelSlot = CanvasPanelSlot;
+
+			//TODO(intrxx) Check if the Layout needs solving first? Item Can be outside any cluster
+			bLayoutDirty = true;
+		}
+	}
+	else
+	{
+		UE_LOG(LogItemLabelManager, Display, TEXT("Item Label [%s] wasn't projected onto screen,"
+											" will be added as invisible data to use later."),
+											*SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
 	}
 	
-	if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(ItemLabel,
-		OutInitialScreenPosition))
-	{
-		UE_LOG(LogItemLabelManager, Display, TEXT("New Label Pos: %s"), *OutInitialScreenPosition.ToString());
-		FObsidianItemLabelData NewLabelData = FObsidianItemLabelData(ItemLabelInfo);
-		NewLabelData.CanvasPanelSlot = CanvasPanelSlot;
-		NewLabelData.LabelSize = CanvasPanelSlot->GetSize();
-		NewLabelData.LabelAdjustedWorldPosition = OwningItemWorldPosition;
-		NewLabelData.LabelAnchorPosition = OutInitialScreenPosition;
-		NewLabelData.LabelSolvedPosition = OutInitialScreenPosition;
-		NewLabelData.bVisible = true; //TODO(intrxx) Check if highlight is toggled on first
-		ItemLabelsData.Add(NewLabelData);
-		
-		// Check if the Layout needs solving first? Item Can be outside any cluster
-		bLayoutDirty = true;
-	}
+	ItemLabelsDataMap.Add(NewLabelData.LabelID, MoveTemp(NewLabelData));
+	return NewLabelData.LabelID;
 }
 
-void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(UObsidianItemLabel* ItemLabel)
+void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(const FGuid& LabelID)
 {
-	if (ItemLabel == nullptr)
+	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
 	{
-		return;
-	}
-	
-	for(auto It = ItemLabelsData.CreateIterator(); It; ++It)
-	{
-		FObsidianItemLabelData& Entry = *It;
-		if(Entry.ItemLabelWidget == ItemLabel)
-		{
-			ItemLabel->RemoveFromParent();
-			It.RemoveCurrent();
-		}
+		ReleaseWidget(FoundLabel->ItemLabelWidget);
+		ItemLabelsDataMap.Remove(LabelID);
 	}
 }
 
@@ -278,4 +311,89 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 void UObsidianItemLabelManagerSubsystem::HandleViewportResize(FViewport* Viewport, uint32 /** unused */)
 {
 	bLayoutDirty = true;
+}
+
+UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGuid& ForID)
+{
+	for (UObsidianItemLabel* ExistingWidget : LabelWidgetPool)
+	{
+		if (ExistingWidget && ExistingWidget->IsInUse() == false)
+		{
+			//TODO(intrxx) Decide if should bind here if cleared in ReleaseWidget
+			// ExistingWidget->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::HandleLabelHovered);
+			// ExistingWidget->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::HandleLabelPressed);
+			ExistingWidget->MarkInUse(true, ForID);
+			return ExistingWidget;
+		}
+	}
+
+	if (ItemLabelClass == nullptr)
+	{
+		UE_LOG(LogItemLabelManager, Error, TEXT("Could not create new Label Widget, Widget class is invalid"
+										  " in [%hs]"), __FUNCTION__);
+		return nullptr;
+	}
+
+	AObsidianPlayerController* OwningOPC = OwningPC.IsValid()
+		? OwningPC.Get()
+		: Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+	if (OwningOPC == nullptr)
+	{
+		UE_LOG(LogItemLabelManager, Error, TEXT("Could not create new Label Widget, Obsidian PC is invalid"
+										  " in [%hs]"), __FUNCTION__);
+		return nullptr;
+	}
+	
+	if (UObsidianItemLabel* NewItemLabel = CreateWidget<UObsidianItemLabel>(OwningOPC, ItemLabelClass))
+	{
+		NewItemLabel->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::HandleLabelHovered);
+		NewItemLabel->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::HandleLabelPressed);
+		NewItemLabel->MarkInUse(true, ForID);
+		LabelWidgetPool.Add(NewItemLabel);
+		return NewItemLabel;
+	}
+	
+	UE_LOG(LogItemLabelManager, Error, TEXT("Creating new Item Widget failed in [%hs]"), __FUNCTION__);
+	return nullptr;
+}
+
+void UObsidianItemLabelManagerSubsystem::ReleaseWidget(UObsidianItemLabel* LabelWidget)
+{
+	if (LabelWidget == nullptr)
+	{
+		UE_LOG(LogItemLabelManager, Error, TEXT("Passed Item Label Widget to release is invalid in [%hs]"),
+			__FUNCTION__);
+		return;
+	}
+
+	//TODO(intrxx) Decide if clear it now and bind in AcquireWidget
+	// LabelWidget->OnItemLabelMouseHoverDelegate.Clear();
+	// LabelWidget->OnItemLabelMouseButtonDownDelegate.Clear();
+	LabelWidget->MarkInUse(false);
+	LabelWidget->SetVisibility(ESlateVisibility::Collapsed);
+
+	//TODO(intrxx) Reset Label content here?
+}
+
+void UObsidianItemLabelManagerSubsystem::HandleLabelHovered(const bool bEnter, const FGuid& LabelID)
+{
+	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
+	{
+		if (UObsidianItemLabelComponent* LabelComponent = FoundLabel->SourceLabelComponent)
+		{
+			LabelComponent->HandleLabelMouseHover(bEnter);
+		}
+	}
+}
+
+void UObsidianItemLabelManagerSubsystem::HandleLabelPressed(const int32 PlayerIndex,
+	const FObsidianItemInteractionFlags& InteractionFlags, const FGuid& LabelID)
+{
+	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
+	{
+		if (UObsidianItemLabelComponent* LabelComponent = FoundLabel->SourceLabelComponent)
+		{
+			LabelComponent->HandleLabelMouseButtonDown(PlayerIndex, InteractionFlags);
+		}
+	}
 }

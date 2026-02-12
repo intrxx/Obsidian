@@ -8,6 +8,9 @@
 #include <Subsystems/WorldSubsystem.h>
 #include "ObsidianItemLabelManagerSubsystem.generated.h"
 
+struct FObsidianItemInteractionFlags;
+class UObsidianItemLabelComponent;
+class ItemLabelClass;
 class UCanvasPanelSlot;
 class AObsidianDroppableItem;
 class UObsidianItemLabel;
@@ -17,35 +20,33 @@ class UObsidianItemLabelOverlay;
 DECLARE_LOG_CATEGORY_EXTERN(LogItemLabelManager, Log, All);
 
 USTRUCT()
-struct FObsidianItemLabelInfo
-{
-	GENERATED_BODY()
-	
-public:
-	bool IsValid() const;
-	
-public:
-	UPROPERTY()
-	TObjectPtr<UObsidianItemLabel> ItemLabelWidget;
-
-	UPROPERTY()
-	TObjectPtr<AObsidianDroppableItem> OwningItemActor;
-	
-	uint8 Priority = 8;
-};
-
-USTRUCT()
 struct FObsidianItemLabelData
 {
 	GENERATED_BODY()
 	
 public:
 	FObsidianItemLabelData(){}
-	FObsidianItemLabelData(const FObsidianItemLabelInfo& ItemLabelInfo);
 
 	bool IsValid() const;
 	
 public:
+	/**
+	 * Initialization
+	 */
+
+	/** Vector position which is adjusted by the ItemLabelGroundZOffset. */
+	UPROPERTY()
+	FVector LabelAdjustedWorldPosition = FVector::Zero();
+
+	UPROPERTY()
+	FVector2D LabelAnchorPosition = FVector2D::Zero();
+
+	UPROPERTY()
+	FGuid LabelID = FGuid();
+
+	UPROPERTY()
+	FVector2D LabelSize = FVector2D::Zero();
+
 	UPROPERTY()
 	TObjectPtr<UObsidianItemLabel> ItemLabelWidget;
 
@@ -53,27 +54,21 @@ public:
 	TObjectPtr<UCanvasPanelSlot> CanvasPanelSlot;
 
 	UPROPERTY()
-	TObjectPtr<AObsidianDroppableItem> OwningItemActor;
+	TObjectPtr<UObsidianItemLabelComponent> SourceLabelComponent;
 
-	/** Vector position which is adjusted by the ItemLabelGroundZOffset. */
 	UPROPERTY()
-	FVector LabelAdjustedWorldPosition = FVector::Zero();
+	uint8 Priority = 8;
+
+	/**
+	 * Dynamic
+	 */
 	
-	UPROPERTY()
-	FVector2D LabelAnchorPosition = FVector2D::Zero();
-
 	UPROPERTY()
 	FVector2D LabelSolvedPositionOffset = FVector2D::Zero();
 	
 	UPROPERTY()
 	FVector2D LabelSolvedPosition = FVector2D::Zero();
-
-	UPROPERTY()
-	FVector2D LabelSize = FVector2D::Zero();
-
-	UPROPERTY()
-	uint8 Priority = 8;
-
+	
 	UPROPERTY()
 	uint8 bVisible:1 = false;
 };
@@ -94,8 +89,8 @@ public:
 	
 	void InitializeItemLabelManager(UObsidianItemLabelOverlay* InItemLabelOverlay, AObsidianPlayerController* InObsidianPC);
 
-	void RegisterItemLabel(const FObsidianItemLabelInfo& ItemLabelInfo);
-	void UnregisterItemLabel(UObsidianItemLabel* ItemLabel);
+	FGuid RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent);
+	void UnregisterItemLabel(const FGuid& LabelID);
 
 	void ToggleItemLabelHighlight(const bool bHighlight);
 	
@@ -105,18 +100,25 @@ public:
 	// ~ End of USubsystem
 
 protected:
-	void UpdateLabelAnchors();
-
-	void ClusterLabels();
+	void UpdateLabelAnchors(float DeltaTime);
 	void SolveLabelLayout();
-	void SolveVerticalCluster();
 
 	static bool CheckVerticalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
 	static bool CheckHorizontalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
 
 	void HandleViewportResize(FViewport* Viewport, uint32 /** unused */);
+
+	UObsidianItemLabel* AcquireWidget(const FGuid& ForID);
+	void ReleaseWidget(UObsidianItemLabel* LabelWidget);
+
+	void HandleLabelHovered(const bool bEnter, const FGuid& LabelID);
+	void HandleLabelPressed(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags,
+		const FGuid& LabelID);
 	
 private:
+	UPROPERTY()
+	TSubclassOf<UObsidianItemLabel> ItemLabelClass;
+	
 	UPROPERTY()
 	TObjectPtr<UObsidianItemLabelOverlay> ItemLabelOverlay;
 
@@ -124,9 +126,13 @@ private:
 	TWeakObjectPtr<AObsidianPlayerController> OwningPC;
 
 	UPROPERTY()
-	TArray<FObsidianItemLabelData> ItemLabelsData;
+	TMap<FGuid, FObsidianItemLabelData> ItemLabelsDataMap;
+
+	UPROPERTY()
+	TArray<UObsidianItemLabel*> LabelWidgetPool;
 
 	float ItemLabelGroundZOffset = 0.0f;
+	float LabelAdjustmentSmoothSpeed = 0.0f;
 
 	FDelegateHandle OnViewportResizeDelegateHandle;
 

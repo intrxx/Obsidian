@@ -21,7 +21,8 @@ void UObsidianItemDropManagerSubsystem::RequestDroppingItems(TArray<FObsidianIte
 	{
 		if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = Item.ItemDefinitionClass)
 		{
-			AObsidianDroppableItem* DroppableItem = World->SpawnActorDeferred<AObsidianDroppableItem>(AObsidianDroppableItem::StaticClass(), Item.DropTransform);
+			AObsidianDroppableItem* DroppableItem = World->SpawnActorDeferred<AObsidianDroppableItem>(
+				AObsidianDroppableItem::StaticClass(), Item.DropTransform);
 
 			FObsidianItemGeneratedData GeneratedData;
 			GeneratedData.AvailableStackCount = Item.DropStacks;

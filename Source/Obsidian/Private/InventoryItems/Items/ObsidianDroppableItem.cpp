@@ -21,7 +21,7 @@
 #include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "InventoryItems/ObsidianItemManagerComponent.h"
-#include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
+#include "InventoryItems/Items/ObsidianItemLabelComponent.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -39,18 +39,10 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetRenderCustomDepth(false);
 	StaticMeshComp->SetupAttachment(RootSceneComponent);
 
-	static ConstructorHelpers::FClassFinder<UUserWidget> ItemLabelClassFinder(TEXT("/Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C"));
-	if (ItemLabelClassFinder.Succeeded())
-	{
-		ItemLabelClass = ItemLabelClassFinder.Class;
-	}
-#if !UE_BUILD_SHIPPING
-	else
-	{
-		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("ItemLabelClassFinder cannot find the default ItemLabelClass for WorldItemNameWidgetComp in AObsidianDroppableItem's constructor"
-													   " previously located in /Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C")), ELogVerbosity::Error);
-	}
-#endif
+	ItemLabelComponent = CreateDefaultSubobject<UObsidianItemLabelComponent>(TEXT("ItemLabelComponent"));
+	ItemLabelComponent->SetItemOwner(this);
+
+	OnItemInitializedDelegate.AddUObject(this, &ThisClass::InitializeLabelComponent);
 	
 	static ConstructorHelpers::FObjectFinder<UCurveFloat> DropCurveClassFinder(TEXT("/Game/Obsidian/Items/ItemDrop/Curves/ItemDrop_FloatCurve.ItemDrop_FloatCurve"));
 	if (DropCurveClassFinder.Succeeded())
@@ -69,13 +61,6 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 void AObsidianDroppableItem::BeginPlay()
 {
 	Super::BeginPlay();
-
-	// In some edge conditions the Replication of actual item set on this ObsidianDroppableItem can not happen before BeginPlay
-	// In This special conditions we will try to set the name again in OnRep_PickupContent if it was not yet initialized
-	if(bInitializedItemLabel == false)
-	{
-		bInitializedItemLabel = InitializeItemLabel();
-	}
 
 	InitDropRouteAnimation();
 }
@@ -103,12 +88,14 @@ void AObsidianDroppableItem::InitializeItem(const FDraggedItem& DraggedItem)
 	if(UObsidianInventoryItemInstance* ItemInstance = DraggedItem.Instance)
 	{
 		AddItemInstance(ItemInstance);
+		OnItemInitializedDelegate.Broadcast();
 		return;
 	}
 
 	if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
 		AddItemDefinition(ItemDef, DraggedItem.GeneratedData);
+		OnItemInitializedDelegate.Broadcast();
 		return;
 	}
 
@@ -132,34 +119,9 @@ void AObsidianDroppableItem::InitializeItem(const TSubclassOf<UObsidianInventory
 	if(ItemDef)
 	{
 		AddItemDefinition(ItemDef, InGeneratedData);
+		OnItemInitializedDelegate.Broadcast();
 		return;
 	}
-}
-
-bool AObsidianDroppableItem::InitializeItemLabel()
-{
-	UWorld* World = GetWorld();
-	if(World == nullptr || bInitializedItemLabel)
-	{
-		return false;
-	}
-
-	bool bSuccess = false;
-	
-	if (UObsidianItemLabelManagerSubsystem* ItemLabelManagerSubsystem = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
-	{
-		ItemLabel = CreateWidget<UObsidianItemLabel>(World, ItemLabelClass);
-		ItemLabel->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::OnItemMouseHover);
-		ItemLabel->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::OnItemMouseButtonDown);
-		bSuccess = ConstructItemLabelWidget(ItemLabel);
-
-		FObsidianItemLabelInfo ItemLabelInfo;
-		ItemLabelInfo.ItemLabelWidget = ItemLabel;
-		ItemLabelInfo.OwningItemActor = this;
-		ItemLabelManagerSubsystem->RegisterItemLabel(ItemLabelInfo);
-	}
-	
-	return bSuccess;
 }
 
 void AObsidianDroppableItem::OnRep_PickupContent()
@@ -167,15 +129,20 @@ void AObsidianDroppableItem::OnRep_PickupContent()
 	if(CarriesItemDef())
 	{
 		SetupItemAppearanceFromDefinition();
+		OnItemInitializedDelegate.Broadcast();
 	}
 	else if(CarriesItemInstance())
 	{
 		SetupItemAppearanceFromInstance();
+		OnItemInitializedDelegate.Broadcast();
 	}
+}
 
-	if(bInitializedItemLabel == false)
+void AObsidianDroppableItem::InitializeLabelComponent()
+{
+	if (ItemLabelComponent)
 	{
-		bInitializedItemLabel = InitializeItemLabel();
+		ItemLabelComponent->RegisterLabelComponent();
 	}
 }
 
@@ -279,17 +246,6 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 
 void AObsidianDroppableItem::DestroyDroppedItem()
 {
-	const UWorld* World = GetWorld();
-	if(World == nullptr)
-	{
-		return;
-	}
-	
-	if (UObsidianItemLabelManagerSubsystem* ItemLabelManagerSubsystem = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
-	{
-		ItemLabelManagerSubsystem->UnregisterItemLabel(ItemLabel);
-	}
-	
 	Destroy();
 }
 
@@ -298,7 +254,6 @@ void AObsidianDroppableItem::Destroyed()
 	if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
 		UGameplayStatics::GetPlayerController(this, 0)))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Got PC [%s]"), *GetNameSafe(ObsidianPC));
 		if(ObsidianPC->IsLocalPlayerController())
 		{
 			StopHighlight();
@@ -354,42 +309,6 @@ void AObsidianDroppableItem::SetupItemAppearanceFromDefinition() const
 	
 	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in [%hs]."),
 		*ItemDefault->GetDebugName(), __FUNCTION__);
-}
-
-bool AObsidianDroppableItem::ConstructItemLabelWidget(UObsidianItemLabel* Label) const
-{
-	if(Label == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("Item World Name is invalid in [%hs]."), __FUNCTION__);
-		return false;
-	}
-	bool bSuccess = false;
-
-	if(const TSubclassOf<UObsidianInventoryItemDefinition> PickupItemDef = GetPickupTemplateFromPickupContent().ItemDef)
-	{
-		if(const UObsidianInventoryItemDefinition* DefaultItem = PickupItemDef.GetDefaultObject())
-		{
-			if(const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(
-				DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
-			{
-				const FText ItemDisplayName = Appearance->GetItemDisplayName();
-				Label->SetItemName(ItemDisplayName);
-				bSuccess = true;
-			}
-		}
-	}
-	else if(const UObsidianInventoryItemInstance* ItemInstance = GetPickupInstanceFromPickupContent().Item)
-    {
-		const FText ItemDisplayName = ItemInstance->GetItemDisplayName();
-		Label->SetItemName(ItemDisplayName);
-		bSuccess = true;
-    }
-	
-	if(!bSuccess)
-	{
-		UE_LOG(LogInventory, Error, TEXT("Failed to setup Item World Name in [%hs]."), __FUNCTION__);
-	}
-	return bSuccess;
 }
 
 void AObsidianDroppableItem::InitDropRouteAnimation()

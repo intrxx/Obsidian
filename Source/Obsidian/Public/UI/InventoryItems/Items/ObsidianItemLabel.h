@@ -12,9 +12,9 @@
 class UBorder;
 class UCommonTextBlock;
 
-DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLabelMouseButtonDownSignature, const int32 PlayerIndex,
-	const FObsidianItemInteractionFlags& InteractionFlags);
-DECLARE_MULTICAST_DELEGATE_OneParam(FOnItemLabelMouseHoverSignature, const bool bEnter);
+DECLARE_MULTICAST_DELEGATE_ThreeParams(FOnItemLabelMouseButtonDownSignature, const int32 PlayerIndex,
+	const FObsidianItemInteractionFlags& InteractionFlags, const FGuid& LabelID);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLabelMouseHoverSignature, const bool bEnter, const FGuid& LabelID);
 
 /**
  * Widget class that represents the Item's name above the Item Actor in the world.
@@ -29,8 +29,12 @@ public:
 	
 	virtual void NativeConstruct() override;
 
+	FGuid GetLabelID() const;
+	bool IsInUse() const;
+	void MarkInUse(const bool bInUse, const FGuid& WithGuid = FGuid());
+	
 	void SetItemName(const FText& ItemName);
-
+	
 	void HandleItemLabelHighlightBegin() const;
 	void HandleItemLabelHighlightEnd() const;
 	
@@ -58,4 +62,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FLinearColor RegularBrushColor;
+
+	bool bLabelInUse = false;
+	FGuid LabelID = FGuid();
 };
