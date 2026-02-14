@@ -103,9 +103,11 @@ protected:
 	void UpdateLabelAnchors(float DeltaTime);
 	void SolveLabelLayout();
 
+	bool IsOutsideCurrentViewport(const FVector2D& ViewportPosition);
+	
 	static bool CheckVerticalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
 	static bool CheckHorizontalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
-
+	
 	void HandleViewportResize(FViewport* Viewport, uint32 /** unused */);
 
 	UObsidianItemLabel* AcquireWidget(const FGuid& ForID);

@@ -106,18 +106,23 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 		if (LabelData.IsValid() && LabelData.bVisible)
 		{
 			FVector2D OutUpdatedAnchorScreenPosition;
-			const bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
+			bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
 				LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
 			if (bSuccess == false)
 			{
 				UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
-				return;
+				continue;
 			}
 			
-			LabelData.LabelAnchorPosition = FMath::Vector2DInterpTo(LabelData.LabelAnchorPosition,
-				OutUpdatedAnchorScreenPosition, DeltaTime, LabelAdjustmentSmoothSpeed);
-
 			const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
+			if (IsOutsideCurrentViewport(NewLabelPosition))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[%s] is outside viewport."),
+					*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+				//TODO(intrxx) Release widget?
+				continue;
+			}
+			
 			LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
 		}
 	}
@@ -187,8 +192,28 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 	}
 }
 
+bool UObsidianItemLabelManagerSubsystem::IsOutsideCurrentViewport(const FVector2D& ViewportPosition)
+{
+	if (const UWorld* World = GetWorld())
+	{
+		const FVector2D ViewportSize = UWidgetLayoutLibrary::GetViewportSize(World);
+		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
+		
+		constexpr float AdditionalBufferArea = 1.2;
+		const FVector2D ViewportSizeScaled = (ViewportSize / DPIScale) * AdditionalBufferArea;
+		
+		const bool bIsOnScreen =
+			ViewportPosition.X >= -250.0f &&
+			ViewportPosition.X <= ViewportSizeScaled.X &&
+			ViewportPosition.Y >= -250.0f &&
+			ViewportPosition.Y <= ViewportSizeScaled.Y;
+		return !bIsOnScreen;
+	}
+	return false;
+}
+
 bool UObsidianItemLabelManagerSubsystem::CheckVerticalOverlap(const FObsidianItemLabelData& LabelA,
-	const FObsidianItemLabelData& LabelB)
+                                                              const FObsidianItemLabelData& LabelB)
 {
 	const float LabelABottom = LabelA.LabelSolvedPosition.Y;
 	const float LabelATop = LabelABottom - LabelA.LabelSize.Y;
