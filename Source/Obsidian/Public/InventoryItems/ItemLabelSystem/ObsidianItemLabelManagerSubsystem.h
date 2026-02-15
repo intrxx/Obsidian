@@ -28,7 +28,8 @@ public:
 	FObsidianItemLabelData(){}
 
 	bool IsValid() const;
-	
+
+	void ResetLabelData();
 public:
 	/**
 	 * Initialization

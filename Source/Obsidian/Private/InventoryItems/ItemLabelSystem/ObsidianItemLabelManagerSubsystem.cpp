@@ -22,6 +22,15 @@ bool FObsidianItemLabelData::IsValid() const
 	return ItemLabelWidget && CanvasPanelSlot && SourceLabelComponent;
 }
 
+void FObsidianItemLabelData::ResetLabelData()
+{
+	CanvasPanelSlot = nullptr;
+	ItemLabelWidget = nullptr;
+	LabelSize = FVector2D::Zero();
+
+	bVisible = false;
+}
+
 // ~ End of FObsidianItemLabelData
 
 UObsidianItemLabelManagerSubsystem::UObsidianItemLabelManagerSubsystem()
@@ -99,33 +108,63 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 			}
 		}
 	}
-	
+
+	uint32 UpdatedWidgetsCount = 0; 
 	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
 	{
 		FObsidianItemLabelData& LabelData = Pair.Value;
-		if (LabelData.IsValid() && LabelData.bVisible)
+		
+		FVector2D OutUpdatedAnchorScreenPosition;
+		bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
+			LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
+		if (bSuccess == false)
 		{
-			FVector2D OutUpdatedAnchorScreenPosition;
-			bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
-				LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
-			if (bSuccess == false)
-			{
-				UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
-				continue;
-			}
-			
-			const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
-			if (IsOutsideCurrentViewport(NewLabelPosition))
-			{
-				UE_LOG(LogTemp, Warning, TEXT("[%s] is outside viewport."),
-					*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-				//TODO(intrxx) Release widget?
-				continue;
-			}
-			
-			LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
+			UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
+			continue;
 		}
+
+		LabelData.LabelAnchorPosition = OutUpdatedAnchorScreenPosition;
+		const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
+		if (IsOutsideCurrentViewport(NewLabelPosition))
+		{
+			if (LabelData.bVisible)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[%s] went outside viewport."),
+					*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+				//TODO(intrxx) Deactivate label
+				ReleaseWidget(LabelData.ItemLabelWidget);
+				LabelData.ResetLabelData();
+			}
+			continue;
+		}
+		if (LabelData.bVisible == false)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("[%s] is back inside the viewport."),
+				*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+			//TODO(intrxx) Activate label
+
+			UObsidianItemLabelComponent* LabelComponent = LabelData.SourceLabelComponent;
+			if (LabelComponent == nullptr)
+			{
+				continue;
+			}
+				
+			const FObsidianLabelInitializationData InitializationData = LabelComponent->GetLabelInitializationData();
+			LabelData.ItemLabelWidget = AcquireWidget(LabelData.LabelID);
+			LabelData.ItemLabelWidget->SetItemName(InitializationData.ItemName);
+			LabelData.ItemLabelWidget->SetVisibility(ESlateVisibility::Visible);
+			LabelData.CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(LabelData.ItemLabelWidget);
+			
+			LabelData.LabelSize = LabelData.CanvasPanelSlot->GetSize();
+				
+			LabelData.bVisible = true;
+		}
+		
+		LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
+		UpdatedWidgetsCount++;
 	}
+
+	UE_LOG(LogTemp, Warning, TEXT("Updated [%d] widget's positions."), UpdatedWidgetsCount);
 
 	bLayoutDirty = false;
 }
@@ -159,6 +198,8 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		FObsidianItemLabelData& LabelData = Pair.Value;
 		CandidateLabels.Add(&LabelData);
 	}
+
+	UE_LOG(LogTemp, Display, TEXT("Solving Layout for [%d] widgets."), CandidateLabels.Num());
 	
 	CandidateLabels.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
 		{
@@ -185,11 +226,13 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		if (/** CheckHorizontalOverlap(Current, Previous) && */ CheckVerticalOverlap(*Current, *Previous))
 		{
 			const float NewY = Previous->LabelSolvedPosition.Y + Previous->LabelSize.Y;
-
+			
 			Current->LabelSolvedPosition.Y = NewY;
 			Current->LabelSolvedPositionOffset.Y = Current->LabelSolvedPosition.Y - Current->LabelAnchorPosition.Y;
 		}
 	}
+
+	UE_LOG(LogItemLabelManager, Warning, TEXT("End Solving Layout!"));
 }
 
 bool UObsidianItemLabelManagerSubsystem::IsOutsideCurrentViewport(const FVector2D& ViewportPosition)
@@ -209,7 +252,7 @@ bool UObsidianItemLabelManagerSubsystem::IsOutsideCurrentViewport(const FVector2
 			ViewportPosition.Y <= ViewportSizeScaled.Y;
 		return !bIsOnScreen;
 	}
-	return false;
+	return true;
 }
 
 bool UObsidianItemLabelManagerSubsystem::CheckVerticalOverlap(const FObsidianItemLabelData& LabelA,
@@ -270,31 +313,21 @@ FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelCo
 	NewLabelData.LabelSolvedPosition = OutInitialScreenPosition;
 	NewLabelData.bVisible = bVisibleOnScreen;
 	
-	if (bVisibleOnScreen)
-	{
-		const FObsidianLabelInitializationData InitializationData = SourceLabelComponent->GetLabelInitializationData();
-		UObsidianItemLabel* ItemLabel = AcquireWidget(NewLabelData.LabelID);
-		ItemLabel->SetItemName(InitializationData.ItemName);
-		ItemLabel->SetVisibility(ESlateVisibility::Visible);
-		NewLabelData.ItemLabelWidget = ItemLabel;
+	const FObsidianLabelInitializationData InitializationData = SourceLabelComponent->GetLabelInitializationData();
+	NewLabelData.ItemLabelWidget = AcquireWidget(NewLabelData.LabelID);
+	NewLabelData.ItemLabelWidget->SetItemName(InitializationData.ItemName);
+	NewLabelData.ItemLabelWidget->SetVisibility(ESlateVisibility::Visible);
 
-		if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(ItemLabel,
-			OutInitialScreenPosition))
-		{
-			UE_LOG(LogItemLabelManager, Display, TEXT("New Label Pos: %s"), *OutInitialScreenPosition.ToString());
+	if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(NewLabelData.ItemLabelWidget,
+		OutInitialScreenPosition))
+	{
+		UE_LOG(LogItemLabelManager, Display, TEXT("New Label Pos: %s"), *OutInitialScreenPosition.ToString());
 			
-			NewLabelData.LabelSize = CanvasPanelSlot->GetSize();
-			NewLabelData.CanvasPanelSlot = CanvasPanelSlot;
+		NewLabelData.LabelSize = CanvasPanelSlot->GetSize();
+		NewLabelData.CanvasPanelSlot = CanvasPanelSlot;
 
-			//TODO(intrxx) Check if the Layout needs solving first? Item Can be outside any cluster
-			bLayoutDirty = true;
-		}
-	}
-	else
-	{
-		UE_LOG(LogItemLabelManager, Display, TEXT("Item Label [%s] wasn't projected onto screen,"
-											" will be added as invisible data to use later."),
-											*SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+		//TODO(intrxx) Check if the Layout needs solving first? Item Can be outside any cluster
+		bLayoutDirty = true;
 	}
 	
 	ItemLabelsDataMap.Add(NewLabelData.LabelID, MoveTemp(NewLabelData));
