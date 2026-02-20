@@ -117,10 +117,20 @@ protected:
 	void HandleLabelHovered(const bool bEnter, const FGuid& LabelID);
 	void HandleLabelPressed(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags,
 		const FGuid& LabelID);
+
+	void MakeLayoutDirty();
+	void MakeLayoutClean();
 	
 private:
 	UPROPERTY()
 	TSubclassOf<UObsidianItemLabel> ItemLabelClass;
+
+	// ~ Debug
+	UPROPERTY()
+	TSubclassOf<UUserWidget> ItemLabelHelperTLClass;
+	UPROPERTY()
+	TSubclassOf<UUserWidget> ItemLabelHelperBRClass;
+	// ~ End of Debug
 	
 	UPROPERTY()
 	TObjectPtr<UObsidianItemLabelOverlay> ItemLabelOverlay;

@@ -22,6 +22,8 @@ class OBSIDIAN_API UObsidianItemLabelOverlay : public UObsidianWidgetBase
 
 public:
 	UCanvasPanelSlot* AddItemLabelToOverlay(UObsidianItemLabel* ItemLabelWidget, const FVector2D& AtPosition);
+	UCanvasPanelSlot* AddItemLabelToOverlayDebug(UUserWidget* ItemLabelWidget, const FVector2D& AtPosition);
+
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

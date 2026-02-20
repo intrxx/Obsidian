@@ -24,3 +24,14 @@ UCanvasPanelSlot* UObsidianItemLabelOverlay::AddItemLabelToOverlay(UObsidianItem
 
 	return CanvasSlot;
 }
+
+UCanvasPanelSlot* UObsidianItemLabelOverlay::AddItemLabelToOverlayDebug(UUserWidget* ItemLabelWidget,
+	const FVector2D& AtPosition)
+{
+	UCanvasPanelSlot* CanvasSlot = Root_CanvasPanel->AddChildToCanvas(ItemLabelWidget);
+	CanvasSlot->SetAutoSize(true);
+	CanvasSlot->SetAlignment(FVector2D(0.5f, 1.0f));
+	CanvasSlot->SetPosition(AtPosition);
+
+	return CanvasSlot;
+}
