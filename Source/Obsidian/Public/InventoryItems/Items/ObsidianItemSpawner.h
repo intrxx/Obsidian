@@ -84,6 +84,12 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float InteractionRadius = 150.0f;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	bool bRandomizeDropLocation = false;
+
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bRandomizeDropLocation", EditConditionHides), Category = "Obsidian|Setup");
+	float RandomizedLocationRadius = 50.0f;
+
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;

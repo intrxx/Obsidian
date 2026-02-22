@@ -2,6 +2,7 @@
 
 #include "InventoryItems/Items/ObsidianItemSpawner.h"
 
+#include "NavigationSystem.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -112,7 +113,31 @@ void AObsidianItemSpawner::Interact(AObsidianPlayerController* InteractingPlayer
 
 FVector AObsidianItemSpawner::GetItemSpawnLocation() const
 {
-	return SpawnPointComp != nullptr ? SpawnPointComp->GetComponentLocation() : FVector::Zero();
+	check(SpawnPointComp)
+	if (SpawnPointComp)
+	{
+		if (bRandomizeDropLocation == false)
+		{
+			return SpawnPointComp->GetComponentLocation();
+		}
+
+		UWorld* World = GetWorld();
+		if (World == nullptr)
+		{
+			return FVector::Zero();
+		}
+
+		if(const UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World))
+		{
+			FNavLocation RandomPoint;
+			if(NavigationSystem->GetRandomPointInNavigableRadius(SpawnPointComp->GetComponentLocation(),
+				RandomizedLocationRadius, RandomPoint))
+			{
+				return RandomPoint.Location;
+			}
+		}
+	}
+	return FVector::Zero();
 }
 
 

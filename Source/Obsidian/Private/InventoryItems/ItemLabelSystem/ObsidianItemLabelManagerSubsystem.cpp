@@ -9,6 +9,7 @@
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/Items/ObsidianItemLabelComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Obsidian/ObsidianGameModule.h"
 #include "UI/InventoryItems/ObsidianItemLabelOverlay.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 
@@ -189,7 +190,8 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		return;
 	}
 
-	//TODO(intrxx) Force this now to get all proper sizes, need to work it out I guess or check how expensive is this
+	//TODO(intrxx) Force this now to get all proper sizes, need to work it out I guess or check how expensive this is,
+	// Solve Layout is already being called in another frame but for some reason the Layout isn't prepassed anyway
 	ItemLabelOverlay->ForceLayoutPrepass();
 
 	AObsidianPlayerController* OwningOPC = OwningPC.IsValid()
@@ -212,6 +214,7 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
 	{
 		FObsidianItemLabelData& LabelData = Pair.Value;
+		//TODO(intrxx) Exclude items that are very far away, or just outside of viewport?
 		CandidateLabels.Add(&LabelData);
 	}
 
@@ -263,10 +266,10 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		Occupied.Add(FBox2D(FirstLabelTopLeft, FirstLabelBottomRight));
 
 		// ~ Debug help
-		UUserWidget* LabelDebugTL = CreateWidget(OwningOPC, ItemLabelHelperTLClass);
-		UUserWidget* LabelDebugBR = CreateWidget(OwningOPC, ItemLabelHelperBRClass);
-		UCanvasPanelSlot* CanvasPanelSlotTL = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugTL, FirstLabelTopLeft);
-		UCanvasPanelSlot* CanvasPanelSlotBR = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugBR, FirstLabelBottomRight);
+		// UUserWidget* LabelDebugTL = CreateWidget(OwningOPC, ItemLabelHelperTLClass);
+		// UUserWidget* LabelDebugBR = CreateWidget(OwningOPC, ItemLabelHelperBRClass);
+		// UCanvasPanelSlot* CanvasPanelSlotTL = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugTL, FirstLabelTopLeft);
+		// UCanvasPanelSlot* CanvasPanelSlotBR = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugBR, FirstLabelBottomRight);
 		// ~ End of Debug help
 	}
 	
@@ -291,14 +294,8 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		}
 		UE_LOG(LogTemp, Display, TEXT("Previous Label Size: [%s]"), *PreviousData.LabelSize.ToString());
 		// ~ End of debug
-		const float PreviousLabelHeightPlusOffset = PreviousData.LabelSize.Y + 1.0f;
-		const float PreviousLabelWidthPlusOffset = PreviousData.LabelSize.X + 1.0f;
-		TArray<FVector2D> CandidateOffsets = {
-			FVector2D(0.f, 0.f),
-			FVector2D(0.f, -PreviousLabelHeightPlusOffset),
-			FVector2D(0.f, PreviousLabelHeightPlusOffset),
-			FVector2D(PreviousLabelWidthPlusOffset, 0.0f),
-			FVector2D(-PreviousLabelWidthPlusOffset, 0.0f)};
+		const float PreviousLabelHeight = PreviousData.LabelSize.Y;
+		const float PreviousLabelHalfWidth = PreviousData.LabelSize.X / 2;
 
 		if (CurrentLabelData.LabelSize.IsZero())
 		{
@@ -315,10 +312,26 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		const float LabelHalfWidth = CurrentLabelData.LabelSize.X / 2;
 		FVector2D LabelTopLeft = FVector2D(
 				CurrentLabelData.LabelSolvedPosition.X - LabelHalfWidth,
-				CurrentLabelData.LabelSolvedPosition.Y - LabelHalfHeight);
+				CurrentLabelData.LabelSolvedPosition.Y - (LabelHalfHeight * 2));
 		FVector2D LabelBottomRight = FVector2D(
 				CurrentLabelData.LabelSolvedPosition.X + LabelHalfWidth,
-				CurrentLabelData.LabelSolvedPosition.Y + LabelHalfHeight);
+				CurrentLabelData.LabelSolvedPosition.Y);
+
+		// I think I want the offsets to lay the item next to previous one (if it's in some range) so the current location
+		// of PreviousLabelData will need to be used, so far the items aren't aligning by if they have enough space for
+		// offset 0,0 to work
+		TArray<FVector2D> CandidateOffsets = {
+			FVector2D(0.f, 0.f),
+			FVector2D(0.f, -PreviousLabelHeight - 1.0f),
+			FVector2D(0.f, PreviousLabelHeight + 1.0f),
+			FVector2D(PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, 0.0f),
+			FVector2D(PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, 0.0f),
+			FVector2D(-PreviousLabelHalfWidth - LabelHalfWidth - 1.0f, -PreviousLabelHeight - 1.0f),
+			FVector2D(-PreviousLabelHalfWidth - LabelHalfWidth - 1.0f, PreviousLabelHeight + 1.0f),
+			FVector2D(-PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, -PreviousLabelHeight - 1.0f),
+			FVector2D(-PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, PreviousLabelHeight + 1.0f)};
+
+		bool bPlaced = false;
 		for (const FVector2D& Offset : CandidateOffsets)
 		{
 			FBox2D LabelRect = FBox2D(LabelTopLeft + Offset, LabelBottomRight + Offset);
@@ -339,8 +352,14 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 				CurrentLabelData.LabelSolvedPosition = CurrentLabelData.LabelSolvedPosition + Offset;
 				CurrentLabelData.LabelSolvedPositionOffset = CurrentLabelData.LabelSolvedPosition - CurrentLabelData.LabelAnchorPosition;
 				Occupied.Add(LabelRect);
+				bPlaced = true;
 				break;
 			}
+		}
+
+		if (bPlaced == false)
+		{
+			UE_LOG(LogObsidian, Error, TEXT("There is no more room for another Item Label on the screen!"));
 		}
 	}
 	
