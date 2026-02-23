@@ -207,9 +207,9 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 	TArray<FObsidianItemLabelData*> CandidateLabels;
 	CandidateLabels.Reserve(ItemLabelsDataMap.Num());
 
-	FVector CamLoc = OwningOPC->PlayerCameraManager
-		? OwningOPC->PlayerCameraManager->GetCameraLocation()
-		: FVector::Zero();
+	// FVector CamLoc = OwningOPC->PlayerCameraManager
+	// 	? OwningOPC->PlayerCameraManager->GetCameraLocation()
+	// 	: FVector::Zero();
 
 	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
 	{
@@ -237,6 +237,17 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 			return DataA.Priority >= DataB.Priority;
 		});
 
+	// ~ Debug
+	// int32 index = 1;
+	// UE_LOG(LogTemp, Display, TEXT("Solving for widgets in Priority:"));
+	// for (const auto& Data : CandidateLabels)
+	// {
+	// 	UE_LOG(LogTemp, Display, TEXT("%d. [%s]."), index,
+	// 		*Data->SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+	// 	++index;
+	// }
+	// ~ End of Debug
+
 	TArray<FBox2D> Occupied;
 	Occupied.Reserve(CandidateLabels.Num());
 
@@ -255,14 +266,10 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		UE_LOG(LogTemp, Display, TEXT("First Label Size: [%s]"), *FirstLabel.LabelSize.ToString());
 		// ~ End of debug
 		
-		const float FirstLabelHalfHeight = FirstLabel.LabelSize.Y / 2;
-		const float FirstLabelHalfWidth = FirstLabel.LabelSize.X / 2;
-		FVector2D FirstLabelTopLeft = FVector2D(
-				FirstLabel.LabelSolvedPosition.X - FirstLabelHalfWidth,
-				FirstLabel.LabelSolvedPosition.Y - (FirstLabelHalfHeight * 2));
-		FVector2D FirstLabelBottomRight = FVector2D(
-				FirstLabel.LabelSolvedPosition.X + FirstLabelHalfWidth,
-				FirstLabel.LabelSolvedPosition.Y);
+		const FVector2D FirstLabelTopLeft = FirstLabel.LabelSolvedPosition;
+		const FVector2D FirstLabelBottomRight = FVector2D(
+				FirstLabel.LabelSolvedPosition.X + FirstLabel.LabelSize.X,
+				FirstLabel.LabelSolvedPosition.Y + FirstLabel.LabelSize.Y);
 		Occupied.Add(FBox2D(FirstLabelTopLeft, FirstLabelBottomRight));
 
 		// ~ Debug help
@@ -276,60 +283,62 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 	for (int32 i = 1; i < CandidateLabels.Num(); ++i)
 	{
 		FObsidianItemLabelData& CurrentLabelData = *CandidateLabels[i];
-		FObsidianItemLabelData& PreviousData = *CandidateLabels[i - 1];
+		FObsidianItemLabelData& PreviousLabelData = *CandidateLabels[i - 1];
 
 		UE_LOG(LogTemp, Warning, TEXT("Solving for [%s] label."),
 				*CurrentLabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
 		UE_LOG(LogTemp, Warning, TEXT("Previous Label being: [%s]."),
-				*PreviousData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+				*PreviousLabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
 
-		if (PreviousData.LabelSize.IsZero())
+		if (PreviousLabelData.LabelSize.IsZero())
 		{
-			PreviousData.LabelSize = PreviousData.ItemLabelWidget->GetDesiredSize();
+			PreviousLabelData.LabelSize = PreviousLabelData.ItemLabelWidget->GetDesiredSize();
 		}
-		// ~ Debug
-		if (PreviousData.LabelSize.IsZero())
-		{
-			UE_LOG(LogTemp, Error, TEXT("Previous Label Size is zero!! [%s]"), *PreviousData.LabelSize.ToString());
-		}
-		UE_LOG(LogTemp, Display, TEXT("Previous Label Size: [%s]"), *PreviousData.LabelSize.ToString());
-		// ~ End of debug
-		const float PreviousLabelHeight = PreviousData.LabelSize.Y;
-		const float PreviousLabelHalfWidth = PreviousData.LabelSize.X / 2;
-
 		if (CurrentLabelData.LabelSize.IsZero())
 		{
 			CurrentLabelData.LabelSize = CurrentLabelData.ItemLabelWidget->GetDesiredSize();
 		}
+		
 		// ~ Debug
-		if (CurrentLabelData.LabelSize.IsZero())
-		{
-			UE_LOG(LogTemp, Error, TEXT("Current Label Size is zero!! [%s]"), *CurrentLabelData.LabelSize.ToString());
-		}
-		UE_LOG(LogTemp, Display, TEXT("Current Label Size: [%s]"), *CurrentLabelData.LabelSize.ToString());
+		// if (PreviousLabelData.LabelSize.IsZero())
+		// {
+		// 	UE_LOG(LogTemp, Error, TEXT("Previous Label Size is zero!! [%s]"), *PreviousLabelData.LabelSize.ToString());
+		// }
+		// UE_LOG(LogTemp, Display, TEXT("Previous Label Size: [%s]"), *PreviousLabelData.LabelSize.ToString());
 		// ~ End of debug
-		const float LabelHalfHeight = CurrentLabelData.LabelSize.Y / 2;
-		const float LabelHalfWidth = CurrentLabelData.LabelSize.X / 2;
-		FVector2D LabelTopLeft = FVector2D(
-				CurrentLabelData.LabelSolvedPosition.X - LabelHalfWidth,
-				CurrentLabelData.LabelSolvedPosition.Y - (LabelHalfHeight * 2));
-		FVector2D LabelBottomRight = FVector2D(
-				CurrentLabelData.LabelSolvedPosition.X + LabelHalfWidth,
-				CurrentLabelData.LabelSolvedPosition.Y);
+		
+		// ~ Debug
+		// if (CurrentLabelData.LabelSize.IsZero())
+		// {
+		// 	UE_LOG(LogTemp, Error, TEXT("Current Label Size is zero!! [%s]"), *CurrentLabelData.LabelSize.ToString());
+		// }
+		// UE_LOG(LogTemp, Display, TEXT("Current Label Size: [%s]"), *CurrentLabelData.LabelSize.ToString());
+		// ~ End of debug
+
+		// Assume label alignment [0, 0] (top left)
+		const float PreviousLabelHeight = PreviousLabelData.LabelSize.Y;
+		const float PreviousLabelWidth = PreviousLabelData.LabelSize.X;
+		const float LabelHeight = CurrentLabelData.LabelSize.Y;
+		const float LabelWidth = CurrentLabelData.LabelSize.X;
+		const FVector2D LabelTopLeft = CurrentLabelData.LabelSolvedPosition;
+		const FVector2D LabelBottomRight = FVector2D(
+				CurrentLabelData.LabelSolvedPosition.X + LabelWidth,
+				CurrentLabelData.LabelSolvedPosition.Y + LabelHeight);
 
 		// I think I want the offsets to lay the item next to previous one (if it's in some range) so the current location
 		// of PreviousLabelData will need to be used, so far the items aren't aligning by if they have enough space for
 		// offset 0,0 to work
+		static float PlacementOffset = 1.0f;
 		TArray<FVector2D> CandidateOffsets = {
 			FVector2D(0.f, 0.f),
-			FVector2D(0.f, -PreviousLabelHeight - 1.0f),
-			FVector2D(0.f, PreviousLabelHeight + 1.0f),
-			FVector2D(PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, 0.0f),
-			FVector2D(PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, 0.0f),
-			FVector2D(-PreviousLabelHalfWidth - LabelHalfWidth - 1.0f, -PreviousLabelHeight - 1.0f),
-			FVector2D(-PreviousLabelHalfWidth - LabelHalfWidth - 1.0f, PreviousLabelHeight + 1.0f),
-			FVector2D(-PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, -PreviousLabelHeight - 1.0f),
-			FVector2D(-PreviousLabelHalfWidth + LabelHalfWidth + 1.0f, PreviousLabelHeight + 1.0f)};
+			FVector2D(0.f, -PreviousLabelHeight - PlacementOffset),
+			FVector2D(0.f, PreviousLabelHeight + PlacementOffset),
+			FVector2D(-PreviousLabelWidth - PlacementOffset, PlacementOffset),
+			FVector2D(PreviousLabelWidth + PlacementOffset, PlacementOffset),
+			FVector2D(-PreviousLabelWidth - PlacementOffset, -PreviousLabelHeight - PlacementOffset),
+			FVector2D(-PreviousLabelWidth - PlacementOffset, PreviousLabelHeight + PlacementOffset),
+			FVector2D(PreviousLabelWidth + PlacementOffset, -PreviousLabelHeight - PlacementOffset),
+			FVector2D(PreviousLabelWidth + PlacementOffset, PreviousLabelHeight + PlacementOffset)};
 
 		bool bPlaced = false;
 		for (const FVector2D& Offset : CandidateOffsets)
@@ -360,26 +369,12 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout()
 		if (bPlaced == false)
 		{
 			UE_LOG(LogObsidian, Error, TEXT("There is no more room for another Item Label on the screen!"));
+			// UUserWidget* LabelDebugTL = CreateWidget(OwningOPC, ItemLabelHelperTLClass);
+			// UUserWidget* LabelDebugBR = CreateWidget(OwningOPC, ItemLabelHelperBRClass);
+			// UCanvasPanelSlot* CanvasPanelSlotTL = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugTL, PreviousLabelData.LabelSolvedPosition);
+			// UCanvasPanelSlot* CanvasPanelSlotBR = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugBR, CurrentLabelData.LabelSolvedPosition);
 		}
 	}
-	
-	// for (int32 i = 1; i < CandidateLabels.Num(); ++i)
-	// {
-	// 	FObsidianItemLabelData* Current = CandidateLabels[i];
-	// 	FObsidianItemLabelData* Previous = CandidateLabels[i - 1];
-	// 	
-	// 	//TODO(intrxx) can store FBox2D in the Label Data
-	// 	
-	// 	
-	// 	
-	// 	if (/** CheckHorizontalOverlap(Current, Previous) && */ CheckVerticalOverlap(*Current, *Previous))
-	// 	{
-	// 		const float NewY = Previous->LabelSolvedPosition.Y + Previous->LabelSize.Y;
-	// 		
-	// 		Current->LabelSolvedPosition.Y = NewY;
-	// 		Current->LabelSolvedPositionOffset.Y = Current->LabelSolvedPosition.Y - Current->LabelAnchorPosition.Y;
-	// 	}
-	// }
 
 	UE_LOG(LogItemLabelManager, Warning, TEXT("---- End Solving Layout! ----"));
 }
