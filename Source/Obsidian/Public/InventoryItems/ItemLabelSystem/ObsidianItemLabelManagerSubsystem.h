@@ -102,7 +102,8 @@ public:
 
 protected:
 	void UpdateLabelAnchors(float DeltaTime);
-	void SolveLabelLayout();
+	void SolveLabelLayout_1();
+	void SolveLabelLayout_2();
 
 	bool IsOutsideCurrentViewport(const FVector2D& ViewportPosition);
 	
@@ -152,4 +153,71 @@ private:
 	bool bLayoutDirty = false;
 
 	bool bLabelOverlayVisible = true;
+};
+
+struct FDeterministicRadialEnumerator
+{
+	
+public:
+	FDeterministicRadialEnumerator(const float InStep, const int32 InMaxRings, const int32 InBaseSamples = 8)
+		: Step(InStep)
+		, MaxRings(InMaxRings)
+		, BaseSamples(InBaseSamples)
+	{}
+
+	void Reset()
+	{
+		Ring = 0;
+		AngleIndex = 0;
+		bFirst = true;
+		SamplesThisRing = 1;
+	}
+
+	bool Next(FVector2D& OutOffset)
+	{
+		if (bFirst)
+		{
+			bFirst = false;
+			OutOffset = FVector2D::ZeroVector;
+			return true;
+		}
+
+		if (Ring >= MaxRings)
+		{
+			return false;
+		}
+
+		if (AngleIndex >= SamplesThisRing)
+		{
+			Ring++;
+			AngleIndex = 0;
+			SamplesThisRing = BaseSamples + Ring * 6;
+		}
+
+		const float Radius = Ring * Step;
+		const float Angle = (2.f * PI * AngleIndex) / SamplesThisRing;
+
+		float SinA, CosA;
+		FMath::SinCos(&SinA, &CosA, Angle);
+
+		FVector2D Offset(CosA * Radius, SinA * Radius);
+		
+		Offset.X = FMath::RoundToFloat(Offset.X);
+		Offset.Y = FMath::RoundToFloat(Offset.Y);
+
+		OutOffset = Offset;
+
+		AngleIndex++;
+		return true;
+	}
+
+private:
+	float Step;
+	int32 MaxRings;
+	int32 BaseSamples;
+
+	int32 Ring = 0;
+	int32 AngleIndex = 0;
+	int32 SamplesThisRing = 1;
+	bool bFirst = true;
 };
