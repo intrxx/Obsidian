@@ -6,6 +6,7 @@
 #include <Components/WidgetComponent.h>
 #include <GameFramework/CharacterMovementComponent.h>
 #include <GameFramework/SpringArmComponent.h>
+#include <GameFramework/GameplayCameraComponent.h>
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
@@ -28,21 +29,25 @@
 AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {
-	SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
-	SpringArmComponent->SetupAttachment(RootComponent);
-	SpringArmComponent->SetRelativeRotation(FRotator(-43.0f, 0.0f, 0.0f));
-	SpringArmComponent->TargetArmLength = 1100.0f;
-	SpringArmComponent->bInheritPitch = false;
-	SpringArmComponent->bInheritPitch = false;
-	SpringArmComponent->bInheritYaw = false;
+	//TODO(intrxx) Delete after GameplayCamera is stable
+	// SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
+	// SpringArmComponent->SetupAttachment(RootComponent);
+	// SpringArmComponent->SetRelativeRotation(FRotator(-43.0f, 0.0f, 0.0f));
+	// SpringArmComponent->TargetArmLength = 1100.0f;
+	// SpringArmComponent->bInheritPitch = false;
+	// SpringArmComponent->bInheritPitch = false;
+	// SpringArmComponent->bInheritYaw = false;
+	//
+	// //TODO(intrxx) Need to decide if i want to use it later on
+	// SpringArmComponent->bEnableCameraLag = true;
+	// SpringArmComponent->CameraLagSpeed = 15.f;
+	// SpringArmComponent->CameraLagMaxDistance = 20.f;
+	//
+	// CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
+	// CameraComponent->SetupAttachment(SpringArmComponent);
+	// ~ End of Delete after GameplayCamera is stable
 
-	//TODO(intrxx) Need to decide if i want to use it later on
-	SpringArmComponent->bEnableCameraLag = true;
-	SpringArmComponent->CameraLagSpeed = 15.f;
-	SpringArmComponent->CameraLagMaxDistance = 20.f;
-	
-	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComponent"));
-	CameraComponent->SetupAttachment(SpringArmComponent);
+	GameplayCameraComponent = CreateDefaultSubobject<UGameplayCameraComponent>(TEXT("GameplayCameraComp"));
 
 	PlayerInputManager = CreateDefaultSubobject<UObsidianPlayerInputManager>(TEXT("PlayerInputManager"));
 

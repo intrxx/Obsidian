@@ -12,6 +12,7 @@
 
 struct FObsidianGenericAttributes;
 
+class UGameplayCameraComponent;
 class AObsidianDroppableItem;
 class UObsidianHeroHealthBar_Simple;
 class UObsidianHeroHealthBar;
@@ -108,10 +109,15 @@ private:
 	TObjectPtr<UObsidianHeroAttributesComponent> HeroAttributesComponent;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UCameraComponent> CameraComponent;
+	TObjectPtr<UGameplayCameraComponent> GameplayCameraComponent;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<USpringArmComponent> SpringArmComponent;
+	//TODO(intrxx) Delete after GameplayCamera is stable
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	// TObjectPtr<UCameraComponent> CameraComponent;
+	//
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
+	// TObjectPtr<USpringArmComponent> SpringArmComponent;
+	// ~ End of Delete after GameplayCamera is stable
 	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;

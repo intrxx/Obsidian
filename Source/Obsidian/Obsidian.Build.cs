@@ -25,7 +25,8 @@ public class Obsidian : ModuleRules
 				"GameplayDebugger",
 				"ModularGameplayActors", 
 				"CommonGame",
-				"Niagara"
+				"Niagara",
+				"GameplayCameras"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

@@ -194,10 +194,11 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 
 void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_1()
 {
-	if (bLayoutDirty == false)
-	{
-		return;
-	}
+	//Note(intrxx) I need to solve this every frame due to camera projection (due to the camera being at an angle)
+	// if (bLayoutDirty == false) 
+	// {
+	// 	return;
+	// }
 	
 	if (ItemLabelsDataMap.IsEmpty())
 	{
@@ -391,7 +392,8 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_1()
 
 void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_2()
 {
-	if (bLayoutDirty == false)
+	//TODO(intrxx) I need to solve this every frame due to camera projection (due to the camera being at an angle)
+	if (bLayoutDirty == false) 
 	{
 		return;
 	}
