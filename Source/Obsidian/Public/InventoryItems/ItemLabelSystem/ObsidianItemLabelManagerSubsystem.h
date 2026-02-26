@@ -8,6 +8,7 @@
 #include <Subsystems/WorldSubsystem.h>
 #include "ObsidianItemLabelManagerSubsystem.generated.h"
 
+class AObsidianItemLabelSystemLateTickActor;
 struct FObsidianItemInteractionFlags;
 class UObsidianItemLabelComponent;
 class ItemLabelClass;
@@ -74,6 +75,31 @@ public:
 	uint8 bVisible:1 = false;
 };
 
+USTRUCT()
+struct FObsidianLabelManagerLateTickFunction : public FTickFunction
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	TObjectPtr<class UObsidianItemLabelManagerSubsystem> Target = nullptr;
+
+public:
+	virtual void ExecuteTick(float DeltaTime, ELevelTick TickType, ENamedThreads::Type CurrentThread,
+		const FGraphEventRef& MyCompletionGraphEvent) override;
+
+	virtual FString DiagnosticMessage() override;
+};
+
+template<>
+struct TStructOpsTypeTraits<FObsidianLabelManagerLateTickFunction> : public TStructOpsTypeTraitsBase2<FObsidianLabelManagerLateTickFunction>
+{
+	enum
+	{
+		WithCopy = false,
+		WithPureVirtual = true
+	};
+};
+
 /**
  * 
  */
@@ -86,6 +112,8 @@ public:
 	UObsidianItemLabelManagerSubsystem();
 
 	virtual void Tick(float DeltaTime) override;
+	void PostWorkTick(float DeltaTime);
+	
 	virtual TStatId GetStatId() const override;
 	
 	void InitializeItemLabelManager(UObsidianItemLabelOverlay* InItemLabelOverlay, AObsidianPlayerController* InObsidianPC);
@@ -100,6 +128,9 @@ public:
 	virtual void Deinitialize() override;
 	// ~ End of USubsystem
 
+public:
+	FObsidianLabelManagerLateTickFunction LateTickFunction;
+	
 protected:
 	void UpdateLabelAnchors(float DeltaTime);
 	void SolveLabelLayout_1();

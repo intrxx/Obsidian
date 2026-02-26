@@ -9,6 +9,7 @@
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/Items/ObsidianItemLabelComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "Math/CameraPoseMath.h"
 #include "Obsidian/ObsidianGameModule.h"
 #include "UI/InventoryItems/ObsidianItemLabelOverlay.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
@@ -32,7 +33,28 @@ void FObsidianItemLabelData::ResetLabelData()
 	bVisible = false;
 }
 
-// ~ End of FObsidianItemLabelData
+// ~ Start of FObsidianLabelManagerLateTickFunction
+
+void FObsidianLabelManagerLateTickFunction::ExecuteTick(float DeltaTime, ELevelTick TickType, ENamedThreads::Type CurrentThread,
+	const FGraphEventRef& MyCompletionGraphEvent)
+{
+	if (Target && IsValid(Target))
+	{
+		FScopeCycleCounterUObject TargetScope = FScopeCycleCounterUObject(Target);
+		Target->PostWorkTick(DeltaTime);
+	}
+}
+
+FString FObsidianLabelManagerLateTickFunction::DiagnosticMessage()
+{
+	if (Target)
+	{
+		return Target->GetFullName() + TEXT("Late Tick"); 
+	}
+	return FTickFunction::DiagnosticMessage();
+}
+
+// ~ End of FObsidianLabelManagerLateTickFunction
 
 UObsidianItemLabelManagerSubsystem::UObsidianItemLabelManagerSubsystem()
 {
@@ -74,6 +96,16 @@ void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Co
 		ItemLabelGroundZOffset = ItemDataSettings->DefaultItemLabelGroundZOffset;
 		LabelAdjustmentSmoothSpeed = ItemDataSettings->LabelAdjustmentSmoothSpeed;
 	}
+
+	if (const UWorld* World = GetWorld())
+	{
+		LateTickFunction.Target = this;
+		LateTickFunction.TickGroup = TG_PostUpdateWork;
+		LateTickFunction.bCanEverTick = true;
+		LateTickFunction.bStartWithTickEnabled = true;
+		LateTickFunction.SetTickFunctionEnable(true);
+		LateTickFunction.RegisterTickFunction(World->PersistentLevel);
+	}
 }
 
 void UObsidianItemLabelManagerSubsystem::Deinitialize()
@@ -82,6 +114,8 @@ void UObsidianItemLabelManagerSubsystem::Deinitialize()
 	{
 		FViewport::ViewportResizedEvent.Remove(OnViewportResizeDelegateHandle);
 	}
+
+	LateTickFunction.UnRegisterTickFunction();
 	
 	Super::Deinitialize();
 }
@@ -94,8 +128,16 @@ void UObsidianItemLabelManagerSubsystem::Tick(float DeltaTime)
 	{
 		//SolveLabelLayout_1();
 		SolveLabelLayout_2();
+	}
+}
+
+void UObsidianItemLabelManagerSubsystem::PostWorkTick(float DeltaTime)
+{
+	if (bLabelOverlayVisible)
+	{
 		UpdateLabelAnchors(DeltaTime);
 	}
+	//SolveLabelLayout_2();
 }
 
 TStatId UObsidianItemLabelManagerSubsystem::GetStatId() const
@@ -129,6 +171,15 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
 	{
 		FObsidianItemLabelData& LabelData = Pair.Value;
+
+		// FCameraPose CameraPose;
+		// CameraPose.
+		//UE::Cameras::FCameraPoseMath::ProjectWorldToScreen();
+		
+		// bool bSuccess = UGameplayStatics::ProjectWorldToScreen(ObsidianPC, LabelData.LabelAdjustedWorldPosition,
+		// 	OutUpdatedAnchorScreenPosition, false);
+
+		//TODO(intrxx) Projection gets fucky wacky with the camera perspective so solved layout is drifting, specially when moving top/down
 		
 		FVector2D OutUpdatedAnchorScreenPosition;
 		bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
@@ -195,10 +246,10 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_1()
 {
 	//Note(intrxx) I need to solve this every frame due to camera projection (due to the camera being at an angle)
-	// if (bLayoutDirty == false) 
-	// {
-	// 	return;
-	// }
+	if (bLayoutDirty == false) 
+	{
+		return;
+	}
 	
 	if (ItemLabelsDataMap.IsEmpty())
 	{
