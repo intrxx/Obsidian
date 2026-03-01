@@ -72,3 +72,14 @@ uint8 UObsidianItemDataDeveloperSettings::GetNaturalMinAffixCountForRarity(const
 	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToNaturalMinAffixCount!"));
 	return 0;
 }
+
+TArray<uint8> UObsidianItemDataDeveloperSettings::GetAffixNumberWeightsForRarity(
+	const EObsidianItemRarity ForRarity) const
+{
+	if (const FObsidianWeightsWrapper* WeightsWrapper = DefaultRarityToNumberOfAffixesWeights.Find(ForRarity))
+	{
+		return WeightsWrapper->Weights;
+	}
+	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToNumberOfAffixesWeights!"));
+	return {};
+}

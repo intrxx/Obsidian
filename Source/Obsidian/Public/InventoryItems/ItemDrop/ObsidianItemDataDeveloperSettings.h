@@ -13,6 +13,16 @@ class UObsidianItemDataConfig;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogItemData, Log, All);
 
+USTRUCT()
+struct FObsidianWeightsWrapper
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere)
+	TArray<uint8> Weights;
+};
+
 /**
  * 
  */
@@ -30,6 +40,7 @@ public:
 	uint8 GetMaxSuffixCountForRarity(const EObsidianItemRarity ForRarity) const;
 	uint8 GetMaxAffixCountForRarity(const EObsidianItemRarity ForRarity) const;
 	uint8 GetNaturalMinAffixCountForRarity(const EObsidianItemRarity ForRarity) const;
+	TArray<uint8> GetAffixNumberWeightsForRarity(const EObsidianItemRarity ForRarity) const;
 	
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Config", meta = (AllowedClasses = "/Script/Obsidian.ObsidianItemDataConfig"))
@@ -64,6 +75,10 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	TMap<EObsidianItemRarity, uint8> DefaultRarityToNaturalMinAffixCount;
+	
+	//TODO(intrxx) validate it against the DefaultRarityToMaxAffixCount
+	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
+	TMap<EObsidianItemRarity, FObsidianWeightsWrapper> DefaultRarityToNumberOfAffixesWeights;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|ItemLabels")
 	float DefaultItemLabelGroundZOffset = 30.0f;

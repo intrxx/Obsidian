@@ -481,15 +481,12 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		return;
 	}
 	
-	const uint8 MinAffixCount = ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemToDrop.DropRarity);
-	const uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(ForItemToDrop.DropRarity);
-
-	//TODO(intrxx) should this roll be weighted?
-	uint8 AffixCountToRoll = FMath::RandRange(MinAffixCount, MaxAffixCount);
+	uint8 AffixCountToRoll = GetNumberOfAffixesToRoll(ForItemToDrop.DropRarity);
 	
 	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
 	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
-	const uint8 MaximumNumberOfAffixesAvailableToAdd = FMath::Min<uint8>(MaxSuffixCount, Suffixes.Num()) + FMath::Min<uint8>(MaxPrefixCount, Prefixes.Num());
+	const uint8 MaximumNumberOfAffixesAvailableToAdd = FMath::Min<uint8>(MaxSuffixCount, Suffixes.Num()) +
+		FMath::Min<uint8>(MaxPrefixCount, Prefixes.Num());
 	if (AffixCountToRoll > MaximumNumberOfAffixesAvailableToAdd)
 	{
 		UE_LOG(LogDropComponent, Error, TEXT("Cannot safely add affixes: requested [%d], available [%d] (Prefixes [%d], Suffixes [%d]).\n"
@@ -655,8 +652,56 @@ bool UObsidianItemDropComponent::ShouldApplyAffixValueMultiplier(const EObsidian
 	return false;
 }
 
+uint8 UObsidianItemDropComponent::GetNumberOfAffixesToRoll(const EObsidianItemRarity ForItemRarity)
+{
+	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
+	if (ItemDataSettings == nullptr)
+	{
+		UE_LOG(LogItemDataLoader, Error, TEXT("ItemDataSettings was not found in [%hs]"), __FUNCTION__);
+		return 0;
+	}
+
+	if (ForItemRarity != EObsidianItemRarity::Magic && ForItemRarity != EObsidianItemRarity::Rare)
+	{
+		return 0;
+	}
+	
+	const uint8 MinAffixCount = ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemRarity);
+	const uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(ForItemRarity);
+	
+	TArray<uint8> AffixValues;
+	AffixValues.Reserve(MaxAffixCount - MinAffixCount + 1);
+	TArray<uint8> ValuesWeights = ItemDataSettings->GetAffixNumberWeightsForRarity(ForItemRarity);
+	
+	int32 WeightIndex = 0;
+	float TotalWeight = 0.0f;
+	for (int32 i = MinAffixCount; i <= MaxAffixCount; i++)
+	{
+		AffixValues.Add(i);
+		TotalWeight += ValuesWeights[WeightIndex];
+		WeightIndex++;
+	}
+	
+	check(AffixValues.Num() == ValuesWeights.Num());
+
+	const float Random = FMath::FRandRange(0.0f, TotalWeight);
+
+	float Cumulative = 0.0f;
+	for (int32 i = 0; i < ValuesWeights.Num(); ++i)
+	{
+		Cumulative += ValuesWeights[i];
+		if (Random <= Cumulative)
+		{
+			return AffixValues[i];
+		}
+	}
+
+	check(false);
+	return 0;
+}
+
 void UObsidianItemDropComponent::AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements,
-	const FObsidianItemToDrop& FromItemToDrop)
+                                                                           const FObsidianItemToDrop& FromItemToDrop)
 {
 	for (const FObsidianActiveItemAffix& Affix : FromItemToDrop.DropAffixes)
 	{
