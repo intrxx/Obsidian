@@ -136,6 +136,26 @@ FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxManaAttribute() const
 	return (HeroAttributeSet ? HeroAttributeSet->GetMaxManaAttribute() : nullptr);
 }
 
+float UObsidianHeroAttributesComponent::GetStamina() const
+{
+return (HeroAttributeSet ? HeroAttributeSet->GetStamina() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetStaminaAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetStaminaAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetMaxStamina() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxStamina() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxStaminaAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetMaxStaminaAttribute() : nullptr);
+}
+
 float UObsidianHeroAttributesComponent::GetSpecialResource() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetSpecialResource() : 0.0f);
@@ -164,6 +184,16 @@ float UObsidianHeroAttributesComponent::GetManaRegeneration() const
 FGameplayAttribute UObsidianHeroAttributesComponent::GetManaRegenerationAttribute() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetManaRegenerationAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetStaminaRegeneration() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetStaminaRegeneration() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetStaminaRegenerationAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetStaminaRegenerationAttribute() : nullptr);
 }
 
 float UObsidianHeroAttributesComponent::GetExperience() const

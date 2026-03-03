@@ -2,10 +2,7 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
 #include "UI/ObsidianMainOverlayWidgetBase.h"
@@ -56,6 +53,8 @@ protected:
 	void OnMaxManaChanged(const float Value);
 	void OnMaxSpecialResourceChanged(const float Value);
 	void OnMaxEnergyShieldChanged(const float Value);
+	void OnMaxStaminaChanged(const float Value);
+	void OnStaminaRegenerationChanged(const float Value);
 	
 	void OnAccuracyChanged(const float Value);
 	void OnAttackSpeedChanged(const float Value);
@@ -129,6 +128,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> Mana_AttributeRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> Stamina_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> SpecialResource_AttributeRow;
@@ -225,6 +227,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> EnergyShieldRegeneration_AttributeRow;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UOCharacterStatusAttributeRow> StaminaRegeneration_AttributeRow;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> HealthRegeneration_AttributeRow;

@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
@@ -50,6 +48,8 @@ public:
 	FOnAttributeValueChangedOneParam MaxManaChangedDelegate;
 	FOnAttributeValueChangedOneParam MaxSpecialResourceChangedDelegate;
 	FOnAttributeValueChangedOneParam MaxEnergyShieldChangedDelegate;
+	FOnAttributeValueChangedOneParam MaxStaminaChangedDelegate;
+	FOnAttributeValueChangedOneParam StaminaRegenerationChangedDelegate;
 	
 	/** Offence */
 	FOnAttributeValueChangedOneParam AccuracyChangedDelegate;
@@ -107,6 +107,8 @@ protected:
 	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
 	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
 	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
+	void MaxStaminaChanged(const FOnAttributeChangeData& Data) const;
+	void StaminaRegenerationChanged(const FOnAttributeChangeData& Data) const;
 	
 	/** Offence */
 	void AccuracyChanged(const FOnAttributeChangeData& Data) const;
@@ -163,6 +165,8 @@ protected:
 	FDelegateHandle MaxManaChangedDelegateHandle;
 	FDelegateHandle MaxSpecialResourceChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
+	FDelegateHandle MaxStaminaChangedDelegateHandle;
+	FDelegateHandle StaminaRegenerationChangedDelegateHandle;
 	
 	/** Offence */
 	FDelegateHandle AccuracyChangedDelegateHandle;

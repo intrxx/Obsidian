@@ -53,6 +53,8 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	CharacterStatusWidgetController->MaxManaChangedDelegate.BindUObject(this, &ThisClass::OnMaxManaChanged);
 	CharacterStatusWidgetController->MaxSpecialResourceChangedDelegate.BindUObject(this, &ThisClass::OnMaxSpecialResourceChanged);
 	CharacterStatusWidgetController->MaxEnergyShieldChangedDelegate.BindUObject(this, &ThisClass::OnMaxEnergyShieldChanged);
+	CharacterStatusWidgetController->MaxStaminaChangedDelegate.BindUObject(this, &ThisClass::OnMaxStaminaChanged);
+	CharacterStatusWidgetController->StaminaRegenerationChangedDelegate.BindUObject(this, &ThisClass::OnStaminaRegenerationChanged);
 
 	/**
 	 * Offence
@@ -212,6 +214,16 @@ void UObsidianCharacterStatus::OnMaxSpecialResourceChanged(const float Value)
 void UObsidianCharacterStatus::OnMaxEnergyShieldChanged(const float Value)
 {
 	EnergyShield_AttributeRow->SetAttributeValue(Value);
+}
+
+void UObsidianCharacterStatus::OnMaxStaminaChanged(const float Value)
+{
+	Stamina_AttributeRow->SetAttributeValue(Value);
+}
+
+void UObsidianCharacterStatus::OnStaminaRegenerationChanged(const float Value)
+{
+	StaminaRegeneration_AttributeRow->SetAttributeValue(Value);
 }
 
 void UObsidianCharacterStatus::OnAccuracyChanged(const float Value)

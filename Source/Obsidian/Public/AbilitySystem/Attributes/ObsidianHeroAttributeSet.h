@@ -38,6 +38,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxExperience);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, PassiveSkillPoints);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, AscensionPoints);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Stamina)
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxStamina)
 
 	/**
 	 * Spending attributes
@@ -54,6 +56,7 @@ public:
 	 */
 	
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, ManaRegeneration);
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, StaminaRegeneration);
 
 	/**
 	 * "RPG Attributes"
@@ -94,6 +97,10 @@ protected:
 	void OnRep_PassiveSkillPoints(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_AscensionPoints(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_Stamina(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_MaxStamina(const FGameplayAttributeData& OldValue);
 	
 	/**
 	 * Spending attributes
@@ -116,6 +123,8 @@ protected:
 
 	UFUNCTION()
 	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_StaminaRegeneration(const FGameplayAttributeData& OldValue);
 
 	/**
 	 * Defence Attributes
@@ -156,11 +165,22 @@ private:
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxExperience, Category = "Obsidian|CAttributes|Experience", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxExperience;
 
+	/** The current Passive Skill Points attribute. Defines amount of current Skill Points that can be spent. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PassiveSkillPoints, Category = "Obsidian|CAttributes|PassiveSkillPoints", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PassiveSkillPoints;
 
+	/** The current Ascension Points attribute. Defines amount of current special Ascension Skill Points that can be spent. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AscensionPoints, Category = "Obsidian|CAttributes|AscensionPoints", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AscensionPoints;
+
+	/** The current Stamina attribute. Defines amount of stamina which can be spent to run faster. */
+	/** ------------------------------------------------------------------------------------------------------------ HideFromModifiers */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Stamina, Category = "Obsidian|CAttributes|Stamina", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Stamina;
+
+	/** The Max Stamina attribute. Defines amount of maximum stamina. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Category = "Obsidian|CAttributes|Stamina", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData MaxStamina;
 	
 	/**
 	 * Spending attributes
@@ -195,6 +215,10 @@ private:
 	/** The current Mana Regeneration attribute. Mana Regeneration defines value of mana that will be regenerated per second */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ManaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ManaRegeneration;
+
+	/** The current Stamina Regeneration attribute. Stamina Regeneration defines value of stamina that will be regenerated per second while not in running mode. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData StaminaRegeneration;
 	
 	/**
 	 * "RPG Attributes"

@@ -88,6 +88,10 @@ void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbility
 		HeroAttributesComp->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
 	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+	MaxStaminaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxStaminaAttribute()).AddUObject(this, &ThisClass::MaxStaminaChanged);
+	StaminaRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetStaminaRegenerationAttribute()).AddUObject(this, &ThisClass::StaminaRegenerationChanged);
 	
 	/** Offence */
 	AccuracyChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
@@ -192,6 +196,8 @@ void UObCharacterStatusWidgetController::SetInitialAttributeValues() const
 	MaxManaChangedDelegate.Execute(HeroAttributesComp->GetMaxMana());
 	MaxSpecialResourceChangedDelegate.Execute(HeroAttributesComp->GetMaxSpecialResource());
 	MaxEnergyShieldChangedDelegate.Execute(HeroAttributesComp->GetMaxEnergyShield());
+	MaxStaminaChangedDelegate.Execute(HeroAttributesComp->GetMaxStamina());
+	StaminaRegenerationChangedDelegate.Execute(HeroAttributesComp->GetStaminaRegeneration());
 	
 	/** Offence */
 	AccuracyChangedDelegate.Execute(HeroAttributesComp->GetAccuracy());
@@ -293,6 +299,22 @@ void UObCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttribu
 	if(MaxEnergyShieldChangedDelegate.IsBound())
 	{
 		MaxEnergyShieldChangedDelegate.Execute(Data.NewValue);
+	}
+}
+
+void UObCharacterStatusWidgetController::MaxStaminaChanged(const FOnAttributeChangeData& Data) const
+{
+	if(MaxStaminaChangedDelegate.IsBound())
+	{
+		MaxStaminaChangedDelegate.Execute(Data.NewValue);
+	}
+}
+
+void UObCharacterStatusWidgetController::StaminaRegenerationChanged(const FOnAttributeChangeData& Data) const
+{
+	if(StaminaRegenerationChangedDelegate.IsBound())
+	{
+		StaminaRegenerationChangedDelegate.Execute(Data.NewValue);
 	}
 }
 

@@ -481,7 +481,7 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		return;
 	}
 	
-	uint8 AffixCountToRoll = GetNumberOfAffixesToRoll(ForItemToDrop.DropRarity);
+	uint8 AffixCountToRoll = GetNumberOfAffixesToRollWeighted(ForItemToDrop.DropRarity);
 	
 	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
 	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
@@ -652,7 +652,7 @@ bool UObsidianItemDropComponent::ShouldApplyAffixValueMultiplier(const EObsidian
 	return false;
 }
 
-uint8 UObsidianItemDropComponent::GetNumberOfAffixesToRoll(const EObsidianItemRarity ForItemRarity)
+uint8 UObsidianItemDropComponent::GetNumberOfAffixesToRollWeighted(const EObsidianItemRarity ForItemRarity)
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)

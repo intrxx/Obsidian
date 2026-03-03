@@ -133,7 +133,7 @@ private:
 	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);
 	bool ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity);
 
-	uint8 GetNumberOfAffixesToRoll(const EObsidianItemRarity ForItemRarity);
+	uint8 GetNumberOfAffixesToRollWeighted(const EObsidianItemRarity ForItemRarity);
 
 	void AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements, const FObsidianItemToDrop& FromItemToDrop);
 	

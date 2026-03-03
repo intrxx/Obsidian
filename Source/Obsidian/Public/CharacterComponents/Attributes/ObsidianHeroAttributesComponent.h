@@ -52,6 +52,14 @@ public:
 	float GetMaxMana() const;
 	FGameplayAttribute GetMaxManaAttribute() const;
 
+	/** Getters for Stamina Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetStamina() const;
+	FGameplayAttribute GetStaminaAttribute() const;
+	
+	/** Getters for Max Stamina Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetMaxStamina() const;
+	FGameplayAttribute GetMaxStaminaAttribute() const;
+
 	/** Getters for Special Resource Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetSpecialResource() const;
 	FGameplayAttribute GetSpecialResourceAttribute() const;
@@ -63,6 +71,10 @@ public:
 	/** Getters for Mana Regeneration Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetManaRegeneration() const;
 	FGameplayAttribute GetManaRegenerationAttribute() const;
+
+	/** Getters for Stamina Regeneration Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetStaminaRegeneration() const;
+	FGameplayAttribute GetStaminaRegenerationAttribute() const;
 
 	/** Getters for Experience Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetExperience() const;
