@@ -2,11 +2,9 @@
 
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
 
-// ~ Core
-#include "Blueprint/WidgetLayoutLibrary.h"
-#include "Components/ProgressBar.h"
+#include <Blueprint/WidgetLayoutLibrary.h>
+#include <Components/ProgressBar.h>
 
-// ~ Project
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "UI/MainOverlay/Subwidgets/ObsidianOverlayExperienceInfo.h"

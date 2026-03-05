@@ -30,6 +30,7 @@
 #include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
 #include "UI/MainOverlay/SkillPoints/ObsidianSkillPointsNotification.h"
 #include "UI/InventoryItems/ObsidianPlayerStashWidget.h"
+#include "UI/ProgressBars/ObsidianOverlayStaminaBar.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {
@@ -53,6 +54,7 @@ void UObsidianMainOverlay::HandleWidgetControllerSet()
 	HealthProgressGlobe->SetWidgetController(WidgetController);
 	ManaProgressGlobe->SetWidgetController(WidgetController);
 	ExperienceProgressBar->SetWidgetController(WidgetController);
+	StaminaProgressBar->SetWidgetController(WidgetController);
 }
 
 void UObsidianMainOverlay::NativeConstruct()

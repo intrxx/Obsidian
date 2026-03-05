@@ -11,6 +11,7 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UObsidianOverlayStaminaBar;
 class UObsidianSkillPointsNotification;
 class UObsidianOverlayExperienceBar;
 class UObsidianItemDescriptionBase;
@@ -89,6 +90,9 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianOverlayExperienceBar> ExperienceProgressBar;
+
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UObsidianOverlayStaminaBar> StaminaProgressBar;
 	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianOverlayGameTabsMenu> Overlay_GameTabsMenu;

@@ -52,6 +52,7 @@ public:
 	void SetInitialAttributeValues() const;
 	void SetInitialStaggerMeter() const;
 	void SetInitialExperienceValues();
+	void SetInitialStaminaValues();
 
 public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
@@ -65,6 +66,9 @@ public:
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|SpecialResource")
 	FOnAttributeValueChangedSignature OnMaxSpecialResourceChangedDelegate;
+
+	FOnAttributeValueChangedSignature OnStaminaChangedDelegate;
+	FOnAttributeValueChangedSignature OnMaxStaminaChangedDelegate;
 	
 	FOnAttributeValueChangedOneParam OnExperienceChangedDelegate;
 	FOnAttributeValueChangedTwoParams OnMaxExperienceChangedDelegate;
@@ -123,6 +127,8 @@ protected:
 	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
 	void PassiveSkillPointsChanged(const FOnAttributeChangeData& Data) const;
 	void AscensionPointsChanged(const FOnAttributeChangeData& Data) const;
+	void StaminaChanged(const FOnAttributeChangeData& Data) const;
+	void MaxStaminaChanged(const FOnAttributeChangeData& Data) const;
 	
 	void HealthChanged(const FOnAttributeChangeData& Data) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
@@ -149,6 +155,8 @@ protected:
 	FDelegateHandle MaxExperienceChangedDelegateHandle;
 	FDelegateHandle PassiveSkillPointsChangedDelegateHandle;
 	FDelegateHandle AscensionPointsChangedDelegateHandle;
+	FDelegateHandle OnStaminaChangedDelegateHandle;
+	FDelegateHandle OnMaxStaminaChangedDelegateHandle;
 
 	/** Common Set */
 	FDelegateHandle HealthChangedDelegateHandle;

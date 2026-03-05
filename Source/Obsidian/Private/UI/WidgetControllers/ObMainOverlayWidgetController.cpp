@@ -99,7 +99,11 @@ void UObMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySyst
 		HeroAttributesComp->GetPassiveSkillPointsAttribute()).AddUObject(this, &ThisClass::PassiveSkillPointsChanged);
 	AscensionPointsChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetAscensionPointsAttribute()).AddUObject(this, &ThisClass::AscensionPointsChanged);
-		
+	OnStaminaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetStaminaAttribute()).AddUObject(this, &ThisClass::StaminaChanged);
+	OnMaxStaminaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+		HeroAttributesComp->GetMaxStaminaAttribute()).AddUObject(this, &ThisClass::MaxStaminaChanged);
+	
 	/** Common Set */
 	HealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetHealthAttribute()).AddUObject(this, &ThisClass::HealthChanged);
@@ -137,6 +141,8 @@ void UObMainOverlayWidgetController::SetInitialAttributeValues() const
 	OnMaxStaggerMeterChangedDelegate.Broadcast(HeroAttributesComp->GetMaxStaggerMeter());
 	OnPassiveSkillPointsChangedDelegate.Broadcast(HeroAttributesComp->GetPassiveSkillPoints());
 	OnAscensionPointsChangedDelegate.Broadcast(HeroAttributesComp->GetAscensionPoints());
+	OnStaminaChangedDelegate.Broadcast(HeroAttributesComp->GetStamina());
+	OnMaxStaminaChangedDelegate.Broadcast(HeroAttributesComp->GetMaxStamina());
 }
 
 void UObMainOverlayWidgetController::SetInitialStaggerMeter() const
@@ -189,6 +195,31 @@ void UObMainOverlayWidgetController::SetInitialExperienceValues()
 	
 		OnExperienceChangedDelegate.Execute(HeroAttributesComp->GetExperience());
 		OnMaxExperienceChangedDelegate.Execute(HeroAttributesComp->GetMaxExperience(), MaxExperienceOldValue);
+	}
+}
+
+void UObMainOverlayWidgetController::SetInitialStaminaValues()
+{
+	UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
+	if (HeroAttributesComp == nullptr)
+	{
+		if (OwnerPlayerController.IsValid())
+		{
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+					OwnerPlayerController.Get()->GetPawn());
+			if (HeroAttributesComp == nullptr)
+			{
+				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+					__FUNCTION__);
+				return;
+			}
+		}
+	}
+	
+	if (HeroAttributesComp)
+	{
+		OnStaminaChangedDelegate.Broadcast(HeroAttributesComp->GetStamina());
+		OnMaxStaminaChangedDelegate.Broadcast(HeroAttributesComp->GetMaxStamina());
 	}
 }
 
@@ -274,6 +305,16 @@ void UObMainOverlayWidgetController::PassiveSkillPointsChanged(const FOnAttribut
 void UObMainOverlayWidgetController::AscensionPointsChanged(const FOnAttributeChangeData& Data) const
 {
 	OnAscensionPointsChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UObMainOverlayWidgetController::StaminaChanged(const FOnAttributeChangeData& Data) const
+{
+	OnStaminaChangedDelegate.Broadcast(Data.NewValue);
+}
+
+void UObMainOverlayWidgetController::MaxStaminaChanged(const FOnAttributeChangeData& Data) const
+{
+	OnMaxStaminaChangedDelegate.Broadcast(Data.NewValue);
 }
 
 void UObMainOverlayWidgetController::HealthChanged(const FOnAttributeChangeData& Data) const

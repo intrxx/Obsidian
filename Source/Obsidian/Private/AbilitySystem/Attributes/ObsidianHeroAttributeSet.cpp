@@ -89,6 +89,21 @@ void UObsidianHeroAttributeSet::PostAttributeChange(const FGameplayAttribute& At
 			SetSpecialResource(FMath::Clamp<float>(NewSpecialResource, 1.0f, CurrentMaxSpecialResource));		
 		}
 	}
+	else if(Attribute == GetMaxStaminaAttribute())
+	{
+		const float CurrentStamina = GetStamina();
+		const float CurrentMaxStamina = GetMaxStamina();
+		if(NewValue < OldValue) // If the New Max Attribute is lower, we need to always lower it
+		{
+			const float NewStamina = CurrentStamina - (OldValue - NewValue);
+			SetStamina(FMath::Clamp<float>(NewStamina, 1.0f, CurrentMaxStamina));		
+		}
+		else if(true) //TODO(intrxx) Check if hero in non-combat area (if equipping item)
+		{
+			const float NewStamina = CurrentStamina + (NewValue - OldValue);
+			SetStamina(FMath::Clamp<float>(NewStamina, 1.0f, CurrentMaxStamina));		
+		}
+	}
 }
 
 void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
