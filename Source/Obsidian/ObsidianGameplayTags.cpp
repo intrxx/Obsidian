@@ -69,6 +69,14 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Effect_Stagger, "Effect.Stagger", "Tag used for activating the Stagger ability.");
 
 	/**
+	 * ---- Movement ----
+	 */
+	
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_Mode_Standing, "Movement.Mode.Standing", "Player has this tag when he is standing.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_Mode_Walking, "Movement.Mode.Walking", "Player has this tag when he is walking.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_Mode_Running, "Movement.Mode.Running", "Player has this tag when he is running.");
+	
+	/**
 	 * ---- Statuses ----
 	 */
 	

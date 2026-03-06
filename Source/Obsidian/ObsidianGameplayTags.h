@@ -38,6 +38,14 @@ namespace ObsidianGameplayTags
 	
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact)
 	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_Stagger)
+
+	/**
+	 * ---- Movement ----
+	 */
+
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Standing)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Walking)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Running)
 	
 	/**
 	 * ---- Statuses ----
