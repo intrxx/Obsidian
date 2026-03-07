@@ -2,9 +2,7 @@
 
 #include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 
-// ~ Core
 
-// ~ Project
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 
 UObsidianCharacterMovementComponent::UObsidianCharacterMovementComponent(const FObjectInitializer& ObjectInitializer)

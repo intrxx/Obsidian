@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
+#include <CoreMinimal.h>
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 #include "ObsidianAttributesComponent.h"
@@ -59,6 +57,10 @@ public:
 	/** Getters for Max Stamina Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetMaxStamina() const;
 	FGameplayAttribute GetMaxStaminaAttribute() const;
+	
+	/** Getters for Sprint Speed Value and Attribute from UObsidianHeroAttributeSet. */
+	float GetSprintSpeed() const;
+	FGameplayAttribute GetSprintSpeedAttribute() const;
 
 	/** Getters for Special Resource Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetSpecialResource() const;

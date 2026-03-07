@@ -122,6 +122,7 @@ void UObsidianHeroAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, AscensionPoints, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, Stamina, COND_None, REPNOTIFY_Always);
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MaxStamina, COND_None, REPNOTIFY_Always);
+	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, SprintSpeed, COND_None, REPNOTIFY_Always);
 	
 	/**
 	 * Spending attributes
@@ -298,6 +299,11 @@ void UObsidianHeroAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldV
 void UObsidianHeroAttributeSet::OnRep_MaxStamina(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, MaxStamina, OldValue);
+}
+
+void UObsidianHeroAttributeSet::OnRep_SprintSpeed(const FGameplayAttributeData& OldValue)
+{
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, SprintSpeed, OldValue);
 }
 
 void UObsidianHeroAttributeSet::OnRep_HitBlockChance(const FGameplayAttributeData& OldValue)

@@ -605,7 +605,7 @@ private:
 	 */
 
 	/** The current Movement Speed attribute. Defines how fast the character is moving. */
-	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MovementSpeed, Category = "Obsidian|CAttributes|MovementSpeed", Meta = (AllowPrivateAccess = true))
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MovementSpeed, Category = "Obsidian|CAttributes|Speed", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MovementSpeed;
 
 	/**

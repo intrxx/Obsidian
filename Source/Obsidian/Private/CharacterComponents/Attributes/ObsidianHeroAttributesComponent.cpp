@@ -2,10 +2,8 @@
 
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 
-// ~ Core
-#include "GameFramework/Character.h"
+#include <GameFramework/Character.h>
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Obsidian/ObsidianGameModule.h"
@@ -154,6 +152,16 @@ float UObsidianHeroAttributesComponent::GetMaxStamina() const
 FGameplayAttribute UObsidianHeroAttributesComponent::GetMaxStaminaAttribute() const
 {
 	return (HeroAttributeSet ? HeroAttributeSet->GetMaxStaminaAttribute() : nullptr);
+}
+
+float UObsidianHeroAttributesComponent::GetSprintSpeed() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetSprintSpeed() : 0.0f);
+}
+
+FGameplayAttribute UObsidianHeroAttributesComponent::GetSprintSpeedAttribute() const
+{
+	return (HeroAttributeSet ? HeroAttributeSet->GetSprintSpeedAttribute() : nullptr);
 }
 
 float UObsidianHeroAttributesComponent::GetSpecialResource() const

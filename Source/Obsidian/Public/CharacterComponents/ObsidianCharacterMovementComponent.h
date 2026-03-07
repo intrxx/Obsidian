@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
-#include "GameFramework/CharacterMovementComponent.h"
+#include <GameFramework/CharacterMovementComponent.h>
 #include "ObsidianCharacterMovementComponent.generated.h"
 
 /**
@@ -23,7 +20,6 @@ public:
 	UObsidianCharacterMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
 	virtual float GetMaxSpeed() const override;
-	
 };
 
 

@@ -40,6 +40,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, AscensionPoints);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Stamina)
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxStamina)
+	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, SprintSpeed)
 
 	/**
 	 * Spending attributes
@@ -101,6 +102,8 @@ protected:
 	void OnRep_Stamina(const FGameplayAttributeData& OldValue);
 	UFUNCTION()
 	void OnRep_MaxStamina(const FGameplayAttributeData& OldValue);
+	UFUNCTION()
+	void OnRep_SprintSpeed(const FGameplayAttributeData& OldValue);
 	
 	/**
 	 * Spending attributes
@@ -181,6 +184,10 @@ private:
 	/** The Max Stamina attribute. Defines amount of maximum stamina. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxStamina, Category = "Obsidian|CAttributes|Stamina", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxStamina;
+
+	/** The Sprint Speed attribute. Defines the sprint speed of hero character. */
+	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SprintSpeed, Category = "Obsidian|CAttributes|Speed", Meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SprintSpeed;
 	
 	/**
 	 * Spending attributes
