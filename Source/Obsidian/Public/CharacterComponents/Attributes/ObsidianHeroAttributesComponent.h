@@ -25,7 +25,7 @@ public:
 	
 	/** Returns the HERO Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroAttributes")
-	static UObsidianHeroAttributesComponent* FindAttributesComponent(const AActor* Actor)
+	static UObsidianHeroAttributesComponent* FindHeroAttributesComponent(const AActor* Actor)
 	{
 		return (Actor ? Actor->FindComponentByClass<UObsidianHeroAttributesComponent>() : nullptr);
 	}
@@ -154,6 +154,9 @@ protected:
 	 * 
 	 */
 
+	virtual void HandleOutOfStamina(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec,
+		float DamageMagnitude, float OldValue, float NewValue);
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|LevelingUp")
 	FObsidianSpecialResourceVisuals SpecialResourceVisuals;
@@ -180,4 +183,7 @@ protected:
 	 */
 
 	bool bIsLocallyController = true;
+
+	UPROPERTY()
+	TWeakObjectPtr<ACharacter> WeakOwner;
 };

@@ -83,6 +83,10 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, IncomingManaReplenishing);
 
+public:
+	/** Delegate fired when the stamina reaches zero */
+	mutable FObsidianAttributeEvent OnOutOfStamina;
+	
 protected:
 	virtual void ResetMetaAttributes() override;
 	
@@ -156,6 +160,8 @@ protected:
 	void OnRep_Faith(const FGameplayAttributeData& OldValue);
 
 private:
+	bool bOutOfStamina;
+	
 	/**
 	 * Character
 	 */

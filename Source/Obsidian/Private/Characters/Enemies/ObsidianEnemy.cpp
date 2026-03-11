@@ -15,13 +15,14 @@
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Characters/ObsidianPawnData.h"
-#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
+#include "CharacterComponents/Movement/ObsidianEnemyMovementComponent.h"
 #include "Characters/ObsidianDummyMeshActor.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianEnemyMovementComponent>(
+		ACharacter::CharacterMovementComponentName))
 {
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	MeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);

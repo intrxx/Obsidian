@@ -28,7 +28,7 @@ void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 		HeroClassText = UObsidianGameplayStatics::GetHeroClassText(Hero->GetHeroClass());
 	}
 
-	OwnerAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
+	OwnerAttributesComponent = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(
 					PlayerController->GetPawn());
 	check(OwnerAttributesComponent.IsValid());
 

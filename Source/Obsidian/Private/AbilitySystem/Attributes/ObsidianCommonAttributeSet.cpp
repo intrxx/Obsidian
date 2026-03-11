@@ -167,7 +167,8 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 				{
 					if(OnOutOfHealth.IsBound())
 					{
-						OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec, Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
+						OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec,
+							Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
 					}
 
 					if(EffectProps.SourceCharacter->ActorHasTag(ObsidianActorTags::Player))

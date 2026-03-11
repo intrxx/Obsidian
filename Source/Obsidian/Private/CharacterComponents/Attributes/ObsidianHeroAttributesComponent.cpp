@@ -6,6 +6,7 @@
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
 #include "Obsidian/ObsidianGameModule.h"
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
@@ -29,11 +30,14 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 
 	ManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetManaAttribute()).AddUObject(this, &ThisClass::ManaChanged);
 	MaxManaChangedDelegateHandle = AbilitySystemComponent->GetGameplayAttributeValueChangeDelegate(GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
+
+	HeroAttributeSet->OnOutOfStamina.AddUObject(this, &ThisClass::HandleOutOfStamina);
 	
 	// Set the Mana value to the MaxMana
 	AbilitySystemComponent->SetNumericAttributeBase(GetManaAttribute(), GetMaxMana());
 
 	bIsLocallyController = Owner->IsLocallyControlled();
+	WeakOwner = Owner;
 }
 
 void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
@@ -112,6 +116,20 @@ void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData&
 void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)
 {
 	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Max Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+}
+
+void UObsidianHeroAttributesComponent::HandleOutOfStamina(AActor* DamageInstigator, AActor* DamageCauser,
+	const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue)
+{
+	if (WeakOwner.IsValid())
+	{
+		UObsidianHeroMovementComponent* MoveComp = Cast<UObsidianHeroMovementComponent>(
+			WeakOwner.Get()->GetCharacterMovement());
+		if (MoveComp)
+		{
+			MoveComp->HandleOutOfStamina();
+		}
+	}
 }
 
 float UObsidianHeroAttributesComponent::GetMana() const

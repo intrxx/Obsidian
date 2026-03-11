@@ -34,6 +34,7 @@ FReply UObsidianOverlayStaminaBar::NativeOnMouseButtonDoubleClick(const FGeometr
 
 void UObsidianOverlayStaminaBar::StaminaChanged(const float NewValue)
 {
+	UE_LOG(LogTemp, Warning, TEXT("New Stamina: [%f]"), NewValue);
 	Stamina = NewValue;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Stamina, MaxStamina);
@@ -46,6 +47,7 @@ void UObsidianOverlayStaminaBar::StaminaChanged(const float NewValue)
 
 void UObsidianOverlayStaminaBar::MaxStaminaChanged(const float NewValue)
 {
+	UE_LOG(LogTemp, Warning, TEXT("New MaxStamina: [%f]"), NewValue);
 	MaxStamina = NewValue;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Stamina, MaxStamina);

@@ -2,16 +2,15 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-
-// ~ Project
+#include <CoreMinimal.h>
 
 
-#include "Abilities/GameplayAbility.h"
+#include <Abilities/GameplayAbility.h>
 #include "ObsidianGameplayAbility.generated.h"
 
 class UObsidianCharacterMovementComponent;
+class UObsidianHeroMovementComponent;
+class UObsidianEnemyMovementComponent;
 class UCharacterMovementComponent;
 class AObsidianPlayerController;
 class UObsidianAbilitySystemComponent;
@@ -84,6 +83,12 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	UObsidianCharacterMovementComponent* GetObsidianCharacterMovementCompFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	UObsidianHeroMovementComponent* GetObsidianHeroMovementCompFromActorInfo() const;
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
+	UObsidianEnemyMovementComponent* GetObsidianEnemyMovementCompFromActorInfo() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	AObsidianPlayerController* GetObsidianPlayerControllerFromActorInfo() const;

@@ -72,9 +72,9 @@ namespace ObsidianGameplayTags
 	 * ---- Movement ----
 	 */
 	
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_Mode_Standing, "Movement.Mode.Standing", "Player has this tag when he is standing.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_Mode_Walking, "Movement.Mode.Walking", "Player has this tag when he is walking.");
-	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_Mode_Running, "Movement.Mode.Running", "Player has this tag when he is running.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_State_Standing, "Movement.State.Standing", "Player has this tag when he is standing.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_State_Walking, "Movement.State.Walking", "Player has this tag when he is walking.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Movement_State_Running, "Movement.State.Running", "Player has this tag when he is running.");
 	
 	/**
 	 * ---- Statuses ----

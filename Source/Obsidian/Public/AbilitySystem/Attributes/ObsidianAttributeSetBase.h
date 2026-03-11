@@ -30,7 +30,8 @@ class UObsidianAbilitySystemComponent;
  * @param OldValue			The value of the attribute before it was changed
  * @param NewValue			The value after it was changed
 */
-DECLARE_MULTICAST_DELEGATE_SixParams(FObsidianAttributeEvent, AActor* /*EffectInstigator*/, AActor* /*EffectCauser*/, const FGameplayEffectSpec* /*EffectSpec*/, float /*EffectMagnitude*/, float /*OldValue*/, float /*NewValue*/);
+DECLARE_MULTICAST_DELEGATE_SixParams(FObsidianAttributeEvent, AActor* /*EffectInstigator*/, AActor* /*EffectCauser*/,
+	const FGameplayEffectSpec* /*EffectSpec*/, float /*EffectMagnitude*/, float /*OldValue*/, float /*NewValue*/);
 
 USTRUCT()
 struct FObsidianEffectProperties

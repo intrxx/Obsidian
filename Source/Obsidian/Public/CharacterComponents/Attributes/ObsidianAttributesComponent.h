@@ -333,7 +333,8 @@ protected:
 	UFUNCTION()
 	virtual void OnRep_DeathState(EObsidianDeathState OldDeathState);
 
-	virtual void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue);
+	virtual void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec,
+		float DamageMagnitude, float OldValue, float NewValue);
 	
 protected:
 	/** Ability System used by this component. */

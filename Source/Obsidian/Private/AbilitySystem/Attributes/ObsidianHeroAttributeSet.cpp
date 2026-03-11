@@ -14,6 +14,7 @@
 UObsidianHeroAttributeSet::UObsidianHeroAttributeSet()
 	: MaxExperience(0.0f)
 {
+	bOutOfStamina = false;
 }
 
 void UObsidianHeroAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
@@ -27,6 +28,11 @@ void UObsidianHeroAttributeSet::PreAttributeChange(const FGameplayAttribute& Att
 	else if (Attribute == GetStaminaAttribute())
 	{
 		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxStamina());
+	}
+	
+	if(bOutOfStamina && (GetStamina() > 0.0f))
+	{
+		bOutOfStamina = false;
 	}
 }
 
@@ -196,7 +202,7 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 			{
 				HeroCharacter->IncreaseHeroLevel();
 				
-				const UObsidianHeroAttributesComponent* HeroAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(HeroCharacter);
+				const UObsidianHeroAttributesComponent* HeroAttributesComponent = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(HeroCharacter);
 				checkf(HeroAttributesComponent, TEXT("HeroCharacter has no HeroAttributesComponent in UObsidianHeroAttributeSet::PostGameplayEffectExecute."));
 				if(HeroAttributesComponent)
 				{
@@ -215,6 +221,21 @@ void UObsidianHeroAttributeSet::PostGameplayEffectExecute(const FGameplayEffectM
 			SetMaxExperience(NewMaxExperience);
 		}
 	}
+	else if (Data.EvaluatedData.Attribute == GetStaminaAttribute())
+	{
+		const float NewStamina = GetStamina();
+		const float OldStamina = FMath::Clamp(NewStamina + Data.EvaluatedData.Magnitude, 0.0f, GetMaxStamina());
+		if(!bOutOfStamina && (GetStamina() <= 0.0f))
+		{
+			if(OnOutOfStamina.IsBound())
+			{
+				OnOutOfStamina.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec,
+					Data.EvaluatedData.Magnitude, OldStamina, NewStamina);
+			}
+		}
+	}
+
+	bOutOfStamina = (GetStamina() <= 0.0f);
 
 	ResetMetaAttributes();
 	EffectProps.Reset();
@@ -294,6 +315,16 @@ void UObsidianHeroAttributeSet::OnRep_AscensionPoints(const FGameplayAttributeDa
 void UObsidianHeroAttributeSet::OnRep_Stamina(const FGameplayAttributeData& OldValue)
 {
 	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianHeroAttributeSet, Stamina, OldValue);
+
+	const float CurrentStamina = GetStamina();
+	const float Magnitude = CurrentStamina - OldValue.GetCurrentValue();
+
+	if(!bOutOfStamina && CurrentStamina <= 0.0f)
+	{
+		OnOutOfStamina.Broadcast(nullptr, nullptr, nullptr, Magnitude, OldValue.GetCurrentValue(), CurrentStamina);
+	}
+
+	bOutOfStamina = (CurrentStamina <= 0.0f);
 }
 
 void UObsidianHeroAttributeSet::OnRep_MaxStamina(const FGameplayAttributeData& OldValue)

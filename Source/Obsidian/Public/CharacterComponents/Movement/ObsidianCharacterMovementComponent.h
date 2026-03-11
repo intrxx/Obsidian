@@ -4,7 +4,6 @@
 
 #include <CoreMinimal.h>
 
-
 #include <GameFramework/CharacterMovementComponent.h>
 #include "ObsidianCharacterMovementComponent.generated.h"
 
@@ -18,8 +17,6 @@ class OBSIDIAN_API UObsidianCharacterMovementComponent : public UCharacterMoveme
 
 public:
 	UObsidianCharacterMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
-	
-	virtual float GetMaxSpeed() const override;
 };
 
 

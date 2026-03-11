@@ -3,14 +3,14 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 
-// ~ Core
-#include "AbilitySystemComponent.h"
-#include "AbilitySystemGlobals.h"
-#include "GameFramework/CharacterMovementComponent.h"
+#include <AbilitySystemComponent.h>
+#include <AbilitySystemGlobals.h>
+#include <GameFramework/CharacterMovementComponent.h>
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
+#include "CharacterComponents/Movement/ObsidianCharacterMovementComponent.h"
+#include "CharacterComponents/Movement/ObsidianEnemyMovementComponent.h"
+#include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Obsidian/ObsidianGameModule.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -48,6 +48,16 @@ UCharacterMovementComponent* UObsidianGameplayAbility::GetCharacterMovementCompF
 UObsidianCharacterMovementComponent* UObsidianGameplayAbility::GetObsidianCharacterMovementCompFromActorInfo() const
 {
 	return (CurrentActorInfo ? Cast<UObsidianCharacterMovementComponent>(CurrentActorInfo->MovementComponent.Get()) : nullptr);
+}
+
+UObsidianHeroMovementComponent* UObsidianGameplayAbility::GetObsidianHeroMovementCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<UObsidianHeroMovementComponent>(CurrentActorInfo->MovementComponent.Get()) : nullptr);
+}
+
+UObsidianEnemyMovementComponent* UObsidianGameplayAbility::GetObsidianEnemyMovementCompFromActorInfo() const
+{
+	return (CurrentActorInfo ? Cast<UObsidianEnemyMovementComponent>(CurrentActorInfo->MovementComponent.Get()) : nullptr);
 }
 
 AObsidianPlayerController* UObsidianGameplayAbility::GetObsidianPlayerControllerFromActorInfo() const

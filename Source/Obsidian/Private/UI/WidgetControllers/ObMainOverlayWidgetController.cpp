@@ -28,7 +28,7 @@ void UObMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	PlayerController->OnEnemyActorHoveredDelegate.BindDynamic(this, &ThisClass::UpdateHoveringOverTarget);
 	PlayerController->OnBossDetectedPlayerDelegate.BindDynamic(this, &ThisClass::UpdateBossDetectionInfo);
 
-	OwnerAttributesComponent = UObsidianHeroAttributesComponent::FindAttributesComponent(
+	OwnerAttributesComponent = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(
 					PlayerController->GetPawn());
 	check(OwnerAttributesComponent.IsValid());
 
@@ -52,7 +52,7 @@ FObsidianSpecialResourceVisuals UObMainOverlayWidgetController::GetSpecialResour
 	{
 		if (OwnerPlayerController.IsValid())
 		{
-			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{
@@ -152,7 +152,7 @@ void UObMainOverlayWidgetController::SetInitialStaggerMeter() const
 	{
 		if (OwnerPlayerController.IsValid())
 		{
-			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{
@@ -174,7 +174,7 @@ void UObMainOverlayWidgetController::SetInitialExperienceValues()
 	{
 		if (OwnerPlayerController.IsValid())
 		{
-			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{
@@ -205,7 +205,7 @@ void UObMainOverlayWidgetController::SetInitialStaminaValues()
 	{
 		if (OwnerPlayerController.IsValid())
 		{
-			HeroAttributesComp = UObsidianHeroAttributesComponent::FindAttributesComponent(
+			HeroAttributesComp = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{

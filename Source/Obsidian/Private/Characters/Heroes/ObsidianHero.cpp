@@ -11,10 +11,10 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
-#include "CharacterComponents/ObsidianCharacterMovementComponent.h"
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+#include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
@@ -27,7 +27,8 @@
 #include "UI/ObsidianWidgetBase.h"
 
 AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianHeroMovementComponent>(
+		ACharacter::CharacterMovementComponentName))
 {
 	//TODO(intrxx) Delete after GameplayCamera is stable
 	// SpringArmComponent = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArmComponent"));
@@ -60,13 +61,13 @@ AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	HealthBarWidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 	HealthBarWidgetComp->SetDrawAtDesiredSize(true);
 	
-	UObsidianCharacterMovementComponent* ObsidianMovementComp = CastChecked<UObsidianCharacterMovementComponent>(GetCharacterMovement());
-	ObsidianMovementComp->bOrientRotationToMovement = true;
-	ObsidianMovementComp->RotationRate = FRotator(0.f, 800.f, 0.f);
-	ObsidianMovementComp->bConstrainToPlane = true;
-	ObsidianMovementComp->bSnapToPlaneAtStart = true;
-	ObsidianMovementComp->BrakingDecelerationWalking = 3400.0f;
-	ObsidianMovementComp->GroundFriction = 10.0f;
+	UObsidianHeroMovementComponent* MovementComp = CastChecked<UObsidianHeroMovementComponent>(GetCharacterMovement());
+	MovementComp->bOrientRotationToMovement = true;
+	MovementComp->RotationRate = FRotator(0.f, 800.f, 0.f);
+	MovementComp->bConstrainToPlane = true;
+	MovementComp->bSnapToPlaneAtStart = true;
+	MovementComp->BrakingDecelerationWalking = 3400.0f;
+	MovementComp->GroundFriction = 10.0f;
 
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;

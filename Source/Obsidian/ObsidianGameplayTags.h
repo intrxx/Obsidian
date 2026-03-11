@@ -43,9 +43,9 @@ namespace ObsidianGameplayTags
 	 * ---- Movement ----
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Standing)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Walking)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_Mode_Running)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_State_Standing)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_State_Walking)
+	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_State_Running)
 	
 	/**
 	 * ---- Statuses ----
