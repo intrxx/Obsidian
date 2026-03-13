@@ -3,8 +3,9 @@
 #include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
 
 #include <AbilitySystemBlueprintLibrary.h>
+#include <CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h>
+#include <Net/UnrealNetwork.h>
 
-#include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianHeroMovementComponent::UObsidianHeroMovementComponent(const FObjectInitializer& ObjectInitializer)
@@ -12,25 +13,38 @@ UObsidianHeroMovementComponent::UObsidianHeroMovementComponent(const FObjectInit
 {
 }
 
+void UObsidianHeroMovementComponent::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+
+	DOREPLIFETIME(ThisClass, CurrentWalkState);
+	DOREPLIFETIME(ThisClass, bUserTurnOnWalkingState);
+	DOREPLIFETIME(ThisClass, bWentOutOfStamina);
+}
+
 float UObsidianHeroMovementComponent::GetMaxSpeed() const
 {
 	const AActor* Owner = GetOwner();
 	if(!Owner)
 	{
+		//UE_LOG(LogTemp, Display, TEXT("[%s] Owner invalid, Speed [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), Super::GetMaxSpeed());
 		return Super::GetMaxSpeed();
 	}
 
 	const UObsidianHeroAttributesComponent* HeroAttributes = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(Owner);
 	if(!HeroAttributes)
 	{
+		//UE_LOG(LogTemp, Display, TEXT("[%s] Hero Attributes invalid, Speed [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), Super::GetMaxSpeed());
 		return Super::GetMaxSpeed();
 	}
 
 	if (CurrentWalkState == ObsidianGameplayTags::Movement_State_Running)
 	{
+		//UE_LOG(LogTemp, Display, TEXT("[%s] Running [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), HeroAttributes->GetSprintSpeed());
 		return HeroAttributes->GetSprintSpeed();
 	}
 
+	//UE_LOG(LogTemp, Display, TEXT("[%s] Walking [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), HeroAttributes->GetMovementSpeed());
 	return HeroAttributes->GetMovementSpeed();
 }
 

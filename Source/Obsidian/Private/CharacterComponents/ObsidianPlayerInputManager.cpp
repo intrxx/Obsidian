@@ -9,11 +9,13 @@
 #include <Components/SplineComponent.h>
 #include <GameFramework/PlayerController.h>
 #include <CommonUIExtensions.h>
+#include <ModularCharacter.h>
 
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Input/OEnhancedInputUserSettings.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -240,6 +242,8 @@ void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputCo
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_WeaponSwap,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_WeaponSwap, false);
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ToggleWalk,
+					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleWalk, false);
 
 				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_UI_OpenGameplayMenu,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_OpenGameplayMenu, false);
@@ -505,6 +509,34 @@ void UObsidianPlayerInputManager::Input_WeaponSwap()
 	if (OwnerItemManagerComponent)
 	{
 		OwnerItemManagerComponent->ServerWeaponSwap();
+	}
+}
+
+void UObsidianPlayerInputManager::Input_ToggleWalk()
+{
+	if (const ACharacter* OwningCharacter = Cast<ACharacter>(GetOwner()))
+	{
+		if (OwningCharacter->HasAuthority() == false)
+		{
+			if (UObsidianHeroMovementComponent* HeroMoveComp = Cast<UObsidianHeroMovementComponent>(
+			OwningCharacter->GetMovementComponent()))
+			{
+				HeroMoveComp->ToggleWalkingState();
+			}
+		}
+	}
+	ServerToggleWalk();
+}
+
+void UObsidianPlayerInputManager::ServerToggleWalk_Implementation()
+{
+	if (const ACharacter* OwningCharacter = Cast<ACharacter>(GetOwner()))
+	{
+		if (UObsidianHeroMovementComponent* HeroMoveComp = Cast<UObsidianHeroMovementComponent>(
+			OwningCharacter->GetMovementComponent()))
+		{
+			HeroMoveComp->ToggleWalkingState();
+		}
 	}
 }
 

@@ -107,6 +107,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_PassiveSkillTree, "Input.Native.PassiveSkillTree", "Passive Skill Tree toggle input.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_WeaponSwap, "Input.Native.WeaponSwap", "Input for Weapon Swap.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_ToggleWalk, "Input.Native.ToggleWalk", "Input for Toggling Walk.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_MainMenu, "Input.UI.MainMenu", "Main Menu Inputs for Layers.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Input_UI_Action_Backwards, "Input.UI.Action.Backwards", "Input for going back a layer in UI.");

@@ -286,7 +286,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	bool bReceivedInitialInventoryItems = false;
 	FDelegateHandle AddDefaultItemsDelegateHandle;
 };

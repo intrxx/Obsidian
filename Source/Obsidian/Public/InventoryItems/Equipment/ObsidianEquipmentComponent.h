@@ -148,7 +148,7 @@ private:
 	UPROPERTY()
 	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
 
-	UPROPERTY()
+	UPROPERTY(Replicated)
 	bool bReceivedInitialEquipmentItems = false;
 	FDelegateHandle AddDefaultItemsDelegateHandle;
 };

@@ -19,6 +19,8 @@ class OBSIDIAN_API UObsidianHeroMovementComponent : public UObsidianCharacterMov
 
 public:
 	UObsidianHeroMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 		
 	virtual float GetMaxSpeed() const override;
 
@@ -34,7 +36,12 @@ protected:
 	bool HandleWalkingStateChanged(const FGameplayTag& NewWalkingState);
 
 protected:
+	UPROPERTY(Replicated)
 	FGameplayTag CurrentWalkState = FGameplayTag::EmptyTag;
+
+	UPROPERTY(Replicated)
 	uint8 bUserTurnOnWalkingState:1 = false;
+
+	UPROPERTY(Replicated)
 	uint8 bWentOutOfStamina:1 = false;
 };

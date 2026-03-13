@@ -4,10 +4,9 @@
 
 #include <CoreMinimal.h>
 #include <GameplayTagContainer.h>
+
+
 #include <Components/PawnComponent.h>
-
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-
 #include "ObsidianPlayerInputManager.generated.h"
 
 class UObsidianItemManagerComponent;
@@ -88,6 +87,7 @@ protected:
 	void Input_Interact();
 
 	void Input_WeaponSwap();
+	void Input_ToggleWalk();
 
 	void Input_OpenGameplayMenu();
 
@@ -113,13 +113,16 @@ private:
 	void CursorTrace();
 	
 	/**
-	 * Mouse Movement.
+	 * Movement.
 	 */
 	
 	bool CanMoveMouse() const;
 	bool CanContinuouslyMoveMouse() const;
 	void AutoRun();
 	void AutoRunToClickedLocation();
+
+	UFUNCTION(Server, Reliable)
+	void ServerToggleWalk();
 
 	/**
 	 * Item Pick up.
