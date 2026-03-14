@@ -38,7 +38,7 @@ public:
 	EObsidianAffixType AffixClassType = EObsidianAffixType::None;
 
 	/** List of actual Item Affixes. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Meta = (TitleProperty = "Affix: {AffixTag}"), Category = "Obsidian")
 	TArray<FObsidianDynamicItemAffix> ItemAffixList;
 };
 
@@ -66,6 +66,6 @@ public:
 #endif
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Meta = (TitleProperty = "AffixClassName"), Category = "Obsidian")
 	TArray<FObsidianAffixClass> AffixClasses;
 };

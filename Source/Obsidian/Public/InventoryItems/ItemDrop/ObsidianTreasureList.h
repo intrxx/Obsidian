@@ -56,7 +56,7 @@ public:
 	uint16 DropWeight = 1;
 	
 	/** Array of possible weighted stack sizes to drop the Item with. */
-	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable"), Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable", TitleProperty = "Stack Size: {StackSize}"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -150,7 +150,7 @@ public:
 	uint16 NoDropWeight = 0;
 
 	/** Definition of Drop Item. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
+	UPROPERTY(EditDefaultsOnly, Meta = (TitleProperty = "Item: {SoftTreasureItemDefinitionClass}"), Category = "Obsidian")
 	TArray<FObsidianDropItem> DropItems;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
