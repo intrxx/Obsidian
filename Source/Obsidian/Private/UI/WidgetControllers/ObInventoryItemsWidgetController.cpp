@@ -1189,7 +1189,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItem(const 
 			ItemManager->ServerAddStacksFromDraggedItemToInventoryItemAtSlot(ClickedItemPosition);
 		}
 		else if (InventoryComp->CanReplaceItemAtSpecificSlotWithDef(ClickedItemPosition,
-			ClickedGridPosition, DraggedItemDef, DraggedItem.GeneratedData.AvailableStackCount))
+			ClickedGridPosition, DraggedItemDef, DraggedItem.GeneratedData.GetStackCount()))
 		{
 			ItemManager->ServerReplaceItemAtInventorySlot(ClickedItemPosition, ClickedGridPosition);
 		}

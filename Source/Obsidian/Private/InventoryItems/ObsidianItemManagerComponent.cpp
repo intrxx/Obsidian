@@ -116,7 +116,7 @@ void UObsidianItemManagerComponent::ServerAddItemToInventoryAtSlot_Implementatio
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
-		const int32 CachedStacks = DraggedItem.GeneratedData.AvailableStackCount;
+		const int32 CachedStacks = DraggedItem.GeneratedData.GetStackCount();
 		const FObsidianItemOperationResult Result = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef,
 			SlotPosition, DraggedItem.GeneratedData, StacksToAddOverride);
 
@@ -162,7 +162,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToInventoryIte
 		const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 		if(DefaultObject && DefaultObject->IsStackable())
 		{
-			const int32 CachedStacks = DraggedItem.GeneratedData.AvailableStackCount;
+			const int32 CachedStacks = DraggedItem.GeneratedData.GetStackCount();
 			const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(
 				ItemDef, CachedStacks, SlotPosition, StacksToAddOverride);
 
@@ -678,7 +678,7 @@ void UObsidianItemManagerComponent::ServerAddItemToStashTabAtSlot_Implementation
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
-		const int32 CachedStacks = DraggedItem.GeneratedData.AvailableStackCount;
+		const int32 CachedStacks = DraggedItem.GeneratedData.GetStackCount();
 		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef,
 			AtPosition, DraggedItem.GeneratedData, StacksToAddOverride);
 
@@ -724,7 +724,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemA
 		const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 		if(DefaultObject && DefaultObject->IsStackable())
 		{
-			const int32 CurrentStackCount = DraggedItem.GeneratedData.AvailableStackCount;
+			const int32 CurrentStackCount = DraggedItem.GeneratedData.GetStackCount();
 			const FObsidianAddingStacksResult AddingStacksResult = PlayerStashComponent->TryAddingStacksToSpecificSlotWithItemDef(
 				ItemDef, CurrentStackCount, AtPosition, StacksToAddOverride);
 			
@@ -963,11 +963,11 @@ void UObsidianItemManagerComponent::OnRep_DraggedItem(const FDraggedItem& OldDra
 		}
 		StartDraggingItem(Controller);
 	}
-	else if(DraggedItem.GeneratedData.AvailableStackCount > 0) // We are dragging an item but the stacks changed. //TODO(intrxx) Why just "Stacks > 0"?
+	else if(DraggedItem.GeneratedData.GetStackCount() > 0) // We are dragging an item but the stacks changed. //TODO(intrxx) Why just "Stacks > 0"?
 	{
 		if(DraggedItemWidget)
 		{
-			DraggedItemWidget->UpdateStackCount(DraggedItem.GeneratedData.AvailableStackCount);
+			DraggedItemWidget->UpdateStackCount(DraggedItem.GeneratedData.GetStackCount());
 		}
 	}
 	//TODO(intrxx) I don't think I need to account for Rarity and Affixes changes but check in later 
@@ -1076,7 +1076,7 @@ void UObsidianItemManagerComponent::UpdateDraggedItem(const FObsidianItemOperati
 			return;
 		}
 		UpdateStacksOnDraggedItemWidget(OperationResult.StacksLeft);
-		DraggedItem.GeneratedData.AvailableStackCount = OperationResult.StacksLeft;
+		DraggedItem.GeneratedData.SetStackCount(OperationResult.StacksLeft);
 	}
 }
 
@@ -1093,7 +1093,7 @@ void UObsidianItemManagerComponent::UpdateDraggedItem(const FObsidianAddingStack
 		else if(OperationResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
 		{
 			UpdateStacksOnDraggedItemWidget(OperationResult.StacksLeft);
-			DraggedItem.GeneratedData.AvailableStackCount = OperationResult.StacksLeft;
+			DraggedItem.GeneratedData.SetStackCount(OperationResult.StacksLeft);
 		}
 	}
 }

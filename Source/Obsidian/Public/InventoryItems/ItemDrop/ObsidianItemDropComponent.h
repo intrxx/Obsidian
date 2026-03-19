@@ -90,7 +90,7 @@ protected:
 	
 	void LoadAdditionalTreasuresAsync();
 
-	void GenerateItem(FObsidianItemToDrop& ForItemToDrop, const uint8 MaxTreasureClassQuality);
+	void ConstructItem(FObsidianItemToDrop& ForItemToDrop);
 	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses,
 		TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
 	
@@ -117,17 +117,16 @@ private:
 	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity MaxRarity);
 
 	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const FGameplayTag& DropItemBaseTypeTag,
-		const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
+		const UOInventoryItemFragment_Affixes* AffixFragment);
 	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const FGameplayTag& DropItemBaseTypeTag,
-		const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
-	void HandleNoGeneration(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
+		const UOInventoryItemFragment_Affixes* AffixFragment);
+	void HandleNoGeneration(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment);
 	
-	void RollSkillImplicits(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& SkillImplicits, const uint8 MaxTreasureClassQuality);
-	void RollImplicit(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Implicits, const uint8 MaxTreasureClassQuality);
-	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, TArray<FObsidianDynamicItemAffix>& Prefixes, TArray<FObsidianDynamicItemAffix>& Suffixes,
-		const uint8 MaxTreasureClassQuality);
-	void TryToGiveStaticImplicit(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
-	void TryToGivePrimaryItemAffix(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment, const uint8 MaxTreasureClassQuality);
+	void RollSkillImplicits(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& SkillImplicits);
+	void RollImplicit(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Implicits);
+	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, TArray<FObsidianDynamicItemAffix>& Prefixes, TArray<FObsidianDynamicItemAffix>& Suffixes);
+	void TryToGiveStaticImplicit(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment);
+	void TryToGivePrimaryItemAffix(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment);
 
 	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
 	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);

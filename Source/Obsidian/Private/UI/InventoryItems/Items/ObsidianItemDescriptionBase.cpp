@@ -239,6 +239,10 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	{
 		ItemRequirements_RequirementsBlock->SetVisibility(ESlateVisibility::Collapsed);
 	}
+
+	// NOT SHOWN STATS, WILL BE SHOWN AFTER ALT
+	UE_LOG(LogTemp, Display, TEXT("Additional Item Stats: "));
+	UE_LOG(LogTemp, Display, TEXT("Item Level: [%i]"), ItemStats.GetItemLevel());
 }
 
 void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity)

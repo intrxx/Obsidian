@@ -395,8 +395,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 
 	const FGameplayTag EquipTag = EquipSlotTagOverride == FGameplayTag::EmptyTag ? SlotTag : EquipSlotTagOverride;
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, ItemGeneratedData, EquipTag);
-	checkf(ItemGeneratedData.AvailableStackCount == 1, TEXT("Equipment Items should have 1 stack only."));
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.AvailableStackCount);
+	checkf(ItemGeneratedData.GetStackCount() == 1, TEXT("Equipment Items should have 1 stack only."));
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.GetStackCount());
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
@@ -552,8 +552,8 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	}
 	
 	UObsidianInventoryItemInstance* Instance = EquipmentList.AddEntry(ItemDef, ItemGeneratedData, SlotTag);
-	checkf(ItemGeneratedData.AvailableStackCount == 1, TEXT("Equipment Items should have 1 stack only."));
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.AvailableStackCount);
+	checkf(ItemGeneratedData.GetStackCount() == 1, TEXT("Equipment Items should have 1 stack only."));
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, ItemGeneratedData.GetStackCount());
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
 	
 	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())

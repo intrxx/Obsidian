@@ -91,6 +91,9 @@ public:
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDefinitionClass;
 
 	UPROPERTY()
+	int8 DropItemLevel = 1;
+
+	UPROPERTY()
 	TArray<FObsidianActiveItemAffix> DropAffixes;
 
 	UPROPERTY()

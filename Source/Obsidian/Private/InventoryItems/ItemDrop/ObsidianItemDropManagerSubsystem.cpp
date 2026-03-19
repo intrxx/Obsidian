@@ -25,7 +25,8 @@ void UObsidianItemDropManagerSubsystem::RequestDroppingItems(TArray<FObsidianIte
 				AObsidianDroppableItem::StaticClass(), Item.DropTransform);
 
 			FObsidianItemGeneratedData GeneratedData;
-			GeneratedData.AvailableStackCount = Item.DropStacks;
+			GeneratedData.SetStackCount(Item.DropStacks);
+			GeneratedData.ItemLevel = Item.DropItemLevel;
 			GeneratedData.ItemRarity = Item.DropRarity;
 			GeneratedData.ItemAffixes = Item.DropAffixes;
 			GeneratedData.ItemEquippingRequirements = Item.DropItemRequirements;

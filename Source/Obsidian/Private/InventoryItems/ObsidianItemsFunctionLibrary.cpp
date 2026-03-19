@@ -73,6 +73,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const AObsidianPlayerController
 
 	OutItemStats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
 	OutItemStats.SetDisplayName(ItemInstance->GetItemDisplayName());
+	OutItemStats.SetItemLevel(ItemInstance->GetItemLevel());
 	OutItemStats.SetRareDisplayNameAddition(ItemInstance->GetRareItemDisplayNameAddition());
 	OutItemStats.SetMagicDisplayNameAddition(ItemInstance->GetMagicAffixMultiplierItemDisplayNameAddition());
 	OutItemStats.SetDescription(ItemInstance->GetItemDescription());
@@ -116,12 +117,14 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const AObsidianPlayerCo
 	{
 		return false;
 	}
+
+	OutItemStats.SetItemLevel(ItemGeneratedData.ItemLevel);
 	
 	if(ItemDefault->IsStackable())
 	{
 		if(const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass())))
 		{
-			OutItemStats.SetStacks(ItemGeneratedData.AvailableStackCount,
+			OutItemStats.SetStacks(ItemGeneratedData.GetStackCount(),
 				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Max));
 		}
 	}
@@ -440,6 +443,7 @@ bool UObsidianItemsFunctionLibrary::FillItemGeneratedData(FObsidianItemGenerated
 	if (FromInstance)
 	{
 		//NOTE(intrx) Do not initialize OutGeneratedData.AvailableStackCount here!! Stacks are handled in Stash/Inventory Components.
+		OutGeneratedData.ItemLevel = FromInstance->GetItemLevel();
 		OutGeneratedData.ItemAffixes = FromInstance->GetAllItemAffixes();
 		OutGeneratedData.ItemRarity = FromInstance->GetItemRarity();
 		OutGeneratedData.NameData = FObsidianItemGeneratedNameData(FromInstance->GetRareItemDisplayNameAddition(),
@@ -456,6 +460,7 @@ void UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(UObs
 	if (Instance)
 	{
 		//NOTE(intrx) Do not initialize GeneratedData.AvailableStackCount here!! Stacks are handled in Stash/Inventory Components.
+		Instance->SetItemLevel(GeneratedData.ItemLevel);
 		Instance->InitializeAffixes(GeneratedData.ItemAffixes);
 		Instance->SetItemRarity(GeneratedData.ItemRarity);
 		Instance->SetGeneratedNameAdditions(GeneratedData.NameData);

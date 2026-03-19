@@ -869,18 +869,14 @@ public:
 	FObsidianItemGeneratedData(const int32 InStacks)
 		: AvailableStackCount(InStacks)
 	{}
-	
+
+	void SetStackCount(const int32 InStackCount);
+	int32 GetStackCount() const;
 	void Reset();
 	
 public:
-	/**
-	 *	Stacks data is handled very uniquely. This number represents the Stack Number of the Item that we Templating,
-	 * this does not mean that we will add this amount of stacks to the item Instance so we shouldn't initialize the Item
-	 * with this amount of stacks.
-	 *	Item stacks initialization is handled in Inventory/Stash.
-	 */
 	UPROPERTY()
-	int32 AvailableStackCount = 1;
+	int8 ItemLevel = 1;
 
 	UPROPERTY()
 	EObsidianItemRarity ItemRarity = EObsidianItemRarity::Normal;
@@ -893,6 +889,16 @@ public:
 
 	UPROPERTY()
 	FObsidianItemRequirements ItemEquippingRequirements = FObsidianItemRequirements();
+
+private:
+	/**
+	 *	Stacks data is handled very uniquely. This number represents the Stack Number of the Item that we Templating,
+	 * this does not mean that we will add this amount of stacks to the item Instance so we shouldn't initialize the Item
+	 * with this amount of stacks.
+	 *	Item stacks initialization is handled in Inventory/Stash.
+	 */
+	UPROPERTY()
+	int32 AvailableStackCount = 1;
 };
 
 /**
@@ -1107,6 +1113,7 @@ public:
 	FObsidianItemStats()
 		: bContainsItemImage(false)
 		, bContainsDisplayName(false)
+		, bContainsItemLevel(false)
 		, bContainsRareItemDisplayNameAddition(false)
 		, bContainsMagicItemDisplayNameAddition(false)
 		, bContainsDescription(false)
@@ -1128,6 +1135,12 @@ public:
 	bool ContainsDisplayName() const
 	{
 		return bContainsDisplayName;
+	}
+	
+	/** Checks if Item Stats contain Item Level. */
+	bool ContainsItemLevel() const
+	{
+		return bContainsItemLevel;
 	}
 
 	/** Checks if Item Stats contain Rare Item Display Name Addition. */
@@ -1195,6 +1208,11 @@ public:
 		return DisplayName;
 	}
 
+	int8 GetItemLevel() const
+	{
+		return ItemLevel;
+	}
+
 	FString GetRareItemDisplayNameAddition() const
 	{
 		return RareItemDisplayNameAddition;
@@ -1241,6 +1259,7 @@ public:
 	/** It takes an additional ItemGridSpan argument as UI needs it to rescale the image for now. */
 	void SetItemImage(UTexture2D* InItemImage, const FIntPoint& InItemGridSpan);
 	void SetDisplayName(const FText& InDisplayName);
+	void SetItemLevel(const int8 InItemLevel);
 	void SetRareDisplayNameAddition(const FString& InDisplayNameAddition);
 	void SetMagicDisplayNameAddition(const FString& InDisplayNameAddition);
 	void SetDescription(const FText& InDescription);
@@ -1269,6 +1288,9 @@ private:
 
 	UPROPERTY()
 	FText DisplayName = FText::GetEmpty();
+
+	UPROPERTY()
+	int8 ItemLevel = 0;
 
 	UPROPERTY()
 	FString RareItemDisplayNameAddition = FString();
@@ -1312,6 +1334,7 @@ private:
 	
 	uint8 bContainsItemImage:1;
 	uint8 bContainsDisplayName:1;
+	uint8 bContainsItemLevel:1;
 	uint8 bContainsRareItemDisplayNameAddition:1;
 	uint8 bContainsMagicItemDisplayNameAddition:1;
 	uint8 bContainsDescription:1;

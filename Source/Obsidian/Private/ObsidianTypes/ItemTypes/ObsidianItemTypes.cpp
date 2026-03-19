@@ -15,9 +15,20 @@
 
 // ~ FObsidianItemGeneratedData
 
+void FObsidianItemGeneratedData::SetStackCount(const int32 InStackCount)
+{
+	AvailableStackCount = InStackCount;
+}
+
+int32 FObsidianItemGeneratedData::GetStackCount() const
+{
+	return AvailableStackCount;
+}
+
 void FObsidianItemGeneratedData::Reset()
 {
 	AvailableStackCount = 1;
+	ItemLevel = 1;
 	ItemRarity = EObsidianItemRarity::None;
 	ItemAffixes.Reset();
 	NameData = FObsidianItemGeneratedNameData();
@@ -692,6 +703,12 @@ void FObsidianItemStats::SetDisplayName(const FText& InDisplayName)
 {
 	bContainsDisplayName = true;
 	DisplayName = InDisplayName;
+}
+
+void FObsidianItemStats::SetItemLevel(const int8 InItemLevel)
+{
+	bContainsItemLevel = true;
+	ItemLevel = InItemLevel;
 }
 
 void FObsidianItemStats::SetRareDisplayNameAddition(const FString& InDisplayNameAddition)
