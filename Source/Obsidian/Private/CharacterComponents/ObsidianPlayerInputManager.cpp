@@ -157,6 +157,35 @@ AObsidianHUD* UObsidianPlayerInputManager::GetObsidianHUD() const
 	return nullptr;
 }
 
+void UObsidianPlayerInputManager::TriggerInteraction(AActor* InteractionActor)
+{
+	if(IObsidianInteractionInterface* InteractionTarget = Cast<IObsidianInteractionInterface>(InteractionActor))
+	{
+		if(InteractionTarget->CanInteract() == false)
+		{
+#if !UE_BUILD_SHIPPING
+			if(bDebugInteraction)
+			{
+				UE_LOG(LogInteraction, Display, TEXT("Target cannot be interacted with."))	
+			}
+#endif
+			return;
+		}
+
+		StopOngoingInteraction();
+		
+		bWantsToInteract = true;
+		ActiveInteractionTarget = InteractionActor;
+		ServerStartInteraction(ActiveInteractionTarget);
+#if !UE_BUILD_SHIPPING
+		if(bDebugInteraction)
+		{
+			UE_LOG(LogInteraction, Display, TEXT("Starting Interaction."))	
+		}
+#endif
+	}
+}
+
 void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputComponent)
 {
 	check(InputComponent);
@@ -477,31 +506,7 @@ void UObsidianPlayerInputManager::Input_Interact()
 		return;
 	}
 
-	if(IObsidianInteractionInterface* InteractionTarget = Cast<IObsidianInteractionInterface>(InteractionActor))
-	{
-		if(InteractionTarget->CanInteract() == false)
-		{
-#if !UE_BUILD_SHIPPING
-			if(bDebugInteraction)
-			{
-				UE_LOG(LogInteraction, Display, TEXT("Target cannot be interacted with."))	
-			}
-#endif
-			return;
-		}
-
-		StopOngoingInteraction();
-		
-		bWantsToInteract = true;
-		ActiveInteractionTarget = InteractionActor;
-		ServerStartInteraction(ActiveInteractionTarget);
-#if !UE_BUILD_SHIPPING
-		if(bDebugInteraction)
-		{
-			UE_LOG(LogInteraction, Display, TEXT("Starting Interaction."))	
-		}
-#endif
-	}
+	TriggerInteraction(InteractionActor);
 }
 
 void UObsidianPlayerInputManager::Input_WeaponSwap()
@@ -584,34 +589,6 @@ void UObsidianPlayerInputManager::Input_ToggleHighlight()
 			ItemLabelManager->ToggleItemLabelHighlight(bHighlight);
 		}
 	}
-}
-
-bool UObsidianPlayerInputManager::HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
-{
-	const AActor* OwnerActor = GetOwner();
-	if(OwnerActor == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), __FUNCTION__);
-		return false;
-	}
-
-	if(OwnerActor->HasAuthority() == false)
-	{
-		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), __FUNCTION__);
-		return false;
-	}
-
-	const FVector ItemLocation = ItemToPickUp->GetActorLocation();
-	const FVector OwnerLocation = OwnerActor->GetActorLocation();
-	
-	const float DistanceToItem = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(ItemLocation.X, ItemLocation.Y, 0.0f)); 
-	if (DistanceToItem > DefaultInteractionRadius + AutoRunAcceptanceRadius)
-	{
-		const FVector ApproachDestination = ItemLocation - ((ItemLocation - OwnerLocation).GetSafeNormal()) * DefaultInteractionRadius;
-		ClientStartApproachingOutOfRangeItem(ApproachDestination, ItemToPickUp, PickUpType);
-		return true;
-	}
-	return false;
 }
 
 bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation)
@@ -778,57 +755,6 @@ void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const 
 			}
 		}
 #endif
-	}
-}
-
-void UObsidianPlayerInputManager::ClientStartApproachingOutOfRangeItem_Implementation(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType)
-{
-	bAutoRunToPickupItemByLabel = true;
-	CachedDestination = ToDestination;
-	CachedDroppableItemToPickup = ItemToPickUp;
-	
-	if(OnArrivedAtAcceptableItemPickupRange.IsBound())
-	{
-		OnArrivedAtAcceptableItemPickupRange.Clear();
-	}
-
-	if(PickUpType == EObsidianItemPickUpType::AutomaticPickUp)
-	{
-		OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::AutomaticallyPickupOutOfRangeItem);
-	}
-	else if(PickUpType == EObsidianItemPickUpType::PickUpToDrag)
-	{
-		OnArrivedAtAcceptableItemPickupRange.AddUObject(this, &ThisClass::DragOutOfRangeItem);
-	}
-	
-	AutoRunToClickedLocation();
-}
-
-void UObsidianPlayerInputManager::AutomaticallyPickupOutOfRangeItem()
-{
-	if(CachedDroppableItemToPickup)
-	{
-		if (OwnerItemManagerComponent)
-		{
-			OwnerItemManagerComponent->ServerPickupItem(CachedDroppableItemToPickup);
-		}
-		
-		OnArrivedAtAcceptableItemPickupRange.Clear();
-		CachedDroppableItemToPickup = nullptr;
-	}
-}
-
-void UObsidianPlayerInputManager::DragOutOfRangeItem()
-{
-	if(CachedDroppableItemToPickup)
-	{
-		if (OwnerItemManagerComponent)
-		{
-			OwnerItemManagerComponent->ServerGrabDroppableItemToCursor(CachedDroppableItemToPickup);
-		}
-		
-		OnArrivedAtAcceptableItemPickupRange.Clear();
-		CachedDroppableItemToPickup = nullptr;
 	}
 }
 

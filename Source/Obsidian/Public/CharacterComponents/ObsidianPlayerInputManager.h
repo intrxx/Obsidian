@@ -32,16 +32,6 @@ DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInteraction, Log, All);
 
-UENUM()
-enum class EObsidianItemPickUpType : uint8
-{
-	/** Automatic pickup, the item goes straight to the inventory. */
-	AutomaticPickUp,
-
-	/** The item goes to Player cursor and is being dragged. */
-	PickUpToDrag
-};
-
 /**
  * Component that manages every type of Player Input in obsidian. This includes regular native input, interactions,
  * highlights and Inventory Items handling.
@@ -67,6 +57,8 @@ public:
 	}
 	
 	AObsidianHUD* GetObsidianHUD() const;
+
+	void TriggerInteraction(AActor* InteractionActor);
 	
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
@@ -123,23 +115,6 @@ private:
 
 	UFUNCTION(Server, Reliable)
 	void ServerToggleWalk();
-
-	/**
-	 * Item Pick up.
-	 */
-	
-	UFUNCTION(Client, Reliable)
-	void ClientStartApproachingOutOfRangeItem(const FVector_NetQuantize10& ToDestination, AObsidianDroppableItem* ItemToPickUp,
-		const EObsidianItemPickUpType PickUpType);
-	
-	void AutomaticallyPickupOutOfRangeItem();
-	void DragOutOfRangeItem();
-
-	/**
-	 * If item is out of picking up range, it will handle getting to the item and picking it up. Will return true
-	 * if item picking up is handled.
-	 */
-	bool HandlePickUpIfItemOutOfRange(AObsidianDroppableItem* ItemToPickUp, const EObsidianItemPickUpType PickUpType);
 	
 	/**
 	 * Interaction.

@@ -210,12 +210,14 @@ void AObsidianDroppableItem::Interact(AObsidianPlayerController* InteractingPlay
 
 	if(CarriesItemDef())
 	{
-		PickupItemDef(false /**TODO This is no consistent, leave it for now tho : < */, InteractingPlayerController);
+		PickupItemDef(bAddToOpenWindow, InteractingPlayerController);
 	}
 	else if(CarriesItemInstance())
 	{
-		PickupItemInstance(false /**TODO This is no consistent, leave it for now tho : < */, InteractingPlayerController);
+		PickupItemInstance(bAddToOpenWindow, InteractingPlayerController);
 	}
+
+	bAddToOpenWindow = false;
 }
 
 void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemStacks)
@@ -518,15 +520,21 @@ void AObsidianDroppableItem::OnItemMouseButtonDown(const int32 PlayerIndex,
 	{
 		return;
 	}
-	
-	if(CarriesItemDef())
+
+	bAddToOpenWindow = InteractionFlags.bAutomaticallyAddToWindow;
+
+	if (UObsidianPlayerInputManager* InputManager = UObsidianPlayerInputManager::FindPlayerInputManager(ObsidianPC->GetPawn()))
 	{
-		PickupItemDef(InteractionFlags.bAutomaticallyAddToWindow, ObsidianPC);
+		InputManager->TriggerInteraction(this);
 	}
-	else if(CarriesItemInstance())
-	{
-		PickupItemInstance(InteractionFlags.bAutomaticallyAddToWindow, ObsidianPC);
-	}
+	// if(CarriesItemDef())
+	// {
+	// 	PickupItemDef(InteractionFlags.bAutomaticallyAddToWindow, ObsidianPC);
+	// }
+	// else if(CarriesItemInstance())
+	// {
+	// 	PickupItemInstance(InteractionFlags.bAutomaticallyAddToWindow, ObsidianPC);
+	// }
 }
 
 bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown,

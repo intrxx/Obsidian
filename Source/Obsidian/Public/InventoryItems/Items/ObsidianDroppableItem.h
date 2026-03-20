@@ -142,4 +142,10 @@ private:
 
 	/** Final item rotation, the rotation the item is spawned with, most likely aligned to the ground. */
 	FRotator FinalItemRotation = FRotator::ZeroRotator;
+
+	/**
+	 * Interaction Cached variabled
+	 */
+
+	bool bAddToOpenWindow = false;
 };
