@@ -73,6 +73,7 @@ void UObsidianPlayerInputManager::AutoRun()
 				bWasAutoMovingLastTick = false;
 			}
 		}
+		
 		return;
 	}
 	
@@ -703,6 +704,10 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 	{
 		ClientTriggerInteraction(InteractionTarget);
 	}
+	else
+	{
+		ClientAbandonInteraction();
+	}
 }
 
 void UObsidianPlayerInputManager::InteractWithOutOfRangeTarget()
@@ -745,6 +750,7 @@ void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const 
 		if(ActiveInteractionTarget->RequiresOngoingInteraction() == false)
 		{
 			ActiveInteractionTarget = nullptr;
+			bWantsToInteract = false;
 		}
 #if !UE_BUILD_SHIPPING
 		else
@@ -756,6 +762,12 @@ void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const 
 		}
 #endif
 	}
+}
+
+void UObsidianPlayerInputManager::ClientAbandonInteraction_Implementation()
+{
+	ActiveInteractionTarget = nullptr;
+	bWantsToInteract = false;
 }
 
 bool UObsidianPlayerInputManager::IsHoveringOverInteractionTarget() const

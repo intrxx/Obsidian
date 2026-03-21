@@ -129,6 +129,8 @@ private:
 
 	UFUNCTION(Client, Reliable)
 	void ClientTriggerInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
+	UFUNCTION(Client, Reliable)
+	void ClientAbandonInteraction();
 	
 	bool IsHoveringOverInteractionTarget() const;
 	void StopOngoingInteraction();
