@@ -8,15 +8,15 @@
 #include <Subsystems/WorldSubsystem.h>
 #include "ObsidianItemLabelManagerSubsystem.generated.h"
 
-class AObsidianItemLabelSystemLateTickActor;
 struct FObsidianItemInteractionFlags;
+
+class AObsidianItemLabelSystemLateTickActor;
 class UObsidianItemLabelComponent;
-class ItemLabelClass;
 class UCanvasPanelSlot;
 class AObsidianDroppableItem;
 class UObsidianItemLabel;
 class AObsidianPlayerController;
-class UObsidianItemLabelOverlay;
+class UObsidianMainOverlay;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogItemLabelManager, Log, All);
 
@@ -116,7 +116,7 @@ public:
 	
 	virtual TStatId GetStatId() const override;
 	
-	void InitializeItemLabelManager(UObsidianItemLabelOverlay* InItemLabelOverlay, AObsidianPlayerController* InObsidianPC);
+	void InitializeItemLabelManager(UObsidianMainOverlay* InItemLabelOverlay, AObsidianPlayerController* InObsidianPC);
 
 	FGuid RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent);
 	void UnregisterItemLabel(const FGuid& LabelID);
@@ -165,7 +165,7 @@ private:
 	// ~ End of Debug
 	
 	UPROPERTY()
-	TObjectPtr<UObsidianItemLabelOverlay> ItemLabelOverlay;
+	TObjectPtr<UObsidianMainOverlay> MainOverlay;
 
 	UPROPERTY()
 	TWeakObjectPtr<AObsidianPlayerController> OwningPC;

@@ -61,9 +61,6 @@ public:
 private:
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")
 	TSubclassOf<UObsidianMainOverlay> MainOverlayWidgetClass;
-
-	UPROPERTY(EditAnywhere, Category = "ObsidianUI|ItemLabelOverlay")
-	TSubclassOf<UObsidianItemLabelOverlay> ItemLabelOverlayClass;
 	
 	/**
 	 * Widget Controllers 

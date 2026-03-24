@@ -10,7 +10,6 @@
 #include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
-#include "UI/InventoryItems/ObsidianItemLabelOverlay.h"
 
 UObMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
 {
@@ -95,16 +94,10 @@ void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, A
 		}
 		
 		MainOverlayWidget->AddToViewport();
-	}
 
-	if (ensureMsgf(ItemLabelOverlayClass, TEXT("Item Label Overlay Class is not set on HUD Class [%s],"
-											" please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
-	{
 		if (UObsidianItemLabelManagerSubsystem* ItemLabelManagerSubsystem = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
 		{
-			UObsidianItemLabelOverlay* LabelOverlay = CreateWidget<UObsidianItemLabelOverlay>(World, ItemLabelOverlayClass);
-			LabelOverlay->AddToViewport();
-			ItemLabelManagerSubsystem->InitializeItemLabelManager(LabelOverlay, ForPlayerController);
+			ItemLabelManagerSubsystem->InitializeItemLabelManager(MainOverlayWidget, ForPlayerController);
 		}
 	}
 }

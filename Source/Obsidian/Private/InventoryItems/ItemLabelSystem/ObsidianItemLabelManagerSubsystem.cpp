@@ -11,8 +11,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Math/CameraPoseMath.h"
 #include "Obsidian/ObsidianGameModule.h"
-#include "UI/InventoryItems/ObsidianItemLabelOverlay.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
+#include "UI/MainOverlay/ObsidianMainOverlay.h"
 
 DECLARE_CYCLE_STAT(TEXT("ItemLabelManager"), STAT_ItemLabelManager, STATGROUP_Tickables);
 DEFINE_LOG_CATEGORY(LogItemLabelManager)
@@ -147,7 +147,7 @@ TStatId UObsidianItemLabelManagerSubsystem::GetStatId() const
 
 void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 {
-	if (OwningPC.IsValid() == false || ItemLabelOverlay == nullptr)
+	if (OwningPC.IsValid() == false || MainOverlay == nullptr)
 	{
 		return;
 	}
@@ -258,7 +258,7 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_1()
 
 	//TODO(intrxx) Force this now to get all proper sizes, need to work it out I guess or check how expensive this is,
 	// Solve Layout is already being called in another frame but for some reason the Layout isn't prepassed anyway
-	ItemLabelOverlay->ForceLayoutPrepass();
+	MainOverlay->ForceItemLabelsPrepass();
 
 	AObsidianPlayerController* OwningOPC = OwningPC.IsValid()
 		? OwningPC.Get()
@@ -456,7 +456,7 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_2()
 
 	//TODO(intrxx) Force this now to get all proper sizes, need to work it out I guess or check how expensive this is,
 	// Solve Layout is already being called in another frame but for some reason the Layout isn't prepassed anyway
-	ItemLabelOverlay->ForceLayoutPrepass();
+	MainOverlay->ForceItemLabelsPrepass();
 
 	AObsidianPlayerController* OwningOPC = OwningPC.IsValid()
 		? OwningPC.Get()
@@ -640,10 +640,10 @@ bool UObsidianItemLabelManagerSubsystem::CheckHorizontalOverlap(const FObsidianI
 	return !(LabelARight <= LabelBLeft || LabelBRight <= LabelALeft);
 }
 
-void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianItemLabelOverlay* InItemLabelOverlay,
+void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianMainOverlay* InItemLabelOverlay,
                                                                     AObsidianPlayerController* InObsidianPC)
 {
-	ItemLabelOverlay = InItemLabelOverlay;
+	MainOverlay = InItemLabelOverlay;
 	OwningPC = InObsidianPC;
 	
 	//TODO(intrxx) Gather any items in the world and init it? Or init it in item's Begin Play?
@@ -651,7 +651,7 @@ void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianIte
 
 FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent)
 {
-	if (OwningPC.IsValid() == false || ItemLabelOverlay == nullptr || SourceLabelComponent == nullptr)
+	if (OwningPC.IsValid() == false || MainOverlay == nullptr || SourceLabelComponent == nullptr)
 	{
 		return FGuid();
 	}
@@ -677,7 +677,7 @@ FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelCo
 	NewLabelData.ItemLabelWidget->SetItemName(InitializationData.ItemName);
 	NewLabelData.ItemLabelWidget->SetVisibility(ESlateVisibility::Visible);
 
-	if (UCanvasPanelSlot* CanvasPanelSlot = ItemLabelOverlay->AddItemLabelToOverlay(NewLabelData.ItemLabelWidget,
+	if (UCanvasPanelSlot* CanvasPanelSlot = MainOverlay->AddItemLabelToOverlay(NewLabelData.ItemLabelWidget,
 		OutInitialScreenPosition))
 	{
 		UE_LOG(LogItemLabelManager, Display, TEXT("New Label Pos: %s"), *OutInitialScreenPosition.ToString());
@@ -706,7 +706,7 @@ void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(const FGuid& LabelI
 
 void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHighlight)
 {
-	if (ItemLabelOverlay == nullptr)
+	if (MainOverlay == nullptr)
 	{
 		UE_LOG(LogItemLabelManager, Error, TEXT("ItemLabelOverlay is invalid in [%hs]."), __FUNCTION__);
 		return;
@@ -715,12 +715,12 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 	if (bHighlight)
 	{
 		MakeLayoutDirty();
-		ItemLabelOverlay->SetVisibility(ESlateVisibility::Visible);
+		MainOverlay->SetItemLabelsVisibility(ESlateVisibility::Visible);
 		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight on!"));
 	}
 	else
 	{
-		ItemLabelOverlay->SetVisibility(ESlateVisibility::Collapsed);
+		MainOverlay-> SetItemLabelsVisibility(ESlateVisibility::Collapsed);
 		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight off!"));
 	}
 

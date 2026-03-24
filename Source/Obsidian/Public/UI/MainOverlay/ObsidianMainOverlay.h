@@ -11,6 +11,9 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "ObsidianMainOverlay.generated.h"
 
+class UCanvasPanel;
+class UCanvasPanelSlot;
+class UObsidianItemLabel;
 class UObsidianOverlayStaminaBar;
 class UObsidianSkillPointsNotification;
 class UObsidianOverlayExperienceBar;
@@ -62,6 +65,15 @@ public:
 	
 	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
 
+	/**
+	 * Item Labels
+	 */
+	
+	UCanvasPanelSlot* AddItemLabelToOverlay(UObsidianItemLabel* ItemLabelWidget, const FVector2D& AtPosition);
+	UCanvasPanelSlot* AddItemLabelToOverlayDebug(UUserWidget* ItemLabelWidget, const FVector2D& AtPosition);
+	void SetItemLabelsVisibility(ESlateVisibility InVisibility);
+	void ForceItemLabelsPrepass();
+
 protected:
 	virtual void HandleWidgetControllerSet() override;
 	
@@ -82,6 +94,9 @@ protected:
 	void UpdateAscensionSkillPointsNotification(float NewSkillPoints);
 	
 protected:
+	UPROPERTY(meta=(BindWidget))
+	TObjectPtr<UCanvasPanel> ItemLabels_CanvasPanel;
+	
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianProgressGlobe_Health> HealthProgressGlobe;
 	

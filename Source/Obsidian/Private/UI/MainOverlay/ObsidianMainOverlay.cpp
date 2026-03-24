@@ -12,7 +12,9 @@
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
+#include "Components/CanvasPanel.h"
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
+#include "Obsidian/ObsidianGameModule.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
@@ -31,6 +33,7 @@
 #include "UI/MainOverlay/SkillPoints/ObsidianSkillPointsNotification.h"
 #include "UI/InventoryItems/ObsidianPlayerStashWidget.h"
 #include "UI/ProgressBars/ObsidianOverlayStaminaBar.h"
+#include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {
@@ -266,6 +269,58 @@ void UObsidianMainOverlay::AddItemDescriptionToOverlay(UObsidianItemDescriptionB
 	if(ItemDescription)
 	{
 		DroppedItemDesc_Overlay->AddChildToOverlay(ItemDescription);
+	}
+}
+
+UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlay(UObsidianItemLabel* ItemLabelWidget,
+	const FVector2D& AtPosition)
+{
+	if (ItemLabelWidget == nullptr)
+	{
+		UE_LOG(LogObsidian, Error, TEXT("Passed ItemLabelWidget is invalid in [%hs]."), __FUNCTION__);
+		return nullptr;
+	}
+	
+	if (ItemLabels_CanvasPanel)
+	{
+		UCanvasPanelSlot* CanvasSlot = ItemLabels_CanvasPanel->AddChildToCanvas(ItemLabelWidget);
+		CanvasSlot->SetAutoSize(true);
+		CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+		CanvasSlot->SetPosition(AtPosition);
+
+		return CanvasSlot;
+	}
+	return nullptr;
+}
+
+UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlayDebug(UUserWidget* ItemLabelWidget,
+	const FVector2D& AtPosition)
+{
+	if (ItemLabels_CanvasPanel)
+	{
+		UCanvasPanelSlot* CanvasSlot = ItemLabels_CanvasPanel->AddChildToCanvas(ItemLabelWidget);
+		CanvasSlot->SetAutoSize(true);
+		CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
+		CanvasSlot->SetPosition(AtPosition);
+
+		return CanvasSlot;
+	}
+	return nullptr;
+}
+
+void UObsidianMainOverlay::SetItemLabelsVisibility(ESlateVisibility InVisibility)
+{
+	if (ItemLabels_CanvasPanel)
+	{
+		ItemLabels_CanvasPanel->SetVisibility(InVisibility);
+	}
+}
+
+void UObsidianMainOverlay::ForceItemLabelsPrepass()
+{
+	if (ItemLabels_CanvasPanel)
+	{
+		ItemLabels_CanvasPanel->ForceLayoutPrepass();
 	}
 }
 
