@@ -34,7 +34,7 @@ AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectI
 	StaticMeshComp->SetCollisionResponseToAllChannels(ECR_Ignore);
 	StaticMeshComp->SetCollisionResponseToChannel(ECC_WorldStatic, ECR_Block);
 	StaticMeshComp->SetCollisionResponseToChannel(ECC_Visibility, ECR_Block);
-	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Block);
+	StaticMeshComp->SetCollisionResponseToChannel(Obsidian_TraceChannel_PlayerCursorTrace, ECR_Ignore);
 	StaticMeshComp->SetCustomDepthStencilValue(ObsidianHighlight::White);
 	StaticMeshComp->SetRenderCustomDepth(false);
 	StaticMeshComp->SetupAttachment(RootSceneComponent);
@@ -62,7 +62,7 @@ void AObsidianDroppableItem::BeginPlay()
 {
 	Super::BeginPlay();
 
-	InitDropRouteAnimation();
+	InitDropRouteAnimation(); 
 }
 
 void AObsidianDroppableItem::GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const
