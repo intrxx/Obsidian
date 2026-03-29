@@ -184,6 +184,9 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 		FVector2D OutUpdatedAnchorScreenPosition;
 		bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
 			LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
+		FSceneViewProjectionData ProjectionData;
+		if (ObsidianPC->GetLocalPlayer())
+		//bool bSuccess1 = ULocalPlayer::GetPixelPoint()
 		if (bSuccess == false)
 		{
 			UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
