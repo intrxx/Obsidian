@@ -165,76 +165,91 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 			}
 		}
 	}
-
-	uint32 UpdatedWidgetsCount = 0;
-	bool bShouldRecalculateLayout = false;
-	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
+	
+	ULocalPlayer* LocalPlayer = ObsidianPC->GetLocalPlayer();
+	if (LocalPlayer == nullptr)
 	{
-		FObsidianItemLabelData& LabelData = Pair.Value;
+		return;
+	}
 
-		// FCameraPose CameraPose;
-		// CameraPose.
-		//UE::Cameras::FCameraPoseMath::ProjectWorldToScreen();
+	bool bShouldRecalculateLayout = false;
+	FSceneViewProjectionData ProjectionData;
+	if (LocalPlayer->GetProjectionData(LocalPlayer->ViewportClient->Viewport, ProjectionData))
+	{
+		float DPIScale = UWidgetLayoutLibrary::GetViewportScale(GetWorld());
+		uint32 UpdatedWidgetsCount = 0;
 		
-		// bool bSuccess = UGameplayStatics::ProjectWorldToScreen(ObsidianPC, LabelData.LabelAdjustedWorldPosition,
-		// 	OutUpdatedAnchorScreenPosition, false);
+		for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
+		{
+			FObsidianItemLabelData& LabelData = Pair.Value;
 
-		//TODO(intrxx) Projection gets fucky wacky with the camera perspective so solved layout is drifting, specially when moving top/down
-		
-		FVector2D OutUpdatedAnchorScreenPosition;
-		bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
-			LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
-		FSceneViewProjectionData ProjectionData;
-		if (ObsidianPC->GetLocalPlayer())
-		//bool bSuccess1 = ULocalPlayer::GetPixelPoint()
-		if (bSuccess == false)
-		{
-			UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
-			continue;
-		}
-		
-		LabelData.LabelAnchorPosition = OutUpdatedAnchorScreenPosition;
-		const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
-		if (IsOutsideCurrentViewport(NewLabelPosition))
-		{
-			if (LabelData.bVisible)
+			// FCameraPose CameraPose;
+			// CameraPose.
+			//UE::Cameras::FCameraPoseMath::ProjectWorldToScreen();
+			
+			// bool bSuccess = UGameplayStatics::ProjectWorldToScreen(ObsidianPC, LabelData.LabelAdjustedWorldPosition,
+			// 	OutUpdatedAnchorScreenPosition, false);
+
+			//TODO(intrxx) Projection gets fucky wacky with the camera perspective so solved layout is drifting, specially when moving top/down
+			
+			FVector2D OutUpdatedAnchorScreenPosition;
+			// bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
+			// 	LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
+			
+			bool bSuccess = ULocalPlayer::GetPixelPoint(ProjectionData, LabelData.LabelAdjustedWorldPosition,
+				OutUpdatedAnchorScreenPosition);
+			if (bSuccess == false)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("[%s] went outside viewport."),
-					*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-				//TODO(intrxx) Deactivate label
-				ReleaseWidget(LabelData.ItemLabelWidget);
-				LabelData.ResetLabelData();
-			}
-			continue;
-		}
-		if (LabelData.bVisible == false)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("[%s] is back inside the viewport."),
-				*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-			//TODO(intrxx) Activate label
-
-			UObsidianItemLabelComponent* LabelComponent = LabelData.SourceLabelComponent;
-			if (LabelComponent == nullptr)
-			{
+				UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
 				continue;
 			}
+
+			OutUpdatedAnchorScreenPosition /= DPIScale;
+			LabelData.LabelAnchorPosition = OutUpdatedAnchorScreenPosition;
+			const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
+			if (IsOutsideCurrentViewport(NewLabelPosition))
+			{
+				if (LabelData.bVisible)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("[%s] went outside viewport."),
+						*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+					//TODO(intrxx) Deactivate label
+					ReleaseWidget(LabelData.ItemLabelWidget);
+					LabelData.ResetLabelData();
+				}
+				continue;
+			}
+			if (LabelData.bVisible == false)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[%s] is back inside the viewport."),
+					*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
+				//TODO(intrxx) Activate label
+
+				UObsidianItemLabelComponent* LabelComponent = LabelData.SourceLabelComponent;
+				if (LabelComponent == nullptr)
+				{
+					continue;
+				}
+					
+				const FObsidianLabelInitializationData InitializationData = LabelComponent->GetLabelInitializationData();
+				LabelData.ItemLabelWidget = AcquireWidget(LabelData.LabelID);
+				LabelData.ItemLabelWidget->SetItemName(InitializationData.ItemName);
+				LabelData.ItemLabelWidget->SetVisibility(ESlateVisibility::Visible);
+				LabelData.CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(LabelData.ItemLabelWidget);
 				
-			const FObsidianLabelInitializationData InitializationData = LabelComponent->GetLabelInitializationData();
-			LabelData.ItemLabelWidget = AcquireWidget(LabelData.LabelID);
-			LabelData.ItemLabelWidget->SetItemName(InitializationData.ItemName);
-			LabelData.ItemLabelWidget->SetVisibility(ESlateVisibility::Visible);
-			LabelData.CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(LabelData.ItemLabelWidget);
-			
-			LabelData.LabelSize = LabelData.CanvasPanelSlot->GetSize();
+				LabelData.LabelSize = LabelData.CanvasPanelSlot->GetSize();
+					
+				LabelData.bVisible = true;
 				
-			LabelData.bVisible = true;
+				bShouldRecalculateLayout = true;
+			}
 			
-			bShouldRecalculateLayout = true;
+			LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
+			UpdatedWidgetsCount++;
 		}
-		
-		LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
-		UpdatedWidgetsCount++;
 	}
+
+	
 
 	//UE_LOG(LogTemp, Warning, TEXT("Updated [%d] widget's positions."), UpdatedWidgetsCount);
 
@@ -248,7 +263,6 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
 
 void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_1()
 {
-	//Note(intrxx) I need to solve this every frame due to camera projection (due to the camera being at an angle)
 	if (bLayoutDirty == false) 
 	{
 		return;
