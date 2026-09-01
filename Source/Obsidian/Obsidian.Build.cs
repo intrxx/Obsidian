@@ -26,7 +26,8 @@ public class Obsidian : ModuleRules
 				"ModularGameplayActors", 
 				"CommonGame",
 				"Niagara",
-				"GameplayCameras"
+				"GameplayCameras", 
+				"MassActors"
 			});
 
 		PrivateDependencyModuleNames.AddRange(new string[]

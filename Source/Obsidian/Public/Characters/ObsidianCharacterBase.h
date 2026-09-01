@@ -2,18 +2,18 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
-#include "AbilitySystemInterface.h"
+#include <CoreMinimal.h>
 
-// ~ Project
+
 #include "Combat/ObsidianCombatInterface.h"
-
-#include "ModularCharacter.h"
+#include <AbilitySystemInterface.h>
+#include <ModularCharacter.h>
 #include "ObsidianCharacterBase.generated.h"
 
-class UNiagaraSystem;
 struct FGameplayAbilitySpec;
+
+class UMassAgentComponent;
+class UNiagaraSystem;
 class UMotionWarpingComponent;
 class UObsidianAbilitySystemComponent;
 class UObsidianPawnExtensionComponent;
@@ -82,6 +82,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Combat", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UMotionWarpingComponent> MotionWarpingComp;
+	
+	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
+	TObjectPtr<UMassAgentComponent> MassAgentComponent;
 
 	/**
 	 * Sockets used mostly for combat reasons, spawning projectiles.
