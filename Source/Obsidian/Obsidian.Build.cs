@@ -38,7 +38,8 @@ public class Obsidian : ModuleRules
 			"NavigationSystem",
 			"NetCore",
 			"GameplayMessageRuntime",
-			"CommonUser"
+			"CommonUser",
+			"AsyncMixin"
 		});
 
 		// Uncomment if you are using Slate UI
