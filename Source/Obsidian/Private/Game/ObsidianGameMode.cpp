@@ -31,6 +31,14 @@ void AObsidianGameMode::InitGame(const FString& MapName, const FString& Options,
 					CurrentNetworkType = EObsidianGameNetworkType::OfflineSolo;
 				}
 			}
+#if WITH_EDITOR
+			else
+			{
+				const ENetMode CurrentNetMode = GEngine->GetNetMode(GetWorld());
+				CurrentNetworkType = CurrentNetMode == NM_Standalone ? EObsidianGameNetworkType::OfflineSolo : 
+					EObsidianGameNetworkType::OnlineCoop; 
+			}
+#endif
 		}
 	}
 	
