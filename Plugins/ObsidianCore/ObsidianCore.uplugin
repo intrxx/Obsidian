@@ -1,0 +1,23 @@
+﻿{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "ObsidianCore",
+	"Description": "",
+	"Category": "Other",
+	"CreatedBy": "intrxx",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "ObsidianCore",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

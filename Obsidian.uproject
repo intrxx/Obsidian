@@ -96,6 +96,10 @@
 		{
 			"Name": "GameplayStateTree",
 			"Enabled": true
+		},
+		{
+			"Name": "ObsidianCore",
+			"Enabled": true
 		}
 	]
 }
