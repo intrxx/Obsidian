@@ -110,3 +110,5 @@ Content/Splash
 
 # Ignore raddbg files
 raddbg_obsidian_target.txt
+
+BugTrack/*
