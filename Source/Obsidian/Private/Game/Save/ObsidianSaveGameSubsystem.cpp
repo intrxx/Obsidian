@@ -81,7 +81,7 @@ void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(cons
 		{
 			UObsidianSharedStashSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(
 				UObsidianSharedStashSaveGame::StaticClass(), LocalPlayer, ObsidianSaveStatics::OnlineStashDataSaveName,
-				FOnLocalPlayerSaveGameLoadedNative::CreateLambda([this](ULocalPlayerSaveGame* SaveGame)
+				FOnLocalPlayerSaveGameLoadedNative::CreateWeakLambda(this, [this](ULocalPlayerSaveGame* SaveGame)
 					{
 						check(SaveGame);
 						OnlineSharedStashData = Cast<UObsidianSharedStashSaveGame>(SaveGame);
@@ -92,7 +92,7 @@ void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(cons
 		{
 			UObsidianSharedStashSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(
 				UObsidianSharedStashSaveGame::StaticClass(), LocalPlayer, ObsidianSaveStatics::OfflineStashDataSaveName,
-				FOnLocalPlayerSaveGameLoadedNative::CreateLambda([this](ULocalPlayerSaveGame* SaveGame)
+				FOnLocalPlayerSaveGameLoadedNative::CreateWeakLambda(this, [this](ULocalPlayerSaveGame* SaveGame)
 					{
 						check(SaveGame);
 						OfflineSharedStashData = Cast<UObsidianSharedStashSaveGame>(SaveGame);
@@ -107,15 +107,15 @@ void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(cons
 
 void UObsidianSaveGameSubsystem::RegisterSaveable(AActor* SaveActor)
 {
-	check(!SaveableActors.Contains(SaveActor) && SaveActor->GetClass()->ImplementsInterface(
-		UObsidianSaveableInterface::StaticClass()))
-	SaveableActors.Add(SaveActor);
+	if (ensure(SaveActor && SaveActor->GetClass()->ImplementsInterface(UObsidianSaveableInterface::StaticClass())))
+	{
+		SaveableActors.AddUnique(SaveActor);
+	}
 }
 
 void UObsidianSaveGameSubsystem::UnregisterSaveable(AActor* SaveActor)
 {
-	check(SaveableActors.Contains(SaveActor))
-	SaveableActors.Remove(SaveActor);
+	SaveableActors.RemoveSingleSwap(SaveActor);
 }
 
 void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync)
@@ -129,6 +129,15 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 			if (SaveActor.IsValid() == false)
 			{
 				continue;
+			}
+
+			// The Hero Save belongs to the Local Player, Pawns of other Players must not write into it.
+			if (const APawn* SavePawn = Cast<APawn>(SaveActor.Get()))
+			{
+				if (SavePawn->IsLocallyControlled() == false)
+				{
+					continue;
+				}
 			}
 
 			if (IObsidianSaveableInterface* SaveableInterface = Cast<IObsidianSaveableInterface>(SaveActor))
@@ -155,6 +164,7 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 			return;
 		}
 		SaveHeroGameForPlayer();
+		return;
 	}
 
 	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Save for invalid LocalPlayer, CurrentHeroSaveGame or "
@@ -210,65 +220,26 @@ void UObsidianSaveGameSubsystem::AsyncSaveSharedStashData(const AObsidianPlayerC
 		return;
 	}
 	
-	if (UObsidianGameplayStatics::IsOfflineNetworkType(NetworkType))
+	UObsidianSharedStashSaveGame* SharedStashSaveGame = UObsidianGameplayStatics::IsOfflineNetworkType(NetworkType)
+		? OfflineSharedStashData
+		: OnlineSharedStashData;
+	if (ensure(SharedStashSaveGame))
 	{
-		if (ensure(OfflineSharedStashData))
+		const TArray<UObsidianInventoryItemInstance*> SharedStashedItems = PlayerStashComponent->GetAllSharedItems();
+		TArray<FObsidianSavedItem>& StashedSavedItems = SharedStashSaveGame->SharedStashData.StashedSavedItems;
+		StashedSavedItems.Empty(SharedStashedItems.Num());
+
+		for (UObsidianInventoryItemInstance* Instance : SharedStashedItems)
 		{
-			TArray<UObsidianInventoryItemInstance*> SharedStashedItems = PlayerStashComponent->GetAllSharedItems();
-			OfflineSharedStashData->SharedStashData.StashedSavedItems.Empty(SharedStashedItems.Num());
-
-			//This is kind of pre-optimization stuff, but I expect this to get big in the future.
-			//TODO(intrxx) Recheck the performance of this compared to regular fors on Game Thread.
-			TQueue<FObsidianSavedItem, EQueueMode::Mpsc> ConstructedSavedItemsQueue;
-			ParallelFor(SharedStashedItems.Num(), [&ConstructedSavedItemsQueue, &SharedStashedItems](int32 Index)
-				{
-					UObsidianInventoryItemInstance* Instance = SharedStashedItems[Index];
-				
-					FObsidianSavedItem SavedItem;
-					Instance->ConstructSaveItem(SavedItem);
-					ConstructedSavedItemsQueue.Enqueue(SavedItem);
-				});
-			
-			FObsidianSavedItem DequeuedSavedItem;
-			while (ConstructedSavedItemsQueue.Dequeue(DequeuedSavedItem))
+			if (Instance)
 			{
-				OfflineSharedStashData->SharedStashData.StashedSavedItems.Add(DequeuedSavedItem);
+				Instance->ConstructSaveItem(StashedSavedItems.AddDefaulted_GetRef());
 			}
-
-			//TODO(intrxx) Save Stash Tabs Cosmetics
-			
-			OfflineSharedStashData->AsyncSaveGameToSlotForLocalPlayer();
 		}
-	}
-	else
-	{
-		if (ensure(OnlineSharedStashData))
-		{
-			TArray<UObsidianInventoryItemInstance*> SharedStashedItems = PlayerStashComponent->GetAllSharedItems();
-			OnlineSharedStashData->SharedStashData.StashedSavedItems.Empty(SharedStashedItems.Num());
 
-			//This is kind of pre-optimization stuff, but I expect this to get big in the future.
-			//TODO(intrxx) Recheck the performance of this compared to regular fors on Game Thread.
-			TQueue<FObsidianSavedItem, EQueueMode::Mpsc> ConstructedSavedItemsQueue;
-			ParallelFor(SharedStashedItems.Num(), [&ConstructedSavedItemsQueue, &SharedStashedItems](int32 Index)
-				{
-					UObsidianInventoryItemInstance* Instance = SharedStashedItems[Index];
-				
-					FObsidianSavedItem SavedItem;
-					Instance->ConstructSaveItem(SavedItem);
-					ConstructedSavedItemsQueue.Enqueue(SavedItem);
-				});
-			
-			FObsidianSavedItem DequeuedSavedItem;
-			while (ConstructedSavedItemsQueue.Dequeue(DequeuedSavedItem))
-			{
-				OnlineSharedStashData->SharedStashData.StashedSavedItems.Add(DequeuedSavedItem);
-			}
+		//TODO(intrxx) Save Stash Tabs Cosmetics
 
-			//TODO(intrxx) Save Stash Tabs Cosmetics
-			
-			OnlineSharedStashData->AsyncSaveGameToSlotForLocalPlayer();
-		}
+		SharedStashSaveGame->AsyncSaveGameToSlotForLocalPlayer();
 	}
 }
 
@@ -340,19 +311,29 @@ bool UObsidianSaveGameSubsystem::DeleteHeroSave(const uint16 SaveID, const bool 
 {
 	check(ObsidianMasterSaveGame)
 	const FString SlotNameToDelete = ObsidianMasterSaveGame->GetSaveNameForID(SaveID, bOnline);
-	const bool bSuccess = UGameplayStatics::DeleteGameInSlot(SlotNameToDelete, 0);
+	const int32 UserIndex = ObsidianMasterSaveGame->GetPlatformUserIndex();
+	const bool bSuccess = UGameplayStatics::DeleteGameInSlot(SlotNameToDelete, UserIndex);
 	if (bSuccess)
 	{
-		if (!ObsidianMasterSaveGame->DeleteHero(SaveID, bOnline))
+		if (ObsidianMasterSaveGame->DeleteHero(SaveID, bOnline))
+		{
+			ObsidianMasterSaveGame->AsyncSaveGameToSlotForLocalPlayer();
+		}
+		else
 		{
 			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s],"
 				" could not be deleted on Master Save Object."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID,
 				*SlotNameToDelete)
 		}
+
+		if (CurrentHeroSaveGame && CurrentHeroSaveGame->GetSaveID() == SaveID && CurrentHeroSaveGame->IsOnline() == bOnline)
+		{
+			CurrentHeroSaveGame = nullptr;
+		}
 	}
 	else
 	{
-		if (!UGameplayStatics::DoesSaveGameExist(SlotNameToDelete, 0))
+		if (!UGameplayStatics::DoesSaveGameExist(SlotNameToDelete, UserIndex))
 		{
 			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s] does not exist,"
 				" and could not be deleted."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID, *SlotNameToDelete)

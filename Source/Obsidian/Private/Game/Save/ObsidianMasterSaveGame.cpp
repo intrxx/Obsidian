@@ -151,10 +151,20 @@ FObsidianHeroSaveInfo* UObsidianMasterSaveGame::GetHeroSaveInfo(const uint16 Sav
 
 uint16 UObsidianMasterSaveGame::GetMaxOfflineSaveID() const
 {
-	return MasterSaveParams.OfflineSavedHeroes.Num();
+	uint16 NextSaveID = 0;
+	for (const FObsidianHeroSaveInfo& SaveInfo : MasterSaveParams.OfflineSavedHeroes)
+	{
+		NextSaveID = FMath::Max<uint16>(NextSaveID, SaveInfo.SaveID + 1);
+	}
+	return NextSaveID;
 }
 
 uint16 UObsidianMasterSaveGame::GetMaxOnlineSaveID() const
 {
-	return MasterSaveParams.OnlineSavedHeroes.Num();
+	uint16 NextSaveID = 0;
+	for (const FObsidianHeroSaveInfo& SaveInfo : MasterSaveParams.OnlineSavedHeroes)
+	{
+		NextSaveID = FMath::Max<uint16>(NextSaveID, SaveInfo.SaveID + 1);
+	}
+	return NextSaveID;
 }

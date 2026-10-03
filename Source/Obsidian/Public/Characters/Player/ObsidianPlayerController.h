@@ -42,6 +42,7 @@ public:
 	// ~ Start of APlayerController interface
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 	virtual void PostInitializeComponents() override;
+	virtual void ReceivedPlayer() override;
 	// ~ End of APlayerController interface
 	
 	// ~ Start of IGenericTeamAgentInterface interface
@@ -121,6 +122,7 @@ private:
 	TObjectPtr<UObsidianItemManagerComponent> ItemManagerComponent;
 
 	FDelegateHandle SharedStashDataLoadDelegateHandle;
-	
+	bool bRequestedSharedStashData = false;
+
 	FGenericTeamId TeamId;
 };

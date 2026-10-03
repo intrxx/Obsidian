@@ -298,7 +298,10 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 	}
 
 	const FObsidianHeroSaveData HeroSaveData = SaveObject->GetHeroSaveData();
-	SetActorLocation(HeroSaveData.GameplaySaveData.CurrentLocation);
+	if (HeroSaveData.GameplaySaveData.CurrentLocation.IsZero() == false)
+	{
+		SetActorLocation(HeroSaveData.GameplaySaveData.CurrentLocation);
+	}
 	
 	if(AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
 	{
@@ -406,7 +409,10 @@ void AObsidianHero::OnAbilitySystemInitialized()
 			SaveGameSubsystem->RegisterSaveable(this);
 
 			//TODO(intrxx) probably don't want to do it this late
-			SaveGameSubsystem->RequestLoadDataForObject(this);
+			if (HasAuthority() && IsLocallyControlled())
+			{
+				SaveGameSubsystem->RequestLoadDataForObject(this);
+			}
 		}
 	}
 

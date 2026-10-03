@@ -251,7 +251,7 @@ void UObsidianCharacterScreen::OnPlayHeroLoadFinished(UObsidianHeroSaveGame* Sav
 	{
 		if (UObsidianSaveGameSubsystem* SaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 		{
-			SaveGameSubsystem->OnSavingFinishedDelegate.Remove(OnPlayLoadingFinishedDelegateHandle);
+			SaveGameSubsystem->OnLoadingFinishedDelegate.Remove(OnPlayLoadingFinishedDelegateHandle);
 		}
 	}
 	

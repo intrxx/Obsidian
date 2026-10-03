@@ -80,6 +80,16 @@ void AObsidianPlayerController::PostInitializeComponents()
 	if (PlayerStashComponent)
 	{
 		PlayerStashComponent->InitializeStashTabs();
+	}
+}
+
+void AObsidianPlayerController::ReceivedPlayer()
+{
+	Super::ReceivedPlayer();
+
+	if (PlayerStashComponent && HasAuthority() && IsLocalController() && bRequestedSharedStashData == false)
+	{
+		bRequestedSharedStashData = true;
 
 		if (const UGameInstance* GameInstance = GetGameInstance())
 		{
