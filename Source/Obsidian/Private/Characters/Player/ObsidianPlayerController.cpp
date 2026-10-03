@@ -32,6 +32,8 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 	PlayerStashComponent = CreateDefaultSubobject<UObsidianPlayerStashComponent>(TEXT("Player Stash Component"));
 	CraftingComponent = CreateDefaultSubobject<UObsidianCraftingComponent>(TEXT("Crafting Component"));
 	ItemManagerComponent = CreateDefaultSubobject<UObsidianItemManagerComponent>(TEXT("Item Manager Component"));
+	
+	SetGenericTeamId(FGenericTeamId(2));
 }
 
 void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
@@ -95,6 +97,19 @@ void AObsidianPlayerController::PostInitializeComponents()
 				}
 			}
 		}
+	}
+}
+
+FGenericTeamId AObsidianPlayerController::GetGenericTeamId() const
+{
+	return TeamId;
+}
+
+void AObsidianPlayerController::SetGenericTeamId(const FGenericTeamId& InTeamID)
+{
+	if (TeamId != InTeamID)
+	{
+		TeamId = InTeamID;
 	}
 }
 

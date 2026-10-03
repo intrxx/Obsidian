@@ -112,6 +112,11 @@ void AObsidianHero::PossessedBy(AController* NewController)
 		check(PawnExtComp);
 		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
 	}
+	
+	if (const IGenericTeamAgentInterface* TeamAgentInterface = Cast<IGenericTeamAgentInterface>(NewController))
+	{
+		TeamId = TeamAgentInterface->GetGenericTeamId();
+	}
 }
 
 void AObsidianHero::OnRep_PlayerState()
@@ -123,6 +128,19 @@ void AObsidianHero::OnRep_PlayerState()
 	{
 		check(PawnExtComp);
 		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
+	}
+}
+
+FGenericTeamId AObsidianHero::GetGenericTeamId() const
+{
+	return TeamId;
+}
+
+void AObsidianHero::SetGenericTeamId(const FGenericTeamId& InTeamID)
+{
+	if (TeamId != InTeamID)
+	{
+		TeamId = InTeamID;
 	}
 }
 

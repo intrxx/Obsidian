@@ -6,7 +6,8 @@
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include "CommonPlayerController.h"
+#include <GenericTeamAgentInterface.h>
+#include <CommonPlayerController.h>
 #include "ObsidianPlayerController.generated.h"
 
 class UObsidianItemManagerComponent;
@@ -32,14 +33,21 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, co
  * Base class for Obsidian player characters player controller.
  */
 UCLASS()
-class OBSIDIAN_API AObsidianPlayerController : public ACommonPlayerController
+class OBSIDIAN_API AObsidianPlayerController : public ACommonPlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 public:
 	AObsidianPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
+	// ~ Start of APlayerController interface
 	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
 	virtual void PostInitializeComponents() override;
+	// ~ End of APlayerController interface
+	
+	// ~ Start of IGenericTeamAgentInterface interface
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
+	// ~ End of IGenericTeamAgentInterface interface
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
 	UObsidianInventoryComponent* GetInventoryComponent() const;
@@ -83,8 +91,10 @@ public:
 	FOnBossDetectedPlayer OnBossDetectedPlayerDelegate;
 	
 protected:
+	// ~ Start of AActor interface
 	virtual void BeginPlay() override;
-
+	// ~ End of AActor interface
+	
 	void LoadSharedStashData(UObsidianSharedStashSaveGame* SharedStashSaveGame);
 
 protected:
@@ -111,4 +121,6 @@ private:
 	TObjectPtr<UObsidianItemManagerComponent> ItemManagerComponent;
 
 	FDelegateHandle SharedStashDataLoadDelegateHandle;
+	
+	FGenericTeamId TeamId;
 };

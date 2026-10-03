@@ -6,6 +6,7 @@
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
+#include <GenericTeamAgentInterface.h>
 #include "Characters/ObsidianCharacterBase.h"
 #include "Game/Save/ObsidianSaveableInterface.h"
 #include "ObsidianHero.generated.h"
@@ -29,16 +30,23 @@ class UObsidianPlayerInputManager;
  * Main class for Hero characters in Obsidian.
  */
 UCLASS()
-class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase, public IObsidianSaveableInterface
+class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase, public IObsidianSaveableInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
 	
 public:
 	AObsidianHero(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
 	
+	// ~ Start of ACharacter interface
 	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(AController* NewController) override;
 	virtual void OnRep_PlayerState() override;
+	// ~ Start of ACharacter interface
+	
+	// ~ Start of IGenericTeamAgentInterface interface
+	virtual FGenericTeamId GetGenericTeamId() const override;
+	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
+	// ~ End of IGenericTeamAgentInterface interface
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
 	AObsidianPlayerState* GetObsidianPlayerState() const;
@@ -132,4 +140,6 @@ private:
 	/** Health bar to set on simulated proxy Player. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianHeroHealthBar_Simple> SimulatedHealthBarClass;
+	
+	FGenericTeamId TeamId;
 };
