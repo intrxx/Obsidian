@@ -4,16 +4,13 @@
 
 #include <CoreMinimal.h>
 
-
 #include <Subsystems/WorldSubsystem.h>
 #include "ObsidianItemLabelManagerSubsystem.generated.h"
 
 struct FObsidianItemInteractionFlags;
 
-class AObsidianItemLabelSystemLateTickActor;
 class UObsidianItemLabelComponent;
 class UCanvasPanelSlot;
-class AObsidianDroppableItem;
 class UObsidianItemLabel;
 class AObsidianPlayerController;
 class UObsidianMainOverlay;
@@ -24,7 +21,7 @@ USTRUCT()
 struct FObsidianItemLabelData
 {
 	GENERATED_BODY()
-	
+
 public:
 	FObsidianItemLabelData(){}
 
@@ -41,10 +38,25 @@ public:
 	FVector LabelAdjustedWorldPosition = FVector::Zero();
 
 	UPROPERTY()
-	FVector2D LabelAnchorPosition = FVector2D::Zero();
+	FGuid LabelID = FGuid();
 
 	UPROPERTY()
-	FGuid LabelID = FGuid();
+	TObjectPtr<UObsidianItemLabelComponent> SourceLabelComponent;
+
+	UPROPERTY()
+	uint8 Priority = 8;
+
+	/** Registration order, used as a stable tiebreaker so the solve order never depends on screen positions. */
+	UPROPERTY()
+	uint32 RegistrationIndex = 0;
+
+	/**
+	 * Dynamic
+	 */
+
+	/** Projected LabelAdjustedWorldPosition in the overlay's canvas space, refreshed every frame. */
+	UPROPERTY()
+	FVector2D LabelAnchorPosition = FVector2D::Zero();
 
 	UPROPERTY()
 	FVector2D LabelSize = FVector2D::Zero();
@@ -55,24 +67,24 @@ public:
 	UPROPERTY()
 	TObjectPtr<UCanvasPanelSlot> CanvasPanelSlot;
 
-	UPROPERTY()
-	TObjectPtr<UObsidianItemLabelComponent> SourceLabelComponent;
-
-	UPROPERTY()
-	uint8 Priority = 8;
-
-	/**
-	 * Dynamic
-	 */
-	
+	/** Offset from the anchor the solver wants this frame. */
 	UPROPERTY()
 	FVector2D LabelSolvedPositionOffset = FVector2D::Zero();
-	
+
+	/** Offset from the anchor that is actually displayed, smoothed towards LabelSolvedPositionOffset. */
+	UPROPERTY()
+	FVector2D LabelDisplayedPositionOffset = FVector2D::Zero();
+
+	/** Final center of the label in the overlay's canvas space. */
 	UPROPERTY()
 	FVector2D LabelSolvedPosition = FVector2D::Zero();
-	
+
 	UPROPERTY()
 	uint8 bVisible:1 = false;
+
+	/** Skips the smoothing for the next update, so freshly shown labels don't slide in from a stale offset. */
+	UPROPERTY()
+	uint8 bSnapToSolvedPosition:1 = true;
 };
 
 USTRUCT()
@@ -104,25 +116,22 @@ struct TStructOpsTypeTraits<FObsidianLabelManagerLateTickFunction> : public TStr
  * 
  */
 UCLASS()
-class OBSIDIAN_API UObsidianItemLabelManagerSubsystem : public UTickableWorldSubsystem
+class OBSIDIAN_API UObsidianItemLabelManagerSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 
 public:
 	UObsidianItemLabelManagerSubsystem();
 
-	virtual void Tick(float DeltaTime) override;
 	void PostWorkTick(float DeltaTime);
-	
-	virtual TStatId GetStatId() const override;
-	
+
 	void InitializeItemLabelManager(UObsidianMainOverlay* InItemLabelOverlay, AObsidianPlayerController* InObsidianPC);
 
 	FGuid RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent);
 	void UnregisterItemLabel(const FGuid& LabelID);
 
 	void ToggleItemLabelHighlight(const bool bHighlight);
-	
+
 	// ~ Start of USubsystem
 	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
 	virtual void Deinitialize() override;
@@ -130,18 +139,18 @@ public:
 
 public:
 	FObsidianLabelManagerLateTickFunction LateTickFunction;
-	
-protected:
-	void UpdateLabelAnchors(float DeltaTime);
-	void SolveLabelLayout_1();
-	void SolveLabelLayout_2();
 
-	bool IsOutsideCurrentViewport(const FVector2D& ViewportPosition);
-	
-	static bool CheckVerticalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
-	static bool CheckHorizontalOverlap(const FObsidianItemLabelData& LabelA, const FObsidianItemLabelData& LabelB);
-	
-	void HandleViewportResize(FViewport* Viewport, uint32 /** unused */);
+protected:
+	// ~ Start of UWorldSubsystem
+	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
+	// ~ End of UWorldSubsystem
+
+	void UpdateLabels(float DeltaTime);
+	void UpdateLabelAnchors(TArray<FObsidianItemLabelData*>& OutLabelsToSolve, FBox2D& OutViewportArea);
+	void SolveLabelLayout(TArray<FObsidianItemLabelData*>& LabelsToSolve, const FBox2D& ViewportArea);
+
+	bool ActivateLabel(FObsidianItemLabelData& LabelData);
+	void DeactivateLabel(FObsidianItemLabelData& LabelData);
 
 	UObsidianItemLabel* AcquireWidget(const FGuid& ForID);
 	void ReleaseWidget(UObsidianItemLabel* LabelWidget);
@@ -150,20 +159,10 @@ protected:
 	void HandleLabelPressed(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags,
 		const FGuid& LabelID);
 
-	void MakeLayoutDirty();
-	void MakeLayoutClean();
-	
 private:
 	UPROPERTY()
 	TSubclassOf<UObsidianItemLabel> ItemLabelClass;
 
-	// ~ Debug
-	UPROPERTY()
-	TSubclassOf<UUserWidget> ItemLabelHelperTLClass;
-	UPROPERTY()
-	TSubclassOf<UUserWidget> ItemLabelHelperBRClass;
-	// ~ End of Debug
-	
 	UPROPERTY()
 	TObjectPtr<UObsidianMainOverlay> MainOverlay;
 
@@ -179,76 +178,7 @@ private:
 	float ItemLabelGroundZOffset = 0.0f;
 	float LabelAdjustmentSmoothSpeed = 0.0f;
 
-	FDelegateHandle OnViewportResizeDelegateHandle;
-
-	bool bLayoutDirty = false;
+	uint32 NextRegistrationIndex = 0;
 
 	bool bLabelOverlayVisible = true;
-};
-
-struct FDeterministicRadialEnumerator
-{
-	
-public:
-	FDeterministicRadialEnumerator(const float InStep, const int32 InMaxRings, const int32 InBaseSamples = 8)
-		: Step(InStep)
-		, MaxRings(InMaxRings)
-		, BaseSamples(InBaseSamples)
-	{}
-
-	void Reset()
-	{
-		Ring = 0;
-		AngleIndex = 0;
-		bFirst = true;
-		SamplesThisRing = 1;
-	}
-
-	bool Next(FVector2D& OutOffset)
-	{
-		if (bFirst)
-		{
-			bFirst = false;
-			OutOffset = FVector2D::ZeroVector;
-			return true;
-		}
-
-		if (Ring >= MaxRings)
-		{
-			return false;
-		}
-
-		if (AngleIndex >= SamplesThisRing)
-		{
-			Ring++;
-			AngleIndex = 0;
-			SamplesThisRing = BaseSamples + Ring * 6;
-		}
-
-		const float Radius = Ring * Step;
-		const float Angle = (2.f * PI * AngleIndex) / SamplesThisRing;
-
-		float SinA, CosA;
-		FMath::SinCos(&SinA, &CosA, Angle);
-
-		FVector2D Offset(CosA * Radius, SinA * Radius);
-		
-		Offset.X = FMath::RoundToFloat(Offset.X);
-		Offset.Y = FMath::RoundToFloat(Offset.Y);
-
-		OutOffset = Offset;
-
-		AngleIndex++;
-		return true;
-	}
-
-private:
-	float Step;
-	int32 MaxRings;
-	int32 BaseSamples;
-
-	int32 Ring = 0;
-	int32 AngleIndex = 0;
-	int32 SamplesThisRing = 1;
-	bool bFirst = true;
 };

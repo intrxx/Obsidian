@@ -4,18 +4,84 @@
 
 #include <Components/CanvasPanelSlot.h>
 #include <Blueprint/WidgetLayoutLibrary.h>
+#include <SceneView.h>
 
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/Items/ObsidianItemLabelComponent.h"
 #include "Kismet/GameplayStatics.h"
-#include "Math/CameraPoseMath.h"
-#include "Obsidian/ObsidianGameModule.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
 DECLARE_CYCLE_STAT(TEXT("ItemLabelManager"), STAT_ItemLabelManager, STATGROUP_Tickables);
 DEFINE_LOG_CATEGORY(LogItemLabelManager)
+
+namespace ObsidianItemLabelLayout
+{
+	/** Gap kept between two labels, in canvas units. */
+	constexpr double LabelPadding = 2.0;
+
+	/** Labels whose anchor is further than this outside the viewport are released back to the pool, in canvas units. */
+	constexpr double OffscreenMargin = 150.0;
+
+	/** Slack for the overlap test, so a label resting exactly against a blocker isn't pushed again. */
+	constexpr double OverlapTolerance = 0.01;
+	
+	double FindFreeCenter(const TArray<FBox2D, TInlineAllocator<16>>& Blockers, const double StartCenter,
+		const double HalfExtent, const double Direction, const int32 Axis)
+	{
+		double Center = StartCenter;
+
+		for (int32 Pass = 0; Pass <= Blockers.Num(); ++Pass)
+		{
+			bool bPushed = false;
+			for (const FBox2D& Blocker : Blockers)
+			{
+				const double BlockerMin = Blocker.Min[Axis] - LabelPadding;
+				const double BlockerMax = Blocker.Max[Axis] + LabelPadding;
+				if (Center + HalfExtent > BlockerMin + OverlapTolerance && Center - HalfExtent < BlockerMax - OverlapTolerance)
+				{
+					Center = Direction < 0.0 ? BlockerMin - HalfExtent : BlockerMax + HalfExtent;
+					bPushed = true;
+				}
+			}
+
+			if (bPushed == false)
+			{
+				break;
+			}
+		}
+		return Center;
+	}
+
+	void GatherBlockers(const TArray<FBox2D>& Occupied, const double Center, const double HalfExtent, const int32 Axis,
+		TArray<FBox2D, TInlineAllocator<16>>& OutBlockers)
+	{
+		OutBlockers.Reset();
+		const double RangeMin = Center - HalfExtent - LabelPadding;
+		const double RangeMax = Center + HalfExtent + LabelPadding;
+		for (const FBox2D& TakenArea : Occupied)
+		{
+			if (TakenArea.Max[Axis] > RangeMin && TakenArea.Min[Axis] < RangeMax)
+			{
+				OutBlockers.Add(TakenArea);
+			}
+		}
+	}
+	
+	double PickPushOffset(const double NegativeDistance, const double PositiveDistance, const bool bNegativeFits,
+		const bool bPositiveFits, const double PreviousOffset, const double SideSwitchThreshold)
+	{
+		if (bNegativeFits != bPositiveFits)
+		{
+			return bNegativeFits ? -NegativeDistance : PositiveDistance;
+		}
+
+		const double NegativeCost = NegativeDistance - (PreviousOffset < 0.0 ? SideSwitchThreshold : 0.0);
+		const double PositiveCost = PositiveDistance - (PreviousOffset > 0.0 ? SideSwitchThreshold : 0.0);
+		return NegativeCost <= PositiveCost ? -NegativeDistance : PositiveDistance;
+	}
+}
 
 // ~ Start of FObsidianItemLabelData
 
@@ -29,8 +95,11 @@ void FObsidianItemLabelData::ResetLabelData()
 	CanvasPanelSlot = nullptr;
 	ItemLabelWidget = nullptr;
 	LabelSize = FVector2D::Zero();
+	LabelSolvedPositionOffset = FVector2D::Zero();
+	LabelDisplayedPositionOffset = FVector2D::Zero();
 
 	bVisible = false;
+	bSnapToSolvedPosition = true;
 }
 
 // ~ Start of FObsidianLabelManagerLateTickFunction
@@ -49,7 +118,7 @@ FString FObsidianLabelManagerLateTickFunction::DiagnosticMessage()
 {
 	if (Target)
 	{
-		return Target->GetFullName() + TEXT("Late Tick"); 
+		return Target->GetFullName() + TEXT("Late Tick");
 	}
 	return FTickFunction::DiagnosticMessage();
 }
@@ -70,27 +139,17 @@ UObsidianItemLabelManagerSubsystem::UObsidianItemLabelManagerSubsystem()
 													   " previously located in /Game/Obsidian/UI/GameplayUserInterface/Inventory/Items/WBP_ItemWorldName.WBP_ItemWorldName_C")), ELogVerbosity::Error);
 	}
 #endif
-	
-	// ~ Debug help
-	static ConstructorHelpers::FClassFinder<UUserWidget> ItemLabelHelperTL(TEXT("/Game/Obsidian/Debug/WBP_ItemLabelDebugHelperTL.WBP_ItemLabelDebugHelperTL_C"));
-	if (ItemLabelClassFinder.Succeeded())
-	{
-		ItemLabelHelperTLClass = ItemLabelHelperTL.Class;
-	}
-	static ConstructorHelpers::FClassFinder<UUserWidget> ItemLabelHelperBR(TEXT("/Game/Obsidian/Debug/WBP_ItemLabelDebugHelperBR.WBP_ItemLabelDebugHelperBR_C"));
-	if (ItemLabelClassFinder.Succeeded())
-	{
-		ItemLabelHelperBRClass = ItemLabelHelperBR.Class;
-	}
-	// ~ End of Debug help
+}
+
+bool UObsidianItemLabelManagerSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
+{
+	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
 }
 
 void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
 	Super::Initialize(Collection);
 
-	OnViewportResizeDelegateHandle = FViewport::ViewportResizedEvent.AddUObject(this, &ThisClass::HandleViewportResize);
-	
 	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
 	{
 		ItemLabelGroundZOffset = ItemDataSettings->DefaultItemLabelGroundZOffset;
@@ -110,613 +169,259 @@ void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Co
 
 void UObsidianItemLabelManagerSubsystem::Deinitialize()
 {
-	if (OnViewportResizeDelegateHandle.IsValid())
-	{
-		FViewport::ViewportResizedEvent.Remove(OnViewportResizeDelegateHandle);
-	}
-
 	LateTickFunction.UnRegisterTickFunction();
-	
+
 	Super::Deinitialize();
-}
-
-void UObsidianItemLabelManagerSubsystem::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-	if (bLabelOverlayVisible)
-	{
-		//SolveLabelLayout_1();
-		SolveLabelLayout_2();
-	}
 }
 
 void UObsidianItemLabelManagerSubsystem::PostWorkTick(float DeltaTime)
 {
 	if (bLabelOverlayVisible)
 	{
-		UpdateLabelAnchors(DeltaTime);
+		UpdateLabels(DeltaTime);
 	}
-	//SolveLabelLayout_2();
 }
 
-TStatId UObsidianItemLabelManagerSubsystem::GetStatId() const
+void UObsidianItemLabelManagerSubsystem::UpdateLabels(float DeltaTime)
 {
-	RETURN_QUICK_DECLARE_CYCLE_STAT(UItemLabelManagerSubsystem, STATGROUP_Tickables);
-}
+	SCOPE_CYCLE_COUNTER(STAT_ItemLabelManager);
 
-void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(float DeltaTime)
-{
-	if (OwningPC.IsValid() == false || MainOverlay == nullptr)
+	if (OwningPC.IsValid() == false || MainOverlay == nullptr || ItemLabelsDataMap.IsEmpty())
 	{
 		return;
 	}
 
-	const AObsidianPlayerController* ObsidianPC = OwningPC.Get();
+	TArray<FObsidianItemLabelData*> LabelsToSolve;
+	LabelsToSolve.Reserve(ItemLabelsDataMap.Num());
 
-	if (bLayoutDirty == false)
+	FBox2D ViewportArea(ForceInit);
+	UpdateLabelAnchors(LabelsToSolve, ViewportArea);
+	SolveLabelLayout(LabelsToSolve, ViewportArea);
+
+	for (FObsidianItemLabelData* Label : LabelsToSolve)
 	{
-		if (const APawn* Pawn = ObsidianPC->GetPawn())
+		if (Label->bSnapToSolvedPosition)
 		{
-			const float SpeedSquared = Pawn->GetVelocity().SizeSquared();
-			if (SpeedSquared < KINDA_SMALL_NUMBER) // Don't do anything if the Player isn't actually moving
-			{
-				return;
-			}
+			Label->LabelDisplayedPositionOffset = Label->LabelSolvedPositionOffset;
+			Label->bSnapToSolvedPosition = Label->LabelSize.IsNearlyZero();
 		}
+		else
+		{
+			Label->LabelDisplayedPositionOffset = FMath::Vector2DInterpTo(Label->LabelDisplayedPositionOffset,
+				Label->LabelSolvedPositionOffset, DeltaTime, LabelAdjustmentSmoothSpeed);
+		}
+
+		Label->LabelSolvedPosition = Label->LabelAnchorPosition + Label->LabelDisplayedPositionOffset;
+		Label->CanvasPanelSlot->SetPosition(Label->LabelSolvedPosition);
 	}
-	
-	ULocalPlayer* LocalPlayer = ObsidianPC->GetLocalPlayer();
-	if (LocalPlayer == nullptr)
+}
+
+void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(TArray<FObsidianItemLabelData*>& OutLabelsToSolve,
+	FBox2D& OutViewportArea)
+{
+	const ULocalPlayer* LocalPlayer = OwningPC->GetLocalPlayer();
+	if (LocalPlayer == nullptr || LocalPlayer->ViewportClient == nullptr)
 	{
 		return;
 	}
 
-	bool bShouldRecalculateLayout = false;
 	FSceneViewProjectionData ProjectionData;
-	if (LocalPlayer->GetProjectionData(LocalPlayer->ViewportClient->Viewport, ProjectionData))
-	{
-		float DPIScale = UWidgetLayoutLibrary::GetViewportScale(GetWorld());
-		uint32 UpdatedWidgetsCount = 0;
-		
-		for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
-		{
-			FObsidianItemLabelData& LabelData = Pair.Value;
-
-			// FCameraPose CameraPose;
-			// CameraPose.
-			//UE::Cameras::FCameraPoseMath::ProjectWorldToScreen();
-			
-			// bool bSuccess = UGameplayStatics::ProjectWorldToScreen(ObsidianPC, LabelData.LabelAdjustedWorldPosition,
-			// 	OutUpdatedAnchorScreenPosition, false);
-
-			//TODO(intrxx) Projection gets fucky wacky with the camera perspective so solved layout is drifting, specially when moving top/down
-			
-			FVector2D OutUpdatedAnchorScreenPosition;
-			// bool bSuccess = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(ObsidianPC,
-			// 	LabelData.LabelAdjustedWorldPosition, OutUpdatedAnchorScreenPosition, false);
-			
-			bool bSuccess = ULocalPlayer::GetPixelPoint(ProjectionData, LabelData.LabelAdjustedWorldPosition,
-				OutUpdatedAnchorScreenPosition);
-			if (bSuccess == false)
-			{
-				UE_LOG(LogItemLabelManager, Warning, TEXT("Label outside of viewport?"));
-				continue;
-			}
-
-			OutUpdatedAnchorScreenPosition /= DPIScale;
-			LabelData.LabelAnchorPosition = OutUpdatedAnchorScreenPosition;
-			const FVector2D NewLabelPosition = LabelData.LabelAnchorPosition + LabelData.LabelSolvedPositionOffset;
-			if (IsOutsideCurrentViewport(NewLabelPosition))
-			{
-				if (LabelData.bVisible)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("[%s] went outside viewport."),
-						*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-					//TODO(intrxx) Deactivate label
-					ReleaseWidget(LabelData.ItemLabelWidget);
-					LabelData.ResetLabelData();
-				}
-				continue;
-			}
-			if (LabelData.bVisible == false)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("[%s] is back inside the viewport."),
-					*LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-				//TODO(intrxx) Activate label
-
-				UObsidianItemLabelComponent* LabelComponent = LabelData.SourceLabelComponent;
-				if (LabelComponent == nullptr)
-				{
-					continue;
-				}
-					
-				const FObsidianLabelInitializationData InitializationData = LabelComponent->GetLabelInitializationData();
-				LabelData.ItemLabelWidget = AcquireWidget(LabelData.LabelID);
-				LabelData.ItemLabelWidget->SetItemName(InitializationData.ItemName);
-				LabelData.ItemLabelWidget->SetVisibility(ESlateVisibility::Visible);
-				LabelData.CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(LabelData.ItemLabelWidget);
-				
-				LabelData.LabelSize = LabelData.CanvasPanelSlot->GetSize();
-					
-				LabelData.bVisible = true;
-				
-				bShouldRecalculateLayout = true;
-			}
-			
-			LabelData.CanvasPanelSlot->SetPosition(NewLabelPosition);
-			UpdatedWidgetsCount++;
-		}
-	}
-
-	
-
-	//UE_LOG(LogTemp, Warning, TEXT("Updated [%d] widget's positions."), UpdatedWidgetsCount);
-
-	if (bShouldRecalculateLayout)
-	{
-		MakeLayoutDirty();
-		return;
-	}
-	MakeLayoutClean();
-}
-
-void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_1()
-{
-	if (bLayoutDirty == false) 
-	{
-		return;
-	}
-	
-	if (ItemLabelsDataMap.IsEmpty())
+	if (LocalPlayer->GetProjectionData(LocalPlayer->ViewportClient->Viewport, ProjectionData) == false)
 	{
 		return;
 	}
 
-	//TODO(intrxx) Force this now to get all proper sizes, need to work it out I guess or check how expensive this is,
-	// Solve Layout is already being called in another frame but for some reason the Layout isn't prepassed anyway
-	MainOverlay->ForceItemLabelsPrepass();
-
-	AObsidianPlayerController* OwningOPC = OwningPC.IsValid()
-		? OwningPC.Get()
-		: Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	if (OwningOPC == nullptr)
+	const double DPIScale = UWidgetLayoutLibrary::GetViewportScale(GetWorld());
+	if (DPIScale <= 0.0)
 	{
 		return;
 	}
 
-	UE_LOG(LogItemLabelManager, Warning, TEXT("------ Solving Layout 1! ------"));
+	const FMatrix ViewProjectionMatrix = ProjectionData.ComputeViewProjectionMatrix();
+	const FIntRect ViewRect = ProjectionData.GetConstrainedViewRect();
 
-	TArray<FObsidianItemLabelData*> CandidateLabels;
-	CandidateLabels.Reserve(ItemLabelsDataMap.Num());
-
-	// FVector CamLoc = OwningOPC->PlayerCameraManager
-	// 	? OwningOPC->PlayerCameraManager->GetCameraLocation()
-	// 	: FVector::Zero();
+	using namespace ObsidianItemLabelLayout;
+	OutViewportArea = FBox2D(FVector2D(ViewRect.Min) / DPIScale, FVector2D(ViewRect.Max) / DPIScale);
+	const FBox2D VisibleArea = OutViewportArea.ExpandBy(OffscreenMargin);
 
 	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
 	{
 		FObsidianItemLabelData& LabelData = Pair.Value;
-		if (LabelData.bVisible == false)
+
+		FVector2D AnchorPixelPosition;
+		const bool bOnScreen = IsValid(LabelData.SourceLabelComponent)
+			&& FSceneView::ProjectWorldToScreen(LabelData.LabelAdjustedWorldPosition, ViewRect, ViewProjectionMatrix, AnchorPixelPosition)
+			&& VisibleArea.IsInside(AnchorPixelPosition / DPIScale);
+		if (bOnScreen == false)
+		{
+			DeactivateLabel(LabelData);
+			continue;
+		}
+
+		LabelData.LabelAnchorPosition = AnchorPixelPosition / DPIScale;
+
+		if (LabelData.bVisible == false && ActivateLabel(LabelData) == false)
 		{
 			continue;
 		}
-		
-		CandidateLabels.Add(&LabelData);
+
+		LabelData.LabelSize = LabelData.ItemLabelWidget->GetDesiredSize();
+		OutLabelsToSolve.Add(&LabelData);
 	}
-
-	UE_LOG(LogTemp, Display, TEXT("Solving Layout for [%d] widgets."), CandidateLabels.Num());
-	
-	CandidateLabels.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
-		{
-			const uint8 APriority = DataA.Priority;
-			const uint8 BPriority = DataB.Priority;
-			if (APriority != BPriority)
-			{
-				return APriority > BPriority;
-			}
-
-			const float AY = DataA.LabelSolvedPosition.Y;
-			const float BY = DataB.LabelSolvedPosition.Y;
-			if (!FMath::IsNearlyEqual(AY, BY))
-			{
-				return AY < BY;
-			}
-		
-			return DataA.LabelID < DataB.LabelID;
-		});
-
-	// ~ Debug
-	// int32 index = 1;
-	// UE_LOG(LogTemp, Display, TEXT("Solving for widgets in Priority:"));
-	// for (const auto& Data : CandidateLabels)
-	// {
-	// 	UE_LOG(LogTemp, Display, TEXT("%d. [%s]."), index,
-	// 		*Data->SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-	// 	++index;
-	// }
-	// ~ End of Debug
-
-	TArray<FBox2D> Occupied;
-	Occupied.Reserve(CandidateLabels.Num());
-
-	if (CandidateLabels.IsEmpty() == false)
-	{
-		FObsidianItemLabelData& FirstLabel = *CandidateLabels[0];
-		if (FirstLabel.LabelSize.IsZero())
-		{
-			FirstLabel.LabelSize = FirstLabel.ItemLabelWidget->GetDesiredSize();
-		}
-		// ~ Debug
-		if (FirstLabel.LabelSize.IsZero())
-		{
-			UE_LOG(LogTemp, Error, TEXT("First Label Size is zero!! [%s]"), *FirstLabel.LabelSize.ToString());
-		}
-		UE_LOG(LogTemp, Display, TEXT("First Label Size: [%s]"), *FirstLabel.LabelSize.ToString());
-		// ~ End of debug
-		
-		const FVector2D FirstLabelTopLeft = FirstLabel.LabelSolvedPosition;
-		const FVector2D FirstLabelBottomRight = FVector2D(
-				FirstLabel.LabelSolvedPosition.X + FirstLabel.LabelSize.X,
-				FirstLabel.LabelSolvedPosition.Y + FirstLabel.LabelSize.Y);
-		Occupied.Add(FBox2D(FirstLabelTopLeft, FirstLabelBottomRight));
-
-		// ~ Debug help
-		// UUserWidget* LabelDebugTL = CreateWidget(OwningOPC, ItemLabelHelperTLClass);
-		// UUserWidget* LabelDebugBR = CreateWidget(OwningOPC, ItemLabelHelperBRClass);
-		// UCanvasPanelSlot* CanvasPanelSlotTL = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugTL, FirstLabelTopLeft);
-		// UCanvasPanelSlot* CanvasPanelSlotBR = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugBR, FirstLabelBottomRight);
-		// ~ End of Debug help
-	}
-	
-	for (int32 i = 1; i < CandidateLabels.Num(); ++i)
-	{
-		FObsidianItemLabelData& CurrentLabelData = *CandidateLabels[i];
-		FObsidianItemLabelData& PreviousLabelData = *CandidateLabels[i - 1];
-
-		UE_LOG(LogTemp, Warning, TEXT("Solving for [%s] label."),
-				*CurrentLabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-		UE_LOG(LogTemp, Warning, TEXT("Previous Label being: [%s]."),
-				*PreviousLabelData.SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-		
-		if (CurrentLabelData.LabelSize.IsZero())
-		{
-			CurrentLabelData.LabelSize = CurrentLabelData.ItemLabelWidget->GetDesiredSize();
-		}
-		
-		// ~ Debug
-		// if (CurrentLabelData.LabelSize.IsZero())
-		// {
-		// 	UE_LOG(LogTemp, Error, TEXT("Current Label Size is zero!! [%s]"), *CurrentLabelData.LabelSize.ToString());
-		// }
-		// UE_LOG(LogTemp, Display, TEXT("Current Label Size: [%s]"), *CurrentLabelData.LabelSize.ToString());
-		// ~ End of debug
-
-		// Assume label alignment [0, 0] (top left)
-		const float PreviousLabelHeight = PreviousLabelData.LabelSize.Y;
-		const float PreviousLabelWidth = PreviousLabelData.LabelSize.X;
-		const float CurrentLabelHeight = CurrentLabelData.LabelSize.Y;
-		const float CurrentLabelWidth = CurrentLabelData.LabelSize.X;
-		const FVector2D CurrentLabelTopLeft = CurrentLabelData.LabelSolvedPosition;
-		const FVector2D CurrentLabelBottomRight = FVector2D(
-				CurrentLabelData.LabelSolvedPosition.X + CurrentLabelWidth,
-				CurrentLabelData.LabelSolvedPosition.Y + CurrentLabelHeight);
-
-		// I think I want the offsets to lay the item next to previous one (if it's in some range) so the current location
-		// of PreviousLabelData will need to be used, so far the items aren't aligning by if they have enough space for
-		// offset 0,0 to work
-		static float PlacementOffset = 1.0f;
-		const TArray<FVector2D> CandidateOffsets = {
-			FVector2D(0.f, 0.f),
-			FVector2D(0.f, -PreviousLabelHeight - PlacementOffset),
-			FVector2D(0.f, PreviousLabelHeight + PlacementOffset),
-			FVector2D(-PreviousLabelWidth - PlacementOffset, PlacementOffset),
-			FVector2D(PreviousLabelWidth + PlacementOffset, PlacementOffset),
-			FVector2D(-PreviousLabelWidth - PlacementOffset, -PreviousLabelHeight - PlacementOffset),
-			FVector2D(-PreviousLabelWidth - PlacementOffset, PreviousLabelHeight + PlacementOffset),
-			FVector2D(PreviousLabelWidth + PlacementOffset, -PreviousLabelHeight - PlacementOffset),
-			FVector2D(PreviousLabelWidth + PlacementOffset, PreviousLabelHeight + PlacementOffset)};
-
-		bool bPlaced = false;
-		for (const FVector2D& Offset : CandidateOffsets)
-		{
-			const FVector2D BoxTopLeft = CurrentLabelTopLeft + Offset;
-			const FVector2D BoxBottomRight = BoxTopLeft + FVector2D(CurrentLabelWidth, CurrentLabelHeight);
-			FBox2D LabelRect = FBox2D(BoxTopLeft, BoxBottomRight);
-
-			bool bOverlap = false;
-			for (const FBox2D& OccupiedRegion : Occupied)
-			{
-				if (OccupiedRegion.Intersect(LabelRect))
-				{
-					UE_LOG(LogTemp, Display, TEXT("[%s] intersects [%s], skipping."), *LabelRect.ToString(), *OccupiedRegion.ToString());
-					bOverlap = true;
-					break;
-				}
-			}
-
-			if (bOverlap == false)
-			{
-				CurrentLabelData.LabelSolvedPosition = CurrentLabelData.LabelSolvedPosition + Offset;
-				CurrentLabelData.LabelSolvedPositionOffset = CurrentLabelData.LabelSolvedPosition - CurrentLabelData.LabelAnchorPosition;
-				Occupied.Add(LabelRect);
-				bPlaced = true;
-				break;
-			}
-		}
-
-		if (bPlaced == false)
-		{
-			UE_LOG(LogObsidian, Error, TEXT("There is no more room for another Item Label on the screen!"));
-			// UUserWidget* LabelDebugTL = CreateWidget(OwningOPC, ItemLabelHelperTLClass);
-			// UUserWidget* LabelDebugBR = CreateWidget(OwningOPC, ItemLabelHelperBRClass);
-			// UCanvasPanelSlot* CanvasPanelSlotTL = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugTL, PreviousLabelData.LabelSolvedPosition);
-			// UCanvasPanelSlot* CanvasPanelSlotBR = ItemLabelOverlay->AddItemLabelToOverlayDebug(LabelDebugBR, CurrentLabelData.LabelSolvedPosition);
-		}
-	}
-
-	UE_LOG(LogItemLabelManager, Warning, TEXT("------ End Solving Layout 1! ------"));
 }
 
-void UObsidianItemLabelManagerSubsystem::SolveLabelLayout_2()
+void UObsidianItemLabelManagerSubsystem::SolveLabelLayout(TArray<FObsidianItemLabelData*>& LabelsToSolve,
+	const FBox2D& ViewportArea)
 {
-	//TODO(intrxx) I need to solve this every frame due to camera projection (due to the camera being at an angle)
-	if (bLayoutDirty == false) 
-	{
-		return;
-	}
+	using namespace ObsidianItemLabelLayout;
 
-	if (ItemLabelsDataMap.IsEmpty())
-	{
-		return;
-	}
-
-	//TODO(intrxx) Force this now to get all proper sizes, need to work it out I guess or check how expensive this is,
-	// Solve Layout is already being called in another frame but for some reason the Layout isn't prepassed anyway
-	MainOverlay->ForceItemLabelsPrepass();
-
-	AObsidianPlayerController* OwningOPC = OwningPC.IsValid()
-		? OwningPC.Get()
-		: Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
-	if (OwningOPC == nullptr)
-	{
-		return;
-	}
-
-	UE_LOG(LogItemLabelManager, Warning, TEXT("------ Solving Layout 2! ------"));
-
-	TArray<FObsidianItemLabelData*> CandidateLabels;
-	CandidateLabels.Reserve(ItemLabelsDataMap.Num());
-
-	for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
-	{
-		FObsidianItemLabelData& LabelData = Pair.Value;
-		if (LabelData.bVisible == false || LabelData.IsValid() == false)
+	LabelsToSolve.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
 		{
-			UE_LOG(LogTemp, Display, TEXT("Skipping label."));
+			if (DataA.Priority != DataB.Priority)
+			{
+				return DataA.Priority > DataB.Priority;
+			}
+			return DataA.RegistrationIndex < DataB.RegistrationIndex;
+		});
+
+	TArray<FBox2D> Occupied;
+	Occupied.Reserve(LabelsToSolve.Num());
+
+	TArray<FBox2D, TInlineAllocator<16>> Blockers;
+
+	for (FObsidianItemLabelData* Label : LabelsToSolve)
+	{
+		const FVector2D Anchor = Label->LabelAnchorPosition;
+		const FVector2D HalfSize = Label->LabelSize * 0.5;
+		if (HalfSize.IsNearlyZero())
+		{
+			Label->LabelSolvedPositionOffset = FVector2D::Zero();
 			continue;
 		}
-		
-		CandidateLabels.Add(&LabelData);
-	}
 
-	UE_LOG(LogTemp, Display, TEXT("Solving Layout for [%d] widgets."), CandidateLabels.Num());
-	
-	CandidateLabels.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
+		const double SideSwitchThreshold = Label->LabelSize.Y;
+		const FVector2D PreviousOffset = Label->LabelSolvedPositionOffset;
+
+		GatherBlockers(Occupied, Anchor.X, HalfSize.X, 0, Blockers);
+		const double UpDistance = Anchor.Y - FindFreeCenter(Blockers, Anchor.Y, HalfSize.Y, -1.0, 1);
+		const double DownDistance = FindFreeCenter(Blockers, Anchor.Y, HalfSize.Y, 1.0, 1) - Anchor.Y;
+
+		const double VerticalFitMargin = PreviousOffset.X != 0.0 ? SideSwitchThreshold : 0.0;
+		const bool bUpFits = UpDistance <= 0.0
+			|| Anchor.Y - UpDistance - HalfSize.Y >= ViewportArea.Min.Y + VerticalFitMargin;
+		const bool bDownFits = DownDistance <= 0.0
+			|| Anchor.Y + DownDistance + HalfSize.Y <= ViewportArea.Max.Y - VerticalFitMargin;
+
+		if (bUpFits || bDownFits)
 		{
-			const uint8 APriority = DataA.Priority;
-			const uint8 BPriority = DataB.Priority;
-			if (APriority != BPriority)
-			{
-				return APriority > BPriority;
-			}
+			Label->LabelSolvedPositionOffset = FVector2D(0.0, PickPushOffset(UpDistance, DownDistance, bUpFits,
+				bDownFits, PreviousOffset.Y, SideSwitchThreshold));
+		}
+		else
+		{
+			// The vertical stack would leave the viewport on both ends, place the label next to it instead.
+			GatherBlockers(Occupied, Anchor.Y, HalfSize.Y, 1, Blockers);
+			const double LeftDistance = Anchor.X - FindFreeCenter(Blockers, Anchor.X, HalfSize.X, -1.0, 0);
+			const double RightDistance = FindFreeCenter(Blockers, Anchor.X, HalfSize.X, 1.0, 0) - Anchor.X;
 
-			const float AY = DataA.LabelAnchorPosition.Y;
-			const float BY = DataB.LabelAnchorPosition.Y;
-			if (!FMath::IsNearlyEqual(AY, BY))
-			{
-				return AY < BY;
-			}
-		
-			return DataA.LabelID < DataB.LabelID;
-		});
+			const bool bLeftFits = Anchor.X - LeftDistance - HalfSize.X >= ViewportArea.Min.X;
+			const bool bRightFits = Anchor.X + RightDistance + HalfSize.X <= ViewportArea.Max.X;
 
-	TArray<FBox2D> Occupied;
-    Occupied.Reserve(CandidateLabels.Num());
-	
-    for (FObsidianItemLabelData* Label : CandidateLabels)
-    {
-        if (Label->LabelSize.IsZero() && Label->ItemLabelWidget)
-        {
-            Label->LabelSize = Label->ItemLabelWidget->GetDesiredSize();
-        }
+			Label->LabelSolvedPositionOffset = FVector2D(PickPushOffset(LeftDistance, RightDistance, bLeftFits,
+				bRightFits, PreviousOffset.X, SideSwitchThreshold), 0.0);
+		}
 
-        const FVector2D Anchor = Label->LabelAnchorPosition;
-        const FVector2D Size = Label->LabelSize;
-    	const FVector2D HalfSize = Size * 0.5f;
-    	
-        bool bPlaced = false;
-	    
-	    {
-		    const FVector2D LabelPreviouslySolvedCenter = Anchor + Label->LabelSolvedPositionOffset;
-        	const FVector2D LabelTopLeft = LabelPreviouslySolvedCenter - HalfSize;
-        	const FVector2D LabelBottomRight = LabelPreviouslySolvedCenter + HalfSize;
-        	const FBox2D Rect = FBox2D(LabelTopLeft, LabelBottomRight);
-
-        	bool bOverlap = false;
-        	for (const FBox2D& TakenBoxArea : Occupied)
-        	{
-        		if (TakenBoxArea.Intersect(Rect))
-        		{
-        			bOverlap = true;
-        			break;
-        		}
-        	}
-
-        	if (!bOverlap)
-        	{
-        		Label->LabelSolvedPosition = LabelPreviouslySolvedCenter;
-        		Label->LabelSolvedPositionOffset = LabelPreviouslySolvedCenter - Anchor;
-        		Occupied.Add(Rect);
-        		continue;
-        	}
-	    }
-    	
-        FDeterministicRadialEnumerator Enumerator(4, 50);
-        Enumerator.Reset();
-
-        FVector2D Offset;
-        while (Enumerator.Next(Offset))
-        {
-        	const FVector2D LabelCenter = Anchor + Offset;
-            FVector2D LabelTopLeft = LabelCenter - HalfSize;
-            FVector2D LabelBottomRight = LabelCenter + HalfSize;
-            FBox2D Rect = FBox2D(LabelTopLeft, LabelBottomRight);
-
-            bool bOverlap = false;
-
-            for (const FBox2D& TakenBoxArea : Occupied)
-            {
-                if (TakenBoxArea.Intersect(Rect))
-                {
-                    bOverlap = true;
-                    break;
-                }
-            }
-
-            if (!bOverlap)
-            {
-                Label->LabelSolvedPosition = LabelCenter;
-                Label->LabelSolvedPositionOffset = LabelCenter - Anchor;
-
-                Occupied.Add(Rect);
-                bPlaced = true;
-                break;
-            }
-        }
-    	
-        if (!bPlaced)
-        {
-        	UE_LOG(LogObsidian, Error, TEXT("No Placement found for [%s]"),
-        		*Label->SourceLabelComponent->GetLabelInitializationData().ItemName.ToString());
-        	// This problem will occur one way or another, the question is, how to actually drop an Item now?
-            Label->bVisible = false;
-        }
-        else
-        {
-            Label->bVisible = true;
-        }
-    }
-	
-	UE_LOG(LogItemLabelManager, Warning, TEXT("------ End Solving Layout 2! ------"));
+		const FVector2D SolvedCenter = Anchor + Label->LabelSolvedPositionOffset;
+		Occupied.Add(FBox2D(SolvedCenter - HalfSize, SolvedCenter + HalfSize));
+	}
 }
 
-bool UObsidianItemLabelManagerSubsystem::IsOutsideCurrentViewport(const FVector2D& ViewportPosition)
+bool UObsidianItemLabelManagerSubsystem::ActivateLabel(FObsidianItemLabelData& LabelData)
 {
-	if (const UWorld* World = GetWorld())
+	UObsidianItemLabel* LabelWidget = AcquireWidget(LabelData.LabelID);
+	if (LabelWidget == nullptr)
 	{
-		const FVector2D ViewportSize = UWidgetLayoutLibrary::GetViewportSize(World);
-		const float DPIScale = UWidgetLayoutLibrary::GetViewportScale(World);
-		
-		constexpr float AdditionalBufferArea = 1.2;
-		const FVector2D ViewportSizeScaled = (ViewportSize / DPIScale) * AdditionalBufferArea;
-		
-		const bool bIsOnScreen =
-			ViewportPosition.X >= -250.0f &&
-			ViewportPosition.X <= ViewportSizeScaled.X &&
-			ViewportPosition.Y >= -250.0f &&
-			ViewportPosition.Y <= ViewportSizeScaled.Y;
-		return !bIsOnScreen;
+		return false;
 	}
+
+	UCanvasPanelSlot* CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(LabelWidget);
+	if (CanvasPanelSlot == nullptr)
+	{
+		CanvasPanelSlot = MainOverlay->AddItemLabelToOverlay(LabelWidget, LabelData.LabelAnchorPosition);
+	}
+	if (CanvasPanelSlot == nullptr)
+	{
+		ReleaseWidget(LabelWidget);
+		return false;
+	}
+
+	LabelWidget->SetItemName(LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName);
+	LabelWidget->SetVisibility(ESlateVisibility::Visible);
+
+	// The solver needs the size right now, without the prepass it would only be available after the next Slate tick.
+	LabelWidget->ForceLayoutPrepass();
+
+	LabelData.ItemLabelWidget = LabelWidget;
+	LabelData.CanvasPanelSlot = CanvasPanelSlot;
+	LabelData.LabelSolvedPositionOffset = FVector2D::Zero();
+	LabelData.LabelDisplayedPositionOffset = FVector2D::Zero();
+	LabelData.bVisible = true;
+	LabelData.bSnapToSolvedPosition = true;
 	return true;
 }
 
-bool UObsidianItemLabelManagerSubsystem::CheckVerticalOverlap(const FObsidianItemLabelData& LabelA,
-                                                              const FObsidianItemLabelData& LabelB)
+void UObsidianItemLabelManagerSubsystem::DeactivateLabel(FObsidianItemLabelData& LabelData)
 {
-	const float LabelABottom = LabelA.LabelSolvedPosition.Y;
-	const float LabelATop = LabelABottom - LabelA.LabelSize.Y;
-	
-	const float LabelBBottom = LabelB.LabelSolvedPosition.Y;
-	const float LabelBTop = LabelBBottom - LabelB.LabelSize.Y;
-
-	return !(LabelABottom <= LabelBTop || LabelBBottom <= LabelATop);
-}
-
-bool UObsidianItemLabelManagerSubsystem::CheckHorizontalOverlap(const FObsidianItemLabelData& LabelA,
-	const FObsidianItemLabelData& LabelB)
-{
-	const float LabelAHalfSizeX = LabelA.LabelSize.X / 2;
-	const float LabelALeft = LabelA.LabelSolvedPosition.X - LabelAHalfSizeX;
-	const float LabelARight = LabelA.LabelSolvedPosition.X + LabelAHalfSizeX;
-
-	const float LabelBHalfSizeX = LabelB.LabelSize.X / 2;
-	const float LabelBLeft = LabelB.LabelSolvedPosition.X - LabelBHalfSizeX;
-	const float LabelBRight = LabelB.LabelSolvedPosition.X + LabelBHalfSizeX;
-
-	return !(LabelARight <= LabelBLeft || LabelBRight <= LabelALeft);
+	if (LabelData.ItemLabelWidget)
+	{
+		ReleaseWidget(LabelData.ItemLabelWidget);
+	}
+	LabelData.ResetLabelData();
 }
 
 void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianMainOverlay* InItemLabelOverlay,
                                                                     AObsidianPlayerController* InObsidianPC)
 {
+	if (MainOverlay != InItemLabelOverlay)
+	{
+		for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
+		{
+			DeactivateLabel(Pair.Value);
+		}
+		LabelWidgetPool.Reset();
+	}
+
 	MainOverlay = InItemLabelOverlay;
 	OwningPC = InObsidianPC;
-	
-	//TODO(intrxx) Gather any items in the world and init it? Or init it in item's Begin Play?
 }
 
 FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent)
 {
-	if (OwningPC.IsValid() == false || MainOverlay == nullptr || SourceLabelComponent == nullptr)
+	if (SourceLabelComponent == nullptr)
 	{
 		return FGuid();
 	}
-	
+
 	FVector OwningItemWorldPosition = SourceLabelComponent->GetOwningItemActorLocation();
 	OwningItemWorldPosition.Z += ItemLabelGroundZOffset;
 
-	FVector2D OutInitialScreenPosition;
-	const bool bVisibleOnScreen = UWidgetLayoutLibrary::ProjectWorldLocationToWidgetPosition(OwningPC.Get(),
-				OwningItemWorldPosition, OutInitialScreenPosition, false);
-	
 	FObsidianItemLabelData NewLabelData;
 	NewLabelData.LabelAdjustedWorldPosition = OwningItemWorldPosition;
-	NewLabelData.LabelAnchorPosition = OutInitialScreenPosition;
 	NewLabelData.LabelID = FGuid::NewGuid();
 	NewLabelData.SourceLabelComponent = SourceLabelComponent;
 	NewLabelData.Priority = /**TODO(Switch to it after implementing Prio) InitializationData.Priority; */ FMath::RandRange(0, 8);
-	NewLabelData.LabelSolvedPosition = OutInitialScreenPosition;
-	NewLabelData.bVisible = bVisibleOnScreen;
-	
-	const FObsidianLabelInitializationData InitializationData = SourceLabelComponent->GetLabelInitializationData();
-	NewLabelData.ItemLabelWidget = AcquireWidget(NewLabelData.LabelID);
-	NewLabelData.ItemLabelWidget->SetItemName(InitializationData.ItemName);
-	NewLabelData.ItemLabelWidget->SetVisibility(ESlateVisibility::Visible);
+	NewLabelData.RegistrationIndex = NextRegistrationIndex++;
 
-	if (UCanvasPanelSlot* CanvasPanelSlot = MainOverlay->AddItemLabelToOverlay(NewLabelData.ItemLabelWidget,
-		OutInitialScreenPosition))
-	{
-		UE_LOG(LogItemLabelManager, Display, TEXT("New Label Pos: %s"), *OutInitialScreenPosition.ToString());
-		
-		NewLabelData.CanvasPanelSlot = CanvasPanelSlot;
-		
-		//TODO(intrxx) Check if the Layout needs solving first? Item Can be outside any cluster.
-		if (const UWorld* World = GetWorld())
-		{
-			World->GetTimerManager().SetTimerForNextTick(FTimerDelegate::CreateUObject(this, &ThisClass::MakeLayoutDirty));
-		}
-	}
-	
-	ItemLabelsDataMap.Add(NewLabelData.LabelID, MoveTemp(NewLabelData));
-	return NewLabelData.LabelID;
+	const FGuid NewLabelID = NewLabelData.LabelID;
+	ItemLabelsDataMap.Add(NewLabelID, MoveTemp(NewLabelData));
+	return NewLabelID;
 }
 
 void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(const FGuid& LabelID)
 {
-	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
+	if (FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
 	{
-		ReleaseWidget(FoundLabel->ItemLabelWidget);
+		DeactivateLabel(*FoundLabel);
 		ItemLabelsDataMap.Remove(LabelID);
 	}
 }
@@ -728,25 +433,24 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 		UE_LOG(LogItemLabelManager, Error, TEXT("ItemLabelOverlay is invalid in [%hs]."), __FUNCTION__);
 		return;
 	}
-	
+
 	if (bHighlight)
 	{
-		MakeLayoutDirty();
+		for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
+		{
+			Pair.Value.bSnapToSolvedPosition = true;
+		}
+
 		MainOverlay->SetItemLabelsVisibility(ESlateVisibility::Visible);
 		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight on!"));
 	}
 	else
 	{
-		MainOverlay-> SetItemLabelsVisibility(ESlateVisibility::Collapsed);
+		MainOverlay->SetItemLabelsVisibility(ESlateVisibility::Collapsed);
 		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight off!"));
 	}
 
 	bLabelOverlayVisible = bHighlight;
-}
-
-void UObsidianItemLabelManagerSubsystem::HandleViewportResize(FViewport* Viewport, uint32 /** unused */)
-{
-	MakeLayoutDirty();
 }
 
 UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGuid& ForID)
@@ -779,7 +483,7 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 										  " in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
-	
+
 	if (UObsidianItemLabel* NewItemLabel = CreateWidget<UObsidianItemLabel>(OwningOPC, ItemLabelClass))
 	{
 		NewItemLabel->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::HandleLabelHovered);
@@ -788,7 +492,7 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 		LabelWidgetPool.Add(NewItemLabel);
 		return NewItemLabel;
 	}
-	
+
 	UE_LOG(LogItemLabelManager, Error, TEXT("Creating new Item Widget failed in [%hs]"), __FUNCTION__);
 	return nullptr;
 }
@@ -832,14 +536,4 @@ void UObsidianItemLabelManagerSubsystem::HandleLabelPressed(const int32 PlayerIn
 			LabelComponent->HandleLabelMouseButtonDown(PlayerIndex, InteractionFlags);
 		}
 	}
-}
-
-void UObsidianItemLabelManagerSubsystem::MakeLayoutDirty()
-{
-	bLayoutDirty = true;
-}
-
-void UObsidianItemLabelManagerSubsystem::MakeLayoutClean()
-{
-	bLayoutDirty = false;
 }
