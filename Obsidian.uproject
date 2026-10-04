@@ -21,6 +21,15 @@
 				"ModularGameplayActors",
 				"DeveloperSettings"
 			]
+		},
+		{
+			"Name": "ObsidianTests",
+			"Type": "Editor",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"Engine",
+				"CoreUObject"
+			]
 		}
 	],
 	"Plugins": [

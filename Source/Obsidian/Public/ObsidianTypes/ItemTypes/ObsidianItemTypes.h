@@ -196,7 +196,7 @@ public:
  *
  */
 USTRUCT(BlueprintType)
-struct FObsidianItemRequirements
+struct OBSIDIAN_API FObsidianItemRequirements
 {
 	GENERATED_BODY()
 	
@@ -308,7 +308,7 @@ enum class EObsidianItemPositionType : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FObsidianItemPosition
+struct OBSIDIAN_API FObsidianItemPosition
 {
 	GENERATED_BODY()
 
@@ -860,7 +860,7 @@ public:
  * 
  */
 USTRUCT(BlueprintType)
-struct FObsidianItemGeneratedData
+struct OBSIDIAN_API FObsidianItemGeneratedData
 {
 	GENERATED_BODY()
 

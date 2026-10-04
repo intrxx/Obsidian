@@ -11,5 +11,6 @@ public class ObsidianEditorTarget : TargetRules
 		DefaultBuildSettings = BuildSettingsVersion.Latest;
 		IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("Obsidian");
+		ExtraModuleNames.Add("ObsidianTests");
 	}
 }
