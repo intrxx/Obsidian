@@ -81,7 +81,7 @@ void UObsidianPlayerInputManager::AutoRun()
 	{
 		const FVector LocationOnSpline = AutoRunSplineComp->FindLocationClosestToWorldLocation(Pawn->GetActorLocation(), ESplineCoordinateSpace::World);
 		const float DistanceToDestination = (LocationOnSpline - CachedDestination).Length();
-		if(DistanceToDestination <= AutoRunAcceptanceRadius)
+		if(DistanceToDestination <= ObsidianPlayerInputStatics::AutoRunAcceptanceRadius)
 		{
 #if 0 // https://github.com/intrxx/Obsidian/commit/e3eda3899a1b39ec1952221a24bce0b40b7be769
 			if(CanDropItem())
@@ -608,7 +608,7 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 	}
 
 	float InteractionRadius = InteractionTarget->GetInteractionRadius();
-	InteractionRadius = InteractionRadius == 0.0f ? DefaultInteractionRadius : InteractionRadius;
+	InteractionRadius = InteractionRadius == 0.0f ? ObsidianPlayerInputStatics::InteractionRadius : InteractionRadius;
 
 	const FVector OwnerLocation = OwnerActor->GetActorLocation();
 	const float DistanceToTarget = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f));
@@ -632,7 +632,7 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 	}
 #endif
 	
-	if(DistanceToTarget > InteractionRadius + AutoRunAcceptanceRadius)
+	if(DistanceToTarget > InteractionRadius + ObsidianPlayerInputStatics::AutoRunAcceptanceRadius)
 	{
 		const FVector ApproachDestination = TargetLocation - ((TargetLocation - OwnerLocation).GetSafeNormal()) * InteractionRadius;
 

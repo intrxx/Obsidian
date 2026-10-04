@@ -7,9 +7,12 @@
 #include <Kismet/KismetMathLibrary.h>
 #include <NavigationSystem.h>
 #include <GameFramework/Character.h>
+#include <EngineUtils.h>
 
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStash.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianPickableInterface.h"
@@ -174,6 +177,12 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToInventoryIte
 void UObsidianItemManagerComponent::ServerTakeoutFromInventoryItem_Implementation(const FIntPoint& SlotPosition,
 	const int32 StacksToTake)
 {
+	if(DraggedItem.IsEmpty() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("Already dragging an Item, it would be lost in [%hs]"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
@@ -211,11 +220,6 @@ void UObsidianItemManagerComponent::ServerTakeoutFromInventoryItem_Implementatio
 	//TODO(intrxx) In this case this are actually StacksToTake, maybe create another struct to reflect that?
 	DraggedItem = FDraggedItem(ItemDef, Result.StacksLeft);
 	StartDraggingItem(Controller);
-
-	if(ItemDef && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(ItemDef);
-	}
 }
 
 void UObsidianItemManagerComponent::ServerReplaceItemAtInventorySlot_Implementation(
@@ -267,6 +271,12 @@ void UObsidianItemManagerComponent::ServerReplaceItemAtInventorySlot_Implementat
 
 void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
 {
+	if(DraggedItem.IsEmpty() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("Already dragging an Item, it would be lost in [%hs]"), __FUNCTION__);
+		return;
+	}
+
 	if(ItemToPickup == nullptr)
 	{
 		UE_LOG(LogItemManager, Error, TEXT("ItemToPickup is null in [%hs]"), __FUNCTION__);
@@ -317,6 +327,12 @@ void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementati
 
 void UObsidianItemManagerComponent::ServerGrabInventoryItemToCursor_Implementation(const FIntPoint& SlotPosition)
 {
+	if(DraggedItem.IsEmpty() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("Already dragging an Item, it would be lost in [%hs]"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
@@ -467,6 +483,12 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 void UObsidianItemManagerComponent::ServerTransferItemToPlayerStash_Implementation(
 	const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab)
 {
+	if(IsOwnerInPlayerStashRange() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("[%hs]: Owner is not in range of any Player Stash!"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if (Controller == nullptr)
 	{
@@ -548,6 +570,12 @@ void UObsidianItemManagerComponent::ServerEquipItemAtSlot_Implementation(const F
 
 void UObsidianItemManagerComponent::ServerGrabEquippedItemToCursor_Implementation(const FGameplayTag& SlotTag)
 {
+	if(DraggedItem.IsEmpty() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("Already dragging an Item, it would be lost in [%hs]"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
@@ -569,8 +597,11 @@ void UObsidianItemManagerComponent::ServerGrabEquippedItemToCursor_Implementatio
 		return;
 	}
 
-	EquipmentComponent->UnequipItem(InstanceToGrab);
-	
+	if(EquipmentComponent->UnequipItem(InstanceToGrab) == false)
+	{
+		return;
+	}
+
 	DraggedItem = FDraggedItem(InstanceToGrab);
 
 	StartDraggingItem(Controller);
@@ -645,6 +676,12 @@ void UObsidianItemManagerComponent::ServerWeaponSwap_Implementation()
 void UObsidianItemManagerComponent::ServerAddItemToStashTabAtSlot_Implementation(
 	const FObsidianItemPosition& AtPosition, const bool bShiftDown)
 {
+	if(IsOwnerInPlayerStashRange() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("[%hs]: Owner is not in range of any Player Stash!"), __FUNCTION__);
+		return;
+	}
+
 	if(DraggedItem.IsEmpty())
 	{
 		UE_LOG(LogItemManager, Error, TEXT("Tried to add Inventory Item to the Inventory at specific slot"
@@ -689,6 +726,12 @@ void UObsidianItemManagerComponent::ServerAddItemToStashTabAtSlot_Implementation
 void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemAtSlot_Implementation(
 	const FObsidianItemPosition& AtPosition, const int32 StacksToAddOverride)
 {
+	if(IsOwnerInPlayerStashRange() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("[%hs]: Owner is not in range of any Player Stash!"), __FUNCTION__);
+		return;
+	}
+
 	if(DraggedItem.IsEmpty())
 	{
 		UE_LOG(LogItemManager, Error, TEXT("Tried to add Stacks from Dragged Item,"
@@ -736,6 +779,18 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemA
 void UObsidianItemManagerComponent::ServerGrabStashedItemToCursor_Implementation(
 	const FObsidianItemPosition& FromPosition)
 {
+	if(DraggedItem.IsEmpty() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("Already dragging an Item, it would be lost in [%hs]"), __FUNCTION__);
+		return;
+	}
+
+	if(IsOwnerInPlayerStashRange() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("[%hs]: Owner is not in range of any Player Stash!"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
@@ -769,6 +824,12 @@ void UObsidianItemManagerComponent::ServerGrabStashedItemToCursor_Implementation
 void UObsidianItemManagerComponent::ServerTransferItemToInventory_Implementation(
 	const FObsidianItemPosition& FromStashPosition)
 {
+	if(IsOwnerInPlayerStashRange() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("[%hs]: Owner is not in range of any Player Stash!"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if (Controller == nullptr)
 	{
@@ -809,6 +870,12 @@ void UObsidianItemManagerComponent::ServerTransferItemToInventory_Implementation
 void UObsidianItemManagerComponent::ServerReplaceItemAtStashPosition_Implementation(
 	const FObsidianItemPosition& AtStashPosition)
 {
+	if(IsOwnerInPlayerStashRange() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("[%hs]: Owner is not in range of any Player Stash!"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if (Controller == nullptr)
 	{
@@ -856,6 +923,18 @@ void UObsidianItemManagerComponent::ServerReplaceItemAtStashPosition_Implementat
 void UObsidianItemManagerComponent::ServerTakeoutFromStashedItem_Implementation(
 	const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake)
 {
+	if(DraggedItem.IsEmpty() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("Already dragging an Item, it would be lost in [%hs]"), __FUNCTION__);
+		return;
+	}
+
+	if(IsOwnerInPlayerStashRange() == false)
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("[%hs]: Owner is not in range of any Player Stash!"), __FUNCTION__);
+		return;
+	}
+
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
@@ -893,11 +972,6 @@ void UObsidianItemManagerComponent::ServerTakeoutFromStashedItem_Implementation(
 	//TODO(intrxx) In this case this are actually StacksToTake, maybe create another struct to reflect that?
 	DraggedItem = FDraggedItem(ItemDef, Result.StacksLeft);
 	StartDraggingItem(Controller);
-
-	if(ItemDef && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(ItemDef);
-	}
 }
 
 bool UObsidianItemManagerComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch,
@@ -910,13 +984,7 @@ bool UObsidianItemManagerComponent::ReplicateSubobjects(UActorChannel* Channel, 
 	{
 		WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
 	}
-	
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
-	if(ItemDef && IsValid(ItemDef))
-	{
-		WroteSomething |= Channel->ReplicateSubobject(ItemDef, *Bunch, *RepFlags);
-	}
-	
+		
 	return WroteSomething;
 }
 
@@ -931,12 +999,6 @@ void UObsidianItemManagerComponent::ReadyForReplication()
 		if(IsValid(Instance))
 		{
 			AddReplicatedSubObject(Instance);
-		}
-
-		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef;
-		if(IsValid(ItemDef))
-		{
-			AddReplicatedSubObject(ItemDef);
 		}
 	}
 }
@@ -1121,12 +1183,44 @@ void UObsidianItemManagerComponent::UpdateStacksOnDraggedItemWidget(const int32 
 	}
 }
 
-bool UObsidianItemManagerComponent::VerifyPickupRange(const AObsidianDroppableItem* ItemToPickUp)
+bool UObsidianItemManagerComponent::VerifyPickupRange(const AObsidianDroppableItem* ItemToPickUp) const
 {
-	//TODO(intrxx) this is hardcoded DefaultInteractionRadius + AutoRunAcceptanceRadius from Input Manager get this somehow
-	constexpr float DefaultInteractionRadius = 200.0f;
-	constexpr float AutoRunAcceptanceRadius = 30.0f;
-	
+	return IsOwnerInInteractionRange(ItemToPickUp, ObsidianPlayerInputStatics::InteractionRadius);
+}
+
+bool UObsidianItemManagerComponent::IsOwnerInPlayerStashRange() const
+{
+	const UWorld* World = GetWorld();
+	if(World == nullptr)
+	{
+		return false;
+	}
+
+	for(TActorIterator<AObsidianPlayerStash> It(World); It; ++It)
+	{
+		AObsidianPlayerStash* PlayerStash = *It;
+		if(IsValid(PlayerStash) == false)
+		{
+			continue;
+		}
+
+		const float StashInteractionRadius = PlayerStash->GetInteractionRadius();
+		if(IsOwnerInInteractionRange(PlayerStash, StashInteractionRadius == 0.0f ? 
+			ObsidianPlayerInputStatics::InteractionRadius : StashInteractionRadius))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+bool UObsidianItemManagerComponent::IsOwnerInInteractionRange(const AActor* InteractionActor, const float InteractionRadius) const
+{
+	if(InteractionActor == nullptr)
+	{
+		return false;
+	}
+
 	const APlayerController* PC = Cast<APlayerController>(GetOwner());
 	if(PC == nullptr)
 	{
@@ -1141,17 +1235,8 @@ bool UObsidianItemManagerComponent::VerifyPickupRange(const AObsidianDroppableIt
 		return false;
 	}
 
-	const FVector ItemLocation = ItemToPickUp->GetActorLocation();
-	const FVector OwnerLocation = OwnerCharacter->GetActorLocation();
-	
-	const float DistanceToItem = FVector::Dist2D(
-		FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f),
-		FVector(ItemLocation.X, ItemLocation.Y, 0.0f)); 
-	if (DistanceToItem > DefaultInteractionRadius + AutoRunAcceptanceRadius + 10.0f) 
-	{
-		return false;
-	}
-	return true;
+	const float DistanceToActorSquared = FVector::DistSquared2D(OwnerCharacter->GetActorLocation(), InteractionActor->GetActorLocation());
+	return DistanceToActorSquared <= FMath::Square(InteractionRadius + ObsidianPlayerInputStatics::InteractionRangeTolerance);
 }
 
 void UObsidianItemManagerComponent::ServerHandleDroppingItem_Implementation()
@@ -1159,6 +1244,12 @@ void UObsidianItemManagerComponent::ServerHandleDroppingItem_Implementation()
 	UWorld* World = GetWorld();
 	if(World == nullptr)
 	{
+		return;
+	}
+
+	if(DraggedItem.IsEmpty())
+	{
+		UE_LOG(LogItemManager, Warning, TEXT("Tried to drop an Item but the Dragged Item is Empty in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -1206,7 +1297,10 @@ void UObsidianItemManagerComponent::ServerHandleDroppingItem_Implementation()
 	
 	//TODO(intrxx) Bias towards Actors forward Vector
 	FNavLocation RandomPointLocation;
-	NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation);
+	if(NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, DropRadius, RandomPointLocation) == false)
+	{
+		RandomPointLocation.Location = OwnerLocation;
+	}
 	
 	FHitResult GroundTraceResult;
 	FCollisionQueryParams QueryParams;

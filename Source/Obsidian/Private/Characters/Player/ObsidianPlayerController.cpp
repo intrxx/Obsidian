@@ -7,6 +7,7 @@
 #include "Characters/ObsidianCharacterBase.h"
 #include "UI/DamageNumbers/ObsidianDamageNumberWidgetComp.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Core/ObsidianGameplayStatics.h"
@@ -43,10 +44,25 @@ void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetAc
 
 void AObsidianPlayerController::ServerSpawnItemFromSpawner_Implementation(AObsidianItemSpawner* ItemSpawner)
 {
-	if(ItemSpawner)
+	if(ItemSpawner == nullptr || ItemSpawner->CanInteract() == false)
 	{
-		ItemSpawner->SpawnItem();
+		return;
 	}
+
+	const APawn* OwnedPawn = GetPawn();
+	if(OwnedPawn == nullptr)
+	{
+		return;
+	}
+
+	const float DistanceToSpawnerSquared = FVector::DistSquared2D(OwnedPawn->GetActorLocation(), ItemSpawner->GetActorLocation());
+	if(DistanceToSpawnerSquared > FMath::Square(ItemSpawner->GetInteractionRadius() + ObsidianPlayerInputStatics::InteractionRangeTolerance))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[%hs]: Item Spawner is too far to be interacted with!"), __FUNCTION__);
+		return;
+	}
+
+	ItemSpawner->SpawnItem();
 }
 
 void AObsidianPlayerController::BeginPlay()

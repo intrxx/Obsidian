@@ -156,7 +156,10 @@ protected:
 	float DropRadius = 200.0f;
 
 private:
-	bool VerifyPickupRange(const AObsidianDroppableItem* ItemToPickUp);
+	bool VerifyPickupRange(const AObsidianDroppableItem* ItemToPickUp) const;
+	/** Stash actions are only allowed when the owning Player stands next to some Player Stash. */
+	bool IsOwnerInPlayerStashRange() const;
+	bool IsOwnerInInteractionRange(const AActor* InteractionActor, const float InteractionRadius) const;
 
 private:
 

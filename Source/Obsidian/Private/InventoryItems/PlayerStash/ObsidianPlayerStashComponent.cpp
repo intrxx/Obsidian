@@ -655,21 +655,24 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::TakeOutFromItemInsta
 		return Result;
 	}
 	
-	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	if(!ensureMsgf(((StacksToTake == 0) || (CurrentTakingFromInstanceStacks != StacksToTake)), TEXT("This function shouldn't be called if you want to take the whole item out. Simply Pickup the item instead.")))
+	if(TakingFromInstance == nullptr)
 	{
 		return Result;
 	}
-	
-	// Since the only valid number of stacks to take is in range [1, x - 1] we can clamp it for extra safety.
-	const int32 StackToTakeSafe = FMath::Clamp<int32>(StacksToTake, 1, CurrentTakingFromInstanceStacks - 1);
+
+	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	if(StacksToTake < 1 || StacksToTake >= CurrentTakingFromInstanceStacks)
+	{
+		return Result;
+	}
+
 	TakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToTake);
 	const FObsidianItemPosition ItemPosition = TakingFromInstance->GetItemCurrentPosition();
 	StashItemList.ChangedEntryStacks(TakingFromInstance, CurrentTakingFromInstanceStacks, ItemPosition.GetOwningStashTabTag());
 
 	Result.bActionSuccessful = true;
 	Result.AffectedInstance = TakingFromInstance;
-	Result.StacksLeft = StackToTakeSafe;
+	Result.StacksLeft = StacksToTake;
 	return Result;
 }
 

@@ -32,6 +32,14 @@ DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
 
 DECLARE_LOG_CATEGORY_EXTERN(LogInteraction, Log, All);
 
+namespace ObsidianPlayerInputStatics
+{
+	inline constexpr float InteractionRadius = 200.0f;
+	inline constexpr float InteractionRadiusSquared = FMath::Square(InteractionRadius);
+	inline constexpr float AutoRunAcceptanceRadius = 30.0f;
+	inline constexpr float InteractionRangeTolerance = AutoRunAcceptanceRadius + 10.0f;
+}
+
 /**
  * Component that manages every type of Player Input in obsidian. This includes regular native input, interactions,
  * highlights and Inventory Items handling.
@@ -89,14 +97,6 @@ protected:
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
 	float ShortPressThreshold = 0.3f;
-
-	/** Acceptable radius to the destination of autorun */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
-	float AutoRunAcceptanceRadius = 30.f;
-
-	/** Radius of the sphere in which we allow the Player to interact with the world e.g. open chest, pickup item etc. */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
-	float DefaultInteractionRadius = 200.0f;
 	
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> AutoRunSplineComp;
