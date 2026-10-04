@@ -417,6 +417,11 @@ void FObsidianStashItemList::PreReplicatedRemove(const TArrayView<int32> Removed
 	for(const int32 Index : RemovedIndices)
 	{
 		FObsidianStashEntry& Entry = Entries[Index];
+		if (Entry.Instance == nullptr || Entry.LastObservedCount == INDEX_NONE) // Item was never added on this Client.
+		{
+			continue;
+		}
+
 		if (UObsidianStashTab* StashTab = GetStashTabForTag(Entry.ItemPosition.GetOwningStashTabTag()))
 		{
 			BroadcastChangeMessage(Entry, /* Old Count */ Entry.StackCount, /* New Count */ 0, Entry.ItemPosition, EObsidianStashChangeType::ICT_ItemRemoved);
@@ -434,6 +439,13 @@ void FObsidianStashItemList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 	for(const int32 Index : AddedIndices)
 	{
 		FObsidianStashEntry& Entry = Entries[Index];
+		if (Entry.Instance == nullptr)
+		{
+			// The Item Instance subobject did not arrive yet, PostReplicatedChange will add the Item once it gets resolved.
+			UE_LOG(LogPlayerStash, Display, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
+			continue;
+		}
+
 		if (UObsidianStashTab* StashTab = GetStashTabForTag(Entry.ItemPosition.GetOwningStashTabTag()))
 		{
 			BroadcastChangeMessage(Entry, /* Old Count */ 0, /* New Count */ Entry.StackCount, Entry.ItemPosition, EObsidianStashChangeType::ICT_ItemAdded);
@@ -451,7 +463,18 @@ void FObsidianStashItemList::PostReplicatedChange(const TArrayView<int32> Change
 	for(const int32 Index : ChangedIndices)
 	{
 		FObsidianStashEntry& Entry = Entries[Index];
-		check(Entry.LastObservedCount != INDEX_NONE);
+		if (Entry.Instance == nullptr)
+		{
+			continue;
+		}
+
+		if (Entry.LastObservedCount == INDEX_NONE) // Adding was deferred until the Item Instance got resolved.
+		{
+			int32 AddedIndex = Index;
+			PostReplicatedAdd(MakeArrayView(&AddedIndex, 1), FinalSize);
+			continue;
+		}
+
 		if(Entry.LastObservedCount == Entry.StackCount)
 		{
 			BroadcastChangeMessage(Entry, /* Old Count */ Entry.LastObservedCount, /* New Count */ Entry.StackCount, Entry.ItemPosition, EObsidianStashChangeType::ICT_GeneralItemChanged);

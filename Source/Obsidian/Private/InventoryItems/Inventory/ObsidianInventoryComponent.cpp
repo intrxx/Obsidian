@@ -617,7 +617,11 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 		return Result;
 	}
 	
-	const int32 StacksInInventory = FindAllStacksForGivenItem(AddingFromItemDef);
+	int32 StacksHeld = FindAllStacksForGivenItem(AddingFromItemDef);
+	if(UObsidianPlayerStashComponent* PlayerStashComponent = UObsidianPlayerStashComponent::FindPlayerStashComponent(GetOwner()))
+	{
+		StacksHeld += PlayerStashComponent->FindAllStacksForGivenItem(AddingFromItemDef);
+	}
 	
 	TArray<UObsidianInventoryItemInstance*> Items = InventoryGrid.GetAllItems();
 	for(UObsidianInventoryItemInstance* Instance : Items)
@@ -631,7 +635,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 		if(AddingFromItemDef == Instance->GetItemDef())
 		{
 			const int32 LimitStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
-			if((LimitStackCount == 1) || (LimitStackCount == StacksInInventory))
+			if((LimitStackCount == 1) || (LimitStackCount > 0 && StacksHeld >= LimitStackCount))
 			{
 				break;
 			}
@@ -643,7 +647,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 			}
 
 			const int32 StacksLeft = Result.StacksLeft;
-			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? StacksLeft : LimitStackCount - StacksInInventory;
+			const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? StacksLeft : LimitStackCount - StacksHeld;
 			if(StacksThatCanBeAddedToInventory <= 0)
 			{
 				continue;
@@ -661,6 +665,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
 			InventoryGrid.ChangedEntryStacks(Instance, CurrentStackCount);
 			
+			StacksHeld += AmountThatCanBeAddedToInstance;
 			Result.AddedStacks += AmountThatCanBeAddedToInstance;
 			Result.StacksLeft -= AmountThatCanBeAddedToInstance;
 			OutAddedToInstances.AddUnique(Instance);
@@ -860,7 +865,7 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 	
 	const int32 AllStacksInInventory = FindAllStacksForGivenItem(ItemDef);
 	const int32 CombinedStacks = AllStacksInInventory + AllStacksInStash;
-	checkf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
+	ensureMsgf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
 	
 	return FMath::Clamp(LimitStackCount - CombinedStacks, 0, CurrentStacks);
 }
@@ -883,7 +888,7 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 	
 	const int32 AllStacksInInventory = FindAllStacksForGivenItem(ItemInstance);
 	const int32 CombinedStacks = AllStacksInInventory + AllStacksInStash;
-	checkf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
+	ensureMsgf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
 	
 	return  FMath::Clamp(LimitStackCount - CombinedStacks, 0, CurrentStacks);
 }
@@ -1065,7 +1070,13 @@ void UObsidianInventoryComponent::ReadyForReplication()
 
 FIntPoint UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const
 {
-	return ItemInstance == nullptr ? FIntPoint::NoneValue : *InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
+	if(ItemInstance == nullptr)
+	{
+		return FIntPoint::NoneValue;
+	}
+
+	const FIntPoint* GridLocation = InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
+	return GridLocation ? *GridLocation : FIntPoint::NoneValue;
 }
 
 bool UObsidianInventoryComponent::IsLocallyControlled()

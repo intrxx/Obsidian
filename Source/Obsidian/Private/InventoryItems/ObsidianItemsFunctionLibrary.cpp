@@ -498,8 +498,8 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const A
 		}
 
 		CombinedStacks = StacksInInventory + StacksInStash;
-		checkf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
-		if((CombinedStacks == 1) || (CombinedStacks == LimitStackCount))
+		ensureMsgf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
+		if((LimitStackCount == 1) || (CombinedStacks >= LimitStackCount))
 		{
 			return 0;
 		}
@@ -541,8 +541,8 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef
 		}
 
 		CombinedStacks = StacksInInventory + StacksInStash;
-		checkf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
-		if((CombinedStacks == 1) || (CombinedStacks == LimitStackCount))
+		ensureMsgf(CombinedStacks <= LimitStackCount, TEXT("Combined Stacks of held item is already bigger than Stacks Limit for this item, something went wrong."));
+		if((LimitStackCount == 1) || (CombinedStacks >= LimitStackCount))
 		{
 			return 0;
 		}

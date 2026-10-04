@@ -460,6 +460,11 @@ void FObsidianEquipmentList::PreReplicatedRemove(const TArrayView<int32> Removed
 	for(const int32 Index : RemovedIndices)
 	{
 		FObsidianEquipmentEntry& Entry = Entries[Index];
+		if(Entry.Instance == nullptr || Entry.LastObservedEquipmentSlotTag == FGameplayTag::EmptyTag) // Item was never added on this Client.
+		{
+			continue;
+		}
+
 		Entry.LastObservedEquipmentSlotTag = FGameplayTag::EmptyTag;
 		SlotToEquipmentMap.Remove(Entry.EquipmentSlotTag);
 		
@@ -474,6 +479,13 @@ void FObsidianEquipmentList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 	for(const int32 Index : AddedIndices)
 	{
 		FObsidianEquipmentEntry& Entry = Entries[Index];
+		if(Entry.Instance == nullptr)
+		{
+			// The Item Instance subobject did not arrive yet, PostReplicatedChange will add the Item once it gets resolved.
+			UE_LOG(LogEquipment, Display, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
+			continue;
+		}
+
 		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;
 		SlotToEquipmentMap.Add(Entry.EquipmentSlotTag, Entry.Instance);
 		
@@ -488,7 +500,18 @@ void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> Change
 	for(const int32 Index : ChangedIndices)
 	{
 		FObsidianEquipmentEntry& Entry = Entries[Index];
-		check(Entry.LastObservedEquipmentSlotTag != FGameplayTag::EmptyTag);
+		if(Entry.Instance == nullptr)
+		{
+			continue;
+		}
+
+		if(Entry.LastObservedEquipmentSlotTag == FGameplayTag::EmptyTag) // Adding was deferred until the Item Instance got resolved.
+		{
+			int32 AddedIndex = Index;
+			PostReplicatedAdd(MakeArrayView(&AddedIndex, 1), FinalSize);
+			continue;
+		}
+
 		if(Entry.LastObservedEquipmentSlotTag != Entry.EquipmentSlotTag)
 		{
 			const bool bSwappedBothWays = SlotToEquipmentMap.Contains(Entry.EquipmentSlotTag) && SlotToEquipmentMap.Contains(Entry.LastObservedEquipmentSlotTag);

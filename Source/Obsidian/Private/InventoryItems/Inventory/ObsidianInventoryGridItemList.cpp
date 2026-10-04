@@ -271,6 +271,11 @@ void FObsidianInventoryGridItemList::PreReplicatedRemove(const TArrayView<int32>
 	for(const int32 Index : RemovedIndices)
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
+		if(Entry.Instance == nullptr || Entry.LastObservedCount == INDEX_NONE) // Item was never added on this Client.
+		{
+			continue;
+		}
+
 		BroadcastChangeMessage(Entry, /* Old Count */ Entry.StackCount, /* New Count */ 0, Entry.GridLocation, EObsidianInventoryChangeType::ICT_ItemRemoved);
 		Entry.LastObservedCount = 0;
 
@@ -286,6 +291,13 @@ void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> A
 	for(const int32 Index : AddedIndices)
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
+		if(Entry.Instance == nullptr)
+		{
+			// The Item Instance subobject did not arrive yet, PostReplicatedChange will add the Item once it gets resolved.
+			UE_LOG(LogInventory, Display, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
+			continue;
+		}
+
 		BroadcastChangeMessage(Entry, /* Old Count */ 0, /* New Count */ Entry.StackCount, Entry.GridLocation, EObsidianInventoryChangeType::ICT_ItemAdded);
 		Entry.LastObservedCount = Entry.StackCount;
 
@@ -301,7 +313,18 @@ void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32
 	for(const int32 Index : ChangedIndices)
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
-		check(Entry.LastObservedCount != INDEX_NONE);
+		if(Entry.Instance == nullptr)
+		{
+			continue;
+		}
+
+		if(Entry.LastObservedCount == INDEX_NONE) // Adding was deferred until the Item Instance got resolved.
+		{
+			int32 AddedIndex = Index;
+			PostReplicatedAdd(MakeArrayView(&AddedIndex, 1), FinalSize);
+			continue;
+		}
+
 		if(Entry.LastObservedCount == Entry.StackCount)
 		{
 			BroadcastChangeMessage(Entry, /* Old Count */ Entry.LastObservedCount, /* New Count */ Entry.StackCount, Entry.GridLocation, EObsidianInventoryChangeType::ICT_GeneralItemChanged);

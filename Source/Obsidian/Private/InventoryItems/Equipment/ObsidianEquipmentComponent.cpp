@@ -821,6 +821,11 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CheckItemRequirements(con
 
 void UObsidianEquipmentComponent::WeaponSwap()
 {
+	if(CanOwnerModifyEquipmentState() == false)
+	{
+		return;
+	}
+
 	TArray<UObsidianInventoryItemInstance*> EquipmentToMoveToSwap = EquipmentList.GetEquippedWeapons();
 	TArray<UObsidianInventoryItemInstance*> EquipmentToMoveFromSwap = EquipmentList.GetSwappedWeapons();
 	
@@ -975,37 +980,53 @@ bool UObsidianEquipmentComponent::CanEquipWithOtherWeaponType(const FObsidianEqu
 
 void UObsidianEquipmentComponent::AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory)
 {
-	FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
-	if(Slot.IsValid())
+	// FindEquipmentSlotByTag returns a copy, the actual Slot from the list needs to be modified.
+	for(FObsidianEquipmentSlotDefinition& Slot : EquipmentList.EquipmentSlots)
 	{
-		Slot.AddBannedEquipmentCategory(InItemCategory);
+		if(Slot.GetEquipmentSlotTag() == SlotTag)
+		{
+			Slot.AddBannedEquipmentCategory(InItemCategory);
+			return;
+		}
 	}
 }
 
 void UObsidianEquipmentComponent::AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories)
 {
-	FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
-	if(Slot.IsValid())
+	// FindEquipmentSlotByTag returns a copy, the actual Slot from the list needs to be modified.
+	for(FObsidianEquipmentSlotDefinition& Slot : EquipmentList.EquipmentSlots)
 	{
-		Slot.AddBannedEquipmentCategories(InItemCategories);
+		if(Slot.GetEquipmentSlotTag() == SlotTag)
+		{
+			Slot.AddBannedEquipmentCategories(InItemCategories);
+			return;
+		}
 	}
 }
 
 void UObsidianEquipmentComponent::RemoveBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategoryToRemove)
 {
-	FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
-	if(Slot.IsValid())
+	// FindEquipmentSlotByTag returns a copy, the actual Slot from the list needs to be modified.
+	for(FObsidianEquipmentSlotDefinition& Slot : EquipmentList.EquipmentSlots)
 	{
-		Slot.RemoveBannedEquipmentCategory(ItemCategoryToRemove);
+		if(Slot.GetEquipmentSlotTag() == SlotTag)
+		{
+			Slot.RemoveBannedEquipmentCategory(ItemCategoryToRemove);
+			return;
+		}
 	}
 }
 
 void UObsidianEquipmentComponent::RemoveBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& ItemCategoriesToRemove)
 {
-	FObsidianEquipmentSlotDefinition Slot = FindEquipmentSlotByTag(SlotTag);
-	if(Slot.IsValid())
+	// FindEquipmentSlotByTag returns a copy, the actual Slot from the list needs to be modified.
+	for(FObsidianEquipmentSlotDefinition& Slot : EquipmentList.EquipmentSlots)
 	{
-		Slot.RemoveBannedEquipmentCategories(ItemCategoriesToRemove);
+		if(Slot.GetEquipmentSlotTag() == SlotTag)
+		{
+			Slot.RemoveBannedEquipmentCategories(ItemCategoriesToRemove);
+			return;
+		}
 	}
 }
 
