@@ -7,7 +7,7 @@
 #include "ObsidianEquipmentList.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include <Components/ActorComponent.h>
+#include "InventoryItems/ObsidianItemContainerComponent.h"
 #include "ObsidianEquipmentComponent.generated.h"
 
 struct FObsidianSavedItem;
@@ -44,7 +44,7 @@ public:
  * Component that manages equipping items on the Heroes.
  */
 UCLASS( ClassGroup=(InventoryItems), meta=(BlueprintSpawnableComponent) )
-class OBSIDIAN_API UObsidianEquipmentComponent : public UActorComponent
+class OBSIDIAN_API UObsidianEquipmentComponent : public UObsidianItemContainerComponent
 {
 	GENERATED_BODY()
 
@@ -57,10 +57,7 @@ public:
 	
 	bool DidReceiveInitialEquipmentItems() const;
 
-	UObsidianInventoryComponent* GetInventoryComponentFromOwner() const;
-	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponentFromOwner() const;
-	AObsidianPlayerState* GetObsidianPlayerStateFromOwner() const;
-	AObsidianPlayerController* GetOwnerPlayerController() const;
+
 	
 	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag) const;
 	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot) const;
@@ -100,15 +97,32 @@ public:
 
 	void LoadEquippedItem(const FObsidianSavedItem& EquippedSavedItem);
 	
-	//~ Start of UObject interface
-	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
-	virtual void ReadyForReplication() override;
-	//~ End of UObject interface
+	//~ Start of UObsidianItemContainerComponent interface
+	virtual TArray<UObsidianInventoryItemInstance*> GetContainedItems() const override;
+	//~ End of UObsidianItemContainerComponent interface
 
 protected:
 	virtual void BeginPlay() override;
 	
+	//~ Start of UObsidianItemContainerComponent interface
+	virtual FGameplayTag GetBlockActionsTag() const override;
+	virtual void AddItemInstanceToList(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition) override;
+	virtual UObsidianInventoryItemInstance* AddItemDefinitionToList(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+		const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FObsidianItemPosition& ToPosition) override;
+	virtual void RemoveItemInstanceFromList(UObsidianInventoryItemInstance* Instance) override;
+	//~ End of UObsidianItemContainerComponent interface
+
 	EObsidianEquipCheckResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
+
+	/** Shared part of CanReplaceInstance and CanReplaceTemplate, checks the slot itself once the item is known to be equippable. */
+	EObsidianEquipCheckResult CanReplaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory,
+		const bool bItemNeedsTwoSlots);
+
+	/**
+	 * Item that needs two slots can't share them, moves the item from the sister slot of provided slot to the Inventory.
+	 * Returns false if it could not be done, true otherwise (also when there is nothing in the sister slot).
+	 */
+	bool MoveSisterSlotItemToInventory(const FGameplayTag& SlotTag);
 	
 	/** Checks weather the item can be equipped with other weapon type already equipped in other hand. */
 	bool CanEquipWithOtherWeaponType(const FObsidianEquipmentSlotDefinition& PrimarySlot, const FGameplayTag& PrimaryWeaponCategory);
@@ -145,8 +159,7 @@ private:
 	UPROPERTY(Replicated)
 	FObsidianEquipmentList EquipmentList;
 
-	UPROPERTY()
-	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
+
 
 	UPROPERTY(Replicated)
 	bool bReceivedInitialEquipmentItems = false;

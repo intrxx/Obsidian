@@ -8,7 +8,7 @@
 // ~ Project
 #include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
 
-#include "Components/ActorComponent.h"
+#include "InventoryItems/ObsidianItemContainerComponent.h"
 #include "ObsidianPlayerStashComponent.generated.h"
 
 class UObsidianInventoryComponent;
@@ -25,7 +25,7 @@ class AObsidianPlayerController;
  * Primary Player Stash Component of Obsidian to be used by Players.
  */
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
-class OBSIDIAN_API UObsidianPlayerStashComponent : public UActorComponent
+class OBSIDIAN_API UObsidianPlayerStashComponent : public UObsidianItemContainerComponent
 {
 	GENERATED_BODY()
 
@@ -151,11 +151,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
-	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
-	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
-	
-	/** Updates the state of using item after it was used. */
-	void UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance, const int32 CurrentStacks);
+
 	
 	UFUNCTION(Server, Reliable)
 	void ServerRegisterAndValidateCurrentStashTab(const FGameplayTag& StashTab);
@@ -163,10 +159,9 @@ public:
 
 	void LoadStashedItem(const FObsidianSavedItem& StashedSavedItem);
 
-	//~ Start of UObject interface
-	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
-	virtual void ReadyForReplication() override;
-	//~ End of UObject interface
+	//~ Start of UObsidianItemContainerComponent interface
+	virtual TArray<UObsidianInventoryItemInstance*> GetContainedItems() const override;
+	//~ End of UObsidianItemContainerComponent interface
 
 protected:
 	/** Checks if the provided Item Definition fits anywhere in the Stash Tab (for tag). Provides Available Position. */
@@ -181,14 +176,21 @@ protected:
 	bool CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& ItemGridSpan,
 		const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseTypeTag, const FGameplayTag& StashTabTag);
 
-	UObsidianInventoryComponent* GetInventoryComponentFromOwner() const;
+	//~ Start of UObsidianItemContainerComponent interface
+	virtual FGameplayTag GetBlockActionsTag() const override;
+	virtual void AddItemInstanceToList(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition) override;
+	virtual UObsidianInventoryItemInstance* AddItemDefinitionToList(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+		const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FObsidianItemPosition& ToPosition) override;
+	virtual void RemoveItemInstanceFromList(UObsidianInventoryItemInstance* Instance) override;
+	virtual void HandleItemStacksChanged(UObsidianInventoryItemInstance* Instance, const int32 OldStackCount) override;
+	virtual void HandleItemChanged(UObsidianInventoryItemInstance* Instance) override;
+	//~ End of UObsidianItemContainerComponent interface
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TObjectPtr<UObsidianStashTabsConfig> StashTabsConfig;
 
-	UPROPERTY()
-	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
+
 
 	/** This is not very clean I think, but I need to store Stash Tabs in some UPROPERTY container so the GC won't get it :/ */
 	UPROPERTY()

@@ -55,6 +55,13 @@ public:
 	static bool FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* FromInstance);
 	static void InitializeItemInstanceWithGeneratedData(UObsidianInventoryItemInstance* Instance, const FObsidianItemGeneratedData& GeneratedData);
 
+	/**
+	 * Creates new Item Instance from Item Definition, initialized by its Fragments and provided Generated Data.
+	 * This does not set the stack count or the identification, as it is up to the caller how many stacks the new item holds.
+	 */
+	static UObsidianInventoryItemInstance* CreateItemInstanceFromDefinition(UObject* Outer, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass,
+		const FObsidianItemGeneratedData& ItemGeneratedData, const FObsidianItemPosition& AtPosition);
+
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool GetItemStats(const AObsidianPlayerController* OwnerPC, const UObsidianInventoryItemInstance* ItemInstance, FObsidianItemStats& OutItemStats);

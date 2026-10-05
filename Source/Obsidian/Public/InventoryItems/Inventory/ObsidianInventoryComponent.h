@@ -9,7 +9,7 @@
 #include "ObsidianInventoryGridItemList.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Components/ActorComponent.h"
+#include "InventoryItems/ObsidianItemContainerComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
 class UObsidianPlayerStashComponent;
@@ -51,7 +51,7 @@ public:
  * Primary Inventory Component of Obsidian to be used by Characters.
  */
 UCLASS( ClassGroup=(InventoryItems), meta=(BlueprintSpawnableComponent) )
-class OBSIDIAN_API UObsidianInventoryComponent : public UActorComponent
+class OBSIDIAN_API UObsidianInventoryComponent : public UObsidianItemContainerComponent
 {
 	GENERATED_BODY()
 
@@ -202,24 +202,26 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	FObsidianItemOperationResult RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove);
 
-	/** Firing the OnUse functionality of passed UsingInstance onto UsingOntoInstance. */
-	void UseItem(UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
 
-	/** Updates the state of using item after it was used. */
-	void UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance, const int32 CurrentStacks);
 	
 	void LoadInventorizedItem(const FObsidianSavedItem& InventorizedSavedItem);
 	
-	//~ Start of UObject interface
-	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
-	virtual void ReadyForReplication() override;
-	//~ End of UObject interface
+	//~ Start of UObsidianItemContainerComponent interface
+	virtual TArray<UObsidianInventoryItemInstance*> GetContainedItems() const override;
+	//~ End of UObsidianItemContainerComponent interface
 
 protected:
 	virtual void BeginPlay() override;
 	
-	bool IsLocallyControlled();
-	UObsidianPlayerStashComponent* GetStashComponentFromOwner() const;
+	//~ Start of UObsidianItemContainerComponent interface
+	virtual FGameplayTag GetBlockActionsTag() const override;
+	virtual void AddItemInstanceToList(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition) override;
+	virtual UObsidianInventoryItemInstance* AddItemDefinitionToList(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+		const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FObsidianItemPosition& ToPosition) override;
+	virtual void RemoveItemInstanceFromList(UObsidianInventoryItemInstance* Instance) override;
+	virtual void HandleItemStacksChanged(UObsidianInventoryItemInstance* Instance, const int32 OldStackCount) override;
+	virtual void HandleItemChanged(UObsidianInventoryItemInstance* Instance) override;
+	//~ End of UObsidianItemContainerComponent interface
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Default")
@@ -281,10 +283,7 @@ private:
 	/** Grid size of the inventory, calculated (InventoryGridWidth * InventoryGridHeight). */
 	int32 InventoryGridSize = 0;
 
-	bool bIsLocallyControlled = false;
 
-	UPROPERTY()
-	TObjectPtr<AObsidianPlayerController> CachedOwnerPlayerController;
 
 	UPROPERTY(Replicated)
 	bool bReceivedInitialInventoryItems = false;

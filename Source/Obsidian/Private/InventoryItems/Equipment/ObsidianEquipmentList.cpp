@@ -178,26 +178,9 @@ UObsidianInventoryItemInstance* FObsidianEquipmentList::AddEntry(const TSubclass
 	}
 
 	FObsidianEquipmentEntry& NewEntry = Entries.AddDefaulted_GetRef();
-	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
+	NewEntry.Instance = UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(OwnerComponent->GetOwner(), ItemDefClass,
+		ItemGeneratedData, EquipmentSlotTag);
 	NewEntry.EquipmentSlotTag = EquipmentSlotTag;
-	NewEntry.Instance->SetItemDef(ItemDefClass);
-	NewEntry.Instance->GenerateUniqueItemID();
-	
-	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
-	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
-	{
-		if(Fragment)
-		{
-			Fragment->OnInstancedCreated(NewEntry.Instance);
-		}
-	}
-	
-	NewEntry.Instance->SetItemCurrentPosition(EquipmentSlotTag);
-	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
-	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
-	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
-	UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(NewEntry.Instance, ItemGeneratedData);
-	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	SlotToEquipmentMap.Add(EquipmentSlotTag, Item);

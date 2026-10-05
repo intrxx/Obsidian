@@ -468,6 +468,36 @@ void UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(UObs
 	}
 }
 
+UObsidianInventoryItemInstance* UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(UObject* Outer,
+	const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
+	const FObsidianItemPosition& AtPosition)
+{
+	check(Outer);
+	check(ItemDefClass != nullptr);
+
+	UObsidianInventoryItemInstance* Instance = NewObject<UObsidianInventoryItemInstance>(Outer);
+	Instance->SetItemDef(ItemDefClass);
+	Instance->GenerateUniqueItemID();
+
+	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
+	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
+	{
+		if(Fragment)
+		{
+			Fragment->OnInstancedCreated(Instance);
+		}
+	}
+
+	Instance->SetItemCurrentPosition(AtPosition);
+	Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
+	Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
+	Instance->SetItemDebugName(DefaultObject->GetDebugName());
+	InitializeItemInstanceWithGeneratedData(Instance, ItemGeneratedData);
+	Instance->OnInstanceCreatedAndInitialized();
+
+	return Instance;
+}
+
 int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const AActor* Owner, const UObsidianInventoryItemInstance* AddingFromInstance, const UObsidianInventoryItemInstance* InstanceToAddTo)
 {
 	if(Owner == nullptr)

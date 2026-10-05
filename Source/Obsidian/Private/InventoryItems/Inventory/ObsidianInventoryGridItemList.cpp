@@ -56,27 +56,10 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const T
 	check(OwningActor);
 
 	FObsidianInventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
-	NewEntry.Instance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
-	NewEntry.Instance->SetItemDef(ItemDefClass);
-	NewEntry.Instance->GenerateUniqueItemID();
-	
-	const UObsidianInventoryItemDefinition* DefaultObject = GetDefault<UObsidianInventoryItemDefinition>(ItemDefClass);
-	for(const UObsidianInventoryItemFragment* Fragment : DefaultObject->ItemFragments)
-	{
-		if(Fragment)
-		{
-			Fragment->OnInstancedCreated(NewEntry.Instance);
-		}
-	}
-	
-	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
-	NewEntry.Instance->SetItemCategory(DefaultObject->GetItemCategoryTag());
-	NewEntry.Instance->SetItemBaseType(DefaultObject->GetItemBaseTypeTag());
-	NewEntry.Instance->SetItemDebugName(DefaultObject->GetDebugName());
+	NewEntry.Instance = UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(OwnerComponent->GetOwner(), ItemDefClass,
+		ItemGeneratedData, AvailablePosition);
 	NewEntry.StackCount = StackCount;
 	NewEntry.GridLocation = AvailablePosition;
-	UObsidianItemsFunctionLibrary::InitializeItemInstanceWithGeneratedData(NewEntry.Instance, ItemGeneratedData);
-	NewEntry.Instance->OnInstanceCreatedAndInitialized();
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	

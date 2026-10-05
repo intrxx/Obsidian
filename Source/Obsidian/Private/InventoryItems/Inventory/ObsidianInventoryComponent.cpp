@@ -68,7 +68,8 @@ void UObsidianInventoryComponent::AddDefaultItems()
 		{
 			if(DefaultItemTemplate.bOverrideInventoryPosition)
 			{
-				if(!AddItemDefinitionToSpecifiedSlot(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.InventoryPositionOverride, DefaultItemTemplate.StackCount))
+				if(!AddItemDefinitionToSpecifiedSlot(DefaultItemTemplate.DefaultItemDef, 
+					DefaultItemTemplate.InventoryPositionOverride, DefaultItemTemplate.StackCount))
 				{
 					AddItemDefinition(DefaultItemTemplate.DefaultItemDef, DefaultItemTemplate.StackCount);
 				}
@@ -127,7 +128,8 @@ TMap<FIntPoint, bool> UObsidianInventoryComponent::GetGridStateMap() const
 	return InventoryGrid.InventoryStateMap;
 }
 
-UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstanceForDefinition(
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef) const
 {
 	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
 	{
@@ -145,22 +147,16 @@ UObsidianInventoryItemInstance* UObsidianInventoryComponent::FindFirstItemInstan
 
 bool UObsidianInventoryComponent::CanOwnerModifyInventoryState()
 {
-	if(CachedOwnerPlayerController == nullptr)
-	{
-		CachedOwnerPlayerController = Cast<AObsidianPlayerController>(GetOwner());
-	}
-	if(const UObsidianAbilitySystemComponent* OwnerASC = CachedOwnerPlayerController->GetObsidianAbilitySystemComponent())
-	{
-		return !OwnerASC->HasMatchingGameplayTag(ObsidianGameplayTags::Inventory_BlockActions);
-	}
-	return false;
+	return CanOwnerModifyContainerState();
 }
 
-bool UObsidianInventoryComponent::CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+bool UObsidianInventoryComponent::CanFitItemDefinition(FIntPoint& OutAvailablePositions, 
+	const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
-		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(
+			ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
 			return CheckAvailablePosition(OutAvailablePositions, AppearanceFrag->GetItemGridSpanFromDesc());
 		}
@@ -168,11 +164,13 @@ bool UObsidianInventoryComponent::CanFitItemDefinition(FIntPoint& OutAvailablePo
 	return false;
 }
 
-bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
+bool UObsidianInventoryComponent::CanFitItemDefinitionToSpecifiedSlot(const FIntPoint& SpecifiedSlot, 
+	const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
-		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(
+			ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
 			return CheckSpecifiedPosition(AppearanceFrag->GetItemGridSpanFromDesc(), SpecifiedSlot);
 		}
@@ -232,10 +230,9 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = ItemGeneratedData.GetStackCount();
 	
-	if(!GetOwner()->HasAuthority())
+	if(HasOwnerAuthority(__FUNCTION__) == false)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemDefinition."));
-		return Result; 
+		return Result;
 	}
 	
 	if(CanOwnerModifyInventoryState() == false)
@@ -305,14 +302,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	
 	Result.StacksLeft -= StacksAvailableToAdd;
 	
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, ItemGeneratedData, StacksAvailableToAdd, AvailablePosition);
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
-	
-	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(Instance);
-	}
+	UObsidianInventoryItemInstance* Instance = PlaceItemDefinition(ItemDef, ItemGeneratedData, StacksAvailableToAdd, AvailablePosition);
 
 	Result.bActionSuccessful = true;
 	Result.AffectedInstance = Instance;
@@ -325,10 +315,9 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	Result.StacksLeft = ItemGeneratedData.GetStackCount();
 	
-	if(!GetOwner()->HasAuthority())
+	if(HasOwnerAuthority(__FUNCTION__) == false)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemDefinitionToSpecifiedSlot."));
-		return Result; 
+		return Result;
 	}
 
 	if(CanOwnerModifyInventoryState() == false)
@@ -359,8 +348,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 
 		if(StackToAddOverride != -1)
 		{
-			StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)),
-				1, StacksAvailableToAdd);
+			StacksAvailableToAdd = ClampStacksToAdd(StacksAvailableToAdd, StackToAddOverride);
 		}
 	}
 	
@@ -376,14 +364,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 														// as we still have a valid item definition in hands if the whole item isn't added here.
 	ensure(Result.StacksLeft >= 0);
 	
-	UObsidianInventoryItemInstance* Instance = InventoryGrid.AddEntry(ItemDef, ItemGeneratedData, StacksAvailableToAdd, ToGridSlot);
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(DefaultObject, ItemGeneratedData));
-	
-	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(Instance);
-	}
+	UObsidianInventoryItemInstance* Instance = PlaceItemDefinition(ItemDef, ItemGeneratedData, StacksAvailableToAdd, ToGridSlot);
 
 	Result.AffectedInstance = Instance;
 	return Result;
@@ -393,10 +374,9 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
-	if(!GetOwner()->HasAuthority())
+	if(HasOwnerAuthority(__FUNCTION__) == false)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstance."));
-		return Result; 
+		return Result;
 	}
 	
 	if(InstanceToAdd == nullptr)
@@ -452,31 +432,9 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 	Result.StacksLeft -= StacksAvailableToAdd;
 	ensure(Result.StacksLeft >= 0);
 
-	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	if(StacksAvailableToAdd == CurrentHeldItemStacks)
-	{
-		InventoryGrid.AddEntry(InstanceToAdd, AvailablePosition);
-	}
-	else
-	{
-		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
-		const bool bCachedIdentified = InstanceToAdd->IsItemIdentified();
-		
-		Result.bActionSuccessful = false;
-		
-		FObsidianItemGeneratedData CachedGeneratedData;
-		UObsidianItemsFunctionLibrary::FillItemGeneratedData(CachedGeneratedData, InstanceToAdd);
-		InstanceToAdd = InventoryGrid.AddEntry(InstanceToAdd->GetItemDef(), CachedGeneratedData, StacksAvailableToAdd, AvailablePosition);
-		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-		InstanceToAdd->SetIdentified(bCachedIdentified);
-	}
-	
-	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(InstanceToAdd);
-	}
-	
-	Result.AffectedInstance = InstanceToAdd;
+	bool bWholeItemPlaced = false;
+	Result.AffectedInstance = PlaceItemInstance(InstanceToAdd, StacksAvailableToAdd, AvailablePosition, /** OUT */ bWholeItemPlaced);
+	Result.bActionSuccessful = bWholeItemPlaced; // If only some of the stacks were placed, the rest is still held by the provided Instance.
 	return Result;
 }
 
@@ -485,10 +443,9 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 	
-	if(!GetOwner()->HasAuthority())
+	if(HasOwnerAuthority(__FUNCTION__) == false)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::AddItemInstanceToSpecificSlot."));
-		return Result; 
+		return Result;
 	}
 	
 	if(InstanceToAdd == nullptr)
@@ -516,8 +473,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 		
 		if(StackToAddOverride != INDEX_NONE)
 		{
-			StacksAvailableToAdd = FMath::Clamp<int32>((FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride)),
-				1, StacksAvailableToAdd);
+			StacksAvailableToAdd = ClampStacksToAdd(StacksAvailableToAdd, StackToAddOverride);
 		}
 	}
 	
@@ -532,67 +488,15 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 	Result.StacksLeft -= StacksAvailableToAdd;
 	ensure(Result.StacksLeft >= 0);
 
-	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	if(StacksAvailableToAdd == CurrentHeldItemStacks)
-	{
-		InventoryGrid.AddEntry(InstanceToAdd, ToGridSlot);
-	}
-	else
-	{
-		InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksAvailableToAdd);
-		const bool bCachedIdentified = InstanceToAdd->IsItemIdentified();
-		
-		Result.bActionSuccessful = false;
-
-		FObsidianItemGeneratedData CachedGeneratedData;
-		UObsidianItemsFunctionLibrary::FillItemGeneratedData(CachedGeneratedData, InstanceToAdd);
-		InstanceToAdd = InventoryGrid.AddEntry(InstanceToAdd->GetItemDef(), CachedGeneratedData, StacksAvailableToAdd, ToGridSlot);
-		InstanceToAdd->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksAvailableToAdd);
-		InstanceToAdd->SetIdentified(bCachedIdentified);
-	}
-	
-	if(InstanceToAdd && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(InstanceToAdd);
-	}
-	
-	Result.AffectedInstance = InstanceToAdd;
+	bool bWholeItemPlaced = false;
+	Result.AffectedInstance = PlaceItemInstance(InstanceToAdd, StacksAvailableToAdd, ToGridSlot, /** OUT */ bWholeItemPlaced);
+	Result.bActionSuccessful = bWholeItemPlaced; // If only some of the stacks were placed, the rest is still held by the provided Instance.
 	return Result;
 }
 
 FObsidianItemOperationResult UObsidianInventoryComponent::TakeOutFromItemInstance(UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
 {
-	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	
-	if(!GetOwner()->HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
-		return Result; 
-	}
-
-	if(CanOwnerModifyInventoryState() == false)
-	{
-		return Result;
-	}
-	
-	if(TakingFromInstance == nullptr)
-	{
-		return Result;
-	}
-
-	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	if(StacksToTake < 1 || StacksToTake >= CurrentTakingFromInstanceStacks)
-	{
-		return Result;
-	}
-
-	TakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToTake);
-	InventoryGrid.ChangedEntryStacks(TakingFromInstance, CurrentTakingFromInstanceStacks);
-	
-	Result.bActionSuccessful = true;
-	Result.AffectedInstance = TakingFromInstance;
-	Result.StacksLeft = StacksToTake;
-	return Result;
+	return TakeOutStacksFromItem(TakingFromInstance, StacksToTake);
 }
 
 FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 StacksToAdd, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances)
@@ -601,10 +505,9 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 	Result.AddedStacks = 0;
 	Result.StacksLeft = StacksToAdd;
 	
-	if(!GetOwner()->HasAuthority())
+	if(HasOwnerAuthority(__FUNCTION__) == false)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToExistingItems."));
-		return Result; 
+		return Result;
 	}
 
 	if(CanOwnerModifyInventoryState() == false)
@@ -684,160 +587,33 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 	return Result;
 }
 
-FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const FIntPoint& AtGridSlot, const int32 StackToAddOverride)
+FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef(
+	const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, 
+	const FIntPoint& AtGridSlot, const int32 StackToAddOverride)
 {
-	FObsidianAddingStacksResult Result = FObsidianAddingStacksResult();
-	Result.StacksLeft = AddingFromItemDefCurrentStacks;
-	
-	if(!GetOwner()->HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithItemDef."));
-		return Result; 
-	}
-
-	if(CanOwnerModifyInventoryState() == false)
-	{
-		return Result; 
-	}
-	
-	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtGridSlot);
-	if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, AddingFromItemDef) == false)
-	{
-		return Result;
-	}
-	
-	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef(GetOwner(), AddingFromItemDef, AddingFromItemDefCurrentStacks, InstanceToAddTo);
-	if(AmountThatCanBeAddedToInstance <= 0)
-	{
-		return Result;
-	}
-	
-	if(StackToAddOverride != -1)
-	{
-		AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((FMath::Min<int32>(AmountThatCanBeAddedToInstance, StackToAddOverride)),
-			1, AmountThatCanBeAddedToInstance);
-	}
-
-	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
-	InventoryGrid.ChangedEntryStacks(InstanceToAddTo, OldStackCount);
-
-	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
-	Result.AddedStacks = AmountThatCanBeAddedToInstance;
-	Result.LastAddedToInstance = InstanceToAddTo;
-	
-	if(AmountThatCanBeAddedToInstance == AddingFromItemDefCurrentStacks)
-	{
-		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
-	}
-	else
-	{
-		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
-	}
-	
-	return Result;
+	return AddStacksToItemFromDefinition(AddingFromItemDef, AddingFromItemDefCurrentStacks,
+		GetItemInstanceAtLocation(AtGridSlot), StackToAddOverride);
 }
 
-FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(UObsidianInventoryItemInstance* AddingFromInstance, const FIntPoint& AtGridSlot, const int32 StackToAddOverride)
+FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance(
+	UObsidianInventoryItemInstance* AddingFromInstance, const FIntPoint& AtGridSlot, const int32 StackToAddOverride)
 {
-	FObsidianAddingStacksResult Result = FObsidianAddingStacksResult();
-	
-	if(!GetOwner()->HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::TryAddingStacksToSpecificSlotWithInstance."));
-		return Result; 
-	}
-
-	if(AddingFromInstance == nullptr)
-	{
-		return Result;
-	}
-	
-	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	Result.StacksLeft = AddingFromInstanceCurrentStacks;
-	
-	if(CanOwnerModifyInventoryState() == false)
-	{
-		return Result;
-	}
-	
-	UObsidianInventoryItemInstance* InstanceToAddTo = GetItemInstanceAtLocation(AtGridSlot);
-	if(UObsidianItemsFunctionLibrary::IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
-	{
-		return Result;
-	}
-	
-	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(GetOwner(), AddingFromInstance, InstanceToAddTo);
-	if(AmountThatCanBeAddedToInstance <= 0)
-	{
-		return Result;
-	}
-
-	if(StackToAddOverride != -1)
-	{
-		AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((FMath::Min<int32>(AmountThatCanBeAddedToInstance, StackToAddOverride)),
-			1, AmountThatCanBeAddedToInstance);
-	}
-
-	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
-	InventoryGrid.ChangedEntryStacks(InstanceToAddTo, OldStackCount);
-	
-	AddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
-	// We should not call the InventoryGrid.ChangedEntryStacks function as the AddingFromInstance is not part of the inventory anyway
-	
-	Result.AddedStacks = AmountThatCanBeAddedToInstance;
-	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
-	Result.LastAddedToInstance = InstanceToAddTo;
-	
-	if(AmountThatCanBeAddedToInstance == AddingFromInstanceCurrentStacks)
-	{
-		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded;
-	}
-	else
-	{
-		Result.AddingStacksResult = EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
-	}
-	
-	return Result;
+	return AddStacksToItemFromInstance(AddingFromInstance, GetItemInstanceAtLocation(AtGridSlot), 
+		StackToAddOverride);
 }
 
 int32 UObsidianInventoryComponent::FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef)
 {
-	int32 AllStacks = 0;
-	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
-	{
-		UObsidianInventoryItemInstance* Instance = Entry.Instance;
-		if(IsValid(Instance))
-		{
-			if(Instance->GetItemDef() == ItemDef)
-			{
-				AllStacks += Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-			}
-		}
-	}
-	return AllStacks;
+	return CountStacksOfItem(ItemDef);
 }
 
 int32 UObsidianInventoryComponent::FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* ItemInstance)
 {
-	int32 AllStacks = 0;
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = ItemInstance->GetItemDef();
-	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
-	{
-		UObsidianInventoryItemInstance* Instance = Entry.Instance;
-		if(IsValid(Instance))
-		{
-			if(Instance->GetItemDef() == ItemDef)
-			{
-				AllStacks += Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-			}
-		}
-	}
-	return AllStacks;
+	return ItemInstance ? CountStacksOfItem(ItemInstance->GetItemDef()) : 0;
 }
 
-int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks)
+int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(
+	const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const int32 CurrentStacks)
 {
 	const UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
 	if(DefaultObject == nullptr)
@@ -845,7 +621,8 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 		return 0;
 	}
 	
-	const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(DefaultObject->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass()));
+	const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(
+		DefaultObject->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass()));
 	if(StacksFrag == nullptr)
 	{
 		return CurrentStacks;
@@ -858,7 +635,8 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 	}
 	
 	int32 AllStacksInStash = 0;
-	if(UObsidianPlayerStashComponent* PlayerStashComponent = UObsidianPlayerStashComponent::FindPlayerStashComponent(GetOwner()))
+	if(UObsidianPlayerStashComponent* PlayerStashComponent = UObsidianPlayerStashComponent::FindPlayerStashComponent(
+		GetOwner()))
 	{
 		AllStacksInStash = PlayerStashComponent->FindAllStacksForGivenItem(ItemDef);
 	}
@@ -881,7 +659,8 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 
 	//TODO(intrxx) Rethink it, I kinda dont want to limit items in stash
 	int32 AllStacksInStash = 0;
-	if(UObsidianPlayerStashComponent* PlayerStashComponent = UObsidianPlayerStashComponent::FindPlayerStashComponent(GetOwner()))
+	if(UObsidianPlayerStashComponent* PlayerStashComponent = UObsidianPlayerStashComponent::FindPlayerStashComponent(
+		GetOwner()))
 	{
 		AllStacksInStash = PlayerStashComponent->FindAllStacksForGivenItem(ItemInstance);
 	}
@@ -895,177 +674,58 @@ int32 UObsidianInventoryComponent::GetNumberOfStacksAvailableToAddToInventory(co
 
 FObsidianItemOperationResult UObsidianInventoryComponent::RemoveItemInstance(UObsidianInventoryItemInstance* InstanceToRemove)
 {
-	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
-	
-	if(!GetOwner()->HasAuthority())
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No Authority in UObsidianInventoryComponent::RemoveItemInstance."));
-		return Result; 
-	}
-	
-	if(CanOwnerModifyInventoryState() == false)
-	{
-		return Result;
-	}
-
-	if(InstanceToRemove == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("Passed InstanceToRemove is invalid in UObsidianInventoryComponent::RemoveItemInstance."));
-		return Result;
-	}
-	
-	InventoryGrid.RemoveEntry(InstanceToRemove);
-	
-	if(InstanceToRemove && IsUsingRegisteredSubObjectList())
-	{
-		RemoveReplicatedSubObject(InstanceToRemove);
-	}
-
-	Result.bActionSuccessful = true;
-	Result.AffectedInstance = InstanceToRemove;
-	return Result;
-}
-
-void UObsidianInventoryComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance,
-	UObsidianInventoryItemInstance* UsingOntoInstance)
-{
-	if(UsingInstance == nullptr)
-	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
-		return;
-	}
-
-	if(UsingInstance->IsItemUsable() == false)
-	{
-		UE_LOG(LogInventory, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"),
-			*UsingInstance->GetItemDebugName(), __FUNCTION__);
-		return;
-	}
-	
-	AObsidianPlayerController* OwningPlayerController = Cast<AObsidianPlayerController>(GetOwner());
-	if(OwningPlayerController == nullptr || OwningPlayerController->HasAuthority() == false)
-	{
-		return;
-	}
-	
-	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	if(CurrentUsingInstanceStacks <= 0)
-	{
-		UE_LOG(LogInventory, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"),
-			*UsingInstance->GetItemDebugName(), __FUNCTION__);
-		return;
-	}
-
-	bool bUsageSuccessful = false;
-	const EObsidianUsableItemType ItemType = UsingInstance->GetUsableItemType();
-	if(ItemType == EObsidianUsableItemType::UIT_Crafting)
-	{
-		if(UsingOntoInstance == nullptr)
-		{
-			UE_LOG(LogInventory, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), __FUNCTION__);
-			return;
-		}
-		
-		if(UsingInstance->UseItem(OwningPlayerController, UsingOntoInstance))
-		{
-			InventoryGrid.GeneralEntryChange(UsingOntoInstance);
-			bUsageSuccessful = true;
-		}
-	}
-	else if(ItemType == EObsidianUsableItemType::UIT_Activation)
-	{
-		bUsageSuccessful = UsingInstance->UseItem(OwningPlayerController, nullptr);
-	}
-
-	if(bUsageSuccessful)
-	{
-		UpdateUsingItemAfterUsage(UsingInstance, CurrentUsingInstanceStacks);
-	}
-	else
-	{
-		//TODO(intrxx) Usage failed, Play some VO?
-	}
-}
-
-void UObsidianInventoryComponent::UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance,
-	const int32 CurrentStacks)
-{
-	const FObsidianItemPosition CurrentUsingItemPosition = UsingInstance->GetItemCurrentPosition();
-	if (CurrentUsingItemPosition.IsOnInventoryGrid())
-	{
-		if(CurrentStacks > 1)
-		{
-			UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
-			InventoryGrid.ChangedEntryStacks(UsingInstance, CurrentStacks);
-			return;
-		}
-	
-		InventoryGrid.RemoveEntry(UsingInstance);
-
-		if(UsingInstance && IsUsingRegisteredSubObjectList())
-		{
-			RemoveReplicatedSubObject(UsingInstance);
-		}
-	}
-	else if (CurrentUsingItemPosition.IsOnStash())
-	{
-		if (UObsidianPlayerStashComponent* PlayerStashComponent = GetStashComponentFromOwner())
-		{
-			PlayerStashComponent->UpdateUsingItemAfterUsage(UsingInstance, CurrentStacks);
-		}
-	}
+	return RemoveItemFromContainer(InstanceToRemove);
 }
 
 void UObsidianInventoryComponent::LoadInventorizedItem(const FObsidianSavedItem& InventorizedSavedItem)
 {
-	if(!GetOwner()->HasAuthority())
+	if(HasOwnerAuthority(__FUNCTION__) == false)
 	{
-		UE_LOG(LogInventory, Warning, TEXT("No Authority in [%hs]"), __FUNCTION__);
-		return; 
+		return;
 	}
 	
 	UObsidianInventoryItemInstance* LoadedInstance = InventoryGrid.LoadEntry(InventorizedSavedItem);
 
-	if(LoadedInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
-	{
-		AddReplicatedSubObject(LoadedInstance);
-	}
+	RegisterItemInstanceForReplication(LoadedInstance);
 }
 
-bool UObsidianInventoryComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+TArray<UObsidianInventoryItemInstance*> UObsidianInventoryComponent::GetContainedItems() const
 {
-	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
-
-	for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
-	{
-		UObsidianInventoryItemInstance* Instance = Entry.Instance;
-
-		if(Instance && IsValid(Instance))
-		{
-			WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
-		}
-	}
-
-	return WroteSomething;
+	return InventoryGrid.GetAllItems();
 }
 
-void UObsidianInventoryComponent::ReadyForReplication()
+FGameplayTag UObsidianInventoryComponent::GetBlockActionsTag() const
 {
-	Super::ReadyForReplication();
+	return ObsidianGameplayTags::Inventory_BlockActions;
+}
 
-	// Register existing UObsidianInventoryItemInstance
-	if(IsUsingRegisteredSubObjectList())
-	{
-		for(const FObsidianInventoryEntry& Entry : InventoryGrid.Entries)
-		{
-			UObsidianInventoryItemInstance* Instance = Entry.Instance;
+void UObsidianInventoryComponent::AddItemInstanceToList(UObsidianInventoryItemInstance* Instance,
+	const FObsidianItemPosition& ToPosition)
+{
+	InventoryGrid.AddEntry(Instance, ToPosition.GetItemGridPosition());
+}
 
-			if(IsValid(Instance))
-			{
-				AddReplicatedSubObject(Instance);
-			}
-		}
-	}
+UObsidianInventoryItemInstance* UObsidianInventoryComponent::AddItemDefinitionToList(
+	const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData,
+	const int32 StackCount, const FObsidianItemPosition& ToPosition)
+{
+	return InventoryGrid.AddEntry(ItemDef, ItemGeneratedData, StackCount, ToPosition.GetItemGridPosition());
+}
+
+void UObsidianInventoryComponent::RemoveItemInstanceFromList(UObsidianInventoryItemInstance* Instance)
+{
+	InventoryGrid.RemoveEntry(Instance);
+}
+
+void UObsidianInventoryComponent::HandleItemStacksChanged(UObsidianInventoryItemInstance* Instance, 
+	const int32 OldStackCount)
+{
+	InventoryGrid.ChangedEntryStacks(Instance, OldStackCount);
+}
+
+void UObsidianInventoryComponent::HandleItemChanged(UObsidianInventoryItemInstance* Instance)
+{
+	InventoryGrid.GeneralEntryChange(Instance);
 }
 
 FIntPoint UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventoryItemInstance* ItemInstance) const
@@ -1077,34 +737,6 @@ FIntPoint UObsidianInventoryComponent::GetItemLocationFromGrid(UObsidianInventor
 
 	const FIntPoint* GridLocation = InventoryGrid.GridLocationToItemMap.FindKey(ItemInstance);
 	return GridLocation ? *GridLocation : FIntPoint::NoneValue;
-}
-
-bool UObsidianInventoryComponent::IsLocallyControlled()
-{
-	if(bIsLocallyControlled)
-	{
-		return true;
-	}
-	
-	if(AActor* Owner = GetOwner())
-	{
-		if(AController* Controller = Cast<AController>(Owner))
-		{
-			bIsLocallyControlled = Controller->IsLocalController();
-			return bIsLocallyControlled;
-		}
-	}
-	return false;
-}
-
-UObsidianPlayerStashComponent* UObsidianInventoryComponent::GetStashComponentFromOwner() const
-{
-	if(const AObsidianPlayerController* ObsidianPC = CastChecked<AObsidianPlayerController>(GetOwner(),
-		ECastCheckedType::NullAllowed))
-	{
-		return ObsidianPC->GetPlayerStashComponent();
-	}
-	return nullptr;
 }
 
 void UObsidianInventoryComponent::InitInventoryState()
@@ -1253,7 +885,8 @@ bool UObsidianInventoryComponent::CanFitItemDefinition(const TSubclassOf<UObsidi
 	
 	if(const UObsidianInventoryItemDefinition* ItemDefault = GetDefault<UObsidianInventoryItemDefinition>(ItemDef))
 	{
-		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
+		if(const UOInventoryItemFragment_Appearance* AppearanceFrag = Cast<UOInventoryItemFragment_Appearance>(
+			ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
 			const FIntPoint ItemGridSpan = AppearanceFrag->GetItemGridSpanFromDesc();
 
