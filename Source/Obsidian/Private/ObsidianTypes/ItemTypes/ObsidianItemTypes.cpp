@@ -569,7 +569,11 @@ FText FObsidianRareItemNameGenerationData::GetRandomPrefixNameAddition(const int
 		PrefixAdditionsCandidates.Append(PrefixAdditions.ItemNameAdditions);
 	}
 
-	check(PrefixAdditionsCandidates.IsEmpty() == false);
+	if (!ensureMsgf(PrefixAdditionsCandidates.IsEmpty() == false, TEXT("There are no Rare item prefix name additions for item level [%d]."),
+		UpToTreasureQuality))
+	{
+		return FText::GetEmpty();
+	}
 	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num() - 1);
 	return PrefixAdditionsCandidates[RandomInt];
 }
@@ -596,7 +600,11 @@ FText FObsidianRareItemNameGenerationData::GetRandomSuffixNameAddition(const int
 		}
 	}
 	
-	check(PrefixAdditionsCandidates.IsEmpty() == false);
+	if (!ensureMsgf(PrefixAdditionsCandidates.IsEmpty() == false, TEXT("There are no Rare item suffix name additions for [%s] at item level [%d]."),
+		*ForItemCategory.ToString(), UpToTreasureQuality))
+	{
+		return FText::GetEmpty();
+	}
 	const int32 RandomInt = FMath::RandRange(0, PrefixAdditionsCandidates.Num() - 1);
 	return PrefixAdditionsCandidates[RandomInt];
 }
