@@ -800,23 +800,23 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 	if (InOverrideDropLocation == FVector::ZeroVector)
 	{
 		const FVector OwnerLocation = DroppingActor->GetActorLocation();
-		UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
 
-		if(NavigationSystem == nullptr)
-		{
-			UE_LOG(LogDropComponent, Error, TEXT("NavigationSystem is null in [%hs]"), __FUNCTION__);
-			return InvalidTransform;
-		}
-		
+		// The location of the dropping actor is used when there is no navigable point to drop the item at (e.g. the level has
+		// no Navigation Mesh). The Nav Location must not be used in this case, it is left at FNavigationSystem::InvalidLocation,
+		// which is far outside of the World and ends up as NaNs in the bounds of the dropped item.
+		DropLocation = OwnerLocation;
+
 		FNavLocation RandomPointLocation;
-		const bool bFound = NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, ItemDropRadius, RandomPointLocation);
-		if (bFound == false)
+		const UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
+		if (NavigationSystem && NavigationSystem->GetRandomPointInNavigableRadius(OwnerLocation, ItemDropRadius, RandomPointLocation))
 		{
-			//TODO Change the location to somewhere valid.
-			UE_LOG(LogDropComponent, Error, TEXT("Could not initially find a valid drop location in [%hs]"), __FUNCTION__);
+			DropLocation = RandomPointLocation.Location;
 		}
-		
-		DropLocation = RandomPointLocation.Location;
+		else
+		{
+			UE_LOG(LogDropComponent, Warning, TEXT("Could not find a navigable drop location around [%s], dropping the item at its location."),
+				*GetNameSafe(DroppingActor));
+		}
 	}
 	else
 	{
