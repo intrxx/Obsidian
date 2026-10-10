@@ -11,8 +11,6 @@
 
 struct FOnAttributeChangeData;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_CharacterStatus, Log, All);
-
 /**
  * 
  */

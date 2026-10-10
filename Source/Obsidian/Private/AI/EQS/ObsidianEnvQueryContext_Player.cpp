@@ -12,7 +12,7 @@
 #include "AI/AObsidianAIControllerBase.h"
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 #include "Characters/Heroes/ObsidianHero.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const
 {
@@ -47,7 +47,7 @@ void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryIns
 	}
 
 #if !UE_BUILD_SHIPPING
-	UE_LOG(LogObsidian, Error, TEXT("Context [%hs] failed to provide Player Context for [%s]."),
+	UE_LOG(ObLogAI, Error, TEXT("Context [%hs] failed to provide Player Context for [%s]."),
 		__FUNCTION__, *GetNameSafe(QueryInstance.Owner.Get()));
 #endif
 }

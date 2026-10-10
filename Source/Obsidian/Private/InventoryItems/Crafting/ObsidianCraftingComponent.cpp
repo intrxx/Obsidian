@@ -12,8 +12,7 @@
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
-
-DEFINE_LOG_CATEGORY(LogCrafting)
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianCraftingComponent::UObsidianCraftingComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -46,14 +45,14 @@ void UObsidianCraftingComponent::InitializeCraftingComponent()
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("Controller is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("Controller is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AActor* OwningActor = Cast<AActor>(Controller->GetPawn());
 	if (OwningActor == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -75,13 +74,13 @@ void UObsidianCraftingComponent::OnInventoryStateChanged(FGameplayTag Channel,
 	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
-		UE_LOG(LogCrafting, Display, TEXT("Stopping Usage of item: [%s] from Inventory, due to removal"),
+		UE_LOG(ObLogCrafting, Verbose, TEXT("Stopping Usage of item: [%s] from Inventory, due to removal"),
 			*Instance->GetItemDisplayName().ToString());
 
 		if(bUsingItem && Instance == CachedUsingItemInstance)
@@ -102,13 +101,13 @@ void UObsidianCraftingComponent::OnPlayerStashChanged(FGameplayTag Channel,
 	const UObsidianInventoryItemInstance* Instance = StashChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemRemoved)
 	{
-		UE_LOG(LogCrafting, Display, TEXT("Stopping Usage of item: [%s] from Player Stash, due to removal"),
+		UE_LOG(ObLogCrafting, Verbose, TEXT("Stopping Usage of item: [%s] from Player Stash, due to removal"),
 			*Instance->GetItemDisplayName().ToString());
 		
 		if(bUsingItem && Instance == CachedUsingItemInstance)
@@ -166,21 +165,21 @@ void UObsidianCraftingComponent::ServerActivateUsableItemFromInventory_Implement
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 	if(InventoryComponent == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -192,21 +191,21 @@ void UObsidianCraftingComponent::ServerActivateUsableItemFromStash_Implementatio
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 	if(PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -218,14 +217,14 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
 	{
-		UE_LOG(LogCrafting, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogCrafting, Error, TEXT("OwningActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -234,7 +233,7 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
 		{
-			UE_LOG(LogCrafting, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
+			UE_LOG(ObLogCrafting, Error, TEXT("InventoryComponent is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -247,13 +246,13 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		const FGameplayTag StashTabTag = OnPosition.GetOwningStashTabTag();
 		if (StashTabTag == FGameplayTag::EmptyTag)
 		{
-			UE_LOG(LogCrafting, Error, TEXT("StashTab tag is empty in [%hs]."), __FUNCTION__);
+			UE_LOG(ObLogCrafting, Error, TEXT("StashTab tag is empty in [%hs]."), __FUNCTION__);
 		}
 
 		UObsidianPlayerStashComponent* PlayerStashComponent = Controller->FindComponentByClass<UObsidianPlayerStashComponent>();
 		if(PlayerStashComponent == nullptr)
 		{
-			UE_LOG(LogCrafting, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
+			UE_LOG(ObLogCrafting, Error, TEXT("PlayerStashComponent is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -266,7 +265,7 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 		if(EquipmentComponent == nullptr)
 		{
-			UE_LOG(LogCrafting, Error, TEXT("EquipmentComponent is null in [%hs]"), __FUNCTION__);
+			UE_LOG(ObLogCrafting, Error, TEXT("EquipmentComponent is null in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -307,7 +306,7 @@ void UObsidianCraftingComponent::SetUsingItem(const bool InbUsingItem, UObsidian
 	{
 		if (UsingInstance == nullptr)
 		{
-			UE_LOG(LogCrafting, Error, TEXT("UsingInstance is invalid in [%hs]."), __FUNCTION__);
+			UE_LOG(ObLogCrafting, Error, TEXT("UsingInstance is invalid in [%hs]."), __FUNCTION__);
 			return;
 		}
 		

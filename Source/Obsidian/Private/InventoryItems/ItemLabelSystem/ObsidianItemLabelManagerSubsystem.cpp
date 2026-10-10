@@ -12,10 +12,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 DECLARE_CYCLE_STAT(TEXT("ItemLabelManager"), STAT_ItemLabelManager, STATGROUP_Tickables);
-DEFINE_LOG_CATEGORY(LogItemLabelManager)
-
 namespace ObsidianItemLabelLayout
 {
 	/** Gap kept between two labels, in canvas units. */
@@ -430,7 +429,7 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 {
 	if (MainOverlay == nullptr)
 	{
-		UE_LOG(LogItemLabelManager, Error, TEXT("ItemLabelOverlay is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogItemLabels, Error, TEXT("ItemLabelOverlay is invalid in [%hs]."), __FUNCTION__);
 		return;
 	}
 
@@ -442,12 +441,12 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 		}
 
 		MainOverlay->SetItemLabelsVisibility(ESlateVisibility::Visible);
-		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight on!"));
+		UE_LOG(ObLogItemLabels, Verbose, TEXT("Toggling Highlight on!"));
 	}
 	else
 	{
 		MainOverlay->SetItemLabelsVisibility(ESlateVisibility::Collapsed);
-		UE_LOG(LogItemLabelManager, Display, TEXT("Toggling Highlight off!"));
+		UE_LOG(ObLogItemLabels, Verbose, TEXT("Toggling Highlight off!"));
 	}
 
 	bLabelOverlayVisible = bHighlight;
@@ -469,7 +468,7 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 
 	if (ItemLabelClass == nullptr)
 	{
-		UE_LOG(LogItemLabelManager, Error, TEXT("Could not create new Label Widget, Widget class is invalid"
+		UE_LOG(ObLogItemLabels, Error, TEXT("Could not create new Label Widget, Widget class is invalid"
 										  " in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
@@ -479,7 +478,7 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 		: Cast<AObsidianPlayerController>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
 	if (OwningOPC == nullptr)
 	{
-		UE_LOG(LogItemLabelManager, Error, TEXT("Could not create new Label Widget, Obsidian PC is invalid"
+		UE_LOG(ObLogItemLabels, Error, TEXT("Could not create new Label Widget, Obsidian PC is invalid"
 										  " in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
@@ -493,7 +492,7 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 		return NewItemLabel;
 	}
 
-	UE_LOG(LogItemLabelManager, Error, TEXT("Creating new Item Widget failed in [%hs]"), __FUNCTION__);
+	UE_LOG(ObLogItemLabels, Error, TEXT("Creating new Item Widget failed in [%hs]"), __FUNCTION__);
 	return nullptr;
 }
 
@@ -501,7 +500,7 @@ void UObsidianItemLabelManagerSubsystem::ReleaseWidget(UObsidianItemLabel* Label
 {
 	if (LabelWidget == nullptr)
 	{
-		UE_LOG(LogItemLabelManager, Error, TEXT("Passed Item Label Widget to release is invalid in [%hs]"),
+		UE_LOG(ObLogItemLabels, Error, TEXT("Passed Item Label Widget to release is invalid in [%hs]"),
 			__FUNCTION__);
 		return;
 	}

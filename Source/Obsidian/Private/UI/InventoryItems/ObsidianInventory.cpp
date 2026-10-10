@@ -4,7 +4,7 @@
 
 #include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/InventoryItems/Slots/ObsidianSlotBase.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
@@ -34,7 +34,7 @@ void UObsidianInventory::HandleWidgetControllerSet()
 	const AObsidianPlayerController* PlayerController = InventoryItemsWidgetController->GetOwningPlayerController();
 	if (PlayerController == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("PlayerController is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogUIItems, Error, TEXT("PlayerController is invalid in [%hs]."), __FUNCTION__);
 	}
 	
 	if (UObsidianCraftingComponent* CraftingComp = PlayerController->GetCraftingComponent())
@@ -80,7 +80,7 @@ void UObsidianInventory::OnInventoryItemAdded(const FObsidianItemWidgetData& Ite
 {
 	if(Inventory_GridPanel == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Inventory_GridPanel is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Inventory_GridPanel is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -114,7 +114,7 @@ void UObsidianInventory::OnEquipmentItemAdded(const FObsidianItemWidgetData& Ite
 {
 	if(Equipment_SlotPanel == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Equipment_SlotPanel is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Equipment_SlotPanel is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	

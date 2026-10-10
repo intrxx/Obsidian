@@ -12,8 +12,6 @@
 class AObsidianPlayerController;
 class UAbilitySystemComponent;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogObsidianDebugMenu, Log, All);
-
 /**
  * What the Debug Menu is currently pointed at, resolved every frame from the World and Player pickers.
  */

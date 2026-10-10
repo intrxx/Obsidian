@@ -15,8 +15,6 @@ class AObsidianDroppableItem;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartDraggingItemSignature, const FDraggedItem& DraggedItem)
 DECLARE_MULTICAST_DELEGATE(FOnStopDraggingItemSignature)
 
-DECLARE_LOG_CATEGORY_EXTERN(LogItemManager, Log, All);
-
 /**
  * Component that manages various Item related actions. 
  */

@@ -17,8 +17,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
-
-DEFINE_LOG_CATEGORY(LogEquipment);
+#include "Obsidian/ObsidianLogCategories.h"
 
 
 namespace EquipmentHelpers
@@ -279,7 +278,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(UO
 	{
 		//TODO(intrxx) Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
-		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), 
+		UE_LOG(ObLogEquipment, Verbose, TEXT("Item cannot be equipped, reason: [%s]"), 
 			*ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
 		return Result;
@@ -318,7 +317,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	{
 		//TODO(intrxx) Send Client RPC to add voiceover passing EquipResult
 #if !UE_BUILD_SHIPPING
-		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), 
+		UE_LOG(ObLogEquipment, Verbose, TEXT("Item cannot be equipped, reason: [%s]"), 
 			*ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
 		return Result;
@@ -359,7 +358,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::ReplaceItemAtSpecificSlot(
 	{
 		//TODO(intrxx) Send Client RPC with some voice over passing EquipResult?
 #if !UE_BUILD_SHIPPING
-		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), 
+		UE_LOG(ObLogEquipment, Verbose, TEXT("Item cannot be equipped, reason: [%s]"), 
 			*ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
 		return Result;
@@ -449,7 +448,7 @@ FObsidianEquipmentResult UObsidianEquipmentComponent::EquipItemToSpecificSlot(co
 	{
 		//TODO(intrxx) Send Client RPC to add voiceover passing EquipResult
 #if !UE_BUILD_SHIPPING
-		UE_LOG(LogEquipment, Warning, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
+		UE_LOG(ObLogEquipment, Verbose, TEXT("Item cannot be equipped, reason: [%s]"), *ObsidianEquipmentDebugHelpers::GetEquipResultString(EquipResult));
 #endif
 		return Result;
 	}
@@ -672,7 +671,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CheckItemRequirements(con
 		return EObsidianEquipCheckResult::None;
 	}
 	
-	UE_LOG(LogTemp, Display, TEXT("Checking Req | Owning Hero Class: [%d], Required Hero Class: [%d]"),
+	UE_LOG(ObLogEquipment, VeryVerbose, TEXT("Checking Req | Owning Hero Class: [%d], Required Hero Class: [%d]"),
 		ObsidianPC->GetHeroClass(), ItemRequirements.HeroClassRequirement);
 	if (ItemRequirements.HeroClassRequirement != EObsidianHeroClass::None && ItemRequirements.HeroClassRequirement != ObsidianPC->GetHeroClass())
 	{
@@ -685,7 +684,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CheckItemRequirements(con
 		return EObsidianEquipCheckResult::None;
 	}
 
-	UE_LOG(LogTemp, Display, TEXT("Checking Req | Owning Hero Level: [%d], Required Hero Level: [%d]"),
+	UE_LOG(ObLogEquipment, VeryVerbose, TEXT("Checking Req | Owning Hero Level: [%d], Required Hero Level: [%d]"),
 		ObsidianPS->GetHeroLevel(), ItemRequirements.RequiredLevel);
 	if (ObsidianPS->GetHeroLevel() < ItemRequirements.RequiredLevel)
 	{
@@ -700,7 +699,7 @@ EObsidianEquipCheckResult UObsidianEquipmentComponent::CheckItemRequirements(con
 	
 	for (const FObsidianAttributeRequirement& AttributeReq : ItemRequirements.AttributeRequirements)
 	{
-		UE_LOG(LogTemp, Display, TEXT("Checking Req | Attribute [%s], Owning Magnitude: [%f], Item Req Magnitude [%d]"),
+		UE_LOG(ObLogEquipment, VeryVerbose, TEXT("Checking Req | Attribute [%s], Owning Magnitude: [%f], Item Req Magnitude [%d]"),
 			*AttributeReq.RequiredAttribute.GetName(), ObsidianASC->GetNumericAttribute(AttributeReq.RequiredAttribute),
 			AttributeReq.RequiredAttributeMagnitude);
 		if (ObsidianASC->GetNumericAttribute(AttributeReq.RequiredAttribute) < AttributeReq.RequiredAttributeMagnitude)

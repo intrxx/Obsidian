@@ -12,8 +12,6 @@
 #include "ObsidianPlayerStashComponent.generated.h"
 
 class UObsidianInventoryComponent;
-DECLARE_LOG_CATEGORY_EXTERN(LogPlayerStash, Display, All);
-
 struct FObsidianSavedItem;
 
 class UObsidianStashTabsConfig;

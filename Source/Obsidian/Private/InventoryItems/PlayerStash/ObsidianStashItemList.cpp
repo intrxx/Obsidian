@@ -6,6 +6,7 @@
 #include "GameFramework/GameplayMessageSubsystem.h"
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
@@ -80,7 +81,7 @@ FString FObsidianStashEntry::GetDebugString() const
 
 TArray<UObsidianStashTab*> FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig)
 {
-	UE_LOG(LogTemp, Display, TEXT("Initializing Stash Tabs"));
+	UE_LOG(ObLogPlayerStash, Verbose, TEXT("Initializing Stash Tabs"));
 	
 	TArray<UObsidianStashTab*> InitializedStashTabs;
 	
@@ -223,7 +224,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	UObsidianStashTab* StashTab = GetStashTabForTag(ToPosition.GetOwningStashTabTag());
 	if(StashTab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 
@@ -260,7 +261,7 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	UObsidianStashTab* StashTab = GetStashTabForTag(ToPosition.GetOwningStashTabTag());
 	if(StashTab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
@@ -296,7 +297,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::LoadEntry(const FObsidia
 	UObsidianStashTab* StashTab = GetStashTabForTag(LoadedPosition.GetOwningStashTabTag());
 	if(StashTab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 	
@@ -319,7 +320,7 @@ void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 	UObsidianStashTab* StashTab = GetStashTabForTag(StashTabTag);
 	if(StashTab == nullptr)
 	{
-		UE_LOG(LogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -412,7 +413,7 @@ void FObsidianStashItemList::PreReplicatedRemove(const TArrayView<int32> Removed
 			
 			StashTab->UnmarkSpaceInTab(Entry.Instance, Entry.ItemPosition);
 
-			UE_LOG(LogPlayerStash, Display, TEXT("Replicated removing [%s] item."), *Entry.Instance->GetItemDebugName());
+			UE_LOG(ObLogPlayerStash, Verbose, TEXT("Replicated removing [%s] item."), *Entry.Instance->GetItemDebugName());
 		}
 	}
 }
@@ -425,7 +426,7 @@ void FObsidianStashItemList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		if (Entry.Instance == nullptr)
 		{
 			// The Item Instance subobject did not arrive yet, PostReplicatedChange will add the Item once it gets resolved.
-			UE_LOG(LogPlayerStash, Display, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
+			UE_LOG(ObLogPlayerStash, Verbose, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
 			continue;
 		}
 
@@ -436,7 +437,7 @@ void FObsidianStashItemList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 			
 			StashTab->MarkSpaceInTab(Entry.Instance, Entry.ItemPosition);
 
-			UE_LOG(LogPlayerStash, Display, TEXT("Replicated adding [%s] item."), *Entry.Instance->GetItemDebugName());
+			UE_LOG(ObLogPlayerStash, Verbose, TEXT("Replicated adding [%s] item."), *Entry.Instance->GetItemDebugName());
 		}
 	}
 }
@@ -468,7 +469,7 @@ void FObsidianStashItemList::PostReplicatedChange(const TArrayView<int32> Change
 		}
 		Entry.LastObservedCount = Entry.StackCount;
 
-		UE_LOG(LogPlayerStash, Display, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
+		UE_LOG(ObLogPlayerStash, Verbose, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 

@@ -1,6 +1,7 @@
 // Copyright 2026 out of sCope team - intrxx
 
 #include "AbilitySystem/Abilities/Specific/ObsidianGA_FlyingKnifes.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 
 UObsidianGA_FlyingKnifes::UObsidianGA_FlyingKnifes(const FObjectInitializer& ObjectInitializer)
@@ -13,7 +14,7 @@ void UObsidianGA_FlyingKnifes::FireFlyingKnifeProjectiles()
 	const FVector OwnerLocation = GetOwnerLocationFromActorInfo();
 	if (OwnerLocation == FVector::ZeroVector)
 	{
-		UE_LOG(LogProjectileAbility, Warning, TEXT("OwnerLocation is ZeroVector in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogAbilitySystem, Warning, TEXT("OwnerLocation is ZeroVector in [%hs]"), __FUNCTION__);
 	}
 
 	const FVector SpawnPoint = FVector(OwnerLocation.X, OwnerLocation.Y, SpawnHeight);

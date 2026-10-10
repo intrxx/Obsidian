@@ -10,6 +10,7 @@
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 // ---- Start of FObsidianInventoryEntry ----
 
@@ -265,7 +266,7 @@ void FObsidianInventoryGridItemList::PreReplicatedRemove(const TArrayView<int32>
 		GridLocationToItemMap.Remove(Entry.GridLocation);
 		Item_UnMarkSpace(Entry.Instance, Entry.GridLocation);
 
-		UE_LOG(LogInventory, Display, TEXT("Replicated removing [%s] item."), *Entry.Instance->GetItemDebugName());
+		UE_LOG(ObLogInventory, Verbose, TEXT("Replicated removing [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -277,7 +278,7 @@ void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> A
 		if(Entry.Instance == nullptr)
 		{
 			// The Item Instance subobject did not arrive yet, PostReplicatedChange will add the Item once it gets resolved.
-			UE_LOG(LogInventory, Display, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
+			UE_LOG(ObLogInventory, Verbose, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
 			continue;
 		}
 
@@ -287,7 +288,7 @@ void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> A
 		GridLocationToItemMap.Add(Entry.GridLocation, Entry.Instance);
 		Item_MarkSpace(Entry.Instance, Entry.GridLocation);
 
-		UE_LOG(LogInventory, Display, TEXT("Replicated adding [%s] item."), *Entry.Instance->GetItemDebugName());
+		UE_LOG(ObLogInventory, Verbose, TEXT("Replicated adding [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -318,7 +319,7 @@ void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32
 		}
 		Entry.LastObservedCount = Entry.StackCount;
 
-		UE_LOG(LogInventory, Display, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
+		UE_LOG(ObLogInventory, Verbose, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 

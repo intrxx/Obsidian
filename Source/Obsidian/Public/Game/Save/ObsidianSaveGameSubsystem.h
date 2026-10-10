@@ -22,8 +22,6 @@ class UObsidianMasterSaveGame;
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnSaveActionFinishedSignature, UObsidianHeroSaveGame* SaveObject, bool bSuccess)
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnSharedStashDataLoadedSignature, UObsidianSharedStashSaveGame* StashSaveObject)
 
-DECLARE_LOG_CATEGORY_EXTERN(LogObsidianSaveSystem, Log, All)
-
 /**
  * 
  */

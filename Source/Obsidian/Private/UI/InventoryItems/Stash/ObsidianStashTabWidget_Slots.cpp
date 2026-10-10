@@ -2,7 +2,7 @@
 
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget_Slots.h"
 
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/InventoryItems/ObsidianSlotPanel.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
@@ -49,7 +49,7 @@ void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget,
 			}
 			else
 			{
-				UE_LOG(LogObsidian, Error, TEXT("Unable to construct blockade Item from ItemClass in [%hs]."),
+				UE_LOG(ObLogItems, Error, TEXT("Unable to construct blockade Item from ItemClass in [%hs]."),
 					__FUNCTION__);
 			}
 		}

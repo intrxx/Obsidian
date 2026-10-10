@@ -7,8 +7,7 @@
 #include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataConfig.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
-
-DEFINE_LOG_CATEGORY(LogItemDataLoader);
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObsidianItemDataLoaderSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
@@ -382,7 +381,7 @@ void UObsidianItemDataLoaderSubsystem::LoadItemData()
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
 	{
-		UE_LOG(LogItemDataLoader, Error, TEXT("ObsidianTreasureConfigDeveloperSettings was not found! Abandoning Loading Item Data Config."));
+		UE_LOG(ObLogItemData, Error, TEXT("ObsidianTreasureConfigDeveloperSettings was not found! Abandoning Loading Item Data Config."));
 		return;
 	}
 
@@ -412,12 +411,12 @@ void UObsidianItemDataLoaderSubsystem::OnItemDataLoaded()
 		if (ItemDataSettings->ItemDataConfig)
 		{
 			ItemDataConfig = ItemDataSettings->ItemDataConfig.Get();
-			UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Treasure Config: [%s]."), *ItemDataConfig->GetName());
+			UE_LOG(ObLogItemData, Log, TEXT("Loaded Treasure Config: [%s]."), *ItemDataConfig->GetName());
 		}
 		if (ItemDataSettings->DefaultAffixAbilitySet)
 		{
 			DefaultAffixAbilitySet = ItemDataSettings->DefaultAffixAbilitySet.Get();
-			UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Default Affix Ability Set: [%s]."), *ItemDataConfig->GetName());
+			UE_LOG(ObLogItemData, Log, TEXT("Loaded Default Affix Ability Set: [%s]."), *DefaultAffixAbilitySet->GetName());
 		}
 	}
 	
@@ -460,17 +459,17 @@ void UObsidianItemDataLoaderSubsystem::OnItemDataLoaded()
 void UObsidianItemDataLoaderSubsystem::OnCommonItemsLoaded()
 {
 #if !UE_BUILD_SHIPPING
-	UE_LOG(LogItemDataLoader, Log, TEXT("Loaded Common Items"));
+	UE_LOG(ObLogItemData, Log, TEXT("Loaded Common Items"));
 
-	UE_LOG(LogItemDataLoader, Log, TEXT("Treasure Classes Available in the game:"));
+	UE_LOG(ObLogItemData, Verbose, TEXT("Treasure Classes Available in the game:"));
 	for (const UObsidianTreasureList* TL : ItemDataConfig->CommonTreasureLists)
 	{
 		if (TL)
 		{
-			UE_LOG(LogItemDataLoader, Log, TEXT("TL: [%s]"), *GetNameSafe(TL));
+			UE_LOG(ObLogItemData, Verbose, TEXT("TL: [%s]"), *GetNameSafe(TL));
 			for (const FObsidianTreasureClass& TC : TL->GetAllTreasureClasses())
 			{
-				UE_LOG(LogItemDataLoader, Log, TEXT("TC:	-[%s]"), *TC.DebugName);
+				UE_LOG(ObLogItemData, Verbose, TEXT("TC:	-[%s]"), *TC.DebugName);
 			}
 		}
 	}

@@ -24,6 +24,7 @@
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 namespace ObsidianDebugItems
 {
@@ -1006,7 +1007,7 @@ bool FObsidianDebugTab_Items::ConstructCraftedItem(UObsidianItemDropComponent* D
 			if (CanAffixRollAtItemLevel(PickedAffix.Affix, OutItemToDrop.DropItemLevel) == false
 				|| OutItemToDrop.DropAffixes.Contains(PickedAffix.Affix))
 			{
-				UE_LOG(LogObsidianDebugMenu, Warning, TEXT("Skipped affix [%s], item level is too low for it or the item already has it."),
+				UE_LOG(ObLogDebugMenu, Warning, TEXT("Skipped affix [%s], item level is too low for it or the item already has it."),
 					*PickedAffix.Affix.AffixTag.ToString());
 				continue;
 			}
@@ -1303,7 +1304,7 @@ void FObsidianDebugTab_Items::GatherAffixes()
 	const UObsidianItemDataConfig* ItemDataConfig = ItemDataSettings ? ItemDataSettings->ItemDataConfig.LoadSynchronous() : nullptr;
 	if (ItemDataConfig == nullptr)
 	{
-		UE_LOG(LogObsidianDebugMenu, Warning, TEXT("Could not gather the affixes, Item Data Config is not set in the Item Data settings."));
+		UE_LOG(ObLogDebugMenu, Warning, TEXT("Could not gather the affixes, Item Data Config is not set in the Item Data settings."));
 		return;
 	}
 
@@ -1402,7 +1403,7 @@ void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& Args, U
 {
 	if (CraftingSelfTestTickerHandle.IsValid())
 	{
-		UE_LOG(LogObsidianDebugMenu, Warning, TEXT("Item crafting self-test is already waiting to be run."));
+		UE_LOG(ObLogDebugMenu, Warning, TEXT("Item crafting self-test is already waiting to be run."));
 		return;
 	}
 
@@ -1463,7 +1464,7 @@ void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& Args, U
 			}
 			else
 			{
-				UE_LOG(LogObsidianDebugMenu, Error, TEXT("Item crafting self-test was not run, there is no game World with a local Player"
+				UE_LOG(ObLogDebugMenu, Error, TEXT("Item crafting self-test was not run, there is no game World with a local Player"
 					" that has a Pawn or the Item Data Config is not loaded."));
 			}
 
@@ -1531,7 +1532,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 			const auto Fail = [&Failures, &RequestName](const FString& Reason)
 				{
 					++Failures;
-					UE_LOG(LogObsidianDebugMenu, Error, TEXT("Crafting self-test: %s -> %s"), *RequestName, *Reason);
+					UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: %s -> %s"), *RequestName, *Reason);
 				};
 
 			const EObsidianItemRarity Rarity = Item.DropRarity;
@@ -1588,7 +1589,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 	const int32 ItemLevels[] = {1, 5, 15, 30, 45, 60, MaxItemLevel};
 	const EAffixMode AffixModes[] = {EAffixMode::Generated, EAffixMode::HandPicked, EAffixMode::None};
 
-	UE_LOG(LogObsidianDebugMenu, Display, TEXT("Crafting self-test: started for [%d] items and [%d] hand-pickable affixes, [%d] iteration(s) each."),
+	UE_LOG(ObLogDebugMenu, Display, TEXT("Crafting self-test: started for [%d] items and [%d] hand-pickable affixes, [%d] iteration(s) each."),
 		ItemPicker.GetClassPaths().Num(), AllAffixes.Num(), Iterations);
 
 	// Affixes are identified by their tags, so the number of the unique ones is what limits how many of them an item can have.
@@ -1611,7 +1612,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 				UniqueAffixTags.Add(AffixEntry.Affix.AffixTag);
 			}
 		}
-		UE_LOG(LogObsidianDebugMenu, Display, TEXT("Crafting self-test: [%s] affixes: [%d] entries, [%d] unique tags, [%d] with a type that differs from their class."),
+		UE_LOG(ObLogDebugMenu, Display, TEXT("Crafting self-test: [%s] affixes: [%d] entries, [%d] unique tags, [%d] with a type that differs from their class."),
 			AffixTypeOption.Name, AffixCount, UniqueAffixTags.Num(), AffixesWithStaleType);
 	}
 
@@ -1665,19 +1666,19 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 						if (CraftingBlocker.IsEmpty() == false)
 						{
 							++BlockedRequests;
-							UE_LOG(LogObsidianDebugMenu, Verbose, TEXT("Crafting self-test: %s is blocked. %s"), *RequestName, *CraftingBlocker);
+							UE_LOG(ObLogDebugMenu, Verbose, TEXT("Crafting self-test: %s is blocked. %s"), *RequestName, *CraftingBlocker);
 							break; // Only the picked affixes differ between the iterations, and these are valid by construction.
 						}
 
 						// Logged before crafting, so the request is known if the item generation asserts.
-						UE_LOG(LogObsidianDebugMenu, Log, TEXT("Crafting self-test: crafting %s."), *RequestName);
+						UE_LOG(ObLogDebugMenu, Log, TEXT("Crafting self-test: crafting %s."), *RequestName);
 						++ValidRequests;
 
 						FObsidianItemToDrop CraftedItem;
 						if (ConstructCraftedItem(DropComponent, Request, CraftedItem) == false)
 						{
 							++Failures;
-							UE_LOG(LogObsidianDebugMenu, Error, TEXT("Crafting self-test: %s -> could not be constructed."), *RequestName);
+							UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: %s -> could not be constructed."), *RequestName);
 							continue;
 						}
 						++CraftedItems;
@@ -1713,7 +1714,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 						if (Instance->GetAllItemAffixes().Num() != CraftedItem.DropAffixes.Num())
 						{
 							++Failures;
-							UE_LOG(LogObsidianDebugMenu, Error, TEXT("Crafting self-test: %s -> Item Instance has [%d] affixes instead of [%d]."),
+							UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: %s -> Item Instance has [%d] affixes instead of [%d]."),
 								*RequestName, Instance->GetAllItemAffixes().Num(), CraftedItem.DropAffixes.Num());
 						}
 					}
@@ -1747,7 +1748,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 				if (GetCraftingBlocker(Request).IsEmpty())
 				{
 					++Failures;
-					UE_LOG(LogObsidianDebugMenu, Error, TEXT("Crafting self-test: Normal [%s] with a Prefix or Suffix is not blocked."), *ItemName);
+					UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: Normal [%s] with a Prefix or Suffix is not blocked."), *ItemName);
 				}
 			}
 
@@ -1759,7 +1760,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 				if (GetCraftingBlocker(Request).IsEmpty())
 				{
 					++Failures;
-					UE_LOG(LogObsidianDebugMenu, Error, TEXT("Crafting self-test: Magic [%s] with [%d] Prefixes and Suffixes is not blocked."),
+					UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: Magic [%s] with [%d] Prefixes and Suffixes is not blocked."),
 						*ItemName, TooManyForMagic);
 				}
 			}
@@ -1772,7 +1773,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 				if (ItemDefault->GetItemDefaultRarity() != BlockedRarity && GetCraftingBlocker(Request).IsEmpty())
 				{
 					++Failures;
-					UE_LOG(LogObsidianDebugMenu, Error, TEXT("Crafting self-test: [%s] [%s] without affixes is not blocked."),
+					UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: [%s] [%s] without affixes is not blocked."),
 						*GetRarityName(BlockedRarity), *ItemName);
 				}
 			}
@@ -1786,7 +1787,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 	{
 		for (const int32 TestedEntityLevel : ItemLevels)
 		{
-			UE_LOG(LogObsidianDebugMenu, Log, TEXT("Crafting self-test: rolling drops of [%s] entity of level [%d]."),
+			UE_LOG(ObLogDebugMenu, Log, TEXT("Crafting self-test: rolling drops of [%s] entity of level [%d]."),
 				*EntityRarityEnum->GetNameStringByIndex(EntityRarityValue), TestedEntityLevel);
 
 			for (int32 Iteration = 0; Iteration < FMath::Min(Iterations, 3); ++Iteration)
@@ -1797,7 +1798,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 			}
 		}
 	}
-	UE_LOG(LogObsidianDebugMenu, Display, TEXT("Crafting self-test: rolled the Random Drops [%d] time(s)."), RolledDrops);
+	UE_LOG(ObLogDebugMenu, Display, TEXT("Crafting self-test: rolled the Random Drops [%d] time(s)."), RolledDrops);
 
 	DropComponent->DestroyComponent();
 
@@ -1807,7 +1808,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 	for (const TPair<EObsidianItemRarity, FRarityStats>& StatsPair : GeneratedStats)
 	{
 		const FRarityStats& Stats = StatsPair.Value;
-		UE_LOG(LogObsidianDebugMenu, Display, TEXT("Crafting self-test: generated [%d] [%s] items, Prefixes avg [%.2f] max [%d], Suffixes avg [%.2f] max [%d]."),
+		UE_LOG(ObLogDebugMenu, Display, TEXT("Crafting self-test: generated [%d] [%s] items, Prefixes avg [%.2f] max [%d], Suffixes avg [%.2f] max [%d]."),
 			Stats.CraftedItems, *GetRarityName(StatsPair.Key),
 			static_cast<float>(Stats.Prefixes) / FMath::Max(Stats.CraftedItems, 1), Stats.MaxPrefixes,
 			static_cast<float>(Stats.Suffixes) / FMath::Max(Stats.CraftedItems, 1), Stats.MaxSuffixes);

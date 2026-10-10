@@ -25,6 +25,7 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetBase.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianHeroMovementComponent>(
@@ -322,11 +323,11 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 	{
 		if (UObsidianInventoryComponent* InventoryComponent = ObsidianPC->GetInventoryComponent())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Loading Inventory Items:"));
+			UE_LOG(ObLogSaveSystem, Verbose, TEXT("Loading Inventory Items:"));
 			InventoryComponent->InitSaveData(HeroSaveData.GameplaySaveData.bReceivedInitialInventoryItems);
 			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.InventorySavedItems)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName);
+				UE_LOG(ObLogSaveSystem, Verbose, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName);
 
 				InventoryComponent->LoadInventorizedItem(SavedItem);
 			}
@@ -334,11 +335,11 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 
 		if (UObsidianEquipmentComponent* EquipmentComponent = ObsidianPC->GetEquipmentComponent())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Loading Equipped Items:"));
+			UE_LOG(ObLogSaveSystem, Verbose, TEXT("Loading Equipped Items:"));
 			EquipmentComponent->InitSaveData(HeroSaveData.GameplaySaveData.bReceivedInitialEquipmentItems);
 			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.EquipmentSavedItems)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)
+				UE_LOG(ObLogSaveSystem, Verbose, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)
 
 				EquipmentComponent->LoadEquippedItem(SavedItem);
 			}
@@ -346,10 +347,10 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 
 		if (UObsidianPlayerStashComponent* PlayerStashComponent = ObsidianPC->GetPlayerStashComponent())
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Loading Personal Stash Items:"));
+			UE_LOG(ObLogSaveSystem, Verbose, TEXT("Loading Personal Stash Items:"));
 			for (const FObsidianSavedItem& SavedItem : HeroSaveData.GameplaySaveData.PersonalStashedItems)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)
+				UE_LOG(ObLogSaveSystem, Verbose, TEXT("Item: [%s]"), *SavedItem.ItemDisplayName)
 
 				PlayerStashComponent->LoadStashedItem(SavedItem);
 			}

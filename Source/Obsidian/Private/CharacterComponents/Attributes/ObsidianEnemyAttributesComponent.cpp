@@ -8,7 +8,7 @@
 // ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -25,7 +25,7 @@ void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbi
 	EnemyAttributeSet = AbilitySystemComponent->GetSet<UObsidianEnemyAttributeSet>();
 	if (!EnemyAttributeSet)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ObsidianEnemyAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Enemy Set set on the Ability System."), *GetNameSafe(Owner));
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianEnemyAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Enemy Set set on the Ability System."), *GetNameSafe(Owner));
 		return;
 	}
 

@@ -12,7 +12,7 @@
 #include "CharacterComponents/Movement/ObsidianEnemyMovementComponent.h"
 #include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 UObsidianGameplayAbility::UObsidianGameplayAbility(const FObjectInitializer& ObjectInitializer)
@@ -192,11 +192,11 @@ FObsidianTaggedMontage UObsidianGameplayAbility::GetRandomAnimMontageToPlay()
 	{
 		if(GetAvatarActorFromActorInfo())
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Attack Montages are empty on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
 		}
 		else
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
 		}
 		return FObsidianTaggedMontage();
 	}
@@ -218,11 +218,11 @@ UAnimMontage* UObsidianGameplayAbility::GetAnimMontage()
 	{
 		if(GetAvatarActorFromActorInfo())
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Attack Montages are empty on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetAvatarActorFromActorInfo()));
 		}
 		else
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Attack Montages are empty on [%s]."), *GetNameSafe(this));
 		}
 		return nullptr;
 	}

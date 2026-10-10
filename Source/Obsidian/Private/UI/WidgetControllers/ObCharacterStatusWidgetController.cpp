@@ -9,8 +9,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Core/ObsidianGameplayStatics.h"
-
-DEFINE_LOG_CATEGORY(LogWidgetController_CharacterStatus)
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {
@@ -18,7 +17,7 @@ void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 	const AObsidianPlayerController* PlayerController = OwnerPlayerController.Get();
 	if (PlayerController == nullptr)
 	{
-		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("PlayerController is invalid in [%hs]."),
+		UE_LOG(ObLogUICharacterStatus, Error, TEXT("PlayerController is invalid in [%hs]."),
 			__FUNCTION__);
 		return;
 	}
@@ -51,14 +50,14 @@ void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbility
 {
 	if(ObsidianASC == nullptr)
 	{
-		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("ObsidianASC is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogUICharacterStatus, Error, TEXT("ObsidianASC is invalid in [%hs]."), __FUNCTION__);
 		return;
 	}
 
 	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
 	if (HeroAttributesComp == nullptr)
 	{
-		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+		UE_LOG(ObLogUICharacterStatus, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 			__FUNCTION__);
 		return;
 	}
@@ -167,7 +166,7 @@ void UObCharacterStatusWidgetController::SetInitialAttributeValues() const
 	AObsidianPlayerState* PlayerState = OwnerPlayerState.Get();
 	if (PlayerState == nullptr)
 	{
-		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("PlayerState is invalid in [%hs]."),
+		UE_LOG(ObLogUICharacterStatus, Error, TEXT("PlayerState is invalid in [%hs]."),
 				__FUNCTION__);
 		return;
 	}
@@ -175,7 +174,7 @@ void UObCharacterStatusWidgetController::SetInitialAttributeValues() const
 	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
 	if (HeroAttributesComp == nullptr)
 	{
-		UE_LOG(LogWidgetController_CharacterStatus, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+		UE_LOG(ObLogUICharacterStatus, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 			__FUNCTION__);
 		return;
 	}

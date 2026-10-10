@@ -8,7 +8,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Game/ObsidianGameMode.h"
 #include "InventoryItems/Items/ItemSpecific/ObsidianTownPortal.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* ItemOwner,
                                                  UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
@@ -59,7 +59,7 @@ bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* Item
 				PortalTransform, ItemOwner);
 			if (TownPortal == nullptr)
 			{
-				UE_LOG(LogObsidian, Error, TEXT("Spawning Town Portal Actor failed in [%hs]."), __FUNCTION__);
+				UE_LOG(ObLogItems, Error, TEXT("Spawning Town Portal Actor failed in [%hs]."), __FUNCTION__);
 				return false;
 			}
 			

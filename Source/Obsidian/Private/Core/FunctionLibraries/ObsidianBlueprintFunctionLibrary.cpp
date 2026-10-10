@@ -7,7 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // ~ Project
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 bool UObsidianBlueprintFunctionLibrary::IsActorOfClass(const AActor* ActorToCheck, UClass* ActorClass)
 {
@@ -36,7 +36,7 @@ void UObsidianBlueprintFunctionLibrary::PrintVector3D(const UObject* WorldContex
 
 	if (bPrintToLog)
 	{
-		UE_LOG(LogObsidian, Log, TEXT("%s"), *FinalStringPrintMessage);
+		UE_LOG(ObLogGeneral, Log, TEXT("%s"), *FinalStringPrintMessage);
 		
 		APlayerController* PC = (WorldContextObject ? UGameplayStatics::GetPlayerController(WorldContextObject, 0) : nullptr);
 		ULocalPlayer* LocalPlayer = (PC ? Cast<ULocalPlayer>(PC->Player) : nullptr);
@@ -47,7 +47,7 @@ void UObsidianBlueprintFunctionLibrary::PrintVector3D(const UObject* WorldContex
 	}
 	else
 	{
-		UE_LOG(LogObsidian, Verbose, TEXT("%s"), *FinalStringPrintMessage);
+		UE_LOG(ObLogGeneral, Verbose, TEXT("%s"), *FinalStringPrintMessage);
 	}
 }
 
@@ -68,7 +68,7 @@ void UObsidianBlueprintFunctionLibrary::PrintRotator(const UObject* WorldContext
 
 	if (bPrintToLog)
 	{
-		UE_LOG(LogObsidian, Log, TEXT("%s"), *FinalStringPrintMessage);
+		UE_LOG(ObLogGeneral, Log, TEXT("%s"), *FinalStringPrintMessage);
 		
 		APlayerController* PC = (WorldContextObject ? UGameplayStatics::GetPlayerController(WorldContextObject, 0) : nullptr);
 		ULocalPlayer* LocalPlayer = (PC ? Cast<ULocalPlayer>(PC->Player) : nullptr);
@@ -79,7 +79,7 @@ void UObsidianBlueprintFunctionLibrary::PrintRotator(const UObject* WorldContext
 	}
 	else
 	{
-		UE_LOG(LogObsidian, Verbose, TEXT("%s"), *FinalStringPrintMessage);
+		UE_LOG(ObLogGeneral, Verbose, TEXT("%s"), *FinalStringPrintMessage);
 	}
 }
 
@@ -100,7 +100,7 @@ void UObsidianBlueprintFunctionLibrary::PrintVector2D(const UObject* WorldContex
 
 	if (bPrintToLog)
 	{
-		UE_LOG(LogObsidian, Log, TEXT("%s"), *FinalStringPrintMessage);
+		UE_LOG(ObLogGeneral, Log, TEXT("%s"), *FinalStringPrintMessage);
 		
 		APlayerController* PC = (WorldContextObject ? UGameplayStatics::GetPlayerController(WorldContextObject, 0) : nullptr);
 		ULocalPlayer* LocalPlayer = (PC ? Cast<ULocalPlayer>(PC->Player) : nullptr);
@@ -111,6 +111,6 @@ void UObsidianBlueprintFunctionLibrary::PrintVector2D(const UObject* WorldContex
 	}
 	else
 	{
-		UE_LOG(LogObsidian, Verbose, TEXT("%s"), *FinalStringPrintMessage);
+		UE_LOG(ObLogGeneral, Verbose, TEXT("%s"), *FinalStringPrintMessage);
 	}
 }

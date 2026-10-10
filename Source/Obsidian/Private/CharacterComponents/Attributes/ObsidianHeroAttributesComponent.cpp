@@ -7,7 +7,7 @@
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -24,7 +24,7 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 	HeroAttributeSet = AbilitySystemComponent->GetSet<UObsidianHeroAttributeSet>();
 	if (!HeroAttributeSet)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("[%hs] Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), __FUNCTION__, *GetNameSafe(Owner));
+		UE_LOG(ObLogAttributes, Error, TEXT("[%hs] Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), __FUNCTION__, *GetNameSafe(Owner));
 		return;
 	}
 
@@ -110,12 +110,12 @@ void UObsidianHeroAttributesComponent::MaxEnergyShieldChanged(const FOnAttribute
 
 void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(ObLogAttributes, Warning, TEXT("Hero - Implement Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Hero - Implement Max Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(ObLogAttributes, Warning, TEXT("Hero - Implement Max Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianHeroAttributesComponent::HandleOutOfStamina(AActor* DamageInstigator, AActor* DamageCauser,

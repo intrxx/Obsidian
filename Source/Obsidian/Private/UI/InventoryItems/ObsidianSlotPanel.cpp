@@ -4,7 +4,7 @@
 
 #include <Blueprint/WidgetTree.h>
 
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
@@ -162,7 +162,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 {
 	if (ItemWidget == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ItemWidget to Add Item Widget to Equipment Panel is invalid in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("ItemWidget to Add Item Widget to Equipment Panel is invalid in [%hs]"),
 			__FUNCTION__);
 		return;
 	}
@@ -170,7 +170,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 	const FGameplayTag SlotTag = ItemWidgetData.ItemPosition.GetItemSlotTag();
 	if (SlotTag.IsValid() == false)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Slot Tag to Add Item Widget to Equipment Panel is invalid in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("Slot Tag to Add Item Widget to Equipment Panel is invalid in [%hs]"),
 			__FUNCTION__);
 		return;
 	}
@@ -178,7 +178,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 	UObsidianSlot_ItemSlot* EquipmentSlot = GetSlotByPosition(SlotTag);
 	if (EquipmentSlot == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Unable to find Equipment Slot for tag [%s] on Equipment Panel in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("Unable to find Equipment Slot for tag [%s] on Equipment Panel in [%hs]"),
 			*SlotTag.ToString(), __FUNCTION__);
 		return;
 	}
@@ -193,7 +193,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 		const FGameplayTag SisterSlotTag = EquipmentSlot->GetSisterSlotTag();
 		if (SisterSlotTag.IsValid() == false)
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Equipment Slot with Tag [%s] has no Sister Slot but the Item added"
+			UE_LOG(ObLogItems, Error, TEXT("Equipment Slot with Tag [%s] has no Sister Slot but the Item added"
 								   " to it want to block it [%hs], please verify if the item and slots are set up correctly."),
 				*EquipmentSlot->GetSlotTag().ToString(), __FUNCTION__);
 			return;
@@ -202,7 +202,7 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 		UObsidianSlot_ItemSlot* SlotToBlock = GetSlotByPosition(SisterSlotTag);
 		if (SlotToBlock == nullptr)
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Unable to find Slot To Block for tag [%s] on Equipment Panel in [%hs]"),
+			UE_LOG(ObLogItems, Error, TEXT("Unable to find Slot To Block for tag [%s] on Equipment Panel in [%hs]"),
 				*SisterSlotTag.ToString(), __FUNCTION__);
 			return;
 		}
@@ -220,13 +220,13 @@ void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, c
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
 	if (AffectedSlot == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 	
@@ -236,7 +236,7 @@ void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, c
 	const FObsidianSlotData* SlotData = GetSlotDataAtGridPosition(SlotTag);
 	if (SlotData == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for tag [%s] in [%hs]."),
+		UE_LOG(ObLogItems, Error, TEXT("Could not find SlotData for tag [%s] in [%hs]."),
 			*SlotTag.ToString(), __FUNCTION__)
 		return;
 	}
@@ -299,13 +299,13 @@ void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemS
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
 	if (AffectedSlot == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 	
@@ -315,7 +315,7 @@ void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemS
 	const FObsidianSlotData* SlotData = GetSlotDataAtGridPosition(SlotTag);
 	if (SlotData == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for tag [%s] in [%hs]."),
+		UE_LOG(ObLogItems, Error, TEXT("Could not find SlotData for tag [%s] in [%hs]."),
 			*SlotTag.ToString(), __FUNCTION__)
 		return;
 	}
@@ -347,13 +347,13 @@ void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_Item
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
 	if (AffectedSlot == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
@@ -363,7 +363,7 @@ void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_Item
 	const FObsidianSlotData* SlotData = GetSlotDataAtGridPosition(SlotTag);
 	if (SlotData == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for tag [%s] in [%hs]."),
+		UE_LOG(ObLogItems, Error, TEXT("Could not find SlotData for tag [%s] in [%hs]."),
 			*SlotTag.ToString(), __FUNCTION__)
 		return;
 	}
@@ -508,7 +508,7 @@ void UObsidianSlotPanel::UnregisterSlotItemWidget(const FGameplayTag& SlotTag)
 			UObsidianItem* SlottedItemWidget = SlotData->ItemWidget;
 			if (SlottedItemWidget == nullptr)
 			{
-				UE_LOG(LogTemp, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
+				UE_LOG(ObLogItems, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
 					*SlotTag.ToString());
 				return;
 			}

@@ -7,7 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 
 // ~ Project
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -71,7 +71,7 @@ void UObsidianAdvancedCombatComponent::StartTrace(const FObsidianAdvancedTracePa
 
 	if(CurrentTracedMesh == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("CurrentTracedMesh is invalid on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetOwner()));
+		UE_LOG(ObLogCombat, Error, TEXT("CurrentTracedMesh is invalid on [%s] for [%s]."), *GetNameSafe(this), *GetNameSafe(GetOwner()));
 		return;
 	}
 

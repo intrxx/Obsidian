@@ -3,7 +3,7 @@
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard_OrbOfRepentance.h"
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 bool UObsidianUsableShard_OrbOfRepentance::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
@@ -22,7 +22,7 @@ bool UObsidianUsableShard_OrbOfRepentance::OnItemUsed(AObsidianPlayerController*
 
 		if (bSuccess)
 		{
-			UE_LOG(LogObsidian, Warning, TEXT("Orb Of Repentance could not be used on provided [%s] Instance. "
+			UE_LOG(ObLogCrafting, Warning, TEXT("Orb Of Repentance could not be used on provided [%s] Instance. "
 									 "Or could not remove the Affix."),
 										*GetNameSafe(UsingOntoInstance));
 		}

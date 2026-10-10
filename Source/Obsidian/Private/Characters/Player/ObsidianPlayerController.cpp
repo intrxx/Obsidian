@@ -20,6 +20,7 @@
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/Items/ObsidianItemSpawner.h"
 #include "ObsidianTypes/ObsidianSavedTypes.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -58,7 +59,7 @@ void AObsidianPlayerController::ServerSpawnItemFromSpawner_Implementation(AObsid
 	const float DistanceToSpawnerSquared = FVector::DistSquared2D(OwnedPawn->GetActorLocation(), ItemSpawner->GetActorLocation());
 	if(DistanceToSpawnerSquared > FMath::Square(ItemSpawner->GetInteractionRadius() + ObsidianPlayerInputStatics::InteractionRangeTolerance))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[%hs]: Item Spawner is too far to be interacted with!"), __FUNCTION__);
+		UE_LOG(ObLogInteraction, Warning, TEXT("[%hs]: Item Spawner is too far to be interacted with!"), __FUNCTION__);
 		return;
 	}
 

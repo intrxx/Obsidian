@@ -11,6 +11,7 @@
 
 #include "Combat/Projectile/OProjectileMovementComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 AObsidianProjectileBase::AObsidianProjectileBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -157,7 +158,7 @@ void AObsidianProjectileBase::HandleMultiHitPerActorCooldown(AActor* ForHitActor
 {
 	bool& bNewCanHit = CanHitPerHitActorMap.FindOrAdd(TWeakObjectPtr<AActor>(ForHitActor));
 	bNewCanHit = false;
-	UE_LOG(LogTemp, Warning, TEXT("Applying Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));
+	UE_LOG(ObLogCombat, VeryVerbose, TEXT("Applying Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));
 
 	FTimerHandle PerActorMultiHitTimerHandle;
 	GetWorldTimerManager().SetTimer(PerActorMultiHitTimerHandle,
@@ -171,7 +172,7 @@ void AObsidianProjectileBase::HandleMultiHitPerActorCooldown(AActor* ForHitActor
 				if (bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(ForHitActor)))
 				{
 					*CanHitPtr = true;
-					UE_LOG(LogTemp, Warning, TEXT("Removing Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));	
+					UE_LOG(ObLogCombat, VeryVerbose, TEXT("Removing Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));	
 				}
 			}),
 			MultiHitCooldown, false);

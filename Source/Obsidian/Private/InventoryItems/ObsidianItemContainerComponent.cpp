@@ -14,8 +14,7 @@
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-
-DEFINE_LOG_CATEGORY(LogItemContainer);
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianItemContainerComponent::UObsidianItemContainerComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -120,13 +119,13 @@ void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* Us
 {
 	if(UsingInstance == nullptr)
 	{
-		UE_LOG(LogItemContainer, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItemContainer, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	if(UsingInstance->IsItemUsable() == false)
 	{
-		UE_LOG(LogItemContainer, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"),
+		UE_LOG(ObLogItemContainer, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"),
 			*UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
@@ -140,7 +139,7 @@ void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* Us
 	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
 	if(CurrentUsingInstanceStacks <= 0)
 	{
-		UE_LOG(LogItemContainer, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"),
+		UE_LOG(ObLogItemContainer, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"),
 			*UsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
@@ -151,7 +150,7 @@ void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* Us
 	{
 		if(UsingOntoInstance == nullptr)
 		{
-			UE_LOG(LogItemContainer, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), __FUNCTION__);
+			UE_LOG(ObLogItemContainer, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), __FUNCTION__);
 			return;
 		}
 
@@ -234,7 +233,7 @@ bool UObsidianItemContainerComponent::HasOwnerAuthority(const ANSICHAR* CallingF
 		return true;
 	}
 
-	UE_LOG(LogItemContainer, Warning, TEXT("No Authority in [%hs]"), CallingFunction);
+	UE_LOG(ObLogItemContainer, Warning, TEXT("No Authority in [%hs]"), CallingFunction);
 	return false;
 }
 
@@ -468,7 +467,7 @@ FObsidianItemOperationResult UObsidianItemContainerComponent::RemoveItemFromCont
 
 	if(InstanceToRemove == nullptr)
 	{
-		UE_LOG(LogItemContainer, Error, TEXT("Passed InstanceToRemove is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItemContainer, Error, TEXT("Passed InstanceToRemove is invalid in [%hs]"), __FUNCTION__);
 		return Result;
 	}
 

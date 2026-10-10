@@ -7,8 +7,6 @@
 
 // ~ Project
 
-DECLARE_LOG_CATEGORY_EXTERN(LogObsidian, Log, All);
-
 /**
  * 
  */

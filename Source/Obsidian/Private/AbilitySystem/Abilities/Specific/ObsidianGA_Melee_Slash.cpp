@@ -8,6 +8,7 @@
 
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "Characters/Heroes/ObsidianHero.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObsidianGA_Melee_Slash::FireSlash()
 {
@@ -70,7 +71,7 @@ void UObsidianGA_Melee_Slash::FireSlash()
 		{
 			if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(HitActor))
 			{
-				UE_LOG(LogTemp, Log, TEXT("Slash hit valid actor: %s"), *HitActor->GetName());
+				UE_LOG(ObLogAbilitySystem, Verbose, TEXT("Slash hit valid actor: %s"), *HitActor->GetName());
 				TargetASC->ApplyGameplayEffectSpecToSelf(*SlashSpecHandle.Data.Get());
 			}
 		}

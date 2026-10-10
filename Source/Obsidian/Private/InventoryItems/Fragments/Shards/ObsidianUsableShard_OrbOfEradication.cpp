@@ -3,7 +3,7 @@
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard_OrbOfEradication.h"
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 bool UObsidianUsableShard_OrbOfEradication::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
@@ -22,7 +22,7 @@ bool UObsidianUsableShard_OrbOfEradication::OnItemUsed(AObsidianPlayerController
 		
 		if (bSuccess == false)
 		{
-			UE_LOG(LogObsidian, Warning, TEXT("Orb Of Eradication could not be used on provided [%s] Instance."
+			UE_LOG(ObLogCrafting, Warning, TEXT("Orb Of Eradication could not be used on provided [%s] Instance."
 									 "Or the Usage failed to Remove any Prefixes or Suffixes."),
 										*GetNameSafe(UsingOntoInstance));
 		}

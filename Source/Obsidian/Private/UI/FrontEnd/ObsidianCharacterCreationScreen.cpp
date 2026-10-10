@@ -13,6 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
@@ -289,7 +290,7 @@ void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianHeroSaveG
 	}
 	else
 	{
-		UE_LOG(LogObsidianSaveSystem, Error, TEXT("Create Save failed in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogSaveSystem, Error, TEXT("Create Save failed in [%hs]"), __FUNCTION__);
 	}
 }
 

@@ -21,8 +21,6 @@ class UObsidianItem;
 class UObsidianDraggedItem;
 class UObsidianSlotBlockadeItem;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_Items, Log, All);
-
 /**
  * 
  */

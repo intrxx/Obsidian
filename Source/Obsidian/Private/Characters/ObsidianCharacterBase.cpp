@@ -9,7 +9,7 @@
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
@@ -87,7 +87,7 @@ FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FG
 	}
 	
 #if !UE_BUILD_SHIPPING	
-	UE_LOG(LogObsidian, Error, TEXT("Could not find any Gameplay Ability for Tag [%s] on Owner [%s]."),
+	UE_LOG(ObLogCharacter, Error, TEXT("Could not find any Gameplay Ability for Tag [%s] on Owner [%s]."),
 		*AbilityTag.GetTagName().ToString(), *GetNameSafe(this));
 #endif
 	

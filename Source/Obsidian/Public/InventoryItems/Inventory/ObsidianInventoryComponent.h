@@ -19,8 +19,6 @@ class AObsidianPlayerController;
 class FGameplayDebuggerCategory_InventoryItems;
 class UObInventoryItemsWidgetController;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogInventory, Log, All);
-
 /**
  * 
  */

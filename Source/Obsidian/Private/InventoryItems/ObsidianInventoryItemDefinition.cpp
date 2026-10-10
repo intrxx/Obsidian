@@ -10,8 +10,6 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 
-DEFINE_LOG_CATEGORY(LogItems)
-
 UObsidianInventoryItemDefinition::UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

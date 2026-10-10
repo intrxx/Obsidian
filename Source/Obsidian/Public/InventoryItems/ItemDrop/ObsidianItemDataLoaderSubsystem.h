@@ -15,8 +15,6 @@ class UObsidianItemDataDeveloperSettings;
 class UObsidianItemDataConfig;
 class UObsidianTreasureList;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogItemDataLoader, Log, All);
-
 /**
  * 
  */

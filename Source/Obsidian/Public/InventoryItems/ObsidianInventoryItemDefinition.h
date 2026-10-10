@@ -15,8 +15,6 @@
 class UObsidianInventoryItemFragment;
 class UOInventoryItemFragment_Affixes;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogItems, Log, All);
-
 /**
  * Constant config of the item.
  */

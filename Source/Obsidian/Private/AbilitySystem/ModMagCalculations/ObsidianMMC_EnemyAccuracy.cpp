@@ -4,14 +4,14 @@
 
 
 #include "Combat/ObsidianCombatInterface.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 float UObsidianMMC_EnemyAccuracy::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
 {
 	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());
 	if (CombatInterface == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
+		UE_LOG(ObLogAbilitySystem, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
 		return Super::CalculateBaseMagnitude_Implementation(Spec);
 	}
 	

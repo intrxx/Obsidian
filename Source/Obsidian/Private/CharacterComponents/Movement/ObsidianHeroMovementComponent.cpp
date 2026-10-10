@@ -7,6 +7,7 @@
 #include <Net/UnrealNetwork.h>
 
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianHeroMovementComponent::UObsidianHeroMovementComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -27,24 +28,20 @@ float UObsidianHeroMovementComponent::GetMaxSpeed() const
 	const AActor* Owner = GetOwner();
 	if(!Owner)
 	{
-		//UE_LOG(LogTemp, Display, TEXT("[%s] Owner invalid, Speed [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), Super::GetMaxSpeed());
 		return Super::GetMaxSpeed();
 	}
 
 	const UObsidianHeroAttributesComponent* HeroAttributes = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(Owner);
 	if(!HeroAttributes)
 	{
-		//UE_LOG(LogTemp, Display, TEXT("[%s] Hero Attributes invalid, Speed [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), Super::GetMaxSpeed());
 		return Super::GetMaxSpeed();
 	}
 
 	if (CurrentWalkState == ObsidianGameplayTags::Movement_State_Running)
 	{
-		//UE_LOG(LogTemp, Display, TEXT("[%s] Running [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), HeroAttributes->GetSprintSpeed());
 		return HeroAttributes->GetSprintSpeed();
 	}
 
-	//UE_LOG(LogTemp, Display, TEXT("[%s] Walking [%f]"), *UEnum::GetValueAsString(GetOwnerRole()), HeroAttributes->GetMovementSpeed());
 	return HeroAttributes->GetMovementSpeed();
 }
 
@@ -122,7 +119,7 @@ bool UObsidianHeroMovementComponent::HandleWalkingStateChanged(const FGameplayTa
 		{
 			if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner))
 			{
-				UE_LOG(LogTemp, Display, TEXT("CurrentWalkingState [%s] changing to NewWalkingState [%s]"),
+				UE_LOG(ObLogCharacter, Verbose, TEXT("CurrentWalkingState [%s] changing to NewWalkingState [%s]"),
 					*CurrentWalkState.ToString(), *NewWalkingState.ToString())
 				ASC->RemoveLooseGameplayTag(CurrentWalkState);
 				ASC->AddLooseGameplayTag(NewWalkingState);

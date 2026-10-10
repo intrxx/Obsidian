@@ -29,8 +29,7 @@
 #include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/ObsidianHUD.h"
-
-DEFINE_LOG_CATEGORY(LogInteraction);
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianPlayerInputManager::UObsidianPlayerInputManager(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -167,7 +166,7 @@ void UObsidianPlayerInputManager::TriggerInteraction(AActor* InteractionActor)
 #if !UE_BUILD_SHIPPING
 			if(bDebugInteraction)
 			{
-				UE_LOG(LogInteraction, Display, TEXT("Target cannot be interacted with."))	
+				UE_LOG(ObLogInteraction, Verbose, TEXT("Target cannot be interacted with."))	
 			}
 #endif
 			return;
@@ -181,7 +180,7 @@ void UObsidianPlayerInputManager::TriggerInteraction(AActor* InteractionActor)
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Starting Interaction."))	
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Starting Interaction."))	
 		}
 #endif
 	}
@@ -370,7 +369,7 @@ void UObsidianPlayerInputManager::Input_MoveStartedMouse()
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Stopped ongoing interaction."))	
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Stopped ongoing interaction."))	
 		}
 #endif
 	}
@@ -597,13 +596,13 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 	const AActor* OwnerActor = GetOwner();
 	if(OwnerActor == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("OwnerActor is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("OwnerActor is null in [%hs]"), __FUNCTION__);
 		return false;
 	}
 
 	if(OwnerActor->HasAuthority() == false)
 	{
-		UE_LOG(LogInventory, Error, TEXT("[%hs] should not be called without authority."), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("[%hs] should not be called without authority."), __FUNCTION__);
 		return false;
 	}
 
@@ -616,18 +615,18 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 #if !UE_BUILD_SHIPPING
 	if(bDebugInteraction)
 	{
-		UE_LOG(LogInteraction, Display, TEXT("Calculating Distance to Interaction Target in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInteraction, VeryVerbose, TEXT("Calculating Distance to Interaction Target in [%hs]"), __FUNCTION__);
 
 		if(const UWorld* World = GetWorld())
 		{
 			UObsidianBlueprintFunctionLibrary::PrintVector3D(World, TargetLocation, TEXT("(Red Sphere) Target Location: "));
-			UE_LOG(LogInteraction, Display, TEXT("Interaction Radius: [%f]."), InteractionRadius);
+			UE_LOG(ObLogInteraction, VeryVerbose, TEXT("Interaction Radius: [%f]."), InteractionRadius);
 			DrawDebugSphere(World, TargetLocation, InteractionRadius, 16, FColor::Red, false, 5.0f);
 
 			UObsidianBlueprintFunctionLibrary::PrintVector3D(World, OwnerLocation, TEXT("(Blue Sphere) Player Location on distance check: "));
 			DrawDebugSphere(World, OwnerLocation, 32.0f, 8, FColor::Blue, false, 5.0f);
 
-			UE_LOG(LogInteraction, Display, TEXT("Calculated Distance: [%f]."), DistanceToTarget);
+			UE_LOG(ObLogInteraction, VeryVerbose, TEXT("Calculated Distance: [%f]."), DistanceToTarget);
 		}
 	}
 #endif
@@ -639,7 +638,7 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Player out of Interacting range. Calculating Approach Destination."));
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Player out of Interacting range. Calculating Approach Destination."));
 
 			if(const UWorld* World = GetWorld())
 			{
@@ -674,14 +673,14 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 {
 	if(InteractionTarget == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionTarget is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInteraction, Error, TEXT("InteractionTarget is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	const AActor* InteractionActor = InteractionTarget->GetInteractionActor();
 	if(InteractionActor == nullptr)
 	{
-		UE_LOG(LogTemp, Error, TEXT("InteractionActor is null in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInteraction, Error, TEXT("InteractionActor is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -691,7 +690,7 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Interaction target is out of range. Approaching."))	
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Interaction target is out of range. Approaching."))	
 		}
 #endif
 		return;
@@ -717,7 +716,7 @@ void UObsidianPlayerInputManager::InteractWithOutOfRangeTarget()
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Trying to interact with out of range Target after approaching."));
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Trying to interact with out of range Target after approaching."));
 			if(const UWorld* World = GetWorld())
 			{
 				if(const AActor* Owner = GetOwner())
@@ -742,7 +741,7 @@ void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const 
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Interacting."))	
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Interacting."))	
 		}
 #endif
 		InteractionTarget->Interact(GetController<AObsidianPlayerController>());
@@ -757,7 +756,7 @@ void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const 
 		{
 			if(bDebugInteraction)
 			{
-				UE_LOG(LogInteraction, Display, TEXT("Target requires ongoing interaction."))	
+				UE_LOG(ObLogInteraction, Verbose, TEXT("Target requires ongoing interaction."))	
 			}
 		}
 #endif
@@ -793,7 +792,7 @@ void UObsidianPlayerInputManager::StopOngoingInteraction()
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Stopped ongoing interaction."))	
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Stopped ongoing interaction."))	
 		}
 #endif
 	}
@@ -802,7 +801,7 @@ void UObsidianPlayerInputManager::StopOngoingInteraction()
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
 		{
-			UE_LOG(LogInteraction, Display, TEXT("Was unable to stop the ongoing interaction."))	
+			UE_LOG(ObLogInteraction, Verbose, TEXT("Was unable to stop the ongoing interaction."))	
 		}
 #endif
 	}

@@ -10,7 +10,7 @@
 
 // ~ Project
 #include "AI/ObsidianEnemyInterface.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianBTTask_UseGameplayAbility::UObsidianBTTask_UseGameplayAbility()
 {
@@ -54,7 +54,7 @@ EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilit
 		}
 		else
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Target Actor Blackboard Key Selector is invalid on [UObsidianBTTask_UseGameplayAbility] for [%s]."
+			UE_LOG(ObLogAI, Error, TEXT("Target Actor Blackboard Key Selector is invalid on [UObsidianBTTask_UseGameplayAbility] for [%s]."
 								   "Make sure to set the TargetActor on the Node!"), *GetNameSafe(AIController));
 		}
 	}

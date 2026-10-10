@@ -7,7 +7,7 @@
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Combat/ObsidianCombatInterface.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 struct SObsidian_MaxHealthStatics
 {
@@ -46,7 +46,7 @@ float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGamep
 	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());
 	if (CombatInterface == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
+		UE_LOG(ObLogAbilitySystem, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
 		return Super::CalculateBaseMagnitude_Implementation(Spec);
 	}
 	

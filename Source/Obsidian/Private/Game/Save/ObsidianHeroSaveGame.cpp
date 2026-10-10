@@ -6,6 +6,7 @@
 
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 // ~ Start of FObsidianSavedEquipmentPiece
 FObsidianSavedEquipmentPiece::FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& EquipmentActor)
@@ -81,7 +82,7 @@ void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)
 	}
 	else
 	{
-		UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to HandlePostSave on [%s]. "), *GetNameSafe(this));
+		UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to HandlePostSave on [%s]. "), *GetNameSafe(this));
 	}
 
 	Super::HandlePostSave(bSuccess);
@@ -109,7 +110,7 @@ void UObsidianHeroSaveGame::HandlePostLoad()
 	}
 	else
 	{
-		UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to HandlePostLoad on [%s]. "), *GetNameSafe(this));
+		UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to HandlePostLoad on [%s]. "), *GetNameSafe(this));
 	}
 
 	Super::HandlePostLoad();

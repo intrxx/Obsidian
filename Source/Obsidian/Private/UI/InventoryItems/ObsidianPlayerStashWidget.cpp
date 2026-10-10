@@ -19,6 +19,7 @@
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget_Grid.h"
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget_Slots.h"
 #include "UI/InventoryItems/Stash/ObsidianStashButton.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 {
@@ -39,7 +40,7 @@ void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 	const AObsidianPlayerController* PlayerController = InventoryItemsWidgetController->GetOwningPlayerController();
 	if (PlayerController == nullptr)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("PlayerController is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogUIItems, Error, TEXT("PlayerController is invalid in [%hs]."), __FUNCTION__);
 	}
 	
 	if (UObsidianCraftingComponent* CraftingComp = PlayerController->GetCraftingComponent())
@@ -225,7 +226,7 @@ void UObsidianPlayerStashWidget::CreateStashTabButton(const FGameplayTag& StashT
 {
 	if(StashTag.IsValid() == false)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to create Stash Tab Button without valid Stash"
+		UE_LOG(ObLogUIItems, Error, TEXT("Trying to create Stash Tab Button without valid Stash"
 												" Tag in [%hs]"), __FUNCTION__);
 		return;
 	}
@@ -242,7 +243,7 @@ void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& WithStashTag)
 {
 	if(WithStashTag.IsValid() == false)
 	{
-		UE_LOG(LogWidgetController_Items, Error, TEXT("Trying to show Stash Tab with invalid tag in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogUIItems, Error, TEXT("Trying to show Stash Tab with invalid tag in [%hs]."), __FUNCTION__);
 		return;
 	}
 	
@@ -252,7 +253,7 @@ void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& WithStashTag)
 		{
 			if(StashTabToShow == ActiveStashTab)
 			{
-				UE_LOG(LogWidgetController_Items, Warning, TEXT("Trying to show the same tab, should disable the button maybe?"));
+				UE_LOG(ObLogUIItems, Verbose, TEXT("Trying to show the same tab, should disable the button maybe?"));
 				return;
 			}
 			

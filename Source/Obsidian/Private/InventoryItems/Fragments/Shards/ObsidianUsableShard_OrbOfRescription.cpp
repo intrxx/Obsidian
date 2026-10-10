@@ -4,7 +4,7 @@
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 
 bool UObsidianUsableShard_OrbOfRescription::OnItemUsed(AObsidianPlayerController* ItemOwner,
@@ -25,7 +25,7 @@ bool UObsidianUsableShard_OrbOfRescription::OnItemUsed(AObsidianPlayerController
 			}
 		}
 		
-		UE_LOG(LogObsidian, Warning, TEXT("Orb Of Rescription could not be used on provided [%s] Instance. "
+		UE_LOG(ObLogCrafting, Warning, TEXT("Orb Of Rescription could not be used on provided [%s] Instance. "
 									"Or Skill Implicit could not be replaced with valid one (could not remove the skill "
 									" implicit or/and find a replacement.)"),
 										*GetNameSafe(UsingOntoInstance));

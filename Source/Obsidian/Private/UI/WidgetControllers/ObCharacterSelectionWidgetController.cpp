@@ -7,7 +7,7 @@
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Characters/ObsidianCharacterCreationHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 
 void UObCharacterSelectionWidgetController::OnWidgetControllerSetupCompleted()
@@ -98,7 +98,7 @@ void UObCharacterSelectionWidgetController::GatherViewTargets()
 	AObsidianPlayerController* PlayerController = OwnerPlayerController.Get();
 	if (PlayerController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("PlayerController is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogUI, Error, TEXT("PlayerController is invalid in [%hs]"), __FUNCTION__);
 	}
 	
 	if (const UWorld* World = OwnerPlayerController->GetWorld())

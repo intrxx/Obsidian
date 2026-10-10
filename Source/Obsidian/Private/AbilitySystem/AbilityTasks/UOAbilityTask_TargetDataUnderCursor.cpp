@@ -7,7 +7,7 @@
 #include "DrawDebugHelpers.h"
 
 // ~ Project
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 UOAbilityTask_TargetDataUnderCursor* UOAbilityTask_TargetDataUnderCursor::CreateTargetDataUnderCursorProxy(UGameplayAbility* OwningAbility)
@@ -42,7 +42,7 @@ void UOAbilityTask_TargetDataUnderCursor::BroadcastTargetDataToServer()
 	const APlayerController* PC = Ability->GetCurrentActorInfo()->PlayerController.Get();
 	if(PC == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("PC is null on [%s]"), *GetNameSafe(this));
+		UE_LOG(ObLogAbilitySystem, Error, TEXT("PC is null on [%s]"), *GetNameSafe(this));
 		return;
 	}
 	

@@ -6,6 +6,7 @@
 
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
@@ -58,10 +59,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 			const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 			OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		
-#if !UE_BUILD_SHIPPING
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange,
-				FString::Printf(TEXT("The hit was blocked. Chance to block was: %f. New damage: 0"), HitBlockChance));
-#endif
+			UE_LOG(ObLogDamage, Verbose, TEXT("The hit was blocked. Chance to block was: %f. New damage: 0"), HitBlockChance);
 		
 			return;
 		}
@@ -81,10 +79,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 			const FGameplayModifierEvaluatedData& ModifierEvaluatedData = FGameplayModifierEvaluatedData(UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 			OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		
-#if WITH_EDITOR || UE_BUILD_DEVELOPMENT
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange,
-				FString::Printf(TEXT("The spell was blocked. Chance to block was: %f. New damage: 0"), SpellBlockChance));
-#endif
+			UE_LOG(ObLogDamage, Verbose, TEXT("The spell was blocked. Chance to block was: %f. New damage: 0"), SpellBlockChance);
 		
 			return;
 		}

@@ -22,6 +22,7 @@
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "InventoryItems/ObsidianItemManagerComponent.h"
 #include "InventoryItems/Items/ObsidianItemLabelComponent.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -203,7 +204,7 @@ void AObsidianDroppableItem::Interact(AObsidianPlayerController* InteractingPlay
 {
 	if(InteractingPlayerController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Cannot interact with Item Actor, ObsidianPC is invalid in [%hs]."),
+		UE_LOG(ObLogInventory, Error, TEXT("Cannot interact with Item Actor, ObsidianPC is invalid in [%hs]."),
 			__FUNCTION__);
 		return;
 	}
@@ -238,7 +239,7 @@ void AObsidianDroppableItem::UpdateDroppedItemStacks(const int32 NewDroppedItemS
 #if !UE_BUILD_SHIPPING
 	if(NewDroppedItemStacks < 0)
 	{
-		UE_LOG(LogInventory, Error, TEXT("[%hs] shouldn't take a negative number of stacks to update."),
+		UE_LOG(ObLogInventory, Error, TEXT("[%hs] shouldn't take a negative number of stacks to update."),
 			__FUNCTION__);
 	}
 #endif
@@ -277,7 +278,7 @@ void AObsidianDroppableItem::SetupItemAppearanceFromInstance() const
 	UStaticMesh* DroppedMesh = ItemInstance->GetItemDroppedMesh();
 	if(DroppedMesh == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in [%hs]"),
+		UE_LOG(ObLogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in [%hs]"),
 			*ItemInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
@@ -309,7 +310,7 @@ void AObsidianDroppableItem::SetupItemAppearanceFromDefinition() const
 		}
 	}
 	
-	UE_LOG(LogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in [%hs]."),
+	UE_LOG(ObLogInventory, Error, TEXT("Item [%s] failed to set the Dropped Mesh in [%hs]."),
 		*ItemDefault->GetDebugName(), __FUNCTION__);
 }
 
@@ -427,7 +428,7 @@ void AObsidianDroppableItem::CreateItemDescription()
 		: CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 		return;	
 	}
 	
@@ -454,7 +455,7 @@ void AObsidianDroppableItem::DestroyItemDescription()
 		CachedInventoryWidgetController->RemoveCurrentDroppedItemDescription();
 		return;	
 	}
-	UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
+	UE_LOG(ObLogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 }
 
 void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance)
@@ -464,7 +465,7 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidian
 		: CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 		return;	
 	}
 	
@@ -486,7 +487,7 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const int32 Sta
 		: CachedInventoryWidgetController;
 	if(CachedInventoryWidgetController == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("Unable to get InventoryController in [%hs]."), __FUNCTION__);
 		return;	
 	}
 	
@@ -548,7 +549,7 @@ bool AObsidianDroppableItem::PickupItemInstance(const bool bLeftControlDown,
 	const AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in [%hs]."),
+		UE_LOG(ObLogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in [%hs]."),
 			__FUNCTION__);
 		return false;
 	}
@@ -582,7 +583,7 @@ bool AObsidianDroppableItem::PickupItemDef(const bool bLeftControlDown, const AO
 	AObsidianHUD* ObsidianHUD = PickingPlayerController->GetObsidianHUD();
 	if(ObsidianHUD == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in [%hs]."),
+		UE_LOG(ObLogInventory, Error, TEXT("Cannot Pickup Item Def, ObsidianHUD is invalid in [%hs]."),
 			__FUNCTION__);
 		return false;
 	}

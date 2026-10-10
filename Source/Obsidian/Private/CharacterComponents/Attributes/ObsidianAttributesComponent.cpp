@@ -10,7 +10,7 @@
 // ~ Project
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 
 
@@ -32,21 +32,21 @@ void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilityS
 {
 	if(AbilitySystemComponent)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *Owner->GetName());
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *Owner->GetName());
 		return;
 	}
 
 	AbilitySystemComponent = InASC;
 	if (!AbilitySystemComponent)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *Owner->GetName());
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *Owner->GetName());
 		return;
 	}
 	
 	CommonAttributeSet = AbilitySystemComponent->GetSet<UObsidianCommonAttributeSet>();
 	if (!CommonAttributeSet)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *Owner->GetName());
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *Owner->GetName());
 		return;
 	}
 	
@@ -156,7 +156,7 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 	if (OldDeathState > NewDeathState)
 	{
 		// The server is trying to set us back, but we've already predicted past the server state.
-		UE_LOG(LogObsidian, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+		UE_LOG(ObLogAttributes, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		return;
 	}
 
@@ -173,7 +173,7 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 		}
 		else
 		{
-			UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+			UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		}
 	}
 	else if (OldDeathState == EObsidianDeathState::EDS_DeathStarted)
@@ -184,7 +184,7 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 		}
 		else
 		{
-			UE_LOG(LogObsidian, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+			UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		}
 	}
 
@@ -215,23 +215,22 @@ void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, A
 
 void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Health Changed or remove the bindingc! - For %s"), *GetNameSafe(GetOwner()));
-	UE_LOG(LogObsidian, Warning, TEXT("New life: %f"), Data.NewValue);
+	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 void UObsidianAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
 {
-	UE_LOG(LogObsidian, Warning, TEXT("Base Class - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
+	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
 float UObsidianAttributesComponent::GetHealth() const

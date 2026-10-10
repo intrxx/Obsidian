@@ -20,8 +20,6 @@ class UObsidianDraggedItem_Simple;
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStartUsingItemSignature, UObsidianInventoryItemInstance* UsingInstance)
 DECLARE_MULTICAST_DELEGATE(FOnStopUsingItemSignature)
 
-DECLARE_LOG_CATEGORY_EXTERN(LogCrafting, Log, All);
-
 
 /**
  * Component which grants the ability to use crafting items to modify other item's properties.

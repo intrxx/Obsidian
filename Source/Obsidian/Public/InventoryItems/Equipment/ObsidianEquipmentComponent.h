@@ -16,8 +16,6 @@ class AObsidianPlayerState;
 class AObsidianPlayerController;
 class UObsidianInventoryComponent;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogEquipment, Log, All);
-
 /**
  * 
  */

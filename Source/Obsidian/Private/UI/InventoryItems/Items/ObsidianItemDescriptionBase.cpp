@@ -10,6 +10,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "UI/InventoryItems/Items/ObsidianAffixRow.h"
 #include "UI/InventoryItems/Items/ObsidianItemDescRequirementsBlock.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObsidianItemDescriptionBase::NativeConstruct()
 {
@@ -241,8 +242,6 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	}
 
 	// NOT SHOWN STATS, WILL BE SHOWN AFTER ALT
-	UE_LOG(LogTemp, Display, TEXT("Additional Item Stats: "));
-	UE_LOG(LogTemp, Display, TEXT("Item Level: [%i]"), ItemStats.GetItemLevel());
 }
 
 void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity)
@@ -275,11 +274,11 @@ void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, 
 				} break;
 			case EObsidianItemRarity::Set:
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Add SetItemName_TextStyle!"));
+					UE_LOG(ObLogItems, Warning, TEXT("Add SetItemName_TextStyle!"));
 				} break;
 			case EObsidianItemRarity::Quest:
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Add QuestItemName_TextStyle!"));
+					UE_LOG(ObLogItems, Warning, TEXT("Add QuestItemName_TextStyle!"));
 				} break;
 				default:
 					{

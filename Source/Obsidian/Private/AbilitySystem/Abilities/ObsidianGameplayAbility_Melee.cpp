@@ -5,7 +5,7 @@
 #include <AbilitySystemComponent.h>
 
 #include "AbilitySystemBlueprintLibrary.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 FGameplayEffectSpecHandle UObsidianGameplayAbility_Melee::MakeMeleeDamageSpec(const UObject* SourceObject)
 {
@@ -26,6 +26,6 @@ FGameplayEffectSpecHandle UObsidianGameplayAbility_Melee::MakeMeleeDamageSpec(co
 		return SpecHandle;
 	}
 	
-	UE_LOG(LogObsidian, Error, TEXT("Could not extract Ability System Component from Owning Actor in [%hs]."), __FUNCTION__);
+	UE_LOG(ObLogAbilitySystem, Error, TEXT("Could not extract Ability System Component from Owning Actor in [%hs]."), __FUNCTION__);
 	return FGameplayEffectSpecHandle(nullptr);
 }

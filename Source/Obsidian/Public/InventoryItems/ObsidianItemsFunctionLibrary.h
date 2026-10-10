@@ -16,8 +16,6 @@ class UObsidianInventoryItemFragment;
 class UObsidianInventoryItemDefinition;
 class UObsidianInventoryItemInstance;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogItemsFunctionLibrary, Log, All);
-
 /**
  * 
  */

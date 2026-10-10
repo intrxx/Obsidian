@@ -30,8 +30,6 @@ class UCommonActivatableWidget;
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableItemPickupRangeSignature)
 DECLARE_MULTICAST_DELEGATE(FOnArrivedAtAcceptableInteractionRangeSignature)
 
-DECLARE_LOG_CATEGORY_EXTERN(LogInteraction, Log, All);
-
 namespace ObsidianPlayerInputStatics
 {
 	inline constexpr float InteractionRadius = 200.0f;

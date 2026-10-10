@@ -17,8 +17,6 @@ struct FObsidianItemAffixStack;
 
 class UObsidianInventoryItemInstance;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogAffixes, Log, All);
-
 /**
  *	A single Entry in Item affix Stack.
  */

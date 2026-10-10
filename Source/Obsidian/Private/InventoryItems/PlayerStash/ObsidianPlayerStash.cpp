@@ -5,6 +5,7 @@
 // ~ Core
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
@@ -74,7 +75,7 @@ void AObsidianPlayerStash::Interact(AObsidianPlayerController* InteractingPlayer
 		return;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Orange, FString::Printf(TEXT("Opening Chest")));
+	UE_LOG(ObLogPlayerStash, Verbose, TEXT("Opening Chest"));
 
 	//TODO(intrxx) Play sound and stash animation
 

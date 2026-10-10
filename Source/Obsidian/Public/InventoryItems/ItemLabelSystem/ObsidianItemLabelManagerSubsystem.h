@@ -15,8 +15,6 @@ class UObsidianItemLabel;
 class AObsidianPlayerController;
 class UObsidianMainOverlay;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogItemLabelManager, Log, All);
-
 USTRUCT()
 struct FObsidianItemLabelData
 {

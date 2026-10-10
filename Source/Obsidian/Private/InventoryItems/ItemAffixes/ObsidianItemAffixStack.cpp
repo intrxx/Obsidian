@@ -8,8 +8,6 @@
 // ~ Project
 #include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
-DEFINE_LOG_CATEGORY(LogAffixes);
-
 int32 FObsidianItemAffixStack::GetTotalAffixCount() const
 {
 	return Entries.Num();

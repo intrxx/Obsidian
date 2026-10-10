@@ -10,7 +10,7 @@
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 #if WITH_EDITOR
 // ~ FObsidianAffixAbilitySet_GameplayAbility
@@ -144,7 +144,7 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 
 		if(!IsValid(AbilityToGrant.Ability))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Ability [%d] on Ablity Set [%s] is not valid."), AbilityIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAffixes, Error, TEXT("Granted Gameplay Ability [%d] on Ablity Set [%s] is not valid."), AbilityIndex, *GetNameSafe(this));
 			continue;
 		}
 
@@ -171,7 +171,7 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 
 		if(!IsValid(EffectToGrant.GameplayEffect))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Effect [%d] on Ability Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAffixes, Error, TEXT("Granted Gameplay Effect [%d] on Ability Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
 			continue;	
 		}
 		
@@ -212,7 +212,7 @@ void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySy
 	const FObsidianAffixAbilitySet_GameplayEffect& EffectToGrant = GrantedGameplayEffects[0];
 	if(!IsValid(EffectToGrant.GameplayEffect))
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Effect [0] on Ability Set [%s] is not valid."), *GetNameSafe(this));
+		UE_LOG(ObLogAffixes, Error, TEXT("Granted Gameplay Effect [0] on Ability Set [%s] is not valid."), *GetNameSafe(this));
 		return;	
 	}
 

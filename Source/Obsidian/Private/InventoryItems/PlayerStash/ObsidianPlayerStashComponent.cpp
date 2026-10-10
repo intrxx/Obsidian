@@ -15,8 +15,7 @@
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
-
-DEFINE_LOG_CATEGORY(LogPlayerStash)
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianPlayerStashComponent::UObsidianPlayerStashComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -191,7 +190,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 	{
 		if (!IsValid(Instance))
 		{
-			UE_LOG(LogPlayerStash, Error, TEXT("Instance is invalid in [%hs]"), __FUNCTION__);
+			UE_LOG(ObLogPlayerStash, Error, TEXT("Instance is invalid in [%hs]"), __FUNCTION__);
 			continue;
 		}
 		
@@ -212,7 +211,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 				continue;
 			}
 			
-			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
+			UE_LOG(ObLogPlayerStash, Verbose, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
 			
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
 			StashItemList.ChangedEntryStacks(Instance, CurrentStackCount, InTabTag);
@@ -286,7 +285,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinition(co
 	if(CanFitItemDefinition(AvailablePosition, StashTabTag, ItemDef) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Inventory is full!")));
+		UE_LOG(ObLogPlayerStash, Verbose, TEXT("Inventory is full!"));
 		if(!OutAddedToInstances.IsEmpty())
 		{
 			Result.bActionSuccessful = true;
@@ -340,7 +339,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemDefinitionToS
 	if(CanFitItemDefinitionToSpecifiedSlot(ItemPosition, ItemDef) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
+		UE_LOG(ObLogPlayerStash, Verbose, TEXT("Inventory is full at specified slot!"));
 		return Result;
 	}
 	
@@ -407,7 +406,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan(), InstanceToAdd->GetItemCategoryTag(), InstanceToAdd->GetItemBaseTypeTag(), StashTabTag) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
+		UE_LOG(ObLogPlayerStash, Verbose, TEXT("Inventory is full!"));
 		return Result;
 	}
 	
@@ -450,7 +449,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 	if(CheckSpecifiedPosition(ItemPosition, InstanceToAdd->GetItemCategoryTag(), InstanceToAdd->GetItemBaseTypeTag(), InstanceToAdd->GetItemGridSpan()) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Player Stash is full at specified slot!")));
+		UE_LOG(ObLogPlayerStash, Verbose, TEXT("Player Stash is full at specified slot!"));
 		return Result;
 	}
 

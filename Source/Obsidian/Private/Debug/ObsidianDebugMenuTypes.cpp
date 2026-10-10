@@ -16,8 +16,7 @@
 
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-
-DEFINE_LOG_CATEGORY(LogObsidianDebugMenu);
+#include "Obsidian/ObsidianLogCategories.h"
 
 // ~ FObsidianDebugMenuContext
 
@@ -47,7 +46,7 @@ UAbilitySystemComponent* FObsidianDebugMenuContext::GetPlayerASC() const
 
 void FObsidianDebugMenuContext::Notify(const FString& Message) const
 {
-	UE_LOG(LogObsidianDebugMenu, Log, TEXT("%s"), *Message);
+	UE_LOG(ObLogDebugMenu, Log, TEXT("%s"), *Message);
 
 	if (StatusMessage)
 	{
@@ -223,14 +222,14 @@ UClass* FObsidianDebugClassPicker::LoadSelectedClass() const
 	UClass* LoadedClass = ClassPaths[SelectedIndex].TryLoadClass<UObject>();
 	if (LoadedClass == nullptr)
 	{
-		UE_LOG(LogObsidianDebugMenu, Warning, TEXT("Could not load class [%s]."), *ClassPaths[SelectedIndex].ToString());
+		UE_LOG(ObLogDebugMenu, Warning, TEXT("Could not load class [%s]."), *ClassPaths[SelectedIndex].ToString());
 		return nullptr;
 	}
 
 	const UClass* BaseClass = GatheredForClass.Get();
 	if ((BaseClass && LoadedClass->IsChildOf(BaseClass) == false) || LoadedClass->HasAnyClassFlags(CLASS_Abstract | CLASS_Deprecated))
 	{
-		UE_LOG(LogObsidianDebugMenu, Warning, TEXT("Class [%s] is abstract, deprecated or of a wrong type."), *GetNameSafe(LoadedClass));
+		UE_LOG(ObLogDebugMenu, Warning, TEXT("Class [%s] is abstract, deprecated or of a wrong type."), *GetNameSafe(LoadedClass));
 		return nullptr;
 	}
 

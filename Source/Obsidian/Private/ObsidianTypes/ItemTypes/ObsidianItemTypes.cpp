@@ -11,7 +11,7 @@
 #include "Core/ObsidianGameplayStatics.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 // ~ FObsidianItemGeneratedData
 
@@ -113,7 +113,7 @@ void FObsidianSlotDefinition::RemoveBannedItemCategory(const FGameplayTag& Banne
 #if !UE_BUILD_SHIPPING
 	if(BannedItemCategories.HasTag(BannedCategoryToRemove) == false)
 	{
-		UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist"
+		UE_LOG(ObLogItems, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist"
 							  " in BannedItemCategories."), *BannedCategoryToRemove.ToString());
 	}
 #endif
@@ -127,7 +127,7 @@ void FObsidianSlotDefinition::RemoveBannedItemCategories(const FGameplayTagConta
 	{
 		if(BannedItemCategories.HasTag(Tag) == false)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist"
+			UE_LOG(ObLogItems, Error, TEXT("Trying to remove Banned Equipment Tag [%s] but the Tag does not exist"
 							   " in BannedItemCategories."), *Tag.ToString());
 		}
 	}
@@ -181,7 +181,7 @@ FIntPoint FObsidianItemPosition::GetItemGridPosition(const bool bWarnIfNotFound)
 #if !UE_BUILD_SHIPPING
 	if(bWarnIfNotFound && GridPosition == FIntPoint::NoneValue)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Grid Location is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Grid Location is invalid in [%hs]."), __FUNCTION__);
 	}
 #endif
 	return GridPosition;
@@ -192,7 +192,7 @@ FGameplayTag FObsidianItemPosition::GetItemSlotTag(const bool bWarnIfNotFound) c
 #if !UE_BUILD_SHIPPING
 	if(bWarnIfNotFound && SlotTag == FGameplayTag::EmptyTag)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Slot Tag is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Slot Tag is invalid in [%hs]."), __FUNCTION__);
 	}
 #endif
 	return SlotTag;
@@ -427,7 +427,7 @@ void FObsidianActiveItemAffix::InitializeWithDynamic(const FObsidianDynamicItemA
 {
 	if (!InDynamicItemAffix)
 	{
-		UE_LOG(LogAffixes, Warning, TEXT("Initializing Affix failed, InDynamicItemAffix is invalid."))
+		UE_LOG(ObLogAffixes, Warning, TEXT("Initializing Affix failed, InDynamicItemAffix is invalid."))
 		return;
 	}
 
@@ -446,7 +446,7 @@ void FObsidianActiveItemAffix::InitializeWithStatic(const FObsidianStaticItemAff
 {
 	if (!InStaticItemAffix)
 	{
-		UE_LOG(LogAffixes, Warning, TEXT("Initializing Affix failed, InStaticItemAffix is invalid."))
+		UE_LOG(ObLogAffixes, Warning, TEXT("Initializing Affix failed, InStaticItemAffix is invalid."))
 		return;
 	}
 

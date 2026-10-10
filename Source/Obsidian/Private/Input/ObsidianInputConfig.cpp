@@ -8,7 +8,7 @@
 #endif // ~ With Editor
 
 // ~ Project
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianInputConfig::UObsidianInputConfig(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -27,7 +27,7 @@ const UInputAction* UObsidianInputConfig::FindNativeInputActionForTag(const FGam
 
 	if(bLogNotFound)
 	{
-		UE_LOG(LogObsidian, Display, TEXT("Could not find NativeInputAction for [%s] on ObsidianInputConfig [%s]"),
+		UE_LOG(ObLogInput, Warning, TEXT("Could not find NativeInputAction for [%s] on ObsidianInputConfig [%s]"),
 			*InputTag.ToString(), *GetNameSafe(this));
 	}
 	
@@ -46,7 +46,7 @@ const UInputAction* UObsidianInputConfig::FindAbilityInputActionForTag(const FGa
 
 	if(bLogNotFound)
 	{
-		UE_LOG(LogObsidian, Display, TEXT("Could not find AbilityInputAction for [%s] on ObsidianInputConfig [%s]"),
+		UE_LOG(ObLogInput, Warning, TEXT("Could not find AbilityInputAction for [%s] on ObsidianInputConfig [%s]"),
 			*InputTag.ToString(), *GetNameSafe(this));
 	}
 	

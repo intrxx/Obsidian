@@ -4,7 +4,7 @@
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
@@ -43,7 +43,7 @@ bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController
 		}
 		else
 		{
-			UE_LOG(LogObsidian, Warning, TEXT("Orb Of Enchantment could not be used on provided [%s] Instance."),
+			UE_LOG(ObLogCrafting, Warning, TEXT("Orb Of Enchantment could not be used on provided [%s] Instance."),
 				*GetNameSafe(UsingOntoInstance));
 		}
 	}

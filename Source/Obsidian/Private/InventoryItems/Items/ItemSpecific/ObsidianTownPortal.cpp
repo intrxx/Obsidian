@@ -7,6 +7,7 @@
 #include "NiagaraComponent.h"
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
@@ -58,7 +59,7 @@ void AObsidianTownPortal::StartPortalOpeningTimer()
 	{
 		World->GetTimerManager().SetTimer(PortalOpenedTimerHandle, FTimerDelegate::CreateWeakLambda(this, [this]()
 			{
-				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green, FString::Printf(TEXT("Portal has opened, you can teleport.")));
+				UE_LOG(ObLogItems, Verbose, TEXT("Portal has opened, you can teleport."));
 
 				bCanTeleport = true;
 				bIsOpening = false;

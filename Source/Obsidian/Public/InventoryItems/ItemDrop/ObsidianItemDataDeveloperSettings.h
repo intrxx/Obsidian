@@ -11,8 +11,6 @@
 
 class UObsidianItemDataConfig;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogItemData, Log, All);
-
 USTRUCT()
 struct FObsidianWeightsWrapper
 {

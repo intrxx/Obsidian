@@ -5,6 +5,7 @@
 // ~ Core
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Components/PoseableMeshComponent.h"
 
 AObsidianDummyMeshActor::AObsidianDummyMeshActor(const FObjectInitializer& ObjectInitializer)
@@ -38,13 +39,13 @@ void AObsidianDummyMeshActor::BeginPlay()
 	{
 		PoseableMeshComp->CopyPoseFromSkeletalComponent(DeadMeshToCopy);
 		
-		UE_LOG(LogTemp, Display, TEXT("Spawned Dummy Mesh for [%s]."), *GetNameSafe(this));
+		UE_LOG(ObLogCharacter, Verbose, TEXT("Spawned Dummy Mesh for [%s]."), *GetNameSafe(this));
 	}
 }
 
 void AObsidianDummyMeshActor::Destroyed()
 {
-	UE_LOG(LogTemp, Display, TEXT("[%s] Dummy Mesh Destroyed."), *GetNameSafe(this));
+	UE_LOG(ObLogCharacter, Verbose, TEXT("[%s] Dummy Mesh Destroyed."), *GetNameSafe(this));
 	
 	Super::Destroyed();
 }

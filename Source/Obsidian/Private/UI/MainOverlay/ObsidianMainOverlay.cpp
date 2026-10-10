@@ -14,7 +14,7 @@
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "Components/CanvasPanel.h"
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
@@ -277,7 +277,7 @@ UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlay(UObsidianItemLabel
 {
 	if (ItemLabelWidget == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Passed ItemLabelWidget is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogUIMainOverlay, Error, TEXT("Passed ItemLabelWidget is invalid in [%hs]."), __FUNCTION__);
 		return nullptr;
 	}
 	

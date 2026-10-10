@@ -18,8 +18,6 @@ class UObsidianPlayerStashComponent;
 class UObsidianInventoryItemInstance;
 class UObsidianInventoryItemDefinition;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogItemContainer, Log, All);
-
 /**
  * 
  */

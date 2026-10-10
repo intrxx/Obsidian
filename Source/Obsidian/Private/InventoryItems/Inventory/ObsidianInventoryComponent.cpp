@@ -7,6 +7,7 @@
 #include "Net/UnrealNetwork.h"
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
@@ -17,8 +18,6 @@
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-
-DEFINE_LOG_CATEGORY(LogInventory);
 
 UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -276,7 +275,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	if(StacksAvailableToAdd == 0)
 	{
 		//TODO(intrxx) We can no longer add this item to the inventory, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
+		UE_LOG(ObLogInventory, Verbose, TEXT("Can no longer add this item to inventory!"));
 		if(!OutAddedToInstances.IsEmpty())
 		{
 			Result.bActionSuccessful = true;
@@ -290,7 +289,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinition(cons
 	if(CanFitItemDefinition(AvailablePosition, ItemDef) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Inventory is full!")));
+		UE_LOG(ObLogInventory, Verbose, TEXT("Inventory is full!"));
 		if(!OutAddedToInstances.IsEmpty())
 		{
 			Result.bActionSuccessful = true;
@@ -342,7 +341,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 		StacksAvailableToAdd = GetNumberOfStacksAvailableToAddToInventory(ItemDef, Result.StacksLeft);
 		if(StacksAvailableToAdd == 0)
 		{
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
+			UE_LOG(ObLogInventory, Verbose, TEXT("Can no longer add this item to inventory!"));
 			return Result;
 		}
 
@@ -355,7 +354,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemDefinitionToSpe
 	if(CanFitItemDefinitionToSpecifiedSlot(ToGridSlot, ItemDef) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
+		UE_LOG(ObLogInventory, Verbose, TEXT("Inventory is full at specified slot!"));
 		return Result;
 	}
 	
@@ -416,7 +415,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 	if(StacksAvailableToAdd == 0)
 	{
 		//TODO(intrxx) We can no longer add this item to the inventory, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
+		UE_LOG(ObLogInventory, Verbose, TEXT("Can no longer add this item to inventory!"));
 		return Result;
 	}
 	
@@ -424,7 +423,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstance(UObsid
 	if(CheckAvailablePosition(AvailablePosition, InstanceToAdd->GetItemGridSpan()) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full!")));
+		UE_LOG(ObLogInventory, Verbose, TEXT("Inventory is full!"));
 		return Result;
 	}
 
@@ -467,7 +466,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 		if(StacksAvailableToAdd == 0)
 		{
 			//TODO(intrxx) We can no longer add this item to the inventory, add voice over?
-			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta,FString::Printf(TEXT("Can no longer add this item to inventory!")));
+			UE_LOG(ObLogInventory, Verbose, TEXT("Can no longer add this item to inventory!"));
 			return Result;
 		}
 		
@@ -480,7 +479,7 @@ FObsidianItemOperationResult UObsidianInventoryComponent::AddItemInstanceToSpeci
 	if(CheckSpecifiedPosition(InstanceToAdd->GetItemGridSpan(), ToGridSlot) == false)
 	{
 		//TODO(intrxx) Inventory is full, add voice over?
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Magenta, FString::Printf(TEXT("Inventory is full at specified slot!")));
+		UE_LOG(ObLogInventory, Verbose, TEXT("Inventory is full at specified slot!"));
 		return Result;
 	}
 
@@ -531,7 +530,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 	{
 		if(!IsValid(Instance))
 		{
-			UE_LOG(LogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryComponent::TryAddingStacksToExistingItem."));
+			UE_LOG(ObLogInventory, Error, TEXT("Instance is invalid in UObsidianInventoryComponent::TryAddingStacksToExistingItem."));
 			continue;
 		}
 		
@@ -563,7 +562,7 @@ FObsidianAddingStacksResult UObsidianInventoryComponent::TryAddingStacksToExisti
 			{
 				continue;
 			}
-			UE_LOG(LogTemp, Warning, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
+			UE_LOG(ObLogInventory, Verbose, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
 			
 			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
 			InventoryGrid.ChangedEntryStacks(Instance, CurrentStackCount);

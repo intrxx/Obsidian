@@ -15,6 +15,7 @@
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 // ~ FObsidianEquipmentSlotDefinition
 
@@ -108,10 +109,6 @@ TArray<UObsidianInventoryItemInstance*> FObsidianEquipmentList::GetEquippedWeapo
 
 UObsidianInventoryItemInstance* FObsidianEquipmentList::GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const
 {
-	for (auto pair : SlotToEquipmentMap)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Item: [%s] At: [%s]"), *pair.Value->GetItemDebugName(), *pair.Key.ToString());
-	}
 	if (UObsidianInventoryItemInstance* const* Item = SlotToEquipmentMap.Find(SlotTag))
 	{
 		return *Item;
@@ -453,7 +450,7 @@ void FObsidianEquipmentList::PreReplicatedRemove(const TArrayView<int32> Removed
 		
 		BroadcastChangeMessage(Entry, FGameplayTag::EmptyTag, Entry.EquipmentSlotTag, EObsidianEquipmentChangeType::ECT_ItemUnequipped);
 
-		UE_LOG(LogEquipment, Display, TEXT("Replicated un-equipping [%s] item."), *Entry.Instance->GetItemDebugName());
+		UE_LOG(ObLogEquipment, Verbose, TEXT("Replicated un-equipping [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -465,7 +462,7 @@ void FObsidianEquipmentList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		if(Entry.Instance == nullptr)
 		{
 			// The Item Instance subobject did not arrive yet, PostReplicatedChange will add the Item once it gets resolved.
-			UE_LOG(LogEquipment, Display, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
+			UE_LOG(ObLogEquipment, Verbose, TEXT("Replicated Item at index [%d] has no Instance yet, deferring."), Index);
 			continue;
 		}
 
@@ -474,7 +471,7 @@ void FObsidianEquipmentList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 		
 		BroadcastChangeMessage(Entry, Entry.EquipmentSlotTag, FGameplayTag::EmptyTag, EObsidianEquipmentChangeType::ECT_ItemEquipped);
 
-		UE_LOG(LogEquipment, Display, TEXT("Replicated equipping [%s] item."), *Entry.Instance->GetItemDebugName());
+		UE_LOG(ObLogEquipment, Verbose, TEXT("Replicated equipping [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -511,7 +508,7 @@ void FObsidianEquipmentList::PostReplicatedChange(const TArrayView<int32> Change
 		}
 		Entry.LastObservedEquipmentSlotTag = Entry.EquipmentSlotTag;
 
-		UE_LOG(LogEquipment, Display, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
+		UE_LOG(ObLogEquipment, Verbose, TEXT("Replicated changing [%s] item."), *Entry.Instance->GetItemDebugName());
 	}
 }
 
@@ -558,21 +555,21 @@ UObsidianAffixAbilitySet* FObsidianEquipmentList::GetDefaultAffixSet()
 {
 	if (OwnerComponent == nullptr)
 	{
-		UE_LOG(LogAffixes, Error, TEXT("OwnerComponent is nullptr in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogAffixes, Error, TEXT("OwnerComponent is nullptr in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 	
 	const UWorld* World = OwnerComponent->GetWorld();
 	if (World == nullptr)
 	{
-		UE_LOG(LogAffixes, Error, TEXT("World is nullptr in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogAffixes, Error, TEXT("World is nullptr in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 	
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
-		UE_LOG(LogAffixes, Error, TEXT("GameInstance is nullptr in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogAffixes, Error, TEXT("GameInstance is nullptr in [%hs]"), __FUNCTION__);
 		return nullptr;
 	}
 	

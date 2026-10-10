@@ -8,6 +8,7 @@
 #endif
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -51,11 +52,11 @@ void UOInventoryItemFragment_Affixes::PreSave(FObjectPreSaveContext SaveContext)
 	{
 		if (Issue.Severity == EMessageSeverity::Error)
 		{
-			UE_LOG(LogTemp, Error, TEXT("Issue: %s"), *Issue.Message.ToString());
+			UE_LOG(ObLogAffixes, Error, TEXT("[%s] Data Validation issue: %s"), *GetNameSafe(this), *Issue.Message.ToString());
 		}
 		else if (Issue.Severity == EMessageSeverity::Warning)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Issue: %s"), *Issue.Message.ToString());
+			UE_LOG(ObLogAffixes, Warning, TEXT("[%s] Data Validation issue: %s"), *GetNameSafe(this), *Issue.Message.ToString());
 		}
 	}
 #endif

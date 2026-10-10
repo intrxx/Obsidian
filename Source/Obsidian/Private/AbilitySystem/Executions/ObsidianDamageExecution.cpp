@@ -6,6 +6,7 @@
 #include "AbilitySystemComponent.h"
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -211,10 +212,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 			UObsidianCommonAttributeSet::GetIncomingDamageAttribute(), EGameplayModOp::Override, 0.0f);
 		OutExecutionOutput.AddOutputModifier(ModifierEvaluatedData);
 		
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-			FString::Printf(TEXT("The hit was evaded. Chance to hit was: [%f]. New damage: [0]"), ChanceToHit));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("The hit was evaded. Chance to hit was: [%f]. New damage: [0]"), ChanceToHit);
 		
 		return;
 	}
@@ -241,11 +239,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * PhysicalDamage);
 		PhysicalDamage -= RawPhysicalDamageMitigation;
 	
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-			FString::Printf(TEXT("Reducing raw physical damage. Damage reduced: [%f]. New Physical damage: [%f]."),
-				RawPhysicalDamageMitigation, PhysicalDamage));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing raw physical damage. Damage reduced: [%f]. New Physical damage: [%f]."), RawPhysicalDamageMitigation, PhysicalDamage);
 		// ~~~ End of Armor Raw Physical Damage Mitigation
 
 		FullDamage += PhysicalDamage;
@@ -267,11 +261,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().FireResistanceDef, EvaluationParameters, FireResistance);
 		FireDamage *= (100.0f - FireResistance) / 100.0f;
 
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-			FString::Printf(TEXT("Reducing fire damage by resistance [%f]. New Fire damage: [%f]."),
-				FireResistance, FireDamage));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing fire damage by resistance [%f]. New Fire damage: [%f]."), FireResistance, FireDamage);
 		// ~~~ End of Fire Resistance Damage Mitigation
 
 		FullDamage += FireDamage;
@@ -293,11 +283,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().LightningResistanceDef, EvaluationParameters, LightningResistance);
 		LightningDamage *= (100.0f - LightningResistance) / 100.0f;
 
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-			FString::Printf(TEXT("Reducing lightning damage by resistance [%f]. New Lightning damage: [%f]."),
-				LightningResistance, LightningDamage));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing lightning damage by resistance [%f]. New Lightning damage: [%f]."), LightningResistance, LightningDamage);
 		// ~~~ End of Lightning Resistance Damage Mitigation
 
 		FullDamage += LightningDamage;
@@ -319,11 +305,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ColdResistanceDef, EvaluationParameters, ColdResistance);
 		ColdDamage *= (100.0f - ColdResistance) / 100.0f;
 
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-			FString::Printf(TEXT("Reducing cold damage by resistance [%f]. New Cold damage: [%f]."),
-				ColdResistance, ColdDamage));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing cold damage by resistance [%f]. New Cold damage: [%f]."), ColdResistance, ColdDamage);
 		// ~~~ End of Cold Resistance Damage Mitigation
 
 		FullDamage += ColdDamage;
@@ -345,11 +327,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ColdResistanceDef, EvaluationParameters, ChaosResistance);
 		ChaosDamage *= (100.0f - ChaosResistance) / 100.0f;
 
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-			FString::Printf(TEXT("Reducing chaos damage by resistance [%f]. New Chaos damage: [%f]."),
-				ChaosResistance, ChaosDamage));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing chaos damage by resistance [%f]. New Chaos damage: [%f]."), ChaosResistance, ChaosDamage);
 		// ~~~ End of Chaos Resistance Damage Mitigation
 
 		FullDamage += ChaosDamage;
@@ -372,11 +350,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 
 		FullDamage -= FullDamage * SpellSuppressionMagnitude / 100.0f;
 
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Turquoise,
-			FString::Printf(TEXT("Suppressing spell damage. Percent Damage suppressed: [%f%%]. New damage: [%f]."),
-				SpellSuppressionMagnitude, FullDamage));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("Suppressing spell damage. Percent Damage suppressed: [%f%%]. New damage: [%f]."), SpellSuppressionMagnitude, FullDamage);
 	}
 	// ~ End of Suppression Spell Damage Calculation
 	
@@ -397,10 +371,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		CriticalStrikeDamageMultiplier = FMath::Max<float>(CriticalStrikeDamageMultiplier, 0.0f);
 		
 		ModifiedDamage = ModifiedDamage * (CriticalStrikeDamageMultiplier / 100.0f);
-#if !UE_BUILD_SHIPPING
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Blue,
-			FString::Printf(TEXT("Critical Strike! New damage: [%f]."), ModifiedDamage));
-#endif
+		UE_LOG(ObLogDamage, Verbose, TEXT("Critical Strike! New damage: [%f]."), ModifiedDamage);
 	}
 	// ~ End of Critical Strikes Calculation
 	

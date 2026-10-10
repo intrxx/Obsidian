@@ -7,6 +7,7 @@
 #include <Components/OverlaySlot.h>
 
 #include "UI/InventoryItems/Items/ObsidianItem.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObsidianSlot_ItemSlot::NativePreConstruct()
 {
@@ -27,7 +28,7 @@ void UObsidianSlot_ItemSlot::InitializeSlot(const FGameplayTag& InSlotTag, const
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Attempting to set SlotTag but it has already been set."));
+		UE_LOG(ObLogItems, Warning, TEXT("Attempting to set SlotTag but it has already been set."));
 	}
 
 	if(!SisterSlotTag.IsValid()) // Slot Tag has been already set in Blueprint
@@ -36,7 +37,7 @@ void UObsidianSlot_ItemSlot::InitializeSlot(const FGameplayTag& InSlotTag, const
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Attempting to set SisterSlotTag but it has already been set."));
+		UE_LOG(ObLogItems, Warning, TEXT("Attempting to set SisterSlotTag but it has already been set."));
 	}
 }
 

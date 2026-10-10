@@ -5,6 +5,7 @@
 // ~ Core
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
@@ -100,7 +101,7 @@ void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidian
 	{
 		if(Tag.MatchesTag(SpecialEffectTag)) // "UI.EffectData.Effect.Special"
 		{
-			UE_LOG(LogTemp, Error, TEXT("Effect [%s] is applied to enemy."), *Tag.GetTagName().ToString());
+			UE_LOG(ObLogUI, Verbose, TEXT("Special Effect [%s] is applied to enemy."), *Tag.GetTagName().ToString());
 
 			HandleSpecialEffect(Tag);
 

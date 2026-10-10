@@ -7,6 +7,7 @@
 #include <GameplayEffectTypes.h>
 
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 #include "ObsidianItemTypes.generated.h"
@@ -83,7 +84,7 @@ namespace ObsidianDefaultStackCounts
 			return LimitCount;
 		}
 		
-		UE_LOG(LogTemp, Error, TEXT("Provided Stack Count Gameplay Tag is invalid, returning 0."));
+		UE_LOG(ObLogItems, Error, TEXT("Provided Stack Count Gameplay Tag is invalid, returning 0."));
 		return 0;
 	}
 }

@@ -8,7 +8,7 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void FObsidianAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle)
 {
@@ -92,7 +92,7 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 
 		if(!IsValid(AbilityToGrant.Ability))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Ability [%d] on Ablity Set [%s] is not valid."), AbilityIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Granted Gameplay Ability [%d] on Ablity Set [%s] is not valid."), AbilityIndex, *GetNameSafe(this));
 			continue;
 		}
 
@@ -119,7 +119,7 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 
 		if(!IsValid(EffectToGrant.GameplayEffect))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Effect [%d] on Ablity Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Granted Gameplay Effect [%d] on Ablity Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
 			continue;	
 		}
 		
@@ -162,7 +162,7 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 
 		if(!IsValid(SetToGrant.AttributeSet))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Attribute Set [%d] on Ablity Set [%s] is not valid."), SetIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Granted Attribute Set [%d] on Ablity Set [%s] is not valid."), SetIndex, *GetNameSafe(this));
 			continue;	
 		}
 
@@ -194,7 +194,7 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 
 		if(!IsValid(AbilityToGrant.Ability))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Ability [%d] on Ablity Set [%s] is not valid."), AbilityIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Granted Gameplay Ability [%d] on Ablity Set [%s] is not valid."), AbilityIndex, *GetNameSafe(this));
 			continue;
 		}
 
@@ -221,7 +221,7 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 
 		if(!IsValid(EffectToGrant.GameplayEffect))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Gameplay Effect [%d] on Ablity Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Granted Gameplay Effect [%d] on Ablity Set [%s] is not valid."), EffectIndex, *GetNameSafe(this));
 			continue;	
 		}
 		
@@ -264,7 +264,7 @@ void UObsidianAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* O
 
 		if(!IsValid(SetToGrant.AttributeSet))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("Granted Attribute Set [%d] on Ablity Set [%s] is not valid."), SetIndex, *GetNameSafe(this));
+			UE_LOG(ObLogAbilitySystem, Error, TEXT("Granted Attribute Set [%d] on Ablity Set [%s] is not valid."), SetIndex, *GetNameSafe(this));
 			continue;	
 		}
 

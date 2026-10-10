@@ -55,8 +55,6 @@ public:
 	TSoftObjectPtr<UObsidianTreasureList> TreasureList;
 };
 
-DECLARE_LOG_CATEGORY_EXTERN(LogDropComponent, Log, All);
-
 /**
  * Broadcasts when the DropItem logic is finished, caution, for now this broadcasts with true after successfully
  * requesting some items to drop to the manager, not when the items are actually dropped as the work is passed to the manager.

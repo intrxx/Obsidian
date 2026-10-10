@@ -13,8 +13,7 @@
 #include "Game/Save/ObsidianSharedStashSaveGame.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
-
-DEFINE_LOG_CATEGORY(LogObsidianSaveSystem)
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::GetCurrentHeroSaveGameObject()
 {
@@ -39,7 +38,7 @@ bool UObsidianSaveGameSubsystem::FillSaveInfosFromMasterSave(const bool bOnline,
 	{
 		if (ObsidianMasterSaveGame == nullptr)
 		{
-			UE_LOG(LogObsidianSaveSystem, Error, TEXT("ObsidianMasterSaveGame isn't loaded yet in [%hs],"
+			UE_LOG(ObLogSaveSystem, Error, TEXT("ObsidianMasterSaveGame isn't loaded yet in [%hs],"
 											 " need to load or create it now!"), __FUNCTION__);
 			LoadOrCreateMasterSaveObject(LocalPlayer);
 		}
@@ -54,7 +53,7 @@ void UObsidianSaveGameSubsystem::LoadOrCreateMasterSaveObject(const UObsidianLoc
 {
 	if (ensure(LocalPlayer))
 	{
-		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Creating or loading existing Master Save Object for [%s]. "),
+		UE_LOG(ObLogSaveSystem, Log, TEXT("Creating or loading existing Master Save Object for [%s]. "),
 			*GetNameSafe(LocalPlayer));
 		
 		ULocalPlayerSaveGame* SaveGame = UObsidianMasterSaveGame::LoadOrCreateSaveGameForLocalPlayer(
@@ -65,7 +64,7 @@ void UObsidianSaveGameSubsystem::LoadOrCreateMasterSaveObject(const UObsidianLoc
 		return;
 	}
 	
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to create or load Master Save Object for LocalPlayer!"));
+	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to create or load Master Save Object for LocalPlayer!"));
 }
 
 void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(const UObsidianLocalPlayer* LocalPlayer,
@@ -73,7 +72,7 @@ void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(cons
 {
 	if (ensure(LocalPlayer))
 	{
-		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Creating or loading existing [%s] Shared Stash Data for [%s]."),
+		UE_LOG(ObLogSaveSystem, Log, TEXT("Creating or loading existing [%s] Shared Stash Data for [%s]."),
 			bOnline ? TEXT("Online") : TEXT("Offline"), *GetNameSafe(LocalPlayer));
 
 		bool bSuccess = false;
@@ -102,7 +101,7 @@ void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(cons
 		return;
 	}
 	
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to create or load Master Save Object for LocalPlayer!"));
+	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to create or load Master Save Object for LocalPlayer!"));
 }
 
 void UObsidianSaveGameSubsystem::RegisterSaveable(AActor* SaveActor)
@@ -122,7 +121,7 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 {
 	if (ensure(LocalPlayer) && ensure(CurrentHeroSaveGame) && ensure(ObsidianMasterSaveGame))
 	{
-		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Save for [%s]. "), *GetNameSafe(LocalPlayer));
+		UE_LOG(ObLogSaveSystem, Log, TEXT("Requested Save for [%s]. "), *GetNameSafe(LocalPlayer));
 		
 		for (TWeakObjectPtr<AActor> SaveActor : SaveableActors)
 		{
@@ -154,7 +153,7 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 		}
 		else
 		{
-			UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to update Save Info in Master Save."));
+			UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to update Save Info in Master Save."));
 		}
 		
 			
@@ -167,7 +166,7 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 		return;
 	}
 
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to Save for invalid LocalPlayer, CurrentHeroSaveGame or "
+	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to Save for invalid LocalPlayer, CurrentHeroSaveGame or "
 		"ObsidianMasterSaveGame!"));
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
@@ -177,7 +176,7 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const UObsidianLocal
 {
 	if (ensure(LocalPlayer) && ensure(ObsidianMasterSaveGame))
 	{
-		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Initial Hero Save for [%s]. "),
+		UE_LOG(ObLogSaveSystem, Log, TEXT("Requested Initial Hero Save for [%s]. "),
 			*GetNameSafe(LocalPlayer));
 		
 		const FObsidianAddHeroSaveResult Result = ObsidianMasterSaveGame->AddHero(bOnline, HeroInitializationSaveData);
@@ -200,7 +199,7 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const UObsidianLocal
 		return;
 	}
 	
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to perform Initial Hero Save for invalid Local Player."));
+	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to perform Initial Hero Save for invalid Local Player."));
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
@@ -209,14 +208,14 @@ void UObsidianSaveGameSubsystem::AsyncSaveSharedStashData(const AObsidianPlayerC
 {
 	if (PlayerController == nullptr)
 	{
-		UE_LOG(LogObsidianSaveSystem, Error, TEXT("Provided PlayerController is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogSaveSystem, Error, TEXT("Provided PlayerController is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
 	UObsidianPlayerStashComponent* PlayerStashComponent = PlayerController->GetPlayerStashComponent();
 	if (PlayerStashComponent == nullptr)
 	{
-		UE_LOG(LogObsidianSaveSystem, Error, TEXT("PlayerStashComponent is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogSaveSystem, Error, TEXT("PlayerStashComponent is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
@@ -248,7 +247,7 @@ UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::CreateHeroSaveGameObject(cons
 {
 	if (ensure(LocalPlayer))
 	{
-		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Creating Save Object for [%s]. "),
+		UE_LOG(ObLogSaveSystem, Log, TEXT("Creating Save Object for [%s]. "),
 			*GetNameSafe(LocalPlayer));
 		
 		if (ULocalPlayerSaveGame* LocalSaveGame = UObsidianHeroSaveGame::CreateNewSaveGameForLocalPlayer(
@@ -261,7 +260,7 @@ UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::CreateHeroSaveGameObject(cons
 		}
 	}
 
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to create Save Object for LocalPlayer!"));
+	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to create Save Object for LocalPlayer!"));
 	return nullptr;
 }
 
@@ -281,7 +280,7 @@ void UObsidianSaveGameSubsystem::RequestLoadGame(const UObsidianLocalPlayer* Loc
 {
 	if (ensure(LocalPlayer))
 	{
-		UE_LOG(LogObsidianSaveSystem, Display, TEXT("Requested Load Game for [%s]. "),
+		UE_LOG(ObLogSaveSystem, Log, TEXT("Requested Load Game for [%s]. "),
 			*GetNameSafe(LocalPlayer));
 		
 		if (bAsync)
@@ -295,7 +294,7 @@ void UObsidianSaveGameSubsystem::RequestLoadGame(const UObsidianLocalPlayer* Loc
 		return;
 	}
 
-	UE_LOG(LogObsidianSaveSystem, Error, TEXT("Failed to perform load Hero Save with invalid Local Player. "));
+	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to perform load Hero Save with invalid Local Player. "));
 	OnLoadingFinishedDelegate.Broadcast(nullptr, false);
 }
 
@@ -321,7 +320,7 @@ bool UObsidianSaveGameSubsystem::DeleteHeroSave(const uint16 SaveID, const bool 
 		}
 		else
 		{
-			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s],"
+			UE_LOG(ObLogSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s],"
 				" could not be deleted on Master Save Object."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID,
 				*SlotNameToDelete)
 		}
@@ -335,12 +334,12 @@ bool UObsidianSaveGameSubsystem::DeleteHeroSave(const uint16 SaveID, const bool 
 	{
 		if (!UGameplayStatics::DoesSaveGameExist(SlotNameToDelete, UserIndex))
 		{
-			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s] does not exist,"
+			UE_LOG(ObLogSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s] does not exist,"
 				" and could not be deleted."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID, *SlotNameToDelete)
 		}
 		else
 		{
-			UE_LOG(LogObsidianSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s], could not be deleted."),
+			UE_LOG(ObLogSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s], could not be deleted."),
 				bOnline ? TEXT("Online") : TEXT("Offline"), SaveID, *SlotNameToDelete)
 		}
 	}

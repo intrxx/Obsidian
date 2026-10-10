@@ -5,7 +5,7 @@
 #include <Components/CanvasPanel.h>
 #include <Components/CanvasPanelSlot.h>
 
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlot_GridSlot.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
@@ -170,7 +170,7 @@ void UObsidianGridPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 {
 	if (ItemWidget == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("ItemWidget to Add Item Widget to Grid is invalid in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("ItemWidget to Add Item Widget to Grid is invalid in [%hs]"),
 			__FUNCTION__);
 		return;
 	}
@@ -178,7 +178,7 @@ void UObsidianGridPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 	const FIntPoint ItemGridPosition = ItemWidgetData.ItemPosition.GetItemGridPosition();
 	if (ItemGridPosition == FIntPoint::NoneValue)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Desired Grid Slot Position to Add Item Widget to Grid is invalid in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("Desired Grid Slot Position to Add Item Widget to Grid is invalid in [%hs]"),
 			__FUNCTION__);
 		return;
 	}
@@ -202,13 +202,13 @@ void UObsidianGridPanel::OnGridSlotHover(UObsidianSlot_GridSlot* AffectedSlot, c
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
 	if (AffectedSlot == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
@@ -286,13 +286,13 @@ void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianSlot_GridS
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
 	if (AffectedSlot == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
@@ -305,7 +305,7 @@ void UObsidianGridPanel::OnGridSlotLeftMouseButtonDown(const UObsidianSlot_GridS
 	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridPositionPressed);
 	if (SlotData == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
+		UE_LOG(ObLogItems, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
 			*GridPositionPressed.ToString(), __FUNCTION__)
 		return;
 	}
@@ -335,13 +335,13 @@ void UObsidianGridPanel::OnGridSlotRightMouseButtonDown(const UObsidianSlot_Grid
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("InventoryItemsWidgetController is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
 	if (AffectedSlot == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
+		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
@@ -351,7 +351,7 @@ void UObsidianGridPanel::OnGridSlotRightMouseButtonDown(const UObsidianSlot_Grid
 	const FObsidianGridSlotData* SlotData = GetSlotDataAtGridPosition(GridPositionPressed);
 	if (SlotData == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
+		UE_LOG(ObLogItems, Error, TEXT("Could not find SlotData for [%s] in [%hs]."),
 			*GridPositionPressed.ToString(), __FUNCTION__)
 		return;
 	}
@@ -419,7 +419,7 @@ void UObsidianGridPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWi
 			UObsidianItem* SlottedItemWidget = SlotData->ItemWidget;
 			if (SlottedItemWidget == nullptr)
 			{
-				UE_LOG(LogTemp, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
+				UE_LOG(ObLogItems, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
 					*GridPositionToClear.ToString());
 				return;
 			}

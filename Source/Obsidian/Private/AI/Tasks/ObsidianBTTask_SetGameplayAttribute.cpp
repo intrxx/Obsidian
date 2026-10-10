@@ -8,6 +8,7 @@
 #include "AbilitySystemComponent.h"
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianBTTask_SetGameplayAttribute::UObsidianBTTask_SetGameplayAttribute()
 {
@@ -34,7 +35,7 @@ EBTNodeResult::Type UObsidianBTTask_SetGameplayAttribute::ExecuteTask(UBehaviorT
 	{
 		for(FGameplayAttributeSet Modifier : Modifiers)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Attribute: [%s], Magnitude: [%f]"), *Modifier.GameplayAttribute.GetName(), Modifier.Magnitude.Value);
+			UE_LOG(ObLogAI, Verbose, TEXT("Setting Attribute: [%s], Magnitude: [%f]"), *Modifier.GameplayAttribute.GetName(), Modifier.Magnitude.Value);
 			UGameplayEffect* GameplayEffect = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("Set Gameplay Attributes")));
 			GameplayEffect->DurationPolicy = DurationPolicy;
 			if(DurationPolicy == EGameplayEffectDurationType::HasDuration)

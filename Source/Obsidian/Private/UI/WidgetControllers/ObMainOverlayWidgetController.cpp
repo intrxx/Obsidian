@@ -10,8 +10,7 @@
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-
-DEFINE_LOG_CATEGORY(LogWidgetController_MainOverlay)
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 {
@@ -20,7 +19,7 @@ void UObMainOverlayWidgetController::OnWidgetControllerSetupCompleted()
 	AObsidianPlayerController* PlayerController = OwnerPlayerController.Get();
 	if (PlayerController == nullptr)
 	{
-		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("PlayerController is invalid in [%hs]."),
+		UE_LOG(ObLogUIMainOverlay, Error, TEXT("PlayerController is invalid in [%hs]."),
 			__FUNCTION__);
 		return;
 	}
@@ -56,7 +55,7 @@ FObsidianSpecialResourceVisuals UObMainOverlayWidgetController::GetSpecialResour
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{
-				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+				UE_LOG(ObLogUIMainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 					__FUNCTION__);
 				return FObsidianSpecialResourceVisuals();
 			}
@@ -70,14 +69,14 @@ void UObMainOverlayWidgetController::HandleBindingCallbacks(UObsidianAbilitySyst
 {
 	if(ObsidianASC == nullptr)
 	{
-		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("ObsidianASC is invalid in [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogUIMainOverlay, Error, TEXT("ObsidianASC is invalid in [%hs]."), __FUNCTION__);
 		return;
 	}
 	
 	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
 	if (HeroAttributesComp == nullptr)
 	{
-		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+		UE_LOG(ObLogUIMainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 			__FUNCTION__);
 		return;
 	}
@@ -124,7 +123,7 @@ void UObMainOverlayWidgetController::SetInitialAttributeValues() const
 	const UObsidianHeroAttributesComponent* HeroAttributesComp = OwnerAttributesComponent.Get();
 	if (HeroAttributesComp == nullptr)
 	{
-		UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+		UE_LOG(ObLogUIMainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 			__FUNCTION__);
 		return;
 	}
@@ -156,7 +155,7 @@ void UObMainOverlayWidgetController::SetInitialStaggerMeter() const
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{
-				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+				UE_LOG(ObLogUIMainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 					__FUNCTION__);
 				return;
 			}
@@ -178,7 +177,7 @@ void UObMainOverlayWidgetController::SetInitialExperienceValues()
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{
-				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+				UE_LOG(ObLogUIMainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 					__FUNCTION__);
 				return;
 			}
@@ -209,7 +208,7 @@ void UObMainOverlayWidgetController::SetInitialStaminaValues()
 					OwnerPlayerController.Get()->GetPawn());
 			if (HeroAttributesComp == nullptr)
 			{
-				UE_LOG(LogWidgetController_MainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
+				UE_LOG(ObLogUIMainOverlay, Error, TEXT("HeroAttributesComp is invalid in [%hs]."),
 					__FUNCTION__);
 				return;
 			}

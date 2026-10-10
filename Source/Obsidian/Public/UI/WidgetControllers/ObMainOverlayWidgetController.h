@@ -26,8 +26,6 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnUpdateEnemyTargetForHealthBar, A
 
 DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraWidgetDestructionInfoReceived, const FGameplayTag, WidgetTag);
 
-DECLARE_LOG_CATEGORY_EXTERN(LogWidgetController_MainOverlay, Log, All);
-
 /**
  * 
  */

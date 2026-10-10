@@ -6,7 +6,7 @@
 #include "CommonTextBlock.h"
 
 // ~ Project
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)
 {
@@ -26,7 +26,7 @@ void UOStackingDurationalEffectInfo::UpdateStackingInfoWidget(const int32 NewCou
 	}
 	else if(EffectDurationPolicy == EGameplayEffectStackingDurationPolicy::NeverRefresh)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("EGameplayEffectStackingDurationPolicy::NeverRefresh is not implemented on [%s]"), *GetNameSafe(this));
+		UE_LOG(ObLogUIMainOverlay, Error, TEXT("EGameplayEffectStackingDurationPolicy::NeverRefresh is not implemented on [%s]"), *GetNameSafe(this));
 	}
 }
 
@@ -89,7 +89,7 @@ void UOStackingDurationalEffectInfo::HandleEffectExpiration()
 		UpdateStackingInfoWidget(EffectStackCount-1);
 		break;
 	case EGameplayEffectStackingExpirationPolicy::RefreshDuration:
-		UE_LOG(LogObsidian, Error, TEXT("EGameplayEffectStackingExpirationPolicy::RefreshDuration is not implemented on [%s]"), *GetNameSafe(this));
+		UE_LOG(ObLogUIMainOverlay, Error, TEXT("EGameplayEffectStackingExpirationPolicy::RefreshDuration is not implemented on [%s]"), *GetNameSafe(this));
 		break;
 	default:
 		break;

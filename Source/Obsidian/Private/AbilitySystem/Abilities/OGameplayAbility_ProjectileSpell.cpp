@@ -8,8 +8,6 @@
 #include "Combat/Projectile/ObsidianProjectileBase.h"
 #include "Obsidian/ObsidianMacros.h"
 
-DEFINE_LOG_CATEGORY(LogProjectileAbility)
-
 UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

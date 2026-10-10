@@ -12,7 +12,7 @@
 // ~ Project
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "Core/FunctionLibraries/ObsidianAbilitySystemFunctionLibrary.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianBTDecorator_CanActivateAbility::UObsidianBTDecorator_CanActivateAbility()
 {
@@ -33,14 +33,14 @@ bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehavi
 	const AAIController* AIController = OwnerComp.GetAIOwner();
 	if(AIController == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("AI Controller is invalid on [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogAI, Error, TEXT("AI Controller is invalid on [%hs]."), __FUNCTION__);
 		return false;
 	}
 
 	const UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
 	if(BlackboardComponent == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("Blackboard Component is invalid on [%hs]."), __FUNCTION__);
+		UE_LOG(ObLogAI, Error, TEXT("Blackboard Component is invalid on [%hs]."), __FUNCTION__);
 		return false;
 	}
 
@@ -64,7 +64,7 @@ bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehavi
 #if !UE_BUILD_SHIPPING
 				if(bDebugEnabled)
 				{
-					UE_LOG(LogObsidian, Display, TEXT("Owner: [%s] is able to activate Ability: [%s]"), *GetNameSafe(ObsidianEnemy), *GetNameSafe(Ability));
+					UE_LOG(ObLogAI, Log, TEXT("Owner: [%s] is able to activate Ability: [%s]"), *GetNameSafe(ObsidianEnemy), *GetNameSafe(Ability));
 				}
 #endif
 				
@@ -73,7 +73,7 @@ bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehavi
 #if !UE_BUILD_SHIPPING
 			if(bDebugEnabled)
 			{
-				UE_LOG(LogObsidian, Error, TEXT("Owner: [%s] is NOT able to activate Ability: [%s]"), *GetNameSafe(ObsidianEnemy), *GetNameSafe(Ability));
+				UE_LOG(ObLogAI, Log, TEXT("Owner: [%s] is NOT able to activate Ability: [%s]"), *GetNameSafe(ObsidianEnemy), *GetNameSafe(Ability));
 			}
 #endif
 		}

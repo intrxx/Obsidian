@@ -5,8 +5,7 @@
 // ~ Core
 
 // ~ Project
-
-DEFINE_LOG_CATEGORY(LogItemData);
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianItemDataDeveloperSettings::UObsidianItemDataDeveloperSettings(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -19,7 +18,7 @@ uint8 UObsidianItemDataDeveloperSettings::GetDefaultDropRollNumberForEntityRarit
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToNumberOfDropRollsMap!"), EntityRarity)
+	UE_LOG(ObLogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToNumberOfDropRollsMap!"), EntityRarity)
 	return 0;
 }
 
@@ -29,7 +28,7 @@ uint8 UObsidianItemDataDeveloperSettings::GetDefaultAddedTreasureQualityForEntit
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToAddedTreasureQualityMap!"), EntityRarity)
+	UE_LOG(ObLogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToAddedTreasureQualityMap!"), EntityRarity)
 	return 0;
 }
 
@@ -39,7 +38,7 @@ uint8 UObsidianItemDataDeveloperSettings::GetMaxPrefixCountForRarity(const EObsi
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided Rarity is not included in the DefaultRarityToMaxPrefixCount!"));
+	UE_LOG(ObLogItemData, Error, TEXT("Provided Rarity is not included in the DefaultRarityToMaxPrefixCount!"));
 	return 0;
 }
 
@@ -49,7 +48,7 @@ uint8 UObsidianItemDataDeveloperSettings::GetMaxSuffixCountForRarity(const EObsi
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided Rarity is not included in the DefaultRarityToMaxSuffixCount!"));
+	UE_LOG(ObLogItemData, Error, TEXT("Provided Rarity is not included in the DefaultRarityToMaxSuffixCount!"));
 	return 0;
 }
 
@@ -59,7 +58,7 @@ uint8 UObsidianItemDataDeveloperSettings::GetMaxAffixCountForRarity(const EObsid
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToMaxAffixCount!"));
+	UE_LOG(ObLogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToMaxAffixCount!"));
 	return 0;
 }
 
@@ -69,7 +68,7 @@ uint8 UObsidianItemDataDeveloperSettings::GetNaturalMinAffixCountForRarity(const
 	{
 		return *CountPtr;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToNaturalMinAffixCount!"));
+	UE_LOG(ObLogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToNaturalMinAffixCount!"));
 	return 0;
 }
 
@@ -80,6 +79,6 @@ TArray<uint8> UObsidianItemDataDeveloperSettings::GetAffixNumberWeightsForRarity
 	{
 		return WeightsWrapper->Weights;
 	}
-	UE_LOG(LogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToNumberOfAffixesWeights!"));
+	UE_LOG(ObLogItemData, Error, TEXT("Provided RarityTag is not included in the DefaultRarityToNumberOfAffixesWeights!"));
 	return {};
 }

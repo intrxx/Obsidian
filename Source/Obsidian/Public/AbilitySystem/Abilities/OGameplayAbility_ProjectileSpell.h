@@ -10,8 +10,6 @@
 
 class AObsidianProjectileBase;
 
-DECLARE_LOG_CATEGORY_EXTERN(LogProjectileAbility, Log, All);
-
 /**
  * 
  */

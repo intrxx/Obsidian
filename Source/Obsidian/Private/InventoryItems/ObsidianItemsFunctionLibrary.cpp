@@ -15,10 +15,9 @@
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Obsidian_TwoHand, "TwoHand");
-
-DEFINE_LOG_CATEGORY(LogItemsFunctionLibrary);
 
 const UObsidianInventoryItemFragment* UObsidianItemsFunctionLibrary::FindItemDefinitionFragment(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef, const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass)
 {
@@ -267,14 +266,14 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomSkillImplicitF
 {
 	if (ForItem == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 
 	const UWorld* World = ForItem->GetWorld();
 	if (World == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
 			*GetNameSafe(ForItem), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
@@ -282,7 +281,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomSkillImplicitF
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 	
@@ -295,7 +294,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomSkillImplicitF
 		return GetRandomDynamicAffix(SkillImplicits);
 	}
 
-	UE_LOG(LogItemsFunctionLibrary, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
+	UE_LOG(ObLogItems, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
 	return FObsidianDynamicItemAffix();
 }
 
@@ -304,14 +303,14 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomImplicitForIte
 {
 	if (ForItem == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 
 	const UWorld* World = ForItem->GetWorld();
 	if (World == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
 			*GetNameSafe(ForItem), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
@@ -319,7 +318,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomImplicitForIte
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 	
@@ -332,7 +331,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomImplicitForIte
 		return GetRandomDynamicAffix(Implicits);
 	}
 
-	UE_LOG(LogItemsFunctionLibrary, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
+	UE_LOG(ObLogItems, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
 	return FObsidianDynamicItemAffix();
 }
 
@@ -341,14 +340,14 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomPrefixForItem(
 {
 	if (ForItem == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 
 	const UWorld* World = ForItem->GetWorld();
 	if (World == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
 			*GetNameSafe(ForItem), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
@@ -356,7 +355,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomPrefixForItem(
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 	
@@ -369,7 +368,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomPrefixForItem(
 		return GetRandomDynamicAffix(Prefixes);
 	}
 
-	UE_LOG(LogItemsFunctionLibrary, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
+	UE_LOG(ObLogItems, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
 	return FObsidianDynamicItemAffix();
 }
 
@@ -378,14 +377,14 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomSuffixForItem(
 {
 	if (ForItem == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Provided Item is invalid in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 
 	const UWorld* World = ForItem->GetWorld();
 	if (World == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
+		UE_LOG(ObLogItems, Error, TEXT("Could not extract valid World from provided item [%s] in [%hs]"),
 			*GetNameSafe(ForItem), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
@@ -393,7 +392,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomSuffixForItem(
 	const UGameInstance* GameInstance = UGameplayStatics::GetGameInstance(World);
 	if (GameInstance == nullptr)
 	{
-		UE_LOG(LogItemsFunctionLibrary, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogItems, Error, TEXT("Could not get GameInstance in [%hs]"), __FUNCTION__);
 		return FObsidianDynamicItemAffix();
 	}
 	
@@ -406,7 +405,7 @@ FObsidianDynamicItemAffix UObsidianItemsFunctionLibrary::GetRandomSuffixForItem(
 		return GetRandomDynamicAffix(Suffixes);
 	}
 
-	UE_LOG(LogItemsFunctionLibrary, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
+	UE_LOG(ObLogItems, Error, TEXT("ItemDataLoader is invalid in [%hs]"), __FUNCTION__);
 	return FObsidianDynamicItemAffix();
 }
 
@@ -502,7 +501,7 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const A
 {
 	if(Owner == nullptr)
 	{
-		UE_LOG(LogInventory, Error, TEXT("Owner is nullptr in [%hs]"), __FUNCTION__);
+		UE_LOG(ObLogInventory, Error, TEXT("Owner is nullptr in [%hs]"), __FUNCTION__);
 		return 0; 
 	}
 	

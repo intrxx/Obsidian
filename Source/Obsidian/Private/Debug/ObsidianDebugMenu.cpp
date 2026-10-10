@@ -10,6 +10,7 @@
 #include <SlateIM.h>
 
 #include "Debug/ObsidianDebugMenuTabs.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 namespace ObsidianDebugMenu
 {
@@ -69,7 +70,7 @@ void FObsidianDebugMenu::OpenTab(const TArray<FString>& Args)
 		{
 			TabNames += FString::Printf(TEXT(" %s"), *Tab->GetTabName().ToString());
 		}
-		UE_LOG(LogObsidianDebugMenu, Warning, TEXT("Usage: obsidian.OpenDebugMenuTab <TabName>. Available tabs:%s"), *TabNames);
+		UE_LOG(ObLogDebugMenu, Warning, TEXT("Usage: obsidian.OpenDebugMenuTab <TabName>. Available tabs:%s"), *TabNames);
 		return;
 	}
 

@@ -3,7 +3,7 @@
 #include "Animation/Notifies/ObsidianAdvancedAttackNotify.h"
 
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
-#include "Obsidian/ObsidianGameModule.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                                 float TotalDuration, const FAnimNotifyEventReference& EventReference)
@@ -12,7 +12,7 @@ void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp
 
 	if(MeshComp == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("MeshComp is invalid on ObsidianAdvancedAttackNotify."));
+		UE_LOG(ObLogCombat, Error, TEXT("MeshComp is invalid on ObsidianAdvancedAttackNotify."));
 		return;
 	}
 
@@ -21,7 +21,7 @@ void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp
 		UObsidianAdvancedCombatComponent* ObsidianAdvancedCombatComp = UObsidianAdvancedCombatComponent::FindAdvancedCombatComponent(Owner);
 		if(!IsValid(ObsidianAdvancedCombatComp))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("ObsidianAdvancedCombatComponent is invalid for [%s]."), *GetNameSafe(Owner));
+			UE_LOG(ObLogCombat, Error, TEXT("ObsidianAdvancedCombatComponent is invalid for [%s]."), *GetNameSafe(Owner));
 			return;
 		}
 		FObsidianAdvancedTraceParams TraceParams;
@@ -40,7 +40,7 @@ void UObsidianAdvancedAttackNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, 
 
 	if(MeshComp == nullptr)
 	{
-		UE_LOG(LogObsidian, Error, TEXT("MeshComp is invalid on ObsidianAdvancedAttackNotify."));
+		UE_LOG(ObLogCombat, Error, TEXT("MeshComp is invalid on ObsidianAdvancedAttackNotify."));
 		return;
 	}
 
@@ -49,7 +49,7 @@ void UObsidianAdvancedAttackNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, 
 		UObsidianAdvancedCombatComponent* ObsidianAdvancedCombatComp = UObsidianAdvancedCombatComponent::FindAdvancedCombatComponent(Owner);
 		if(!IsValid(ObsidianAdvancedCombatComp))
 		{
-			UE_LOG(LogObsidian, Error, TEXT("ObsidianAdvancedCombatComponent is invalid for [%s]."), *GetNameSafe(Owner));
+			UE_LOG(ObLogCombat, Error, TEXT("ObsidianAdvancedCombatComponent is invalid for [%s]."), *GetNameSafe(Owner));
 			return;
 		}
 		ObsidianAdvancedCombatComp->StopTrace();

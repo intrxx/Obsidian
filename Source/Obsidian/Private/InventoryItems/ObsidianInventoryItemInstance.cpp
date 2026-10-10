@@ -14,6 +14,7 @@
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -108,7 +109,7 @@ int8 UObsidianInventoryItemInstance::GetItemLevel() const
 #if !UE_BUILD_SHIPPING
 	if (ItemLevel == INDEX_NONE)
 	{
-		UE_LOG(LogItems, Error, TEXT("Item [%s] has invalid Item Level."), *DebugName);
+		UE_LOG(ObLogItems, Error, TEXT("Item [%s] has invalid Item Level."), *DebugName);
 	}
 #endif
 	return ItemLevel;
@@ -725,7 +726,7 @@ void UObsidianInventoryItemInstance::ConstructFromSavedItem(const FObsidianSaved
 	// General
 	if (FGuid::Parse(SavedItem.UniqueItemID, ItemUniqueID) == false)
 	{
-		UE_LOG(LogItems, Error, TEXT("Fail to load unique item ID from string [%s]"), *SavedItem.UniqueItemID);
+		UE_LOG(ObLogItems, Error, TEXT("Fail to load unique item ID from string [%s]"), *SavedItem.UniqueItemID);
 	}
 	ItemLevel = SavedItem.ItemLevel;
 	ItemDef = SavedItem.SoftItemDef.LoadSynchronous();

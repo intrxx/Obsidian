@@ -7,6 +7,7 @@
 #include "AbilitySystemGlobals.h"
 
 // ~ Project
+#include "Obsidian/ObsidianLogCategories.h"
 #include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "Obsidian/ObsidianGameplayTags.h"
@@ -133,9 +134,7 @@ float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGamep
 	if(EffectSpec.Def->bExecutePeriodicEffectOnApplication)
 	{
 		FullMagnitude += Magnitude;
-		//UE_LOG(LogObsidian, Warning, TEXT("%f / %f * %f + %f = %f"),Duration, Period, Magnitude, Magnitude, FullMagnitude);
 	}
-	//UE_LOG(LogObsidian, Warning, TEXT("%f / %f * %f = %f"),Duration, Period, Magnitude, FullMagnitude);
 	
 	return FullMagnitude;
 }

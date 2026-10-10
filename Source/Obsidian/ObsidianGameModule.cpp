@@ -16,8 +16,6 @@
 #include "Debug/ObsidianDebugMenu.h"
 #endif
 
-DEFINE_LOG_CATEGORY(LogObsidian);
-
 IMPLEMENT_PRIMARY_GAME_MODULE(FObsidianGameModule, Obsidian, "Obsidian");
 
 #if WITH_OBSIDIAN_DEBUG_MENU
