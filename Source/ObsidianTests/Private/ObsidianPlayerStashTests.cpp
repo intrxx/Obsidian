@@ -43,7 +43,7 @@ TEST_CLASS(ObsidianPlayerStashTests, "Obsidian.Items.PlayerStash")
 		ASSERT_THAT(AreEqual(2, Stash.GetAllStashTabs().Num()));
 		ASSERT_THAT(IsNotNull(Stash.GetStashTabForTag(Env->PersonalStashTab())));
 		ASSERT_THAT(IsNotNull(Stash.GetStashTabForTag(Env->SharedStashTab())));
-		ASSERT_THAT(IsNull(Stash.GetStashTabForTag(ObsidianGameplayTags::StashTab_Grid_3)));
+		ASSERT_THAT(IsNull(Stash.GetStashTabForTag(ObsidianGameplayTags::StashTab::Grid_3)));
 	}
 
 	TEST_METHOD(AddItemDefinition_ItemIsOnlyInTheTabItWasAddedTo)
@@ -87,7 +87,7 @@ TEST_CLASS(ObsidianPlayerStashTests, "Obsidian.Items.PlayerStash")
 		UObsidianPlayerStashComponent& Stash = Env->Stash();
 
 		const FObsidianItemOperationResult Result = Stash.AddItemDefinition(UObsidianTestItemDef_Large::StaticClass(),
-			ObsidianGameplayTags::StashTab_Grid_3, Env->MakeItemData());
+			ObsidianGameplayTags::StashTab::Grid_3, Env->MakeItemData());
 
 		ASSERT_THAT(IsFalse(Result.bActionSuccessful));
 		ASSERT_THAT(AreEqual(0, Stash.GetAllItems().Num()));
@@ -140,7 +140,7 @@ TEST_CLASS(ObsidianPlayerStashTests, "Obsidian.Items.PlayerStash")
 	TEST_METHOD(CheckSpecifiedPosition_RespectsItemSpanAndGridBounds)
 	{
 		UObsidianPlayerStashComponent& Stash = Env->Stash();
-		const FGameplayTag Category = ObsidianGameplayTags::Item_Category_Currency_Functional;
+		const FGameplayTag Category = ObsidianGameplayTags::Item::Category::Currency::Functional;
 		const FGameplayTag NoBaseType = FGameplayTag::EmptyTag;
 
 		Stash.AddItemDefinitionToSpecifiedSlot(UObsidianTestItemDef_Large::StaticClass(), Env->PersonalStashPosition(0, 0), Env->MakeItemData());
@@ -376,7 +376,7 @@ TEST_CLASS(ObsidianPlayerStashTests, "Obsidian.Items.PlayerStash")
 			Env->PersonalStashTab(), Env->MakeItemData(6)).AffectedInstance;
 		UObsidianInventoryItemInstance* HeldItem = Env->MakeHeldItem(UObsidianTestItemDef_Large::StaticClass());
 
-		Env->AddOwnerTag(ObsidianGameplayTags::PlayerStash_BlockActions);
+		Env->AddOwnerTag(ObsidianGameplayTags::PlayerStash::BlockActions);
 
 		ASSERT_THAT(IsFalse(Stash.CanOwnerModifyPlayerStashState()));
 		ASSERT_THAT(IsFalse(Stash.AddItemDefinition(UObsidianTestItemDef_Large::StaticClass(), Env->PersonalStashTab(),
@@ -390,7 +390,7 @@ TEST_CLASS(ObsidianPlayerStashTests, "Obsidian.Items.PlayerStash")
 		ASSERT_THAT(AreEqual(1, Stash.GetAllItems().Num()));
 		ASSERT_THAT(AreEqual(6, Env->Stacks(Item)));
 
-		Env->RemoveOwnerTag(ObsidianGameplayTags::PlayerStash_BlockActions);
+		Env->RemoveOwnerTag(ObsidianGameplayTags::PlayerStash::BlockActions);
 
 		ASSERT_THAT(IsTrue(Stash.CanOwnerModifyPlayerStashState()));
 		ASSERT_THAT(IsTrue(Stash.RemoveItemInstance(Item).bActionSuccessful));
@@ -398,7 +398,7 @@ TEST_CLASS(ObsidianPlayerStashTests, "Obsidian.Items.PlayerStash")
 
 	TEST_METHOD(BlockActionsTag_OfTheStash_DoesNotBlockTheInventory)
 	{
-		Env->AddOwnerTag(ObsidianGameplayTags::PlayerStash_BlockActions);
+		Env->AddOwnerTag(ObsidianGameplayTags::PlayerStash::BlockActions);
 
 		ASSERT_THAT(IsTrue(Env->Inventory().AddItemDefinition(UObsidianTestItemDef_Large::StaticClass(), Env->MakeItemData()).bActionSuccessful));
 	}

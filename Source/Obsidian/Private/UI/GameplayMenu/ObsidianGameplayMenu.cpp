@@ -50,7 +50,7 @@ void UObsidianGameplayMenu::OnOptionsClicked()
 	ULocalPlayer* LocalPlayer = GetOwningLocalPlayer();
 	if (SettingsMenuWidgetClass.IsNull() == false && LocalPlayer)
 	{
-		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(LocalPlayer, ObsidianGameplayTags::UI_Layer_GameplayMenu,
+		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(LocalPlayer, ObsidianGameplayTags::UI::Layer::GameplayMenu,
 			SettingsMenuWidgetClass);
 	}
 }

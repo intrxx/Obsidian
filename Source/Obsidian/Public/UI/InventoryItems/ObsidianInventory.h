@@ -12,7 +12,6 @@
 struct FObsidianItemWidgetData;
 struct FGameplayTag;
 
-class UObsidianSlotBlockadeItem;
 class UObsidianItem;
 class UObsidianSlotBase;
 class UObsidianInventoryItemDefinition;

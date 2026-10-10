@@ -111,7 +111,7 @@ void UObsidianItemManagerComponent::ServerAddItemToInventoryAtSlot_Implementatio
 	
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
-		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianItemOperationResult Result = InventoryComponent->AddItemInstanceToSpecificSlot(Instance,
 			SlotPosition, StacksToAddOverride);
 		
@@ -154,7 +154,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToInventoryIte
 	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
 	if(Instance && Instance->IsStackable())
 	{
-		const int32 PreviousStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 PreviousStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(
 			Instance, SlotPosition, StacksToAddOverride);
 		
@@ -470,7 +470,7 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 		}
 
 
-		const int32 CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianItemOperationResult Result = InventoryComponent->AddItemInstance(ItemInstance);
 		if(CurrentStacks != Result.StacksLeft)
 		{
@@ -707,7 +707,7 @@ void UObsidianItemManagerComponent::ServerAddItemToStashTabAtSlot_Implementation
 	
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
-		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance,
 			AtPosition, StacksToAddOverride);
 		
@@ -756,7 +756,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemA
 	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
 	if(Instance && Instance->IsStackable())
 	{
-		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianAddingStacksResult AddingStacksResult = PlayerStashComponent->TryAddingStacksToSpecificSlotWithInstance(
 			Instance, AtPosition, StacksToAddOverride);
 		

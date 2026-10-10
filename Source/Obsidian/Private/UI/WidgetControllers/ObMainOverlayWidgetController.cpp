@@ -245,8 +245,8 @@ void UObMainOverlayWidgetController::HandleEffectApplied(const FObsidianEffectUI
 
 		if(UIData.EffectDurationPolicy == EGameplayEffectDurationType::HasDuration)
 		{
-			const FGameplayTag HealthGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_HealingHealth;
-			const FGameplayTag ManaGlobeDataTag = ObsidianGameplayTags::UI_GlobeData_RepleanishingMana;
+			const FGameplayTag HealthGlobeDataTag = ObsidianGameplayTags::UI::GlobeData::HealingHealth;
+			const FGameplayTag ManaGlobeDataTag = ObsidianGameplayTags::UI::GlobeData::ReplenishingMana;
 			if(Tag.MatchesTag(HealthGlobeDataTag))
 			{
 				EffectUIHealthGlobeDataDelegate.Broadcast(UIData.EffectDuration, UIData.EffectMagnitude);

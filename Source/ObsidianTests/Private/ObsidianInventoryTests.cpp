@@ -463,7 +463,7 @@ TEST_CLASS(ObsidianInventoryTests, "Obsidian.Items.Inventory")
 			Env->MakeItemData(6)).AffectedInstance;
 		UObsidianInventoryItemInstance* HeldItem = Env->MakeHeldItem(UObsidianTestItemDef_Large::StaticClass());
 
-		Env->AddOwnerTag(ObsidianGameplayTags::Inventory_BlockActions);
+		Env->AddOwnerTag(ObsidianGameplayTags::Inventory::BlockActions);
 
 		ASSERT_THAT(IsFalse(Inventory.CanOwnerModifyInventoryState()));
 		ASSERT_THAT(IsFalse(Inventory.AddItemDefinition(UObsidianTestItemDef_Large::StaticClass(), Env->MakeItemData()).bActionSuccessful));
@@ -476,7 +476,7 @@ TEST_CLASS(ObsidianInventoryTests, "Obsidian.Items.Inventory")
 		ASSERT_THAT(AreEqual(1, Inventory.GetAllItems().Num()));
 		ASSERT_THAT(AreEqual(6, Env->Stacks(Item)));
 
-		Env->RemoveOwnerTag(ObsidianGameplayTags::Inventory_BlockActions);
+		Env->RemoveOwnerTag(ObsidianGameplayTags::Inventory::BlockActions);
 
 		ASSERT_THAT(IsTrue(Inventory.CanOwnerModifyInventoryState()));
 		ASSERT_THAT(IsTrue(Inventory.RemoveItemInstance(Item).bActionSuccessful));

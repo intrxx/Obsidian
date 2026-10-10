@@ -311,10 +311,10 @@ void FObsidianEquipmentList::MoveWeaponToSwap(UObsidianInventoryItemInstance* In
 	}
 #endif
 
-	FGameplayTag SwapTag = ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_RightHand;
-	if(CurrentWeaponSlotTag == ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand)
+	FGameplayTag SwapTag = ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand;
+	if(CurrentWeaponSlotTag == ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand)
 	{
-		SwapTag = ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_LeftHand;
+		SwapTag = ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::LeftHand;
 	}
 
 	bool bSuccess = false;
@@ -381,10 +381,10 @@ void FObsidianEquipmentList::MoveWeaponFromSwap(UObsidianInventoryItemInstance* 
 	}
 #endif
 
-	FGameplayTag MainWeaponSlotTag = ObsidianGameplayTags::Item_Slot_Equipment_Weapon_RightHand;
-	if(CurrentSwapTag == ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_LeftHand)
+	FGameplayTag MainWeaponSlotTag = ObsidianGameplayTags::Item::Slot::Equipment::Weapon::RightHand;
+	if(CurrentSwapTag == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::LeftHand)
 	{
-		MainWeaponSlotTag = ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand;
+		MainWeaponSlotTag = ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand;
 	}
 
 	bool bSuccess = false;
@@ -591,7 +591,7 @@ void FObsidianEquipmentList::BroadcastChangeMessage(const FObsidianEquipmentEntr
 	Message.SlotTagToClear = SlotTagToClear;
 	
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
-	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message_Equipment_Changed, Message);
+	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message::Equipment::Changed, Message);
 }
 
 

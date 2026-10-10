@@ -97,7 +97,7 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(const UObsidianI
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
-	const int32 CurrentStack = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentStack = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	const FText StackCountText = FText::AsNumber(CurrentStack);
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);

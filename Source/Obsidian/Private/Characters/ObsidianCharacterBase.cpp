@@ -167,23 +167,23 @@ UNiagaraSystem* AObsidianCharacterBase::GetBloodEffect_Implementation()
 
 FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(FGameplayTag Tag)
 {
-	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_RightHandWeapon)
+	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::RightHandWeapon)
 	{
 		return GetAbilitySocketLocationFromRHWeapon_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_LeftHandWeapon)
+	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::LeftHandWeapon)
 	{
 		return GetAbilitySocketLocationFromLHWeapon_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_BetweenHands)
+	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::BetweenHands)
 	{
 		return GetAbilityBetweenHandsSocketLocation_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_LeftHand)
+	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::LeftHand)
 	{
 		return GetAbilitySocketLocationFromLeftHand_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent_AbilityMontage_Socket_RightHand)
+	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::RightHand)
 	{
 		return GetAbilitySocketLocationFromRightHand_Implementation();
 	}

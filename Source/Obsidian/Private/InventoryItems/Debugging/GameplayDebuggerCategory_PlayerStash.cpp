@@ -76,9 +76,9 @@ void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* Owner
 			InventoryItems.ItemUniqueID = Item->GetUniqueItemID().ToString();
 			InventoryItems.Item = GetNameSafe(Item->GetItemDef());
 			InventoryItems.Item.RemoveFromEnd(TEXT("_C"));
-			InventoryItems.CurrentStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-			InventoryItems.MaxStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
-			InventoryItems.LimitStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+			InventoryItems.CurrentStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+			InventoryItems.MaxStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Max);
+			InventoryItems.LimitStackCount = Item->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Limit);
 			InventoryItems.GridSpan = Item->GetItemGridSpan();
 			InventoryItems.CurrentGridLocation = Item->GetItemCurrentPosition().GetItemGridPosition(false);
 			InventoryItems.CurrentSlotTag = Item->GetItemCurrentPosition().GetItemSlotTag(false);

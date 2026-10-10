@@ -63,11 +63,11 @@ void UObInventoryItemsWidgetController::OnWidgetControllerSetupCompleted()
 	check(OwningActor);
 	
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
-	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this,
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message::Inventory::Changed, this,
 		&ThisClass::OnInventoryStateChanged);
-	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Equipment_Changed, this,
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message::Equipment::Changed, this,
 		&ThisClass::OnEquipmentStateChanged);
-	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_PlayerStash_Changed, this,
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message::PlayerStash::Changed, this,
 		&ThisClass::OnPlayerStashChanged);
 	
 	OwnerItemManagerComponent = OwnerPlayerController->GetItemManagerComponent();
@@ -306,7 +306,7 @@ void UObInventoryItemsWidgetController::OnInventoryOpen()
 			ItemWidgetData.GridSpan = Item->GetItemGridSpan();
 			ItemWidgetData.ItemPosition = Item->GetItemCurrentPosition();
 			ItemWidgetData.StackCount = Item->IsStackable() ?
-										Item->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) :
+										Item->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current) :
 										0;
 			ItemWidgetData.bUsable = Item->IsItemUsable();
 			ItemWidgetData.ItemSlotPadding = Item->GetItemSlotPadding();
@@ -345,7 +345,7 @@ void UObInventoryItemsWidgetController::OnPlayerStashOpen()
 			ItemWidgetData.ItemPosition = Instance->GetItemCurrentPosition();
 			ItemWidgetData.GridSpan = Instance->GetItemGridSpan();
 			ItemWidgetData.StackCount = Instance->IsStackable() ?
-										Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) :
+										Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current) :
 										0;
 			ItemWidgetData.bUsable = Instance->IsItemUsable();
 			ItemWidgetData.ItemSlotPadding = Instance->GetItemSlotPadding();
@@ -1235,7 +1235,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnInventoryItemWithShi
 		return;
 	}
 	
-	const int32 CurrentItemStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentItemStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	if(CurrentItemStacks <= 1)
 	{
 		return;
@@ -1463,7 +1463,7 @@ void UObInventoryItemsWidgetController::HandleLeftClickingOnStashedItemWithShift
 		return;
 	}
 	
-	const int32 CurrentItemStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentItemStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	if(CurrentItemStacks <= 1)
 	{
 		return;
@@ -1737,7 +1737,7 @@ void UObInventoryItemsWidgetController::HandleTakingOutStacksFromInventory(const
 	if(const UObsidianInventoryItemInstance* Instance = OwnerInventoryComponent->GetItemInstanceAtLocation(
 		GridPosition))
 	{
-		if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
+		if(Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current) == StacksToTake)
 		{
 			ItemManager->ServerGrabInventoryItemToCursor(GridPosition);
 			return;
@@ -1766,7 +1766,7 @@ void UObInventoryItemsWidgetController::HandleTakingOutStacksFromStash(const int
 	if(const UObsidianInventoryItemInstance* Instance = OwnerPlayerStashComponent->GetItemInstanceFromTabAtPosition(
 		ItemPosition))
 	{
-		if(Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) == StacksToTake)
+		if(Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current) == StacksToTake)
 		{
 			ItemManager->ServerGrabStashedItemToCursor(ItemPosition);
 			return;

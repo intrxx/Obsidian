@@ -12,19 +12,33 @@ namespace ObsidianGameplayTags
 	 * ---- User Interface ----
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_MainMenu);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_GameplayMenu);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_Layer_Gameplay);
+	namespace UI::Layer
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MainMenu);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayMenu);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Gameplay);
+	}
 	
 	/**
 	 * ---- Damage Types ----
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Physical);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Fire);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Cold);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Elemental_Lightning);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SetByCaller_DamageType_Chaos);
+	namespace DamageType
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Physical);
+	}
+
+	namespace DamageType::Elemental
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fire);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cold);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Lightning);
+	}
+
+	namespace DamageType
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chaos);
+	}
 	
 	/** All damage Types stored for convenience */
 	OBSIDIAN_API extern const TArray<FGameplayTag> DamageTypes;
@@ -33,26 +47,38 @@ namespace ObsidianGameplayTags
 	 *  ---- Effects ----
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_HitReact)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Effect_Stagger)
+	namespace Effect
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact)
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stagger)
+	}
 
 	/**
 	 * ---- Movement ----
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_State_Standing)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_State_Walking)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Movement_State_Running)
+	namespace Movement::State
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Standing)
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Walking)
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Running)
+	}
 	
 	/**
 	 * ---- Statuses ----
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death_Dying);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Death_Dead);
+	namespace Status::Death
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Death);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dying);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dead);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Immunity);
+	namespace Status
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Immunity);
+	}
 
 	/**
 	 * ---- Input ----
@@ -61,81 +87,134 @@ namespace ObsidianGameplayTags
 	/**
 	 * Native
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move_Keyboard);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Move_Mouse);
+	namespace Input::Native::Move
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Keyboard);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Mouse);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_ReleaseUsingItem);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_ReleaseContinouslyUsingItem);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_DropItem);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Interact);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_CharacterStatus);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Inventory);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_PassiveSkillTree);
+	namespace Input::Native
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ReleaseUsingItem);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ReleaseContinouslyUsingItem);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_WeaponSwap);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_ToggleWalk);
-
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_MainMenu);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_Action_Backwards);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_OpenGameplayMenu);
+	namespace Input
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DropItem);
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_UI_ToggleHighlight);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Interact);
+	}
+	
+	namespace Input::Native
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CharacterStatus);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Inventory);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PassiveSkillTree);
+
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(WeaponSwap);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ToggleWalk);
+	}
+
+	namespace Input::UI
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MainMenu);
+	}
+
+	namespace Input::UI::Action
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Backwards);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(OpenGameplayMenu);
+	}
+	
+	namespace Input::UI
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ToggleHighlight);
+	}
 	
 	/**
 	 * Ability
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability_Move_Mouse);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability_Move_Roll);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability1);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability2);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability3);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability4);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability5);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability6);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability7);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Ability8);
+	namespace Input::Ability::Move
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Roll);
+	}
+
+	namespace Input::Ability
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability1);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability2);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability3);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability4);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability5);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability6);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability7);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability8);
+	}
 
 	/*
 	 * ---- Data ----
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_AdvancedCombat_Hit);
+	namespace Data::AdvancedCombat
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Hit);
+	}
 	
 	/**
 	 * UI Data
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_DataSpecifierTag)
+	namespace UI
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DataSpecifierTag)
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Flask_HealthHealing);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Flask_ManaHealing);
+	namespace UI::EffectData::Flask
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HealthHealing);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ManaHealing);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_Health);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_Mana);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_Energy);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_Evasion);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_Armor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_CriticalDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_CriticalChance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_ChaosDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_PhysicalDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_CirclingElementalDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_HealthRegeneration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Aura_ManaRegeneration);
+	namespace UI::EffectData::Aura
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Health);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Mana);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Energy);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Evasion);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CriticalDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CriticalChance);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ChaosDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PhysicalDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CirclingElementalDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HealthRegeneration);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ManaRegeneration);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Effect_Poison);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Effect_Chill);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Effect_Ignite);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Effect_Shock);
+	namespace UI::EffectData::Effect
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Poison);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chill);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ignite);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shock);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Effect_Special_Immunity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Effect_Special_DamageReduction);
+	namespace UI::EffectData::Effect::Special
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Immunity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(DamageReduction);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_EffectData_Effect_Curse_ElementalWeakness);
+	namespace UI::EffectData::Effect::Curse
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ElementalWeakness);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_HealingHealth);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UI_GlobeData_RepleanishingMana);
+	namespace UI::GlobeData
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HealingHealth);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ReplenishingMana);
+	}
 
 	/**
 	 * ---- Gameplay Messages ----
@@ -144,17 +223,26 @@ namespace ObsidianGameplayTags
 	/**
 	 * Inventory
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_Inventory_Changed);
+	namespace Message::Inventory
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Changed);
+	}
 
 	/**
 	 * Equipment
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_Equipment_Changed);
+	namespace Message::Equipment
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Changed);
+	}
 
 	/**
 	 * Player Stash
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Message_PlayerStash_Changed);
+	namespace Message::PlayerStash
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Changed);
+	}
 	
 	/**
 	 * ---- Gameplay Events ----
@@ -163,85 +251,124 @@ namespace ObsidianGameplayTags
 	/**
 	 * Shared
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_Death);
+	namespace GameplayEvent
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Death);
+	}
 
 	/**
 	 * Hero
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_Firebolt);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_FlyingKnifes);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_MagneticHammer);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Player_Slash);
+	namespace GameplayEvent::AbilityMontage::Player
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Firebolt);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FlyingKnifes);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MagneticHammer);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Slash);
+	}
 
 	/**
 	 * Tree Orc
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_EquipWeapon);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_TreeOrc_SpawnComboProjectile);
+	namespace GameplayEvent::AbilityMontage::TreeOrc
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EquipWeapon);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SpawnComboProjectile);
+	}
 
 	/**
 	 * Ranged Goblin
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_RangedGoblin_SpawnSlingShotProj);
+	namespace GameplayEvent::AbilityMontage::RangedGoblin
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SpawnSlingShotProj);
+	}
 	
 	/**
 	 * Skeletal Mage
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_SkeletalMage_SpawnFireNova);
+	namespace GameplayEvent::AbilityMontage::SkeletalMage
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SpawnFireNova);
+	}
 	
 	/**
 	 * Sockets
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_RightHandWeapon)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_LeftHandWeapon)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_RightHand)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_LeftHand)
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayEvent_AbilityMontage_Socket_BetweenHands)
+	namespace GameplayEvent::AbilityMontage::Socket
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(RightHandWeapon)
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LeftHandWeapon)
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(RightHand)
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LeftHand)
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BetweenHands)
+	}
 
 	/**
 	 * ---- Gameplay Cues ----
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_MeleeImpact)
+	namespace GameplayCue
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MeleeImpact)
+	}
 
 	/**
 	 * ---- Ability Activation Tags ----
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_ActivationFail_IsDead);
+	namespace Ability::ActivationFail
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(IsDead);
+	}
 
 	/**
 	 * Shared
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_HitReact);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Stagger);
+	namespace AbilityActivation
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Stagger);
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Introduction);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Introduction);
+	}
 
 	/**
 	 * Zombie
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_Zombie_MeleeAttack);
+	namespace AbilityActivation::Zombie
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MeleeAttack);
+	}
 
 	/**
 	 * Ranged Goblin
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_RangedGoblin_BowAttack);
+	namespace AbilityActivation::RangedGoblin
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BowAttack);
+	}
 
 	/**
 	 * Skeletal Mage
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_SkeletalMage_FireBall);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_SkeletalMage_FireNova);
+	namespace AbilityActivation::SkeletalMage
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FireBall);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FireNova);
+	}
 
 	/**
 	 * Tree Orc
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_TreeOrc_UnarmedSwing);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_TreeOrc_LeapAttack);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_TreeOrc_Equip);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_TreeOrc_ComboSwing);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(AbilityActivation_TreeOrc_ArmedSwing);
+	namespace AbilityActivation::TreeOrc
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(UnarmedSwing);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LeapAttack);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equip);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ComboSwing);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmedSwing);
+	}
 	
 	/**
 	 * ---- Cooldowns ----
@@ -250,18 +377,27 @@ namespace ObsidianGameplayTags
 	/**
 	 * Shared
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_HitReact);
+	namespace Ability::Cooldown
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HitReact);
+	}
 
 	/**
 	 * Tree Orc
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_TreeOrc_LeapAttack);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_TreeOrc_ComboSwing);
+	namespace Ability::Cooldown::TreeOrc
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LeapAttack);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ComboSwing);
+	}
 	
 	/**
 	 * Skeletal Mage
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ability_Cooldown_SkeletalMage_FireNova);
+	namespace Ability::Cooldown::SkeletalMage
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FireNova);
+	}
 	
 	/**
 	 * ---- Items ----
@@ -271,133 +407,223 @@ namespace ObsidianGameplayTags
 	 * Inventory
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Inventory_BlockActions);
+	namespace Inventory
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockActions);
+	}
 
 	/**
 	 * Equipment
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Equipment_BlockActions);
+	namespace Equipment
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockActions);
+	}
 
 	/**
 	 * Player Stash
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PlayerStash_BlockActions);
+	namespace PlayerStash
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlockActions);
+	}
 
 	/**
 	 * Item Category.
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Currency_Resource);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Currency_Functional);
+	namespace Item::Category::Currency
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Resource);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Functional);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Armor_Helmet);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Armor_BodyArmor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Armor_Belt);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Armor_Gloves);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Armor_Boots);
+	namespace Item::Category::Equipment::Armor
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Helmet);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BodyArmor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Belt);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Gloves);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Boots);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Offhand_Shield);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Offhand_Quiver);
+	namespace Item::Category::Equipment::Offhand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shield);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Quiver);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Jewellery_Amulet);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Jewellery_Ring);
+	namespace Item::Category::Equipment::Jewellery
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Amulet);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ring);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_OneHand_Dagger);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_OneHand_Flail);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_OneHand_Mace);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_OneHand_Sword);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_OneHand_Axe);
+	namespace Item::Category::Equipment::Weapon::Melee::OneHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dagger);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Flail);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Mace);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Sword);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Axe);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_TwoHand_Mace);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_TwoHand_Sword);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Melee_TwoHand_Axe);
+	namespace Item::Category::Equipment::Weapon::Melee::TwoHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Mace);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Sword);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Axe);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Ranged_OneHand_Wand);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Ranged_OneHand_Bow);
+	namespace Item::Category::Equipment::Weapon::Ranged::OneHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Wand);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Bow);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Category_Equipment_Weapon_Ranged_TwoHand_Staff);
+	namespace Item::Category::Equipment::Weapon::Ranged::TwoHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Staff);
+	}
 	
 	/**
 	 * Item Base Types
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_ScrollOfIdentification);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_ScrollOfTeleportation);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfEnchantment);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfRepentance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfEradication);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Orb_OrbOfRescription);
+	namespace Item::BaseType::Orb
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ScrollOfIdentification);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ScrollOfTeleportation);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(OrbOfEnchantment);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(OrbOfRepentance);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(OrbOfEradication);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(OrbOfRescription);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Helmet_Armor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Helmet_Evasion);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Helmet_EnergyShield);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_BodyArmor_Armor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_BodyArmor_Evasion);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_BodyArmor_EnergyShield);
+	namespace Item::BaseType::Helmet
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Evasion);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EnergyShield);
+	}
+
+	namespace Item::BaseType::BodyArmor
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Evasion);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EnergyShield);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Amulet);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Ring);
+	namespace Item::BaseType
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Amulet);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Ring);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_OneHand_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_OneHand_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_OneHand_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_OneHand_Intelligence);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_TwoHand_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_TwoHand_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_TwoHand_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Sword_TwoHand_Intelligence);
+	namespace Item::BaseType::Sword::OneHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_OneHand_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_OneHand_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_OneHand_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_OneHand_Intelligence);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_TwoHand_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_TwoHand_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_TwoHand_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Axe_TwoHand_Intelligence);
+	namespace Item::BaseType::Sword::TwoHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_OneHand_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_OneHand_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_OneHand_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_OneHand_Intelligence);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_TwoHand_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_TwoHand_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_TwoHand_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Mace_TwoHand_Intelligence);
+	namespace Item::BaseType::Axe::OneHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Dagger_Intelligence);
+	namespace Item::BaseType::Axe::TwoHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Faith);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Wand_Intelligence);
+	namespace Item::BaseType::Mace::OneHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
+
+	namespace Item::BaseType::Mace::TwoHand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
+
+	namespace Item::BaseType::Dagger
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
+
+	namespace Item::BaseType::Wand
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Shield_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_BaseType_Shield_Dexterity);
+	namespace Item::BaseType::Shield
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+	}
 	
 	/**
 	 * Equipment Slots.
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Weapon_RightHand);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Weapon_LeftHand);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_SwapSlot_Equipment_Weapon_RightHand);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_SwapSlot_Equipment_Weapon_LeftHand);
+	namespace Item::Slot::Equipment::Weapon
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(RightHand);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LeftHand);
+	}
+
+	namespace Item::SwapSlot::Equipment::Weapon
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(RightHand);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LeftHand);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Helmet);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_BodyArmor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Belt);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Gloves);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Boots);
+	namespace Item::Slot::Equipment
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Helmet);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BodyArmor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Belt);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Gloves);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Boots);
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Amulet);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Ring_RightHand);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Equipment_Ring_LeftHand);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Amulet);
+	}
+
+	namespace Item::Slot::Equipment::Ring
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(RightHand);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LeftHand);
+	}
 
 	/** All Stack Types stored for convenience. */
 	OBSIDIAN_API extern const TArray<FGameplayTag> EquipmentSlots;
@@ -412,27 +638,36 @@ namespace ObsidianGameplayTags
 	 * Currency Slots.
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Functional_ScrollOfIdentification);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Functional_ScrollOfTeleportation);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Slot_Functional_OrbOfEnchantment);
+	namespace Item::Slot::Functional
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ScrollOfIdentification);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ScrollOfTeleportation);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(OrbOfEnchantment);
+	}
 
 	/**
 	 * Stash Tabs.
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_1);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_2);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_3);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Grid_4);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_BigGrid_1);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(StashTab_Functional);
+	namespace StashTab
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Grid_1);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Grid_2);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Grid_3);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Grid_4);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BigGrid_1);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Functional);
+	}
 
 	/**
 	 * Stacks Counts
 	 */
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_StackCount_Current);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_StackCount_Max);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_StackCount_Limit);
+	namespace Item::StackCount
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Current);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Max);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Limit);
+	}
 
 	/** All Stack Types stored for convenience. */
 	OBSIDIAN_API extern const TArray<FGameplayTag> StackTypes;
@@ -445,152 +680,246 @@ namespace ObsidianGameplayTags
 	 * Affix Values
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_AffixValue_SingleValue);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_AffixValue_MinValue);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_AffixValue_MaxValue);
+	namespace Item::AffixValue
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SingleValue);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MinValue);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MaxValue);
+	}
 	
 	/**
 	 * Implicits
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_Life_LifeFlat);
+	namespace Item::Affix::Implicit::Life
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LifeFlat);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_Mana_ManaFlat);
+	namespace Item::Affix::Implicit::Mana
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ManaFlat);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicit_EnergyShield_EnergyShieldFlat);
+	namespace Item::Affix::Implicit::EnergyShield
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EnergyShieldFlat);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Fire);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Lightning);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Cold);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_Resistance_Chaos);
+	namespace Item::Affix::Implicit::Resistance
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fire);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Lightning);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cold);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chaos);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Fire);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Lightning);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Cold);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Implicits_MaxResistance_Chaos);
+	namespace Item::Affix::Implicit::MaxResistance
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fire);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Lightning);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cold);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chaos);
+	}
 
 	/**
 	 * Prefixes
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Life_LifeFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Life_LifePercent);
+	namespace Item::Affix::Prefix::Life
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LifeFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LifePercent);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Mana_ManaFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Mana_ManaPercent);
+	namespace Item::Affix::Prefix::Mana
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ManaFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ManaPercent);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Utility_MagicFind);
+	namespace Item::Affix::Prefix::Utility
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MagicFind);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_ArmorFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_ArmorPercent);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EvasionFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EvasionPercent);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EnergyShieldFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_Defence_EnergyShieldPercent);
+	namespace Item::Affix::Prefix::Defence
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmorFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmorPercent);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EvasionFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EvasionPercent);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EnergyShieldFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EnergyShieldPercent);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreasePhysicalDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseFireDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseColdDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseLightningDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageMultiplier_IncreaseChaosDamage);
+	namespace Item::Affix::Prefix::DamageMultiplier
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(IncreasePhysicalDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(IncreaseFireDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(IncreaseColdDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(IncreaseLightningDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(IncreaseChaosDamage);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_PhysicalDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_PhysicalDamagePercentage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_FireDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_FireDamagePercentage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_ColdDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_ColdDamagePercentage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRange_LightningDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRanger_LightningDamagePercentage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRanger_ChaosDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Prefix_DamageRanger_ChaosDamagePercentage);
+	namespace Item::Affix::Prefix::DamageRange
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PhysicalDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PhysicalDamagePercentage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FireDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FireDamagePercentage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ColdDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ColdDamagePercentage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LightningDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LightningDamagePercentage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ChaosDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ChaosDamagePercentage);
+	}
 	
 	/**
 	 * Suffixes
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Life_LifeRegeneration);
+	namespace Item::Affix::Suffix::Life
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LifeRegeneration);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_EnergyShield_EnergyShieldRegeneration);
+	namespace Item::Affix::Suffix::EnergyShield
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EnergyShieldRegeneration);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Mana_ManaRegeneration);
+	namespace Item::Affix::Suffix::Mana
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ManaRegeneration);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Dexterity);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Intelligence);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Strength);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Attribute_Faith);
+	namespace Item::Affix::Suffix::Attribute
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Dexterity);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Intelligence);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Strength);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Faith);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Fire);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Lightning);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Cold);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Resistance_Chaos);
+	namespace Item::Affix::Suffix::Resistance
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fire);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Lightning);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cold);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chaos);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Fire);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Lightning);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Cold);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_MaxResistance_Chaos);
+	namespace Item::Affix::Suffix::MaxResistance
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Fire);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Lightning);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Cold);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Chaos);
+	}
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Utility_MagicFind);
+	namespace Item::Affix::Suffix::Utility
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MagicFind);
+	}
 
 	/**
 	 * Enchanted Affixes
 	 */
 	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_Suffix_Enchant_MaximumLifePercentage)
+	namespace Item::Affix::Suffix::Enchant
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MaximumLifePercentage)
+	}
 
 	/**
 	 * Item Primary Affix
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_DamageRange_PhysicalDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_DamageRange_FireDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_DamageRange_ColdDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_DamageRange_LightningDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_DamageRange_ChaosDamageFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_Defence_EvasionFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_Defence_ArmorFlat);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_ItemPrimaryAffix_Defence_EnergyShieldFlat);
+	namespace Item::Affix::ItemPrimaryAffix::DamageRange
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PhysicalDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FireDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ColdDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(LightningDamageFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ChaosDamageFlat);
+	}
+
+	namespace Item::Affix::ItemPrimaryAffix::Defence
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EvasionFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ArmorFlat);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(EnergyShieldFlat);
+	}
 
 	/**
 	 * Skill Implicits
 	 */
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Witch_FireBall);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Barbarian_Slash);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Assassin_FlyingKnife);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Paladin_BlessedHammer);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Attack_Paladin_MagneticHammer);
+	namespace Item::Affix::SkillImplicits::Attack::Witch
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FireBall);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_MagmaBarrier);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_FrozenArmor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_TransientArmor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_SparklingBarrier);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Defence_RaisedShield);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Roll);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Jump);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_ShieldCharge);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Blink);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Movement_Teleport);
-	
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Health);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Mana);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Energy);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Evasion);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Armor);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_CirclingElementalDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_CriticalDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_CriticalChance);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_ChaosDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_PhysicalDamage);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_HealthRegeneration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_ManaRegeneration);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Aura_Hatred);
+	namespace Item::Affix::SkillImplicits::Attack::Barbarian
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Slash);
+	}
 
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_VoidSphere);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_Combustion);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_Shatter);
-	OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Item_Affix_SkillImplicits_Ultimate_Electrocution);
+	namespace Item::Affix::SkillImplicits::Attack::Assassin
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FlyingKnife);
+	}
+
+	namespace Item::Affix::SkillImplicits::Attack::Paladin
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(BlessedHammer);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MagneticHammer);
+	}
+
+	namespace Item::Affix::SkillImplicits::Defence
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(MagmaBarrier);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(FrozenArmor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(TransientArmor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(SparklingBarrier);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(RaisedShield);
+	}
+	
+	namespace Item::Affix::SkillImplicits::Movement
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Roll);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Jump);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ShieldCharge);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Blink);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Teleport);
+	}
+	
+	namespace Item::Affix::SkillImplicits::Aura
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Health);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Mana);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Energy);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Evasion);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Armor);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CirclingElementalDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CriticalDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(CriticalChance);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ChaosDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(PhysicalDamage);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HealthRegeneration);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(ManaRegeneration);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Hatred);
+	}
+
+	namespace Item::Affix::SkillImplicits::Ultimate
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(VoidSphere);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combustion);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Shatter);
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Electrocution);
+	}
 }
 
 

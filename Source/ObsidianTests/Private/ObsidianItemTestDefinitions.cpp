@@ -38,10 +38,10 @@ namespace ObsidianItemTestDefinitions
 	void AddStacks(UObsidianInventoryItemDefinition* Definition, const int32 MaxStacks, const int32 LimitStacks)
 	{
 		TMap<FGameplayTag, int32> StackNumbers;
-		StackNumbers.Add(ObsidianGameplayTags::Item_StackCount_Max, MaxStacks);
+		StackNumbers.Add(ObsidianGameplayTags::Item::StackCount::Max, MaxStacks);
 		if(LimitStacks > 0)
 		{
-			StackNumbers.Add(ObsidianGameplayTags::Item_StackCount_Limit, LimitStacks);
+			StackNumbers.Add(ObsidianGameplayTags::Item::StackCount::Limit, LimitStacks);
 		}
 
 		UOInventoryItemFragment_Stacks* Stacks = Definition->CreateDefaultSubobject<UOInventoryItemFragment_Stacks>(TEXT("Stacks"));
@@ -59,7 +59,7 @@ namespace ObsidianItemTestDefinitions
 UObsidianTestItemDef_Stackable::UObsidianTestItemDef_Stackable()
 {
 	DebugName = TEXT("Test Stackable");
-	ItemCategory = ObsidianGameplayTags::Item_Category_Currency_Resource;
+	ItemCategory = ObsidianGameplayTags::Item::Category::Currency::Resource;
 	bStartsIdentified = true;
 
 	ObsidianItemTestDefinitions::AddAppearance(this, EObsidianInventoryItemGridSize::IIGS_SingleSquare);
@@ -69,7 +69,7 @@ UObsidianTestItemDef_Stackable::UObsidianTestItemDef_Stackable()
 UObsidianTestItemDef_LimitedStackable::UObsidianTestItemDef_LimitedStackable()
 {
 	DebugName = TEXT("Test Limited Stackable");
-	ItemCategory = ObsidianGameplayTags::Item_Category_Currency_Resource;
+	ItemCategory = ObsidianGameplayTags::Item::Category::Currency::Resource;
 	bStartsIdentified = true;
 
 	ObsidianItemTestDefinitions::AddAppearance(this, EObsidianInventoryItemGridSize::IIGS_SingleSquare);
@@ -79,7 +79,7 @@ UObsidianTestItemDef_LimitedStackable::UObsidianTestItemDef_LimitedStackable()
 UObsidianTestItemDef_Large::UObsidianTestItemDef_Large()
 {
 	DebugName = TEXT("Test Large");
-	ItemCategory = ObsidianGameplayTags::Item_Category_Currency_Functional;
+	ItemCategory = ObsidianGameplayTags::Item::Category::Currency::Functional;
 	bStartsIdentified = true;
 
 	ObsidianItemTestDefinitions::AddAppearance(this, EObsidianInventoryItemGridSize::IIGS_FourSquares_Square);
@@ -88,7 +88,7 @@ UObsidianTestItemDef_Large::UObsidianTestItemDef_Large()
 UObsidianTestItemDef_Helmet::UObsidianTestItemDef_Helmet()
 {
 	DebugName = TEXT("Test Helmet");
-	ItemCategory = ObsidianGameplayTags::Item_Category_Equipment_Armor_Helmet;
+	ItemCategory = ObsidianGameplayTags::Item::Category::Equipment::Armor::Helmet;
 
 	ObsidianItemTestDefinitions::AddAppearance(this, EObsidianInventoryItemGridSize::IIGS_FourSquares_Square);
 	ObsidianItemTestDefinitions::AddEquippable(this);
@@ -97,7 +97,7 @@ UObsidianTestItemDef_Helmet::UObsidianTestItemDef_Helmet()
 UObsidianTestItemDef_OneHandSword::UObsidianTestItemDef_OneHandSword()
 {
 	DebugName = TEXT("Test One-Hand Sword");
-	ItemCategory = ObsidianGameplayTags::Item_Category_Equipment_Weapon_Melee_OneHand_Sword;
+	ItemCategory = ObsidianGameplayTags::Item::Category::Equipment::Weapon::Melee::OneHand::Sword;
 
 	ObsidianItemTestDefinitions::AddAppearance(this, EObsidianInventoryItemGridSize::IIGS_ThreeSquares_Vertical);
 	ObsidianItemTestDefinitions::AddEquippable(this);
@@ -106,7 +106,7 @@ UObsidianTestItemDef_OneHandSword::UObsidianTestItemDef_OneHandSword()
 UObsidianTestItemDef_TwoHandSword::UObsidianTestItemDef_TwoHandSword()
 {
 	DebugName = TEXT("Test Two-Hand Sword");
-	ItemCategory = ObsidianGameplayTags::Item_Category_Equipment_Weapon_Melee_TwoHand_Sword;
+	ItemCategory = ObsidianGameplayTags::Item::Category::Equipment::Weapon::Melee::TwoHand::Sword;
 
 	ObsidianItemTestDefinitions::AddAppearance(this, EObsidianInventoryItemGridSize::IIGS_EightSquares_VerticalRectangle);
 	ObsidianItemTestDefinitions::AddEquippable(this);
@@ -115,7 +115,7 @@ UObsidianTestItemDef_TwoHandSword::UObsidianTestItemDef_TwoHandSword()
 UObsidianTestItemDef_Shield::UObsidianTestItemDef_Shield()
 {
 	DebugName = TEXT("Test Shield");
-	ItemCategory = ObsidianGameplayTags::Item_Category_Equipment_Offhand_Shield;
+	ItemCategory = ObsidianGameplayTags::Item::Category::Equipment::Offhand::Shield;
 
 	ObsidianItemTestDefinitions::AddAppearance(this, EObsidianInventoryItemGridSize::IIGS_FourSquares_Square);
 	ObsidianItemTestDefinitions::AddEquippable(this);

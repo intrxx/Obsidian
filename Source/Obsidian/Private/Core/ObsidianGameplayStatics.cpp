@@ -34,21 +34,21 @@ bool UObsidianGameplayStatics::DoesTagMatchesAnySubTag(const FGameplayTag TagToC
 
 FGameplayTag UObsidianGameplayStatics::GetOpposedEquipmentTagForTag(const FGameplayTag MainTag)
 {
-	if(MainTag == ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand)
+	if(MainTag == ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand)
 	{
-		return ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_LeftHand;
+		return ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::LeftHand;
 	}
-	if(MainTag == ObsidianGameplayTags::Item_Slot_Equipment_Weapon_RightHand)
+	if(MainTag == ObsidianGameplayTags::Item::Slot::Equipment::Weapon::RightHand)
 	{
-		return ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_RightHand;
+		return ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand;
 	}
-	if(MainTag == ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_LeftHand)
+	if(MainTag == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::LeftHand)
 	{
-		return ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand;
+		return ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand;
 	}
-	if(MainTag == ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_RightHand)
+	if(MainTag == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand)
 	{
-		return ObsidianGameplayTags::Item_Slot_Equipment_Weapon_RightHand;
+		return ObsidianGameplayTags::Item::Slot::Equipment::Weapon::RightHand;
 	}
 	
 	return FGameplayTag::EmptyTag;

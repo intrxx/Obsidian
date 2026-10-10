@@ -197,14 +197,14 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 		
 		if (AddingFromItemDef == Instance->GetItemDef())
 		{
-			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 			if (CurrentStackCount == 0)
 			{
 				continue;
 			}
 			
 			const int32 StacksLeft = Result.StacksLeft;
-			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+			const int32 MaxStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Max);
 			int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksLeft);
 			AmountThatCanBeAddedToInstance = FMath::Min(AmountThatCanBeAddedToInstance, StacksLeft);
 			if (AmountThatCanBeAddedToInstance <= 0)
@@ -214,7 +214,7 @@ FObsidianAddingStacksResult UObsidianPlayerStashComponent::TryAddingStacksToExis
 			
 			UE_LOG(ObLogPlayerStash, Verbose, TEXT("Added [%d] stacks to [%s]."), AmountThatCanBeAddedToInstance, *GetNameSafe(Instance));
 			
-			Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+			Instance->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
 			StashItemList.ChangedEntryStacks(Instance, CurrentStackCount, InTabTag);
 			
 			Result.AddedStacks += AmountThatCanBeAddedToInstance;
@@ -375,7 +375,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 		return Result;
 	}
 
-	Result.StacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	Result.StacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	if(CanOwnerModifyPlayerStashState() == false)
 	{
@@ -391,7 +391,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstance(UObs
 		{
 			Result.StacksLeft = AddingStacksResult.StacksLeft;
 			Result.AffectedInstance = OutAddedToInstances.Last();
-			InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, Result.StacksLeft);
+			InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, Result.StacksLeft);
 		}
 		
 		if(AddingStacksResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
@@ -434,7 +434,7 @@ FObsidianItemOperationResult UObsidianPlayerStashComponent::AddItemInstanceToSpe
 		return Result;
 	}
 
-	Result.StacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	Result.StacksLeft = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 
 	if(CanOwnerModifyPlayerStashState() == false)
 	{
@@ -519,7 +519,7 @@ TArray<UObsidianInventoryItemInstance*> UObsidianPlayerStashComponent::GetContai
 
 FGameplayTag UObsidianPlayerStashComponent::GetBlockActionsTag() const
 {
-	return ObsidianGameplayTags::PlayerStash_BlockActions;
+	return ObsidianGameplayTags::PlayerStash::BlockActions;
 }
 
 void UObsidianPlayerStashComponent::AddItemInstanceToList(UObsidianInventoryItemInstance* Instance,

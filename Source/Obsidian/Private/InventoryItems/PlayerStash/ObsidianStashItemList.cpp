@@ -277,7 +277,7 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	NewEntry.ItemPosition = ToPosition;
 	NewEntry.OwningStashTab = StashTab;
 	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
-	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	StashTab->MarkSpaceInTab(Instance, ToPosition);
 	MarkItemDirty(NewEntry);
@@ -304,7 +304,7 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::LoadEntry(const FObsidia
 	NewEntry.ItemPosition = LoadedPosition;
 	NewEntry.OwningStashTab = StashTab;
 	NewEntry.Instance->SetItemCurrentPosition(LoadedPosition);
-	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	StashTab->MarkSpaceInTab(LoadedInstance, LoadedPosition);
 	MarkItemDirty(NewEntry);
@@ -343,7 +343,7 @@ void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 		
 		StashTab->UnmarkSpaceInTab(Instance, CachedPosition);
 
-		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, CachedPosition, EObsidianStashChangeType::ICT_ItemRemoved);
 		return;
 	}
@@ -352,7 +352,7 @@ void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 
 void FObsidianStashItemList::ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount, const FGameplayTag& StashTabTag)
 {
-	const int32 NewCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 NewCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	bool bSuccess = false;
 	for(FObsidianStashEntry& Entry : Entries)
@@ -388,7 +388,7 @@ void FObsidianStashItemList::GeneralEntryChange(UObsidianInventoryItemInstance* 
 	
 	if(bSuccess)
 	{
-		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		BroadcastChangeMessage(Instance, Count, Count, Instance->GetItemCurrentPosition(), EObsidianStashChangeType::ICT_GeneralItemChanged);
 		return;
 	}
@@ -483,6 +483,6 @@ void FObsidianStashItemList::BroadcastChangeMessage(const FObsidianStashEntry& E
 	Message.ChangeType = ChangeType;
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
-	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message_PlayerStash_Changed, Message);
+	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message::PlayerStash::Changed, Message);
 }
 

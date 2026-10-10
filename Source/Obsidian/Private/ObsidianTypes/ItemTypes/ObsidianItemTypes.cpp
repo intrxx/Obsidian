@@ -40,7 +40,7 @@ void FObsidianItemGeneratedData::Reset()
 
 FDraggedItem::FDraggedItem(UObsidianInventoryItemInstance* InInstance) 
 	: Instance(InInstance)
-	, GeneratedData(InInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current))
+	, GeneratedData(InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current))
 {}
 
 bool FDraggedItem::IsEmpty() const

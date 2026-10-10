@@ -106,8 +106,8 @@ struct FObsidianDamageStatics
 		ChaosResistanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetChaosResistanceAttribute(),
 			EGameplayEffectAttributeCaptureSource::Target, false);
 		
-		UIDataTags.AddTag(ObsidianGameplayTags::UI_DataSpecifierTag);
-		UIDataTags.AddTag(ObsidianGameplayTags::UI_EffectData_Effect_Shock);
+		UIDataTags.AddTag(ObsidianGameplayTags::UI::DataSpecifierTag);
+		UIDataTags.AddTag(ObsidianGameplayTags::UI::EffectData::Effect::Shock);
 	}
 };
 
@@ -175,7 +175,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	EvaluationParameters.TargetTags = TargetTags;
 
 	//~ Implementation of Immunity
-	if(TargetTags->HasTag(ObsidianGameplayTags::Status_Immunity))
+	if(TargetTags->HasTag(ObsidianGameplayTags::Status::Immunity))
 	{
 		ObsidianEffectContext->SetIsTargetImmune(true);
 		
@@ -221,7 +221,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float FullDamage = 0.0f;
 
 	// ~~ Start of Physical Damage
-	float PhysicalDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_DamageType_Physical, false, 0.0f);
+	float PhysicalDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Physical, false, 0.0f);
 	float MinPhysicalDamage = 0.0f;
 	float MaxPhysicalDamage = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatPhysicalDamageDef, EvaluationParameters, MinPhysicalDamage);
@@ -246,7 +246,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	// ~~ End of Physical Damage
 
 	// ~~ Start of Fire Damage
-	float FireDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Fire, false, 0.0f);
+	float FireDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Elemental::Fire, false, 0.0f);
 	float MinFireDamage = 0.0f;
 	float MaxFireDamage = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatFireDamageDef, EvaluationParameters, MinFireDamage);
@@ -268,7 +268,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	// ~~ End of Fire Damage
 
 	// ~~ Start of Lightning Damage
-	float LightningDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Lightning, false, 0.0f);
+	float LightningDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Elemental::Lightning, false, 0.0f);
 	float MinLightningDamage = 0.0f;
 	float MaxLightningDamage = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatLightningDamageDef, EvaluationParameters, MinLightningDamage);
@@ -290,7 +290,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	// ~~ End of Lightning Damage
 
 	// ~~ Start of Cold Damage
-	float ColdDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_DamageType_Elemental_Cold, false, 0.0f);
+	float ColdDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Elemental::Cold, false, 0.0f);
 	float MinColdDamage = 0.0f;
 	float MaxColdDamage = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatColdDamageDef, EvaluationParameters, MinColdDamage);
@@ -312,7 +312,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	// ~~ End of Cold Damage
 
 	// ~~ Start of Chaos Damage
-	float ChaosDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::SetByCaller_DamageType_Chaos, false, 0.0f);
+	float ChaosDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Chaos, false, 0.0f);
 	float MinChaosDamage = 0.0f;
 	float MaxChaosDamage = 0.0f;
 	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatChaosDamageDef, EvaluationParameters, MinChaosDamage);

@@ -261,7 +261,7 @@ void UObsidianCharacterScreen::OnPlayHeroLoadFinished(UObsidianHeroSaveGame* Sav
 		if (bOnline)
 		{
 			UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(),
-				ObsidianGameplayTags::UI_Layer_MainMenu, SoftOnlineLobbyWidgetClass);
+				ObsidianGameplayTags::UI::Layer::MainMenu, SoftOnlineLobbyWidgetClass);
 		}
 		else
 		{

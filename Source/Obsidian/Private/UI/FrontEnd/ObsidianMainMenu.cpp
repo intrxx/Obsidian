@@ -55,7 +55,7 @@ void UObsidianMainMenu::OnOptionsClicked()
 {
 	if (SoftSettingsMenuWidgetClass.IsNull() == false)
 	{
-		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI_Layer_MainMenu,
+		UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(GetOwningLocalPlayer(), ObsidianGameplayTags::UI::Layer::MainMenu,
 			SoftSettingsMenuWidgetClass);
 	}
 }

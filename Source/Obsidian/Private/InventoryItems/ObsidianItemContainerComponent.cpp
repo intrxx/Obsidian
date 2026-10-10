@@ -109,7 +109,7 @@ int32 UObsidianItemContainerComponent::CountStacksOfItem(const TSubclassOf<UObsi
 	{
 		if(IsValid(Instance) && Instance->GetItemDef() == ItemDef)
 		{
-			AllStacks += Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			AllStacks += Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		}
 	}
 	return AllStacks;
@@ -137,7 +137,7 @@ void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* Us
 		return;
 	}
 
-	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	if(CurrentUsingInstanceStacks <= 0)
 	{
 		UE_LOG(ObLogItemContainer, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"),
@@ -273,7 +273,7 @@ UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemDefini
 		return nullptr;
 	}
 
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StackCount);
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, StackCount);
 	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(ItemDef.GetDefaultObject(), ItemGeneratedData));
 
 	RegisterItemInstanceForReplication(Instance);
@@ -290,7 +290,7 @@ void UObsidianItemContainerComponent::PlaceWholeItemInstance(UObsidianInventoryI
 UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemInstance(UObsidianInventoryItemInstance* InstanceToAdd,
 	const int32 StacksToAdd, const FObsidianItemPosition& ToPosition, bool& bOutWholeItemPlaced)
 {
-	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	bOutWholeItemPlaced = StacksToAdd == CurrentHeldItemStacks;
 	if(bOutWholeItemPlaced)
 	{
@@ -299,7 +299,7 @@ UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemInstan
 	}
 
 	// Only some of the stacks are placed, the rest stays on the provided Instance and a new one is created for the placed part.
-	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, CurrentHeldItemStacks - StacksToAdd);
+	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, CurrentHeldItemStacks - StacksToAdd);
 	const bool bCachedIdentified = InstanceToAdd->IsItemIdentified();
 
 	FObsidianItemGeneratedData CachedGeneratedData;
@@ -309,7 +309,7 @@ UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemInstan
 		StacksToAdd, ToPosition);
 	if(SplitInstance)
 	{
-		SplitInstance->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToAdd);
+		SplitInstance->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, StacksToAdd);
 		SplitInstance->SetIdentified(bCachedIdentified);
 
 		RegisterItemInstanceForReplication(SplitInstance);
@@ -333,7 +333,7 @@ FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFrom
 		return Result;
 	}
 
-	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	Result.StacksLeft = AddingFromInstanceCurrentStacks;
 
 	if(CanOwnerModifyContainerState() == false)
@@ -355,12 +355,12 @@ FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFrom
 
 	AmountThatCanBeAddedToInstance = ClampStacksToAdd(AmountThatCanBeAddedToInstance, StackToAddOverride);
 
-	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
 	HandleItemStacksChanged(InstanceToAddTo, OldStackCount);
 
 	// AddingFromInstance is not held by this container, whoever holds it is responsible for reacting to the change.
-	AddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	AddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
 
 	Result.AddedStacks = AmountThatCanBeAddedToInstance;
 	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
@@ -402,8 +402,8 @@ FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFrom
 
 	AmountThatCanBeAddedToInstance = ClampStacksToAdd(AmountThatCanBeAddedToInstance, StackToAddOverride);
 
-	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, AmountThatCanBeAddedToInstance);
+	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
 	HandleItemStacksChanged(InstanceToAddTo, OldStackCount);
 
 	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
@@ -437,13 +437,13 @@ FObsidianItemOperationResult UObsidianItemContainerComponent::TakeOutStacksFromI
 
 	// The only valid number of stacks to take is in range [1, x - 1], taking the whole item out is just picking it up.
 	// StacksToTake comes from the Client so it can't be trusted, anything outside this range would duplicate or void stacks.
-	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	if(StacksToTake < 1 || StacksToTake >= CurrentTakingFromInstanceStacks)
 	{
 		return Result;
 	}
 
-	TakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, StacksToTake);
+	TakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, StacksToTake);
 	HandleItemStacksChanged(TakingFromInstance, CurrentTakingFromInstanceStacks);
 
 	Result.bActionSuccessful = true;
@@ -489,7 +489,7 @@ void UObsidianItemContainerComponent::ConsumeUsedItem(UObsidianInventoryItemInst
 
 	if(CurrentStacks > 1)
 	{
-		UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item_StackCount_Current, 1);
+		UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, 1);
 		HandleItemStacksChanged(UsingInstance, CurrentStacks);
 		return;
 	}

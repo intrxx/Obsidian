@@ -38,7 +38,7 @@ float UObsidianHeroMovementComponent::GetMaxSpeed() const
 		return Super::GetMaxSpeed();
 	}
 
-	if (CurrentWalkState == ObsidianGameplayTags::Movement_State_Running)
+	if (CurrentWalkState == ObsidianGameplayTags::Movement::State::Running)
 	{
 		return HeroAttributes->GetSprintSpeed();
 	}
@@ -63,9 +63,9 @@ bool UObsidianHeroMovementComponent::IsInWalkingState() const
 
 void UObsidianHeroMovementComponent::HandleOutOfStamina()
 {
-	if (CurrentWalkState == ObsidianGameplayTags::Movement_State_Running)
+	if (CurrentWalkState == ObsidianGameplayTags::Movement::State::Running)
 	{
-		const bool bSuccess = HandleWalkingStateChanged(ObsidianGameplayTags::Movement_State_Walking);
+		const bool bSuccess = HandleWalkingStateChanged(ObsidianGameplayTags::Movement::State::Walking);
 		if (bSuccess && bWentOutOfStamina == false)
 		{
 			bWentOutOfStamina = true;
@@ -95,7 +95,7 @@ void UObsidianHeroMovementComponent::TickComponent(float DeltaTime, enum ELevelT
 		const bool bHasStamina = HeroAttributes->GetStamina() > 0.0f;
 		if (GetVelocityForNavMovement().SizeSquared() < KINDA_SMALL_NUMBER)
 		{
-			const bool bSuccess = HandleWalkingStateChanged(ObsidianGameplayTags::Movement_State_Standing);
+			const bool bSuccess = HandleWalkingStateChanged(ObsidianGameplayTags::Movement::State::Standing);
 			if (bSuccess && bWentOutOfStamina && bHasStamina)
 			{
 				bWentOutOfStamina = false;
@@ -103,11 +103,11 @@ void UObsidianHeroMovementComponent::TickComponent(float DeltaTime, enum ELevelT
 		}
 		else if (bUserTurnOnWalkingState == false && bWentOutOfStamina == false && bHasStamina)
 		{
-			HandleWalkingStateChanged(ObsidianGameplayTags::Movement_State_Running);
+			HandleWalkingStateChanged(ObsidianGameplayTags::Movement::State::Running);
 		}
 		else
 		{
-			HandleWalkingStateChanged(ObsidianGameplayTags::Movement_State_Walking);
+			HandleWalkingStateChanged(ObsidianGameplayTags::Movement::State::Walking);
 		}
 	}
 }

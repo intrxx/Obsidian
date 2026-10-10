@@ -95,8 +95,8 @@ void UObsidianAttributesComponent::ClearGameplayTags()
 {
 	if(AbilitySystemComponent)
 	{
-		AbilitySystemComponent->RemoveLooseGameplayTag(ObsidianGameplayTags::Status_Death_Dying, 0);
-		AbilitySystemComponent->RemoveLooseGameplayTag(ObsidianGameplayTags::Status_Death_Dead, 0);
+		AbilitySystemComponent->RemoveLooseGameplayTag(ObsidianGameplayTags::Status::Death::Dying, 0);
+		AbilitySystemComponent->RemoveLooseGameplayTag(ObsidianGameplayTags::Status::Death::Dead, 0);
 	}
 }
 
@@ -111,7 +111,7 @@ void UObsidianAttributesComponent::StartDeath()
 
 	if(AbilitySystemComponent)
 	{
-		AbilitySystemComponent->SetLooseGameplayTagCount(ObsidianGameplayTags::Status_Death_Dying, 1);
+		AbilitySystemComponent->SetLooseGameplayTagCount(ObsidianGameplayTags::Status::Death::Dying, 1);
 	}
 
 	AActor* Owner = GetOwner();
@@ -133,7 +133,7 @@ void UObsidianAttributesComponent::FinishDeath()
 
 	if(AbilitySystemComponent)
 	{
-		AbilitySystemComponent->SetLooseGameplayTagCount(ObsidianGameplayTags::Status_Death_Dead, 1);
+		AbilitySystemComponent->SetLooseGameplayTagCount(ObsidianGameplayTags::Status::Death::Dead, 1);
 	}
 
 	AActor* Owner = GetOwner();
@@ -196,7 +196,7 @@ void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, A
 	if(AbilitySystemComponent && DamageEffectSpec)
 	{
 		FGameplayEventData Payload;
-		Payload.EventTag = ObsidianGameplayTags::GameplayEvent_Death;
+		Payload.EventTag = ObsidianGameplayTags::GameplayEvent::Death;
 		Payload.Instigator = DamageInstigator;
 		Payload.Target = AbilitySystemComponent->GetAvatarActor();
 		Payload.OptionalObject = DamageEffectSpec->Def;

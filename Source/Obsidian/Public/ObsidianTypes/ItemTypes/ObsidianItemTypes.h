@@ -71,15 +71,15 @@ namespace ObsidianDefaultStackCounts
 	/** Returns the unified project default item stack count for a given Stack Tag. */
 	inline int32 GetUnifiedDefaultForTag(const FGameplayTag Tag)
 	{
-		if(Tag == ObsidianGameplayTags::Item_StackCount_Current)
+		if(Tag == ObsidianGameplayTags::Item::StackCount::Current)
 		{
 			return CurrentStackCount;
 		}
-		if(Tag == ObsidianGameplayTags::Item_StackCount_Max)
+		if(Tag == ObsidianGameplayTags::Item::StackCount::Max)
 		{
 			return MaxStackCount;
 		}
-		if(Tag == ObsidianGameplayTags::Item_StackCount_Limit)
+		if(Tag == ObsidianGameplayTags::Item::StackCount::Limit)
 		{
 			return LimitCount;
 		}

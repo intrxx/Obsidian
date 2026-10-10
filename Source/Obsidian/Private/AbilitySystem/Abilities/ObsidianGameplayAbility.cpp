@@ -119,10 +119,10 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 
 		if (AbilitySystemComponentTags.HasAny(AllBlockedTags))
 		{
-			if (OptionalRelevantTags && AbilitySystemComponentTags.HasTag(ObsidianGameplayTags::Status_Death))
+			if (OptionalRelevantTags && AbilitySystemComponentTags.HasTag(ObsidianGameplayTags::Status::Death::Death))
 			{
 				// If player is dead and was rejected due to blocking tags, give that feedback
-				OptionalRelevantTags->AddTag(ObsidianGameplayTags::Ability_ActivationFail_IsDead);
+				OptionalRelevantTags->AddTag(ObsidianGameplayTags::Ability::ActivationFail::IsDead);
 			}
 
 			bBlocked = true;

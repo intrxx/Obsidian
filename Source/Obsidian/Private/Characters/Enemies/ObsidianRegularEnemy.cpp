@@ -58,7 +58,7 @@ void AObsidianRegularEnemy::OnAbilitySystemInitialized()
 	UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent();
 	check(ObsidianASC);
 
-	ObsidianASC->RegisterGameplayTagEvent(ObsidianGameplayTags::Effect_HitReact,
+	ObsidianASC->RegisterGameplayTagEvent(ObsidianGameplayTags::Effect::HitReact,
 		EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 }
 

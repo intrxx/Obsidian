@@ -66,8 +66,8 @@ bool UObsidianItemsFunctionLibrary::GetItemStats(const AObsidianPlayerController
 	
 	if(ItemInstance->IsStackable())
 	{
-		OutItemStats.SetStacks(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current),
-			 ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max));
+		OutItemStats.SetStacks(ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current),
+			 ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Max));
 	}
 
 	OutItemStats.SetItemImage(ItemInstance->GetItemImage(), ItemInstance->GetItemGridSpan());
@@ -124,7 +124,7 @@ bool UObsidianItemsFunctionLibrary::GetItemStats_WithDef(const AObsidianPlayerCo
 		if(const UOInventoryItemFragment_Stacks* StacksFrag = Cast<UOInventoryItemFragment_Stacks>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Stacks::StaticClass())))
 		{
 			OutItemStats.SetStacks(ItemGeneratedData.GetStackCount(),
-				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item_StackCount_Max));
+				 StacksFrag->GetItemStackNumberByTag(ObsidianGameplayTags::Item::StackCount::Max));
 		}
 	}
 
@@ -505,14 +505,14 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const A
 		return 0; 
 	}
 	
-	const int32 CurrentStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	if(CurrentStackCount == 0)
 	{
 		return 0;
 	}
 
 	int32 CombinedStacks = 0;
-	const int32 LimitStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+	const int32 LimitStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Limit);
 	if(LimitStackCount > 0)
 	{
 		int32 StacksInInventory = 0;
@@ -534,28 +534,28 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(const A
 		}
 	}
 	
-	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	const int32 StacksThatCanBeAddedToInventory = LimitStackCount == 0 ? AddingFromInstanceCurrentStacks : LimitStackCount - CombinedStacks;
 	if(StacksThatCanBeAddedToInventory <= 0)
 	{
 		return 0;
 	}
 			
-	const int32 MaxStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+	const int32 MaxStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Max);
 	const int32 AmountThatCanBeAddedToInstance = FMath::Clamp<int32>((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
 	return FMath::Min<int32>(AmountThatCanBeAddedToInstance, AddingFromInstanceCurrentStacks);
 }
 
 int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef(const AActor* Owner, const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks, const UObsidianInventoryItemInstance* InstanceToAddTo)
 {
-	const int32 CurrentStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 CurrentStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	if(CurrentStackCount == 0)
 	{
 		return 0;
 	}
 
 	int32 CombinedStacks = 0;
-	const int32 LimitStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+	const int32 LimitStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Limit);
 	if(LimitStackCount > 0)
 	{
 		int32 StacksInInventory = 0;
@@ -583,7 +583,7 @@ int32 UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef
 		return 0;
 	}
 			
-	const int32 MaxStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
+	const int32 MaxStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Max);
 	const int32 AmountThatCanBeAddedToInstance = FMath::Clamp((MaxStackCount - CurrentStackCount), 0, StacksThatCanBeAddedToInventory);
 	return FMath::Min(AmountThatCanBeAddedToInstance, AddingFromItemDefCurrentStacks);
 }

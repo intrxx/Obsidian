@@ -698,13 +698,13 @@ void UObsidianInventoryItemInstance::ConstructSaveItem(FObsidianSavedItem& OutSa
 	OutSavedItem.bStackable = bStackable;
 	if (OutSavedItem.bStackable)
 	{
-		OutSavedItem.ItemCurrentStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
-		OutSavedItem.ItemMaxStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Max);
-		OutSavedItem.ItemLimitStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Limit);
+		OutSavedItem.ItemCurrentStacks = GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+		OutSavedItem.ItemMaxStacks = GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Max);
+		OutSavedItem.ItemLimitStacks = GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Limit);
 	}
 	else
 	{
-		OutSavedItem.ItemCurrentStacks = GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		OutSavedItem.ItemCurrentStacks = GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	}
 	
 	// Appearance
@@ -761,20 +761,20 @@ void UObsidianInventoryItemInstance::ConstructFromSavedItem(const FObsidianSaved
 	bStackable = SavedItem.bStackable;
 	if (bStackable)
 	{
-		ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Current, SavedItem.ItemCurrentStacks);
+		ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Current, SavedItem.ItemCurrentStacks);
 
 		if (SavedItem.ItemMaxStacks > 0)
 		{
-			ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Max, SavedItem.ItemMaxStacks);
+			ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Max, SavedItem.ItemMaxStacks);
 		}
 		if (SavedItem.ItemLimitStacks > 0)
 		{
-			ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Limit, SavedItem.ItemLimitStacks);
+			ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Limit, SavedItem.ItemLimitStacks);
 		}
 	}
 	else
 	{
-		ItemStackTags.AddStack(ObsidianGameplayTags::Item_StackCount_Current, SavedItem.ItemCurrentStacks);
+		ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Current, SavedItem.ItemCurrentStacks);
 	}
 
 	// Appearance

@@ -98,7 +98,7 @@ void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* In
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(Instance);
 	NewEntry.GridLocation = AvailablePosition; //TODO(intrxx) Add Grid Location to Entry instead of instance?
 	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
-	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	GridLocationToItemMap.Add(AvailablePosition, Instance);
 	Item_MarkSpace(Instance, AvailablePosition);
@@ -116,7 +116,7 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::LoadEntry(const 
 
 	const FIntPoint LoadedGridPosition = LoadedInstance->GetItemCurrentPosition().GetItemGridPosition();
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, LoadedGridPosition);
-	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	NewEntry.StackCount = LoadedInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	GridLocationToItemMap.Add(LoadedGridPosition, LoadedInstance);
 	Item_MarkSpace(LoadedInstance, LoadedGridPosition);
@@ -149,7 +149,7 @@ void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance*
 		GridLocationToItemMap.Remove(CachedLocation);
 		Item_UnMarkSpace(Instance, CachedLocation);
 
-		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, CachedLocation, EObsidianInventoryChangeType::ICT_ItemRemoved);
 		return;
 	}
@@ -158,7 +158,7 @@ void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance*
 
 void FObsidianInventoryGridItemList::ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount)
 {
-	const int32 NewCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+	const int32 NewCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	bool bSuccess = false;
 	for(FObsidianInventoryEntry& Entry : Entries)
@@ -195,7 +195,7 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 	if(bSuccess)
 	{
 		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
-		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		BroadcastChangeMessage(Instance, Count, Count, GridLocation,
 			EObsidianInventoryChangeType::ICT_GeneralItemChanged);
 		return;
@@ -335,7 +335,7 @@ void FObsidianInventoryGridItemList::BroadcastChangeMessage(const FObsidianInven
 	Message.ChangeType = ChangeType;
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
-	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message_Inventory_Changed, Message);
+	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message::Inventory::Changed, Message);
 }
 
 

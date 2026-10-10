@@ -112,12 +112,12 @@ void FObsidianItemTestEnvironment::SetHeroLevel(const uint8 HeroLevel) const
 
 FGameplayTag FObsidianItemTestEnvironment::PersonalStashTab()
 {
-	return ObsidianGameplayTags::StashTab_Grid_1;
+	return ObsidianGameplayTags::StashTab::Grid_1;
 }
 
 FGameplayTag FObsidianItemTestEnvironment::SharedStashTab()
 {
-	return ObsidianGameplayTags::StashTab_Grid_2;
+	return ObsidianGameplayTags::StashTab::Grid_2;
 }
 
 FObsidianItemPosition FObsidianItemTestEnvironment::PersonalStashPosition(const int32 X, const int32 Y)
@@ -137,7 +137,7 @@ FObsidianItemGeneratedData FObsidianItemTestEnvironment::MakeItemData(const int3
 
 int32 FObsidianItemTestEnvironment::Stacks(const UObsidianInventoryItemInstance* Instance)
 {
-	return Instance ? Instance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current) : 0;
+	return Instance ? Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current) : 0;
 }
 
 UObsidianInventoryItemInstance* FObsidianItemTestEnvironment::MakeHeldItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,

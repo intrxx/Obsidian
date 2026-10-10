@@ -92,5 +92,5 @@ void AObsidianBossEnemy::HandleAdvancedCombatHit(const FHitResult& HitResult)
 	FGameplayEventData Payload;
 	Payload.TargetData = TargetData; 
 	
-	ASC->HandleGameplayEvent(ObsidianGameplayTags::Data_AdvancedCombat_Hit, &Payload);
+	ASC->HandleGameplayEvent(ObsidianGameplayTags::Data::AdvancedCombat::Hit, &Payload);
 }

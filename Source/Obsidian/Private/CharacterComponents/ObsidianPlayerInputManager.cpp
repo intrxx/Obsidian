@@ -241,44 +241,44 @@ void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputCo
 				ObsidianInputComponent->BindAbilityActions(InputConfig, this, &ThisClass::Input_AbilityInputTagPressed,
 					&ThisClass::Input_AbilityInputTagReleased, /*OUT*/ BindHandles);
 
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Keyboard,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::Move::Keyboard,
 					ETriggerEvent::Triggered,this, &ThisClass::Input_MoveKeyboard, true);
 				
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::Move::Mouse,
 					ETriggerEvent::Started, this, &ThisClass::Input_MoveStartedMouse, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::Move::Mouse,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_MoveTriggeredMouse, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::Move::Mouse,
 					ETriggerEvent::Completed, this, &ThisClass::Input_MoveReleasedMouse, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Move_Mouse,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::Move::Mouse,
 					ETriggerEvent::Canceled, this, &ThisClass::Input_MoveReleasedMouse, false);
 				
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_CharacterStatus,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::CharacterStatus,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleCharacterStatus, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Inventory,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::Inventory,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleInventory, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_PassiveSkillTree,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::PassiveSkillTree,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_TogglePassiveSkillTree, false);
 
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_DropItem,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::DropItem,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_DropItem, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ReleaseUsingItem,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::ReleaseUsingItem,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ReleaseUsingItem, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ReleaseContinouslyUsingItem,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::ReleaseContinouslyUsingItem,
 					ETriggerEvent::Completed, this, &ThisClass::Input_ReleaseUsingItem, false);
 				
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_Interact,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Interact,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_Interact, false);
 
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_WeaponSwap,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::WeaponSwap,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_WeaponSwap, false);
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_ToggleWalk,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::Native::ToggleWalk,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleWalk, false);
 
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_UI_OpenGameplayMenu,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::UI::Action::OpenGameplayMenu,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_OpenGameplayMenu, false);
 
-				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input_UI_ToggleHighlight,
+				ObsidianInputComponent->BindNativeAction(InputConfig, ObsidianGameplayTags::Input::UI::ToggleHighlight,
 					ETriggerEvent::Triggered, this, &ThisClass::Input_ToggleHighlight, false);
 			}
 		}
@@ -574,7 +574,7 @@ void UObsidianPlayerInputManager::Input_OpenGameplayMenu()
 	//TODO(intrxx) Close all Gameplay Menus First
 	// This actually need some more work, Gameplay UI like Inventory, Stash etc. should be handled with Common UI first
 	
-	UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(LocalPlayer, ObsidianGameplayTags::UI_Layer_GameplayMenu,
+	UCommonUIExtensions::PushStreamedContentToLayer_ForPlayer(LocalPlayer, ObsidianGameplayTags::UI::Layer::GameplayMenu,
 		GameplayMenuClass);
 }
 

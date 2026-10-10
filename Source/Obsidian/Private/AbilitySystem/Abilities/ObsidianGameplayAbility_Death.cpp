@@ -16,7 +16,7 @@ UObsidianGameplayAbility_Death::UObsidianGameplayAbility_Death()
 	{
 		// Add the ability trigger tag by default to the CDO.
 		FAbilityTriggerData TriggerData;
-		TriggerData.TriggerTag = ObsidianGameplayTags::GameplayEvent_Death;
+		TriggerData.TriggerTag = ObsidianGameplayTags::GameplayEvent::Death;
 		TriggerData.TriggerSource = EGameplayAbilityTriggerSource::GameplayEvent;
 		AbilityTriggers.Add(TriggerData);
 	}

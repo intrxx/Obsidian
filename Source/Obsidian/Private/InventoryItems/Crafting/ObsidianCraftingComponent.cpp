@@ -58,9 +58,9 @@ void UObsidianCraftingComponent::InitializeCraftingComponent()
 	}
 	
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwningActor->GetWorld());
-	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_Inventory_Changed, this,
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message::Inventory::Changed, this,
 		&ThisClass::OnInventoryStateChanged);
-	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message_PlayerStash_Changed, this,
+	MessageSubsystem.RegisterListener(ObsidianGameplayTags::Message::PlayerStash::Changed, this,
 		&ThisClass::OnPlayerStashChanged);
 }
 

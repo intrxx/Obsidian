@@ -44,7 +44,7 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 				TargetASC->CancelAllAbilities();
 				
 				FGameplayTagContainer ActivateTag;
-				ActivateTag.AddTag(ObsidianGameplayTags::AbilityActivation_HitReact);
+				ActivateTag.AddTag(ObsidianGameplayTags::AbilityActivation::HitReact);
 				TargetASC->TryActivateAbilitiesByTag(ActivateTag);
 			}	
 		}

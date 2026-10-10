@@ -475,7 +475,7 @@ void AObsidianDroppableItem::UpdateStacksOnActiveItemDescription(const UObsidian
 		int32 CurrentStacks = 0;
 		if(!ensureMsgf(ItemInstance, TEXT("Item Instance is invalid in [%hs], stacks were set to 0."), __FUNCTION__))
 		{
-			CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item_StackCount_Current);
+			CurrentStacks = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		}
 		ActiveItemDescription->UpdateCurrentStackCount(CurrentStacks);
 	}

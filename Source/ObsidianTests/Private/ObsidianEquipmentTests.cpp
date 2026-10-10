@@ -21,10 +21,10 @@ TEST_CLASS(ObsidianEquipmentTests, "Obsidian.Items.Equipment")
 {
 	TUniquePtr<FObsidianItemTestEnvironment> Env;
 
-	FGameplayTag HelmetSlot = ObsidianGameplayTags::Item_Slot_Equipment_Helmet;
-	FGameplayTag BootsSlot = ObsidianGameplayTags::Item_Slot_Equipment_Boots;
-	FGameplayTag RightHandSlot = ObsidianGameplayTags::Item_Slot_Equipment_Weapon_RightHand;
-	FGameplayTag LeftHandSlot = ObsidianGameplayTags::Item_Slot_Equipment_Weapon_LeftHand;
+	FGameplayTag HelmetSlot = ObsidianGameplayTags::Item::Slot::Equipment::Helmet;
+	FGameplayTag BootsSlot = ObsidianGameplayTags::Item::Slot::Equipment::Boots;
+	FGameplayTag RightHandSlot = ObsidianGameplayTags::Item::Slot::Equipment::Weapon::RightHand;
+	FGameplayTag LeftHandSlot = ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand;
 
 	BEFORE_EACH()
 	{
@@ -283,7 +283,7 @@ TEST_CLASS(ObsidianEquipmentTests, "Obsidian.Items.Equipment")
 		Equipment.WeaponSwap();
 
 		ASSERT_THAT(IsFalse(Equipment.IsItemEquippedAtSlot(RightHandSlot)));
-		ASSERT_THAT(IsTrue(Sword->GetItemCurrentPosition().GetItemSlotTag() == ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_RightHand));
+		ASSERT_THAT(IsTrue(Sword->GetItemCurrentPosition().GetItemSlotTag() == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand));
 		ASSERT_THAT(AreEqual(1, Equipment.GetAllEquippedItems().Num())); // Swapped out weapons are still held by the Equipment.
 
 		Equipment.WeaponSwap();
@@ -307,7 +307,7 @@ TEST_CLASS(ObsidianEquipmentTests, "Obsidian.Items.Equipment")
 		Equipment.WeaponSwap();
 
 		ASSERT_THAT(IsTrue(Equipment.GetEquippedInstanceAtSlot(RightHandSlot) == FirstSword));
-		ASSERT_THAT(IsTrue(SecondSword->GetItemCurrentPosition().GetItemSlotTag() == ObsidianGameplayTags::Item_SwapSlot_Equipment_Weapon_RightHand));
+		ASSERT_THAT(IsTrue(SecondSword->GetItemCurrentPosition().GetItemSlotTag() == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand));
 		ASSERT_THAT(AreEqual(2, Equipment.GetAllEquippedItems().Num()));
 	}
 
@@ -358,7 +358,7 @@ TEST_CLASS(ObsidianEquipmentTests, "Obsidian.Items.Equipment")
 			HelmetSlot, Env->MakeItemData()).AffectedInstance;
 		UObsidianInventoryItemInstance* Sword = Equipment.EquipItemToSpecificSlot(SwordDef, RightHandSlot, Env->MakeItemData()).AffectedInstance;
 
-		Env->AddOwnerTag(ObsidianGameplayTags::Equipment_BlockActions);
+		Env->AddOwnerTag(ObsidianGameplayTags::Equipment::BlockActions);
 
 		ASSERT_THAT(IsFalse(Equipment.CanOwnerModifyEquipmentState()));
 		ASSERT_THAT(IsTrue(Equipment.CanEquipTemplate(SwordDef, LeftHandSlot, Env->MakeItemData()) == EObsidianEquipCheckResult::EquipmentActionsBlocked));
@@ -372,7 +372,7 @@ TEST_CLASS(ObsidianEquipmentTests, "Obsidian.Items.Equipment")
 		ASSERT_THAT(IsTrue(Equipment.GetEquippedInstanceAtSlot(RightHandSlot) == Sword));
 		ASSERT_THAT(AreEqual(2, Equipment.GetAllEquippedItems().Num()));
 
-		Env->RemoveOwnerTag(ObsidianGameplayTags::Equipment_BlockActions);
+		Env->RemoveOwnerTag(ObsidianGameplayTags::Equipment::BlockActions);
 
 		ASSERT_THAT(IsTrue(Equipment.UnequipItem(Helmet).bActionSuccessful));
 	}
