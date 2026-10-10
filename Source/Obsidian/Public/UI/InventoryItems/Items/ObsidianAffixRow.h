@@ -28,7 +28,7 @@ protected:
 	virtual void NativePreConstruct() override;
 
 	void RefreshAffixRowStyle();
-	void ShowAffixRow(const bool bShow);
+	void ShowAffixRow(const bool bInShow);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

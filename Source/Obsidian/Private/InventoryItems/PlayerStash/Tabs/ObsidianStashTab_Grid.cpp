@@ -7,33 +7,33 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 
-UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
-UObsidianInventoryItemInstance* UObsidianStashTab_Grid::GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition)
+UObsidianInventoryItemInstance* UObsidianStashTab_Grid::GetInstanceAtPosition(const FObsidianItemPosition& InItemPosition)
 {
-	return GridLocationToItemMap.FindRef(ItemPosition.GetItemGridPosition());
+	return GridLocationToItemMap.FindRef(InItemPosition.GetItemGridPosition());
 }
 
-bool UObsidianStashTab_Grid::DebugVerifyPositionFree(const FObsidianItemPosition& Position)
+bool UObsidianStashTab_Grid::DebugVerifyPositionFree(const FObsidianItemPosition& InPosition)
 {
-	return !GridLocationToItemMap.Contains(Position.GetItemGridPosition());
+	return !GridLocationToItemMap.Contains(InPosition.GetItemGridPosition());
 }
 
-bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan)
+bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan)
 {
-	const FIntPoint SpecificGridPosition = SpecifiedPosition.GetItemGridPosition();
+	const FIntPoint SpecificGridPosition = InSpecifiedPosition.GetItemGridPosition();
 	
 	bool bCanFit = false;
 	const bool* InitialPositionFreePtr = GridStateMap.Find(SpecificGridPosition);
 	if(InitialPositionFreePtr && *InitialPositionFreePtr == false) // Initial location is free
 	{
 		bCanFit = true;
-		for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
+		for(int32 SpanX = 0; SpanX < InItemGridSpan.X; ++SpanX)
 		{
-			for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
+			for(int32 SpanY = 0; SpanY < InItemGridSpan.Y; ++SpanY)
 			{
 				const FIntPoint LocationToCheck = SpecificGridPosition + FIntPoint(SpanX, SpanY);
 				const bool* ExistingOccupiedPtr = GridStateMap.Find(LocationToCheck);
@@ -48,7 +48,7 @@ bool UObsidianStashTab_Grid::CanPlaceItemAtSpecificPosition(const FObsidianItemP
 	return bCanFit;
 }
 
-bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan)
+bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan)
 {
 	bool bCanFit = false;
 	
@@ -58,9 +58,9 @@ bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosi
 		{
 			bCanFit = true;
 			
-			for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
+			for(int32 SpanX = 0; SpanX < InItemGridSpan.X; ++SpanX)
 			{
-				for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
+				for(int32 SpanY = 0; SpanY < InItemGridSpan.Y; ++SpanY)
 				{
 					const FIntPoint LocationToCheck = Location.Key + FIntPoint(SpanX, SpanY);
 					const bool* bExistingOccupied = GridStateMap.Find(LocationToCheck);
@@ -83,43 +83,43 @@ bool UObsidianStashTab_Grid::FindFirstAvailablePositionForItem(FObsidianItemPosi
 	return bCanFit;
 }
 
-bool UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance)
+bool UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const UObsidianInventoryItemInstance* InReplacingInstance)
 {
-	if (ReplacingInstance == nullptr)
+	if (InReplacingInstance == nullptr)
 	{
 		return false;
 	}
 
-	return CheckReplacementPossible(SpecifiedPosition, ReplacingInstance->GetItemGridSpan());
+	return CheckReplacementPossible(InSpecifiedPosition, InReplacingInstance->GetItemGridSpan());
 }
 
-bool UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef)
+bool UObsidianStashTab_Grid::CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& InReplacingDef)
 {
-	if (ReplacingDef == nullptr)
+	if (InReplacingDef == nullptr)
 	{
 		return false;
 	}
 
-	if (const UObsidianInventoryItemDefinition* DefaultItem = ReplacingDef.GetDefaultObject())
+	if (const UObsidianInventoryItemDefinition* DefaultItem = InReplacingDef.GetDefaultObject())
 	{
 		if (const UOInventoryItemFragment_Appearance* Appearance = Cast<UOInventoryItemFragment_Appearance>(DefaultItem->FindFragmentByClass(UOInventoryItemFragment_Appearance::StaticClass())))
 		{
-			return CheckReplacementPossible(SpecifiedPosition, Appearance->GetItemGridSpanFromDesc());
+			return CheckReplacementPossible(InSpecifiedPosition, Appearance->GetItemGridSpanFromDesc());
 		}
 	}
 	
 	return false;
 }
 
-bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FIntPoint& ReplacingItemGridSpan) const
+bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPosition& InSpecifiedPosition, const FIntPoint& InReplacingItemGridSpan) const
 {
-	UObsidianInventoryItemInstance* InstanceAtGrid = GridLocationToItemMap.FindRef(SpecifiedPosition.GetItemGridPosition());
+	UObsidianInventoryItemInstance* InstanceAtGrid = GridLocationToItemMap.FindRef(InSpecifiedPosition.GetItemGridPosition());
 	if (InstanceAtGrid == nullptr )
 	{
 		return false; 
 	}
 
-	const FIntPoint ItemOrigin = SpecifiedPosition.GetItemGridPosition();
+	const FIntPoint ItemOrigin = InSpecifiedPosition.GetItemGridPosition();
 	const FIntPoint ItemGridSpan = InstanceAtGrid->GetItemGridSpan();
 	TMap<FIntPoint, bool> TempInventoryStateMap = GridStateMap;
 	
@@ -148,9 +148,9 @@ bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPositio
 	if(InitialPositionFreePtr && *InitialPositionFreePtr == false) // Initial location is free
 	{
 		bCanReplace = true;
-		for(int32 SpanX = 0; SpanX < ReplacingItemGridSpan.X; ++SpanX)
+		for(int32 SpanX = 0; SpanX < InReplacingItemGridSpan.X; ++SpanX)
 		{
-			for(int32 SpanY = 0; SpanY < ReplacingItemGridSpan.Y; ++SpanY)
+			for(int32 SpanY = 0; SpanY < InReplacingItemGridSpan.Y; ++SpanY)
 			{
 				const FIntPoint GridSlotToCheck = ItemOrigin + FIntPoint(SpanX, SpanY);
 				const bool* bExistingOccupied = TempInventoryStateMap.Find(GridSlotToCheck);
@@ -165,14 +165,14 @@ bool UObsidianStashTab_Grid::CheckReplacementPossible(const FObsidianItemPositio
 	return bCanReplace;
 }
 
-void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)
+void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition)
 {
-	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
+	const FIntPoint ItemGridSpan = InItemInstance->GetItemGridSpan();
 	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			const FIntPoint LocationToMark = AtPosition.GetItemGridPosition() + FIntPoint(SpanX, SpanY);
+			const FIntPoint LocationToMark = InAtPosition.GetItemGridPosition() + FIntPoint(SpanX, SpanY);
 			if(bool* Location = GridStateMap.Find(LocationToMark))
 			{
 				*Location = true;
@@ -187,17 +187,17 @@ void UObsidianStashTab_Grid::MarkSpaceInTab(UObsidianInventoryItemInstance* Item
 		}
 	}
 
-	GridLocationToItemMap.Add(AtPosition.GetItemGridPosition(), ItemInstance);
+	GridLocationToItemMap.Add(InAtPosition.GetItemGridPosition(), InItemInstance);
 }
 
-void UObsidianStashTab_Grid::UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition)
+void UObsidianStashTab_Grid::UnmarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition)
 {
-	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
+	const FIntPoint ItemGridSpan = InItemInstance->GetItemGridSpan();
 	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			const FIntPoint LocationToUnmark = AtPosition.GetItemGridPosition() + FIntPoint(SpanX, SpanY);
+			const FIntPoint LocationToUnmark = InAtPosition.GetItemGridPosition() + FIntPoint(SpanX, SpanY);
 			if(bool* Location = GridStateMap.Find(LocationToUnmark))
 			{
 				*Location = false;
@@ -212,10 +212,10 @@ void UObsidianStashTab_Grid::UnmarkSpaceInTab(UObsidianInventoryItemInstance* It
 		}
 	}
 
-	GridLocationToItemMap.Remove(AtPosition.GetItemGridPosition());
+	GridLocationToItemMap.Remove(InAtPosition.GetItemGridPosition());
 }
 
-void UObsidianStashTab_Grid::Construct(UObsidianPlayerStashComponent* StashComponent)
+void UObsidianStashTab_Grid::Construct(UObsidianPlayerStashComponent* InStashComponent)
 {
 	int16 GridX = 0;
 	int16 GridY = 0;

@@ -44,18 +44,18 @@ UObsidianAbilitySystemComponent* UObsidianAttributeSetBase::GetObsidianAbilitySy
 	return Cast<UObsidianAbilitySystemComponent>(GetOwningAbilitySystemComponent());
 }
 
-void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCallbackData& Data, FObsidianEffectProperties& Props) const
+void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCallbackData& InData, FObsidianEffectProperties& OutProps) const
 {
 	// Source = causer of the effect, Target = target of the effect (owner of THIS Attribute Set)
 	
-	const FGameplayEffectContextHandle& EffectContextHandle = Data.EffectSpec.GetContext();
-	Props.EffectContextHandle = EffectContextHandle;
+	const FGameplayEffectContextHandle& EffectContextHandle = InData.EffectSpec.GetContext();
+	OutProps.EffectContextHandle = EffectContextHandle;
 
-	Props.Instigator = EffectContextHandle.GetOriginalInstigator();
-	Props.EffectCauser = EffectContextHandle.GetEffectCauser();
+	OutProps.Instigator = EffectContextHandle.GetOriginalInstigator();
+	OutProps.EffectCauser = EffectContextHandle.GetEffectCauser();
 
 	UAbilitySystemComponent* SourceASC = EffectContextHandle.GetOriginalInstigatorAbilitySystemComponent();
-	Props.SourceASC = SourceASC;
+	OutProps.SourceASC = SourceASC;
 	
 	if(IsValid(SourceASC) && SourceASC->AbilityActorInfo.IsValid() && SourceASC->AbilityActorInfo->AvatarActor.IsValid())
 	{
@@ -63,67 +63,67 @@ void UObsidianAttributeSetBase::SetEffectProperties(const FGameplayEffectModCall
 		AController* SourceController = nullptr;
 		
 		SourceAvatarActor = SourceASC->AbilityActorInfo->AvatarActor.Get();
-		Props.SourceAvatarActor = SourceAvatarActor;
+		OutProps.SourceAvatarActor = SourceAvatarActor;
 		
 		SourceController = SourceASC->AbilityActorInfo->PlayerController.Get();
-		Props.SourceController = SourceController;
+		OutProps.SourceController = SourceController;
 		
 		if(SourceController == nullptr && SourceAvatarActor != nullptr)
 		{
 			if(const APawn* Pawn = Cast<APawn>(SourceAvatarActor))
 			{
 				SourceController = Pawn->GetController();
-				Props.SourceController = SourceController;
+				OutProps.SourceController = SourceController;
 			}
 		}
 
 		if(SourceController)
 		{
-			Props.SourceCharacter = Cast<AObsidianCharacterBase>(SourceController->GetCharacter());
+			OutProps.SourceCharacter = Cast<AObsidianCharacterBase>(SourceController->GetCharacter());
 		}
 		else
 		{
-			Props.SourceCharacter = Cast<AObsidianCharacterBase>(SourceAvatarActor);
+			OutProps.SourceCharacter = Cast<AObsidianCharacterBase>(SourceAvatarActor);
 		}
 	}
 	
-	if(Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())
+	if(InData.Target.AbilityActorInfo.IsValid() && InData.Target.AbilityActorInfo->AvatarActor.IsValid())
 	{
 		AActor* TargetAvatarActor = nullptr;
 		AController* TargetController = nullptr;
 		
-		TargetAvatarActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
-		Props.TargetAvatarActor = TargetAvatarActor;
+		TargetAvatarActor = InData.Target.AbilityActorInfo->AvatarActor.Get();
+		OutProps.TargetAvatarActor = TargetAvatarActor;
 		
-		TargetController = Data.Target.AbilityActorInfo->PlayerController.Get();
-		Props.TargetController = TargetController;
+		TargetController = InData.Target.AbilityActorInfo->PlayerController.Get();
+		OutProps.TargetController = TargetController;
 		
 		if(TargetController == nullptr && TargetAvatarActor != nullptr)
 		{
 			if(const APawn* Pawn = Cast<APawn>(TargetAvatarActor))
 			{
 				TargetController = Pawn->GetController();
-				Props.TargetController = TargetController;
+				OutProps.TargetController = TargetController;
 			}
 		}
 		
 		if(TargetController)
 		{
-			Props.TargetCharacter = Cast<AObsidianCharacterBase>(TargetController->GetCharacter());
+			OutProps.TargetCharacter = Cast<AObsidianCharacterBase>(TargetController->GetCharacter());
 		}
 		else
 		{
-			Props.TargetCharacter = Cast<AObsidianCharacterBase>(TargetAvatarActor);
+			OutProps.TargetCharacter = Cast<AObsidianCharacterBase>(TargetAvatarActor);
 		}
 
-		Props.bIsPlayerCharacter = Props.TargetCharacter->ActorHasTag(ObsidianActorTags::Player);
-		if(!Props.bIsPlayerCharacter)
+		OutProps.bIsPlayerCharacter = OutProps.TargetCharacter->ActorHasTag(ObsidianActorTags::Player);
+		if(!OutProps.bIsPlayerCharacter)
 		{
-			Props.bIsBoss = Props.TargetCharacter->ActorHasTag(ObsidianActorTags::BossEnemy);
+			OutProps.bIsBoss = OutProps.TargetCharacter->ActorHasTag(ObsidianActorTags::BossEnemy);
 		}
 		
-		Props.bCanHitReact = Props.TargetCharacter->CanHitReact();
+		OutProps.bCanHitReact = OutProps.TargetCharacter->CanHitReact();
 
-		Props.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetAvatarActor);
+		OutProps.TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetAvatarActor);
 	}
 }

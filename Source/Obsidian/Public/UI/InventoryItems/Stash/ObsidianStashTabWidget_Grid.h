@@ -21,14 +21,14 @@ class OBSIDIAN_API UObsidianStashTabWidget_Grid : public UObsidianStashTabWidget
 	GENERATED_BODY()
 
 public:
-	void InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController, const int32 GridWidth,
-		const int32 GridHeight, const FGameplayTag& InStashTabTag);
+	void InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController, const int32 InGridWidth,
+		const int32 InGridHeight, const FGameplayTag& InStashTabTag);
 
-	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) override;
-	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) override;
-	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) override;
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData) override;
+	virtual void HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData) override;
+	virtual void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData) override;
 
-	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight) override;
+	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight) override;
 	virtual void ClearUsableItemHighlight() override;
 	
 protected:

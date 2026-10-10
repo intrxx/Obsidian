@@ -29,28 +29,28 @@ static const SObsidian_EvasionStatics& EvasionStatics()
 	return EvasionStatics;
 }
 
-UObsidianMMC_Evasion::UObsidianMMC_Evasion(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_Evasion::UObsidianMMC_Evasion(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(EvasionStatics().Evasion);
 	RelevantAttributesToCapture.Add(EvasionStatics().DexterityDef);
 	RelevantAttributesToCapture.Add(EvasionStatics().IncreasedEvasionPercentage);
 }
 
-float UObsidianMMC_Evasion::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_Evasion::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	const FAggregatorEvaluateParameters EvaluationParameters;
 	
 	float Evasion = 0.f;
-	GetCapturedAttributeMagnitude(EvasionStatics().Evasion, Spec, EvaluationParameters, Evasion);
+	GetCapturedAttributeMagnitude(EvasionStatics().Evasion, InSpec, EvaluationParameters, Evasion);
 	Evasion = FMath::Max<float>(Evasion, 0.f);
 	
 	float Dexterity = 0.f;
-	GetCapturedAttributeMagnitude(EvasionStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
+	GetCapturedAttributeMagnitude(EvasionStatics().DexterityDef, InSpec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 
 	float IncreasedEvasionPercentage = 0.f;
-	GetCapturedAttributeMagnitude(EvasionStatics().IncreasedEvasionPercentage, Spec, EvaluationParameters, IncreasedEvasionPercentage);
+	GetCapturedAttributeMagnitude(EvasionStatics().IncreasedEvasionPercentage, InSpec, EvaluationParameters, IncreasedEvasionPercentage);
 	IncreasedEvasionPercentage = FMath::Max<float>(IncreasedEvasionPercentage, 0.f);
 
 	const float EvasionIncreaseMagnitude = FMath::FloorToInt((Evasion * IncreasedEvasionPercentage / 100.0f));

@@ -18,7 +18,7 @@ class OBSIDIAN_API AObsidianCharacterCreationHero : public AModularCharacter
 	GENERATED_BODY()
 
 public:
-	AObsidianCharacterCreationHero(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianCharacterCreationHero(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreationHero")
 	void StartHighlight();

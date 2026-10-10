@@ -9,22 +9,22 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	EnemyAttributeSet = nullptr;
 }
 
-void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner)
+void UObsidianEnemyAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner)
 {
-	check(Owner);
+	check(InOwner);
 	
-	Super::InitializeWithAbilitySystem(InASC, Owner);
+	Super::InitializeWithAbilitySystem(InASC, InOwner);
 
 	EnemyAttributeSet = AbilitySystemComponent->GetSet<UObsidianEnemyAttributeSet>();
 	if (!EnemyAttributeSet)
 	{
-		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianEnemyAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Enemy Set set on the Ability System."), *GetNameSafe(Owner));
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianEnemyAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Enemy Set set on the Ability System."), *GetNameSafe(InOwner));
 		return;
 	}
 
@@ -61,44 +61,44 @@ void UObsidianEnemyAttributesComponent::ClearGameplayTags()
 	Super::ClearGameplayTags();
 }
 
-void UObsidianEnemyAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyAttributesComponent::HealthChanged(const FOnAttributeChangeData& InData)
 {
-	const float Health = Data.NewValue;
+	const float Health = InData.NewValue;
 
 	HealthChangedDelegate.Broadcast(Health);
 }
 
-void UObsidianEnemyAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& InData)
 {
-	const float MaxHealth = Data.NewValue;
+	const float MaxHealth = InData.NewValue;
 
 	MaxHealthChangedDelegate.Broadcast(MaxHealth);
 }
 
-void UObsidianEnemyAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& InData)
 {
-	const float EnergyShield = Data.NewValue;
+	const float EnergyShield = InData.NewValue;
 
 	EnergyShieldChangedDelegate.Broadcast(EnergyShield);
 }
 
-void UObsidianEnemyAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& InData)
 {
-	const float MaxEnergyShield = Data.NewValue;
+	const float MaxEnergyShield = InData.NewValue;
 
 	MaxEnergyShieldChangedDelegate.Broadcast(MaxEnergyShield);
 }
 
-void UObsidianEnemyAttributesComponent::StaggerMeterChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyAttributesComponent::StaggerMeterChanged(const FOnAttributeChangeData& InData)
 {
-	const float StaggerMeter = Data.NewValue;
+	const float StaggerMeter = InData.NewValue;
 	
 	StaggerMeterChangedDelegate.Broadcast(StaggerMeter);
 }
 
-void UObsidianEnemyAttributesComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data)
+void UObsidianEnemyAttributesComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& InData)
 {
-	const float MaxStaggerMeter = Data.NewValue;
+	const float MaxStaggerMeter = InData.NewValue;
 
 	MaxStaggerMeterChangedDelegate.Broadcast(MaxStaggerMeter);
 }

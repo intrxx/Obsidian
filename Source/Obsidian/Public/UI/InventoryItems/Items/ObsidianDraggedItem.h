@@ -24,11 +24,11 @@ class OBSIDIAN_API UObsidianDraggedItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& GeneratedData);
-	void InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* ItemInstance);
+	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InGeneratedData);
+	void InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* InItemInstance);
 	
 	/** Updates the stack count on the dragged item. */
-	void UpdateStackCount(const int32 NewStackCount);
+	void UpdateStackCount(const int32 InNewStackCount);
 	
 public:
 	UPROPERTY(meta=(BindWidget))

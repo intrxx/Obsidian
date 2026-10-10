@@ -45,40 +45,40 @@ UAbilitySystemComponent* FObsidianDebugMenuContext::GetPlayerASC() const
 	return nullptr;
 }
 
-void FObsidianDebugMenuContext::Notify(const FString& Message) const
+void FObsidianDebugMenuContext::Notify(const FString& InMessage) const
 {
-	UE_LOG(ObLogDebugMenu, Log, TEXT("%s"), *Message);
+	UE_LOG(ObLogDebugMenu, Log, TEXT("%s"), *InMessage);
 
 	if (StatusMessage)
 	{
-		*StatusMessage = Message;
+		*StatusMessage = InMessage;
 	}
 }
 
-void FObsidianDebugMenuContext::ExecConsoleCommand(const FString& Command) const
+void FObsidianDebugMenuContext::ExecConsoleCommand(const FString& InCommand) const
 {
-	if (World == nullptr || GEngine == nullptr || Command.IsEmpty())
+	if (World == nullptr || GEngine == nullptr || InCommand.IsEmpty())
 	{
 		return;
 	}
 
 	if (APlayerController* LocalPlayerController = GEngine->GetFirstLocalPlayerController(World))
 	{
-		LocalPlayerController->ConsoleCommand(Command);
+		LocalPlayerController->ConsoleCommand(InCommand);
 	}
 	else
 	{
-		GEngine->Exec(World, *Command);
+		GEngine->Exec(World, *InCommand);
 	}
 
-	Notify(FString::Printf(TEXT("Executed [%s]."), *Command));
+	Notify(FString::Printf(TEXT("Executed [%s]."), *InCommand));
 }
 
 // ~ FObsidianDebugComboBox
 
-bool FObsidianDebugComboBox::Draw(const TArray<FString>& NewOptions, int32& InOutIndex, const bool bSearchable)
+bool FObsidianDebugComboBox::Draw(const TArray<FString>& InNewOptions, int32& InOutIndex, const bool bInSearchable)
 {
-	if (NewOptions.IsEmpty())
+	if (InNewOptions.IsEmpty())
 	{
 		Options.Reset();
 		LastIndex = INDEX_NONE;
@@ -89,14 +89,14 @@ bool FObsidianDebugComboBox::Draw(const TArray<FString>& NewOptions, int32& InOu
 		return false;
 	}
 
-	InOutIndex = FMath::Clamp(InOutIndex, 0, NewOptions.Num() - 1);
+	InOutIndex = FMath::Clamp(InOutIndex, 0, InNewOptions.Num() - 1);
 
 	// SlateIM hands the new options to the Searchable Combo Box but never makes it refresh the list it shows (it only does
 	// that when the search text changes), so it keeps listing the old options and picking any of them ends up as no
 	// selection at all. Drawing a widget of another type in its place for a frame makes SlateIM create a fresh one.
-	if (bSearchable && Options.IsEmpty() == false && Options != NewOptions)
+	if (bInSearchable && Options.IsEmpty() == false && Options != InNewOptions)
 	{
-		Options = NewOptions;
+		Options = InNewOptions;
 		LastIndex = InOutIndex;
 		SlateIM::ComboBox(Options, InOutIndex, {.bForceRefresh = true, .bSearchable = false});
 		return false;
@@ -104,25 +104,25 @@ bool FObsidianDebugComboBox::Draw(const TArray<FString>& NewOptions, int32& InOu
 
 	// The widget caches both the options and the selection, so it needs to be told when any of these changes from the outside.
 	bool bForceRefresh = InOutIndex != LastIndex;
-	if (Options != NewOptions)
+	if (Options != InNewOptions)
 	{
-		Options = NewOptions;
+		Options = InNewOptions;
 		bForceRefresh = true;
 	}
 
-	const bool bSelectionChanged = SlateIM::ComboBox(Options, InOutIndex, {.bForceRefresh = bForceRefresh, .bSearchable = bSearchable});
+	const bool bSelectionChanged = SlateIM::ComboBox(Options, InOutIndex, {.bForceRefresh = bForceRefresh, .bSearchable = bInSearchable});
 	LastIndex = InOutIndex;
 	return bSelectionChanged;
 }
 
 // ~ FObsidianDebugClassPicker
 
-bool FObsidianDebugClassPicker::Draw(const UClass* BaseClass)
+bool FObsidianDebugClassPicker::Draw(const UClass* InBaseClass)
 {
 	bool bSelectionChanged = false;
-	if (GatheredForClass != BaseClass)
+	if (GatheredForClass != InBaseClass)
 	{
-		Refresh(BaseClass);
+		Refresh(InBaseClass);
 		bSelectionChanged = true;
 	}
 
@@ -134,7 +134,7 @@ bool FObsidianDebugClassPicker::Draw(const UClass* BaseClass)
 		SlateIM::SetToolTip(TEXT("Gathers the classes again, use it after creating new Blueprints."));
 		if (SlateIM::Button(TEXT("Refresh")))
 		{
-			Refresh(BaseClass);
+			Refresh(InBaseClass);
 			bSelectionChanged = true;
 		}
 	}
@@ -143,21 +143,21 @@ bool FObsidianDebugClassPicker::Draw(const UClass* BaseClass)
 	return bSelectionChanged;
 }
 
-void FObsidianDebugClassPicker::Refresh(const UClass* BaseClass)
+void FObsidianDebugClassPicker::Refresh(const UClass* InBaseClass)
 {
 	const FString PreviouslySelectedClassName = GetSelectedClassName();
 
 	ClassPaths.Reset();
 	ClassNames.Reset();
-	GatheredForClass = BaseClass;
+	GatheredForClass = InBaseClass;
 
-	if (BaseClass == nullptr)
+	if (InBaseClass == nullptr)
 	{
 		return;
 	}
 
 	TSet<FTopLevelAssetPath> DerivedClassPaths;
-	IAssetRegistry::GetChecked().GetDerivedClassNames({BaseClass->GetClassPathName()}, TSet<FTopLevelAssetPath>(), DerivedClassPaths);
+	IAssetRegistry::GetChecked().GetDerivedClassNames({InBaseClass->GetClassPathName()}, TSet<FTopLevelAssetPath>(), DerivedClassPaths);
 
 	for (const FTopLevelAssetPath& ClassPath : DerivedClassPaths)
 	{
@@ -195,9 +195,9 @@ void FObsidianDebugClassPicker::Refresh(const UClass* BaseClass)
 		ClassPaths.Add(MoveTemp(SoftClassPath));
 	}
 
-	ClassPaths.Sort([](const FSoftClassPath& A, const FSoftClassPath& B)
+	ClassPaths.Sort([](const FSoftClassPath& InA, const FSoftClassPath& InB)
 		{
-			return A.GetAssetName() < B.GetAssetName();
+			return InA.GetAssetName() < InB.GetAssetName();
 		});
 
 	ClassNames.Reserve(ClassPaths.Num());
@@ -258,27 +258,27 @@ void ObsidianDebugUI::EndTabContent()
 	SlateIM::EndScrollBox();
 }
 
-void ObsidianDebugUI::Section(const FStringView& Title)
+void ObsidianDebugUI::Section(const FStringView& InTitle)
 {
 	SlateIM::Padding(FMargin(0.0f, 12.0f, 0.0f, 4.0f));
-	SlateIM::Text(Title, {.Color = FStyleColors::AccentBlue});
+	SlateIM::Text(InTitle, {.Color = FStyleColors::AccentBlue});
 }
 
-void ObsidianDebugUI::Label(const FStringView& Text, const float Width)
+void ObsidianDebugUI::Label(const FStringView& InText, const float InWidth)
 {
 	SlateIM::VAlign(VAlign_Center);
-	SlateIM::MinWidth(Width);
-	SlateIM::Text(Text);
+	SlateIM::MinWidth(InWidth);
+	SlateIM::Text(InText);
 }
 
-void ObsidianDebugUI::WarningText(const FStringView& Text)
+void ObsidianDebugUI::WarningText(const FStringView& InText)
 {
-	SlateIM::Text(Text, {.Color = FStyleColors::Warning});
+	SlateIM::Text(InText, {.Color = FStyleColors::Warning});
 }
 
-FString ObsidianDebugUI::GetCleanClassName(const UObject* ClassOrDefaultObject)
+FString ObsidianDebugUI::GetCleanClassName(const UObject* InClassOrDefaultObject)
 {
-	FString Name = GetNameSafe(ClassOrDefaultObject);
+	FString Name = GetNameSafe(InClassOrDefaultObject);
 	Name.RemoveFromStart(TEXT("Default__"));
 	Name.RemoveFromEnd(TEXT("_C"));
 	return Name;
@@ -286,55 +286,55 @@ FString ObsidianDebugUI::GetCleanClassName(const UObject* ClassOrDefaultObject)
 
 // ~ ObsidianDebugGAS
 
-bool ObsidianDebugGAS::ApplyInstantAttributeMod(UAbilitySystemComponent* SourceASC, UAbilitySystemComponent* TargetASC,
-	const FGameplayAttribute& Attribute, const EGameplayModOp::Type ModifierOp, const float Magnitude)
+bool ObsidianDebugGAS::ApplyInstantAttributeMod(UAbilitySystemComponent* InSourceASC, UAbilitySystemComponent* InTargetASC,
+	const FGameplayAttribute& InAttribute, const EGameplayModOp::Type InModifierOp, const float InMagnitude)
 {
-	if (TargetASC == nullptr || Attribute.IsValid() == false || TargetASC->HasAttributeSetForAttribute(Attribute) == false)
+	if (InTargetASC == nullptr || InAttribute.IsValid() == false || InTargetASC->HasAttributeSetForAttribute(InAttribute) == false)
 	{
 		return false;
 	}
 
-	if (SourceASC == nullptr)
+	if (InSourceASC == nullptr)
 	{
-		SourceASC = TargetASC;
+		InSourceASC = InTargetASC;
 	}
 
 	UGameplayEffect* InstantEffect = NewObject<UGameplayEffect>(GetTransientPackage());
 	InstantEffect->DurationPolicy = EGameplayEffectDurationType::Instant;
 
 	FGameplayModifierInfo& ModifierInfo = InstantEffect->Modifiers.AddDefaulted_GetRef();
-	ModifierInfo.Attribute = Attribute;
-	ModifierInfo.ModifierOp = ModifierOp;
-	ModifierInfo.ModifierMagnitude = FScalableFloat(Magnitude);
+	ModifierInfo.Attribute = InAttribute;
+	ModifierInfo.ModifierOp = InModifierOp;
+	ModifierInfo.ModifierMagnitude = FScalableFloat(InMagnitude);
 
-	SourceASC->ApplyGameplayEffectToTarget(InstantEffect, TargetASC, 1.0f, SourceASC->MakeEffectContext());
+	InSourceASC->ApplyGameplayEffectToTarget(InstantEffect, InTargetASC, 1.0f, InSourceASC->MakeEffectContext());
 	return true;
 }
 
-bool ObsidianDebugGAS::Kill(UAbilitySystemComponent* TargetASC, UAbilitySystemComponent* InstigatorASC)
+bool ObsidianDebugGAS::Kill(UAbilitySystemComponent* InTargetASC, UAbilitySystemComponent* InInstigatorASC)
 {
 	float Health = 0.0f;
-	if (GetAttributeValue(TargetASC, UObsidianCommonAttributeSet::GetHealthAttribute(), Health) == false)
+	if (GetAttributeValue(InTargetASC, UObsidianCommonAttributeSet::GetHealthAttribute(), Health) == false)
 	{
 		return false;
 	}
 
 	float EnergyShield = 0.0f;
-	GetAttributeValue(TargetASC, UObsidianCommonAttributeSet::GetEnergyShieldAttribute(), EnergyShield);
+	GetAttributeValue(InTargetASC, UObsidianCommonAttributeSet::GetEnergyShieldAttribute(), EnergyShield);
 
 	// Damage needs to go through Incoming Damage for the regular death flow to be run.
-	return ApplyInstantAttributeMod(InstigatorASC, TargetASC, UObsidianCommonAttributeSet::GetIncomingDamageAttribute(),
+	return ApplyInstantAttributeMod(InInstigatorASC, InTargetASC, UObsidianCommonAttributeSet::GetIncomingDamageAttribute(),
 		EGameplayModOp::Override, Health + EnergyShield + 1.0f);
 }
 
-bool ObsidianDebugGAS::GetAttributeValue(const UAbilitySystemComponent* ASC, const FGameplayAttribute& Attribute, float& OutValue)
+bool ObsidianDebugGAS::GetAttributeValue(const UAbilitySystemComponent* InASC, const FGameplayAttribute& InAttribute, float& OutValue)
 {
-	if (ASC == nullptr || Attribute.IsValid() == false || ASC->HasAttributeSetForAttribute(Attribute) == false)
+	if (InASC == nullptr || InAttribute.IsValid() == false || InASC->HasAttributeSetForAttribute(InAttribute) == false)
 	{
 		return false;
 	}
 
-	OutValue = ASC->GetNumericAttribute(Attribute);
+	OutValue = InASC->GetNumericAttribute(InAttribute);
 	return true;
 }
 

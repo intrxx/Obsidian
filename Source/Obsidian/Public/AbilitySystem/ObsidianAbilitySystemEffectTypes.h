@@ -23,7 +23,7 @@ public:
 	{
 	}
 
-	static OBSIDIAN_API FObsidianGameplayEffectContext* ExtractEffectContextFromHandle(FGameplayEffectContextHandle Handle);
+	static OBSIDIAN_API FObsidianGameplayEffectContext* ExtractEffectContextFromHandle(FGameplayEffectContextHandle InHandle);
 
 	/** Returns true if hit was blocked, it is not determined if it was a spell or hit. */
 	bool IsBlockedAttack() const
@@ -105,7 +105,7 @@ public:
 		return NewContext;
 	}
 
-	virtual bool NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess) override;
+	virtual bool NetSerialize(FArchive& InOutAr, UPackageMap* InMap, bool& bOutSuccess) override;
 	
 protected:
 	UPROPERTY()

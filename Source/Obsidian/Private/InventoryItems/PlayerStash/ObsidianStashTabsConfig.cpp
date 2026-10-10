@@ -3,8 +3,8 @@
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 
 
-UObsidianStashTabsConfig::UObsidianStashTabsConfig(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianStashTabsConfig::UObsidianStashTabsConfig(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 

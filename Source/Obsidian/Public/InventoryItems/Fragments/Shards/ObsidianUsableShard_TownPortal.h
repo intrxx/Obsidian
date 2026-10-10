@@ -19,8 +19,8 @@ class OBSIDIAN_API UObsidianUsableShard_TownPortal : public UObsidianUsableShard
 	GENERATED_BODY()
 
 public:
-	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
-		UObsidianInventoryItemInstance* UsingOntoInstance = nullptr) override;
+	virtual bool OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
+		UObsidianInventoryItemInstance* InUsingOntoInstance = nullptr) override;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian")

@@ -21,19 +21,19 @@ static const SObsidian_MaxSpecialResource_Witch& MaxSpecialResource_WitchStatics
 	return MaxSpecialResource_WitchStatics;
 }
 
-UObsidianMMC_MaxSpecialResource_Witch::UObsidianMMC_MaxSpecialResource_Witch(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_MaxSpecialResource_Witch::UObsidianMMC_MaxSpecialResource_Witch(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxSpecialResource_WitchStatics().IntelligenceDef);
 }
 
-float UObsidianMMC_MaxSpecialResource_Witch::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_MaxSpecialResource_Witch::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	// OBS-79
 	// const float LevelAddedSpecialResource = Super::CalculateBaseMagnitude_Implementation(Spec);
 	
 	float Intelligence = 0.f;
-	GetCapturedAttributeMagnitude(MaxSpecialResource_WitchStatics().IntelligenceDef, Spec, FAggregatorEvaluateParameters(), Intelligence);
+	GetCapturedAttributeMagnitude(MaxSpecialResource_WitchStatics().IntelligenceDef, InSpec, FAggregatorEvaluateParameters(), Intelligence);
 	Intelligence = FMath::Max<float>(Intelligence, 0.f);
 
 	const float MaxSpecialResourceBonus_Witch = /** OBS-79 / LevelAddedSpecialResource  + */ FMath::FloorToInt(Intelligence / 6);

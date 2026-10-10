@@ -9,19 +9,19 @@
 #include "Obsidian/ObsidianMacros.h"
 
 
-UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
-void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                                        const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UOGameplayAbility_ProjectileSpell::ActivateAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo,
+                                                        const FGameplayAbilityActivationInfo InActivationInfo, const FGameplayEventData* InTriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	Super::ActivateAbility(InHandle, InActorInfo, InActivationInfo, InTriggerEventData);
 }
 
-void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLocation, const FVector& TargetLocation, const bool bWithDebug)
+void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& InSpawnLocation, const FVector& InTargetLocation, const bool bInWithDebug)
 {
 	const bool bHasAuthority = GetAvatarActorFromActorInfo()->HasAuthority();
 	if(!bHasAuthority)
@@ -35,14 +35,14 @@ void UOGameplayAbility_ProjectileSpell::SpawnProjectile(const FVector& SpawnLoca
 		return;
 	}
 
-	if(bWithDebug)
+	if(bInWithDebug)
 	{
-		DEBUG_SPHERE(TargetLocation);
-		DEBUG_LINE(SpawnLocation, TargetLocation);
+		DEBUG_SPHERE(InTargetLocation);
+		DEBUG_LINE(InSpawnLocation, InTargetLocation);
 	}
 	
-	const FVector StartLocation = SpawnLocation;
-	FRotator Rotation = (TargetLocation - StartLocation).Rotation();
+	const FVector StartLocation = InSpawnLocation;
+	FRotator Rotation = (InTargetLocation - StartLocation).Rotation();
 
 	// This can actually cause a bug on client, when the socket location would be different on the firing client.
 	// This will need to be addressed later.

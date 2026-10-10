@@ -17,8 +17,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
@@ -83,11 +83,11 @@ UWorld* UObsidianInventoryItemInstance::GetWorld() const
 }
 
 const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragmentByClass(
-	const TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const
+	const TSubclassOf<UObsidianInventoryItemFragment> InFragmentClass) const
 {
-	if((ItemDef != nullptr) && (FragmentClass != nullptr))
+	if((ItemDef != nullptr) && (InFragmentClass != nullptr))
 	{
-		return GetDefault<UObsidianInventoryItemDefinition>(ItemDef)->FindFragmentByClass(FragmentClass);
+		return GetDefault<UObsidianInventoryItemDefinition>(ItemDef)->FindFragmentByClass(InFragmentClass);
 	}
 	return nullptr;
 }
@@ -171,9 +171,9 @@ void UObsidianInventoryItemInstance::SetItemBaseType(const FGameplayTag& InItemB
 	ItemBaseType = InItemBaseTypeTag;
 }
 
-void UObsidianInventoryItemInstance::SetUsable(const bool IsUsable)
+void UObsidianInventoryItemInstance::SetUsable(const bool InIsUsable)
 {
-	bUsable = IsUsable;
+	bUsable = InIsUsable;
 }
 
 bool UObsidianInventoryItemInstance::IsItemUsable() const
@@ -186,12 +186,12 @@ void UObsidianInventoryItemInstance::SetUsableShard(UObsidianUsableShard* InUsab
 	UsableShard = InUsableShard;
 }
 
-bool UObsidianInventoryItemInstance::UseItem(AObsidianPlayerController* ItemOwner,
-	UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianInventoryItemInstance::UseItem(AObsidianPlayerController* InItemOwner,
+	UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
 	if(UsableShard)
 	{
-		return UsableShard->OnItemUsed(ItemOwner, this, UsingOntoInstance);
+		return UsableShard->OnItemUsed(InItemOwner, this, InUsingOntoInstance);
 	}
 	return false;
 }
@@ -206,12 +206,12 @@ EObsidianUsableItemType UObsidianInventoryItemInstance::GetUsableItemType() cons
 	return UsableItemType;
 }
 
-bool UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+bool UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) const
 {
 	if(UsableShard)
 	{
-		UsableShard->OnItemUsed_UIContext(AllItems, OutItemsMatchingContext);
+		UsableShard->OnItemUsed_UIContext(InAllItems, OutItemsMatchingContext);
 	}
 	return OutItemsMatchingContext.HasAnyMatchingItems();
 }
@@ -241,24 +241,24 @@ TArray<FObsidianActiveItemAffix> UObsidianInventoryItemInstance::GetAllItemPrefi
 	return ItemAffixes.GetAllItemPrefixesAndSuffixes();
 }
 
-void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
+void UObsidianInventoryItemInstance::InitializeAffixes(const TArray<FObsidianActiveItemAffix>& InAffixesToInitialize)
 {
-	if (AffixesToInitialize.IsEmpty())
+	if (InAffixesToInitialize.IsEmpty())
 	{
 		return;
 	}
 	
-	ItemAffixes.InitializeAffixes(this, AffixesToInitialize);
+	ItemAffixes.InitializeAffixes(this, InAffixesToInitialize);
 }
 
-void UObsidianInventoryItemInstance::AddAffix(const FObsidianActiveItemAffix& AffixToAdd)
+void UObsidianInventoryItemInstance::AddAffix(const FObsidianActiveItemAffix& InAffixToAdd)
 {
-	ItemAffixes.AddAffix(this, AffixToAdd);
+	ItemAffixes.AddAffix(this, InAffixToAdd);
 }
 
-bool UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& AffixTag)
+bool UObsidianInventoryItemInstance::RemoveAffix(const FGameplayTag& InAffixTag)
 {
-	const bool bSuccess = ItemAffixes.RemoveAffix(AffixTag);
+	const bool bSuccess = ItemAffixes.RemoveAffix(InAffixTag);
 	return bSuccess;
 }
 
@@ -371,29 +371,29 @@ uint8 UObsidianInventoryItemInstance::GetItemAddedPrefixCount() const
 	return ItemAffixes.GetPrefixCount();
 }
 
-void UObsidianInventoryItemInstance::AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount)
+void UObsidianInventoryItemInstance::AddItemStackCount(const FGameplayTag InToTag, const int32 InStackCount)
 {
-	ItemStackTags.AddStack(ToTag, StackCount);
+	ItemStackTags.AddStack(InToTag, InStackCount);
 }
 
-void UObsidianInventoryItemInstance::RemoveItemStackCount(const FGameplayTag FromTag, const int32 StackCount)
+void UObsidianInventoryItemInstance::RemoveItemStackCount(const FGameplayTag InFromTag, const int32 InStackCount)
 {
-	ItemStackTags.RemoveStack(FromTag, StackCount);
+	ItemStackTags.RemoveStack(InFromTag, InStackCount);
 }
 
-void UObsidianInventoryItemInstance::OverrideItemStackCount(const FGameplayTag Tag, const int32 NewStackCount)
+void UObsidianInventoryItemInstance::OverrideItemStackCount(const FGameplayTag InTag, const int32 InNewStackCount)
 {
-	ItemStackTags.OverrideStack(Tag, NewStackCount);
+	ItemStackTags.OverrideStack(InTag, InNewStackCount);
 }
 
-int32 UObsidianInventoryItemInstance::GetItemStackCount(const FGameplayTag Tag) const
+int32 UObsidianInventoryItemInstance::GetItemStackCount(const FGameplayTag InTag) const
 {
-	return ItemStackTags.GetStackCount(Tag);
+	return ItemStackTags.GetStackCount(InTag);
 }
 
-bool UObsidianInventoryItemInstance::HasStackCountForTag(const FGameplayTag Tag) const
+bool UObsidianInventoryItemInstance::HasStackCountForTag(const FGameplayTag InTag) const
 {
-	return ItemStackTags.ContainsTag(Tag);
+	return ItemStackTags.ContainsTag(InTag);
 }
 
 bool UObsidianInventoryItemInstance::HasAnyStacks() const
@@ -424,9 +424,9 @@ FIntPoint UObsidianInventoryItemInstance::GetItemGridSpan() const
 	return ItemGridSpan;
 }
 
-void UObsidianInventoryItemInstance::SetItemGridSpan(const FIntPoint& GridSpanToSet)
+void UObsidianInventoryItemInstance::SetItemGridSpan(const FIntPoint& InGridSpanToSet)
 {
-	ItemGridSpan = GridSpanToSet;
+	ItemGridSpan = InGridSpanToSet;
 }
 
 FObsidianItemPosition UObsidianInventoryItemInstance::GetItemCurrentPosition() const
@@ -434,9 +434,9 @@ FObsidianItemPosition UObsidianInventoryItemInstance::GetItemCurrentPosition() c
 	return ItemCurrentPosition;
 }
 
-void UObsidianInventoryItemInstance::SetItemCurrentPosition(const FObsidianItemPosition& CurrentPositionToSet)
+void UObsidianInventoryItemInstance::SetItemCurrentPosition(const FObsidianItemPosition& InCurrentPositionToSet)
 {
-	ItemCurrentPosition = CurrentPositionToSet;	
+	ItemCurrentPosition = InCurrentPositionToSet;	
 }
 
 void UObsidianInventoryItemInstance::ResetItemCurrentPosition()
@@ -449,9 +449,9 @@ UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const
 	return ItemImage;
 }
 
-void UObsidianInventoryItemInstance::SetItemImage(UTexture2D* ItemImageToSet)
+void UObsidianInventoryItemInstance::SetItemImage(UTexture2D* InItemImageToSet)
 {
-	ItemImage = ItemImageToSet;
+	ItemImage = InItemImageToSet;
 }
 
 void UObsidianInventoryItemInstance::SetEquippable(const bool InEquippable)
@@ -479,18 +479,18 @@ TArray<AObsidianSpawnedEquipmentPiece*> UObsidianInventoryItemInstance::GetSpawn
 	return SpawnedActors;
 }
 
-void UObsidianInventoryItemInstance::SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors)
+void UObsidianInventoryItemInstance::SetEquipmentActors(const TArray<FObsidianEquipmentActor>& InEquipmentActors)
 {
-	if(EquipmentActors.IsEmpty()) // This is a valid case since I don't plan to support any body armor equipment.
+	if(InEquipmentActors.IsEmpty()) // This is a valid case since I don't plan to support any body armor equipment.
 	{
 		return;
 	}
 	
-	ActorsToSpawn.Empty(EquipmentActors.Num());
-	ActorsToSpawn.Append(EquipmentActors);
+	ActorsToSpawn.Empty(InEquipmentActors.Num());
+	ActorsToSpawn.Append(InEquipmentActors);
 }
 
-void UObsidianInventoryItemInstance::SpawnEquipmentActors(const FGameplayTag& SlotTag)
+void UObsidianInventoryItemInstance::SpawnEquipmentActors(const FGameplayTag& InSlotTag)
 {
 	if(ActorsToSpawn.IsEmpty()) // This is a valid case since I don't plan to support any body armor equipment.
 	{
@@ -510,10 +510,10 @@ void UObsidianInventoryItemInstance::SpawnEquipmentActors(const FGameplayTag& Sl
 			AObsidianSpawnedEquipmentPiece* NewActor = GetWorld()->SpawnActorDeferred<AObsidianSpawnedEquipmentPiece>(SpawnInfo.ActorToSpawn, FTransform::Identity, OwningPawn);
 			NewActor->FinishSpawning(FTransform::Identity, true);
 			NewActor->SetActorRelativeTransform(SpawnInfo.AttachTransform);
-			NewActor->AssociatedSlotTag = SlotTag;
+			NewActor->AssociatedSlotTag = InSlotTag;
 			if(SpawnInfo.bOverrideAttachSocket)
 			{
-				SpawnInfo.OverrideAttachSocket(SlotTag);
+				SpawnInfo.OverrideAttachSocket(InSlotTag);
 			}
 			NewActor->AttachToComponent(AttachTarget, FAttachmentTransformRules::KeepRelativeTransform, SpawnInfo.AttachSocket);
 
@@ -722,74 +722,74 @@ void UObsidianInventoryItemInstance::ConstructSaveItem(FObsidianSavedItem& OutSa
 	OutSavedItem.DebugItemName = DebugName;
 }
 
-void UObsidianInventoryItemInstance::ConstructFromSavedItem(const FObsidianSavedItem& SavedItem)
+void UObsidianInventoryItemInstance::ConstructFromSavedItem(const FObsidianSavedItem& InSavedItem)
 {
 	// General
-	if (FGuid::Parse(SavedItem.UniqueItemID, ItemUniqueID) == false)
+	if (FGuid::Parse(InSavedItem.UniqueItemID, ItemUniqueID) == false)
 	{
-		UE_LOG(ObLogItems, Error, TEXT("Fail to load unique item ID from string [%s]"), *SavedItem.UniqueItemID);
+		UE_LOG(ObLogItems, Error, TEXT("Fail to load unique item ID from string [%s]"), *InSavedItem.UniqueItemID);
 	}
-	ItemLevel = SavedItem.ItemLevel;
-	ItemDef = SavedItem.SoftItemDef.LoadSynchronous();
-	ItemCategory = SavedItem.ItemCategory;
-	ItemBaseType = SavedItem.ItemBaseType;
-	ItemRarity = SavedItem.ItemRarity;
-	ItemCurrentPosition = SavedItem.ItemCurrentPosition;
+	ItemLevel = InSavedItem.ItemLevel;
+	ItemDef = InSavedItem.SoftItemDef.LoadSynchronous();
+	ItemCategory = InSavedItem.ItemCategory;
+	ItemBaseType = InSavedItem.ItemBaseType;
+	ItemRarity = InSavedItem.ItemRarity;
+	ItemCurrentPosition = InSavedItem.ItemCurrentPosition;
 
 	// Usability
-	bUsable = SavedItem.bUsable;
+	bUsable = InSavedItem.bUsable;
 	if (bUsable)
 	{
-		UsableItemType = SavedItem.UsableItemType;
-		UsableShard = SavedItem.UsableShard.LoadSynchronous();
+		UsableItemType = InSavedItem.UsableItemType;
+		UsableShard = InSavedItem.UsableShard.LoadSynchronous();
 	}
 
 	// Equipping
-	bEquippable = SavedItem.bEquippable;
+	bEquippable = InSavedItem.bEquippable;
 	if (bEquippable)
 	{
-		bNeedsTwoSlots = SavedItem.bNeedsTwoSlots;
-		ActorsToSpawn.Append(SavedItem.SavedEquipmentPieces);
-		EquippingRequirements = SavedItem.EquippingRequirements;
+		bNeedsTwoSlots = InSavedItem.bNeedsTwoSlots;
+		ActorsToSpawn.Append(InSavedItem.SavedEquipmentPieces);
+		EquippingRequirements = InSavedItem.EquippingRequirements;
 	}
 
 	// Affixes
-	bIdentified = SavedItem.bIdentified;
-	InitializeAffixes(SavedItem.SavedAffixes);
+	bIdentified = InSavedItem.bIdentified;
+	InitializeAffixes(InSavedItem.SavedAffixes);
 
 	// Stacks
-	bStackable = SavedItem.bStackable;
+	bStackable = InSavedItem.bStackable;
 	if (bStackable)
 	{
-		ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Current, SavedItem.ItemCurrentStacks);
+		ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Current, InSavedItem.ItemCurrentStacks);
 
-		if (SavedItem.ItemMaxStacks > 0)
+		if (InSavedItem.ItemMaxStacks > 0)
 		{
-			ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Max, SavedItem.ItemMaxStacks);
+			ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Max, InSavedItem.ItemMaxStacks);
 		}
-		if (SavedItem.ItemLimitStacks > 0)
+		if (InSavedItem.ItemLimitStacks > 0)
 		{
-			ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Limit, SavedItem.ItemLimitStacks);
+			ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Limit, InSavedItem.ItemLimitStacks);
 		}
 	}
 	else
 	{
-		ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Current, SavedItem.ItemCurrentStacks);
+		ItemStackTags.AddStack(ObsidianGameplayTags::Item::StackCount::Current, InSavedItem.ItemCurrentStacks);
 	}
 
 	// Appearance
-	ItemGridSpan = SavedItem.ItemGridSpan;
-	ItemImage = SavedItem.SoftItemImage.LoadSynchronous();
-	ItemDroppedMesh = SavedItem.SoftItemDroppedMesh.LoadSynchronous();
-	ItemDisplayName = FText::FromString(SavedItem.ItemDisplayName);
+	ItemGridSpan = InSavedItem.ItemGridSpan;
+	ItemImage = InSavedItem.SoftItemImage.LoadSynchronous();
+	ItemDroppedMesh = InSavedItem.SoftItemDroppedMesh.LoadSynchronous();
+	ItemDisplayName = FText::FromString(InSavedItem.ItemDisplayName);
 	ItemNameAdditionsData = FObsidianItemGeneratedNameData(
-		SavedItem.ItemNameAdditionsData_RareItemDisplayNameAddition,
-		SavedItem.ItemNameAdditionsData_MagicItemDisplayNameAddition);
-	ItemDescription = FText::FromString(SavedItem.ItemDescription);
-	ItemAdditionalDescription = FText::FromString(SavedItem.ItemAdditionalDescription);
-	ItemSlotPadding = SavedItem.ItemSlotPadding;
+		InSavedItem.ItemNameAdditionsData_RareItemDisplayNameAddition,
+		InSavedItem.ItemNameAdditionsData_MagicItemDisplayNameAddition);
+	ItemDescription = FText::FromString(InSavedItem.ItemDescription);
+	ItemAdditionalDescription = FText::FromString(InSavedItem.ItemAdditionalDescription);
+	ItemSlotPadding = InSavedItem.ItemSlotPadding;
 	
 	// Debug
-	DebugName = SavedItem.DebugItemName;
+	DebugName = InSavedItem.DebugItemName;
 }
 

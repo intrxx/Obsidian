@@ -19,24 +19,24 @@ class OBSIDIAN_API UObsidianProgressGlobe_Health : public UObsidianProgressGlobe
 	GENERATED_BODY()	
 
 public:
-	void SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage) const;
+	void SetProgressGlobeStyle(const FSlateBrush& InProgressGlobeFillImage) const;
 	void ResetStyle() const;
 	
 protected:
 	virtual void HandleWidgetControllerSet() override;
 
 	UFUNCTION()
-	void OnHealthChanged(float NewHealth);
+	void OnHealthChanged(float InNewHealth);
 	UFUNCTION()
-	void OnMaxHealthChanged(float NewMaxHealth);
+	void OnMaxHealthChanged(float InNewMaxHealth);
 	UFUNCTION()
-	void OnEnergyShieldChanged(float NewEnergyShield);
+	void OnEnergyShieldChanged(float InNewEnergyShield);
 	UFUNCTION()
-	void OnMaxEnergyShieldChanged(float NewMaxEnergyShield);
+	void OnMaxEnergyShieldChanged(float InNewMaxEnergyShield);
 	UFUNCTION()
-	void OnStaggerMeterChanged(float NewStaggerMeter);
+	void OnStaggerMeterChanged(float InNewStaggerMeter);
 	UFUNCTION()
-	void OnMaxStaggerMeterChanged(float NewMaxStaggerMeter);
+	void OnMaxStaggerMeterChanged(float InNewMaxStaggerMeter);
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))

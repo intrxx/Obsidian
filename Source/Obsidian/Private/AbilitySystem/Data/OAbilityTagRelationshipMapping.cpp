@@ -7,14 +7,14 @@
 #endif // ~ With Editor
 
 
-void UOAbilityTagRelationshipMapping::GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& AbilityTags,
+void UOAbilityTagRelationshipMapping::GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& InAbilityTags,
                                                                      FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagToCancel) const
 {
 	for(int32 i = 0; i < AbilityTagRelationships.Num(); i++)
 	{
 		const FObsidianAbilityTagRelationship& Tags = AbilityTagRelationships[i];
 		
-		if(AbilityTags.HasTag(Tags.AbilityTag))
+		if(InAbilityTags.HasTag(Tags.AbilityTag))
 		{
 			if(OutTagsToBlock)
 			{
@@ -28,14 +28,14 @@ void UOAbilityTagRelationshipMapping::GetAbilityTagsToBlockAndCancel(const FGame
 	}
 }
 
-void UOAbilityTagRelationshipMapping::GetRequiredAndBlockedActivationTags(const FGameplayTagContainer& AbilityTags,
+void UOAbilityTagRelationshipMapping::GetRequiredAndBlockedActivationTags(const FGameplayTagContainer& InAbilityTags,
 	FGameplayTagContainer* OutActivationRequiredTags, FGameplayTagContainer* OutActivationBlockedTags) const
 {
 	for(int32 i = 0; i < AbilityTagRelationships.Num(); i++)
 	{
 		const FObsidianAbilityTagRelationship& Tags = AbilityTagRelationships[i];
 		
-		if(AbilityTags.HasTag(Tags.AbilityTag))
+		if(InAbilityTags.HasTag(Tags.AbilityTag))
 		{
 			if(OutActivationRequiredTags)
 			{
@@ -49,14 +49,14 @@ void UOAbilityTagRelationshipMapping::GetRequiredAndBlockedActivationTags(const 
 	}
 }
 
-bool UOAbilityTagRelationshipMapping::IsAbilityCanceledByTag(const FGameplayTagContainer& AbilityTags,
-	const FGameplayTag& ActionTag) const
+bool UOAbilityTagRelationshipMapping::IsAbilityCanceledByTag(const FGameplayTagContainer& InAbilityTags,
+	const FGameplayTag& InActionTag) const
 {
 	for(int32 i = 0; i < AbilityTagRelationships.Num(); i++)
 	{
 		const FObsidianAbilityTagRelationship& Tags = AbilityTagRelationships[i];
 
-		if(Tags.AbilityTag == ActionTag && Tags.AbilityTagsToCancel.HasAny(AbilityTags))
+		if(Tags.AbilityTag == InActionTag && Tags.AbilityTagsToCancel.HasAny(InAbilityTags))
 		{
 			return true;
 		}
@@ -65,7 +65,7 @@ bool UOAbilityTagRelationshipMapping::IsAbilityCanceledByTag(const FGameplayTagC
 }
 
 #if WITH_EDITOR
-EDataValidationResult FObsidianAbilityTagRelationship::ValidateData(FDataValidationContext& Context, const int Index) const
+EDataValidationResult FObsidianAbilityTagRelationship::ValidateData(FDataValidationContext& InContext, const int InIndex) const
 {
 	EDataValidationResult Result = EDataValidationResult::Valid;
 
@@ -74,22 +74,22 @@ EDataValidationResult FObsidianAbilityTagRelationship::ValidateData(FDataValidat
 		Result = EDataValidationResult::Invalid;
 
 		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Ability Tag at index [%i] is invalid! \n"
-			"Please set a valid Ability Tag or delete this index entry in the Ability Tag Relationships array"), Index));
+			"Please set a valid Ability Tag or delete this index entry in the Ability Tag Relationships array"), InIndex));
 
-		Context.AddError(ErrorMessage);
+		InContext.AddError(ErrorMessage);
 	}
 
 	return Result;
 }
 
-EDataValidationResult UOAbilityTagRelationshipMapping::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UOAbilityTagRelationshipMapping::IsDataValid(FDataValidationContext& InContext) const
 {
-	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(InContext), EDataValidationResult::Valid);
 
 	unsigned int TagRelationshipIndex = 0;
 	for(const FObsidianAbilityTagRelationship& TagRelationship : AbilityTagRelationships)
 	{
-		Result =  CombineDataValidationResults(Result, TagRelationship.ValidateData(Context, TagRelationshipIndex));
+		Result =  CombineDataValidationResults(Result, TagRelationship.ValidateData(InContext, TagRelationshipIndex));
 		TagRelationshipIndex++;
 	}
 	

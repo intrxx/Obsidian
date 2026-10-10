@@ -8,8 +8,8 @@
 #include "Characters/ObsidianPawnData.h"
 
 
-UObsidianPawnExtensionComponent::UObsidianPawnExtensionComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianPawnExtensionComponent::UObsidianPawnExtensionComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
@@ -19,9 +19,9 @@ UObsidianPawnExtensionComponent::UObsidianPawnExtensionComponent(const FObjectIn
 	AbilitySystemComponent = nullptr;
 }
 
-void UObsidianPawnExtensionComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UObsidianPawnExtensionComponent::EndPlay(const EEndPlayReason::Type InEndPlayReason)
 {
-	Super::EndPlay(EndPlayReason);
+	Super::EndPlay(InEndPlayReason);
 }
 
 void UObsidianPawnExtensionComponent::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -92,25 +92,25 @@ void UObsidianPawnExtensionComponent::UninitializeAbilitySystem()
 	AbilitySystemComponent = nullptr;
 }
 
-void UObsidianPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate)
+void UObsidianPawnExtensionComponent::OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate InDelegate)
 {
-	if(!OnAbilitySystemInitialized.IsBoundToObject(Delegate.GetUObject()))
+	if(!OnAbilitySystemInitialized.IsBoundToObject(InDelegate.GetUObject()))
 	{
-		OnAbilitySystemInitialized.Add(Delegate);
+		OnAbilitySystemInitialized.Add(InDelegate);
 	}
 
 	// If we already have valid ASC we should fire the delegate
 	if(AbilitySystemComponent)
 	{
-		Delegate.Execute();
+		InDelegate.Execute();
 	}
 }
 
-void UObsidianPawnExtensionComponent::OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate)
+void UObsidianPawnExtensionComponent::OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate InDelegate)
 {
-	if(!OnAbilitySystemUninitialized.IsBoundToObject(Delegate.GetUObject()))
+	if(!OnAbilitySystemUninitialized.IsBoundToObject(InDelegate.GetUObject()))
 	{
-		OnAbilitySystemUninitialized.Add(Delegate);
+		OnAbilitySystemUninitialized.Add(InDelegate);
 	}
 }
 

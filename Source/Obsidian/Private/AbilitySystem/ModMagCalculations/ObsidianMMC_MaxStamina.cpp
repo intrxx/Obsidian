@@ -27,21 +27,21 @@ static const SObsidian_MaxStaminaStatics& MaxStaminaStatics()
 	return MaxStaminaStatics;
 }
 
-UObsidianMMC_MaxStamina::UObsidianMMC_MaxStamina(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_MaxStamina::UObsidianMMC_MaxStamina(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxStaminaStatics().StrengthDef);
 	RelevantAttributesToCapture.Add(MaxStaminaStatics().DexterityDef);
 }
 
-float UObsidianMMC_MaxStamina::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_MaxStamina::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
-	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());
+	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(InSpec.GetContext().GetSourceObject());
 	if (CombatInterface == nullptr)
 	{
 		UE_LOG(ObLogAbilitySystem, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"),
 			*GetNameSafe(this));
-		return Super::CalculateBaseMagnitude_Implementation(Spec);
+		return Super::CalculateBaseMagnitude_Implementation(InSpec);
 	}
 	
 	const uint8 CharacterLevel = CombatInterface->GetCharacterLevel();
@@ -57,11 +57,11 @@ float UObsidianMMC_MaxStamina::CalculateBaseMagnitude_Implementation(const FGame
 	const FAggregatorEvaluateParameters EvaluationParameters;
 
 	float Strength = 0.f;
-	GetCapturedAttributeMagnitude(MaxStaminaStatics().StrengthDef, Spec, EvaluationParameters, Strength);
+	GetCapturedAttributeMagnitude(MaxStaminaStatics().StrengthDef, InSpec, EvaluationParameters, Strength);
 	Strength = FMath::Max<float>(Strength, 0.f);
 	
 	float Dexterity = 0.f;
-	GetCapturedAttributeMagnitude(MaxStaminaStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
+	GetCapturedAttributeMagnitude(MaxStaminaStatics().DexterityDef, InSpec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 	
 	const float MaxManaBonus = Dexterity * 2 + Strength + LevelAddedMaxStaminaValue;

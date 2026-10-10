@@ -42,17 +42,17 @@ class OBSIDIAN_API UOInventoryItemFragment_Affixes : public UObsidianInventoryIt
 	GENERATED_BODY()
 
 public:
-    UOInventoryItemFragment_Affixes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+    UOInventoryItemFragment_Affixes(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
     
 	//~ Start of UObsidianInventoryItemFragment
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
 	//~ End of UObsidianInventoryItemFragment
 
 	virtual void PostInitProperties() override;
-	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
+	virtual void PreSave(FObjectPreSaveContext InSaveContext) override;
 
 #if WITH_EDITOR
-	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 	
 	bool HasPrimaryItemAffix() const;

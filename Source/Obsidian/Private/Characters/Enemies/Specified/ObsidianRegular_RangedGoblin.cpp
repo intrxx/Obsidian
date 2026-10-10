@@ -5,8 +5,8 @@
 #include "Net/UnrealNetwork.h"
 
 
-AObsidianRegular_RangedGoblin::AObsidianRegular_RangedGoblin(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianRegular_RangedGoblin::AObsidianRegular_RangedGoblin(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	LeftHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("LeftHandEquipmentMesh");
 	LeftHandEquipmentMesh->SetupAttachment(GetMesh(), ObsidianMeshSocketNames::LeftHandWeaponSocket);

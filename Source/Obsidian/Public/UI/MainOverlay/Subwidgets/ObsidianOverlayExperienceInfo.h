@@ -20,7 +20,7 @@ class OBSIDIAN_API UObsidianOverlayExperienceInfo : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeExperienceInfo(const float CurrentExperience, const float MaxExperience, const float LastMaxExperience, const int32 PlayerLevel);
+	void InitializeExperienceInfo(const float InCurrentExperience, const float InMaxExperience, const float InLastMaxExperience, const int32 InPlayerLevel);
 	
 	void DestroyExperienceInfo();
 

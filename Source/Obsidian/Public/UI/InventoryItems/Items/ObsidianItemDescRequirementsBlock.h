@@ -24,11 +24,11 @@ class OBSIDIAN_API UObsidianItemDescRequirementsBlock : public UObsidianWidgetBa
 	GENERATED_BODY()
 
 public:
-	void InitializeRequirementsBlock(const FObsidianItemRequirementsUIDescription& RequirementsUIDescription);
+	void InitializeRequirementsBlock(const FObsidianItemRequirementsUIDescription& InRequirementsUIDescription);
 
 protected:
-	void SetupAttributeRequirement(const bool bHasRequirement, const bool bMeetRequirement, const int32 RequirementValue,
-		UHorizontalBox* RequirementContainer, UCommonTextBlock* RequirementText, uint8& Counter);
+	void SetupAttributeRequirement(const bool bInHasRequirement, const bool bInMeetRequirement, const int32 InRequirementValue,
+		UHorizontalBox* InRequirementContainer, UCommonTextBlock* InRequirementText, uint8& InOutCounter);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Style")

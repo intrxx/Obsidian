@@ -32,7 +32,7 @@ class OBSIDIAN_API UOInventoryItemFragment_Usable : public UObsidianInventoryIte
 	
 public:
 	//~ Start of UObsidianInventoryItemFragment
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
 	//~ End of UObsidianInventoryItemFragment
 
 protected:

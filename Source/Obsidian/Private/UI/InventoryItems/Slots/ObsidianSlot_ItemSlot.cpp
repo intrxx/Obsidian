@@ -52,7 +52,7 @@ FGameplayTag UObsidianSlot_ItemSlot::GetSisterSlotTag() const
 	return SisterSlotTag;
 }
 
-void UObsidianSlot_ItemSlot::AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
+void UObsidianSlot_ItemSlot::AddItemToSlot(UObsidianItem* InItemWidget, const float InItemSlotPadding)
 {
 	if(ensure(Main_Overlay && InItemWidget))
 	{
@@ -60,12 +60,12 @@ void UObsidianSlot_ItemSlot::AddItemToSlot(UObsidianItem* InItemWidget, const fl
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
 		
-		const float ItemPadding = SlottedItemAdditionalPadding + ItemSlotPadding;
+		const float ItemPadding = SlottedItemAdditionalPadding + InItemSlotPadding;
 		ItemSlot->SetPadding(ItemPadding);
 	}
 }
 
-void UObsidianSlot_ItemSlot::AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding)
+void UObsidianSlot_ItemSlot::AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float InItemSlotPadding)
 {
 	if(ensure(Main_Overlay && InItemWidget))
 	{
@@ -75,7 +75,7 @@ void UObsidianSlot_ItemSlot::AddBlockadeItemToSlot(UObsidianItem* InItemWidget, 
 		ItemSlot->SetHorizontalAlignment(HAlign_Center);
 		ItemSlot->SetVerticalAlignment(VAlign_Center);
 
-		const float ItemPadding = SlottedItemAdditionalPadding + ItemSlotPadding;
+		const float ItemPadding = SlottedItemAdditionalPadding + InItemSlotPadding;
 		ItemSlot->SetPadding(ItemPadding);
 	}
 }

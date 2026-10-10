@@ -50,7 +50,7 @@ class OBSIDIAN_API UObsidianSharedStashSaveGame : public ULocalPlayerSaveGame
 	GENERATED_BODY()
 
 public:
-	UObsidianSharedStashSaveGame(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianSharedStashSaveGame(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 public:
 	UPROPERTY()

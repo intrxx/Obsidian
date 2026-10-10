@@ -22,19 +22,19 @@ void UObsidianDraggedItem::NativeConstruct()
 	SetVisibility(ESlateVisibility::HitTestInvisible);
 }
 
-void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& GeneratedData)
+void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InGeneratedData)
 {
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	
-	if(ItemDef == nullptr)
+	if(InItemDef == nullptr)
 	{
 		FFrame::KismetExecutionMessage(TEXT("Provided ItemDef is invalid in UObsidianDraggedItem::InitializeItemWidgetWithItemDef."), ELogVerbosity::Error);
 		return;
 	}
 	
-	InternalStacks = GeneratedData.GetStackCount();
+	InternalStacks = InGeneratedData.GetStackCount();
 	
-	UObsidianInventoryItemDefinition* DefaultObject = ItemDef.GetDefaultObject();
+	UObsidianInventoryItemDefinition* DefaultObject = InItemDef.GetDefaultObject();
 	if(DefaultObject == nullptr)
 	{
 		return;
@@ -72,50 +72,50 @@ void UObsidianDraggedItem::InitializeItemWidgetWithItemDef(const TSubclassOf<UOb
 	}
 }
 
-void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* ItemInstance)
+void UObsidianDraggedItem::InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* InItemInstance)
 {
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	
-	if(ItemInstance == nullptr)
+	if(InItemInstance == nullptr)
 	{
 		FFrame::KismetExecutionMessage(TEXT("Provided ItemInstance is invalid in UObsidianDraggedItem::InitializeItemWidgetWithItemInstance."), ELogVerbosity::Error);
 		return;
 	}
 	
-	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
+	const FIntPoint ItemGridSpan = InItemInstance->GetItemGridSpan();
 	Root_SizeBox->SetWidthOverride(ItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(ItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
 
 	SetDesiredSizeInViewport(ItemGridSpan * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 
-	UTexture2D* ItemImage = ItemInstance->GetItemImage();
+	UTexture2D* ItemImage = InItemInstance->GetItemImage();
 	Item_Image->SetBrushFromTexture(ItemImage);
 
-	bStackableItem = ItemInstance->IsStackable();
+	bStackableItem = InItemInstance->IsStackable();
 	if(bStackableItem == false)
 	{
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
-	const int32 CurrentStack = ItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	const int32 CurrentStack = InItemInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	const FText StackCountText = FText::AsNumber(CurrentStack);
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianDraggedItem::UpdateStackCount(const int32 NewStackCount)
+void UObsidianDraggedItem::UpdateStackCount(const int32 InNewStackCount)
 {
 	if(bStackableItem == false)
 	{
 		return;
 	}
 
-	if(NewStackCount == InternalStacks)
+	if(InNewStackCount == InternalStacks)
 	{
 		return;
 	}
 	
-	InternalStacks = NewStackCount;
+	InternalStacks = InNewStackCount;
 	const FText StackCountText = FText::AsNumber(InternalStacks);
 	StackCount_TextBlock->SetText(StackCountText);
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);

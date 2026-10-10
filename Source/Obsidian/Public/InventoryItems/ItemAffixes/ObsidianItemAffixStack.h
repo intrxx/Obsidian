@@ -67,22 +67,22 @@ public:
 	TArray<FObsidianActiveItemAffix> GetAllItemAffixes() const;
 	TArray<FObsidianActiveItemAffix> GetAllItemPrefixesAndSuffixes() const;
 	
-	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
+	bool NetDeltaSerialize(FNetDeltaSerializeInfo& InOutDeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianAffixEntry, FObsidianItemAffixStack>(Entries, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianAffixEntry, FObsidianItemAffixStack>(Entries, InOutDeltaParams, *this);
 	}
 
-	void InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
-	void AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianActiveItemAffix& ItemAffix);
-	bool RemoveAffix(const FGameplayTag& AffixTag);
+	void InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianActiveItemAffix>& InAffixesToInitialize);
+	void AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianActiveItemAffix& InItemAffix);
+	bool RemoveAffix(const FGameplayTag& InAffixTag);
 	bool RemoveSkillImplicitAffix();
 	bool RemoveAllPrefixesAndSuffixes();
-	void AffixChanged(const FGameplayTag& AffixTag);
+	void AffixChanged(const FGameplayTag& InAffixTag);
 	
 	//~ Start of FFastArraySerializer contract
-	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
-	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
-	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
+	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
+	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
+	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
 	//~ End of FFastArraySerializer contract
 	
 private:

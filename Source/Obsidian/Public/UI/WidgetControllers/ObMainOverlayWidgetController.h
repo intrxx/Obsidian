@@ -42,10 +42,10 @@ public:
 	FObsidianSpecialResourceVisuals GetSpecialResourceVisuals() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Health")
-	void UpdateHealthInfoGlobe(const float Magnitude) const;
+	void UpdateHealthInfoGlobe(const float InMagnitude) const;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Mana")
-	void UpdateManaInfoGlobe(const float Magnitude) const;
+	void UpdateManaInfoGlobe(const float InMagnitude) const;
 
 	void SetInitialAttributeValues() const;
 	void SetInitialStaggerMeter() const;
@@ -113,32 +113,32 @@ public:
 	FOnAuraWidgetDestructionInfoReceived OnAuraWidgetDestructionInfoReceivedDelegate;
 
 protected:
-	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
+	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC) override;
 	
-	void HandleEffectApplied(const FObsidianEffectUIData& UIData);
+	void HandleEffectApplied(const FObsidianEffectUIData& InUIData);
 
-	void ManaChanged(const FOnAttributeChangeData& Data) const;
-	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
-	void SpecialResourceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
-	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
-	void PassiveSkillPointsChanged(const FOnAttributeChangeData& Data) const;
-	void AscensionPointsChanged(const FOnAttributeChangeData& Data) const;
-	void StaminaChanged(const FOnAttributeChangeData& Data) const;
-	void MaxStaminaChanged(const FOnAttributeChangeData& Data) const;
+	void ManaChanged(const FOnAttributeChangeData& InData) const;
+	void MaxManaChanged(const FOnAttributeChangeData& InData) const;
+	void SpecialResourceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxSpecialResourceChanged(const FOnAttributeChangeData& InData) const;
+	void ExperienceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxExperienceChanged(const FOnAttributeChangeData& InData);
+	void PassiveSkillPointsChanged(const FOnAttributeChangeData& InData) const;
+	void AscensionPointsChanged(const FOnAttributeChangeData& InData) const;
+	void StaminaChanged(const FOnAttributeChangeData& InData) const;
+	void MaxStaminaChanged(const FOnAttributeChangeData& InData) const;
 	
-	void HealthChanged(const FOnAttributeChangeData& Data) const;
-	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
-	void EnergyShieldChanged(const FOnAttributeChangeData& Data) const;
-	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
-	void StaggerMeterChanged(const FOnAttributeChangeData& Data) const;
-	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const;
+	void HealthChanged(const FOnAttributeChangeData& InData) const;
+	void MaxHealthChanged(const FOnAttributeChangeData& InData) const;
+	void EnergyShieldChanged(const FOnAttributeChangeData& InData) const;
+	void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) const;
+	void StaggerMeterChanged(const FOnAttributeChangeData& InData) const;
+	void MaxStaggerMeterChanged(const FOnAttributeChangeData& InData) const;
 
 	UFUNCTION()
-	void UpdateHoveringOverTarget(AActor* TargetActor, const bool bHoveredOver);
+	void UpdateHoveringOverTarget(AActor* InTargetActor, const bool bInHoveredOver);
 	UFUNCTION()
-	void UpdateBossDetectionInfo(AActor* BossActor, const bool bSeen);
+	void UpdateBossDetectionInfo(AActor* InBossActor, const bool bInSeen);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")
@@ -166,7 +166,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void DestroyAuraWidget(const FGameplayTag AuraWidgetTag);
+	void DestroyAuraWidget(const FGameplayTag InAuraWidgetTag);
 
 private:
 	UPROPERTY()

@@ -10,22 +10,22 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	HeroAttributeSet = nullptr;
 }
 
-void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner)
+void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner)
 {
-	check(Owner);
+	check(InOwner);
 	
-	Super::InitializeWithAbilitySystem(InASC, Owner);
+	Super::InitializeWithAbilitySystem(InASC, InOwner);
 
 	HeroAttributeSet = AbilitySystemComponent->GetSet<UObsidianHeroAttributeSet>();
 	if (!HeroAttributeSet)
 	{
-		UE_LOG(ObLogAttributes, Error, TEXT("[%hs] Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), __FUNCTION__, *GetNameSafe(Owner));
+		UE_LOG(ObLogAttributes, Error, TEXT("[%hs] Cannot initialize Hero Attributes Component for owner [%s] with NULL Hero Set set on the Ability System."), __FUNCTION__, *GetNameSafe(InOwner));
 		return;
 	}
 
@@ -37,8 +37,8 @@ void UObsidianHeroAttributesComponent::InitializeWithAbilitySystem(UObsidianAbil
 	// Set the Mana value to the MaxMana
 	AbilitySystemComponent->SetNumericAttributeBase(GetManaAttribute(), GetMaxMana());
 
-	bIsLocallyController = Owner->IsLocallyControlled();
-	WeakOwner = Owner;
+	bIsLocallyController = InOwner->IsLocallyControlled();
+	WeakOwner = InOwner;
 }
 
 void UObsidianHeroAttributesComponent::UninitializeFromAbilitySystem()
@@ -73,54 +73,54 @@ void UObsidianHeroAttributesComponent::ClearGameplayTags()
 	Super::ClearGameplayTags();
 }
 
-void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianHeroAttributesComponent::HealthChanged(const FOnAttributeChangeData& InData)
 {
 	// Broadcast for simulated hero health bar
 	if (!bIsLocallyController)
 	{
-		OnHeroHealthChangedDelegate.Broadcast(Data.NewValue);
+		OnHeroHealthChangedDelegate.Broadcast(InData.NewValue);
 	}
 }
 
-void UObsidianHeroAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianHeroAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& InData)
 {
 	// Broadcast for simulated hero health bar
 	if(!bIsLocallyController)
 	{
-		OnHeroMaxHealthChangedDelegate.Broadcast(Data.NewValue);
+		OnHeroMaxHealthChangedDelegate.Broadcast(InData.NewValue);
 	}
 }
 
-void UObsidianHeroAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianHeroAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& InData)
 {
 	// Broadcast for simulated hero health bar
 	if(!bIsLocallyController)
 	{
-		OnHeroEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+		OnHeroEnergyShieldChangedDelegate.Broadcast(InData.NewValue);
 	}
 }
 
-void UObsidianHeroAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianHeroAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& InData)
 {
 	// Broadcast for simulated hero health bar
 	if(!bIsLocallyController)
 	{
-		OnHeroMaxEnergyShieldChangedDelegate.Broadcast(Data.NewValue);
+		OnHeroMaxEnergyShieldChangedDelegate.Broadcast(InData.NewValue);
 	}
 }
 
-void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& Data)
+void UObsidianHeroAttributesComponent::ManaChanged(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(ObLogAttributes, Warning, TEXT("Hero - Implement Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
-void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& Data)
+void UObsidianHeroAttributesComponent::MaxManaChanged(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(ObLogAttributes, Warning, TEXT("Hero - Implement Max Mana Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
-void UObsidianHeroAttributesComponent::HandleOutOfStamina(AActor* DamageInstigator, AActor* DamageCauser,
-	const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue)
+void UObsidianHeroAttributesComponent::HandleOutOfStamina(AActor* InDamageInstigator, AActor* InDamageCauser,
+	const FGameplayEffectSpec* InDamageEffectSpec, float InDamageMagnitude, float InOldValue, float InNewValue)
 {
 	if (WeakOwner.IsValid())
 	{

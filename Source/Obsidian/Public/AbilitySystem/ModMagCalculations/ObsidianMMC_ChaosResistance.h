@@ -16,8 +16,8 @@ class OBSIDIAN_API UObsidianMMC_ChaosResistance : public UGameplayModMagnitudeCa
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_ChaosResistance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_ChaosResistance(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 	
 };

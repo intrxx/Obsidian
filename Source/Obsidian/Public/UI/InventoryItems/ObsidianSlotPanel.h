@@ -31,7 +31,7 @@ public:
 
 	bool IsOccupied() const;
 	bool IsBlocked() const;
-	void AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget, const bool bBlockSlot);
+	void AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget, const bool bInBlockSlot);
 	void Reset();
 
 public:
@@ -65,18 +65,18 @@ public:
 	bool ConstructStashPanel(const FGameplayTag& InStashTabTag);
 
 	TArray<UObsidianSlot_ItemSlot*> GetAllSlots() const;
-	UObsidianSlot_ItemSlot* GetSlotByPosition(const FGameplayTag& AtSlotTag);
-	const FObsidianSlotData* GetSlotDataAtGridPosition(const FGameplayTag& AtSlotTag) const;
-	UObsidianItem* GetItemWidgetAtSlot(const FGameplayTag& AtSlotTag) const;
-	bool IsSlotOccupied(const FGameplayTag& AtSlotTag) const;
-	bool IsSlotBlocked(const FGameplayTag& AtSlotTag) const;
+	UObsidianSlot_ItemSlot* GetSlotByPosition(const FGameplayTag& InAtSlotTag);
+	const FObsidianSlotData* GetSlotDataAtGridPosition(const FGameplayTag& InAtSlotTag) const;
+	UObsidianItem* GetItemWidgetAtSlot(const FGameplayTag& InAtSlotTag) const;
+	bool IsSlotOccupied(const FGameplayTag& InAtSlotTag) const;
+	bool IsSlotBlocked(const FGameplayTag& InAtSlotTag) const;
 	
-	void AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData,
-		const bool bBlockSlot = false);
-	void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
-	void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
+	void AddItemWidget(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData,
+		const bool bInBlockSlot = false);
+	void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
+	void HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
 
-	void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight);
+	void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight);
 	void ClearUsableItemHighlight();
 	
 protected:
@@ -85,18 +85,18 @@ protected:
 	
 	bool ConstructSlots();
 	
-	void RegisterSlotItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
-		const bool bSwappedWithAnother, const bool bBlocksSlot = false,
-		const FObsidianItemPosition& ItemOriginPosition = FObsidianItemPosition());
-	void UnregisterSlotItemWidget(const FGameplayTag& SlotTag);
+	void RegisterSlotItemWidget(const FObsidianItemPosition& InItemPosition, UObsidianItem* InItemWidget,
+		const bool bInSwappedWithAnother, const bool bInBlocksSlot = false,
+		const FObsidianItemPosition& InItemOriginPosition = FObsidianItemPosition());
+	void UnregisterSlotItemWidget(const FGameplayTag& InSlotTag);
 	
-	void OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, const bool bEntered);
-	void OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
-		const FObsidianItemInteractionFlags& InteractionFlags);
-	void OnItemSlotRightMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
-		const FObsidianItemInteractionFlags& InteractionFlags);
+	void OnItemSlotHover(UObsidianSlot_ItemSlot* InAffectedSlot, const bool bInEntered);
+	void OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemSlot* InAffectedSlot,
+		const FObsidianItemInteractionFlags& InInteractionFlags);
+	void OnItemSlotRightMouseButtonDown(const UObsidianSlot_ItemSlot* InAffectedSlot,
+		const FObsidianItemInteractionFlags& InInteractionFlags);
 	
-	void ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FGameplayTag& SlotTagOverride) const;
+	void ConstructItemPosition(FObsidianItemPosition& OutItemPosition, const FGameplayTag& InSlotTagOverride) const;
 	
 private:
 	UPROPERTY()

@@ -92,13 +92,13 @@ FGameplayTag UObsidianPlayerStashWidget::GetActiveStashTabTag() const
 	return FGameplayTag::EmptyTag;
 }
 
-void UObsidianPlayerStashWidget::HighlightSlotPlacement(const FGameplayTagContainer& WithTags)
+void UObsidianPlayerStashWidget::HighlightSlotPlacement(const FGameplayTagContainer& InWithTags)
 {
 	if(const UObsidianStashTabWidget_Slots* StashTabWidget_Slots = Cast<UObsidianStashTabWidget_Slots>(ActiveStashTab))
 	{
 		for (UObsidianSlot_ItemSlot* SlotWidget : StashTabWidget_Slots->GetSlotWidgets())
 		{
-			if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
+			if (SlotWidget && InWithTags.HasTagExact(SlotWidget->GetSlotTag()))
 			{
 				SlotWidget->SetSlotState(EObsidianItemSlotState::GreenLight, EObsidianItemSlotStatePriority::High);
 				CachedHighlightedSlot.Add(SlotWidget);
@@ -138,12 +138,12 @@ void UObsidianPlayerStashWidget::SavePlayerStash()
 }
 
 void UObsidianPlayerStashWidget::OnUsableContextFiredForStash(
-	const TMultiMap<FGameplayTag, FObsidianItemPosition>& MatchingItemPositions)
+	const TMultiMap<FGameplayTag, FObsidianItemPosition>& InMatchingItemPositions)
 {
 	if (ActiveStashTab)
 	{
 		TArray<FObsidianItemPosition> OutItemForCurrentTab;
-		MatchingItemPositions.MultiFind(ActiveStashTab->GetStashTabTag(), OutItemForCurrentTab);
+		InMatchingItemPositions.MultiFind(ActiveStashTab->GetStashTabTag(), OutItemForCurrentTab);
 
 		if (OutItemForCurrentTab.IsEmpty() == false)
 		{
@@ -151,7 +151,7 @@ void UObsidianPlayerStashWidget::OnUsableContextFiredForStash(
 		}
 	}
 
-	CachedItemsToHighlight = MatchingItemPositions;
+	CachedItemsToHighlight = InMatchingItemPositions;
 }
 
 void UObsidianPlayerStashWidget::ClearUsableItemHighlight()
@@ -173,12 +173,12 @@ void UObsidianPlayerStashWidget::CloseStash()
 	RemoveFromParent();
 }
 
-void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(ItemWidgetData.ItemPosition.IsOnStash()))
+	if (ensure(InItemWidgetData.ItemPosition.IsOnStash()))
 	{
 		if (UObsidianStashTabWidget** StashTabWidgetPointer = StashTabsMap.Find(
-			ItemWidgetData.ItemPosition.GetOwningStashTabTag()))
+			InItemWidgetData.ItemPosition.GetOwningStashTabTag()))
 		{
 			UObsidianStashTabWidget* StashTabWidget = *StashTabWidgetPointer;
 			ensure(StashTabWidget);
@@ -186,46 +186,46 @@ void UObsidianPlayerStashWidget::OnItemStashed(const FObsidianItemWidgetData& It
 			checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in [%hs],"
 								" fill it in ObsidianInventory instance."), __FUNCTION__);
 			UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-			ItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage,
-				ItemWidgetData.StackCount);
+			ItemWidget->InitializeItemWidget(InItemWidgetData.GridSpan, InItemWidgetData.ItemImage,
+				InItemWidgetData.StackCount);
 			
-			StashTabWidget->AddItemToStash(ItemWidget, ItemWidgetData);
+			StashTabWidget->AddItemToStash(ItemWidget, InItemWidgetData);
 			bStashChanged = true;
 		}
 	}
 }
 
-void UObsidianPlayerStashWidget::OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData) 
+void UObsidianPlayerStashWidget::OnItemChanged(const FObsidianItemWidgetData& InItemWidgetData) 
 {
-	if (ensure(ItemWidgetData.ItemPosition.IsOnStash()))
+	if (ensure(InItemWidgetData.ItemPosition.IsOnStash()))
 	{
 		if (UObsidianStashTabWidget** StashTabWidgetPointer = StashTabsMap.Find(
-			ItemWidgetData.ItemPosition.GetOwningStashTabTag()))
+			InItemWidgetData.ItemPosition.GetOwningStashTabTag()))
 		{
 			UObsidianStashTabWidget* StashTabWidget = *StashTabWidgetPointer;
-			StashTabWidget->HandleItemChanged(ItemWidgetData);
+			StashTabWidget->HandleItemChanged(InItemWidgetData);
 			bStashChanged = true;
 		}
 	}
 }
 
-void UObsidianPlayerStashWidget::OnItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianPlayerStashWidget::OnItemRemoved(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(ItemWidgetData.ItemPosition.IsOnStash()))
+	if (ensure(InItemWidgetData.ItemPosition.IsOnStash()))
 	{
 		if (UObsidianStashTabWidget** StashTabWidgetPointer = StashTabsMap.Find(
-			ItemWidgetData.ItemPosition.GetOwningStashTabTag()))
+			InItemWidgetData.ItemPosition.GetOwningStashTabTag()))
 		{
 			UObsidianStashTabWidget* StashTabWidget = *StashTabWidgetPointer;
-			StashTabWidget->HandleItemRemoved(ItemWidgetData);
+			StashTabWidget->HandleItemRemoved(InItemWidgetData);
 			bStashChanged = true;
 		}
 	}
 }
 
-void UObsidianPlayerStashWidget::CreateStashTabButton(const FGameplayTag& StashTag, const FText& StashTabName)
+void UObsidianPlayerStashWidget::CreateStashTabButton(const FGameplayTag& InStashTag, const FText& InStashTabName)
 {
-	if(StashTag.IsValid() == false)
+	if(InStashTag.IsValid() == false)
 	{
 		UE_LOG(ObLogUIItems, Error, TEXT("Trying to create Stash Tab Button without valid Stash"
 												" Tag in [%hs]"), __FUNCTION__);
@@ -234,21 +234,21 @@ void UObsidianPlayerStashWidget::CreateStashTabButton(const FGameplayTag& StashT
 
 	checkf(StashButtonWidgetClass, TEXT("Trying to create Stash Button without valid StashButtonWidgetClass."))
 	UObsidianStashButton* StashButton = CreateWidget<UObsidianStashButton>(this, StashButtonWidgetClass);
-	StashButton->InitializeStashButton(StashTag, StashTabName);
+	StashButton->InitializeStashButton(InStashTag, InStashTabName);
 	StashButton->OnStashTabButtonPressedDelegate.AddUObject(this, &ThisClass::ShowStashTab);
 	
 	StashTabsList_ScrollBox->AddChild(StashButton);
 }
 
-void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& WithStashTag)
+void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& InWithStashTag)
 {
-	if(WithStashTag.IsValid() == false)
+	if(InWithStashTag.IsValid() == false)
 	{
 		UE_LOG(ObLogUIItems, Error, TEXT("Trying to show Stash Tab with invalid tag in [%hs]."), __FUNCTION__);
 		return;
 	}
 	
-	if(UObsidianStashTabWidget* StashTabToShow = *StashTabsMap.Find(WithStashTag))
+	if(UObsidianStashTabWidget* StashTabToShow = *StashTabsMap.Find(InWithStashTag))
 	{
 		if(ActiveStashTab && ActiveStashTab->IsTabActive())
 		{
@@ -263,7 +263,7 @@ void UObsidianPlayerStashWidget::ShowStashTab(const FGameplayTag& WithStashTag)
 		
 		StashTabToShow->ShowStashTab();
 		ActiveStashTab = StashTabToShow;
-		InventoryItemsWidgetController->RegisterCurrentStashTab(WithStashTag);
+		InventoryItemsWidgetController->RegisterCurrentStashTab(InWithStashTag);
 	}
 }
 

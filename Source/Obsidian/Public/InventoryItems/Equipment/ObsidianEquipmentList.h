@@ -83,13 +83,13 @@ public:
 
 	FGameplayTag GetEquipmentSlotTag() const;
 	
-	EObsidianPlacingAtSlotResult CanEquipAtSlot(const FGameplayTag& ItemCategory) const;
+	EObsidianPlacingAtSlotResult CanEquipAtSlot(const FGameplayTag& InItemCategory) const;
 
 	void AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories);
 	
-	void RemoveBannedEquipmentCategory(const FGameplayTag& BannedCategoryToRemove);
-	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
+	void RemoveBannedEquipmentCategory(const FGameplayTag& InBannedCategoryToRemove);
+	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategoriesToRemove);
 
 public:
 	FObsidianSlotDefinition BaseSlotDefinition = FObsidianSlotDefinition();
@@ -161,40 +161,40 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetSwappedWeapons();
 	TArray<UObsidianInventoryItemInstance*> GetEquippedWeapons();
-	UObsidianInventoryItemInstance* GetEquipmentPieceByTag(const FGameplayTag& SlotTag) const;
+	UObsidianInventoryItemInstance* GetEquipmentPieceByTag(const FGameplayTag& InSlotTag) const;
 
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	AObsidianHero* GetObsidianHero() const;
 	
-	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
-	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& ItemCategory);
+	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& InSlotTag);
+	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& InItemCategory);
 	
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
-		const FGameplayTag& EquipmentSlotTag);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& EquipmentSlotTag);
-	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& EquippedSavedItem);
-	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDefClass, const FObsidianItemGeneratedData& InItemGeneratedData,
+		const FGameplayTag& InEquipmentSlotTag);
+	void AddEntry(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InEquipmentSlotTag);
+	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& InEquippedSavedItem);
+	void RemoveEntry(UObsidianInventoryItemInstance* InInstance);
 	
-	void MoveWeaponToSwap(UObsidianInventoryItemInstance* Instance);
-	void MoveWeaponFromSwap(UObsidianInventoryItemInstance* Instance);
+	void MoveWeaponToSwap(UObsidianInventoryItemInstance* InInstance);
+	void MoveWeaponFromSwap(UObsidianInventoryItemInstance* InInstance);
 
-	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
+	bool NetDeltaSerialize(FNetDeltaSerializeInfo& InOutDeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianEquipmentEntry, FObsidianEquipmentList>(Entries, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianEquipmentEntry, FObsidianEquipmentList>(Entries, InOutDeltaParams, *this);
 	}
 	
-	static bool ValidateEquipmentSlot(const FGameplayTag& SlotTag);
+	static bool ValidateEquipmentSlot(const FGameplayTag& InSlotTag);
 
 	//~ Start of FFastArraySerializer contract
-	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
-	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
-	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
+	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
+	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
+	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianEquipmentEntry& Entry, const FGameplayTag& EquipmentSlotTag, const FGameplayTag& SlotTagToClear, const EObsidianEquipmentChangeType ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianEquipmentEntry& InEntry, const FGameplayTag& InEquipmentSlotTag, const FGameplayTag& InSlotTagToClear, const EObsidianEquipmentChangeType InChangeType) const;
 
-	void AddItemAffixesToOwner(UObsidianInventoryItemInstance* FromItemInstance, FObsidianAffixAbilitySet_GrantedHandles* ItemGrantedHandles);
+	void AddItemAffixesToOwner(UObsidianInventoryItemInstance* InFromItemInstance, FObsidianAffixAbilitySet_GrantedHandles* OutItemGrantedHandles);
 	UObsidianAffixAbilitySet* GetDefaultAffixSet();
 	
 private:

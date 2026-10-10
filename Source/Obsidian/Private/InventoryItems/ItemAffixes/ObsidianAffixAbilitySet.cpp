@@ -16,7 +16,7 @@
 
 #if WITH_EDITOR
 // ~ FObsidianAffixAbilitySet_GameplayAbility
-EDataValidationResult FObsidianAffixAbilitySet_GameplayAbility::ValidateData(FDataValidationContext& Context, const int Index) const
+EDataValidationResult FObsidianAffixAbilitySet_GameplayAbility::ValidateData(FDataValidationContext& InContext, const int InIndex) const
 {
 	EDataValidationResult Result = EDataValidationResult::Valid;
 
@@ -25,9 +25,9 @@ EDataValidationResult FObsidianAffixAbilitySet_GameplayAbility::ValidateData(FDa
 		Result = EDataValidationResult::Invalid;
 
 		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Abilty at index [%i] is null! \n"
-			"Please set a valid Ability class or delete this index entry in the Granted Gameplay Abilities array"), Index));
+			"Please set a valid Ability class or delete this index entry in the Granted Gameplay Abilities array"), InIndex));
 
-		Context.AddError(ErrorMessage);
+		InContext.AddError(ErrorMessage);
 	}
 	
 	return Result;
@@ -35,7 +35,7 @@ EDataValidationResult FObsidianAffixAbilitySet_GameplayAbility::ValidateData(FDa
 
 // ~ FObsidianAffixAbilitySet_GameplayEffect
 
-EDataValidationResult FObsidianAffixAbilitySet_GameplayEffect::ValidateData(FDataValidationContext& Context, const int Index) const
+EDataValidationResult FObsidianAffixAbilitySet_GameplayEffect::ValidateData(FDataValidationContext& InContext, const int InIndex) const
 {
 	EDataValidationResult Result = EDataValidationResult::Valid;
 
@@ -44,30 +44,30 @@ EDataValidationResult FObsidianAffixAbilitySet_GameplayEffect::ValidateData(FDat
 		Result = EDataValidationResult::Invalid;
 
 		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Gameplay Effect at index [%i] is null! \n"
-			"Please set a valid Gameplay Effect class or delete this index entry in the Granted Gameplay Effects array"), Index));
+			"Please set a valid Gameplay Effect class or delete this index entry in the Granted Gameplay Effects array"), InIndex));
 
-		Context.AddError(ErrorMessage);
+		InContext.AddError(ErrorMessage);
 	}
 
 	return Result;
 }
 
 // ~~ Start of UObsidianAffixAbilitySet
-EDataValidationResult UObsidianAffixAbilitySet::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UObsidianAffixAbilitySet::IsDataValid(FDataValidationContext& InContext) const
 {
-	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(InContext), EDataValidationResult::Valid);
 
 	unsigned int AbilityIndex = 0;
 	for(const FObsidianAffixAbilitySet_GameplayAbility& Ability : GrantedGameplayAbilities)
 	{
-		Result =  CombineDataValidationResults(Result, Ability.ValidateData(Context, AbilityIndex));
+		Result =  CombineDataValidationResults(Result, Ability.ValidateData(InContext, AbilityIndex));
 		AbilityIndex++;
 	}
 	
 	unsigned int EffectIndex = 0;
 	for(const FObsidianAffixAbilitySet_GameplayEffect& Effect : GrantedGameplayEffects)
 	{
-		Result =  CombineDataValidationResults(Result, Effect.ValidateData(Context, EffectIndex));
+		Result =  CombineDataValidationResults(Result, Effect.ValidateData(InContext, EffectIndex));
 		EffectIndex++;
 	}
 	
@@ -77,27 +77,27 @@ EDataValidationResult UObsidianAffixAbilitySet::IsDataValid(FDataValidationConte
 #endif // ~ WITH_EDITOR
 
 // ~ FObsidianAffixAbilitySet_GrantedHandles
-void FObsidianAffixAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle)
+void FObsidianAffixAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& InHandle)
 {
-	if (Handle.IsValid())
+	if (InHandle.IsValid())
 	{
-		GameplayAbilitySpecHandles.Add(Handle);
+		GameplayAbilitySpecHandles.Add(InHandle);
 	}
 }
 
-void FObsidianAffixAbilitySet_GrantedHandles::AddActiveGameplayEffectSpecHandle(const FActiveGameplayEffectHandle& Handle)
+void FObsidianAffixAbilitySet_GrantedHandles::AddActiveGameplayEffectSpecHandle(const FActiveGameplayEffectHandle& InHandle)
 {
-	if (Handle.IsValid())
+	if (InHandle.IsValid())
 	{
-		GameplayEffectHandles.Add(Handle);
+		GameplayEffectHandles.Add(InHandle);
 	}
 }
 
-void FObsidianAffixAbilitySet_GrantedHandles::TakeFromAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC)
+void FObsidianAffixAbilitySet_GrantedHandles::TakeFromAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC)
 {
-	check(ObsidianASC);
+	check(InObsidianASC);
 
-	if (!ObsidianASC->IsOwnerActorAuthoritative())
+	if (!InObsidianASC->IsOwnerActorAuthoritative())
 	{
 		// Must be authoritative to give or take ability sets.
 		return;
@@ -107,7 +107,7 @@ void FObsidianAffixAbilitySet_GrantedHandles::TakeFromAbilitySystem(UObsidianAbi
 	{
 		if (Handle.IsValid())
 		{
-			ObsidianASC->RemoveActiveGameplayEffect(Handle);
+			InObsidianASC->RemoveActiveGameplayEffect(Handle);
 		}
 	}
 	
@@ -115,7 +115,7 @@ void FObsidianAffixAbilitySet_GrantedHandles::TakeFromAbilitySystem(UObsidianAbi
 	{
 		if (Handle.IsValid())
 		{
-			ObsidianASC->ClearAbility(Handle);
+			InObsidianASC->ClearAbility(Handle);
 		}
 	}
 
@@ -124,16 +124,16 @@ void FObsidianAffixAbilitySet_GrantedHandles::TakeFromAbilitySystem(UObsidianAbi
 }
 // ~ End of FObsidianAffixAbilitySet_GrantedHandles
 
-UObsidianAffixAbilitySet::UObsidianAffixAbilitySet(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianAffixAbilitySet::UObsidianAffixAbilitySet(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {}
 
-void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const FGameplayTag& AffixTag,
-	const FObsidianActiveAffixValue& AffixValue, FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
+void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, const FGameplayTag& InAffixTag,
+	const FObsidianActiveAffixValue& InAffixValue, FObsidianAffixAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject) const
 {
-	check(ObsidianASC);
+	check(InObsidianASC);
 
-	if(!ObsidianASC->IsOwnerActorAuthoritative())
+	if(!InObsidianASC->IsOwnerActorAuthoritative())
 	{
 		// Must be authoritative to give or take ability sets.
 		return;
@@ -152,17 +152,17 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 
 		UObsidianGameplayAbility* AbilityCDO = AbilityToGrant.Ability->GetDefaultObject<UObsidianGameplayAbility>();
 
-		checkf(AffixValue.AffixValues.Num() == 1, TEXT("Affix that gives abilities should have one Affix Value!"));
-		float AbilityLevel = AffixValue.AffixValues[0];
+		checkf(InAffixValue.AffixValues.Num() == 1, TEXT("Affix that gives abilities should have one Affix Value!"));
+		float AbilityLevel = InAffixValue.AffixValues[0];
 		FGameplayAbilitySpec AbilitySpec(AbilityCDO, AbilityLevel);
-		AbilitySpec.SourceObject = SourceObject;
+		AbilitySpec.SourceObject = InSourceObject;
 		AbilitySpec.GetDynamicSpecSourceTags().AddTag(AbilityToGrant.OptionalInputTag);
 		
-		const FGameplayAbilitySpecHandle AbilitySpecHandle = ObsidianASC->GiveAbility(AbilitySpec);
+		const FGameplayAbilitySpecHandle AbilitySpecHandle = InObsidianASC->GiveAbility(AbilitySpec);
 
-		if(GrantedHandles)
+		if(OutGrantedHandles)
 		{
-			GrantedHandles->AddAbilitySpecHandle(AbilitySpecHandle);
+			OutGrantedHandles->AddAbilitySpecHandle(AbilitySpecHandle);
 		}
 	}
 	
@@ -177,33 +177,33 @@ void UObsidianAffixAbilitySet::GiveToAbilitySystem(UObsidianAbilitySystemCompone
 			continue;	
 		}
 		
-		FGameplayEffectContextHandle ContextHandle = ObsidianASC->MakeEffectContext();
-		ContextHandle.AddSourceObject(SourceObject);
+		FGameplayEffectContextHandle ContextHandle = InObsidianASC->MakeEffectContext();
+		ContextHandle.AddSourceObject(InSourceObject);
 		
-		const FGameplayEffectSpecHandle SpecHandle = ObsidianASC->MakeOutgoingSpec(EffectToGrant.GameplayEffect, 1, ContextHandle);
+		const FGameplayEffectSpecHandle SpecHandle = InObsidianASC->MakeOutgoingSpec(EffectToGrant.GameplayEffect, 1, ContextHandle);
 		uint8 Index = 0;
-		for (const float Value : AffixValue.AffixValues)
+		for (const float Value : InAffixValue.AffixValues)
 		{
-			const FGameplayTag TagPair = AffixValue.AffixValuesIdentifiers[Index].AffixValueID;
+			const FGameplayTag TagPair = InAffixValue.AffixValuesIdentifiers[Index].AffixValueID;
 			UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, TagPair, Value);
 			++Index;
 		}
 		
-		const FActiveGameplayEffectHandle ActiveSpecHandle = ObsidianASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
+		const FActiveGameplayEffectHandle ActiveSpecHandle = InObsidianASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
 
-		if(GrantedHandles)
+		if(OutGrantedHandles)
 		{
-			GrantedHandles->AddActiveGameplayEffectSpecHandle(ActiveSpecHandle);
+			OutGrantedHandles->AddActiveGameplayEffectSpecHandle(ActiveSpecHandle);
 		}
 	}
 }
 
-void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes,
-	FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject) const
+void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, const TArray<FObsidianActiveItemAffix>& InItemAffixes,
+	FObsidianAffixAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject) const
 {
-	check(ObsidianASC);
+	check(InObsidianASC);
 
-	if(!ObsidianASC->IsOwnerActorAuthoritative())
+	if(!InObsidianASC->IsOwnerActorAuthoritative())
 	{
 		// Must be authoritative to give or take ability sets.
 		return;
@@ -219,12 +219,12 @@ void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySy
 	}
 
 	//NOTE(intrxx) IDK if that's safe, it seems to work both on server and client, but need extensive tests I guess
-	FGameplayEffectContextHandle ContextHandle = ObsidianASC->MakeEffectContext();
-	ContextHandle.AddSourceObject(SourceObject);
+	FGameplayEffectContextHandle ContextHandle = InObsidianASC->MakeEffectContext();
+	ContextHandle.AddSourceObject(InSourceObject);
 	const UGameplayEffect* BaseGE = EffectToGrant.GameplayEffect->GetDefaultObject<UGameplayEffect>();
 	UGameplayEffect* DynamicAffixGE = DuplicateObject<UGameplayEffect>(BaseGE, GetTransientPackage());
 		
-	for (const FObsidianActiveItemAffix& Affix : ItemAffixes)
+	for (const FObsidianActiveItemAffix& Affix : InItemAffixes)
 	{
 		for (int32 i = 0; i < Affix.CurrentAffixValue.AffixValuesIdentifiers.Num(); ++i)
 		{
@@ -243,10 +243,10 @@ void UObsidianAffixAbilitySet::GiveItemAffixesToAbilitySystem(UObsidianAbilitySy
 			DynamicAffixGE->Modifiers.Add(NewModifierInfo);
 		}
 	}
-	const FActiveGameplayEffectHandle ActiveSpecHandle = ObsidianASC->ApplyGameplayEffectToSelf(DynamicAffixGE, 1.0f, ContextHandle);
+	const FActiveGameplayEffectHandle ActiveSpecHandle = InObsidianASC->ApplyGameplayEffectToSelf(DynamicAffixGE, 1.0f, ContextHandle);
 		
-	if(GrantedHandles)
+	if(OutGrantedHandles)
 	{
-		GrantedHandles->AddActiveGameplayEffectSpecHandle(ActiveSpecHandle);
+		OutGrantedHandles->AddActiveGameplayEffectSpecHandle(ActiveSpecHandle);
 	}
 }

@@ -33,11 +33,11 @@ void UObsidianProgressGlobe_Mana::InitializeSpecialResourceVisuals()
 	SpecialResource_ProgressGlobe->SetWidgetStyle(Style);
 }
 
-void UObsidianProgressGlobe_Mana::OnManaChanged(float NewMana)
+void UObsidianProgressGlobe_Mana::OnManaChanged(float InNewMana)
 {
-	ShouldGhostGlobeDecrease(NewMana, Mana, MaxMana);
+	ShouldGhostGlobeDecrease(InNewMana, Mana, MaxMana);
 	
-	Mana = NewMana;
+	Mana = InNewMana;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Mana, MaxMana);
 	Mana_ProgressGlobe->SetPercent(ProgressBarPercent);
@@ -49,9 +49,9 @@ void UObsidianProgressGlobe_Mana::OnManaChanged(float NewMana)
 	ManaAttributeCount_TextBlock->SetText(AttributeText);
 }
 
-void UObsidianProgressGlobe_Mana::OnMaxManaChanged(float NewMaxMana)
+void UObsidianProgressGlobe_Mana::OnMaxManaChanged(float InNewMaxMana)
 {
-	MaxMana = NewMaxMana;
+	MaxMana = InNewMaxMana;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Mana, MaxMana);
 	Mana_ProgressGlobe->SetPercent(ProgressBarPercent);
@@ -63,9 +63,9 @@ void UObsidianProgressGlobe_Mana::OnMaxManaChanged(float NewMaxMana)
 	ManaAttributeCount_TextBlock->SetText(AttributeText);
 }
 
-void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResource)
+void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float InNewSpecialResource)
 {
-	SpecialResource = NewSpecialResource;
+	SpecialResource = InNewSpecialResource;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(SpecialResource, MaxSpecialResource);
 	SpecialResource_ProgressGlobe->SetPercent(ProgressBarPercent);
@@ -77,9 +77,9 @@ void UObsidianProgressGlobe_Mana::OnSpecialResourceChanged(float NewSpecialResou
 	SpecialResourceAttributeCount_TextBlock->SetText(AttributeText);
 }
 
-void UObsidianProgressGlobe_Mana::OnMaxSpecialResourceChanged(float NewMaxSpecialResource)
+void UObsidianProgressGlobe_Mana::OnMaxSpecialResourceChanged(float InNewMaxSpecialResource)
 {
-	MaxSpecialResource = NewMaxSpecialResource;
+	MaxSpecialResource = InNewMaxSpecialResource;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(SpecialResource, MaxSpecialResource);
 	SpecialResource_ProgressGlobe->SetPercent(ProgressBarPercent);

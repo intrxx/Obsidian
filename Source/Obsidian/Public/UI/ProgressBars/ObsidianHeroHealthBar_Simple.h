@@ -21,13 +21,13 @@ protected:
 
 private:
 	UFUNCTION()
-	void HealthChanged(const float NewHealth);
+	void HealthChanged(const float InNewHealth);
 	UFUNCTION()
-	void MaxHealthChanged(const float NewMaxHealth);
+	void MaxHealthChanged(const float InNewMaxHealth);
     
 	UFUNCTION()
-	void EnergyShieldChanged(const float NewEnergyShield);
+	void EnergyShieldChanged(const float InNewEnergyShield);
 	UFUNCTION()
-	void MaxEnergyShieldChanged(const float NewMaxEnergyShield);
+	void MaxEnergyShieldChanged(const float InNewMaxEnergyShield);
 	
 };

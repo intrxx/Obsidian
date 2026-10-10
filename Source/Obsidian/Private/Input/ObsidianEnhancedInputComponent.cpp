@@ -3,16 +3,16 @@
 #include "Input/ObsidianEnhancedInputComponent.h"
 
 
-UObsidianEnhancedInputComponent::UObsidianEnhancedInputComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianEnhancedInputComponent::UObsidianEnhancedInputComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
-void UObsidianEnhancedInputComponent::RemoveBinds(TArray<uint32>& BindHandles)
+void UObsidianEnhancedInputComponent::RemoveBinds(TArray<uint32>& InOutBindHandles)
 {
-	for(uint32 Handle : BindHandles)
+	for(uint32 Handle : InOutBindHandles)
 	{
 		RemoveBindingByHandle(Handle);
 	}
-	BindHandles.Reset();
+	InOutBindHandles.Reset();
 }

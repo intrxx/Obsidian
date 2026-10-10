@@ -21,19 +21,19 @@ static const SObsidianMMC_MaxSpecialResource_Barbarian& MaxSpecialResource_Barba
 	return MaxSpecialResource_WitchStatics;
 }
 
-UObsidianMMC_MaxSpecialResource_Barbarian::UObsidianMMC_MaxSpecialResource_Barbarian(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_MaxSpecialResource_Barbarian::UObsidianMMC_MaxSpecialResource_Barbarian(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxSpecialResource_BarbarianStatics().StrengthDef);
 }
 
-float UObsidianMMC_MaxSpecialResource_Barbarian::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_MaxSpecialResource_Barbarian::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	// OBS-79
 	// const float LevelAddedSpecialResource = Super::CalculateBaseMagnitude_Implementation(Spec);
 
 	float Strength = 0.f;
-	GetCapturedAttributeMagnitude(MaxSpecialResource_BarbarianStatics().StrengthDef, Spec, FAggregatorEvaluateParameters(), Strength);
+	GetCapturedAttributeMagnitude(MaxSpecialResource_BarbarianStatics().StrengthDef, InSpec, FAggregatorEvaluateParameters(), Strength);
 	Strength = FMath::Max<float>(Strength, 0.f);
 
 	const float MaxSpecialResourceBonus_Witch = /** OBS-79 / LevelAddedSpecialResource + */ FMath::FloorToInt(Strength / 6);

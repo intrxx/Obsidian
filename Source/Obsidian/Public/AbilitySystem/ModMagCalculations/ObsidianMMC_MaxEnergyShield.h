@@ -16,7 +16,7 @@ class OBSIDIAN_API UObsidianMMC_MaxEnergyShield : public UGameplayModMagnitudeCa
 	GENERATED_BODY()
 	
 public:
-	UObsidianMMC_MaxEnergyShield(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_MaxEnergyShield(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 };

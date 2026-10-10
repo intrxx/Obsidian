@@ -14,8 +14,8 @@
 #include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
 
 
-AObsidianRegularEnemy::AObsidianRegularEnemy(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianRegularEnemy::AObsidianRegularEnemy(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	HealthBarWidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarWidgetComponent"));
 	HealthBarWidgetComp->SetupAttachment(GetRootComponent());
@@ -29,15 +29,15 @@ AObsidianRegularEnemy::AObsidianRegularEnemy(const FObjectInitializer& ObjectIni
 	Tags.Emplace(ObsidianActorTags::RegularEnemy);
 }
 
-void AObsidianRegularEnemy::PossessedBy(AController* NewController)
+void AObsidianRegularEnemy::PossessedBy(AController* InNewController)
 {
-	Super::PossessedBy(NewController);
+	Super::PossessedBy(InNewController);
 
 	if(!HasAuthority())
 	{
 		return;
 	}
-	ObsidianRegularAIController = Cast<AObsidianAIControllerBase>(NewController);
+	ObsidianRegularAIController = Cast<AObsidianAIControllerBase>(InNewController);
 	ObsidianRegularAIController->GetBlackboardComponent()->InitializeBlackboard(*DefaultBehaviorTree->BlackboardAsset);
 	ObsidianRegularAIController->RunBehaviorTree(DefaultBehaviorTree);
 
@@ -62,9 +62,9 @@ void AObsidianRegularEnemy::OnAbilitySystemInitialized()
 		EGameplayTagEventType::NewOrRemoved).AddUObject(this, &ThisClass::HitReactTagChanged);
 }
 
-void AObsidianRegularEnemy::OnDeathStarted(AActor* OwningActor)
+void AObsidianRegularEnemy::OnDeathStarted(AActor* InOwningActor)
 {
-	Super::OnDeathStarted(OwningActor);
+	Super::OnDeathStarted(InOwningActor);
 
 	if(HealthBarWidgetComp)
 	{
@@ -77,9 +77,9 @@ void AObsidianRegularEnemy::OnDeathStarted(AActor* OwningActor)
 	}
 }
 
-void AObsidianRegularEnemy::OnDeathFinished(AActor* OwningActor)
+void AObsidianRegularEnemy::OnDeathFinished(AActor* InOwningActor)
 {
-	Super::OnDeathFinished(OwningActor);
+	Super::OnDeathFinished(InOwningActor);
 }
 
 void AObsidianRegularEnemy::CreateHealthBarWidget() const
@@ -96,9 +96,9 @@ void AObsidianRegularEnemy::CreateHealthBarWidget() const
 	}
 }
 
-void AObsidianRegularEnemy::HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+void AObsidianRegularEnemy::HitReactTagChanged(const FGameplayTag InCallbackTag, int32 InNewCount)
 {
-	bHitReacting = NewCount > 0;
+	bHitReacting = InNewCount > 0;
 
 	if(HasAuthority() && ObsidianRegularAIController)
 	{

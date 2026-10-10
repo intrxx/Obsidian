@@ -17,7 +17,7 @@ class OBSIDIAN_API UObsidianGA_FlyingKnifes : public UOGameplayAbility_Projectil
 	GENERATED_BODY()
 
 public:
-	UObsidianGA_FlyingKnifes(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianGA_FlyingKnifes(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|FlyingKnifes")
 	void FireFlyingKnifeProjectiles();

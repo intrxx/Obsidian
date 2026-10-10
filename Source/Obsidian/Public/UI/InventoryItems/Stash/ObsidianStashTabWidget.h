@@ -22,11 +22,11 @@ class OBSIDIAN_API UObsidianStashTabWidget : public UObsidianWidgetBase
 	GENERATED_BODY()
 	
 public:
-	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) {};
-	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) {};
-	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) {};
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData) {};
+	virtual void HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData) {};
+	virtual void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData) {};
 	
-	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight) {};
+	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight) {};
 	virtual void ClearUsableItemHighlight() {};
 	
 	FGameplayTag GetStashTabTag() const;

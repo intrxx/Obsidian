@@ -27,7 +27,7 @@ struct FObsidianSavedEquipmentPiece
 
 public:
 	FObsidianSavedEquipmentPiece(){}
-	FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& EquipmentActor);
+	FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& InEquipmentActor);
 	
 public:
 	UPROPERTY()

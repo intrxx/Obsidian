@@ -27,9 +27,9 @@ protected:
 	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
 	UFUNCTION()
-	void StaminaChanged(const float NewValue);
+	void StaminaChanged(const float InNewValue);
 	UFUNCTION()
-	void MaxStaminaChanged(const float NewValue);
+	void MaxStaminaChanged(const float InNewValue);
 
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))

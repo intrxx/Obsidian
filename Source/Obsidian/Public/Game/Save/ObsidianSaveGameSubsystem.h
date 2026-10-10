@@ -31,28 +31,28 @@ class OBSIDIAN_API UObsidianSaveGameSubsystem : public UGameInstanceSubsystem
 
 public:
 	UObsidianHeroSaveGame* GetCurrentHeroSaveGameObject();
-	UObsidianSharedStashSaveGame* GetStashSaveGameObject(const EObsidianGameNetworkType NetworkType);
+	UObsidianSharedStashSaveGame* GetStashSaveGameObject(const EObsidianGameNetworkType InNetworkType);
 
-	bool FillSaveInfosFromMasterSave(const bool bOnline, const UObsidianLocalPlayer* LocalPlayer,
+	bool FillSaveInfosFromMasterSave(const bool bInOnline, const UObsidianLocalPlayer* InLocalPlayer,
 		TArray<FObsidianHeroSaveInfo>& OutHeroInfos);
 	
-	void RegisterSaveable(AActor* SaveActor);
-	void UnregisterSaveable(AActor* SaveActor);
+	void RegisterSaveable(AActor* InSaveActor);
+	void UnregisterSaveable(AActor* InSaveActor);
 
-	void LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer);
-	void AsyncLoadOrCreateSharedStashDataSaveObject(const UObsidianLocalPlayer* LocalPlayer, const bool bOnline);
+	void LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* InLocalPlayer);
+	void AsyncLoadOrCreateSharedStashDataSaveObject(const UObsidianLocalPlayer* InLocalPlayer, const bool bInOnline);
 	
-	void RequestSaveGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync);
-	void RequestSaveInitialHeroSave(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync, const bool bOnline,
-		const FObsidianHeroInitializationSaveData& HeroInitializationSaveData);
-	void AsyncSaveSharedStashData(const AObsidianPlayerController* PlayerController, const EObsidianGameNetworkType NetworkType);
+	void RequestSaveGame(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync);
+	void RequestSaveInitialHeroSave(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync, const bool bInOnline,
+		const FObsidianHeroInitializationSaveData& InHeroInitializationSaveData);
+	void AsyncSaveSharedStashData(const AObsidianPlayerController* InPlayerController, const EObsidianGameNetworkType InNetworkType);
 	
-	void RequestLoadHeroSaveGameWithID(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync, const uint16 SaveID,
-		const bool bOnline);
-	void RequestLoadGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync, const FString& SlotName);
-	void RequestLoadDataForObject(AActor* LoadActor);
+	void RequestLoadHeroSaveGameWithID(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync, const uint16 InSaveID,
+		const bool bInOnline);
+	void RequestLoadGame(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync, const FString& InSlotName);
+	void RequestLoadDataForObject(AActor* InLoadActor);
 
-	bool DeleteHeroSave(const uint16 SaveID, const bool bOnline);
+	bool DeleteHeroSave(const uint16 InSaveID, const bool bInOnline);
 	
 public:
 	FOnSaveActionFinishedSignature OnSavingFinishedDelegate;
@@ -64,11 +64,11 @@ protected:
 	void SaveHeroGameForPlayer();
 	void SaveHeroGameForPlayerAsync();
 	
-	void LoadGameForPlayer(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName);
-	void LoadGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName);
+	void LoadGameForPlayer(const UObsidianLocalPlayer* InLocalPlayer, const FString& InSlotName);
+	void LoadGameForPlayerAsync(const UObsidianLocalPlayer* InLocalPlayer, const FString& InSlotName);
 
-	UObsidianHeroSaveGame* CreateHeroSaveGameObject(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName,
-		const uint16 SaveID);
+	UObsidianHeroSaveGame* CreateHeroSaveGameObject(const UObsidianLocalPlayer* InLocalPlayer, const FString& InSlotName,
+		const uint16 InSaveID);
 	
 protected:
 	UPROPERTY()
@@ -87,8 +87,8 @@ protected:
 	TObjectPtr<UObsidianMasterSaveGame> ObsidianMasterSaveGame;
 
 private:
-	void HandleLoadingHeroSaveFinished(UObsidianHeroSaveGame* SaveGame);
-	void HandleSavingHeroSaveFinished(const bool bSuccess, UObsidianHeroSaveGame* SaveGame);
+	void HandleLoadingHeroSaveFinished(UObsidianHeroSaveGame* InSaveGame);
+	void HandleSavingHeroSaveFinished(const bool bInSuccess, UObsidianHeroSaveGame* InSaveGame);
 
 private:
 	friend UObsidianHeroSaveGame;

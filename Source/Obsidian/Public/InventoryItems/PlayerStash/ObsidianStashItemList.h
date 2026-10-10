@@ -77,12 +77,12 @@ public:
 	bool HasLimitedStacks() const;
 	FGameplayTag GetStashSlotTag() const;
 	
-	EObsidianPlacingAtSlotResult CanStashAtSlot(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType) const;
+	EObsidianPlacingAtSlotResult CanStashAtSlot(const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType) const;
 
 	void AddBannedStashCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedStashCategories(const FGameplayTagContainer& InBannedCategories);
-	void RemoveBannedStashCategory(const FGameplayTag& BannedCategoryToRemove);
-	void RemoveBannedStashCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
+	void RemoveBannedStashCategory(const FGameplayTag& InBannedCategoryToRemove);
+	void RemoveBannedStashCategories(const FGameplayTagContainer& InBannedCategoriesToRemove);
 
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
@@ -155,38 +155,38 @@ public:
 		: OwnerComponent(InOwnerComponent)
 	{}
 
-	TArray<UObsidianStashTab*> InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig);
+	TArray<UObsidianStashTab*> InitializeStashTabs(const UObsidianStashTabsConfig* InStashTabsConfig);
 
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllPersonalItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllSharedItems() const;
-	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& StashTabTag);
+	TArray<UObsidianInventoryItemInstance*> GetAllItemsFromStashTab(const FGameplayTag& InStashTabTag);
 	int32 GetEntriesCount() const;
-	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& StashTabTag);
+	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& InStashTabTag);
 
-	TArray<FObsidianStashSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const UObsidianStashTab_Slots* SlotStashTab);
+	TArray<FObsidianStashSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const UObsidianStashTab_Slots* InSlotStashTab);
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
-		const int32 StackCount, const FObsidianItemPosition& ToPosition);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition);
-	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& EquippedSavedItem);
-	void RemoveEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
-	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount, const FGameplayTag& StashTabTag);
-	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDefClass, const FObsidianItemGeneratedData& InItemGeneratedData,
+		const int32 InStackCount, const FObsidianItemPosition& InToPosition);
+	void AddEntry(UObsidianInventoryItemInstance* InInstance, const FObsidianItemPosition& InToPosition);
+	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& InEquippedSavedItem);
+	void RemoveEntry(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InStashTabTag);
+	void ChangedEntryStacks(UObsidianInventoryItemInstance* InInstance, const int32 InOldCount, const FGameplayTag& InStashTabTag);
+	void GeneralEntryChange(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InStashTabTag);
 
-	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
+	bool NetDeltaSerialize(FNetDeltaSerializeInfo& InOutDeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianStashEntry, FObsidianStashItemList>(Entries, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianStashEntry, FObsidianStashItemList>(Entries, InOutDeltaParams, *this);
 	}
 
 	//~ Start of FFastArraySerializer contract
-	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
-	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
-	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
+	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
+	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
+	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianStashEntry& Entry, const int32 OldCount, const int32 NewCount, const FObsidianItemPosition& ItemPosition, const EObsidianStashChangeType& ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianStashEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FObsidianItemPosition& InItemPosition, const EObsidianStashChangeType& InChangeType) const;
 	
 private:
 	friend UObsidianPlayerStashComponent;

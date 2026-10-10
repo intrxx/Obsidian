@@ -18,10 +18,10 @@ class OBSIDIAN_API UObsidianBTTask_UseGameplayAbility : public UBTTaskNode
 	
 	UObsidianBTTask_UseGameplayAbility();
 
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
 
 protected:
-	virtual EBTNodeResult::Type PerformUseGameplayAbilityTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual EBTNodeResult::Type PerformUseGameplayAbilityTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory);
 	virtual FString GetStaticDescription() const override;
 
 protected:

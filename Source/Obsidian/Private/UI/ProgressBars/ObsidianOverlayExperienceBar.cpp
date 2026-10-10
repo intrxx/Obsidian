@@ -34,9 +34,9 @@ FReply UObsidianOverlayExperienceBar::NativeOnMouseButtonDoubleClick(const FGeom
 	return FReply::Handled();
 }
 
-void UObsidianOverlayExperienceBar::ExperienceChanged(const float NewValue)
+void UObsidianOverlayExperienceBar::ExperienceChanged(const float InNewValue)
 {
-	Experience = NewValue;
+	Experience = InNewValue;
 
 	float BarPercentage = 0.0f;
 	if(MaxExperience > 0.0f)
@@ -50,10 +50,10 @@ void UObsidianOverlayExperienceBar::ExperienceChanged(const float NewValue)
 	}
 }
 
-void UObsidianOverlayExperienceBar::MaxExperienceChanged(const float NewValue, const float OldValue)
+void UObsidianOverlayExperienceBar::MaxExperienceChanged(const float InNewValue, const float InOldValue)
 {
-	MaxExperience = NewValue;
-	LastMaxExperience = OldValue;
+	MaxExperience = InNewValue;
+	LastMaxExperience = InOldValue;
 	
 	float BarPercentage = 0.0f;
 	if(MaxExperience > 0.0f)

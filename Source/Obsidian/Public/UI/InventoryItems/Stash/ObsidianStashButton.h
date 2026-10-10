@@ -20,7 +20,7 @@ class OBSIDIAN_API UObsidianStashButton : public UObsidianButtonBase
 	GENERATED_BODY()
 
 public:
-	void InitializeStashButton(const FGameplayTag& StashTag, const FText& StashTabName);
+	void InitializeStashButton(const FGameplayTag& InStashTag, const FText& InStashTabName);
 
 public:
 	FOnStashTabButtonPressedSignature OnStashTabButtonPressedDelegate;

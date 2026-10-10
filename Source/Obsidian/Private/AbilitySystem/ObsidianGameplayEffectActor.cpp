@@ -22,21 +22,21 @@ void AObsidianGameplayEffectActor::BeginPlay()
 	
 }
 
-void AObsidianGameplayEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> EffectClassToApply)
+void AObsidianGameplayEffectActor::ApplyEffectToTarget(AActor* InTargetActor, TSubclassOf<UGameplayEffect> InEffectClassToApply)
 {
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InTargetActor);
 
 	if(TargetASC == nullptr)
 	{
 		return;
 	}
 
-	checkf(EffectClassToApply, TEXT("No Gameplay Effect Class found in [%s]"), *GetNameSafe(this));
+	checkf(InEffectClassToApply, TEXT("No Gameplay Effect Class found in [%s]"), *GetNameSafe(this));
 	
 	FGameplayEffectContextHandle GEContextHandle = TargetASC->MakeEffectContext();
 	GEContextHandle.AddSourceObject(this);
 	
-	const FGameplayEffectSpecHandle GESpecHandle = TargetASC->MakeOutgoingSpec(EffectClassToApply, EffectLevel, GEContextHandle);
+	const FGameplayEffectSpecHandle GESpecHandle = TargetASC->MakeOutgoingSpec(InEffectClassToApply, EffectLevel, GEContextHandle);
 	const FActiveGameplayEffectHandle ActiveGameplayEffectHandle = TargetASC->ApplyGameplayEffectSpecToSelf(*GESpecHandle.Data.Get());
 	
 	const bool bIsInfinite = GESpecHandle.Data.Get()->Def.Get()->DurationPolicy == EGameplayEffectDurationType::Infinite;
@@ -46,17 +46,17 @@ void AObsidianGameplayEffectActor::ApplyEffectToTarget(AActor* TargetActor, TSub
 	}
 }
 
-void AObsidianGameplayEffectActor::ApplyMultipleEffectsToTarget(AActor* TargetActor,
-	TArray<FObsidianGameplayEffectStack> MultipleGameplayEffectsToApply)
+void AObsidianGameplayEffectActor::ApplyMultipleEffectsToTarget(AActor* InTargetActor,
+	TArray<FObsidianGameplayEffectStack> InMultipleGameplayEffectsToApply)
 {
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InTargetActor);
 
 	if(TargetASC == nullptr)
 	{
 		return;
 	}
 
-	for(const FObsidianGameplayEffectStack& Effect : MultipleGameplayEffectsToApply)
+	for(const FObsidianGameplayEffectStack& Effect : InMultipleGameplayEffectsToApply)
 	{
 		checkf(Effect.GameplayEffectClass, TEXT("No Gameplay Effect Class found in [%s]"), *GetNameSafe(this));
 		
@@ -73,16 +73,16 @@ void AObsidianGameplayEffectActor::ApplyMultipleEffectsToTarget(AActor* TargetAc
 	}
 }
 
-void AObsidianGameplayEffectActor::OnOverlap(AActor* TargetActor)
+void AObsidianGameplayEffectActor::OnOverlap(AActor* InTargetActor)
 {
-	if(!bApplyEffectToEnemies && TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+	if(!bApplyEffectToEnemies && InTargetActor->ActorHasTag(ObsidianActorTags::Enemy))
 	{
 		return;
 	}
 	
 	if(InstantEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnOverlap)
 	{
-		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
+		ApplyEffectToTarget(InTargetActor, InstantGameplayEffectClass);
 		if(bDestroyOnEffectApplication)
 		{
 			Destroy();
@@ -91,30 +91,30 @@ void AObsidianGameplayEffectActor::OnOverlap(AActor* TargetActor)
 
 	if(DurationalEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnOverlap)
 	{
-		ApplyEffectToTarget(TargetActor, DurationalGameplayEffectClass);
+		ApplyEffectToTarget(InTargetActor, DurationalGameplayEffectClass);
 	}
 
 	if(InfiniteEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnOverlap)
 	{
-		ApplyEffectToTarget(TargetActor, InfiniteGameplayEffectClass);
+		ApplyEffectToTarget(InTargetActor, InfiniteGameplayEffectClass);
 	}
 
 	if(EffectToApply == EObsidianEffectToApply::MultipleEffects)
 	{
-		ApplyMultipleEffectsToTarget(TargetActor, MultipleGameplayEffects);
+		ApplyMultipleEffectsToTarget(InTargetActor, MultipleGameplayEffects);
 	}
 }
 
-void AObsidianGameplayEffectActor::OnEndOverlap(AActor* TargetActor)
+void AObsidianGameplayEffectActor::OnEndOverlap(AActor* InTargetActor)
 {
-	if(!bApplyEffectToEnemies && TargetActor->ActorHasTag(ObsidianActorTags::Enemy))
+	if(!bApplyEffectToEnemies && InTargetActor->ActorHasTag(ObsidianActorTags::Enemy))
 	{
 		return;
 	}
 	
 	if(InstantEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
-		ApplyEffectToTarget(TargetActor, InstantGameplayEffectClass);
+		ApplyEffectToTarget(InTargetActor, InstantGameplayEffectClass);
 		if(bDestroyOnEffectApplication)
 		{
 			Destroy();
@@ -123,28 +123,28 @@ void AObsidianGameplayEffectActor::OnEndOverlap(AActor* TargetActor)
 
 	if(DurationalEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
-		ApplyEffectToTarget(TargetActor, DurationalGameplayEffectClass);
+		ApplyEffectToTarget(InTargetActor, DurationalGameplayEffectClass);
 	}
 
 	if(InfiniteEffectApplicationPolicy == EObsidianEffectApplicationPolicy::ApplyOnEndOverlap)
 	{
-		ApplyEffectToTarget(TargetActor, InfiniteGameplayEffectClass);
+		ApplyEffectToTarget(InTargetActor, InfiniteGameplayEffectClass);
 	}
 	
 	if(InfiniteEffectRemovalPolicy == EObsidianEffectRemovalPolicy::RemovalOnEndOverlap)
 	{
-		RemoveEffectsFromActor(TargetActor);
+		RemoveEffectsFromActor(InTargetActor);
 	}
 
 	if(EffectToApply == EObsidianEffectToApply::MultipleEffects && !ActiveEffectHandles.IsEmpty())
 	{
-		RemoveEffectsFromActor(TargetActor);
+		RemoveEffectsFromActor(InTargetActor);
 	}
 }
 
-void AObsidianGameplayEffectActor::RemoveEffectsFromActor(AActor* TargetActor)
+void AObsidianGameplayEffectActor::RemoveEffectsFromActor(AActor* InTargetActor)
 {
-	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(TargetActor);
+	UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InTargetActor);
 
 	if(!IsValid(TargetASC))
 	{

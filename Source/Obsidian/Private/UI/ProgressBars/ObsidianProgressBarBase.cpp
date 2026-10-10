@@ -6,11 +6,11 @@
 #include "Kismet/KismetMathLibrary.h"
 
 
-bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, FGameplayTag EffectTag)
+bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, FGameplayTag InEffectTag)
 {
 	for(const FObsidianProgressBarEffectFillImage& EffectFillImage : ProgressBarEffectFillImages)
 	{
-		if(EffectFillImage.ProgressBarFillImage.IsSet() && (EffectFillImage.EffectTag == EffectTag))
+		if(EffectFillImage.ProgressBarFillImage.IsSet() && (EffectFillImage.EffectTag == InEffectTag))
 		{
 			OutFillImage = EffectFillImage;
 			return true;
@@ -19,11 +19,11 @@ bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffe
 	return false;
 }
 
-void UObsidianProgressBarBase::SetProgressBarPercent(const float Value, const float MaxValue, UProgressBar* ProgressBar)
+void UObsidianProgressBarBase::SetProgressBarPercent(const float InValue, const float InMaxValue, UProgressBar* InProgressBar)
 {
-	if(ProgressBar)
+	if(InProgressBar)
 	{
-		ProgressBar->SetPercent(UKismetMathLibrary::SafeDivide(Value, MaxValue));
+		InProgressBar->SetPercent(UKismetMathLibrary::SafeDivide(InValue, InMaxValue));
 	}
 }
 

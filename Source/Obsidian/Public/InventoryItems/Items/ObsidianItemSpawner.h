@@ -36,7 +36,7 @@ class OBSIDIAN_API AObsidianItemSpawner : public AActor, public IObsidianHighlig
 	GENERATED_BODY()
 	
 public:	
-	AObsidianItemSpawner(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianItemSpawner(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	//~ Start of HighlightInterface
 	virtual AActor* GetHighlightAvatarActor() override;
@@ -48,7 +48,7 @@ public:
 	virtual AActor* GetInteractionActor() override;
 	virtual bool CanInteract() override;
 	virtual float GetInteractionRadius() override;
-	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
+	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
 	//~ End of InteractionInterface
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemSpawner")
@@ -59,7 +59,7 @@ public:
 	void SpawnItem();
 	
 protected:
-	void OnSpawningItemsFinished(const bool bDroppedItem);
+	void OnSpawningItemsFinished(const bool bInDroppedItem);
 	
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

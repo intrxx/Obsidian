@@ -110,17 +110,17 @@ void UObsidianCommonAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimePro
 	DOREPLIFETIME_CONDITION_NOTIFY(ThisClass, MovementSpeed, COND_None, REPNOTIFY_Always);
 }
 
-void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& InAttribute, float& InOutNewValue)
 {
-	Super::PreAttributeChange(Attribute, NewValue);
+	Super::PreAttributeChange(InAttribute, InOutNewValue);
 
-	if(Attribute == GetHealthAttribute())
+	if(InAttribute == GetHealthAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxHealth());
+		InOutNewValue = FMath::Clamp(InOutNewValue, 0.0f, GetMaxHealth());
 	}
-	else if(Attribute == GetEnergyShieldAttribute())
+	else if(InAttribute == GetEnergyShieldAttribute())
 	{
-		NewValue = FMath::Clamp(NewValue, 0.0f, GetMaxEnergyShield());
+		InOutNewValue = FMath::Clamp(InOutNewValue, 0.0f, GetMaxEnergyShield());
 	}
 
 	if(bOutOfHealth && (GetHealth() > 0.0f))
@@ -129,21 +129,21 @@ void UObsidianCommonAttributeSet::PreAttributeChange(const FGameplayAttribute& A
 	}
 }
 
-void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData)
 {
-	Super::PostGameplayEffectExecute(Data);
+	Super::PostGameplayEffectExecute(InData);
 	
-	SetEffectProperties(Data, /** OUT */ EffectProps);
+	SetEffectProperties(InData, /** OUT */ EffectProps);
 	
-	if(Data.EvaluatedData.Attribute == GetHealthAttribute())
+	if(InData.EvaluatedData.Attribute == GetHealthAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
 	}
-	else if(Data.EvaluatedData.Attribute == GetEnergyShieldAttribute())
+	else if(InData.EvaluatedData.Attribute == GetEnergyShieldAttribute())
 	{
 		SetEnergyShield(FMath::Clamp(GetEnergyShield(), 0.0f, GetMaxEnergyShield()));
 	}
-	else if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	else if(InData.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
 		
@@ -166,8 +166,8 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 				{
 					if(OnOutOfHealth.IsBound())
 					{
-						OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &Data.EffectSpec,
-							Data.EvaluatedData.Magnitude, OldHealth, NewHealth);
+						OnOutOfHealth.Broadcast(EffectProps.Instigator, EffectProps.EffectCauser, &InData.EffectSpec,
+							InData.EvaluatedData.Magnitude, OldHealth, NewHealth);
 					}
 
 					if(EffectProps.SourceCharacter->ActorHasTag(ObsidianActorTags::Player))
@@ -201,7 +201,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			}
 		}
 	}
-	else if(Data.EvaluatedData.Attribute == GetIncomingStaggerMagnitudeAttribute())
+	else if(InData.EvaluatedData.Attribute == GetIncomingStaggerMagnitudeAttribute())
 	{
 		const float LocalIncomingStaggerMagnitude = GetIncomingStaggerMagnitude();
 		const float ModifiedIncomingStaggerMagnitude = FMath::FloorToInt(LocalIncomingStaggerMagnitude * GetStaggerMultiplier());
@@ -226,7 +226,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 
 		SetIncomingStaggerMagnitude(0.0f);
 	}
-	else if(Data.EvaluatedData.Attribute == GetIncomingHealthHealingAttribute())
+	else if(InData.EvaluatedData.Attribute == GetIncomingHealthHealingAttribute())
 	{
 		const float LocalIncomingHealthHealing = GetIncomingHealthHealing();
 		
@@ -237,7 +237,7 @@ void UObsidianCommonAttributeSet::PostGameplayEffectExecute(const FGameplayEffec
 			SetHealth(FMath::Clamp(NewHealth, 0.0f, GetMaxHealth()));
 		}
 	}
-	else if(Data.EvaluatedData.Attribute == GetIncomingEnergyShieldHealingAttribute())
+	else if(InData.EvaluatedData.Attribute == GetIncomingEnergyShieldHealingAttribute())
 	{
 		const float LocalIncomingEnergyShieldHealing = GetIncomingEnergyShieldHealing();
 		
@@ -258,7 +258,7 @@ void UObsidianCommonAttributeSet::ResetMetaAttributes()
 	SetIncomingEnergyShieldHealing(0.0f);
 }
 
-void UObsidianCommonAttributeSet::ApplyExperienceReward(UAbilitySystemComponent* SourceASC)
+void UObsidianCommonAttributeSet::ApplyExperienceReward(UAbilitySystemComponent* InSourceASC)
 {
 	// Create a dynamic instant Gameplay Effect to give the bounties
 	UGameplayEffect* ExperienceRewardGE = NewObject<UGameplayEffect>(GetTransientPackage(), FName(TEXT("ExperienceReward")));
@@ -272,317 +272,317 @@ void UObsidianCommonAttributeSet::ApplyExperienceReward(UAbilitySystemComponent*
 	ExperienceInfo.ModifierOp = EGameplayModOp::Additive;
 	ExperienceInfo.Attribute = UObsidianHeroAttributeSet::GetExperienceAttribute();
 	
-	SourceASC->ApplyGameplayEffectToSelf(ExperienceRewardGE, 1.0f, SourceASC->MakeEffectContext());
+	InSourceASC->ApplyGameplayEffectToSelf(ExperienceRewardGE, 1.0f, InSourceASC->MakeEffectContext());
 }
 
-void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_Health(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Health, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Health, InOldValue);
 
 	const float CurrentHealth = GetHealth();
-	const float Magnitude = CurrentHealth - OldValue.GetCurrentValue();
+	const float Magnitude = CurrentHealth - InOldValue.GetCurrentValue();
 
 	if(!bOutOfHealth && CurrentHealth <= 0.0f)
 	{
-		OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, Magnitude, OldValue.GetCurrentValue(), CurrentHealth);
+		OnOutOfHealth.Broadcast(nullptr, nullptr, nullptr, Magnitude, InOldValue.GetCurrentValue(), CurrentHealth);
 	}
 
 	bOutOfHealth = (CurrentHealth <= 0.0f);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxHealth(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxHealth, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxHealth, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_IncreasedHealthPercentage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_IncreasedHealthPercentage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedHealthPercentage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedHealthPercentage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_EnergyShield(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_EnergyShield(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, EnergyShield, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, EnergyShield, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxEnergyShield(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxEnergyShield(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxEnergyShield, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxEnergyShield, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_IncreasedEnergyShieldPercentage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_IncreasedEnergyShieldPercentage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEnergyShieldPercentage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEnergyShieldPercentage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_HealthRegeneration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_HealthRegeneration(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, HealthRegeneration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, HealthRegeneration, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, EnergyShieldRegeneration, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_StaggerMeter(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_StaggerMeter(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerMeter, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerMeter, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxStaggerMeter(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxStaggerMeter(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxStaggerMeter, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_StaggerMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_StaggerMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_AllDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_AllDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_Armor(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_Armor(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Armor, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Armor, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_IncreasedArmorPercent(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_IncreasedArmorPercent(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedArmorPercent, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedArmorPercent, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_Evasion(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_Evasion(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Evasion, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Evasion, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_IncreasedEvasionPercent(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_IncreasedEvasionPercent(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEvasionPercent, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEvasionPercent, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_SpellSuppressionChance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_SpellSuppressionChance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, SpellSuppressionChance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, SpellSuppressionChance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_SpellSuppressionMagnitude(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_SpellSuppressionMagnitude(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, SpellSuppressionMagnitude, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, SpellSuppressionMagnitude, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_AilmentThreshold(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_AilmentThreshold(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AilmentThreshold, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AilmentThreshold, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_StaggerDamageTakenMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_StaggerDamageTakenMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerDamageTakenMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, StaggerDamageTakenMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_AllElementalResistances(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_AllElementalResistances(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalResistances, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalResistances, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_FireResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FireResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FireResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxFireResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxFireResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFireResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFireResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ColdResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ColdResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxColdResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxColdResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxColdResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxColdResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_LightningResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_LightningResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxLightningResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxLightningResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxLightningResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxLightningResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ChaosResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ChaosResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxChaosResistance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxChaosResistance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_IncreasedEffectOfShock(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_IncreasedEffectOfShock(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEffectOfShock, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, IncreasedEffectOfShock, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ChanceToShock(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ChanceToShock(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChanceToShock, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChanceToShock, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_Accuracy(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_Accuracy(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Accuracy, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, Accuracy, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_CriticalStrikeChance(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CriticalStrikeChance, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CriticalStrikeChance, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_CriticalStrikeDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_CriticalStrikeDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CriticalStrikeDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CriticalStrikeDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_AttackSpeed(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AttackSpeed, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AttackSpeed, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_CastSpeed(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_CastSpeed(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CastSpeed, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, CastSpeed, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_FirePenetration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_FirePenetration(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FirePenetration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FirePenetration, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ColdPenetration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ColdPenetration(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdPenetration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdPenetration, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_LightningPenetration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_LightningPenetration(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningPenetration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningPenetration, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_AllElementalPenetration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_AllElementalPenetration(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalPenetration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalPenetration, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ChaosPenetration(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ChaosPenetration(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosPenetration, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosPenetration, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_FireDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_FireDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FireDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, FireDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ColdDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ColdDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ColdDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_LightningDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_LightningDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, LightningDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_AllElementalDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_AllElementalDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, AllElementalDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_ChaosDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_ChaosDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, ChaosDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, PhysicalDamageMultiplier, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, PhysicalDamageMultiplier, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MinFlatPhysicalDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MinFlatPhysicalDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatPhysicalDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatPhysicalDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxFlatPhysicalDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxFlatPhysicalDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatPhysicalDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatPhysicalDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MinFlatFireDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MinFlatFireDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatFireDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatFireDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxFlatFireDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxFlatFireDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatFireDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatFireDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MinFlatColdDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MinFlatColdDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatColdDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatColdDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxFlatColdDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxFlatColdDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatColdDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatColdDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MinFlatLightningDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MinFlatLightningDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatLightningDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatLightningDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxFlatLightningDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxFlatLightningDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatLightningDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatLightningDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MinFlatChaosDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MinFlatChaosDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatChaosDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MinFlatChaosDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MaxFlatChaosDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MaxFlatChaosDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatChaosDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MaxFlatChaosDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_BaseDamage(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_BaseDamage(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, BaseDamage, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, BaseDamage, InOldValue);
 }
 
-void UObsidianCommonAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& OldValue)
+void UObsidianCommonAttributeSet::OnRep_MovementSpeed(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MovementSpeed, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianCommonAttributeSet, MovementSpeed, InOldValue);
 }
 
 

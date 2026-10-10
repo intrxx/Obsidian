@@ -107,16 +107,16 @@ void UObsidianCharacterStatus::HandleWidgetControllerSet()
 	}
 }
 
-void UObsidianCharacterStatus::SwitchToTab(UScrollBox* Tab)
+void UObsidianCharacterStatus::SwitchToTab(UScrollBox* InTab)
 {
-	if(Tab == nullptr)
+	if(InTab == nullptr)
 	{
 		return;
 	}
 
 	CurrentlyShownTab->SetVisibility(ESlateVisibility::Collapsed);
-	Tab->SetVisibility(ESlateVisibility::Visible);
-	CurrentlyShownTab = Tab;
+	InTab->SetVisibility(ESlateVisibility::Visible);
+	CurrentlyShownTab = InTab;
 }
 
 void UObsidianCharacterStatus::SetExperienceTextBlock() const
@@ -150,209 +150,209 @@ void UObsidianCharacterStatus::SetExperienceProgressBar() const
 	}
 }
 
-void UObsidianCharacterStatus::OnHeroLevelUp(const uint8 NewLevel)
+void UObsidianCharacterStatus::OnHeroLevelUp(const uint8 InNewLevel)
 {
 	if(HeroLevel_TextBlock)
 	{
-		HeroLevel_TextBlock->SetText(FText::AsNumber(NewLevel));
+		HeroLevel_TextBlock->SetText(FText::AsNumber(InNewLevel));
 	}
 }
 
-void UObsidianCharacterStatus::OnExperienceChanged(const float Value)
+void UObsidianCharacterStatus::OnExperienceChanged(const float InValue)
 {
-	Experience = Value;
+	Experience = InValue;
 	
 	SetExperienceTextBlock();
 	SetExperienceProgressBar();
 }
 
-void UObsidianCharacterStatus::OnMaxExperienceChanged(const float Value, const float OldValue)
+void UObsidianCharacterStatus::OnMaxExperienceChanged(const float InValue, const float InOldValue)
 {
-	LastMaxExperience = OldValue;
-	MaxExperience = Value;
+	LastMaxExperience = InOldValue;
+	MaxExperience = InValue;
 	
 	SetExperienceTextBlock();
 	SetExperienceProgressBar();
 }
 
-void UObsidianCharacterStatus::OnStrengthChanged(const float Value)
+void UObsidianCharacterStatus::OnStrengthChanged(const float InValue)
 {
-	Strength_AttributeRow->SetAttributeValue(Value);
+	Strength_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnIntelligenceChanged(const float Value)
+void UObsidianCharacterStatus::OnIntelligenceChanged(const float InValue)
 {
-	Intelligence_AttributeRow->SetAttributeValue(Value);
+	Intelligence_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnDexterityChanged(const float Value)
+void UObsidianCharacterStatus::OnDexterityChanged(const float InValue)
 {
-	Dexterity_AttributeRow->SetAttributeValue(Value);
+	Dexterity_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnFaithChanged(const float Value)
+void UObsidianCharacterStatus::OnFaithChanged(const float InValue)
 {
-	Faith_AttributeRow->SetAttributeValue(Value); 
+	Faith_AttributeRow->SetAttributeValue(InValue); 
 }
 
-void UObsidianCharacterStatus::OnMaxHealthChanged(const float Value)
+void UObsidianCharacterStatus::OnMaxHealthChanged(const float InValue)
 {
-	Life_AttributeRow->SetAttributeValue(Value);
+	Life_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnMaxManaChanged(const float Value)
+void UObsidianCharacterStatus::OnMaxManaChanged(const float InValue)
 {
-	Mana_AttributeRow->SetAttributeValue(Value);
+	Mana_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnMaxSpecialResourceChanged(const float Value)
+void UObsidianCharacterStatus::OnMaxSpecialResourceChanged(const float InValue)
 {
-	SpecialResource_AttributeRow->SetAttributeValue(Value);
+	SpecialResource_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnMaxEnergyShieldChanged(const float Value)
+void UObsidianCharacterStatus::OnMaxEnergyShieldChanged(const float InValue)
 {
-	EnergyShield_AttributeRow->SetAttributeValue(Value);
+	EnergyShield_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnMaxStaminaChanged(const float Value)
+void UObsidianCharacterStatus::OnMaxStaminaChanged(const float InValue)
 {
-	Stamina_AttributeRow->SetAttributeValue(Value);
+	Stamina_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnStaminaRegenerationChanged(const float Value)
+void UObsidianCharacterStatus::OnStaminaRegenerationChanged(const float InValue)
 {
-	StaminaRegeneration_AttributeRow->SetAttributeValue(Value);
+	StaminaRegeneration_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnAccuracyChanged(const float Value)
+void UObsidianCharacterStatus::OnAccuracyChanged(const float InValue)
 {
-	Accuracy_AttributeRow->SetAttributeValue(Value);
+	Accuracy_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnAttackSpeedChanged(const float Value)
+void UObsidianCharacterStatus::OnAttackSpeedChanged(const float InValue)
 {
-	AttackSpeed_AttributeRow->SetAttributeValueWithPercentage(Value);
+	AttackSpeed_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnCastSpeedChanged(const float Value)
+void UObsidianCharacterStatus::OnCastSpeedChanged(const float InValue)
 {
-	CastSpeed_AttributeRow->SetAttributeValueWithPercentage(Value);
+	CastSpeed_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnCriticalStrikeChanceChanged(const float Value)
+void UObsidianCharacterStatus::OnCriticalStrikeChanceChanged(const float InValue)
 {
-	CriticalStrikeChance_AttributeRow->SetAttributeValueWithPercentage(Value);
+	CriticalStrikeChance_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnCriticalStrikeDamageMultiplierChanged(const float Value)
+void UObsidianCharacterStatus::OnCriticalStrikeDamageMultiplierChanged(const float InValue)
 {
-	CriticalStrikeMulti_AttributeRow->SetAttributeValueWithPercentage(Value);
+	CriticalStrikeMulti_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnPhysicalDamageMultiplierChanged(const float Value)
+void UObsidianCharacterStatus::OnPhysicalDamageMultiplierChanged(const float InValue)
 {
-	PhysDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
+	PhysDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnFireDamageMultiplierChanged(const float Value)
+void UObsidianCharacterStatus::OnFireDamageMultiplierChanged(const float InValue)
 {
-	FireDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
+	FireDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnLightningDamageMultiplierChanged(const float Value)
+void UObsidianCharacterStatus::OnLightningDamageMultiplierChanged(const float InValue)
 {
-	LightningDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
+	LightningDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnColdDamageMultiplierChanged(const float Value)
+void UObsidianCharacterStatus::OnColdDamageMultiplierChanged(const float InValue)
 {
-	ColdDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
+	ColdDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnChaosDamageMultiplierChanged(const float Value)
+void UObsidianCharacterStatus::OnChaosDamageMultiplierChanged(const float InValue)
 {
-	ChaosDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(Value);
+	ChaosDamageMultiplier_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnFirePenetrationChanged(const float Value)
+void UObsidianCharacterStatus::OnFirePenetrationChanged(const float InValue)
 {
-	FirePenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
+	FirePenetration_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnLightningPenetrationChanged(const float Value)
+void UObsidianCharacterStatus::OnLightningPenetrationChanged(const float InValue)
 {
-	LightningPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
+	LightningPenetration_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnColdPenetrationChanged(const float Value)
+void UObsidianCharacterStatus::OnColdPenetrationChanged(const float InValue)
 {
-	ColdPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
+	ColdPenetration_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnChaosPenetrationChanged(const float Value)
+void UObsidianCharacterStatus::OnChaosPenetrationChanged(const float InValue)
 {
-	ChaosPenetration_AttributeRow->SetAttributeValueWithPercentage(Value);
+	ChaosPenetration_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnArmorChanged(const float Value)
+void UObsidianCharacterStatus::OnArmorChanged(const float InValue)
 {
-	Armor_AttributeRow->SetAttributeValue(Value);
+	Armor_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnEvasionChanged(const float Value)
+void UObsidianCharacterStatus::OnEvasionChanged(const float InValue)
 {
-	Evasion_AttributeRow->SetAttributeValue(Value);
+	Evasion_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnHealthRegenerationChanged(const float Value)
+void UObsidianCharacterStatus::OnHealthRegenerationChanged(const float InValue)
 {
-	HealthRegeneration_AttributeRow->SetAttributeValue(Value);
+	HealthRegeneration_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnEnergyShieldRegenerationChanged(const float Value)
+void UObsidianCharacterStatus::OnEnergyShieldRegenerationChanged(const float InValue)
 {
-	EnergyShieldRegeneration_AttributeRow->SetAttributeValue(Value);
+	EnergyShieldRegeneration_AttributeRow->SetAttributeValue(InValue);
 }
 
-void UObsidianCharacterStatus::OnFireResistanceChanged(const float Value, const float MaxValue)
+void UObsidianCharacterStatus::OnFireResistanceChanged(const float InValue, const float InMaxValue)
 {
-	FireResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	FireResistance_AttributeRow->SetTwoAttributeValuesWithPercent(InValue, InMaxValue);
 }
 
-void UObsidianCharacterStatus::OnColdResistanceChanged(const float Value, const float MaxValue)
+void UObsidianCharacterStatus::OnColdResistanceChanged(const float InValue, const float InMaxValue)
 {
-	ColdResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	ColdResistance_AttributeRow->SetTwoAttributeValuesWithPercent(InValue, InMaxValue);
 }
 
-void UObsidianCharacterStatus::OnLightningResistanceChanged(const float Value, const float MaxValue)
+void UObsidianCharacterStatus::OnLightningResistanceChanged(const float InValue, const float InMaxValue)
 {
-	LightningResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	LightningResistance_AttributeRow->SetTwoAttributeValuesWithPercent(InValue, InMaxValue);
 }
 
-void UObsidianCharacterStatus::OnChaosResistanceChanged(const float Value, const float MaxValue)
+void UObsidianCharacterStatus::OnChaosResistanceChanged(const float InValue, const float InMaxValue)
 {
-	ChaosResistance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	ChaosResistance_AttributeRow->SetTwoAttributeValuesWithPercent(InValue, InMaxValue);
 }
 
-void UObsidianCharacterStatus::OnSpellSuppressionChanceChanged(const float Value)
+void UObsidianCharacterStatus::OnSpellSuppressionChanceChanged(const float InValue)
 {
-	SpellSuppressionChance_AttributeRow->SetAttributeValueWithPercentage(Value);
+	SpellSuppressionChance_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnSpellSuppressionMagnitudeChanged(const float Value)
+void UObsidianCharacterStatus::OnSpellSuppressionMagnitudeChanged(const float InValue)
 {
-	SpellSuppressionMagnitude_AttributeRow->SetAttributeValueWithPercentage(Value);
+	SpellSuppressionMagnitude_AttributeRow->SetAttributeValueWithPercentage(InValue);
 }
 
-void UObsidianCharacterStatus::OnHitBlockChanceChanged(const float Value, const float MaxValue)
+void UObsidianCharacterStatus::OnHitBlockChanceChanged(const float InValue, const float InMaxValue)
 {
-	HitBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	HitBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(InValue, InMaxValue);
 }
 
-void UObsidianCharacterStatus::OnSpellBlockChanceChanged(const float Value, const float MaxValue)
+void UObsidianCharacterStatus::OnSpellBlockChanceChanged(const float InValue, const float InMaxValue)
 {
-	SpellBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(Value, MaxValue);
+	SpellBlockChance_AttributeRow->SetTwoAttributeValuesWithPercent(InValue, InMaxValue);
 }
 
 

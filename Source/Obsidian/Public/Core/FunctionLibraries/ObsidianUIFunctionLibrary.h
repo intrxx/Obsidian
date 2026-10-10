@@ -25,26 +25,26 @@ class OBSIDIAN_API UObsidianUIFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UObMainOverlayWidgetController* GetOverlayWidgetController(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintPure, meta = (HidePin = "InWorldContextObject", DefaultToSelf = "InWorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
+	static UObMainOverlayWidgetController* GetOverlayWidgetController(const UObject* InWorldContextObject);
 
-	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintPure, meta = (HidePin = "InWorldContextObject", DefaultToSelf = "InWorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
+	static UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const UObject* InWorldContextObject);
 
-	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintPure, meta = (HidePin = "InWorldContextObject", DefaultToSelf = "InWorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
+	static UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const UObject* InWorldContextObject);
 
-	UFUNCTION(BlueprintPure, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
-	static UObCharacterSelectionWidgetController* GetCharacterSelectionWidgetController(const UObject* WorldContextObject);
+	UFUNCTION(BlueprintPure, meta = (HidePin = "InWorldContextObject", DefaultToSelf = "InWorldContextObject"), Category = "ObsidianUIFunctionLibrary|WidgetControllers")
+	static UObCharacterSelectionWidgetController* GetCharacterSelectionWidgetController(const UObject* InWorldContextObject);
 
 	static FVector2D GetGameViewportSize();
 	
 	template<typename T>
-	static T* GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag);
+	static T* GetDataTableRowByTag(UDataTable* InDataTable, const FGameplayTag& InTag);
 };
 
 template <typename T>
-T* UObsidianUIFunctionLibrary::GetDataTableRowByTag(UDataTable* DataTable, const FGameplayTag& Tag)
+T* UObsidianUIFunctionLibrary::GetDataTableRowByTag(UDataTable* InDataTable, const FGameplayTag& InTag)
 {
-	return DataTable->FindRow<T>(Tag.GetTagName(), TEXT(""));
+	return InDataTable->FindRow<T>(InTag.GetTagName(), TEXT(""));
 }

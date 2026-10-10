@@ -8,18 +8,18 @@
 
 
 void UObsidianHeroWidgetControllerBase::SetWidgetControllerParams(
-	const FObsidianWidgetControllerParams& WidgetControllerParams)
+	const FObsidianWidgetControllerParams& InWidgetControllerParams)
 {
-	OwnerPlayerController = WidgetControllerParams.ObsidianPlayerController.Get();
-	OwnerLocalPlayer = WidgetControllerParams.ObsidianLocalPlayer.Get();
-	OwnerPlayerState = WidgetControllerParams.ObsidianPlayerState.Get();
+	OwnerPlayerController = InWidgetControllerParams.ObsidianPlayerController.Get();
+	OwnerLocalPlayer = InWidgetControllerParams.ObsidianLocalPlayer.Get();
+	OwnerPlayerState = InWidgetControllerParams.ObsidianPlayerState.Get();
 }
 
 void UObsidianHeroWidgetControllerBase::OnWidgetControllerSetupCompleted()
 {
 }
 
-void UObsidianHeroWidgetControllerBase::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
+void UObsidianHeroWidgetControllerBase::HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC)
 {
 }
 

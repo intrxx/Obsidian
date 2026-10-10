@@ -18,7 +18,7 @@ class OBSIDIAN_API UObsidianPawnExtensionComponent : public UPawnComponent
 {
 	GENERATED_BODY()
 public:
-	UObsidianPawnExtensionComponent(const FObjectInitializer& ObjectInitializer);
+	UObsidianPawnExtensionComponent(const FObjectInitializer& InObjectInitializer);
 
 	UFUNCTION(BlueprintPure, Category = "Obsidian|Pawn")
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const
@@ -28,9 +28,9 @@ public:
 
 	/** Returns the hero component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|ExtComp")
-	static UObsidianPawnExtensionComponent* FindPawnExtComponent(const AActor* Actor)
+	static UObsidianPawnExtensionComponent* FindPawnExtComponent(const AActor* InActor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianPawnExtensionComponent>() : nullptr);
+		return (InActor ? InActor->FindComponentByClass<UObsidianPawnExtensionComponent>() : nullptr);
 	}
 	
 	const UObsidianPawnData* GetPawnData() const
@@ -47,13 +47,13 @@ public:
 	void UninitializeAbilitySystem();
 
 	/** Register with the OnAbilitySystemInitialized delegate and broadcast if our Pawn has been registered with the Ability System Component */
-	void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate Delegate);
+	void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate InDelegate);
 	
 	/** Register with the OnAbilitySystemInitialized delegate, this is fired when our pawn is removed as the Ability System's avatar actor */
-	void OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate Delegate);
+	void OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate InDelegate);
 
 protected:
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void EndPlay(const EEndPlayReason::Type InEndPlayReason) override;
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Pawn")

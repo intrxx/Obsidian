@@ -16,7 +16,7 @@ class OBSIDIAN_API UObsidianMMC_MaxSpecialResource : public UGameplayModMagnitud
 	GENERATED_BODY()
 
 public:
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")

@@ -18,7 +18,7 @@ class OBSIDIAN_API UObsidianMainMenu : public UObsidianActivatableWidget
 	GENERATED_BODY()
 
 public:
-	UObsidianMainMenu(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMainMenu(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 

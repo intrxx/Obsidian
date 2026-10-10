@@ -5,24 +5,24 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 
-bool UObsidianUsableShard_Identification::OnItemUsed(AObsidianPlayerController* ItemOwner,
-	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_Identification::OnItemUsed(AObsidianPlayerController* InItemOwner,
+	UObsidianInventoryItemInstance* InUsingInstance, UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
-	if(ItemOwner && UsingOntoInstance && UsingInstance)
+	if(InItemOwner && InUsingOntoInstance && InUsingInstance)
 	{
-		if(UsingOntoInstance->IsItemIdentified() == false)
+		if(InUsingOntoInstance->IsItemIdentified() == false)
 		{
-			UsingOntoInstance->SetIdentified(true);
+			InUsingOntoInstance->SetIdentified(true);
 			return true;
 		}
 	}
 	return false;
 }
 
-void UObsidianUsableShard_Identification::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+void UObsidianUsableShard_Identification::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext)
 {
-	for(const UObsidianInventoryItemInstance* Instance : AllItems)
+	for(const UObsidianInventoryItemInstance* Instance : InAllItems)
 	{
 		if(Instance->IsItemIdentified() == false)
 		{

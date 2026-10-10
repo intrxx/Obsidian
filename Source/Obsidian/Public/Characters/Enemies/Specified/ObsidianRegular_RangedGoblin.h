@@ -17,7 +17,7 @@ class OBSIDIAN_API AObsidianRegular_RangedGoblin : public AObsidianRegularEnemy
 	GENERATED_BODY()
 
 public:
-	AObsidianRegular_RangedGoblin(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianRegular_RangedGoblin(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	

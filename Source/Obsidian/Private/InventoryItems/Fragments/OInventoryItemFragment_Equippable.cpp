@@ -13,20 +13,20 @@
 //
 
 // ~ Start of FObsidianEquipmentActor
-FObsidianEquipmentActor::FObsidianEquipmentActor(const FObsidianSavedEquipmentPiece& SavedEquipmentActor)
-	: ActorToSpawn(SavedEquipmentActor.SoftActorToSpawn.LoadSynchronous())
-	, bOverrideAttachSocket(SavedEquipmentActor.bOverrideAttachSocket)
-	, AttachSocket(SavedEquipmentActor.AttachSocketName)
-	, AttachTransform(SavedEquipmentActor.AttachTransform)
+FObsidianEquipmentActor::FObsidianEquipmentActor(const FObsidianSavedEquipmentPiece& InSavedEquipmentActor)
+	: ActorToSpawn(InSavedEquipmentActor.SoftActorToSpawn.LoadSynchronous())
+	, bOverrideAttachSocket(InSavedEquipmentActor.bOverrideAttachSocket)
+	, AttachSocket(InSavedEquipmentActor.AttachSocketName)
+	, AttachTransform(InSavedEquipmentActor.AttachTransform)
 {
 }
 // ~ End of FObsidianEquipmentActor
 
-void FObsidianEquipmentActor::OverrideAttachSocket(const FGameplayTag& SlotTag)
+void FObsidianEquipmentActor::OverrideAttachSocket(const FGameplayTag& InSlotTag)
 {
-	if(ObsidianGameplayTags::GetSlotToAttachSocketMap().Contains(SlotTag))
+	if(ObsidianGameplayTags::GetSlotToAttachSocketMap().Contains(InSlotTag))
 	{
-		AttachSocket = ObsidianGameplayTags::GetSlotToAttachSocketMap()[SlotTag];
+		AttachSocket = ObsidianGameplayTags::GetSlotToAttachSocketMap()[InSlotTag];
 	}
 }
 
@@ -34,10 +34,10 @@ void FObsidianEquipmentActor::OverrideAttachSocket(const FGameplayTag& SlotTag)
 // Inventory Item Fragment - Equippable
 //
 
-void UOInventoryItemFragment_Equippable::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
+void UOInventoryItemFragment_Equippable::OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const
 {
-	Instance->SetEquipmentActors(ActorsToSpawn);
-	Instance->SetEquippable(true);
+	InInstance->SetEquipmentActors(ActorsToSpawn);
+	InInstance->SetEquippable(true);
 }
 
 FObsidianItemRequirements UOInventoryItemFragment_Equippable::GetItemDefaultEquippingRequirements() const

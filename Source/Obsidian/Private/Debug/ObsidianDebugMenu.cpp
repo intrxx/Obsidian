@@ -17,9 +17,9 @@ namespace ObsidianDebugMenu
 {
 	const FVector2f DefaultWindowSize(900.0f, 760.0f);
 
-	FString GetNetModeString(const ENetMode NetMode)
+	FString GetNetModeString(const ENetMode InNetMode)
 	{
-		switch (NetMode)
+		switch (InNetMode)
 		{
 			case NM_Standalone:
 				return TEXT("Standalone");
@@ -56,12 +56,12 @@ FObsidianDebugMenu::FObsidianDebugMenu()
 
 FObsidianDebugMenu::~FObsidianDebugMenu() = default;
 
-void FObsidianDebugMenu::OpenTab(const TArray<FString>& Args)
+void FObsidianDebugMenu::OpenTab(const TArray<FString>& InArgs)
 {
-	const FName TabName = Args.IsEmpty() ? NAME_None : FName(*Args[0]);
-	const bool bTabExists = Tabs.ContainsByPredicate([TabName](const TUniquePtr<FObsidianDebugMenuTab>& Tab)
+	const FName TabName = InArgs.IsEmpty() ? NAME_None : FName(*InArgs[0]);
+	const bool bTabExists = Tabs.ContainsByPredicate([TabName](const TUniquePtr<FObsidianDebugMenuTab>& InTab)
 		{
-			return Tab->GetTabName() == TabName;
+			return InTab->GetTabName() == TabName;
 		});
 
 	if (bTabExists == false)
@@ -80,7 +80,7 @@ void FObsidianDebugMenu::OpenTab(const TArray<FString>& Args)
 	EnableWidget();
 }
 
-void FObsidianDebugMenu::DrawWindow(float DeltaTime)
+void FObsidianDebugMenu::DrawWindow(float InDeltaTime)
 {
 	FObsidianDebugMenuContext Context;
 	Context.StatusMessage = &StatusMessage;
@@ -92,7 +92,7 @@ void FObsidianDebugMenu::DrawWindow(float DeltaTime)
 	{
 		for (const TUniquePtr<FObsidianDebugMenuTab>& Tab : Tabs)
 		{
-			Tab->Tick(Context, DeltaTime);
+			Tab->Tick(Context, InDeltaTime);
 		}
 	}
 
@@ -152,9 +152,9 @@ void FObsidianDebugMenu::DrawTargetBar(FObsidianDebugMenuContext& OutContext)
 	if (WorldIndex == INDEX_NONE)
 	{
 		// Prefer the World with authority as most of the debug actions need it.
-		WorldIndex = Worlds.IndexOfByPredicate([](const UWorld* World)
+		WorldIndex = Worlds.IndexOfByPredicate([](const UWorld* InWorld)
 			{
-				return World->GetNetMode() != NM_Client;
+				return InWorld->GetNetMode() != NM_Client;
 			});
 	}
 
@@ -200,9 +200,9 @@ void FObsidianDebugMenu::DrawTargetBar(FObsidianDebugMenuContext& OutContext)
 		int32 PlayerIndex = PlayerControllers.IndexOfByKey(SelectedPlayerController.Get());
 		if (PlayerIndex == INDEX_NONE)
 		{
-			PlayerIndex = PlayerControllers.IndexOfByPredicate([](const APlayerController* PlayerController)
+			PlayerIndex = PlayerControllers.IndexOfByPredicate([](const APlayerController* InPlayerController)
 				{
-					return PlayerController->IsLocalController();
+					return InPlayerController->IsLocalController();
 				});
 		}
 
@@ -219,23 +219,23 @@ void FObsidianDebugMenu::DrawTargetBar(FObsidianDebugMenuContext& OutContext)
 	SlateIM::EndHorizontalStack();
 }
 
-void FObsidianDebugMenu::DrawTab(FObsidianDebugMenuTab& Tab, const FObsidianDebugMenuContext& Context) const
+void FObsidianDebugMenu::DrawTab(FObsidianDebugMenuTab& InTab, const FObsidianDebugMenuContext& InContext) const
 {
 	ObsidianDebugUI::BeginTabContent();
-	if (Context.IsValid() == false)
+	if (InContext.IsValid() == false)
 	{
 		ObsidianDebugUI::WarningText(TEXT("There is no game World running, start the game or PIE session to use the Debug Menu."));
 	}
 	else
 	{
-		const bool bMissingAuthority = Tab.RequiresAuthority() && Context.HasAuthority() == false;
+		const bool bMissingAuthority = InTab.RequiresAuthority() && InContext.HasAuthority() == false;
 		if (bMissingAuthority)
 		{
 			ObsidianDebugUI::WarningText(TEXT("This tab changes gameplay state so it needs authority, choose the server World above to use it."));
 			SlateIM::BeginDisabledState();
 		}
 
-		Tab.Draw(Context);
+		InTab.Draw(InContext);
 
 		if (bMissingAuthority)
 		{

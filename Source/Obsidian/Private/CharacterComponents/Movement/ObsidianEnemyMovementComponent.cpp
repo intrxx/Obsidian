@@ -5,8 +5,8 @@
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 
 
-UObsidianEnemyMovementComponent::UObsidianEnemyMovementComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianEnemyMovementComponent::UObsidianEnemyMovementComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 

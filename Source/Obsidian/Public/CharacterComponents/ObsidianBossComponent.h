@@ -15,13 +15,13 @@ class OBSIDIAN_API UObsidianBossComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianBossComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianBossComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	/** Returns the Boss Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
-	static UObsidianBossComponent* FindBossComponent(const AActor* Actor)
+	static UObsidianBossComponent* FindBossComponent(const AActor* InActor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianBossComponent>() : nullptr);
+		return (InActor ? InActor->FindComponentByClass<UObsidianBossComponent>() : nullptr);
 	}
 
 	FOnBossThresholdReached OnBossThresholdReached_75Delegate;

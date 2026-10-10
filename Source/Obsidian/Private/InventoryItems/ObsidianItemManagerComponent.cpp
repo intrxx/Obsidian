@@ -22,8 +22,8 @@
 #include "UI/InventoryItems/Items/ObsidianDraggedItem.h"
 
 
-UObsidianItemManagerComponent::UObsidianItemManagerComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianItemManagerComponent::UObsidianItemManagerComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	SetIsReplicatedByDefault(true);
 	PrimaryComponentTick.bCanEverTick = true;
@@ -37,10 +37,10 @@ void UObsidianItemManagerComponent::GetLifetimeReplicatedProps(TArray<FLifetimeP
 	DOREPLIFETIME_CONDITION(ThisClass, DraggedItem, COND_OwnerOnly);
 }
 
-void UObsidianItemManagerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
-	FActorComponentTickFunction* ThisTickFunction)
+void UObsidianItemManagerComponent::TickComponent(float InDeltaTime, ELevelTick InTickType,
+	FActorComponentTickFunction* InThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(InDeltaTime, InTickType, InThisTickFunction);
 
 	if(bDraggingItem)
 	{
@@ -83,8 +83,8 @@ bool UObsidianItemManagerComponent::DropItem()
 	return true;
 }
 
-void UObsidianItemManagerComponent::ServerAddItemToInventoryAtSlot_Implementation(const FIntPoint& SlotPosition,
-	const bool bShiftDown)
+void UObsidianItemManagerComponent::ServerAddItemToInventoryAtSlot_Implementation(const FIntPoint& InSlotPosition,
+	const bool bInShiftDown)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -107,13 +107,13 @@ void UObsidianItemManagerComponent::ServerAddItemToInventoryAtSlot_Implementatio
 		return;
 	}
 	
-	const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+	const int32 StacksToAddOverride = bInShiftDown ? 1 : -1;
 	
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
 		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianItemOperationResult Result = InventoryComponent->AddItemInstanceToSpecificSlot(Instance,
-			SlotPosition, StacksToAddOverride);
+			InSlotPosition, StacksToAddOverride);
 		
 		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}
@@ -121,14 +121,14 @@ void UObsidianItemManagerComponent::ServerAddItemToInventoryAtSlot_Implementatio
 	{
 		const int32 CachedStacks = DraggedItem.GeneratedData.GetStackCount();
 		const FObsidianItemOperationResult Result = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef,
-			SlotPosition, DraggedItem.GeneratedData, StacksToAddOverride);
+			InSlotPosition, DraggedItem.GeneratedData, StacksToAddOverride);
 
 		UpdateDraggedItem(Result, CachedStacks, Controller);
 	}
 }
 
 void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToInventoryItemAtSlot_Implementation(
-	const FIntPoint& SlotPosition, const int32 StacksToAddOverride)
+	const FIntPoint& InSlotPosition, const int32 InStacksToAddOverride)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -156,7 +156,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToInventoryIte
 	{
 		const int32 PreviousStacks = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithInstance(
-			Instance, SlotPosition, StacksToAddOverride);
+			Instance, InSlotPosition, InStacksToAddOverride);
 		
 		UpdateDraggedItem(AddingStacksResult, PreviousStacks, Controller);
 	}
@@ -167,15 +167,15 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToInventoryIte
 		{
 			const int32 CachedStacks = DraggedItem.GeneratedData.GetStackCount();
 			const FObsidianAddingStacksResult AddingStacksResult = InventoryComponent->TryAddingStacksToSpecificSlotWithItemDef(
-				ItemDef, CachedStacks, SlotPosition, StacksToAddOverride);
+				ItemDef, CachedStacks, InSlotPosition, InStacksToAddOverride);
 
 			UpdateDraggedItem(AddingStacksResult, CachedStacks, Controller);
 		}
 	}
 }
 
-void UObsidianItemManagerComponent::ServerTakeoutFromInventoryItem_Implementation(const FIntPoint& SlotPosition,
-	const int32 StacksToTake)
+void UObsidianItemManagerComponent::ServerTakeoutFromInventoryItem_Implementation(const FIntPoint& InSlotPosition,
+	const int32 InStacksToTake)
 {
 	if(DraggedItem.IsEmpty() == false)
 	{
@@ -197,14 +197,14 @@ void UObsidianItemManagerComponent::ServerTakeoutFromInventoryItem_Implementatio
 		return;
 	}
 
-	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	UObsidianInventoryItemInstance* ItemInstance = InventoryComponent->GetItemInstanceAtLocation(InSlotPosition);
 	if(ItemInstance == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("ItemInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
-	const FObsidianItemOperationResult Result = InventoryComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
+	const FObsidianItemOperationResult Result = InventoryComponent->TakeOutFromItemInstance(ItemInstance, InStacksToTake);
 	const UObsidianInventoryItemInstance* AffectedInstance = Result.AffectedInstance;
 	if(AffectedInstance == nullptr || Result.bActionSuccessful == false)
 	{
@@ -223,7 +223,7 @@ void UObsidianItemManagerComponent::ServerTakeoutFromInventoryItem_Implementatio
 }
 
 void UObsidianItemManagerComponent::ServerReplaceItemAtInventorySlot_Implementation(
-	const FIntPoint& ClickedItemPosition, const FIntPoint& ClickedGridPosition)
+	const FIntPoint& InClickedItemPosition, const FIntPoint& InClickedGridPosition)
 {
 	const AController* Controller = Cast<AController>(GetOwner());
 	if (Controller == nullptr)
@@ -248,28 +248,28 @@ void UObsidianItemManagerComponent::ServerReplaceItemAtInventorySlot_Implementat
 	DraggedItem.Clear();
 	StopDraggingItem(Controller);
 	
-	ServerGrabInventoryItemToCursor(ClickedItemPosition);
+	ServerGrabInventoryItemToCursor(InClickedItemPosition);
 
 	bool bSuccess = false;
 	if (UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, ClickedGridPosition);
+		bSuccess = InventoryComponent->AddItemInstanceToSpecificSlot(Instance, InClickedGridPosition);
 	}
 	else if (const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
-		bSuccess = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, ClickedGridPosition,
+		bSuccess = InventoryComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, InClickedGridPosition,
 			CachedDraggedItem.GeneratedData);
 	}
 	
 	if (bSuccess == false)
 	{
-		ServerAddItemToInventoryAtSlot(ClickedItemPosition, false);
+		ServerAddItemToInventoryAtSlot(InClickedItemPosition, false);
 		DraggedItem = CachedDraggedItem;
 		StartDraggingItem(Controller);
 	}
 }
 
-void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* ItemToPickup)
+void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementation(AObsidianDroppableItem* InItemToPickup)
 {
 	if(DraggedItem.IsEmpty() == false)
 	{
@@ -277,7 +277,7 @@ void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementati
 		return;
 	}
 
-	if(ItemToPickup == nullptr)
+	if(InItemToPickup == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("ItemToPickup is null in [%hs]"), __FUNCTION__);
 		return;
@@ -290,7 +290,7 @@ void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementati
 		return;
 	}
 
-	if (VerifyPickupRange(ItemToPickup) == false)
+	if (VerifyPickupRange(InItemToPickup) == false)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("[%hs]: Item is too far to be picked up!"), __FUNCTION__);
 		return;
@@ -301,21 +301,21 @@ void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementati
 	// 	return;
 	// }
 	
-	const FObsidianPickupTemplate Template = ItemToPickup->GetPickupTemplateFromPickupContent();
+	const FObsidianPickupTemplate Template = InItemToPickup->GetPickupTemplateFromPickupContent();
 	if(Template.IsValid()) // We are grabbing Item Template
 	{
 		DraggedItem = FDraggedItem(Template.ItemDef, Template.ItemGeneratedData);
-		ItemToPickup->UpdateDroppedItemStacks(0);
+		InItemToPickup->UpdateDroppedItemStacks(0);
 		
 		StartDraggingItem(Controller);
 		return;
 	}
 
-	const FObsidianPickupInstance Instance = ItemToPickup->GetPickupInstanceFromPickupContent();
+	const FObsidianPickupInstance Instance = InItemToPickup->GetPickupInstanceFromPickupContent();
 	if(Instance.IsValid()) // We are grabbing Item Instance
 	{
 		DraggedItem = FDraggedItem(Instance.Item);
-		ItemToPickup->UpdateDroppedItemStacks(0);
+		InItemToPickup->UpdateDroppedItemStacks(0);
 		
 		StartDraggingItem(Controller);
 		return;
@@ -325,7 +325,7 @@ void UObsidianItemManagerComponent::ServerGrabDroppableItemToCursor_Implementati
 					" this is bad and should not happen."))
 }
 
-void UObsidianItemManagerComponent::ServerGrabInventoryItemToCursor_Implementation(const FIntPoint& SlotPosition)
+void UObsidianItemManagerComponent::ServerGrabInventoryItemToCursor_Implementation(const FIntPoint& InSlotPosition)
 {
 	if(DraggedItem.IsEmpty() == false)
 	{
@@ -347,7 +347,7 @@ void UObsidianItemManagerComponent::ServerGrabInventoryItemToCursor_Implementati
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(SlotPosition);
+	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(InSlotPosition);
 	if(InstanceToGrab == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
@@ -364,9 +364,9 @@ void UObsidianItemManagerComponent::ServerGrabInventoryItemToCursor_Implementati
 	StartDraggingItem(Controller);
 }
 
-void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDroppableItem* ItemToPickup)
+void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDroppableItem* InItemToPickup)
 {
-	if(ItemToPickup == nullptr)
+	if(InItemToPickup == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("ItemToPickup is null in [%hs]"), __FUNCTION__);
 		return;
@@ -379,7 +379,7 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 		return;
 	}
 
-	if (VerifyPickupRange(ItemToPickup) == false)
+	if (VerifyPickupRange(InItemToPickup) == false)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("[%hs]: Item is too far to be picked up!"), __FUNCTION__);
 		return;
@@ -390,7 +390,7 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 	// 	return;
 	// }
 	
-	const FObsidianPickupTemplate Template = ItemToPickup->GetPickupTemplateFromPickupContent();
+	const FObsidianPickupTemplate Template = InItemToPickup->GetPickupTemplateFromPickupContent();
 	if(Template.IsValid())
 	{
 		const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = Template.ItemDef;
@@ -414,7 +414,7 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 			
 				if(EquipmentComponent->AutomaticallyEquipItem(ItemDef, Template.ItemGeneratedData))
 				{
-					ItemToPickup->DestroyDroppedItem();
+					InItemToPickup->DestroyDroppedItem();
 					return;
 				}
 			}
@@ -430,13 +430,13 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 		if(const FObsidianItemOperationResult& Result = InventoryComponent->AddItemDefinition(ItemDef,
 			Template.ItemGeneratedData))
 		{
-			ItemToPickup->UpdateDroppedItemStacks(Result.StacksLeft);
+			InItemToPickup->UpdateDroppedItemStacks(Result.StacksLeft);
 		}
 		
 		return;
 	}
 
-	const FObsidianPickupInstance Instance = ItemToPickup->GetPickupInstanceFromPickupContent();
+	const FObsidianPickupInstance Instance = InItemToPickup->GetPickupInstanceFromPickupContent();
 	if(Instance.IsValid())
 	{
 		UObsidianInventoryItemInstance* ItemInstance = Instance.Item;
@@ -457,7 +457,7 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 			
 			if(EquipmentComponent->AutomaticallyEquipItem(ItemInstance))
 			{
-				ItemToPickup->DestroyDroppedItem();
+				InItemToPickup->DestroyDroppedItem();
 				return;
 			}
 		}
@@ -474,14 +474,14 @@ void UObsidianItemManagerComponent::ServerPickupItem_Implementation(AObsidianDro
 		const FObsidianItemOperationResult Result = InventoryComponent->AddItemInstance(ItemInstance);
 		if(CurrentStacks != Result.StacksLeft)
 		{
-			ItemToPickup->UpdateDroppedItemStacks(Result.StacksLeft);
+			InItemToPickup->UpdateDroppedItemStacks(Result.StacksLeft);
 		}
 		return;
 	}
 }
 
 void UObsidianItemManagerComponent::ServerTransferItemToPlayerStash_Implementation(
-	const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab)
+	const FIntPoint& InFromInventoryPosition, const FGameplayTag& InToStashTab)
 {
 	if(IsOwnerInPlayerStashRange() == false)
 	{
@@ -510,7 +510,7 @@ void UObsidianItemManagerComponent::ServerTransferItemToPlayerStash_Implementati
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(FromInventoryPosition);
+	UObsidianInventoryItemInstance* InstanceToGrab = InventoryComponent->GetItemInstanceAtLocation(InFromInventoryPosition);
 	if (InstanceToGrab == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
@@ -518,16 +518,16 @@ void UObsidianItemManagerComponent::ServerTransferItemToPlayerStash_Implementati
 	}
 	
 	if (PlayerStashComponent->CanFitInstanceInStashTab(InstanceToGrab->GetItemGridSpan(),
-		InstanceToGrab->GetItemCategoryTag(), InstanceToGrab->GetItemBaseTypeTag(), ToStashTab))
+		InstanceToGrab->GetItemCategoryTag(), InstanceToGrab->GetItemBaseTypeTag(), InToStashTab))
 	{
 		if (InventoryComponent->RemoveItemInstance(InstanceToGrab))
 		{
-			PlayerStashComponent->AddItemInstance(InstanceToGrab, ToStashTab);
+			PlayerStashComponent->AddItemInstance(InstanceToGrab, InToStashTab);
 		}
 	}
 }
 
-void UObsidianItemManagerComponent::ServerEquipItemAtSlot_Implementation(const FGameplayTag& SlotTag)
+void UObsidianItemManagerComponent::ServerEquipItemAtSlot_Implementation(const FGameplayTag& InSlotTag)
 {
 	if(DraggedItem.IsEmpty())
 	{
@@ -552,7 +552,7 @@ void UObsidianItemManagerComponent::ServerEquipItemAtSlot_Implementation(const F
 
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
-		if(EquipmentComponent->EquipItemToSpecificSlot(Instance, SlotTag))
+		if(EquipmentComponent->EquipItemToSpecificSlot(Instance, InSlotTag))
 		{
 			DraggedItem.Clear();
 			StopDraggingItem(Controller);
@@ -560,7 +560,7 @@ void UObsidianItemManagerComponent::ServerEquipItemAtSlot_Implementation(const F
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DraggedItem.ItemDef)
 	{
-		if(EquipmentComponent->EquipItemToSpecificSlot(ItemDef, SlotTag, DraggedItem.GeneratedData))
+		if(EquipmentComponent->EquipItemToSpecificSlot(ItemDef, InSlotTag, DraggedItem.GeneratedData))
 		{
 			DraggedItem.Clear();
 			StopDraggingItem(Controller);
@@ -568,7 +568,7 @@ void UObsidianItemManagerComponent::ServerEquipItemAtSlot_Implementation(const F
 	}
 }
 
-void UObsidianItemManagerComponent::ServerGrabEquippedItemToCursor_Implementation(const FGameplayTag& SlotTag)
+void UObsidianItemManagerComponent::ServerGrabEquippedItemToCursor_Implementation(const FGameplayTag& InSlotTag)
 {
 	if(DraggedItem.IsEmpty() == false)
 	{
@@ -590,7 +590,7 @@ void UObsidianItemManagerComponent::ServerGrabEquippedItemToCursor_Implementatio
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = EquipmentComponent->GetEquippedInstanceAtSlot(SlotTag);
+	UObsidianInventoryItemInstance* InstanceToGrab = EquipmentComponent->GetEquippedInstanceAtSlot(InSlotTag);
 	if(InstanceToGrab == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
@@ -607,8 +607,8 @@ void UObsidianItemManagerComponent::ServerGrabEquippedItemToCursor_Implementatio
 	StartDraggingItem(Controller);
 }
 
-void UObsidianItemManagerComponent::ServerReplaceItemAtEquipmentSlot_Implementation(const FGameplayTag& SlotTag,
-	const FGameplayTag& EquipSlotTagOverride)
+void UObsidianItemManagerComponent::ServerReplaceItemAtEquipmentSlot_Implementation(const FGameplayTag& InSlotTag,
+	const FGameplayTag& InEquipSlotTagOverride)
 {
 	const AController* Controller = Cast<AController>(GetOwner());
 	if(Controller == nullptr)
@@ -633,22 +633,22 @@ void UObsidianItemManagerComponent::ServerReplaceItemAtEquipmentSlot_Implementat
 	DraggedItem.Clear();
 	StopDraggingItem(Controller);
 	
-	ServerGrabEquippedItemToCursor(SlotTag);
+	ServerGrabEquippedItemToCursor(InSlotTag);
 
 	bool bSuccess = false;
 	if(UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(Instance, SlotTag, EquipSlotTagOverride);
+		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(Instance, InSlotTag, InEquipSlotTagOverride);
 	}
 	else if(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
-		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(ItemDef, SlotTag, CachedDraggedItem.GeneratedData,
-			EquipSlotTagOverride);
+		bSuccess = EquipmentComponent->ReplaceItemAtSpecificSlot(ItemDef, InSlotTag, CachedDraggedItem.GeneratedData,
+			InEquipSlotTagOverride);
 	}
 	
 	if(bSuccess == false)
 	{
-		ServerEquipItemAtSlot(SlotTag);
+		ServerEquipItemAtSlot(InSlotTag);
 		DraggedItem = CachedDraggedItem;
 		StartDraggingItem(Controller);
 	}
@@ -674,7 +674,7 @@ void UObsidianItemManagerComponent::ServerWeaponSwap_Implementation()
 }
 
 void UObsidianItemManagerComponent::ServerAddItemToStashTabAtSlot_Implementation(
-	const FObsidianItemPosition& AtPosition, const bool bShiftDown)
+	const FObsidianItemPosition& InAtPosition, const bool bInShiftDown)
 {
 	if(IsOwnerInPlayerStashRange() == false)
 	{
@@ -703,13 +703,13 @@ void UObsidianItemManagerComponent::ServerAddItemToStashTabAtSlot_Implementation
 		return;
 	}
 	
-	const int32 StacksToAddOverride = bShiftDown ? 1 : -1;
+	const int32 StacksToAddOverride = bInShiftDown ? 1 : -1;
 	
 	if(UObsidianInventoryItemInstance* Instance = DraggedItem.Instance)
 	{
 		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance,
-			AtPosition, StacksToAddOverride);
+			InAtPosition, StacksToAddOverride);
 		
 		UpdateDraggedItem(Result, CurrentStackCount, Controller);
 	}
@@ -717,14 +717,14 @@ void UObsidianItemManagerComponent::ServerAddItemToStashTabAtSlot_Implementation
 	{
 		const int32 CachedStacks = DraggedItem.GeneratedData.GetStackCount();
 		const FObsidianItemOperationResult Result = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef,
-			AtPosition, DraggedItem.GeneratedData, StacksToAddOverride);
+			InAtPosition, DraggedItem.GeneratedData, StacksToAddOverride);
 
 		UpdateDraggedItem(Result, CachedStacks, Controller);
 	}
 }
 
 void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemAtSlot_Implementation(
-	const FObsidianItemPosition& AtPosition, const int32 StacksToAddOverride)
+	const FObsidianItemPosition& InAtPosition, const int32 InStacksToAddOverride)
 {
 	if(IsOwnerInPlayerStashRange() == false)
 	{
@@ -758,7 +758,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemA
 	{
 		const int32 CurrentStackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		const FObsidianAddingStacksResult AddingStacksResult = PlayerStashComponent->TryAddingStacksToSpecificSlotWithInstance(
-			Instance, AtPosition, StacksToAddOverride);
+			Instance, InAtPosition, InStacksToAddOverride);
 		
 		UpdateDraggedItem(AddingStacksResult, CurrentStackCount, Controller);
 	}
@@ -769,7 +769,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemA
 		{
 			const int32 CurrentStackCount = DraggedItem.GeneratedData.GetStackCount();
 			const FObsidianAddingStacksResult AddingStacksResult = PlayerStashComponent->TryAddingStacksToSpecificSlotWithItemDef(
-				ItemDef, CurrentStackCount, AtPosition, StacksToAddOverride);
+				ItemDef, CurrentStackCount, InAtPosition, InStacksToAddOverride);
 			
 			UpdateDraggedItem(AddingStacksResult, CurrentStackCount, Controller);
 		}
@@ -777,7 +777,7 @@ void UObsidianItemManagerComponent::ServerAddStacksFromDraggedItemToStashedItemA
 }
 									
 void UObsidianItemManagerComponent::ServerGrabStashedItemToCursor_Implementation(
-	const FObsidianItemPosition& FromPosition)
+	const FObsidianItemPosition& InFromPosition)
 {
 	if(DraggedItem.IsEmpty() == false)
 	{
@@ -805,7 +805,7 @@ void UObsidianItemManagerComponent::ServerGrabStashedItemToCursor_Implementation
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(FromPosition);
+	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(InFromPosition);
 	if(InstanceToGrab == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
@@ -822,7 +822,7 @@ void UObsidianItemManagerComponent::ServerGrabStashedItemToCursor_Implementation
 }
 
 void UObsidianItemManagerComponent::ServerTransferItemToInventory_Implementation(
-	const FObsidianItemPosition& FromStashPosition)
+	const FObsidianItemPosition& InFromStashPosition)
 {
 	if(IsOwnerInPlayerStashRange() == false)
 	{
@@ -851,7 +851,7 @@ void UObsidianItemManagerComponent::ServerTransferItemToInventory_Implementation
 		return;
 	}
 
-	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(FromStashPosition);
+	UObsidianInventoryItemInstance* InstanceToGrab = PlayerStashComponent->GetItemInstanceFromTabAtPosition(InFromStashPosition);
 	if (InstanceToGrab == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("InstanceToGrab is null in [%hs]"), __FUNCTION__);
@@ -868,7 +868,7 @@ void UObsidianItemManagerComponent::ServerTransferItemToInventory_Implementation
 }
 
 void UObsidianItemManagerComponent::ServerReplaceItemAtStashPosition_Implementation(
-	const FObsidianItemPosition& AtStashPosition)
+	const FObsidianItemPosition& InAtStashPosition)
 {
 	if(IsOwnerInPlayerStashRange() == false)
 	{
@@ -899,29 +899,29 @@ void UObsidianItemManagerComponent::ServerReplaceItemAtStashPosition_Implementat
 	DraggedItem.Clear();
 	StopDraggingItem(Controller);
 	
-	ServerGrabStashedItemToCursor(AtStashPosition);
+	ServerGrabStashedItemToCursor(InAtStashPosition);
 
 	bool bSuccess = false;
 	if (UObsidianInventoryItemInstance* Instance = CachedDraggedItem.Instance)
 	{
-		bSuccess = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, AtStashPosition);
+		bSuccess = PlayerStashComponent->AddItemInstanceToSpecificSlot(Instance, InAtStashPosition);
 	}
 	else if (const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CachedDraggedItem.ItemDef)
 	{
-		bSuccess = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, AtStashPosition,
+		bSuccess = PlayerStashComponent->AddItemDefinitionToSpecifiedSlot(ItemDef, InAtStashPosition,
 			CachedDraggedItem.GeneratedData);
 	}
 	
 	if (bSuccess == false)
 	{
-		ServerAddItemToStashTabAtSlot(AtStashPosition, false);
+		ServerAddItemToStashTabAtSlot(InAtStashPosition, false);
 		DraggedItem = CachedDraggedItem;
 		StartDraggingItem(Controller);
 	}
 }
 
 void UObsidianItemManagerComponent::ServerTakeoutFromStashedItem_Implementation(
-	const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake)
+	const FObsidianItemPosition& InAtStashPosition, const int32 InStacksToTake)
 {
 	if(DraggedItem.IsEmpty() == false)
 	{
@@ -949,14 +949,14 @@ void UObsidianItemManagerComponent::ServerTakeoutFromStashedItem_Implementation(
 		return;
 	}
 
-	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(AtStashPosition);
+	UObsidianInventoryItemInstance* ItemInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(InAtStashPosition);
 	if(ItemInstance == nullptr)
 	{
 		UE_LOG(ObLogItemManager, Error, TEXT("ItemInstance is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
-	const FObsidianItemOperationResult Result = PlayerStashComponent->TakeOutFromItemInstance(ItemInstance, StacksToTake);
+	const FObsidianItemOperationResult Result = PlayerStashComponent->TakeOutFromItemInstance(ItemInstance, InStacksToTake);
 	const UObsidianInventoryItemInstance* AffectedInstance = Result.AffectedInstance;
 	if(AffectedInstance == nullptr || Result.bActionSuccessful == false)
 	{
@@ -974,15 +974,15 @@ void UObsidianItemManagerComponent::ServerTakeoutFromStashedItem_Implementation(
 	StartDraggingItem(Controller);
 }
 
-bool UObsidianItemManagerComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch,
-	FReplicationFlags* RepFlags)
+bool UObsidianItemManagerComponent::ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch,
+	FReplicationFlags* InRepFlags)
 {
-	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+	bool WroteSomething = Super::ReplicateSubobjects(InChannel, InBunch, InRepFlags);
 
 	UObsidianInventoryItemInstance* Instance = DraggedItem.Instance;
 	if(Instance && IsValid(Instance))
 	{
-		WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
+		WroteSomething |= InChannel->ReplicateSubobject(Instance, *InBunch, *InRepFlags);
 	}
 		
 	return WroteSomething;
@@ -1003,7 +1003,7 @@ void UObsidianItemManagerComponent::ReadyForReplication()
 	}
 }
 
-void UObsidianItemManagerComponent::OnRep_DraggedItem(const FDraggedItem& OldDraggedItem)
+void UObsidianItemManagerComponent::OnRep_DraggedItem(const FDraggedItem& InOldDraggedItem)
 {
 	if(DraggedItem.IsEmpty() && bDraggingItem) // We cleared Dragged Item, so we should no longer drag it
 	{
@@ -1015,7 +1015,7 @@ void UObsidianItemManagerComponent::OnRep_DraggedItem(const FDraggedItem& OldDra
 		}
 		StopDraggingItem(Controller);
 	}
-	else if(!DraggedItem.IsEmpty() && !bDraggingItem || DraggedItemWasReplaced(OldDraggedItem))  // We got new Item to drag
+	else if(!DraggedItem.IsEmpty() && !bDraggingItem || DraggedItemWasReplaced(InOldDraggedItem))  // We got new Item to drag
 	{
 		const AController* Controller = Cast<AController>(GetOwner());
 		if(Controller == nullptr)
@@ -1052,7 +1052,7 @@ void UObsidianItemManagerComponent::DragItem() const
 	}
 }
 
-void UObsidianItemManagerComponent::StartDraggingItem(const AController* Controller)
+void UObsidianItemManagerComponent::StartDraggingItem(const AController* InController)
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -1060,7 +1060,7 @@ void UObsidianItemManagerComponent::StartDraggingItem(const AController* Control
 		return;
 	}
 	
-	if(Controller && !Controller->IsLocalController())
+	if(InController && !InController->IsLocalController())
 	{
 		return;
 	}
@@ -1105,9 +1105,9 @@ void UObsidianItemManagerComponent::StartDraggingItem(const AController* Control
 	OnStartDraggingItemDelegate.Broadcast(DraggedItem);
 }
 
-void UObsidianItemManagerComponent::StopDraggingItem(const AController* Controller)
+void UObsidianItemManagerComponent::StopDraggingItem(const AController* InController)
 {
-	if(Controller && !Controller->IsLocalController())
+	if(InController && !InController->IsLocalController())
 	{
 		return;
 	}
@@ -1126,48 +1126,48 @@ void UObsidianItemManagerComponent::StopDraggingItem(const AController* Controll
 	OnStopDraggingItemDelegate.Broadcast();
 }
 
-void UObsidianItemManagerComponent::UpdateDraggedItem(const FObsidianItemOperationResult& OperationResult,
-	const int32 CachedNumberOfStack, const AController* ForController)
+void UObsidianItemManagerComponent::UpdateDraggedItem(const FObsidianItemOperationResult& InOperationResult,
+	const int32 InCachedNumberOfStack, const AController* InForController)
 {
-	if(CachedNumberOfStack != OperationResult.StacksLeft)
+	if(InCachedNumberOfStack != InOperationResult.StacksLeft)
 	{
-		if(OperationResult.bActionSuccessful)
+		if(InOperationResult.bActionSuccessful)
 		{
 			DraggedItem.Clear();
-			StopDraggingItem(ForController);
+			StopDraggingItem(InForController);
 			return;
 		}
-		UpdateStacksOnDraggedItemWidget(OperationResult.StacksLeft);
-		DraggedItem.GeneratedData.SetStackCount(OperationResult.StacksLeft);
+		UpdateStacksOnDraggedItemWidget(InOperationResult.StacksLeft);
+		DraggedItem.GeneratedData.SetStackCount(InOperationResult.StacksLeft);
 	}
 }
 
-void UObsidianItemManagerComponent::UpdateDraggedItem(const FObsidianAddingStacksResult& OperationResult,
-	const int32 CachedNumberOfStack, const AController* ForController)
+void UObsidianItemManagerComponent::UpdateDraggedItem(const FObsidianAddingStacksResult& InOperationResult,
+	const int32 InCachedNumberOfStack, const AController* InForController)
 {
-	if(CachedNumberOfStack != OperationResult.StacksLeft)
+	if(InCachedNumberOfStack != InOperationResult.StacksLeft)
 	{
-		if(OperationResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
+		if(InOperationResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded)
 		{
 			DraggedItem.Clear();
-			StopDraggingItem(ForController);
+			StopDraggingItem(InForController);
 		}
-		else if(OperationResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
+		else if(InOperationResult.AddingStacksResult == EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded)
 		{
-			UpdateStacksOnDraggedItemWidget(OperationResult.StacksLeft);
-			DraggedItem.GeneratedData.SetStackCount(OperationResult.StacksLeft);
+			UpdateStacksOnDraggedItemWidget(InOperationResult.StacksLeft);
+			DraggedItem.GeneratedData.SetStackCount(InOperationResult.StacksLeft);
 		}
 	}
 }
 
-bool UObsidianItemManagerComponent::DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const
+bool UObsidianItemManagerComponent::DraggedItemWasReplaced(const FDraggedItem& InOldDraggedItem) const
 {
-	if(OldDraggedItem.Instance && OldDraggedItem.Instance != DraggedItem.Instance)
+	if(InOldDraggedItem.Instance && InOldDraggedItem.Instance != DraggedItem.Instance)
 	{
 		return true;
 	}
 
-	if(OldDraggedItem.ItemDef && DraggedItem.Instance)
+	if(InOldDraggedItem.ItemDef && DraggedItem.Instance)
 	{
 		return true;
 	}
@@ -1183,9 +1183,9 @@ void UObsidianItemManagerComponent::UpdateStacksOnDraggedItemWidget(const int32 
 	}
 }
 
-bool UObsidianItemManagerComponent::VerifyPickupRange(const AObsidianDroppableItem* ItemToPickUp) const
+bool UObsidianItemManagerComponent::VerifyPickupRange(const AObsidianDroppableItem* InItemToPickUp) const
 {
-	return IsOwnerInInteractionRange(ItemToPickUp, ObsidianPlayerInputStatics::InteractionRadius);
+	return IsOwnerInInteractionRange(InItemToPickUp, ObsidianPlayerInputStatics::InteractionRadius);
 }
 
 bool UObsidianItemManagerComponent::IsOwnerInPlayerStashRange() const
@@ -1214,9 +1214,9 @@ bool UObsidianItemManagerComponent::IsOwnerInPlayerStashRange() const
 	return false;
 }
 
-bool UObsidianItemManagerComponent::IsOwnerInInteractionRange(const AActor* InteractionActor, const float InteractionRadius) const
+bool UObsidianItemManagerComponent::IsOwnerInInteractionRange(const AActor* InInteractionActor, const float InInteractionRadius) const
 {
-	if(InteractionActor == nullptr)
+	if(InInteractionActor == nullptr)
 	{
 		return false;
 	}
@@ -1235,8 +1235,8 @@ bool UObsidianItemManagerComponent::IsOwnerInInteractionRange(const AActor* Inte
 		return false;
 	}
 
-	const float DistanceToActorSquared = FVector::DistSquared2D(OwnerCharacter->GetActorLocation(), InteractionActor->GetActorLocation());
-	return DistanceToActorSquared <= FMath::Square(InteractionRadius + ObsidianPlayerInputStatics::InteractionRangeTolerance);
+	const float DistanceToActorSquared = FVector::DistSquared2D(OwnerCharacter->GetActorLocation(), InInteractionActor->GetActorLocation());
+	return DistanceToActorSquared <= FMath::Square(InInteractionRadius + ObsidianPlayerInputStatics::InteractionRangeTolerance);
 }
 
 void UObsidianItemManagerComponent::ServerHandleDroppingItem_Implementation()

@@ -33,20 +33,20 @@ class OBSIDIAN_API UObsidianItemLabelComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianItemLabelComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianItemLabelComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	void SetItemOwner(AObsidianDroppableItem* OwningItemActor);
+	void SetItemOwner(AObsidianDroppableItem* InOwningItemActor);
 
 	FVector GetOwningItemActorLocation() const;
 	FObsidianLabelInitializationData GetLabelInitializationData() const;
 	
 	void RegisterLabelComponent();
 
-	void HandleLabelMouseHover(const bool bMouseEnter);
-	void HandleLabelMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags);
+	void HandleLabelMouseHover(const bool bInMouseEnter);
+	void HandleLabelMouseButtonDown(const int32 InPlayerIndex, const FObsidianItemInteractionFlags& InInteractionFlags);
 
 protected:
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void EndPlay(const EEndPlayReason::Type InEndPlayReason) override;
 	
 private:
 	FGuid RegisteredLabelID = FGuid();

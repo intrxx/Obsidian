@@ -30,10 +30,10 @@ public:
 	UAbilitySystemComponent* GetPlayerASC() const;
 
 	/** Logs the message and shows it in the status bar of the menu. */
-	void Notify(const FString& Message) const;
+	void Notify(const FString& InMessage) const;
 
 	/** Runs the command through the local Player if there is one, so viewport commands like "stat" or "show" work. */
-	void ExecConsoleCommand(const FString& Command) const;
+	void ExecConsoleCommand(const FString& InCommand) const;
 
 public:
 	UWorld* World = nullptr;
@@ -50,7 +50,7 @@ struct FObsidianDebugComboBox
 {
 public:
 	/** Returns true if the user changed the selection this frame. InOutIndex will be INDEX_NONE if there are no options. */
-	bool Draw(const TArray<FString>& NewOptions, int32& InOutIndex, const bool bSearchable = false);
+	bool Draw(const TArray<FString>& InNewOptions, int32& InOutIndex, const bool bInSearchable = false);
 
 private:
 	TArray<FString> Options;
@@ -64,9 +64,9 @@ struct FObsidianDebugClassPicker
 {
 public:
 	/** Draws the picker with the Refresh button. Returns true if the selection changed this frame. */
-	bool Draw(const UClass* BaseClass);
+	bool Draw(const UClass* InBaseClass);
 
-	void Refresh(const UClass* BaseClass);
+	void Refresh(const UClass* InBaseClass);
 
 	/** Loads the selected class, will be nullptr if nothing is selected or the class cannot be used. */
 	UClass* LoadSelectedClass() const;
@@ -106,15 +106,15 @@ namespace ObsidianDebugUI
 	void BeginTabContent();
 	void EndTabContent();
 
-	void Section(const FStringView& Title);
+	void Section(const FStringView& InTitle);
 
 	/** Fixed width label, meant to be used as the first widget of the horizontal stack. */
-	void Label(const FStringView& Text, const float Width = 150.0f);
+	void Label(const FStringView& InText, const float InWidth = 150.0f);
 
-	void WarningText(const FStringView& Text);
+	void WarningText(const FStringView& InText);
 
 	/** Strips the "Default__" and "_C" decorations out of the class or CDO name. */
-	FString GetCleanClassName(const UObject* ClassOrDefaultObject);
+	FString GetCleanClassName(const UObject* InClassOrDefaultObject);
 }
 
 namespace ObsidianDebugGAS
@@ -123,14 +123,14 @@ namespace ObsidianDebugGAS
 	 * Applies the modifier with a dynamic instant Gameplay Effect, unlike setting the base value directly this runs
 	 * PostGameplayEffectExecute on the Attribute Sets, so things like death or leveling up are handled.
 	 */
-	bool ApplyInstantAttributeMod(UAbilitySystemComponent* SourceASC, UAbilitySystemComponent* TargetASC,
-		const FGameplayAttribute& Attribute, const EGameplayModOp::Type ModifierOp, const float Magnitude);
+	bool ApplyInstantAttributeMod(UAbilitySystemComponent* InSourceASC, UAbilitySystemComponent* InTargetASC,
+		const FGameplayAttribute& InAttribute, const EGameplayModOp::Type InModifierOp, const float InMagnitude);
 
 	/** Deals enough damage to kill the Target, InstigatorASC is credited for the kill (Target itself if left empty). */
-	bool Kill(UAbilitySystemComponent* TargetASC, UAbilitySystemComponent* InstigatorASC = nullptr);
+	bool Kill(UAbilitySystemComponent* InTargetASC, UAbilitySystemComponent* InInstigatorASC = nullptr);
 
 	/** Returns false if given ASC does not own the Attribute. */
-	bool GetAttributeValue(const UAbilitySystemComponent* ASC, const FGameplayAttribute& Attribute, float& OutValue);
+	bool GetAttributeValue(const UAbilitySystemComponent* InASC, const FGameplayAttribute& InAttribute, float& OutValue);
 }
 
 #endif // WITH_OBSIDIAN_DEBUG_MENU

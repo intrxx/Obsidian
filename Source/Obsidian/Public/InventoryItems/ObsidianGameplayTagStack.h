@@ -50,35 +50,35 @@ struct FGameplayTagStackContainer : public FFastArraySerializer
 
 public:
 	/** Adds a specified number of stacks to the provided tag (does nothing if AvailableStackCount is below 1). */
-	void AddStack(FGameplayTag ToTag, int32 StackCount);
+	void AddStack(FGameplayTag InToTag, int32 InStackCount);
 
 	/** Removes a specified number of stacks to the provided tag (does nothing if AvailableStackCount is below 1). */
-	void RemoveStack(FGameplayTag FromTag, int32 StackCount);
+	void RemoveStack(FGameplayTag InFromTag, int32 InStackCount);
 	
 	/** Overrides stacks on provided tag (does nothing if AvailableStackCount is below 1). */
-	void OverrideStack(FGameplayTag Tag, int32 NewStackCount);
+	void OverrideStack(FGameplayTag InTag, int32 InNewStackCount);
 
 	/** Returns the stack count of the specified tag (or 0 if the tag is not present). */
-	int32 GetStackCount(const FGameplayTag Tag) const
+	int32 GetStackCount(const FGameplayTag InTag) const
 	{
-		return TagToCountMap.FindRef(Tag);
+		return TagToCountMap.FindRef(InTag);
 	}
 
 	/** Returns true if there is at least one stack of the specified tag. */
-	bool ContainsTag(const FGameplayTag Tag) const
+	bool ContainsTag(const FGameplayTag InTag) const
 	{
-		return TagToCountMap.Contains(Tag);
+		return TagToCountMap.Contains(InTag);
 	}
 
-	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
+	bool NetDeltaSerialize(FNetDeltaSerializeInfo& InOutDeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FGameplayTagStack, FGameplayTagStackContainer>(Stacks, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FGameplayTagStack, FGameplayTagStackContainer>(Stacks, InOutDeltaParams, *this);
 	}
 
 	//~ Start of FFastArraySerializer contract
-	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
-	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
-	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
+	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
+	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
+	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
 	//~ End of FFastArraySerializer contract
 
 private:

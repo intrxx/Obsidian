@@ -26,7 +26,7 @@ protected:
 
 	//~ Start of UCommonButtonBase interface
 	virtual void UpdateInputActionWidget() override;
-	virtual void OnInputMethodChanged(ECommonInputType CurrentInputType) override;
+	virtual void OnInputMethodChanged(ECommonInputType InCurrentInputType) override;
 	//~ End of UCommonButtonBase interface
 
 	void RefreshButtonText();

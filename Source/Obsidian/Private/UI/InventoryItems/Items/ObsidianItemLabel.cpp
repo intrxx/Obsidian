@@ -32,29 +32,29 @@ bool UObsidianItemLabel::IsInUse() const
 	return bLabelInUse;
 }
 
-void UObsidianItemLabel::MarkInUse(const bool bInUse, const FGuid& WithGuid)
+void UObsidianItemLabel::MarkInUse(const bool bInUse, const FGuid& InWithGuid)
 {
 #if !UE_BUILD_SHIPPING
 	if (bInUse)
 	{
-		checkf(WithGuid.IsValid(), TEXT("Please provide a valid Guid when marking Label in use."));
+		checkf(InWithGuid.IsValid(), TEXT("Please provide a valid Guid when marking Label in use."));
 	}
 	else
 	{
-		checkf(WithGuid.IsValid() == false, TEXT("Please do not provide a valid Guid when marking Label"
+		checkf(InWithGuid.IsValid() == false, TEXT("Please do not provide a valid Guid when marking Label"
 										   " not longer in use"));
 	}
 #endif
 	
-	LabelID = WithGuid;
+	LabelID = InWithGuid;
 	bLabelInUse = bInUse;
 }
 
-void UObsidianItemLabel::SetItemName(const FText& ItemName)
+void UObsidianItemLabel::SetItemName(const FText& InItemName)
 {
 	if(ItemName_TextBlock)
 	{
-		ItemName_TextBlock->SetText(ItemName);
+		ItemName_TextBlock->SetText(InItemName);
 	}
 }
 

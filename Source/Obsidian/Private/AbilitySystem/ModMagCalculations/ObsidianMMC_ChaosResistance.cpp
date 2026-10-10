@@ -21,16 +21,16 @@ static const SObsidian_ChaosResistanceStatics& ChaosResistanceStatics()
 	return ChaosResistanceStatics;
 }
 
-UObsidianMMC_ChaosResistance::UObsidianMMC_ChaosResistance(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_ChaosResistance::UObsidianMMC_ChaosResistance(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(ChaosResistanceStatics().FaithDef);
 }
 
-float UObsidianMMC_ChaosResistance::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_ChaosResistance::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	float Faith = 0.f;
-	GetCapturedAttributeMagnitude(ChaosResistanceStatics().FaithDef, Spec, FAggregatorEvaluateParameters(), Faith);
+	GetCapturedAttributeMagnitude(ChaosResistanceStatics().FaithDef, InSpec, FAggregatorEvaluateParameters(), Faith);
 	Faith = FMath::Max<float>(Faith, 0.f);
 
 	const float ChaosResistanceBonus = FMath::FloorToInt(Faith / 3);

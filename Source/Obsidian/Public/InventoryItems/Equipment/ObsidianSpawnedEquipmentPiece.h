@@ -14,9 +14,9 @@ class OBSIDIAN_API AObsidianSpawnedEquipmentPiece : public AActor
 	GENERATED_BODY()
 	
 public:	
-	AObsidianSpawnedEquipmentPiece(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianSpawnedEquipmentPiece(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	USkeletalMeshSocket const* GetEquipmentSocketByName(const FName SocketName) const;
+	USkeletalMeshSocket const* GetEquipmentSocketByName(const FName InSocketName) const;
 	USkeletalMeshComponent* GetEquipmentPieceMesh() const
 	{
 		return EquipmentPieceMesh;

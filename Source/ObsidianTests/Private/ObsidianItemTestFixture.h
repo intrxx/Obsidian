@@ -36,29 +36,29 @@ struct FObsidianItemTestEnvironment
 	UObsidianPlayerStashComponent& Stash() const;
 
 	/** Adds Gameplay Tag to the Player's Ability System Component, e.g. to block actions on one of the components. */
-	void AddOwnerTag(const FGameplayTag& Tag) const;
-	void RemoveOwnerTag(const FGameplayTag& Tag) const;
+	void AddOwnerTag(const FGameplayTag& InTag) const;
+	void RemoveOwnerTag(const FGameplayTag& InTag) const;
 
-	void SetHeroLevel(const uint8 HeroLevel) const;
+	void SetHeroLevel(const uint8 InHeroLevel) const;
 
 	/** Stash Tabs that the Player Stash is configured with, both are 12x10 grids. */
 	static FGameplayTag PersonalStashTab();
 	static FGameplayTag SharedStashTab();
-	static FObsidianItemPosition PersonalStashPosition(const int32 X, const int32 Y);
-	static FObsidianItemPosition SharedStashPosition(const int32 X, const int32 Y);
+	static FObsidianItemPosition PersonalStashPosition(const int32 InX, const int32 InY);
+	static FObsidianItemPosition SharedStashPosition(const int32 InX, const int32 InY);
 
 	/** Generated Data of a Normal rarity item with given number of stacks and no requirements. */
-	static FObsidianItemGeneratedData MakeItemData(const int32 StackCount = 1);
+	static FObsidianItemGeneratedData MakeItemData(const int32 InStackCount = 1);
 
 	/** Current stacks of an item, 0 for nullptr. */
-	static int32 Stacks(const UObsidianInventoryItemInstance* Instance);
+	static int32 Stacks(const UObsidianInventoryItemInstance* InInstance);
 
 	/**
 	 * Creates an Item Instance that is not held by any of the components, the same as an item that is being dragged.
 	 * It is made by adding the item to the Inventory and removing it right away.
 	 */
-	UObsidianInventoryItemInstance* MakeHeldItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
-		const int32 StackCount = 1) const;
+	UObsidianInventoryItemInstance* MakeHeldItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
+		const int32 InStackCount = 1) const;
 
 	FActorTestSpawner Spawner;
 	AObsidianPlayerController* PlayerController = nullptr;

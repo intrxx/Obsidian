@@ -90,31 +90,31 @@ void UObsidianOverlayEnemyBar::SetInitialValues()
 	}
 }
 
-void UObsidianOverlayEnemyBar::SetOverlayBarStyle(const FSlateBrush& Brush) const
+void UObsidianOverlayEnemyBar::SetOverlayBarStyle(const FSlateBrush& InBrush) const
 {
 	if(Health_ProgressBar)
 	{
 		FProgressBarStyle Style;
 		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
-		Style.FillImage = Brush;
+		Style.FillImage = InBrush;
 		Health_ProgressBar->SetWidgetStyle(Style);
 	}
 }
 
-void UObsidianOverlayEnemyBar::HandleSpecialEffectApplied(const FSlateBrush& Brush) const
+void UObsidianOverlayEnemyBar::HandleSpecialEffectApplied(const FSlateBrush& InBrush) const
 {
 	if(SpecialEffect_Image)
 	{
-		SpecialEffect_Image->SetBrush(Brush);
+		SpecialEffect_Image->SetBrush(InBrush);
 		SpecialEffect_Image->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
-void UObsidianOverlayEnemyBar::HealthChanged(const float NewValue)
+void UObsidianOverlayEnemyBar::HealthChanged(const float InNewValue)
 {
 	if(EnemyOverlayBarComp && !EnemyOverlayBarComp->IsDeadOrDying())
 	{
-		Health = NewValue;
+		Health = InNewValue;
 		SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 
 		if(Health <= 0)
@@ -124,33 +124,33 @@ void UObsidianOverlayEnemyBar::HealthChanged(const float NewValue)
 	}
 }
 
-void UObsidianOverlayEnemyBar::MaxHealthChanged(const float NewValue)
+void UObsidianOverlayEnemyBar::MaxHealthChanged(const float InNewValue)
 {
-	MaxHealth = NewValue;
+	MaxHealth = InNewValue;
 	SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 }
 
-void UObsidianOverlayEnemyBar::EnergyShieldChanged(const float NewValue)
+void UObsidianOverlayEnemyBar::EnergyShieldChanged(const float InNewValue)
 {
-	EnergyShield = NewValue;
+	EnergyShield = InNewValue;
 	SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 }
 
-void UObsidianOverlayEnemyBar::MaxEnergyShieldChanged(const float NewValue)
+void UObsidianOverlayEnemyBar::MaxEnergyShieldChanged(const float InNewValue)
 {
-	MaxEnergyShield = NewValue;
+	MaxEnergyShield = InNewValue;
 	SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 }
 
-void UObsidianOverlayEnemyBar::StaggerMeterChanged(const float NewValue)
+void UObsidianOverlayEnemyBar::StaggerMeterChanged(const float InNewValue)
 {
-	StaggerMeter = NewValue;
+	StaggerMeter = InNewValue;
 	SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
 }
 
-void UObsidianOverlayEnemyBar::MaxStaggerMeterChanged(const float NewValue)
+void UObsidianOverlayEnemyBar::MaxStaggerMeterChanged(const float InNewValue)
 {
-	MaxStaggerMeter = NewValue;
+	MaxStaggerMeter = InNewValue;
 	SetProgressBarPercent(StaggerMeter, MaxStaggerMeter, StaggerMeter_ProgressBar);
 }
 

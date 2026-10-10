@@ -44,7 +44,7 @@ struct FObsidianAdditionalTreasureList
 public:
 	
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 	
 public:
@@ -72,12 +72,12 @@ class OBSIDIAN_API UObsidianItemDropComponent : public UActorComponent
 	GENERATED_BODY()
 	
 public:	
-	UObsidianItemDropComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianItemDropComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
-	void DropItems(const EObsidianEntityRarity DroppingEntityRarity, const uint8 DroppingEntityLevel, const FVector& InOverrideDropLocation = FVector::ZeroVector);
+	void DropItems(const EObsidianEntityRarity InDroppingEntityRarity, const uint8 InDroppingEntityLevel, const FVector& InOverrideDropLocation = FVector::ZeroVector);
 
 #if WITH_EDITOR
-	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 
 public:
@@ -88,8 +88,8 @@ protected:
 	
 	void LoadAdditionalTreasuresAsync();
 
-	void ConstructItem(FObsidianItemToDrop& ForItemToDrop);
-	void GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses,
+	void ConstructItem(FObsidianItemToDrop& InOutForItemToDrop);
+	void GetTreasureClassesToRollFrom(const uint8 InMaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses,
 		TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
 	
 protected:
@@ -108,31 +108,31 @@ protected:
 	TArray<FObsidianAdditionalTreasureList> AdditionalTreasureLists;
 
 private:
-	bool ConstructItemToDrop(const FObsidianDropItem& DropItem, const FVector& InOverrideDropLocation, const uint8 TreasureQuality,
+	bool ConstructItemToDrop(const FObsidianDropItem& InDropItem, const FVector& InOverrideDropLocation, const uint8 InTreasureQuality,
 		FObsidianItemToDrop& OutItemToDrop);
 	
-	FTransform GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
-	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity MaxRarity);
+	FTransform GetDropTransformAligned(const AActor* InDroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
+	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity InMaxRarity);
 
-	void HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const FGameplayTag& DropItemBaseTypeTag,
-		const UOInventoryItemFragment_Affixes* AffixFragment);
-	void HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory, const FGameplayTag& DropItemBaseTypeTag,
-		const UOInventoryItemFragment_Affixes* AffixFragment);
-	void HandleNoGeneration(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment);
+	void HandleDefaultGeneration(FObsidianItemToDrop& InOutForItemToDrop, const FGameplayTag& InDropItemCategory, const FGameplayTag& InDropItemBaseTypeTag,
+		const UOInventoryItemFragment_Affixes* InAffixFragment);
+	void HandleFullGeneration(FObsidianItemToDrop& InOutForItemToDrop, const FGameplayTag& InDropItemCategory, const FGameplayTag& InDropItemBaseTypeTag,
+		const UOInventoryItemFragment_Affixes* InAffixFragment);
+	void HandleNoGeneration(FObsidianItemToDrop& InOutForItemToDrop, const UOInventoryItemFragment_Affixes* InAffixFragment);
 	
-	void RollSkillImplicits(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& SkillImplicits);
-	void RollImplicit(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Implicits);
-	void RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, TArray<FObsidianDynamicItemAffix>& Prefixes, TArray<FObsidianDynamicItemAffix>& Suffixes);
-	void TryToGiveStaticImplicit(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment);
-	void TryToGivePrimaryItemAffix(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment);
+	void RollSkillImplicits(FObsidianItemToDrop& InOutForItemToDrop, const TArray<FObsidianDynamicItemAffix>& InSkillImplicits);
+	void RollImplicit(FObsidianItemToDrop& InOutForItemToDrop, const TArray<FObsidianDynamicItemAffix>& InImplicits);
+	void RollAffixesAndPrefixes(FObsidianItemToDrop& InOutForItemToDrop, TArray<FObsidianDynamicItemAffix>& InOutPrefixes, TArray<FObsidianDynamicItemAffix>& InOutSuffixes);
+	void TryToGiveStaticImplicit(FObsidianItemToDrop& InOutForItemToDrop, const UOInventoryItemFragment_Affixes* InAffixFragment);
+	void TryToGivePrimaryItemAffix(FObsidianItemToDrop& InOutForItemToDrop, const UOInventoryItemFragment_Affixes* InAffixFragment);
 
-	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem);
-	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem);
-	bool ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity);
+	FGameplayTag GetItemBaseTypeFromDropItem(const FObsidianDropItem& InDropItem);
+	EObsidianItemRarity GetItemDefaultRarityFromDropItem(const FObsidianDropItem& InDropItem);
+	bool ShouldApplyAffixValueMultiplier(const EObsidianItemRarity InForItemRarity);
 
-	uint8 GetNumberOfAffixesToRollWeighted(const EObsidianItemRarity ForItemRarity);
+	uint8 GetNumberOfAffixesToRollWeighted(const EObsidianItemRarity InForItemRarity);
 
-	void AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements, const FObsidianItemToDrop& FromItemToDrop);
+	void AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements, const FObsidianItemToDrop& InFromItemToDrop);
 
 private:
 #if WITH_OBSIDIAN_DEBUG_MENU

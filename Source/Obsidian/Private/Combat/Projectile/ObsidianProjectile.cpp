@@ -5,8 +5,8 @@
 #include "Combat/Projectile/OProjectileMovementComponent.h"
 
 
-AObsidianProjectile::AObsidianProjectile(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianProjectile::AObsidianProjectile(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;

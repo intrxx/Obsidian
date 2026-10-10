@@ -17,11 +17,11 @@ class OBSIDIAN_API AObsidianTickingProjectile : public AObsidianProjectileBase
 	GENERATED_BODY()
 
 public:
-	AObsidianTickingProjectile(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianTickingProjectile(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaSeconds) override;
+	virtual void Tick(float InDeltaSeconds) override;
 
 protected:
 	FVector ProjectileSpawnLocation = FVector::ZeroVector;

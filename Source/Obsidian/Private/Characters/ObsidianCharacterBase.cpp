@@ -14,8 +14,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& ObjectInitializer) :
-	Super(ObjectInitializer)
+AObsidianCharacterBase::AObsidianCharacterBase(const FObjectInitializer& InObjectInitializer) :
+	Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -71,13 +71,13 @@ UAbilitySystemComponent* AObsidianCharacterBase::GetAbilitySystemComponent() con
 	return  PawnExtComp->GetObsidianAbilitySystemComponent();
 }
 
-FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FGameplayTag& AbilityTag) const
+FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FGameplayTag& InAbilityTag) const
 {
 	if(const UAbilitySystemComponent* ASC = GetAbilitySystemComponent())
 	{
 		TArray<FGameplayAbilitySpec*> AbilitySpecs;
 		FGameplayTagContainer AbilityTags;
-		AbilityTags.AddTag(AbilityTag);
+		AbilityTags.AddTag(InAbilityTag);
 		
 		ASC->GetActivatableGameplayAbilitySpecsByAllMatchingTags(AbilityTags, AbilitySpecs, false);
 
@@ -89,7 +89,7 @@ FGameplayAbilitySpec* AObsidianCharacterBase::GetFirstAbilitySpecForTag(const FG
 	
 #if !UE_BUILD_SHIPPING	
 	UE_LOG(ObLogCharacter, Error, TEXT("Could not find any Gameplay Ability for Tag [%s] on Owner [%s]."),
-		*AbilityTag.GetTagName().ToString(), *GetNameSafe(this));
+		*InAbilityTag.GetTagName().ToString(), *GetNameSafe(this));
 #endif
 	
 	return nullptr;
@@ -108,7 +108,7 @@ void AObsidianCharacterBase::OnAbilitySystemUninitialized()
 {
 }
 
-void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
+void AObsidianCharacterBase::OnDeathStarted(AActor* InOwningActor)
 {
 	UCapsuleComponent* CapsuleComp = GetCapsuleComponent();
 	check(CapsuleComp);
@@ -130,7 +130,7 @@ void AObsidianCharacterBase::OnDeathStarted(AActor* OwningActor)
 	AbilitySystemComponent->CancelAbilities();
 }
 
-void AObsidianCharacterBase::OnDeathFinished(AActor* OwningActor)
+void AObsidianCharacterBase::OnDeathFinished(AActor* InOwningActor)
 {
 	GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ThisClass::DestroyDueToDeath);
 }
@@ -165,25 +165,25 @@ UNiagaraSystem* AObsidianCharacterBase::GetBloodEffect_Implementation()
 	return BloodEffect;
 }
 
-FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(FGameplayTag Tag)
+FVector AObsidianCharacterBase::GetAbilitySocketLocationForTag_Implementation(FGameplayTag InTag)
 {
-	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::RightHandWeapon)
+	if(InTag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::RightHandWeapon)
 	{
 		return GetAbilitySocketLocationFromRHWeapon_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::LeftHandWeapon)
+	if(InTag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::LeftHandWeapon)
 	{
 		return GetAbilitySocketLocationFromLHWeapon_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::BetweenHands)
+	if(InTag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::BetweenHands)
 	{
 		return GetAbilityBetweenHandsSocketLocation_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::LeftHand)
+	if(InTag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::LeftHand)
 	{
 		return GetAbilitySocketLocationFromLeftHand_Implementation();
 	}
-	if(Tag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::RightHand)
+	if(InTag == ObsidianGameplayTags::GameplayEvent::AbilityMontage::Socket::RightHand)
 	{
 		return GetAbilitySocketLocationFromRightHand_Implementation();
 	}
@@ -233,11 +233,11 @@ FVector AObsidianCharacterBase::GetAbilityBetweenHandsSocketLocation_Implementat
 	return FVector::ZeroVector;
 }
 
-void AObsidianCharacterBase::SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget)
+void AObsidianCharacterBase::SetMotionWarpingFacingTarget_Implementation(const FName InMotionWarpName, const FVector& InFacingTarget)
 {
 	if(MotionWarpingComp)
 	{
-		MotionWarpingComp->AddOrUpdateWarpTargetFromLocation(MotionWarpName, FacingTarget);
+		MotionWarpingComp->AddOrUpdateWarpTargetFromLocation(InMotionWarpName, InFacingTarget);
 	}
 }
 

@@ -76,13 +76,13 @@ UObsidianAffixRow* UObsidianItemDescriptionBase::GetFreeBlockForUniqueItem()
 	return nullptr;
 }
 
-void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats, const bool bDisplayItemImage)
+void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidianItemStats& InItemStats, const bool bInDisplayItemImage)
 {
-	if(bDisplayItemImage && ItemStats.ContainsItemImage())
+	if(bInDisplayItemImage && InItemStats.ContainsItemImage())
 	{
-		if(UTexture2D* ItemTexture = ItemStats.GetItemImage())
+		if(UTexture2D* ItemTexture = InItemStats.GetItemImage())
 		{
-			const FIntPoint GridSpan = ItemStats.GetItemGridSpan();
+			const FIntPoint GridSpan = InItemStats.GetItemGridSpan();
 			const FVector2D ImageDesiredSize = FVector2D(
 				GridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X,
 				GridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
@@ -98,9 +98,9 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		Item_Image->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	
-	if(ItemStats.ContainsStacks())
+	if(InItemStats.ContainsStacks())
 	{
-		const FObsidianStacksUIData StacksData = ItemStats.GetItemStacks();
+		const FObsidianStacksUIData StacksData = InItemStats.GetItemStacks();
 		SetStackCount(StacksData.CurrentItemStackCount, StacksData.MaxItemStackCount);
 	}
 	else
@@ -108,18 +108,18 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		StacksContainer_HorizontalBox->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	
-	if(ItemStats.ContainsDescription())
+	if(InItemStats.ContainsDescription())
 	{
-		SetItemDescription(ItemStats.GetDescription());
+		SetItemDescription(InItemStats.GetDescription());
 	}
 	else
 	{
 		ItemDescription_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 	}
 	
-	if(ItemStats.ContainsAdditionalDescription())
+	if(InItemStats.ContainsAdditionalDescription())
 	{
-		SetAdditionalItemDescription(ItemStats.GetAdditionalDescription());
+		SetAdditionalItemDescription(InItemStats.GetAdditionalDescription());
 	}
 	else
 	{
@@ -127,15 +127,15 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	}
 
 	//TODO(intrxx) maybe the creation of items name should be done inside the item logic? This might potentially be expensive if spammed.
-	FText ItemDisplayName = ItemStats.GetDisplayName();
-	if(ItemStats.SupportsIdentification() && !ItemStats.IsIdentified())
+	FText ItemDisplayName = InItemStats.GetDisplayName();
+	if(InItemStats.SupportsIdentification() && !InItemStats.IsIdentified())
 	{
 		Unidentified_TextBlock->SetVisibility(ESlateVisibility::Visible);
 		IdentificationHint_TextBlock->SetVisibility(ESlateVisibility::Visible);
 
-		if (ItemStats.ContainsAffixes()) // We always want to show Skill Implicit and Primary Item Affix if we got them.
+		if (InItemStats.ContainsAffixes()) // We always want to show Skill Implicit and Primary Item Affix if we got them.
 		{
-			for(const FObsidianAffixDescriptionRow& Row : ItemStats.GetAffixDescriptions()) 
+			for(const FObsidianAffixDescriptionRow& Row : InItemStats.GetAffixDescriptions()) 
 			{
 				if (Row.AffixType == EObsidianAffixType::SkillImplicit)
 				{
@@ -151,12 +151,12 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 			}
 		}
 	}
-	else if(ItemStats.ContainsAffixes())
+	else if(InItemStats.ContainsAffixes())
 	{
-		TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows = ItemStats.GetAffixDescriptions();
+		TArray<FObsidianAffixDescriptionRow> AffixDescriptionRows = InItemStats.GetAffixDescriptions();
 		
 		FString ItemNameString = ItemDisplayName.ToString();
-		if (ItemStats.ItemRarity == EObsidianItemRarity::Magic)
+		if (InItemStats.ItemRarity == EObsidianItemRarity::Magic)
 		{
 			for(const FObsidianAffixDescriptionRow& Row : AffixDescriptionRows)
 			{
@@ -170,15 +170,15 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 				}
 			}
 
-			if (ItemStats.ContainsMagicDisplayNameAddition())
+			if (InItemStats.ContainsMagicDisplayNameAddition())
 			{
-				ItemNameString = FString::Printf(TEXT("%s "), *ItemStats.GetMagicItemDisplayNameAddition()) + ItemNameString;
+				ItemNameString = FString::Printf(TEXT("%s "), *InItemStats.GetMagicItemDisplayNameAddition()) + ItemNameString;
 			}
 		}
-		else if (ItemStats.ItemRarity == EObsidianItemRarity::Rare)
+		else if (InItemStats.ItemRarity == EObsidianItemRarity::Rare)
 		{
-			ensure(ItemStats.ContainsRareDisplayNameAddition());
-			ItemNameString = FString::Printf(TEXT("%s "), *ItemStats.GetRareItemDisplayNameAddition()) + ItemNameString;
+			ensure(InItemStats.ContainsRareDisplayNameAddition());
+			ItemNameString = FString::Printf(TEXT("%s "), *InItemStats.GetRareItemDisplayNameAddition()) + ItemNameString;
 		}
 		
 		ItemDisplayName = FText::FromString(ItemNameString);
@@ -231,11 +231,11 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 		}
 	}
 	
-	SetItemDisplayName(ItemDisplayName, ItemStats.ItemRarity);
+	SetItemDisplayName(ItemDisplayName, InItemStats.ItemRarity);
 
-	if (ItemStats.HasItemEquippingRequirements())
+	if (InItemStats.HasItemEquippingRequirements())
 	{
-		ItemRequirements_RequirementsBlock->InitializeRequirementsBlock(ItemStats.GetItemEquippingRequirements());
+		ItemRequirements_RequirementsBlock->InitializeRequirementsBlock(InItemStats.GetItemEquippingRequirements());
 	}
 	else
 	{
@@ -245,13 +245,13 @@ void UObsidianItemDescriptionBase::InitializeWidgetWithItemStats(const FObsidian
 	// NOT SHOWN STATS, WILL BE SHOWN AFTER ALT
 }
 
-void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity)
+void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& InDisplayName, const EObsidianItemRarity InRarity)
 {
-	if(!DisplayName.IsEmpty())
+	if(!InDisplayName.IsEmpty())
 	{
-		ItemName_TextBlock->SetText(DisplayName);
+		ItemName_TextBlock->SetText(InDisplayName);
 
-		switch (Rarity)
+		switch (InRarity)
 		{
 			case EObsidianItemRarity::Normal:
 				{
@@ -290,40 +290,40 @@ void UObsidianItemDescriptionBase::SetItemDisplayName(const FText& DisplayName, 
 	}
 }
 
-void UObsidianItemDescriptionBase::SetStackCount(const int32 CurrentStacks, const int32 MaxStacks)
+void UObsidianItemDescriptionBase::SetStackCount(const int32 InCurrentStacks, const int32 InMaxStacks)
 {
-	CurrentStackCount = CurrentStacks;
-	MaxStackCount = MaxStacks;
+	CurrentStackCount = InCurrentStacks;
+	MaxStackCount = InMaxStacks;
 	
 	StacksContainer_HorizontalBox->SetVisibility(ESlateVisibility::Visible);
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d/%d"), CurrentStackCount, MaxStackCount));
 	StackCount_TextBlock->SetText(StackCountText);
 }
 
-void UObsidianItemDescriptionBase::UpdateCurrentStackCount(const int32 CurrentStacks)
+void UObsidianItemDescriptionBase::UpdateCurrentStackCount(const int32 InCurrentStacks)
 {
-	CurrentStackCount = CurrentStacks;
+	CurrentStackCount = InCurrentStacks;
 	
 	StacksContainer_HorizontalBox->SetVisibility(ESlateVisibility::Visible);
 	const FText StackCountText = FText::FromString(FString::Printf(TEXT("%d/%d"), CurrentStackCount, MaxStackCount));
 	StackCount_TextBlock->SetText(StackCountText);
 }
 
-void UObsidianItemDescriptionBase::SetItemDescription(const FText& ItemDescription)
+void UObsidianItemDescriptionBase::SetItemDescription(const FText& InItemDescription)
 {
-	if(!ItemDescription.IsEmpty())
+	if(!InItemDescription.IsEmpty())
 	{
 		ItemDescription_TextBlock->SetVisibility(ESlateVisibility::Visible);
-		ItemDescription_TextBlock->SetText(ItemDescription);
+		ItemDescription_TextBlock->SetText(InItemDescription);
 	}
 }
 
-void UObsidianItemDescriptionBase::SetAdditionalItemDescription(const FText& AdditionalItemDescription)
+void UObsidianItemDescriptionBase::SetAdditionalItemDescription(const FText& InAdditionalItemDescription)
 {
-	if(!AdditionalItemDescription.IsEmpty())
+	if(!InAdditionalItemDescription.IsEmpty())
 	{
 		AdditionalItemDescription_TextBlock->SetVisibility(ESlateVisibility::Visible);
-		AdditionalItemDescription_TextBlock->SetText(AdditionalItemDescription);
+		AdditionalItemDescription_TextBlock->SetText(InAdditionalItemDescription);
 	}
 }
 

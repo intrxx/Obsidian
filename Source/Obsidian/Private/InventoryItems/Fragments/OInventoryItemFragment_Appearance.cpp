@@ -55,19 +55,19 @@ static const FObsidianInventoryItemGridSize& ObsidianItemGridSize()
 	return InventoryItemGridSize;
 }
 
-void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
+void UOInventoryItemFragment_Appearance::OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const
 {
-	if(Instance)
+	if(InInstance)
 	{
 		const FIntPoint GridSpan = GetItemGridSpanFromDesc();
 		
-		Instance->SetItemImage(ItemImage);
-		Instance->SetItemDroppedMesh(DroppedMesh);
-		Instance->SetItemDisplayName(DisplayName);
-		Instance->SetItemGridSpan(GridSpan);
-		Instance->SetItemDescription(Description);
-		Instance->SetItemAdditionalDescription(AdditionalDescription);
-		Instance->SetItemSlotPadding(ItemSlotPadding);
+		InInstance->SetItemImage(ItemImage);
+		InInstance->SetItemDroppedMesh(DroppedMesh);
+		InInstance->SetItemDisplayName(DisplayName);
+		InInstance->SetItemGridSpan(GridSpan);
+		InInstance->SetItemDescription(Description);
+		InInstance->SetItemAdditionalDescription(AdditionalDescription);
+		InInstance->SetItemSlotPadding(ItemSlotPadding);
 	}
 }
 

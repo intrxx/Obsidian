@@ -21,10 +21,10 @@ class OBSIDIAN_API UObsidianRegularEnemyHealthBar : public UObsidianBasicHealthB
 protected:
     virtual void HandleWidgetControllerSet() override;
 
-    void HealthChanged(const float NewValue);
-    void MaxHealthChanged(const float NewValue);
-    void EnergyShieldChanged(const float NewValue);
-    void MaxEnergyShieldChanged(const float NewValue);
+    void HealthChanged(const float InNewValue);
+    void MaxHealthChanged(const float InNewValue);
+    void EnergyShieldChanged(const float InNewValue);
+    void MaxEnergyShieldChanged(const float InNewValue);
     
 private:
     void StartWidgetHideTimer();

@@ -33,17 +33,17 @@ class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable, pu
 	GENERATED_BODY()
 
 public:
-	AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianDroppableItem(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 	
-	void InitializeItem(const FDraggedItem& DraggedItem);
-	void InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
+	void InitializeItem(const FDraggedItem& InDraggedItem);
+	void InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
 		const FObsidianItemGeneratedData& InGeneratedData);
 
 	//TODO(intrxx) this shouldn't be public?
-	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
-	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+	virtual void AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd) override;
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
 		const FObsidianItemGeneratedData& InGeneratedData) override;
 
 	//~ Start of HighlightInterface
@@ -56,7 +56,7 @@ public:
 	virtual AActor* GetInteractionActor() override;
 	virtual bool CanInteract() override;
 	virtual float GetInteractionRadius() override;
-	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
+	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
 	//~ End of InteractionInterface
 
 	/**
@@ -65,12 +65,12 @@ public:
 	 * Must be called after potential stack changes of the item, handles destroying the item if stack count is 0 or negative,
 	 * although it should never be negative, so It will warn you.
 	 */
-	void UpdateDroppedItemStacks(const int32 NewDroppedItemStacks);
+	void UpdateDroppedItemStacks(const int32 InNewDroppedItemStacks);
 
 	void DestroyDroppedItem();
 
-	void OnItemMouseHover(const bool bMouseEnter);
-	void OnItemMouseButtonDown(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags);
+	void OnItemMouseHover(const bool bInMouseEnter);
+	void OnItemMouseButtonDown(const int32 InPlayerIndex, const FObsidianItemInteractionFlags& InInteractionFlags);
 
 	/** Fires when Instance or Definition is set on the Droppable Item. */
 	FOnItemInitializedSignature OnItemInitializedDelegate;
@@ -84,10 +84,10 @@ protected:
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
-	bool PickupItemInstance(const bool bLeftControlDown, const AObsidianPlayerController* PickingPlayerController);
+	bool PickupItemInstance(const bool bInLeftControlDown, const AObsidianPlayerController* InPickingPlayerController);
 	
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
-	bool PickupItemDef(const bool bLeftControlDown, const AObsidianPlayerController* PickingPlayerController);
+	bool PickupItemDef(const bool bInLeftControlDown, const AObsidianPlayerController* InPickingPlayerController);
 	
 	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
 	void SetupItemAppearanceFromInstance() const;
@@ -98,12 +98,12 @@ private:
 	void InitDropRouteAnimation();
 
 	UFUNCTION()
-	void UpdateItemDropAnimation(float UpdateAlpha);
+	void UpdateItemDropAnimation(float InUpdateAlpha);
 
 	void CreateItemDescription();
 	void DestroyItemDescription();
-	void UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* ItemInstance);
-	void UpdateStacksOnActiveItemDescription(const int32 StacksToSet);
+	void UpdateStacksOnActiveItemDescription(const UObsidianInventoryItemInstance* InItemInstance);
+	void UpdateStacksOnActiveItemDescription(const int32 InStacksToSet);
 
 	UFUNCTION()
 	void OnRep_DroppedItemStacks();

@@ -18,6 +18,6 @@ class OBSIDIAN_API UObsidianInventoryItemFragment : public UObject
 	GENERATED_BODY()
 
 public:
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const {}
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const {}
 };
 

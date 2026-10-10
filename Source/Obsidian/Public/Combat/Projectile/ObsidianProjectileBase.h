@@ -46,7 +46,7 @@ class OBSIDIAN_API AObsidianProjectileBase : public AActor
 	GENERATED_BODY()
 	
 public:	
-	AObsidianProjectileBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianProjectileBase(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	virtual void Destroyed() override;
 
@@ -63,19 +63,19 @@ public:
 	}
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
-	void SetProjectileDamageSpecHandle(const FGameplayEffectSpecHandle DamageSpec)
+	void SetProjectileDamageSpecHandle(const FGameplayEffectSpecHandle InDamageSpec)
 	{
-		DamageEffectSpecHandle = DamageSpec;
+		DamageEffectSpecHandle = InDamageSpec;
 	}
 
 protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
-		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+	void OnSphereOverlap(UPrimitiveComponent* InOverlappedComponent, AActor* InOtherActor, UPrimitiveComponent* InOtherComp,
+		int32 InOtherBodyIndex, bool bInFromSweep, const FHitResult& InSweepResult);
 
-	bool ApplyProjectileDamageToActor(AActor* ActorToDamage) const;
+	bool ApplyProjectileDamageToActor(AActor* InActorToDamage) const;
 	
 protected:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Projectile")
@@ -143,9 +143,9 @@ protected:
 
 private:
 	void HandleMultiHitGlobalCooldown();
-	void HandleMultiHitPerActorCooldown(AActor* ForHitActor);
+	void HandleMultiHitPerActorCooldown(AActor* InForHitActor);
 
-	bool CanApplyCosmeticMultiHit(AActor* ForHitActor);
+	bool CanApplyCosmeticMultiHit(AActor* InForHitActor);
 	
 private:
 	FTimerHandle GlobalMultiHitCooldownTimerHandle;

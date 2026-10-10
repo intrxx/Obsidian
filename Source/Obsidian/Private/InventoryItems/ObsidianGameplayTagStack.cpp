@@ -14,66 +14,66 @@ FString FGameplayTagStack::GetDebugString() const
 
 // ---- Start of FGameplayTagStackContainer ----
 
-void FGameplayTagStackContainer::AddStack(FGameplayTag ToTag, int32 StackCount)
+void FGameplayTagStackContainer::AddStack(FGameplayTag InToTag, int32 InStackCount)
 {
-	if(!ToTag.IsValid())
+	if(!InToTag.IsValid())
 	{
 		FFrame::KismetExecutionMessage(TEXT("Tag passed to AddStack is invalid."), ELogVerbosity::Error);
 		return;
 	}
 
-	if(StackCount > 0)
+	if(InStackCount > 0)
 	{
 		for(FGameplayTagStack& Stack : Stacks)
 		{
-			if(Stack.Tag == ToTag)
+			if(Stack.Tag == InToTag)
 			{
-				const int32 NewCount = Stack.StackCount + StackCount;
+				const int32 NewCount = Stack.StackCount + InStackCount;
 				Stack.StackCount = NewCount;
-				TagToCountMap[ToTag] = NewCount;
+				TagToCountMap[InToTag] = NewCount;
 				MarkItemDirty(Stack);
 				return;
 			}
 		}
 
-		FGameplayTagStack& NewStack = Stacks.Emplace_GetRef(ToTag, StackCount);
+		FGameplayTagStack& NewStack = Stacks.Emplace_GetRef(InToTag, InStackCount);
 		MarkItemDirty(NewStack);
-		TagToCountMap.Add(ToTag, StackCount);
+		TagToCountMap.Add(InToTag, InStackCount);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Trying to Add 0 or negative number of stacks, in case of the second one use RemoveStack."), ELogVerbosity::Error);
 }
 
-void FGameplayTagStackContainer::RemoveStack(FGameplayTag FromTag, int32 StackCount)
+void FGameplayTagStackContainer::RemoveStack(FGameplayTag InFromTag, int32 InStackCount)
 {
-	if(!FromTag.IsValid())
+	if(!InFromTag.IsValid())
 	{
 		FFrame::KismetExecutionMessage(TEXT("Tag passed to RemoveStack is invalid."), ELogVerbosity::Error);
 		return;
 	}
 	
-	if(StackCount > 0)
+	if(InStackCount > 0)
 	{
 		for(auto It = Stacks.CreateIterator(); It; ++It)
 		{
 			FGameplayTagStack& Stack = *It;
-			if(Stack.Tag == FromTag)
+			if(Stack.Tag == InFromTag)
 			{
-				if(Stack.StackCount <= StackCount)
+				if(Stack.StackCount <= InStackCount)
 				{
-					if(Stack.StackCount != StackCount)
+					if(Stack.StackCount != InStackCount)
 					{
 						FFrame::KismetExecutionMessage(TEXT("Passed StackCount to remove is greater than this item's StackCount."), ELogVerbosity::Warning);
 					}
 					It.RemoveCurrent();
-					TagToCountMap.Remove(FromTag);
+					TagToCountMap.Remove(InFromTag);
 					MarkArrayDirty();
 				}
 				else
 				{
-					const int32 NewCount = Stack.StackCount - StackCount;
+					const int32 NewCount = Stack.StackCount - InStackCount;
 					Stack.StackCount = NewCount;
-					TagToCountMap[FromTag] = NewCount;
+					TagToCountMap[InFromTag] = NewCount;
 					MarkItemDirty(Stack);
 				}
 				return;
@@ -85,57 +85,57 @@ void FGameplayTagStackContainer::RemoveStack(FGameplayTag FromTag, int32 StackCo
 	FFrame::KismetExecutionMessage(TEXT("Trying to Remove 0 or negative number of stacks."), ELogVerbosity::Error);
 }
 
-void FGameplayTagStackContainer::OverrideStack(FGameplayTag Tag, int32 NewStackCount)
+void FGameplayTagStackContainer::OverrideStack(FGameplayTag InTag, int32 InNewStackCount)
 {
-	if(!Tag.IsValid())
+	if(!InTag.IsValid())
 	{
 		FFrame::KismetExecutionMessage(TEXT("Tag passed to OverrideStack is invalid."), ELogVerbosity::Error);
 		return;
 	}
 
-	if(NewStackCount > 0)
+	if(InNewStackCount > 0)
 	{
 		for(FGameplayTagStack& Stack : Stacks)
 		{
-			if(Stack.Tag == Tag)
+			if(Stack.Tag == InTag)
 			{
-				const int32 NewCount = NewStackCount;
+				const int32 NewCount = InNewStackCount;
 				Stack.StackCount = NewCount;
-				TagToCountMap[Tag] = NewCount;
+				TagToCountMap[InTag] = NewCount;
 				MarkItemDirty(Stack);
 				return;
 			}
 		}
 
-		FGameplayTagStack& NewStack = Stacks.Emplace_GetRef(Tag, NewStackCount);
+		FGameplayTagStack& NewStack = Stacks.Emplace_GetRef(InTag, InNewStackCount);
 		MarkItemDirty(NewStack);
-		TagToCountMap.Add(Tag, NewStackCount);
+		TagToCountMap.Add(InTag, InNewStackCount);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Trying to Override 0 or negative number of stacks, in case of the second one use RemoveStack."), ELogVerbosity::Error);
 }
 
-void FGameplayTagStackContainer::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
+void FGameplayTagStackContainer::PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : RemovedIndices)
+	for(const int32 Index : InRemovedIndices)
 	{
 		const FGameplayTag Tag = Stacks[Index].Tag;
 		TagToCountMap.Remove(Tag);
 	}
 }
 
-void FGameplayTagStackContainer::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
+void FGameplayTagStackContainer::PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : AddedIndices)
+	for(const int32 Index : InAddedIndices)
 	{
 		const FGameplayTagStack& Stack = Stacks[Index];
 		TagToCountMap.Add(Stack.Tag, Stack.StackCount);
 	}
 }
 
-void FGameplayTagStackContainer::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
+void FGameplayTagStackContainer::PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : ChangedIndices)
+	for(const int32 Index : InChangedIndices)
 	{
 		const FGameplayTagStack& Stack = Stacks[Index];
 		TagToCountMap[Stack.Tag] = Stack.StackCount;

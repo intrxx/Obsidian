@@ -32,11 +32,11 @@ UEnemyObsidianDamageExecution::UEnemyObsidianDamageExecution()
 	RelevantAttributesToCapture.Add(ObsidianEnemyDamageStatics().SpellBlockChanceDef);
 }
 
-void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& InExecutionParams,
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 #if WITH_SERVER_CODE
-	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	const FGameplayEffectSpec& Spec = InExecutionParams.GetOwningSpec();
 	FGameplayEffectContextHandle ContextHandle = Spec.GetContext();
 	FGameplayEffectContext* Context = ContextHandle.Get();
 	
@@ -45,7 +45,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 	if(true) //TODO(intrxx) Check if the ability is hit based
 	{
 		float HitBlockChance = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianEnemyDamageStatics().HitBlockChanceDef, EvaluationParameters, HitBlockChance);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianEnemyDamageStatics().HitBlockChanceDef, EvaluationParameters, HitBlockChance);
 		HitBlockChance = FMath::Max<float>(HitBlockChance, 0.0f);
 
 		if(HitBlockChance >= FMath::RandRange(1.0f, 100.0f))
@@ -65,7 +65,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 	if(true) //TODO(intrxx) Check if the ability is a spell
 	{
 		float SpellBlockChance = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianEnemyDamageStatics().SpellBlockChanceDef, EvaluationParameters, SpellBlockChance);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianEnemyDamageStatics().SpellBlockChanceDef, EvaluationParameters, SpellBlockChance);
 		SpellBlockChance = FMath::Max<float>(SpellBlockChance, 0.0f);
 
 		if(SpellBlockChance >= FMath::RandRange(1.0f, 100.0f))
@@ -82,7 +82,7 @@ void UEnemyObsidianDamageExecution::Execute_Implementation(const FGameplayEffect
 		}
 	}
 	
-	Super::Execute_Implementation(ExecutionParams, OutExecutionOutput);
+	Super::Execute_Implementation(InExecutionParams, OutExecutionOutput);
 	
 #endif // WITH_SERVER_CODE
 }

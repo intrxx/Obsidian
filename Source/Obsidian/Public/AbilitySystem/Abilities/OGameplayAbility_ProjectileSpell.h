@@ -18,13 +18,13 @@ class OBSIDIAN_API UOGameplayAbility_ProjectileSpell : public UObsidianDamageGam
 {
 	GENERATED_BODY()
 public:
-	UOGameplayAbility_ProjectileSpell(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UOGameplayAbility_ProjectileSpell(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProjectileSpell")
-	void SpawnProjectile(const FVector& SpawnLocation, const FVector& TargetLocation, const bool bWithDebug);
+	void SpawnProjectile(const FVector& InSpawnLocation, const FVector& InTargetLocation, const bool bInWithDebug);
 	
 protected:
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo, const FGameplayAbilityActivationInfo InActivationInfo, const FGameplayEventData* InTriggerEventData) override;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, meta=(Categories="SetByCaller.DamageType"), Category = "Obsidian|Damage")

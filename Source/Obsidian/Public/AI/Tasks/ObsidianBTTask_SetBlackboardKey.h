@@ -35,7 +35,7 @@ class OBSIDIAN_API UObsidianBTTask_SetBlackboardKey : public UBTTaskNode
 
 	UObsidianBTTask_SetBlackboardKey();
 	
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
 
 protected:
 	virtual FString GetStaticDescription() const override;

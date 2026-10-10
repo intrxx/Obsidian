@@ -23,38 +23,38 @@ void UObsidianHeroHealthBar::HandleWidgetControllerSet()
    WC->SetInitialAttributeValues();
 }
 
-void UObsidianHeroHealthBar::HealthChanged(const float NewHealth)
+void UObsidianHeroHealthBar::HealthChanged(const float InNewHealth)
 {
-   Health = NewHealth;
+   Health = InNewHealth;
    SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 }
 
-void UObsidianHeroHealthBar::MaxHealthChanged(const float NewMaxHealth)
+void UObsidianHeroHealthBar::MaxHealthChanged(const float InNewMaxHealth)
 {
-   MaxHealth = NewMaxHealth;
+   MaxHealth = InNewMaxHealth;
    SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 }
 
-void UObsidianHeroHealthBar::EnergyShieldChanged(const float NewEnergyShield)
+void UObsidianHeroHealthBar::EnergyShieldChanged(const float InNewEnergyShield)
 {
-   EnergyShield = NewEnergyShield;
+   EnergyShield = InNewEnergyShield;
    SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 }
 
-void UObsidianHeroHealthBar::MaxEnergyShieldChanged(const float NewMaxEnergyShield)
+void UObsidianHeroHealthBar::MaxEnergyShieldChanged(const float InNewMaxEnergyShield)
 {
-   MaxEnergyShield = NewMaxEnergyShield;
+   MaxEnergyShield = InNewMaxEnergyShield;
    SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 }
 
-void UObsidianHeroHealthBar::ManaChanged(const float NewMana)
+void UObsidianHeroHealthBar::ManaChanged(const float InNewMana)
 {
-   Mana = NewMana;
+   Mana = InNewMana;
    SetProgressBarPercent(Mana, MaxMana, Mana_ProgressBar);
 }
 
-void UObsidianHeroHealthBar::MaxManaChanged(const float NewMaxMana)
+void UObsidianHeroHealthBar::MaxManaChanged(const float InNewMaxMana)
 {
-   MaxMana = NewMaxMana;
+   MaxMana = InNewMaxMana;
    SetProgressBarPercent(Mana, MaxMana, Mana_ProgressBar);
 }

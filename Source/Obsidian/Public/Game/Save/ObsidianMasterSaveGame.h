@@ -103,22 +103,22 @@ class OBSIDIAN_API UObsidianMasterSaveGame : public ULocalPlayerSaveGame
 	GENERATED_BODY()
 
 public:
-	FObsidianAddHeroSaveResult AddHero(const bool bOnline, const FObsidianHeroInitializationSaveData& HeroSaveData);
-	bool DeleteHero(const uint16 SaveID, const bool bOnline);
-	bool UpdateHeroSave(const uint16 SaveID, const bool bOnline, const uint8 HeroLevel);
+	FObsidianAddHeroSaveResult AddHero(const bool bInOnline, const FObsidianHeroInitializationSaveData& InHeroSaveData);
+	bool DeleteHero(const uint16 InSaveID, const bool bInOnline);
+	bool UpdateHeroSave(const uint16 InSaveID, const bool bInOnline, const uint8 InHeroLevel);
 	
-	TArray<FObsidianHeroSaveInfo> GetHeroSaveInfos(const bool bOnline);
-	FString GetSaveNameForID(const uint16 SaveID, const bool bOnline) const; 
+	TArray<FObsidianHeroSaveInfo> GetHeroSaveInfos(const bool bInOnline);
+	FString GetSaveNameForID(const uint16 InSaveID, const bool bInOnline) const; 
 	uint16 GetMaxOfflineSaveID() const; 
 	uint16 GetMaxOnlineSaveID() const; 
 
 protected:
 	/** Adds new Offline Hero, returns new generated Save name as well as its ID. */
-	FObsidianAddHeroSaveResult AddOfflineHero(const FObsidianHeroInitializationSaveData& HeroSaveData);
+	FObsidianAddHeroSaveResult AddOfflineHero(const FObsidianHeroInitializationSaveData& InHeroSaveData);
 	/** Adds new Online Hero, returns new generated Save name as well as its ID. */
-	FObsidianAddHeroSaveResult AddOnlineHero(const FObsidianHeroInitializationSaveData& HeroSaveData);
+	FObsidianAddHeroSaveResult AddOnlineHero(const FObsidianHeroInitializationSaveData& InHeroSaveData);
 
-	FObsidianHeroSaveInfo* GetHeroSaveInfo(const uint16 SaveID, const bool bOnline);
+	FObsidianHeroSaveInfo* GetHeroSaveInfo(const uint16 InSaveID, const bool bInOnline);
 	
 protected:
 	UPROPERTY()

@@ -8,13 +8,13 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-FGameplayEffectSpecHandle UObsidianGameplayAbility_Melee::MakeMeleeDamageSpec(const UObject* SourceObject)
+FGameplayEffectSpecHandle UObsidianGameplayAbility_Melee::MakeMeleeDamageSpec(const UObject* InSourceObject)
 {
 	if (const UAbilitySystemComponent* OwningASC = GetAbilitySystemComponentFromActorInfo())
 	{
 		FGameplayEffectContextHandle ContextHandle = OwningASC->MakeEffectContext();
 		ContextHandle.SetAbility(this);
-		ContextHandle.AddSourceObject(SourceObject);
+		ContextHandle.AddSourceObject(InSourceObject);
 	
 		const FGameplayEffectSpecHandle SpecHandle = OwningASC->MakeOutgoingSpec(DamageEffectClass, GetAbilityLevel(), ContextHandle);
 

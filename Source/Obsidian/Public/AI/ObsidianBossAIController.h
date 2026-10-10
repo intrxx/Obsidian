@@ -32,7 +32,7 @@ protected:
 	
 protected:
 	UFUNCTION()
-	void OnStimulusChanged(AActor* UpdatedActor, FAIStimulus Stimulus);
+	void OnStimulusChanged(AActor* InUpdatedActor, FAIStimulus InStimulus);
 
 	virtual void OnPossess(APawn* InPawn) override;
 	

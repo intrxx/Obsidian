@@ -4,9 +4,9 @@
 
 
 FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(
-	FGameplayEffectContextHandle Handle)
+	FGameplayEffectContextHandle InHandle)
 {
-	FGameplayEffectContext* BaseEffectContext = Handle.Get();
+	FGameplayEffectContext* BaseEffectContext = InHandle.Get();
 	if(((BaseEffectContext != nullptr) && BaseEffectContext->GetScriptStruct()->IsChildOf(StaticStruct())))
 	{
 		return (FObsidianGameplayEffectContext*)BaseEffectContext;
@@ -14,10 +14,10 @@ FObsidianGameplayEffectContext* FObsidianGameplayEffectContext::ExtractEffectCon
 	return nullptr;
 }
 
-bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map, bool& bOutSuccess)
+bool FObsidianGameplayEffectContext::NetSerialize(FArchive& InOutAr, UPackageMap* InMap, bool& bOutSuccess)
 {
 	uint32 RepBits = 0;
-	if (Ar.IsSaving())
+	if (InOutAr.IsSaving())
 	{
 		if (bReplicateInstigator && Instigator.IsValid())
 		{
@@ -70,42 +70,42 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 		}
 	}
 
-	Ar.SerializeBits(&RepBits, 13);
+	InOutAr.SerializeBits(&RepBits, 13);
 
 	if (RepBits & (1 << 0))
 	{
-		Ar << Instigator;
+		InOutAr << Instigator;
 	}
 	if (RepBits & (1 << 1))
 	{
-		Ar << EffectCauser;
+		InOutAr << EffectCauser;
 	}
 	if (RepBits & (1 << 2))
 	{
-		Ar << AbilityCDO;
+		InOutAr << AbilityCDO;
 	}
 	if (RepBits & (1 << 3))
 	{
-		Ar << SourceObject;
+		InOutAr << SourceObject;
 	}
 	if (RepBits & (1 << 4))
 	{
-		SafeNetSerializeTArray_Default<31>(Ar, Actors);
+		SafeNetSerializeTArray_Default<31>(InOutAr, Actors);
 	}
 	if (RepBits & (1 << 5))
 	{
-		if (Ar.IsLoading())
+		if (InOutAr.IsLoading())
 		{
 			if (!HitResult.IsValid())
 			{
 				HitResult = TSharedPtr<FHitResult>(new FHitResult());
 			}
 		}
-		HitResult->NetSerialize(Ar, Map, bOutSuccess);
+		HitResult->NetSerialize(InOutAr, InMap, bOutSuccess);
 	}
 	if (RepBits & (1 << 6))
 	{
-		Ar << WorldOrigin;
+		InOutAr << WorldOrigin;
 		bHasWorldOrigin = true;
 	}
 	else
@@ -114,26 +114,26 @@ bool FObsidianGameplayEffectContext::NetSerialize(FArchive& Ar, UPackageMap* Map
 	}
 	if (RepBits & (1 << 7))
 	{
-		Ar << bIsBlockedAttack;
+		InOutAr << bIsBlockedAttack;
 	}
 	if(RepBits & (1 << 8))
 	{
-		Ar << bIsCriticalAttack;
+		InOutAr << bIsCriticalAttack;
 	}
 	if(RepBits & (1 << 9))
 	{
-		Ar << bIsEvadedHit;
+		InOutAr << bIsEvadedHit;
 	}
 	if(RepBits & (1 << 10))
 	{
-		Ar << bIsSuppressedSpell;
+		InOutAr << bIsSuppressedSpell;
 	}
 	if(RepBits & (1 << 11))
 	{
-		Ar << bIsTargetImmune;
+		InOutAr << bIsTargetImmune;
 	}
 
-	if (Ar.IsLoading())
+	if (InOutAr.IsLoading())
 	{
 		// Just to initialize InstigatorAbilitySystemComponent
 		AddInstigator(Instigator.Get(), EffectCauser.Get()); 

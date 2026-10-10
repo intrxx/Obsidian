@@ -15,7 +15,7 @@ class OBSIDIAN_API AObsidianWorldCollectable : public AActor, public IObsidianPi
 	GENERATED_BODY()
 	
 public:	
-	AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianWorldCollectable(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
@@ -24,14 +24,14 @@ public:
 
 	//~ Start of IObsidianPickableInterface
 	virtual FObsidianPickupContent GetPickupContent() const override;
-	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) override;
-	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+	virtual void AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd) override;
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
 		const FObsidianItemGeneratedData& InGeneratedData) override;
-	virtual void OverrideTemplateStacks(const int32 NewItemStacks) override;
+	virtual void OverrideTemplateStacks(const int32 InNewItemStacks) override;
 	//~ End of IObsidianPickableInterface
 	
 	//~ Start of UObject interface
-	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+	virtual bool ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch, FReplicationFlags* InRepFlags) override;
 	//~ End of UObject interface
 
 protected:

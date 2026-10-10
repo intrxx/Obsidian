@@ -47,53 +47,53 @@ class OBSIDIAN_API UObsidianEquipmentComponent : public UObsidianItemContainerCo
 	GENERATED_BODY()
 
 public:	
-	UObsidianEquipmentComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianEquipmentComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
-	void InitSaveData(const bool bReceivedInitialItems);
+	void InitSaveData(const bool bInReceivedInitialItems);
 	
 	bool DidReceiveInitialEquipmentItems() const;
 
 
 	
-	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& SlotTag) const;
-	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& Slot) const;
+	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FGameplayTag& InSlotTag) const;
+	UObsidianInventoryItemInstance* GetEquippedInstanceAtSlot(const FObsidianEquipmentSlotDefinition& InSlot) const;
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
-	USkeletalMeshComponent* GetMainEquippedMeshFromSlot(const FGameplayTag& SlotTag) const;
+	USkeletalMeshComponent* GetMainEquippedMeshFromSlot(const FGameplayTag& InSlotTag) const;
 
 	/** Finds Equipment Slot if one exists in the Equipment, might return invalid slot when nothing was found, check IsValid for safety. */
-	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& SlotTag);
+	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& InSlotTag);
 
-	TArray<FObsidianEquipmentSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory);
-	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithInstance(const UObsidianInventoryItemInstance* ForInstance);
-	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& ForItemDef,
-		const FObsidianItemGeneratedData& ItemGeneratedData);
+	TArray<FObsidianEquipmentSlotDefinition> FindMatchingSlotsForItemCategory(const FGameplayTag& InItemCategory);
+	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithInstance(const UObsidianInventoryItemInstance* InForInstance);
+	TArray<FObsidianEquipmentSlotDefinition> FindPossibleSlotsForEquipping_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InForItemDef,
+		const FObsidianItemGeneratedData& InItemGeneratedData);
 	
-	bool IsItemEquippedAtSlot(const FGameplayTag& SlotTag);
+	bool IsItemEquippedAtSlot(const FGameplayTag& InSlotTag);
 
 	bool CanOwnerModifyEquipmentState();
 	
-	EObsidianEquipCheckResult CanEquipInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
-	EObsidianEquipCheckResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData);
+	EObsidianEquipCheckResult CanEquipInstance(const UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InSlotTag);
+	EObsidianEquipCheckResult CanEquipTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FGameplayTag& InSlotTag, const FObsidianItemGeneratedData& InItemGeneratedData);
 	
-	EObsidianEquipCheckResult CanReplaceInstance(const UObsidianInventoryItemInstance* Instance, const FGameplayTag& SlotTag);
-	EObsidianEquipCheckResult CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData);
+	EObsidianEquipCheckResult CanReplaceInstance(const UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InSlotTag);
+	EObsidianEquipCheckResult CanReplaceTemplate(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FGameplayTag& InSlotTag, const FObsidianItemGeneratedData& InItemGeneratedData);
 	
-	FObsidianEquipmentResult AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData);
-	FObsidianEquipmentResult AutomaticallyEquipItem(UObsidianInventoryItemInstance* InstanceToEquip);
+	FObsidianEquipmentResult AutomaticallyEquipItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InItemGeneratedData);
+	FObsidianEquipmentResult AutomaticallyEquipItem(UObsidianInventoryItemInstance* InInstanceToEquip);
 	
-	FObsidianEquipmentResult EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData);
-	FObsidianEquipmentResult EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag);
+	FObsidianEquipmentResult EquipItemToSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FGameplayTag& InSlotTag, const FObsidianItemGeneratedData& InItemGeneratedData);
+	FObsidianEquipmentResult EquipItemToSpecificSlot(UObsidianInventoryItemInstance* InInstanceToEquip, const FGameplayTag& InSlotTag);
 
-	FObsidianEquipmentResult ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FGameplayTag& SlotTag, const FObsidianItemGeneratedData& ItemGeneratedData, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
-	FObsidianEquipmentResult ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InstanceToEquip, const FGameplayTag& SlotTag, const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
+	FObsidianEquipmentResult ReplaceItemAtSpecificSlot(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FGameplayTag& InSlotTag, const FObsidianItemGeneratedData& InItemGeneratedData, const FGameplayTag& InEquipSlotTagOverride = FGameplayTag::EmptyTag);
+	FObsidianEquipmentResult ReplaceItemAtSpecificSlot(UObsidianInventoryItemInstance* InInstanceToEquip, const FGameplayTag& InSlotTag, const FGameplayTag& InEquipSlotTagOverride = FGameplayTag::EmptyTag);
 	
 	void WeaponSwap();
 
-	FObsidianEquipmentResult UnequipItem(UObsidianInventoryItemInstance* InstanceToUnequip);
+	FObsidianEquipmentResult UnequipItem(UObsidianInventoryItemInstance* InInstanceToUnequip);
 
-	void LoadEquippedItem(const FObsidianSavedItem& EquippedSavedItem);
+	void LoadEquippedItem(const FObsidianSavedItem& InEquippedSavedItem);
 	
 	//~ Start of UObsidianItemContainerComponent interface
 	virtual TArray<UObsidianInventoryItemInstance*> GetContainedItems() const override;
@@ -104,32 +104,32 @@ protected:
 	
 	//~ Start of UObsidianItemContainerComponent interface
 	virtual FGameplayTag GetBlockActionsTag() const override;
-	virtual void AddItemInstanceToList(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition) override;
-	virtual UObsidianInventoryItemInstance* AddItemDefinitionToList(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
-		const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FObsidianItemPosition& ToPosition) override;
-	virtual void RemoveItemInstanceFromList(UObsidianInventoryItemInstance* Instance) override;
+	virtual void AddItemInstanceToList(UObsidianInventoryItemInstance* InInstance, const FObsidianItemPosition& InToPosition) override;
+	virtual UObsidianInventoryItemInstance* AddItemDefinitionToList(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
+		const FObsidianItemGeneratedData& InItemGeneratedData, const int32 InStackCount, const FObsidianItemPosition& InToPosition) override;
+	virtual void RemoveItemInstanceFromList(UObsidianInventoryItemInstance* InInstance) override;
 	//~ End of UObsidianItemContainerComponent interface
 
-	EObsidianEquipCheckResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory);
+	EObsidianEquipCheckResult CanPlaceItemAtEquipmentSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InItemCategory);
 
 	/** Shared part of CanReplaceInstance and CanReplaceTemplate, checks the slot itself once the item is known to be equippable. */
-	EObsidianEquipCheckResult CanReplaceItemAtEquipmentSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategory,
-		const bool bItemNeedsTwoSlots);
+	EObsidianEquipCheckResult CanReplaceItemAtEquipmentSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InItemCategory,
+		const bool bInItemNeedsTwoSlots);
 
 	/**
 	 * Item that needs two slots can't share them, moves the item from the sister slot of provided slot to the Inventory.
 	 * Returns false if it could not be done, true otherwise (also when there is nothing in the sister slot).
 	 */
-	bool MoveSisterSlotItemToInventory(const FGameplayTag& SlotTag);
+	bool MoveSisterSlotItemToInventory(const FGameplayTag& InSlotTag);
 	
 	/** Checks weather the item can be equipped with other weapon type already equipped in other hand. */
-	bool CanEquipWithOtherWeaponType(const FObsidianEquipmentSlotDefinition& PrimarySlot, const FGameplayTag& PrimaryWeaponCategory);
+	bool CanEquipWithOtherWeaponType(const FObsidianEquipmentSlotDefinition& InPrimarySlot, const FGameplayTag& InPrimaryWeaponCategory);
 	
-	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& InItemCategory);
-	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& InItemCategories);
+	void AddBannedEquipmentCategoryToSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InItemCategory);
+	void AddBannedEquipmentCategoriesToSlot(const FGameplayTag& InSlotTag, const FGameplayTagContainer& InItemCategories);
 	
-	void RemoveBannedEquipmentCategoryToSlot(const FGameplayTag& SlotTag, const FGameplayTag& ItemCategoryToRemove);
-	void RemoveBannedEquipmentCategoriesToSlot(const FGameplayTag& SlotTag, const FGameplayTagContainer& ItemCategoriesToRemove);
+	void RemoveBannedEquipmentCategoryToSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InItemCategoryToRemove);
+	void RemoveBannedEquipmentCategoriesToSlot(const FGameplayTag& InSlotTag, const FGameplayTagContainer& InItemCategoriesToRemove);
 
 protected:
 	/** THIS IS NOT SUPPORTED WITH NEW DYNAMIC GENERATED ITEM TYPES. */
@@ -144,9 +144,9 @@ private:
 
 	TArray<FObsidianEquipmentSlotDefinition> Internal_GetEquipmentSlots() const;
 
-	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemInstance* Instance);
-	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemDefinition* Definition, const FObsidianItemGeneratedData& ItemGeneratedData);
-	EObsidianEquipCheckResult CheckItemRequirements(const FObsidianItemRequirements& ItemRequirements) const;
+	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemInstance* InInstance);
+	EObsidianEquipCheckResult IsItemEquippingPossible(const UObsidianInventoryItemDefinition* InDefinition, const FObsidianItemGeneratedData& InItemGeneratedData);
+	EObsidianEquipCheckResult CheckItemRequirements(const FObsidianItemRequirements& InItemRequirements) const;
 	
 private:
 #if WITH_GAMEPLAY_DEBUGGER
@@ -186,9 +186,9 @@ namespace ObsidianEquipmentDebugHelpers
 		{EObsidianEquipCheckResult::CanEquip, TEXT("Can Equip")}
 	};
 
-	inline FString GetEquipResultString(const EObsidianEquipCheckResult Result)
+	inline FString GetEquipResultString(const EObsidianEquipCheckResult InResult)
 	{
-		return EquipResultToStringMap[Result];
+		return EquipResultToStringMap[InResult];
 	}
 }
 

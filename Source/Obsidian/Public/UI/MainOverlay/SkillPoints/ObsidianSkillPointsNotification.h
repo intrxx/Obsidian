@@ -22,7 +22,7 @@ class OBSIDIAN_API UObsidianSkillPointsNotification : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void SetSkillPointsCount(const float NewPoints) const;
+	void SetSkillPointsCount(const float InNewPoints) const;
 
 public:
 	FOnSkillPointsNotificationPressedSignature OnSkillPointsNotificationPressedDelegate;

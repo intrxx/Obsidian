@@ -45,18 +45,18 @@ protected:
 	TObjectPtr<UObsidianSlotPanel> Equipment_SlotPanel;
 	
 private:
-	void OnInventoryItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnInventoryItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnInventoryItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnInventoryItemAdded(const FObsidianItemWidgetData& InItemWidgetData);
+	void OnInventoryItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
+	void OnInventoryItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
 	
-	void OnEquipmentItemAdded(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnEquipmentItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnEquipmentItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnEquipmentItemAdded(const FObsidianItemWidgetData& InItemWidgetData);
+	void OnEquipmentItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
+	void OnEquipmentItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
 
-	void OnUsableContextFiredForInventory(const TArray<FObsidianItemPosition>& MatchingItemPositions);
-	void OnUsableContextFiredForEquipment(const TArray<FObsidianItemPosition>& MatchingItemPositions);
+	void OnUsableContextFiredForInventory(const TArray<FObsidianItemPosition>& InMatchingItemPositions);
+	void OnUsableContextFiredForEquipment(const TArray<FObsidianItemPosition>& InMatchingItemPositions);
 	
-	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
+	void HighlightSlotPlacement(const FGameplayTagContainer& InWithTags);
 	void StopHighlightSlotPlacement();
 	void ClearUsableItemHighlight();
 	

@@ -32,11 +32,11 @@ TSharedRef<FGameplayDebuggerCategory> FGameplayDebuggerCategory_InventoryItems::
 	return MakeShareable(new FGameplayDebuggerCategory_InventoryItems());
 }
 
-void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* OwnerPC, AActor* DebugActor)
+void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* InOwnerPC, AActor* InDebugActor)
 {
 	DataPack.Items.Empty();
 	
-	if(UObsidianInventoryComponent* InventoryComponent = OwnerPC->FindComponentByClass<UObsidianInventoryComponent>())
+	if(UObsidianInventoryComponent* InventoryComponent = InOwnerPC->FindComponentByClass<UObsidianInventoryComponent>())
 	{
 		TArray<UObsidianInventoryItemInstance*> Items = InventoryComponent->GetAllItems();
 		for(const UObsidianInventoryItemInstance* Item : Items)
@@ -59,34 +59,34 @@ void FGameplayDebuggerCategory_InventoryItems:: CollectData(APlayerController* O
 	}
 }
 
-void FGameplayDebuggerCategory_InventoryItems::DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext)
+void FGameplayDebuggerCategory_InventoryItems::DrawData(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext)
 {
 	if (LastDrawDataEndSize <= 0.0f)
 	{
-		LastDrawDataEndSize = CanvasContext.Canvas->SizeY - CanvasContext.CursorY - CanvasContext.CursorX;
+		LastDrawDataEndSize = InCanvasContext.Canvas->SizeY - InCanvasContext.CursorY - InCanvasContext.CursorX;
 	}
 
-	const float ThisDrawDataStartPos = CanvasContext.CursorY;
+	const float ThisDrawDataStartPos = InCanvasContext.CursorY;
 	
-	const FVector2D BackgroundPos{CanvasContext.CursorX, CanvasContext.CursorY};
-	const FVector2D BackgroundSize{CanvasContext.Canvas->SizeX -  (2.0f * CanvasContext.CursorX), LastDrawDataEndSize};
+	const FVector2D BackgroundPos{InCanvasContext.CursorX, InCanvasContext.CursorY};
+	const FVector2D BackgroundSize{InCanvasContext.Canvas->SizeX -  (2.0f * InCanvasContext.CursorX), LastDrawDataEndSize};
 
 	FCanvasTileItem Background(FVector2D(0.0f), BackgroundSize, InventoryItems::Debug::BackgroundColor);
 	Background.BlendMode = SE_BLEND_Translucent;
 	
-	CanvasContext.DrawItem(Background, BackgroundPos.X, BackgroundPos.Y);
+	InCanvasContext.DrawItem(Background, BackgroundPos.X, BackgroundPos.Y);
 
-	DrawItems(OwnerPC, CanvasContext);
+	DrawItems(InOwnerPC, InCanvasContext);
 
-	LastDrawDataEndSize = CanvasContext.CursorY - ThisDrawDataStartPos;
+	LastDrawDataEndSize = InCanvasContext.CursorY - ThisDrawDataStartPos;
 }
 
-void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) const
+void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const
 {
 	using namespace InventoryItems::Debug;
 	
-	const float CanvasWidth = CanvasContext.Canvas->SizeX;
-	Algo::Sort(DataPack.Items, [](const FRepData::FInventoryItemDebug& ItemOne, const FRepData::FInventoryItemDebug& ItemTwo) { return ItemOne.Name < ItemTwo.Name; });
+	const float CanvasWidth = InCanvasContext.Canvas->SizeX;
+	Algo::Sort(DataPack.Items, [](const FRepData::FInventoryItemDebug& InItemOne, const FRepData::FInventoryItemDebug& InItemTwo) { return InItemOne.Name < InItemTwo.Name; });
 
 	constexpr float Padding = 10.0f;
 	static float ObjNameSize = 0.0f;
@@ -102,14 +102,14 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 		float TempSizeY = 0.0f;
 
 		// We have to actually use representative strings because of the kerning
-		CanvasContext.MeasureString(*LongestDebugObjectName, ObjNameSize, TempSizeY);
-		CanvasContext.MeasureString(*LongestDebugObjectName, ItemNameSize, TempSizeY);
-		CanvasContext.MeasureString(*LongestDebugObjectName, UniqueIDSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("current stack count: 00"), CurrentStackCountNameSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("max stack count: 00"), MaxStackCountSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("limit stack count: 00"), LimitStackCountSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("grid size: 00"), GridSpanSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("grid location: 00"), CurrentGridLocationSize, TempSizeY);
+		InCanvasContext.MeasureString(*LongestDebugObjectName, ObjNameSize, TempSizeY);
+		InCanvasContext.MeasureString(*LongestDebugObjectName, ItemNameSize, TempSizeY);
+		InCanvasContext.MeasureString(*LongestDebugObjectName, UniqueIDSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("current stack count: 00"), CurrentStackCountNameSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("max stack count: 00"), MaxStackCountSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("limit stack count: 00"), LimitStackCountSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("grid size: 00"), GridSpanSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("grid location: 00"), CurrentGridLocationSize, TempSizeY);
 		ObjNameSize += Padding;
 	}
 	const float SecondArgConstX = ObjNameSize * 0.7;
@@ -123,70 +123,70 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 	const float ColumnWidth = ObjNameSize * 5 + ItemNameSize + CurrentStackCountNameSize + MaxStackCountSize + LimitStackCountSize + GridSpanSize + CurrentGridLocationSize;
 	const int NumColumns = FMath::Max(1, FMath::FloorToInt(CanvasWidth / ColumnWidth));
 
-	float TopCursorY = CanvasContext.CursorY;
-	float TopCursorX = CanvasContext.CursorX;
-	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Inventory Items:")));
+	float TopCursorY = InCanvasContext.CursorY;
+	float TopCursorX = InCanvasContext.CursorX;
+	InCanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Inventory Items:")));
 	TopCursorX += 300.0f;
 
 	const int32 ItemsNum = DataPack.Items.Num();
-	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Owned Items Count: {yellow}%d"), ItemsNum));
-	CanvasContext.MoveToNewLine();
+	InCanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Owned Items Count: {yellow}%d"), ItemsNum));
+	InCanvasContext.MoveToNewLine();
 	
-	CanvasContext.MoveToNewLine();
-	TopCursorX = CanvasContext.CursorX;
-	TopCursorY = CanvasContext.CursorY;
+	InCanvasContext.MoveToNewLine();
+	TopCursorX = InCanvasContext.CursorX;
+	TopCursorY = InCanvasContext.CursorY;
 	
-	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Item Debug Name:")));
-	CanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Unique Item ID:")));
-	CanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
-	CanvasContext.PrintAt(TopCursorX + FourthArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Stack Count:")));
-	CanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Max Item Stack Count:")));
-	CanvasContext.PrintAt(TopCursorX + SixthArgConstX, TopCursorY, FString::Printf(TEXT("Item Stack Count Inventory Limit:")));
-	CanvasContext.PrintAt(TopCursorX + SeventhArgConstX, TopCursorY, FString::Printf(TEXT("Item Grid Size:")));
-	CanvasContext.PrintAt(TopCursorX + EightArgConstX, TopCursorY, FString::Printf(TEXT("Item Origin Location On The Grid:")));
+	InCanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Item Debug Name:")));
+	InCanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Unique Item ID:")));
+	InCanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
+	InCanvasContext.PrintAt(TopCursorX + FourthArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Stack Count:")));
+	InCanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Max Item Stack Count:")));
+	InCanvasContext.PrintAt(TopCursorX + SixthArgConstX, TopCursorY, FString::Printf(TEXT("Item Stack Count Inventory Limit:")));
+	InCanvasContext.PrintAt(TopCursorX + SeventhArgConstX, TopCursorY, FString::Printf(TEXT("Item Grid Size:")));
+	InCanvasContext.PrintAt(TopCursorX + EightArgConstX, TopCursorY, FString::Printf(TEXT("Item Origin Location On The Grid:")));
 
-	CanvasContext.MoveToNewLine();
-	CanvasContext.CursorX += Padding;
+	InCanvasContext.MoveToNewLine();
+	InCanvasContext.CursorX += Padding;
 	for(const FRepData::FInventoryItemDebug& ItemData : DataPack.Items)
 	{
-		float CursorX = CanvasContext.CursorX;
-		float CursorY = CanvasContext.CursorY;
+		float CursorX = InCanvasContext.CursorX;
+		float CursorY = InCanvasContext.CursorY;
 
 		// Print positions manually to align them properly
-		CanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, ItemData.Name.Left(35));
-		CanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Cyan, ItemData.ItemUniqueID);
-		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FColor::Emerald, ItemData.Item);
-		CanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
-		CanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
-		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
-		CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSpan.X, ItemData.GridSpan.Y));
-		CanvasContext.PrintAt(CursorX + EightArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
+		InCanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, ItemData.Name.Left(35));
+		InCanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Cyan, ItemData.ItemUniqueID);
+		InCanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FColor::Emerald, ItemData.Item);
+		InCanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
+		InCanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
+		InCanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
+		InCanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSpan.X, ItemData.GridSpan.Y));
+		InCanvasContext.PrintAt(CursorX + EightArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
 
 		// PrintAt would have reset these values, restore them.
-		CanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
-		CanvasContext.CursorY = CursorY;
+		InCanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
+		InCanvasContext.CursorY = CursorY;
 
 		// If we're going to overflow, go to the next line...
-		if (CanvasContext.CursorX + ColumnWidth >= CanvasWidth)
+		if (InCanvasContext.CursorX + ColumnWidth >= CanvasWidth)
 		{
-			CanvasContext.MoveToNewLine();
-			CanvasContext.CursorX += Padding;
+			InCanvasContext.MoveToNewLine();
+			InCanvasContext.CursorX += Padding;
 		}
 	}
 
 	// End the row with a newline
-	if (CanvasContext.CursorX != CanvasContext.DefaultX)
+	if (InCanvasContext.CursorX != InCanvasContext.DefaultX)
 	{
-		CanvasContext.MoveToNewLine();
+		InCanvasContext.MoveToNewLine();
 	}
 
 	// End the category with a newline to separate
-	CanvasContext.MoveToNewLine();
-	CanvasContext.Print(TEXT("Inventory State Map:"));
-	CanvasContext.MoveToNewLine();
+	InCanvasContext.MoveToNewLine();
+	InCanvasContext.Print(TEXT("Inventory State Map:"));
+	InCanvasContext.MoveToNewLine();
 
 	float TileX = Padding * 2;
-	float TileY = CanvasContext.CursorY;
+	float TileY = InCanvasContext.CursorY;
 	constexpr float TilePadding = 5.0f;
 	
 	int32 CurrentRow = 1;
@@ -194,7 +194,7 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 	{
 		if(CurrentRow == Pair.Key.Y)
 		{
-			TileY = CanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
+			TileY = InCanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
 			TileX = Padding * 2;
 			CurrentRow++;
 		}
@@ -202,45 +202,45 @@ void FGameplayDebuggerCategory_InventoryItems::DrawItems(APlayerController* Owne
 		if(Pair.Value == true)
 		{
 			FCanvasTileItem TakenField = {FVector2D(TileX, TileY), StateMapTileSize, TakenColor};
-			CanvasContext.DrawItem(TakenField, TileX, TileY);
+			InCanvasContext.DrawItem(TakenField, TileX, TileY);
 		}
 		else
 		{
 			FCanvasTileItem FreeField = {FVector2D(TileX, TileY), StateMapTileSize, FreeColor};
-			CanvasContext.DrawItem(FreeField, TileX, TileY);
+			InCanvasContext.DrawItem(FreeField, TileX, TileY);
 		}
 		
-		CanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y));
+		InCanvasContext.PrintAt(TileX + 5.0f, TileY + 5.0f, FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y));
 		TileX += StateMapTileSize.X + TilePadding;
 	}
-	CanvasContext.CursorY = CanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
-	CanvasContext.CursorX = Padding;
-	CanvasContext.PrintAt(CanvasContext.CursorX, CanvasContext.CursorY, FString::Printf(TEXT("{grey}Taken fields are painted red, free fields are green.")));
-	CanvasContext.MoveToNewLine();
+	InCanvasContext.CursorY = InCanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
+	InCanvasContext.CursorX = Padding;
+	InCanvasContext.PrintAt(InCanvasContext.CursorX, InCanvasContext.CursorY, FString::Printf(TEXT("{grey}Taken fields are painted red, free fields are green.")));
+	InCanvasContext.MoveToNewLine();
 }
 
-void FGameplayDebuggerCategory_InventoryItems::FRepData::Serialize(FArchive& Ar)
+void FGameplayDebuggerCategory_InventoryItems::FRepData::Serialize(FArchive& InOutAr)
 {
 	int32 NumItems = Items.Num();
-	Ar << NumItems;
+	InOutAr << NumItems;
 	
-	if(Ar.IsLoading())
+	if(InOutAr.IsLoading())
 	{
 		Items.SetNum(NumItems);
 	}
 
 	for(int32 i = 0; i < NumItems; i++)
 	{
-		Ar << Items[i].Name;
-		Ar << Items[i].Item;
-		Ar << Items[i].CurrentStackCount;
-		Ar << Items[i].MaxStackCount;
-		Ar << Items[i].LimitStackCount;
-		Ar << Items[i].GridSpan;
-		Ar << Items[i].CurrentGridLocation;
+		InOutAr << Items[i].Name;
+		InOutAr << Items[i].Item;
+		InOutAr << Items[i].CurrentStackCount;
+		InOutAr << Items[i].MaxStackCount;
+		InOutAr << Items[i].LimitStackCount;
+		InOutAr << Items[i].GridSpan;
+		InOutAr << Items[i].CurrentGridLocation;
 	}
 
-	Ar << InventoryStateMap;
+	InOutAr << InventoryStateMap;
 }
 
 #endif // WITH_GAMEPLAY_DEBUGGER_MENU

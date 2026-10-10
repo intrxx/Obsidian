@@ -68,7 +68,7 @@ void UObsidianGameplayMenu::OnSaveAndExitClicked()
 	}
 }
 
-void UObsidianGameplayMenu::OnSaveFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess)
+void UObsidianGameplayMenu::OnSaveFinished(UObsidianHeroSaveGame* InSaveGame, bool bInSuccess)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -79,7 +79,7 @@ void UObsidianGameplayMenu::OnSaveFinished(UObsidianHeroSaveGame* SaveGame, bool
 	}
 
 	const UWorld* World = GetWorld();
-	if (bSuccess && World)
+	if (bInSuccess && World)
 	{
 		UGameplayStatics::OpenLevel(World, FName("L_FrontEnd"), true);
 	}

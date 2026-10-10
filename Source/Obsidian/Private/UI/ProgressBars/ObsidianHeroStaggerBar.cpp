@@ -19,14 +19,14 @@ void UObsidianHeroStaggerBar::HandleWidgetControllerSet()
 	WC->SetInitialStaggerMeter();
 }
 
-void UObsidianHeroStaggerBar::StaggerChanged(const float NewStagger)
+void UObsidianHeroStaggerBar::StaggerChanged(const float InNewStagger)
 {
-	Stagger = NewStagger;
+	Stagger = InNewStagger;
 	SetProgressBarPercent(Stagger, MaxStagger, Stagger_ProgressBar);
 }
 
-void UObsidianHeroStaggerBar::MaxStaggerChanged(const float NewMaxStagger)
+void UObsidianHeroStaggerBar::MaxStaggerChanged(const float InNewMaxStagger)
 {
-	MaxStagger = NewMaxStagger;
+	MaxStagger = InNewMaxStagger;
 	SetProgressBarPercent(Stagger, MaxStagger, Stagger_ProgressBar);
 }

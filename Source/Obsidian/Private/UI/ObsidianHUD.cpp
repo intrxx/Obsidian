@@ -11,7 +11,7 @@
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
 
-UObMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
+UObMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams)
 {
 	// If the overlay controller is a nullptr we need to construct one
 	if(MainOverlayWidgetController == nullptr)
@@ -19,7 +19,7 @@ UObMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(con
 		if(ensureMsgf(MainOverlayWidgetControllerClass, TEXT("Main Overlay Widget Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 		{
 			MainOverlayWidgetController = NewObject<UObMainOverlayWidgetController>(this, MainOverlayWidgetControllerClass);
-			MainOverlayWidgetController->SetWidgetControllerParams(WidgetControllerParams);
+			MainOverlayWidgetController->SetWidgetControllerParams(InWidgetControllerParams);
 			
 			return MainOverlayWidgetController;
 		}
@@ -27,7 +27,7 @@ UObMainOverlayWidgetController* AObsidianHUD::GetMainOverlayWidgetController(con
 	return MainOverlayWidgetController;
 }
 
-UObCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
+UObCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams)
 {
 	// If the character status controller is a nullptr we need to construct one
 	if(CharacterStatusWidgetController == nullptr)
@@ -35,7 +35,7 @@ UObCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetContro
 		if(ensureMsgf(CharacterStatusWidgetControllerClass, TEXT("Character Status Widget Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 		{
 			CharacterStatusWidgetController = NewObject<UObCharacterStatusWidgetController>(this, CharacterStatusWidgetControllerClass);
-			CharacterStatusWidgetController->SetWidgetControllerParams(WidgetControllerParams);
+			CharacterStatusWidgetController->SetWidgetControllerParams(InWidgetControllerParams);
 			CharacterStatusWidgetController->OnWidgetControllerSetupCompleted();
 
 			return CharacterStatusWidgetController;
@@ -44,7 +44,7 @@ UObCharacterStatusWidgetController* AObsidianHUD::GetCharacterStatusWidgetContro
 	return CharacterStatusWidgetController;
 }
 
-UObInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams)
+UObInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams)
 {
 	// If the character status controller is a nullptr we need to construct one
 	if(InventoryItemsWidgetController == nullptr)
@@ -52,7 +52,7 @@ UObInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetControll
 		if(ensureMsgf(InventoryItemsWidgetControllerClass, TEXT("Inventory Controller Class is not set on HUD Class [%s], please fill it out in BP_ObsidianHUD"), *GetNameSafe(this)))
 		{
 			InventoryItemsWidgetController = NewObject<UObInventoryItemsWidgetController>(this, InventoryItemsWidgetControllerClass);
-			InventoryItemsWidgetController->SetWidgetControllerParams(WidgetControllerParams);
+			InventoryItemsWidgetController->SetWidgetControllerParams(InWidgetControllerParams);
 			InventoryItemsWidgetController->OnWidgetControllerSetupCompleted();
 			
 			return InventoryItemsWidgetController;
@@ -61,7 +61,7 @@ UObInventoryItemsWidgetController* AObsidianHUD::GetInventoryItemsWidgetControll
 	return InventoryItemsWidgetController;
 }
 
-void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, AObsidianPlayerState* ForPlayerState)
+void AObsidianHUD::InitOverlay(AObsidianPlayerController* InForPlayerController, AObsidianPlayerState* InForPlayerState)
 {
 	UWorld* World = GetWorld();
 	if (World == nullptr)
@@ -75,8 +75,8 @@ void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, A
 		MainOverlayWidget = CreateWidget<UObsidianMainOverlay>(World, MainOverlayWidgetClass);
 
 		FObsidianWidgetControllerParams Params;
-		Params.ObsidianPlayerController = ForPlayerController;
-		Params.ObsidianPlayerState = ForPlayerState;
+		Params.ObsidianPlayerController = InForPlayerController;
+		Params.ObsidianPlayerState = InForPlayerState;
 		UObMainOverlayWidgetController* WidgetController = GetMainOverlayWidgetController(Params);
 
 		MainOverlayWidget->SetWidgetController(WidgetController);
@@ -97,7 +97,7 @@ void AObsidianHUD::InitOverlay(AObsidianPlayerController* ForPlayerController, A
 
 		if (UObsidianItemLabelManagerSubsystem* ItemLabelManagerSubsystem = World->GetSubsystem<UObsidianItemLabelManagerSubsystem>())
 		{
-			ItemLabelManagerSubsystem->InitializeItemLabelManager(MainOverlayWidget, ForPlayerController);
+			ItemLabelManagerSubsystem->InitializeItemLabelManager(MainOverlayWidget, InForPlayerController);
 		}
 	}
 }
@@ -126,11 +126,11 @@ void AObsidianHUD::TogglePassiveSkillTree() const
 	}
 }
 
-void AObsidianHUD::TogglePlayerStash(const bool bShowStash) const
+void AObsidianHUD::TogglePlayerStash(const bool bInShowStash) const
 {
 	if(MainOverlayWidget)
 	{
-		MainOverlayWidget->TogglePlayerStash(bShowStash);
+		MainOverlayWidget->TogglePlayerStash(bInShowStash);
 	}
 }
 

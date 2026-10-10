@@ -22,11 +22,11 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack = 0);
-	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot = false);
+	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* InItemImage, const int32 InCurrentStack = 0);
+	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* InItemImage, const bool bInIsForSwapSlot = false);
 	
-	void AddCurrentStackCount(const int32 StackCountToAdd);
-	void OverrideCurrentStackCount(const int32 NewStackCount);
+	void AddCurrentStackCount(const int32 InStackCountToAdd);
+	void OverrideCurrentStackCount(const int32 InNewStackCount);
 	
 	FSlateBrush GetItemImage() const;
 	FVector2D GetItemWidgetSize() const;

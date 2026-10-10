@@ -24,7 +24,7 @@ class OBSIDIAN_API UObsidianStashTab : public UObject
 	GENERATED_BODY()
 
 public:
-	UObsidianStashTab(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianStashTab(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	FString GetStashTabName() const;
 	FGameplayTag GetStashTabTag() const;
@@ -33,20 +33,20 @@ public:
 	TSubclassOf<UObsidianStashTabWidget> GetWidgetClass() const;
 	void SetStashData(const FObsidianStashTabDefinition& InDefinition);
 
-	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) {return nullptr;}
+	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& InItemPosition) {return nullptr;}
 
-	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan) {return false;}
-	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan) {return false;}
+	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) {return false;}
+	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) {return false;}
 	
-	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance) {return false;}
-	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef) {return false;}
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const UObsidianInventoryItemInstance* InReplacingInstance) {return false;}
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& InReplacingDef) {return false;}
 
 	/** Return true if the position in Stash Tab is free. */
-	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& Position) {return false;}
+	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& InPosition) {return false;}
 	
-	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) {}
-	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
-	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) {}
+	virtual void Construct(UObsidianPlayerStashComponent* InStashComponent) {}
+	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) {}
+	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) {}
 
 protected:
 	FString StashTabName = FString();

@@ -115,33 +115,33 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	int32 GetEntriesCount() const;
 
-	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass, const FObsidianItemGeneratedData& ItemGeneratedData,
-		const int32 StackCount, const FIntPoint& AvailablePosition);
-	void AddEntry(UObsidianInventoryItemInstance* Instance, const FIntPoint& AvailablePosition);
-	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& EquippedSavedItem);
-	void RemoveEntry(UObsidianInventoryItemInstance* Instance);
-	void ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount);
-	void GeneralEntryChange(UObsidianInventoryItemInstance* Instance);
+	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDefClass, const FObsidianItemGeneratedData& InItemGeneratedData,
+		const int32 InStackCount, const FIntPoint& InAvailablePosition);
+	void AddEntry(UObsidianInventoryItemInstance* InInstance, const FIntPoint& InAvailablePosition);
+	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& InEquippedSavedItem);
+	void RemoveEntry(UObsidianInventoryItemInstance* InInstance);
+	void ChangedEntryStacks(UObsidianInventoryItemInstance* InInstance, const int32 InOldCount);
+	void GeneralEntryChange(UObsidianInventoryItemInstance* InInstance);
 
 	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
-	void Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition);
+	void Item_MarkSpace(const UObsidianInventoryItemInstance* InItemInstance, const FIntPoint& InAtPosition);
 	
 	/** Unmarks Item space in the internal Inventory State map. Must be called after removing item. */
-	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition);
+	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* InItemInstance, const FIntPoint& InAtPosition);
 
-	bool NetDeltaSerialize(FNetDeltaSerializeInfo& DeltaParams)
+	bool NetDeltaSerialize(FNetDeltaSerializeInfo& InOutDeltaParams)
 	{
-		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryGridItemList>(Entries, DeltaParams, *this);
+		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryGridItemList>(Entries, InOutDeltaParams, *this);
 	}
 
 	//~ Start of FFastArraySerializer contract
-	void PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize);
-	void PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize);
-	void PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize);
+	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
+	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
+	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
 	//~ End of FFastArraySerializer contract
 
 private:
-	void BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FIntPoint& GridPosition, const EObsidianInventoryChangeType& ChangeType) const;
+	void BroadcastChangeMessage(const FObsidianInventoryEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FIntPoint& InGridPosition, const EObsidianInventoryChangeType& InChangeType) const;
 	
 private:
 	friend UObsidianInventoryComponent;

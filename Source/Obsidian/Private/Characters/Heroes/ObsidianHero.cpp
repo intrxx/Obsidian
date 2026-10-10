@@ -28,8 +28,8 @@
 #include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
 
 
-AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianHeroMovementComponent>(
+AObsidianHero::AObsidianHero(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer.SetDefaultSubobjectClass<UObsidianHeroMovementComponent>(
 		ACharacter::CharacterMovementComponentName))
 {
 	//TODO(intrxx) Delete after GameplayCamera is stable
@@ -84,7 +84,7 @@ void AObsidianHero::BeginPlay()
 	Super::BeginPlay();
 }
 
-void AObsidianHero::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void AObsidianHero::EndPlay(const EEndPlayReason::Type InEndPlayReason)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -94,19 +94,19 @@ void AObsidianHero::EndPlay(const EEndPlayReason::Type EndPlayReason)
 		}
 	}
 	
-	Super::EndPlay(EndPlayReason);
+	Super::EndPlay(InEndPlayReason);
 }
 
-void AObsidianHero::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AObsidianHero::SetupPlayerInputComponent(UInputComponent* InPlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	Super::SetupPlayerInputComponent(InPlayerInputComponent);
 
-	PlayerInputManager->InitializePlayerInput(PlayerInputComponent);
+	PlayerInputManager->InitializePlayerInput(InPlayerInputComponent);
 }
 
-void AObsidianHero::PossessedBy(AController* NewController)
+void AObsidianHero::PossessedBy(AController* InNewController)
 {
-	Super::PossessedBy(NewController);
+	Super::PossessedBy(InNewController);
 
 	// Init for the server
 	if(AObsidianPlayerState* ObsidianPS = GetObsidianPlayerState())
@@ -115,7 +115,7 @@ void AObsidianHero::PossessedBy(AController* NewController)
 		PawnExtComp->InitializeAbilitySystem(ObsidianPS->GetObsidianAbilitySystemComponent(), ObsidianPS);
 	}
 	
-	if (const IGenericTeamAgentInterface* TeamAgentInterface = Cast<IGenericTeamAgentInterface>(NewController))
+	if (const IGenericTeamAgentInterface* TeamAgentInterface = Cast<IGenericTeamAgentInterface>(InNewController))
 	{
 		TeamId = TeamAgentInterface->GetGenericTeamId();
 	}
@@ -229,9 +229,9 @@ FVector AObsidianHero::GetAbilitySocketLocationFromRHWeapon_Implementation()
 	return FVector::ZeroVector;
 }
 
-void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
+void AObsidianHero::SaveData(UObsidianHeroSaveGame* InSaveObject)
 {
-	if (SaveObject == nullptr)
+	if (InSaveObject == nullptr)
 	{
 		return;
 	}
@@ -289,17 +289,17 @@ void AObsidianHero::SaveData(UObsidianHeroSaveGame* SaveObject)
 		}
 	}
 	
-	SaveObject->SetHeroGameplayData(HeroSaveData);
+	InSaveObject->SetHeroGameplayData(HeroSaveData);
 }
 
-void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
+void AObsidianHero::LoadData(UObsidianHeroSaveGame* InSaveObject)
 {
-	if (SaveObject == nullptr)
+	if (InSaveObject == nullptr)
 	{
 		return;
 	}
 
-	const FObsidianHeroSaveData HeroSaveData = SaveObject->GetHeroSaveData();
+	const FObsidianHeroSaveData HeroSaveData = InSaveObject->GetHeroSaveData();
 	if (HeroSaveData.GameplaySaveData.CurrentLocation.IsZero() == false)
 	{
 		SetActorLocation(HeroSaveData.GameplaySaveData.CurrentLocation);
@@ -359,11 +359,11 @@ void AObsidianHero::LoadData(UObsidianHeroSaveGame* SaveObject)
 	}
 }
 
-void AObsidianHero::ClientUpdateBossDetectingPlayer_Implementation(AActor* BossActor, const bool bSeenPlayer)
+void AObsidianHero::ClientUpdateBossDetectingPlayer_Implementation(AActor* InBossActor, const bool bInSeenPlayer)
 {
 	if(const AObsidianPlayerController* ObsidianPC = GetObsidianPlayerController())
 	{
-		ObsidianPC->OnBossDetectedPlayerDelegate.ExecuteIfBound(BossActor, bSeenPlayer);
+		ObsidianPC->OnBossDetectedPlayerDelegate.ExecuteIfBound(InBossActor, bInSeenPlayer);
 	}
 }
 
@@ -429,14 +429,14 @@ void AObsidianHero::OnAbilitySystemUninitialized()
 	HeroAttributesComponent->UninitializeFromAbilitySystem();
 }
 
-void AObsidianHero::OnDeathStarted(AActor* OwningActor)
+void AObsidianHero::OnDeathStarted(AActor* InOwningActor)
 {
 	if(IsValid(Controller))
 	{
 		Controller->SetIgnoreMoveInput(true);
 	}
 	
-	Super::OnDeathStarted(OwningActor);
+	Super::OnDeathStarted(InOwningActor);
 
 	if(!DeathMontages.IsEmpty())
 	{
@@ -447,12 +447,12 @@ void AObsidianHero::OnDeathStarted(AActor* OwningActor)
 	}
 }
 
-void AObsidianHero::OnDeathFinished(AActor* OwningActor)
+void AObsidianHero::OnDeathFinished(AActor* InOwningActor)
 {
-	Super::OnDeathFinished(OwningActor);
+	Super::OnDeathFinished(InOwningActor);
 }
 
-void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) const
+void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* InObsidianASC) const
 {
 	InitializeHealthBar();
 	
@@ -467,14 +467,14 @@ void AObsidianHero::InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) c
 	}
 }
 
-void AObsidianHero::FillGenericAttribures(FObsidianGenericAttributes& GenericAttributes)
+void AObsidianHero::FillGenericAttribures(FObsidianGenericAttributes& OutGenericAttributes)
 {
 	if (HeroAttributesComponent)
 	{
-		GenericAttributes.CurrentExperience = HeroAttributesComponent->GetExperience();
-		GenericAttributes.MaxExperience = HeroAttributesComponent->GetMaxExperience();
-		GenericAttributes.PassiveSkillPoints = HeroAttributesComponent->GetPassiveSkillPoints();
-		GenericAttributes.AscensionPoints = HeroAttributesComponent->GetAscensionPoints();
+		OutGenericAttributes.CurrentExperience = HeroAttributesComponent->GetExperience();
+		OutGenericAttributes.MaxExperience = HeroAttributesComponent->GetMaxExperience();
+		OutGenericAttributes.PassiveSkillPoints = HeroAttributesComponent->GetPassiveSkillPoints();
+		OutGenericAttributes.AscensionPoints = HeroAttributesComponent->GetAscensionPoints();
 	}
 }
 

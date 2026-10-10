@@ -51,11 +51,11 @@ protected:
 	void PopulateCharacterScreen();
 	void InitCharacterScreen();
 
-	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked);
+	void HandleClickingOnCharacterEntry(UObsidianCharacterEntry* InEntryClicked);
 
-	void CreateHeroEntries(const TArray<FObsidianHeroSaveInfo>& SaveInfos);
+	void CreateHeroEntries(const TArray<FObsidianHeroSaveInfo>& InSaveInfos);
 
-	void OnPlayHeroLoadFinished(UObsidianHeroSaveGame* SaveObject, bool bSuccess);
+	void OnPlayHeroLoadFinished(UObsidianHeroSaveGame* InSaveObject, bool bInSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

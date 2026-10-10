@@ -11,9 +11,9 @@ UObsidianBTTask_ClearFocus::UObsidianBTTask_ClearFocus()
 	INIT_TASK_NODE_NOTIFY_FLAGS();
 }
 
-EBTNodeResult::Type UObsidianBTTask_ClearFocus::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_ClearFocus::ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
-	if(AAIController* AIController = OwnerComp.GetAIOwner())
+	if(AAIController* AIController = InOwnerComp.GetAIOwner())
 	{
 		AIController->ClearFocus(EAIFocusPriority::Gameplay);
 

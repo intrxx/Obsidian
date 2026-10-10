@@ -49,7 +49,7 @@ class OBSIDIAN_API UObsidianHeroWidgetControllerBase : public UObject
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|WidgetController")
-	void SetWidgetControllerParams(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	void SetWidgetControllerParams(const FObsidianWidgetControllerParams& InWidgetControllerParams);
 	
 	/**
 	 * This function is called when the initial setup for Widget Controller is completed,
@@ -68,7 +68,7 @@ public:
 	}
 
 protected:
-	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC);
+	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")

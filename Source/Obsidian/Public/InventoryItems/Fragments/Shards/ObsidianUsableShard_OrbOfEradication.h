@@ -17,11 +17,11 @@ class OBSIDIAN_API UObsidianUsableShard_OrbOfEradication : public UObsidianUsabl
 	GENERATED_BODY()
 
 public:
-	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
-		UObsidianInventoryItemInstance* UsingOntoInstance = nullptr) override;
-	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+	virtual bool OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
+		UObsidianInventoryItemInstance* InUsingOntoInstance = nullptr) override;
+	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) override;
 
 protected:
-	bool CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const;
+	bool CanUseOnItem(const UObsidianInventoryItemInstance* InInstance) const;
 };

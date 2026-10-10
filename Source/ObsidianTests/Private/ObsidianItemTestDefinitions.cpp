@@ -15,44 +15,44 @@ namespace ObsidianItemTestDefinitions
 	 * lets the tests set them without opening up the Fragments just for testing.
 	 */
 	template <typename ValueType>
-	void SetFragmentProperty(UObject* Fragment, const FName PropertyName, const ValueType& Value)
+	void SetFragmentProperty(UObject* InFragment, const FName InPropertyName, const ValueType& InValue)
 	{
-		const FProperty* Property = FindFProperty<FProperty>(Fragment->GetClass(), PropertyName);
-		checkf(Property, TEXT("Property [%s] was not found on [%s], was it renamed?"), *PropertyName.ToString(),
-			*GetNameSafe(Fragment->GetClass()));
+		const FProperty* Property = FindFProperty<FProperty>(InFragment->GetClass(), InPropertyName);
+		checkf(Property, TEXT("Property [%s] was not found on [%s], was it renamed?"), *InPropertyName.ToString(),
+			*GetNameSafe(InFragment->GetClass()));
 		checkf(Property->GetElementSize() == sizeof(ValueType), TEXT("Property [%s] on [%s] is of a different type than expected."),
-			*PropertyName.ToString(), *GetNameSafe(Fragment->GetClass()));
+			*InPropertyName.ToString(), *GetNameSafe(InFragment->GetClass()));
 
-		*Property->ContainerPtrToValuePtr<ValueType>(Fragment) = Value;
+		*Property->ContainerPtrToValuePtr<ValueType>(InFragment) = InValue;
 	}
 
-	void AddAppearance(UObsidianInventoryItemDefinition* Definition, const EObsidianInventoryItemGridSize GridSize)
+	void AddAppearance(UObsidianInventoryItemDefinition* InDefinition, const EObsidianInventoryItemGridSize InGridSize)
 	{
-		UOInventoryItemFragment_Appearance* Appearance = Definition->CreateDefaultSubobject<UOInventoryItemFragment_Appearance>(
+		UOInventoryItemFragment_Appearance* Appearance = InDefinition->CreateDefaultSubobject<UOInventoryItemFragment_Appearance>(
 			TEXT("Appearance"));
-		SetFragmentProperty(Appearance, TEXT("InventoryItemGridSizeDesc"), GridSize);
-		Definition->ItemFragments.Add(Appearance);
+		SetFragmentProperty(Appearance, TEXT("InventoryItemGridSizeDesc"), InGridSize);
+		InDefinition->ItemFragments.Add(Appearance);
 	}
 
 	/** LimitStacks of 0 means that there is no limit, same as leaving the limit out in the editor. */
-	void AddStacks(UObsidianInventoryItemDefinition* Definition, const int32 MaxStacks, const int32 LimitStacks)
+	void AddStacks(UObsidianInventoryItemDefinition* InDefinition, const int32 InMaxStacks, const int32 InLimitStacks)
 	{
 		TMap<FGameplayTag, int32> StackNumbers;
-		StackNumbers.Add(ObsidianGameplayTags::Item::StackCount::Max, MaxStacks);
-		if(LimitStacks > 0)
+		StackNumbers.Add(ObsidianGameplayTags::Item::StackCount::Max, InMaxStacks);
+		if(InLimitStacks > 0)
 		{
-			StackNumbers.Add(ObsidianGameplayTags::Item::StackCount::Limit, LimitStacks);
+			StackNumbers.Add(ObsidianGameplayTags::Item::StackCount::Limit, InLimitStacks);
 		}
 
-		UOInventoryItemFragment_Stacks* Stacks = Definition->CreateDefaultSubobject<UOInventoryItemFragment_Stacks>(TEXT("Stacks"));
+		UOInventoryItemFragment_Stacks* Stacks = InDefinition->CreateDefaultSubobject<UOInventoryItemFragment_Stacks>(TEXT("Stacks"));
 		SetFragmentProperty(Stacks, TEXT("bStackable"), true);
 		SetFragmentProperty(Stacks, TEXT("InventoryItemStackNumbers"), StackNumbers);
-		Definition->ItemFragments.Add(Stacks);
+		InDefinition->ItemFragments.Add(Stacks);
 	}
 
-	void AddEquippable(UObsidianInventoryItemDefinition* Definition)
+	void AddEquippable(UObsidianInventoryItemDefinition* InDefinition)
 	{
-		Definition->ItemFragments.Add(Definition->CreateDefaultSubobject<UOInventoryItemFragment_Equippable>(TEXT("Equippable")));
+		InDefinition->ItemFragments.Add(InDefinition->CreateDefaultSubobject<UOInventoryItemFragment_Equippable>(TEXT("Equippable")));
 	}
 }
 

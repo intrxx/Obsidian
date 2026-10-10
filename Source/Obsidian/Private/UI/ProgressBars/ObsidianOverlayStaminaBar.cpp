@@ -33,9 +33,9 @@ FReply UObsidianOverlayStaminaBar::NativeOnMouseButtonDoubleClick(const FGeometr
 	return FReply::Handled();
 }
 
-void UObsidianOverlayStaminaBar::StaminaChanged(const float NewValue)
+void UObsidianOverlayStaminaBar::StaminaChanged(const float InNewValue)
 {
-	Stamina = NewValue;
+	Stamina = InNewValue;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Stamina, MaxStamina);
 	
@@ -45,9 +45,9 @@ void UObsidianOverlayStaminaBar::StaminaChanged(const float NewValue)
 	}
 }
 
-void UObsidianOverlayStaminaBar::MaxStaminaChanged(const float NewValue)
+void UObsidianOverlayStaminaBar::MaxStaminaChanged(const float InNewValue)
 {
-	MaxStamina = NewValue;
+	MaxStamina = InNewValue;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Stamina, MaxStamina);
 

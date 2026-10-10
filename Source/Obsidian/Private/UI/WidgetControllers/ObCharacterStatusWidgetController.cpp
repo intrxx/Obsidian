@@ -46,9 +46,9 @@ void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 	}
 }
 
-void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC)
+void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC)
 {
-	if(ObsidianASC == nullptr)
+	if(InObsidianASC == nullptr)
 	{
 		UE_LOG(ObLogUICharacterStatus, Error, TEXT("ObsidianASC is invalid in [%hs]."), __FUNCTION__);
 		return;
@@ -63,101 +63,101 @@ void UObCharacterStatusWidgetController::HandleBindingCallbacks(UObsidianAbility
 	}
 	
 	/** Character */
-	ExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ExperienceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetExperienceAttribute()).AddUObject(this, &ThisClass::ExperienceChanged);
-	MaxExperienceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxExperienceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxExperienceAttribute()).AddUObject(this, &ThisClass::MaxExperienceChanged);
 	
 	/** Attributes */
-	StrengthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	StrengthChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetStrengthAttribute()).AddUObject(this, &ThisClass::StrengthChanged);
-	IntelligenceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	IntelligenceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetIntelligenceAttribute()).AddUObject(this, &ThisClass::IntelligenceChanged);
-	DexterityChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	DexterityChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetDexterityAttribute()).AddUObject(this, &ThisClass::DexterityChanged);
-	FaithChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	FaithChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetFaithAttribute()).AddUObject(this, &ThisClass::FaithChanged);
 	
 	/** Vital Attributes */
-	MaxHealthChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxHealthChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxHealthAttribute()).AddUObject(this, &ThisClass::MaxHealthChanged);
-	MaxEnergyShieldChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxEnergyShieldChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxEnergyShieldAttribute()).AddUObject(this, &ThisClass::MaxEnergyShieldChanged);
-	MaxSpecialResourceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxSpecialResourceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxSpecialResourceAttribute()).AddUObject(this, &ThisClass::MaxSpecialResourceChanged);
-	MaxManaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxManaChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxManaAttribute()).AddUObject(this, &ThisClass::MaxManaChanged);
-	MaxStaminaChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxStaminaChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxStaminaAttribute()).AddUObject(this, &ThisClass::MaxStaminaChanged);
-	StaminaRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	StaminaRegenerationChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetStaminaRegenerationAttribute()).AddUObject(this, &ThisClass::StaminaRegenerationChanged);
 	
 	/** Offence */
-	AccuracyChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	AccuracyChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetAccuracyAttribute()).AddUObject(this, &ThisClass::AccuracyChanged);
-	AttackSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	AttackSpeedChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetAttackSpeedAttribute()).AddUObject(this, &ThisClass::AttackSpeedChanged);
-	CastSpeedChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	CastSpeedChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetCastSpeedAttribute()).AddUObject(this, &ThisClass::CastSpeedChanged);
-	CriticalStrikeChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	CriticalStrikeChanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetCriticalStrikeChanceAttribute()).AddUObject(this, &ThisClass::CriticalStrikeChanceChanged);
-	CriticalStrikeDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	CriticalStrikeDamageMultiplierChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetCriticalStrikeDamageMultiplierAttribute()).AddUObject(this, &ThisClass::CriticalStrikeDamageMultiplierChanged);
-	PhysicalDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	PhysicalDamageMultiplierChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetPhysicalDamageMultiplierAttribute()).AddUObject(this, &ThisClass::PhysicalDamageMultiplierChanged);
-	FireDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	FireDamageMultiplierChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetFireDamageMultiplierAttribute()).AddUObject(this, &ThisClass::FireDamageMultiplierChanged);
-	LightningDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	LightningDamageMultiplierChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetLightningDamageMultiplierAttribute()).AddUObject(this, &ThisClass::LightningDamageMultiplierChanged);
-	ColdDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ColdDamageMultiplierChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetColdDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ColdDamageMultiplierChanged);
-	ChaosDamageMultiplierChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ChaosDamageMultiplierChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetChaosDamageMultiplierAttribute()).AddUObject(this, &ThisClass::ChaosDamageMultiplierChanged);
-	FirePenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	FirePenetrationChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetFirePenetrationAttribute()).AddUObject(this, &ThisClass::FirePenetrationChanged);
-	LightningPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	LightningPenetrationChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetLightningPenetrationAttribute()).AddUObject(this, &ThisClass::LightningPenetrationChanged);
-	ColdPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ColdPenetrationChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetColdPenetrationAttribute()).AddUObject(this, &ThisClass::ColdPenetrationChanged);
-	ChaosPenetrationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ChaosPenetrationChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetChaosPenetrationAttribute()).AddUObject(this, &ThisClass::ChaosPenetrationChanged);
 	
 	/** Defence */
-	ArmorChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ArmorChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetArmorAttribute()).AddUObject(this, &ThisClass::ArmorChanged);
-	EvasionChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	EvasionChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetEvasionAttribute()).AddUObject(this, &ThisClass::EvasionChanged);
-	HealthRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	HealthRegenerationChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetHealthRegenerationAttribute()).AddUObject(this, &ThisClass::HealthRegenerationChanged);
-	EnergyShieldRegenerationChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	EnergyShieldRegenerationChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetEnergyShieldRegenerationAttribute()).AddUObject(this, &ThisClass::EnergyShieldRegenerationChanged);
-	FireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	FireResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetFireResistanceAttribute()).AddUObject(this, &ThisClass::FireResistanceChanged);
-	MaxFireResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxFireResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxFireResistanceAttribute()).AddUObject(this, &ThisClass::MaxFireResistanceChanged);
-	ColdResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ColdResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetColdResistanceAttribute()).AddUObject(this, &ThisClass::ColdResistanceChanged);
-	MaxColdResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxColdResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxColdResistanceAttribute()).AddUObject(this, &ThisClass::MaxColdResistanceChanged);
-	LightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	LightningResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetLightningResistanceAttribute()).AddUObject(this, &ThisClass::LightningResistanceChanged);
-	MaxLightningResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxLightningResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxLightningResistanceAttribute()).AddUObject(this, &ThisClass::MaxLightningResistanceChanged);
-	ChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	ChaosResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetChaosResistanceAttribute()).AddUObject(this, &ThisClass::ChaosResistanceChanged);
-	MaxChaosResistanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxChaosResistanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxChaosResistanceAttribute()).AddUObject(this, &ThisClass::MaxChaosResistanceChanged);
-	SpellSuppressionChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	SpellSuppressionChanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetSpellSuppressionChanceAttribute()).AddUObject(this, &ThisClass::SpellSuppressionChanceChanged);
-	SpellSuppressionMagnitudeChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	SpellSuppressionMagnitudeChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetSpellSuppressionMagnitudeAttribute()).AddUObject(this, &ThisClass::SpellSuppressionMagnitudeChanged);
-	HitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	HitBlockChanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetHitBlockChanceAttribute()).AddUObject(this, &ThisClass::HitBlockChanceChanged);
-	MaxHitBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxHitBlockChanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxHitBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxHitBlockChanceChanged);
-	SpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	SpellBlockChanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::SpellBlockChanceChanged);
-	MaxSpellBlockChanceChangedDelegateHandle = ObsidianASC->GetGameplayAttributeValueChangeDelegate(
+	MaxSpellBlockChanceChangedDelegateHandle = InObsidianASC->GetGameplayAttributeValueChangeDelegate(
 		HeroAttributesComp->GetMaxSpellBlockChanceAttribute()).AddUObject(this, &ThisClass::MaxSpellBlockChanceChanged);
 }
 
@@ -229,365 +229,365 @@ void UObCharacterStatusWidgetController::SetInitialAttributeValues() const
 	SpellBlockChanceChangedDelegate.Execute(HeroAttributesComp->GetSpellBlockChance(), HeroAttributesComp->GetMaxSpellBlockChance());
 }
 
-void UObCharacterStatusWidgetController::HeroLevelUp(const uint8 NewLevel)
+void UObCharacterStatusWidgetController::HeroLevelUp(const uint8 InNewLevel)
 {
 	if(HeroLevelUpDelegate.IsBound())
 	{
-		HeroLevelUpDelegate.Broadcast(NewLevel);
+		HeroLevelUpDelegate.Broadcast(InNewLevel);
 	}
 }
 
-void UObCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::StrengthChanged(const FOnAttributeChangeData& InData) const
 {
 	if(StrengthValueChangedDelegate.IsBound())
 	{
-		StrengthValueChangedDelegate.Execute(Data.NewValue);
+		StrengthValueChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::IntelligenceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::IntelligenceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(IntelligenceValueChangedDelegate.IsBound())
 	{
-		IntelligenceValueChangedDelegate.Execute(Data.NewValue);
+		IntelligenceValueChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::DexterityChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::DexterityChanged(const FOnAttributeChangeData& InData) const
 {
 	if(DexterityValueChangedDelegate.IsBound())
 	{
-		DexterityValueChangedDelegate.Execute(Data.NewValue);
+		DexterityValueChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::FaithChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FaithChanged(const FOnAttributeChangeData& InData) const
 {
 	if(FaithValueChangedDelegate.IsBound())
 	{
-		FaithValueChangedDelegate.Execute(Data.NewValue);
+		FaithValueChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxHealthChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxHealthChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxHealthChangedDelegate.IsBound())
 	{
-		MaxHealthChangedDelegate.Execute(Data.NewValue);
+		MaxHealthChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxManaChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxManaChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxManaChangedDelegate.IsBound())
 	{
-		MaxManaChangedDelegate.Execute(Data.NewValue);
+		MaxManaChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxSpecialResourceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxSpecialResourceChangedDelegate.IsBound())
 	{
-		MaxSpecialResourceChangedDelegate.Execute(Data.NewValue);
+		MaxSpecialResourceChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxEnergyShieldChangedDelegate.IsBound())
 	{
-		MaxEnergyShieldChangedDelegate.Execute(Data.NewValue);
+		MaxEnergyShieldChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxStaminaChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxStaminaChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxStaminaChangedDelegate.IsBound())
 	{
-		MaxStaminaChangedDelegate.Execute(Data.NewValue);
+		MaxStaminaChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::StaminaRegenerationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::StaminaRegenerationChanged(const FOnAttributeChangeData& InData) const
 {
 	if(StaminaRegenerationChangedDelegate.IsBound())
 	{
-		StaminaRegenerationChangedDelegate.Execute(Data.NewValue);
+		StaminaRegenerationChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ExperienceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ExperienceChangedDelegate.IsBound())
 	{
-		ExperienceChangedDelegate.Execute(Data.NewValue);
+		ExperienceChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& Data)
+void UObCharacterStatusWidgetController::MaxExperienceChanged(const FOnAttributeChangeData& InData)
 {
-	MaxExperienceOldValue = Data.OldValue;
+	MaxExperienceOldValue = InData.OldValue;
 	
 	if(MaxExperienceChangedDelegate.IsBound())
 	{
-		MaxExperienceChangedDelegate.Execute(Data.NewValue, MaxExperienceOldValue);
+		MaxExperienceChangedDelegate.Execute(InData.NewValue, MaxExperienceOldValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::AccuracyChanged(const FOnAttributeChangeData& InData) const
 {
 	if(AccuracyChangedDelegate.IsBound())
 	{
-		AccuracyChangedDelegate.Execute(Data.NewValue);
+		AccuracyChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::AttackSpeedChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::AttackSpeedChanged(const FOnAttributeChangeData& InData) const
 {
 	if(AttackSpeedChangedDelegate.IsBound())
 	{
-		AttackSpeedChangedDelegate.Execute(Data.NewValue);
+		AttackSpeedChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::CastSpeedChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::CastSpeedChanged(const FOnAttributeChangeData& InData) const
 {
 	if(CastSpeedChangedDelegate.IsBound())
 	{
-		CastSpeedChangedDelegate.Execute(Data.NewValue);
+		CastSpeedChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::CriticalStrikeChanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(CriticalStrikeChanceChangedDelegate.IsBound())
 	{
-		CriticalStrikeChanceChangedDelegate.Execute(Data.NewValue);
+		CriticalStrikeChanceChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& InData) const
 {
 	if(CriticalStrikeDamageMultiplierChangedDelegate.IsBound())
 	{
-		CriticalStrikeDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+		CriticalStrikeDamageMultiplierChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& InData) const
 {
 	if(PhysicalDamageMultiplierChangedDelegate.IsBound())
 	{
-		PhysicalDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+		PhysicalDamageMultiplierChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FireDamageMultiplierChanged(const FOnAttributeChangeData& InData) const
 {
 	if(FireDamageMultiplierChangedDelegate.IsBound())
 	{
-		FireDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+		FireDamageMultiplierChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::LightningDamageMultiplierChanged(const FOnAttributeChangeData& InData) const
 {
 	if(LightningDamageMultiplierChangedDelegate.IsBound())
 	{
-		LightningDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+		LightningDamageMultiplierChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ColdDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ColdDamageMultiplierChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ColdDamageMultiplierChangedDelegate.IsBound())
 	{
-		ColdDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+		ColdDamageMultiplierChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ChaosDamageMultiplierChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ChaosDamageMultiplierChangedDelegate.IsBound())
 	{
-		ChaosDamageMultiplierChangedDelegate.Execute(Data.NewValue);
+		ChaosDamageMultiplierChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::FirePenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FirePenetrationChanged(const FOnAttributeChangeData& InData) const
 {
 	if(FirePenetrationChangedDelegate.IsBound())
 	{
-		FirePenetrationChangedDelegate.Execute(Data.NewValue);
+		FirePenetrationChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::LightningPenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::LightningPenetrationChanged(const FOnAttributeChangeData& InData) const
 {
 	if(LightningPenetrationChangedDelegate.IsBound())
 	{
-		LightningPenetrationChangedDelegate.Execute(Data.NewValue);
+		LightningPenetrationChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ColdPenetrationChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ColdPenetrationChangedDelegate.IsBound())
 	{
-		ColdPenetrationChangedDelegate.Execute(Data.NewValue);
+		ColdPenetrationChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ChaosPenetrationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ChaosPenetrationChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ChaosPenetrationChangedDelegate.IsBound())
 	{
-		ChaosPenetrationChangedDelegate.Execute(Data.NewValue);
+		ChaosPenetrationChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ArmorChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ArmorChangedDelegate.IsBound())
 	{
-		ArmorChangedDelegate.Execute(Data.NewValue);
+		ArmorChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::EvasionChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::EvasionChanged(const FOnAttributeChangeData& InData) const
 {
 	if(EvasionChangedDelegate.IsBound())
 	{
-		EvasionChangedDelegate.Execute(Data.NewValue);
+		EvasionChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::HealthRegenerationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::HealthRegenerationChanged(const FOnAttributeChangeData& InData) const
 {
 	if(HealthRegenerationChangedDelegate.IsBound())
 	{
-		HealthRegenerationChangedDelegate.Execute(Data.NewValue);
+		HealthRegenerationChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::EnergyShieldRegenerationChanged(const FOnAttributeChangeData& InData) const
 {
 	if(EnergyShieldRegenerationChangedDelegate.IsBound())
 	{
-		EnergyShieldRegenerationChangedDelegate.Execute(Data.NewValue);
+		EnergyShieldRegenerationChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::FireResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::FireResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(FireResistanceChangedDelegate.IsBound())
 	{
-		FireResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxFireResistance());
+		FireResistanceChangedDelegate.Execute(InData.NewValue, OwnerAttributesComponent->GetMaxFireResistance());
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxFireResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxFireResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxFireResistanceChangedDelegate.IsBound())
 	{
-		MaxFireResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetFireResistance(), Data.NewValue);
+		MaxFireResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetFireResistance(), InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ColdResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ColdResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ColdResistanceChangedDelegate.IsBound())
 	{
-		ColdResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxColdResistance());
+		ColdResistanceChangedDelegate.Execute(InData.NewValue, OwnerAttributesComponent->GetMaxColdResistance());
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxColdResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxColdResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxColdResistanceChangedDelegate.IsBound())
 	{
-		MaxColdResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetColdResistance(), Data.NewValue);
+		MaxColdResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetColdResistance(), InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::LightningResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::LightningResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(LightningResistanceChangedDelegate.IsBound())
 	{
-		LightningResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxLightningResistance());
+		LightningResistanceChangedDelegate.Execute(InData.NewValue, OwnerAttributesComponent->GetMaxLightningResistance());
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxLightningResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxLightningResistanceChangedDelegate.IsBound())
 	{
-		MaxLightningResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetLightningResistance(), Data.NewValue);
+		MaxLightningResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetLightningResistance(), InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::ChaosResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::ChaosResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(ChaosResistanceChangedDelegate.IsBound())
 	{
-		ChaosResistanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxChaosResistance());
+		ChaosResistanceChangedDelegate.Execute(InData.NewValue, OwnerAttributesComponent->GetMaxChaosResistance());
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxChaosResistanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxChaosResistanceChangedDelegate.IsBound())
 	{
-		MaxChaosResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetChaosResistance(), Data.NewValue);
+		MaxChaosResistanceChangedDelegate.Execute(OwnerAttributesComponent->GetChaosResistance(), InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::SpellSuppressionChanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(SpellSuppressionChanceChangedDelegate.IsBound())
 	{
-		SpellSuppressionChanceChangedDelegate.Execute(Data.NewValue);
+		SpellSuppressionChanceChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& InData) const
 {
 	if(SpellSuppressionMagnitudeChangedDelegate.IsBound())
 	{
-		SpellSuppressionMagnitudeChangedDelegate.Execute(Data.NewValue);
+		SpellSuppressionMagnitudeChangedDelegate.Execute(InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::HitBlockChanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(HitBlockChanceChangedDelegate.IsBound())
 	{
-		HitBlockChanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxHitBlockChance());
+		HitBlockChanceChangedDelegate.Execute(InData.NewValue, OwnerAttributesComponent->GetMaxHitBlockChance());
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxHitBlockChanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxHitBlockChanceChangedDelegate.IsBound())
 	{
-		MaxHitBlockChanceChangedDelegate.Execute(OwnerAttributesComponent->GetHitBlockChance(), Data.NewValue);
+		MaxHitBlockChanceChangedDelegate.Execute(OwnerAttributesComponent->GetHitBlockChance(), InData.NewValue);
 	}
 }
 
-void UObCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::SpellBlockChanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(SpellBlockChanceChangedDelegate.IsBound())
 	{
-		SpellBlockChanceChangedDelegate.Execute(Data.NewValue, OwnerAttributesComponent->GetMaxSpellBlockChance());
+		SpellBlockChanceChangedDelegate.Execute(InData.NewValue, OwnerAttributesComponent->GetMaxSpellBlockChance());
 	}
 }
 
-void UObCharacterStatusWidgetController::MaxSpellBlockChanceChanged(const FOnAttributeChangeData& Data) const
+void UObCharacterStatusWidgetController::MaxSpellBlockChanceChanged(const FOnAttributeChangeData& InData) const
 {
 	if(MaxSpellBlockChanceChangedDelegate.IsBound())
 	{
-		MaxSpellBlockChanceChangedDelegate.Execute(OwnerAttributesComponent->GetSpellBlockChance(), Data.NewValue);
+		MaxSpellBlockChanceChangedDelegate.Execute(OwnerAttributesComponent->GetSpellBlockChance(), InData.NewValue);
 	}
 }
 

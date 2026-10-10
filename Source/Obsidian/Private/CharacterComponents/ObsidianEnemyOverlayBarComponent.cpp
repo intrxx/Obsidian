@@ -9,8 +9,8 @@
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
 
 
-UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
@@ -19,13 +19,13 @@ UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent(const FObje
 	SpecialEffectTag = FGameplayTag::RequestGameplayTag(FName("UI.EffectData.Effect.Special"));
 }
 
-bool UObsidianEnemyOverlayBarComponent::GetCurrentOverlayFillBarEffect(FSlateBrush& CurrentFillBarEffect)
+bool UObsidianEnemyOverlayBarComponent::GetCurrentOverlayFillBarEffect(FSlateBrush& OutCurrentFillBarEffect)
 {
 	if(CachedEffectFillImages.IsEmpty())
 	{
 		return false;
 	}
-	CurrentFillBarEffect = CachedEffectFillImages.Last().ProgressBarFillImage;
+	OutCurrentFillBarEffect = CachedEffectFillImages.Last().ProgressBarFillImage;
 	
 	return true;
 }
@@ -87,15 +87,15 @@ void UObsidianEnemyOverlayBarComponent::UninitializeOverlayBarComponent()
 	EnemyAttributesComp = nullptr;
 }
 
-void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData)
+void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidianEffectUIData& InUIData)
 {
 	// We don't care about any Instant gameplay effects, might want to change it later.
-	if(UIData.EffectDurationPolicy == EGameplayEffectDurationType::Instant)
+	if(InUIData.EffectDurationPolicy == EGameplayEffectDurationType::Instant)
 	{
 		return;
 	}
 	
-	for(const FGameplayTag& Tag : UIData.AssetTags)
+	for(const FGameplayTag& Tag : InUIData.AssetTags)
 	{
 		if(Tag.MatchesTag(SpecialEffectTag)) // "UI.EffectData.Effect.Special"
 		{
@@ -109,11 +109,11 @@ void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidian
 		if(Tag.MatchesTag(EffectTag)) // "UI.EffectData.Effect"
 		{
 			FObsidianEffectUIDataWidgetRow* Row = UObsidianUIFunctionLibrary::GetDataTableRowByTag<FObsidianEffectUIDataWidgetRow>(UIEffectDataTable, Tag);
-			Row->EffectDuration = UIData.EffectDuration;
+			Row->EffectDuration = InUIData.EffectDuration;
 					
-			if(UIData.bStackingEffect)
+			if(InUIData.bStackingEffect)
 			{
-				HandleStackingEffect(*Row, UIData.StackingData);
+				HandleStackingEffect(*Row, InUIData.StackingData);
 			}
 			else
 			{
@@ -123,7 +123,7 @@ void UObsidianEnemyOverlayBarComponent::HandleEnemyEffectApplied(const FObsidian
 	}
 }
 
-void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& Row, const FObsidianEffectUIStackingData& StackingData)
+void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& InRow, const FObsidianEffectUIStackingData& InStackingData)
 {
 	UWorld* World = GetWorld();
 	if(World == nullptr)
@@ -132,7 +132,7 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	}
 
 	FObsidianProgressBarEffectFillImage FillImage;
-	if(!GetEffectFillImageForTag(ProgressBarEffectFillImages, /* OUT */ FillImage, Row.EffectTag))
+	if(!GetEffectFillImageForTag(ProgressBarEffectFillImages, /* OUT */ FillImage, InRow.EffectTag))
 	{
 		return;
 	}
@@ -140,17 +140,17 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	bool bAlreadyApplied = false;
 	for(const FObsidianProgressBarEffectFillImage& EffectImage : CachedEffectFillImages)
 	{
-		if(EffectImage.EffectTag == Row.EffectTag)
+		if(EffectImage.EffectTag == InRow.EffectTag)
 		{
 			bAlreadyApplied = true;
 		}
 	}
 	
-	if(bAlreadyApplied && StackingData.EffectStackingDurationPolicy == EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication)
+	if(bAlreadyApplied && InStackingData.EffectStackingDurationPolicy == EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication)
 	{
 		EffectStackCount++;
 		
-		RefreshStackingEffectDuration(StackingData.EffectExpirationDurationPolicy, Row.EffectDuration, Row.EffectTag);
+		RefreshStackingEffectDuration(InStackingData.EffectExpirationDurationPolicy, InRow.EffectDuration, InRow.EffectTag);
 		
 		return;
 	}
@@ -159,7 +159,7 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	if(bDebugEnabled)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
-			FString::Printf(TEXT("Adding Stacking Effect [%s] on Enemy [%s]."), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
+			FString::Printf(TEXT("Adding Stacking Effect [%s] on Enemy [%s]."), *InRow.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
 	}
 #endif
 		
@@ -167,19 +167,19 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffect(const FObsidianEffe
 	CachedEffectFillImages.Add(FillImage);
 	EffectStackCount = 1;
 		
-	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [StackingData, Row, this]()
+	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [InStackingData, InRow, this]()
 		{
-			HandleStackingEffectExpiration(StackingData.EffectExpirationDurationPolicy, Row.EffectDuration, Row.EffectTag);
-		}), Row.EffectDuration, false);
+			HandleStackingEffectExpiration(InStackingData.EffectExpirationDurationPolicy, InRow.EffectDuration, InRow.EffectTag);
+		}), InRow.EffectDuration, false);
 }
 
-void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row)
+void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& InRow)
 {
 #if !UE_BUILD_SHIPPING
 	if(bDebugEnabled)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-			FString::Printf(TEXT("Adding Regular Effect [%s] on Enemy [%s]."), *Row.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
+			FString::Printf(TEXT("Adding Regular Effect [%s] on Enemy [%s]."), *InRow.EffectName.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
 	}
 #endif
 
@@ -190,51 +190,51 @@ void UObsidianEnemyOverlayBarComponent::HandleRegularEffect(const FObsidianEffec
 	}
 	
 	FObsidianProgressBarEffectFillImage FillImage;
-	if(GetEffectFillImageForTag(ProgressBarEffectFillImages, /* OUT */FillImage, Row.EffectTag))
+	if(GetEffectFillImageForTag(ProgressBarEffectFillImages, /* OUT */FillImage, InRow.EffectTag))
 	{
 		OnNewOverlayBarStyleNeededDelegate.Broadcast(FillImage.ProgressBarFillImage);
 		CachedEffectFillImages.Add(FillImage);
 			
 		FTimerHandle EffectExpiredDelegateHandle;
-		World->GetTimerManager().SetTimer(EffectExpiredDelegateHandle, FTimerDelegate::CreateWeakLambda(this, [this, Row]()
+		World->GetTimerManager().SetTimer(EffectExpiredDelegateHandle, FTimerDelegate::CreateWeakLambda(this, [this, InRow]()
 			{
 			
 #if !UE_BUILD_SHIPPING
 if(bDebugEnabled)
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-		FString::Printf(TEXT("Removing Regular Effect for Tag [%s]."), *Row.EffectTag.GetTagName().ToString()));
+		FString::Printf(TEXT("Removing Regular Effect for Tag [%s]."), *InRow.EffectTag.GetTagName().ToString()));
 }
 #endif
 			
-				HandleEffectFillImageRemoval(Row.EffectTag);
+				HandleEffectFillImageRemoval(InRow.EffectTag);
 				
-			}), Row.EffectDuration, false);
+			}), InRow.EffectDuration, false);
 	}
 }
 
 
-void UObsidianEnemyOverlayBarComponent::HandleSpecialEffect(const FGameplayTag& EffectImageTag)
+void UObsidianEnemyOverlayBarComponent::HandleSpecialEffect(const FGameplayTag& InEffectImageTag)
 {
 #if !UE_BUILD_SHIPPING
 	if(bDebugEnabled)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-			FString::Printf(TEXT("Adding Special Effect with Tag [%s] on Enemy [%s]."), *EffectImageTag.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
+			FString::Printf(TEXT("Adding Special Effect with Tag [%s] on Enemy [%s]."), *InEffectImageTag.ToString(), *EnemyAttributesComp->GetEnemyName().ToString()));
 	}
 #endif
 	
 	FObsidianProgressBarEffectFillImage SpecialImage;
-	if(GetEffectFillImageForTag(ProgressBarSpecialEffects, SpecialImage, EffectImageTag))
+	if(GetEffectFillImageForTag(ProgressBarSpecialEffects, SpecialImage, InEffectImageTag))
 	{
 		OnNewOverlayBarSpecialEffectNeededDelegate.Broadcast(SpecialImage.ProgressBarFillImage);
 		CachedSpecialEffectFillImages.Add(SpecialImage);
 	}
 }
 
-void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag)
+void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& InExpirationPolicy, const float InDuration, const FGameplayTag& InStackingEffectTag)
 {
-	switch(ExpirationPolicy)
+	switch(InExpirationPolicy)
 	{
 	case EGameplayEffectStackingExpirationPolicy::ClearEntireStack:
 		
@@ -242,11 +242,11 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGa
 		if(bDebugEnabled)
 		{
 			GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
-				FString::Printf(TEXT("Removing Stacking Effect for Tag [%s]."), *StackingEffectTag.GetTagName().ToString()));
+				FString::Printf(TEXT("Removing Stacking Effect for Tag [%s]."), *InStackingEffectTag.GetTagName().ToString()));
 		}
 #endif
 		
-		HandleEffectFillImageRemoval(StackingEffectTag);
+		HandleEffectFillImageRemoval(InStackingEffectTag);
 		break;
 	case EGameplayEffectStackingExpirationPolicy::RemoveSingleStackAndRefreshDuration:
 		if(EffectStackCount-1 == 0)
@@ -256,32 +256,32 @@ void UObsidianEnemyOverlayBarComponent::HandleStackingEffectExpiration(const EGa
 			if(bDebugEnabled)
 			{
 				GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
-					FString::Printf(TEXT("Removing Stacking Effect for Tag [%s]."), *StackingEffectTag.GetTagName().ToString()));
+					FString::Printf(TEXT("Removing Stacking Effect for Tag [%s]."), *InStackingEffectTag.GetTagName().ToString()));
 			}
 #endif
 			
-			HandleEffectFillImageRemoval(StackingEffectTag);
+			HandleEffectFillImageRemoval(InStackingEffectTag);
 			return;
 		}
 		
 		EffectStackCount--;
-		RefreshStackingEffectDuration(ExpirationPolicy, Duration, StackingEffectTag);
+		RefreshStackingEffectDuration(InExpirationPolicy, InDuration, InStackingEffectTag);
 		break;
 	case EGameplayEffectStackingExpirationPolicy::RefreshDuration:
-		RefreshStackingEffectDuration(ExpirationPolicy, Duration, StackingEffectTag);
+		RefreshStackingEffectDuration(InExpirationPolicy, InDuration, InStackingEffectTag);
 		break;
 	default:
 		break;
 	}
 }
 
-void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag)
+void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& InExpirationPolicy, const float InDuration, const FGameplayTag& InStackingEffectTag)
 {
 #if !UE_BUILD_SHIPPING
 	if(bDebugEnabled)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Green,
-			FString::Printf(TEXT("Refreshing duration for Effect with tag [%s]."), *StackingEffectTag.GetTagName().ToString()));
+			FString::Printf(TEXT("Refreshing duration for Effect with tag [%s]."), *InStackingEffectTag.GetTagName().ToString()));
 	}
 #endif
 	
@@ -296,22 +296,22 @@ void UObsidianEnemyOverlayBarComponent::RefreshStackingEffectDuration(const EGam
 		World->GetTimerManager().ClearTimer(StackingEffectTimerHandle);
 	}
 
-	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [ExpirationPolicy, Duration, StackingEffectTag, this]()
+	World->GetTimerManager().SetTimer(StackingEffectTimerHandle, FTimerDelegate::CreateWeakLambda(this, [InExpirationPolicy, InDuration, InStackingEffectTag, this]()
 		{
-			HandleStackingEffectExpiration(ExpirationPolicy, Duration, StackingEffectTag);
-		}), Duration, false);
+			HandleStackingEffectExpiration(InExpirationPolicy, InDuration, InStackingEffectTag);
+		}), InDuration, false);
 }
 
-bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& Images, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck)
+bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& InImages, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& InTagToCheck)
 {
-	if(Images.IsEmpty())
+	if(InImages.IsEmpty())
 	{
 		return false;
 	}
 	
-	for(const FObsidianProgressBarEffectFillImage& EffectFillImage : Images)
+	for(const FObsidianProgressBarEffectFillImage& EffectFillImage : InImages)
 	{
-		if(EffectFillImage.ProgressBarFillImage.IsSet() && (EffectFillImage.EffectTag == TagToCheck))
+		if(EffectFillImage.ProgressBarFillImage.IsSet() && (EffectFillImage.EffectTag == InTagToCheck))
 		{
 			OutFillImage = EffectFillImage;
 			return true;
@@ -322,26 +322,26 @@ bool UObsidianEnemyOverlayBarComponent::GetEffectFillImageForTag(const TArray<FO
 	if(bDebugEnabled)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red,
-			FString::Printf(TEXT("There is no Fill Image for Tag [%s]."), *TagToCheck.GetTagName().ToString()));
+			FString::Printf(TEXT("There is no Fill Image for Tag [%s]."), *InTagToCheck.GetTagName().ToString()));
 	}
 #endif
 	
 	return false;
 }
 
-void UObsidianEnemyOverlayBarComponent::HandleEffectFillImageRemoval(const FGameplayTag& EffectImageTag)
+void UObsidianEnemyOverlayBarComponent::HandleEffectFillImageRemoval(const FGameplayTag& InEffectImageTag)
 {
 	if(!CachedEffectFillImages.IsEmpty())
 	{
 		for(int i = 0; i < CachedEffectFillImages.Num(); i++)
 		{
-			if(CachedEffectFillImages[i].EffectTag == EffectImageTag)
+			if(CachedEffectFillImages[i].EffectTag == InEffectImageTag)
 			{
 #if !UE_BUILD_SHIPPING
 				if(bDebugEnabled)
 				{
 					GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Emerald,
-						FString::Printf(TEXT("Removing Special Effect for Tag [%s]."), *EffectImageTag.GetTagName().ToString()));
+						FString::Printf(TEXT("Removing Special Effect for Tag [%s]."), *InEffectImageTag.GetTagName().ToString()));
 				}
 #endif
 				CachedEffectFillImages.RemoveAt(i);
@@ -361,13 +361,13 @@ void UObsidianEnemyOverlayBarComponent::HandleEffectFillImageRemoval(const FGame
 	OnOverlayBarStyleResetDelegate.Broadcast();
 }
 
-void UObsidianEnemyOverlayBarComponent::HandleSpecialEffectImageRemoval(const FGameplayTag& EffectImageTag)
+void UObsidianEnemyOverlayBarComponent::HandleSpecialEffectImageRemoval(const FGameplayTag& InEffectImageTag)
 {
 	if(!CachedSpecialEffectFillImages.IsEmpty())
 	{
 		for(int i = 0; i < CachedSpecialEffectFillImages.Num(); i++)
 		{
-			if(CachedSpecialEffectFillImages[i].EffectTag == EffectImageTag)
+			if(CachedSpecialEffectFillImages[i].EffectTag == InEffectImageTag)
 			{
 				CachedSpecialEffectFillImages.RemoveAt(i);
 			}
@@ -386,34 +386,34 @@ void UObsidianEnemyOverlayBarComponent::HandleSpecialEffectImageRemoval(const FG
 	OnOverlayBarSpecialEffectResetDelegate.Broadcast();
 }
 
-void UObsidianEnemyOverlayBarComponent::HealthChanged(const FOnAttributeChangeData& Data) const
+void UObsidianEnemyOverlayBarComponent::HealthChanged(const FOnAttributeChangeData& InData) const
 {
-	OnHealthChangedDelegate.ExecuteIfBound(Data.NewValue);
+	OnHealthChangedDelegate.ExecuteIfBound(InData.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxHealthChanged(const FOnAttributeChangeData& Data) const
+void UObsidianEnemyOverlayBarComponent::MaxHealthChanged(const FOnAttributeChangeData& InData) const
 {
-	OnMaxHealthChangedDelegate.ExecuteIfBound(Data.NewValue);
+	OnMaxHealthChangedDelegate.ExecuteIfBound(InData.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data) const
+void UObsidianEnemyOverlayBarComponent::EnergyShieldChanged(const FOnAttributeChangeData& InData) const
 {
-	OnEnergyShieldChangedDelegate.ExecuteIfBound(Data.NewValue);
+	OnEnergyShieldChangedDelegate.ExecuteIfBound(InData.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const
+void UObsidianEnemyOverlayBarComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) const
 {
-	OnMaxEnergyShieldChangedDelegate.ExecuteIfBound(Data.NewValue);
+	OnMaxEnergyShieldChangedDelegate.ExecuteIfBound(InData.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::StaggerMeterChanged(const FOnAttributeChangeData& Data) const
+void UObsidianEnemyOverlayBarComponent::StaggerMeterChanged(const FOnAttributeChangeData& InData) const
 {
-	OnStaggerMeterChangedDelegate.ExecuteIfBound(Data.NewValue);
+	OnStaggerMeterChangedDelegate.ExecuteIfBound(InData.NewValue);
 }
 
-void UObsidianEnemyOverlayBarComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const
+void UObsidianEnemyOverlayBarComponent::MaxStaggerMeterChanged(const FOnAttributeChangeData& InData) const
 {
-	OnMaxStaggerMeterChangedDelegate.ExecuteIfBound(Data.NewValue);
+	OnMaxStaggerMeterChangedDelegate.ExecuteIfBound(InData.NewValue);
 }
 
 

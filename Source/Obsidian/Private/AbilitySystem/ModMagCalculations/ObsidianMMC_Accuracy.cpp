@@ -21,16 +21,16 @@ static const SObsidian_AccuracyStatics& AccuracyStatics()
 	return AccuracyStatics;
 }
 
-UObsidianMMC_Accuracy::UObsidianMMC_Accuracy(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_Accuracy::UObsidianMMC_Accuracy(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(AccuracyStatics().DexterityDef);
 }
 
-float UObsidianMMC_Accuracy::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_Accuracy::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	float Dexterity = 0.f;
-	GetCapturedAttributeMagnitude(AccuracyStatics().DexterityDef, Spec, FAggregatorEvaluateParameters(), Dexterity);
+	GetCapturedAttributeMagnitude(AccuracyStatics().DexterityDef, InSpec, FAggregatorEvaluateParameters(), Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 
 	const float DexterityBonus = (FMath::FloorToInt(Dexterity / 2) * 5);

@@ -9,8 +9,8 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 
-AObsidianWorldCollectable::AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianWorldCollectable::AObsidianWorldCollectable(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	bReplicates = true;
 	
@@ -50,51 +50,51 @@ FObsidianPickupTemplate AObsidianWorldCollectable::GetPickupTemplateFromPickupCo
 	return PickupTemplate;
 }
 
-void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd)
+void AObsidianWorldCollectable::AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd)
 {
-	checkf(InstanceToAdd, TEXT("Provided InstanceToAdd is invalid in AObsidianWorldCollectable::AddItemInstance."));
-	PickupContent.Instance = FObsidianPickupInstance(InstanceToAdd);
+	checkf(InInstanceToAdd, TEXT("Provided InstanceToAdd is invalid in AObsidianWorldCollectable::AddItemInstance."));
+	PickupContent.Instance = FObsidianPickupInstance(InInstanceToAdd);
 	
-	if(InstanceToAdd && IsUsingRegisteredSubObjectList())
+	if(InInstanceToAdd && IsUsingRegisteredSubObjectList())
 	{
-		AddReplicatedSubObject(InstanceToAdd);
+		AddReplicatedSubObject(InInstanceToAdd);
 	}
 }
 
-void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+void AObsidianWorldCollectable::AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
 	const FObsidianItemGeneratedData& InGeneratedData)
 {
-	checkf(ItemDef, TEXT("Provided ItemDef is invalid in AObsidianWorldCollectable::AddItemDefinition."));
-	PickupContent.Template = FObsidianPickupTemplate(ItemDef, InGeneratedData);
+	checkf(InItemDef, TEXT("Provided ItemDef is invalid in AObsidianWorldCollectable::AddItemDefinition."));
+	PickupContent.Template = FObsidianPickupTemplate(InItemDef, InGeneratedData);
 
-	if(ItemDef && IsUsingRegisteredSubObjectList())
+	if(InItemDef && IsUsingRegisteredSubObjectList())
 	{
-		AddReplicatedSubObject(ItemDef);
+		AddReplicatedSubObject(InItemDef);
 	}
 }
 
-void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 NewItemStacks)
+void AObsidianWorldCollectable::OverrideTemplateStacks(const int32 InNewItemStacks)
 {
 	if(PickupContent.Template.IsValid())
 	{
-		PickupContent.Template.ItemGeneratedData.SetStackCount(NewItemStacks);
+		PickupContent.Template.ItemGeneratedData.SetStackCount(InNewItemStacks);
 	}
 }
 
-bool AObsidianWorldCollectable::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+bool AObsidianWorldCollectable::ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch, FReplicationFlags* InRepFlags)
 {
-	bool WroteSomething =  Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+	bool WroteSomething =  Super::ReplicateSubobjects(InChannel, InBunch, InRepFlags);
 
 	UObsidianInventoryItemInstance* Instance = PickupContent.Instance.Item;
 	if(Instance && IsValid(Instance))
 	{
-		WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
+		WroteSomething |= InChannel->ReplicateSubobject(Instance, *InBunch, *InRepFlags);
 	}
 	
 	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = PickupContent.Template.ItemDef;
 	if(ItemDef && IsValid(ItemDef))
 	{
-		WroteSomething |= Channel->ReplicateSubobject(ItemDef, *Bunch, *RepFlags);
+		WroteSomething |= InChannel->ReplicateSubobject(ItemDef, *InBunch, *InRepFlags);
 	}
 
 	return WroteSomething;

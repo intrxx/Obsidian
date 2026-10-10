@@ -30,15 +30,15 @@ class OBSIDIAN_API UObsidianItemDataDeveloperSettings : public UDeveloperSetting
 	GENERATED_BODY()
 
 public:
-	UObsidianItemDataDeveloperSettings(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianItemDataDeveloperSettings(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	uint8 GetDefaultDropRollNumberForEntityRarity(const EObsidianEntityRarity EntityRarity) const;
-	uint8 GetDefaultAddedTreasureQualityForEntityRarity(const EObsidianEntityRarity EntityRarity) const;
-	uint8 GetMaxPrefixCountForRarity(const EObsidianItemRarity ForRarity) const;
-	uint8 GetMaxSuffixCountForRarity(const EObsidianItemRarity ForRarity) const;
-	uint8 GetMaxAffixCountForRarity(const EObsidianItemRarity ForRarity) const;
-	uint8 GetNaturalMinAffixCountForRarity(const EObsidianItemRarity ForRarity) const;
-	TArray<uint8> GetAffixNumberWeightsForRarity(const EObsidianItemRarity ForRarity) const;
+	uint8 GetDefaultDropRollNumberForEntityRarity(const EObsidianEntityRarity InEntityRarity) const;
+	uint8 GetDefaultAddedTreasureQualityForEntityRarity(const EObsidianEntityRarity InEntityRarity) const;
+	uint8 GetMaxPrefixCountForRarity(const EObsidianItemRarity InForRarity) const;
+	uint8 GetMaxSuffixCountForRarity(const EObsidianItemRarity InForRarity) const;
+	uint8 GetMaxAffixCountForRarity(const EObsidianItemRarity InForRarity) const;
+	uint8 GetNaturalMinAffixCountForRarity(const EObsidianItemRarity InForRarity) const;
+	TArray<uint8> GetAffixNumberWeightsForRarity(const EObsidianItemRarity InForRarity) const;
 	
 public:
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Config", meta = (AllowedClasses = "/Script/Obsidian.ObsidianItemDataConfig"))

@@ -17,7 +17,7 @@ class OBSIDIAN_API UObsidianMMC_MaxSpecialResource_Assassin : public UObsidianMM
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_MaxSpecialResource_Assassin(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_MaxSpecialResource_Assassin(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 };

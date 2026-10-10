@@ -28,7 +28,7 @@ class OBSIDIAN_API UObsidianProgressGlobe : public UObsidianProgressBarBase
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressGlobe")
-	void SetInfoGlobeVisibility(const bool bShouldBeVisible);
+	void SetInfoGlobeVisibility(const bool bInShouldBeVisible);
 
 public:
 	/**
@@ -70,11 +70,11 @@ public:
 	float GhostGlobeFollowingSpeed = 5.f;
 
 protected:
-	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
+	virtual void NativeTick(const FGeometry& InMyGeometry, float InDeltaTime) override;
 	virtual void HandleWidgetControllerSet() override;
 	virtual void NativePreConstruct() override;
 
-	void ShouldGhostGlobeDecrease(const float NewAttribute, const float Attribute, const float MaxAttribute);
+	void ShouldGhostGlobeDecrease(const float InNewAttribute, const float InAttribute, const float InMaxAttribute);
 	
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
@@ -93,7 +93,7 @@ protected:
 	bool bInfoGlobeActive = false;
 
 private:
-	void SetGhostGlobeDecreasing(const float CurrentPercent, const float NewPercent, const float DeltaTime);
+	void SetGhostGlobeDecreasing(const float InCurrentPercent, const float InNewPercent, const float InDeltaTime);
 	
 };
 

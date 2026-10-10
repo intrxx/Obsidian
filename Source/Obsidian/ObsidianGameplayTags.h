@@ -6,7 +6,7 @@
 
 namespace ObsidianGameplayTags
 {
-	OBSIDIAN_API FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString = false);
+	OBSIDIAN_API FGameplayTag FindTagByString(const FString& InTagString, bool bInMatchPartialString = false);
 	
 	/**
 	 * ---- User Interface ----

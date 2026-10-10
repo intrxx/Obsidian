@@ -33,14 +33,14 @@ FGameplayTag FObsidianStashSlotDefinition::GetStashSlotTag() const
 	return BaseSlotDefinition.GetSlotTag();
 }
 
-EObsidianPlacingAtSlotResult FObsidianStashSlotDefinition::CanStashAtSlot(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType) const
+EObsidianPlacingAtSlotResult FObsidianStashSlotDefinition::CanStashAtSlot(const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType) const
 {
 	if (bRequireUniqueBaseTypeMatch)
 	{
-		return UniqueBaseTypeTag == ItemBaseType ? EObsidianPlacingAtSlotResult::CanPlace : EObsidianPlacingAtSlotResult::UnableToPlace_BaseTypeDiffers;
+		return UniqueBaseTypeTag == InItemBaseType ? EObsidianPlacingAtSlotResult::CanPlace : EObsidianPlacingAtSlotResult::UnableToPlace_BaseTypeDiffers;
 	}
 	
-	return BaseSlotDefinition.CanPlaceAtSlot(ItemCategory);
+	return BaseSlotDefinition.CanPlaceAtSlot(InItemCategory);
 }
 
 void FObsidianStashSlotDefinition::AddBannedStashCategory(const FGameplayTag& InBannedCategory)
@@ -53,14 +53,14 @@ void FObsidianStashSlotDefinition::AddBannedStashCategories(const FGameplayTagCo
 	BaseSlotDefinition.AddBannedItemCategories(InBannedCategories);
 }
 
-void FObsidianStashSlotDefinition::RemoveBannedStashCategory(const FGameplayTag& BannedCategoryToRemove)
+void FObsidianStashSlotDefinition::RemoveBannedStashCategory(const FGameplayTag& InBannedCategoryToRemove)
 {
-	BaseSlotDefinition.RemoveBannedItemCategory(BannedCategoryToRemove);
+	BaseSlotDefinition.RemoveBannedItemCategory(InBannedCategoryToRemove);
 }
 
-void FObsidianStashSlotDefinition::RemoveBannedStashCategories(const FGameplayTagContainer& BannedCategoriesToRemove)
+void FObsidianStashSlotDefinition::RemoveBannedStashCategories(const FGameplayTagContainer& InBannedCategoriesToRemove)
 {
-	BaseSlotDefinition.RemoveBannedItemCategories(BannedCategoriesToRemove);
+	BaseSlotDefinition.RemoveBannedItemCategories(InBannedCategoriesToRemove);
 }
 
 // ~ FObsidianStashEntry
@@ -78,13 +78,13 @@ FString FObsidianStashEntry::GetDebugString() const
 
 // ~ End of FObsidianStashEntry
 
-TArray<UObsidianStashTab*> FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig* StashTabsConfig)
+TArray<UObsidianStashTab*> FObsidianStashItemList::InitializeStashTabs(const UObsidianStashTabsConfig* InStashTabsConfig)
 {
 	UE_LOG(ObLogPlayerStash, Verbose, TEXT("Initializing Stash Tabs"));
 	
 	TArray<UObsidianStashTab*> InitializedStashTabs;
 	
-	if(StashTabsConfig == nullptr || OwnerComponent == nullptr)
+	if(InStashTabsConfig == nullptr || OwnerComponent == nullptr)
 	{
 		return InitializedStashTabs;
 	}
@@ -95,7 +95,7 @@ TArray<UObsidianStashTab*> FObsidianStashItemList::InitializeStashTabs(const UOb
 		return InitializedStashTabs;
 	}
 
-	const TArray<FObsidianStashTabDefinition> StashTabDefinitions = StashTabsConfig->GetStashTabDefinitions();
+	const TArray<FObsidianStashTabDefinition> StashTabDefinitions = InStashTabsConfig->GetStashTabDefinitions();
 	StashTabsMap.Empty(StashTabDefinitions.Num());
 	
 	for(const FObsidianStashTabDefinition& Definition : StashTabDefinitions)
@@ -164,13 +164,13 @@ TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllSharedItem
 	return Items;
 }
 
-TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItemsFromStashTab(const FGameplayTag& StashTabTag)
+TArray<UObsidianInventoryItemInstance*> FObsidianStashItemList::GetAllItemsFromStashTab(const FGameplayTag& InStashTabTag)
 {
 	TArray<UObsidianInventoryItemInstance*> Items;
 
 	for(const FObsidianStashEntry& Entry : Entries)
 	{
-		if(Entry.Instance && Entry.ItemPosition.GetOwningStashTabTag() == StashTabTag)
+		if(Entry.Instance && Entry.ItemPosition.GetOwningStashTabTag() == InStashTabTag)
 		{
 			Items.Add(Entry.Instance);
 		}
@@ -183,26 +183,26 @@ int32 FObsidianStashItemList::GetEntriesCount() const
 	return Entries.Num();
 }
 
-UObsidianStashTab* FObsidianStashItemList::GetStashTabForTag(const FGameplayTag& StashTabTag)
+UObsidianStashTab* FObsidianStashItemList::GetStashTabForTag(const FGameplayTag& InStashTabTag)
 {
-	if(UObsidianStashTab** StashTabPointer = StashTabsMap.Find(StashTabTag))
+	if(UObsidianStashTab** StashTabPointer = StashTabsMap.Find(InStashTabTag))
 	{
 		return *StashTabPointer;
 	}
 	return nullptr;
 }
 
-TArray<FObsidianStashSlotDefinition> FObsidianStashItemList::FindMatchingSlotsForItemCategory(const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const UObsidianStashTab_Slots* SlotStashTab)
+TArray<FObsidianStashSlotDefinition> FObsidianStashItemList::FindMatchingSlotsForItemCategory(const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const UObsidianStashTab_Slots* InSlotStashTab)
 {
 	TArray<FObsidianStashSlotDefinition> MatchingSlots;
-	if (SlotStashTab == nullptr)
+	if (InSlotStashTab == nullptr)
 	{
 		return MatchingSlots;
 	}
 	
-	for (const FObsidianStashSlotDefinition& Slot : SlotStashTab->GetSlots())
+	for (const FObsidianStashSlotDefinition& Slot : InSlotStashTab->GetSlots())
 	{
-		if (Slot.CanStashAtSlot(ItemCategory, ItemBaseType) == EObsidianPlacingAtSlotResult::CanPlace)
+		if (Slot.CanStashAtSlot(InItemCategory, InItemBaseType) == EObsidianPlacingAtSlotResult::CanPlace)
 		{
 			MatchingSlots.Add(Slot);
 		}
@@ -211,16 +211,16 @@ TArray<FObsidianStashSlotDefinition> FObsidianStashItemList::FindMatchingSlotsFo
 	return MatchingSlots;
 }
 
-UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass,
-	const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FObsidianItemPosition& ToPosition)
+UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDefClass,
+	const FObsidianItemGeneratedData& InItemGeneratedData, const int32 InStackCount, const FObsidianItemPosition& InToPosition)
 {
-	check(ItemDefClass != nullptr);
+	check(InItemDefClass != nullptr);
 	check(OwnerComponent);
 
 	const AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor);
 
-	UObsidianStashTab* StashTab = GetStashTabForTag(ToPosition.GetOwningStashTabTag());
+	UObsidianStashTab* StashTab = GetStashTabForTag(InToPosition.GetOwningStashTabTag());
 	if(StashTab == nullptr)
 	{
 		UE_LOG(ObLogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
@@ -228,36 +228,36 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::AddEntry(const TSubclass
 	}
 
 #if !UE_BUILD_SHIPPING
-	if(StashTab->DebugVerifyPositionFree(ToPosition) == false)
+	if(StashTab->DebugVerifyPositionFree(InToPosition) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the StashTab's Map in [%hs]"), ToPosition.GetItemGridPosition().X, ToPosition.GetItemGridPosition().Y, __FUNCTION__),
+			 "exist in the StashTab's Map in [%hs]"), InToPosition.GetItemGridPosition().X, InToPosition.GetItemGridPosition().Y, __FUNCTION__),
 			 ELogVerbosity::Error);
 	}
 #endif
 
 	FObsidianStashEntry& NewEntry = Entries.AddDefaulted_GetRef();
-	NewEntry.Instance = UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(OwnerComponent->GetOwner(), ItemDefClass,
-		ItemGeneratedData, ToPosition);
+	NewEntry.Instance = UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(OwnerComponent->GetOwner(), InItemDefClass,
+		InItemGeneratedData, InToPosition);
 	NewEntry.OwningStashTab = StashTab;
-	NewEntry.StackCount = StackCount;
-	NewEntry.ItemPosition = ToPosition;
+	NewEntry.StackCount = InStackCount;
+	NewEntry.ItemPosition = InToPosition;
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	
-	StashTab->MarkSpaceInTab(Item, ToPosition);
+	StashTab->MarkSpaceInTab(Item, InToPosition);
 	MarkItemDirty(NewEntry);
 	
-	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, ToPosition, EObsidianStashChangeType::ICT_ItemAdded);
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, InToPosition, EObsidianStashChangeType::ICT_ItemAdded);
 	return Item;
 }
 
-void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, const FObsidianItemPosition& ToPosition)
+void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* InInstance, const FObsidianItemPosition& InToPosition)
 {
-	check(Instance != nullptr);
+	check(InInstance != nullptr);
 	check(OwnerComponent);
 
-	UObsidianStashTab* StashTab = GetStashTabForTag(ToPosition.GetOwningStashTabTag());
+	UObsidianStashTab* StashTab = GetStashTabForTag(InToPosition.GetOwningStashTabTag());
 	if(StashTab == nullptr)
 	{
 		UE_LOG(ObLogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
@@ -265,32 +265,32 @@ void FObsidianStashItemList::AddEntry(UObsidianInventoryItemInstance* Instance, 
 	}
 
 #if !UE_BUILD_SHIPPING
-	if(StashTab->DebugVerifyPositionFree(ToPosition) == false)
+	if(StashTab->DebugVerifyPositionFree(InToPosition) == false)
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the StashTab's Map in [%hs]"), ToPosition.GetItemGridPosition().X, ToPosition.GetItemGridPosition().Y, __FUNCTION__),
+			 "exist in the StashTab's Map in [%hs]"), InToPosition.GetItemGridPosition().X, InToPosition.GetItemGridPosition().Y, __FUNCTION__),
 			 ELogVerbosity::Error);
 	}
 #endif
 
-	FObsidianStashEntry& NewEntry = Entries.Emplace_GetRef(Instance);
-	NewEntry.ItemPosition = ToPosition;
+	FObsidianStashEntry& NewEntry = Entries.Emplace_GetRef(InInstance);
+	NewEntry.ItemPosition = InToPosition;
 	NewEntry.OwningStashTab = StashTab;
-	NewEntry.Instance->SetItemCurrentPosition(ToPosition);
-	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	NewEntry.Instance->SetItemCurrentPosition(InToPosition);
+	NewEntry.StackCount = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
-	StashTab->MarkSpaceInTab(Instance, ToPosition);
+	StashTab->MarkSpaceInTab(InInstance, InToPosition);
 	MarkItemDirty(NewEntry);
 	
-	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, ToPosition, EObsidianStashChangeType::ICT_ItemAdded);
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, InToPosition, EObsidianStashChangeType::ICT_ItemAdded);
 }
 
-UObsidianInventoryItemInstance* FObsidianStashItemList::LoadEntry(const FObsidianSavedItem& EquippedSavedItem)
+UObsidianInventoryItemInstance* FObsidianStashItemList::LoadEntry(const FObsidianSavedItem& InEquippedSavedItem)
 {
 	check(OwnerComponent);
 	
 	UObsidianInventoryItemInstance* LoadedInstance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
-	LoadedInstance->ConstructFromSavedItem(EquippedSavedItem);
+	LoadedInstance->ConstructFromSavedItem(InEquippedSavedItem);
 
 	const FObsidianItemPosition LoadedPosition = LoadedInstance->GetItemCurrentPosition();
 	UObsidianStashTab* StashTab = GetStashTabForTag(LoadedPosition.GetOwningStashTabTag());
@@ -314,9 +314,9 @@ UObsidianInventoryItemInstance* FObsidianStashItemList::LoadEntry(const FObsidia
 	return LoadedInstance;
 }
 
-void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag)
+void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InStashTabTag)
 {
-	UObsidianStashTab* StashTab = GetStashTabForTag(StashTabTag);
+	UObsidianStashTab* StashTab = GetStashTabForTag(InStashTabTag);
 	if(StashTab == nullptr)
 	{
 		UE_LOG(ObLogPlayerStash, Error, TEXT("StashTab for provided tag is invalid in [%hs]"), __FUNCTION__);
@@ -327,9 +327,9 @@ void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 	for(auto It = Entries.CreateIterator(); It; ++It)
 	{
 		FObsidianStashEntry& Entry = *It;
-		if(Entry.Instance == Instance)
+		if(Entry.Instance == InInstance)
 		{
-			ensure(StashTabTag == Entry.ItemPosition.GetOwningStashTabTag());
+			ensure(InStashTabTag == Entry.ItemPosition.GetOwningStashTabTag());
 			It.RemoveCurrent();
 			MarkArrayDirty();
 			bSuccess = true;
@@ -338,28 +338,28 @@ void FObsidianStashItemList::RemoveEntry(UObsidianInventoryItemInstance* Instanc
 
 	if(bSuccess)
 	{
-		const FObsidianItemPosition CachedPosition = Instance->GetItemCurrentPosition();
-		Instance->ResetItemCurrentPosition();
+		const FObsidianItemPosition CachedPosition = InInstance->GetItemCurrentPosition();
+		InInstance->ResetItemCurrentPosition();
 		
-		StashTab->UnmarkSpaceInTab(Instance, CachedPosition);
+		StashTab->UnmarkSpaceInTab(InInstance, CachedPosition);
 
-		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, CachedPosition, EObsidianStashChangeType::ICT_ItemRemoved);
+		const int32 StackCount = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+		BroadcastChangeMessage(InInstance, /* Old Count */ StackCount, /* New Count */ 0, CachedPosition, EObsidianStashChangeType::ICT_ItemRemoved);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
-void FObsidianStashItemList::ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount, const FGameplayTag& StashTabTag)
+void FObsidianStashItemList::ChangedEntryStacks(UObsidianInventoryItemInstance* InInstance, const int32 InOldCount, const FGameplayTag& InStashTabTag)
 {
-	const int32 NewCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	const int32 NewCount = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	bool bSuccess = false;
 	for(FObsidianStashEntry& Entry : Entries)
 	{
-		if(Entry.Instance == Instance)
+		if(Entry.Instance == InInstance)
 		{
-			ensure(StashTabTag == Entry.ItemPosition.GetOwningStashTabTag());
+			ensure(InStashTabTag == Entry.ItemPosition.GetOwningStashTabTag());
 			Entry.StackCount = NewCount;
 			MarkItemDirty(Entry);
 			bSuccess = true;
@@ -368,18 +368,18 @@ void FObsidianStashItemList::ChangedEntryStacks(UObsidianInventoryItemInstance* 
 
 	if(bSuccess)
 	{
-		BroadcastChangeMessage(Instance, OldCount, NewCount, Instance->GetItemCurrentPosition(), EObsidianStashChangeType::ICT_ItemStacksChanged);
+		BroadcastChangeMessage(InInstance, InOldCount, NewCount, InInstance->GetItemCurrentPosition(), EObsidianStashChangeType::ICT_ItemStacksChanged);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
-void FObsidianStashItemList::GeneralEntryChange(UObsidianInventoryItemInstance* Instance, const FGameplayTag& StashTabTag)
+void FObsidianStashItemList::GeneralEntryChange(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InStashTabTag)
 {
 	bool bSuccess = false;
 	for(FObsidianStashEntry& Entry : Entries)
 	{
-		if(Entry.Instance == Instance)
+		if(Entry.Instance == InInstance)
 		{
 			MarkItemDirty(Entry);
 			bSuccess = true;
@@ -388,16 +388,16 @@ void FObsidianStashItemList::GeneralEntryChange(UObsidianInventoryItemInstance* 
 	
 	if(bSuccess)
 	{
-		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-		BroadcastChangeMessage(Instance, Count, Count, Instance->GetItemCurrentPosition(), EObsidianStashChangeType::ICT_GeneralItemChanged);
+		const int32 Count = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+		BroadcastChangeMessage(InInstance, Count, Count, InInstance->GetItemCurrentPosition(), EObsidianStashChangeType::ICT_GeneralItemChanged);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
-void FObsidianStashItemList::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
+void FObsidianStashItemList::PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : RemovedIndices)
+	for(const int32 Index : InRemovedIndices)
 	{
 		FObsidianStashEntry& Entry = Entries[Index];
 		if (Entry.Instance == nullptr || Entry.LastObservedCount == INDEX_NONE) // Item was never added on this Client.
@@ -417,9 +417,9 @@ void FObsidianStashItemList::PreReplicatedRemove(const TArrayView<int32> Removed
 	}
 }
 
-void FObsidianStashItemList::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
+void FObsidianStashItemList::PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : AddedIndices)
+	for(const int32 Index : InAddedIndices)
 	{
 		FObsidianStashEntry& Entry = Entries[Index];
 		if (Entry.Instance == nullptr)
@@ -441,9 +441,9 @@ void FObsidianStashItemList::PostReplicatedAdd(const TArrayView<int32> AddedIndi
 	}
 }
 
-void FObsidianStashItemList::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
+void FObsidianStashItemList::PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : ChangedIndices)
+	for(const int32 Index : InChangedIndices)
 	{
 		FObsidianStashEntry& Entry = Entries[Index];
 		if (Entry.Instance == nullptr)
@@ -454,7 +454,7 @@ void FObsidianStashItemList::PostReplicatedChange(const TArrayView<int32> Change
 		if (Entry.LastObservedCount == INDEX_NONE) // Adding was deferred until the Item Instance got resolved.
 		{
 			int32 AddedIndex = Index;
-			PostReplicatedAdd(MakeArrayView(&AddedIndex, 1), FinalSize);
+			PostReplicatedAdd(MakeArrayView(&AddedIndex, 1), InFinalSize);
 			continue;
 		}
 
@@ -472,15 +472,15 @@ void FObsidianStashItemList::PostReplicatedChange(const TArrayView<int32> Change
 	}
 }
 
-void FObsidianStashItemList::BroadcastChangeMessage(const FObsidianStashEntry& Entry, const int32 OldCount, const int32 NewCount, const FObsidianItemPosition& ItemPosition, const EObsidianStashChangeType& ChangeType) const
+void FObsidianStashItemList::BroadcastChangeMessage(const FObsidianStashEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FObsidianItemPosition& InItemPosition, const EObsidianStashChangeType& InChangeType) const
 {
 	FObsidianStashChangeMessage Message;
 	Message.PlayerStashOwner = OwnerComponent;
-	Message.ItemInstance = Entry.Instance;
-	Message.ItemPosition = ItemPosition;
-	Message.NewCount = NewCount;
-	Message.Delta = NewCount - OldCount;
-	Message.ChangeType = ChangeType;
+	Message.ItemInstance = InEntry.Instance;
+	Message.ItemPosition = InItemPosition;
+	Message.NewCount = InNewCount;
+	Message.Delta = InNewCount - InOldCount;
+	Message.ChangeType = InChangeType;
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
 	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message::PlayerStash::Changed, Message);

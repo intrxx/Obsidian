@@ -17,17 +17,17 @@ void UObsidianProgressGlobe::NativePreConstruct()
 	SetInfoGlobeVisibility(false);
 }
 
-void UObsidianProgressGlobe::ShouldGhostGlobeDecrease(const float NewAttribute, const float Attribute, const float MaxAttribute)
+void UObsidianProgressGlobe::ShouldGhostGlobeDecrease(const float InNewAttribute, const float InAttribute, const float InMaxAttribute)
 {
-	if(NewAttribute == Attribute)
+	if(InNewAttribute == InAttribute)
 	{
 		return;
 	}
 
-	CurrentPercentage = UKismetMathLibrary::SafeDivide(Attribute, MaxAttribute);
-	NewPercentage = UKismetMathLibrary::SafeDivide(NewAttribute, MaxAttribute);
+	CurrentPercentage = UKismetMathLibrary::SafeDivide(InAttribute, InMaxAttribute);
+	NewPercentage = UKismetMathLibrary::SafeDivide(InNewAttribute, InMaxAttribute);
 
-	if(Attribute > NewAttribute)
+	if(InAttribute > InNewAttribute)
 	{
 		bShouldSetGhostGlobe = true;
 		return;
@@ -53,14 +53,14 @@ void UObsidianProgressGlobe::HandleWidgetControllerSet()
 	check(WidgetController);
 }
 
-void UObsidianProgressGlobe::SetInfoGlobeVisibility(const bool bShouldBeVisible)
+void UObsidianProgressGlobe::SetInfoGlobeVisibility(const bool bInShouldBeVisible)
 {
 	if(Info_ProgressGlobe == nullptr)
 	{
 		return;
 	}
 
-	if(bShouldBeVisible)
+	if(bInShouldBeVisible)
 	{
 		Info_ProgressGlobe->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -70,20 +70,20 @@ void UObsidianProgressGlobe::SetInfoGlobeVisibility(const bool bShouldBeVisible)
 	}
 }
 
-void UObsidianProgressGlobe::SetGhostGlobeDecreasing(const float CurrentPercent, const float NewPercent, const float DeltaTime)
+void UObsidianProgressGlobe::SetGhostGlobeDecreasing(const float InCurrentPercent, const float InNewPercent, const float InDeltaTime)
 {
-	CurrentPercentage = FMath::FInterpTo(CurrentPercent, NewPercent, DeltaTime, GhostGlobeFollowingSpeed);
+	CurrentPercentage = FMath::FInterpTo(InCurrentPercent, InNewPercent, InDeltaTime, GhostGlobeFollowingSpeed);
 	Ghost_ProgressGlobe->SetPercent(CurrentPercentage);
 	
-	if(CurrentPercent <= NewPercent)
+	if(InCurrentPercent <= InNewPercent)
 	{
 		bShouldSetGhostGlobe = false;
 	}
 }
 
-void UObsidianProgressGlobe::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
+void UObsidianProgressGlobe::NativeTick(const FGeometry& InMyGeometry, float InDeltaTime)
 {
-	Super::NativeTick(MyGeometry, InDeltaTime);
+	Super::NativeTick(InMyGeometry, InDeltaTime);
 	
 	if(bShouldSetGhostGlobe)
 	{

@@ -49,7 +49,7 @@ class OBSIDIAN_API UObsidianCharacterCreationScreen : public UObsidianActivatabl
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void InitializeCharacterCreationScreen(const bool bIsOnline);
+	void InitializeCharacterCreationScreen(const bool bInIsOnline);
 
 	virtual UWidget* NativeGetDesiredFocusTarget() const override;
 
@@ -62,12 +62,12 @@ protected:
 	void HandleBackwardsAction();
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian")
-	void ShowHeroDescription(const EObsidianHeroClass& ForClass);
+	void ShowHeroDescription(const EObsidianHeroClass& InForClass);
 	UFUNCTION(BlueprintCallable, Category = "Obsidian")
 	void HideHeroDescription() const;
 
 	UFUNCTION()
-	void OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type CommitType);
+	void OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type InCommitType);
 	UFUNCTION()
 	void OnHardcoreCheckboxStatusChanged(bool InBool);
 	
@@ -85,13 +85,13 @@ protected:
 	void OnAssassinButtonHovered();
 	void OnAssassinButtonUnhovered();
 
-	void HandleClickingHeroButton(const EObsidianHeroClass ForClass);
-	void HandleHoverHeroButton(const EObsidianHeroClass ForClass);
-	void HandleUnhoverHeroButton(const EObsidianHeroClass ForClass);
+	void HandleClickingHeroButton(const EObsidianHeroClass InForClass);
+	void HandleHoverHeroButton(const EObsidianHeroClass InForClass);
+	void HandleUnhoverHeroButton(const EObsidianHeroClass InForClass);
 
 	void ResetHeroDetails() const;
 
-	void OnCreateSavingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess);
+	void OnCreateSavingFinished(UObsidianHeroSaveGame* InSaveGame, bool bInSuccess);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

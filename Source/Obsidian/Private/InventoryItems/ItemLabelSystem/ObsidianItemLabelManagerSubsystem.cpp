@@ -27,21 +27,21 @@ namespace ObsidianItemLabelLayout
 	/** Slack for the overlap test, so a label resting exactly against a blocker isn't pushed again. */
 	constexpr double OverlapTolerance = 0.01;
 	
-	double FindFreeCenter(const TArray<FBox2D, TInlineAllocator<16>>& Blockers, const double StartCenter,
-		const double HalfExtent, const double Direction, const int32 Axis)
+	double FindFreeCenter(const TArray<FBox2D, TInlineAllocator<16>>& InBlockers, const double InStartCenter,
+		const double InHalfExtent, const double InDirection, const int32 InAxis)
 	{
-		double Center = StartCenter;
+		double Center = InStartCenter;
 
-		for (int32 Pass = 0; Pass <= Blockers.Num(); ++Pass)
+		for (int32 Pass = 0; Pass <= InBlockers.Num(); ++Pass)
 		{
 			bool bPushed = false;
-			for (const FBox2D& Blocker : Blockers)
+			for (const FBox2D& Blocker : InBlockers)
 			{
-				const double BlockerMin = Blocker.Min[Axis] - LabelPadding;
-				const double BlockerMax = Blocker.Max[Axis] + LabelPadding;
-				if (Center + HalfExtent > BlockerMin + OverlapTolerance && Center - HalfExtent < BlockerMax - OverlapTolerance)
+				const double BlockerMin = Blocker.Min[InAxis] - LabelPadding;
+				const double BlockerMax = Blocker.Max[InAxis] + LabelPadding;
+				if (Center + InHalfExtent > BlockerMin + OverlapTolerance && Center - InHalfExtent < BlockerMax - OverlapTolerance)
 				{
-					Center = Direction < 0.0 ? BlockerMin - HalfExtent : BlockerMax + HalfExtent;
+					Center = InDirection < 0.0 ? BlockerMin - InHalfExtent : BlockerMax + InHalfExtent;
 					bPushed = true;
 				}
 			}
@@ -54,32 +54,32 @@ namespace ObsidianItemLabelLayout
 		return Center;
 	}
 
-	void GatherBlockers(const TArray<FBox2D>& Occupied, const double Center, const double HalfExtent, const int32 Axis,
+	void GatherBlockers(const TArray<FBox2D>& InOccupied, const double InCenter, const double InHalfExtent, const int32 InAxis,
 		TArray<FBox2D, TInlineAllocator<16>>& OutBlockers)
 	{
 		OutBlockers.Reset();
-		const double RangeMin = Center - HalfExtent - LabelPadding;
-		const double RangeMax = Center + HalfExtent + LabelPadding;
-		for (const FBox2D& TakenArea : Occupied)
+		const double RangeMin = InCenter - InHalfExtent - LabelPadding;
+		const double RangeMax = InCenter + InHalfExtent + LabelPadding;
+		for (const FBox2D& TakenArea : InOccupied)
 		{
-			if (TakenArea.Max[Axis] > RangeMin && TakenArea.Min[Axis] < RangeMax)
+			if (TakenArea.Max[InAxis] > RangeMin && TakenArea.Min[InAxis] < RangeMax)
 			{
 				OutBlockers.Add(TakenArea);
 			}
 		}
 	}
 	
-	double PickPushOffset(const double NegativeDistance, const double PositiveDistance, const bool bNegativeFits,
-		const bool bPositiveFits, const double PreviousOffset, const double SideSwitchThreshold)
+	double PickPushOffset(const double InNegativeDistance, const double InPositiveDistance, const bool bInNegativeFits,
+		const bool bInPositiveFits, const double InPreviousOffset, const double InSideSwitchThreshold)
 	{
-		if (bNegativeFits != bPositiveFits)
+		if (bInNegativeFits != bInPositiveFits)
 		{
-			return bNegativeFits ? -NegativeDistance : PositiveDistance;
+			return bInNegativeFits ? -InNegativeDistance : InPositiveDistance;
 		}
 
-		const double NegativeCost = NegativeDistance - (PreviousOffset < 0.0 ? SideSwitchThreshold : 0.0);
-		const double PositiveCost = PositiveDistance - (PreviousOffset > 0.0 ? SideSwitchThreshold : 0.0);
-		return NegativeCost <= PositiveCost ? -NegativeDistance : PositiveDistance;
+		const double NegativeCost = InNegativeDistance - (InPreviousOffset < 0.0 ? InSideSwitchThreshold : 0.0);
+		const double PositiveCost = InPositiveDistance - (InPreviousOffset > 0.0 ? InSideSwitchThreshold : 0.0);
+		return NegativeCost <= PositiveCost ? -InNegativeDistance : InPositiveDistance;
 	}
 }
 
@@ -104,13 +104,13 @@ void FObsidianItemLabelData::ResetLabelData()
 
 // ~ Start of FObsidianLabelManagerLateTickFunction
 
-void FObsidianLabelManagerLateTickFunction::ExecuteTick(float DeltaTime, ELevelTick TickType, ENamedThreads::Type CurrentThread,
-	const FGraphEventRef& MyCompletionGraphEvent)
+void FObsidianLabelManagerLateTickFunction::ExecuteTick(float InDeltaTime, ELevelTick InTickType, ENamedThreads::Type InCurrentThread,
+	const FGraphEventRef& InMyCompletionGraphEvent)
 {
 	if (Target && IsValid(Target))
 	{
 		FScopeCycleCounterUObject TargetScope = FScopeCycleCounterUObject(Target);
-		Target->PostWorkTick(DeltaTime);
+		Target->PostWorkTick(InDeltaTime);
 	}
 }
 
@@ -141,14 +141,14 @@ UObsidianItemLabelManagerSubsystem::UObsidianItemLabelManagerSubsystem()
 #endif
 }
 
-bool UObsidianItemLabelManagerSubsystem::DoesSupportWorldType(const EWorldType::Type WorldType) const
+bool UObsidianItemLabelManagerSubsystem::DoesSupportWorldType(const EWorldType::Type InWorldType) const
 {
-	return WorldType == EWorldType::Game || WorldType == EWorldType::PIE;
+	return InWorldType == EWorldType::Game || InWorldType == EWorldType::PIE;
 }
 
-void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UObsidianItemLabelManagerSubsystem::Initialize(FSubsystemCollectionBase& InCollection)
 {
-	Super::Initialize(Collection);
+	Super::Initialize(InCollection);
 
 	if (const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>())
 	{
@@ -174,15 +174,15 @@ void UObsidianItemLabelManagerSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-void UObsidianItemLabelManagerSubsystem::PostWorkTick(float DeltaTime)
+void UObsidianItemLabelManagerSubsystem::PostWorkTick(float InDeltaTime)
 {
 	if (bLabelOverlayVisible)
 	{
-		UpdateLabels(DeltaTime);
+		UpdateLabels(InDeltaTime);
 	}
 }
 
-void UObsidianItemLabelManagerSubsystem::UpdateLabels(float DeltaTime)
+void UObsidianItemLabelManagerSubsystem::UpdateLabels(float InDeltaTime)
 {
 	SCOPE_CYCLE_COUNTER(STAT_ItemLabelManager);
 
@@ -208,7 +208,7 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabels(float DeltaTime)
 		else
 		{
 			Label->LabelDisplayedPositionOffset = FMath::Vector2DInterpTo(Label->LabelDisplayedPositionOffset,
-				Label->LabelSolvedPositionOffset, DeltaTime, LabelAdjustmentSmoothSpeed);
+				Label->LabelSolvedPositionOffset, InDeltaTime, LabelAdjustmentSmoothSpeed);
 		}
 
 		Label->LabelSolvedPosition = Label->LabelAnchorPosition + Label->LabelDisplayedPositionOffset;
@@ -270,26 +270,26 @@ void UObsidianItemLabelManagerSubsystem::UpdateLabelAnchors(TArray<FObsidianItem
 	}
 }
 
-void UObsidianItemLabelManagerSubsystem::SolveLabelLayout(TArray<FObsidianItemLabelData*>& LabelsToSolve,
-	const FBox2D& ViewportArea)
+void UObsidianItemLabelManagerSubsystem::SolveLabelLayout(TArray<FObsidianItemLabelData*>& InOutLabelsToSolve,
+	const FBox2D& InViewportArea)
 {
 	using namespace ObsidianItemLabelLayout;
 
-	LabelsToSolve.Sort([](const FObsidianItemLabelData& DataA, const FObsidianItemLabelData& DataB)
+	InOutLabelsToSolve.Sort([](const FObsidianItemLabelData& InDataA, const FObsidianItemLabelData& InDataB)
 		{
-			if (DataA.Priority != DataB.Priority)
+			if (InDataA.Priority != InDataB.Priority)
 			{
-				return DataA.Priority > DataB.Priority;
+				return InDataA.Priority > InDataB.Priority;
 			}
-			return DataA.RegistrationIndex < DataB.RegistrationIndex;
+			return InDataA.RegistrationIndex < InDataB.RegistrationIndex;
 		});
 
 	TArray<FBox2D> Occupied;
-	Occupied.Reserve(LabelsToSolve.Num());
+	Occupied.Reserve(InOutLabelsToSolve.Num());
 
 	TArray<FBox2D, TInlineAllocator<16>> Blockers;
 
-	for (FObsidianItemLabelData* Label : LabelsToSolve)
+	for (FObsidianItemLabelData* Label : InOutLabelsToSolve)
 	{
 		const FVector2D Anchor = Label->LabelAnchorPosition;
 		const FVector2D HalfSize = Label->LabelSize * 0.5;
@@ -308,9 +308,9 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout(TArray<FObsidianItemLa
 
 		const double VerticalFitMargin = PreviousOffset.X != 0.0 ? SideSwitchThreshold : 0.0;
 		const bool bUpFits = UpDistance <= 0.0
-			|| Anchor.Y - UpDistance - HalfSize.Y >= ViewportArea.Min.Y + VerticalFitMargin;
+			|| Anchor.Y - UpDistance - HalfSize.Y >= InViewportArea.Min.Y + VerticalFitMargin;
 		const bool bDownFits = DownDistance <= 0.0
-			|| Anchor.Y + DownDistance + HalfSize.Y <= ViewportArea.Max.Y - VerticalFitMargin;
+			|| Anchor.Y + DownDistance + HalfSize.Y <= InViewportArea.Max.Y - VerticalFitMargin;
 
 		if (bUpFits || bDownFits)
 		{
@@ -324,8 +324,8 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout(TArray<FObsidianItemLa
 			const double LeftDistance = Anchor.X - FindFreeCenter(Blockers, Anchor.X, HalfSize.X, -1.0, 0);
 			const double RightDistance = FindFreeCenter(Blockers, Anchor.X, HalfSize.X, 1.0, 0) - Anchor.X;
 
-			const bool bLeftFits = Anchor.X - LeftDistance - HalfSize.X >= ViewportArea.Min.X;
-			const bool bRightFits = Anchor.X + RightDistance + HalfSize.X <= ViewportArea.Max.X;
+			const bool bLeftFits = Anchor.X - LeftDistance - HalfSize.X >= InViewportArea.Min.X;
+			const bool bRightFits = Anchor.X + RightDistance + HalfSize.X <= InViewportArea.Max.X;
 
 			Label->LabelSolvedPositionOffset = FVector2D(PickPushOffset(LeftDistance, RightDistance, bLeftFits,
 				bRightFits, PreviousOffset.X, SideSwitchThreshold), 0.0);
@@ -336,9 +336,9 @@ void UObsidianItemLabelManagerSubsystem::SolveLabelLayout(TArray<FObsidianItemLa
 	}
 }
 
-bool UObsidianItemLabelManagerSubsystem::ActivateLabel(FObsidianItemLabelData& LabelData)
+bool UObsidianItemLabelManagerSubsystem::ActivateLabel(FObsidianItemLabelData& InOutLabelData)
 {
-	UObsidianItemLabel* LabelWidget = AcquireWidget(LabelData.LabelID);
+	UObsidianItemLabel* LabelWidget = AcquireWidget(InOutLabelData.LabelID);
 	if (LabelWidget == nullptr)
 	{
 		return false;
@@ -347,7 +347,7 @@ bool UObsidianItemLabelManagerSubsystem::ActivateLabel(FObsidianItemLabelData& L
 	UCanvasPanelSlot* CanvasPanelSlot = UWidgetLayoutLibrary::SlotAsCanvasSlot(LabelWidget);
 	if (CanvasPanelSlot == nullptr)
 	{
-		CanvasPanelSlot = MainOverlay->AddItemLabelToOverlay(LabelWidget, LabelData.LabelAnchorPosition);
+		CanvasPanelSlot = MainOverlay->AddItemLabelToOverlay(LabelWidget, InOutLabelData.LabelAnchorPosition);
 	}
 	if (CanvasPanelSlot == nullptr)
 	{
@@ -355,28 +355,28 @@ bool UObsidianItemLabelManagerSubsystem::ActivateLabel(FObsidianItemLabelData& L
 		return false;
 	}
 
-	LabelWidget->SetItemName(LabelData.SourceLabelComponent->GetLabelInitializationData().ItemName);
+	LabelWidget->SetItemName(InOutLabelData.SourceLabelComponent->GetLabelInitializationData().ItemName);
 	LabelWidget->SetVisibility(ESlateVisibility::Visible);
 
 	// The solver needs the size right now, without the prepass it would only be available after the next Slate tick.
 	LabelWidget->ForceLayoutPrepass();
 
-	LabelData.ItemLabelWidget = LabelWidget;
-	LabelData.CanvasPanelSlot = CanvasPanelSlot;
-	LabelData.LabelSolvedPositionOffset = FVector2D::Zero();
-	LabelData.LabelDisplayedPositionOffset = FVector2D::Zero();
-	LabelData.bVisible = true;
-	LabelData.bSnapToSolvedPosition = true;
+	InOutLabelData.ItemLabelWidget = LabelWidget;
+	InOutLabelData.CanvasPanelSlot = CanvasPanelSlot;
+	InOutLabelData.LabelSolvedPositionOffset = FVector2D::Zero();
+	InOutLabelData.LabelDisplayedPositionOffset = FVector2D::Zero();
+	InOutLabelData.bVisible = true;
+	InOutLabelData.bSnapToSolvedPosition = true;
 	return true;
 }
 
-void UObsidianItemLabelManagerSubsystem::DeactivateLabel(FObsidianItemLabelData& LabelData)
+void UObsidianItemLabelManagerSubsystem::DeactivateLabel(FObsidianItemLabelData& InOutLabelData)
 {
-	if (LabelData.ItemLabelWidget)
+	if (InOutLabelData.ItemLabelWidget)
 	{
-		ReleaseWidget(LabelData.ItemLabelWidget);
+		ReleaseWidget(InOutLabelData.ItemLabelWidget);
 	}
-	LabelData.ResetLabelData();
+	InOutLabelData.ResetLabelData();
 }
 
 void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianMainOverlay* InItemLabelOverlay,
@@ -395,20 +395,20 @@ void UObsidianItemLabelManagerSubsystem::InitializeItemLabelManager(UObsidianMai
 	OwningPC = InObsidianPC;
 }
 
-FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent)
+FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelComponent* InSourceLabelComponent)
 {
-	if (SourceLabelComponent == nullptr)
+	if (InSourceLabelComponent == nullptr)
 	{
 		return FGuid();
 	}
 
-	FVector OwningItemWorldPosition = SourceLabelComponent->GetOwningItemActorLocation();
+	FVector OwningItemWorldPosition = InSourceLabelComponent->GetOwningItemActorLocation();
 	OwningItemWorldPosition.Z += ItemLabelGroundZOffset;
 
 	FObsidianItemLabelData NewLabelData;
 	NewLabelData.LabelAdjustedWorldPosition = OwningItemWorldPosition;
 	NewLabelData.LabelID = FGuid::NewGuid();
-	NewLabelData.SourceLabelComponent = SourceLabelComponent;
+	NewLabelData.SourceLabelComponent = InSourceLabelComponent;
 	NewLabelData.Priority = /**TODO(Switch to it after implementing Prio) InitializationData.Priority; */ FMath::RandRange(0, 8);
 	NewLabelData.RegistrationIndex = NextRegistrationIndex++;
 
@@ -417,16 +417,16 @@ FGuid UObsidianItemLabelManagerSubsystem::RegisterItemLabel(UObsidianItemLabelCo
 	return NewLabelID;
 }
 
-void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(const FGuid& LabelID)
+void UObsidianItemLabelManagerSubsystem::UnregisterItemLabel(const FGuid& InLabelID)
 {
-	if (FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
+	if (FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(InLabelID))
 	{
 		DeactivateLabel(*FoundLabel);
-		ItemLabelsDataMap.Remove(LabelID);
+		ItemLabelsDataMap.Remove(InLabelID);
 	}
 }
 
-void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHighlight)
+void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bInHighlight)
 {
 	if (MainOverlay == nullptr)
 	{
@@ -434,7 +434,7 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 		return;
 	}
 
-	if (bHighlight)
+	if (bInHighlight)
 	{
 		for (TTuple<FGuid, FObsidianItemLabelData>& Pair : ItemLabelsDataMap)
 		{
@@ -450,10 +450,10 @@ void UObsidianItemLabelManagerSubsystem::ToggleItemLabelHighlight(const bool bHi
 		UE_LOG(ObLogItemLabels, Verbose, TEXT("Toggling Highlight off!"));
 	}
 
-	bLabelOverlayVisible = bHighlight;
+	bLabelOverlayVisible = bInHighlight;
 }
 
-UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGuid& ForID)
+UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGuid& InForID)
 {
 	for (UObsidianItemLabel* ExistingWidget : LabelWidgetPool)
 	{
@@ -462,7 +462,7 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 			//TODO(intrxx) Decide if should bind here if cleared in ReleaseWidget
 			// ExistingWidget->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::HandleLabelHovered);
 			// ExistingWidget->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::HandleLabelPressed);
-			ExistingWidget->MarkInUse(true, ForID);
+			ExistingWidget->MarkInUse(true, InForID);
 			return ExistingWidget;
 		}
 	}
@@ -488,7 +488,7 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 	{
 		NewItemLabel->OnItemLabelMouseHoverDelegate.AddUObject(this, &ThisClass::HandleLabelHovered);
 		NewItemLabel->OnItemLabelMouseButtonDownDelegate.AddUObject(this, &ThisClass::HandleLabelPressed);
-		NewItemLabel->MarkInUse(true, ForID);
+		NewItemLabel->MarkInUse(true, InForID);
 		LabelWidgetPool.Add(NewItemLabel);
 		return NewItemLabel;
 	}
@@ -497,9 +497,9 @@ UObsidianItemLabel* UObsidianItemLabelManagerSubsystem::AcquireWidget(const FGui
 	return nullptr;
 }
 
-void UObsidianItemLabelManagerSubsystem::ReleaseWidget(UObsidianItemLabel* LabelWidget)
+void UObsidianItemLabelManagerSubsystem::ReleaseWidget(UObsidianItemLabel* InLabelWidget)
 {
-	if (LabelWidget == nullptr)
+	if (InLabelWidget == nullptr)
 	{
 		UE_LOG(ObLogItemLabels, Error, TEXT("Passed Item Label Widget to release is invalid in [%hs]"),
 			__FUNCTION__);
@@ -509,31 +509,31 @@ void UObsidianItemLabelManagerSubsystem::ReleaseWidget(UObsidianItemLabel* Label
 	//TODO(intrxx) Decide if clear it now and bind in AcquireWidget
 	// LabelWidget->OnItemLabelMouseHoverDelegate.Clear();
 	// LabelWidget->OnItemLabelMouseButtonDownDelegate.Clear();
-	LabelWidget->MarkInUse(false);
-	LabelWidget->SetVisibility(ESlateVisibility::Collapsed);
+	InLabelWidget->MarkInUse(false);
+	InLabelWidget->SetVisibility(ESlateVisibility::Collapsed);
 
 	//TODO(intrxx) Reset Label content here?
 }
 
-void UObsidianItemLabelManagerSubsystem::HandleLabelHovered(const bool bEnter, const FGuid& LabelID)
+void UObsidianItemLabelManagerSubsystem::HandleLabelHovered(const bool bInEnter, const FGuid& InLabelID)
 {
-	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
+	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(InLabelID))
 	{
 		if (UObsidianItemLabelComponent* LabelComponent = FoundLabel->SourceLabelComponent)
 		{
-			LabelComponent->HandleLabelMouseHover(bEnter);
+			LabelComponent->HandleLabelMouseHover(bInEnter);
 		}
 	}
 }
 
-void UObsidianItemLabelManagerSubsystem::HandleLabelPressed(const int32 PlayerIndex,
-	const FObsidianItemInteractionFlags& InteractionFlags, const FGuid& LabelID)
+void UObsidianItemLabelManagerSubsystem::HandleLabelPressed(const int32 InPlayerIndex,
+	const FObsidianItemInteractionFlags& InInteractionFlags, const FGuid& InLabelID)
 {
-	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(LabelID))
+	if (const FObsidianItemLabelData* FoundLabel = ItemLabelsDataMap.Find(InLabelID))
 	{
 		if (UObsidianItemLabelComponent* LabelComponent = FoundLabel->SourceLabelComponent)
 		{
-			LabelComponent->HandleLabelMouseButtonDown(PlayerIndex, InteractionFlags);
+			LabelComponent->HandleLabelMouseButtonDown(InPlayerIndex, InInteractionFlags);
 		}
 	}
 }

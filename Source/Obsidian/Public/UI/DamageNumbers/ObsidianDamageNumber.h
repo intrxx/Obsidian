@@ -22,7 +22,7 @@ class OBSIDIAN_API UObsidianDamageNumber : public UObsidianWidgetBase
 
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageNumber")
-	void InitializeDamageNumber(const FObsidianDamageTextProps& DamageTextProps);
+	void InitializeDamageNumber(const FObsidianDamageTextProps& InDamageTextProps);
 	
 public:
 	UPROPERTY(meta=(BindWidget))
@@ -56,5 +56,5 @@ public:
 	TSubclassOf<UCommonTextStyle> CriticalDamageNumber_Style;
 
 protected:
-	void SetDamageNumber(const TSubclassOf<UCommonTextStyle>& Style, const FText& Text) const;
+	void SetDamageNumber(const TSubclassOf<UCommonTextStyle>& InStyle, const FText& InText) const;
 };

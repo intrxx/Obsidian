@@ -19,7 +19,7 @@ public:
 	UObsidianBTService_FindNearestPlayer();
 
 protected:
-	virtual void TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds) override;
+	virtual void TickNode(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory, float InDeltaSeconds) override;
 	virtual FString GetStaticDescription() const override;
 
 protected:

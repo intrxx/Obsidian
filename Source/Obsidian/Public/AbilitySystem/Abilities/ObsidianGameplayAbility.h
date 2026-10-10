@@ -54,7 +54,7 @@ class OBSIDIAN_API UObsidianGameplayAbility : public UGameplayAbility
 	friend UObsidianAbilitySystemComponent;
 
 public:
-	UObsidianGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianGameplayAbility(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	EObsidianGameplayAbility_ActivationPolicy GetAbilityActivationPolicy() const
 	{
@@ -99,7 +99,7 @@ protected:
 	FVector GetOwnerLocationFromActorInfo() const;
 	
 	//~UGameplayAbility interface
-	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const override;
+	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& InAbilitySystemComponent, const FGameplayTagContainer* InSourceTags, const FGameplayTagContainer* InTargetTags, FGameplayTagContainer* OutOptionalRelevantTags) const override;
 	//~End of UGameplayAbility interface
 
 	/** Randomly chooses the Anim Montage to play. */
@@ -110,10 +110,10 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
 	UAnimMontage* GetAnimMontage();
 
-	FVector GetRandomPointInCircleAroundOrigin(const FVector& Origin, const float Radius, const float FixedHeight);
+	FVector GetRandomPointInCircleAroundOrigin(const FVector& InOrigin, const float InRadius, const float InFixedHeight);
 
 	/** Gets set number of points on circle around origin which are equally distributed. */
-	TArray<FVector> GetPointsOnCircleAroundOriginNormalized(const FVector& Origin, const float NumberOfPoints, const float Radius, const float FixedHeight);
+	TArray<FVector> GetPointsOnCircleAroundOriginNormalized(const FVector& InOrigin, const float InNumberOfPoints, const float InRadius, const float InFixedHeight);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")

@@ -6,26 +6,26 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-bool UObsidianUsableShard_OrbOfRepentance::OnItemUsed(AObsidianPlayerController* ItemOwner,
-	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_OrbOfRepentance::OnItemUsed(AObsidianPlayerController* InItemOwner,
+	UObsidianInventoryItemInstance* InUsingInstance, UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
-	if(ItemOwner && UsingInstance && UsingOntoInstance)
+	if(InItemOwner && InUsingInstance && InUsingOntoInstance)
 	{
 		bool bSuccess = false;
-		if(CanUseOnItem(UsingOntoInstance))
+		if(CanUseOnItem(InUsingOntoInstance))
 		{
-			TArray<FObsidianActiveItemAffix> ItemPrefixesAndSuffixes = UsingOntoInstance->GetAllItemPrefixesAndSuffixes();
+			TArray<FObsidianActiveItemAffix> ItemPrefixesAndSuffixes = InUsingOntoInstance->GetAllItemPrefixesAndSuffixes();
 			const int32 RandomAffixIndex = FMath::RandRange(0, ItemPrefixesAndSuffixes.Num() - 1);
 			
 			const FObsidianActiveItemAffix ChosenAffix = ItemPrefixesAndSuffixes[RandomAffixIndex];
-			bSuccess = UsingOntoInstance->RemoveAffix(ChosenAffix.AffixTag);
+			bSuccess = InUsingOntoInstance->RemoveAffix(ChosenAffix.AffixTag);
 		}
 
 		if (bSuccess)
 		{
 			UE_LOG(ObLogCrafting, Warning, TEXT("Orb Of Repentance could not be used on provided [%s] Instance. "
 									 "Or could not remove the Affix."),
-										*GetNameSafe(UsingOntoInstance));
+										*GetNameSafe(InUsingOntoInstance));
 		}
 
 		return bSuccess;
@@ -33,10 +33,10 @@ bool UObsidianUsableShard_OrbOfRepentance::OnItemUsed(AObsidianPlayerController*
 	return false;
 }
 
-void UObsidianUsableShard_OrbOfRepentance::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+void UObsidianUsableShard_OrbOfRepentance::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext)
 {
-	for(const UObsidianInventoryItemInstance* Instance : AllItems)
+	for(const UObsidianInventoryItemInstance* Instance : InAllItems)
 	{
 		if(CanUseOnItem(Instance))
 		{
@@ -45,13 +45,13 @@ void UObsidianUsableShard_OrbOfRepentance::OnItemUsed_UIContext(const TArray<UOb
 	}
 }
 
-bool UObsidianUsableShard_OrbOfRepentance::CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const
+bool UObsidianUsableShard_OrbOfRepentance::CanUseOnItem(const UObsidianInventoryItemInstance* InInstance) const
 {
-	if (Instance == nullptr)
+	if (InInstance == nullptr)
 	{
 		return false;
 	}
-	return Instance->IsItemIdentified() &&
-			Instance->IsMagicOrRare() &&
-			Instance->GetItemAddedPrefixAndSuffixCount() > 0;
+	return InInstance->IsItemIdentified() &&
+			InInstance->IsMagicOrRare() &&
+			InInstance->GetItemAddedPrefixAndSuffixCount() > 0;
 }

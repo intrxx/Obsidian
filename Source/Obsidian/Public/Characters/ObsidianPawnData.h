@@ -41,7 +41,7 @@ class OBSIDIAN_API UObsidianPawnData : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianPawnData(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianPawnData(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 public:
 	/** Determines if the Pawn is a Player */

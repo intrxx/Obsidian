@@ -7,8 +7,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-AObsidianDummyMeshActor::AObsidianDummyMeshActor(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianDummyMeshActor::AObsidianDummyMeshActor(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -20,14 +20,14 @@ AObsidianDummyMeshActor::AObsidianDummyMeshActor(const FObjectInitializer& Objec
 	SetRootComponent(PoseableMeshComp);
 }
 
-void AObsidianDummyMeshActor::SetupDummyMeshActor(USkeletalMeshComponent* InMeshToCopy, const float LifeSpan)
+void AObsidianDummyMeshActor::SetupDummyMeshActor(USkeletalMeshComponent* InMeshToCopy, const float InLifeSpan)
 {
 	check(InMeshToCopy);
 	
 	DeadMeshToCopy = InMeshToCopy;
 	PoseableMeshComp->SetSkinnedAssetAndUpdate(InMeshToCopy->GetSkeletalMeshAsset(), false);
 
-	SetLifeSpan(LifeSpan);
+	SetLifeSpan(InLifeSpan);
 }
 
 void AObsidianDummyMeshActor::BeginPlay()

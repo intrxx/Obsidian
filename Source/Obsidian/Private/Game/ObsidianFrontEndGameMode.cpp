@@ -24,8 +24,8 @@ bool FObsidianHeroClassParams::IsValid() const
 	return HeroObjectClass.IsNull() == false;
 }
 
-AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianFrontEndGameMode::AObsidianFrontEndGameMode(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PlayerControllerClass = AObsidianPlayerController::StaticClass();
 }
@@ -51,12 +51,12 @@ FObsidianHeroClassParams AObsidianFrontEndGameMode::CreateHeroClass(const EObsid
 	return HeroClassParams;
 }
 
-bool AObsidianFrontEndGameMode::DeleteHeroClass(const int32 WithID)
+bool AObsidianFrontEndGameMode::DeleteHeroClass(const int32 InWithID)
 {
 	for(auto It = CreatedHeroes.CreateIterator(); It; ++It)
 	{
 		FObsidianHeroClassParams& Params = *It;
-		if(Params.HeroID == WithID)
+		if(Params.HeroID == InWithID)
 		{
 			It.RemoveCurrent();
 			return true;

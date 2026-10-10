@@ -12,9 +12,9 @@ UObsidianUIManagerSubsystem::UObsidianUIManagerSubsystem()
 {
 }
 
-void UObsidianUIManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
+void UObsidianUIManagerSubsystem::Initialize(FSubsystemCollectionBase& InCollection)
 {
-	Super::Initialize(Collection);
+	Super::Initialize(InCollection);
 	
 	TickHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateUObject(this, &UObsidianUIManagerSubsystem::Tick), 0.0f);
 }
@@ -26,7 +26,7 @@ void UObsidianUIManagerSubsystem::Deinitialize()
 	FTSTicker::GetCoreTicker().RemoveTicker(TickHandle);
 }
 
-bool UObsidianUIManagerSubsystem::Tick(float DeltaTime)
+bool UObsidianUIManagerSubsystem::Tick(float InDeltaTime)
 {
 	SyncRootLayoutVisibilityToShowHUD();
 	

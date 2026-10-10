@@ -3,7 +3,7 @@
 #include "Characters/ObsidianPawnData.h"
 
 
-UObsidianPawnData::UObsidianPawnData(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianPawnData::UObsidianPawnData(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }

@@ -16,8 +16,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianGameplayAbility::UObsidianGameplayAbility(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianGameplayAbility::UObsidianGameplayAbility(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
@@ -76,8 +76,8 @@ FVector UObsidianGameplayAbility::GetOwnerLocationFromActorInfo() const
 	return (CurrentActorInfo ? GetAvatarActorFromActorInfo()->GetActorLocation() : FVector::ZeroVector);
 }
 
-bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& AbilitySystemComponent,
-                                                                 const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, FGameplayTagContainer* OptionalRelevantTags) const
+bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& InAbilitySystemComponent,
+                                                                 const FGameplayTagContainer* InSourceTags, const FGameplayTagContainer* InTargetTags, FGameplayTagContainer* OutOptionalRelevantTags) const
 {
 		// Specialized version to handle death exclusion and AbilityTags expansion via ASC
 
@@ -91,12 +91,12 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 	const FGameplayTagContainer& AssetTags = GetAssetTags();
 	
 	// Check if any of this ability's tags are currently blocked
-	if (AbilitySystemComponent.AreAbilityTagsBlocked(AssetTags))
+	if (InAbilitySystemComponent.AreAbilityTagsBlocked(AssetTags))
 	{
 		bBlocked = true;
 	}
 
-	const UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(&AbilitySystemComponent);
+	const UObsidianAbilitySystemComponent* ObsidianASC = Cast<UObsidianAbilitySystemComponent>(&InAbilitySystemComponent);
 	static FGameplayTagContainer AllRequiredTags;
 	static FGameplayTagContainer AllBlockedTags;
 
@@ -115,14 +115,14 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 		static FGameplayTagContainer AbilitySystemComponentTags;
 		
 		AbilitySystemComponentTags.Reset();
-		AbilitySystemComponent.GetOwnedGameplayTags(AbilitySystemComponentTags);
+		InAbilitySystemComponent.GetOwnedGameplayTags(AbilitySystemComponentTags);
 
 		if (AbilitySystemComponentTags.HasAny(AllBlockedTags))
 		{
-			if (OptionalRelevantTags && AbilitySystemComponentTags.HasTag(ObsidianGameplayTags::Status::Death::Death))
+			if (OutOptionalRelevantTags && AbilitySystemComponentTags.HasTag(ObsidianGameplayTags::Status::Death::Death))
 			{
 				// If player is dead and was rejected due to blocking tags, give that feedback
-				OptionalRelevantTags->AddTag(ObsidianGameplayTags::Ability::ActivationFail::IsDead);
+				OutOptionalRelevantTags->AddTag(ObsidianGameplayTags::Ability::ActivationFail::IsDead);
 			}
 
 			bBlocked = true;
@@ -134,32 +134,32 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 		}
 	}
 
-	if (SourceTags != nullptr)
+	if (InSourceTags != nullptr)
 	{
 		if (SourceBlockedTags.Num() || SourceRequiredTags.Num())
 		{
-			if (SourceTags->HasAny(SourceBlockedTags))
+			if (InSourceTags->HasAny(SourceBlockedTags))
 			{
 				bBlocked = true;
 			}
 
-			if (!SourceTags->HasAll(SourceRequiredTags))
+			if (!InSourceTags->HasAll(SourceRequiredTags))
 			{
 				bMissing = true;
 			}
 		}
 	}
 
-	if (TargetTags != nullptr)
+	if (InTargetTags != nullptr)
 	{
 		if (TargetBlockedTags.Num() || TargetRequiredTags.Num())
 		{
-			if (TargetTags->HasAny(TargetBlockedTags))
+			if (InTargetTags->HasAny(TargetBlockedTags))
 			{
 				bBlocked = true;
 			}
 
-			if (!TargetTags->HasAll(TargetRequiredTags))
+			if (!InTargetTags->HasAll(TargetRequiredTags))
 			{
 				bMissing = true;
 			}
@@ -168,17 +168,17 @@ bool UObsidianGameplayAbility::DoesAbilitySatisfyTagRequirements(const UAbilityS
 
 	if (bBlocked)
 	{
-		if (OptionalRelevantTags && BlockedTag.IsValid())
+		if (OutOptionalRelevantTags && BlockedTag.IsValid())
 		{
-			OptionalRelevantTags->AddTag(BlockedTag);
+			OutOptionalRelevantTags->AddTag(BlockedTag);
 		}
 		return false;
 	}
 	if (bMissing)
 	{
-		if (OptionalRelevantTags && MissingTag.IsValid())
+		if (OutOptionalRelevantTags && MissingTag.IsValid())
 		{
-			OptionalRelevantTags->AddTag(MissingTag);
+			OutOptionalRelevantTags->AddTag(MissingTag);
 		}
 		return false;
 	}
@@ -231,39 +231,39 @@ UAnimMontage* UObsidianGameplayAbility::GetAnimMontage()
 	return AbilityMontages[0].AbilityMontage;
 }
 
-FVector UObsidianGameplayAbility::GetRandomPointInCircleAroundOrigin(const FVector& Origin, const float Radius, const float FixedHeight)
+FVector UObsidianGameplayAbility::GetRandomPointInCircleAroundOrigin(const FVector& InOrigin, const float InRadius, const float InFixedHeight)
 {
 	const float Angle = FMath::RandRange(0.0f, 2.0f * PI);
 
-	const float X = FMath::Cos(Angle) * Radius;
-	const float Y = FMath::Sin(Angle) * Radius;
+	const float X = FMath::Cos(Angle) * InRadius;
+	const float Y = FMath::Sin(Angle) * InRadius;
 
-	const FVector OriginZeroZ = FVector(Origin.X, Origin.Y, 0.0f);
-	return OriginZeroZ + FVector(X, Y, FixedHeight);
+	const FVector OriginZeroZ = FVector(InOrigin.X, InOrigin.Y, 0.0f);
+	return OriginZeroZ + FVector(X, Y, InFixedHeight);
 }
 
-TArray<FVector> UObsidianGameplayAbility::GetPointsOnCircleAroundOriginNormalized(const FVector& Origin, const float NumberOfPoints,
-	const float Radius, const float FixedHeight)
+TArray<FVector> UObsidianGameplayAbility::GetPointsOnCircleAroundOriginNormalized(const FVector& InOrigin, const float InNumberOfPoints,
+	const float InRadius, const float InFixedHeight)
 {
 	TArray<FVector> Points;
-	Points.Reserve(NumberOfPoints);
+	Points.Reserve(InNumberOfPoints);
 	
-	if (NumberOfPoints == 0)
+	if (InNumberOfPoints == 0)
 	{
 		return Points;
 	}
 
-	const FVector OriginZeroZ = FVector(Origin.X, Origin.Y, 0.0f);
-	const float AngleStep = (2.0f * PI) / NumberOfPoints;
+	const FVector OriginZeroZ = FVector(InOrigin.X, InOrigin.Y, 0.0f);
+	const float AngleStep = (2.0f * PI) / InNumberOfPoints;
 
-	for (uint16 i = 0; i < NumberOfPoints; ++i)
+	for (uint16 i = 0; i < InNumberOfPoints; ++i)
 	{
 		const float Angle = AngleStep * static_cast<float>(i);
 
-		const float X = FMath::Cos(Angle) * Radius;
-		const float Y = FMath::Sin(Angle) * Radius;
+		const float X = FMath::Cos(Angle) * InRadius;
+		const float Y = FMath::Sin(Angle) * InRadius;
 
-		Points.Add(OriginZeroZ + FVector(X, Y, FixedHeight));
+		Points.Add(OriginZeroZ + FVector(X, Y, InFixedHeight));
 	}
 
 	return Points;

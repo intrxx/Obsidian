@@ -21,9 +21,9 @@ class OBSIDIAN_API UObsidianItemDataConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianItemDataConfig(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianItemDataConfig(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
-	FString GetRandomItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag);
+	FString GetRandomItemNameAddition(const int32 InUpToTreasureQuality, const FGameplayTag& InForItemCategoryTag);
 	
 public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Items")

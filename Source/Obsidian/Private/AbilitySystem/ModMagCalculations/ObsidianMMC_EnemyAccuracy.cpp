@@ -6,13 +6,13 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-float UObsidianMMC_EnemyAccuracy::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_EnemyAccuracy::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
-	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());
+	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(InSpec.GetContext().GetSourceObject());
 	if (CombatInterface == nullptr)
 	{
 		UE_LOG(ObLogAbilitySystem, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
-		return Super::CalculateBaseMagnitude_Implementation(Spec);
+		return Super::CalculateBaseMagnitude_Implementation(InSpec);
 	}
 	
 	const uint8 CharacterLevel = CombatInterface->GetCharacterLevel();

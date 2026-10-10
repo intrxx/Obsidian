@@ -17,7 +17,7 @@ class OBSIDIAN_API AObsidianProjectile : public AObsidianProjectileBase
 	GENERATED_BODY()
 
 public:
-	AObsidianProjectile(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianProjectile(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 protected:
 	virtual void BeginPlay() override;

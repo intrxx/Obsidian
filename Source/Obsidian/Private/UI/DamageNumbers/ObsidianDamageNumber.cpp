@@ -7,35 +7,35 @@
 #include "ObsidianTypes/ObsidianUITypes.h"
 
 
-void UObsidianDamageNumber::InitializeDamageNumber(const FObsidianDamageTextProps& DamageTextProps)
+void UObsidianDamageNumber::InitializeDamageNumber(const FObsidianDamageTextProps& InDamageTextProps)
 {
-	if(DamageTextProps.bIsBlockedAttack)
+	if(InDamageTextProps.bIsBlockedAttack)
 	{
 		SetDamageNumber(BlockedDamageNumber_Style, BlockedText);
 		return;
 	}
 
-	if(DamageTextProps.bIsEvadedHit)
+	if(InDamageTextProps.bIsEvadedHit)
 	{
 		SetDamageNumber(EvadedDamageNumber_Style, EvadedText);
 		return;
 	}
 
-	if(DamageTextProps.bIsTargetImmune)
+	if(InDamageTextProps.bIsTargetImmune)
 	{
 		SetDamageNumber(ImmuneDamageNumber_Style, ImmuneText);
 		return;
 	}
 
-	const FText DamageNumberText = FText::AsNumber(FMath::FloorToInt(DamageTextProps.DamageMagnitude));
+	const FText DamageNumberText = FText::AsNumber(FMath::FloorToInt(InDamageTextProps.DamageMagnitude));
 	
-	if(DamageTextProps.bIsSuppressedSpell)
+	if(InDamageTextProps.bIsSuppressedSpell)
 	{
 		SetDamageNumber(SuppressedDamageNumber_Style, DamageNumberText);
 		return;
 	}
 
-	if(DamageTextProps.bIsCriticalAttack)
+	if(InDamageTextProps.bIsCriticalAttack)
 	{
 		SetDamageNumber(CriticalDamageNumber_Style, DamageNumberText);
 		return;
@@ -44,11 +44,11 @@ void UObsidianDamageNumber::InitializeDamageNumber(const FObsidianDamageTextProp
 	SetDamageNumber(RegularDamageNumber_Style, DamageNumberText);
 }
 
-void UObsidianDamageNumber::SetDamageNumber(const TSubclassOf<UCommonTextStyle>& Style, const FText& Text) const
+void UObsidianDamageNumber::SetDamageNumber(const TSubclassOf<UCommonTextStyle>& InStyle, const FText& InText) const
 {
 	if(DamageNumber_TextBlock)
 	{
-		DamageNumber_TextBlock->SetStyle(Style);
-		DamageNumber_TextBlock->SetText(Text);
+		DamageNumber_TextBlock->SetStyle(InStyle);
+		DamageNumber_TextBlock->SetText(InText);
 	}
 }

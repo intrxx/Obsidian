@@ -29,14 +29,14 @@ class OBSIDIAN_API UObsidianItemDescriptionBase : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeWidgetWithItemStats(const FObsidianItemStats& ItemStats, const bool bDisplayItemImage = false);
+	void InitializeWidgetWithItemStats(const FObsidianItemStats& InItemStats, const bool bInDisplayItemImage = false);
 	
-	void SetItemDisplayName(const FText& DisplayName, const EObsidianItemRarity Rarity);
-	void SetItemDescription(const FText& ItemDescription);
-	void SetAdditionalItemDescription(const FText& AdditionalItemDescription);
+	void SetItemDisplayName(const FText& InDisplayName, const EObsidianItemRarity InRarity);
+	void SetItemDescription(const FText& InItemDescription);
+	void SetAdditionalItemDescription(const FText& InAdditionalItemDescription);
 
-	void SetStackCount(const int32 CurrentStacks, const int32 MaxStacks);
-	void UpdateCurrentStackCount(const int32 CurrentStacks);
+	void SetStackCount(const int32 InCurrentStacks, const int32 InMaxStacks);
+	void UpdateCurrentStackCount(const int32 InCurrentStacks);
 
 	void DestroyDescriptionWidget();
 

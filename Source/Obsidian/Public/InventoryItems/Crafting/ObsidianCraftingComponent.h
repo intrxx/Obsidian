@@ -29,22 +29,22 @@ class OBSIDIAN_API UObsidianCraftingComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianCraftingComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianCraftingComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	bool IsUsingItem() const;
 	UObsidianInventoryItemInstance* GetUsingItem();
 
-	void UseItem(const FObsidianItemPosition& OnPosition, const bool bLeftShiftDown);
-	void SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget = nullptr,
-		UObsidianInventoryItemInstance* UsingInstance = nullptr);
+	void UseItem(const FObsidianItemPosition& InOnPosition, const bool bInLeftShiftDown);
+	void SetUsingItem(const bool InInbUsingItem, UObsidianItem* InItemWidget = nullptr,
+		UObsidianInventoryItemInstance* InUsingInstance = nullptr);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerActivateUsableItemFromInventory(UObsidianInventoryItemInstance* UsingInstance);
+	void ServerActivateUsableItemFromInventory(UObsidianInventoryItemInstance* InUsingInstance);
 	UFUNCTION(Server, Reliable)
-	void ServerActivateUsableItemFromStash(UObsidianInventoryItemInstance* UsingInstance);
+	void ServerActivateUsableItemFromStash(UObsidianInventoryItemInstance* InUsingInstance);
 
 	//~ Start of UObject interface
-	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+	virtual bool ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch, FReplicationFlags* InRepFlags) override;
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
 
@@ -54,11 +54,11 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType,
-		FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float InDeltaTime, enum ELevelTick InTickType,
+		FActorComponentTickFunction* InThisTickFunction) override;
 
-	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
-	void OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage);
+	void OnInventoryStateChanged(FGameplayTag InChannel, const FObsidianInventoryChangeMessage& InInventoryChangeMessage);
+	void OnPlayerStashChanged(FGameplayTag InChannel, const FObsidianStashChangeMessage& InStashChangeMessage);
 
 	void InitializeCraftingComponent();
 	
@@ -68,7 +68,7 @@ protected:
 	
 private:
 	UFUNCTION(Server, Reliable)
-	void ServerUseItem(UObsidianInventoryItemInstance* UsingInstance, const FObsidianItemPosition& OnPosition);
+	void ServerUseItem(UObsidianInventoryItemInstance* InUsingInstance, const FObsidianItemPosition& InOnPosition);
 	
 	void DragUsableItemIcon() const;
 

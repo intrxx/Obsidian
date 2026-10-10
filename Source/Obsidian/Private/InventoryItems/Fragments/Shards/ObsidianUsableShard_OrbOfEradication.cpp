@@ -6,17 +6,17 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-bool UObsidianUsableShard_OrbOfEradication::OnItemUsed(AObsidianPlayerController* ItemOwner,
-	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_OrbOfEradication::OnItemUsed(AObsidianPlayerController* InItemOwner,
+	UObsidianInventoryItemInstance* InUsingInstance, UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
-	if(ItemOwner && UsingInstance && UsingOntoInstance)
+	if(InItemOwner && InUsingInstance && InUsingOntoInstance)
 	{
 		bool bSuccess = false;
-		if(CanUseOnItem(UsingOntoInstance))
+		if(CanUseOnItem(InUsingOntoInstance))
 		{
-			if (UsingOntoInstance->RemoveAllPrefixesAndSuffixes())
+			if (InUsingOntoInstance->RemoveAllPrefixesAndSuffixes())
 			{
-				UsingOntoInstance->SetItemRarity(EObsidianItemRarity::Normal);
+				InUsingOntoInstance->SetItemRarity(EObsidianItemRarity::Normal);
 				bSuccess = true;
 			}
 		}
@@ -25,7 +25,7 @@ bool UObsidianUsableShard_OrbOfEradication::OnItemUsed(AObsidianPlayerController
 		{
 			UE_LOG(ObLogCrafting, Warning, TEXT("Orb Of Eradication could not be used on provided [%s] Instance."
 									 "Or the Usage failed to Remove any Prefixes or Suffixes."),
-										*GetNameSafe(UsingOntoInstance));
+										*GetNameSafe(InUsingOntoInstance));
 		}
 
 		return bSuccess;
@@ -33,10 +33,10 @@ bool UObsidianUsableShard_OrbOfEradication::OnItemUsed(AObsidianPlayerController
 	return false;
 }
 
-void UObsidianUsableShard_OrbOfEradication::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+void UObsidianUsableShard_OrbOfEradication::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext)
 {
-	for(const UObsidianInventoryItemInstance* Instance : AllItems)
+	for(const UObsidianInventoryItemInstance* Instance : InAllItems)
 	{
 		if(CanUseOnItem(Instance))
 		{
@@ -45,13 +45,13 @@ void UObsidianUsableShard_OrbOfEradication::OnItemUsed_UIContext(const TArray<UO
 	}
 }
 
-bool UObsidianUsableShard_OrbOfEradication::CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const
+bool UObsidianUsableShard_OrbOfEradication::CanUseOnItem(const UObsidianInventoryItemInstance* InInstance) const
 {
-	if (Instance == nullptr)
+	if (InInstance == nullptr)
 	{
 		return false;
 	}
-	return Instance->IsItemIdentified() &&
-			Instance->IsMagicOrRare() &&
-			Instance->GetItemAddedPrefixAndSuffixCount() > 0;
+	return InInstance->IsItemIdentified() &&
+			InInstance->IsMagicOrRare() &&
+			InInstance->GetItemAddedPrefixAndSuffixCount() > 0;
 }

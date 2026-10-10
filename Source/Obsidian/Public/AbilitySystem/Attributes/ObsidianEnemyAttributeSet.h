@@ -21,13 +21,13 @@ public:
 	UObsidianEnemyAttributeSet();
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
 
 	ATTRIBUTE_ACCESSORS(UObsidianEnemyAttributeSet, HitReactThreshold);
 
 protected:
 	UFUNCTION()
-	void OnRep_HitReactThreshold(const FGameplayAttributeData& OldValue);
+	void OnRep_HitReactThreshold(const FGameplayAttributeData& InOldValue);
 
 private:
 	/** The current Hit React Threshold Attribute. Defines a percent threshold for which attacks greater than it will cause hit react. */

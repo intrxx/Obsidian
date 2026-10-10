@@ -24,34 +24,34 @@ class OBSIDIAN_API UObsidianItemDataLoaderSubsystem : public UGameInstanceSubsys
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Initialize(FSubsystemCollectionBase& InCollection) override;
 	virtual void Deinitialize() override;
 	
-	bool GetAllCommonTreasureClassesUpToQuality(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const;
-	bool GetAllCommonTreasureClassesUpToQualityForCategory(const int32 UpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass,
-		const FGameplayTag& ForCategory) const;
-	bool GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(const int32 UpToTreasureQuality, const EObsidianItemRarity RarityToGet,
-		const FGameplayTag& OfBaseType, FObsidianTreasureClass& OutTreasureClass) const;
+	bool GetAllCommonTreasureClassesUpToQuality(const int32 InUpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const;
+	bool GetAllCommonTreasureClassesUpToQualityForCategory(const int32 InUpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass,
+		const FGameplayTag& InForCategory) const;
+	bool GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(const int32 InUpToTreasureQuality, const EObsidianItemRarity InRarityToGet,
+		const FGameplayTag& InOfBaseType, FObsidianTreasureClass& OutTreasureClass) const;
 	
-	bool GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
-		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
+	bool GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
+		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
 		TArray<FObsidianDynamicItemAffix>& OutSkillImplicits) const;
-	bool GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
-		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
+	bool GetAllAffixesUpToQualityForCategory_FullGeneration(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
+		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
 		TArray<FObsidianDynamicItemAffix>& OutImplicits, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits) const;
-	bool GetAllAffixesUpToQualityForCategory_NormalItemGeneration(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
-		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutImplicits, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits);
-	bool GetAllSkillImplicitsUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
-		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits);
-	bool GetAllImplicitsUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
-		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutImplicits);
-	bool GetAllPrefixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
-		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes);
-	bool GetAllSuffixesUpToQualityForCategory(const int32 UpToTreasureQuality, const FGameplayTag& ForCategoryTag,
-		const FGameplayTag& ForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutSuffixes);
+	bool GetAllAffixesUpToQualityForCategory_NormalItemGeneration(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
+		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutImplicits, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits);
+	bool GetAllSkillImplicitsUpToQualityForCategory(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
+		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutSkillImplicits);
+	bool GetAllImplicitsUpToQualityForCategory(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
+		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutImplicits);
+	bool GetAllPrefixesUpToQualityForCategory(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
+		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes);
+	bool GetAllSuffixesUpToQualityForCategory(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
+		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutSuffixes);
 	
 	
-	FString GetRandomRareItemNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategoryTag) const;
+	FString GetRandomRareItemNameAddition(const int32 InUpToTreasureQuality, const FGameplayTag& InForItemCategoryTag) const;
 	FString GetAffixMultiplierMagicItemNameAddition() const;
 
 public:

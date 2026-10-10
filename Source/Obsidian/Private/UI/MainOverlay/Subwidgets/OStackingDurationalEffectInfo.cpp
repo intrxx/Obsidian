@@ -7,18 +7,18 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)
+void UOStackingDurationalEffectInfo::SetStackCount(const int32 InCount)
 {
-	EffectStackCount = Count;
+	EffectStackCount = InCount;
 	if(StackCount_TextBlock)
 	{
-		StackCount_TextBlock->SetText(FText::AsNumber(Count));
+		StackCount_TextBlock->SetText(FText::AsNumber(InCount));
 	}
 }
 
-void UOStackingDurationalEffectInfo::UpdateStackingInfoWidget(const int32 NewCount)
+void UOStackingDurationalEffectInfo::UpdateStackingInfoWidget(const int32 InNewCount)
 {
-	SetStackCount(NewCount);
+	SetStackCount(InNewCount);
 	if(EffectDurationPolicy == EGameplayEffectStackingDurationPolicy::RefreshOnSuccessfulApplication)
 	{
 		ResetEffectTimer();

@@ -48,41 +48,41 @@ class OBSIDIAN_API UObsidianAbilitySystemComponent : public UAbilitySystemCompon
 	GENERATED_BODY()
 
 public:
-	UObsidianAbilitySystemComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianAbilitySystemComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	void AbilityInputTagPressed(const FGameplayTag& InputTag);
-	void AbilityInputTagReleased(const FGameplayTag& InputTag);
+	void AbilityInputTagPressed(const FGameplayTag& InInputTag);
+	void AbilityInputTagReleased(const FGameplayTag& InInputTag);
 
-	void ProcessAbilityInput(float DeltaTime, bool bPauseGame);
+	void ProcessAbilityInput(float InDeltaTime, bool bInPauseGame);
 	void ClearAbilityInput();
 
-	void SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* MappingToSet);
+	void SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* InMappingToSet);
 	void AbilityActorInfoSet();
 	void BindToOnEffectAppliedDelegate();
 
-	void GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const;
+	void GetAdditionalActivationTagRequirements(const FGameplayTagContainer& InAbilityTags, FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const;
 
-	UFUNCTION(BlueprintCallable, Category = "GameplayCue", meta = (AutoCreateRefTerm = "GameplayCueParameters", GameplayTagFilter = "GameplayCue"))
-	void ExecuteGameplayCueLocal(const FGameplayTag GameplayCueTag, const FGameplayCueParameters& GameplayCueParameters);
+	UFUNCTION(BlueprintCallable, Category = "GameplayCue", meta = (AutoCreateRefTerm = "InGameplayCueParameters", GameplayTagFilter = "GameplayCue"))
+	void ExecuteGameplayCueLocal(const FGameplayTag InGameplayCueTag, const FGameplayCueParameters& InGameplayCueParameters);
 
-	UFUNCTION(BlueprintCallable, Category = "GameplayCue", meta = (AutoCreateRefTerm = "GameplayCueParameters", GameplayTagFilter = "GameplayCue"))
-	void AddGameplayCueLocal(const FGameplayTag GameplayCueTag, const FGameplayCueParameters& GameplayCueParameters);
+	UFUNCTION(BlueprintCallable, Category = "GameplayCue", meta = (AutoCreateRefTerm = "InGameplayCueParameters", GameplayTagFilter = "GameplayCue"))
+	void AddGameplayCueLocal(const FGameplayTag InGameplayCueTag, const FGameplayCueParameters& InGameplayCueParameters);
 
-	UFUNCTION(BlueprintCallable, Category = "GameplayCue", meta = (AutoCreateRefTerm = "GameplayCueParameters", GameplayTagFilter = "GameplayCue"))
-	void RemoveGameplayCueLocal(const FGameplayTag GameplayCueTag, const FGameplayCueParameters& GameplayCueParameters);
+	UFUNCTION(BlueprintCallable, Category = "GameplayCue", meta = (AutoCreateRefTerm = "InGameplayCueParameters", GameplayTagFilter = "GameplayCue"))
+	void RemoveGameplayCueLocal(const FGameplayTag InGameplayCueTag, const FGameplayCueParameters& InGameplayCueParameters);
 
 public:
 	FEffectAppliedAssetTags OnEffectAppliedAssetTags;
 	FOnAuraDisabled OnAuraDisabledDelegate;
 	
 protected:
-	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& Spec) override;
-	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& Spec) override;
+	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& InSpec) override;
+	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& InSpec) override;
 
 	UFUNCTION(Client, Reliable)
-	void ClientOnEffectApplied(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle EffectHandle);
+	void ClientOnEffectApplied(UAbilitySystemComponent* InASC, const FGameplayEffectSpec& InEffectSpec, FActiveGameplayEffectHandle InEffectHandle);
 
-	float CalculateFullEffectMagnitude(const FGameplayEffectSpec& EffectSpec);
+	float CalculateFullEffectMagnitude(const FGameplayEffectSpec& InEffectSpec);
 	
 protected:
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;

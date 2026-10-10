@@ -15,18 +15,18 @@ UObsidianBTTask_SetGameplayAttribute::UObsidianBTTask_SetGameplayAttribute()
 	INIT_TASK_NODE_NOTIFY_FLAGS();
 }
 
-EBTNodeResult::Type UObsidianBTTask_SetGameplayAttribute::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_SetGameplayAttribute::ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
- 	AAIController* AIController = OwnerComp.GetAIOwner();
+ 	AAIController* AIController = InOwnerComp.GetAIOwner();
 	if(AIController == nullptr)
 	{
-		UE_VLOG(OwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetGameplayAttribute::ExecuteTask failed since AIController is missing."));
+		UE_VLOG(InOwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetGameplayAttribute::ExecuteTask failed since AIController is missing."));
 		return EBTNodeResult::Failed;
 	}
 	AActor* Actor = AIController->GetPawn();
 	if(Actor == nullptr)
 	{
-		UE_VLOG(OwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetGameplayAttribute::ExecuteTask failed since Actor is missing."));
+		UE_VLOG(InOwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetGameplayAttribute::ExecuteTask failed since Actor is missing."));
 		return EBTNodeResult::Failed;
 	}
 

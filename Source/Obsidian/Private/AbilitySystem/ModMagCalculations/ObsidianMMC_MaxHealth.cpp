@@ -32,8 +32,8 @@ static const SObsidian_MaxHealthStatics& MaxHealthStatics()
 	return MaxHealthStatics;
 }
 
-UObsidianMMC_MaxHealth::UObsidianMMC_MaxHealth(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_MaxHealth::UObsidianMMC_MaxHealth(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxHealthStatics().MaxHealth);
 	RelevantAttributesToCapture.Add(MaxHealthStatics().StrengthDef);
@@ -41,14 +41,14 @@ UObsidianMMC_MaxHealth::UObsidianMMC_MaxHealth(const FObjectInitializer& ObjectI
 	RelevantAttributesToCapture.Add(MaxHealthStatics().IncreasedHealthPercentage);
 }
 
-float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	// We can get the combat interface because the source object is our Character that executes the backing attributes infinite gameplay effect
-	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());
+	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(InSpec.GetContext().GetSourceObject());
 	if (CombatInterface == nullptr)
 	{
 		UE_LOG(ObLogAbilitySystem, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
-		return Super::CalculateBaseMagnitude_Implementation(Spec);
+		return Super::CalculateBaseMagnitude_Implementation(InSpec);
 	}
 	
 	const uint8 CharacterLevel = CombatInterface->GetCharacterLevel();
@@ -56,19 +56,19 @@ float UObsidianMMC_MaxHealth::CalculateBaseMagnitude_Implementation(const FGamep
 	const FAggregatorEvaluateParameters EvaluationParameters;
 
 	float MaxHealth = 0.f;
-	GetCapturedAttributeMagnitude(MaxHealthStatics().MaxHealth, Spec, EvaluationParameters, MaxHealth);
+	GetCapturedAttributeMagnitude(MaxHealthStatics().MaxHealth, InSpec, EvaluationParameters, MaxHealth);
 	MaxHealth = FMath::Max<float>(MaxHealth, 0.f);
 	
 	float Strength = 0.f;
-	GetCapturedAttributeMagnitude(MaxHealthStatics().StrengthDef, Spec, EvaluationParameters, Strength);
+	GetCapturedAttributeMagnitude(MaxHealthStatics().StrengthDef, InSpec, EvaluationParameters, Strength);
 	Strength = FMath::Max<float>(Strength, 0.f);
 
 	float Dexterity = 0.f;
-	GetCapturedAttributeMagnitude(MaxHealthStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
+	GetCapturedAttributeMagnitude(MaxHealthStatics().DexterityDef, InSpec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 
 	float IncreasedHealth = 0.f;
-	GetCapturedAttributeMagnitude(MaxHealthStatics().IncreasedHealthPercentage, Spec, EvaluationParameters, IncreasedHealth);
+	GetCapturedAttributeMagnitude(MaxHealthStatics().IncreasedHealthPercentage, InSpec, EvaluationParameters, IncreasedHealth);
 	IncreasedHealth = FMath::Max<float>(IncreasedHealth, 0.f);
 
 	//TICKET(intrxx) OBS-79

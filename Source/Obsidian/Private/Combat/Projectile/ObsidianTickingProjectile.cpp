@@ -3,8 +3,8 @@
 #include "Combat/Projectile/ObsidianTickingProjectile.h"
 
 
-AObsidianTickingProjectile::AObsidianTickingProjectile(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianTickingProjectile::AObsidianTickingProjectile(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
@@ -24,9 +24,9 @@ void AObsidianTickingProjectile::BeginPlay()
 	}
 }
 
-void AObsidianTickingProjectile::Tick(float DeltaSeconds)
+void AObsidianTickingProjectile::Tick(float InDeltaSeconds)
 {
-	Super::Tick(DeltaSeconds);
+	Super::Tick(InDeltaSeconds);
 
 	if (ProjectileCleanupMethod == EObsidianProjectileCleanupMethod::DistanceTraveled)
 	{

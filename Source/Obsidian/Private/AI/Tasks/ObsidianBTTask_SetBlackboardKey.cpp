@@ -11,13 +11,13 @@ UObsidianBTTask_SetBlackboardKey::UObsidianBTTask_SetBlackboardKey()
 	INIT_TASK_NODE_NOTIFY_FLAGS();
 }
 
-EBTNodeResult::Type UObsidianBTTask_SetBlackboardKey::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_SetBlackboardKey::ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
-	UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+	UBlackboardComponent* BlackboardComponent = InOwnerComp.GetBlackboardComponent();
 
 	if(BlackboardComponent == nullptr)
 	{
-		UE_VLOG(OwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetBlackboardKey::ExecuteTask failed since BlackboardComponent is missing."));
+		UE_VLOG(InOwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetBlackboardKey::ExecuteTask failed since BlackboardComponent is missing."));
 		return EBTNodeResult::Failed;
 	}
 

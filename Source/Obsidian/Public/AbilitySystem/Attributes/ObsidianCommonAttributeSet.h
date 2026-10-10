@@ -20,9 +20,9 @@ class OBSIDIAN_API UObsidianCommonAttributeSet : public UObsidianAttributeSetBas
 public:
 	UObsidianCommonAttributeSet();
 
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PreAttributeChange(const FGameplayAttribute& InAttribute, float& InOutNewValue) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
 
 	/**
 	 * Vital
@@ -145,178 +145,178 @@ public:
 protected:
 	virtual void ResetMetaAttributes();
 
-	void ApplyExperienceReward(UAbilitySystemComponent* SourceASC);
+	void ApplyExperienceReward(UAbilitySystemComponent* InSourceASC);
 	
 	/**
 	 * Vital
 	 */
 	
 	UFUNCTION()
-	void OnRep_Health(const FGameplayAttributeData& OldValue);
+	void OnRep_Health(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_IncreasedHealthPercentage(const FGameplayAttributeData& OldValue);
+	void OnRep_IncreasedHealthPercentage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxHealth(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxHealth(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_EnergyShield(const FGameplayAttributeData& OldValue);
+	void OnRep_EnergyShield(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxEnergyShield(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxEnergyShield(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_IncreasedEnergyShieldPercentage(const FGameplayAttributeData& OldValue);
+	void OnRep_IncreasedEnergyShieldPercentage(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Status
 	 */
 
 	UFUNCTION()
-	void OnRep_HealthRegeneration(const FGameplayAttributeData& OldValue);
+	void OnRep_HealthRegeneration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& OldValue);
+	void OnRep_EnergyShieldRegeneration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_StaggerMeter(const FGameplayAttributeData& OldValue);
+	void OnRep_StaggerMeter(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxStaggerMeter(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxStaggerMeter(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_StaggerMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_StaggerMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_AllDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_AllDamageMultiplier(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Defence attributes
 	 */
 	
 	UFUNCTION()
-	void OnRep_Armor(const FGameplayAttributeData& OldValue);
+	void OnRep_Armor(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_IncreasedArmorPercent(const FGameplayAttributeData& OldValue);
+	void OnRep_IncreasedArmorPercent(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_Evasion(const FGameplayAttributeData& OldValue);
+	void OnRep_Evasion(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_IncreasedEvasionPercent(const FGameplayAttributeData& OldValue);
+	void OnRep_IncreasedEvasionPercent(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_SpellSuppressionChance(const FGameplayAttributeData& OldValue);
+	void OnRep_SpellSuppressionChance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_SpellSuppressionMagnitude(const FGameplayAttributeData& OldValue);
+	void OnRep_SpellSuppressionMagnitude(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_AilmentThreshold(const FGameplayAttributeData& OldValue);
+	void OnRep_AilmentThreshold(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Damage Taken Multipliers
 	 */
 	
 	UFUNCTION()
-	void OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_StaggerDamageTakenMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_StaggerDamageTakenMultiplier(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Resistances
 	 */
 	
 	UFUNCTION()
-	void OnRep_AllElementalResistances(const FGameplayAttributeData& OldValue);
+	void OnRep_AllElementalResistances(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_FireResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_FireResistance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxFireResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxFireResistance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_ColdResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_ColdResistance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxColdResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxColdResistance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_LightningResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_LightningResistance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxLightningResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxLightningResistance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_ChaosResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_ChaosResistance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxChaosResistance(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxChaosResistance(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Status Effects
 	 */
 
 	UFUNCTION()
-	void OnRep_IncreasedEffectOfShock(const FGameplayAttributeData& OldValue);
+	void OnRep_IncreasedEffectOfShock(const FGameplayAttributeData& InOldValue);
 
 	UFUNCTION()
-	void OnRep_ChanceToShock(const FGameplayAttributeData& OldValue);
+	void OnRep_ChanceToShock(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Damage scaling attributes
 	 */
 	
 	UFUNCTION()
-	void OnRep_Accuracy(const FGameplayAttributeData& OldValue);
+	void OnRep_Accuracy(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_CriticalStrikeChance(const FGameplayAttributeData& OldValue);
+	void OnRep_CriticalStrikeChance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_CriticalStrikeDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_CriticalStrikeDamageMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_AttackSpeed(const FGameplayAttributeData& OldValue);
+	void OnRep_AttackSpeed(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_CastSpeed(const FGameplayAttributeData& OldValue);
+	void OnRep_CastSpeed(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_FirePenetration(const FGameplayAttributeData& OldValue);
+	void OnRep_FirePenetration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_ColdPenetration(const FGameplayAttributeData& OldValue);
+	void OnRep_ColdPenetration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_LightningPenetration(const FGameplayAttributeData& OldValue);
+	void OnRep_LightningPenetration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_AllElementalPenetration(const FGameplayAttributeData& OldValue);
+	void OnRep_AllElementalPenetration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_ChaosPenetration(const FGameplayAttributeData& OldValue);
+	void OnRep_ChaosPenetration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_FireDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_FireDamageMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_ColdDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_ColdDamageMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_LightningDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_LightningDamageMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_AllElementalDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_AllElementalDamageMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_ChaosDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_ChaosDamageMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& OldValue);
+	void OnRep_PhysicalDamageMultiplier(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Base Attributes
 	 */
 
 	UFUNCTION()
-	void OnRep_MinFlatPhysicalDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MinFlatPhysicalDamage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxFlatPhysicalDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxFlatPhysicalDamage(const FGameplayAttributeData& InOldValue);
 
 	UFUNCTION()
-	void OnRep_MinFlatFireDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MinFlatFireDamage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxFlatFireDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxFlatFireDamage(const FGameplayAttributeData& InOldValue);
 
 	UFUNCTION()
-	void OnRep_MinFlatColdDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MinFlatColdDamage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxFlatColdDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxFlatColdDamage(const FGameplayAttributeData& InOldValue);
 
 	UFUNCTION()
-	void OnRep_MinFlatLightningDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MinFlatLightningDamage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxFlatLightningDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxFlatLightningDamage(const FGameplayAttributeData& InOldValue);
 
 	UFUNCTION()
-	void OnRep_MinFlatChaosDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MinFlatChaosDamage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxFlatChaosDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxFlatChaosDamage(const FGameplayAttributeData& InOldValue);
 	
 	UFUNCTION()
-	void OnRep_BaseDamage(const FGameplayAttributeData& OldValue);
+	void OnRep_BaseDamage(const FGameplayAttributeData& InOldValue);
 	
 	/**
 	 * Base Attributes
 	 */
 
 	UFUNCTION()
-	void OnRep_MovementSpeed(const FGameplayAttributeData& OldValue);
+	void OnRep_MovementSpeed(const FGameplayAttributeData& InOldValue);
 
 protected:
 	UPROPERTY()

@@ -3,7 +3,7 @@
 #include "Game/Save/ObsidianSharedStashSaveGame.h"
 
 
-UObsidianSharedStashSaveGame::UObsidianSharedStashSaveGame(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianSharedStashSaveGame::UObsidianSharedStashSaveGame(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }

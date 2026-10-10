@@ -9,8 +9,8 @@
 #include "CharacterComponents/ObsidianBossComponent.h"
 
 
-AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RightHandEquipmentMesh = CreateDefaultSubobject<USkeletalMeshComponent>("RightHandEquipmentMesh");
 	RightHandEquipmentMesh->SetupAttachment(GetMesh(), ObsidianMeshSocketNames::BackWeaponSocket);

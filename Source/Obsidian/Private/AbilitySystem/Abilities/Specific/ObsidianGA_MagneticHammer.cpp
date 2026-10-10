@@ -4,12 +4,12 @@
 #include "AbilitySystem/Abilities/Specific/ObsidianGA_MagneticHammer.h"
 
 
-UObsidianGA_MagneticHammer::UObsidianGA_MagneticHammer(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianGA_MagneticHammer::UObsidianGA_MagneticHammer(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
-void UObsidianGA_MagneticHammer::FireMagneticHammer(const FVector& TowardsTarget)
+void UObsidianGA_MagneticHammer::FireMagneticHammer(const FVector& InTowardsTarget)
 {
-	SpawnProjectile(GetOwnerLocationFromActorInfo(), TowardsTarget, true);
+	SpawnProjectile(GetOwnerLocationFromActorInfo(), InTowardsTarget, true);
 }

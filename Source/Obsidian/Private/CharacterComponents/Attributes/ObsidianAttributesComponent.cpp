@@ -12,8 +12,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
@@ -26,25 +26,25 @@ UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitiali
 	DeathState = EObsidianDeathState::EDS_Alive;
 }
 
-void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner)
+void UObsidianAttributesComponent::InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner)
 {
 	if(AbilitySystemComponent)
 	{
-		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *Owner->GetName());
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Attributes Component for owner [%s] has already been initialized with an Ability System."), *InOwner->GetName());
 		return;
 	}
 
 	AbilitySystemComponent = InASC;
 	if (!AbilitySystemComponent)
 	{
-		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *Owner->GetName());
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL ability system."), *InOwner->GetName());
 		return;
 	}
 	
 	CommonAttributeSet = AbilitySystemComponent->GetSet<UObsidianCommonAttributeSet>();
 	if (!CommonAttributeSet)
 	{
-		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *Owner->GetName());
+		UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComponent: Cannot initialize Attributes Component for owner [%s] with NULL Common Set set on the Ability System."), *InOwner->GetName());
 		return;
 	}
 	
@@ -144,21 +144,21 @@ void UObsidianAttributesComponent::FinishDeath()
 	Owner->ForceNetUpdate();
 }
 
-void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeathState)
+void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState InOldDeathState)
 {
 	const EObsidianDeathState NewDeathState = DeathState;
 
 	// Revert the death state for now since we rely on StartDeath and FinishDeath to change it.
-	DeathState = OldDeathState;
+	DeathState = InOldDeathState;
 
-	if (OldDeathState > NewDeathState)
+	if (InOldDeathState > NewDeathState)
 	{
 		// The server is trying to set us back, but we've already predicted past the server state.
-		UE_LOG(ObLogAttributes, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+		UE_LOG(ObLogAttributes, Warning, TEXT("ObsidianAttributesComp: Predicted past server death state [%d] -> [%d] for owner [%s]."), (uint8)InOldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		return;
 	}
 
-	if (OldDeathState == EObsidianDeathState::EDS_Alive)
+	if (InOldDeathState == EObsidianDeathState::EDS_Alive)
 	{
 		if (NewDeathState == EObsidianDeathState::EDS_DeathStarted)
 		{
@@ -171,10 +171,10 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 		}
 		else
 		{
-			UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+			UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)InOldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		}
 	}
-	else if (OldDeathState == EObsidianDeathState::EDS_DeathStarted)
+	else if (InOldDeathState == EObsidianDeathState::EDS_DeathStarted)
 	{
 		if (NewDeathState == EObsidianDeathState::EDS_DeathFinished)
 		{
@@ -182,28 +182,28 @@ void UObsidianAttributesComponent::OnRep_DeathState(EObsidianDeathState OldDeath
 		}
 		else
 		{
-			UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+			UE_LOG(ObLogAttributes, Error, TEXT("ObsidianAttributesComp: Invalid death transition [%d] -> [%d] for owner [%s]."), (uint8)InOldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 		}
 	}
 
-	ensureMsgf((DeathState == NewDeathState), TEXT("ObsidianAttributesComp: Death transition failed [%d] -> [%d] for owner [%s]."), (uint8)OldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
+	ensureMsgf((DeathState == NewDeathState), TEXT("ObsidianAttributesComp: Death transition failed [%d] -> [%d] for owner [%s]."), (uint8)InOldDeathState, (uint8)NewDeathState, *GetNameSafe(GetOwner()));
 }
 
-void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser,
-	const FGameplayEffectSpec* DamageEffectSpec, float DamageMagnitude, float OldValue, float NewValue)
+void UObsidianAttributesComponent::HandleOutOfHealth(AActor* InDamageInstigator, AActor* InDamageCauser,
+	const FGameplayEffectSpec* InDamageEffectSpec, float InDamageMagnitude, float InOldValue, float InNewValue)
 {
 #if WITH_SERVER_CODE
-	if(AbilitySystemComponent && DamageEffectSpec)
+	if(AbilitySystemComponent && InDamageEffectSpec)
 	{
 		FGameplayEventData Payload;
 		Payload.EventTag = ObsidianGameplayTags::GameplayEvent::Death;
-		Payload.Instigator = DamageInstigator;
+		Payload.Instigator = InDamageInstigator;
 		Payload.Target = AbilitySystemComponent->GetAvatarActor();
-		Payload.OptionalObject = DamageEffectSpec->Def;
-		Payload.ContextHandle = DamageEffectSpec->GetEffectContext();
-		Payload.InstigatorTags = *DamageEffectSpec->CapturedSourceTags.GetAggregatedTags();
-		Payload.TargetTags = *DamageEffectSpec->CapturedTargetTags.GetAggregatedTags();
-		Payload.EventMagnitude = DamageMagnitude;
+		Payload.OptionalObject = InDamageEffectSpec->Def;
+		Payload.ContextHandle = InDamageEffectSpec->GetEffectContext();
+		Payload.InstigatorTags = *InDamageEffectSpec->CapturedSourceTags.GetAggregatedTags();
+		Payload.TargetTags = *InDamageEffectSpec->CapturedTargetTags.GetAggregatedTags();
+		Payload.EventMagnitude = InDamageMagnitude;
 
 		FScopedPredictionWindow NewScopedWindow(AbilitySystemComponent, true);
 		AbilitySystemComponent->HandleGameplayEvent(Payload.EventTag, &Payload);
@@ -211,22 +211,22 @@ void UObsidianAttributesComponent::HandleOutOfHealth(AActor* DamageInstigator, A
 #endif 
 }
 
-void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianAttributesComponent::HealthChanged(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
-void UObsidianAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& Data)
+void UObsidianAttributesComponent::MaxHealthChanged(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Max Health Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
-void UObsidianAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianAttributesComponent::EnergyShieldChanged(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }
 
-void UObsidianAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& Data)
+void UObsidianAttributesComponent::MaxEnergyShieldChanged(const FOnAttributeChangeData& InData)
 {
 	UE_LOG(ObLogAttributes, Warning, TEXT("Base Class - Implement Max Energy Shield Changed or remove the binding! - For %s"), *GetNameSafe(GetOwner()));
 }

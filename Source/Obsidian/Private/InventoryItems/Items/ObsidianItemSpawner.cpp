@@ -9,8 +9,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -56,7 +56,7 @@ uint8 AObsidianItemSpawner::GetItemSpawnerLevel() const
 	return 0;
 }
 
-void AObsidianItemSpawner::OnSpawningItemsFinished(const bool bDroppedItem)
+void AObsidianItemSpawner::OnSpawningItemsFinished(const bool bInDroppedItem)
 {
 	++TimesDropped;
 	
@@ -105,11 +105,11 @@ float AObsidianItemSpawner::GetInteractionRadius()
 	return InteractionRadius;
 }
 
-void AObsidianItemSpawner::Interact(AObsidianPlayerController* InteractingPlayerController)
+void AObsidianItemSpawner::Interact(AObsidianPlayerController* InInteractingPlayerController)
 {
-	if(InteractingPlayerController)
+	if(InInteractingPlayerController)
 	{
-		InteractingPlayerController->ServerSpawnItemFromSpawner(this);
+		InInteractingPlayerController->ServerSpawnItemFromSpawner(this);
 	}
 }
 

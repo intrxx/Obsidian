@@ -8,8 +8,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = true;
 	PrimaryComponentTick.bStartWithTickEnabled = true;
@@ -24,9 +24,9 @@ UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObject
 	};
 }
 
-void UObsidianAdvancedCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UObsidianAdvancedCombatComponent::TickComponent(float InDeltaTime, ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(InDeltaTime, InTickType, InThisTickFunction);
 
 	if(bStartTrace)
 	{
@@ -58,13 +58,13 @@ void UObsidianAdvancedCombatComponent::TickTrace()
 	}
 }
 
-void UObsidianAdvancedCombatComponent::StartTrace(const FObsidianAdvancedTraceParams& TraceParams)
+void UObsidianAdvancedCombatComponent::StartTrace(const FObsidianAdvancedTraceParams& InTraceParams)
 {
-	CurrentTraceType = TraceParams.TraceType;
-	CurrentTracedMesh = TracedMeshesMap[TraceParams.TracedMeshType];
-	bOneHitPerTrace = TraceParams.bAllowOneHitPerTrace;
+	CurrentTraceType = InTraceParams.TraceType;
+	CurrentTracedMesh = TracedMeshesMap[InTraceParams.TracedMeshType];
+	bOneHitPerTrace = InTraceParams.bAllowOneHitPerTrace;
 	
-	const FObsidianAdvancedCombatSockets Sockets = SocketsMap[TraceParams.TracedMeshType];
+	const FObsidianAdvancedCombatSockets Sockets = SocketsMap[InTraceParams.TracedMeshType];
 	TraceStartSocketName = Sockets.StartSocketName;
 	TraceEndSocketName = Sockets.EndSocketName;
 
@@ -104,21 +104,21 @@ void UObsidianAdvancedCombatComponent::StopTrace()
 	OnAttackTraceFinishedDelegate.Broadcast();
 }
 
-void UObsidianAdvancedCombatComponent::GetSocketsLocationsByMesh(const UPrimitiveComponent* Mesh,
+void UObsidianAdvancedCombatComponent::GetSocketsLocationsByMesh(const UPrimitiveComponent* InMesh,
 	FVector& OutStartSocketLoc, FVector& OutEndSocketLoc) const
 {
-	OutStartSocketLoc = Mesh->GetSocketLocation(TraceStartSocketName);
-	OutEndSocketLoc = Mesh->GetSocketLocation(TraceEndSocketName);
+	OutStartSocketLoc = InMesh->GetSocketLocation(TraceStartSocketName);
+	OutEndSocketLoc = InMesh->GetSocketLocation(TraceEndSocketName);
 }
 
-void UObsidianAdvancedCombatComponent::HandleHit(const bool bHit, const TArray<FHitResult>& HitResults)
+void UObsidianAdvancedCombatComponent::HandleHit(const bool bInHit, const TArray<FHitResult>& InHitResults)
 {
-	if(!bHit)
+	if(!bInHit)
 	{
 		return;
 	}
 
-	for(const FHitResult& HitResult : HitResults)
+	for(const FHitResult& HitResult : InHitResults)
 	{
 		if(bOneHitPerTrace)
 		{
@@ -136,10 +136,10 @@ void UObsidianAdvancedCombatComponent::HandleHit(const bool bHit, const TArray<F
 	}
 }
 
-void UObsidianAdvancedCombatComponent::CalculateNextTracePoint(const int32 Index, const int32 Count, const FVector& Start,
-	const FVector& End, FVector& OutTracePoint)
+void UObsidianAdvancedCombatComponent::CalculateNextTracePoint(const int32 InIndex, const int32 InCount, const FVector& InStart,
+	const FVector& InEnd, FVector& OutTracePoint)
 {
-	OutTracePoint = Start + Index * ((End - Start) / Count);
+	OutTracePoint = InStart + InIndex * ((InEnd - InStart) / InCount);
 }
 
 void UObsidianAdvancedCombatComponent::SimpleLineTrace()
@@ -266,13 +266,13 @@ void UObsidianAdvancedCombatComponent::AddIgnoredActors(TArray<AActor*> InIgnore
 	}
 }
 
-void UObsidianAdvancedCombatComponent::RemoveIgnoredActor(AActor* IgnoredActorToRemove)
+void UObsidianAdvancedCombatComponent::RemoveIgnoredActor(AActor* InIgnoredActorToRemove)
 {
-	if(!IsValid(IgnoredActorToRemove))
+	if(!IsValid(InIgnoredActorToRemove))
 	{
 		return;
 	}
-	IgnoredActors.Remove(IgnoredActorToRemove);
+	IgnoredActors.Remove(InIgnoredActorToRemove);
 }
 
 void UObsidianAdvancedCombatComponent::ClearIgnoredActors()
@@ -280,13 +280,13 @@ void UObsidianAdvancedCombatComponent::ClearIgnoredActors()
 	IgnoredActors.Empty();
 }
 
-void UObsidianAdvancedCombatComponent::AddTracedMesh(UPrimitiveComponent* InTracedMesh, const EObsidianTracedMeshType TracedMeshType)
+void UObsidianAdvancedCombatComponent::AddTracedMesh(UPrimitiveComponent* InTracedMesh, const EObsidianTracedMeshType InTracedMeshType)
 {
 	if(!IsValid(InTracedMesh))
 	{
 		return;
 	}
-	TracedMeshesMap.Add(TracedMeshType, InTracedMesh);
+	TracedMeshesMap.Add(InTracedMeshType, InTracedMesh);
 }
 
 void UObsidianAdvancedCombatComponent::AddTracedMeshes(TMap<EObsidianTracedMeshType, UPrimitiveComponent*> InTracedMeshesMap)
@@ -301,9 +301,9 @@ void UObsidianAdvancedCombatComponent::AddTracedMeshes(TMap<EObsidianTracedMeshT
 	}
 }
 
-void UObsidianAdvancedCombatComponent::RemoveTracedMeshWithType(const EObsidianTracedMeshType TracedMeshType)
+void UObsidianAdvancedCombatComponent::RemoveTracedMeshWithType(const EObsidianTracedMeshType InTracedMeshType)
 {
-	TracedMeshesMap.Remove(TracedMeshType);
+	TracedMeshesMap.Remove(InTracedMeshType);
 }
 
 void UObsidianAdvancedCombatComponent::ClearTracedMeshes()

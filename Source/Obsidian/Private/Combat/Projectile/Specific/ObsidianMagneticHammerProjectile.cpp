@@ -8,8 +8,8 @@
 #include "Combat/Projectile/OProjectileMovementComponent.h"
 
 
-AObsidianMagneticHammerProjectile::AObsidianMagneticHammerProjectile(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianMagneticHammerProjectile::AObsidianMagneticHammerProjectile(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	HammerMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Hammer Mesh"));
 	HammerMeshComponent->SetupAttachment(GetRootComponent());
@@ -43,14 +43,14 @@ void AObsidianMagneticHammerProjectile::BeginPlay()
 	}
 }
 
-void AObsidianMagneticHammerProjectile::Tick(float DeltaTime)
+void AObsidianMagneticHammerProjectile::Tick(float InDeltaTime)
 {
-	Super::Tick(DeltaTime);
+	Super::Tick(InDeltaTime);
 
-	UpdateHammerRoute(DeltaTime);
+	UpdateHammerRoute(InDeltaTime);
 }
 
-void AObsidianMagneticHammerProjectile::UpdateHammerRoute(const float DeltaTime)
+void AObsidianMagneticHammerProjectile::UpdateHammerRoute(const float InDeltaTime)
 {
 	if (HeroOwner.IsValid() == false)
 	{
@@ -103,7 +103,7 @@ void AObsidianMagneticHammerProjectile::UpdateHammerRoute(const float DeltaTime)
 			NewRotation.Yaw = TargetRotation.Yaw - 180.0f; // -180.0f cuz we are going backwards back to Owner
 			SetActorRotation(NewRotation);
 		}
-		HammerMeshComponent->AddLocalRotation(FRotator(HammerRotationSpeed * DeltaTime, 0.0f, 0.0f));
+		HammerMeshComponent->AddLocalRotation(FRotator(HammerRotationSpeed * InDeltaTime, 0.0f, 0.0f));
 		HammerMeshComponent->SetRelativeScale3D(HammerInitialScaleValue * FVector(HammerScaleValue));
 	}
 }

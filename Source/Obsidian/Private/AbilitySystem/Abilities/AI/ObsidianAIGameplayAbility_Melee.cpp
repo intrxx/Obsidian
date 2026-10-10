@@ -10,27 +10,27 @@
 #include "AI/ObsidianEnemyInterface.h"
 
 
-void UObsidianAIGameplayAbility_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-                                                       const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UObsidianAIGameplayAbility_Melee::ActivateAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo,
+                                                       const FGameplayAbilityActivationInfo InActivationInfo, const FGameplayEventData* InTriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	Super::ActivateAbility(InHandle, InActorInfo, InActivationInfo, InTriggerEventData);
 
 	AActor* AvatarActor = GetAvatarActorFromActorInfo();
 	if(AvatarActor == nullptr)
 	{
-		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		CancelAbility(InHandle, InActorInfo, InActivationInfo, true);
 	}
 
 	OwningAIController = OwningAIController.Get() == nullptr ? GetAIControllerFromActorInfo() : OwningAIController.Get();
 	if(OwningAIController == nullptr)
 	{
-		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		CancelAbility(InHandle, InActorInfo, InActivationInfo, true);
 	}
 
 	CombatTargetActor = IObsidianEnemyInterface::Execute_GetCombatTarget(AvatarActor);
 	if(CombatTargetActor == nullptr)
 	{
-		CancelAbility(Handle, ActorInfo, ActivationInfo, true);
+		CancelAbility(InHandle, InActorInfo, InActivationInfo, true);
 	}
 	
 	if(bShouldStopMovement)
@@ -55,10 +55,10 @@ void UObsidianAIGameplayAbility_Melee::ActivateAbility(const FGameplayAbilitySpe
 	}
 }
 
-void UObsidianAIGameplayAbility_Melee::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void UObsidianAIGameplayAbility_Melee::EndAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo,
+	const FGameplayAbilityActivationInfo InActivationInfo, bool bInReplicateEndAbility, bool bInWasCancelled)
 {
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	Super::EndAbility(InHandle, InActorInfo, InActivationInfo, bInReplicateEndAbility, bInWasCancelled);
 
 	if(bShouldStopMovement)
 	{

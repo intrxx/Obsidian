@@ -7,8 +7,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianPlayerStash::AObsidianPlayerStash(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianPlayerStash::AObsidianPlayerStash(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -66,9 +66,9 @@ float AObsidianPlayerStash::GetInteractionRadius()
 	return InteractionRadius;
 }
 
-void AObsidianPlayerStash::Interact(AObsidianPlayerController* InteractingPlayerController)
+void AObsidianPlayerStash::Interact(AObsidianPlayerController* InInteractingPlayerController)
 {
-	if(InteractingPlayerController == nullptr)
+	if(InInteractingPlayerController == nullptr)
 	{
 		return;
 	}
@@ -77,14 +77,14 @@ void AObsidianPlayerStash::Interact(AObsidianPlayerController* InteractingPlayer
 
 	//TODO(intrxx) Play sound and stash animation
 
-	InteractingPlayerController->TogglePlayerStash(true);
+	InInteractingPlayerController->TogglePlayerStash(true);
 }
 
-void AObsidianPlayerStash::StopInteraction(AObsidianPlayerController* InteractingPlayerController)
+void AObsidianPlayerStash::StopInteraction(AObsidianPlayerController* InInteractingPlayerController)
 {
-	if(InteractingPlayerController)
+	if(InInteractingPlayerController)
 	{
-		InteractingPlayerController->TogglePlayerStash(false);
+		InInteractingPlayerController->TogglePlayerStash(false);
 	}
 }
 

@@ -39,13 +39,13 @@ class OBSIDIAN_API UObsidianAttributesComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianAttributesComponent(const FObjectInitializer& ObjectInitializer);
+	UObsidianAttributesComponent(const FObjectInitializer& InObjectInitializer);
 
 	/** Returns the COMMON Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
-	static UObsidianAttributesComponent* FindCommonAttributesComponent(const AActor* Actor)
+	static UObsidianAttributesComponent* FindCommonAttributesComponent(const AActor* InActor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianAttributesComponent>() : nullptr);
+		return (InActor ? InActor->FindComponentByClass<UObsidianAttributesComponent>() : nullptr);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
@@ -63,7 +63,7 @@ public:
 	
 	/** Initializes this component using ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner = nullptr);
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner = nullptr);
 	
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 	
@@ -319,20 +319,20 @@ protected:
 	 * Callbacks for Attribute change delegates.
 	 */
 	
-	virtual void HealthChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data);
-	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data);
+	virtual void HealthChanged(const FOnAttributeChangeData& InData);
+	virtual void MaxHealthChanged(const FOnAttributeChangeData& InData);
+	virtual void EnergyShieldChanged(const FOnAttributeChangeData& InData);
+	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData);
 	
 	/**
 	 *  Death Sequence
 	 */
 
 	UFUNCTION()
-	virtual void OnRep_DeathState(EObsidianDeathState OldDeathState);
+	virtual void OnRep_DeathState(EObsidianDeathState InOldDeathState);
 
-	virtual void HandleOutOfHealth(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec,
-		float DamageMagnitude, float OldValue, float NewValue);
+	virtual void HandleOutOfHealth(AActor* InDamageInstigator, AActor* InDamageCauser, const FGameplayEffectSpec* InDamageEffectSpec,
+		float InDamageMagnitude, float InOldValue, float InNewValue);
 	
 protected:
 	/** Ability System used by this component. */

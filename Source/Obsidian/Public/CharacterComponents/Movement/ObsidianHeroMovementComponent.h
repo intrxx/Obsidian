@@ -18,7 +18,7 @@ class OBSIDIAN_API UObsidianHeroMovementComponent : public UObsidianCharacterMov
 	GENERATED_BODY()
 
 public:
-	UObsidianHeroMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianHeroMovementComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 		
@@ -31,9 +31,9 @@ public:
 	void HandleOutOfStamina();
 
 protected:
-	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float InDeltaTime, enum ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction) override;
 
-	bool HandleWalkingStateChanged(const FGameplayTag& NewWalkingState);
+	bool HandleWalkingStateChanged(const FGameplayTag& InNewWalkingState);
 
 protected:
 	UPROPERTY(Replicated)

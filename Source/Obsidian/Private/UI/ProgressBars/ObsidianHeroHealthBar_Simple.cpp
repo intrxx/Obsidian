@@ -31,26 +31,26 @@ void UObsidianHeroHealthBar_Simple::HandleWidgetControllerSet()
 	}
 }
 
-void UObsidianHeroHealthBar_Simple::HealthChanged(const float NewHealth)
+void UObsidianHeroHealthBar_Simple::HealthChanged(const float InNewHealth)
 {
-	Health = NewHealth;
+	Health = InNewHealth;
 	SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 }
 
-void UObsidianHeroHealthBar_Simple::MaxHealthChanged(const float NewMaxHealth)
+void UObsidianHeroHealthBar_Simple::MaxHealthChanged(const float InNewMaxHealth)
 {
-	MaxHealth = NewMaxHealth;
+	MaxHealth = InNewMaxHealth;
 	SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
 }
 
-void UObsidianHeroHealthBar_Simple::EnergyShieldChanged(const float NewEnergyShield)
+void UObsidianHeroHealthBar_Simple::EnergyShieldChanged(const float InNewEnergyShield)
 {
-	EnergyShield = NewEnergyShield;
+	EnergyShield = InNewEnergyShield;
 	SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 }
 
-void UObsidianHeroHealthBar_Simple::MaxEnergyShieldChanged(const float NewMaxEnergyShield)
+void UObsidianHeroHealthBar_Simple::MaxEnergyShieldChanged(const float InNewMaxEnergyShield)
 {
-	MaxEnergyShield = NewMaxEnergyShield;
+	MaxEnergyShield = InNewMaxEnergyShield;
 	SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
 }

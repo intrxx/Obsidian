@@ -3,7 +3,7 @@
 #include "CharacterComponents/Movement/ObsidianCharacterMovementComponent.h"
 
 
-UObsidianCharacterMovementComponent::UObsidianCharacterMovementComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianCharacterMovementComponent::UObsidianCharacterMovementComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }

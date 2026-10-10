@@ -26,7 +26,7 @@ class OBSIDIAN_API UObsidianUnstackSlider : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	void InitializeUnstackSlider(const int32 CurrentItemStacks, const FObsidianItemPosition& InItemPosition);
+	void InitializeUnstackSlider(const int32 InCurrentItemStacks, const FObsidianItemPosition& InItemPosition);
 
 	FVector2D GetSizeBoxSize() const;
 
@@ -47,7 +47,7 @@ protected:
 	void OnAcceptButtonClicked();
 
 	UFUNCTION()
-	void UpdateStacksValues(float NewValue);
+	void UpdateStacksValues(float InNewValue);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

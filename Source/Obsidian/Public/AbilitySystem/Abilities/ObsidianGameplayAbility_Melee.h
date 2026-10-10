@@ -17,5 +17,5 @@ class OBSIDIAN_API UObsidianGameplayAbility_Melee : public UObsidianDamageGamepl
 	GENERATED_BODY()
 
 protected:
-	FGameplayEffectSpecHandle MakeMeleeDamageSpec(const UObject* SourceObject);
+	FGameplayEffectSpecHandle MakeMeleeDamageSpec(const UObject* InSourceObject);
 };

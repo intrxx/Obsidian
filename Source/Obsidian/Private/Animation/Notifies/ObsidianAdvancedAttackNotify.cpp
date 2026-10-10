@@ -6,18 +6,18 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-                                                float TotalDuration, const FAnimNotifyEventReference& EventReference)
+void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* InMeshComp, UAnimSequenceBase* InAnimation,
+                                                float InTotalDuration, const FAnimNotifyEventReference& InEventReference)
 {
-	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
+	Super::NotifyBegin(InMeshComp, InAnimation, InTotalDuration, InEventReference);
 
-	if(MeshComp == nullptr)
+	if(InMeshComp == nullptr)
 	{
 		UE_LOG(ObLogCombat, Error, TEXT("MeshComp is invalid on ObsidianAdvancedAttackNotify."));
 		return;
 	}
 
-	if(const AActor* Owner = MeshComp->GetOwner())
+	if(const AActor* Owner = InMeshComp->GetOwner())
 	{
 		UObsidianAdvancedCombatComponent* ObsidianAdvancedCombatComp = UObsidianAdvancedCombatComponent::FindAdvancedCombatComponent(Owner);
 		if(!IsValid(ObsidianAdvancedCombatComp))
@@ -34,18 +34,18 @@ void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp
 	}
 }
 
-void UObsidianAdvancedAttackNotify::NotifyEnd(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
-	const FAnimNotifyEventReference& EventReference)
+void UObsidianAdvancedAttackNotify::NotifyEnd(USkeletalMeshComponent* InMeshComp, UAnimSequenceBase* InAnimation,
+	const FAnimNotifyEventReference& InEventReference)
 {
-	Super::NotifyEnd(MeshComp, Animation, EventReference);
+	Super::NotifyEnd(InMeshComp, InAnimation, InEventReference);
 
-	if(MeshComp == nullptr)
+	if(InMeshComp == nullptr)
 	{
 		UE_LOG(ObLogCombat, Error, TEXT("MeshComp is invalid on ObsidianAdvancedAttackNotify."));
 		return;
 	}
 
-	if(const AActor* Owner = MeshComp->GetOwner())
+	if(const AActor* Owner = InMeshComp->GetOwner())
 	{
 		UObsidianAdvancedCombatComponent* ObsidianAdvancedCombatComp = UObsidianAdvancedCombatComponent::FindAdvancedCombatComponent(Owner);
 		if(!IsValid(ObsidianAdvancedCombatComp))

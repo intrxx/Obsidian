@@ -44,15 +44,15 @@ void AObsidianBossAIController::OnPossess(APawn* InPawn)
 	}
 }
 
-void AObsidianBossAIController::OnStimulusChanged(AActor* UpdatedActor, FAIStimulus Stimulus)
+void AObsidianBossAIController::OnStimulusChanged(AActor* InUpdatedActor, FAIStimulus InStimulus)
 {
-	AObsidianHero* HeroTarget = Cast<AObsidianHero>(UpdatedActor);
+	AObsidianHero* HeroTarget = Cast<AObsidianHero>(InUpdatedActor);
 	if(HeroTarget == nullptr)
 	{
 		return;
 	}
 	
-	if(Stimulus.IsActive())
+	if(InStimulus.IsActive())
 	{
 		HeroTarget->ClientUpdateBossDetectingPlayer(EnemyOwner, true);
 		

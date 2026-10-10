@@ -47,29 +47,29 @@ class OBSIDIAN_API UObsidianPlayerInputManager : public UPawnComponent
 	GENERATED_BODY()
 	
 public:
-	UObsidianPlayerInputManager(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianPlayerInputManager(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-		FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float InDeltaTime, ELevelTick InTickType,
+		FActorComponentTickFunction* InThisTickFunction) override;
 
-	void InitializePlayerInput(UInputComponent* InputComponent);
+	void InitializePlayerInput(UInputComponent* InInputComponent);
 	
 	/** Returns the player input manager component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|PlayerInputManager")
-	static UObsidianPlayerInputManager* FindPlayerInputManager(const AActor* Actor)
+	static UObsidianPlayerInputManager* FindPlayerInputManager(const AActor* InActor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianPlayerInputManager>() : nullptr);
+		return (InActor ? InActor->FindComponentByClass<UObsidianPlayerInputManager>() : nullptr);
 	}
 	
 	AObsidianHUD* GetObsidianHUD() const;
 
-	void TriggerInteraction(AActor* InteractionActor);
+	void TriggerInteraction(AActor* InInteractionActor);
 	
 protected:
-	void Input_AbilityInputTagPressed(FGameplayTag InputTag);
-	void Input_AbilityInputTagReleased(FGameplayTag InputTag);
+	void Input_AbilityInputTagPressed(FGameplayTag InInputTag);
+	void Input_AbilityInputTagReleased(FGameplayTag InInputTag);
 	
-	void Input_MoveKeyboard(const FInputActionValue& InputActionValue);
+	void Input_MoveKeyboard(const FInputActionValue& InInputActionValue);
 	void Input_MoveStartedMouse();
 	void Input_MoveTriggeredMouse();
 	void Input_MoveReleasedMouse();
@@ -118,14 +118,14 @@ private:
 	 */
 
 	UFUNCTION(Client, Reliable)
-	void ClientStartApproachingOutOfRangeInteractionTarget(const FVector_NetQuantize10& ToDestination);
+	void ClientStartApproachingOutOfRangeInteractionTarget(const FVector_NetQuantize10& InToDestination);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerStartInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
+	void ServerStartInteraction(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget);
 	void InteractWithOutOfRangeTarget();
 
 	UFUNCTION(Client, Reliable)
-	void ClientTriggerInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget);
+	void ClientTriggerInteraction(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget);
 	UFUNCTION(Client, Reliable)
 	void ClientAbandonInteraction();
 	
@@ -133,7 +133,7 @@ private:
 	void StopOngoingInteraction();
 
 	/** If Interaction target is out of interaction range, it will handle getting to the interaction target and interacting with it. Will return true if interaction was handled here. */
-	bool HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation);
+	bool HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget, const FVector& InTargetLocation);
 	
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")

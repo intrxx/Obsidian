@@ -25,11 +25,11 @@ void UObsidianCharacterCreationScreen::HandleWidgetControllerSet()
 	check(CharacterSelectionWidgetController);
 }
 
-void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const bool bIsOnline)
+void UObsidianCharacterCreationScreen::InitializeCharacterCreationScreen(const bool bInIsOnline)
 {
-	bIsOnlineCharacter = bIsOnline;
+	bIsOnlineCharacter = bInIsOnline;
 	
-	const FText TabNameText = bIsOnline ? FText::FromString(TEXT("Online Character Creation")) : FText::FromString(TEXT("Character Creation"));
+	const FText TabNameText = bInIsOnline ? FText::FromString(TEXT("Online Character Creation")) : FText::FromString(TEXT("Character Creation"));
 	TabName_TextBlock->SetText(TabNameText);
 }
 
@@ -88,11 +88,11 @@ void UObsidianCharacterCreationScreen::HandleBackwardsAction()
 	DeactivateWidget();
 }
 
-void UObsidianCharacterCreationScreen::ShowHeroDescription(const EObsidianHeroClass& ForClass)
+void UObsidianCharacterCreationScreen::ShowHeroDescription(const EObsidianHeroClass& InForClass)
 {
 	for(const FObsidianHeroInfo& Info : HeroInfos)
 	{
-		if(Info.Class == ForClass)
+		if(Info.Class == InForClass)
 		{
 			HeroInfo_HeroName_SizeBox->SetText(Info.HeroName);
 			HeroInfo_HeroDescription_SizeBox->SetText(Info.HeroInfoText);
@@ -107,7 +107,7 @@ void UObsidianCharacterCreationScreen::HideHeroDescription() const
 	HeroInfo_SizeBox->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UObsidianCharacterCreationScreen::OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type CommitType)
+void UObsidianCharacterCreationScreen::OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type InCommitType)
 {
 }
 
@@ -222,7 +222,7 @@ void UObsidianCharacterCreationScreen::OnAssassinButtonUnhovered()
 	HandleUnhoverHeroButton(EObsidianHeroClass::Assassin);
 }
 
-void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianHeroClass ForClass)
+void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianHeroClass InForClass)
 {
 	ResetHeroDetails();
 	HeroDetails_SizeBox->SetVisibility(ESlateVisibility::Visible);
@@ -234,12 +234,12 @@ void UObsidianCharacterCreationScreen::HandleClickingHeroButton(const EObsidianH
 	else
 	{
 		CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ChosenClass);
-		CharacterSelectionWidgetController->HighlightCharacterWithTag(ForClass);
-		ShowHeroDescription(ForClass);
+		CharacterSelectionWidgetController->HighlightCharacterWithTag(InForClass);
+		ShowHeroDescription(InForClass);
 	}
 }
 
-void UObsidianCharacterCreationScreen::HandleHoverHeroButton(const EObsidianHeroClass ForClass)
+void UObsidianCharacterCreationScreen::HandleHoverHeroButton(const EObsidianHeroClass InForClass)
 {
 	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
 	{
@@ -250,18 +250,18 @@ void UObsidianCharacterCreationScreen::HandleHoverHeroButton(const EObsidianHero
 			CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ChosenClass);
 			ChosenClass = EObsidianHeroClass::None;
 		}
-		CharacterSelectionWidgetController->HighlightCharacterWithTag(ForClass);
-		ShowHeroDescription(ForClass);
+		CharacterSelectionWidgetController->HighlightCharacterWithTag(InForClass);
+		ShowHeroDescription(InForClass);
 	}
 }
 
-void UObsidianCharacterCreationScreen::HandleUnhoverHeroButton(const EObsidianHeroClass ForClass)
+void UObsidianCharacterCreationScreen::HandleUnhoverHeroButton(const EObsidianHeroClass InForClass)
 {
 	if(UCommonUIExtensions::IsOwningPlayerUsingGamepad(this))
 	{
-		if(ChosenClass != ForClass)
+		if(ChosenClass != InForClass)
 		{
-			CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(ForClass);
+			CharacterSelectionWidgetController->ResetHighlightForCharacterWithTag(InForClass);
 			HideHeroDescription();
 		}
 	}
@@ -273,7 +273,7 @@ void UObsidianCharacterCreationScreen::ResetHeroDetails() const
 	PlayerName_EditableTextBox->SetText(FText());
 }
 
-void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianHeroSaveGame* SaveGame, bool bSuccess)
+void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianHeroSaveGame* InSaveGame, bool bInSuccess)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -283,7 +283,7 @@ void UObsidianCharacterCreationScreen::OnCreateSavingFinished(UObsidianHeroSaveG
 		}
 	}
 
-	if (bSuccess)
+	if (bInSuccess)
 	{
 		HandleBackwardsAction();
 	}

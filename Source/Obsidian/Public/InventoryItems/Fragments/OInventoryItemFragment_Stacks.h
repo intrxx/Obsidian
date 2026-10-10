@@ -19,11 +19,11 @@ class OBSIDIAN_API UOInventoryItemFragment_Stacks : public UObsidianInventoryIte
 
 public:
 	//~ Start of UObsidianInventoryItemFragment
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
 	//~ End of UObsidianInventoryItemFragment
 	
 	/** Getter for item stack number, if the Tag for Stack Count does not exist on the item, it will return the unified project default. */
-	int32 GetItemStackNumberByTag(const FGameplayTag Tag) const;
+	int32 GetItemStackNumberByTag(const FGameplayTag InTag) const;
 	
 	bool IsStackable() const
 	{

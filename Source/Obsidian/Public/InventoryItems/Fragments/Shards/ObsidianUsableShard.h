@@ -21,7 +21,7 @@ struct FObsidianItemsMatchingUsableContext
 	GENERATED_BODY()
 
 public:
-	void AddMatchingItem(const UObsidianInventoryItemInstance* InstanceToAdd);
+	void AddMatchingItem(const UObsidianInventoryItemInstance* InInstanceToAdd);
 	bool HasAnyMatchingItems() const;
 	
 public:
@@ -43,8 +43,8 @@ class OBSIDIAN_API UObsidianUsableShard : public UObject
 	GENERATED_BODY()
 	
 public:
-	virtual bool OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
-		UObsidianInventoryItemInstance* UsingOntoInstance = nullptr);
-	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+	virtual bool OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
+		UObsidianInventoryItemInstance* InUsingOntoInstance = nullptr);
+	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext);
 };

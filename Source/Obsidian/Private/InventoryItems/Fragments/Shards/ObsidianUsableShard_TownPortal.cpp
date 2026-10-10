@@ -11,17 +11,17 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* ItemOwner,
-                                                 UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* InItemOwner,
+                                                 UObsidianInventoryItemInstance* InUsingInstance, UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
-	if(ItemOwner == nullptr || UsingInstance == nullptr)
+	if(InItemOwner == nullptr || InUsingInstance == nullptr)
 	{
 		return false;
 	}
 
-	if(const AObsidianHero* ObsidianHero = ItemOwner->GetObsidianHero())
+	if(const AObsidianHero* ObsidianHero = InItemOwner->GetObsidianHero())
 	{
-		UWorld* World = ItemOwner->GetWorld();
+		UWorld* World = InItemOwner->GetWorld();
 		if(World == nullptr)
 		{
 			return false;
@@ -57,7 +57,7 @@ bool UObsidianUsableShard_TownPortal::OnItemUsed(AObsidianPlayerController* Item
 			checkf(TownPortalActorClass, TEXT("TownPortalActorClass is not set on UObsidianUsableShard_TownPortal,"
 									 " please fill it."));
 			AObsidianTownPortal* TownPortal = World->SpawnActorDeferred<AObsidianTownPortal>(TownPortalActorClass,
-				PortalTransform, ItemOwner);
+				PortalTransform, InItemOwner);
 			if (TownPortal == nullptr)
 			{
 				UE_LOG(ObLogItems, Error, TEXT("Spawning Town Portal Actor failed in [%hs]."), __FUNCTION__);

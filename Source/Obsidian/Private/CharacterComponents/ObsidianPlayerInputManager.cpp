@@ -32,8 +32,8 @@
 #include "UI/ObsidianHUD.h"
 
 
-UObsidianPlayerInputManager::UObsidianPlayerInputManager(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianPlayerInputManager::UObsidianPlayerInputManager(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	SetIsReplicatedByDefault(true);
 	PrimaryComponentTick.bCanEverTick = true;
@@ -42,9 +42,9 @@ UObsidianPlayerInputManager::UObsidianPlayerInputManager(const FObjectInitialize
 	AutoRunSplineComp = CreateDefaultSubobject<USplineComponent>(TEXT("AutoRunSplineComponent"));
 }
 
-void UObsidianPlayerInputManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UObsidianPlayerInputManager::TickComponent(float InDeltaTime, ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(InDeltaTime, InTickType, InThisTickFunction);
 
 	CursorTrace();
 	AutoRun();
@@ -158,9 +158,9 @@ AObsidianHUD* UObsidianPlayerInputManager::GetObsidianHUD() const
 	return nullptr;
 }
 
-void UObsidianPlayerInputManager::TriggerInteraction(AActor* InteractionActor)
+void UObsidianPlayerInputManager::TriggerInteraction(AActor* InInteractionActor)
 {
-	if(IObsidianInteractionInterface* InteractionTarget = Cast<IObsidianInteractionInterface>(InteractionActor))
+	if(IObsidianInteractionInterface* InteractionTarget = Cast<IObsidianInteractionInterface>(InInteractionActor))
 	{
 		if(InteractionTarget->CanInteract() == false)
 		{
@@ -176,7 +176,7 @@ void UObsidianPlayerInputManager::TriggerInteraction(AActor* InteractionActor)
 		StopOngoingInteraction();
 		
 		bWantsToInteract = true;
-		ActiveInteractionTarget = InteractionActor;
+		ActiveInteractionTarget = InInteractionActor;
 		ServerStartInteraction(ActiveInteractionTarget);
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
@@ -187,9 +187,9 @@ void UObsidianPlayerInputManager::TriggerInteraction(AActor* InteractionActor)
 	}
 }
 
-void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputComponent)
+void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InInputComponent)
 {
-	check(InputComponent);
+	check(InInputComponent);
 
 	const APawn* Pawn = GetPawn<APawn>();
 	if(Pawn == nullptr)
@@ -234,7 +234,7 @@ void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputCo
 				}
 			}
 			
-			UObsidianEnhancedInputComponent* ObsidianInputComponent = Cast<UObsidianEnhancedInputComponent>(InputComponent);
+			UObsidianEnhancedInputComponent* ObsidianInputComponent = Cast<UObsidianEnhancedInputComponent>(InInputComponent);
 			if(ensureMsgf(ObsidianInputComponent, TEXT("Unexpected Input Component")))
 			{
 				TArray<uint32> BindHandles;
@@ -290,7 +290,7 @@ void UObsidianPlayerInputManager::InitializePlayerInput(UInputComponent* InputCo
 	check(OwnerItemManagerComponent);
 }
 
-void UObsidianPlayerInputManager::Input_AbilityInputTagPressed(FGameplayTag InputTag)
+void UObsidianPlayerInputManager::Input_AbilityInputTagPressed(FGameplayTag InInputTag)
 {
 	if(const APawn* Pawn = GetPawn<APawn>())
 	{
@@ -298,13 +298,13 @@ void UObsidianPlayerInputManager::Input_AbilityInputTagPressed(FGameplayTag Inpu
 		{
 			if(UObsidianAbilitySystemComponent* ObsidianASC = PawnExtComp->GetObsidianAbilitySystemComponent())
 			{
-				ObsidianASC->AbilityInputTagPressed(InputTag);
+				ObsidianASC->AbilityInputTagPressed(InInputTag);
 			}
 		}
 	}
 }
 
-void UObsidianPlayerInputManager::Input_AbilityInputTagReleased(FGameplayTag InputTag)
+void UObsidianPlayerInputManager::Input_AbilityInputTagReleased(FGameplayTag InInputTag)
 {
 	if(const APawn* Pawn = GetPawn<APawn>())
 	{
@@ -312,13 +312,13 @@ void UObsidianPlayerInputManager::Input_AbilityInputTagReleased(FGameplayTag Inp
 		{
 			if(UObsidianAbilitySystemComponent* ObsidianASC = PawnExtComp->GetObsidianAbilitySystemComponent())
 			{
-				ObsidianASC->AbilityInputTagReleased(InputTag);
+				ObsidianASC->AbilityInputTagReleased(InInputTag);
 			}
 		}
 	}
 }
 
-void UObsidianPlayerInputManager::Input_MoveKeyboard(const FInputActionValue& InputActionValue)
+void UObsidianPlayerInputManager::Input_MoveKeyboard(const FInputActionValue& InInputActionValue)
 {
 	APawn* Pawn = GetPawn<APawn>();
 	if(Pawn == nullptr)
@@ -330,7 +330,7 @@ void UObsidianPlayerInputManager::Input_MoveKeyboard(const FInputActionValue& In
 	{
 		bAutoRunning = false;
 		
-		const FVector2D InputAxisVector = InputActionValue.Get<FVector2D>();
+		const FVector2D InputAxisVector = InInputActionValue.Get<FVector2D>();
 		const FRotator MovementRotation(0.0f, Controller->GetControlRotation().Yaw, 0.0f);
 
 		if(InputAxisVector.X != 0.0f)
@@ -592,7 +592,7 @@ void UObsidianPlayerInputManager::Input_ToggleHighlight()
 	}
 }
 
-bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget, const FVector& TargetLocation)
+bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget, const FVector& InTargetLocation)
 {
 	const AActor* OwnerActor = GetOwner();
 	if(OwnerActor == nullptr)
@@ -607,11 +607,11 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 		return false;
 	}
 
-	float InteractionRadius = InteractionTarget->GetInteractionRadius();
+	float InteractionRadius = InInteractionTarget->GetInteractionRadius();
 	InteractionRadius = InteractionRadius == 0.0f ? ObsidianPlayerInputStatics::InteractionRadius : InteractionRadius;
 
 	const FVector OwnerLocation = OwnerActor->GetActorLocation();
-	const float DistanceToTarget = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(TargetLocation.X, TargetLocation.Y, 0.0f));
+	const float DistanceToTarget = FVector::Dist2D(FVector(OwnerLocation.X, OwnerLocation.Y, 0.0f), FVector(InTargetLocation.X, InTargetLocation.Y, 0.0f));
 	
 #if !UE_BUILD_SHIPPING
 	if(bDebugInteraction)
@@ -620,9 +620,9 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 
 		if(const UWorld* World = GetWorld())
 		{
-			UObsidianBlueprintFunctionLibrary::PrintVector3D(World, TargetLocation, TEXT("(Red Sphere) Target Location: "));
+			UObsidianBlueprintFunctionLibrary::PrintVector3D(World, InTargetLocation, TEXT("(Red Sphere) Target Location: "));
 			UE_LOG(ObLogInteraction, VeryVerbose, TEXT("Interaction Radius: [%f]."), InteractionRadius);
-			DrawDebugSphere(World, TargetLocation, InteractionRadius, 16, FColor::Red, false, 5.0f);
+			DrawDebugSphere(World, InTargetLocation, InteractionRadius, 16, FColor::Red, false, 5.0f);
 
 			UObsidianBlueprintFunctionLibrary::PrintVector3D(World, OwnerLocation, TEXT("(Blue Sphere) Player Location on distance check: "));
 			DrawDebugSphere(World, OwnerLocation, 32.0f, 8, FColor::Blue, false, 5.0f);
@@ -634,7 +634,7 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 	
 	if(DistanceToTarget > InteractionRadius + ObsidianPlayerInputStatics::AutoRunAcceptanceRadius)
 	{
-		const FVector ApproachDestination = TargetLocation - ((TargetLocation - OwnerLocation).GetSafeNormal()) * InteractionRadius;
+		const FVector ApproachDestination = InTargetLocation - ((InTargetLocation - OwnerLocation).GetSafeNormal()) * InteractionRadius;
 
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
@@ -655,10 +655,10 @@ bool UObsidianPlayerInputManager::HandleOutOfRangeInteraction(const TScriptInter
 	return false;
 }
 
-void UObsidianPlayerInputManager::ClientStartApproachingOutOfRangeInteractionTarget_Implementation(const FVector_NetQuantize10& ToDestination)
+void UObsidianPlayerInputManager::ClientStartApproachingOutOfRangeInteractionTarget_Implementation(const FVector_NetQuantize10& InToDestination)
 {
 	bAutoRunToInteract = true;
-	CachedDestination = ToDestination;
+	CachedDestination = InToDestination;
 	
 	if(OnArrivedAtAcceptableInteractionRange.IsBound())
 	{
@@ -670,15 +670,15 @@ void UObsidianPlayerInputManager::ClientStartApproachingOutOfRangeInteractionTar
 	AutoRunToClickedLocation();
 }
 
-void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
+void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget)
 {
-	if(InteractionTarget == nullptr)
+	if(InInteractionTarget == nullptr)
 	{
 		UE_LOG(ObLogInteraction, Error, TEXT("InteractionTarget is null in [%hs]"), __FUNCTION__);
 		return;
 	}
 
-	const AActor* InteractionActor = InteractionTarget->GetInteractionActor();
+	const AActor* InteractionActor = InInteractionTarget->GetInteractionActor();
 	if(InteractionActor == nullptr)
 	{
 		UE_LOG(ObLogInteraction, Error, TEXT("InteractionActor is null in [%hs]"), __FUNCTION__);
@@ -686,7 +686,7 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 	}
 	
 	const FVector InteractionLocation = InteractionActor->GetActorLocation();
-	if(HandleOutOfRangeInteraction(InteractionTarget, InteractionLocation))
+	if(HandleOutOfRangeInteraction(InInteractionTarget, InteractionLocation))
 	{
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
@@ -700,9 +700,9 @@ void UObsidianPlayerInputManager::ServerStartInteraction_Implementation(const TS
 	//TODO(intrxx) Perform validation here, if there is no validation, there is no point of keeping this client -> server -> client logic
 	// HandleOutOfRangeInteraction is some kind of validating
 
-	if(InteractionTarget->CanInteract())
+	if(InInteractionTarget->CanInteract())
 	{
-		ClientTriggerInteraction(InteractionTarget);
+		ClientTriggerInteraction(InInteractionTarget);
 	}
 	else
 	{
@@ -735,9 +735,9 @@ void UObsidianPlayerInputManager::InteractWithOutOfRangeTarget()
 	}
 }
 
-void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InteractionTarget)
+void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget)
 {
-	if(InteractionTarget)
+	if(InInteractionTarget)
 	{
 #if !UE_BUILD_SHIPPING
 		if(bDebugInteraction)
@@ -745,7 +745,7 @@ void UObsidianPlayerInputManager::ClientTriggerInteraction_Implementation(const 
 			UE_LOG(ObLogInteraction, Verbose, TEXT("Interacting."))	
 		}
 #endif
-		InteractionTarget->Interact(GetController<AObsidianPlayerController>());
+		InInteractionTarget->Interact(GetController<AObsidianPlayerController>());
 
 		if(ActiveInteractionTarget->RequiresOngoingInteraction() == false)
 		{

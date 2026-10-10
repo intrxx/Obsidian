@@ -109,10 +109,10 @@ TArray<FObsidianActiveItemAffix> FObsidianItemAffixStack::GetAllItemPrefixesAndS
 	return PrefixesAndSuffixes;
 }
 
-void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianActiveItemAffix>& AffixesToInitialize)
+void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* InOwningInstance, const TArray<FObsidianActiveItemAffix>& InAffixesToInitialize)
 {
 	check(Entries.IsEmpty());
-	for (const FObsidianActiveItemAffix& Affix : AffixesToInitialize)
+	for (const FObsidianActiveItemAffix& Affix : InAffixesToInitialize)
 	{
 		if (Affix)
 		{
@@ -126,9 +126,9 @@ void FObsidianItemAffixStack::InitializeAffixes(UObsidianInventoryItemInstance* 
 	}
 }
 
-void FObsidianItemAffixStack::AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianActiveItemAffix& ItemAffix)
+void FObsidianItemAffixStack::AddAffix(UObsidianInventoryItemInstance* InOwningInstance, const FObsidianActiveItemAffix& InItemAffix)
 {
-	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(ItemAffix);
+	FObsidianAffixEntry& AffixEntry = Entries.Add_GetRef(InItemAffix);
 	AffixEntry.OwningItem = InOwningInstance;
 	
 	//TODO(intrxx) Apply Affix Gameplay Effect with correct Magnitude/Magnitudes if supports changing Equipped Items.
@@ -136,12 +136,12 @@ void FObsidianItemAffixStack::AddAffix(UObsidianInventoryItemInstance* InOwningI
 	MarkItemDirty(AffixEntry);
 }
 
-bool FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& AffixTag)
+bool FObsidianItemAffixStack::RemoveAffix(const FGameplayTag& InAffixTag)
 {
 	for(auto It = Entries.CreateIterator(); It; ++It)
 	{
 		FObsidianAffixEntry& Entry = *It;
-		if(Entry.ActiveItemAffix.AffixTag == AffixTag)
+		if(Entry.ActiveItemAffix.AffixTag == InAffixTag)
 		{
 			It.RemoveCurrent();
 			
@@ -197,20 +197,20 @@ bool FObsidianItemAffixStack::RemoveAllPrefixesAndSuffixes()
 	return bSuccess;
 }
 
-void FObsidianItemAffixStack::AffixChanged(const FGameplayTag& AffixTag)
+void FObsidianItemAffixStack::AffixChanged(const FGameplayTag& InAffixTag)
 {
 	//TODO(intrxx) Reapply Affix Gameplay Effect with correct new Magnitude/Magnitudes? if supports changing Equipped Items.
 }
 
-void FObsidianItemAffixStack::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
+void FObsidianItemAffixStack::PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize)
 {
 }
 
-void FObsidianItemAffixStack::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
+void FObsidianItemAffixStack::PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize)
 {
 }
 
-void FObsidianItemAffixStack::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
+void FObsidianItemAffixStack::PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize)
 {
 }
 

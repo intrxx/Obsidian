@@ -5,8 +5,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianGA_FlyingKnifes::UObsidianGA_FlyingKnifes(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianGA_FlyingKnifes::UObsidianGA_FlyingKnifes(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 

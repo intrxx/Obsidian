@@ -22,10 +22,10 @@ class OBSIDIAN_API AObsidianFrontEndHUD : public AHUD
 	GENERATED_BODY()
 
 public:
-	AObsidianFrontEndHUD(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianFrontEndHUD(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	UObCharacterSelectionWidgetController* GetCharacterSelectionWidgetController(
-		const FObsidianWidgetControllerParams& WidgetControllerParams);
+		const FObsidianWidgetControllerParams& InWidgetControllerParams);
 
 protected:
 	/**

@@ -37,10 +37,10 @@ class OBSIDIAN_API AObsidianPlayerController : public ACommonPlayerController, p
 {
 	GENERATED_BODY()
 public:
-	AObsidianPlayerController(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianPlayerController(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	// ~ Start of APlayerController interface
-	virtual void PostProcessInput(const float DeltaTime, const bool bGamePaused) override;
+	virtual void PostProcessInput(const float InDeltaTime, const bool bInGamePaused) override;
 	virtual void PostInitializeComponents() override;
 	virtual void ReceivedPlayer() override;
 	// ~ End of APlayerController interface
@@ -76,16 +76,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	AObsidianHero* GetObsidianHero() const;
 
-	void TogglePlayerStash(const bool bShowStash) const;
+	void TogglePlayerStash(const bool bInShowStash) const;
 	
 	UFUNCTION(Client, Reliable)
-	void ClientShowDamageNumber(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter);
+	void ClientShowDamageNumber(const FObsidianDamageTextProps& InDamageTextProps, AObsidianCharacterBase* InTargetCharacter);
 
 	/** Updates when Player hovers over Regular Enemy Target, TargetActor will be nullptr after removing the mouse from target, this is by design and might change. */
-	void UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const;
+	void UpdateHoveredRegularEnemyTarget(AActor* InTargetActor, const bool bInHoveredOver) const;
 
 	UFUNCTION(Server, Reliable)
-	void ServerSpawnItemFromSpawner(AObsidianItemSpawner* ItemSpawner);
+	void ServerSpawnItemFromSpawner(AObsidianItemSpawner* InItemSpawner);
 
 public:
 	FOnEnemyActorHovered OnEnemyActorHoveredDelegate;
@@ -96,7 +96,7 @@ protected:
 	virtual void BeginPlay() override;
 	// ~ End of AActor interface
 	
-	void LoadSharedStashData(UObsidianSharedStashSaveGame* SharedStashSaveGame);
+	void LoadSharedStashData(UObsidianSharedStashSaveGame* InSharedStashSaveGame);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Cursor")

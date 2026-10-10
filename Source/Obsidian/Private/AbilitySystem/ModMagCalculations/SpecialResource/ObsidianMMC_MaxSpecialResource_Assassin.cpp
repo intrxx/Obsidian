@@ -23,24 +23,24 @@ static const SObsidianMMC_MaxSpecialResource_Assassin& MaxSpecialResource_Assass
 	return MaxSpecialResource_WitchStatics;
 }
 
-UObsidianMMC_MaxSpecialResource_Assassin::UObsidianMMC_MaxSpecialResource_Assassin(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_MaxSpecialResource_Assassin::UObsidianMMC_MaxSpecialResource_Assassin(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxSpecialResource_AssassinStatics().DexterityDef);
 	RelevantAttributesToCapture.Add(MaxSpecialResource_AssassinStatics().IntelligenceDef);
 }
 
-float UObsidianMMC_MaxSpecialResource_Assassin::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_MaxSpecialResource_Assassin::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	// OBS-79
 	// const float LevelAddedSpecialResource = Super::CalculateBaseMagnitude_Implementation(Spec);
 
 	float Intelligence = 0.f;
-	GetCapturedAttributeMagnitude(MaxSpecialResource_AssassinStatics().IntelligenceDef, Spec, FAggregatorEvaluateParameters(), Intelligence);
+	GetCapturedAttributeMagnitude(MaxSpecialResource_AssassinStatics().IntelligenceDef, InSpec, FAggregatorEvaluateParameters(), Intelligence);
 	Intelligence = FMath::Max<float>(Intelligence, 0.f);
 	
 	float Dexterity = 0.f;
-	GetCapturedAttributeMagnitude(MaxSpecialResource_AssassinStatics().DexterityDef, Spec, FAggregatorEvaluateParameters(), Dexterity);
+	GetCapturedAttributeMagnitude(MaxSpecialResource_AssassinStatics().DexterityDef, InSpec, FAggregatorEvaluateParameters(), Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 
 	const float MaxSpecialResourceBonus_Witch = /** OBS-79 / LevelAddedSpecialResource + */ FMath::FloorToInt(Intelligence / 10) + FMath::FloorToInt(Dexterity / 10);

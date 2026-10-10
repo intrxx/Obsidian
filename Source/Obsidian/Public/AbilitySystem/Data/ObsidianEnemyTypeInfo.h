@@ -28,7 +28,7 @@ class OBSIDIAN_API UObsidianEnemyTypeInfo : public UDataAsset
 {
 	GENERATED_BODY()
 public:
-	FObsidianEnemyTypeDefaultInfo GetEnemyTypeDefaultInfo(const EObsidianEnemyClass EnemyClass);
+	FObsidianEnemyTypeDefaultInfo GetEnemyTypeDefaultInfo(const EObsidianEnemyClass InEnemyClass);
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Enemy Types Info")

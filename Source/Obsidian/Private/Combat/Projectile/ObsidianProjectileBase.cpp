@@ -14,8 +14,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianProjectileBase::AObsidianProjectileBase(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianProjectileBase::AObsidianProjectileBase(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bStartWithTickEnabled = false;
 	bReplicates = true;
@@ -68,21 +68,21 @@ void AObsidianProjectileBase::Destroyed()
 	Super::Destroyed();
 }
 
-void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* InOverlappedComponent, AActor* InOtherActor,
+	UPrimitiveComponent* InOtherComp, int32 InOtherBodyIndex, bool bInFromSweep, const FHitResult& InSweepResult)
 {
-	if(HasAuthority() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == OtherActor)
+	if(HasAuthority() && DamageEffectSpecHandle.Data.Get()->GetContext().GetEffectCauser() == InOtherActor)
 	{
 		return;
 	}
 
-	if(ClassToIgnore && OtherActor->IsA(ClassToIgnore))
+	if(ClassToIgnore && InOtherActor->IsA(ClassToIgnore))
 	{
 		return;
 	}
 
 	//TODO(intrxx) As for now this will only work for the server
-	if(bServerHit == false && bAllowMultiHit == false || (bAllowMultiHit && CanApplyCosmeticMultiHit(OtherActor)))
+	if(bServerHit == false && bAllowMultiHit == false || (bAllowMultiHit && CanApplyCosmeticMultiHit(InOtherActor)))
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, ProjImpactSound, GetActorLocation(), FRotator::ZeroRotator);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, ProjImpactEffect, GetActorLocation());
@@ -92,7 +92,7 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 	{
 		if(bDestroyOnHit)
 		{
-			ApplyProjectileDamageToActor(OtherActor); // In this can we want to Destroy regardless of if ApplyDamage succeeds 
+			ApplyProjectileDamageToActor(InOtherActor); // In this can we want to Destroy regardless of if ApplyDamage succeeds 
 			Destroy();
 			return;
 		}
@@ -101,31 +101,31 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 		{
 			if (MultiHitCooldownType == EObsidianMultiHitCooldownType::GlobalMultiHitCooldown && bGlobalMultiHitCanHit)
 			{
-				if (ApplyProjectileDamageToActor(OtherActor))
+				if (ApplyProjectileDamageToActor(InOtherActor))
 				{
-					AlreadyHitActors.AddUnique(TWeakObjectPtr<AActor>(OtherActor));
+					AlreadyHitActors.AddUnique(TWeakObjectPtr<AActor>(InOtherActor));
 					bGlobalMultiHitCanHit = false;
 					HandleMultiHitGlobalCooldown();
 				}
 			}
 			else if (MultiHitCooldownType == EObsidianMultiHitCooldownType::PerEnemyMultiHitCooldown)
 			{
-				bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(OtherActor));
+				bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(InOtherActor));
 				if (CanHitPtr == nullptr || (CanHitPtr && *CanHitPtr))
 				{
-					if (ApplyProjectileDamageToActor(OtherActor))
+					if (ApplyProjectileDamageToActor(InOtherActor))
 					{
-						AlreadyHitActors.AddUnique(TWeakObjectPtr<AActor>(OtherActor));
-						HandleMultiHitPerActorCooldown(OtherActor);
+						AlreadyHitActors.AddUnique(TWeakObjectPtr<AActor>(InOtherActor));
+						HandleMultiHitPerActorCooldown(InOtherActor);
 					}
 				}
 			}
 		}
-		else if (AlreadyHitActors.Contains(TWeakObjectPtr<AActor>(OtherActor)) == false)
+		else if (AlreadyHitActors.Contains(TWeakObjectPtr<AActor>(InOtherActor)) == false)
 		{
-			if (ApplyProjectileDamageToActor(OtherActor))
+			if (ApplyProjectileDamageToActor(InOtherActor))
 			{
-				AlreadyHitActors.Add(TWeakObjectPtr<AActor>(OtherActor));
+				AlreadyHitActors.Add(TWeakObjectPtr<AActor>(InOtherActor));
 			}
 		}
 	}
@@ -135,9 +135,9 @@ void AObsidianProjectileBase::OnSphereOverlap(UPrimitiveComponent* OverlappedCom
 	}
 }
 
-bool AObsidianProjectileBase::ApplyProjectileDamageToActor(AActor* ActorToDamage) const
+bool AObsidianProjectileBase::ApplyProjectileDamageToActor(AActor* InActorToDamage) const
 {
-	if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToDamage))
+	if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActorToDamage))
 	{
 		TargetASC->ApplyGameplayEffectSpecToSelf(*DamageEffectSpecHandle.Data.Get());
 		return true;
@@ -155,31 +155,31 @@ void AObsidianProjectileBase::HandleMultiHitGlobalCooldown()
 			MultiHitCooldown, false);
 }
 
-void AObsidianProjectileBase::HandleMultiHitPerActorCooldown(AActor* ForHitActor)
+void AObsidianProjectileBase::HandleMultiHitPerActorCooldown(AActor* InForHitActor)
 {
-	bool& bNewCanHit = CanHitPerHitActorMap.FindOrAdd(TWeakObjectPtr<AActor>(ForHitActor));
+	bool& bNewCanHit = CanHitPerHitActorMap.FindOrAdd(TWeakObjectPtr<AActor>(InForHitActor));
 	bNewCanHit = false;
-	UE_LOG(ObLogCombat, VeryVerbose, TEXT("Applying Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));
+	UE_LOG(ObLogCombat, VeryVerbose, TEXT("Applying Hit Cooldown for [%s]"), *GetNameSafe(InForHitActor));
 
 	FTimerHandle PerActorMultiHitTimerHandle;
 	GetWorldTimerManager().SetTimer(PerActorMultiHitTimerHandle,
-		FTimerDelegate::CreateWeakLambda(this, [this, ForHitActor]()
+		FTimerDelegate::CreateWeakLambda(this, [this, InForHitActor]()
 			{
-				if (IsValid(ForHitActor) == false)
+				if (IsValid(InForHitActor) == false)
 				{
 					return;
 				}
 			
-				if (bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(ForHitActor)))
+				if (bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(InForHitActor)))
 				{
 					*CanHitPtr = true;
-					UE_LOG(ObLogCombat, VeryVerbose, TEXT("Removing Hit Cooldown for [%s]"), *GetNameSafe(ForHitActor));	
+					UE_LOG(ObLogCombat, VeryVerbose, TEXT("Removing Hit Cooldown for [%s]"), *GetNameSafe(InForHitActor));	
 				}
 			}),
 			MultiHitCooldown, false);
 }
 
-bool AObsidianProjectileBase::CanApplyCosmeticMultiHit(AActor* ForHitActor)
+bool AObsidianProjectileBase::CanApplyCosmeticMultiHit(AActor* InForHitActor)
 {
 	if (MultiHitCooldownType == EObsidianMultiHitCooldownType::GlobalMultiHitCooldown)
 	{
@@ -188,12 +188,12 @@ bool AObsidianProjectileBase::CanApplyCosmeticMultiHit(AActor* ForHitActor)
 	
 	if (MultiHitCooldownType == EObsidianMultiHitCooldownType::PerEnemyMultiHitCooldown)
 	{
-		if (ForHitActor == nullptr)
+		if (InForHitActor == nullptr)
 		{
 			return false;
 		}
 
-		if (const bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(ForHitActor)))
+		if (const bool* CanHitPtr = CanHitPerHitActorMap.Find(TWeakObjectPtr<AActor>(InForHitActor)))
 		{
 			return *CanHitPtr;
 		}

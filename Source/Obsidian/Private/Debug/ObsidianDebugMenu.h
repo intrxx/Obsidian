@@ -28,7 +28,7 @@ public:
 
 protected:
 	//~ Start of FSlateIMWindowBase
-	virtual void DrawWindow(float DeltaTime) override;
+	virtual void DrawWindow(float InDeltaTime) override;
 	//~ End of FSlateIMWindowBase
 
 private:
@@ -39,11 +39,11 @@ private:
 	}
 
 	/** Opens the menu with given tab active, handler of the "obsidian.OpenDebugMenuTab" console command. */
-	void OpenTab(const TArray<FString>& Args);
+	void OpenTab(const TArray<FString>& InArgs);
 
 	/** Draws the World and Player pickers and fills the Context with the picked ones. */
 	void DrawTargetBar(FObsidianDebugMenuContext& OutContext);
-	void DrawTab(FObsidianDebugMenuTab& Tab, const FObsidianDebugMenuContext& Context) const;
+	void DrawTab(FObsidianDebugMenuTab& InTab, const FObsidianDebugMenuContext& InContext) const;
 
 private:
 	TArray<TUniquePtr<FObsidianDebugMenuTab>> Tabs;

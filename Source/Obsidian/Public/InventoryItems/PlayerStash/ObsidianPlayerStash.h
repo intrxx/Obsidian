@@ -18,7 +18,7 @@ class OBSIDIAN_API AObsidianPlayerStash : public AActor, public IObsidianHighlig
 	GENERATED_BODY()
 	
 public:	
-	AObsidianPlayerStash(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianPlayerStash(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	//~ Start of HighlightInterface
 	virtual AActor* GetHighlightAvatarActor() override;
@@ -31,8 +31,8 @@ public:
 	virtual bool CanInteract() override;
 	virtual bool RequiresOngoingInteraction() override;
 	virtual float GetInteractionRadius() override;
-	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
-	virtual void StopInteraction(AObsidianPlayerController* InteractingPlayerController) override;
+	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
+	virtual void StopInteraction(AObsidianPlayerController* InInteractingPlayerController) override;
 	//~ End of InteractionInterface
 	
 protected:

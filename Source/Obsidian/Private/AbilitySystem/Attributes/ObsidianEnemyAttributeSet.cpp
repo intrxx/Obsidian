@@ -21,14 +21,14 @@ void UObsidianEnemyAttributeSet::GetLifetimeReplicatedProps(TArray<FLifetimeProp
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 }
 
-void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData)
 {
-	Super::PostGameplayEffectExecute(Data);
+	Super::PostGameplayEffectExecute(InData);
 
 	//FObsidianEffectProperties EffectProps;
 	//SetEffectProperties(Data, /** OUT */ EffectProps);
 
-	if(Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+	if(InData.EvaluatedData.Attribute == GetIncomingDamageAttribute())
 	{
 		const float LocalIncomingDamage = GetIncomingDamage();
 		const float CurrentHealth = GetHealth();
@@ -65,7 +65,7 @@ void UObsidianEnemyAttributeSet::PostGameplayEffectExecute(const FGameplayEffect
 	EffectProps.Reset();
 }
 
-void UObsidianEnemyAttributeSet::OnRep_HitReactThreshold(const FGameplayAttributeData& OldValue)
+void UObsidianEnemyAttributeSet::OnRep_HitReactThreshold(const FGameplayAttributeData& InOldValue)
 {
-	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianEnemyAttributeSet, HitReactThreshold, OldValue);
+	GAMEPLAYATTRIBUTE_REPNOTIFY(UObsidianEnemyAttributeSet, HitReactThreshold, InOldValue);
 }

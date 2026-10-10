@@ -26,7 +26,7 @@ public:
 	virtual void NativeDestruct() override;
 	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const FGameplayTag EffectTag);
+	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const FGameplayTag InEffectTag);
 
 	void RemoveAuraInfoWidget();
 	

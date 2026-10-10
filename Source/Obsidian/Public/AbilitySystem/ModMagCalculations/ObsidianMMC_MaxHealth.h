@@ -16,9 +16,9 @@ class OBSIDIAN_API UObsidianMMC_MaxHealth : public UGameplayModMagnitudeCalculat
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_MaxHealth(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_MaxHealth(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")

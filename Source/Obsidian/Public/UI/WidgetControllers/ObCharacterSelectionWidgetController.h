@@ -24,13 +24,13 @@ public:
 	// ~ End of WidgetControllerBase
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void HighlightCharacterWithTag(const EObsidianHeroClass WithClass);
+	void HighlightCharacterWithTag(const EObsidianHeroClass InWithClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass WithClass);
+	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass InWithClass);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
-	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass ForClass);
+	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass InForClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisidan")
 	void SetupCameraForCreationPanel();

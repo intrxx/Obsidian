@@ -19,17 +19,17 @@ class OBSIDIAN_API AObsidianMagneticHammerProjectile : public AObsidianTickingPr
 	GENERATED_BODY()
 
 public:
-	AObsidianMagneticHammerProjectile(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianMagneticHammerProjectile(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+	virtual void Tick(float InDeltaTime) override;
 	
 protected:
 	void OnHammerRouteFinished();
 
 private:
-	void UpdateHammerRoute(const float DeltaTime);
+	void UpdateHammerRoute(const float InDeltaTime);
 	
 private:
 	UPROPERTY(VisibleDefaultsOnly, meta = (AllowPrivateAccess = "true"), Category = "Obsidian")

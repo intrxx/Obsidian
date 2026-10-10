@@ -12,12 +12,12 @@ UObsidianBTTask_SetFocus::UObsidianBTTask_SetFocus()
 	INIT_TASK_NODE_NOTIFY_FLAGS();
 }
 
-EBTNodeResult::Type UObsidianBTTask_SetFocus::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_SetFocus::ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
 	EBTNodeResult::Type NodeResult = EBTNodeResult::InProgress;
 
-	AAIController* AIController = OwnerComp.GetAIOwner();
-	UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+	AAIController* AIController = InOwnerComp.GetAIOwner();
+	UBlackboardComponent* BlackboardComponent = InOwnerComp.GetBlackboardComponent();
 	if(AIController && BlackboardComponent)
 	{
 		if(AActor* Target = Cast<AActor>(BlackboardComponent->GetValueAsObject(Target_Selector.SelectedKeyName)))
@@ -28,13 +28,13 @@ EBTNodeResult::Type UObsidianBTTask_SetFocus::ExecuteTask(UBehaviorTreeComponent
 		}
 		else
 		{
-			UE_VLOG(OwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetFocus::ExecuteTask failed since Target to Focus is missing."));
+			UE_VLOG(InOwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetFocus::ExecuteTask failed since Target to Focus is missing."));
 			NodeResult = EBTNodeResult::Failed;
 		}
 	}
 	else
 	{
-		UE_VLOG(OwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetFocus::ExecuteTask failed since AIController is missing."));
+		UE_VLOG(InOwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_SetFocus::ExecuteTask failed since AIController is missing."));
 		NodeResult = EBTNodeResult::Failed;
 	}
 	

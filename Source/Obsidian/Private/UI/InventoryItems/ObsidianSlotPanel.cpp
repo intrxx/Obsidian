@@ -23,11 +23,11 @@ bool FObsidianSlotData::IsBlocked() const
 }
 
 void FObsidianSlotData::AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget,
-                                   const bool bBlockSlot)
+                                   const bool bInBlockSlot)
 {
 	OriginPosition = InPosition;
 	ItemWidget = InItemWidget;
-	bBlocked = bBlockSlot;
+	bBlocked = bInBlockSlot;
 	bOccupied = true;
 }
 
@@ -68,9 +68,9 @@ bool UObsidianSlotPanel::ConstructStashPanel(const FGameplayTag& InStashTabTag)
 bool UObsidianSlotPanel::ConstructSlots()
 {
 	bool bSuccess = false;
-	WidgetTree->ForEachWidget([this, &bSuccess](UWidget* Widget)
+	WidgetTree->ForEachWidget([this, &bSuccess](UWidget* InWidget)
 		{
-			if(UObsidianSlot_ItemSlot* EquipmentSlot = Cast<UObsidianSlot_ItemSlot>(Widget))
+			if(UObsidianSlot_ItemSlot* EquipmentSlot = Cast<UObsidianSlot_ItemSlot>(InWidget))
 			{
 				EquipmentSlot->OnItemSlotHoverDelegate.AddUObject(this, &ThisClass::OnItemSlotHover);
 				EquipmentSlot->OnItemSlotLeftButtonPressedDelegate.AddUObject(this, &ThisClass::OnItemSlotLeftMouseButtonDown);
@@ -116,23 +116,23 @@ TArray<UObsidianSlot_ItemSlot*> UObsidianSlotPanel::GetAllSlots() const
 	return Slots;
 }
 
-UObsidianSlot_ItemSlot* UObsidianSlotPanel::GetSlotByPosition(const FGameplayTag& AtSlotTag)
+UObsidianSlot_ItemSlot* UObsidianSlotPanel::GetSlotByPosition(const FGameplayTag& InAtSlotTag)
 {
-	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(AtSlotTag))
+	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(InAtSlotTag))
 	{
 		return SlotData->OwningSlot;
 	}
 	return nullptr;
 }
 
-const FObsidianSlotData* UObsidianSlotPanel::GetSlotDataAtGridPosition(const FGameplayTag& AtSlotTag) const
+const FObsidianSlotData* UObsidianSlotPanel::GetSlotDataAtGridPosition(const FGameplayTag& InAtSlotTag) const
 {
-	return SlotDataMap.Find(AtSlotTag);
+	return SlotDataMap.Find(InAtSlotTag);
 }
 
-UObsidianItem* UObsidianSlotPanel::GetItemWidgetAtSlot(const FGameplayTag& AtSlotTag) const
+UObsidianItem* UObsidianSlotPanel::GetItemWidgetAtSlot(const FGameplayTag& InAtSlotTag) const
 {
-	const FObsidianSlotData* SlotData = SlotDataMap.Find(AtSlotTag);
+	const FObsidianSlotData* SlotData = SlotDataMap.Find(InAtSlotTag);
 	if (SlotData && SlotData->IsOccupied())
 	{
 		return SlotData->ItemWidget;
@@ -140,35 +140,35 @@ UObsidianItem* UObsidianSlotPanel::GetItemWidgetAtSlot(const FGameplayTag& AtSlo
 	return nullptr;
 }
 
-bool UObsidianSlotPanel::IsSlotOccupied(const FGameplayTag& AtSlotTag) const
+bool UObsidianSlotPanel::IsSlotOccupied(const FGameplayTag& InAtSlotTag) const
 {
-	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(AtSlotTag))
+	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(InAtSlotTag))
 	{
 		return SlotData->IsOccupied();
 	}
 	return false;
 }
 
-bool UObsidianSlotPanel::IsSlotBlocked(const FGameplayTag& AtSlotTag) const
+bool UObsidianSlotPanel::IsSlotBlocked(const FGameplayTag& InAtSlotTag) const
 {
-	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(AtSlotTag))
+	if (const FObsidianSlotData* SlotData = SlotDataMap.Find(InAtSlotTag))
 	{
 		return SlotData->IsBlocked();
 	}
 	return false;
 }
 
-void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidianItemWidgetData& ItemWidgetData,
-	const bool bBlockSlot)
+void UObsidianSlotPanel::AddItemWidget(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData,
+	const bool bInBlockSlot)
 {
-	if (ItemWidget == nullptr)
+	if (InItemWidget == nullptr)
 	{
 		UE_LOG(ObLogItems, Error, TEXT("ItemWidget to Add Item Widget to Equipment Panel is invalid in [%hs]"),
 			__FUNCTION__);
 		return;
 	}
 	
-	const FGameplayTag SlotTag = ItemWidgetData.ItemPosition.GetItemSlotTag();
+	const FGameplayTag SlotTag = InItemWidgetData.ItemPosition.GetItemSlotTag();
 	if (SlotTag.IsValid() == false)
 	{
 		UE_LOG(ObLogItems, Error, TEXT("Slot Tag to Add Item Widget to Equipment Panel is invalid in [%hs]"),
@@ -184,10 +184,10 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 		return;
 	}
 
-	if (bBlockSlot == false)
+	if (bInBlockSlot == false)
 	{
-		EquipmentSlot->AddItemToSlot(ItemWidget, ItemWidgetData.ItemSlotPadding);
-		RegisterSlotItemWidget(ItemWidgetData.ItemPosition, ItemWidget, ItemWidgetData.bSwappedWithAnotherItem);
+		EquipmentSlot->AddItemToSlot(InItemWidget, InItemWidgetData.ItemSlotPadding);
+		RegisterSlotItemWidget(InItemWidgetData.ItemPosition, InItemWidget, InItemWidgetData.bSwappedWithAnotherItem);
 	}
 	else
 	{
@@ -210,14 +210,14 @@ void UObsidianSlotPanel::AddItemWidget(UObsidianItem* ItemWidget, const FObsidia
 
 		FObsidianItemPosition ItemPosition;
 		ConstructItemPosition(ItemPosition, SisterSlotTag);
-		SlotToBlock->AddBlockadeItemToSlot(ItemWidget, ItemWidgetData.ItemSlotPadding);
+		SlotToBlock->AddBlockadeItemToSlot(InItemWidget, InItemWidgetData.ItemSlotPadding);
 		SlotToBlock->SetSlotState(EObsidianItemSlotState::Blocked, EObsidianItemSlotStatePriority::TakePriority);
-		RegisterSlotItemWidget(ItemPosition, ItemWidget, false, true,
-			ItemWidgetData.ItemPosition);
+		RegisterSlotItemWidget(ItemPosition, InItemWidget, false, true,
+			InItemWidgetData.ItemPosition);
 	}
 }
 
-void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, const bool bEntered)
+void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* InAffectedSlot, const bool bInEntered)
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
@@ -225,13 +225,13 @@ void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, c
 		return;
 	}
 
-	if (AffectedSlot == nullptr)
+	if (InAffectedSlot == nullptr)
 	{
 		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 	
-	const FGameplayTag SlotTag = AffectedSlot->GetSlotTag();
+	const FGameplayTag SlotTag = InAffectedSlot->GetSlotTag();
 	check(SlotTag.IsValid());
 
 	const FObsidianSlotData* SlotData = GetSlotDataAtGridPosition(SlotTag);
@@ -247,7 +247,7 @@ void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, c
 	const bool IsSlotBlocked = SlotData->IsBlocked();
 	const bool IsSlotEmpty = IsSlotBlocked == false && IsSlotOccupied == false;
 	
-	if (bEntered)
+	if (bInEntered)
 	{
 		if (IsSlotEmpty == false)
 		{
@@ -262,13 +262,13 @@ void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, c
 		
 		if(bCanInteract == false)
 		{
-			AffectedSlot->SetSlotState(EObsidianItemSlotState::RedLight, EObsidianItemSlotStatePriority::Low);
+			InAffectedSlot->SetSlotState(EObsidianItemSlotState::RedLight, EObsidianItemSlotStatePriority::Low);
 			return;
 		}
 	
 		if(InventoryItemsWidgetController->IsDraggingAnItem() == false)
 		{
-			AffectedSlot->SetSlotState(EObsidianItemSlotState::Selected, EObsidianItemSlotStatePriority::Low);
+			InAffectedSlot->SetSlotState(EObsidianItemSlotState::Selected, EObsidianItemSlotStatePriority::Low);
 			return;
 		}
 		
@@ -279,7 +279,7 @@ void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, c
 		
 		const EObsidianItemSlotState SlotState = bCanPlace ? EObsidianItemSlotState::GreenLight
 			: EObsidianItemSlotState::RedLight;
-		AffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
+		InAffectedSlot->SetSlotState(SlotState, EObsidianItemSlotStatePriority::Low);
 	}
 	else
 	{
@@ -290,13 +290,13 @@ void UObsidianSlotPanel::OnItemSlotHover(UObsidianSlot_ItemSlot* AffectedSlot, c
 
 		if (bCanInteract)
 		{
-			AffectedSlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
+			InAffectedSlot->SetSlotState(EObsidianItemSlotState::Neutral, EObsidianItemSlotStatePriority::Low);
 		}
 	}
 }
 
-void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
-	const FObsidianItemInteractionFlags& InteractionFlags)
+void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemSlot* InAffectedSlot,
+	const FObsidianItemInteractionFlags& InInteractionFlags)
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
@@ -304,13 +304,13 @@ void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemS
 		return;
 	}
 
-	if (AffectedSlot == nullptr)
+	if (InAffectedSlot == nullptr)
 	{
 		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 	
-	const FGameplayTag SlotTag = AffectedSlot->GetSlotTag();
+	const FGameplayTag SlotTag = InAffectedSlot->GetSlotTag();
 	check(SlotTag.IsValid());
 
 	const FObsidianSlotData* SlotData = GetSlotDataAtGridPosition(SlotTag);
@@ -325,7 +325,7 @@ void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemS
 	ConstructItemPosition(ItemPosition, SlotTag);
 	
 	FObsidianItemInteractionData InteractionData;
-	InteractionData.InteractionFlags = InteractionFlags;
+	InteractionData.InteractionFlags = InInteractionFlags;
 	
 	if (SlotData->IsOccupied())
 	{
@@ -343,8 +343,8 @@ void UObsidianSlotPanel::OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemS
 	}
 }
 
-void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_ItemSlot* AffectedSlot,
-	const FObsidianItemInteractionFlags& InteractionFlags)
+void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_ItemSlot* InAffectedSlot,
+	const FObsidianItemInteractionFlags& InInteractionFlags)
 {
 	if(InventoryItemsWidgetController == nullptr)
 	{
@@ -352,13 +352,13 @@ void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_Item
 		return;
 	}
 
-	if (AffectedSlot == nullptr)
+	if (InAffectedSlot == nullptr)
 	{
 		UE_LOG(ObLogItems, Error, TEXT("AffectedSlot is invalid in [%hs]."), __FUNCTION__)
 		return;
 	}
 
-	const FGameplayTag SlotTag = AffectedSlot->GetSlotTag();
+	const FGameplayTag SlotTag = InAffectedSlot->GetSlotTag();
 	check(SlotTag.IsValid());
 
 	const FObsidianSlotData* SlotData = GetSlotDataAtGridPosition(SlotTag);
@@ -373,7 +373,7 @@ void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_Item
 	ConstructItemPosition(ItemPosition, SlotTag);
 	
 	FObsidianItemInteractionData InteractionData;
-	InteractionData.InteractionFlags = InteractionFlags;
+	InteractionData.InteractionFlags = InInteractionFlags;
 	
 	if (SlotData && SlotData->IsOccupied())
 	{
@@ -386,26 +386,26 @@ void UObsidianSlotPanel::OnItemSlotRightMouseButtonDown(const UObsidianSlot_Item
 	}
 }
 
-void UObsidianSlotPanel::ConstructItemPosition(FObsidianItemPosition& ItemPosition, const FGameplayTag& SlotTagOverride) const
+void UObsidianSlotPanel::ConstructItemPosition(FObsidianItemPosition& OutItemPosition, const FGameplayTag& InSlotTagOverride) const
 {
 	if (PanelOwner == EObsidianPanelOwner::Equipment)
 	{
-		ItemPosition = FObsidianItemPosition(SlotTagOverride);
+		OutItemPosition = FObsidianItemPosition(InSlotTagOverride);
 	}
 	else if (PanelOwner == EObsidianPanelOwner::PlayerStash)
 	{
-		ItemPosition = FObsidianItemPosition(SlotTagOverride, StashTag);
+		OutItemPosition = FObsidianItemPosition(InSlotTagOverride, StashTag);
 	}
 }
 
-void UObsidianSlotPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianSlotPanel::HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	const FGameplayTag SlotToClearTag = ItemWidgetData.ItemPosition.GetItemSlotTag();
+	const FGameplayTag SlotToClearTag = InItemWidgetData.ItemPosition.GetItemSlotTag();
 	if (ensureMsgf(SlotToClearTag.IsValid(), TEXT("SlotToClearTag is invalid in [%hs]. "), __FUNCTION__))
 	{
 		UnregisterSlotItemWidget(SlotToClearTag);
 
-		if (ItemWidgetData.bDoesBlockSisterSlot)
+		if (InItemWidgetData.bDoesBlockSisterSlot)
 		{
 			if (const FObsidianSlotData* SlotData = SlotDataMap.Find(SlotToClearTag))
 			{
@@ -424,16 +424,16 @@ void UObsidianSlotPanel::HandleItemRemoved(const FObsidianItemWidgetData& ItemWi
 	
 }
 
-void UObsidianSlotPanel::HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianSlotPanel::HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	const FGameplayTag AtSlot = ItemWidgetData.ItemPosition.GetItemSlotTag();
+	const FGameplayTag AtSlot = InItemWidgetData.ItemPosition.GetItemSlotTag();
 	if(UObsidianItem* ItemWidget = GetItemWidgetAtSlot(AtSlot))
 	{
-		if (ItemWidgetData.bUpdateStacks)
+		if (InItemWidgetData.bUpdateStacks)
 		{
-			ItemWidget->OverrideCurrentStackCount(ItemWidgetData.StackCount);
+			ItemWidget->OverrideCurrentStackCount(InItemWidgetData.StackCount);
 		}
-		else if (ItemWidgetData.bGeneralItemUpdate)
+		else if (InItemWidgetData.bGeneralItemUpdate)
 		{
 			if (HighlightedItems.Remove(ItemWidget))
 			{
@@ -443,7 +443,7 @@ void UObsidianSlotPanel::HandleItemChanged(const FObsidianItemWidgetData& ItemWi
 				{
 					FObsidianItemInteractionData InteractionData;
 					InteractionData.ItemWidget = ItemWidget;
-					InventoryItemsWidgetController->HandleHoveringOverItem(ItemWidgetData.ItemPosition, InteractionData,
+					InventoryItemsWidgetController->HandleHoveringOverItem(InItemWidgetData.ItemPosition, InteractionData,
 						PanelOwner);
 				}
 			}
@@ -451,11 +451,11 @@ void UObsidianSlotPanel::HandleItemChanged(const FObsidianItemWidgetData& ItemWi
 	}
 }
 
-void UObsidianSlotPanel::HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight)
+void UObsidianSlotPanel::HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight)
 {
-	HighlightedItems.Reserve(ItemsToHighlight.Num());
+	HighlightedItems.Reserve(InItemsToHighlight.Num());
 	
-	for (const FObsidianItemPosition& ItemPosition : ItemsToHighlight)
+	for (const FObsidianItemPosition& ItemPosition : InItemsToHighlight)
 	{
 		if (UObsidianItem* ItemWidget = GetItemWidgetAtSlot(ItemPosition.GetItemSlotTag()))
 		{
@@ -478,31 +478,31 @@ void UObsidianSlotPanel::ClearUsableItemHighlight()
 	HighlightedItems.Empty();
 }
 
-void UObsidianSlotPanel::RegisterSlotItemWidget(const FObsidianItemPosition& ItemPosition, UObsidianItem* ItemWidget,
-                                                const bool bSwappedWithAnother, const bool bBlocksSlot, const FObsidianItemPosition& ItemOriginPosition)
+void UObsidianSlotPanel::RegisterSlotItemWidget(const FObsidianItemPosition& InItemPosition, UObsidianItem* InItemWidget,
+                                                const bool bInSwappedWithAnother, const bool bInBlocksSlot, const FObsidianItemPosition& InItemOriginPosition)
 {
-	if (ensureMsgf(ItemWidget && ItemPosition.IsValid(), TEXT("ItemWidget or ItemPosition are invalid in [%hs]. "),
+	if (ensureMsgf(InItemWidget && InItemPosition.IsValid(), TEXT("ItemWidget or ItemPosition are invalid in [%hs]. "),
 		__FUNCTION__))
 	{
-		if(bSwappedWithAnother)
+		if(bInSwappedWithAnother)
 		{
-			UnregisterSlotItemWidget(ItemPosition.GetItemSlotTag());
+			UnregisterSlotItemWidget(InItemPosition.GetItemSlotTag());
 		}
 		
-		if (FObsidianSlotData* SlotData = SlotDataMap.Find(ItemPosition.GetItemSlotTag()))
+		if (FObsidianSlotData* SlotData = SlotDataMap.Find(InItemPosition.GetItemSlotTag()))
 		{
 			check(SlotData->IsOccupied() == false);
-			const FObsidianItemPosition OriginPosition = bBlocksSlot ? ItemOriginPosition : ItemPosition;
-			SlotData->AddNewItem(OriginPosition, ItemWidget, bBlocksSlot);
+			const FObsidianItemPosition OriginPosition = bInBlocksSlot ? InItemOriginPosition : InItemPosition;
+			SlotData->AddNewItem(OriginPosition, InItemWidget, bInBlocksSlot);
 		}
 	}
 }
 
-void UObsidianSlotPanel::UnregisterSlotItemWidget(const FGameplayTag& SlotTag)
+void UObsidianSlotPanel::UnregisterSlotItemWidget(const FGameplayTag& InSlotTag)
 {
-	if  (ensureMsgf(SlotTag.IsValid(), TEXT("SlotTag is invalid in [%hs]. "), __FUNCTION__))
+	if  (ensureMsgf(InSlotTag.IsValid(), TEXT("SlotTag is invalid in [%hs]. "), __FUNCTION__))
 	{
-		if (FObsidianSlotData* SlotData = SlotDataMap.Find(SlotTag))
+		if (FObsidianSlotData* SlotData = SlotDataMap.Find(InSlotTag))
 		{
 			check(SlotData->IsOccupied());
 
@@ -510,7 +510,7 @@ void UObsidianSlotPanel::UnregisterSlotItemWidget(const FGameplayTag& SlotTag)
 			if (SlottedItemWidget == nullptr)
 			{
 				UE_LOG(ObLogItems, Error, TEXT("Trying to remove ItemWidget from [%s], but the ItemWidget is invalid!"),
-					*SlotTag.ToString());
+					*InSlotTag.ToString());
 				return;
 			}
 

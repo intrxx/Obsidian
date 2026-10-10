@@ -24,8 +24,8 @@ class OBSIDIAN_API UObsidianOverlayEnemyBar : public UObsidianBasicHealthBar
 protected:
 	void ResetStyle() const;
 	void ResetSpecialStyle() const;
-	void SetOverlayBarStyle(const FSlateBrush& Brush) const;
-	void HandleSpecialEffectApplied(const FSlateBrush& Brush) const;
+	void SetOverlayBarStyle(const FSlateBrush& InBrush) const;
+	void HandleSpecialEffectApplied(const FSlateBrush& InBrush) const;
 
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
@@ -33,12 +33,12 @@ protected:
 	
 	void SetInitialValues();
 
-	void HealthChanged(const float NewValue);
-	void MaxHealthChanged(const float NewValue);
-	void EnergyShieldChanged(const float NewValue);
-	void MaxEnergyShieldChanged(const float NewValue);
-	void StaggerMeterChanged(const float NewValue);
-	void MaxStaggerMeterChanged(const float NewValue);
+	void HealthChanged(const float InNewValue);
+	void MaxHealthChanged(const float InNewValue);
+	void EnergyShieldChanged(const float InNewValue);
+	void MaxEnergyShieldChanged(const float InNewValue);
+	void StaggerMeterChanged(const float InNewValue);
+	void MaxStaggerMeterChanged(const float InNewValue);
 
 protected:
 	UPROPERTY()

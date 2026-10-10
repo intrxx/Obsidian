@@ -27,7 +27,7 @@ class OBSIDIAN_API AObsidianCharacterBase : public AModularCharacter, public IAb
 	GENERATED_BODY()
 
 public:
-	AObsidianCharacterBase(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianCharacterBase(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Character")
     UCapsuleComponent* GetCapsuleComp() const;
@@ -37,7 +37,7 @@ public:
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
-	FGameplayAbilitySpec* GetFirstAbilitySpecForTag(const FGameplayTag& AbilityTag) const;
+	FGameplayAbilitySpec* GetFirstAbilitySpecForTag(const FGameplayTag& InAbilityTag) const;
 	
 	bool CanHitReact() const
 	{
@@ -54,10 +54,10 @@ protected:
 	virtual void OnAbilitySystemUninitialized();
 
 	/** Begins the death sequence for the character (disables collision, disables movement, etc...) */
-	virtual void OnDeathStarted(AActor* OwningActor);
+	virtual void OnDeathStarted(AActor* InOwningActor);
 
 	/** Ends the death sequence for the character (detaches controller, destroys pawn, etc...) */
-	virtual void OnDeathFinished(AActor* OwningActor);
+	virtual void OnDeathFinished(AActor* InOwningActor);
 
 	UFUNCTION(BlueprintImplementableEvent, meta = (DisplayName="On Death Finished"), Category = "Obsidian|Character")
 	void BP_OnDeathFinished();
@@ -67,13 +67,13 @@ protected:
 
 	//~ Start of CombatInterface
 	virtual UNiagaraSystem* GetBloodEffect_Implementation() override;
-	virtual FVector GetAbilitySocketLocationForTag_Implementation(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag Tag) override;
+	virtual FVector GetAbilitySocketLocationForTag_Implementation(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag InTag) override;
 	virtual FVector GetAbilitySocketLocationFromLeftHand_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromRightHand_Implementation() override;
 	virtual FVector GetAbilityBetweenHandsSocketLocation_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
 	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
-	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName = FName("FacingTarget"), const FVector& FacingTarget = FVector(0.0f, 0.0f, 0.0f)) override;
+	virtual void SetMotionWarpingFacingTarget_Implementation(const FName InMotionWarpName = FName("FacingTarget"), const FVector& InFacingTarget = FVector(0.0f, 0.0f, 0.0f)) override;
 	//~ End of CombatInterface
 
 protected:

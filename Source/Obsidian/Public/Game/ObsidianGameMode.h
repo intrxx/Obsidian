@@ -21,7 +21,7 @@ class OBSIDIAN_API AObsidianGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	virtual void InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage) override;
+	virtual void InitGame(const FString& InMapName, const FString& InOptions, FString& OutErrorMessage) override;
 
 	EObsidianGameNetworkType GetCurrentNetworkType() const;
 	UObsidianEnemyTypeInfo* GetEnemyTypeInfo() const;

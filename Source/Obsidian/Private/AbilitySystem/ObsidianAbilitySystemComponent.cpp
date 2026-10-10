@@ -11,21 +11,21 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianAbilitySystemComponent::UObsidianAbilitySystemComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianAbilitySystemComponent::UObsidianAbilitySystemComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	InputPressedSpecHandles.Reset();
 	InputReleasedSpecHandles.Reset();
 	InputHeldSpecHandles.Reset();
 }
 
-void UObsidianAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InputTag)
+void UObsidianAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag& InInputTag)
 {
-	if(InputTag.IsValid())
+	if(InInputTag.IsValid())
 	{
 		for(const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 		{
-			if(AbilitySpec.Ability && (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag)))
+			if(AbilitySpec.Ability && (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag)))
 			{
 				InputPressedSpecHandles.AddUnique(AbilitySpec.Handle);
 				InputHeldSpecHandles.AddUnique(AbilitySpec.Handle);
@@ -34,13 +34,13 @@ void UObsidianAbilitySystemComponent::AbilityInputTagPressed(const FGameplayTag&
 	}
 }
 
-void UObsidianAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InputTag)
+void UObsidianAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag& InInputTag)
 {
-	if (InputTag.IsValid())
+	if (InInputTag.IsValid())
 	{
 		for (const FGameplayAbilitySpec& AbilitySpec : GetActivatableAbilities())
 		{
-			if (AbilitySpec.Ability && (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InputTag)))
+			if (AbilitySpec.Ability && (AbilitySpec.GetDynamicSpecSourceTags().HasTagExact(InInputTag)))
 			{
 				InputReleasedSpecHandles.AddUnique(AbilitySpec.Handle);
 				InputHeldSpecHandles.Remove(AbilitySpec.Handle);
@@ -49,39 +49,39 @@ void UObsidianAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag
 	}
 }
 
-void UObsidianAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& Spec)
+void UObsidianAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& InSpec)
 {
-	Super::AbilitySpecInputPressed(Spec);
-	if (Spec.IsActive())
+	Super::AbilitySpecInputPressed(InSpec);
+	if (InSpec.IsActive())
 	{
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
-		const UGameplayAbility* Instance = Spec.GetPrimaryInstance();
-		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : Spec.ActivationInfo.GetActivationPredictionKey();
+		const UGameplayAbility* Instance = InSpec.GetPrimaryInstance();
+		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : InSpec.ActivationInfo.GetActivationPredictionKey();
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 		
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, Spec.Handle, InstancedPredictionKey);
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, InSpec.Handle, InstancedPredictionKey);
 	}
 }
 
-void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec& Spec)
+void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec& InSpec)
 {
-	Super::AbilitySpecInputReleased(Spec);
-	if (Spec.IsActive())
+	Super::AbilitySpecInputReleased(InSpec);
+	if (InSpec.IsActive())
 	{
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
-		const UGameplayAbility* Instance = Spec.GetPrimaryInstance();
-		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : Spec.ActivationInfo.GetActivationPredictionKey();
+		const UGameplayAbility* Instance = InSpec.GetPrimaryInstance();
+		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : InSpec.ActivationInfo.GetActivationPredictionKey();
 PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, Spec.Handle, InstancedPredictionKey);
+		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, InSpec.Handle, InstancedPredictionKey);
 	}
 }
 
-void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbilitySystemComponent* ASC, const FGameplayEffectSpec& EffectSpec,
-	FActiveGameplayEffectHandle EffectHandle)
+void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbilitySystemComponent* InASC, const FGameplayEffectSpec& InEffectSpec,
+	FActiveGameplayEffectHandle InEffectHandle)
 {
 	FGameplayTagContainer AssetTags;
-	EffectSpec.GetAllAssetTags(AssetTags);
+	InEffectSpec.GetAllAssetTags(AssetTags);
 	
 	if(AssetTags.HasTagExact(ObsidianGameplayTags::UI::DataSpecifierTag))
 	{
@@ -89,24 +89,24 @@ void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbil
 		
 		EffectUIData.AssetTags = AssetTags;
 
-		const EGameplayEffectDurationType GameplayEffectType = EffectSpec.Def->DurationPolicy;
+		const EGameplayEffectDurationType GameplayEffectType = InEffectSpec.Def->DurationPolicy;
 		EffectUIData.EffectDurationPolicy = GameplayEffectType;
 
 		if(GameplayEffectType == EGameplayEffectDurationType::HasDuration)
 		{
-			EffectUIData.EffectDuration = EffectSpec.GetDuration();
-			EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(EffectSpec);
+			EffectUIData.EffectDuration = InEffectSpec.GetDuration();
+			EffectUIData.EffectMagnitude = CalculateFullEffectMagnitude(InEffectSpec);
 		}
 	
-		if(EffectSpec.Def->StackingType != EGameplayEffectStackingType::None)
+		if(InEffectSpec.Def->StackingType != EGameplayEffectStackingType::None)
 		{
 			EffectUIData.bStackingEffect = true;
 		
 			FObsidianEffectUIStackingData StackingData;
 		
-			StackingData.EffectStackCount = EffectSpec.GetStackCount();
-			StackingData.EffectExpirationDurationPolicy = EffectSpec.Def->GetStackExpirationPolicy();
-			StackingData.EffectStackingDurationPolicy = EffectSpec.Def->StackDurationRefreshPolicy;
+			StackingData.EffectStackCount = InEffectSpec.GetStackCount();
+			StackingData.EffectExpirationDurationPolicy = InEffectSpec.Def->GetStackExpirationPolicy();
+			StackingData.EffectStackingDurationPolicy = InEffectSpec.Def->StackDurationRefreshPolicy;
 			EffectUIData.StackingData = StackingData;
 		}
 	
@@ -114,22 +114,22 @@ void UObsidianAbilitySystemComponent::ClientOnEffectApplied_Implementation(UAbil
 	}
 }
 
-float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGameplayEffectSpec& EffectSpec)
+float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGameplayEffectSpec& InEffectSpec)
 {
 	//@Hack It fixes a crash when applying cooldown effects as cds have no modifiers
-	if(EffectSpec.Def->Modifiers.Num() == 0)
+	if(InEffectSpec.Def->Modifiers.Num() == 0)
 	{
 		return 0.f;
 	}
 	
-	const float Magnitude = EffectSpec.GetModifierMagnitude(0, false);
+	const float Magnitude = InEffectSpec.GetModifierMagnitude(0, false);
 	
-	const float Duration = EffectSpec.GetDuration();
-	const float Period = EffectSpec.GetPeriod();
+	const float Duration = InEffectSpec.GetDuration();
+	const float Period = InEffectSpec.GetPeriod();
 	
 	float FullMagnitude = Duration / Period * Magnitude;
 	
-	if(EffectSpec.Def->bExecutePeriodicEffectOnApplication)
+	if(InEffectSpec.Def->bExecutePeriodicEffectOnApplication)
 	{
 		FullMagnitude += Magnitude;
 	}
@@ -137,7 +137,7 @@ float UObsidianAbilitySystemComponent::CalculateFullEffectMagnitude(const FGamep
 	return FullMagnitude;
 }
 
-void UObsidianAbilitySystemComponent::ProcessAbilityInput(float DeltaTime, bool bPauseGame)
+void UObsidianAbilitySystemComponent::ProcessAbilityInput(float InDeltaTime, bool bInPauseGame)
 {
 	//TODO(intrxx) Check for blocking tag here and clear input if this ASC has it
 	
@@ -227,9 +227,9 @@ void UObsidianAbilitySystemComponent::ClearAbilityInput()
 	InputHeldSpecHandles.Reset();
 }
 
-void UObsidianAbilitySystemComponent::SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* MappingToSet)
+void UObsidianAbilitySystemComponent::SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* InMappingToSet)
 {
-	TagRelationshipMapping = MappingToSet;
+	TagRelationshipMapping = InMappingToSet;
 }
 
 void UObsidianAbilitySystemComponent::AbilityActorInfoSet()
@@ -242,28 +242,28 @@ void UObsidianAbilitySystemComponent::BindToOnEffectAppliedDelegate()
 	OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &ThisClass::ClientOnEffectApplied);
 }
 
-void UObsidianAbilitySystemComponent::GetAdditionalActivationTagRequirements(const FGameplayTagContainer& AbilityTags,
+void UObsidianAbilitySystemComponent::GetAdditionalActivationTagRequirements(const FGameplayTagContainer& InAbilityTags,
                                                                              FGameplayTagContainer& OutActivationRequired, FGameplayTagContainer& OutActivationBlocked) const
 {
 	if (TagRelationshipMapping)
 	{
-		TagRelationshipMapping->GetRequiredAndBlockedActivationTags(AbilityTags, &OutActivationRequired, &OutActivationBlocked);
+		TagRelationshipMapping->GetRequiredAndBlockedActivationTags(InAbilityTags, &OutActivationRequired, &OutActivationBlocked);
 	}
 }
 
-void UObsidianAbilitySystemComponent::ExecuteGameplayCueLocal(const FGameplayTag GameplayCueTag, const FGameplayCueParameters& GameplayCueParameters)
+void UObsidianAbilitySystemComponent::ExecuteGameplayCueLocal(const FGameplayTag InGameplayCueTag, const FGameplayCueParameters& InGameplayCueParameters)
 {
-	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), GameplayCueTag, EGameplayCueEvent::Type::Executed, GameplayCueParameters);
+	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), InGameplayCueTag, EGameplayCueEvent::Type::Executed, InGameplayCueParameters);
 }
 
-void UObsidianAbilitySystemComponent::AddGameplayCueLocal(const FGameplayTag GameplayCueTag, const FGameplayCueParameters& GameplayCueParameters)
+void UObsidianAbilitySystemComponent::AddGameplayCueLocal(const FGameplayTag InGameplayCueTag, const FGameplayCueParameters& InGameplayCueParameters)
 {
-	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), GameplayCueTag, EGameplayCueEvent::Type::OnActive, GameplayCueParameters);
-	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), GameplayCueTag, EGameplayCueEvent::Type::WhileActive, GameplayCueParameters);
+	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), InGameplayCueTag, EGameplayCueEvent::Type::OnActive, InGameplayCueParameters);
+	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), InGameplayCueTag, EGameplayCueEvent::Type::WhileActive, InGameplayCueParameters);
 }
 
-void UObsidianAbilitySystemComponent::RemoveGameplayCueLocal(const FGameplayTag GameplayCueTag, const FGameplayCueParameters& GameplayCueParameters)
+void UObsidianAbilitySystemComponent::RemoveGameplayCueLocal(const FGameplayTag InGameplayCueTag, const FGameplayCueParameters& InGameplayCueParameters)
 {
-	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), GameplayCueTag, EGameplayCueEvent::Type::Removed, GameplayCueParameters);
+	UAbilitySystemGlobals::Get().GetGameplayCueManager()->HandleGameplayCue(GetOwner(), InGameplayCueTag, EGameplayCueEvent::Type::Removed, InGameplayCueParameters);
 }
 

@@ -18,11 +18,11 @@ class OBSIDIAN_API UObsidianUIManagerSubsystem : public UGameUIManagerSubsystem
 public:
 	UObsidianUIManagerSubsystem();
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Initialize(FSubsystemCollectionBase& InCollection) override;
 	virtual void Deinitialize() override;
 
 private:
-	bool Tick(float DeltaTime);
+	bool Tick(float InDeltaTime);
 	void SyncRootLayoutVisibilityToShowHUD();
 
 	FTSTicker::FDelegateHandle TickHandle;

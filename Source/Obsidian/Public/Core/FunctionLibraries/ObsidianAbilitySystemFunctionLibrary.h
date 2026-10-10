@@ -22,26 +22,26 @@ class OBSIDIAN_API UObsidianAbilitySystemFunctionLibrary : public UBlueprintFunc
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Init")
-	static void InitializeEnemyDefaultAttributesWithClass(const UObject* WorldContextObject, UObsidianAbilitySystemComponent* ASC,
-		const EObsidianEnemyClass EnemyClass, const float Level, UObject* SourceObject = nullptr);
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "InWorldContextObject", DefaultToSelf = "InWorldContextObject"), Category = "ObsidianASCFunctionLibrary|Init")
+	static void InitializeEnemyDefaultAttributesWithClass(const UObject* InWorldContextObject, UObsidianAbilitySystemComponent* InASC,
+		const EObsidianEnemyClass InEnemyClass, const float InLevel, UObject* InSourceObject = nullptr);
 
-	UFUNCTION(BlueprintCallable, meta = (HidePin = "WorldContextObject", DefaultToSelf = "WorldContextObject"), Category = "ObsidianASCFunctionLibrary|Combat")
-	static void GetAllCharactersWithinRadius(const UObject* WorldContextObject, TArray<AActor*>& OutOverlappingActors,
-		UClass* ActorClassFilter, const TArray<AActor*>& ActorsToIgnore, const float Radius, const FVector& SphereOrigin, const bool bWithDebug);
-
-	UFUNCTION(BlueprintPure, Category = "ObsidianASCFunctionLibrary|Combat")
-	static bool IsBlockedAttack(const FGameplayEffectContextHandle& EffectContextHandle);
+	UFUNCTION(BlueprintCallable, meta = (HidePin = "InWorldContextObject", DefaultToSelf = "InWorldContextObject"), Category = "ObsidianASCFunctionLibrary|Combat")
+	static void GetAllCharactersWithinRadius(const UObject* InWorldContextObject, TArray<AActor*>& OutOverlappingActors,
+		UClass* InActorClassFilter, const TArray<AActor*>& InActorsToIgnore, const float InRadius, const FVector& InSphereOrigin, const bool bInWithDebug);
 
 	UFUNCTION(BlueprintPure, Category = "ObsidianASCFunctionLibrary|Combat")
-	static bool IsCriticalAttack(const FGameplayEffectContextHandle& EffectContextHandle);
+	static bool IsBlockedAttack(const FGameplayEffectContextHandle& InEffectContextHandle);
+
+	UFUNCTION(BlueprintPure, Category = "ObsidianASCFunctionLibrary|Combat")
+	static bool IsCriticalAttack(const FGameplayEffectContextHandle& InEffectContextHandle);
 
 	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
-	static void SetIsBlockedAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsBlockedAttack);
+	static void SetIsBlockedAttack(UPARAM(ref) FGameplayEffectContextHandle& InOutEffectContextHandle, const bool bInIsBlockedAttack);
 
 	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary|Combat")
-	static void SetIsCriticalAttack(UPARAM(ref) FGameplayEffectContextHandle& EffectContextHandle, const bool bInIsCriticalAttack);
+	static void SetIsCriticalAttack(UPARAM(ref) FGameplayEffectContextHandle& InOutEffectContextHandle, const bool bInIsCriticalAttack);
 
 	UFUNCTION(BlueprintCallable, Category = "ObsidianASCFunctionLibrary")
-	static void GetAllOwnedTagsFromActor(AActor* Actor, FGameplayTagContainer& OutTags);
+	static void GetAllOwnedTagsFromActor(AActor* InActor, FGameplayTagContainer& OutTags);
 };

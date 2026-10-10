@@ -35,11 +35,11 @@ class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase, public IObsidi
 	GENERATED_BODY()
 	
 public:
-	AObsidianHero(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianHero(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	// ~ Start of ACharacter interface
-	virtual void SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) override;
-	virtual void PossessedBy(AController* NewController) override;
+	virtual void SetupPlayerInputComponent(UInputComponent* InPlayerInputComponent) override;
+	virtual void PossessedBy(AController* InNewController) override;
 	virtual void OnRep_PlayerState() override;
 	// ~ Start of ACharacter interface
 	
@@ -72,35 +72,35 @@ public:
 	//~ End of CombatInterface
 
 	//~ Start of SaveableInterface
-	virtual void SaveData(UObsidianHeroSaveGame* SaveObject) override;
-	virtual void LoadData(UObsidianHeroSaveGame* SaveObject) override;
+	virtual void SaveData(UObsidianHeroSaveGame* InSaveObject) override;
+	virtual void LoadData(UObsidianHeroSaveGame* InSaveObject) override;
 	//~ End of SaveableInterface
 
 	/** Updates when boss sees Player, BossActor will be nullptr when Boss lost sight of Player, this is by design and might change. */
 	UFUNCTION(Client, Reliable)
-	void ClientUpdateBossDetectingPlayer(AActor* BossActor, const bool bSeenPlayer);
+	void ClientUpdateBossDetectingPlayer(AActor* InBossActor, const bool bInSeenPlayer);
 
 	void IncreaseHeroLevel() const;
 	uint8 GetHeroLevel() const;
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	virtual void EndPlay(const EEndPlayReason::Type InEndPlayReason) override;
 	
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
 	
 	UFUNCTION()
-	virtual void OnDeathStarted(AActor* OwningActor) override;
+	virtual void OnDeathStarted(AActor* InOwningActor) override;
 
 	UFUNCTION()
-	virtual void OnDeathFinished(AActor* OwningActor) override;
+	virtual void OnDeathFinished(AActor* InOwningActor) override;
 	//~ End of AObsidianCharacterBase
 
-	void InitializeUI(UObsidianAbilitySystemComponent* ObsidianASC) const;
+	void InitializeUI(UObsidianAbilitySystemComponent* InObsidianASC) const;
 
-	void FillGenericAttribures(FObsidianGenericAttributes& GenericAttributes);
+	void FillGenericAttribures(FObsidianGenericAttributes& OutGenericAttributes);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Hero")

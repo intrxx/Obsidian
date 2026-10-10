@@ -61,16 +61,16 @@ public:
 	UFUNCTION()
 	void TogglePassiveSkillTree();
 	
-	void TogglePlayerStash(const bool bShowStash);
+	void TogglePlayerStash(const bool bInShowStash);
 	
-	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const;
+	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* InItemDescription) const;
 
 	/**
 	 * Item Labels
 	 */
 	
-	UCanvasPanelSlot* AddItemLabelToOverlay(UObsidianItemLabel* ItemLabelWidget, const FVector2D& AtPosition);
-	UCanvasPanelSlot* AddItemLabelToOverlayDebug(UUserWidget* ItemLabelWidget, const FVector2D& AtPosition);
+	UCanvasPanelSlot* AddItemLabelToOverlay(UObsidianItemLabel* InItemLabelWidget, const FVector2D& InAtPosition);
+	UCanvasPanelSlot* AddItemLabelToOverlayDebug(UUserWidget* InItemLabelWidget, const FVector2D& InAtPosition);
 	void SetItemLabelsVisibility(ESlateVisibility InVisibility);
 	void ForceItemLabelsPrepass();
 
@@ -78,20 +78,20 @@ protected:
 	virtual void HandleWidgetControllerSet() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
-	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData);
+	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow InRow, const FObsidianEffectUIStackingData InStackingData);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
-	void HandleUIData(const FObsidianEffectUIDataWidgetRow Row);
+	void HandleUIData(const FObsidianEffectUIDataWidgetRow InRow);
 	
 	UFUNCTION()
-	void HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar);
+	void HandleRegularOverlayBar(AActor* InTargetActor, bool bInDisplayBar);
 	UFUNCTION()
-	void HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar);
+	void HandleBossOverlayBar(AActor* InTargetActor, bool bInDisplayBar);
 
 	UFUNCTION()
-	void UpdatePassiveSkillPointsNotification(float NewSkillPoints);
+	void UpdatePassiveSkillPointsNotification(float InNewSkillPoints);
 	UFUNCTION()
-	void UpdateAscensionSkillPointsNotification(float NewSkillPoints);
+	void UpdateAscensionSkillPointsNotification(float InNewSkillPoints);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))
@@ -185,14 +185,14 @@ protected:
 	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;
 	
 private:
-	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy);
+	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* InWidgetToDestroy);
 
 	UFUNCTION()
-	void DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag);
+	void DestroyAuraInfoWidget(const FGameplayTag InWidgetToDestroyWithTag);
 
-	void HandleEffectFillImageRemoval(const FGameplayTag& EffectTag);
+	void HandleEffectFillImageRemoval(const FGameplayTag& InEffectTag);
 
-	void MoveDroppedItemDescOverlay(const bool bInventoryOpen);
+	void MoveDroppedItemDescOverlay(const bool bInInventoryOpen);
 	
 private:
 	UPROPERTY()

@@ -77,7 +77,7 @@ void UObsidianInventory::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianInventory::OnInventoryItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnInventoryItemAdded(const FObsidianItemWidgetData& InItemWidgetData)
 {
 	if(Inventory_GridPanel == nullptr)
 	{
@@ -85,33 +85,33 @@ void UObsidianInventory::OnInventoryItemAdded(const FObsidianItemWidgetData& Ite
 		return;
 	}
 	
-	const FIntPoint DesiredPosition = ItemWidgetData.ItemPosition.GetItemGridPosition();
-	const FIntPoint GridSpan = ItemWidgetData.GridSpan;
+	const FIntPoint DesiredPosition = InItemWidgetData.ItemPosition.GetItemGridPosition();
+	const FIntPoint GridSpan = InItemWidgetData.GridSpan;
 	
 	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnInventoryItemAdded,"
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(GridSpan, ItemWidgetData.ItemImage, ItemWidgetData.StackCount);
-	Inventory_GridPanel->AddItemWidget(ItemWidget, ItemWidgetData);
+	ItemWidget->InitializeItemWidget(GridSpan, InItemWidgetData.ItemImage, InItemWidgetData.StackCount);
+	Inventory_GridPanel->AddItemWidget(ItemWidget, InItemWidgetData);
 }
 
-void UObsidianInventory::OnInventoryItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnInventoryItemChanged(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(ItemWidgetData.ItemPosition.IsOnInventoryGrid()))
+	if (ensure(InItemWidgetData.ItemPosition.IsOnInventoryGrid()))
 	{
-		Inventory_GridPanel->HandleItemChanged(ItemWidgetData);
+		Inventory_GridPanel->HandleItemChanged(InItemWidgetData);
 	}
 }
 
-void UObsidianInventory::OnInventoryItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnInventoryItemRemoved(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(Inventory_GridPanel && ItemWidgetData.ItemPosition.IsOnInventoryGrid()))
+	if (ensure(Inventory_GridPanel && InItemWidgetData.ItemPosition.IsOnInventoryGrid()))
 	{
-		Inventory_GridPanel->HandleItemRemoved(ItemWidgetData);
+		Inventory_GridPanel->HandleItemRemoved(InItemWidgetData);
 	}
 }
 
-void UObsidianInventory::OnEquipmentItemAdded(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnEquipmentItemAdded(const FObsidianItemWidgetData& InItemWidgetData)
 {
 	if(Equipment_SlotPanel == nullptr)
 	{
@@ -122,48 +122,48 @@ void UObsidianInventory::OnEquipmentItemAdded(const FObsidianItemWidgetData& Ite
 	checkf(ItemWidgetClass, TEXT("Tried to create widget without valid widget class in UObsidianInventory::OnInventoryItemAdded,"
 							  " fill it in ObsidianInventory instance."));
 	UObsidianItem* ItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-	ItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage,
-		ItemWidgetData.IsItemForSwapSlot());
-	Equipment_SlotPanel->AddItemWidget(ItemWidget, ItemWidgetData);
+	ItemWidget->InitializeItemWidget(InItemWidgetData.GridSpan, InItemWidgetData.ItemImage,
+		InItemWidgetData.IsItemForSwapSlot());
+	Equipment_SlotPanel->AddItemWidget(ItemWidget, InItemWidgetData);
 
-	if (ItemWidgetData.bDoesBlockSisterSlot)
+	if (InItemWidgetData.bDoesBlockSisterSlot)
 	{
 		UObsidianItem* BlockingItemWidget = CreateWidget<UObsidianItem>(this, ItemWidgetClass);
-		BlockingItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage,
-			ItemWidgetData.IsItemForSwapSlot());
-		Equipment_SlotPanel->AddItemWidget(BlockingItemWidget, ItemWidgetData, true);
+		BlockingItemWidget->InitializeItemWidget(InItemWidgetData.GridSpan, InItemWidgetData.ItemImage,
+			InItemWidgetData.IsItemForSwapSlot());
+		Equipment_SlotPanel->AddItemWidget(BlockingItemWidget, InItemWidgetData, true);
 	}
 }
 
-void UObsidianInventory::OnEquipmentItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnEquipmentItemChanged(const FObsidianItemWidgetData& InItemWidgetData)
 {
 	if (ensure(Equipment_SlotPanel))
 	{
-		Equipment_SlotPanel->HandleItemChanged(ItemWidgetData);
+		Equipment_SlotPanel->HandleItemChanged(InItemWidgetData);
 	}
 }
 
-void UObsidianInventory::OnEquipmentItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianInventory::OnEquipmentItemRemoved(const FObsidianItemWidgetData& InItemWidgetData)
 {
 	if (ensure(Equipment_SlotPanel))
 	{
-		Equipment_SlotPanel->HandleItemRemoved(ItemWidgetData);
+		Equipment_SlotPanel->HandleItemRemoved(InItemWidgetData);
 	}
 }
 
-void UObsidianInventory::OnUsableContextFiredForInventory(const TArray<FObsidianItemPosition>& MatchingItemPositions)
+void UObsidianInventory::OnUsableContextFiredForInventory(const TArray<FObsidianItemPosition>& InMatchingItemPositions)
 {
 	if (ensure(Inventory_GridPanel))
 	{
-		Inventory_GridPanel->HandleHighlightingItems(MatchingItemPositions);
+		Inventory_GridPanel->HandleHighlightingItems(InMatchingItemPositions);
 	}
 }
 
-void UObsidianInventory::OnUsableContextFiredForEquipment(const TArray<FObsidianItemPosition>& MatchingItemPositions)
+void UObsidianInventory::OnUsableContextFiredForEquipment(const TArray<FObsidianItemPosition>& InMatchingItemPositions)
 {
 	if (ensure(Equipment_SlotPanel))
 	{
-		Equipment_SlotPanel->HandleHighlightingItems(MatchingItemPositions);
+		Equipment_SlotPanel->HandleHighlightingItems(InMatchingItemPositions);
 	}
 }
 
@@ -176,11 +176,11 @@ void UObsidianInventory::ClearUsableItemHighlight()
 	}
 }
 
-void UObsidianInventory::HighlightSlotPlacement(const FGameplayTagContainer& WithTags)
+void UObsidianInventory::HighlightSlotPlacement(const FGameplayTagContainer& InWithTags)
 {
 	for (UObsidianSlot_ItemSlot* SlotWidget : Equipment_SlotPanel->GetAllSlots())
 	{
-		if (SlotWidget && WithTags.HasTagExact(SlotWidget->GetSlotTag()))
+		if (SlotWidget && InWithTags.HasTagExact(SlotWidget->GetSlotTag()))
 		{
 			SlotWidget->SetSlotState(EObsidianItemSlotState::GreenLight, EObsidianItemSlotStatePriority::High);
 			CachedHighlightedSlot.Add(SlotWidget);

@@ -3,8 +3,8 @@
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 
 
-AObsidianSpawnedEquipmentPiece::AObsidianSpawnedEquipmentPiece(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianSpawnedEquipmentPiece::AObsidianSpawnedEquipmentPiece(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -15,11 +15,11 @@ AObsidianSpawnedEquipmentPiece::AObsidianSpawnedEquipmentPiece(const FObjectInit
 	SetRootComponent(EquipmentPieceMesh);
 }
 
-USkeletalMeshSocket const* AObsidianSpawnedEquipmentPiece::GetEquipmentSocketByName(const FName SocketName) const
+USkeletalMeshSocket const* AObsidianSpawnedEquipmentPiece::GetEquipmentSocketByName(const FName InSocketName) const
 {
 	if(EquipmentPieceMesh)
 	{
-		return EquipmentPieceMesh->GetSocketByName(SocketName);
+		return EquipmentPieceMesh->GetSocketByName(InSocketName);
 	}
 	return nullptr;
 }

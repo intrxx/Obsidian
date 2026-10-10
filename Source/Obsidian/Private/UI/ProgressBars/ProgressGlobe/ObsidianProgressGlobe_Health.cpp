@@ -22,13 +22,13 @@ void UObsidianProgressGlobe_Health::HandleWidgetControllerSet()
 	MainOverlayWidgetController->OnMaxStaggerMeterChangedDelegate.AddDynamic(this, &ThisClass::OnMaxStaggerMeterChanged);
 }
 
-void UObsidianProgressGlobe_Health::SetProgressGlobeStyle(const FSlateBrush& ProgressGlobeFillImage) const
+void UObsidianProgressGlobe_Health::SetProgressGlobeStyle(const FSlateBrush& InProgressGlobeFillImage) const
 {
 	if(Health_ProgressGlobe)
 	{
 		FProgressBarStyle Style;
 		Style.BackgroundImage.TintColor = FSlateColor(FLinearColor::Transparent);
-		Style.FillImage = ProgressGlobeFillImage;
+		Style.FillImage = InProgressGlobeFillImage;
 		Health_ProgressGlobe->SetWidgetStyle(Style);
 	}
 }
@@ -44,11 +44,11 @@ void UObsidianProgressGlobe_Health::ResetStyle() const
 	}
 }
 
-void UObsidianProgressGlobe_Health::OnHealthChanged(float NewHealth)
+void UObsidianProgressGlobe_Health::OnHealthChanged(float InNewHealth)
 {
-	ShouldGhostGlobeDecrease(NewHealth, Health, MaxHealth);
+	ShouldGhostGlobeDecrease(InNewHealth, Health, MaxHealth);
 	
-	Health = NewHealth;
+	Health = InNewHealth;
 
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Health, MaxHealth);
 	Health_ProgressGlobe->SetPercent(ProgressBarPercent);
@@ -60,9 +60,9 @@ void UObsidianProgressGlobe_Health::OnHealthChanged(float NewHealth)
 	HealthAttributeCount_TextBlock->SetText(AttributeText);
 }
 
-void UObsidianProgressGlobe_Health::OnMaxHealthChanged(float NewMaxHealth)
+void UObsidianProgressGlobe_Health::OnMaxHealthChanged(float InNewMaxHealth)
 {
-	MaxHealth = NewMaxHealth;
+	MaxHealth = InNewMaxHealth;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(Health, MaxHealth);
 	Health_ProgressGlobe->SetPercent(ProgressBarPercent);
@@ -74,9 +74,9 @@ void UObsidianProgressGlobe_Health::OnMaxHealthChanged(float NewMaxHealth)
 	HealthAttributeCount_TextBlock->SetText(AttributeText);
 }
 
-void UObsidianProgressGlobe_Health::OnEnergyShieldChanged(float NewEnergyShield)
+void UObsidianProgressGlobe_Health::OnEnergyShieldChanged(float InNewEnergyShield)
 {
-	EnergyShield = NewEnergyShield;
+	EnergyShield = InNewEnergyShield;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(EnergyShield, MaxEnergyShield);
 	EnergyShield_ProgressGlobe->SetPercent(ProgressBarPercent);
@@ -88,9 +88,9 @@ void UObsidianProgressGlobe_Health::OnEnergyShieldChanged(float NewEnergyShield)
 	EnergyShieldAttributeCount_TextBlock->SetText(AttributeText);
 }
 
-void UObsidianProgressGlobe_Health::OnMaxEnergyShieldChanged(float NewMaxEnergyShield)
+void UObsidianProgressGlobe_Health::OnMaxEnergyShieldChanged(float InNewMaxEnergyShield)
 {
-	MaxEnergyShield = NewMaxEnergyShield;
+	MaxEnergyShield = InNewMaxEnergyShield;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(EnergyShield, MaxEnergyShield);
 	EnergyShield_ProgressGlobe->SetPercent(ProgressBarPercent);
@@ -102,17 +102,17 @@ void UObsidianProgressGlobe_Health::OnMaxEnergyShieldChanged(float NewMaxEnergyS
 	EnergyShieldAttributeCount_TextBlock->SetText(AttributeText);
 }
 
-void UObsidianProgressGlobe_Health::OnStaggerMeterChanged(float NewStaggerMeter)
+void UObsidianProgressGlobe_Health::OnStaggerMeterChanged(float InNewStaggerMeter)
 {
-	StaggerMeter = NewStaggerMeter;
+	StaggerMeter = InNewStaggerMeter;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(StaggerMeter, MaxStaggerMeter);
 	Stagger_RadialProgressBar->SetPercent(ProgressBarPercent);
 }
 
-void UObsidianProgressGlobe_Health::OnMaxStaggerMeterChanged(float NewMaxStaggerMeter)
+void UObsidianProgressGlobe_Health::OnMaxStaggerMeterChanged(float InNewMaxStaggerMeter)
 {
-	MaxStaggerMeter = NewMaxStaggerMeter;
+	MaxStaggerMeter = InNewMaxStaggerMeter;
 	
 	const float ProgressBarPercent = UKismetMathLibrary::SafeDivide(StaggerMeter, MaxStaggerMeter);
 	Stagger_RadialProgressBar->SetPercent(ProgressBarPercent);

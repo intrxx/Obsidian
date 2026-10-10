@@ -37,36 +37,36 @@ namespace ObsidianDebugAI
 		return RarityNames;
 	}
 
-	void TableTextCell(const FStringView& Text, const FSlateColor& Color = FSlateColor::UseForeground())
+	void TableTextCell(const FStringView& InText, const FSlateColor& InColor = FSlateColor::UseForeground())
 	{
 		if (SlateIM::NextTableCell())
 		{
 			SlateIM::Padding(FMargin(4.0f, 0.0f));
 			SlateIM::VAlign(VAlign_Center);
-			SlateIM::Text(Text, {.Color = Color});
+			SlateIM::Text(InText, {.Color = InColor});
 		}
 	}
 }
 
-void FObsidianDebugTab_AI::Tick(const FObsidianDebugMenuContext& Context, const float DeltaTime)
+void FObsidianDebugTab_AI::Tick(const FObsidianDebugMenuContext& InContext, const float InDeltaTime)
 {
 	// Done every frame to also catch the enemies that were spawned by the game after the AI was frozen.
-	if (bFreezeAI && Context.HasAuthority())
+	if (bFreezeAI && InContext.HasAuthority())
 	{
-		for (TActorIterator<AObsidianEnemy> It(Context.World); It; ++It)
+		for (TActorIterator<AObsidianEnemy> It(InContext.World); It; ++It)
 		{
 			SetAILogicPaused(*It, true);
 		}
 	}
 }
 
-void FObsidianDebugTab_AI::Draw(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_AI::Draw(const FObsidianDebugMenuContext& InContext)
 {
-	DrawSpawning(Context);
-	DrawSpawnedEnemies(Context);
+	DrawSpawning(InContext);
+	DrawSpawnedEnemies(InContext);
 }
 
-void FObsidianDebugTab_AI::DrawSpawning(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_AI::DrawSpawning(const FObsidianDebugMenuContext& InContext)
 {
 	ObsidianDebugUI::Section(TEXT("Spawning"));
 
@@ -138,7 +138,7 @@ void FObsidianDebugTab_AI::DrawSpawning(const FObsidianDebugMenuContext& Context
 
 	if (SlateIM::Button(TEXT("Spawn"), {.bEnabled = SpawnBlocker.IsEmpty()}))
 	{
-		SpawnEnemies(Context);
+		SpawnEnemies(InContext);
 	}
 
 	if (SpawnBlocker.IsEmpty() == false)
@@ -148,14 +148,14 @@ void FObsidianDebugTab_AI::DrawSpawning(const FObsidianDebugMenuContext& Context
 	}
 }
 
-void FObsidianDebugTab_AI::DrawSpawnedEnemies(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_AI::DrawSpawnedEnemies(const FObsidianDebugMenuContext& InContext)
 {
 	using namespace ObsidianDebugAI;
 
 	ObsidianDebugUI::Section(TEXT("Enemies In The World"));
 
 	TArray<AObsidianEnemy*> Enemies;
-	for (TActorIterator<AObsidianEnemy> It(Context.World); It; ++It)
+	for (TActorIterator<AObsidianEnemy> It(InContext.World); It; ++It)
 	{
 		Enemies.Add(*It);
 	}
@@ -253,9 +253,9 @@ void FObsidianDebugTab_AI::DrawSpawnedEnemies(const FObsidianDebugMenuContext& C
 				EnemiesToDestroy.Add(Enemy);
 			}
 			SlateIM::SetToolTip(TEXT("Teleports the enemy in front of the chosen Player."));
-			if (SlateIM::Button(TEXT("Bring"), {.bEnabled = Context.Pawn != nullptr}))
+			if (SlateIM::Button(TEXT("Bring"), {.bEnabled = InContext.Pawn != nullptr}))
 			{
-				const FVector BringLocation = Context.Pawn->GetActorLocation() + Context.Pawn->GetActorForwardVector() * 250.0f;
+				const FVector BringLocation = InContext.Pawn->GetActorLocation() + InContext.Pawn->GetActorForwardVector() * 250.0f;
 				Enemy->TeleportTo(BringLocation, Enemy->GetActorRotation(), false, true);
 			}
 			SlateIM::EndHorizontalStack();
@@ -266,7 +266,7 @@ void FObsidianDebugTab_AI::DrawSpawnedEnemies(const FObsidianDebugMenuContext& C
 
 	if (EnemiesToKill.IsEmpty() == false)
 	{
-		UAbilitySystemComponent* InstigatorASC = bCreditPlayerForKills ? Context.GetPlayerASC() : nullptr;
+		UAbilitySystemComponent* InstigatorASC = bCreditPlayerForKills ? InContext.GetPlayerASC() : nullptr;
 
 		int32 KilledCount = 0;
 		for (const AObsidianEnemy* Enemy : EnemiesToKill)
@@ -277,7 +277,7 @@ void FObsidianDebugTab_AI::DrawSpawnedEnemies(const FObsidianDebugMenuContext& C
 				++KilledCount;
 			}
 		}
-		Context.Notify(FString::Printf(TEXT("Killed [%d] enemies."), KilledCount));
+		InContext.Notify(FString::Printf(TEXT("Killed [%d] enemies."), KilledCount));
 	}
 
 	if (EnemiesToDestroy.IsEmpty() == false)
@@ -286,16 +286,16 @@ void FObsidianDebugTab_AI::DrawSpawnedEnemies(const FObsidianDebugMenuContext& C
 		{
 			Enemy->Destroy();
 		}
-		Context.Notify(FString::Printf(TEXT("Destroyed [%d] enemies."), EnemiesToDestroy.Num()));
+		InContext.Notify(FString::Printf(TEXT("Destroyed [%d] enemies."), EnemiesToDestroy.Num()));
 	}
 }
 
-void FObsidianDebugTab_AI::SpawnEnemies(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_AI::SpawnEnemies(const FObsidianDebugMenuContext& InContext)
 {
 	const TSubclassOf<AObsidianEnemy> EnemyClass = EnemyPicker.LoadSelectedClass();
 	if (EnemyClass == nullptr)
 	{
-		Context.Notify(TEXT("Could not spawn the enemies, chosen class is invalid."));
+		InContext.Notify(TEXT("Could not spawn the enemies, chosen class is invalid."));
 		return;
 	}
 
@@ -304,19 +304,19 @@ void FObsidianDebugTab_AI::SpawnEnemies(const FObsidianDebugMenuContext& Context
 	const FString SpawnBlocker = GetSpawnBlocker(EnemyClass.GetDefaultObject());
 	if (SpawnBlocker.IsEmpty() == false)
 	{
-		Context.Notify(FString::Printf(TEXT("Could not spawn the enemies. %s"), *SpawnBlocker));
+		InContext.Notify(FString::Printf(TEXT("Could not spawn the enemies. %s"), *SpawnBlocker));
 		return;
 	}
 
-	if (Context.Pawn == nullptr)
+	if (InContext.Pawn == nullptr)
 	{
-		Context.Notify(TEXT("Could not spawn the enemies, chosen Player has no Pawn to spawn them around."));
+		InContext.Notify(TEXT("Could not spawn the enemies, chosen Player has no Pawn to spawn them around."));
 		return;
 	}
 
-	UWorld* World = Context.World;
-	const FVector PlayerLocation = Context.Pawn->GetActorLocation();
-	const FVector SpawnOrigin = PlayerLocation + Context.Pawn->GetActorForwardVector() * SpawnDistance;
+	UWorld* World = InContext.World;
+	const FVector PlayerLocation = InContext.Pawn->GetActorLocation();
+	const FVector SpawnOrigin = PlayerLocation + InContext.Pawn->GetActorForwardVector() * SpawnDistance;
 	const UNavigationSystemV1* NavigationSystem = UNavigationSystemV1::GetCurrent(World);
 
 	// Navigable points are on the ground, while the characters are spawned by the center of their capsule.
@@ -373,33 +373,33 @@ void FObsidianDebugTab_AI::SpawnEnemies(const FObsidianDebugMenuContext& Context
 		++SpawnedCount;
 	}
 
-	Context.Notify(FString::Printf(TEXT("Spawned [%d] out of [%d] [%s]."), SpawnedCount, SpawnCount,
+	InContext.Notify(FString::Printf(TEXT("Spawned [%d] out of [%d] [%s]."), SpawnedCount, SpawnCount,
 		*ObsidianDebugUI::GetCleanClassName(EnemyClass.Get())));
 }
 
-FString FObsidianDebugTab_AI::GetSpawnBlocker(const AObsidianEnemy* EnemyDefault)
+FString FObsidianDebugTab_AI::GetSpawnBlocker(const AObsidianEnemy* InEnemyDefault)
 {
-	if (EnemyDefault == nullptr)
+	if (InEnemyDefault == nullptr)
 	{
 		return FString();
 	}
 
-	const FString EnemyName = ObsidianDebugUI::GetCleanClassName(EnemyDefault);
+	const FString EnemyName = ObsidianDebugUI::GetCleanClassName(InEnemyDefault);
 
-	if (EnemyDefault->PawnExtComp == nullptr || EnemyDefault->PawnExtComp->GetPawnData() == nullptr)
+	if (InEnemyDefault->PawnExtComp == nullptr || InEnemyDefault->PawnExtComp->GetPawnData() == nullptr)
 	{
 		return FString::Printf(TEXT("[%s] has no Pawn Data set, it is most likely a base class."), *EnemyName);
 	}
 
-	if (EnemyDefault->DefaultBehaviorTree == nullptr || EnemyDefault->DefaultBehaviorTree->BlackboardAsset == nullptr)
+	if (InEnemyDefault->DefaultBehaviorTree == nullptr || InEnemyDefault->DefaultBehaviorTree->BlackboardAsset == nullptr)
 	{
 		return FString::Printf(TEXT("[%s] has no Default Behavior Tree with a Blackboard set."), *EnemyName);
 	}
 
 	// Bosses use the features of their own controller, the rest of the enemies is fine with the base one.
-	const UClass* RequiredControllerClass = EnemyDefault->IsA<AObsidianBossEnemy>() ? AObsidianBossAIController::StaticClass() :
+	const UClass* RequiredControllerClass = InEnemyDefault->IsA<AObsidianBossEnemy>() ? AObsidianBossAIController::StaticClass() :
 		AObsidianAIControllerBase::StaticClass();
-	if (EnemyDefault->AIControllerClass == nullptr || EnemyDefault->AIControllerClass->IsChildOf(RequiredControllerClass) == false)
+	if (InEnemyDefault->AIControllerClass == nullptr || InEnemyDefault->AIControllerClass->IsChildOf(RequiredControllerClass) == false)
 	{
 		return FString::Printf(TEXT("[%s] needs its AI Controller Class to be a [%s]."), *EnemyName, *RequiredControllerClass->GetName());
 	}
@@ -407,16 +407,16 @@ FString FObsidianDebugTab_AI::GetSpawnBlocker(const AObsidianEnemy* EnemyDefault
 	return FString();
 }
 
-void FObsidianDebugTab_AI::SetAILogicPaused(const AObsidianEnemy* Enemy, const bool bPaused)
+void FObsidianDebugTab_AI::SetAILogicPaused(const AObsidianEnemy* InEnemy, const bool bInPaused)
 {
-	AAIController* AIController = Enemy ? Cast<AAIController>(Enemy->GetController()) : nullptr;
+	AAIController* AIController = InEnemy ? Cast<AAIController>(InEnemy->GetController()) : nullptr;
 	UBrainComponent* BrainComponent = AIController ? AIController->GetBrainComponent() : nullptr;
-	if (BrainComponent == nullptr || BrainComponent->IsPaused() == bPaused)
+	if (BrainComponent == nullptr || BrainComponent->IsPaused() == bInPaused)
 	{
 		return;
 	}
 
-	if (bPaused)
+	if (bInPaused)
 	{
 		BrainComponent->PauseLogic(ObsidianDebugAI::PauseReason);
 		AIController->StopMovement();

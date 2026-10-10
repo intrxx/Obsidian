@@ -15,8 +15,8 @@
 #include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
 
 
-UObsidianMainMenu::UObsidianMainMenu(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMainMenu::UObsidianMainMenu(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 

@@ -23,26 +23,26 @@ class OBSIDIAN_API AObsidianBossEnemy : public AObsidianEnemy
 	GENERATED_BODY()
 
 public:
-	AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianBossEnemy(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
-	virtual void PossessedBy(AController* NewController) override;
+	virtual void PossessedBy(AController* InNewController) override;
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "Handle Advanced Combat Hit"), Category = "Obsidian|Boss")
-	void BP_HandleAdvancedCombatHit(const FHitResult& HitResult);
+	void BP_HandleAdvancedCombatHit(const FHitResult& InHitResult);
 
 protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
 	
 	UFUNCTION()
-	virtual void OnDeathStarted(AActor* OwningActor) override;
+	virtual void OnDeathStarted(AActor* InOwningActor) override;
 
 	UFUNCTION()
-	virtual void OnDeathFinished(AActor* OwningActor) override;
+	virtual void OnDeathFinished(AActor* InOwningActor) override;
 	//~ End of AObsidianCharacterBase
 
 	UFUNCTION()
-	void HandleAdvancedCombatHit(const FHitResult& HitResult);
+	void HandleAdvancedCombatHit(const FHitResult& InHitResult);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))

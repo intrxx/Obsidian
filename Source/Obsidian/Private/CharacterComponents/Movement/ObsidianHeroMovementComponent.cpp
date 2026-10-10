@@ -10,8 +10,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianHeroMovementComponent::UObsidianHeroMovementComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianHeroMovementComponent::UObsidianHeroMovementComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
@@ -73,23 +73,23 @@ void UObsidianHeroMovementComponent::HandleOutOfStamina()
 	}
 }
 
-void UObsidianHeroMovementComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
-	FActorComponentTickFunction* ThisTickFunction)
+void UObsidianHeroMovementComponent::TickComponent(float InDeltaTime, enum ELevelTick InTickType,
+	FActorComponentTickFunction* InThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(InDeltaTime, InTickType, InThisTickFunction);
 
 	if (((CharacterMovementCVars::AsyncCharacterMovement == 1) && IsAsyncCallbackRegistered()) == false)
 	{
 		const AActor* Owner = GetOwner();
 		if(!Owner)
 		{
-			return Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+			return Super::TickComponent(InDeltaTime, InTickType, InThisTickFunction);
 		}
 
 		const UObsidianHeroAttributesComponent* HeroAttributes = UObsidianHeroAttributesComponent::FindHeroAttributesComponent(Owner);
 		if(!HeroAttributes)
 		{
-			return Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+			return Super::TickComponent(InDeltaTime, InTickType, InThisTickFunction);
 		}
 
 		const bool bHasStamina = HeroAttributes->GetStamina() > 0.0f;
@@ -112,19 +112,19 @@ void UObsidianHeroMovementComponent::TickComponent(float DeltaTime, enum ELevelT
 	}
 }
 
-bool UObsidianHeroMovementComponent::HandleWalkingStateChanged(const FGameplayTag& NewWalkingState)
+bool UObsidianHeroMovementComponent::HandleWalkingStateChanged(const FGameplayTag& InNewWalkingState)
 {
-	if (CurrentWalkState != NewWalkingState)
+	if (CurrentWalkState != InNewWalkingState)
 	{
 		if (AActor* Owner = GetOwner())
 		{
 			if (UAbilitySystemComponent* ASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Owner))
 			{
 				UE_LOG(ObLogCharacter, Verbose, TEXT("CurrentWalkingState [%s] changing to NewWalkingState [%s]"),
-					*CurrentWalkState.ToString(), *NewWalkingState.ToString())
+					*CurrentWalkState.ToString(), *InNewWalkingState.ToString())
 				ASC->RemoveLooseGameplayTag(CurrentWalkState);
-				ASC->AddLooseGameplayTag(NewWalkingState);
-				CurrentWalkState = NewWalkingState;
+				ASC->AddLooseGameplayTag(InNewWalkingState);
+				CurrentWalkState = InNewWalkingState;
 				return true;
 			}
 		}

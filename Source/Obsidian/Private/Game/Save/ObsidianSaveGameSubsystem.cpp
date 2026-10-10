@@ -21,44 +21,44 @@ UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::GetCurrentHeroSaveGameObject(
 	return CurrentHeroSaveGame;
 }
 
-UObsidianSharedStashSaveGame* UObsidianSaveGameSubsystem::GetStashSaveGameObject(const EObsidianGameNetworkType NetworkType)
+UObsidianSharedStashSaveGame* UObsidianSaveGameSubsystem::GetStashSaveGameObject(const EObsidianGameNetworkType InNetworkType)
 {
-	ensure(NetworkType != EObsidianGameNetworkType::None);
+	ensure(InNetworkType != EObsidianGameNetworkType::None);
 
-	if (UObsidianGameplayStatics::IsOfflineNetworkType(NetworkType))
+	if (UObsidianGameplayStatics::IsOfflineNetworkType(InNetworkType))
 	{
 		return OfflineSharedStashData;
 	}
 	return OnlineSharedStashData;
 }
 
-bool UObsidianSaveGameSubsystem::FillSaveInfosFromMasterSave(const bool bOnline, const UObsidianLocalPlayer* LocalPlayer,
+bool UObsidianSaveGameSubsystem::FillSaveInfosFromMasterSave(const bool bInOnline, const UObsidianLocalPlayer* InLocalPlayer,
                                                              TArray<FObsidianHeroSaveInfo>& OutHeroInfos)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(InLocalPlayer))
 	{
 		if (ObsidianMasterSaveGame == nullptr)
 		{
 			UE_LOG(ObLogSaveSystem, Error, TEXT("ObsidianMasterSaveGame isn't loaded yet in [%hs],"
 											 " need to load or create it now!"), __FUNCTION__);
-			LoadOrCreateMasterSaveObject(LocalPlayer);
+			LoadOrCreateMasterSaveObject(InLocalPlayer);
 		}
 
-		OutHeroInfos.Append(ObsidianMasterSaveGame->GetHeroSaveInfos(bOnline));
+		OutHeroInfos.Append(ObsidianMasterSaveGame->GetHeroSaveInfos(bInOnline));
 		return !OutHeroInfos.IsEmpty();
 	}
 	return false;
 }
 
-void UObsidianSaveGameSubsystem::LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* LocalPlayer)
+void UObsidianSaveGameSubsystem::LoadOrCreateMasterSaveObject(const UObsidianLocalPlayer* InLocalPlayer)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(InLocalPlayer))
 	{
 		UE_LOG(ObLogSaveSystem, Log, TEXT("Creating or loading existing Master Save Object for [%s]. "),
-			*GetNameSafe(LocalPlayer));
+			*GetNameSafe(InLocalPlayer));
 		
 		ULocalPlayerSaveGame* SaveGame = UObsidianMasterSaveGame::LoadOrCreateSaveGameForLocalPlayer(
-			UObsidianMasterSaveGame::StaticClass(), LocalPlayer, ObsidianSaveStatics::MasterSaveName);
+			UObsidianMasterSaveGame::StaticClass(), InLocalPlayer, ObsidianSaveStatics::MasterSaveName);
 
 		check(SaveGame);
 		ObsidianMasterSaveGame = Cast<UObsidianMasterSaveGame>(SaveGame);
@@ -68,34 +68,34 @@ void UObsidianSaveGameSubsystem::LoadOrCreateMasterSaveObject(const UObsidianLoc
 	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to create or load Master Save Object for LocalPlayer!"));
 }
 
-void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(const UObsidianLocalPlayer* LocalPlayer,
-	const bool bOnline)
+void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(const UObsidianLocalPlayer* InLocalPlayer,
+	const bool bInOnline)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(InLocalPlayer))
 	{
 		UE_LOG(ObLogSaveSystem, Log, TEXT("Creating or loading existing [%s] Shared Stash Data for [%s]."),
-			bOnline ? TEXT("Online") : TEXT("Offline"), *GetNameSafe(LocalPlayer));
+			bInOnline ? TEXT("Online") : TEXT("Offline"), *GetNameSafe(InLocalPlayer));
 
 		bool bSuccess = false;
-		if (bOnline)
+		if (bInOnline)
 		{
 			UObsidianSharedStashSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(
-				UObsidianSharedStashSaveGame::StaticClass(), LocalPlayer, ObsidianSaveStatics::OnlineStashDataSaveName,
-				FOnLocalPlayerSaveGameLoadedNative::CreateWeakLambda(this, [this](ULocalPlayerSaveGame* SaveGame)
+				UObsidianSharedStashSaveGame::StaticClass(), InLocalPlayer, ObsidianSaveStatics::OnlineStashDataSaveName,
+				FOnLocalPlayerSaveGameLoadedNative::CreateWeakLambda(this, [this](ULocalPlayerSaveGame* InSaveGame)
 					{
-						check(SaveGame);
-						OnlineSharedStashData = Cast<UObsidianSharedStashSaveGame>(SaveGame);
+						check(InSaveGame);
+						OnlineSharedStashData = Cast<UObsidianSharedStashSaveGame>(InSaveGame);
 						OnSharedStashDataLoadedDelegate.Broadcast(OnlineSharedStashData);
 					}));
 		}
 		else
 		{
 			UObsidianSharedStashSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(
-				UObsidianSharedStashSaveGame::StaticClass(), LocalPlayer, ObsidianSaveStatics::OfflineStashDataSaveName,
-				FOnLocalPlayerSaveGameLoadedNative::CreateWeakLambda(this, [this](ULocalPlayerSaveGame* SaveGame)
+				UObsidianSharedStashSaveGame::StaticClass(), InLocalPlayer, ObsidianSaveStatics::OfflineStashDataSaveName,
+				FOnLocalPlayerSaveGameLoadedNative::CreateWeakLambda(this, [this](ULocalPlayerSaveGame* InSaveGame)
 					{
-						check(SaveGame);
-						OfflineSharedStashData = Cast<UObsidianSharedStashSaveGame>(SaveGame);
+						check(InSaveGame);
+						OfflineSharedStashData = Cast<UObsidianSharedStashSaveGame>(InSaveGame);
 						OnSharedStashDataLoadedDelegate.Broadcast(OfflineSharedStashData);
 					}));
 		}
@@ -105,24 +105,24 @@ void UObsidianSaveGameSubsystem::AsyncLoadOrCreateSharedStashDataSaveObject(cons
 	UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to create or load Master Save Object for LocalPlayer!"));
 }
 
-void UObsidianSaveGameSubsystem::RegisterSaveable(AActor* SaveActor)
+void UObsidianSaveGameSubsystem::RegisterSaveable(AActor* InSaveActor)
 {
-	if (ensure(SaveActor && SaveActor->GetClass()->ImplementsInterface(UObsidianSaveableInterface::StaticClass())))
+	if (ensure(InSaveActor && InSaveActor->GetClass()->ImplementsInterface(UObsidianSaveableInterface::StaticClass())))
 	{
-		SaveableActors.AddUnique(SaveActor);
+		SaveableActors.AddUnique(InSaveActor);
 	}
 }
 
-void UObsidianSaveGameSubsystem::UnregisterSaveable(AActor* SaveActor)
+void UObsidianSaveGameSubsystem::UnregisterSaveable(AActor* InSaveActor)
 {
-	SaveableActors.RemoveSingleSwap(SaveActor);
+	SaveableActors.RemoveSingleSwap(InSaveActor);
 }
 
-void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync)
+void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync)
 {
-	if (ensure(LocalPlayer) && ensure(CurrentHeroSaveGame) && ensure(ObsidianMasterSaveGame))
+	if (ensure(InLocalPlayer) && ensure(CurrentHeroSaveGame) && ensure(ObsidianMasterSaveGame))
 	{
-		UE_LOG(ObLogSaveSystem, Log, TEXT("Requested Save for [%s]. "), *GetNameSafe(LocalPlayer));
+		UE_LOG(ObLogSaveSystem, Log, TEXT("Requested Save for [%s]. "), *GetNameSafe(InLocalPlayer));
 		
 		for (TWeakObjectPtr<AActor> SaveActor : SaveableActors)
 		{
@@ -158,7 +158,7 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 		}
 		
 			
-		if (bAsync)
+		if (bInAsync)
 		{
 			SaveHeroGameForPlayerAsync();
 			return;
@@ -172,23 +172,23 @@ void UObsidianSaveGameSubsystem::RequestSaveGame(const UObsidianLocalPlayer* Loc
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync,
-	const bool bOnline, const FObsidianHeroInitializationSaveData& HeroInitializationSaveData)
+void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync,
+	const bool bInOnline, const FObsidianHeroInitializationSaveData& InHeroInitializationSaveData)
 {
-	if (ensure(LocalPlayer) && ensure(ObsidianMasterSaveGame))
+	if (ensure(InLocalPlayer) && ensure(ObsidianMasterSaveGame))
 	{
 		UE_LOG(ObLogSaveSystem, Log, TEXT("Requested Initial Hero Save for [%s]. "),
-			*GetNameSafe(LocalPlayer));
+			*GetNameSafe(InLocalPlayer));
 		
-		const FObsidianAddHeroSaveResult Result = ObsidianMasterSaveGame->AddHero(bOnline, HeroInitializationSaveData);
-		UObsidianHeroSaveGame* NewHeroSaveGame = CreateHeroSaveGameObject(LocalPlayer, Result.SaveName, Result.SaveID);
-		NewHeroSaveGame->InitializeHeroSaveData(bOnline, HeroInitializationSaveData);
+		const FObsidianAddHeroSaveResult Result = ObsidianMasterSaveGame->AddHero(bInOnline, InHeroInitializationSaveData);
+		UObsidianHeroSaveGame* NewHeroSaveGame = CreateHeroSaveGameObject(InLocalPlayer, Result.SaveName, Result.SaveID);
+		NewHeroSaveGame->InitializeHeroSaveData(bInOnline, InHeroInitializationSaveData);
 		CurrentHeroSaveGame = NewHeroSaveGame;
 
 		//TODO(intrxx) Make it async 
 		ObsidianMasterSaveGame->SaveGameToSlotForLocalPlayer();
 		
-		if (bAsync)
+		if (bInAsync)
 		{
 			SaveHeroGameForPlayerAsync();
 		}
@@ -204,23 +204,23 @@ void UObsidianSaveGameSubsystem::RequestSaveInitialHeroSave(const UObsidianLocal
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::AsyncSaveSharedStashData(const AObsidianPlayerController* PlayerController,
-	const EObsidianGameNetworkType NetworkType)
+void UObsidianSaveGameSubsystem::AsyncSaveSharedStashData(const AObsidianPlayerController* InPlayerController,
+	const EObsidianGameNetworkType InNetworkType)
 {
-	if (PlayerController == nullptr)
+	if (InPlayerController == nullptr)
 	{
 		UE_LOG(ObLogSaveSystem, Error, TEXT("Provided PlayerController is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
-	UObsidianPlayerStashComponent* PlayerStashComponent = PlayerController->GetPlayerStashComponent();
+	UObsidianPlayerStashComponent* PlayerStashComponent = InPlayerController->GetPlayerStashComponent();
 	if (PlayerStashComponent == nullptr)
 	{
 		UE_LOG(ObLogSaveSystem, Error, TEXT("PlayerStashComponent is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
-	UObsidianSharedStashSaveGame* SharedStashSaveGame = UObsidianGameplayStatics::IsOfflineNetworkType(NetworkType)
+	UObsidianSharedStashSaveGame* SharedStashSaveGame = UObsidianGameplayStatics::IsOfflineNetworkType(InNetworkType)
 		? OfflineSharedStashData
 		: OnlineSharedStashData;
 	if (ensure(SharedStashSaveGame))
@@ -243,20 +243,20 @@ void UObsidianSaveGameSubsystem::AsyncSaveSharedStashData(const AObsidianPlayerC
 	}
 }
 
-UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::CreateHeroSaveGameObject(const UObsidianLocalPlayer* LocalPlayer,
-                                                                            const FString& SlotName, const uint16 SaveID)
+UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::CreateHeroSaveGameObject(const UObsidianLocalPlayer* InLocalPlayer,
+                                                                            const FString& InSlotName, const uint16 InSaveID)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(InLocalPlayer))
 	{
 		UE_LOG(ObLogSaveSystem, Log, TEXT("Creating Save Object for [%s]. "),
-			*GetNameSafe(LocalPlayer));
+			*GetNameSafe(InLocalPlayer));
 		
 		if (ULocalPlayerSaveGame* LocalSaveGame = UObsidianHeroSaveGame::CreateNewSaveGameForLocalPlayer(
-			UObsidianHeroSaveGame::StaticClass(), LocalPlayer, SlotName))
+			UObsidianHeroSaveGame::StaticClass(), InLocalPlayer, InSlotName))
 		{
 			UObsidianHeroSaveGame* ObsidianHeroSaveGame = Cast<UObsidianHeroSaveGame>(LocalSaveGame);
 			ObsidianHeroSaveGame->InitWithSaveSystem(this);
-			ObsidianHeroSaveGame->SetSaveID(SaveID);
+			ObsidianHeroSaveGame->SetSaveID(InSaveID);
 			return ObsidianHeroSaveGame;
 		}
 	}
@@ -265,32 +265,32 @@ UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::CreateHeroSaveGameObject(cons
 	return nullptr;
 }
 
-void UObsidianSaveGameSubsystem::RequestLoadHeroSaveGameWithID(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync,
-	const uint16 SaveID, const bool bOnline)
+void UObsidianSaveGameSubsystem::RequestLoadHeroSaveGameWithID(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync,
+	const uint16 InSaveID, const bool bInOnline)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(InLocalPlayer))
 	{
 		check(ObsidianMasterSaveGame)
-		const FString HeroSaveName = ObsidianMasterSaveGame->GetSaveNameForID(SaveID, bOnline);
-		RequestLoadGame(LocalPlayer, bAsync, HeroSaveName);
+		const FString HeroSaveName = ObsidianMasterSaveGame->GetSaveNameForID(InSaveID, bInOnline);
+		RequestLoadGame(InLocalPlayer, bInAsync, HeroSaveName);
 	}
 }
 
-void UObsidianSaveGameSubsystem::RequestLoadGame(const UObsidianLocalPlayer* LocalPlayer, const bool bAsync,
-	const FString& SlotName)
+void UObsidianSaveGameSubsystem::RequestLoadGame(const UObsidianLocalPlayer* InLocalPlayer, const bool bInAsync,
+	const FString& InSlotName)
 {
-	if (ensure(LocalPlayer))
+	if (ensure(InLocalPlayer))
 	{
 		UE_LOG(ObLogSaveSystem, Log, TEXT("Requested Load Game for [%s]. "),
-			*GetNameSafe(LocalPlayer));
+			*GetNameSafe(InLocalPlayer));
 		
-		if (bAsync)
+		if (bInAsync)
 		{
-			LoadGameForPlayerAsync(LocalPlayer, SlotName);
+			LoadGameForPlayerAsync(InLocalPlayer, InSlotName);
 		}
 		else
 		{
-			LoadGameForPlayer(LocalPlayer, SlotName);
+			LoadGameForPlayer(InLocalPlayer, InSlotName);
 		}
 		return;
 	}
@@ -299,34 +299,34 @@ void UObsidianSaveGameSubsystem::RequestLoadGame(const UObsidianLocalPlayer* Loc
 	OnLoadingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* LoadActor)
+void UObsidianSaveGameSubsystem::RequestLoadDataForObject(AActor* InLoadActor)
 {
-	if (IObsidianSaveableInterface* SaveableInterface = Cast<IObsidianSaveableInterface>(LoadActor))
+	if (IObsidianSaveableInterface* SaveableInterface = Cast<IObsidianSaveableInterface>(InLoadActor))
 	{
 		SaveableInterface->LoadData(CurrentHeroSaveGame);
 	}
 }
 
-bool UObsidianSaveGameSubsystem::DeleteHeroSave(const uint16 SaveID, const bool bOnline)
+bool UObsidianSaveGameSubsystem::DeleteHeroSave(const uint16 InSaveID, const bool bInOnline)
 {
 	check(ObsidianMasterSaveGame)
-	const FString SlotNameToDelete = ObsidianMasterSaveGame->GetSaveNameForID(SaveID, bOnline);
+	const FString SlotNameToDelete = ObsidianMasterSaveGame->GetSaveNameForID(InSaveID, bInOnline);
 	const int32 UserIndex = ObsidianMasterSaveGame->GetPlatformUserIndex();
 	const bool bSuccess = UGameplayStatics::DeleteGameInSlot(SlotNameToDelete, UserIndex);
 	if (bSuccess)
 	{
-		if (ObsidianMasterSaveGame->DeleteHero(SaveID, bOnline))
+		if (ObsidianMasterSaveGame->DeleteHero(InSaveID, bInOnline))
 		{
 			ObsidianMasterSaveGame->AsyncSaveGameToSlotForLocalPlayer();
 		}
 		else
 		{
 			UE_LOG(ObLogSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s],"
-				" could not be deleted on Master Save Object."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID,
+				" could not be deleted on Master Save Object."), bInOnline ? TEXT("Online") : TEXT("Offline"), InSaveID,
 				*SlotNameToDelete)
 		}
 
-		if (CurrentHeroSaveGame && CurrentHeroSaveGame->GetSaveID() == SaveID && CurrentHeroSaveGame->IsOnline() == bOnline)
+		if (CurrentHeroSaveGame && CurrentHeroSaveGame->GetSaveID() == InSaveID && CurrentHeroSaveGame->IsOnline() == bInOnline)
 		{
 			CurrentHeroSaveGame = nullptr;
 		}
@@ -336,12 +336,12 @@ bool UObsidianSaveGameSubsystem::DeleteHeroSave(const uint16 SaveID, const bool 
 		if (!UGameplayStatics::DoesSaveGameExist(SlotNameToDelete, UserIndex))
 		{
 			UE_LOG(ObLogSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s] does not exist,"
-				" and could not be deleted."), bOnline ? TEXT("Online") : TEXT("Offline"), SaveID, *SlotNameToDelete)
+				" and could not be deleted."), bInOnline ? TEXT("Online") : TEXT("Offline"), InSaveID, *SlotNameToDelete)
 		}
 		else
 		{
 			UE_LOG(ObLogSaveSystem, Error, TEXT("[%s] save with id [%d], of retrieved name [%s], could not be deleted."),
-				bOnline ? TEXT("Online") : TEXT("Offline"), SaveID, *SlotNameToDelete)
+				bInOnline ? TEXT("Online") : TEXT("Offline"), InSaveID, *SlotNameToDelete)
 		}
 	}
 	return bSuccess;
@@ -367,37 +367,37 @@ void UObsidianSaveGameSubsystem::SaveHeroGameForPlayerAsync()
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::LoadGameForPlayer(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName)
+void UObsidianSaveGameSubsystem::LoadGameForPlayer(const UObsidianLocalPlayer* InLocalPlayer, const FString& InSlotName)
 {
-	UObsidianHeroSaveGame::LoadOrCreateSaveGameForLocalPlayer(UObsidianHeroSaveGame::StaticClass(), LocalPlayer,
-		SlotName);
+	UObsidianHeroSaveGame::LoadOrCreateSaveGameForLocalPlayer(UObsidianHeroSaveGame::StaticClass(), InLocalPlayer,
+		InSlotName);
 }
 
-void UObsidianSaveGameSubsystem::LoadGameForPlayerAsync(const UObsidianLocalPlayer* LocalPlayer, const FString& SlotName)
+void UObsidianSaveGameSubsystem::LoadGameForPlayerAsync(const UObsidianLocalPlayer* InLocalPlayer, const FString& InSlotName)
 {
-	UObsidianHeroSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(UObsidianHeroSaveGame::StaticClass(), LocalPlayer,
-		SlotName,FOnLocalPlayerSaveGameLoadedNative::CreateLambda([this](ULocalPlayerSaveGame* SaveGame)
+	UObsidianHeroSaveGame::AsyncLoadOrCreateSaveGameForLocalPlayer(UObsidianHeroSaveGame::StaticClass(), InLocalPlayer,
+		InSlotName,FOnLocalPlayerSaveGameLoadedNative::CreateLambda([this](ULocalPlayerSaveGame* InSaveGame)
 			{
-				HandleLoadingHeroSaveFinished(Cast<UObsidianHeroSaveGame>(SaveGame));
+				HandleLoadingHeroSaveFinished(Cast<UObsidianHeroSaveGame>(InSaveGame));
 			}));
 }
 
-void UObsidianSaveGameSubsystem::HandleLoadingHeroSaveFinished(UObsidianHeroSaveGame* SaveGame)
+void UObsidianSaveGameSubsystem::HandleLoadingHeroSaveFinished(UObsidianHeroSaveGame* InSaveGame)
 {
-	if (SaveGame)
+	if (InSaveGame)
 	{
-		CurrentHeroSaveGame = SaveGame;
-		OnLoadingFinishedDelegate.Broadcast(SaveGame, true);
+		CurrentHeroSaveGame = InSaveGame;
+		OnLoadingFinishedDelegate.Broadcast(InSaveGame, true);
 		return;
 	}
 	OnLoadingFinishedDelegate.Broadcast(nullptr, false);
 }
 
-void UObsidianSaveGameSubsystem::HandleSavingHeroSaveFinished(const bool bSuccess, UObsidianHeroSaveGame* SaveGame)
+void UObsidianSaveGameSubsystem::HandleSavingHeroSaveFinished(const bool bInSuccess, UObsidianHeroSaveGame* InSaveGame)
 {
-	if (bSuccess && SaveGame)
+	if (bInSuccess && InSaveGame)
 	{
-		OnSavingFinishedDelegate.Broadcast(SaveGame, true);
+		OnSavingFinishedDelegate.Broadcast(InSaveGame, true);
 		return;
 	}
 	OnSavingFinishedDelegate.Broadcast(nullptr, false);

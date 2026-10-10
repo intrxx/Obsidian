@@ -215,9 +215,9 @@ void UObsidianMainOverlay::TogglePassiveSkillTree()
 	}
 }
 
-void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
+void UObsidianMainOverlay::TogglePlayerStash(const bool bInShowStash)
 {
-	if(bShowStash && IsPlayerStashOpen() == false)
+	if(bInShowStash && IsPlayerStashOpen() == false)
 	{
 		if(IsCharacterStatusOpen())
 		{
@@ -252,7 +252,7 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 		
 		InventoryItemsWidgetController->OnPlayerStashOpen();
 	}
-	else if(bShowStash == false && IsPlayerStashOpen())
+	else if(bInShowStash == false && IsPlayerStashOpen())
 	{
 		InventoryItemsWidgetController->RegisterCurrentStashTab(FGameplayTag::EmptyTag);
 		PlayerStash->CloseStash();
@@ -265,18 +265,18 @@ void UObsidianMainOverlay::TogglePlayerStash(const bool bShowStash)
 	}
 }
 
-void UObsidianMainOverlay::AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* ItemDescription) const
+void UObsidianMainOverlay::AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* InItemDescription) const
 {
-	if(ItemDescription)
+	if(InItemDescription)
 	{
-		DroppedItemDesc_Overlay->AddChildToOverlay(ItemDescription);
+		DroppedItemDesc_Overlay->AddChildToOverlay(InItemDescription);
 	}
 }
 
-UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlay(UObsidianItemLabel* ItemLabelWidget,
-	const FVector2D& AtPosition)
+UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlay(UObsidianItemLabel* InItemLabelWidget,
+	const FVector2D& InAtPosition)
 {
-	if (ItemLabelWidget == nullptr)
+	if (InItemLabelWidget == nullptr)
 	{
 		UE_LOG(ObLogUIMainOverlay, Error, TEXT("Passed ItemLabelWidget is invalid in [%hs]."), __FUNCTION__);
 		return nullptr;
@@ -284,25 +284,25 @@ UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlay(UObsidianItemLabel
 	
 	if (ItemLabels_CanvasPanel)
 	{
-		UCanvasPanelSlot* CanvasSlot = ItemLabels_CanvasPanel->AddChildToCanvas(ItemLabelWidget);
+		UCanvasPanelSlot* CanvasSlot = ItemLabels_CanvasPanel->AddChildToCanvas(InItemLabelWidget);
 		CanvasSlot->SetAutoSize(true);
 		CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
-		CanvasSlot->SetPosition(AtPosition);
+		CanvasSlot->SetPosition(InAtPosition);
 
 		return CanvasSlot;
 	}
 	return nullptr;
 }
 
-UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlayDebug(UUserWidget* ItemLabelWidget,
-	const FVector2D& AtPosition)
+UCanvasPanelSlot* UObsidianMainOverlay::AddItemLabelToOverlayDebug(UUserWidget* InItemLabelWidget,
+	const FVector2D& InAtPosition)
 {
 	if (ItemLabels_CanvasPanel)
 	{
-		UCanvasPanelSlot* CanvasSlot = ItemLabels_CanvasPanel->AddChildToCanvas(ItemLabelWidget);
+		UCanvasPanelSlot* CanvasSlot = ItemLabels_CanvasPanel->AddChildToCanvas(InItemLabelWidget);
 		CanvasSlot->SetAutoSize(true);
 		CanvasSlot->SetAlignment(FVector2D(0.5f, 0.5f));
-		CanvasSlot->SetPosition(AtPosition);
+		CanvasSlot->SetPosition(InAtPosition);
 
 		return CanvasSlot;
 	}
@@ -325,34 +325,34 @@ void UObsidianMainOverlay::ForceItemLabelsPrepass()
 	}
 }
 
-void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow Row, const FObsidianEffectUIStackingData StackingData)
+void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidgetRow InRow, const FObsidianEffectUIStackingData InStackingData)
 {
-	if(StackingInfoWidgetsMap.Contains(Row.EffectTag))
+	if(StackingInfoWidgetsMap.Contains(InRow.EffectTag))
 	{
-		StackingInfoWidgetsMap[Row.EffectTag]->UpdateStackingInfoWidget(StackingData.EffectStackCount);
+		StackingInfoWidgetsMap[InRow.EffectTag]->UpdateStackingInfoWidget(InStackingData.EffectStackCount);
 		return;
 	}
 
-	checkf(Row.StackingDurationalEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleStackingUIData, fill it in ObsidianMainOverlay instance."));
-	UOStackingDurationalEffectInfo* StackingInfoWidget = CreateWidget<UOStackingDurationalEffectInfo>(OwningPlayerController, Row.StackingDurationalEffectWidget);
-	StackingInfoWidgetsMap.Add(Row.EffectTag, StackingInfoWidget);
+	checkf(InRow.StackingDurationalEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleStackingUIData, fill it in ObsidianMainOverlay instance."));
+	UOStackingDurationalEffectInfo* StackingInfoWidget = CreateWidget<UOStackingDurationalEffectInfo>(OwningPlayerController, InRow.StackingDurationalEffectWidget);
+	StackingInfoWidgetsMap.Add(InRow.EffectTag, StackingInfoWidget);
 	
-	StackingInfoWidget->InitDurationalStackingEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration, StackingData);
+	StackingInfoWidget->InitDurationalStackingEffectInfo(InRow.EffectName, InRow.EffectDesc, InRow.EffectImage, InRow.EffectDuration, InStackingData);
 
 	FObsidianProgressBarEffectFillImage FillImage;
-	if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */ FillImage, Row.EffectTag))
+	if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */ FillImage, InRow.EffectTag))
 	{
 		HealthProgressGlobe->SetProgressGlobeStyle(FillImage.ProgressBarFillImage);
 		EffectFillImages.Add(FillImage);
 	}
 	
-	StackingInfoWidget->OnStackingInfoWidgetTerminatedDelegate.AddLambda([Row, this](UOStackingDurationalEffectInfo* WidgetToDestroy)
+	StackingInfoWidget->OnStackingInfoWidgetTerminatedDelegate.AddLambda([InRow, this](UOStackingDurationalEffectInfo* InWidgetToDestroy)
 		{
-			DestroyStackingInfoWidget(WidgetToDestroy);
-			HandleEffectFillImageRemoval(Row.EffectTag);
+			DestroyStackingInfoWidget(InWidgetToDestroy);
+			HandleEffectFillImageRemoval(InRow.EffectTag);
 		});
 
-	switch(Row.EffectClassification)
+	switch(InRow.EffectClassification)
 	{
 	case EObsidianUIEffectClassification::EUEC_Buff:
 		BuffsEffectInfo_WrapBox->AddChild(StackingInfoWidget);
@@ -366,15 +366,15 @@ void UObsidianMainOverlay::HandleStackingUIData(const FObsidianEffectUIDataWidge
 	}
 }
 
-void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row)
+void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow InRow)
 {
-	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo)
+	if(InRow.InfoWidgetType == EObsidianInfoWidgetType::EIWT_SimpleEffectInfo)
 	{
-		checkf(Row.SimpleEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleUIData, fill it in ObsidianMainOverlay instance."));
-		UObsidianEffectInfoBase* InfoWidget = CreateWidget<UObsidianEffectInfoBase>(OwningPlayerController, Row.SimpleEffectWidget);
-		InfoWidget->InitEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectTag);
+		checkf(InRow.SimpleEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleUIData, fill it in ObsidianMainOverlay instance."));
+		UObsidianEffectInfoBase* InfoWidget = CreateWidget<UObsidianEffectInfoBase>(OwningPlayerController, InRow.SimpleEffectWidget);
+		InfoWidget->InitEffectInfo(InRow.EffectName, InRow.EffectDesc, InRow.EffectImage, InRow.EffectTag);
 		
-		switch(Row.EffectClassification)
+		switch(InRow.EffectClassification)
 		{
 		case EObsidianUIEffectClassification::EUEC_Buff:
 			BuffsEffectInfo_WrapBox->AddChild(InfoWidget);
@@ -387,7 +387,7 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 			break;
 		}
 
-		if(Row.bAuraEffect)
+		if(InRow.bAuraEffect)
 		{
 			AuraUIInfoArray.AddUnique(InfoWidget);
 		}
@@ -395,25 +395,25 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 		return;
 	}
 	
-	if(Row.InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo)
+	if(InRow.InfoWidgetType == EObsidianInfoWidgetType::EIWT_DurationalEffectInfo)
 	{
-		checkf(Row.DurationalEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleUIData, fill it in ObsidianMainOverlay instance."));
-		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, Row.DurationalEffectWidget);
-		DurationalInfoWidget->InitDurationalEffectInfo(Row.EffectName, Row.EffectDesc, Row.EffectImage, Row.EffectDuration);
+		checkf(InRow.DurationalEffectWidget, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleUIData, fill it in ObsidianMainOverlay instance."));
+		UObsidianDurationalEffectInfo* DurationalInfoWidget = CreateWidget<UObsidianDurationalEffectInfo>(OwningPlayerController, InRow.DurationalEffectWidget);
+		DurationalInfoWidget->InitDurationalEffectInfo(InRow.EffectName, InRow.EffectDesc, InRow.EffectImage, InRow.EffectDuration);
 
 		FObsidianProgressBarEffectFillImage FillImage;
-		if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */FillImage, Row.EffectTag))
+		if(HealthProgressGlobe->GetEffectFillImageForTag(/* OUT */FillImage, InRow.EffectTag))
 		{
 			HealthProgressGlobe->SetProgressGlobeStyle(FillImage.ProgressBarFillImage);
 			EffectFillImages.Add(FillImage);
 			
-			DurationalInfoWidget->OnDurationalInfoWidgetTerminatedDelegate.AddLambda([Row, this](UObsidianDurationalEffectInfo* WidgetToDestroy)
+			DurationalInfoWidget->OnDurationalInfoWidgetTerminatedDelegate.AddLambda([InRow, this](UObsidianDurationalEffectInfo* InWidgetToDestroy)
 				{
-					HandleEffectFillImageRemoval(Row.EffectTag);
+					HandleEffectFillImageRemoval(InRow.EffectTag);
 				});
 		}
 
-		switch(Row.EffectClassification)
+		switch(InRow.EffectClassification)
 		{
 		case EObsidianUIEffectClassification::EUEC_Buff:
 			BuffsEffectInfo_WrapBox->AddChild(DurationalInfoWidget);
@@ -428,14 +428,14 @@ void UObsidianMainOverlay::HandleUIData(const FObsidianEffectUIDataWidgetRow Row
 	}
 }
 
-void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDisplayBar)
+void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* InTargetActor, bool bInDisplayBar)
 {
-	if(bDisplayBar)
+	if(bInDisplayBar)
 	{
 		checkf(RegularEnemyOverlayHealthBarClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleRegularOverlayBar, fill it in ObsidianMainOverlay instance."));
 		RegularEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayEnemyBar>(OwningPlayerController, RegularEnemyOverlayHealthBarClass);
 		
-		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(TargetActor);
+		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(InTargetActor);
 		check(EnemyOverlayBarComponent);
 		
 		RegularEnemyOverlayHealthBar->SetWidgetController(EnemyOverlayBarComponent);
@@ -451,14 +451,14 @@ void UObsidianMainOverlay::HandleRegularOverlayBar(AActor* TargetActor, bool bDi
 	}
 }
 
-void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDisplayBar)
+void UObsidianMainOverlay::HandleBossOverlayBar(AActor* InTargetActor, bool bInDisplayBar)
 {
-	if(bDisplayBar)
+	if(bInDisplayBar)
 	{
 		checkf(BossEnemyOverlayHealthBarClass, TEXT("Tried to create widget without valid widget class in UObsidianMainOverlay::HandleBossOverlayBar, fill it in ObsidianMainOverlay instance."));
 		BossEnemyOverlayHealthBar = CreateWidget<UObsidianOverlayBossEnemyBar>(OwningPlayerController, BossEnemyOverlayHealthBarClass);
 		
-		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(TargetActor);
+		UObsidianEnemyOverlayBarComponent* EnemyOverlayBarComponent = UObsidianEnemyOverlayBarComponent::FindEnemyOverlayComponent(InTargetActor);
 		check(EnemyOverlayBarComponent);
 		
 		BossEnemyOverlayHealthBar->SetWidgetController(EnemyOverlayBarComponent);
@@ -474,9 +474,9 @@ void UObsidianMainOverlay::HandleBossOverlayBar(AActor* TargetActor, bool bDispl
 	}
 }
 
-void UObsidianMainOverlay::UpdatePassiveSkillPointsNotification(float NewSkillPoints)
+void UObsidianMainOverlay::UpdatePassiveSkillPointsNotification(float InNewSkillPoints)
 {
-	if(PassiveSkillPointsNotification && NewSkillPoints <= 0)
+	if(PassiveSkillPointsNotification && InNewSkillPoints <= 0)
 	{
 		PassiveSkillPointsNotification->OnSkillPointsNotificationPressedDelegate.RemoveAll(this);
 		PassiveSkillPointsNotification->RemoveFromParent();
@@ -486,25 +486,25 @@ void UObsidianMainOverlay::UpdatePassiveSkillPointsNotification(float NewSkillPo
 	
 	if(PassiveSkillPointsNotification)
 	{
-		ensureMsgf(NewSkillPoints > 1, TEXT("PassiveSkillPointsNotification is added to viewport but NewSkillPoints is less than 2, why?"));
+		ensureMsgf(InNewSkillPoints > 1, TEXT("PassiveSkillPointsNotification is added to viewport but NewSkillPoints is less than 2, why?"));
 		
-		PassiveSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		PassiveSkillPointsNotification->SetSkillPointsCount(InNewSkillPoints);
 		return;
 	}
 	
-	if(NewSkillPoints > 0)
+	if(InNewSkillPoints > 0)
 	{
 		checkf(PassiveSkillPointsNotificationClass, TEXT("PassiveSkillPointsNotificationClass is not set in UObsidianMainOverlay."));
 		PassiveSkillPointsNotification = CreateWidget<UObsidianSkillPointsNotification>(this, PassiveSkillPointsNotificationClass);
-		PassiveSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		PassiveSkillPointsNotification->SetSkillPointsCount(InNewSkillPoints);
 		PassiveSkillPointsNotification->OnSkillPointsNotificationPressedDelegate.AddUObject(this, &ThisClass::TogglePassiveSkillTree);
 		PassiveSkillPoints_WrapBox->AddChildToWrapBox(PassiveSkillPointsNotification);
 	}
 }
 
-void UObsidianMainOverlay::UpdateAscensionSkillPointsNotification(float NewSkillPoints)
+void UObsidianMainOverlay::UpdateAscensionSkillPointsNotification(float InNewSkillPoints)
 {
-	if(AscensionSkillPointsNotification && NewSkillPoints <= 0)
+	if(AscensionSkillPointsNotification && InNewSkillPoints <= 0)
 	{
 		AscensionSkillPointsNotification->RemoveFromParent();
 		AscensionSkillPointsNotification = nullptr;
@@ -513,36 +513,36 @@ void UObsidianMainOverlay::UpdateAscensionSkillPointsNotification(float NewSkill
 	
 	if(AscensionSkillPointsNotification)
 	{
-		ensureMsgf(NewSkillPoints > 1, TEXT("AscensionSkillPointsNotification is added to viewport but NewSkillPoints is less than 2, why?"));
+		ensureMsgf(InNewSkillPoints > 1, TEXT("AscensionSkillPointsNotification is added to viewport but NewSkillPoints is less than 2, why?"));
 		
-		AscensionSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		AscensionSkillPointsNotification->SetSkillPointsCount(InNewSkillPoints);
 		return;
 	}
 	
-	if(NewSkillPoints > 0)
+	if(InNewSkillPoints > 0)
 	{
 		checkf(AscensionSkillPointsNotificationClass, TEXT("AscensionSkillPointsNotificationClass is not set in UObsidianMainOverlay."));
 		AscensionSkillPointsNotification = CreateWidget<UObsidianSkillPointsNotification>(this, AscensionSkillPointsNotificationClass);
-		AscensionSkillPointsNotification->SetSkillPointsCount(NewSkillPoints);
+		AscensionSkillPointsNotification->SetSkillPointsCount(InNewSkillPoints);
 		PassiveSkillPoints_WrapBox->AddChildToWrapBox(AscensionSkillPointsNotification);
 	}
 }
 
-void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* WidgetToDestroy)
+void UObsidianMainOverlay::DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* InWidgetToDestroy)
 {
-	if(const FGameplayTag* Key = StackingInfoWidgetsMap.FindKey(WidgetToDestroy))
+	if(const FGameplayTag* Key = StackingInfoWidgetsMap.FindKey(InWidgetToDestroy))
 	{
 		StackingInfoWidgetsMap.Remove(*Key);
 	}
 }
 
-void UObsidianMainOverlay::HandleEffectFillImageRemoval(const FGameplayTag& EffectTag)
+void UObsidianMainOverlay::HandleEffectFillImageRemoval(const FGameplayTag& InEffectTag)
 {
 	if(!EffectFillImages.IsEmpty())
 	{
 		for(int i = 0; i < EffectFillImages.Num(); i++)
 		{
-			if(EffectFillImages[i].EffectTag == EffectTag)
+			if(EffectFillImages[i].EffectTag == InEffectTag)
 			{
 				EffectFillImages.RemoveAt(i);
 			}
@@ -562,7 +562,7 @@ void UObsidianMainOverlay::HandleEffectFillImageRemoval(const FGameplayTag& Effe
 	HealthProgressGlobe->ResetStyle();
 }
 
-void UObsidianMainOverlay::DestroyAuraInfoWidget(const FGameplayTag WidgetToDestroyWithTag)
+void UObsidianMainOverlay::DestroyAuraInfoWidget(const FGameplayTag InWidgetToDestroyWithTag)
 {
 	if(AuraUIInfoArray.IsEmpty())
 	{
@@ -571,16 +571,16 @@ void UObsidianMainOverlay::DestroyAuraInfoWidget(const FGameplayTag WidgetToDest
 
 	for(UObsidianEffectInfoBase* Widget : AuraUIInfoArray)
 	{
-		if(Widget->UIEffectTag == WidgetToDestroyWithTag)
+		if(Widget->UIEffectTag == InWidgetToDestroyWithTag)
 		{
 			Widget->RemoveAuraInfoWidget();
 		}
 	}
 }
 
-void UObsidianMainOverlay::MoveDroppedItemDescOverlay(const bool bInventoryOpen)
+void UObsidianMainOverlay::MoveDroppedItemDescOverlay(const bool bInInventoryOpen)
 {
-	if(bInventoryOpen)
+	if(bInInventoryOpen)
 	{
 		if(Inventory == nullptr)
 		{

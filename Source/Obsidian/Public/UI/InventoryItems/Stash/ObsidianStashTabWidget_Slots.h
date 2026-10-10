@@ -27,11 +27,11 @@ public:
 
 	TArray<UObsidianSlot_ItemSlot*> GetSlotWidgets() const;
 	
-	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& ItemWidgetData) override;
-	virtual void HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData) override;
-	virtual void HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData) override;
+	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData) override;
+	virtual void HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData) override;
+	virtual void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData) override;
 
-	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight) override;
+	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight) override;
 	virtual void ClearUsableItemHighlight() override;
 	
 protected:

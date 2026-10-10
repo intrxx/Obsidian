@@ -37,11 +37,11 @@ public:
 	}
 
 	/** Called every frame the menu is opened, even if the tab is not the active one. */
-	virtual void Tick(const FObsidianDebugMenuContext& Context, const float DeltaTime)
+	virtual void Tick(const FObsidianDebugMenuContext& InContext, const float InDeltaTime)
 	{}
 
 	/** Called every frame the tab is the active one, Context is guaranteed to have a valid World. */
-	virtual void Draw(const FObsidianDebugMenuContext& Context) = 0;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) = 0;
 };
 
 /**
@@ -55,7 +55,7 @@ public:
 		return TEXT("Game");
 	}
 
-	virtual void Draw(const FObsidianDebugMenuContext& Context) override;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) override;
 
 private:
 	void GatherMaps();
@@ -81,11 +81,11 @@ public:
 		return TEXT("Player");
 	}
 
-	virtual void Tick(const FObsidianDebugMenuContext& Context, const float DeltaTime) override;
-	virtual void Draw(const FObsidianDebugMenuContext& Context) override;
+	virtual void Tick(const FObsidianDebugMenuContext& InContext, const float InDeltaTime) override;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) override;
 
 private:
-	static void RestoreResources(const FObsidianDebugMenuContext& Context);
+	static void RestoreResources(const FObsidianDebugMenuContext& InContext);
 
 private:
 	bool bKeepResourcesFull = false;
@@ -111,7 +111,7 @@ public:
 		return false;
 	}
 
-	virtual void Draw(const FObsidianDebugMenuContext& Context) override;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) override;
 };
 
 /**
@@ -130,10 +130,10 @@ public:
 		return false;
 	}
 
-	virtual void Draw(const FObsidianDebugMenuContext& Context) override;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) override;
 
 private:
-	void RunCommand(const FObsidianDebugMenuContext& Context, const FString& Command);
+	void RunCommand(const FObsidianDebugMenuContext& InContext, const FString& InCommand);
 
 private:
 	FString CommandInput;
@@ -154,7 +154,7 @@ public:
 	FObsidianDebugTab_Items();
 	virtual ~FObsidianDebugTab_Items() override;
 
-	virtual void Draw(const FObsidianDebugMenuContext& Context) override;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) override;
 
 private:
 	enum class EAffixMode : uint8
@@ -180,24 +180,24 @@ private:
 		EObsidianAffixType AffixType = EObsidianAffixType::None;
 	};
 
-	void DrawRandomDrops(const FObsidianDebugMenuContext& Context);
-	void DrawItemCrafting(const FObsidianDebugMenuContext& Context);
-	void DrawAffixPicker(const UObsidianInventoryItemDefinition* ItemDefault);
-	void DrawCurrency(const FObsidianDebugMenuContext& Context);
+	void DrawRandomDrops(const FObsidianDebugMenuContext& InContext);
+	void DrawItemCrafting(const FObsidianDebugMenuContext& InContext);
+	void DrawAffixPicker(const UObsidianInventoryItemDefinition* InItemDefault);
+	void DrawCurrency(const FObsidianDebugMenuContext& InContext);
 
-	void RollRandomDrops(const FObsidianDebugMenuContext& Context);
-	void CraftItems(const FObsidianDebugMenuContext& Context);
-	void SpawnCurrency(const FObsidianDebugMenuContext& Context);
+	void RollRandomDrops(const FObsidianDebugMenuContext& InContext);
+	void CraftItems(const FObsidianDebugMenuContext& InContext);
+	void SpawnCurrency(const FObsidianDebugMenuContext& InContext);
 
 	/** Drops the items near the Player or adds them to its Inventory, transforms of the items need to be already set. */
-	void DeliverItems(const FObsidianDebugMenuContext& Context, TArray<FObsidianItemToDrop>&& Items, const FString& ItemName,
-		const EDestination Destination) const;
+	void DeliverItems(const FObsidianDebugMenuContext& InContext, TArray<FObsidianItemToDrop>&& InItems, const FString& InItemName,
+		const EDestination InDestination) const;
 
 	/** Currency items (Item.Category.Currency) have their own section, so they are not listed in the Item Crafting. */
-	static bool IsCurrencyItem(const UClass* ItemDefClass);
+	static bool IsCurrencyItem(const UClass* InItemDefClass);
 
 	/** Affixes can only be hand-picked for the items that get them generated and have any hand-pickable affix that fits them. */
-	bool CanHandPickAffixesForItem(const UClass* ItemDefClass) const;
+	bool CanHandPickAffixesForItem(const UClass* InItemDefClass) const;
 
 	/** Lists only the items that can be crafted with the chosen Affix Mode in the Item Picker. */
 	void UpdateItemPickerFilter();
@@ -225,10 +225,10 @@ private:
 	};
 
 	/** Gathers the state of the menu into the request to craft given item. */
-	FCraftingRequest MakeCraftingRequest(UClass* ItemDefClass) const;
+	FCraftingRequest MakeCraftingRequest(UClass* InItemDefClass) const;
 
 	/** Fills everything but the transform of the Item To Drop, returns false if the item could not be constructed. */
-	static bool ConstructCraftedItem(UObsidianItemDropComponent* DropComponent, const FCraftingRequest& Request,
+	static bool ConstructCraftedItem(UObsidianItemDropComponent* InDropComponent, const FCraftingRequest& InRequest,
 		FObsidianItemToDrop& OutItemToDrop);
 
 	/**
@@ -236,31 +236,31 @@ private:
 	 * on top of that item generation asserts on setups that the game never produces. Returns the reason the request
 	 * breaks any of these, empty string if the item can be crafted.
 	 */
-	static FString GetCraftingBlocker(const FCraftingRequest& Request);
+	static FString GetCraftingBlocker(const FCraftingRequest& InRequest);
 
 	/**
 	 * Returns the reason the affix cannot be hand-picked for the requested item next to the other picked affixes,
 	 * empty string if it can. Picked Affixes of the request are ignored in favor of the provided ones.
 	 */
-	static FString GetAffixBlocker(const FCraftingRequest& Request, const FAffixEntry& Affix, TConstArrayView<FAffixEntry> OtherPickedAffixes);
+	static FString GetAffixBlocker(const FCraftingRequest& InRequest, const FAffixEntry& InAffix, TConstArrayView<FAffixEntry> InOtherPickedAffixes);
 
 	/**
 	 * Crafts every item with every rarity and affix mode on a range of item levels and verifies that the results obey
 	 * the crafting rules, then rolls the Random Drops and delivers a sample of the crafted items to the World and the
 	 * Inventory. Handler of the "obsidian.DebugMenu.TestItemCrafting" command.
 	 */
-	void RunCraftingSelfTest(const TArray<FString>& Args, UWorld* World);
-	void CraftingSelfTest(const FObsidianDebugMenuContext& Context, const int32 Iterations);
+	void RunCraftingSelfTest(const TArray<FString>& InArgs, UWorld* InWorld);
+	void CraftingSelfTest(const FObsidianDebugMenuContext& InContext, const int32 InIterations);
 
 	void GatherAffixes();
 	void GatherItemCategories();
 
 	/** Creates the transient Drop Component used to run the regular item generation code for the Player. */
-	UObsidianItemDropComponent* CreateDropComponent(const FObsidianDebugMenuContext& Context) const;
+	UObsidianItemDropComponent* CreateDropComponent(const FObsidianDebugMenuContext& InContext) const;
 
 	/** Affixes can only be rolled if they have a tier available for the level of the item. */
-	static bool CanAffixRollAtItemLevel(const FObsidianDynamicItemAffix& Affix, const int32 ItemLevel);
-	static bool IsAffixCompatibleWithItem(const FObsidianDynamicItemAffix& Affix, const UObsidianInventoryItemDefinition* ItemDefault);
+	static bool CanAffixRollAtItemLevel(const FObsidianDynamicItemAffix& InAffix, const int32 InItemLevel);
+	static bool IsAffixCompatibleWithItem(const FObsidianDynamicItemAffix& InAffix, const UObsidianInventoryItemDefinition* InItemDefault);
 
 private:
 	/**
@@ -345,16 +345,16 @@ public:
 		return TEXT("GAS");
 	}
 
-	virtual void Draw(const FObsidianDebugMenuContext& Context) override;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) override;
 
 private:
 	/** Draws the picker of the actor to debug, returns its Ability System Component. */
-	UAbilitySystemComponent* DrawTargetPicker(const FObsidianDebugMenuContext& Context);
+	UAbilitySystemComponent* DrawTargetPicker(const FObsidianDebugMenuContext& InContext);
 
-	void DrawAttributes(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC);
-	void DrawAbilities(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC);
-	void DrawEffects(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC);
-	void DrawTags(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC);
+	void DrawAttributes(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC);
+	void DrawAbilities(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC);
+	void DrawEffects(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC);
+	void DrawTags(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC);
 
 	void GatherInputTags();
 
@@ -408,22 +408,22 @@ public:
 		return TEXT("AI");
 	}
 
-	virtual void Tick(const FObsidianDebugMenuContext& Context, const float DeltaTime) override;
-	virtual void Draw(const FObsidianDebugMenuContext& Context) override;
+	virtual void Tick(const FObsidianDebugMenuContext& InContext, const float InDeltaTime) override;
+	virtual void Draw(const FObsidianDebugMenuContext& InContext) override;
 
 private:
-	void DrawSpawning(const FObsidianDebugMenuContext& Context);
-	void DrawSpawnedEnemies(const FObsidianDebugMenuContext& Context);
+	void DrawSpawning(const FObsidianDebugMenuContext& InContext);
+	void DrawSpawnedEnemies(const FObsidianDebugMenuContext& InContext);
 
-	void SpawnEnemies(const FObsidianDebugMenuContext& Context);
+	void SpawnEnemies(const FObsidianDebugMenuContext& InContext);
 
 	/**
 	 * Enemies assume to be fully set up when they get possessed, so spawning the ones that are not (like the base classes)
 	 * crashes the game. Returns what is missing in the setup of the enemy, empty string if it is safe to spawn.
 	 */
-	static FString GetSpawnBlocker(const AObsidianEnemy* EnemyDefault);
+	static FString GetSpawnBlocker(const AObsidianEnemy* InEnemyDefault);
 
-	static void SetAILogicPaused(const AObsidianEnemy* Enemy, const bool bPaused);
+	static void SetAILogicPaused(const AObsidianEnemy* InEnemy, const bool bInPaused);
 
 private:
 	FObsidianDebugClassPicker EnemyPicker;

@@ -58,11 +58,11 @@ class OBSIDIAN_API AObsidianFrontEndGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	AObsidianFrontEndGameMode(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianFrontEndGameMode(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	FObsidianHeroClassParams CreateHeroClass(const EObsidianHeroClass InClass, const FString& InName, const bool InIsOnline,
 		const bool InIsHardcore);
-	bool DeleteHeroClass(const int32 WithID);
+	bool DeleteHeroClass(const int32 InWithID);
 
 protected:
 	virtual void BeginPlay() override;

@@ -29,7 +29,7 @@ class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsid
 	GENERATED_BODY()
 
 public:
-	AObsidianEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianEnemy(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	//~ Start of HighlightInterface
 	virtual AActor* GetHighlightAvatarActor() override;
@@ -50,8 +50,8 @@ protected:
 	//~ Start of AObsidianCharacterBase
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
-	virtual void OnDeathStarted(AActor* OwningActor) override;
-	virtual void OnDeathFinished(AActor* OwningActor) override;
+	virtual void OnDeathStarted(AActor* InOwningActor) override;
+	virtual void OnDeathFinished(AActor* InOwningActor) override;
 	//~ End of AObsidianCharacterBase
 
 	//~ Start of CombatInterface

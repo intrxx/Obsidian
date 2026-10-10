@@ -18,7 +18,7 @@ class OBSIDIAN_API AObsidianTownPortal : public AActor, public IObsidianInteract
 	GENERATED_BODY()
 	
 public:	
-	AObsidianTownPortal(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianTownPortal(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
 
@@ -30,7 +30,7 @@ public:
 	virtual AActor* GetInteractionActor() override;
 	virtual bool CanInteract() override;
 	virtual float GetInteractionRadius() override;
-	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) override;
+	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
 	//~ End of InteractionInterface
 
 protected:

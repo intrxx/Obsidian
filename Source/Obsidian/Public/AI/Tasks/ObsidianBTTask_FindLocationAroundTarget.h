@@ -17,10 +17,10 @@ class OBSIDIAN_API UObsidianBTTask_FindLocationAroundTarget : public UBTTaskNode
 
 	UObsidianBTTask_FindLocationAroundTarget();
 
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
 
 protected:
-	virtual EBTNodeResult::Type PerformFindLocationAroundTargetTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory);
+	virtual EBTNodeResult::Type PerformFindLocationAroundTargetTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory);
 	virtual FString GetStaticDescription() const override;
 
 protected:

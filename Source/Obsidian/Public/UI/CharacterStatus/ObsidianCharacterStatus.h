@@ -29,7 +29,7 @@ public:
 	virtual void NativeConstruct() override;
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatus")
-	void SwitchToTab(UScrollBox* Tab);
+	void SwitchToTab(UScrollBox* InTab);
 
 protected:
 	// ~ Start of Obsidian Widget Base
@@ -39,50 +39,50 @@ protected:
 	void SetExperienceTextBlock() const;
 	void SetExperienceProgressBar() const;
 
-	void OnHeroLevelUp(const uint8 NewLevel);
+	void OnHeroLevelUp(const uint8 InNewLevel);
 	
-	void OnExperienceChanged(const float Value);
-	void OnMaxExperienceChanged(const float Value, const float OldValue);
+	void OnExperienceChanged(const float InValue);
+	void OnMaxExperienceChanged(const float InValue, const float InOldValue);
 	
-	void OnStrengthChanged(const float Value);
-	void OnIntelligenceChanged(const float Value);
-	void OnDexterityChanged(const float Value);
-	void OnFaithChanged(const float Value);
+	void OnStrengthChanged(const float InValue);
+	void OnIntelligenceChanged(const float InValue);
+	void OnDexterityChanged(const float InValue);
+	void OnFaithChanged(const float InValue);
 	
-	void OnMaxHealthChanged(const float Value);
-	void OnMaxManaChanged(const float Value);
-	void OnMaxSpecialResourceChanged(const float Value);
-	void OnMaxEnergyShieldChanged(const float Value);
-	void OnMaxStaminaChanged(const float Value);
-	void OnStaminaRegenerationChanged(const float Value);
+	void OnMaxHealthChanged(const float InValue);
+	void OnMaxManaChanged(const float InValue);
+	void OnMaxSpecialResourceChanged(const float InValue);
+	void OnMaxEnergyShieldChanged(const float InValue);
+	void OnMaxStaminaChanged(const float InValue);
+	void OnStaminaRegenerationChanged(const float InValue);
 	
-	void OnAccuracyChanged(const float Value);
-	void OnAttackSpeedChanged(const float Value);
-	void OnCastSpeedChanged(const float Value);
-	void OnCriticalStrikeChanceChanged(const float Value);
-	void OnCriticalStrikeDamageMultiplierChanged(const float Value);
-	void OnPhysicalDamageMultiplierChanged(const float Value);
-	void OnFireDamageMultiplierChanged(const float Value);
-	void OnLightningDamageMultiplierChanged(const float Value);
-	void OnColdDamageMultiplierChanged(const float Value);
-	void OnChaosDamageMultiplierChanged(const float Value);
-	void OnFirePenetrationChanged(const float Value);
-	void OnLightningPenetrationChanged(const float Value);
-	void OnColdPenetrationChanged(const float Value);
-	void OnChaosPenetrationChanged(const float Value);
+	void OnAccuracyChanged(const float InValue);
+	void OnAttackSpeedChanged(const float InValue);
+	void OnCastSpeedChanged(const float InValue);
+	void OnCriticalStrikeChanceChanged(const float InValue);
+	void OnCriticalStrikeDamageMultiplierChanged(const float InValue);
+	void OnPhysicalDamageMultiplierChanged(const float InValue);
+	void OnFireDamageMultiplierChanged(const float InValue);
+	void OnLightningDamageMultiplierChanged(const float InValue);
+	void OnColdDamageMultiplierChanged(const float InValue);
+	void OnChaosDamageMultiplierChanged(const float InValue);
+	void OnFirePenetrationChanged(const float InValue);
+	void OnLightningPenetrationChanged(const float InValue);
+	void OnColdPenetrationChanged(const float InValue);
+	void OnChaosPenetrationChanged(const float InValue);
 	
-	void OnArmorChanged(const float Value);
-	void OnEvasionChanged(const float Value);
-	void OnHealthRegenerationChanged(const float Value);
-	void OnEnergyShieldRegenerationChanged(const float Value);
-	void OnFireResistanceChanged(const float Value, const float MaxValue);
-	void OnColdResistanceChanged(const float Value, const float MaxValue);
-	void OnLightningResistanceChanged(const float Value, const float MaxValue);
-	void OnChaosResistanceChanged(const float Value, const float MaxValue);
-	void OnSpellSuppressionChanceChanged(const float Value);
-	void OnSpellSuppressionMagnitudeChanged(const float Value);
-	void OnHitBlockChanceChanged(const float Value, const float MaxValue);
-	void OnSpellBlockChanceChanged(const float Value, const float MaxValue);
+	void OnArmorChanged(const float InValue);
+	void OnEvasionChanged(const float InValue);
+	void OnHealthRegenerationChanged(const float InValue);
+	void OnEnergyShieldRegenerationChanged(const float InValue);
+	void OnFireResistanceChanged(const float InValue, const float InMaxValue);
+	void OnColdResistanceChanged(const float InValue, const float InMaxValue);
+	void OnLightningResistanceChanged(const float InValue, const float InMaxValue);
+	void OnChaosResistanceChanged(const float InValue, const float InMaxValue);
+	void OnSpellSuppressionChanceChanged(const float InValue);
+	void OnSpellSuppressionMagnitudeChanged(const float InValue);
+	void OnHitBlockChanceChanged(const float InValue, const float InMaxValue);
+	void OnSpellBlockChanceChanged(const float InValue, const float InMaxValue);
 	
 protected:
 	/**

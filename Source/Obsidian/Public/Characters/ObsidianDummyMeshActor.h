@@ -18,9 +18,9 @@ class OBSIDIAN_API AObsidianDummyMeshActor : public AActor
 	GENERATED_BODY()
 	
 public:	
-	AObsidianDummyMeshActor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianDummyMeshActor(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	void SetupDummyMeshActor(USkeletalMeshComponent* InMeshToCopy, const float LifeSpan);
+	void SetupDummyMeshActor(USkeletalMeshComponent* InMeshToCopy, const float InLifeSpan);
 	
 protected:
 	virtual void BeginPlay() override;

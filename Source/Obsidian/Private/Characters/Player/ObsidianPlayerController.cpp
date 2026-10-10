@@ -22,8 +22,8 @@
 #include "UI/ObsidianHUD.h"
 
 
-AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	bReplicates = true;
 	bEnableClickEvents = true;
@@ -38,14 +38,14 @@ AObsidianPlayerController::AObsidianPlayerController(const FObjectInitializer& O
 	SetGenericTeamId(FGenericTeamId(2));
 }
 
-void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* TargetActor, const bool bHoveredOver) const
+void AObsidianPlayerController::UpdateHoveredRegularEnemyTarget(AActor* InTargetActor, const bool bInHoveredOver) const
 {
-	OnEnemyActorHoveredDelegate.ExecuteIfBound(TargetActor, bHoveredOver);
+	OnEnemyActorHoveredDelegate.ExecuteIfBound(InTargetActor, bInHoveredOver);
 }
 
-void AObsidianPlayerController::ServerSpawnItemFromSpawner_Implementation(AObsidianItemSpawner* ItemSpawner)
+void AObsidianPlayerController::ServerSpawnItemFromSpawner_Implementation(AObsidianItemSpawner* InItemSpawner)
 {
-	if(ItemSpawner == nullptr || ItemSpawner->CanInteract() == false)
+	if(InItemSpawner == nullptr || InItemSpawner->CanInteract() == false)
 	{
 		return;
 	}
@@ -56,14 +56,14 @@ void AObsidianPlayerController::ServerSpawnItemFromSpawner_Implementation(AObsid
 		return;
 	}
 
-	const float DistanceToSpawnerSquared = FVector::DistSquared2D(OwnedPawn->GetActorLocation(), ItemSpawner->GetActorLocation());
-	if(DistanceToSpawnerSquared > FMath::Square(ItemSpawner->GetInteractionRadius() + ObsidianPlayerInputStatics::InteractionRangeTolerance))
+	const float DistanceToSpawnerSquared = FVector::DistSquared2D(OwnedPawn->GetActorLocation(), InItemSpawner->GetActorLocation());
+	if(DistanceToSpawnerSquared > FMath::Square(InItemSpawner->GetInteractionRadius() + ObsidianPlayerInputStatics::InteractionRangeTolerance))
 	{
 		UE_LOG(ObLogInteraction, Warning, TEXT("[%hs]: Item Spawner is too far to be interacted with!"), __FUNCTION__);
 		return;
 	}
 
-	ItemSpawner->SpawnItem();
+	InItemSpawner->SpawnItem();
 }
 
 void AObsidianPlayerController::BeginPlay()
@@ -80,14 +80,14 @@ void AObsidianPlayerController::BeginPlay()
 	SetInputMode(InputModeData);
 }
 
-void AObsidianPlayerController::PostProcessInput(const float DeltaTime, const bool bGamePaused)
+void AObsidianPlayerController::PostProcessInput(const float InDeltaTime, const bool bInGamePaused)
 {
 	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
 	{
-		ObsidianASC->ProcessAbilityInput(DeltaTime, bGamePaused);
+		ObsidianASC->ProcessAbilityInput(InDeltaTime, bInGamePaused);
 	}
 	
-	Super::PostProcessInput(DeltaTime, bGamePaused);
+	Super::PostProcessInput(InDeltaTime, bInGamePaused);
 }
 
 void AObsidianPlayerController::PostInitializeComponents()
@@ -165,11 +165,11 @@ UObsidianItemManagerComponent* AObsidianPlayerController::GetItemManagerComponen
 	return ItemManagerComponent;
 }
 
-void AObsidianPlayerController::LoadSharedStashData(UObsidianSharedStashSaveGame* SharedStashSaveGame)
+void AObsidianPlayerController::LoadSharedStashData(UObsidianSharedStashSaveGame* InSharedStashSaveGame)
 {
-	if (PlayerStashComponent && SharedStashSaveGame)
+	if (PlayerStashComponent && InSharedStashSaveGame)
 	{
-		for (const FObsidianSavedItem& SavedItem : SharedStashSaveGame->SharedStashData.StashedSavedItems)
+		for (const FObsidianSavedItem& SavedItem : InSharedStashSaveGame->SharedStashData.StashedSavedItems)
 		{
 			PlayerStashComponent->LoadStashedItem(SavedItem);
 		}
@@ -216,26 +216,26 @@ AObsidianHero* AObsidianPlayerController::GetObsidianHero() const
 	return CastChecked<AObsidianHero>(GetCharacter(), ECastCheckedType::NullAllowed);
 }
 
-void AObsidianPlayerController::TogglePlayerStash(const bool bShowStash) const
+void AObsidianPlayerController::TogglePlayerStash(const bool bInShowStash) const
 {
 	if(const AObsidianHUD* ObsidianHUD = GetObsidianHUD())
 	{
-		ObsidianHUD->TogglePlayerStash(bShowStash);
+		ObsidianHUD->TogglePlayerStash(bInShowStash);
 	}
 }
 
-void AObsidianPlayerController::ClientShowDamageNumber_Implementation(const FObsidianDamageTextProps& DamageTextProps, AObsidianCharacterBase* TargetCharacter)
+void AObsidianPlayerController::ClientShowDamageNumber_Implementation(const FObsidianDamageTextProps& InDamageTextProps, AObsidianCharacterBase* InTargetCharacter)
 {
 	// I use IsValid on the character to also check if the character is currently pending kill
-	if(IsValid(TargetCharacter) && DamageNumberWidgetCompClass && IsLocalController())
+	if(IsValid(InTargetCharacter) && DamageNumberWidgetCompClass && IsLocalController())
 	{
-		UObsidianDamageNumberWidgetComp* DamageNumberWidgetComp = NewObject<UObsidianDamageNumberWidgetComp>(TargetCharacter, DamageNumberWidgetCompClass);
+		UObsidianDamageNumberWidgetComp* DamageNumberWidgetComp = NewObject<UObsidianDamageNumberWidgetComp>(InTargetCharacter, DamageNumberWidgetCompClass);
 		DamageNumberWidgetComp->RegisterComponent();
-		DamageNumberWidgetComp->AttachToComponent(TargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
+		DamageNumberWidgetComp->AttachToComponent(InTargetCharacter->GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
 
 		// After attaching the component its widget will play animation right away, so we don't want the widget to follow the Target Character around
 		DamageNumberWidgetComp->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
-		DamageNumberWidgetComp->SetDamageTextProps(DamageTextProps);
+		DamageNumberWidgetComp->SetDamageTextProps(InDamageTextProps);
 	}
 }
 

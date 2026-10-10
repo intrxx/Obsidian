@@ -6,21 +6,21 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 
-void UOInventoryItemFragment_Stacks::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
+void UOInventoryItemFragment_Stacks::OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const
 {
 	for(const auto& Stack : InventoryItemStackNumbers)
 	{
-		Instance->AddItemStackCount(Stack.Key, Stack.Value);
+		InInstance->AddItemStackCount(Stack.Key, Stack.Value);
 	}
-	Instance->SetStackable(bStackable);
+	InInstance->SetStackable(bStackable);
 }
 
-int32 UOInventoryItemFragment_Stacks::GetItemStackNumberByTag(const FGameplayTag Tag) const
+int32 UOInventoryItemFragment_Stacks::GetItemStackNumberByTag(const FGameplayTag InTag) const
 {
-	if(const int32* StackPtr = InventoryItemStackNumbers.Find(Tag))
+	if(const int32* StackPtr = InventoryItemStackNumbers.Find(InTag))
 	{
 		return *StackPtr;
 	}
 	
-	return ObsidianDefaultStackCounts::GetUnifiedDefaultForTag(Tag);
+	return ObsidianDefaultStackCounts::GetUnifiedDefaultForTag(InTag);
 }

@@ -11,13 +11,13 @@
 
 // ~ FObsidianAffixClass
 
-TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQuality(const int32 UpToTreasureQuality) const
+TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQuality(const int32 InUpToTreasureQuality) const
 {
 	TArray<FObsidianDynamicItemAffix> MatchingTreasureClasses;
 	
 	for (const FObsidianDynamicItemAffix& Class : ItemAffixList)
 	{
-		if (Class.MinItemLevelRequirement <= UpToTreasureQuality)
+		if (Class.MinItemLevelRequirement <= InUpToTreasureQuality)
 		{
 			MatchingTreasureClasses.Add(Class);
 		}
@@ -26,16 +26,16 @@ TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQuality(
 	return MatchingTreasureClasses;
 }
 
-TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality,
-	const FGameplayTag& ForCategory, const FGameplayTag& ForBaseType) const
+TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQualityForCategory(const int32 InUpToTreasureQuality,
+	const FGameplayTag& InForCategory, const FGameplayTag& InForBaseType) const
 {
 	TArray<FObsidianDynamicItemAffix> MatchingTreasureClasses;
 	
 	for (const FObsidianDynamicItemAffix& Class : ItemAffixList)
 	{
-		if (Class.MinItemLevelRequirement <= UpToTreasureQuality && Class.AcceptedItemCategories.HasTagExact(ForCategory))
+		if (Class.MinItemLevelRequirement <= InUpToTreasureQuality && Class.AcceptedItemCategories.HasTagExact(InForCategory))
 		{
-			if (Class.bOverride_HasBaseTypeRequirements && Class.RequiredItemBaseType.HasTagExact(ForBaseType) == false)
+			if (Class.bOverride_HasBaseTypeRequirements && Class.RequiredItemBaseType.HasTagExact(InForBaseType) == false)
 			{
 				continue;
 			}
@@ -49,8 +49,8 @@ TArray<FObsidianDynamicItemAffix> FObsidianAffixClass::GetAllAffixesUpToQualityF
 
 // ~ FObsidianAffixClass
 
-UObsidianAffixList::UObsidianAffixList(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianAffixList::UObsidianAffixList(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
@@ -60,9 +60,9 @@ void UObsidianAffixList::PostInitProperties()
 
 	for (FObsidianAffixClass& AffixClass : AffixClasses)
 	{
-		AffixClass.ItemAffixList.Sort([](const FObsidianDynamicItemAffix& A, const FObsidianDynamicItemAffix& B)
+		AffixClass.ItemAffixList.Sort([](const FObsidianDynamicItemAffix& InA, const FObsidianDynamicItemAffix& InB)
 				{
-					return A.MinItemLevelRequirement > B.MinItemLevelRequirement;
+					return InA.MinItemLevelRequirement > InB.MinItemLevelRequirement;
 				});
 	}
 }
@@ -77,9 +77,9 @@ TConstArrayView<FObsidianAffixClass> UObsidianAffixList::ReadAllAffixClasses() c
 	return AffixClasses;
 }
 
-void UObsidianAffixList::PreSave(FObjectPreSaveContext SaveContext)
+void UObsidianAffixList::PreSave(FObjectPreSaveContext InSaveContext)
 {
-	Super::PreSave(SaveContext);
+	Super::PreSave(InSaveContext);
 	
 	for (FObsidianAffixClass& Class : AffixClasses)
 	{
@@ -92,9 +92,9 @@ void UObsidianAffixList::PreSave(FObjectPreSaveContext SaveContext)
 }
 
 #if WITH_EDITOR
-void UObsidianAffixList::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+void UObsidianAffixList::PostEditChangeProperty(struct FPropertyChangedEvent& InPropertyChangedEvent)
 {
-	Super::PostEditChangeProperty(PropertyChangedEvent);
+	Super::PostEditChangeProperty(InPropertyChangedEvent);
 
 	for (FObsidianAffixClass& Class : AffixClasses)
 	{
@@ -106,7 +106,7 @@ void UObsidianAffixList::PostEditChangeProperty(struct FPropertyChangedEvent& Pr
 	}
 }
 
-EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& Context, const FName ClassName, const int Index) const
+EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& InContext, const FName InClassName, const int InIndex) const
 {
 	EDataValidationResult Result = EDataValidationResult::Valid;
 	
@@ -120,8 +120,8 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 			Result = EDataValidationResult::Invalid;
 			
 			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Affix Tag at index [%i] of [%s] class at index [%i] is invalid! \n"
-				"Please fill correct Affix Tag."), i, *ClassName.ToString(), Index));
-			Context.AddError(ErrorMessage);
+				"Please fill correct Affix Tag."), i, *InClassName.ToString(), InIndex));
+			InContext.AddError(ErrorMessage);
 		}
 		
 		if (DynamicAffix.AcceptedItemCategories.IsEmpty())
@@ -129,8 +129,8 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 			Result = EDataValidationResult::Invalid;
 
 			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Accepted Item Categories at index [%i] of [%s] class at index [%i] are empty! \n"
-				"Please fill Accepted Item Categories container with Item Category tags."), i, *ClassName.ToString(), Index));
-			Context.AddError(ErrorMessage);
+				"Please fill Accepted Item Categories container with Item Category tags."), i, *InClassName.ToString(), InIndex));
+			InContext.AddError(ErrorMessage);
 		}
 		
 		if (DynamicAffix.bOverride_AffixAbilitySet && DynamicAffix.SoftAbilitySetToApply.IsNull())
@@ -138,16 +138,16 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 			Result = EDataValidationResult::Invalid;
 		
 			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] class at index [%i] is not set! \n"
-				"Please provide a valid AbilitySet to apply!"), i, *ClassName.ToString(), Index));
-			Context.AddError(ErrorMessage);
+				"Please provide a valid AbilitySet to apply!"), i, *InClassName.ToString(), InIndex));
+			InContext.AddError(ErrorMessage);
 		}
 		else if (DynamicAffix.bOverride_AffixAbilitySet == false && DynamicAffix.SoftAbilitySetToApply.IsNull() == false)
 		{
 			Result = EDataValidationResult::Invalid;
 		
 			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("SoftAbilitySetToApply at index [%i] of [%s] class at index [%i] is set but the Affix does not Override it! \n"
-				"Please re-check the asset!"), i, *ClassName.ToString(), Index));
-			Context.AddError(ErrorMessage);
+				"Please re-check the asset!"), i, *InClassName.ToString(), InIndex));
+			InContext.AddError(ErrorMessage);
 		}
 
 		if (DynamicAffix.AffixValuesDefinition.IsValid() == false)
@@ -155,8 +155,8 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 			Result = EDataValidationResult::Invalid;
 
 			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("PossibleAffixRanges at index [%i] of [%s] class at index [%i] are not set! \n"
-				"Please fill it with possible affix ranges."), i, *ClassName.ToString(), Index));
-			Context.AddError(ErrorMessage);
+				"Please fill it with possible affix ranges."), i, *InClassName.ToString(), InIndex));
+			InContext.AddError(ErrorMessage);
 			continue;
 		}
 		
@@ -168,8 +168,8 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 				Result = EDataValidationResult::Invalid;
 
 				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AffixValueID at index [%i] inside [%i] Affix of [%s] class at index [%i] of AffixValuesIdentifiers is not set! \n"
-					"Please make sure to fill the AffixValueID tag."),x, i, *ClassName.ToString(), Index));
-				Context.AddError(ErrorMessage);
+					"Please make sure to fill the AffixValueID tag."),x, i, *InClassName.ToString(), InIndex));
+				InContext.AddError(ErrorMessage);
 			}
 			
 			if (DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify && DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid() == false)
@@ -177,16 +177,16 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 				Result = EDataValidationResult::Invalid;
 
 				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%i] Affix of [%s] class at index [%i] of AffixValuesIdentifiers is not set! \n"
-					"Please make sure to either correct the bOverride_AttributeToModify or fill the Attribute."),x, i, *ClassName.ToString(), Index));
-				Context.AddError(ErrorMessage);
+					"Please make sure to either correct the bOverride_AttributeToModify or fill the Attribute."),x, i, *InClassName.ToString(), InIndex));
+				InContext.AddError(ErrorMessage);
 			}
 			else if (DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].bOverride_AttributeToModify == false && DynamicAffix.AffixValuesDefinition.AffixValuesIdentifiers[x].AttributeToModify.IsValid())
 			{
 				Result = EDataValidationResult::Invalid;
 
 				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("AttributeToModify at index [%i] inside [%i] Affix of [%s] class at index [%i] of AffixValuesIdentifiers is set but the Affix does not Override it! \n"
-					"Please re-check the asset!"),x, i, *ClassName.ToString(), Index));
-				Context.AddError(ErrorMessage);
+					"Please re-check the asset!"),x, i, *InClassName.ToString(), InIndex));
+				InContext.AddError(ErrorMessage);
 			}
 		}
 		
@@ -198,8 +198,8 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 				Result = EDataValidationResult::Invalid;
 
 				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Number of AffixRanges at index [%i] inside [%i] Affix of [%s] class at index [%i] differs from expected number of [%d]! \n"
-					"Please make sure that every entry has the same number of possible ranges."),y, i, *ClassName.ToString(), Index, ExpectedCount));
-				Context.AddError(ErrorMessage);
+					"Please make sure that every entry has the same number of possible ranges."),y, i, *InClassName.ToString(), InIndex, ExpectedCount));
+				InContext.AddError(ErrorMessage);
 			}
 		}
 	}
@@ -207,14 +207,14 @@ EDataValidationResult FObsidianAffixClass::ValidateData(FDataValidationContext& 
 	return Result;
 }
 
-EDataValidationResult UObsidianAffixList::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UObsidianAffixList::IsDataValid(FDataValidationContext& InContext) const
 {
-	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(InContext), EDataValidationResult::Valid);
 
 	uint16 TreasureClassesIndex = 0;
 	for (const FObsidianAffixClass& Class : AffixClasses)
 	{
-		Result = CombineDataValidationResults(Result, Class.ValidateData(Context, Class.AffixClassName, TreasureClassesIndex));
+		Result = CombineDataValidationResults(Result, Class.ValidateData(InContext, Class.AffixClassName, TreasureClassesIndex));
 		TreasureClassesIndex++;
 	}
 	

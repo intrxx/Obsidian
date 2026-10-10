@@ -8,8 +8,8 @@
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 
 
-UObsidianInventoryItemDefinition::UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianInventoryItemDefinition::UObsidianInventoryItemDefinition(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
@@ -73,16 +73,16 @@ EObsidianItemRarity UObsidianInventoryItemDefinition::GetItemDefaultRarity() con
 	return ItemDefaultRarity;
 }
 
-const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const
+const UObsidianInventoryItemFragment* UObsidianInventoryItemDefinition::FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& InFragmentClass) const
 {
-	if(FragmentClass == nullptr)
+	if(InFragmentClass == nullptr)
 	{
 		return nullptr;
 	}
 
 	for(const UObsidianInventoryItemFragment* Fragment : ItemFragments)
 	{
-		if(Fragment->IsA(FragmentClass))
+		if(Fragment->IsA(InFragmentClass))
 		{
 			return Fragment;
 		}

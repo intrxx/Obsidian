@@ -17,9 +17,9 @@ class OBSIDIAN_API UObsidianMMC_MaxStamina : public UGameplayModMagnitudeCalcula
 
 
 public:
-	UObsidianMMC_MaxStamina(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_MaxStamina(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")

@@ -75,7 +75,7 @@ class OBSIDIAN_API UObsidianStashTabsConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianStashTabsConfig(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianStashTabsConfig(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	TArray<FObsidianStashTabDefinition> GetStashTabDefinitions() const;
 	int32 StashTabCount() const;

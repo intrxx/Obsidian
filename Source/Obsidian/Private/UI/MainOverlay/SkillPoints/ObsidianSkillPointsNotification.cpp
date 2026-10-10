@@ -22,11 +22,11 @@ void UObsidianSkillPointsNotification::OnPressed()
 	OnSkillPointsNotificationPressedDelegate.Broadcast();
 }
 
-void UObsidianSkillPointsNotification::SetSkillPointsCount(const float NewPoints) const
+void UObsidianSkillPointsNotification::SetSkillPointsCount(const float InNewPoints) const
 {
 	if(SkillPointsCounter_TextBlock)
 	{
-		const FText	SkillPointsCountText = FText::AsNumber(FMath::TruncToInt(NewPoints));
+		const FText	SkillPointsCountText = FText::AsNumber(FMath::TruncToInt(InNewPoints));
 		SkillPointsCounter_TextBlock->SetText(SkillPointsCountText);
 	}
 }

@@ -16,7 +16,7 @@ class OBSIDIAN_API UObsidianCharacterMovementComponent : public UCharacterMoveme
 	GENERATED_BODY()
 
 public:
-	UObsidianCharacterMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianCharacterMovementComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 };
 
 

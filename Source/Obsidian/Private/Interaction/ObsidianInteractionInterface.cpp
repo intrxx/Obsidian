@@ -8,7 +8,7 @@ bool IObsidianInteractionInterface::RequiresOngoingInteraction()
 	return false;
 }
 
-void IObsidianInteractionInterface::StopInteraction(AObsidianPlayerController* InteractingPlayerController)
+void IObsidianInteractionInterface::StopInteraction(AObsidianPlayerController* InInteractingPlayerController)
 {
 	
 }

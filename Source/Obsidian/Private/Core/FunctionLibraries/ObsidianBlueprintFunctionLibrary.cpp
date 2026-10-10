@@ -8,36 +8,36 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-bool UObsidianBlueprintFunctionLibrary::IsActorOfClass(const AActor* ActorToCheck, UClass* ActorClass)
+bool UObsidianBlueprintFunctionLibrary::IsActorOfClass(const AActor* InActorToCheck, UClass* InActorClass)
 {
-	if(ActorToCheck == nullptr || ActorClass == nullptr)
+	if(InActorToCheck == nullptr || InActorClass == nullptr)
 	{
 		return false;
 	}
 	
-	return ActorToCheck->IsA(ActorClass);
+	return InActorToCheck->IsA(InActorClass);
 }
 
-void UObsidianBlueprintFunctionLibrary::PrintVector3D(const UObject* WorldContextObject, const FVector& VectorToLog, const FString& PrefixMessage,
-	const FName Key, const float TimeToDisplay, const FLinearColor MessageColor, const bool bPrintToScreen, const bool bPrintToLog)
+void UObsidianBlueprintFunctionLibrary::PrintVector3D(const UObject* InWorldContextObject, const FVector& InVectorToLog, const FString& InPrefixMessage,
+	const FName InKey, const float InTimeToDisplay, const FLinearColor InMessageColor, const bool bInPrintToScreen, const bool bInPrintToLog)
 {
-	const FString FinalStringPrintMessage = FString::Printf(TEXT("[%s]: [X %f,Y %f,Z %f]"), *PrefixMessage, VectorToLog.X, VectorToLog.Y, VectorToLog.Z);
+	const FString FinalStringPrintMessage = FString::Printf(TEXT("[%s]: [X %f,Y %f,Z %f]"), *InPrefixMessage, InVectorToLog.X, InVectorToLog.Y, InVectorToLog.Z);
 	
-	if(GAreScreenMessagesEnabled && bPrintToScreen && TimeToDisplay > 0.0f)
+	if(GAreScreenMessagesEnabled && bInPrintToScreen && InTimeToDisplay > 0.0f)
 	{
 		uint64 InnerKey = -1;
-		if(Key != NAME_None)
+		if(InKey != NAME_None)
 		{
-			InnerKey = GetTypeHash(Key);
+			InnerKey = GetTypeHash(InKey);
 		}
-		GEngine->AddOnScreenDebugMessage(InnerKey, TimeToDisplay, MessageColor.ToFColor(true), FinalStringPrintMessage);
+		GEngine->AddOnScreenDebugMessage(InnerKey, InTimeToDisplay, InMessageColor.ToFColor(true), FinalStringPrintMessage);
 	}
 
-	if (bPrintToLog)
+	if (bInPrintToLog)
 	{
 		UE_LOG(ObLogGeneral, Log, TEXT("%s"), *FinalStringPrintMessage);
 		
-		APlayerController* PC = (WorldContextObject ? UGameplayStatics::GetPlayerController(WorldContextObject, 0) : nullptr);
+		APlayerController* PC = (InWorldContextObject ? UGameplayStatics::GetPlayerController(InWorldContextObject, 0) : nullptr);
 		ULocalPlayer* LocalPlayer = (PC ? Cast<ULocalPlayer>(PC->Player) : nullptr);
 		if (LocalPlayer && LocalPlayer->ViewportClient && LocalPlayer->ViewportClient->ViewportConsole)
 		{
@@ -50,26 +50,26 @@ void UObsidianBlueprintFunctionLibrary::PrintVector3D(const UObject* WorldContex
 	}
 }
 
-void UObsidianBlueprintFunctionLibrary::PrintRotator(const UObject* WorldContextObject, const FRotator& RotatorToLog, const FString& PrefixMessage,
-	const FName Key, const float TimeToDisplay, const FLinearColor MessageColor, const bool bPrintToScreen, const bool bPrintToLog)
+void UObsidianBlueprintFunctionLibrary::PrintRotator(const UObject* InWorldContextObject, const FRotator& InRotatorToLog, const FString& InPrefixMessage,
+	const FName InKey, const float InTimeToDisplay, const FLinearColor InMessageColor, const bool bInPrintToScreen, const bool bInPrintToLog)
 {
-	const FString FinalStringPrintMessage = FString::Printf(TEXT("[%s]: [X(Roll) %f,Y(Pitch) %f,Z(Yaw) %f]"), *PrefixMessage, RotatorToLog.Roll, RotatorToLog.Pitch, RotatorToLog.Yaw);
+	const FString FinalStringPrintMessage = FString::Printf(TEXT("[%s]: [X(Roll) %f,Y(Pitch) %f,Z(Yaw) %f]"), *InPrefixMessage, InRotatorToLog.Roll, InRotatorToLog.Pitch, InRotatorToLog.Yaw);
 	
-	if(GAreScreenMessagesEnabled && bPrintToScreen && TimeToDisplay > 0.0f)
+	if(GAreScreenMessagesEnabled && bInPrintToScreen && InTimeToDisplay > 0.0f)
 	{
 		uint64 InnerKey = -1;
-		if(Key != NAME_None)
+		if(InKey != NAME_None)
 		{
-			InnerKey = GetTypeHash(Key);
+			InnerKey = GetTypeHash(InKey);
 		}
-		GEngine->AddOnScreenDebugMessage(InnerKey, TimeToDisplay, MessageColor.ToFColor(true), FinalStringPrintMessage);
+		GEngine->AddOnScreenDebugMessage(InnerKey, InTimeToDisplay, InMessageColor.ToFColor(true), FinalStringPrintMessage);
 	}
 
-	if (bPrintToLog)
+	if (bInPrintToLog)
 	{
 		UE_LOG(ObLogGeneral, Log, TEXT("%s"), *FinalStringPrintMessage);
 		
-		APlayerController* PC = (WorldContextObject ? UGameplayStatics::GetPlayerController(WorldContextObject, 0) : nullptr);
+		APlayerController* PC = (InWorldContextObject ? UGameplayStatics::GetPlayerController(InWorldContextObject, 0) : nullptr);
 		ULocalPlayer* LocalPlayer = (PC ? Cast<ULocalPlayer>(PC->Player) : nullptr);
 		if (LocalPlayer && LocalPlayer->ViewportClient && LocalPlayer->ViewportClient->ViewportConsole)
 		{
@@ -82,26 +82,26 @@ void UObsidianBlueprintFunctionLibrary::PrintRotator(const UObject* WorldContext
 	}
 }
 
-void UObsidianBlueprintFunctionLibrary::PrintVector2D(const UObject* WorldContextObject, const FVector2D& VectorToLog, const FString& PrefixMessage,
-                                                      const FName Key, const float TimeToDisplay, const FLinearColor MessageColor, const bool bPrintToScreen, const bool bPrintToLog)
+void UObsidianBlueprintFunctionLibrary::PrintVector2D(const UObject* InWorldContextObject, const FVector2D& InVectorToLog, const FString& InPrefixMessage,
+                                                      const FName InKey, const float InTimeToDisplay, const FLinearColor InMessageColor, const bool bInPrintToScreen, const bool bInPrintToLog)
 {
-	const FString FinalStringPrintMessage = FString::Printf(TEXT("[%s]: [%f, %f]"), *PrefixMessage, VectorToLog.X, VectorToLog.Y);
+	const FString FinalStringPrintMessage = FString::Printf(TEXT("[%s]: [%f, %f]"), *InPrefixMessage, InVectorToLog.X, InVectorToLog.Y);
 	
-	if(GAreScreenMessagesEnabled && bPrintToScreen && TimeToDisplay > 0.0f)
+	if(GAreScreenMessagesEnabled && bInPrintToScreen && InTimeToDisplay > 0.0f)
 	{
 		uint64 InnerKey = -1;
-		if(Key != NAME_None)
+		if(InKey != NAME_None)
 		{
-			InnerKey = GetTypeHash(Key);
+			InnerKey = GetTypeHash(InKey);
 		}
-		GEngine->AddOnScreenDebugMessage(InnerKey, TimeToDisplay, MessageColor.ToFColor(true), FinalStringPrintMessage);
+		GEngine->AddOnScreenDebugMessage(InnerKey, InTimeToDisplay, InMessageColor.ToFColor(true), FinalStringPrintMessage);
 	}
 
-	if (bPrintToLog)
+	if (bInPrintToLog)
 	{
 		UE_LOG(ObLogGeneral, Log, TEXT("%s"), *FinalStringPrintMessage);
 		
-		APlayerController* PC = (WorldContextObject ? UGameplayStatics::GetPlayerController(WorldContextObject, 0) : nullptr);
+		APlayerController* PC = (InWorldContextObject ? UGameplayStatics::GetPlayerController(InWorldContextObject, 0) : nullptr);
 		ULocalPlayer* LocalPlayer = (PC ? Cast<ULocalPlayer>(PC->Player) : nullptr);
 		if (LocalPlayer && LocalPlayer->ViewportClient && LocalPlayer->ViewportClient->ViewportConsole)
 		{

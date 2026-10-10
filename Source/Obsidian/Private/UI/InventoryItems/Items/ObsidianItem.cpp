@@ -21,27 +21,27 @@ void UObsidianItem::NativeConstruct()
 	}
 }
 
-void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const int32 CurrentStack)
+void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* InItemImage, const int32 InCurrentStack)
 {
-	InternalStacks = CurrentStack;
+	InternalStacks = InCurrentStack;
 	
 	Root_SizeBox->SetWidthOverride(InItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X);
 	Root_SizeBox->SetHeightOverride(InItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y);
-	Item_Image->SetBrushFromTexture(ItemImage);
+	Item_Image->SetBrushFromTexture(InItemImage);
 	
-	if(CurrentStack == 0)
+	if(InCurrentStack == 0)
 	{
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 		return;
 	}
 	
-	StackCount_TextBlock->SetText(FText::AsNumber(CurrentStack));
+	StackCount_TextBlock->SetText(FText::AsNumber(InCurrentStack));
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* ItemImage, const bool bIsForSwapSlot)
+void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* InItemImage, const bool bInIsForSwapSlot)
 {
-	const float SlotSizeMultiplier = bIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
+	const float SlotSizeMultiplier = bInIsForSwapSlot == true ? SwapSlotSizeMultiplier : 1.0f;
 		
 	const float WidthOverride = (InItemGridSpan.X * ObsidianInventoryItemsStatics::InventorySlotSize.X) * SlotSizeMultiplier;
 	const float HeightOverride = (InItemGridSpan.Y * ObsidianInventoryItemsStatics::InventorySlotSize.Y) * SlotSizeMultiplier;
@@ -50,20 +50,20 @@ void UObsidianItem::InitializeItemWidget(const FIntPoint& InItemGridSpan, UTextu
 
 	FSlateBrush Brush;
 	Brush.SetImageSize(FVector2D(WidthOverride, HeightOverride));
-	Brush.SetResourceObject(ItemImage);
+	Brush.SetResourceObject(InItemImage);
 	Item_Image->SetBrush(Brush);
 	
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
 }
 
-void UObsidianItem::AddCurrentStackCount(const int32 StackCountToAdd)
+void UObsidianItem::AddCurrentStackCount(const int32 InStackCountToAdd)
 {
-	if(StackCountToAdd <= 0)
+	if(InStackCountToAdd <= 0)
 	{
 		return;
 	}
 	
-	InternalStacks += StackCountToAdd;
+	InternalStacks += InStackCountToAdd;
 	if(InternalStacks <= 0)
 	{
 		StackCount_TextBlock->SetVisibility(ESlateVisibility::Collapsed);
@@ -73,15 +73,15 @@ void UObsidianItem::AddCurrentStackCount(const int32 StackCountToAdd)
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 
-void UObsidianItem::OverrideCurrentStackCount(const int32 NewStackCount)
+void UObsidianItem::OverrideCurrentStackCount(const int32 InNewStackCount)
 {
-	if(NewStackCount <= 0)
+	if(InNewStackCount <= 0)
 	{
 		return;
 	}
-	InternalStacks = NewStackCount;
+	InternalStacks = InNewStackCount;
 	
-	StackCount_TextBlock->SetText(FText::AsNumber(NewStackCount));
+	StackCount_TextBlock->SetText(FText::AsNumber(InNewStackCount));
 	StackCount_TextBlock->SetVisibility(ESlateVisibility::Visible);
 }
 

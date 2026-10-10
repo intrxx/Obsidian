@@ -12,18 +12,18 @@
 #endif
 
 
-UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	StaticItemImplicit.AffixType = EObsidianAffixType::Implicit;
 	StaticItemSkillImplicit.AffixType = EObsidianAffixType::SkillImplicit;
 }
 
-void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
+void UOInventoryItemFragment_Affixes::OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const
 {
-	if (Instance)
+	if (InInstance)
 	{
-		Instance->SetCanHaveAffixes(true);
+		InInstance->SetCanHaveAffixes(true);
 	}
 }
 
@@ -37,9 +37,9 @@ void UOInventoryItemFragment_Affixes::PostInitProperties()
 	}
 }
 
-void UOInventoryItemFragment_Affixes::PreSave(FObjectPreSaveContext SaveContext)
+void UOInventoryItemFragment_Affixes::PreSave(FObjectPreSaveContext InSaveContext)
 {
-	Super::PreSave(SaveContext);
+	Super::PreSave(InSaveContext);
 
 	for (FObsidianStaticItemAffix& PrimaryAffix : PrimaryItemAffixes)
 	{
@@ -100,30 +100,30 @@ EObsidianAffixGenerationType UOInventoryItemFragment_Affixes::GetGenerationType(
 }
 
 #if WITH_EDITOR
-EDataValidationResult UOInventoryItemFragment_Affixes::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UOInventoryItemFragment_Affixes::IsDataValid(FDataValidationContext& InContext) const
 {
-	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(InContext), EDataValidationResult::Valid);
 
 	if (bHasPrimaryItemAffix)
 	{
 		for (int32 i = 0; i < PrimaryItemAffixes.Num(); ++i)
 		{
-			Result = CombineDataValidationResults(Result, PrimaryItemAffixes[i].IsStaticAffixValid(Context, i, TEXT("Primary Item")));
+			Result = CombineDataValidationResults(Result, PrimaryItemAffixes[i].IsStaticAffixValid(InContext, i, TEXT("Primary Item")));
 		}
 	}
 
 	if (bHasImplicitAffix)
 	{
-		Result = CombineDataValidationResults(Result, StaticItemImplicit.IsStaticAffixValid(Context, 0, TEXT("Implicit")));
+		Result = CombineDataValidationResults(Result, StaticItemImplicit.IsStaticAffixValid(InContext, 0, TEXT("Implicit")));
 	}
 
 	if (ItemAffixesGenerationType == EObsidianAffixGenerationType::NoGeneration)
 	{
-		Result = CombineDataValidationResults(Result, StaticItemSkillImplicit.IsStaticAffixValid(Context, 0, TEXT("Skill Implicit")));
+		Result = CombineDataValidationResults(Result, StaticItemSkillImplicit.IsStaticAffixValid(InContext, 0, TEXT("Skill Implicit")));
 
 		for (int32 i = 0; i < StaticItemAffixes.Num(); ++i)
 		{
-			Result = CombineDataValidationResults(Result, StaticItemAffixes[i].IsStaticAffixValid(Context, 0, TEXT("Static Item ")));
+			Result = CombineDataValidationResults(Result, StaticItemAffixes[i].IsStaticAffixValid(InContext, 0, TEXT("Static Item ")));
 		}
 	}
 	

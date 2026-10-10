@@ -17,7 +17,7 @@ class OBSIDIAN_API UObsidianBTTask_SetFocus : public UBTTaskNode
 	
 	UObsidianBTTask_SetFocus();
 	
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
 	virtual FString GetStaticDescription() const override;
 
 protected:

@@ -30,9 +30,9 @@ void UObsidianAffixRow::RefreshAffixRowStyle()
 	}
 }
 
-void UObsidianAffixRow::ShowAffixRow(const bool bShow)
+void UObsidianAffixRow::ShowAffixRow(const bool bInShow)
 {
-	if (bShow)
+	if (bInShow)
 	{
 		SetVisibility(ESlateVisibility::HitTestInvisible);
 	}

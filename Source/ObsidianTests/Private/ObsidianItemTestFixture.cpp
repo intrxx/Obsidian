@@ -21,9 +21,9 @@
 namespace ObsidianItemTestFixture
 {
 	/** Stash Tabs are normally configured in a Data Asset set on the Player Controller Blueprint, tests build one in code. */
-	UObsidianStashTabsConfig* CreateStashTabsConfig(UObject* Outer)
+	UObsidianStashTabsConfig* CreateStashTabsConfig(UObject* InOuter)
 	{
-		UObsidianStashTabsConfig* Config = NewObject<UObsidianStashTabsConfig>(Outer);
+		UObsidianStashTabsConfig* Config = NewObject<UObsidianStashTabsConfig>(InOuter);
 
 		const FArrayProperty* StashTabsProperty = FindFProperty<FArrayProperty>(UObsidianStashTabsConfig::StaticClass(), TEXT("StashTabs"));
 		checkf(StashTabsProperty, TEXT("StashTabs was not found on UObsidianStashTabsConfig, was it renamed?"));
@@ -48,11 +48,11 @@ namespace ObsidianItemTestFixture
 		return Config;
 	}
 
-	void SetStashTabsConfig(UObsidianPlayerStashComponent* StashComponent, UObsidianStashTabsConfig* Config)
+	void SetStashTabsConfig(UObsidianPlayerStashComponent* InStashComponent, UObsidianStashTabsConfig* InConfig)
 	{
 		const FObjectProperty* ConfigProperty = FindFProperty<FObjectProperty>(UObsidianPlayerStashComponent::StaticClass(), TEXT("StashTabsConfig"));
 		checkf(ConfigProperty, TEXT("StashTabsConfig was not found on UObsidianPlayerStashComponent, was it renamed?"));
-		ConfigProperty->SetObjectPropertyValue_InContainer(StashComponent, Config);
+		ConfigProperty->SetObjectPropertyValue_InContainer(InStashComponent, InConfig);
 	}
 }
 
@@ -95,19 +95,19 @@ UObsidianPlayerStashComponent& FObsidianItemTestEnvironment::Stash() const
 	return *PlayerController->GetPlayerStashComponent();
 }
 
-void FObsidianItemTestEnvironment::AddOwnerTag(const FGameplayTag& Tag) const
+void FObsidianItemTestEnvironment::AddOwnerTag(const FGameplayTag& InTag) const
 {
-	PlayerState->GetObsidianAbilitySystemComponent()->AddLooseGameplayTag(Tag);
+	PlayerState->GetObsidianAbilitySystemComponent()->AddLooseGameplayTag(InTag);
 }
 
-void FObsidianItemTestEnvironment::RemoveOwnerTag(const FGameplayTag& Tag) const
+void FObsidianItemTestEnvironment::RemoveOwnerTag(const FGameplayTag& InTag) const
 {
-	PlayerState->GetObsidianAbilitySystemComponent()->RemoveLooseGameplayTag(Tag);
+	PlayerState->GetObsidianAbilitySystemComponent()->RemoveLooseGameplayTag(InTag);
 }
 
-void FObsidianItemTestEnvironment::SetHeroLevel(const uint8 HeroLevel) const
+void FObsidianItemTestEnvironment::SetHeroLevel(const uint8 InHeroLevel) const
 {
-	PlayerState->SetHeroLevel(HeroLevel);
+	PlayerState->SetHeroLevel(InHeroLevel);
 }
 
 FGameplayTag FObsidianItemTestEnvironment::PersonalStashTab()
@@ -120,35 +120,35 @@ FGameplayTag FObsidianItemTestEnvironment::SharedStashTab()
 	return ObsidianGameplayTags::StashTab::Grid_2;
 }
 
-FObsidianItemPosition FObsidianItemTestEnvironment::PersonalStashPosition(const int32 X, const int32 Y)
+FObsidianItemPosition FObsidianItemTestEnvironment::PersonalStashPosition(const int32 InX, const int32 InY)
 {
-	return FObsidianItemPosition(FIntPoint(X, Y), PersonalStashTab());
+	return FObsidianItemPosition(FIntPoint(InX, InY), PersonalStashTab());
 }
 
-FObsidianItemPosition FObsidianItemTestEnvironment::SharedStashPosition(const int32 X, const int32 Y)
+FObsidianItemPosition FObsidianItemTestEnvironment::SharedStashPosition(const int32 InX, const int32 InY)
 {
-	return FObsidianItemPosition(FIntPoint(X, Y), SharedStashTab());
+	return FObsidianItemPosition(FIntPoint(InX, InY), SharedStashTab());
 }
 
-FObsidianItemGeneratedData FObsidianItemTestEnvironment::MakeItemData(const int32 StackCount)
+FObsidianItemGeneratedData FObsidianItemTestEnvironment::MakeItemData(const int32 InStackCount)
 {
-	return FObsidianItemGeneratedData(StackCount);
+	return FObsidianItemGeneratedData(InStackCount);
 }
 
-int32 FObsidianItemTestEnvironment::Stacks(const UObsidianInventoryItemInstance* Instance)
+int32 FObsidianItemTestEnvironment::Stacks(const UObsidianInventoryItemInstance* InInstance)
 {
-	return Instance ? Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current) : 0;
+	return InInstance ? InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current) : 0;
 }
 
-UObsidianInventoryItemInstance* FObsidianItemTestEnvironment::MakeHeldItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
-	const int32 StackCount) const
+UObsidianInventoryItemInstance* FObsidianItemTestEnvironment::MakeHeldItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
+	const int32 InStackCount) const
 {
 	UObsidianInventoryComponent& InventoryComponent = Inventory();
 
 	// Added on its own, so it does not get stacked onto the items the test already put in the Inventory.
 	const FIntPoint FreeCorner(InventoryComponent.GetInventoryGridWidth() - 2, 0);
-	const FObsidianItemOperationResult AddingResult = InventoryComponent.AddItemDefinitionToSpecifiedSlot(ItemDef, FreeCorner,
-		MakeItemData(StackCount));
+	const FObsidianItemOperationResult AddingResult = InventoryComponent.AddItemDefinitionToSpecifiedSlot(InItemDef, FreeCorner,
+		MakeItemData(InStackCount));
 	UObsidianInventoryItemInstance* HeldItem = AddingResult.AffectedInstance;
 	checkf(HeldItem, TEXT("Could not create the held item, the top right corner of the Inventory needs to stay free for it."));
 

@@ -17,8 +17,8 @@ class OBSIDIAN_API UObsidianGA_MagneticHammer : public UOGameplayAbility_Project
 	GENERATED_BODY()
 
 public:
-	UObsidianGA_MagneticHammer(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianGA_MagneticHammer(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintCallable)
-	void FireMagneticHammer(const FVector& TowardsTarget);
+	void FireMagneticHammer(const FVector& InTowardsTarget);
 };

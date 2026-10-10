@@ -33,20 +33,20 @@ TArray<UObsidianSlot_ItemSlot*> UObsidianStashTabWidget_Slots::GetSlotWidgets() 
 }
 
 void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget,
-	const FObsidianItemWidgetData& ItemWidgetData)
+	const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if(ensure(StashTab_SlotPanel && InItemWidget && ItemWidgetData.ItemPosition.IsOnStashSlot()))
+	if(ensure(StashTab_SlotPanel && InItemWidget && InItemWidgetData.ItemPosition.IsOnStashSlot()))
 	{
-		StashTab_SlotPanel->AddItemWidget(InItemWidget, ItemWidgetData);
+		StashTab_SlotPanel->AddItemWidget(InItemWidget, InItemWidgetData);
 
-		if (ItemWidgetData.bDoesBlockSisterSlot)
+		if (InItemWidgetData.bDoesBlockSisterSlot)
 		{
 			if (const TSubclassOf<UObsidianItem> ItemClass = InItemWidget->GetClass())
 			{
 				UObsidianItem* BlockingItemWidget = CreateWidget<UObsidianItem>(this, ItemClass);
-				BlockingItemWidget->InitializeItemWidget(ItemWidgetData.GridSpan, ItemWidgetData.ItemImage,
-					ItemWidgetData.IsItemForSwapSlot());
-				StashTab_SlotPanel->AddItemWidget(BlockingItemWidget, ItemWidgetData, true);
+				BlockingItemWidget->InitializeItemWidget(InItemWidgetData.GridSpan, InItemWidgetData.ItemImage,
+					InItemWidgetData.IsItemForSwapSlot());
+				StashTab_SlotPanel->AddItemWidget(BlockingItemWidget, InItemWidgetData, true);
 			}
 			else
 			{
@@ -57,27 +57,27 @@ void UObsidianStashTabWidget_Slots::AddItemToStash(UObsidianItem* InItemWidget,
 	}
 }
 
-void UObsidianStashTabWidget_Slots::HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianStashTabWidget_Slots::HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(StashTab_SlotPanel && ItemWidgetData.ItemPosition.IsOnStashSlot()))
+	if (ensure(StashTab_SlotPanel && InItemWidgetData.ItemPosition.IsOnStashSlot()))
 	{
-		StashTab_SlotPanel->HandleItemChanged(ItemWidgetData);
+		StashTab_SlotPanel->HandleItemChanged(InItemWidgetData);
 	}
 }
 
-void UObsidianStashTabWidget_Slots::HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianStashTabWidget_Slots::HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(StashTab_SlotPanel && ItemWidgetData.ItemPosition.IsOnStashSlot()))
+	if (ensure(StashTab_SlotPanel && InItemWidgetData.ItemPosition.IsOnStashSlot()))
 	{
-		StashTab_SlotPanel->HandleItemRemoved(ItemWidgetData);
+		StashTab_SlotPanel->HandleItemRemoved(InItemWidgetData);
 	}
 }
 
-void UObsidianStashTabWidget_Slots::HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight)
+void UObsidianStashTabWidget_Slots::HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight)
 {
 	if (ensure(StashTab_SlotPanel))
 	{
-		StashTab_SlotPanel->HandleHighlightingItems(ItemsToHighlight);
+		StashTab_SlotPanel->HandleHighlightingItems(InItemsToHighlight);
 	}
 }
 

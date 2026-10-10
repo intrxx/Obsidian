@@ -16,6 +16,6 @@ class OBSIDIAN_API UObsidianDamageNumberWidgetComp : public UWidgetComponent
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void SetDamageTextProps(const FObsidianDamageTextProps& DamageTextProps);
+	void SetDamageTextProps(const FObsidianDamageTextProps& InDamageTextProps);
 };
 

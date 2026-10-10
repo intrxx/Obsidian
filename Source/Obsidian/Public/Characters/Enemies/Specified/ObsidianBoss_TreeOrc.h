@@ -17,7 +17,7 @@ class OBSIDIAN_API AObsidianBoss_TreeOrc : public AObsidianBossEnemy
 	GENERATED_BODY()
 
 public:
-	AObsidianBoss_TreeOrc(const FObjectInitializer& ObjectInitializer);
+	AObsidianBoss_TreeOrc(const FObjectInitializer& InObjectInitializer);
 
 	virtual void PostInitializeComponents() override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

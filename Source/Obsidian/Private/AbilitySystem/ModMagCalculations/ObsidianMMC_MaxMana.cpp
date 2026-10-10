@@ -31,8 +31,8 @@ static const SObsidian_MaxManaStatics& MaxManaStatics()
 	return MaxManaStatics;
 }
 
-UObsidianMMC_MaxMana::UObsidianMMC_MaxMana(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianMMC_MaxMana::UObsidianMMC_MaxMana(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	RelevantAttributesToCapture.Add(MaxManaStatics().MaxMana);
 	RelevantAttributesToCapture.Add(MaxManaStatics().FaithDef);
@@ -40,13 +40,13 @@ UObsidianMMC_MaxMana::UObsidianMMC_MaxMana(const FObjectInitializer& ObjectIniti
 	RelevantAttributesToCapture.Add(MaxManaStatics().IncreasedManaPercentage);
 }
 
-float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
-	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());
+	IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(InSpec.GetContext().GetSourceObject());
 	if (CombatInterface == nullptr)
 	{
 		UE_LOG(ObLogAbilitySystem, Error, TEXT("Combat Interface on [%s] is null, please double check the Source Object"), *GetNameSafe(this));
-		return Super::CalculateBaseMagnitude_Implementation(Spec);
+		return Super::CalculateBaseMagnitude_Implementation(InSpec);
 	}
 	
 	const uint8 CharacterLevel = CombatInterface->GetCharacterLevel();
@@ -54,19 +54,19 @@ float UObsidianMMC_MaxMana::CalculateBaseMagnitude_Implementation(const FGamepla
 	const FAggregatorEvaluateParameters EvaluationParameters;
 
 	float MaxMana = 0.f;
-	GetCapturedAttributeMagnitude(MaxManaStatics().MaxMana, Spec, EvaluationParameters, MaxMana);
+	GetCapturedAttributeMagnitude(MaxManaStatics().MaxMana, InSpec, EvaluationParameters, MaxMana);
 	MaxMana = FMath::Max<float>(MaxMana, 0.f);
 	
 	float Faith = 0.f;
-	GetCapturedAttributeMagnitude(MaxManaStatics().FaithDef, Spec, EvaluationParameters, Faith);
+	GetCapturedAttributeMagnitude(MaxManaStatics().FaithDef, InSpec, EvaluationParameters, Faith);
 	Faith = FMath::Max<float>(Faith, 0.f);
 
 	float Dexterity = 0.f;
-	GetCapturedAttributeMagnitude(MaxManaStatics().DexterityDef, Spec, EvaluationParameters, Dexterity);
+	GetCapturedAttributeMagnitude(MaxManaStatics().DexterityDef, InSpec, EvaluationParameters, Dexterity);
 	Dexterity = FMath::Max<float>(Dexterity, 0.f);
 
 	float IncreasedManaPercentage = 0.f;
-	GetCapturedAttributeMagnitude(MaxManaStatics().IncreasedManaPercentage, Spec, EvaluationParameters, IncreasedManaPercentage);
+	GetCapturedAttributeMagnitude(MaxManaStatics().IncreasedManaPercentage, InSpec, EvaluationParameters, IncreasedManaPercentage);
 	IncreasedManaPercentage = FMath::Max<float>(IncreasedManaPercentage, 0.f);
 	
 	// OBS-79

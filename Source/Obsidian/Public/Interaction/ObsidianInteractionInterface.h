@@ -26,9 +26,9 @@ public:
 	virtual AActor* GetInteractionActor() = 0;
 	virtual bool CanInteract() = 0;
 	virtual float GetInteractionRadius() = 0;
-	virtual void Interact(AObsidianPlayerController* InteractingPlayerController) = 0;
+	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) = 0;
 
 	virtual bool RequiresOngoingInteraction();
-	virtual void StopInteraction(AObsidianPlayerController* InteractingPlayerController);
+	virtual void StopInteraction(AObsidianPlayerController* InInteractingPlayerController);
 	
 };

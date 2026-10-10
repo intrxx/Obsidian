@@ -13,12 +13,12 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const
+void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& InQueryInstance, FEnvQueryContextData& OutContextData) const
 {
 	TArray<AActor*> Heroes;
 	bool bWasSuccessful = false;
 	
-	if(const AObsidianRegularEnemy* EnemyOwner = Cast<AObsidianRegularEnemy>(QueryInstance.Owner.Get()))
+	if(const AObsidianRegularEnemy* EnemyOwner = Cast<AObsidianRegularEnemy>(InQueryInstance.Owner.Get()))
 	{
 		if(AObsidianAIControllerBase* ObsidianAIController = EnemyOwner->GetObsidianAIController())
 		{
@@ -41,12 +41,12 @@ void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryIns
 	
 	if(!Heroes.IsEmpty())
 	{
-		UEnvQueryItemType_Actor::SetContextHelper(ContextData, Heroes);
+		UEnvQueryItemType_Actor::SetContextHelper(OutContextData, Heroes);
 		return;
 	}
 
 #if !UE_BUILD_SHIPPING
 	UE_LOG(ObLogAI, Error, TEXT("Context [%hs] failed to provide Player Context for [%s]."),
-		__FUNCTION__, *GetNameSafe(QueryInstance.Owner.Get()));
+		__FUNCTION__, *GetNameSafe(InQueryInstance.Owner.Get()));
 #endif
 }

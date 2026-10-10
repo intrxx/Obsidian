@@ -3,8 +3,8 @@
 #include "Game/ObsidianGameInstance.h"
 
 
-UObsidianGameInstance::UObsidianGameInstance(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianGameInstance::UObsidianGameInstance(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 

@@ -69,17 +69,17 @@ namespace ObsidianDefaultStackCounts
 	static constexpr int32 LimitCount = 0;
 
 	/** Returns the unified project default item stack count for a given Stack Tag. */
-	inline int32 GetUnifiedDefaultForTag(const FGameplayTag Tag)
+	inline int32 GetUnifiedDefaultForTag(const FGameplayTag InTag)
 	{
-		if(Tag == ObsidianGameplayTags::Item::StackCount::Current)
+		if(InTag == ObsidianGameplayTags::Item::StackCount::Current)
 		{
 			return CurrentStackCount;
 		}
-		if(Tag == ObsidianGameplayTags::Item::StackCount::Max)
+		if(InTag == ObsidianGameplayTags::Item::StackCount::Max)
 		{
 			return MaxStackCount;
 		}
-		if(Tag == ObsidianGameplayTags::Item::StackCount::Limit)
+		if(InTag == ObsidianGameplayTags::Item::StackCount::Limit)
 		{
 			return LimitCount;
 		}
@@ -273,13 +273,13 @@ public:
 	
 	FGameplayTag GetSlotTag() const;
 	
-	EObsidianPlacingAtSlotResult CanPlaceAtSlot(const FGameplayTag& ItemCategory) const;
+	EObsidianPlacingAtSlotResult CanPlaceAtSlot(const FGameplayTag& InItemCategory) const;
 
 	void AddBannedItemCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedItemCategories(const FGameplayTagContainer& InBannedCategories);
 	
-	void RemoveBannedItemCategory(const FGameplayTag& BannedCategoryToRemove);
-	void RemoveBannedItemCategories(const FGameplayTagContainer& BannedCategoriesToRemove);
+	void RemoveBannedItemCategory(const FGameplayTag& InBannedCategoryToRemove);
+	void RemoveBannedItemCategories(const FGameplayTagContainer& InBannedCategoriesToRemove);
 
 public:
 	/** Gameplay Tag representing this slot. */
@@ -343,27 +343,27 @@ public:
 
 	void Reset();
 
-	FIntPoint GetItemGridPosition(const bool bWarnIfNotFound = true) const;
-	FGameplayTag GetItemSlotTag(const bool bWarnIfNotFound = true) const;
+	FIntPoint GetItemGridPosition(const bool bInWarnIfNotFound = true) const;
+	FGameplayTag GetItemSlotTag(const bool bInWarnIfNotFound = true) const;
 	FGameplayTag GetOwningStashTabTag() const;
 	
 	// Type Hash (required for TMap)
-	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& ItemPosition)
+	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& InItemPosition)
 	{
-		uint32 Hash = GetTypeHash(ItemPosition.Type);
-		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.SlotTag));
-		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.GridPosition));
-		Hash = HashCombine(Hash, GetTypeHash(ItemPosition.OwningStashTabTag));
+		uint32 Hash = GetTypeHash(InItemPosition.Type);
+		Hash = HashCombine(Hash, GetTypeHash(InItemPosition.SlotTag));
+		Hash = HashCombine(Hash, GetTypeHash(InItemPosition.GridPosition));
+		Hash = HashCombine(Hash, GetTypeHash(InItemPosition.OwningStashTabTag));
 		return Hash;
 	}
 
 	// Equality operator (required for TMap)
-	FORCEINLINE bool operator==(const FObsidianItemPosition& Other) const
+	FORCEINLINE bool operator==(const FObsidianItemPosition& InOther) const
 	{
-		return Type == Other.Type
-			&& GridPosition == Other.GridPosition
-			&& SlotTag == Other.SlotTag
-			&& OwningStashTabTag == Other.OwningStashTabTag;
+		return Type == InOther.Type
+			&& GridPosition == InOther.GridPosition
+			&& SlotTag == InOther.SlotTag
+			&& OwningStashTabTag == InOther.OwningStashTabTag;
 	}
 
 	FString GetDebugStringPosition() const;
@@ -670,12 +670,12 @@ public:
 	bool IsEmptyAffix() const;
 
 	explicit operator bool() const;
-	bool operator ==(const FObsidianStaticItemAffix& Other) const;
-	bool operator ==(const FObsidianDynamicItemAffix& Other) const;
-	bool operator ==(const FObsidianActiveItemAffix& Other) const;
+	bool operator ==(const FObsidianStaticItemAffix& InOther) const;
+	bool operator ==(const FObsidianDynamicItemAffix& InOther) const;
+	bool operator ==(const FObsidianActiveItemAffix& InOther) const;
 
 #if WITH_EDITOR
-	EDataValidationResult IsStaticAffixValid(FDataValidationContext& Context, const int32 Index, const FString& AffixTypeName) const;
+	EDataValidationResult IsStaticAffixValid(FDataValidationContext& InContext, const int32 InIndex, const FString& InAffixTypeName) const;
 #endif
 
 public:
@@ -721,9 +721,9 @@ public:
 	{}
 
 	explicit operator bool() const;
-	bool operator ==(const FObsidianDynamicItemAffix& Other) const;
-	bool operator ==(const FObsidianActiveItemAffix& Other) const;
-	bool operator ==(const FObsidianStaticItemAffix& Other) const;
+	bool operator ==(const FObsidianDynamicItemAffix& InOther) const;
+	bool operator ==(const FObsidianActiveItemAffix& InOther) const;
+	bool operator ==(const FObsidianStaticItemAffix& InOther) const;
 	
 public:
 	/** Unique Affix Gameplay Tag Identifier. */
@@ -791,17 +791,17 @@ public:
 		return AffixTag.IsValid();
 	}
 
-	bool operator==(const FObsidianActiveItemAffix& Other) const;
-	bool operator==(const FObsidianDynamicItemAffix& Other) const;
-	bool operator==(const FObsidianStaticItemAffix& Other) const;
+	bool operator==(const FObsidianActiveItemAffix& InOther) const;
+	bool operator==(const FObsidianDynamicItemAffix& InOther) const;
+	bool operator==(const FObsidianStaticItemAffix& InOther) const;
 
 	uint8 GetCurrentAffixTier() const;
 	int8 GetCurrentAffixTierItemLevelRequirement() const;
 	
-	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 UpToTreasureQuality,
-		const bool bApplyMagicMultiplier = false);
-	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 UpToTreasureQuality,
-		const bool bApplyMagicMultiplier = false);
+	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 InUpToTreasureQuality,
+		const bool bInApplyMagicMultiplier = false);
+	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 InUpToTreasureQuality,
+		const bool bInApplyMagicMultiplier = false);
 	
 	void RandomizeAffixValueBoundByRange();
 	
@@ -832,8 +832,8 @@ public:
 
 private:
 	void CreateAffixActiveDescription();
-	void InitializeAffixTierAndRange(const uint8 UpToTreasureQuality, const bool bApplyMagicMultiplier);
-	FObsidianAffixValueRange GetRandomAffixRange(const uint8 UpToTreasureQuality);
+	void InitializeAffixTierAndRange(const uint8 InUpToTreasureQuality, const bool bInApplyMagicMultiplier);
+	FObsidianAffixValueRange GetRandomAffixRange(const uint8 InUpToTreasureQuality);
 };
 
 /**
@@ -954,9 +954,9 @@ public:
 	GENERATED_BODY();
 	
 	FObsidianStacksUIData(){}
-	FObsidianStacksUIData(const int32 CurrentStacks, const int32 MaxStacks)
-		: CurrentItemStackCount(CurrentStacks)
-		, MaxItemStackCount(MaxStacks)
+	FObsidianStacksUIData(const int32 InCurrentStacks, const int32 InMaxStacks)
+		: CurrentItemStackCount(InCurrentStacks)
+		, MaxItemStackCount(InMaxStacks)
 	{}
 
 	void SetCurrentStacks(const int32 InCurrentStacks)
@@ -1037,8 +1037,8 @@ struct FObsidianRareItemNameGenerationData
 	GENERATED_BODY()
 
 public:
-	FText GetRandomPrefixNameAddition(const int32 UpToTreasureQuality);
-	FText GetRandomSuffixNameAddition(const int32 UpToTreasureQuality, const FGameplayTag& ForItemCategory);
+	FText GetRandomPrefixNameAddition(const int32 InUpToTreasureQuality);
+	FText GetRandomSuffixNameAddition(const int32 InUpToTreasureQuality, const FGameplayTag& InForItemCategory);
 	
 public:
 	/** General prefix item name additions. */
@@ -1070,9 +1070,9 @@ struct FObsidianItemRequirementsUIDescription
 		, bMeetIntelligenceRequirement(false)
 	{}
 
-	void SetHeroLevelRequirement(const uint8 RequiredMagnitude, const uint8 OwnerMagnitude);
-	void SetHeroClassRequirement(const EObsidianHeroClass RequiredClass, const EObsidianHeroClass OwnerClass);
-	void SetAttributeRequirement(const FGameplayAttribute& Attribute, const float RequirementMagnitude, const float OwnerMagnitude);
+	void SetHeroLevelRequirement(const uint8 InRequiredMagnitude, const uint8 InOwnerMagnitude);
+	void SetHeroClassRequirement(const EObsidianHeroClass InRequiredClass, const EObsidianHeroClass InOwnerClass);
+	void SetAttributeRequirement(const FGameplayAttribute& InAttribute, const float InRequirementMagnitude, const float InOwnerMagnitude);
 	
 public:
 	uint8 bHasHeroClassRequirement:1;
@@ -1269,8 +1269,8 @@ public:
 	void SetCurrentStacks(const int32 InCurrentStack);
 	void SetMaxStacks(const int32 InMaxStacks);
 	void SetIdentified(const bool InIdentified);
-	void SetAffixDescriptionRows(const TArray<FObsidianAffixDescriptionRow>& AffixRows);
-	void SetItemEquippingRequirements(const FObsidianItemRequirementsUIDescription& Requirements);
+	void SetAffixDescriptionRows(const TArray<FObsidianAffixDescriptionRow>& InAffixRows);
+	void SetItemEquippingRequirements(const FObsidianItemRequirementsUIDescription& InRequirements);
 	
 public:
 	UPROPERTY()

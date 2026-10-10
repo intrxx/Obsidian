@@ -12,13 +12,13 @@
 #include "Game/ObsidianGameInstance.h"
 
 
-AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	// GAS needs higher NetUpdateFrequency
 	SetNetUpdateFrequency(100.f);
 
-	AbilitySystemComponent = ObjectInitializer.CreateDefaultSubobject<UObsidianAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
+	AbilitySystemComponent = InObjectInitializer.CreateDefaultSubobject<UObsidianAbilitySystemComponent>(this, TEXT("AbilitySystemComponent"));
 	AbilitySystemComponent->SetIsReplicated(true);
 	AbilitySystemComponent->SetReplicationMode(EGameplayEffectReplicationMode::Mixed);
 

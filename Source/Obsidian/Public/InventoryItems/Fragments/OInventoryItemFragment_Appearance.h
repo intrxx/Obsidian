@@ -56,7 +56,7 @@ class OBSIDIAN_API UOInventoryItemFragment_Appearance : public UObsidianInventor
 	GENERATED_BODY()
 
 public:
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
 	
 	FIntPoint GetItemGridSpanFromDesc() const;
 	

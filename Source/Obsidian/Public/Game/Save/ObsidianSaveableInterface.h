@@ -23,6 +23,6 @@ class OBSIDIAN_API IObsidianSaveableInterface
 	GENERATED_BODY()
 
 public:
-	virtual void SaveData(UObsidianHeroSaveGame* SaveObject) = 0;
-	virtual void LoadData(UObsidianHeroSaveGame* SaveObject) = 0;
+	virtual void SaveData(UObsidianHeroSaveGame* InSaveObject) = 0;
+	virtual void LoadData(UObsidianHeroSaveGame* InSaveObject) = 0;
 };

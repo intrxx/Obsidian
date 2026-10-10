@@ -18,29 +18,29 @@ UObsidianBTTask_UseGameplayAbility::UObsidianBTTask_UseGameplayAbility()
 }
 
 
-EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
 	EBTNodeResult::Type NodeResult = EBTNodeResult::InProgress;
 
-	AAIController* AIController = OwnerComp.GetAIOwner();
+	AAIController* AIController = InOwnerComp.GetAIOwner();
 	if(AIController == nullptr)
 	{
-		UE_VLOG(OwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_UseGameplayAbility::ExecuteTask failed since AIController is missing."));
+		UE_VLOG(InOwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_UseGameplayAbility::ExecuteTask failed since AIController is missing."));
 		NodeResult = EBTNodeResult::Failed;
 	}
 	else
 	{
-		NodeResult = PerformUseGameplayAbilityTask(OwnerComp, NodeMemory);
+		NodeResult = PerformUseGameplayAbilityTask(InOwnerComp, InNodeMemory);
 	}
 	
 	return NodeResult;
 }
 
-EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilityTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_UseGameplayAbility::PerformUseGameplayAbilityTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
 	EBTNodeResult::Type NodeResult = EBTNodeResult::Failed;
 	
-	AAIController* AIController = OwnerComp.GetAIOwner();
+	AAIController* AIController = InOwnerComp.GetAIOwner();
 	AActor* Actor = AIController->GetPawn();
 
 	

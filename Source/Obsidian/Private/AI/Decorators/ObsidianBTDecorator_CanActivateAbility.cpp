@@ -26,17 +26,17 @@ UObsidianBTDecorator_CanActivateAbility::UObsidianBTDecorator_CanActivateAbility
 	bAllowAbortLowerPri = false;
 }
 
-bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehaviorTreeComponent& OwnerComp,
-	uint8* NodeMemory) const
+bool UObsidianBTDecorator_CanActivateAbility::CalculateRawConditionValue(UBehaviorTreeComponent& InOwnerComp,
+	uint8* InNodeMemory) const
 {
-	const AAIController* AIController = OwnerComp.GetAIOwner();
+	const AAIController* AIController = InOwnerComp.GetAIOwner();
 	if(AIController == nullptr)
 	{
 		UE_LOG(ObLogAI, Error, TEXT("AI Controller is invalid on [%hs]."), __FUNCTION__);
 		return false;
 	}
 
-	const UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+	const UBlackboardComponent* BlackboardComponent = InOwnerComp.GetBlackboardComponent();
 	if(BlackboardComponent == nullptr)
 	{
 		UE_LOG(ObLogAI, Error, TEXT("Blackboard Component is invalid on [%hs]."), __FUNCTION__);

@@ -15,8 +15,8 @@
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 
 
-UObsidianCraftingComponent::UObsidianCraftingComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianCraftingComponent::UObsidianCraftingComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	SetIsReplicatedByDefault(true);
 	PrimaryComponentTick.bCanEverTick = true;
@@ -30,10 +30,10 @@ void UObsidianCraftingComponent::BeginPlay()
 	InitializeCraftingComponent();
 }
 
-void UObsidianCraftingComponent::TickComponent(float DeltaTime, enum ELevelTick TickType,
-                                               FActorComponentTickFunction* ThisTickFunction)
+void UObsidianCraftingComponent::TickComponent(float InDeltaTime, enum ELevelTick InTickType,
+                                               FActorComponentTickFunction* InThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	Super::TickComponent(InDeltaTime, InTickType, InThisTickFunction);
 
 	if(bUsingItem)
 	{
@@ -64,22 +64,22 @@ void UObsidianCraftingComponent::InitializeCraftingComponent()
 		&ThisClass::OnPlayerStashChanged);
 }
 
-void UObsidianCraftingComponent::OnInventoryStateChanged(FGameplayTag Channel,
-	const FObsidianInventoryChangeMessage& InventoryChangeMessage)
+void UObsidianCraftingComponent::OnInventoryStateChanged(FGameplayTag InChannel,
+	const FObsidianInventoryChangeMessage& InInventoryChangeMessage)
 {
-	if (GetOwner() != InventoryChangeMessage.InventoryOwner->GetOwner())
+	if (GetOwner() != InInventoryChangeMessage.InventoryOwner->GetOwner())
 	{
 		return;
 	}
 
-	const UObsidianInventoryItemInstance* Instance = InventoryChangeMessage.ItemInstance;
+	const UObsidianInventoryItemInstance* Instance = InInventoryChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
 		UE_LOG(ObLogCrafting, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
-	if(InventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
+	if(InInventoryChangeMessage.ChangeType == EObsidianInventoryChangeType::ICT_ItemRemoved)
 	{
 		UE_LOG(ObLogCrafting, Verbose, TEXT("Stopping Usage of item: [%s] from Inventory, due to removal"),
 			*Instance->GetItemDisplayName().ToString());
@@ -91,22 +91,22 @@ void UObsidianCraftingComponent::OnInventoryStateChanged(FGameplayTag Channel,
 	}
 }
 
-void UObsidianCraftingComponent::OnPlayerStashChanged(FGameplayTag Channel,
-	const FObsidianStashChangeMessage& StashChangeMessage)
+void UObsidianCraftingComponent::OnPlayerStashChanged(FGameplayTag InChannel,
+	const FObsidianStashChangeMessage& InStashChangeMessage)
 {
-	if (GetOwner() != StashChangeMessage.PlayerStashOwner->GetOwner())
+	if (GetOwner() != InStashChangeMessage.PlayerStashOwner->GetOwner())
 	{
 		return;
 	}
 	
-	const UObsidianInventoryItemInstance* Instance = StashChangeMessage.ItemInstance;
+	const UObsidianInventoryItemInstance* Instance = InStashChangeMessage.ItemInstance;
 	if(Instance == nullptr)
 	{
 		UE_LOG(ObLogCrafting, Error, TEXT("Item Instance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 	
-	if(StashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemRemoved)
+	if(InStashChangeMessage.ChangeType == EObsidianStashChangeType::ICT_ItemRemoved)
 	{
 		UE_LOG(ObLogCrafting, Verbose, TEXT("Stopping Usage of item: [%s] from Player Stash, due to removal"),
 			*Instance->GetItemDisplayName().ToString());
@@ -118,14 +118,14 @@ void UObsidianCraftingComponent::OnPlayerStashChanged(FGameplayTag Channel,
 	}
 }
 
-bool UObsidianCraftingComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch,
-                                                     FReplicationFlags* RepFlags)
+bool UObsidianCraftingComponent::ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch,
+                                                     FReplicationFlags* InRepFlags)
 {
-	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+	bool WroteSomething = Super::ReplicateSubobjects(InChannel, InBunch, InRepFlags);
 
 	if(CachedUsingItemInstance && IsValid(CachedUsingItemInstance))
 	{
-		WroteSomething |= Channel->ReplicateSubobject(CachedUsingItemInstance, *Bunch, *RepFlags);
+		WroteSomething |= InChannel->ReplicateSubobject(CachedUsingItemInstance, *InBunch, *InRepFlags);
 	}
 	
 	return WroteSomething;
@@ -151,20 +151,20 @@ UObsidianInventoryItemInstance* UObsidianCraftingComponent::GetUsingItem()
 	return CachedUsingItemInstance;
 }
 
-void UObsidianCraftingComponent::UseItem(const FObsidianItemPosition& OnPosition, const bool bLeftShiftDown)
+void UObsidianCraftingComponent::UseItem(const FObsidianItemPosition& InOnPosition, const bool bInLeftShiftDown)
 {
-	ServerUseItem(CachedUsingItemInstance, OnPosition);
+	ServerUseItem(CachedUsingItemInstance, InOnPosition);
 
-	if(bLeftShiftDown == false)
+	if(bInLeftShiftDown == false)
 	{
 		SetUsingItem(false);
 	}
 }
 
 void UObsidianCraftingComponent::ServerActivateUsableItemFromInventory_Implementation(
-	UObsidianInventoryItemInstance* UsingInstance)
+	UObsidianInventoryItemInstance* InUsingInstance)
 {
-	if(UsingInstance == nullptr)
+	if(InUsingInstance == nullptr)
 	{
 		UE_LOG(ObLogInventory, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
@@ -184,13 +184,13 @@ void UObsidianCraftingComponent::ServerActivateUsableItemFromInventory_Implement
 		return;
 	}
 	
-	InventoryComponent->UseItem(UsingInstance, nullptr);
+	InventoryComponent->UseItem(InUsingInstance, nullptr);
 }
 
 void UObsidianCraftingComponent::ServerActivateUsableItemFromStash_Implementation(
-	UObsidianInventoryItemInstance* UsingInstance)
+	UObsidianInventoryItemInstance* InUsingInstance)
 {
-	if(UsingInstance == nullptr)
+	if(InUsingInstance == nullptr)
 	{
 		UE_LOG(ObLogCrafting, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
@@ -210,13 +210,13 @@ void UObsidianCraftingComponent::ServerActivateUsableItemFromStash_Implementatio
 		return;
 	}
 	
-	PlayerStashComponent->UseItem(UsingInstance, nullptr);
+	PlayerStashComponent->UseItem(InUsingInstance, nullptr);
 }
 
-void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventoryItemInstance* UsingInstance,
-	const FObsidianItemPosition& OnPosition)
+void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventoryItemInstance* InUsingInstance,
+	const FObsidianItemPosition& InOnPosition)
 {
-	if(UsingInstance == nullptr)
+	if(InUsingInstance == nullptr)
 	{
 		UE_LOG(ObLogCrafting, Error, TEXT("UsingInstance is null in [%hs]"), __FUNCTION__);
 		return;
@@ -229,7 +229,7 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		return;
 	}
 
-	if (OnPosition.IsOnInventoryGrid())
+	if (InOnPosition.IsOnInventoryGrid())
 	{
 		UObsidianInventoryComponent* InventoryComponent = Controller->FindComponentByClass<UObsidianInventoryComponent>();
 		if(InventoryComponent == nullptr)
@@ -239,12 +239,12 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		}
 
 		UObsidianInventoryItemInstance* UsingOntoInstance = InventoryComponent->GetItemInstanceAtLocation(
-			OnPosition.GetItemGridPosition());
-		InventoryComponent->UseItem(UsingInstance, UsingOntoInstance);
+			InOnPosition.GetItemGridPosition());
+		InventoryComponent->UseItem(InUsingInstance, UsingOntoInstance);
 	}
-	else if (OnPosition.IsOnStash())
+	else if (InOnPosition.IsOnStash())
 	{
-		const FGameplayTag StashTabTag = OnPosition.GetOwningStashTabTag();
+		const FGameplayTag StashTabTag = InOnPosition.GetOwningStashTabTag();
 		if (StashTabTag == FGameplayTag::EmptyTag)
 		{
 			UE_LOG(ObLogCrafting, Error, TEXT("StashTab tag is empty in [%hs]."), __FUNCTION__);
@@ -258,10 +258,10 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		}
 
 		UObsidianInventoryItemInstance* UsingOntoInstance = PlayerStashComponent->GetItemInstanceFromTabAtPosition(
-			OnPosition);
-		PlayerStashComponent->UseItem(UsingInstance, UsingOntoInstance);
+			InOnPosition);
+		PlayerStashComponent->UseItem(InUsingInstance, UsingOntoInstance);
 	}
-	else if (OnPosition.IsOnEquipmentSlot())
+	else if (InOnPosition.IsOnEquipmentSlot())
 	{
 		UObsidianEquipmentComponent* EquipmentComponent = Controller->FindComponentByClass<UObsidianEquipmentComponent>();
 		if(EquipmentComponent == nullptr)
@@ -271,7 +271,7 @@ void UObsidianCraftingComponent::ServerUseItem_Implementation(UObsidianInventory
 		}
 
 		UObsidianInventoryItemInstance* UsingOntoInstance = EquipmentComponent->GetEquippedInstanceAtSlot(
-			OnPosition.GetItemSlotTag());
+			InOnPosition.GetItemSlotTag());
 		//EquipmentComponent->UseItem(UsingInstance, UsingOntoInstance);
 	}
 }
@@ -300,12 +300,12 @@ void UObsidianCraftingComponent::DragUsableItemIcon() const
 	}
 }
 
-void UObsidianCraftingComponent::SetUsingItem(const bool InbUsingItem, UObsidianItem* ItemWidget,
-                                              UObsidianInventoryItemInstance* UsingInstance)
+void UObsidianCraftingComponent::SetUsingItem(const bool InInbUsingItem, UObsidianItem* InItemWidget,
+                                              UObsidianInventoryItemInstance* InUsingInstance)
 {
-	if(InbUsingItem && ItemWidget)
+	if(InInbUsingItem && InItemWidget)
 	{
-		if (UsingInstance == nullptr)
+		if (InUsingInstance == nullptr)
 		{
 			UE_LOG(ObLogCrafting, Error, TEXT("UsingInstance is invalid in [%hs]."), __FUNCTION__);
 			return;
@@ -322,16 +322,16 @@ void UObsidianCraftingComponent::SetUsingItem(const bool InbUsingItem, UObsidian
 			CachedActiveUsingItemIcon->RemoveFromParent();
 		}
 		
-		ItemWidget->SetUsingItemProperties();
-		CachedUsingItemWidget = ItemWidget;
+		InItemWidget->SetUsingItemProperties();
+		CachedUsingItemWidget = InItemWidget;
 
 		checkf(UsingItemIconClass, TEXT("UsingItemIconClass is invalid in [%hs] please fill it."),
 			__FUNCTION__);
 		CachedActiveUsingItemIcon = CreateWidget<UObsidianDraggedItem_Simple>(World, UsingItemIconClass);
-		CachedActiveUsingItemIcon->InitializeDraggedItem(ItemWidget->GetItemImage(), UsingInstance->GetItemGridSpan());
+		CachedActiveUsingItemIcon->InitializeDraggedItem(InItemWidget->GetItemImage(), InUsingInstance->GetItemGridSpan());
 		CachedActiveUsingItemIcon->AddToViewport();
 
-		CachedUsingItemInstance = UsingInstance;
+		CachedUsingItemInstance = InUsingInstance;
 	}
 	else
 	{
@@ -351,7 +351,7 @@ void UObsidianCraftingComponent::SetUsingItem(const bool InbUsingItem, UObsidian
 		OnStopUsingItemDelegate.Broadcast();
 	}
 
-	bUsingItem = InbUsingItem;
+	bUsingItem = InInbUsingItem;
 }
 
 

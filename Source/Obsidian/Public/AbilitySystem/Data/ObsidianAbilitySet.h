@@ -37,7 +37,7 @@ public:
 	FGameplayTag InputTag;
 	
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 };
 
@@ -63,7 +63,7 @@ public:
 	bool bIsDependentOnOtherAttributes = false;
 
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 };
 
@@ -81,7 +81,7 @@ public:
 	TSubclassOf<UAttributeSet> AttributeSet;
 	
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 };
 
@@ -94,11 +94,11 @@ struct FObsidianAbilitySet_GrantedHandles
 	GENERATED_BODY()
 
 public:
-	void AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle);
-	void AddActiveGameplayEffectSpecHandle(const FActiveGameplayEffectHandle& Handle);
-	void AddAttributeSet(UAttributeSet* AttributeSet);
+	void AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& InHandle);
+	void AddActiveGameplayEffectSpecHandle(const FActiveGameplayEffectHandle& InHandle);
+	void AddAttributeSet(UAttributeSet* InAttributeSet);
 
-	void TakeFromAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC);
+	void TakeFromAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC);
 
 protected:
 	/** Handles to granted Gameplay Abilities. */
@@ -123,7 +123,7 @@ class OBSIDIAN_API UObsidianAbilitySet : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianAbilitySet(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianAbilitySet(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	/**
 	 * Grants the Ability Set.
@@ -131,11 +131,11 @@ public:
 	 * @param GrantedHandles Handles that can be later used to take away anything that was granted.
 	 * @param SourceObject Used for Gameplay Ability Spec Handle to specify its Source Object
 	 */
-	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
-	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, FObsidianAbilitySet_GrantedHandles* GrantedHandles, const float LevelOverride, UObject* SourceObject = nullptr) const;
+	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, FObsidianAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject = nullptr) const;
+	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, FObsidianAbilitySet_GrantedHandles* OutGrantedHandles, const float InLevelOverride, UObject* InSourceObject = nullptr) const;
 
 #if WITH_EDITOR
-	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 
 protected:

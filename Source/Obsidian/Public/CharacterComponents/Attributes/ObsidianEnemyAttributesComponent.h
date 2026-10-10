@@ -21,13 +21,13 @@ class OBSIDIAN_API UObsidianEnemyAttributesComponent : public UObsidianAttribute
 	GENERATED_BODY()
 
 public:
-	UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer);
+	UObsidianEnemyAttributesComponent(const FObjectInitializer& InObjectInitializer);
 	
 	/** Returns the ENEMY Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
-	static UObsidianEnemyAttributesComponent* FindAttributesComponent(const AActor* Actor)
+	static UObsidianEnemyAttributesComponent* FindAttributesComponent(const AActor* InActor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianEnemyAttributesComponent>() : nullptr);
+		return (InActor ? InActor->FindComponentByClass<UObsidianEnemyAttributesComponent>() : nullptr);
 	}
 
 	void SetEnemyName(const FText& InEnemyName)
@@ -50,7 +50,7 @@ public:
 	FGameplayAttribute GetHitReactThresholdAttribute() const;
 	
 	//~ Start of ObsidianAttributesComponent
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner = nullptr) override;
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
 
@@ -73,12 +73,12 @@ protected:
 	 * Callbacks for Attribute change delegates.
 	 */
 	
-	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data) override;
-	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) override;
-	virtual void StaggerMeterChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data);
+	virtual void HealthChanged(const FOnAttributeChangeData& InData) override;
+	virtual void MaxHealthChanged(const FOnAttributeChangeData& InData) override;
+	virtual void EnergyShieldChanged(const FOnAttributeChangeData& InData) override;
+	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) override;
+	virtual void StaggerMeterChanged(const FOnAttributeChangeData& InData);
+	virtual void MaxStaggerMeterChanged(const FOnAttributeChangeData& InData);
 
 	/**
 	 * 

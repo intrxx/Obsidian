@@ -31,9 +31,9 @@ public:
 
 	FGuid GetLabelID() const;
 	bool IsInUse() const;
-	void MarkInUse(const bool bInUse, const FGuid& WithGuid = FGuid());
+	void MarkInUse(const bool bInUse, const FGuid& InWithGuid = FGuid());
 	
-	void SetItemName(const FText& ItemName);
+	void SetItemName(const FText& InItemName);
 	
 	void HandleItemLabelHighlightBegin() const;
 	void HandleItemLabelHighlightEnd() const;

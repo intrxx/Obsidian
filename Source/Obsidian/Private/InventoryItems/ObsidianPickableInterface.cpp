@@ -15,22 +15,22 @@ bool FObsidianPickupInstance::IsValid() const
 	return Item != nullptr;
 }
 
-UObsidianPickableStatics::UObsidianPickableStatics(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianPickableStatics::UObsidianPickableStatics(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
-TScriptInterface<IObsidianPickableInterface> UObsidianPickableStatics::GetPickableFromActor(AActor* Actor)
+TScriptInterface<IObsidianPickableInterface> UObsidianPickableStatics::GetPickableFromActor(AActor* InActor)
 {
 	// If the actor is directly pickable, return that.
-	TScriptInterface<IObsidianPickableInterface> PickupableActor(Actor);
+	TScriptInterface<IObsidianPickableInterface> PickupableActor(InActor);
 	if(PickupableActor)
 	{
 		return PickupableActor;
 	}
 
 	// If the actor isn't pickable, it might have a component that has a pickupable interface.
-	TArray<UActorComponent*> PickupableComponents = Actor ? Actor->GetComponentsByInterface(
+	TArray<UActorComponent*> PickupableComponents = InActor ? InActor->GetComponentsByInterface(
 		UObsidianPickableInterface::StaticClass()) : TArray<UActorComponent*>();
 	if(PickupableComponents.IsEmpty() == false)
 	{

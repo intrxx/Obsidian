@@ -23,9 +23,9 @@ void UObsidianButtonBase::UpdateInputActionWidget()
 	RefreshButtonText();
 }
 
-void UObsidianButtonBase::OnInputMethodChanged(ECommonInputType CurrentInputType)
+void UObsidianButtonBase::OnInputMethodChanged(ECommonInputType InCurrentInputType)
 {
-	Super::OnInputMethodChanged(CurrentInputType);
+	Super::OnInputMethodChanged(InCurrentInputType);
 
 	UpdateButtonStyle();
 }

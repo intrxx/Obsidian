@@ -17,7 +17,7 @@ class OBSIDIAN_API UObsidianEnemyMovementComponent : public UObsidianCharacterMo
 	GENERATED_BODY()
 
 public:
-	UObsidianEnemyMovementComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianEnemyMovementComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 		
 	virtual float GetMaxSpeed() const override;
 };

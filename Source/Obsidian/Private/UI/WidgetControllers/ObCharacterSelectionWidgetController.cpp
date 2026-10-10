@@ -19,29 +19,29 @@ void UObCharacterSelectionWidgetController::OnWidgetControllerSetupCompleted()
 	GatherViewTargets();
 }
 
-void UObCharacterSelectionWidgetController::HighlightCharacterWithTag(const EObsidianHeroClass WithClass)
+void UObCharacterSelectionWidgetController::HighlightCharacterWithTag(const EObsidianHeroClass InWithClass)
 {
-	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(WithClass))
+	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(InWithClass))
 	{
 		CreationHero->StartHighlight();
 		CreationHero->PlayChooseMeAnimMontage();
 	}
 }
 
-void UObCharacterSelectionWidgetController::ResetHighlightForCharacterWithTag(const EObsidianHeroClass WithClass)
+void UObCharacterSelectionWidgetController::ResetHighlightForCharacterWithTag(const EObsidianHeroClass InWithClass)
 {
-	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(WithClass))
+	if(AObsidianCharacterCreationHero* CreationHero = GetCreationHeroForTag(InWithClass))
 	{
 		CreationHero->StopHighlight();
 		CreationHero->StopPlayingChooseMeAnimMontage();
 	}
 }
 
-AObsidianCharacterCreationHero* UObCharacterSelectionWidgetController::GetCreationHeroForTag(const EObsidianHeroClass ForClass)
+AObsidianCharacterCreationHero* UObCharacterSelectionWidgetController::GetCreationHeroForTag(const EObsidianHeroClass InForClass)
 {
 	for(AObsidianCharacterCreationHero* Hero : CreationHeroes)
 	{
-		if(Hero && Hero->HeroClass == ForClass)
+		if(Hero && Hero->HeroClass == InForClass)
 		{
 			return Hero;
 		}

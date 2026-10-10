@@ -21,7 +21,7 @@ struct FObsidianAbilityDamageRange
 	UPROPERTY(EditDefaultsOnly)
 	FScalableFloat MaximalDamage;
 
-	float RollForDamageNumberAtLevel(const float Level) const;
+	float RollForDamageNumberAtLevel(const float InLevel) const;
 };
 
 /**
@@ -33,22 +33,22 @@ class OBSIDIAN_API UObsidianDamageGameplayAbility : public UObsidianGameplayAbil
 	GENERATED_BODY()
 
 public:
-	UObsidianDamageGameplayAbility(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianDamageGameplayAbility(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 protected:
 	/** Given the Array of Actors, damages all of them with the damage provided in the ability. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
-	void DamageAllCharacters(const TArray<AActor*>& ActorsToDamage);
+	void DamageAllCharacters(const TArray<AActor*>& InActorsToDamage);
 
 	/** Damages the actor with the damage provided in the ability. Uses DamageTypeMap. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
-	void DamageCharacter(AActor* ActorToDamage);
+	void DamageCharacter(AActor* InActorToDamage);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
-	static FVector PredictActorLocation(AActor* Actor, const float Time = 1.0f, const FVector& FallBackVector = FVector::ZeroVector);
+	static FVector PredictActorLocation(AActor* InActor, const float InTime = 1.0f, const FVector& InFallBackVector = FVector::ZeroVector);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageAbility")
-	static FVector ShortenVector(const FVector& StartVector, const FVector& EndVector, const float AmountToShorten);
+	static FVector ShortenVector(const FVector& InStartVector, const FVector& InEndVector, const float InAmountToShorten);
 	
 protected:
 	// UPROPERTY(EditDefaultsOnly, meta=(Categories = "SetByCaller.DamageType"), Category = "Obsidian|Damage")

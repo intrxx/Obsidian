@@ -30,30 +30,30 @@ void UObsidianRegularEnemyHealthBar::HandleWidgetControllerSet()
    }
 }
 
-void UObsidianRegularEnemyHealthBar::HealthChanged(const float NewValue)
+void UObsidianRegularEnemyHealthBar::HealthChanged(const float InNewValue)
 {
-   Health = NewValue;
+   Health = InNewValue;
    SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
    StartWidgetHideTimer();
 }
 
-void UObsidianRegularEnemyHealthBar::MaxHealthChanged(const float NewValue)
+void UObsidianRegularEnemyHealthBar::MaxHealthChanged(const float InNewValue)
 {
-   MaxHealth = NewValue;
+   MaxHealth = InNewValue;
    SetProgressBarPercent(Health, MaxHealth, Health_ProgressBar);
    StartWidgetHideTimer();
 }
 
-void UObsidianRegularEnemyHealthBar::EnergyShieldChanged(const float NewValue)
+void UObsidianRegularEnemyHealthBar::EnergyShieldChanged(const float InNewValue)
 {
-   EnergyShield = NewValue;
+   EnergyShield = InNewValue;
    SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
    StartWidgetHideTimer();
 }
 
-void UObsidianRegularEnemyHealthBar::MaxEnergyShieldChanged(const float NewValue)
+void UObsidianRegularEnemyHealthBar::MaxEnergyShieldChanged(const float InNewValue)
 {
-   MaxEnergyShield = NewValue;
+   MaxEnergyShield = InNewValue;
    SetProgressBarPercent(EnergyShield, MaxEnergyShield, EnergyShield_ProgressBar);
    StartWidgetHideTimer();
 }

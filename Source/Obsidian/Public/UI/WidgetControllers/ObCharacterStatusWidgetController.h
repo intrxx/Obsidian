@@ -86,63 +86,63 @@ public:
 	FOnAttributeValueChangedTwoParams MaxSpellBlockChanceChangedDelegate;
 
 protected:
-	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* ObsidianASC) override;
+	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC) override;
 
 	/** Character */
 	UFUNCTION()
-	void HeroLevelUp(const uint8 NewLevel);
-	void ExperienceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxExperienceChanged(const FOnAttributeChangeData& Data);
+	void HeroLevelUp(const uint8 InNewLevel);
+	void ExperienceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxExperienceChanged(const FOnAttributeChangeData& InData);
 	
 	/** Attributes */
-	void StrengthChanged(const FOnAttributeChangeData& Data) const;
-	void IntelligenceChanged(const FOnAttributeChangeData& Data) const;
-	void DexterityChanged(const FOnAttributeChangeData& Data) const;
-	void FaithChanged(const FOnAttributeChangeData& Data) const;
+	void StrengthChanged(const FOnAttributeChangeData& InData) const;
+	void IntelligenceChanged(const FOnAttributeChangeData& InData) const;
+	void DexterityChanged(const FOnAttributeChangeData& InData) const;
+	void FaithChanged(const FOnAttributeChangeData& InData) const;
 	
 	/** Vital Attributes */
-	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
-	void MaxManaChanged(const FOnAttributeChangeData& Data) const;
-	void MaxSpecialResourceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
-	void MaxStaminaChanged(const FOnAttributeChangeData& Data) const;
-	void StaminaRegenerationChanged(const FOnAttributeChangeData& Data) const;
+	void MaxHealthChanged(const FOnAttributeChangeData& InData) const;
+	void MaxManaChanged(const FOnAttributeChangeData& InData) const;
+	void MaxSpecialResourceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) const;
+	void MaxStaminaChanged(const FOnAttributeChangeData& InData) const;
+	void StaminaRegenerationChanged(const FOnAttributeChangeData& InData) const;
 	
 	/** Offence */
-	void AccuracyChanged(const FOnAttributeChangeData& Data) const;
-	void AttackSpeedChanged(const FOnAttributeChangeData& Data) const;
-	void CastSpeedChanged(const FOnAttributeChangeData& Data) const;
-	void CriticalStrikeChanceChanged(const FOnAttributeChangeData& Data) const;
-	void CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
-	void PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
-	void FireDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
-	void LightningDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
-	void ColdDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
-	void ChaosDamageMultiplierChanged(const FOnAttributeChangeData& Data) const;
-	void FirePenetrationChanged(const FOnAttributeChangeData& Data) const;
-	void LightningPenetrationChanged(const FOnAttributeChangeData& Data) const;
-	void ColdPenetrationChanged(const FOnAttributeChangeData& Data) const;
-	void ChaosPenetrationChanged(const FOnAttributeChangeData& Data) const;
+	void AccuracyChanged(const FOnAttributeChangeData& InData) const;
+	void AttackSpeedChanged(const FOnAttributeChangeData& InData) const;
+	void CastSpeedChanged(const FOnAttributeChangeData& InData) const;
+	void CriticalStrikeChanceChanged(const FOnAttributeChangeData& InData) const;
+	void CriticalStrikeDamageMultiplierChanged(const FOnAttributeChangeData& InData) const;
+	void PhysicalDamageMultiplierChanged(const FOnAttributeChangeData& InData) const;
+	void FireDamageMultiplierChanged(const FOnAttributeChangeData& InData) const;
+	void LightningDamageMultiplierChanged(const FOnAttributeChangeData& InData) const;
+	void ColdDamageMultiplierChanged(const FOnAttributeChangeData& InData) const;
+	void ChaosDamageMultiplierChanged(const FOnAttributeChangeData& InData) const;
+	void FirePenetrationChanged(const FOnAttributeChangeData& InData) const;
+	void LightningPenetrationChanged(const FOnAttributeChangeData& InData) const;
+	void ColdPenetrationChanged(const FOnAttributeChangeData& InData) const;
+	void ChaosPenetrationChanged(const FOnAttributeChangeData& InData) const;
 	
 	/** Defence */
-	void ArmorChanged(const FOnAttributeChangeData& Data) const;
-	void EvasionChanged(const FOnAttributeChangeData& Data) const;
-	void HealthRegenerationChanged(const FOnAttributeChangeData& Data) const;
-	void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& Data) const;
-	void FireResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxFireResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void ColdResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxColdResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void LightningResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxLightningResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void ChaosResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxChaosResistanceChanged(const FOnAttributeChangeData& Data) const;
-	void SpellSuppressionChanceChanged(const FOnAttributeChangeData& Data) const;
-	void SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& Data) const;
-	void HitBlockChanceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxHitBlockChanceChanged(const FOnAttributeChangeData& Data) const;
-	void SpellBlockChanceChanged(const FOnAttributeChangeData& Data) const;
-	void MaxSpellBlockChanceChanged(const FOnAttributeChangeData& Data) const;
+	void ArmorChanged(const FOnAttributeChangeData& InData) const;
+	void EvasionChanged(const FOnAttributeChangeData& InData) const;
+	void HealthRegenerationChanged(const FOnAttributeChangeData& InData) const;
+	void EnergyShieldRegenerationChanged(const FOnAttributeChangeData& InData) const;
+	void FireResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxFireResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void ColdResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxColdResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void LightningResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxLightningResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void ChaosResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxChaosResistanceChanged(const FOnAttributeChangeData& InData) const;
+	void SpellSuppressionChanceChanged(const FOnAttributeChangeData& InData) const;
+	void SpellSuppressionMagnitudeChanged(const FOnAttributeChangeData& InData) const;
+	void HitBlockChanceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxHitBlockChanceChanged(const FOnAttributeChangeData& InData) const;
+	void SpellBlockChanceChanged(const FOnAttributeChangeData& InData) const;
+	void MaxSpellBlockChanceChanged(const FOnAttributeChangeData& InData) const;
 	
 protected:
 	/** Character */

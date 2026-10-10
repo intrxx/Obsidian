@@ -7,20 +7,20 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-bool UObsidianUsableShard_OrbOfRescription::OnItemUsed(AObsidianPlayerController* ItemOwner,
-	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard_OrbOfRescription::OnItemUsed(AObsidianPlayerController* InItemOwner,
+	UObsidianInventoryItemInstance* InUsingInstance, UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
-	if(ItemOwner && UsingInstance && UsingOntoInstance)
+	if(InItemOwner && InUsingInstance && InUsingOntoInstance)
 	{
-		if(CanUseOnItem(UsingOntoInstance))
+		if(CanUseOnItem(InUsingOntoInstance))
 		{
 			const FObsidianDynamicItemAffix SkillImplicitToAdd = UObsidianItemsFunctionLibrary::GetRandomSkillImplicitForItem(
-					UsingOntoInstance);
-			if (SkillImplicitToAdd && UsingOntoInstance->RemoveSkillImplicitAffix())
+					InUsingOntoInstance);
+			if (SkillImplicitToAdd && InUsingOntoInstance->RemoveSkillImplicitAffix())
 			{
 				FObsidianActiveItemAffix ActiveAffix;
-				ActiveAffix.InitializeWithDynamic(SkillImplicitToAdd, UsingOntoInstance->GetItemLevel());
-				UsingOntoInstance->AddAffix(ActiveAffix);
+				ActiveAffix.InitializeWithDynamic(SkillImplicitToAdd, InUsingOntoInstance->GetItemLevel());
+				InUsingOntoInstance->AddAffix(ActiveAffix);
 				return true;
 			}
 		}
@@ -28,15 +28,15 @@ bool UObsidianUsableShard_OrbOfRescription::OnItemUsed(AObsidianPlayerController
 		UE_LOG(ObLogCrafting, Warning, TEXT("Orb Of Rescription could not be used on provided [%s] Instance. "
 									"Or Skill Implicit could not be replaced with valid one (could not remove the skill "
 									" implicit or/and find a replacement.)"),
-										*GetNameSafe(UsingOntoInstance));
+										*GetNameSafe(InUsingOntoInstance));
 	}
 	return false;
 }
 
-void UObsidianUsableShard_OrbOfRescription::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+void UObsidianUsableShard_OrbOfRescription::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext)
 {
-	for(const UObsidianInventoryItemInstance* Instance : AllItems)
+	for(const UObsidianInventoryItemInstance* Instance : InAllItems)
 	{
 		if(CanUseOnItem(Instance))
 		{
@@ -45,15 +45,15 @@ void UObsidianUsableShard_OrbOfRescription::OnItemUsed_UIContext(const TArray<UO
 	}
 }
 
-bool UObsidianUsableShard_OrbOfRescription::CanUseOnItem(const UObsidianInventoryItemInstance* Instance) const
+bool UObsidianUsableShard_OrbOfRescription::CanUseOnItem(const UObsidianInventoryItemInstance* InInstance) const
 {
-	if (Instance == nullptr)
+	if (InInstance == nullptr)
 	{
 		return false;
 	}
 
-	return Instance->IsItemEquippable() &&
-			Instance->IsItemIdentified() &&
-			Instance->IsUniqueOrSet() == false &&
-			Instance->HasSkillImplicitAffix();	
+	return InInstance->IsItemEquippable() &&
+			InInstance->IsItemIdentified() &&
+			InInstance->IsUniqueOrSet() == false &&
+			InInstance->HasSkillImplicitAffix();	
 }

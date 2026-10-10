@@ -16,8 +16,8 @@ class OBSIDIAN_API UObsidianDamageExecution : public UGameplayEffectExecutionCal
 	GENERATED_BODY()
 	
 public:
-	UObsidianDamageExecution(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianDamageExecution(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 protected:
-	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
+	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& InExecutionParams, FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
 };

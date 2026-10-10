@@ -24,11 +24,11 @@ class OBSIDIAN_API UObsidianItemManagerComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:
-	UObsidianItemManagerComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianItemManagerComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
-		FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float InDeltaTime, ELevelTick InTickType,
+		FActorComponentTickFunction* InThisTickFunction) override;
 
 	FDraggedItem GetDraggedItem();
 	bool IsDraggingAnItem() const;
@@ -44,43 +44,43 @@ public:
 	bool DropItem();
 	
 	UFUNCTION(Server, Reliable)
-	void ServerAddItemToInventoryAtSlot(const FIntPoint& SlotPosition, const bool bShiftDown);
+	void ServerAddItemToInventoryAtSlot(const FIntPoint& InSlotPosition, const bool bInShiftDown);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerAddStacksFromDraggedItemToInventoryItemAtSlot(const FIntPoint& SlotPosition,
-		const int32 StacksToAddOverride = -1);
+	void ServerAddStacksFromDraggedItemToInventoryItemAtSlot(const FIntPoint& InSlotPosition,
+		const int32 InStacksToAddOverride = -1);
 
 	UFUNCTION(Server, Reliable)
-	void ServerTakeoutFromInventoryItem(const FIntPoint& SlotPosition, const int32 StacksToTake);
+	void ServerTakeoutFromInventoryItem(const FIntPoint& InSlotPosition, const int32 InStacksToTake);
 
 	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtInventorySlot(const FIntPoint& ClickedItemPosition, const FIntPoint& ClickedGridPosition);
+	void ServerReplaceItemAtInventorySlot(const FIntPoint& InClickedItemPosition, const FIntPoint& InClickedGridPosition);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* ItemToPickup);
+	void ServerGrabDroppableItemToCursor(AObsidianDroppableItem* InItemToPickup);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabInventoryItemToCursor(const FIntPoint& SlotPosition);
+	void ServerGrabInventoryItemToCursor(const FIntPoint& InSlotPosition);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerPickupItem(AObsidianDroppableItem* ItemToPickup);
+	void ServerPickupItem(AObsidianDroppableItem* InItemToPickup);
 
 	UFUNCTION(Server, Reliable)
-	void ServerTransferItemToPlayerStash(const FIntPoint& FromInventoryPosition, const FGameplayTag& ToStashTab);
+	void ServerTransferItemToPlayerStash(const FIntPoint& InFromInventoryPosition, const FGameplayTag& InToStashTab);
 	
 	/**
 	 * Equipment.
 	 */
 
 	UFUNCTION(Server, Reliable)
-	void ServerEquipItemAtSlot(const FGameplayTag& SlotTag);
+	void ServerEquipItemAtSlot(const FGameplayTag& InSlotTag);
 
 	UFUNCTION(Server, Reliable)
-	void ServerGrabEquippedItemToCursor(const FGameplayTag& SlotTag);
+	void ServerGrabEquippedItemToCursor(const FGameplayTag& InSlotTag);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtEquipmentSlot(const FGameplayTag& SlotTag,
-		const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
+	void ServerReplaceItemAtEquipmentSlot(const FGameplayTag& InSlotTag,
+		const FGameplayTag& InEquipSlotTagOverride = FGameplayTag::EmptyTag);
 
 	UFUNCTION(Server, Reliable)
 	void ServerWeaponSwap();
@@ -90,26 +90,26 @@ public:
 	 */
 
 	UFUNCTION(Server, Reliable)
-	void ServerAddItemToStashTabAtSlot(const FObsidianItemPosition& AtPosition, const bool bShiftDown);
+	void ServerAddItemToStashTabAtSlot(const FObsidianItemPosition& InAtPosition, const bool bInShiftDown);
 
 	UFUNCTION(Server, Reliable)
-	void ServerAddStacksFromDraggedItemToStashedItemAtSlot(const FObsidianItemPosition& AtPosition,
-		const int32 StacksToAddOverride = -1);
+	void ServerAddStacksFromDraggedItemToStashedItemAtSlot(const FObsidianItemPosition& InAtPosition,
+		const int32 InStacksToAddOverride = -1);
 	
 	UFUNCTION(Server, Reliable)
-	void ServerGrabStashedItemToCursor(const FObsidianItemPosition& FromPosition);
+	void ServerGrabStashedItemToCursor(const FObsidianItemPosition& InFromPosition);
 
 	UFUNCTION(Server, Reliable)
-	void ServerTransferItemToInventory(const FObsidianItemPosition& FromStashPosition);
+	void ServerTransferItemToInventory(const FObsidianItemPosition& InFromStashPosition);
 
 	UFUNCTION(Server, Reliable)
-	void ServerReplaceItemAtStashPosition(const FObsidianItemPosition& AtStashPosition);
+	void ServerReplaceItemAtStashPosition(const FObsidianItemPosition& InAtStashPosition);
 
 	UFUNCTION(Server, Reliable)
-	void ServerTakeoutFromStashedItem(const FObsidianItemPosition& AtStashPosition, const int32 StacksToTake);
+	void ServerTakeoutFromStashedItem(const FObsidianItemPosition& InAtStashPosition, const int32 InStacksToTake);
 	
 	//~ Start of UObject interface
-	virtual bool ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags) override;
+	virtual bool ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch, FReplicationFlags* InRepFlags) override;
 	virtual void ReadyForReplication() override;
 	//~ End of UObject interface
 
@@ -119,23 +119,23 @@ public:
 
 protected:
 	UFUNCTION()
-	void OnRep_DraggedItem(const FDraggedItem& OldDraggedItem);
+	void OnRep_DraggedItem(const FDraggedItem& InOldDraggedItem);
 	
 	void DragItem() const;
 	
-	void StartDraggingItem(const AController* Controller);
-	void StopDraggingItem(const AController* Controller);
+	void StartDraggingItem(const AController* InController);
+	void StopDraggingItem(const AController* InController);
 
-	void UpdateDraggedItem(const FObsidianItemOperationResult& OperationResult, const int32 CachedNumberOfStack,
-		const AController* ForController);
-	void UpdateDraggedItem(const FObsidianAddingStacksResult& OperationResult, const int32 CachedNumberOfStack,
-		const AController* ForController);
+	void UpdateDraggedItem(const FObsidianItemOperationResult& InOperationResult, const int32 InCachedNumberOfStack,
+		const AController* InForController);
+	void UpdateDraggedItem(const FObsidianAddingStacksResult& InOperationResult, const int32 InCachedNumberOfStack,
+		const AController* InForController);
 
 	/**
 	 * This is a very specific function that is used to determine if the dragged item was changed in a result of replacing it with
 	 * another item in the inventory in OnRep_DraggedItem. If it sounds useful be careful when using it.
 	 */
-	bool DraggedItemWasReplaced(const FDraggedItem& OldDraggedItem) const;
+	bool DraggedItemWasReplaced(const FDraggedItem& InOldDraggedItem) const;
 	void UpdateStacksOnDraggedItemWidget(const int32 InStacks);
 	
 	/**
@@ -154,10 +154,10 @@ protected:
 	float DropRadius = 200.0f;
 
 private:
-	bool VerifyPickupRange(const AObsidianDroppableItem* ItemToPickUp) const;
+	bool VerifyPickupRange(const AObsidianDroppableItem* InItemToPickUp) const;
 	/** Stash actions are only allowed when the owning Player stands next to some Player Stash. */
 	bool IsOwnerInPlayerStashRange() const;
-	bool IsOwnerInInteractionRange(const AActor* InteractionActor, const float InteractionRadius) const;
+	bool IsOwnerInInteractionRange(const AActor* InInteractionActor, const float InInteractionRadius) const;
 
 private:
 

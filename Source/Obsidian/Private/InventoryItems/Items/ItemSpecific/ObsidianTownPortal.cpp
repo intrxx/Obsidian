@@ -11,8 +11,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianTownPortal::AObsidianTownPortal(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianTownPortal::AObsidianTownPortal(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = false;
 	PrimaryActorTick.bStartWithTickEnabled = false;
@@ -103,14 +103,14 @@ float AObsidianTownPortal::GetInteractionRadius()
 	return InteractionRadius;
 }
 
-void AObsidianTownPortal::Interact(AObsidianPlayerController* InteractingPlayerController)
+void AObsidianTownPortal::Interact(AObsidianPlayerController* InInteractingPlayerController)
 {
-	if(InteractingPlayerController == nullptr)
+	if(InInteractingPlayerController == nullptr)
 	{
 		return;
 	}
 
-	if(UWorld* World = InteractingPlayerController->GetWorld())
+	if(UWorld* World = InInteractingPlayerController->GetWorld())
 	{
 		// Temp
 		World->ServerTravel(FString("/Game/Obsidian/Levels/TestLevels/L_Town_Test?listen"));

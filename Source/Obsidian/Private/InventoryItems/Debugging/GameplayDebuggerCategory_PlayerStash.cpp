@@ -44,14 +44,14 @@ TSharedRef<FGameplayDebuggerCategory> FGameplayDebuggerCategory_PlayerStash::Mak
 	return MakeShareable(new FGameplayDebuggerCategory_PlayerStash());
 }
 
-void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* OwnerPC, AActor* DebugActor)
+void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* InOwnerPC, AActor* InDebugActor)
 {
 	DataPack.Items.Empty();
 	DataPack.Grid.GridStateMap.Reset();
 	DataPack.Slots.Empty();
 	DataPack.StashTabType = EDebugStashTabType::DSTT_None;
 	
-	if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(OwnerPC))
+	if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(InOwnerPC))
 	{
 		if(const AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
@@ -59,7 +59,7 @@ void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* Owner
 		}
 	}
 	
-	if(UObsidianPlayerStashComponent* PlayerStashComponent = OwnerPC->FindComponentByClass<UObsidianPlayerStashComponent>())
+	if(UObsidianPlayerStashComponent* PlayerStashComponent = InOwnerPC->FindComponentByClass<UObsidianPlayerStashComponent>())
 	{
 		DataPack.StashTabTag = PlayerStashComponent->GetActiveStashTag();
 		if (DataPack.StashTabTag == FGameplayTag::EmptyTag)
@@ -122,34 +122,34 @@ void FGameplayDebuggerCategory_PlayerStash::CollectData(APlayerController* Owner
 	}
 }
 
-void FGameplayDebuggerCategory_PlayerStash::DrawData(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext)
+void FGameplayDebuggerCategory_PlayerStash::DrawData(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext)
 {
 	if (LastDrawDataEndSize <= 0.0f)
 	{
-		LastDrawDataEndSize = CanvasContext.Canvas->SizeY - CanvasContext.CursorY - CanvasContext.CursorX;
+		LastDrawDataEndSize = InCanvasContext.Canvas->SizeY - InCanvasContext.CursorY - InCanvasContext.CursorX;
 	}
 
-	const float ThisDrawDataStartPos = CanvasContext.CursorY;
+	const float ThisDrawDataStartPos = InCanvasContext.CursorY;
 	
-	const FVector2D BackgroundPos{CanvasContext.CursorX, CanvasContext.CursorY};
-	const FVector2D BackgroundSize{CanvasContext.Canvas->SizeX -  (2.0f * CanvasContext.CursorX), LastDrawDataEndSize};
+	const FVector2D BackgroundPos{InCanvasContext.CursorX, InCanvasContext.CursorY};
+	const FVector2D BackgroundSize{InCanvasContext.Canvas->SizeX -  (2.0f * InCanvasContext.CursorX), LastDrawDataEndSize};
 
 	FCanvasTileItem Background(FVector2D(0.0f), BackgroundSize, PlayerStash::Debug::BackgroundColor);
 	Background.BlendMode = SE_BLEND_Translucent;
 	
-	CanvasContext.DrawItem(Background, BackgroundPos.X, BackgroundPos.Y);
+	InCanvasContext.DrawItem(Background, BackgroundPos.X, BackgroundPos.Y);
 
-	DrawItems(OwnerPC, CanvasContext);
+	DrawItems(InOwnerPC, InCanvasContext);
 
-	LastDrawDataEndSize = CanvasContext.CursorY - ThisDrawDataStartPos;
+	LastDrawDataEndSize = InCanvasContext.CursorY - ThisDrawDataStartPos;
 }
 
-void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC, FGameplayDebuggerCanvasContext& CanvasContext) const
+void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const
 {
 	using namespace PlayerStash::Debug;
 	
-	const float CanvasWidth = CanvasContext.Canvas->SizeX;
-	Algo::Sort(DataPack.Items, [](const FRepData::FStashedItemsDebug& ItemOne, const FRepData::FStashedItemsDebug& ItemTwo) { return ItemOne.Name < ItemTwo.Name; });
+	const float CanvasWidth = InCanvasContext.Canvas->SizeX;
+	Algo::Sort(DataPack.Items, [](const FRepData::FStashedItemsDebug& InItemOne, const FRepData::FStashedItemsDebug& InItemTwo) { return InItemOne.Name < InItemTwo.Name; });
 
 	constexpr float Padding = 10.0f;
 	static float ObjNameSize = 0.0f;
@@ -166,15 +166,15 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 		float TempSizeY = 0.0f;
 
 		// We have to actually use representative strings because of the kerning
-		CanvasContext.MeasureString(*LongestDebugObjectName, ObjNameSize, TempSizeY);
-		CanvasContext.MeasureString(*LongestDebugObjectName, ItemNameSize, TempSizeY);
-		CanvasContext.MeasureString(*LongestDebugObjectName, UniqueItemIDSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("current stack count: 00"), CurrentStackCountNameSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("max stack count: 00"), MaxStackCountSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("limit stack count: 00"), LimitStackCountSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("grid size: 00"), GridSpanSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("grid location: 00"), CurrentGridLocationSize, TempSizeY);
-		CanvasContext.MeasureString(TEXT("Player Stash is Closed, to view items open it."), NoItemsTextSize, TempSizeY);
+		InCanvasContext.MeasureString(*LongestDebugObjectName, ObjNameSize, TempSizeY);
+		InCanvasContext.MeasureString(*LongestDebugObjectName, ItemNameSize, TempSizeY);
+		InCanvasContext.MeasureString(*LongestDebugObjectName, UniqueItemIDSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("current stack count: 00"), CurrentStackCountNameSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("max stack count: 00"), MaxStackCountSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("limit stack count: 00"), LimitStackCountSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("grid size: 00"), GridSpanSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("grid location: 00"), CurrentGridLocationSize, TempSizeY);
+		InCanvasContext.MeasureString(TEXT("Player Stash is Closed, to view items open it."), NoItemsTextSize, TempSizeY);
 		ObjNameSize += Padding;
 	}
 	const float SecondArgConstX = ObjNameSize * 0.7;
@@ -190,9 +190,9 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 	const int NumColumns = FMath::Max(1, FMath::FloorToInt(CanvasWidth / ColumnWidth));
 
 	bool bStashActive = DataPack.bStashActive;
-	if (OwnerPC->HasAuthority() == false) // If we are on the client the check failed on the Server since we check the HUD, recheck here
+	if (InOwnerPC->HasAuthority() == false) // If we are on the client the check failed on the Server since we check the HUD, recheck here
 	{
-		if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(OwnerPC))
+		if(const AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(InOwnerPC))
 		{
 			if(const AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 			{
@@ -203,80 +203,80 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 	
 	if (bStashActive == false)
 	{
-		CanvasContext.PrintAt((CanvasWidth / 2) - (NoItemsTextSize / 2), CanvasContext.Canvas->SizeY / 2,
+		InCanvasContext.PrintAt((CanvasWidth / 2) - (NoItemsTextSize / 2), InCanvasContext.Canvas->SizeY / 2,
 			FString::Printf(TEXT("{red}Player Stash is Closed, to view items open it.")));
 		return;
 	}
 
-	float TopCursorY = CanvasContext.CursorY;
-	float TopCursorX = CanvasContext.CursorX;
-	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Stashed Items:")));
+	float TopCursorY = InCanvasContext.CursorY;
+	float TopCursorX = InCanvasContext.CursorX;
+	InCanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Stashed Items:")));
 	TopCursorX += 300.0f;
 
 	const int32 ItemsNum = DataPack.Items.Num();
-	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Owned Items Count: {yellow}%d"), ItemsNum));
+	InCanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Owned Items Count: {yellow}%d"), ItemsNum));
 	TopCursorX += 300.0f;
 
-	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Stash Gameplay Tag: {yellow}%s"), *DataPack.StashTabTag.GetTagName().ToString()));
-	CanvasContext.MoveToNewLine();
+	InCanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Stash Gameplay Tag: {yellow}%s"), *DataPack.StashTabTag.GetTagName().ToString()));
+	InCanvasContext.MoveToNewLine();
 	
-	CanvasContext.MoveToNewLine();
-	TopCursorX = CanvasContext.CursorX;
-	TopCursorY = CanvasContext.CursorY;
+	InCanvasContext.MoveToNewLine();
+	TopCursorX = InCanvasContext.CursorX;
+	TopCursorY = InCanvasContext.CursorY;
 	
-	CanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Item Debug Name:")));
-	CanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Unique Item ID:")));
-	CanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
-	CanvasContext.PrintAt(TopCursorX + FourthArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Stack Count:")));
-	CanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Max Item Stack Count:")));
-	CanvasContext.PrintAt(TopCursorX + SixthArgConstX, TopCursorY, FString::Printf(TEXT("Item Stack Count Inventory Limit:")));
-	CanvasContext.PrintAt(TopCursorX + SeventhArgConstX, TopCursorY, FString::Printf(TEXT("Item Grid Size:")));
-	CanvasContext.PrintAt(TopCursorX + EighthArgConstX, TopCursorY, FString::Printf(TEXT("Item Location:")));
+	InCanvasContext.PrintAt(TopCursorX, TopCursorY, FString::Printf(TEXT("Item Debug Name:")));
+	InCanvasContext.PrintAt(TopCursorX + SecondArgConstX, TopCursorY, FString::Printf(TEXT("Unique Item ID:")));
+	InCanvasContext.PrintAt(TopCursorX + ThirdArgConstX, TopCursorY, FString::Printf(TEXT("Item Definition Class:")));
+	InCanvasContext.PrintAt(TopCursorX + FourthArgConstX, TopCursorY, FString::Printf(TEXT("Current Item Stack Count:")));
+	InCanvasContext.PrintAt(TopCursorX + FifthArgConstX, TopCursorY, FString::Printf(TEXT("Max Item Stack Count:")));
+	InCanvasContext.PrintAt(TopCursorX + SixthArgConstX, TopCursorY, FString::Printf(TEXT("Item Stack Count Inventory Limit:")));
+	InCanvasContext.PrintAt(TopCursorX + SeventhArgConstX, TopCursorY, FString::Printf(TEXT("Item Grid Size:")));
+	InCanvasContext.PrintAt(TopCursorX + EighthArgConstX, TopCursorY, FString::Printf(TEXT("Item Location:")));
 
-	CanvasContext.MoveToNewLine();
-	CanvasContext.CursorX += Padding;
+	InCanvasContext.MoveToNewLine();
+	InCanvasContext.CursorX += Padding;
 	for (const FRepData::FStashedItemsDebug& ItemData : DataPack.Items)
 	{
-		float CursorX = CanvasContext.CursorX;
-		float CursorY = CanvasContext.CursorY;
+		float CursorX = InCanvasContext.CursorX;
+		float CursorY = InCanvasContext.CursorY;
 
 		// Print positions manually to align them properly
-		CanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, ItemData.Name.Left(35));
-		CanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Emerald, ItemData.ItemUniqueID);
-		CanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FColor::Emerald, ItemData.Item);
-		CanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
-		CanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
-		CanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
-		CanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSpan.X, ItemData.GridSpan.Y));
+		InCanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, ItemData.Name.Left(35));
+		InCanvasContext.PrintAt(CursorX + SecondArgConstX, CursorY, FColor::Emerald, ItemData.ItemUniqueID);
+		InCanvasContext.PrintAt(CursorX + ThirdArgConstX, CursorY, FColor::Emerald, ItemData.Item);
+		InCanvasContext.PrintAt(CursorX + FourthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.CurrentStackCount));
+		InCanvasContext.PrintAt(CursorX + FifthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.MaxStackCount));
+		InCanvasContext.PrintAt(CursorX + SixthArgConstX, CursorY, FString::Printf(TEXT("{grey}Count: {yellow}%d"), ItemData.LimitStackCount));
+		InCanvasContext.PrintAt(CursorX + SeventhArgConstX, CursorY, FString::Printf(TEXT("{grey}Size: {yellow}[%d, %d]"), ItemData.GridSpan.X, ItemData.GridSpan.Y));
 		if (ItemData.CurrentGridLocation != FIntPoint::NoneValue)
 		{
-			CanvasContext.PrintAt(CursorX + EighthArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
+			InCanvasContext.PrintAt(CursorX + EighthArgConstX, CursorY, FString::Printf(TEXT("{grey}Location: {yellow}[%d, %d]"), ItemData.CurrentGridLocation.X, ItemData.CurrentGridLocation.Y));
 		}
 		else if (ItemData.CurrentSlotTag != FGameplayTag::EmptyTag)
 		{
-			CanvasContext.PrintAt(CursorX + EighthArgConstX, CursorY, FString::Printf(TEXT("{grey}Slot Tag: {yellow}%s"), *ItemData.CurrentSlotTag.GetTagName().ToString()));
+			InCanvasContext.PrintAt(CursorX + EighthArgConstX, CursorY, FString::Printf(TEXT("{grey}Slot Tag: {yellow}%s"), *ItemData.CurrentSlotTag.GetTagName().ToString()));
 		}
 		
 		// PrintAt would have reset these values, restore them.
-		CanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
-		CanvasContext.CursorY = CursorY;
+		InCanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
+		InCanvasContext.CursorY = CursorY;
 
 		// If we're going to overflow, go to the next line...
-		if (CanvasContext.CursorX + ColumnWidth >= CanvasWidth)
+		if (InCanvasContext.CursorX + ColumnWidth >= CanvasWidth)
 		{
-			CanvasContext.MoveToNewLine();
-			CanvasContext.CursorX += Padding;
+			InCanvasContext.MoveToNewLine();
+			InCanvasContext.CursorX += Padding;
 		}
 	}
 
 	// End the row with a newline
-	if (CanvasContext.CursorX != CanvasContext.DefaultX)
+	if (InCanvasContext.CursorX != InCanvasContext.DefaultX)
 	{
-		CanvasContext.MoveToNewLine();
+		InCanvasContext.MoveToNewLine();
 	}
 
 	// End the category with a newline to separate
-	CanvasContext.MoveToNewLine();
+	InCanvasContext.MoveToNewLine();
 
 	if (DataPack.StashTabType == EDebugStashTabType::DSTT_Grid)
 	{
@@ -290,11 +290,11 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 		
 		float DefaultTileX = ((CanvasWidth / 2) - StateMapTileSize.X) + (Padding * 2);
 		
-		CanvasContext.PrintAt(DefaultTileX, CanvasContext.CursorY, FString::Printf(TEXT("Grid Stash Tab State Map:")));
-		CanvasContext.MoveToNewLine();
+		InCanvasContext.PrintAt(DefaultTileX, InCanvasContext.CursorY, FString::Printf(TEXT("Grid Stash Tab State Map:")));
+		InCanvasContext.MoveToNewLine();
 		
 		float TileX = DefaultTileX;
-		float TileY = CanvasContext.CursorY;
+		float TileY = InCanvasContext.CursorY;
 		constexpr float TilePadding = 5.0f;
 		
 		int32 CurrentRow = 1;
@@ -302,7 +302,7 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 		{
 			if(CurrentRow == Pair.Key.Y)
 			{
-				TileY = CanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
+				TileY = InCanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
 				TileX = DefaultTileX;
 				CurrentRow++;
 			}
@@ -310,53 +310,53 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 			if(Pair.Value == true)
 			{
 				FCanvasTileItem TakenField = {FVector2D(TileX, TileY), StateMapTileSize, TakenColor};
-				CanvasContext.DrawItem(TakenField, TileX, TileY);
+				InCanvasContext.DrawItem(TakenField, TileX, TileY);
 			}
 			else
 			{
 				FCanvasTileItem FreeField = {FVector2D(TileX, TileY), StateMapTileSize, FreeColor};
-				CanvasContext.DrawItem(FreeField, TileX, TileY);
+				InCanvasContext.DrawItem(FreeField, TileX, TileY);
 			}
 
 			FVector2D ScreenPos(TileX + 3.0f, TileY + 3.0f);
 			FString Text = FString::Printf(TEXT("[%d, %d]"), Pair.Key.X, Pair.Key.Y);
 			FCanvasTextItem TextItem(ScreenPos, FText::FromString(Text), GEngine->GetSmallFont(), FLinearColor::White);
 			TextItem.Scale = FontScale;
-			CanvasContext.Canvas->DrawItem(TextItem);
+			InCanvasContext.Canvas->DrawItem(TextItem);
 			
 			TileX += StateMapTileSize.X + TilePadding;
 		}
 		
-		CanvasContext.CursorY = CanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
-		CanvasContext.CursorX = Padding;
-		CanvasContext.PrintAt(DefaultTileX, CanvasContext.CursorY, FString::Printf(TEXT("{grey}Taken fields are painted red, free fields are green.")));
-		CanvasContext.MoveToNewLine();
+		InCanvasContext.CursorY = InCanvasContext.CursorY + (StateMapTileSize.Y + TilePadding) * CurrentRow;
+		InCanvasContext.CursorX = Padding;
+		InCanvasContext.PrintAt(DefaultTileX, InCanvasContext.CursorY, FString::Printf(TEXT("{grey}Taken fields are painted red, free fields are green.")));
+		InCanvasContext.MoveToNewLine();
 	}
 	else if (DataPack.StashTabType == EDebugStashTabType::DSTT_Slots)
 	{
-		CanvasContext.Print(TEXT("Equipment Slots:"));
-		CanvasContext.MoveToNewLine();
+		InCanvasContext.Print(TEXT("Equipment Slots:"));
+		InCanvasContext.MoveToNewLine();
 
-		float SecondCategoryTopX = CanvasContext.CursorX;
-		float SecondCategoryTopY = CanvasContext.CursorY;
+		float SecondCategoryTopX = InCanvasContext.CursorX;
+		float SecondCategoryTopY = InCanvasContext.CursorY;
 		
-		CanvasContext.PrintAt(SecondCategoryTopX, SecondCategoryTopY, FString::Printf(TEXT("Slot Tag:")));
-		CanvasContext.PrintAt(SecondCategoryTopX + ThirdArgConstX, SecondCategoryTopY, FString::Printf(TEXT("Accepted Equipment Categories:")));
+		InCanvasContext.PrintAt(SecondCategoryTopX, SecondCategoryTopY, FString::Printf(TEXT("Slot Tag:")));
+		InCanvasContext.PrintAt(SecondCategoryTopX + ThirdArgConstX, SecondCategoryTopY, FString::Printf(TEXT("Accepted Equipment Categories:")));
 		float CustomForthArgConstX = (ThirdArgConstX + CanvasWidth / 3) + 150.0f;
-		CanvasContext.PrintAt(SecondCategoryTopX + CustomForthArgConstX, SecondCategoryTopY, FString::Printf(TEXT("Banned Equipment Categories:")));
+		InCanvasContext.PrintAt(SecondCategoryTopX + CustomForthArgConstX, SecondCategoryTopY, FString::Printf(TEXT("Banned Equipment Categories:")));
 		
-		CanvasContext.MoveToNewLine();
-		CanvasContext.CursorX += Padding;
+		InCanvasContext.MoveToNewLine();
+		InCanvasContext.CursorX += Padding;
 
 		int32 AcceptedIncreasedLines = 0;
 		int32 BannedIncreasedLines = 0;
 		for(const FRepData::FStashSlotsDebug& EquipmentSlot : DataPack.Slots)
 		{
-			float CursorX = CanvasContext.CursorX;
-			float CursorY = CanvasContext.CursorY;
+			float CursorX = InCanvasContext.CursorX;
+			float CursorY = InCanvasContext.CursorY;
 
 			// Print positions manually to align them properly
-			CanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, EquipmentSlot.SlotTag);
+			InCanvasContext.PrintAt(CursorX, CursorY, FColor::Cyan, EquipmentSlot.SlotTag);
 			
 			float CachedCursorX = CursorX;
 			float CachedCursorY = CursorY;
@@ -364,68 +364,68 @@ void FGameplayDebuggerCategory_PlayerStash::DrawItems(APlayerController* OwnerPC
 			{
 				float SizeX;
 				float SizeY;
-				CanvasContext.MeasureString(AcceptedTagString, SizeX, SizeY);
+				InCanvasContext.MeasureString(AcceptedTagString, SizeX, SizeY);
 
 				if (CachedCursorX + SizeX >= CursorX + CustomForthArgConstX - 500.0f)
 				{
-					CachedCursorY += CanvasContext.GetLineHeight();
+					CachedCursorY += InCanvasContext.GetLineHeight();
 					CachedCursorX = CursorX;
 					AcceptedIncreasedLines++;
 				}
 				
-				CanvasContext.PrintAt(CachedCursorX + ThirdArgConstX, CachedCursorY, AcceptedTagString);
+				InCanvasContext.PrintAt(CachedCursorX + ThirdArgConstX, CachedCursorY, AcceptedTagString);
 				CachedCursorX += SizeX + Padding;
 			}
 			
 			CachedCursorX = CursorX;
-			CachedCursorY += CanvasContext.GetLineHeight();
+			CachedCursorY += InCanvasContext.GetLineHeight();
 			for(const FString& BannedTagString : EquipmentSlot.BannedTags)
 			{
 				float SizeX;
 				float SizeY;
-				CanvasContext.MeasureString(BannedTagString, SizeX, SizeY);
+				InCanvasContext.MeasureString(BannedTagString, SizeX, SizeY);
 				
 				if (CachedCursorX + SizeX >= CanvasWidth)
 				{
-					CachedCursorY += CanvasContext.GetLineHeight();
+					CachedCursorY += InCanvasContext.GetLineHeight();
 					CachedCursorX = CursorX;
 					BannedIncreasedLines++;
 				}
 				
-				CanvasContext.PrintAt(CachedCursorX + CustomForthArgConstX, CachedCursorY, BannedTagString);
+				InCanvasContext.PrintAt(CachedCursorX + CustomForthArgConstX, CachedCursorY, BannedTagString);
 				CachedCursorX += SizeX + Padding;
 			}
 			
 			// PrintAt would have reset these values, restore them.
-			CanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
-			CanvasContext.CursorY = CursorY + CanvasContext.GetLineHeight();
+			InCanvasContext.CursorX = CursorX + (CanvasWidth / NumColumns);
+			InCanvasContext.CursorY = CursorY + InCanvasContext.GetLineHeight();
 
 			int32 NumberOfEntriesInLine = FMath::Max<int32>(AcceptedIncreasedLines, BannedIncreasedLines);
 			for(int i = 0; i < NumberOfEntriesInLine; i++)
 			{
-				CanvasContext.MoveToNewLine();
+				InCanvasContext.MoveToNewLine();
 			}
 			AcceptedIncreasedLines = 0;
 			BannedIncreasedLines = 0;
 			
 			// If we're going to overflow, go to the next line...
-			if (CanvasContext.CursorX + ColumnWidth >= CanvasWidth)
+			if (InCanvasContext.CursorX + ColumnWidth >= CanvasWidth)
 			{
-				CanvasContext.MoveToNewLine();
-				CanvasContext.CursorX += Padding;
+				InCanvasContext.MoveToNewLine();
+				InCanvasContext.CursorX += Padding;
 			}
 		}
 	}
 }
 
-void FGameplayDebuggerCategory_PlayerStash::FRepData::Serialize(FArchive& Ar)
+void FGameplayDebuggerCategory_PlayerStash::FRepData::Serialize(FArchive& InOutAr)
 {
 	int32 NumItems = Items.Num();
-	Ar << NumItems;
+	InOutAr << NumItems;
 	int32 NumSlots = Slots.Num();
-	Ar << NumSlots;
+	InOutAr << NumSlots;
 	
-	if(Ar.IsLoading())
+	if(InOutAr.IsLoading())
 	{
 		Items.SetNum(NumItems);
 		Slots.SetNum(NumSlots);
@@ -433,28 +433,28 @@ void FGameplayDebuggerCategory_PlayerStash::FRepData::Serialize(FArchive& Ar)
 
 	for(int32 i = 0; i < NumItems; i++)
 	{
-		Ar << Items[i].Name;
-		Ar << Items[i].Item;
-		Ar << Items[i].CurrentStackCount;
-		Ar << Items[i].MaxStackCount;
-		Ar << Items[i].LimitStackCount;
-		Ar << Items[i].GridSpan;
-		Ar << Items[i].CurrentGridLocation;
-		Ar << Items[i].CurrentSlotTag;
+		InOutAr << Items[i].Name;
+		InOutAr << Items[i].Item;
+		InOutAr << Items[i].CurrentStackCount;
+		InOutAr << Items[i].MaxStackCount;
+		InOutAr << Items[i].LimitStackCount;
+		InOutAr << Items[i].GridSpan;
+		InOutAr << Items[i].CurrentGridLocation;
+		InOutAr << Items[i].CurrentSlotTag;
 	}
 
 	for(int32 i = 0; i < NumSlots; i++)
 	{
-		Ar << Slots[i].SlotTag;
-		Ar << Slots[i].AcceptedTags;
-		Ar << Slots[i].BannedTags;
+		InOutAr << Slots[i].SlotTag;
+		InOutAr << Slots[i].AcceptedTags;
+		InOutAr << Slots[i].BannedTags;
 	}
 
-	Ar << bStashActive;
-	Ar << StashTabTag;
-	Ar << StashTabType;
+	InOutAr << bStashActive;
+	InOutAr << StashTabTag;
+	InOutAr << StashTabType;
 	
-	Ar << Grid.GridStateMap;
+	InOutAr << Grid.GridStateMap;
 }
 
 #endif // WITH_GAMEPLAY_DEBUGGER_MENU

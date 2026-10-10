@@ -70,19 +70,19 @@ class OBSIDIAN_API UObsidianAdvancedCombatComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianAdvancedCombatComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianAdvancedCombatComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintPure, Category = "Obsidian Advanced Combat")
-	static UObsidianAdvancedCombatComponent* FindAdvancedCombatComponent(const AActor* Owner)
+	static UObsidianAdvancedCombatComponent* FindAdvancedCombatComponent(const AActor* InOwner)
 	{
-		return (Owner ? Owner->FindComponentByClass<UObsidianAdvancedCombatComponent>() : nullptr);
+		return (InOwner ? InOwner->FindComponentByClass<UObsidianAdvancedCombatComponent>() : nullptr);
 	}
 
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float InDeltaTime, ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction) override;
 
 	/** Starts the trace on the Component. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void StartTrace(const FObsidianAdvancedTraceParams& TraceParams);
+	void StartTrace(const FObsidianAdvancedTraceParams& InTraceParams);
 
 	/** Stops the trace, clearing all variables. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
@@ -98,7 +98,7 @@ public:
 
 	/** Removes ignored actor. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void RemoveIgnoredActor(AActor* IgnoredActorToRemove);
+	void RemoveIgnoredActor(AActor* InIgnoredActorToRemove);
 	
 	/** Removes all ignored actors. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
@@ -106,7 +106,7 @@ public:
 
 	/** Adds Traced Mesh to the map. It is necessary to state the type of the mesh which can be then paired with proper sockets. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void AddTracedMesh(UPrimitiveComponent* InTracedMesh, const EObsidianTracedMeshType TracedMeshType);
+	void AddTracedMesh(UPrimitiveComponent* InTracedMesh, const EObsidianTracedMeshType InTracedMeshType);
 
 	/** Adds all traced meshes to the map. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
@@ -114,7 +114,7 @@ public:
 
 	/** Removes all meshes with a given type. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
-	void RemoveTracedMeshWithType(const EObsidianTracedMeshType TracedMeshType);
+	void RemoveTracedMeshWithType(const EObsidianTracedMeshType InTracedMeshType);
 
 	/** Removes all traced meshes. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
@@ -185,9 +185,9 @@ protected:
 private:
 	void TickTrace();
 
-	void GetSocketsLocationsByMesh(const UPrimitiveComponent* Mesh, FVector& OutStartSocketLoc, FVector& OutEndSocketLoc) const;
-	void HandleHit(const bool bHit, const TArray<FHitResult>& HitResults);
-	void CalculateNextTracePoint(const int32 Index, const int32 Count, const FVector& Start, const FVector& End, FVector& OutTracePoint);
+	void GetSocketsLocationsByMesh(const UPrimitiveComponent* InMesh, FVector& OutStartSocketLoc, FVector& OutEndSocketLoc) const;
+	void HandleHit(const bool bInHit, const TArray<FHitResult>& InHitResults);
+	void CalculateNextTracePoint(const int32 InIndex, const int32 InCount, const FVector& InStart, const FVector& InEnd, FVector& OutTracePoint);
 
 	void SimpleLineTrace();
 	void SemiComplexLineTrace();

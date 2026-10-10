@@ -36,7 +36,7 @@ struct FObsidianAbilityTagRelationship
 	FGameplayTagContainer ActivationBlockedTags;
 
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 };
 
@@ -50,16 +50,16 @@ class OBSIDIAN_API UOAbilityTagRelationshipMapping : public UDataAsset
 
 public:
 	/** Given a set of ability tags, parse the tag relationship and fill out tags to block and cancel */
-	void GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagToCancel) const;
+	void GetAbilityTagsToBlockAndCancel(const FGameplayTagContainer& InAbilityTags, FGameplayTagContainer* OutTagsToBlock, FGameplayTagContainer* OutTagToCancel) const;
 
 	/** Given a set of ability tags, add additional required and blocking tags */
-	void GetRequiredAndBlockedActivationTags(const FGameplayTagContainer& AbilityTags, FGameplayTagContainer* OutActivationRequiredTags, FGameplayTagContainer* OutActivationBlockedTags) const;
+	void GetRequiredAndBlockedActivationTags(const FGameplayTagContainer& InAbilityTags, FGameplayTagContainer* OutActivationRequiredTags, FGameplayTagContainer* OutActivationBlockedTags) const;
 
 	/** Returns true if the specified ability tags are canceled by the passed in action tag */
-	bool IsAbilityCanceledByTag(const FGameplayTagContainer& AbilityTags, const FGameplayTag& ActionTag) const;
+	bool IsAbilityCanceledByTag(const FGameplayTagContainer& InAbilityTags, const FGameplayTag& InActionTag) const;
 
 #if WITH_EDITOR
-	EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 
 private:

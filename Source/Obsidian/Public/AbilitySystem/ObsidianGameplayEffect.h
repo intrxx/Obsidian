@@ -16,6 +16,6 @@ class OBSIDIAN_API UObsidianGameplayEffect : public UGameplayEffect
 	GENERATED_BODY()
 
 public:
-	UObsidianGameplayEffect(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianGameplayEffect(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 };

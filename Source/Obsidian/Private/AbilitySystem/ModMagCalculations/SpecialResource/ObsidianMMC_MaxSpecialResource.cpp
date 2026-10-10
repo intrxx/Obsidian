@@ -5,7 +5,7 @@
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 
-float UObsidianMMC_MaxSpecialResource::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const
+float UObsidianMMC_MaxSpecialResource::CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const
 {
 	// OBS-79
 	// IObsidianCombatInterface* CombatInterface = Cast<IObsidianCombatInterface>(Spec.GetContext().GetSourceObject());

@@ -220,7 +220,7 @@ void UObsidianCharacterScreen::InitCharacterScreen()
 	}
 }
 
-void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveInfo>& SaveInfos)
+void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveInfo>& InSaveInfos)
 {
 	APlayerController* PlayerController = UGameplayStatics::GetPlayerController(this, 0);
 	if(PlayerController == nullptr)
@@ -231,7 +231,7 @@ void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveI
 	checkf(CharacterEntryWidgetClass, TEXT("CharacterEntryWidgetClass is invalid in UObsidianCharacterScreen::PopulateCharacterScreen."));
 	if (CharacterEntryWidgetClass)
 	{
-		for (const FObsidianHeroSaveInfo& SaveInfo : SaveInfos)
+		for (const FObsidianHeroSaveInfo& SaveInfo : InSaveInfos)
 		{
 			UObsidianCharacterEntry* Entry = CreateWidget<UObsidianCharacterEntry>(PlayerController, CharacterEntryWidgetClass);
 			Entry->InitializeCharacterEntry(SaveInfo.SaveID, SaveInfo.HeroDescription.HeroName, SaveInfo.HeroDescription.HeroLevel,
@@ -246,7 +246,7 @@ void UObsidianCharacterScreen::CreateHeroEntries(const TArray<FObsidianHeroSaveI
 	InitCharacterScreen();
 }
 
-void UObsidianCharacterScreen::OnPlayHeroLoadFinished(UObsidianHeroSaveGame* SaveObject, bool bSuccess)
+void UObsidianCharacterScreen::OnPlayHeroLoadFinished(UObsidianHeroSaveGame* InSaveObject, bool bInSuccess)
 {
 	if (const UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -256,7 +256,7 @@ void UObsidianCharacterScreen::OnPlayHeroLoadFinished(UObsidianHeroSaveGame* Sav
 		}
 	}
 	
-	if (bSuccess && SaveObject)
+	if (bInSuccess && InSaveObject)
 	{
 		if (bOnline)
 		{
@@ -270,14 +270,14 @@ void UObsidianCharacterScreen::OnPlayHeroLoadFinished(UObsidianHeroSaveGame* Sav
 	}	
 }
 
-void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacterEntry* EntryClicked)
+void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacterEntry* InEntryClicked)
 {
-	if(EntryClicked == nullptr)
+	if(InEntryClicked == nullptr)
 	{
 		return;
 	}
 
-	if(CachedChosenCharacterEntry == EntryClicked)
+	if(CachedChosenCharacterEntry == InEntryClicked)
 	{
 		return;
 	}
@@ -287,7 +287,7 @@ void UObsidianCharacterScreen::HandleClickingOnCharacterEntry(UObsidianCharacter
 		CachedChosenCharacterEntry->ResetChosenState();
 	}
 
-	EntryClicked->SetIsChosen();
-	CachedChosenCharacterEntry = EntryClicked;
+	InEntryClicked->SetIsChosen();
+	CachedChosenCharacterEntry = InEntryClicked;
 }
 

@@ -28,7 +28,7 @@ class OBSIDIAN_API UObsidianActivatableWidget : public UCommonActivatableWidget
 	GENERATED_BODY()
 
 public:
-	UObsidianActivatableWidget(const FObjectInitializer& ObjectInitializer);
+	UObsidianActivatableWidget(const FObjectInitializer& InObjectInitializer);
 
 	/** Function that sets widget controller, use this instead of setting it directly. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|UI")
@@ -40,7 +40,7 @@ public:
 	//~ End of UCommonActivatableWidget interface
 
 #if WITH_EDITOR
-	virtual void ValidateCompiledWidgetTree(const UWidgetTree& BlueprintWidgetTree, class IWidgetCompilerLog& CompileLog) const override;
+	virtual void ValidateCompiledWidgetTree(const UWidgetTree& InBlueprintWidgetTree, class IWidgetCompilerLog& InCompileLog) const override;
 #endif
 
 protected:

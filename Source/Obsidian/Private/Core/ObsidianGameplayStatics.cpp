@@ -6,47 +6,47 @@
 #include "Obsidian/ObsidianGameplayTags.h"
 
 
-FText UObsidianGameplayStatics::GetHeroClassText(const EObsidianHeroClass HeroClass)
+FText UObsidianGameplayStatics::GetHeroClassText(const EObsidianHeroClass InHeroClass)
 {
-	if(HeroClass == EObsidianHeroClass::Witch)
+	if(InHeroClass == EObsidianHeroClass::Witch)
 	{
 		return FText::FromString(TEXT("Witch"));
 	}
-	if(HeroClass == EObsidianHeroClass::Barbarian)
+	if(InHeroClass == EObsidianHeroClass::Barbarian)
 	{
 		return FText::FromString(TEXT("Barbarian"));
 	}
-	if(HeroClass == EObsidianHeroClass::Assassin)
+	if(InHeroClass == EObsidianHeroClass::Assassin)
 	{
 		return FText::FromString(TEXT("Assassin"));
 	}
-	if(HeroClass == EObsidianHeroClass::Paladin)
+	if(InHeroClass == EObsidianHeroClass::Paladin)
 	{
 		return FText::FromString(TEXT("Paladin"));
 	}
 	return FText::FromString(TEXT("Error - None!"));
 }
 
-bool UObsidianGameplayStatics::DoesTagMatchesAnySubTag(const FGameplayTag TagToCheck, const FGameplayTag& SubTagToCheck)
+bool UObsidianGameplayStatics::DoesTagMatchesAnySubTag(const FGameplayTag InTagToCheck, const FGameplayTag& InSubTagToCheck)
 {
-	return TagToCheck.ToString().Contains(SubTagToCheck.ToString());
+	return InTagToCheck.ToString().Contains(InSubTagToCheck.ToString());
 }
 
-FGameplayTag UObsidianGameplayStatics::GetOpposedEquipmentTagForTag(const FGameplayTag MainTag)
+FGameplayTag UObsidianGameplayStatics::GetOpposedEquipmentTagForTag(const FGameplayTag InMainTag)
 {
-	if(MainTag == ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand)
+	if(InMainTag == ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand)
 	{
 		return ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::LeftHand;
 	}
-	if(MainTag == ObsidianGameplayTags::Item::Slot::Equipment::Weapon::RightHand)
+	if(InMainTag == ObsidianGameplayTags::Item::Slot::Equipment::Weapon::RightHand)
 	{
 		return ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand;
 	}
-	if(MainTag == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::LeftHand)
+	if(InMainTag == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::LeftHand)
 	{
 		return ObsidianGameplayTags::Item::Slot::Equipment::Weapon::LeftHand;
 	}
-	if(MainTag == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand)
+	if(InMainTag == ObsidianGameplayTags::Item::SwapSlot::Equipment::Weapon::RightHand)
 	{
 		return ObsidianGameplayTags::Item::Slot::Equipment::Weapon::RightHand;
 	}
@@ -54,21 +54,21 @@ FGameplayTag UObsidianGameplayStatics::GetOpposedEquipmentTagForTag(const FGamep
 	return FGameplayTag::EmptyTag;
 }
 
-EObsidianGameNetworkType UObsidianGameplayStatics::GetCurrentNetworkType(const UObject* WorldContextObject)
+EObsidianGameNetworkType UObsidianGameplayStatics::GetCurrentNetworkType(const UObject* InWorldContextObject)
 {
-	if (const AObsidianGameMode* ObsidianGameMode = Cast<AObsidianGameMode>(GetGameMode(WorldContextObject)))
+	if (const AObsidianGameMode* ObsidianGameMode = Cast<AObsidianGameMode>(GetGameMode(InWorldContextObject)))
 	{
 		return ObsidianGameMode->GetCurrentNetworkType();
 	}
 	return EObsidianGameNetworkType::None;
 }
 
-bool UObsidianGameplayStatics::IsOfflineNetworkType(const EObsidianGameNetworkType NetworkType)
+bool UObsidianGameplayStatics::IsOfflineNetworkType(const EObsidianGameNetworkType InNetworkType)
 {
-	if (NetworkType == EObsidianGameNetworkType::None)
+	if (InNetworkType == EObsidianGameNetworkType::None)
 	{
 		return false;
 	}
 	
-	return NetworkType >= EObsidianGameNetworkType::OfflineSolo;
+	return InNetworkType >= EObsidianGameNetworkType::OfflineSolo;
 }

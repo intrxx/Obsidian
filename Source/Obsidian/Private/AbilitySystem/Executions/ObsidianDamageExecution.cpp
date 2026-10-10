@@ -117,8 +117,8 @@ static const FObsidianDamageStatics& ObsidianDamageStatics()
 	return ObsidianDamageStatics;
 }
 
-UObsidianDamageExecution::UObsidianDamageExecution(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianDamageExecution::UObsidianDamageExecution(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	// Source
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().AccuracyDef);
@@ -153,16 +153,16 @@ UObsidianDamageExecution::UObsidianDamageExecution(const FObjectInitializer& Obj
 	RelevantAttributesToCapture.Add(ObsidianDamageStatics().ChaosResistanceDef);
 }
 
-void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCustomExecutionParameters& InExecutionParams,
 	FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const
 {
 #if WITH_SERVER_CODE
-	const FGameplayEffectSpec& Spec = ExecutionParams.GetOwningSpec();
+	const FGameplayEffectSpec& Spec = InExecutionParams.GetOwningSpec();
 	FObsidianGameplayEffectContext* ObsidianEffectContext = FObsidianGameplayEffectContext::ExtractEffectContextFromHandle(Spec.GetContext());
 	checkf(ObsidianEffectContext, TEXT("Obsidian Gameplay Effect Context is invalid in Obsidian Damage Execution"));
 	
-	const UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
-	UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
+	const UAbilitySystemComponent* SourceASC = InExecutionParams.GetSourceAbilitySystemComponent();
+	UAbilitySystemComponent* TargetASC = InExecutionParams.GetTargetAbilitySystemComponent();
 
 	const AActor* SourceAvatar = SourceASC ? SourceASC->GetAvatarActor() : nullptr;
 	const AActor* TargetAvatar = TargetASC ? TargetASC->GetAvatarActor() : nullptr;
@@ -190,11 +190,11 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	//TODO(intrxx) Only evade Hits
 	// ~ Start of Hit Evasion Calculation
 	float Evasion = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().EvasionDef, EvaluationParameters, Evasion);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().EvasionDef, EvaluationParameters, Evasion);
 	Evasion = FMath::Max<float>(Evasion, 0.0f);
 	
 	float Accuracy = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AccuracyDef, EvaluationParameters, Accuracy);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AccuracyDef, EvaluationParameters, Accuracy);
 	Accuracy = FMath::Max<float>(Accuracy, 0.0f);
 
 	//TODO(intrxx) Read about entropy hit here: https://pathofexile.fandom.com/wiki/Evasion#cite_note-cite4-2,
@@ -224,15 +224,15 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float PhysicalDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Physical, false, 0.0f);
 	float MinPhysicalDamage = 0.0f;
 	float MaxPhysicalDamage = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatPhysicalDamageDef, EvaluationParameters, MinPhysicalDamage);
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatPhysicalDamageDef, EvaluationParameters, MaxPhysicalDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatPhysicalDamageDef, EvaluationParameters, MinPhysicalDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatPhysicalDamageDef, EvaluationParameters, MaxPhysicalDamage);
 	PhysicalDamage += FMath::Max<float>(FMath::RandRange(static_cast<int32>(MinPhysicalDamage), static_cast<int32>(MaxPhysicalDamage)), 0.0f);
 	
 	if(PhysicalDamage > 0.0f)
 	{
 		// ~~~ Start of Armor Raw Physical Damage Mitigation
 		float Armor = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ArmorDef, EvaluationParameters, Armor);
 		Armor = FMath::Max<float>(Armor, 0.0f);
 	
 		const float RawPhysicalDamageMitigation = Armor / (Armor + 5 * PhysicalDamage);
@@ -249,15 +249,15 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float FireDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Elemental::Fire, false, 0.0f);
 	float MinFireDamage = 0.0f;
 	float MaxFireDamage = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatFireDamageDef, EvaluationParameters, MinFireDamage);
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatFireDamageDef, EvaluationParameters, MaxFireDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatFireDamageDef, EvaluationParameters, MinFireDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatFireDamageDef, EvaluationParameters, MaxFireDamage);
 	FireDamage += FMath::Max<float>(FMath::RandRange(static_cast<int32>(MinFireDamage), static_cast<int32>(MaxFireDamage)), 0.0f);
 	
 	if (FireDamage > 0.0f)
 	{
 		// ~~~ Start of Fire Resistance Damage Mitigation
 		float FireResistance = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().FireResistanceDef, EvaluationParameters, FireResistance);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().FireResistanceDef, EvaluationParameters, FireResistance);
 		FireDamage *= (100.0f - FireResistance) / 100.0f;
 
 		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing fire damage by resistance [%f]. New Fire damage: [%f]."), FireResistance, FireDamage);
@@ -271,15 +271,15 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float LightningDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Elemental::Lightning, false, 0.0f);
 	float MinLightningDamage = 0.0f;
 	float MaxLightningDamage = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatLightningDamageDef, EvaluationParameters, MinLightningDamage);
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatLightningDamageDef, EvaluationParameters, MaxLightningDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatLightningDamageDef, EvaluationParameters, MinLightningDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatLightningDamageDef, EvaluationParameters, MaxLightningDamage);
 	LightningDamage += FMath::Max<float>(FMath::RandRange(static_cast<int32>(MinLightningDamage), static_cast<int32>(MaxLightningDamage)), 0.0f);
 
 	if (LightningDamage > 0.0f)
 	{
 		// ~~~ Start of Lightning Resistance Damage Mitigation
 		float LightningResistance = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().LightningResistanceDef, EvaluationParameters, LightningResistance);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().LightningResistanceDef, EvaluationParameters, LightningResistance);
 		LightningDamage *= (100.0f - LightningResistance) / 100.0f;
 
 		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing lightning damage by resistance [%f]. New Lightning damage: [%f]."), LightningResistance, LightningDamage);
@@ -293,15 +293,15 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float ColdDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Elemental::Cold, false, 0.0f);
 	float MinColdDamage = 0.0f;
 	float MaxColdDamage = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatColdDamageDef, EvaluationParameters, MinColdDamage);
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatColdDamageDef, EvaluationParameters, MaxColdDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatColdDamageDef, EvaluationParameters, MinColdDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatColdDamageDef, EvaluationParameters, MaxColdDamage);
 	ColdDamage += FMath::Max<float>(FMath::RandRange(static_cast<int32>(MinColdDamage), static_cast<int32>(MaxColdDamage)), 0.0f);
 
 	if (ColdDamage > 0.0f)
 	{
 		// ~~~ Start of Cold Resistance Damage Mitigation
 		float ColdResistance = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ColdResistanceDef, EvaluationParameters, ColdResistance);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ColdResistanceDef, EvaluationParameters, ColdResistance);
 		ColdDamage *= (100.0f - ColdResistance) / 100.0f;
 
 		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing cold damage by resistance [%f]. New Cold damage: [%f]."), ColdResistance, ColdDamage);
@@ -315,15 +315,15 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	float ChaosDamage = Spec.GetSetByCallerMagnitude(ObsidianGameplayTags::DamageType::Chaos, false, 0.0f);
 	float MinChaosDamage = 0.0f;
 	float MaxChaosDamage = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatChaosDamageDef, EvaluationParameters, MinChaosDamage);
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatChaosDamageDef, EvaluationParameters, MaxChaosDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MinFlatChaosDamageDef, EvaluationParameters, MinChaosDamage);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().MaxFlatChaosDamageDef, EvaluationParameters, MaxChaosDamage);
 	ChaosDamage += FMath::Max<float>(FMath::RandRange(static_cast<int32>(MinChaosDamage), static_cast<int32>(MaxChaosDamage)), 0.0f);
 
 	if (ChaosDamage > 0.0f)
 	{
 		// ~~~ Start of Chaos Resistance Damage Mitigation
 		float ChaosResistance = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ColdResistanceDef, EvaluationParameters, ChaosResistance);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ColdResistanceDef, EvaluationParameters, ChaosResistance);
 		ChaosDamage *= (100.0f - ChaosResistance) / 100.0f;
 
 		UE_LOG(ObLogDamage, Verbose, TEXT("Reducing chaos damage by resistance [%f]. New Chaos damage: [%f]."), ChaosResistance, ChaosDamage);
@@ -336,7 +336,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	//TODO(intrxx) Only attempt to suppress spell damage - in other words see if the GA is a spell and not a Hit
 	// ~ Start of Suppression Spell Damage Calculation
 	float SpellSuppressionChance = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionChanceDef, EvaluationParameters, SpellSuppressionChance);
 	SpellSuppressionChance = FMath::Max<float>(SpellSuppressionChance, 0.0f);
 	
 	if(SpellSuppressionChance >= FMath::RandRange(1.0f, 100.0f))
@@ -344,7 +344,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		ObsidianEffectContext->SetIsSuppressedSpell(true);
 		
 		float SpellSuppressionMagnitude = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().SpellSuppressionMagnitudeDef, EvaluationParameters, SpellSuppressionMagnitude);
 		SpellSuppressionMagnitude = FMath::Max<float>(SpellSuppressionMagnitude, 0.0f);
 
 		FullDamage -= FullDamage * SpellSuppressionMagnitude / 100.0f;
@@ -358,7 +358,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	//TODO(intrxx) Critical Strike Calculation might want to be on the ability itself
 	// ~ Start of Critical Strikes Calculation
 	float CriticalStrikeChance = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeChanceDef, EvaluationParameters, CriticalStrikeChance);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeChanceDef, EvaluationParameters, CriticalStrikeChance);
 	CriticalStrikeChance = FMath::Max<float>(CriticalStrikeChance, 0.0f);
 	
 	if(CriticalStrikeChance >= FMath::RandRange(1.0f, 100.0f))
@@ -366,7 +366,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 		ObsidianEffectContext->SetIsCriticalAttack(true);	
 		
 		float CriticalStrikeDamageMultiplier = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef, EvaluationParameters, CriticalStrikeDamageMultiplier);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().CriticalStrikeDamageMultiplierDef, EvaluationParameters, CriticalStrikeDamageMultiplier);
 		CriticalStrikeDamageMultiplier = FMath::Max<float>(CriticalStrikeDamageMultiplier, 0.0f);
 		
 		ModifiedDamage = ModifiedDamage * (CriticalStrikeDamageMultiplier / 100.0f);
@@ -376,17 +376,17 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	// ~ Start of Shock calculation
 	float ChanceToShock = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ChanceToShockDef, EvaluationParameters, ChanceToShock);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().ChanceToShockDef, EvaluationParameters, ChanceToShock);
 	ChanceToShock = FMath::Max<float>(ChanceToShock, 0.0f);
 					
 	if(ChanceToShock >= FMath::RandRange(1.0f, 100.0f))
 	{
 		float EnemyAilmentThreshold = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AilmentThresholdDef, EvaluationParameters, EnemyAilmentThreshold);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AilmentThresholdDef, EvaluationParameters, EnemyAilmentThreshold);
 		EnemyAilmentThreshold = FMath::Max<float>(EnemyAilmentThreshold, 1.0f);
 
 		float IncreasedEffectOfShock = 0.0f;
-		ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().IncreasedEffectOfShockDef, EvaluationParameters, IncreasedEffectOfShock);
+		InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().IncreasedEffectOfShockDef, EvaluationParameters, IncreasedEffectOfShock);
 		IncreasedEffectOfShock = FMath::Max<float>(IncreasedEffectOfShock, 0.0f);
 
 		float ShockEffect = (0.5f * FMath::Pow((LightningDamage / EnemyAilmentThreshold), 0.4f) * (1 + IncreasedEffectOfShock)) * 100.0f;
@@ -422,7 +422,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 	
 	// ~ Start of Stagger calculation
 	float StaggerDamageTakenMultiplier = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().StaggerDamageTakenMultiplierDef, EvaluationParameters, StaggerDamageTakenMultiplier);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().StaggerDamageTakenMultiplierDef, EvaluationParameters, StaggerDamageTakenMultiplier);
 	StaggerDamageTakenMultiplier = FMath::Max<float>(StaggerDamageTakenMultiplier, 0.0f);
 	
 	ModifiedDamage *= (100.0f + StaggerDamageTakenMultiplier) / 100.0f;
@@ -436,7 +436,7 @@ void UObsidianDamageExecution::Execute_Implementation(const FGameplayEffectCusto
 
 	// ~ Start of All Damage Multiplier calculation
 	float AllDamageMultiplier = 0.0f;
-	ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AllDamageMultiplierDef, EvaluationParameters, AllDamageMultiplier);
+	InExecutionParams.AttemptCalculateCapturedAttributeMagnitude(ObsidianDamageStatics().AllDamageMultiplierDef, EvaluationParameters, AllDamageMultiplier);
 	AllDamageMultiplier = FMath::Max<float>(AllDamageMultiplier, 0.0f);
 
 	ModifiedDamage = ModifiedDamage * AllDamageMultiplier;

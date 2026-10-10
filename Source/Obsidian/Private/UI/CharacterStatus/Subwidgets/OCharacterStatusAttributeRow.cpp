@@ -24,27 +24,27 @@ void UOCharacterStatusAttributeRow::InitialSetup() const
 	NameAndValue_Spacer->SetSize(FVector2D(NameAndValueSpacing, 1.f));
 }
 
-void UOCharacterStatusAttributeRow::SetAttributeValue(const float Value) const
+void UOCharacterStatusAttributeRow::SetAttributeValue(const float InValue) const
 {
 	if(AttributeValue_TextBlock)
 	{
-		AttributeValue_TextBlock->SetText(FText::AsNumber(FMath::FloorToInt(Value)));
+		AttributeValue_TextBlock->SetText(FText::AsNumber(FMath::FloorToInt(InValue)));
 	}
 }
 
-void UOCharacterStatusAttributeRow::SetAttributeValueWithPercentage(const float Value) const
+void UOCharacterStatusAttributeRow::SetAttributeValueWithPercentage(const float InValue) const
 {
-	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%%"), FMath::FloorToInt(Value)));
+	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%%"), FMath::FloorToInt(InValue)));
 	if(AttributeValue_TextBlock)
 	{
 		AttributeValue_TextBlock->SetText(TextValue);
 	}
 }
 
-void UOCharacterStatusAttributeRow::SetTwoAttributeValuesWithPercent(const float Value, const float MaxValue) const
+void UOCharacterStatusAttributeRow::SetTwoAttributeValuesWithPercent(const float InValue, const float InMaxValue) const
 {
 	const FText TextValue = FText::FromString(FString::Printf(TEXT("%d%% (%d%%)"),
-		FMath::FloorToInt(Value), FMath::FloorToInt(MaxValue)));
+		FMath::FloorToInt(InValue), FMath::FloorToInt(InMaxValue)));
 	
 	if(AttributeValue_TextBlock)
 	{

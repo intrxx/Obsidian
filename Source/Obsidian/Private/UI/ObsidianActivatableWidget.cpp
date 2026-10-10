@@ -7,8 +7,8 @@
 
 #define LOCTEXT_NAMESPACE "Obsidian"
 
-UObsidianActivatableWidget::UObsidianActivatableWidget(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianActivatableWidget::UObsidianActivatableWidget(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
@@ -57,20 +57,20 @@ TOptional<FUIInputConfig> UObsidianActivatableWidget::GetDesiredInputConfig() co
 
 #include "Editor/WidgetCompilerLog.h"
 
-void UObsidianActivatableWidget::ValidateCompiledWidgetTree(const UWidgetTree& BlueprintWidgetTree, class IWidgetCompilerLog& CompileLog) const
+void UObsidianActivatableWidget::ValidateCompiledWidgetTree(const UWidgetTree& InBlueprintWidgetTree, class IWidgetCompilerLog& InCompileLog) const
 {
-	Super::ValidateCompiledWidgetTree(BlueprintWidgetTree, CompileLog);
+	Super::ValidateCompiledWidgetTree(InBlueprintWidgetTree, InCompileLog);
 
 	if (!GetClass()->IsFunctionImplementedInScript(GET_FUNCTION_NAME_CHECKED(UObsidianActivatableWidget, BP_GetDesiredFocusTarget)))
 	{
 		if (GetParentNativeClass(GetClass()) == UObsidianActivatableWidget::StaticClass())
 		{
-			CompileLog.Warning(LOCTEXT("ValidateGetDesiredFocusTarget_Warning", "GetDesiredFocusTarget wasn't implemented, you're going to have trouble using gamepads on this screen."));
+			InCompileLog.Warning(LOCTEXT("ValidateGetDesiredFocusTarget_Warning", "GetDesiredFocusTarget wasn't implemented, you're going to have trouble using gamepads on this screen."));
 		}
 		else
 		{
 			//TODO - Note for now, because we can't guarantee it isn't implemented in a native subclass of this one.
-			CompileLog.Note(LOCTEXT("ValidateGetDesiredFocusTarget_Note", "GetDesiredFocusTarget wasn't implemented, you're going to have trouble using gamepads on this screen.  If it was implemented in the native base class you can ignore this message."));
+			InCompileLog.Note(LOCTEXT("ValidateGetDesiredFocusTarget_Note", "GetDesiredFocusTarget wasn't implemented, you're going to have trouble using gamepads on this screen.  If it was implemented in the native base class you can ignore this message."));
 		}
 	}
 }

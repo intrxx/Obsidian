@@ -9,9 +9,9 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-UOAbilityTask_TargetDataUnderCursor* UOAbilityTask_TargetDataUnderCursor::CreateTargetDataUnderCursorProxy(UGameplayAbility* OwningAbility)
+UOAbilityTask_TargetDataUnderCursor* UOAbilityTask_TargetDataUnderCursor::CreateTargetDataUnderCursorProxy(UGameplayAbility* InOwningAbility)
 {
-	UOAbilityTask_TargetDataUnderCursor* AbilityTaskObj = NewAbilityTask<UOAbilityTask_TargetDataUnderCursor>(OwningAbility);
+	UOAbilityTask_TargetDataUnderCursor* AbilityTaskObj = NewAbilityTask<UOAbilityTask_TargetDataUnderCursor>(InOwningAbility);
 	
 	return AbilityTaskObj;
 }
@@ -78,12 +78,12 @@ void UOAbilityTask_TargetDataUnderCursor::ReceiveTargetDataFromClient()
 	}
 }
 
-void UOAbilityTask_TargetDataUnderCursor::OnTargetDataSetCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag)
+void UOAbilityTask_TargetDataUnderCursor::OnTargetDataSetCallback(const FGameplayAbilityTargetDataHandle& InDataHandle, FGameplayTag InActivationTag)
 {
 	AbilitySystemComponent->ConsumeClientReplicatedTargetData(GetAbilitySpecHandle(), GetActivationPredictionKey());
 
 	if(ShouldBroadcastAbilityTaskDelegates())
 	{
-		DataReceived.Broadcast(DataHandle);
+		DataReceived.Broadcast(InDataHandle);
 	}
 }

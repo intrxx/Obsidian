@@ -31,22 +31,22 @@ class OBSIDIAN_API AObsidianHUD : public AHUD
 	GENERATED_BODY()
 	
 public:
-	UObMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
-	UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
-	UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& WidgetControllerParams);
+	UObMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
+	UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
+	UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
 
 	UObsidianMainOverlay* GetMainOverlay()
 	{
 		return MainOverlayWidget;
 	}
 
-	void InitOverlay(AObsidianPlayerController* ForPlayerController, AObsidianPlayerState* ForPlayerState);
+	void InitOverlay(AObsidianPlayerController* InForPlayerController, AObsidianPlayerState* InForPlayerState);
 
 	void ToggleCharacterStatus() const;
 	void ToggleInventory() const;
 	void TogglePassiveSkillTree() const;
 	
-	void TogglePlayerStash(const bool bShowStash) const;
+	void TogglePlayerStash(const bool bInShowStash) const;
 
 	bool IsInventoryOpened() const;
 	bool IsPlayerStashOpened() const;

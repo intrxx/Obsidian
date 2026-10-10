@@ -10,11 +10,11 @@
 
 
 // ~ Start of FObsidianSavedEquipmentPiece
-FObsidianSavedEquipmentPiece::FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& EquipmentActor)
-	: SoftActorToSpawn(EquipmentActor.ActorToSpawn)
-	, bOverrideAttachSocket(EquipmentActor.bOverrideAttachSocket)
-	, AttachSocketName(EquipmentActor.AttachSocket.ToString())
-	, AttachTransform(EquipmentActor.AttachTransform)
+FObsidianSavedEquipmentPiece::FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& InEquipmentActor)
+	: SoftActorToSpawn(InEquipmentActor.ActorToSpawn)
+	, bOverrideAttachSocket(InEquipmentActor.bOverrideAttachSocket)
+	, AttachSocketName(InEquipmentActor.AttachSocket.ToString())
+	, AttachTransform(InEquipmentActor.AttachTransform)
 {
 }
 // ~ End of FObsidianSavedEquipmentPiece
@@ -24,10 +24,10 @@ void UObsidianHeroSaveGame::InitWithSaveSystem(UObsidianSaveGameSubsystem* InSav
 	SaveGameSubsystem = InSaveGameSubsystem;
 }
 
-void UObsidianHeroSaveGame::InitializeHeroSaveData(const bool InbOnline,
+void UObsidianHeroSaveGame::InitializeHeroSaveData(const bool InInbOnline,
 	const FObsidianHeroInitializationSaveData& InInitializationSaveData)
 {
-	HeroSaveData.bOnline = InbOnline;
+	HeroSaveData.bOnline = InInbOnline;
 	HeroSaveData.InitializationSaveData = InInitializationSaveData;
 }
 
@@ -61,11 +61,11 @@ uint8 UObsidianHeroSaveGame::GetHeroLevel() const
 	return HeroSaveData.GameplaySaveData.HeroLevel;
 }
 
-void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)
+void UObsidianHeroSaveGame::HandlePostSave(bool bInSuccess)
 {
 	if (SaveGameSubsystem.IsValid())
 	{
-		SaveGameSubsystem->HandleSavingHeroSaveFinished(bSuccess, this);
+		SaveGameSubsystem->HandleSavingHeroSaveFinished(bInSuccess, this);
 	}
 	else if (const ULocalPlayer* LocalPlayer = GetLocalPlayer())
 	{
@@ -76,7 +76,7 @@ void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)
 				if (UObsidianSaveGameSubsystem* ObSaveGameSubsystem = GameInstance->GetSubsystem<UObsidianSaveGameSubsystem>())
 				{
 					SaveGameSubsystem = ObSaveGameSubsystem;
-					SaveGameSubsystem->HandleSavingHeroSaveFinished(bSuccess, this);
+					SaveGameSubsystem->HandleSavingHeroSaveFinished(bInSuccess, this);
 				}
 			}
 		}
@@ -86,7 +86,7 @@ void UObsidianHeroSaveGame::HandlePostSave(bool bSuccess)
 		UE_LOG(ObLogSaveSystem, Error, TEXT("Failed to HandlePostSave on [%s]. "), *GetNameSafe(this));
 	}
 
-	Super::HandlePostSave(bSuccess);
+	Super::HandlePostSave(bInSuccess);
 }
 
 void UObsidianHeroSaveGame::HandlePostLoad()

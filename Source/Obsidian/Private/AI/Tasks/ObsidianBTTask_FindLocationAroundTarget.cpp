@@ -12,29 +12,29 @@ UObsidianBTTask_FindLocationAroundTarget::UObsidianBTTask_FindLocationAroundTarg
 	INIT_TASK_NODE_NOTIFY_FLAGS();
 }
 
-EBTNodeResult::Type UObsidianBTTask_FindLocationAroundTarget::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_FindLocationAroundTarget::ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
 	EBTNodeResult::Type NodeResult = EBTNodeResult::InProgress;
 
-	AAIController* AIController = OwnerComp.GetAIOwner();
+	AAIController* AIController = InOwnerComp.GetAIOwner();
 	if(AIController == nullptr)
 	{
-		UE_VLOG(OwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_UseGameplayAbility::ExecuteTask failed since AIController is missing."));
+		UE_VLOG(InOwnerComp.GetOwner(), LogBehaviorTree, Error, TEXT("UObsidianBTTask_UseGameplayAbility::ExecuteTask failed since AIController is missing."));
 		NodeResult = EBTNodeResult::Failed;
 	}
 	else
 	{
-		NodeResult = PerformFindLocationAroundTargetTask(OwnerComp, NodeMemory);
+		NodeResult = PerformFindLocationAroundTargetTask(InOwnerComp, InNodeMemory);
 	}
 	
 	return NodeResult;
 }
 
-EBTNodeResult::Type UObsidianBTTask_FindLocationAroundTarget::PerformFindLocationAroundTargetTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
+EBTNodeResult::Type UObsidianBTTask_FindLocationAroundTarget::PerformFindLocationAroundTargetTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory)
 {
 	EBTNodeResult::Type NodeResult = EBTNodeResult::Failed;
 	
-	UBlackboardComponent* BlackboardComponent = OwnerComp.GetBlackboardComponent();
+	UBlackboardComponent* BlackboardComponent = InOwnerComp.GetBlackboardComponent();
 	
 	if(const AActor* TargetActor = Cast<AActor>(BlackboardComponent->GetValueAsObject(Target_Selector.SelectedKeyName)))
 	{

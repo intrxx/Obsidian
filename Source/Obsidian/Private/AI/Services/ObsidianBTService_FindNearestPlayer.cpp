@@ -18,11 +18,11 @@ UObsidianBTService_FindNearestPlayer::UObsidianBTService_FindNearestPlayer()
 	RandomDeviation = 0.1f;
 }
 
-void UObsidianBTService_FindNearestPlayer::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, float DeltaSeconds)
+void UObsidianBTService_FindNearestPlayer::TickNode(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory, float InDeltaSeconds)
 {
-	Super::TickNode(OwnerComp, NodeMemory, DeltaSeconds);
+	Super::TickNode(InOwnerComp, InNodeMemory, InDeltaSeconds);
 
-	const AAIController* AIController = OwnerComp.GetAIOwner();
+	const AAIController* AIController = InOwnerComp.GetAIOwner();
 	const APawn* OwningPawn = AIController->GetPawn();
 	
 	if(!IsValid(OwningPawn))
@@ -48,7 +48,7 @@ void UObsidianBTService_FindNearestPlayer::TickNode(UBehaviorTreeComponent& Owne
 		}
 	}
 
-	UBlackboardComponent* OwnerBlackBoardComp = OwnerComp.GetBlackboardComponent();
+	UBlackboardComponent* OwnerBlackBoardComp = InOwnerComp.GetBlackboardComponent();
 	OwnerBlackBoardComp->SetValueAsObject(NearestTargetActor_Selector.SelectedKeyName, NearestActor);
 	OwnerBlackBoardComp->SetValueAsFloat(DistanceToTargetActor_Selector.SelectedKeyName, NearestDistance);
 }

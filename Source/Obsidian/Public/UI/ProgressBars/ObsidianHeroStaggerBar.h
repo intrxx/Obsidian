@@ -31,7 +31,7 @@ protected:
 
 private:
 	UFUNCTION()
-	void StaggerChanged(const float NewStagger);
+	void StaggerChanged(const float InNewStagger);
 	UFUNCTION()
-	void MaxStaggerChanged(const float NewMaxStagger);
+	void MaxStaggerChanged(const float InNewMaxStagger);
 };

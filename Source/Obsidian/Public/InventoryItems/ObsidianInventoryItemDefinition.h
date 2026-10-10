@@ -21,7 +21,7 @@ class OBSIDIAN_API UObsidianInventoryItemDefinition : public UObject
 	GENERATED_BODY()
 
 public:
-	UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianInventoryItemDefinition(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	UFUNCTION(BlueprintCallable, Category="Obsidian|Debug")
 	FString GetDebugName() const
@@ -39,7 +39,7 @@ public:
 	bool DoesStartIdentified() const;
 	bool DoesItemNeedsTwoSlots() const;
 
-	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& FragmentClass) const;
+	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& InFragmentClass) const;
 	
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.Category"), Category = "Obsidian")

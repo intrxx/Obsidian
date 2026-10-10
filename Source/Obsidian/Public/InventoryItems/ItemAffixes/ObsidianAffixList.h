@@ -18,12 +18,12 @@ struct FObsidianAffixClass
 	GENERATED_BODY()
 
 public:
-	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQuality(const int32 UpToTreasureQuality) const;
-	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQualityForCategory(const int32 UpToTreasureQuality,
-		const FGameplayTag& ForCategory, const FGameplayTag& ForBaseType) const;
+	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQuality(const int32 InUpToTreasureQuality) const;
+	TArray<FObsidianDynamicItemAffix> GetAllAffixesUpToQualityForCategory(const int32 InUpToTreasureQuality,
+		const FGameplayTag& InForCategory, const FGameplayTag& InForBaseType) const;
 
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const FName ClassName, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const FName InClassName, const int InIndex) const;
 #endif
 	
 public:
@@ -49,18 +49,18 @@ class OBSIDIAN_API UObsidianAffixList : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianAffixList(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianAffixList(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	virtual void PostInitProperties() override;
 	virtual void PostLoad() override;
 	
 	TConstArrayView<FObsidianAffixClass> ReadAllAffixClasses() const;
 	
-	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
+	virtual void PreSave(FObjectPreSaveContext InSaveContext) override;
 	
 #if WITH_EDITOR
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
-	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& InPropertyChangedEvent) override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 	
 protected:

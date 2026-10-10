@@ -32,8 +32,8 @@ public:
 	FGameplayTag GetSlotTag() const;
 	FGameplayTag GetSisterSlotTag() const;
 	
-	void AddItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f);
-	void AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float ItemSlotPadding = 0.0f);
+	void AddItemToSlot(UObsidianItem* InItemWidget, const float InItemSlotPadding = 0.0f);
+	void AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float InItemSlotPadding = 0.0f);
 
 	void ResetSlotState();
 

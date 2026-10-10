@@ -19,11 +19,11 @@ class OBSIDIAN_API AObsidianRegularEnemy : public AObsidianEnemy
 	GENERATED_BODY()
 
 public:
-	AObsidianRegularEnemy(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianRegularEnemy(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual void PossessedBy(AController* NewController) override;
+	virtual void PossessedBy(AController* InNewController) override;
 	
-	void HitReactTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	void HitReactTagChanged(const FGameplayTag InCallbackTag, int32 InNewCount);
 
 	AObsidianAIControllerBase* GetObsidianAIController() const
 	{
@@ -35,10 +35,10 @@ protected:
 	virtual void OnAbilitySystemInitialized() override;
 	
 	UFUNCTION()
-	virtual void OnDeathStarted(AActor* OwningActor) override;
+	virtual void OnDeathStarted(AActor* InOwningActor) override;
 
 	UFUNCTION()
-	virtual void OnDeathFinished(AActor* OwningActor) override;
+	virtual void OnDeathFinished(AActor* InOwningActor) override;
 	//~ End of AObsidianCharacterBase
 
 private:

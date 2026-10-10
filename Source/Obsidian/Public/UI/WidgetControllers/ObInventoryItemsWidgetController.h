@@ -121,45 +121,45 @@ public:
 	UObsidianItemDescriptionBase* GetActiveDroppedItemDescription();
 	
 	TConstArrayView<TObjectPtr<UObsidianStashTab>> GetAllStashTabs() const;
-	FString GetStashTabName(const FGameplayTag StashTabTag) const;
+	FString GetStashTabName(const FGameplayTag InStashTabTag) const;
 	
 	int32 GetInventoryGridWidth() const;
 	int32 GetInventoryGridHeight() const;
 	
 	bool IsDraggingAnItem() const;
 	FIntPoint GetDraggedItemGridSpan() const;
-	FIntPoint GetItemGridSpanByPosition(const FObsidianItemPosition& ItemPosition) const;
+	FIntPoint GetItemGridSpanByPosition(const FObsidianItemPosition& InItemPosition) const;
 	
-	bool CanInteractWithGrid(const EObsidianPanelOwner PanelOwner) const;
-	bool CanInteractWithSlots(const EObsidianPanelOwner PanelOwner) const;
+	bool CanInteractWithGrid(const EObsidianPanelOwner InPanelOwner) const;
+	bool CanInteractWithSlots(const EObsidianPanelOwner InPanelOwner) const;
 	bool CanInteractWithInventory() const;
 	bool CanInteractWithEquipment() const;
 	bool CanInteractWithPlayerStash() const;
 	
-	bool CanPlaceDraggedItemAtPosition(const FObsidianItemPosition& AtPosition,
-		const EObsidianPanelOwner PanelOwner) const;
+	bool CanPlaceDraggedItemAtPosition(const FObsidianItemPosition& InAtPosition,
+		const EObsidianPanelOwner InPanelOwner) const;
 	
-	void HandleLeftClickingOnSlot(const FObsidianItemPosition& AtItemPosition,
-		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
-	void HandleRightClickingOnSlot(const FObsidianItemPosition& AtItemPosition,
-		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
-	void HandleRightClickingOnItem(const FObsidianItemPosition& AtItemPosition,
-		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
-	void HandleLeftClickingOnItem(const FObsidianItemPosition& AtItemPosition,
-		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
+	void HandleLeftClickingOnSlot(const FObsidianItemPosition& InAtItemPosition,
+		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
+	void HandleRightClickingOnSlot(const FObsidianItemPosition& InAtItemPosition,
+		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
+	void HandleRightClickingOnItem(const FObsidianItemPosition& InAtItemPosition,
+		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
+	void HandleLeftClickingOnItem(const FObsidianItemPosition& InAtItemPosition,
+		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
 
-	void HandleHoveringOverItem(const FObsidianItemPosition& ItemPosition,
-		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
-	void HandleUnhoveringItem(const FObsidianItemPosition& FromPosition);
+	void HandleHoveringOverItem(const FObsidianItemPosition& InItemPosition,
+		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
+	void HandleUnhoveringItem(const FObsidianItemPosition& InFromPosition);
 	
-	void RemoveItemUIElements(const EObsidianPanelOwner ForPanelOwner);
+	void RemoveItemUIElements(const EObsidianPanelOwner InForPanelOwner);
 	void RemoveCurrentDroppedItemDescription();
 
-	void CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* Instance);
-	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef,
-		const FObsidianItemGeneratedData& ItemGeneratedData);
+	void CreateItemDescriptionForDroppedItem(const UObsidianInventoryItemInstance* InInstance);
+	void CreateItemDescriptionForDroppedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
+		const FObsidianItemGeneratedData& InItemGeneratedData);
 
-	void RegisterCurrentStashTab(const FGameplayTag& CurrentStashTab);
+	void RegisterCurrentStashTab(const FGameplayTag& InCurrentStashTab);
 
 	void OnInventoryOpen();
 	void OnPlayerStashOpen();
@@ -196,52 +196,52 @@ protected:
 	TSubclassOf<UObsidianItemDescriptionBase> ItemDescriptionClass;
 
 private:
-	void OnInventoryStateChanged(FGameplayTag Channel, const FObsidianInventoryChangeMessage& InventoryChangeMessage);
-	void OnEquipmentStateChanged(FGameplayTag Channel, const FObsidianEquipmentChangeMessage& EquipmentChangeMessage);
-	void OnPlayerStashChanged(FGameplayTag Channel, const FObsidianStashChangeMessage& StashChangeMessage);
+	void OnInventoryStateChanged(FGameplayTag InChannel, const FObsidianInventoryChangeMessage& InInventoryChangeMessage);
+	void OnEquipmentStateChanged(FGameplayTag InChannel, const FObsidianEquipmentChangeMessage& InEquipmentChangeMessage);
+	void OnPlayerStashChanged(FGameplayTag InChannel, const FObsidianStashChangeMessage& InStashChangeMessage);
 
-	bool CanPlaceDraggedItemInInventory(const FIntPoint& AtGridSlot) const;
-	bool CanPlaceDraggedItemInStash(const FObsidianItemPosition& ItemPosition) const;
-	bool CanPlaceDraggedItemInEquipment(const FGameplayTag& SlotTag) const;
+	bool CanPlaceDraggedItemInInventory(const FIntPoint& InAtGridSlot) const;
+	bool CanPlaceDraggedItemInStash(const FObsidianItemPosition& InItemPosition) const;
+	bool CanPlaceDraggedItemInEquipment(const FGameplayTag& InSlotTag) const;
 
 	bool CanShowDescription() const;
 
-	void RequestAddingItem(const FObsidianItemPosition& AtItemPosition,
-		const FObsidianItemInteractionData& InteractionData, const EObsidianPanelOwner PanelOwner);
-	void RequestAddingItemToInventory(const FIntPoint& ToGridSlot, const bool bShiftDown);
-	void RequestAddingItemToEquipment(const FGameplayTag& SlotTag);
-	void RequestAddingItemToStashTab(const FObsidianItemPosition& ToPosition, const bool bShiftDown);
+	void RequestAddingItem(const FObsidianItemPosition& InAtItemPosition,
+		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
+	void RequestAddingItemToInventory(const FIntPoint& InToGridSlot, const bool bInShiftDown);
+	void RequestAddingItemToEquipment(const FGameplayTag& InSlotTag);
+	void RequestAddingItemToStashTab(const FObsidianItemPosition& InToPosition, const bool bInShiftDown);
 
-	void HandleLeftClickingOnInventoryItem(const FIntPoint& ClickedItemPosition, const FIntPoint& ClickedGridPosition,
-		const bool bAddToOtherWindow);
-	void HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& ClickedItemPosition, const UObsidianItem* ItemWidget);
-	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& SlotTag,
-		const FGameplayTag& EquipSlotTagOverride = FGameplayTag::EmptyTag);
-	void HandleLeftClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, const bool bAddToOtherWindow);
-	void HandleLeftClickingOnStashedItemWithShiftDown(const FObsidianItemPosition& AtItemPosition,
-		const UObsidianItem* ItemWidget);
+	void HandleLeftClickingOnInventoryItem(const FIntPoint& InClickedItemPosition, const FIntPoint& InClickedGridPosition,
+		const bool bInAddToOtherWindow);
+	void HandleLeftClickingOnInventoryItemWithShiftDown(const FIntPoint& InClickedItemPosition, const UObsidianItem* InItemWidget);
+	void HandleLeftClickingOnEquipmentItem(const FGameplayTag& InSlotTag,
+		const FGameplayTag& InEquipSlotTagOverride = FGameplayTag::EmptyTag);
+	void HandleLeftClickingOnStashedItem(const FObsidianItemPosition& InAtItemPosition, const bool bInAddToOtherWindow);
+	void HandleLeftClickingOnStashedItemWithShiftDown(const FObsidianItemPosition& InAtItemPosition,
+		const UObsidianItem* InItemWidget);
 
-	void HandleRightClickingOnInventoryItem(const FIntPoint& AtGridSlot, UObsidianItem* ItemWidget);
-	void HandleRightClickingOnStashedItem(const FObsidianItemPosition& AtItemPosition, UObsidianItem* ItemWidget);
+	void HandleRightClickingOnInventoryItem(const FIntPoint& InAtGridSlot, UObsidianItem* InItemWidget);
+	void HandleRightClickingOnStashedItem(const FObsidianItemPosition& InAtItemPosition, UObsidianItem* InItemWidget);
 	
-	void OnStartDraggingItem(const FDraggedItem& DraggedItem);
+	void OnStartDraggingItem(const FDraggedItem& InDraggedItem);
 	void OnStopDraggingItem();
 	
-	void HandleTakingOutStacksFromInventory(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition);
-	void HandleTakingOutStacksFromStash(const int32 StacksToTake, const FObsidianItemPosition& ItemPosition);
+	void HandleTakingOutStacksFromInventory(const int32 InStacksToTake, const FObsidianItemPosition& InItemPosition);
+	void HandleTakingOutStacksFromStash(const int32 InStacksToTake, const FObsidianItemPosition& InItemPosition);
 	
 	void RemoveUnstackSlider();
-	void ClearItemDescriptionForPosition(const FObsidianItemPosition& ForPosition);
-	void ClearItemDescriptionsForOwner(const EObsidianPanelOwner ForDescriptionOwner);
+	void ClearItemDescriptionForPosition(const FObsidianItemPosition& InForPosition);
+	void ClearItemDescriptionsForOwner(const EObsidianPanelOwner InForDescriptionOwner);
 
-	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const FObsidianItemPosition& AtPosition,
-		const EObsidianPanelOwner PanelOwner, const UObsidianItem* ForItemWidget, const FObsidianItemStats& ItemStats);
-	UObsidianItemDescriptionBase* CreateDroppedItemDescription(const FObsidianItemStats& ItemStats);
+	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const FObsidianItemPosition& InAtPosition,
+		const EObsidianPanelOwner InPanelOwner, const UObsidianItem* InForItemWidget, const FObsidianItemStats& InItemStats);
+	UObsidianItemDescriptionBase* CreateDroppedItemDescription(const FObsidianItemStats& InItemStats);
 	
-	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* ItemWidget) const;
-	FVector2D CalculateDescriptionPosition(const UObsidianItem* ItemWidget, UObsidianItemDescriptionBase* ForDescription) const;
-	FVector2D GetItemUIElementPositionBoundByViewport(const FVector2D& ViewportSize, const FVector2D& ItemPosition,
-		const FVector2D& ItemSize, const FVector2D& UIElementSize) const;
+	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* InItemWidget) const;
+	FVector2D CalculateDescriptionPosition(const UObsidianItem* InItemWidget, UObsidianItemDescriptionBase* InForDescription) const;
+	FVector2D GetItemUIElementPositionBoundByViewport(const FVector2D& InViewportSize, const FVector2D& InItemPosition,
+		const FVector2D& InItemSize, const FVector2D& InUIElementSize) const;
 
 private:
 	UPROPERTY()

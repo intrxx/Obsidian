@@ -4,7 +4,7 @@
 #include "AbilitySystem/Data/ObsidianEnemyTypeInfo.h"
 
 
-FObsidianEnemyTypeDefaultInfo UObsidianEnemyTypeInfo::GetEnemyTypeDefaultInfo(const EObsidianEnemyClass EnemyClass)
+FObsidianEnemyTypeDefaultInfo UObsidianEnemyTypeInfo::GetEnemyTypeDefaultInfo(const EObsidianEnemyClass InEnemyClass)
 {
-    return EnemyTypeDefaultInfoMap.FindChecked(EnemyClass);
+    return EnemyTypeDefaultInfoMap.FindChecked(InEnemyClass);
 }

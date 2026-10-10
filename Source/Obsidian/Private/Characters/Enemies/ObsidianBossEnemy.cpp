@@ -14,8 +14,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	AdvancedCombatComponent = CreateDefaultSubobject<UObsidianAdvancedCombatComponent>(TEXT("AdvancedCombatComponent"));
 
@@ -37,16 +37,16 @@ AObsidianBossEnemy::AObsidianBossEnemy(const FObjectInitializer& ObjectInitializ
 	Tags.Emplace(ObsidianActorTags::BossEnemy);
 }
 
-void AObsidianBossEnemy::PossessedBy(AController* NewController)
+void AObsidianBossEnemy::PossessedBy(AController* InNewController)
 {
-	Super::PossessedBy(NewController);
+	Super::PossessedBy(InNewController);
 
 	if(!HasAuthority())
 	{
 		return;
 	}
 	
-	ObsidianBossAIController = Cast<AObsidianBossAIController>(NewController);
+	ObsidianBossAIController = Cast<AObsidianBossAIController>(InNewController);
 	ObsidianBossAIController->GetBlackboardComponent()->InitializeBlackboard(*DefaultBehaviorTree->BlackboardAsset);
 	ObsidianBossAIController->RunBehaviorTree(DefaultBehaviorTree);
 }
@@ -60,9 +60,9 @@ void AObsidianBossEnemy::OnAbilitySystemInitialized()
 	EnemyAttributesComponent->OnDeathFinished.AddUniqueDynamic(this, &ThisClass::OnDeathFinished);
 }
 
-void AObsidianBossEnemy::OnDeathStarted(AActor* OwningActor)
+void AObsidianBossEnemy::OnDeathStarted(AActor* InOwningActor)
 {
-	Super::OnDeathStarted(OwningActor);
+	Super::OnDeathStarted(InOwningActor);
 
 	if(ObsidianBossAIController)
 	{
@@ -70,15 +70,15 @@ void AObsidianBossEnemy::OnDeathStarted(AActor* OwningActor)
 	}
 }
 
-void AObsidianBossEnemy::OnDeathFinished(AActor* OwningActor)
+void AObsidianBossEnemy::OnDeathFinished(AActor* InOwningActor)
 {
-	Super::OnDeathFinished(OwningActor);
+	Super::OnDeathFinished(InOwningActor);
 }
 
-void AObsidianBossEnemy::HandleAdvancedCombatHit(const FHitResult& HitResult)
+void AObsidianBossEnemy::HandleAdvancedCombatHit(const FHitResult& InHitResult)
 {
 	//TODO(intrxx) Verify if I actually use it in the future.
-	BP_HandleAdvancedCombatHit(HitResult);
+	BP_HandleAdvancedCombatHit(InHitResult);
 
 	UAbilitySystemComponent* ASC = GetAbilitySystemComponent();
 	if(ASC == nullptr)
@@ -87,7 +87,7 @@ void AObsidianBossEnemy::HandleAdvancedCombatHit(const FHitResult& HitResult)
 	}
 
 	FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit();
-	TargetData->HitResult = HitResult;
+	TargetData->HitResult = InHitResult;
 
 	FGameplayEventData Payload;
 	Payload.TargetData = TargetData; 

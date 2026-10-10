@@ -17,8 +17,8 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianItemContainerComponent::UObsidianItemContainerComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianItemContainerComponent::UObsidianItemContainerComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
@@ -76,17 +76,17 @@ UObsidianPlayerStashComponent* UObsidianItemContainerComponent::GetStashComponen
 }
 
 UObsidianItemContainerComponent* UObsidianItemContainerComponent::GetContainerFromOwnerForPosition(
-	const FObsidianItemPosition& ItemPosition) const
+	const FObsidianItemPosition& InItemPosition) const
 {
-	if(ItemPosition.IsOnInventoryGrid())
+	if(InItemPosition.IsOnInventoryGrid())
 	{
 		return GetInventoryComponentFromOwner();
 	}
-	if(ItemPosition.IsOnStash())
+	if(InItemPosition.IsOnStash())
 	{
 		return GetStashComponentFromOwner();
 	}
-	if(ItemPosition.IsOnEquipmentSlot())
+	if(InItemPosition.IsOnEquipmentSlot())
 	{
 		return GetEquipmentComponentFromOwner();
 	}
@@ -102,12 +102,12 @@ bool UObsidianItemContainerComponent::CanOwnerModifyContainerState() const
 	return false;
 }
 
-int32 UObsidianItemContainerComponent::CountStacksOfItem(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef) const
+int32 UObsidianItemContainerComponent::CountStacksOfItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef) const
 {
 	int32 AllStacks = 0;
 	for(const UObsidianInventoryItemInstance* Instance : GetContainedItems())
 	{
-		if(IsValid(Instance) && Instance->GetItemDef() == ItemDef)
+		if(IsValid(Instance) && Instance->GetItemDef() == InItemDef)
 		{
 			AllStacks += Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 		}
@@ -115,19 +115,19 @@ int32 UObsidianItemContainerComponent::CountStacksOfItem(const TSubclassOf<UObsi
 	return AllStacks;
 }
 
-void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* UsingInstance,
-	UObsidianInventoryItemInstance* UsingOntoInstance)
+void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* InUsingInstance,
+	UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
-	if(UsingInstance == nullptr)
+	if(InUsingInstance == nullptr)
 	{
 		UE_LOG(ObLogItemContainer, Error, TEXT("UsingInstance is invalid in [%hs]"), __FUNCTION__);
 		return;
 	}
 
-	if(UsingInstance->IsItemUsable() == false)
+	if(InUsingInstance->IsItemUsable() == false)
 	{
 		UE_LOG(ObLogItemContainer, Error, TEXT("Trying to use unusable Item [%s] in [%hs]"),
-			*UsingInstance->GetItemDebugName(), __FUNCTION__);
+			*InUsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 
@@ -137,42 +137,42 @@ void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* Us
 		return;
 	}
 
-	const int32 CurrentUsingInstanceStacks = UsingInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	const int32 CurrentUsingInstanceStacks = InUsingInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	if(CurrentUsingInstanceStacks <= 0)
 	{
 		UE_LOG(ObLogItemContainer, Error, TEXT("Trying to use Item [%s] that has no more stacks in [%hs]"),
-			*UsingInstance->GetItemDebugName(), __FUNCTION__);
+			*InUsingInstance->GetItemDebugName(), __FUNCTION__);
 		return;
 	}
 
 	bool bUsageSuccessful = false;
-	const EObsidianUsableItemType ItemType = UsingInstance->GetUsableItemType();
+	const EObsidianUsableItemType ItemType = InUsingInstance->GetUsableItemType();
 	if(ItemType == EObsidianUsableItemType::UIT_Crafting)
 	{
-		if(UsingOntoInstance == nullptr)
+		if(InUsingOntoInstance == nullptr)
 		{
 			UE_LOG(ObLogItemContainer, Error, TEXT("UsingOntoInstance is invalid in [%hs]"), __FUNCTION__);
 			return;
 		}
 
-		if(UsingInstance->UseItem(OwningPlayerController, UsingOntoInstance))
+		if(InUsingInstance->UseItem(OwningPlayerController, InUsingOntoInstance))
 		{
 			// The item we used onto does not need to be held by this container.
-			if(UObsidianItemContainerComponent* Container = GetContainerFromOwnerForPosition(UsingOntoInstance->GetItemCurrentPosition()))
+			if(UObsidianItemContainerComponent* Container = GetContainerFromOwnerForPosition(InUsingOntoInstance->GetItemCurrentPosition()))
 			{
-				Container->HandleItemChanged(UsingOntoInstance);
+				Container->HandleItemChanged(InUsingOntoInstance);
 			}
 			bUsageSuccessful = true;
 		}
 	}
 	else if(ItemType == EObsidianUsableItemType::UIT_Activation)
 	{
-		bUsageSuccessful = UsingInstance->UseItem(OwningPlayerController, nullptr);
+		bUsageSuccessful = InUsingInstance->UseItem(OwningPlayerController, nullptr);
 	}
 
 	if(bUsageSuccessful)
 	{
-		UpdateUsingItemAfterUsage(UsingInstance, CurrentUsingInstanceStacks);
+		UpdateUsingItemAfterUsage(InUsingInstance, CurrentUsingInstanceStacks);
 	}
 	else
 	{
@@ -180,29 +180,29 @@ void UObsidianItemContainerComponent::UseItem(UObsidianInventoryItemInstance* Us
 	}
 }
 
-void UObsidianItemContainerComponent::UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* UsingInstance,
-	const int32 CurrentStacks)
+void UObsidianItemContainerComponent::UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* InUsingInstance,
+	const int32 InCurrentStacks)
 {
-	if(UsingInstance == nullptr)
+	if(InUsingInstance == nullptr)
 	{
 		return;
 	}
 
-	if(UObsidianItemContainerComponent* Container = GetContainerFromOwnerForPosition(UsingInstance->GetItemCurrentPosition()))
+	if(UObsidianItemContainerComponent* Container = GetContainerFromOwnerForPosition(InUsingInstance->GetItemCurrentPosition()))
 	{
-		Container->ConsumeUsedItem(UsingInstance, CurrentStacks);
+		Container->ConsumeUsedItem(InUsingInstance, InCurrentStacks);
 	}
 }
 
-bool UObsidianItemContainerComponent::ReplicateSubobjects(UActorChannel* Channel, FOutBunch* Bunch, FReplicationFlags* RepFlags)
+bool UObsidianItemContainerComponent::ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch, FReplicationFlags* InRepFlags)
 {
-	bool WroteSomething = Super::ReplicateSubobjects(Channel, Bunch, RepFlags);
+	bool WroteSomething = Super::ReplicateSubobjects(InChannel, InBunch, InRepFlags);
 
 	for(UObsidianInventoryItemInstance* Instance : GetContainedItems())
 	{
 		if(IsValid(Instance))
 		{
-			WroteSomething |= Channel->ReplicateSubobject(Instance, *Bunch, *RepFlags);
+			WroteSomething |= InChannel->ReplicateSubobject(Instance, *InBunch, *InRepFlags);
 		}
 	}
 
@@ -226,7 +226,7 @@ void UObsidianItemContainerComponent::ReadyForReplication()
 	}
 }
 
-bool UObsidianItemContainerComponent::HasOwnerAuthority(const ANSICHAR* CallingFunction) const
+bool UObsidianItemContainerComponent::HasOwnerAuthority(const ANSICHAR* InCallingFunction) const
 {
 	const AActor* Owner = GetOwner();
 	if(Owner && Owner->HasAuthority())
@@ -234,82 +234,82 @@ bool UObsidianItemContainerComponent::HasOwnerAuthority(const ANSICHAR* CallingF
 		return true;
 	}
 
-	UE_LOG(ObLogItemContainer, Warning, TEXT("No Authority in [%hs]"), CallingFunction);
+	UE_LOG(ObLogItemContainer, Warning, TEXT("No Authority in [%hs]"), InCallingFunction);
 	return false;
 }
 
-void UObsidianItemContainerComponent::RegisterItemInstanceForReplication(UObsidianInventoryItemInstance* Instance)
+void UObsidianItemContainerComponent::RegisterItemInstanceForReplication(UObsidianInventoryItemInstance* InInstance)
 {
-	if(Instance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
+	if(InInstance && IsUsingRegisteredSubObjectList() && IsReadyForReplication())
 	{
-		AddReplicatedSubObject(Instance);
+		AddReplicatedSubObject(InInstance);
 	}
 }
 
-void UObsidianItemContainerComponent::UnregisterItemInstanceFromReplication(UObsidianInventoryItemInstance* Instance)
+void UObsidianItemContainerComponent::UnregisterItemInstanceFromReplication(UObsidianInventoryItemInstance* InInstance)
 {
-	if(Instance && IsUsingRegisteredSubObjectList())
+	if(InInstance && IsUsingRegisteredSubObjectList())
 	{
-		RemoveReplicatedSubObject(Instance);
+		RemoveReplicatedSubObject(InInstance);
 	}
 }
 
-int32 UObsidianItemContainerComponent::ClampStacksToAdd(const int32 StacksAvailableToAdd, const int32 StackToAddOverride)
+int32 UObsidianItemContainerComponent::ClampStacksToAdd(const int32 InStacksAvailableToAdd, const int32 InStackToAddOverride)
 {
-	if(StackToAddOverride == INDEX_NONE)
+	if(InStackToAddOverride == INDEX_NONE)
 	{
-		return StacksAvailableToAdd;
+		return InStacksAvailableToAdd;
 	}
-	return FMath::Clamp<int32>(FMath::Min<int32>(StacksAvailableToAdd, StackToAddOverride), 1, StacksAvailableToAdd);
+	return FMath::Clamp<int32>(FMath::Min<int32>(InStacksAvailableToAdd, InStackToAddOverride), 1, InStacksAvailableToAdd);
 }
 
 UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemDefinition(
-	const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDef, const FObsidianItemGeneratedData& ItemGeneratedData,
-	const int32 StackCount, const FObsidianItemPosition& ToPosition)
+	const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InItemGeneratedData,
+	const int32 InStackCount, const FObsidianItemPosition& InToPosition)
 {
-	UObsidianInventoryItemInstance* Instance = AddItemDefinitionToList(ItemDef, ItemGeneratedData, StackCount, ToPosition);
+	UObsidianInventoryItemInstance* Instance = AddItemDefinitionToList(InItemDef, InItemGeneratedData, InStackCount, InToPosition);
 	if(Instance == nullptr)
 	{
 		return nullptr;
 	}
 
-	Instance->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, StackCount);
-	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(ItemDef.GetDefaultObject(), ItemGeneratedData));
+	Instance->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, InStackCount);
+	Instance->SetIdentified(UObsidianItemsFunctionLibrary::IsDefinitionIdentified(InItemDef.GetDefaultObject(), InItemGeneratedData));
 
 	RegisterItemInstanceForReplication(Instance);
 	return Instance;
 }
 
-void UObsidianItemContainerComponent::PlaceWholeItemInstance(UObsidianInventoryItemInstance* InstanceToAdd,
-	const FObsidianItemPosition& ToPosition)
+void UObsidianItemContainerComponent::PlaceWholeItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd,
+	const FObsidianItemPosition& InToPosition)
 {
-	AddItemInstanceToList(InstanceToAdd, ToPosition);
-	RegisterItemInstanceForReplication(InstanceToAdd);
+	AddItemInstanceToList(InInstanceToAdd, InToPosition);
+	RegisterItemInstanceForReplication(InInstanceToAdd);
 }
 
-UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemInstance(UObsidianInventoryItemInstance* InstanceToAdd,
-	const int32 StacksToAdd, const FObsidianItemPosition& ToPosition, bool& bOutWholeItemPlaced)
+UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd,
+	const int32 InStacksToAdd, const FObsidianItemPosition& InToPosition, bool& bOutWholeItemPlaced)
 {
-	const int32 CurrentHeldItemStacks = InstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-	bOutWholeItemPlaced = StacksToAdd == CurrentHeldItemStacks;
+	const int32 CurrentHeldItemStacks = InInstanceToAdd->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	bOutWholeItemPlaced = InStacksToAdd == CurrentHeldItemStacks;
 	if(bOutWholeItemPlaced)
 	{
-		PlaceWholeItemInstance(InstanceToAdd, ToPosition);
-		return InstanceToAdd;
+		PlaceWholeItemInstance(InInstanceToAdd, InToPosition);
+		return InInstanceToAdd;
 	}
 
 	// Only some of the stacks are placed, the rest stays on the provided Instance and a new one is created for the placed part.
-	InstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, CurrentHeldItemStacks - StacksToAdd);
-	const bool bCachedIdentified = InstanceToAdd->IsItemIdentified();
+	InInstanceToAdd->OverrideItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, CurrentHeldItemStacks - InStacksToAdd);
+	const bool bCachedIdentified = InInstanceToAdd->IsItemIdentified();
 
 	FObsidianItemGeneratedData CachedGeneratedData;
-	UObsidianItemsFunctionLibrary::FillItemGeneratedData(CachedGeneratedData, InstanceToAdd);
+	UObsidianItemsFunctionLibrary::FillItemGeneratedData(CachedGeneratedData, InInstanceToAdd);
 
-	UObsidianInventoryItemInstance* SplitInstance = AddItemDefinitionToList(InstanceToAdd->GetItemDef(), CachedGeneratedData,
-		StacksToAdd, ToPosition);
+	UObsidianInventoryItemInstance* SplitInstance = AddItemDefinitionToList(InInstanceToAdd->GetItemDef(), CachedGeneratedData,
+		InStacksToAdd, InToPosition);
 	if(SplitInstance)
 	{
-		SplitInstance->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, StacksToAdd);
+		SplitInstance->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, InStacksToAdd);
 		SplitInstance->SetIdentified(bCachedIdentified);
 
 		RegisterItemInstanceForReplication(SplitInstance);
@@ -318,8 +318,8 @@ UObsidianInventoryItemInstance* UObsidianItemContainerComponent::PlaceItemInstan
 }
 
 FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFromInstance(
-	UObsidianInventoryItemInstance* AddingFromInstance, UObsidianInventoryItemInstance* InstanceToAddTo,
-	const int32 StackToAddOverride)
+	UObsidianInventoryItemInstance* InAddingFromInstance, UObsidianInventoryItemInstance* InInstanceToAddTo,
+	const int32 InStackToAddOverride)
 {
 	FObsidianAddingStacksResult Result = FObsidianAddingStacksResult();
 
@@ -328,12 +328,12 @@ FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFrom
 		return Result;
 	}
 
-	if(AddingFromInstance == nullptr)
+	if(InAddingFromInstance == nullptr)
 	{
 		return Result;
 	}
 
-	const int32 AddingFromInstanceCurrentStacks = AddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	const int32 AddingFromInstanceCurrentStacks = InAddingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	Result.StacksLeft = AddingFromInstanceCurrentStacks;
 
 	if(CanOwnerModifyContainerState() == false)
@@ -341,30 +341,30 @@ FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFrom
 		return Result;
 	}
 
-	if(UObsidianItemsFunctionLibrary::IsTheSameItem(AddingFromInstance, InstanceToAddTo) == false)
+	if(UObsidianItemsFunctionLibrary::IsTheSameItem(InAddingFromInstance, InInstanceToAddTo) == false)
 	{
 		return Result;
 	}
 
 	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem(GetOwner(),
-		AddingFromInstance, InstanceToAddTo);
+		InAddingFromInstance, InInstanceToAddTo);
 	if(AmountThatCanBeAddedToInstance <= 0)
 	{
 		return Result;
 	}
 
-	AmountThatCanBeAddedToInstance = ClampStacksToAdd(AmountThatCanBeAddedToInstance, StackToAddOverride);
+	AmountThatCanBeAddedToInstance = ClampStacksToAdd(AmountThatCanBeAddedToInstance, InStackToAddOverride);
 
-	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
-	HandleItemStacksChanged(InstanceToAddTo, OldStackCount);
+	const int32 OldStackCount = InInstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	InInstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
+	HandleItemStacksChanged(InInstanceToAddTo, OldStackCount);
 
 	// AddingFromInstance is not held by this container, whoever holds it is responsible for reacting to the change.
-	AddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
+	InAddingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
 
 	Result.AddedStacks = AmountThatCanBeAddedToInstance;
 	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
-	Result.LastAddedToInstance = InstanceToAddTo;
+	Result.LastAddedToInstance = InInstanceToAddTo;
 	Result.AddingStacksResult = AmountThatCanBeAddedToInstance == AddingFromInstanceCurrentStacks
 		? EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded
 		: EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
@@ -372,11 +372,11 @@ FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFrom
 }
 
 FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFromDefinition(
-	const TSubclassOf<UObsidianInventoryItemDefinition>& AddingFromItemDef, const int32 AddingFromItemDefCurrentStacks,
-	UObsidianInventoryItemInstance* InstanceToAddTo, const int32 StackToAddOverride)
+	const TSubclassOf<UObsidianInventoryItemDefinition>& InAddingFromItemDef, const int32 InAddingFromItemDefCurrentStacks,
+	UObsidianInventoryItemInstance* InInstanceToAddTo, const int32 InStackToAddOverride)
 {
 	FObsidianAddingStacksResult Result = FObsidianAddingStacksResult();
-	Result.StacksLeft = AddingFromItemDefCurrentStacks;
+	Result.StacksLeft = InAddingFromItemDefCurrentStacks;
 
 	if(HasOwnerAuthority(__FUNCTION__) == false)
 	{
@@ -388,35 +388,35 @@ FObsidianAddingStacksResult UObsidianItemContainerComponent::AddStacksToItemFrom
 		return Result;
 	}
 
-	if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InstanceToAddTo, AddingFromItemDef) == false)
+	if(UObsidianItemsFunctionLibrary::IsTheSameItem_WithDef(InInstanceToAddTo, InAddingFromItemDef) == false)
 	{
 		return Result;
 	}
 
 	int32 AmountThatCanBeAddedToInstance = UObsidianItemsFunctionLibrary::GetAmountOfStacksAllowedToAddToItem_WithDef(GetOwner(),
-		AddingFromItemDef, AddingFromItemDefCurrentStacks, InstanceToAddTo);
+		InAddingFromItemDef, InAddingFromItemDefCurrentStacks, InInstanceToAddTo);
 	if(AmountThatCanBeAddedToInstance <= 0)
 	{
 		return Result;
 	}
 
-	AmountThatCanBeAddedToInstance = ClampStacksToAdd(AmountThatCanBeAddedToInstance, StackToAddOverride);
+	AmountThatCanBeAddedToInstance = ClampStacksToAdd(AmountThatCanBeAddedToInstance, InStackToAddOverride);
 
-	const int32 OldStackCount = InstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-	InstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
-	HandleItemStacksChanged(InstanceToAddTo, OldStackCount);
+	const int32 OldStackCount = InInstanceToAddTo->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	InInstanceToAddTo->AddItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, AmountThatCanBeAddedToInstance);
+	HandleItemStacksChanged(InInstanceToAddTo, OldStackCount);
 
 	Result.StacksLeft -= AmountThatCanBeAddedToInstance;
 	Result.AddedStacks = AmountThatCanBeAddedToInstance;
-	Result.LastAddedToInstance = InstanceToAddTo;
-	Result.AddingStacksResult = AmountThatCanBeAddedToInstance == AddingFromItemDefCurrentStacks
+	Result.LastAddedToInstance = InInstanceToAddTo;
+	Result.AddingStacksResult = AmountThatCanBeAddedToInstance == InAddingFromItemDefCurrentStacks
 		? EObsidianAddingStacksResultType::ASR_WholeItemAsStacksAdded
 		: EObsidianAddingStacksResultType::ASR_SomeOfTheStacksAdded;
 	return Result;
 }
 
 FObsidianItemOperationResult UObsidianItemContainerComponent::TakeOutStacksFromItem(
-	UObsidianInventoryItemInstance* TakingFromInstance, const int32 StacksToTake)
+	UObsidianInventoryItemInstance* InTakingFromInstance, const int32 InStacksToTake)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 
@@ -430,29 +430,29 @@ FObsidianItemOperationResult UObsidianItemContainerComponent::TakeOutStacksFromI
 		return Result;
 	}
 
-	if(TakingFromInstance == nullptr)
+	if(InTakingFromInstance == nullptr)
 	{
 		return Result;
 	}
 
 	// The only valid number of stacks to take is in range [1, x - 1], taking the whole item out is just picking it up.
 	// StacksToTake comes from the Client so it can't be trusted, anything outside this range would duplicate or void stacks.
-	const int32 CurrentTakingFromInstanceStacks = TakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-	if(StacksToTake < 1 || StacksToTake >= CurrentTakingFromInstanceStacks)
+	const int32 CurrentTakingFromInstanceStacks = InTakingFromInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	if(InStacksToTake < 1 || InStacksToTake >= CurrentTakingFromInstanceStacks)
 	{
 		return Result;
 	}
 
-	TakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, StacksToTake);
-	HandleItemStacksChanged(TakingFromInstance, CurrentTakingFromInstanceStacks);
+	InTakingFromInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, InStacksToTake);
+	HandleItemStacksChanged(InTakingFromInstance, CurrentTakingFromInstanceStacks);
 
 	Result.bActionSuccessful = true;
-	Result.AffectedInstance = TakingFromInstance;
-	Result.StacksLeft = StacksToTake;
+	Result.AffectedInstance = InTakingFromInstance;
+	Result.StacksLeft = InStacksToTake;
 	return Result;
 }
 
-FObsidianItemOperationResult UObsidianItemContainerComponent::RemoveItemFromContainer(UObsidianInventoryItemInstance* InstanceToRemove)
+FObsidianItemOperationResult UObsidianItemContainerComponent::RemoveItemFromContainer(UObsidianInventoryItemInstance* InInstanceToRemove)
 {
 	FObsidianItemOperationResult Result = FObsidianItemOperationResult();
 
@@ -466,34 +466,34 @@ FObsidianItemOperationResult UObsidianItemContainerComponent::RemoveItemFromCont
 		return Result;
 	}
 
-	if(InstanceToRemove == nullptr)
+	if(InInstanceToRemove == nullptr)
 	{
 		UE_LOG(ObLogItemContainer, Error, TEXT("Passed InstanceToRemove is invalid in [%hs]"), __FUNCTION__);
 		return Result;
 	}
 
-	RemoveItemInstanceFromList(InstanceToRemove);
-	UnregisterItemInstanceFromReplication(InstanceToRemove);
+	RemoveItemInstanceFromList(InInstanceToRemove);
+	UnregisterItemInstanceFromReplication(InInstanceToRemove);
 
 	Result.bActionSuccessful = true;
-	Result.AffectedInstance = InstanceToRemove;
+	Result.AffectedInstance = InInstanceToRemove;
 	return Result;
 }
 
-void UObsidianItemContainerComponent::ConsumeUsedItem(UObsidianInventoryItemInstance* UsingInstance, const int32 CurrentStacks)
+void UObsidianItemContainerComponent::ConsumeUsedItem(UObsidianInventoryItemInstance* InUsingInstance, const int32 InCurrentStacks)
 {
-	if(UsingInstance == nullptr)
+	if(InUsingInstance == nullptr)
 	{
 		return;
 	}
 
-	if(CurrentStacks > 1)
+	if(InCurrentStacks > 1)
 	{
-		UsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, 1);
-		HandleItemStacksChanged(UsingInstance, CurrentStacks);
+		InUsingInstance->RemoveItemStackCount(ObsidianGameplayTags::Item::StackCount::Current, 1);
+		HandleItemStacksChanged(InUsingInstance, InCurrentStacks);
 		return;
 	}
 
-	RemoveItemInstanceFromList(UsingInstance);
-	UnregisterItemInstanceFromReplication(UsingInstance);
+	RemoveItemInstanceFromList(InUsingInstance);
+	UnregisterItemInstanceFromReplication(InUsingInstance);
 }

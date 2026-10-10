@@ -17,7 +17,7 @@ class OBSIDIAN_API UObsidianMMC_MaxSpecialResource_Barbarian : public UObsidianM
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_MaxSpecialResource_Barbarian(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_MaxSpecialResource_Barbarian(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 };

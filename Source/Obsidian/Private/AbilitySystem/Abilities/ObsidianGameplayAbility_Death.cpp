@@ -22,12 +22,12 @@ UObsidianGameplayAbility_Death::UObsidianGameplayAbility_Death()
 	}
 }
 
-void UObsidianGameplayAbility_Death::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UObsidianGameplayAbility_Death::ActivateAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo,
+	const FGameplayAbilityActivationInfo InActivationInfo, const FGameplayEventData* InTriggerEventData)
 {
-	check(ActorInfo);
+	check(InActorInfo);
 
-	UObsidianAbilitySystemComponent* ObsidianASC = CastChecked<UObsidianAbilitySystemComponent>(ActorInfo->AbilitySystemComponent.Get());
+	UObsidianAbilitySystemComponent* ObsidianASC = CastChecked<UObsidianAbilitySystemComponent>(InActorInfo->AbilitySystemComponent.Get());
 
 	//TODO(intrxx) Can change it to cancel specific abilities or ignore some with specific tag in the future
 	ObsidianASC->CancelAllAbilities(this);
@@ -39,17 +39,17 @@ void UObsidianGameplayAbility_Death::ActivateAbility(const FGameplayAbilitySpecH
 		StartDeath();
 	}
 	
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	Super::ActivateAbility(InHandle, InActorInfo, InActivationInfo, InTriggerEventData);
 }
 
-void UObsidianGameplayAbility_Death::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+void UObsidianGameplayAbility_Death::EndAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo,
+	const FGameplayAbilityActivationInfo InActivationInfo, bool bInReplicateEndAbility, bool bInWasCancelled)
 {
-	check(ActorInfo);
+	check(InActorInfo);
 
 	FinishDeath();
 	
-	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+	Super::EndAbility(InHandle, InActorInfo, InActivationInfo, bInReplicateEndAbility, bInWasCancelled);
 }
 
 void UObsidianGameplayAbility_Death::StartDeath()

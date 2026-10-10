@@ -16,7 +16,7 @@ class OBSIDIAN_API UObsidianMMC_Evasion : public UGameplayModMagnitudeCalculatio
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_Evasion(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_Evasion(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 };

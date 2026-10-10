@@ -29,7 +29,7 @@ class OBSIDIAN_API UObsidianInventoryItemInstance : public UObject
 	GENERATED_BODY()
 
 public:
-	UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianInventoryItemInstance(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	//~ Start of UObject interface
 	virtual bool IsSupportedForNetworking() const override {return true;}
@@ -45,7 +45,7 @@ public:
 	virtual UWorld* GetWorld() const override final;
 	
 	UFUNCTION(BlueprintCallable, BlueprintPure = false, meta=(DeterminesOutputType = FragmentClass))
-	const UObsidianInventoryItemFragment* FindFragmentByClass(TSubclassOf<UObsidianInventoryItemFragment> FragmentClass) const;
+	const UObsidianInventoryItemFragment* FindFragmentByClass(TSubclassOf<UObsidianInventoryItemFragment> InFragmentClass) const;
 
 	template <typename T>
 	const T* FindFragmentByClass() const
@@ -87,7 +87,7 @@ public:
 	FObsidianItemPosition GetItemCurrentPosition() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void SetItemCurrentPosition(const FObsidianItemPosition& CurrentPositionToSet);
+	void SetItemCurrentPosition(const FObsidianItemPosition& InCurrentPositionToSet);
 
 	/** Should be called when removing item from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
@@ -98,7 +98,7 @@ public:
 	 */
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void SetUsable(const bool IsUsable);
+	void SetUsable(const bool InIsUsable);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool IsItemUsable() const;
@@ -107,7 +107,7 @@ public:
 	void SetUsableShard(UObsidianUsableShard* InUsableShard);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	bool UseItem(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingOntoInstance);
+	bool UseItem(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingOntoInstance);
 
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
 	void SetUsableItemType(const EObsidianUsableItemType InUsableItemTyp);
@@ -116,7 +116,7 @@ public:
 	EObsidianUsableItemType GetUsableItemType() const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	bool FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+	bool FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) const;
 
 	/**
@@ -138,8 +138,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	TArray<AObsidianSpawnedEquipmentPiece*> GetSpawnedActors() const;
 
-	void SetEquipmentActors(const TArray<FObsidianEquipmentActor>& EquipmentActors);
-	void SpawnEquipmentActors(const FGameplayTag& SlotTag);
+	void SetEquipmentActors(const TArray<FObsidianEquipmentActor>& InEquipmentActors);
+	void SpawnEquipmentActors(const FGameplayTag& InSlotTag);
 	void DestroyEquipmentActors();
 
 	bool HasEquippingRequirements() const;
@@ -177,9 +177,9 @@ public:
 	TArray<FObsidianActiveItemAffix> GetAllItemAffixes() const;
 	TArray<FObsidianActiveItemAffix> GetAllItemPrefixesAndSuffixes() const;
 	
-	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& AffixesToInitialize);
-	void AddAffix(const FObsidianActiveItemAffix& AffixToAdd);
-	bool RemoveAffix(const FGameplayTag& AffixTag);
+	void InitializeAffixes(const TArray<FObsidianActiveItemAffix>& InAffixesToInitialize);
+	void AddAffix(const FObsidianActiveItemAffix& InAffixToAdd);
+	bool RemoveAffix(const FGameplayTag& InAffixTag);
 	bool RemoveSkillImplicitAffix();
 	bool RemoveAllPrefixesAndSuffixes();
 	
@@ -216,23 +216,23 @@ public:
 
 	/** Adds a specified number of stacks to the tag (does nothing if AvailableStackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void AddItemStackCount(const FGameplayTag ToTag, const int32 StackCount);
+	void AddItemStackCount(const FGameplayTag InToTag, const int32 InStackCount);
 
 	/** Removes a specified number of stacks to the tag (does nothing if AvailableStackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void RemoveItemStackCount(const FGameplayTag FromTag, const int32 StackCount);
+	void RemoveItemStackCount(const FGameplayTag InFromTag, const int32 InStackCount);
 
 	/** Overrides stacks on provided tag (does nothing if AvailableStackCount is below 1). */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Item")
-	void OverrideItemStackCount(const FGameplayTag Tag, const int32 NewStackCount);
+	void OverrideItemStackCount(const FGameplayTag InTag, const int32 InNewStackCount);
 	
 	/** Returns the stack count of the specified tag (or 0 is there is no stack for this tag). */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	int32 GetItemStackCount(const FGameplayTag Tag) const;
+	int32 GetItemStackCount(const FGameplayTag InTag) const;
 
 	/** Return true if there is at least one stack of the specified tag. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
-	bool HasStackCountForTag(const FGameplayTag Tag) const;
+	bool HasStackCountForTag(const FGameplayTag InTag) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	bool HasAnyStacks() const;
@@ -250,12 +250,12 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	FIntPoint GetItemGridSpan() const;
 	
-	void SetItemGridSpan(const FIntPoint& GridSpanToSet);
+	void SetItemGridSpan(const FIntPoint& InGridSpanToSet);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	UTexture2D* GetItemImage() const;
 	
-	void SetItemImage(UTexture2D* ItemImageToSet);
+	void SetItemImage(UTexture2D* InItemImageToSet);
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Item")
 	UStaticMesh* GetItemDroppedMesh() const;
@@ -309,7 +309,7 @@ public:
 	 */
 
 	void ConstructSaveItem(FObsidianSavedItem& OutSavedItem);
-	void ConstructFromSavedItem(const FObsidianSavedItem& SavedItem);
+	void ConstructFromSavedItem(const FObsidianSavedItem& InSavedItem);
 
 private:
 	/**

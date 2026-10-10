@@ -20,12 +20,12 @@ class OBSIDIAN_API UObsidianHeroAttributeSet : public UObsidianCommonAttributeSe
 public:
 	UObsidianHeroAttributeSet();
 	
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
+	virtual void PreAttributeChange(const FGameplayAttribute& InAttribute, float& InOutNewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& InAttribute, float InOldValue, float InNewValue) override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
 
-	static float GetMaxExperienceForLevel(const uint8 HeroLevel);
+	static float GetMaxExperienceForLevel(const uint8 InHeroLevel);
 
 	/**
 	 *	Character
@@ -92,69 +92,69 @@ protected:
 	 */
 	
 	UFUNCTION()
-	void OnRep_Experience(const FGameplayAttributeData& OldValue);
+	void OnRep_Experience(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxExperience(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxExperience(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_PassiveSkillPoints(const FGameplayAttributeData& OldValue);
+	void OnRep_PassiveSkillPoints(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_AscensionPoints(const FGameplayAttributeData& OldValue);
+	void OnRep_AscensionPoints(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_Stamina(const FGameplayAttributeData& OldValue);
+	void OnRep_Stamina(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxStamina(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxStamina(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_SprintSpeed(const FGameplayAttributeData& OldValue);
+	void OnRep_SprintSpeed(const FGameplayAttributeData& InOldValue);
 	
 	/**
 	 * Spending attributes
 	 */
 	
 	UFUNCTION()
-	void OnRep_Mana(const FGameplayAttributeData& OldValue);
+	void OnRep_Mana(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxMana(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxMana(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_IncreasedManaPercentage(const FGameplayAttributeData& OldValue);
+	void OnRep_IncreasedManaPercentage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_SpecialResource(const FGameplayAttributeData& OldValue);
+	void OnRep_SpecialResource(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxSpecialResource(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxSpecialResource(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Status
 	 */
 
 	UFUNCTION()
-	void OnRep_ManaRegeneration(const FGameplayAttributeData& OldValue);
+	void OnRep_ManaRegeneration(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_StaminaRegeneration(const FGameplayAttributeData& OldValue);
+	void OnRep_StaminaRegeneration(const FGameplayAttributeData& InOldValue);
 
 	/**
 	 * Defence Attributes
 	 */
 
 	UFUNCTION()
-	void OnRep_HitBlockChance(const FGameplayAttributeData& OldValue);
+	void OnRep_HitBlockChance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxHitBlockChance(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxHitBlockChance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_SpellBlockChance(const FGameplayAttributeData& OldValue);
+	void OnRep_SpellBlockChance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_MaxSpellBlockChance(const FGameplayAttributeData& OldValue);
+	void OnRep_MaxSpellBlockChance(const FGameplayAttributeData& InOldValue);
 	
 	/**
 	 * "RPG Attributes"
 	 */
 	
 	UFUNCTION()
-	void OnRep_Strength(const FGameplayAttributeData& OldValue);
+	void OnRep_Strength(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_Intelligence(const FGameplayAttributeData& OldValue);
+	void OnRep_Intelligence(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_Dexterity(const FGameplayAttributeData& OldValue);
+	void OnRep_Dexterity(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
-	void OnRep_Faith(const FGameplayAttributeData& OldValue);
+	void OnRep_Faith(const FGameplayAttributeData& InOldValue);
 
 private:
 	bool bOutOfStamina;

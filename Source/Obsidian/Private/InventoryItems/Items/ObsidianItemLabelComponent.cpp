@@ -9,16 +9,16 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
 
-UObsidianItemLabelComponent::UObsidianItemLabelComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianItemLabelComponent::UObsidianItemLabelComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
 }
 
-void UObsidianItemLabelComponent::SetItemOwner(AObsidianDroppableItem* OwningItemActor)
+void UObsidianItemLabelComponent::SetItemOwner(AObsidianDroppableItem* InOwningItemActor)
 {
-	WeakOwningItemActor = OwningItemActor;
+	WeakOwningItemActor = InOwningItemActor;
 }
 
 FVector UObsidianItemLabelComponent::GetOwningItemActorLocation() const
@@ -73,9 +73,9 @@ void UObsidianItemLabelComponent::RegisterLabelComponent()
 	}
 }
 
-void UObsidianItemLabelComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+void UObsidianItemLabelComponent::EndPlay(const EEndPlayReason::Type InEndPlayReason)
 {
-	if (EndPlayReason == EEndPlayReason::Type::Destroyed)
+	if (InEndPlayReason == EEndPlayReason::Type::Destroyed)
 	{
 		if (const UWorld* World = GetWorld())
 		{
@@ -87,23 +87,23 @@ void UObsidianItemLabelComponent::EndPlay(const EEndPlayReason::Type EndPlayReas
 		}
 	}
 	
-	Super::EndPlay(EndPlayReason);
+	Super::EndPlay(InEndPlayReason);
 }
 
-void UObsidianItemLabelComponent::HandleLabelMouseHover(const bool bMouseEnter)
+void UObsidianItemLabelComponent::HandleLabelMouseHover(const bool bInMouseEnter)
 {
 	if (AObsidianDroppableItem* OwningDroppableItem = WeakOwningItemActor.Get())
 	{
-		OwningDroppableItem->OnItemMouseHover(bMouseEnter);
+		OwningDroppableItem->OnItemMouseHover(bInMouseEnter);
 	}
 }
 
-void UObsidianItemLabelComponent::HandleLabelMouseButtonDown(const int32 PlayerIndex,
-	const FObsidianItemInteractionFlags& InteractionFlags)
+void UObsidianItemLabelComponent::HandleLabelMouseButtonDown(const int32 InPlayerIndex,
+	const FObsidianItemInteractionFlags& InInteractionFlags)
 {
 	if (AObsidianDroppableItem* OwningDroppableItem = WeakOwningItemActor.Get())
 	{
-		OwningDroppableItem->OnItemMouseButtonDown(PlayerIndex, InteractionFlags);
+		OwningDroppableItem->OnItemMouseButtonDown(InPlayerIndex, InInteractionFlags);
 	}
 }
 

@@ -19,8 +19,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianEnemyMovementComponent>(
+AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer.SetDefaultSubobjectClass<UObsidianEnemyMovementComponent>(
 		ACharacter::CharacterMovementComponentName))
 {
 	USkeletalMeshComponent* MeshComp = GetMesh();
@@ -136,9 +136,9 @@ void AObsidianEnemy::OnAbilitySystemUninitialized()
 	EnemyOverlayBarComponent->UninitializeOverlayBarComponent();
 }
 
-void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
+void AObsidianEnemy::OnDeathStarted(AActor* InOwningActor)
 {
-	Super::OnDeathStarted(OwningActor);
+	Super::OnDeathStarted(InOwningActor);
 
 	if(HasAuthority() && IsValid(Controller) && IsValid(ItemDropComponent))
 	{
@@ -185,9 +185,9 @@ void AObsidianEnemy::OnDeathStarted(AActor* OwningActor)
 	}
 }
 
-void AObsidianEnemy::OnDeathFinished(AActor* OwningActor)
+void AObsidianEnemy::OnDeathFinished(AActor* InOwningActor)
 {
-	Super::OnDeathFinished(OwningActor);
+	Super::OnDeathFinished(InOwningActor);
 }
 
 bool AObsidianEnemy::IsDeadOrDying_Implementation() const

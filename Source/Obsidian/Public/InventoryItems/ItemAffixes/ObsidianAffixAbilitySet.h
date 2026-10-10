@@ -35,7 +35,7 @@ public:
 	FGameplayTag OptionalInputTag;
 	
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 };
 
@@ -53,7 +53,7 @@ public:
 	TSubclassOf<UGameplayEffect> GameplayEffect = nullptr;
 
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 };
 
@@ -66,10 +66,10 @@ struct FObsidianAffixAbilitySet_GrantedHandles
 	GENERATED_BODY()
 
 public:
-	void AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle);
-	void AddActiveGameplayEffectSpecHandle(const FActiveGameplayEffectHandle& Handle);
+	void AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& InHandle);
+	void AddActiveGameplayEffectSpecHandle(const FActiveGameplayEffectHandle& InHandle);
 
-	void TakeFromAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC);
+	void TakeFromAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC);
 
 protected:
 	/** Handles to granted Gameplay Abilities. */
@@ -90,7 +90,7 @@ class OBSIDIAN_API UObsidianAffixAbilitySet : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianAffixAbilitySet(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianAffixAbilitySet(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	/**
 	 * Grants the Ability Set.
@@ -100,13 +100,13 @@ public:
 	 * @param AffixValue Value/Values of Affix that are applied to the owner.
 	 * @param SourceObject Used for Gameplay Ability Spec Handle to specify its Source Object
 	 */
-	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const FGameplayTag& AffixTag, const FObsidianActiveAffixValue& AffixValue,
-		FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
-	void GiveItemAffixesToAbilitySystem(UObsidianAbilitySystemComponent* ObsidianASC, const TArray<FObsidianActiveItemAffix>& ItemAffixes,
-			FObsidianAffixAbilitySet_GrantedHandles* GrantedHandles, UObject* SourceObject = nullptr) const;
+	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, const FGameplayTag& InAffixTag, const FObsidianActiveAffixValue& InAffixValue,
+		FObsidianAffixAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject = nullptr) const;
+	void GiveItemAffixesToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, const TArray<FObsidianActiveItemAffix>& InItemAffixes,
+			FObsidianAffixAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject = nullptr) const;
 	
 #if WITH_EDITOR
-	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 
 protected:

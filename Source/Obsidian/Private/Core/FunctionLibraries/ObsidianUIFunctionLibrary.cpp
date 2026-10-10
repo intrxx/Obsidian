@@ -12,15 +12,15 @@
 #include "UI/ObsidianWidgetControllerBase.h"
 
 
-UObMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetController(const UObject* WorldContextObject)
+UObMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetController(const UObject* InWorldContextObject)
 {
-	if(WorldContextObject == nullptr)
+	if(InWorldContextObject == nullptr)
 	{
 		return nullptr;
 	}
 
 	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
-		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+		UGameplayStatics::GetPlayerController(InWorldContextObject, 0)))
 	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
@@ -38,15 +38,15 @@ UObMainOverlayWidgetController* UObsidianUIFunctionLibrary::GetOverlayWidgetCont
 	return nullptr;
 }
 
-UObCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(const UObject* WorldContextObject)
+UObCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStatusWidgetController(const UObject* InWorldContextObject)
 {
-	if(WorldContextObject == nullptr)
+	if(InWorldContextObject == nullptr)
 	{
 		return nullptr;
 	}
 
 	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
-		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+		UGameplayStatics::GetPlayerController(InWorldContextObject, 0)))
 	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
@@ -63,15 +63,15 @@ UObCharacterStatusWidgetController* UObsidianUIFunctionLibrary::GetCharacterStat
 	return nullptr;
 }
 
-UObInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(const UObject* WorldContextObject)
+UObInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItemsWidgetController(const UObject* InWorldContextObject)
 {
-	if(WorldContextObject == nullptr)
+	if(InWorldContextObject == nullptr)
 	{
 		return nullptr;
 	}
 
 	if(AObsidianPlayerController* ObsidianPC = Cast<AObsidianPlayerController>(
-		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+		UGameplayStatics::GetPlayerController(InWorldContextObject, 0)))
 	{
 		if(AObsidianHUD* ObsidianHUD = ObsidianPC->GetObsidianHUD())
 		{
@@ -89,15 +89,15 @@ UObInventoryItemsWidgetController* UObsidianUIFunctionLibrary::GetInventoryItems
 }
 
 UObCharacterSelectionWidgetController* UObsidianUIFunctionLibrary::GetCharacterSelectionWidgetController(
-	const UObject* WorldContextObject)
+	const UObject* InWorldContextObject)
 {
-	if(WorldContextObject == nullptr)
+	if(InWorldContextObject == nullptr)
 	{
 		return nullptr;
 	}
 
 	if(AObsidianPlayerController* PlayerController = Cast<AObsidianPlayerController>(
-		UGameplayStatics::GetPlayerController(WorldContextObject, 0)))
+		UGameplayStatics::GetPlayerController(InWorldContextObject, 0)))
 	{
 		if(AObsidianFrontEndHUD* FrontEndHUD = Cast<AObsidianFrontEndHUD>(PlayerController->GetHUD()))
 		{

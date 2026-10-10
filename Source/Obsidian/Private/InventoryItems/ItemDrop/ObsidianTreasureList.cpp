@@ -31,7 +31,7 @@ bool FObsidianDropItem::IsValid() const
 	return !SoftTreasureItemDefinitionClass.IsNull();
 }
 
-uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQuality) const
+uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 InTreasureQuality) const
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
@@ -57,7 +57,7 @@ uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQu
 		MaxStack = FMath::Max(MaxStack, StackSizeConfig.StackSize);
 	}
 
-	const float RollBias = TreasureQuality / ItemDataSettings->MaxTreasureQuality;
+	const float RollBias = InTreasureQuality / ItemDataSettings->MaxTreasureQuality;
 	uint32 TotalAdjustedWeight = 0;
 	for (FObsidianStacksToDrop& AdjustedStackSizeConfig : AdjustedStackSizes)
 	{
@@ -86,9 +86,9 @@ uint8 FObsidianDropItem::GetRandomStackSizeToDropAdjusted(const uint8 TreasureQu
 
 // ~ FObsidianTreasureClass
 
-FObsidianDropItem FObsidianTreasureClass::GetRandomItemFromClass(const float NoDropScale)
+FObsidianDropItem FObsidianTreasureClass::GetRandomItemFromClass(const float InNoDropScale)
 {
-	const uint16 ScaledNoDropWeight = FMath::Max((NoDropWeight * NoDropScale), 0);
+	const uint16 ScaledNoDropWeight = FMath::Max((NoDropWeight * InNoDropScale), 0);
 	uint32 TotalWeight = ScaledNoDropWeight;
 	for (const FObsidianDropItem& DropItem : DropItems)
 	{
@@ -115,14 +115,14 @@ FObsidianDropItem FObsidianTreasureClass::GetRandomItemFromClass(const float NoD
 }
 
 #if WITH_EDITOR
-EDataValidationResult UObsidianTreasureList::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UObsidianTreasureList::IsDataValid(FDataValidationContext& InContext) const
 {
-	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(InContext), EDataValidationResult::Valid);
 
 	uint16 TreasureClassesIndex = 0;
 	for (const FObsidianTreasureClass& Class : TreasureClasses)
 	{
-		Result = CombineDataValidationResults(Result, Class.ValidateData(Context, TreasureClassesIndex));
+		Result = CombineDataValidationResults(Result, Class.ValidateData(InContext, TreasureClassesIndex));
 		TreasureClassesIndex++;
 	}
 	
@@ -136,18 +136,18 @@ void UObsidianTreasureList::PostInitProperties()
 {
 	Super::PostInitProperties();
 
-	TreasureClasses.Sort([](const FObsidianTreasureClass& A, const FObsidianTreasureClass& B)
+	TreasureClasses.Sort([](const FObsidianTreasureClass& InA, const FObsidianTreasureClass& InB)
 		{
-			return A.TreasureQuality < B.TreasureQuality;
+			return InA.TreasureQuality < InB.TreasureQuality;
 		});
 
 	for (FObsidianTreasureClass& TreasureClass : TreasureClasses)
 	{
 		for (FObsidianDropItem& DropItem : TreasureClass.DropItems)
 		{
-			DropItem.StackSizes.Sort([](const FObsidianStacksToDrop& A, const FObsidianStacksToDrop& B)
+			DropItem.StackSizes.Sort([](const FObsidianStacksToDrop& InA, const FObsidianStacksToDrop& InB)
 				{
-					return A.StackTierWeight > B.StackTierWeight;
+					return InA.StackTierWeight > InB.StackTierWeight;
 				});
 		}
 	}
@@ -169,13 +169,13 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClasses() co
 	return TreasureClasses;
 }
 
-TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality) const
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const uint8 InTreasureQuality) const
 {
 	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
 	
 	for (const FObsidianTreasureClass& Class : TreasureClasses)
 	{
-		if (Class.TreasureQuality <= TreasureQuality)
+		if (Class.TreasureQuality <= InTreasureQuality)
 		{
 			MatchingTreasureClasses.Add(Class);
 		}
@@ -184,18 +184,18 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQ
 	return MatchingTreasureClasses;
 }
 
-TArray<FObsidianDropItem> UObsidianTreasureList::GetAllItemsOfBaseTypeUpToQuality(const uint8 TreasureQuality,
-	const FGameplayTag& OfBaseType) const
+TArray<FObsidianDropItem> UObsidianTreasureList::GetAllItemsOfBaseTypeUpToQuality(const uint8 InTreasureQuality,
+	const FGameplayTag& InOfBaseType) const
 {
 	TArray<FObsidianDropItem> MatchingItemsToDrop;
 	
 	for (const FObsidianTreasureClass& Class : TreasureClasses)
 	{
-		if (Class.TreasureQuality <= TreasureQuality)
+		if (Class.TreasureQuality <= InTreasureQuality)
 		{
 			for (const FObsidianDropItem& Item : Class.DropItems)
 			{
-				if (Item.ItemBaseType == OfBaseType)
+				if (Item.ItemBaseType == InOfBaseType)
 				{
 					MatchingItemsToDrop.Add(Item);
 				}
@@ -206,10 +206,10 @@ TArray<FObsidianDropItem> UObsidianTreasureList::GetAllItemsOfBaseTypeUpToQualit
 	return MatchingItemsToDrop;
 }
 
-TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQuality(const uint8 TreasureQuality) const
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQuality(const uint8 InTreasureQuality) const
 {
 	TArray<const FObsidianTreasureClass*> MatchingTreasureClassesPtrs;
-	TreasureClassMap.MultiFind(TreasureQuality, MatchingTreasureClassesPtrs);
+	TreasureClassMap.MultiFind(InTreasureQuality, MatchingTreasureClassesPtrs);
 
 	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
 	for (const FObsidianTreasureClass* TreasureClassPtr : MatchingTreasureClassesPtrs)
@@ -222,16 +222,16 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQualit
 	return MatchingTreasureClasses;
 }
 
-TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQualityWithCategory(const uint8 TreasureQuality,
-	const FGameplayTag& FromCategory) const
+TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQualityWithCategory(const uint8 InTreasureQuality,
+	const FGameplayTag& InFromCategory) const
 {
 	TArray<const FObsidianTreasureClass*> MatchingTreasureClassesPtrs;
-	TreasureClassMap.MultiFind(TreasureQuality, MatchingTreasureClassesPtrs);
+	TreasureClassMap.MultiFind(InTreasureQuality, MatchingTreasureClassesPtrs);
 
 	TArray<FObsidianTreasureClass> MatchingTreasureClasses;
 	for (const FObsidianTreasureClass* TreasureClassPtr : MatchingTreasureClassesPtrs)
 	{
-		if (TreasureClassPtr && TreasureClassPtr->TreasureCategoryTag.MatchesTag(FromCategory))
+		if (TreasureClassPtr && TreasureClassPtr->TreasureCategoryTag.MatchesTag(InFromCategory))
 		{
 			MatchingTreasureClasses.Add(*TreasureClassPtr);
 		}
@@ -239,9 +239,9 @@ TArray<FObsidianTreasureClass> UObsidianTreasureList::GetTreasureClassesOfQualit
 	return MatchingTreasureClasses;
 }
 
-void UObsidianTreasureList::PreSave(FObjectPreSaveContext SaveContext)
+void UObsidianTreasureList::PreSave(FObjectPreSaveContext InSaveContext)
 {
-	Super::PreSave(SaveContext);
+	Super::PreSave(InSaveContext);
 
 	for (auto& TreasureClass : TreasureClasses)
 	{
@@ -263,7 +263,7 @@ void UObsidianTreasureList::PreSave(FObjectPreSaveContext SaveContext)
 }
 
 #if WITH_EDITOR
-EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContext& Context, const int Index) const
+EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContext& InContext, const int InIndex) const
 {
 	EDataValidationResult Result = EDataValidationResult::Valid;
 
@@ -272,9 +272,9 @@ EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContex
 		Result = EDataValidationResult::Invalid;
 
 		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Treasure Quality at index [%i] is not set! \n"
-			"Please set a valid Treasure Quality or delete this index entry in this Treasure Class."), Index));
+			"Please set a valid Treasure Quality or delete this index entry in this Treasure Class."), InIndex));
 
-		Context.AddError(ErrorMessage);
+		InContext.AddError(ErrorMessage);
 	}
 	
 	if(DropItems.IsEmpty())
@@ -282,9 +282,9 @@ EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContex
 		Result = EDataValidationResult::Invalid;
 
 		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Drop Items at index [%i] is empty! \n"
-			"Please fill Drop Items or delete this index entry in this Treasure Class."), Index));
+			"Please fill Drop Items or delete this index entry in this Treasure Class."), InIndex));
 
-		Context.AddError(ErrorMessage);
+		InContext.AddError(ErrorMessage);
 	}
 
 	for (int32 i = 0; i < DropItems.Num(); i++)
@@ -295,20 +295,20 @@ EDataValidationResult FObsidianTreasureClass::ValidateData(FDataValidationContex
 			Result = EDataValidationResult::Invalid;
 
 			const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Item Def at Drop Items index [%i] at overall index [%i] is empty! \n"
-				"Please fill correct Treasure Item Definition Class or delete this index entry."), i, Index));
+				"Please fill correct Treasure Item Definition Class or delete this index entry."), i, InIndex));
 
-			Context.AddError(ErrorMessage);
+			InContext.AddError(ErrorMessage);
 		}
 	}
 
 	return Result;
 }
 
-void UObsidianTreasureList::PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent)
+void UObsidianTreasureList::PostEditChangeProperty(struct FPropertyChangedEvent& InPropertyChangedEvent)
 {
-	Super::PostEditChangeProperty(PropertyChangedEvent);
+	Super::PostEditChangeProperty(InPropertyChangedEvent);
 
-	const FName PropertyName = PropertyChangedEvent.Property ? PropertyChangedEvent.Property->GetFName() : NAME_None;
+	const FName PropertyName = InPropertyChangedEvent.Property ? InPropertyChangedEvent.Property->GetFName() : NAME_None;
 	
 	// Refresh derived tags when any TreasureClass changes
 	if (PropertyName == GET_MEMBER_NAME_CHECKED(FObsidianDropItem, SoftTreasureItemDefinitionClass) || PropertyName == NAME_None)

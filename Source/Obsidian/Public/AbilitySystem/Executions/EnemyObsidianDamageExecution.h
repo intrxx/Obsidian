@@ -20,6 +20,6 @@ public:
 	UEnemyObsidianDamageExecution();
 
 protected:
-	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& ExecutionParams,
+	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& InExecutionParams,
 		FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
 };

@@ -30,8 +30,8 @@ protected:
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	
-	void ExperienceChanged(const float NewValue);
-	void MaxExperienceChanged(const float NewValue, const float OldValue);
+	void ExperienceChanged(const float InNewValue);
+	void MaxExperienceChanged(const float InNewValue, const float InOldValue);
 	
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")

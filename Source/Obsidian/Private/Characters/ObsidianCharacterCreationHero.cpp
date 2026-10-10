@@ -7,8 +7,8 @@
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
-AObsidianCharacterCreationHero::AObsidianCharacterCreationHero(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+AObsidianCharacterCreationHero::AObsidianCharacterCreationHero(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	USkeletalMeshComponent* MeshComp = GetMesh();
 	MeshComp->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));

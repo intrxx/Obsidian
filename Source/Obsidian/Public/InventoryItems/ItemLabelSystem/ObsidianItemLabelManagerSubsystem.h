@@ -94,8 +94,8 @@ public:
 	TObjectPtr<class UObsidianItemLabelManagerSubsystem> Target = nullptr;
 
 public:
-	virtual void ExecuteTick(float DeltaTime, ELevelTick TickType, ENamedThreads::Type CurrentThread,
-		const FGraphEventRef& MyCompletionGraphEvent) override;
+	virtual void ExecuteTick(float InDeltaTime, ELevelTick InTickType, ENamedThreads::Type InCurrentThread,
+		const FGraphEventRef& InMyCompletionGraphEvent) override;
 
 	virtual FString DiagnosticMessage() override;
 };
@@ -121,17 +121,17 @@ class OBSIDIAN_API UObsidianItemLabelManagerSubsystem : public UWorldSubsystem
 public:
 	UObsidianItemLabelManagerSubsystem();
 
-	void PostWorkTick(float DeltaTime);
+	void PostWorkTick(float InDeltaTime);
 
 	void InitializeItemLabelManager(UObsidianMainOverlay* InItemLabelOverlay, AObsidianPlayerController* InObsidianPC);
 
-	FGuid RegisterItemLabel(UObsidianItemLabelComponent* SourceLabelComponent);
-	void UnregisterItemLabel(const FGuid& LabelID);
+	FGuid RegisterItemLabel(UObsidianItemLabelComponent* InSourceLabelComponent);
+	void UnregisterItemLabel(const FGuid& InLabelID);
 
-	void ToggleItemLabelHighlight(const bool bHighlight);
+	void ToggleItemLabelHighlight(const bool bInHighlight);
 
 	// ~ Start of USubsystem
-	virtual void Initialize(FSubsystemCollectionBase& Collection) override;
+	virtual void Initialize(FSubsystemCollectionBase& InCollection) override;
 	virtual void Deinitialize() override;
 	// ~ End of USubsystem
 
@@ -140,22 +140,22 @@ public:
 
 protected:
 	// ~ Start of UWorldSubsystem
-	virtual bool DoesSupportWorldType(const EWorldType::Type WorldType) const override;
+	virtual bool DoesSupportWorldType(const EWorldType::Type InWorldType) const override;
 	// ~ End of UWorldSubsystem
 
-	void UpdateLabels(float DeltaTime);
+	void UpdateLabels(float InDeltaTime);
 	void UpdateLabelAnchors(TArray<FObsidianItemLabelData*>& OutLabelsToSolve, FBox2D& OutViewportArea);
-	void SolveLabelLayout(TArray<FObsidianItemLabelData*>& LabelsToSolve, const FBox2D& ViewportArea);
+	void SolveLabelLayout(TArray<FObsidianItemLabelData*>& InOutLabelsToSolve, const FBox2D& InViewportArea);
 
-	bool ActivateLabel(FObsidianItemLabelData& LabelData);
-	void DeactivateLabel(FObsidianItemLabelData& LabelData);
+	bool ActivateLabel(FObsidianItemLabelData& InOutLabelData);
+	void DeactivateLabel(FObsidianItemLabelData& InOutLabelData);
 
-	UObsidianItemLabel* AcquireWidget(const FGuid& ForID);
-	void ReleaseWidget(UObsidianItemLabel* LabelWidget);
+	UObsidianItemLabel* AcquireWidget(const FGuid& InForID);
+	void ReleaseWidget(UObsidianItemLabel* InLabelWidget);
 
-	void HandleLabelHovered(const bool bEnter, const FGuid& LabelID);
-	void HandleLabelPressed(const int32 PlayerIndex, const FObsidianItemInteractionFlags& InteractionFlags,
-		const FGuid& LabelID);
+	void HandleLabelHovered(const bool bInEnter, const FGuid& InLabelID);
+	void HandleLabelPressed(const int32 InPlayerIndex, const FObsidianItemInteractionFlags& InInteractionFlags,
+		const FGuid& InLabelID);
 
 private:
 	UPROPERTY()

@@ -99,5 +99,5 @@ public:
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 
 protected:
-	void SetEffectProperties(const FGameplayEffectModCallbackData& Data, /** OUT */ FObsidianEffectProperties& Props) const;
+	void SetEffectProperties(const FGameplayEffectModCallbackData& InData, /** OUT */ FObsidianEffectProperties& OutProps) const;
 };

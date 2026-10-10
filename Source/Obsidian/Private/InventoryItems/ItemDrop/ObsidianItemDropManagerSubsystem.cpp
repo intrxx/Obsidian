@@ -8,7 +8,7 @@
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 
-void UObsidianItemDropManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const
+void UObsidianItemDropManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& InItemsToDrop) const
 {
 	UWorld* World = GetWorld();
 	if (World == nullptr)
@@ -17,7 +17,7 @@ void UObsidianItemDropManagerSubsystem::RequestDroppingItems(TArray<FObsidianIte
 	}
 
 	//TODO(intrxx) Apply delay after every drop?
-	for (const FObsidianItemToDrop& Item : ItemsToDrop)
+	for (const FObsidianItemToDrop& Item : InItemsToDrop)
 	{
 		if (const TSubclassOf<UObsidianInventoryItemDefinition>& ItemToDrop = Item.ItemDefinitionClass)
 		{

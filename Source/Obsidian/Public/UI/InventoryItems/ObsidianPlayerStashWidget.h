@@ -43,19 +43,19 @@ protected:
 
 	UObsidianStashTabWidget* GetActiveStashTab() const;
 	
-	void CreateStashTabButton(const FGameplayTag& StashTag, const FText& StashTabName);
-	void ShowStashTab(const FGameplayTag& WithStashTag);
+	void CreateStashTabButton(const FGameplayTag& InStashTag, const FText& InStashTabName);
+	void ShowStashTab(const FGameplayTag& InWithStashTag);
 
-	void OnItemStashed(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemChanged(const FObsidianItemWidgetData& ItemWidgetData);
-	void OnItemRemoved(const FObsidianItemWidgetData& ItemWidgetData);
+	void OnItemStashed(const FObsidianItemWidgetData& InItemWidgetData);
+	void OnItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
+	void OnItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
 	
-	void HighlightSlotPlacement(const FGameplayTagContainer& WithTags);
+	void HighlightSlotPlacement(const FGameplayTagContainer& InWithTags);
 	void StopHighlightSlotPlacement();
 
 	void SavePlayerStash();
 
-	void OnUsableContextFiredForStash(const TMultiMap<FGameplayTag, FObsidianItemPosition>& MatchingItemPositions);
+	void OnUsableContextFiredForStash(const TMultiMap<FGameplayTag, FObsidianItemPosition>& InMatchingItemPositions);
 	void ClearUsableItemHighlight();
 	
 protected:

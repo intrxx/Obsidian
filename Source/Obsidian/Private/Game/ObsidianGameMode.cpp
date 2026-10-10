@@ -8,7 +8,7 @@
 #include "InventoryItems/Items/ItemSpecific/ObsidianTownPortal.h"
 
 
-void AObsidianGameMode::InitGame(const FString& MapName, const FString& Options, FString& ErrorMessage)
+void AObsidianGameMode::InitGame(const FString& InMapName, const FString& InOptions, FString& OutErrorMessage)
 {
 	if(const UGameInstance* GameInstance = GetGameInstance())
 	{
@@ -42,7 +42,7 @@ void AObsidianGameMode::InitGame(const FString& MapName, const FString& Options,
 		}
 	}
 	
-	Super::InitGame(MapName, Options, ErrorMessage);
+	Super::InitGame(InMapName, InOptions, OutErrorMessage);
 }
 
 EObsidianGameNetworkType AObsidianGameMode::GetCurrentNetworkType() const

@@ -47,11 +47,11 @@ FReply UObsidianOverlayGameTabsMenu::NativeOnMouseButtonDoubleClick(const FGeome
 	return FReply::Handled();
 }
 
-void UObsidianOverlayGameTabsMenu::OnCharacterStatusTabStatusChange(bool bIsConstructed)
+void UObsidianOverlayGameTabsMenu::OnCharacterStatusTabStatusChange(bool bInIsConstructed)
 {
 	if(CharacterStatus_GameTabButton)
 	{
-		CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
+		CharacterStatus_GameTabButton->bIsCorrespondingTabOpen = bInIsConstructed;
 	}
 }
 
@@ -60,11 +60,11 @@ void UObsidianOverlayGameTabsMenu::OnInventoryButtonClicked()
 	OnInventoryButtonClickedDelegate.Broadcast();
 }
 
-void UObsidianOverlayGameTabsMenu::OnInventoryTabStatusChange(bool bIsConstructed)
+void UObsidianOverlayGameTabsMenu::OnInventoryTabStatusChange(bool bInIsConstructed)
 {
 	if(Inventory_GameTabButton)
 	{
-		Inventory_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
+		Inventory_GameTabButton->bIsCorrespondingTabOpen = bInIsConstructed;
 	}
 }
 
@@ -73,10 +73,10 @@ void UObsidianOverlayGameTabsMenu::OnPassiveSkillTreeButtonClicked()
 	OnPassiveSkillTreeButtonClickedDelegate.Broadcast();
 }
 
-void UObsidianOverlayGameTabsMenu::OnPassiveSkillTreeTabStatusChange(bool bIsConstructed)
+void UObsidianOverlayGameTabsMenu::OnPassiveSkillTreeTabStatusChange(bool bInIsConstructed)
 {
 	if(PassiveSkillTree_GameTabButton)
 	{
-		PassiveSkillTree_GameTabButton->bIsCorrespondingTabOpen = bIsConstructed;
+		PassiveSkillTree_GameTabButton->bIsCorrespondingTabOpen = bInIsConstructed;
 	}
 }

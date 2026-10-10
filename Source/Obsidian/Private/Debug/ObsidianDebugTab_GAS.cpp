@@ -33,37 +33,37 @@ namespace ObsidianDebugGASTab
 		SlateIM::BeginTable();
 	}
 
-	void TableTextCell(const FStringView& Text, const FSlateColor& Color = FSlateColor::UseForeground())
+	void TableTextCell(const FStringView& InText, const FSlateColor& InColor = FSlateColor::UseForeground())
 	{
 		if (SlateIM::NextTableCell())
 		{
 			SlateIM::Padding(FMargin(4.0f, 0.0f));
 			SlateIM::VAlign(VAlign_Center);
-			SlateIM::Text(Text, {.Color = Color});
+			SlateIM::Text(InText, {.Color = InColor});
 		}
 	}
 }
 
-void FObsidianDebugTab_GAS::Draw(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_GAS::Draw(const FObsidianDebugMenuContext& InContext)
 {
-	UAbilitySystemComponent* ASC = DrawTargetPicker(Context);
+	UAbilitySystemComponent* ASC = DrawTargetPicker(InContext);
 	if (ASC == nullptr)
 	{
 		ObsidianDebugUI::WarningText(TEXT("There is no Pawn with an Ability System Component in the chosen World."));
 		return;
 	}
 
-	DrawAttributes(Context, ASC);
-	DrawAbilities(Context, ASC);
-	DrawEffects(Context, ASC);
-	DrawTags(Context, ASC);
+	DrawAttributes(InContext, ASC);
+	DrawAbilities(InContext, ASC);
+	DrawEffects(InContext, ASC);
+	DrawTags(InContext, ASC);
 }
 
-UAbilitySystemComponent* FObsidianDebugTab_GAS::DrawTargetPicker(const FObsidianDebugMenuContext& Context)
+UAbilitySystemComponent* FObsidianDebugTab_GAS::DrawTargetPicker(const FObsidianDebugMenuContext& InContext)
 {
 	TArray<AActor*> Targets;
 	TArray<FString> TargetNames;
-	for (TActorIterator<APawn> It(Context.World); It; ++It)
+	for (TActorIterator<APawn> It(InContext.World); It; ++It)
 	{
 		APawn* Pawn = *It;
 		if (UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Pawn) == nullptr)
@@ -72,7 +72,7 @@ UAbilitySystemComponent* FObsidianDebugTab_GAS::DrawTargetPicker(const FObsidian
 		}
 
 		// Pawn of the chosen Player is always the first option.
-		if (Pawn == Context.Pawn)
+		if (Pawn == InContext.Pawn)
 		{
 			Targets.Insert(Pawn, 0);
 			TargetNames.Insert(FString::Printf(TEXT("%s (chosen Player)"), *Pawn->GetName()), 0);
@@ -98,7 +98,7 @@ UAbilitySystemComponent* FObsidianDebugTab_GAS::DrawTargetPicker(const FObsidian
 
 		if (SlateIM::Button(TEXT("Use Player")))
 		{
-			TargetIndex = Targets.IndexOfByKey(Context.Pawn);
+			TargetIndex = Targets.IndexOfByKey(InContext.Pawn);
 		}
 	}
 	SlateIM::EndHorizontalStack();
@@ -107,7 +107,7 @@ UAbilitySystemComponent* FObsidianDebugTab_GAS::DrawTargetPicker(const FObsidian
 	return UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(TargetActor.Get());
 }
 
-void FObsidianDebugTab_GAS::DrawAttributes(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC)
+void FObsidianDebugTab_GAS::DrawAttributes(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC)
 {
 	using namespace ObsidianDebugGASTab;
 
@@ -137,7 +137,7 @@ void FObsidianDebugTab_GAS::DrawAttributes(const FObsidianDebugMenuContext& Cont
 	SlateIM::EndHorizontalStack();
 
 	TArray<FGameplayAttribute> Attributes;
-	ASC->GetAllAttributes(Attributes);
+	InASC->GetAllAttributes(Attributes);
 
 	FGameplayAttribute AttributeToModify;
 	EGameplayModOp::Type ModifierOp = EGameplayModOp::Additive;
@@ -168,8 +168,8 @@ void FObsidianDebugTab_GAS::DrawAttributes(const FObsidianDebugMenuContext& Cont
 		}
 
 		TableTextCell(AttributeName);
-		TableTextCell(FString::SanitizeFloat(ASC->GetNumericAttributeBase(Attribute)));
-		TableTextCell(FString::SanitizeFloat(ASC->GetNumericAttribute(Attribute)));
+		TableTextCell(FString::SanitizeFloat(InASC->GetNumericAttributeBase(Attribute)));
+		TableTextCell(FString::SanitizeFloat(InASC->GetNumericAttribute(Attribute)));
 
 		if (SlateIM::NextTableCell())
 		{
@@ -202,17 +202,17 @@ void FObsidianDebugTab_GAS::DrawAttributes(const FObsidianDebugMenuContext& Cont
 	{
 		if (bApplyAsInstantEffect)
 		{
-			ObsidianDebugGAS::ApplyInstantAttributeMod(ASC, ASC, AttributeToModify, ModifierOp, ModifierMagnitude);
+			ObsidianDebugGAS::ApplyInstantAttributeMod(InASC, InASC, AttributeToModify, ModifierOp, ModifierMagnitude);
 		}
 		else
 		{
 			const float NewBaseValue = ModifierOp == EGameplayModOp::Override ? ModifierMagnitude :
-				ASC->GetNumericAttributeBase(AttributeToModify) + ModifierMagnitude;
-			ASC->SetNumericAttributeBase(AttributeToModify, NewBaseValue);
+				InASC->GetNumericAttributeBase(AttributeToModify) + ModifierMagnitude;
+			InASC->SetNumericAttributeBase(AttributeToModify, NewBaseValue);
 		}
 
-		Context.Notify(FString::Printf(TEXT("%s [%s] of [%s] %s [%s]."), ModifierOp == EGameplayModOp::Override ? TEXT("Set") : TEXT("Changed"),
-			*AttributeToModify.GetName(), *GetNameSafe(ASC->GetAvatarActor()), ModifierOp == EGameplayModOp::Override ? TEXT("to") : TEXT("by"),
+		InContext.Notify(FString::Printf(TEXT("%s [%s] of [%s] %s [%s]."), ModifierOp == EGameplayModOp::Override ? TEXT("Set") : TEXT("Changed"),
+			*AttributeToModify.GetName(), *GetNameSafe(InASC->GetAvatarActor()), ModifierOp == EGameplayModOp::Override ? TEXT("to") : TEXT("by"),
 			*FString::SanitizeFloat(ModifierMagnitude)));
 	}
 
@@ -225,29 +225,29 @@ void FObsidianDebugTab_GAS::DrawAttributes(const FObsidianDebugMenuContext& Cont
 		if (SlateIM::Button(TEXT("Add Attribute Set")))
 		{
 			const UClass* AttributeSetClass = AttributeSetPicker.LoadSelectedClass();
-			const bool bAlreadyOwned = ASC->GetSpawnedAttributes().ContainsByPredicate([AttributeSetClass](const UAttributeSet* AttributeSet)
+			const bool bAlreadyOwned = InASC->GetSpawnedAttributes().ContainsByPredicate([AttributeSetClass](const UAttributeSet* InAttributeSet)
 				{
-					return AttributeSet && AttributeSet->GetClass() == AttributeSetClass;
+					return InAttributeSet && InAttributeSet->GetClass() == AttributeSetClass;
 				});
 
 			if (AttributeSetClass == nullptr || bAlreadyOwned)
 			{
-				Context.Notify(TEXT("Could not add the Attribute Set, it is invalid or the target already owns it."));
+				InContext.Notify(TEXT("Could not add the Attribute Set, it is invalid or the target already owns it."));
 			}
 			else
 			{
-				UAttributeSet* NewAttributeSet = NewObject<UAttributeSet>(ASC->GetOwnerActor(), AttributeSetClass);
-				ASC->AddSpawnedAttribute(NewAttributeSet);
-				ASC->ForceReplication();
+				UAttributeSet* NewAttributeSet = NewObject<UAttributeSet>(InASC->GetOwnerActor(), AttributeSetClass);
+				InASC->AddSpawnedAttribute(NewAttributeSet);
+				InASC->ForceReplication();
 
-				Context.Notify(FString::Printf(TEXT("Added [%s] to [%s]."), *GetNameSafe(AttributeSetClass), *GetNameSafe(ASC->GetAvatarActor())));
+				InContext.Notify(FString::Printf(TEXT("Added [%s] to [%s]."), *GetNameSafe(AttributeSetClass), *GetNameSafe(InASC->GetAvatarActor())));
 			}
 		}
 	}
 	SlateIM::EndHorizontalStack();
 }
 
-void FObsidianDebugTab_GAS::DrawAbilities(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC)
+void FObsidianDebugTab_GAS::DrawAbilities(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC)
 {
 	using namespace ObsidianDebugGASTab;
 
@@ -292,13 +292,13 @@ void FObsidianDebugTab_GAS::DrawAbilities(const FObsidianDebugMenuContext& Conte
 				AbilitySpec.GetDynamicSpecSourceTags().AddTag(InputTags[InputTagIndex]);
 			}
 
-			ASC->GiveAbility(AbilitySpec);
-			Context.Notify(FString::Printf(TEXT("Granted [%s] to [%s]."), *ObsidianDebugUI::GetCleanClassName(AbilityClass.Get()),
-				*GetNameSafe(ASC->GetAvatarActor())));
+			InASC->GiveAbility(AbilitySpec);
+			InContext.Notify(FString::Printf(TEXT("Granted [%s] to [%s]."), *ObsidianDebugUI::GetCleanClassName(AbilityClass.Get()),
+				*GetNameSafe(InASC->GetAvatarActor())));
 		}
 		else
 		{
-			Context.Notify(TEXT("Could not grant the ability, chosen class is invalid."));
+			InContext.Notify(TEXT("Could not grant the ability, chosen class is invalid."));
 		}
 	}
 
@@ -319,7 +319,7 @@ void FObsidianDebugTab_GAS::DrawAbilities(const FObsidianDebugMenuContext& Conte
 	SlateIM::AddTableColumn(TEXT("Actions"), TEXT("Actions"));
 	SlateIM::EndTableHeader();
 	SlateIM::BeginTableBody();
-	for (const FGameplayAbilitySpec& AbilitySpec : ASC->GetActivatableAbilities())
+	for (const FGameplayAbilitySpec& AbilitySpec : InASC->GetActivatableAbilities())
 	{
 		const bool bActive = AbilitySpec.IsActive();
 
@@ -356,25 +356,25 @@ void FObsidianDebugTab_GAS::DrawAbilities(const FObsidianDebugMenuContext& Conte
 	{
 		case EAbilityAction::Activate:
 			{
-				const bool bActivated = ASC->TryActivateAbility(AbilityHandle);
-				Context.Notify(bActivated ? TEXT("Activated the ability.") : TEXT("Could not activate the ability, see the Ability System log."));
+				const bool bActivated = InASC->TryActivateAbility(AbilityHandle);
+				InContext.Notify(bActivated ? TEXT("Activated the ability.") : TEXT("Could not activate the ability, see the Ability System log."));
 			} break;
 		case EAbilityAction::Cancel:
 			{
-				ASC->CancelAbilityHandle(AbilityHandle);
-				Context.Notify(TEXT("Canceled the ability."));
+				InASC->CancelAbilityHandle(AbilityHandle);
+				InContext.Notify(TEXT("Canceled the ability."));
 			} break;
 		case EAbilityAction::Remove:
 			{
-				ASC->ClearAbility(AbilityHandle);
-				Context.Notify(TEXT("Removed the ability."));
+				InASC->ClearAbility(AbilityHandle);
+				InContext.Notify(TEXT("Removed the ability."));
 			} break;
 		default:
 			{} break;
 	}
 }
 
-void FObsidianDebugTab_GAS::DrawEffects(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC)
+void FObsidianDebugTab_GAS::DrawEffects(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC)
 {
 	using namespace ObsidianDebugGASTab;
 
@@ -399,18 +399,18 @@ void FObsidianDebugTab_GAS::DrawEffects(const FObsidianDebugMenuContext& Context
 	{
 		if (const TSubclassOf<UGameplayEffect> EffectClass = EffectPicker.LoadSelectedClass())
 		{
-			ASC->ApplyGameplayEffectToSelf(EffectClass.GetDefaultObject(), EffectLevel, ASC->MakeEffectContext());
-			Context.Notify(FString::Printf(TEXT("Applied [%s] to [%s]."), *ObsidianDebugUI::GetCleanClassName(EffectClass.Get()),
-				*GetNameSafe(ASC->GetAvatarActor())));
+			InASC->ApplyGameplayEffectToSelf(EffectClass.GetDefaultObject(), EffectLevel, InASC->MakeEffectContext());
+			InContext.Notify(FString::Printf(TEXT("Applied [%s] to [%s]."), *ObsidianDebugUI::GetCleanClassName(EffectClass.Get()),
+				*GetNameSafe(InASC->GetAvatarActor())));
 		}
 		else
 		{
-			Context.Notify(TEXT("Could not apply the effect, chosen class is invalid."));
+			InContext.Notify(TEXT("Could not apply the effect, chosen class is invalid."));
 		}
 	}
 
 	FActiveGameplayEffectHandle EffectToRemove;
-	const float WorldTime = static_cast<float>(Context.World->GetTimeSeconds());
+	const float WorldTime = static_cast<float>(InContext.World->GetTimeSeconds());
 
 	BeginSizedTable();
 	SlateIM::BeginTableHeader();
@@ -425,9 +425,9 @@ void FObsidianDebugTab_GAS::DrawEffects(const FObsidianDebugMenuContext& Context
 	SlateIM::AddTableColumn(TEXT("Actions"), TEXT("Actions"));
 	SlateIM::EndTableHeader();
 	SlateIM::BeginTableBody();
-	for (const FActiveGameplayEffectHandle& EffectHandle : ASC->GetActiveEffects(FGameplayEffectQuery()))
+	for (const FActiveGameplayEffectHandle& EffectHandle : InASC->GetActiveEffects(FGameplayEffectQuery()))
 	{
-		const FActiveGameplayEffect* ActiveEffect = ASC->GetActiveGameplayEffect(EffectHandle);
+		const FActiveGameplayEffect* ActiveEffect = InASC->GetActiveGameplayEffect(EffectHandle);
 		if (ActiveEffect == nullptr)
 		{
 			continue;
@@ -439,7 +439,7 @@ void FObsidianDebugTab_GAS::DrawEffects(const FObsidianDebugMenuContext& Context
 
 		TableTextCell(ObsidianDebugUI::GetCleanClassName(ActiveEffect->Spec.Def));
 		TableTextCell(FString::SanitizeFloat(ActiveEffect->Spec.GetLevel()));
-		TableTextCell(FString::FromInt(ASC->GetCurrentStackCount(EffectHandle)));
+		TableTextCell(FString::FromInt(InASC->GetCurrentStackCount(EffectHandle)));
 		TableTextCell(TimeLeft);
 
 		if (SlateIM::NextTableCell())
@@ -455,12 +455,12 @@ void FObsidianDebugTab_GAS::DrawEffects(const FObsidianDebugMenuContext& Context
 
 	if (EffectToRemove.IsValid())
 	{
-		ASC->RemoveActiveGameplayEffect(EffectToRemove);
-		Context.Notify(TEXT("Removed the effect."));
+		InASC->RemoveActiveGameplayEffect(EffectToRemove);
+		InContext.Notify(TEXT("Removed the effect."));
 	}
 }
 
-void FObsidianDebugTab_GAS::DrawTags(const FObsidianDebugMenuContext& Context, UAbilitySystemComponent* ASC)
+void FObsidianDebugTab_GAS::DrawTags(const FObsidianDebugMenuContext& InContext, UAbilitySystemComponent* InASC)
 {
 	ObsidianDebugUI::Section(TEXT("Tags"));
 
@@ -477,24 +477,24 @@ void FObsidianDebugTab_GAS::DrawTags(const FObsidianDebugMenuContext& Context, U
 			const FGameplayTag Tag = FGameplayTag::RequestGameplayTag(FName(*TagInput.TrimStartAndEnd()), false);
 			if (Tag.IsValid() == false)
 			{
-				Context.Notify(FString::Printf(TEXT("[%s] is not a registered Gameplay Tag."), *TagInput));
+				InContext.Notify(FString::Printf(TEXT("[%s] is not a registered Gameplay Tag."), *TagInput));
 			}
 			else if (bAddTag)
 			{
-				ASC->AddLooseGameplayTag(Tag);
-				Context.Notify(FString::Printf(TEXT("Added loose tag [%s]."), *Tag.ToString()));
+				InASC->AddLooseGameplayTag(Tag);
+				InContext.Notify(FString::Printf(TEXT("Added loose tag [%s]."), *Tag.ToString()));
 			}
 			else
 			{
-				ASC->RemoveLooseGameplayTag(Tag);
-				Context.Notify(FString::Printf(TEXT("Removed loose tag [%s]."), *Tag.ToString()));
+				InASC->RemoveLooseGameplayTag(Tag);
+				InContext.Notify(FString::Printf(TEXT("Removed loose tag [%s]."), *Tag.ToString()));
 			}
 		}
 	}
 	SlateIM::EndHorizontalStack();
 
 	FGameplayTagContainer OwnedTags;
-	ASC->GetOwnedGameplayTags(OwnedTags);
+	InASC->GetOwnedGameplayTags(OwnedTags);
 
 	if (OwnedTags.IsEmpty())
 	{
@@ -503,7 +503,7 @@ void FObsidianDebugTab_GAS::DrawTags(const FObsidianDebugMenuContext& Context, U
 
 	for (const FGameplayTag& OwnedTag : OwnedTags)
 	{
-		SlateIM::Text(FString::Printf(TEXT("%s (x%d)"), *OwnedTag.ToString(), ASC->GetGameplayTagCount(OwnedTag)));
+		SlateIM::Text(FString::Printf(TEXT("%s (x%d)"), *OwnedTag.ToString(), InASC->GetGameplayTagCount(OwnedTag)));
 	}
 }
 

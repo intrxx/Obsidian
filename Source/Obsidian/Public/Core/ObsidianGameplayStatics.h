@@ -19,12 +19,12 @@ class OBSIDIAN_API UObsidianGameplayStatics : public UGameplayStatics
 	GENERATED_BODY()
 	
 public:
-	static FText GetHeroClassText(const EObsidianHeroClass HeroClass);
+	static FText GetHeroClassText(const EObsidianHeroClass InHeroClass);
 
-	static bool DoesTagMatchesAnySubTag(const FGameplayTag TagToCheck, const FGameplayTag& SubTagToCheck);
+	static bool DoesTagMatchesAnySubTag(const FGameplayTag InTagToCheck, const FGameplayTag& InSubTagToCheck);
 	
-	static FGameplayTag GetOpposedEquipmentTagForTag(const FGameplayTag MainTag);
+	static FGameplayTag GetOpposedEquipmentTagForTag(const FGameplayTag InMainTag);
 
-	static EObsidianGameNetworkType GetCurrentNetworkType(const UObject* WorldContextObject);
-	static bool IsOfflineNetworkType(const EObsidianGameNetworkType NetworkType);
+	static EObsidianGameNetworkType GetCurrentNetworkType(const UObject* InWorldContextObject);
+	static bool IsOfflineNetworkType(const EObsidianGameNetworkType InNetworkType);
 };

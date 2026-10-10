@@ -10,21 +10,21 @@
 
 namespace ObsidianGameplayTags
 {
-	FGameplayTag FindTagByString(const FString& TagString, bool bMatchPartialString)
+	FGameplayTag FindTagByString(const FString& InTagString, bool bInMatchPartialString)
 	{
 		const UGameplayTagsManager& TagsManager = UGameplayTagsManager::Get();
-		FGameplayTag ReturnTag = TagsManager.RequestGameplayTag(FName(*TagString), false);
+		FGameplayTag ReturnTag = TagsManager.RequestGameplayTag(FName(*InTagString), false);
 
-		if(bMatchPartialString && !ReturnTag.IsValid())
+		if(bInMatchPartialString && !ReturnTag.IsValid())
 		{
 			FGameplayTagContainer AllTags;
 			TagsManager.RequestAllGameplayTags(AllTags, true);
 
 			for(const FGameplayTag& Tag : AllTags)
 			{
-				if(Tag.ToString().Contains(TagString))
+				if(Tag.ToString().Contains(InTagString))
 				{
-					UE_LOG(ObLogGeneral, Log, TEXT("Did not find exact match for [%s] but found partial match on tag [%s]."), *TagString, *Tag.ToString());
+					UE_LOG(ObLogGeneral, Log, TEXT("Did not find exact match for [%s] but found partial match on tag [%s]."), *InTagString, *Tag.ToString());
 					ReturnTag = Tag;
 					break;
 				}	

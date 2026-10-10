@@ -26,11 +26,11 @@ void UObsidianUnstackSlider::NativeDestruct()
 	Super::NativeDestruct();
 }
 
-void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 CurrentItemStacks, const FObsidianItemPosition& InItemPosition)
+void UObsidianUnstackSlider::InitializeUnstackSlider(const int32 InCurrentItemStacks, const FObsidianItemPosition& InItemPosition)
 {
 	ItemSlotPosition = InItemPosition;
 	
-	MaxStacks = CurrentItemStacks;
+	MaxStacks = InCurrentItemStacks;
 	StackToLeave = MaxStacks - 1;
 	StackToTake = 1;
 	
@@ -63,9 +63,9 @@ void UObsidianUnstackSlider::OnAcceptButtonClicked()
 	OnAcceptButtonPressedDelegate.Broadcast(StackToTake, ItemSlotPosition);
 }
 
-void UObsidianUnstackSlider::UpdateStacksValues(float NewValue)
+void UObsidianUnstackSlider::UpdateStacksValues(float InNewValue)
 {
-	const int32 IntValue = FMath::RoundToInt32(NewValue);
+	const int32 IntValue = FMath::RoundToInt32(InNewValue);
 	StackToTake = IntValue;
 	StackToLeave = MaxStacks - StackToTake;
 

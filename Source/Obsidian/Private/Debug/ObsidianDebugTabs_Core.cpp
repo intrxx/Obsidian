@@ -79,22 +79,22 @@ namespace ObsidianDebugCore
 
 	constexpr int32 MaxCommandHistory = 12;
 
-	void InfoRow(const FStringView& Label, const FStringView& Value)
+	void InfoRow(const FStringView& InLabel, const FStringView& InValue)
 	{
 		SlateIM::HAlign(HAlign_Fill);
 		SlateIM::BeginHorizontalStack();
-		ObsidianDebugUI::Label(Label);
+		ObsidianDebugUI::Label(InLabel);
 
 		// Value takes the rest of the row, otherwise the text that changes every frame wraps based on its previous size.
 		SlateIM::Fill();
 		SlateIM::HAlign(HAlign_Fill);
 		SlateIM::VAlign(VAlign_Center);
-		SlateIM::Text(Value);
+		SlateIM::Text(InValue);
 		SlateIM::EndHorizontalStack();
 	}
 
 	template<int32 Count>
-	void CommandButtons(const FObsidianDebugMenuContext& Context, const FNamedCommand (&Commands)[Count])
+	void CommandButtons(const FObsidianDebugMenuContext& InContext, const FNamedCommand (&Commands)[Count])
 	{
 		SlateIM::HAlign(HAlign_Fill);
 		SlateIM::BeginHorizontalWrap();
@@ -103,17 +103,17 @@ namespace ObsidianDebugCore
 			SlateIM::SetToolTip(NamedCommand.Command);
 			if (SlateIM::Button(NamedCommand.Name))
 			{
-				Context.ExecConsoleCommand(NamedCommand.Command);
+				InContext.ExecConsoleCommand(NamedCommand.Command);
 			}
 		}
 		SlateIM::EndHorizontalWrap();
 	}
 
-	FString GetAttributeString(const UAbilitySystemComponent* ASC, const FGameplayAttribute& Attribute, const FGameplayAttribute& MaxAttribute)
+	FString GetAttributeString(const UAbilitySystemComponent* InASC, const FGameplayAttribute& InAttribute, const FGameplayAttribute& InMaxAttribute)
 	{
 		float Value = 0.0f;
 		float MaxValue = 0.0f;
-		if (ObsidianDebugGAS::GetAttributeValue(ASC, Attribute, Value) && ObsidianDebugGAS::GetAttributeValue(ASC, MaxAttribute, MaxValue))
+		if (ObsidianDebugGAS::GetAttributeValue(InASC, InAttribute, Value) && ObsidianDebugGAS::GetAttributeValue(InASC, InMaxAttribute, MaxValue))
 		{
 			return FString::Printf(TEXT("%.0f / %.0f"), Value, MaxValue);
 		}
@@ -123,11 +123,11 @@ namespace ObsidianDebugCore
 
 // ~ FObsidianDebugTab_Game
 
-void FObsidianDebugTab_Game::Draw(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Game::Draw(const FObsidianDebugMenuContext& InContext)
 {
 	using namespace ObsidianDebugCore;
 
-	UWorld* World = Context.World;
+	UWorld* World = InContext.World;
 
 	ObsidianDebugUI::Section(TEXT("World"));
 	{
@@ -197,7 +197,7 @@ void FObsidianDebugTab_Game::Draw(const FObsidianDebugMenuContext& Context)
 
 			if (SlateIM::Button(TEXT("Open")) && MapPackageNames.IsValidIndex(SelectedMapIndex))
 			{
-				Context.Notify(FString::Printf(TEXT("Opening level [%s]."), *MapPackageNames[SelectedMapIndex]));
+				InContext.Notify(FString::Printf(TEXT("Opening level [%s]."), *MapPackageNames[SelectedMapIndex]));
 				UGameplayStatics::OpenLevel(World, FName(*MapPackageNames[SelectedMapIndex]));
 			}
 			if (SlateIM::Button(TEXT("Refresh")))
@@ -217,7 +217,7 @@ void FObsidianDebugTab_Game::Draw(const FObsidianDebugMenuContext& Context)
 	if (SlateIM::Button(TEXT("Collect Garbage")) && GEngine)
 	{
 		GEngine->ForceGarbageCollection(true);
-		Context.Notify(TEXT("Requested full garbage collection."));
+		InContext.Notify(TEXT("Requested full garbage collection."));
 	}
 }
 
@@ -239,9 +239,9 @@ void FObsidianDebugTab_Game::GatherMaps()
 		}
 	}
 
-	MapPackageNames.Sort([](const FString& A, const FString& B)
+	MapPackageNames.Sort([](const FString& InA, const FString& InB)
 		{
-			return FPaths::GetBaseFilename(A) < FPaths::GetBaseFilename(B);
+			return FPaths::GetBaseFilename(InA) < FPaths::GetBaseFilename(InB);
 		});
 
 	for (const FString& PackageName : MapPackageNames)
@@ -252,21 +252,21 @@ void FObsidianDebugTab_Game::GatherMaps()
 
 // ~ FObsidianDebugTab_Player
 
-void FObsidianDebugTab_Player::Tick(const FObsidianDebugMenuContext& Context, const float DeltaTime)
+void FObsidianDebugTab_Player::Tick(const FObsidianDebugMenuContext& InContext, const float InDeltaTime)
 {
-	if (bKeepResourcesFull && Context.HasAuthority())
+	if (bKeepResourcesFull && InContext.HasAuthority())
 	{
-		RestoreResources(Context);
+		RestoreResources(InContext);
 	}
 }
 
-void FObsidianDebugTab_Player::Draw(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Player::Draw(const FObsidianDebugMenuContext& InContext)
 {
 	using namespace ObsidianDebugCore;
 
-	APawn* Pawn = Context.Pawn;
-	UAbilitySystemComponent* ASC = Context.GetPlayerASC();
-	const AObsidianPlayerController* ObsidianPC = Context.GetObsidianPC();
+	APawn* Pawn = InContext.Pawn;
+	UAbilitySystemComponent* ASC = InContext.GetPlayerASC();
+	const AObsidianPlayerController* ObsidianPC = InContext.GetObsidianPC();
 	if (Pawn == nullptr || ASC == nullptr)
 	{
 		ObsidianDebugUI::WarningText(TEXT("Chosen Player has no Pawn with an Ability System Component."));
@@ -299,15 +299,15 @@ void FObsidianDebugTab_Player::Draw(const FObsidianDebugMenuContext& Context)
 			SlateIM::SetToolTip(TEXT("Sets Health, Energy Shield, Mana and Stamina to their max values."));
 			if (SlateIM::Button(TEXT("Restore Resources")))
 			{
-				RestoreResources(Context);
-				Context.Notify(TEXT("Restored the resources of the Player."));
+				RestoreResources(InContext);
+				InContext.Notify(TEXT("Restored the resources of the Player."));
 			}
 
 			SlateIM::SetToolTip(TEXT("Deals lethal damage to the Player, running the regular death flow."));
 			if (SlateIM::Button(TEXT("Kill")))
 			{
 				const bool bKilled = ObsidianDebugGAS::Kill(ASC);
-				Context.Notify(bKilled ? TEXT("Killed the Player.") : TEXT("Could not kill the Player, it has no Common Attribute Set."));
+				InContext.Notify(bKilled ? TEXT("Killed the Player.") : TEXT("Could not kill the Player, it has no Common Attribute Set."));
 			}
 		}
 		SlateIM::EndHorizontalStack();
@@ -328,7 +328,7 @@ void FObsidianDebugTab_Player::Draw(const FObsidianDebugMenuContext& Context)
 			{
 				ObsidianDebugGAS::ApplyInstantAttributeMod(ASC, ASC, UObsidianHeroAttributeSet::GetExperienceAttribute(),
 					EGameplayModOp::Additive, ExperienceToAdd);
-				Context.Notify(FString::Printf(TEXT("Added [%.0f] Experience to the Player."), ExperienceToAdd));
+				InContext.Notify(FString::Printf(TEXT("Added [%.0f] Experience to the Player."), ExperienceToAdd));
 			}
 
 			SlateIM::SetToolTip(TEXT("Adds just enough Experience for the Player to level up."));
@@ -341,7 +341,7 @@ void FObsidianDebugTab_Player::Draw(const FObsidianDebugMenuContext& Context)
 				{
 					ObsidianDebugGAS::ApplyInstantAttributeMod(ASC, ASC, UObsidianHeroAttributeSet::GetExperienceAttribute(),
 						EGameplayModOp::Additive, FMath::Max(MaxExperience - Experience, 0.0f) + 1.0f);
-					Context.Notify(TEXT("Leveled up the Player."));
+					InContext.Notify(TEXT("Leveled up the Player."));
 				}
 			}
 		}
@@ -412,9 +412,9 @@ void FObsidianDebugTab_Player::Draw(const FObsidianDebugMenuContext& Context)
 	}
 }
 
-void FObsidianDebugTab_Player::RestoreResources(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Player::RestoreResources(const FObsidianDebugMenuContext& InContext)
 {
-	UAbilitySystemComponent* ASC = Context.GetPlayerASC();
+	UAbilitySystemComponent* ASC = InContext.GetPlayerASC();
 	if (ASC == nullptr)
 	{
 		return;
@@ -442,18 +442,18 @@ void FObsidianDebugTab_Player::RestoreResources(const FObsidianDebugMenuContext&
 
 // ~ FObsidianDebugTab_Rendering
 
-void FObsidianDebugTab_Rendering::Draw(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Rendering::Draw(const FObsidianDebugMenuContext& InContext)
 {
 	using namespace ObsidianDebugCore;
 
 	ObsidianDebugUI::Section(TEXT("Stats"));
-	CommandButtons(Context, StatCommands);
+	CommandButtons(InContext, StatCommands);
 
 	ObsidianDebugUI::Section(TEXT("View Mode"));
-	CommandButtons(Context, ViewModeCommands);
+	CommandButtons(InContext, ViewModeCommands);
 
 	ObsidianDebugUI::Section(TEXT("Show Flags (toggles)"));
-	CommandButtons(Context, ShowFlagCommands);
+	CommandButtons(InContext, ShowFlagCommands);
 
 	ObsidianDebugUI::Section(TEXT("Settings"));
 	{
@@ -504,7 +504,7 @@ void FObsidianDebugTab_Rendering::Draw(const FObsidianDebugMenuContext& Context)
 
 // ~ FObsidianDebugTab_Console
 
-void FObsidianDebugTab_Console::Draw(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Console::Draw(const FObsidianDebugMenuContext& InContext)
 {
 	using namespace ObsidianDebugCore;
 
@@ -519,14 +519,14 @@ void FObsidianDebugTab_Console::Draw(const FObsidianDebugMenuContext& Context)
 
 			if (SlateIM::Button(TEXT("Run"), {.bEnabled = CommandInput.IsEmpty() == false}))
 			{
-				RunCommand(Context, CommandInput);
+				RunCommand(InContext, CommandInput);
 			}
 		}
 		SlateIM::EndHorizontalStack();
 	}
 
 	ObsidianDebugUI::Section(TEXT("Presets"));
-	CommandButtons(Context, ConsolePresets);
+	CommandButtons(InContext, ConsolePresets);
 
 	ObsidianDebugUI::Section(TEXT("History"));
 	{
@@ -548,17 +548,17 @@ void FObsidianDebugTab_Console::Draw(const FObsidianDebugMenuContext& Context)
 
 		if (CommandToRun.IsEmpty() == false)
 		{
-			RunCommand(Context, CommandToRun);
+			RunCommand(InContext, CommandToRun);
 		}
 	}
 }
 
-void FObsidianDebugTab_Console::RunCommand(const FObsidianDebugMenuContext& Context, const FString& Command)
+void FObsidianDebugTab_Console::RunCommand(const FObsidianDebugMenuContext& InContext, const FString& InCommand)
 {
 	// Command might be a reference to the history entry that is about to be moved.
-	const FString CommandCopy = Command;
+	const FString CommandCopy = InCommand;
 
-	Context.ExecConsoleCommand(CommandCopy);
+	InContext.ExecConsoleCommand(CommandCopy);
 
 	CommandHistory.Remove(CommandCopy);
 	CommandHistory.Insert(CommandCopy, 0);

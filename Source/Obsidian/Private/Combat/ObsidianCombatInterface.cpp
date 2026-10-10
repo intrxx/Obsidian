@@ -25,12 +25,12 @@ UNiagaraSystem* IObsidianCombatInterface::GetBloodEffect_Implementation()
 	return nullptr;
 }
 
-void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName, const FVector& FacingTarget)
+void IObsidianCombatInterface::SetMotionWarpingFacingTarget_Implementation(const FName InMotionWarpName, const FVector& InFacingTarget)
 {
 	
 }
 
-FVector IObsidianCombatInterface::GetAbilitySocketLocationForTag_Implementation(FGameplayTag Tag)
+FVector IObsidianCombatInterface::GetAbilitySocketLocationForTag_Implementation(FGameplayTag InTag)
 {
 	return FVector();
 }

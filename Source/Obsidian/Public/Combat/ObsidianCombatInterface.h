@@ -41,16 +41,16 @@ public:
 	virtual UNiagaraSystem* GetBloodEffect_Implementation();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
-	void SetMotionWarpingFacingTarget(const FName MotionWarpName = FName("FacingTarget"), const FVector& FacingTarget = FVector(0.0f, 0.0f, 0.0f));
-	virtual void SetMotionWarpingFacingTarget_Implementation(const FName MotionWarpName = FName("FacingTarget"), const FVector& FacingTarget = FVector(0.0f, 0.0f, 0.0f));
+	void SetMotionWarpingFacingTarget(const FName InMotionWarpName = FName("FacingTarget"), const FVector& InFacingTarget = FVector(0.0f, 0.0f, 0.0f));
+	virtual void SetMotionWarpingFacingTarget_Implementation(const FName InMotionWarpName = FName("FacingTarget"), const FVector& InFacingTarget = FVector(0.0f, 0.0f, 0.0f));
 	
 	/*
 	 * Socket Locations for spawning abilities.
 	 */
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")
-	FVector GetAbilitySocketLocationForTag(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag Tag);
-	virtual FVector GetAbilitySocketLocationForTag_Implementation(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag Tag);
+	FVector GetAbilitySocketLocationForTag(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag InTag);
+	virtual FVector GetAbilitySocketLocationForTag_Implementation(UPARAM(meta=(Categories="GameplayEvent.AbilityMontage")) FGameplayTag InTag);
 
 	/** Gets the socket location from left hand weapon. */
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Obsidian|CombatInterface")

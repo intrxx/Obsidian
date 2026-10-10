@@ -26,17 +26,17 @@ class OBSIDIAN_API UObsidianEnemyOverlayBarComponent : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	UObsidianEnemyOverlayBarComponent(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianEnemyOverlayBarComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	/** Returns Enemy Overlay Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyOverlayBarComp")
-	static UObsidianEnemyOverlayBarComponent* FindEnemyOverlayComponent(const AActor* Actor)
+	static UObsidianEnemyOverlayBarComponent* FindEnemyOverlayComponent(const AActor* InActor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianEnemyOverlayBarComponent>() : nullptr);
+		return (InActor ? InActor->FindComponentByClass<UObsidianEnemyOverlayBarComponent>() : nullptr);
 	}
 
 	/** Returns most recent fill bar effect image if one exists currently. */ 
-	bool GetCurrentOverlayFillBarEffect(FSlateBrush& CurrentFillBarEffect);
+	bool GetCurrentOverlayFillBarEffect(FSlateBrush& OutCurrentFillBarEffect);
 
 	FText GetEnemyName() const;
 	bool IsDeadOrDying() const;
@@ -66,26 +66,26 @@ public:
 	FOnOverlayBarSpecialEffectResetSignature OnOverlayBarSpecialEffectResetDelegate;
 
 protected:
-	void HandleEnemyEffectApplied(const FObsidianEffectUIData& UIData);
-	void HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& Row, const FObsidianEffectUIStackingData& StackingData);
-	void HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& Row);
-	void HandleSpecialEffect(const FGameplayTag& EffectImageTag);
+	void HandleEnemyEffectApplied(const FObsidianEffectUIData& InUIData);
+	void HandleStackingEffect(const FObsidianEffectUIDataWidgetRow& InRow, const FObsidianEffectUIStackingData& InStackingData);
+	void HandleRegularEffect(const FObsidianEffectUIDataWidgetRow& InRow);
+	void HandleSpecialEffect(const FGameplayTag& InEffectImageTag);
 
-	void HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag);
-	void RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& ExpirationPolicy, const float Duration, const FGameplayTag& StackingEffectTag);
+	void HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& InExpirationPolicy, const float InDuration, const FGameplayTag& InStackingEffectTag);
+	void RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& InExpirationPolicy, const float InDuration, const FGameplayTag& InStackingEffectTag);
 	
-	bool GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& Images, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& TagToCheck);
-	void HandleEffectFillImageRemoval(const FGameplayTag& EffectImageTag);
+	bool GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& InImages, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& InTagToCheck);
+	void HandleEffectFillImageRemoval(const FGameplayTag& InEffectImageTag);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EnemyOverlayBarComp")
-	void HandleSpecialEffectImageRemoval(const FGameplayTag& EffectImageTag);
+	void HandleSpecialEffectImageRemoval(const FGameplayTag& InEffectImageTag);
 
-	void HealthChanged(const FOnAttributeChangeData& Data) const;
-	void MaxHealthChanged(const FOnAttributeChangeData& Data) const;
-	void EnergyShieldChanged(const FOnAttributeChangeData& Data) const;
-	void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) const;
-	void StaggerMeterChanged(const FOnAttributeChangeData& Data) const;
-	void MaxStaggerMeterChanged(const FOnAttributeChangeData& Data) const;
+	void HealthChanged(const FOnAttributeChangeData& InData) const;
+	void MaxHealthChanged(const FOnAttributeChangeData& InData) const;
+	void EnergyShieldChanged(const FOnAttributeChangeData& InData) const;
+	void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) const;
+	void StaggerMeterChanged(const FOnAttributeChangeData& InData) const;
+	void MaxStaggerMeterChanged(const FOnAttributeChangeData& InData) const;
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyOverlayBarComp|Data")

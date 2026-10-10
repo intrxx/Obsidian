@@ -18,28 +18,28 @@ class OBSIDIAN_API UObsidianStashTab_Slots : public UObsidianStashTab
 	GENERATED_BODY()
 
 public:
-	UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianStashTab_Slots(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& ItemPosition) override;
+	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& InItemPosition) override;
 	TArray<FObsidianStashSlotDefinition> GetSlots() const;
 
-	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& Position) override;
+	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& InPosition) override;
 
-	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan) override;
-	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& ItemCategory, const FGameplayTag& ItemBaseType, const FIntPoint& ItemGridSpan) override;
+	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) override;
+	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) override;
 
-	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const UObsidianInventoryItemInstance* ReplacingInstance) override;
-	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& SpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& ReplacingDef) override;
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const UObsidianInventoryItemInstance* InReplacingInstance) override;
+	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& InReplacingDef) override;
 	
-	virtual void Construct(UObsidianPlayerStashComponent* StashComponent) override;
-	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
-	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* ItemInstance, const FObsidianItemPosition& AtPosition) override;
+	virtual void Construct(UObsidianPlayerStashComponent* InStashComponent) override;
+	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) override;
+	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) override;
 
 protected:
-	FObsidianStashSlotDefinition FindSlotByTag(const FGameplayTag& SlotTag) const;
+	FObsidianStashSlotDefinition FindSlotByTag(const FGameplayTag& InSlotTag) const;
 
 private:
-	bool CheckReplacementPossible(const FObsidianItemPosition& SpecifiedPosition, const FGameplayTag& ReplacingItemCategory, const FGameplayTag& ReplacingItemBaseType) const;
+	bool CheckReplacementPossible(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InReplacingItemCategory, const FGameplayTag& InReplacingItemBaseType) const;
 	
 private:
 

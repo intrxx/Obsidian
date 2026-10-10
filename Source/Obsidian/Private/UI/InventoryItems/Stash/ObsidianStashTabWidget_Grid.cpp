@@ -6,50 +6,50 @@
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
 
-void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController,
-	const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)
+void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController,
+	const int32 InGridWidth, const int32 InGridHeight, const FGameplayTag& InStashTabTag)
 {
-	if(StashTab_GridPanel && InventoryItemsWidgetController)
+	if(StashTab_GridPanel && InInventoryItemsWidgetController)
 	{
-		InventoryItemsController = InventoryItemsWidgetController;
+		InventoryItemsController = InInventoryItemsWidgetController;
 		StashTabTag = InStashTabTag;
 		
-		StashTab_GridPanel->SetWidgetController(InventoryItemsWidgetController);
-		const bool bSuccess = StashTab_GridPanel->ConstructStashPanel(GridWidth, GridHeight, InStashTabTag);
+		StashTab_GridPanel->SetWidgetController(InInventoryItemsWidgetController);
+		const bool bSuccess = StashTab_GridPanel->ConstructStashPanel(InGridWidth, InGridHeight, InStashTabTag);
 		ensureMsgf(bSuccess, TEXT("StashTab_GridPanel was unable to construct the GridPanel!"));
 	}
 }
 
 void UObsidianStashTabWidget_Grid::AddItemToStash(UObsidianItem* InItemWidget,
-	const FObsidianItemWidgetData& ItemWidgetData)
+	const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(StashTab_GridPanel && InItemWidget && ItemWidgetData.ItemPosition.IsOnStashGrid()))
+	if (ensure(StashTab_GridPanel && InItemWidget && InItemWidgetData.ItemPosition.IsOnStashGrid()))
 	{
-		StashTab_GridPanel->AddItemWidget(InItemWidget, ItemWidgetData);
+		StashTab_GridPanel->AddItemWidget(InItemWidget, InItemWidgetData);
 	}
 }
 
-void UObsidianStashTabWidget_Grid::HandleItemChanged(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianStashTabWidget_Grid::HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(StashTab_GridPanel && ItemWidgetData.ItemPosition.IsOnStashGrid()))
+	if (ensure(StashTab_GridPanel && InItemWidgetData.ItemPosition.IsOnStashGrid()))
 	{
-		StashTab_GridPanel->HandleItemChanged(ItemWidgetData);
+		StashTab_GridPanel->HandleItemChanged(InItemWidgetData);
 	}
 }
 
-void UObsidianStashTabWidget_Grid::HandleItemRemoved(const FObsidianItemWidgetData& ItemWidgetData)
+void UObsidianStashTabWidget_Grid::HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData)
 {
-	if (ensure(StashTab_GridPanel && ItemWidgetData.ItemPosition.IsOnStashGrid()))
+	if (ensure(StashTab_GridPanel && InItemWidgetData.ItemPosition.IsOnStashGrid()))
 	{
-		StashTab_GridPanel->HandleItemRemoved(ItemWidgetData);
+		StashTab_GridPanel->HandleItemRemoved(InItemWidgetData);
 	}
 }
 
-void UObsidianStashTabWidget_Grid::HandleHighlightingItems(const TArray<FObsidianItemPosition>& ItemsToHighlight)
+void UObsidianStashTabWidget_Grid::HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight)
 {
 	if (ensure(StashTab_GridPanel))
 	{
-		StashTab_GridPanel->HandleHighlightingItems(ItemsToHighlight);
+		StashTab_GridPanel->HandleHighlightingItems(InItemsToHighlight);
 	}
 }
 

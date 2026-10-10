@@ -48,71 +48,71 @@ int32 FObsidianInventoryGridItemList::GetEntriesCount() const
 	return Entries.Num();
 }
 
-UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& ItemDefClass,
-	const FObsidianItemGeneratedData& ItemGeneratedData, const int32 StackCount, const FIntPoint& AvailablePosition)
+UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDefClass,
+	const FObsidianItemGeneratedData& InItemGeneratedData, const int32 InStackCount, const FIntPoint& InAvailablePosition)
 {
-	check(ItemDefClass != nullptr);
+	check(InItemDefClass != nullptr);
 	check(OwnerComponent);
 
 	const AActor* OwningActor = OwnerComponent->GetOwner();
 	check(OwningActor);
 
 	FObsidianInventoryEntry& NewEntry = Entries.AddDefaulted_GetRef();
-	NewEntry.Instance = UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(OwnerComponent->GetOwner(), ItemDefClass,
-		ItemGeneratedData, AvailablePosition);
-	NewEntry.StackCount = StackCount;
-	NewEntry.GridLocation = AvailablePosition;
+	NewEntry.Instance = UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(OwnerComponent->GetOwner(), InItemDefClass,
+		InItemGeneratedData, InAvailablePosition);
+	NewEntry.StackCount = InStackCount;
+	NewEntry.GridLocation = InAvailablePosition;
 	
 	UObsidianInventoryItemInstance* Item = NewEntry.Instance;
 	
 #if !UE_BUILD_SHIPPING
-	if(GridLocationToItemMap.Contains(AvailablePosition))
+	if(GridLocationToItemMap.Contains(InAvailablePosition))
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the GridLocationToItemMap in [%hs]"), AvailablePosition.X, AvailablePosition.Y, __FUNCTION__), ELogVerbosity::Error);
+			 "exist in the GridLocationToItemMap in [%hs]"), InAvailablePosition.X, InAvailablePosition.Y, __FUNCTION__), ELogVerbosity::Error);
 	}
 #endif
 
-	GridLocationToItemMap.Add(AvailablePosition, Item);
-	Item_MarkSpace(Item, AvailablePosition);
+	GridLocationToItemMap.Add(InAvailablePosition, Item);
+	Item_MarkSpace(Item, InAvailablePosition);
 	
 	MarkItemDirty(NewEntry);
 	
-	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, AvailablePosition, EObsidianInventoryChangeType::ICT_ItemAdded);
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, InAvailablePosition, EObsidianInventoryChangeType::ICT_ItemAdded);
 	return Item;
 }
 
-void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* Instance, const FIntPoint& AvailablePosition)
+void FObsidianInventoryGridItemList::AddEntry(UObsidianInventoryItemInstance* InInstance, const FIntPoint& InAvailablePosition)
 {
-	check(Instance != nullptr);
+	check(InInstance != nullptr);
 	check(OwnerComponent);
 
 #if !UE_BUILD_SHIPPING
-	if(GridLocationToItemMap.Contains(AvailablePosition))
+	if(GridLocationToItemMap.Contains(InAvailablePosition))
 	{
 		FFrame::KismetExecutionMessage(*FString::Printf(TEXT("Provided Available Position [x: %d, y: %d] already"
-			 "exist in the GridLocationToItemMap in [%hs]"), AvailablePosition.X, AvailablePosition.Y, __FUNCTION__), ELogVerbosity::Error);
+			 "exist in the GridLocationToItemMap in [%hs]"), InAvailablePosition.X, InAvailablePosition.Y, __FUNCTION__), ELogVerbosity::Error);
 	}
 #endif
 
-	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(Instance);
-	NewEntry.GridLocation = AvailablePosition; //TODO(intrxx) Add Grid Location to Entry instead of instance?
-	NewEntry.Instance->SetItemCurrentPosition(AvailablePosition);
-	NewEntry.StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(InInstance);
+	NewEntry.GridLocation = InAvailablePosition; //TODO(intrxx) Add Grid Location to Entry instead of instance?
+	NewEntry.Instance->SetItemCurrentPosition(InAvailablePosition);
+	NewEntry.StackCount = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
-	GridLocationToItemMap.Add(AvailablePosition, Instance);
-	Item_MarkSpace(Instance, AvailablePosition);
+	GridLocationToItemMap.Add(InAvailablePosition, InInstance);
+	Item_MarkSpace(InInstance, InAvailablePosition);
 	MarkItemDirty(NewEntry);
 	
-	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, AvailablePosition, EObsidianInventoryChangeType::ICT_ItemAdded);
+	BroadcastChangeMessage(NewEntry, /* Old Count */ 0, /* New Count */ NewEntry.StackCount, InAvailablePosition, EObsidianInventoryChangeType::ICT_ItemAdded);
 }
 
-UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::LoadEntry(const FObsidianSavedItem& EquippedSavedItem)
+UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::LoadEntry(const FObsidianSavedItem& InEquippedSavedItem)
 {
 	check(OwnerComponent);
 	
 	UObsidianInventoryItemInstance* LoadedInstance = NewObject<UObsidianInventoryItemInstance>(OwnerComponent->GetOwner());
-	LoadedInstance->ConstructFromSavedItem(EquippedSavedItem);
+	LoadedInstance->ConstructFromSavedItem(InEquippedSavedItem);
 
 	const FIntPoint LoadedGridPosition = LoadedInstance->GetItemCurrentPosition().GetItemGridPosition();
 	FObsidianInventoryEntry& NewEntry = Entries.Emplace_GetRef(LoadedInstance, LoadedGridPosition);
@@ -127,13 +127,13 @@ UObsidianInventoryItemInstance* FObsidianInventoryGridItemList::LoadEntry(const 
 	return LoadedInstance;
 }
 
-void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance* Instance)
+void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance* InInstance)
 {
 	bool bSuccess = false;
 	for(auto It = Entries.CreateIterator(); It; ++It)
 	{
 		FObsidianInventoryEntry& Entry = *It;
-		if(Entry.Instance == Instance)
+		if(Entry.Instance == InInstance)
 		{
 			It.RemoveCurrent();
 			MarkArrayDirty();
@@ -143,27 +143,27 @@ void FObsidianInventoryGridItemList::RemoveEntry(UObsidianInventoryItemInstance*
 
 	if(bSuccess)
 	{
-		const FIntPoint CachedLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
-		Instance->ResetItemCurrentPosition();
+		const FIntPoint CachedLocation = InInstance->GetItemCurrentPosition().GetItemGridPosition();
+		InInstance->ResetItemCurrentPosition();
 		
 		GridLocationToItemMap.Remove(CachedLocation);
-		Item_UnMarkSpace(Instance, CachedLocation);
+		Item_UnMarkSpace(InInstance, CachedLocation);
 
-		const int32 StackCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-		BroadcastChangeMessage(Instance, /* Old Count */ StackCount, /* New Count */ 0, CachedLocation, EObsidianInventoryChangeType::ICT_ItemRemoved);
+		const int32 StackCount = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+		BroadcastChangeMessage(InInstance, /* Old Count */ StackCount, /* New Count */ 0, CachedLocation, EObsidianInventoryChangeType::ICT_ItemRemoved);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to remove is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
-void FObsidianInventoryGridItemList::ChangedEntryStacks(UObsidianInventoryItemInstance* Instance, const int32 OldCount)
+void FObsidianInventoryGridItemList::ChangedEntryStacks(UObsidianInventoryItemInstance* InInstance, const int32 InOldCount)
 {
-	const int32 NewCount = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+	const int32 NewCount = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
 	
 	bool bSuccess = false;
 	for(FObsidianInventoryEntry& Entry : Entries)
 	{
-		if(Entry.Instance == Instance)
+		if(Entry.Instance == InInstance)
 		{
 			Entry.StackCount = NewCount;
 			MarkItemDirty(Entry);
@@ -173,19 +173,19 @@ void FObsidianInventoryGridItemList::ChangedEntryStacks(UObsidianInventoryItemIn
 
 	if(bSuccess)
 	{
-		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
-		BroadcastChangeMessage(Instance, OldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
+		const FIntPoint GridLocation = InInstance->GetItemCurrentPosition().GetItemGridPosition();
+		BroadcastChangeMessage(InInstance, InOldCount, NewCount, GridLocation, EObsidianInventoryChangeType::ICT_ItemStacksChanged);
 		return;
 	}
 	FFrame::KismetExecutionMessage(TEXT("Provided Instance to change is not in the Inventory List."), ELogVerbosity::Warning);
 }
 
-void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemInstance* Instance)
+void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemInstance* InInstance)
 {
 	bool bSuccess = false;
 	for(FObsidianInventoryEntry& Entry : Entries)
 	{
-		if(Entry.Instance == Instance)
+		if(Entry.Instance == InInstance)
 		{
 			MarkItemDirty(Entry);
 			bSuccess = true;
@@ -194,9 +194,9 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 	
 	if(bSuccess)
 	{
-		const FIntPoint GridLocation = Instance->GetItemCurrentPosition().GetItemGridPosition();
-		const int32 Count = Instance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
-		BroadcastChangeMessage(Instance, Count, Count, GridLocation,
+		const FIntPoint GridLocation = InInstance->GetItemCurrentPosition().GetItemGridPosition();
+		const int32 Count = InInstance->GetItemStackCount(ObsidianGameplayTags::Item::StackCount::Current);
+		BroadcastChangeMessage(InInstance, Count, Count, GridLocation,
 			EObsidianInventoryChangeType::ICT_GeneralItemChanged);
 		return;
 	}
@@ -205,14 +205,14 @@ void FObsidianInventoryGridItemList::GeneralEntryChange(UObsidianInventoryItemIn
 		ELogVerbosity::Warning);
 }
 
-void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition)
+void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItemInstance* InItemInstance, const FIntPoint& InAtPosition)
 {
-	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
+	const FIntPoint ItemGridSpan = InItemInstance->GetItemGridSpan();
 	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			const FIntPoint LocationToMark = AtPosition + FIntPoint(SpanX, SpanY);
+			const FIntPoint LocationToMark = InAtPosition + FIntPoint(SpanX, SpanY);
 			if(bool* Location = InventoryStateMap.Find(LocationToMark))
 			{
 				*Location = true;
@@ -228,14 +228,14 @@ void FObsidianInventoryGridItemList::Item_MarkSpace(const UObsidianInventoryItem
 	}
 }
 
-void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryItemInstance* ItemInstance, const FIntPoint& AtPosition)
+void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryItemInstance* InItemInstance, const FIntPoint& InAtPosition)
 {
-	const FIntPoint ItemGridSpan = ItemInstance->GetItemGridSpan();
+	const FIntPoint ItemGridSpan = InItemInstance->GetItemGridSpan();
 	for(int32 SpanX = 0; SpanX < ItemGridSpan.X; ++SpanX)
 	{
 		for(int32 SpanY = 0; SpanY < ItemGridSpan.Y; ++SpanY)
 		{
-			const FIntPoint LocationToUnmark = AtPosition + FIntPoint(SpanX, SpanY);
+			const FIntPoint LocationToUnmark = InAtPosition + FIntPoint(SpanX, SpanY);
 			if(bool* Location = InventoryStateMap.Find(LocationToUnmark))
 			{
 				*Location = false;
@@ -251,9 +251,9 @@ void FObsidianInventoryGridItemList::Item_UnMarkSpace(const UObsidianInventoryIt
 	}
 }
 
-void FObsidianInventoryGridItemList::PreReplicatedRemove(const TArrayView<int32> RemovedIndices, int32 FinalSize)
+void FObsidianInventoryGridItemList::PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : RemovedIndices)
+	for(const int32 Index : InRemovedIndices)
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
 		if(Entry.Instance == nullptr || Entry.LastObservedCount == INDEX_NONE) // Item was never added on this Client.
@@ -271,9 +271,9 @@ void FObsidianInventoryGridItemList::PreReplicatedRemove(const TArrayView<int32>
 	}
 }
 
-void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> AddedIndices, int32 FinalSize)
+void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : AddedIndices)
+	for(const int32 Index : InAddedIndices)
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
 		if(Entry.Instance == nullptr)
@@ -293,9 +293,9 @@ void FObsidianInventoryGridItemList::PostReplicatedAdd(const TArrayView<int32> A
 	}
 }
 
-void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32> ChangedIndices, int32 FinalSize)
+void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize)
 {
-	for(const int32 Index : ChangedIndices)
+	for(const int32 Index : InChangedIndices)
 	{
 		FObsidianInventoryEntry& Entry = Entries[Index];
 		if(Entry.Instance == nullptr)
@@ -306,7 +306,7 @@ void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32
 		if(Entry.LastObservedCount == INDEX_NONE) // Adding was deferred until the Item Instance got resolved.
 		{
 			int32 AddedIndex = Index;
-			PostReplicatedAdd(MakeArrayView(&AddedIndex, 1), FinalSize);
+			PostReplicatedAdd(MakeArrayView(&AddedIndex, 1), InFinalSize);
 			continue;
 		}
 
@@ -324,15 +324,15 @@ void FObsidianInventoryGridItemList::PostReplicatedChange(const TArrayView<int32
 	}
 }
 
-void FObsidianInventoryGridItemList::BroadcastChangeMessage(const FObsidianInventoryEntry& Entry, const int32 OldCount, const int32 NewCount, const FIntPoint& GridPosition, const EObsidianInventoryChangeType& ChangeType) const
+void FObsidianInventoryGridItemList::BroadcastChangeMessage(const FObsidianInventoryEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FIntPoint& InGridPosition, const EObsidianInventoryChangeType& InChangeType) const
 {
 	FObsidianInventoryChangeMessage Message;
 	Message.InventoryOwner = OwnerComponent;
-	Message.ItemInstance = Entry.Instance;
-	Message.NewCount = NewCount;
-	Message.Delta = NewCount - OldCount;
-	Message.GridItemPosition = GridPosition;
-	Message.ChangeType = ChangeType;
+	Message.ItemInstance = InEntry.Instance;
+	Message.NewCount = InNewCount;
+	Message.Delta = InNewCount - InOldCount;
+	Message.GridItemPosition = InGridPosition;
+	Message.ChangeType = InChangeType;
 
 	UGameplayMessageSubsystem& MessageSubsystem = UGameplayMessageSubsystem::Get(OwnerComponent->GetWorld());
 	MessageSubsystem.BroadcastMessage(ObsidianGameplayTags::Message::Inventory::Changed, Message);

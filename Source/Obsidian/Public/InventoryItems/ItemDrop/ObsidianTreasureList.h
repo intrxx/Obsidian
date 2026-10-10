@@ -42,7 +42,7 @@ public:
 
 	bool IsValid() const;
 
-	uint8 GetRandomStackSizeToDropAdjusted(const uint8 TreasureQuality) const;
+	uint8 GetRandomStackSizeToDropAdjusted(const uint8 InTreasureQuality) const;
 	
 public:
 	/** Actual items/item templates in this Treasure Class. */
@@ -128,10 +128,10 @@ public:
 	{}
 	
 	/** Returns Weighted Randomized Item, will be FObsidianDropItem::NoDropType if NoDrop was chosen. */
-	FObsidianDropItem GetRandomItemFromClass(const float NoDropScale = 1.0f);
+	FObsidianDropItem GetRandomItemFromClass(const float InNoDropScale = 1.0f);
 
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
 	
 public:
@@ -171,16 +171,16 @@ public:
 	virtual void PostLoad() override;
 	
 	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
-	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 TreasureQuality) const;
-	TArray<FObsidianTreasureClass> GetTreasureClassesOfQuality(const uint8 TreasureQuality) const;
-	TArray<FObsidianTreasureClass> GetTreasureClassesOfQualityWithCategory(const uint8 TreasureQuality, const FGameplayTag& FromCategory) const;
-	TArray<FObsidianDropItem> GetAllItemsOfBaseTypeUpToQuality(const uint8 TreasureQuality, const FGameplayTag& OfBaseType) const;
+	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 InTreasureQuality) const;
+	TArray<FObsidianTreasureClass> GetTreasureClassesOfQuality(const uint8 InTreasureQuality) const;
+	TArray<FObsidianTreasureClass> GetTreasureClassesOfQualityWithCategory(const uint8 InTreasureQuality, const FGameplayTag& InFromCategory) const;
+	TArray<FObsidianDropItem> GetAllItemsOfBaseTypeUpToQuality(const uint8 InTreasureQuality, const FGameplayTag& InOfBaseType) const;
 	
-	virtual void PreSave(FObjectPreSaveContext SaveContext) override;
+	virtual void PreSave(FObjectPreSaveContext InSaveContext) override;
 	
 #if WITH_EDITOR
-	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& PropertyChangedEvent) override;
-	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& InPropertyChangedEvent) override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 	
 protected:

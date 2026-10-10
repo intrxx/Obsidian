@@ -16,7 +16,7 @@ class OBSIDIAN_API UObsidianMMC_Armor : public UGameplayModMagnitudeCalculation
 	GENERATED_BODY()
 
 public:
-	UObsidianMMC_Armor(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianMMC_Armor(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override;
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
 };

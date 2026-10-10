@@ -5,34 +5,34 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianItemDataDeveloperSettings::UObsidianItemDataDeveloperSettings(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianItemDataDeveloperSettings::UObsidianItemDataDeveloperSettings(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetDefaultDropRollNumberForEntityRarity(const EObsidianEntityRarity EntityRarity) const
+uint8 UObsidianItemDataDeveloperSettings::GetDefaultDropRollNumberForEntityRarity(const EObsidianEntityRarity InEntityRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToNumberOfDropRollsMap.Find(EntityRarity))
+	if (const uint8* CountPtr = DefaultRarityToNumberOfDropRollsMap.Find(InEntityRarity))
 	{
 		return *CountPtr;
 	}
-	UE_LOG(ObLogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToNumberOfDropRollsMap!"), EntityRarity)
+	UE_LOG(ObLogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToNumberOfDropRollsMap!"), InEntityRarity)
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetDefaultAddedTreasureQualityForEntityRarity(const EObsidianEntityRarity EntityRarity) const
+uint8 UObsidianItemDataDeveloperSettings::GetDefaultAddedTreasureQualityForEntityRarity(const EObsidianEntityRarity InEntityRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToAddedTreasureQualityMap.Find(EntityRarity))
+	if (const uint8* CountPtr = DefaultRarityToAddedTreasureQualityMap.Find(InEntityRarity))
 	{
 		return *CountPtr;
 	}
-	UE_LOG(ObLogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToAddedTreasureQualityMap!"), EntityRarity)
+	UE_LOG(ObLogItemData, Error, TEXT("Provided EntityRarity [%d] is not included in the DefaultRarityToAddedTreasureQualityMap!"), InEntityRarity)
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetMaxPrefixCountForRarity(const EObsidianItemRarity ForRarity) const
+uint8 UObsidianItemDataDeveloperSettings::GetMaxPrefixCountForRarity(const EObsidianItemRarity InForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToMaxPrefixCount.Find(ForRarity))
+	if (const uint8* CountPtr = DefaultRarityToMaxPrefixCount.Find(InForRarity))
 	{
 		return *CountPtr;
 	}
@@ -40,9 +40,9 @@ uint8 UObsidianItemDataDeveloperSettings::GetMaxPrefixCountForRarity(const EObsi
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetMaxSuffixCountForRarity(const EObsidianItemRarity ForRarity) const
+uint8 UObsidianItemDataDeveloperSettings::GetMaxSuffixCountForRarity(const EObsidianItemRarity InForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToMaxSuffixCount.Find(ForRarity))
+	if (const uint8* CountPtr = DefaultRarityToMaxSuffixCount.Find(InForRarity))
 	{
 		return *CountPtr;
 	}
@@ -50,9 +50,9 @@ uint8 UObsidianItemDataDeveloperSettings::GetMaxSuffixCountForRarity(const EObsi
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetMaxAffixCountForRarity(const EObsidianItemRarity ForRarity) const
+uint8 UObsidianItemDataDeveloperSettings::GetMaxAffixCountForRarity(const EObsidianItemRarity InForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToMaxAffixCount.Find(ForRarity))
+	if (const uint8* CountPtr = DefaultRarityToMaxAffixCount.Find(InForRarity))
 	{
 		return *CountPtr;
 	}
@@ -60,9 +60,9 @@ uint8 UObsidianItemDataDeveloperSettings::GetMaxAffixCountForRarity(const EObsid
 	return 0;
 }
 
-uint8 UObsidianItemDataDeveloperSettings::GetNaturalMinAffixCountForRarity(const EObsidianItemRarity ForRarity) const
+uint8 UObsidianItemDataDeveloperSettings::GetNaturalMinAffixCountForRarity(const EObsidianItemRarity InForRarity) const
 {
-	if (const uint8* CountPtr = DefaultRarityToNaturalMinAffixCount.Find(ForRarity))
+	if (const uint8* CountPtr = DefaultRarityToNaturalMinAffixCount.Find(InForRarity))
 	{
 		return *CountPtr;
 	}
@@ -71,9 +71,9 @@ uint8 UObsidianItemDataDeveloperSettings::GetNaturalMinAffixCountForRarity(const
 }
 
 TArray<uint8> UObsidianItemDataDeveloperSettings::GetAffixNumberWeightsForRarity(
-	const EObsidianItemRarity ForRarity) const
+	const EObsidianItemRarity InForRarity) const
 {
-	if (const FObsidianWeightsWrapper* WeightsWrapper = DefaultRarityToNumberOfAffixesWeights.Find(ForRarity))
+	if (const FObsidianWeightsWrapper* WeightsWrapper = DefaultRarityToNumberOfAffixesWeights.Find(InForRarity))
 	{
 		return WeightsWrapper->Weights;
 	}

@@ -72,16 +72,16 @@ protected:
 	virtual void BeginPlay() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
-	void ApplyEffectToTarget(AActor* TargetActor, TSubclassOf<UGameplayEffect> EffectClassToApply);
+	void ApplyEffectToTarget(AActor* InTargetActor, TSubclassOf<UGameplayEffect> InEffectClassToApply);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
-	void ApplyMultipleEffectsToTarget(AActor* TargetActor, TArray<FObsidianGameplayEffectStack> MultipleGameplayEffectsToApply);
+	void ApplyMultipleEffectsToTarget(AActor* InTargetActor, TArray<FObsidianGameplayEffectStack> InMultipleGameplayEffectsToApply);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
-	void OnOverlap(AActor* TargetActor);
+	void OnOverlap(AActor* InTargetActor);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
-	void OnEndOverlap(AActor* TargetActor);
+	void OnEndOverlap(AActor* InTargetActor);
 	
 protected:
 	/** Instant Gameplay Effect */
@@ -128,7 +128,7 @@ protected:
 	bool bApplyEffectToEnemies = false;
 
 private:
-	void RemoveEffectsFromActor(AActor* TargetActor);
+	void RemoveEffectsFromActor(AActor* InTargetActor);
 	
 private:
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;

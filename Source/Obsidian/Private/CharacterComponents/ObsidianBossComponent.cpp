@@ -3,8 +3,8 @@
 #include "CharacterComponents/ObsidianBossComponent.h"
 
 
-UObsidianBossComponent::UObsidianBossComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianBossComponent::UObsidianBossComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;

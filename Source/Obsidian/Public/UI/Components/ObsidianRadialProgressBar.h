@@ -57,7 +57,7 @@ protected:
 
 	void SetThickness(const float InThickness);
 
-	float GetMappedValue(float RawValue);
+	float GetMappedValue(float InRawValue);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

@@ -25,7 +25,7 @@ class OBSIDIAN_API AObsidianPlayerState : public AModularPlayerState, public IAb
 	GENERATED_BODY()
 
 public:
-	AObsidianPlayerState(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	AObsidianPlayerState(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;

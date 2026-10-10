@@ -7,14 +7,14 @@
 
 // ~ Start of FObsidianItemsMatchingUsableContext
 
-void FObsidianItemsMatchingUsableContext::AddMatchingItem(const UObsidianInventoryItemInstance* InstanceToAdd)
+void FObsidianItemsMatchingUsableContext::AddMatchingItem(const UObsidianInventoryItemInstance* InInstanceToAdd)
 {
-	if (InstanceToAdd == nullptr)
+	if (InInstanceToAdd == nullptr)
 	{
 		return;
 	}
 	
-	const FObsidianItemPosition CurrentPosition = InstanceToAdd->GetItemCurrentPosition();
+	const FObsidianItemPosition CurrentPosition = InInstanceToAdd->GetItemCurrentPosition();
 
 	if (CurrentPosition.IsOnStash())
 	{
@@ -39,13 +39,13 @@ bool FObsidianItemsMatchingUsableContext::HasAnyMatchingItems() const
 
 // ~ End of FObsidianItemsMatchingUsableContext
 
-bool UObsidianUsableShard::OnItemUsed(AObsidianPlayerController* ItemOwner, UObsidianInventoryItemInstance* UsingInstance,
-                                      UObsidianInventoryItemInstance* UsingOntoInstance)
+bool UObsidianUsableShard::OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
+                                      UObsidianInventoryItemInstance* InUsingOntoInstance)
 {
 	return false;
 }
 
-void UObsidianUsableShard::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& AllItems,
+void UObsidianUsableShard::OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext)
 {
 }

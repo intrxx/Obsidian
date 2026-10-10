@@ -19,9 +19,9 @@ class OBSIDIAN_API UOAbilityTask_TargetDataUnderCursor : public UAbilityTask
 
 public:
 	/** Gets the hit result under cursor and returns the target data */
-	UFUNCTION(BlueprintCallable, meta=( BlueprintInternalUseOnly = "TRUE", HidePin = "OwningAbility", DefaultToSelf = "OwningAbility",
+	UFUNCTION(BlueprintCallable, meta=( BlueprintInternalUseOnly = "TRUE", HidePin = "InOwningAbility", DefaultToSelf = "InOwningAbility",
 		DisplayName = "Get Target Data Under Cursor"), Category = "Obsidian|GameplayTasks")
-	static UOAbilityTask_TargetDataUnderCursor* CreateTargetDataUnderCursorProxy(UGameplayAbility* OwningAbility);
+	static UOAbilityTask_TargetDataUnderCursor* CreateTargetDataUnderCursorProxy(UGameplayAbility* InOwningAbility);
 
 	UPROPERTY(BlueprintAssignable)
 	FCursorTargetDataSignature DataReceived;
@@ -32,5 +32,5 @@ private:
 	void BroadcastTargetDataToServer();
 	void ReceiveTargetDataFromClient();
 	
-	void OnTargetDataSetCallback(const FGameplayAbilityTargetDataHandle& DataHandle, FGameplayTag ActivationTag);
+	void OnTargetDataSetCallback(const FGameplayAbilityTargetDataHandle& InDataHandle, FGameplayTag InActivationTag);
 };

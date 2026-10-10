@@ -96,12 +96,12 @@ public:
 	// This is a direct way to add items to pickup, I'm okay with it for now but idk if it's the way to go
 	
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
-	virtual void AddItemInstance(UObsidianInventoryItemInstance* InstanceToAdd) = 0;
+	virtual void AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
-	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef,
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
 		const FObsidianItemGeneratedData& InGeneratedData) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
-	virtual void OverrideTemplateStacks(const int32 TemplateIndex) = 0;
+	virtual void OverrideTemplateStacks(const int32 InTemplateIndex) = 0;
 	
 	//
 };
@@ -115,9 +115,9 @@ class UObsidianPickableStatics : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 
 public:
-	UObsidianPickableStatics(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianPickableStatics(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 public:
 	UFUNCTION(BlueprintPure)
-	static TScriptInterface<IObsidianPickableInterface> GetPickableFromActor(AActor* Actor);
+	static TScriptInterface<IObsidianPickableInterface> GetPickableFromActor(AActor* InActor);
 };

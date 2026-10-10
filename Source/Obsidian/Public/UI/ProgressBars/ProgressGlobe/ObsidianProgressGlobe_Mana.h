@@ -23,13 +23,13 @@ protected:
 	void InitializeSpecialResourceVisuals();
 
 	UFUNCTION()
-	void OnManaChanged(float NewMana);
+	void OnManaChanged(float InNewMana);
 	UFUNCTION()
-	void OnMaxManaChanged(float NewMaxMana);
+	void OnMaxManaChanged(float InNewMaxMana);
 	UFUNCTION()
-	void OnSpecialResourceChanged(float NewSpecialResource);
+	void OnSpecialResourceChanged(float InNewSpecialResource);
 	UFUNCTION()
-	void OnMaxSpecialResourceChanged(float NewMaxSpecialResource);
+	void OnMaxSpecialResourceChanged(float InNewMaxSpecialResource);
 	
 protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|ManaProgressGlobe", meta=(BindWidget))

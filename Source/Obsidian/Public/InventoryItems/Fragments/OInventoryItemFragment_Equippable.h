@@ -22,9 +22,9 @@ struct FObsidianEquipmentActor
 
 public:
 	FObsidianEquipmentActor(){}
-	FObsidianEquipmentActor(const FObsidianSavedEquipmentPiece& SavedEquipmentActor);
+	FObsidianEquipmentActor(const FObsidianSavedEquipmentPiece& InSavedEquipmentActor);
 	
-	void OverrideAttachSocket(const FGameplayTag& SlotTag);
+	void OverrideAttachSocket(const FGameplayTag& InSlotTag);
 	
 public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Equipment")
@@ -51,7 +51,7 @@ class OBSIDIAN_API UOInventoryItemFragment_Equippable : public UObsidianInventor
 
 public:
 	//~ Start of UObsidianInventoryItemFragment
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const override;
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
 	//~ End of UObsidianInventoryItemFragment
 	
 	FObsidianItemRequirements GetItemDefaultEquippingRequirements() const;

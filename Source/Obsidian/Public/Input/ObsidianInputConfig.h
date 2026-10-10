@@ -26,7 +26,7 @@ public:
 	FGameplayTag InputTag;
 
 #if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& Context, const int Index, const FString& InputActionsName) const;
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex, const FString& InInputActionsName) const;
 #endif
 };
 
@@ -39,16 +39,16 @@ class OBSIDIAN_API UObsidianInputConfig : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UObsidianInputConfig(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianInputConfig(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Input")
-	const UInputAction* FindNativeInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;
+	const UInputAction* FindNativeInputActionForTag(const FGameplayTag& InInputTag, bool bInLogNotFound = true) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Input")
-	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InputTag, bool bLogNotFound = true) const;
+	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InInputTag, bool bInLogNotFound = true) const;
 
 #if WITH_EDITOR
-	virtual EDataValidationResult IsDataValid(FDataValidationContext& Context) const override;
+	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
 	
 public:

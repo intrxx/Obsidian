@@ -17,11 +17,11 @@ void UObsidianStashButton::NativeDestruct()
 	OnClicked().Clear();
 }
 
-void UObsidianStashButton::InitializeStashButton(const FGameplayTag& StashTag, const FText& StashTabName)
+void UObsidianStashButton::InitializeStashButton(const FGameplayTag& InStashTag, const FText& InStashTabName)
 {
-	CorrespondingStashTag = StashTag;
+	CorrespondingStashTag = InStashTag;
 
-	SetButtonText(StashTabName);
+	SetButtonText(InStashTabName);
 }
 
 void UObsidianStashButton::OnStashButtonClicked()

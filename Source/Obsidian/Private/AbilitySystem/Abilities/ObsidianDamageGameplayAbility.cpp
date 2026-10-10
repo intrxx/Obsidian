@@ -7,15 +7,15 @@
 #include "AbilitySystemComponent.h"
 
 
-UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility(const FObjectInitializer& ObjectInitializer)
-    : Super(ObjectInitializer)
+UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility(const FObjectInitializer& InObjectInitializer)
+    : Super(InObjectInitializer)
 {
     InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
-void UObsidianDamageGameplayAbility::DamageAllCharacters(const TArray<AActor*>& ActorsToDamage)
+void UObsidianDamageGameplayAbility::DamageAllCharacters(const TArray<AActor*>& InActorsToDamage)
 {
-    if(ActorsToDamage.IsEmpty())
+    if(InActorsToDamage.IsEmpty())
     {
         return;
     }
@@ -35,7 +35,7 @@ void UObsidianDamageGameplayAbility::DamageAllCharacters(const TArray<AActor*>& 
         UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, Damage);
     }
     
-    for(AActor* Actor : ActorsToDamage)
+    for(AActor* Actor : InActorsToDamage)
     {
         if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Actor))
         {
@@ -44,9 +44,9 @@ void UObsidianDamageGameplayAbility::DamageAllCharacters(const TArray<AActor*>& 
     }
 }
 
-void UObsidianDamageGameplayAbility::DamageCharacter(AActor* ActorToDamage)
+void UObsidianDamageGameplayAbility::DamageCharacter(AActor* InActorToDamage)
 {
-    if(!IsValid(ActorToDamage))
+    if(!IsValid(InActorToDamage))
     {
         return;
     }
@@ -66,33 +66,33 @@ void UObsidianDamageGameplayAbility::DamageCharacter(AActor* ActorToDamage)
         UAbilitySystemBlueprintLibrary::AssignTagSetByCallerMagnitude(SpecHandle, Pair.Key, Damage);
     }
 
-    if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(ActorToDamage))
+    if(UAbilitySystemComponent* TargetASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(InActorToDamage))
     {
         TargetASC->ApplyGameplayEffectSpecToSelf(*SpecHandle.Data.Get());
     }
 }
 
-FVector UObsidianDamageGameplayAbility::PredictActorLocation(AActor* Actor, const float Time, const FVector& FallBackVector)
+FVector UObsidianDamageGameplayAbility::PredictActorLocation(AActor* InActor, const float InTime, const FVector& InFallBackVector)
 {
-    if(Actor == nullptr)
+    if(InActor == nullptr)
     {
-        return FallBackVector;
+        return InFallBackVector;
     }
     
-    const FVector ActorVelocity = Actor->GetVelocity() * FVector(1.0f, 1.0f, 0.0f);
+    const FVector ActorVelocity = InActor->GetVelocity() * FVector(1.0f, 1.0f, 0.0f);
     if(ActorVelocity.IsNearlyZero())
     {
-        return Actor->GetActorLocation();
+        return InActor->GetActorLocation();
     }
     
-    return Actor->GetActorLocation() + (ActorVelocity * Time);
+    return InActor->GetActorLocation() + (ActorVelocity * InTime);
 }
 
-FVector UObsidianDamageGameplayAbility::ShortenVector(const FVector& StartVector, const FVector& EndVector,
-    const float AmountToShorten)
+FVector UObsidianDamageGameplayAbility::ShortenVector(const FVector& InStartVector, const FVector& InEndVector,
+    const float InAmountToShorten)
 {
-    float ShortenBy = AmountToShorten;
-    const FVector OriginalVector = EndVector - StartVector;
+    float ShortenBy = InAmountToShorten;
+    const FVector OriginalVector = InEndVector - InStartVector;
     const float OriginalVectorLength = OriginalVector.Length();
     
     if(ShortenBy >= OriginalVectorLength)
@@ -100,13 +100,13 @@ FVector UObsidianDamageGameplayAbility::ShortenVector(const FVector& StartVector
         ShortenBy = OriginalVectorLength;
     }
 
-    return StartVector + OriginalVector.GetSafeNormal() * (OriginalVectorLength - ShortenBy);
+    return InStartVector + OriginalVector.GetSafeNormal() * (OriginalVectorLength - ShortenBy);
 }
 
-float FObsidianAbilityDamageRange::RollForDamageNumberAtLevel(const float Level) const
+float FObsidianAbilityDamageRange::RollForDamageNumberAtLevel(const float InLevel) const
 {
-    const float MinValue = MinimalDamage.GetValueAtLevel(Level);
-    const float MaxValue = MaximalDamage.GetValueAtLevel(Level);
+    const float MinValue = MinimalDamage.GetValueAtLevel(InLevel);
+    const float MaxValue = MaximalDamage.GetValueAtLevel(InLevel);
     
     return FMath::FloorToFloat(FMath::RandRange(MinValue, MaxValue));
 }

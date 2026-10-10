@@ -21,17 +21,17 @@ class OBSIDIAN_API UObsidianHeroAttributesComponent : public UObsidianAttributes
 	GENERATED_BODY()
 
 public:
-	UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer);
+	UObsidianHeroAttributesComponent(const FObjectInitializer& InObjectInitializer);
 	
 	/** Returns the HERO Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroAttributes")
-	static UObsidianHeroAttributesComponent* FindHeroAttributesComponent(const AActor* Actor)
+	static UObsidianHeroAttributesComponent* FindHeroAttributesComponent(const AActor* InActor)
 	{
-		return (Actor ? Actor->FindComponentByClass<UObsidianHeroAttributesComponent>() : nullptr);
+		return (InActor ? InActor->FindComponentByClass<UObsidianHeroAttributesComponent>() : nullptr);
 	}
 
 	//~ Start of ObsidianAttributesComponent
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* Owner = nullptr) override;
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
 	//~ End of ObsidianAttributesComponent
 
@@ -143,19 +143,19 @@ protected:
 	 * Callbacks for Attribute change delegates. //TODO(intrxx) Decide what should actually be bind later - check performance
 	 */
 	
-	virtual void HealthChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxHealthChanged(const FOnAttributeChangeData& Data) override;
-	virtual void EnergyShieldChanged(const FOnAttributeChangeData& Data) override;
-	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& Data) override;
-	virtual void ManaChanged(const FOnAttributeChangeData& Data);
-	virtual void MaxManaChanged(const FOnAttributeChangeData& Data);
+	virtual void HealthChanged(const FOnAttributeChangeData& InData) override;
+	virtual void MaxHealthChanged(const FOnAttributeChangeData& InData) override;
+	virtual void EnergyShieldChanged(const FOnAttributeChangeData& InData) override;
+	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) override;
+	virtual void ManaChanged(const FOnAttributeChangeData& InData);
+	virtual void MaxManaChanged(const FOnAttributeChangeData& InData);
 	
 	/**
 	 * 
 	 */
 
-	virtual void HandleOutOfStamina(AActor* DamageInstigator, AActor* DamageCauser, const FGameplayEffectSpec* DamageEffectSpec,
-		float DamageMagnitude, float OldValue, float NewValue);
+	virtual void HandleOutOfStamina(AActor* InDamageInstigator, AActor* InDamageCauser, const FGameplayEffectSpec* InDamageEffectSpec,
+		float InDamageMagnitude, float InOldValue, float InNewValue);
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|LevelingUp")

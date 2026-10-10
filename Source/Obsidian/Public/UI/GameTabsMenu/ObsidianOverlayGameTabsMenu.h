@@ -67,9 +67,9 @@ protected:
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	
-	void OnCharacterStatusTabStatusChange(bool bIsConstructed);
-	void OnInventoryTabStatusChange(bool bIsConstructed);
-	void OnPassiveSkillTreeTabStatusChange(bool bIsConstructed);
+	void OnCharacterStatusTabStatusChange(bool bInIsConstructed);
+	void OnInventoryTabStatusChange(bool bInIsConstructed);
+	void OnPassiveSkillTreeTabStatusChange(bool bInIsConstructed);
 	
 protected:
 	UPROPERTY(meta=(BindWidget))

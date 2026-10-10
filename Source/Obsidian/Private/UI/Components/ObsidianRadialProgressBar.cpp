@@ -39,10 +39,10 @@ void UObsidianRadialProgressBar::SetThickness(const float InThickness)
 	}
 }
 
-float UObsidianRadialProgressBar::GetMappedValue(float RawValue)
+float UObsidianRadialProgressBar::GetMappedValue(float InRawValue)
 {
 	return FMath::GetMappedRangeValueClamped(FVector2f(0.0f, 1.0f),
-		FVector2f(BarPercentMin, BarPercentMax), RawValue);
+		FVector2f(BarPercentMin, BarPercentMax), InRawValue);
 }
 
 void UObsidianRadialProgressBar::SetPercent(float InPercent)

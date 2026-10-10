@@ -18,6 +18,6 @@ class OBSIDIAN_API UObsidianGameInstance : public UCommonGameInstance
 	GENERATED_BODY()
 
 public:
-	UObsidianGameInstance(const FObjectInitializer& ObjectInitializer = FObjectInitializer::Get());
+	UObsidianGameInstance(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 	
 };

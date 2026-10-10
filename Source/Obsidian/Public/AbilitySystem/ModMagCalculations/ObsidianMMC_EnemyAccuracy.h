@@ -15,5 +15,5 @@ class OBSIDIAN_API UObsidianMMC_EnemyAccuracy : public UGameplayModMagnitudeCalc
 {
 	GENERATED_BODY()
 	
-	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& Spec) const override; 
+	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override; 
 };

@@ -36,16 +36,16 @@ namespace DropComponentDebugHelpers
 		{EObsidianItemRarity::Set, TEXT("Set")},
 	};
 
-	inline FString GetRarityDebugString(const EObsidianItemRarity Rarity)
+	inline FString GetRarityDebugString(const EObsidianItemRarity InRarity)
 	{
-		return ItemRarityToDebugStringMap[Rarity];
+		return ItemRarityToDebugStringMap[InRarity];
 	}
 }
 
 // ~ FObsidianAdditionalTreasureList
 
 #if WITH_EDITOR
-EDataValidationResult FObsidianAdditionalTreasureList::ValidateData(FDataValidationContext& Context, const int Index) const
+EDataValidationResult FObsidianAdditionalTreasureList::ValidateData(FDataValidationContext& InContext, const int InIndex) const
 {
 	EDataValidationResult Result = EDataValidationResult::Valid;
 	
@@ -54,9 +54,9 @@ EDataValidationResult FObsidianAdditionalTreasureList::ValidateData(FDataValidat
 		Result = EDataValidationResult::Invalid;
 
 		const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Treasure List at index [%i] is empty! \n"
-			"Please fill Treasure List or delete this index entry in Additional Treasure Lists"), Index));
+			"Please fill Treasure List or delete this index entry in Additional Treasure Lists"), InIndex));
 
-		Context.AddError(ErrorMessage);
+		InContext.AddError(ErrorMessage);
 	}
 	
 	return Result;
@@ -65,8 +65,8 @@ EDataValidationResult FObsidianAdditionalTreasureList::ValidateData(FDataValidat
 
 // ~ End of FObsidianAdditionalTreasureList
 
-UObsidianItemDropComponent::UObsidianItemDropComponent(const FObjectInitializer& ObjectInitializer)
-	: Super(ObjectInitializer)
+UObsidianItemDropComponent::UObsidianItemDropComponent(const FObjectInitializer& InObjectInitializer)
+	: Super(InObjectInitializer)
 {
 	PrimaryComponentTick.bCanEverTick = false;
 	PrimaryComponentTick.bStartWithTickEnabled = false;
@@ -90,10 +90,10 @@ void UObsidianItemDropComponent::LoadAdditionalTreasuresAsync()
 	UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditionalTreasureListsPaths);
 }
 
-void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingEntityRarity, const uint8 DroppingEntityLevel,
+void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity InDroppingEntityRarity, const uint8 InDroppingEntityLevel,
 	const FVector& InOverrideDropLocation)
 {
-	checkf(DroppingEntityRarity != EObsidianEntityRarity::None, TEXT("Entity Rarity passed to DropItems is None, setup or run time logic is invalid."));
+	checkf(InDroppingEntityRarity != EObsidianEntityRarity::None, TEXT("Entity Rarity passed to DropItems is None, setup or run time logic is invalid."));
 	
 	const UWorld* World = GetWorld();
 	if (World == nullptr)
@@ -123,7 +123,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	}
 	
 	const uint8 TreasureQuality = FMath::Clamp(
-		(DroppingEntityLevel + ItemDataSettings->GetDefaultAddedTreasureQualityForEntityRarity(DroppingEntityRarity)),
+		(InDroppingEntityLevel + ItemDataSettings->GetDefaultAddedTreasureQualityForEntityRarity(InDroppingEntityRarity)),
 		1, ItemDataSettings->MaxTreasureQuality);
 	
 	TArray<FObsidianTreasureClass> TreasureClasses;
@@ -137,7 +137,7 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 		return;
 	}
 	
-	uint8 DropRolls = ItemDataSettings->GetDefaultDropRollNumberForEntityRarity(DroppingEntityRarity);
+	uint8 DropRolls = ItemDataSettings->GetDefaultDropRollNumberForEntityRarity(InDroppingEntityRarity);
 
 	for (const FObsidianTreasureClass& TC : TreasureClasses)
 	{
@@ -190,10 +190,10 @@ void UObsidianItemDropComponent::DropItems(const EObsidianEntityRarity DroppingE
 	}
 }
 
-bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& DropItem, const FVector& InOverrideDropLocation,
-	const uint8 TreasureQuality, FObsidianItemToDrop& OutItemToDrop)
+bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& InDropItem, const FVector& InOverrideDropLocation,
+	const uint8 InTreasureQuality, FObsidianItemToDrop& OutItemToDrop)
 {
-	if (DropItem.IsValid() == false)
+	if (InDropItem.IsValid() == false)
 	{
 		return false;
 	}
@@ -206,20 +206,20 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 		return false;
 	}
 
-	TSoftClassPtr<UObsidianInventoryItemDefinition> ItemSoftItemDefinition = DropItem.SoftTreasureItemDefinitionClass;
-	const EObsidianItemRarity RolledRarity = DropItem.bShouldRandomizeRarity ? RollItemRarity(DropItem.ItemMaxRarity) : EObsidianItemRarity::None;
+	TSoftClassPtr<UObsidianInventoryItemDefinition> ItemSoftItemDefinition = InDropItem.SoftTreasureItemDefinitionClass;
+	const EObsidianItemRarity RolledRarity = InDropItem.bShouldRandomizeRarity ? RollItemRarity(InDropItem.ItemMaxRarity) : EObsidianItemRarity::None;
 	if (RolledRarity >= EObsidianItemRarity::Unique)
 	{
-		FGameplayTag ItemBaseTypeTag = DropItem.ItemBaseType;
-		if (DropItem.ItemBaseType.IsValid() == false)
+		FGameplayTag ItemBaseTypeTag = InDropItem.ItemBaseType;
+		if (InDropItem.ItemBaseType.IsValid() == false)
 		{
-			ItemBaseTypeTag = GetItemBaseTypeFromDropItem(DropItem);
+			ItemBaseTypeTag = GetItemBaseTypeFromDropItem(InDropItem);
 		}
 		
 		if (CachedItemDataLoader && ItemBaseTypeTag.IsValid())
 		{
 			FObsidianTreasureClass SpecialItemsTreasureClass;
-			CachedItemDataLoader->GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(TreasureQuality, RolledRarity,
+			CachedItemDataLoader->GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(InTreasureQuality, RolledRarity,
 				ItemBaseTypeTag, SpecialItemsTreasureClass);
 			
 			const FObsidianDropItem RolledSpecialItem = SpecialItemsTreasureClass.GetRandomItemFromClass();
@@ -235,18 +235,18 @@ bool UObsidianItemDropComponent::ConstructItemToDrop(const FObsidianDropItem& Dr
 		OutItemToDrop.ItemDefinitionClass = ItemSoftItemDefinition.LoadSynchronous();
 	}
 
-	OutItemToDrop.DropItemLevel = TreasureQuality;
-	OutItemToDrop.DropRarity = DropItem.bShouldRandomizeRarity ? RolledRarity : GetItemDefaultRarityFromDropItem(DropItem);
+	OutItemToDrop.DropItemLevel = InTreasureQuality;
+	OutItemToDrop.DropRarity = InDropItem.bShouldRandomizeRarity ? RolledRarity : GetItemDefaultRarityFromDropItem(InDropItem);
 	OutItemToDrop.bShouldApplyMultiplier = ShouldApplyAffixValueMultiplier(OutItemToDrop.DropRarity);
 	OutItemToDrop.DropTransform = GetDropTransformAligned(OwningActor, InOverrideDropLocation);
-	OutItemToDrop.DropStacks = DropItem.GetRandomStackSizeToDropAdjusted(TreasureQuality);
+	OutItemToDrop.DropStacks = InDropItem.GetRandomStackSizeToDropAdjusted(InTreasureQuality);
 	ConstructItem(OutItemToDrop);
 	return true;
 }
 
-void UObsidianItemDropComponent::ConstructItem(FObsidianItemToDrop& ForItemToDrop)
+void UObsidianItemDropComponent::ConstructItem(FObsidianItemToDrop& InOutForItemToDrop)
 {
-	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = ForItemToDrop.ItemDefinitionClass;
+	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = InOutForItemToDrop.ItemDefinitionClass;
 	if (ItemDef == nullptr)
 	{
 		UE_LOG(ObLogItemDrop, Error, TEXT("ItemDef is invalid in [%hs]."), __FUNCTION__);
@@ -269,31 +269,31 @@ void UObsidianItemDropComponent::ConstructItem(FObsidianItemToDrop& ForItemToDro
 		return;		
 	}
 
-	if (ForItemToDrop.DropRarity == EObsidianItemRarity::Rare)
+	if (InOutForItemToDrop.DropRarity == EObsidianItemRarity::Rare)
 	{
-		ForItemToDrop.DropRareItemDisplayNameAddition = CachedItemDataLoader->GetRandomRareItemNameAddition(
-			ForItemToDrop.DropItemLevel, DefaultObject->GetItemCategoryTag());
+		InOutForItemToDrop.DropRareItemDisplayNameAddition = CachedItemDataLoader->GetRandomRareItemNameAddition(
+			InOutForItemToDrop.DropItemLevel, DefaultObject->GetItemCategoryTag());
 	}
-	else if (ForItemToDrop.bShouldApplyMultiplier) // Only magic items can apply affix multiplier, that's why it's else if.
+	else if (InOutForItemToDrop.bShouldApplyMultiplier) // Only magic items can apply affix multiplier, that's why it's else if.
 	{
-		ForItemToDrop.DropMagicItemDisplayNameAddition = CachedItemDataLoader->GetAffixMultiplierMagicItemNameAddition();
+		InOutForItemToDrop.DropMagicItemDisplayNameAddition = CachedItemDataLoader->GetAffixMultiplierMagicItemNameAddition();
 	}
 	
 	switch (AffixFragment->GetGenerationType())
 	{
 		case EObsidianAffixGenerationType::DefaultGeneration:
 			{
-				HandleDefaultGeneration(ForItemToDrop, DefaultObject->GetItemCategoryTag(), DefaultObject->GetItemBaseTypeTag(),
+				HandleDefaultGeneration(InOutForItemToDrop, DefaultObject->GetItemCategoryTag(), DefaultObject->GetItemBaseTypeTag(),
 					AffixFragment);
 			} break;
 		case EObsidianAffixGenerationType::FullGeneration:
 			{
-				HandleFullGeneration(ForItemToDrop, DefaultObject->GetItemCategoryTag(), DefaultObject->GetItemBaseTypeTag(),
+				HandleFullGeneration(InOutForItemToDrop, DefaultObject->GetItemCategoryTag(), DefaultObject->GetItemBaseTypeTag(),
 					AffixFragment);
 			} break;
 		case EObsidianAffixGenerationType::NoGeneration:
 			{
-				HandleNoGeneration(ForItemToDrop, AffixFragment);
+				HandleNoGeneration(InOutForItemToDrop, AffixFragment);
 			} break;
 			default:
 			{} break;
@@ -309,67 +309,67 @@ void UObsidianItemDropComponent::ConstructItem(FObsidianItemToDrop& ForItemToDro
 	FObsidianItemRequirements DefaultRequirements = EquippableFragment->GetItemDefaultEquippingRequirements();
 	if (UObsidianItemsFunctionLibrary::HasEquippingRequirements(DefaultRequirements))
 	{
-		AdjustItemRequirementsBasedOnAddedAffixes(DefaultRequirements, ForItemToDrop);
-		ForItemToDrop.DropItemRequirements = DefaultRequirements;
+		AdjustItemRequirementsBasedOnAddedAffixes(DefaultRequirements, InOutForItemToDrop);
+		InOutForItemToDrop.DropItemRequirements = DefaultRequirements;
 	}
 }
 
-void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
-	const FGameplayTag& DropItemBaseTypeTag, const UOInventoryItemFragment_Affixes* AffixFragment)
+void UObsidianItemDropComponent::HandleDefaultGeneration(FObsidianItemToDrop& InOutForItemToDrop, const FGameplayTag& InDropItemCategory,
+	const FGameplayTag& InDropItemBaseTypeTag, const UOInventoryItemFragment_Affixes* InAffixFragment)
 {
-	TryToGivePrimaryItemAffix(ForItemToDrop, AffixFragment);
-	TryToGiveStaticImplicit(ForItemToDrop, AffixFragment);
+	TryToGivePrimaryItemAffix(InOutForItemToDrop, InAffixFragment);
+	TryToGiveStaticImplicit(InOutForItemToDrop, InAffixFragment);
 	
-	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
+	if (InOutForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
 		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_DefaultGeneration(
-			ForItemToDrop.DropItemLevel, DropItemCategory, DropItemBaseTypeTag,
+			InOutForItemToDrop.DropItemLevel, InDropItemCategory, InDropItemBaseTypeTag,
 			/** OUT */ PrefixAffixes,
 			/** OUT */ SuffixAffixes,
 			/** OUT */ SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(ObLogItemDrop, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
-				*DropItemCategory.GetTagName().ToString(), ForItemToDrop.DropItemLevel);
+				*InDropItemCategory.GetTagName().ToString(), InOutForItemToDrop.DropItemLevel);
 			return;
 		}
 
-		RollSkillImplicits(ForItemToDrop, SkillImplicitAffixes);
-		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes);
+		RollSkillImplicits(InOutForItemToDrop, SkillImplicitAffixes);
+		RollAffixesAndPrefixes(InOutForItemToDrop, PrefixAffixes, SuffixAffixes);
 	}
-	else if (ForItemToDrop.DropRarity == EObsidianItemRarity::Normal)
+	else if (InOutForItemToDrop.DropRarity == EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
 		const bool bGatheredAffixes = CachedItemDataLoader->GetAllSkillImplicitsUpToQualityForCategory(
-			ForItemToDrop.DropItemLevel, DropItemCategory, DropItemBaseTypeTag,
+			InOutForItemToDrop.DropItemLevel, InDropItemCategory, InDropItemBaseTypeTag,
 			/** OUT */ SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(ObLogItemDrop, Warning, TEXT("Could not find any Skill Implicits for [%s] up to [%d] quality level."),
-				*DropItemCategory.GetTagName().ToString(), ForItemToDrop.DropItemLevel);
+				*InDropItemCategory.GetTagName().ToString(), InOutForItemToDrop.DropItemLevel);
 			return;
 		}
 
-		RollSkillImplicits(ForItemToDrop, SkillImplicitAffixes);
+		RollSkillImplicits(InOutForItemToDrop, SkillImplicitAffixes);
 	}
 }
 
-void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForItemToDrop, const FGameplayTag& DropItemCategory,
-	const FGameplayTag& DropItemBaseTypeTag, const UOInventoryItemFragment_Affixes* AffixFragment)
+void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& InOutForItemToDrop, const FGameplayTag& InDropItemCategory,
+	const FGameplayTag& InDropItemBaseTypeTag, const UOInventoryItemFragment_Affixes* InAffixFragment)
 {
-	TryToGivePrimaryItemAffix(ForItemToDrop, AffixFragment);
+	TryToGivePrimaryItemAffix(InOutForItemToDrop, InAffixFragment);
 	
-	if (ForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
+	if (InOutForItemToDrop.DropRarity != EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> ImplicitAffixes;
 		TArray<FObsidianDynamicItemAffix> PrefixAffixes;
 		TArray<FObsidianDynamicItemAffix> SuffixAffixes;
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
 		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_FullGeneration(
-			ForItemToDrop.DropItemLevel, DropItemCategory, DropItemBaseTypeTag,
+			InOutForItemToDrop.DropItemLevel, InDropItemCategory, InDropItemBaseTypeTag,
 			/** OUT */ PrefixAffixes,
 			/** OUT */ SuffixAffixes,
 			/** OUT */ ImplicitAffixes,
@@ -377,61 +377,61 @@ void UObsidianItemDropComponent::HandleFullGeneration(FObsidianItemToDrop& ForIt
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(ObLogItemDrop, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
-				*DropItemCategory.GetTagName().ToString(), ForItemToDrop.DropItemLevel);
+				*InDropItemCategory.GetTagName().ToString(), InOutForItemToDrop.DropItemLevel);
 			return;
 		}
 	
-		RollSkillImplicits(ForItemToDrop, SkillImplicitAffixes);
-		RollImplicit(ForItemToDrop, ImplicitAffixes);
-		RollAffixesAndPrefixes(ForItemToDrop, PrefixAffixes, SuffixAffixes);
+		RollSkillImplicits(InOutForItemToDrop, SkillImplicitAffixes);
+		RollImplicit(InOutForItemToDrop, ImplicitAffixes);
+		RollAffixesAndPrefixes(InOutForItemToDrop, PrefixAffixes, SuffixAffixes);
 	}
-	else if (ForItemToDrop.DropRarity == EObsidianItemRarity::Normal)
+	else if (InOutForItemToDrop.DropRarity == EObsidianItemRarity::Normal)
 	{
 		TArray<FObsidianDynamicItemAffix> SkillImplicitAffixes;
 		TArray<FObsidianDynamicItemAffix> ImplicitAffixes;
 		const bool bGatheredAffixes = CachedItemDataLoader->GetAllAffixesUpToQualityForCategory_NormalItemGeneration(
-			ForItemToDrop.DropItemLevel, DropItemCategory, DropItemBaseTypeTag,
+			InOutForItemToDrop.DropItemLevel, InDropItemCategory, InDropItemBaseTypeTag,
 			ImplicitAffixes, SkillImplicitAffixes);
 		if (bGatheredAffixes == false)
 		{
 			UE_LOG(ObLogItemDrop, Warning, TEXT("Could not find any Affixes for [%s] up to [%d] quality level."),
-				*DropItemCategory.GetTagName().ToString(), ForItemToDrop.DropItemLevel);
+				*InDropItemCategory.GetTagName().ToString(), InOutForItemToDrop.DropItemLevel);
 			return;
 		}
 	
-		RollSkillImplicits(ForItemToDrop, SkillImplicitAffixes);
-		RollImplicit(ForItemToDrop, ImplicitAffixes);
+		RollSkillImplicits(InOutForItemToDrop, SkillImplicitAffixes);
+		RollImplicit(InOutForItemToDrop, ImplicitAffixes);
 	}
 }
 
-void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItemToDrop,
-	const UOInventoryItemFragment_Affixes* AffixFragment)
+void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& InOutForItemToDrop,
+	const UOInventoryItemFragment_Affixes* InAffixFragment)
 {
-	if (AffixFragment == nullptr)
+	if (InAffixFragment == nullptr)
 	{
 		return;
 	}
 
-	TryToGivePrimaryItemAffix(ForItemToDrop, AffixFragment);
-	TryToGiveStaticImplicit(ForItemToDrop, AffixFragment);
+	TryToGivePrimaryItemAffix(InOutForItemToDrop, InAffixFragment);
+	TryToGiveStaticImplicit(InOutForItemToDrop, InAffixFragment);
 	
-	if (FObsidianStaticItemAffix SkillImplicitAffix = AffixFragment->GetStaticSkillImplicitAffix())
+	if (FObsidianStaticItemAffix SkillImplicitAffix = InAffixFragment->GetStaticSkillImplicitAffix())
 	{
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithStatic(SkillImplicitAffix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-		ForItemToDrop.DropAffixes.Add(ActiveAffix);
+		ActiveAffix.InitializeWithStatic(SkillImplicitAffix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+		InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Static Skill Implicit Affix: [%s], [%s]"), *SkillImplicitAffix.AffixTag.GetTagName().ToString(),
 			*SkillImplicitAffix.AffixItemNameAddition);
 	}
 	
-	for (const FObsidianStaticItemAffix& StaticAffix : AffixFragment->GetStaticAffixes())
+	for (const FObsidianStaticItemAffix& StaticAffix : InAffixFragment->GetStaticAffixes())
 	{
 		if (StaticAffix)
 		{
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithStatic(StaticAffix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-			ForItemToDrop.DropAffixes.Add(ActiveAffix);
+			ActiveAffix.InitializeWithStatic(StaticAffix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+			InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
 						
 			UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Static Affix: [%s], [%s]"), *StaticAffix.AffixTag.GetTagName().ToString(),
 				*StaticAffix.AffixItemNameAddition);
@@ -439,38 +439,38 @@ void UObsidianItemDropComponent::HandleNoGeneration(FObsidianItemToDrop& ForItem
 	}
 }
 
-void UObsidianItemDropComponent::RollSkillImplicits(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& SkillImplicits)
+void UObsidianItemDropComponent::RollSkillImplicits(FObsidianItemToDrop& InOutForItemToDrop, const TArray<FObsidianDynamicItemAffix>& InSkillImplicits)
 {
-	if (SkillImplicits.IsEmpty() == false)
+	if (InSkillImplicits.IsEmpty() == false)
 	{
-		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(SkillImplicits);
+		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(InSkillImplicits);
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithDynamic(RolledItemAffix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-		ForItemToDrop.DropAffixes.Add(ActiveAffix);
+		ActiveAffix.InitializeWithDynamic(RolledItemAffix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+		InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Skill Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
 					*RolledItemAffix.AffixItemNameAddition);
 	}
 }
 
-void UObsidianItemDropComponent::RollImplicit(FObsidianItemToDrop& ForItemToDrop, const TArray<FObsidianDynamicItemAffix>& Implicits)
+void UObsidianItemDropComponent::RollImplicit(FObsidianItemToDrop& InOutForItemToDrop, const TArray<FObsidianDynamicItemAffix>& InImplicits)
 {
-	if (Implicits.IsEmpty() == false)
+	if (InImplicits.IsEmpty() == false)
 	{
-		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Implicits);
+		FObsidianDynamicItemAffix RolledItemAffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(InImplicits);
 		FObsidianActiveItemAffix ActiveAffix;
-		ActiveAffix.InitializeWithDynamic(RolledItemAffix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-		ForItemToDrop.DropAffixes.Add(ActiveAffix);
+		ActiveAffix.InitializeWithDynamic(RolledItemAffix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+		InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 		UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Implicit Affix: [%s], [%s]"), *RolledItemAffix.AffixTag.GetTagName().ToString(),
 					*RolledItemAffix.AffixItemNameAddition);
 	}
 }
 
-void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& ForItemToDrop, TArray<FObsidianDynamicItemAffix>& Prefixes,
-	TArray<FObsidianDynamicItemAffix>& Suffixes)
+void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& InOutForItemToDrop, TArray<FObsidianDynamicItemAffix>& InOutPrefixes,
+	TArray<FObsidianDynamicItemAffix>& InOutSuffixes)
 {
-	if (Prefixes.IsEmpty() && Suffixes.IsEmpty())
+	if (InOutPrefixes.IsEmpty() && InOutSuffixes.IsEmpty())
 	{
 		return;
 	}
@@ -482,17 +482,17 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		return;
 	}
 	
-	uint8 AffixCountToRoll = GetNumberOfAffixesToRollWeighted(ForItemToDrop.DropRarity);
+	uint8 AffixCountToRoll = GetNumberOfAffixesToRollWeighted(InOutForItemToDrop.DropRarity);
 	
-	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(ForItemToDrop.DropRarity);
-	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(ForItemToDrop.DropRarity);
-	const uint8 MaximumNumberOfAffixesAvailableToAdd = FMath::Min<uint8>(MaxSuffixCount, Suffixes.Num()) +
-		FMath::Min<uint8>(MaxPrefixCount, Prefixes.Num());
+	const uint8 MaxPrefixCount = ItemDataSettings->GetMaxPrefixCountForRarity(InOutForItemToDrop.DropRarity);
+	const uint8 MaxSuffixCount = ItemDataSettings->GetMaxSuffixCountForRarity(InOutForItemToDrop.DropRarity);
+	const uint8 MaximumNumberOfAffixesAvailableToAdd = FMath::Min<uint8>(MaxSuffixCount, InOutSuffixes.Num()) +
+		FMath::Min<uint8>(MaxPrefixCount, InOutPrefixes.Num());
 	if (AffixCountToRoll > MaximumNumberOfAffixesAvailableToAdd)
 	{
 		UE_LOG(ObLogItemDrop, Error, TEXT("Cannot safely add affixes: requested [%d], available [%d] (Prefixes [%d], Suffixes [%d]).\n"
 		    "Falling back to maximum available count."),
-			AffixCountToRoll, MaximumNumberOfAffixesAvailableToAdd, Prefixes.Num(), Suffixes.Num());
+			AffixCountToRoll, MaximumNumberOfAffixesAvailableToAdd, InOutPrefixes.Num(), InOutSuffixes.Num());
 		AffixCountToRoll = MaximumNumberOfAffixesAvailableToAdd;
 	}
 	
@@ -500,8 +500,8 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 	uint8 AddedSuffixes = 0;
 	while (AddedPrefixes + AddedSuffixes < AffixCountToRoll)
 	{
-		bool bCanRollPrefix = !Prefixes.IsEmpty() && (AddedPrefixes < MaxPrefixCount);
-		bool bCanRollSuffix = !Suffixes.IsEmpty() && (AddedSuffixes < MaxSuffixCount);
+		bool bCanRollPrefix = !InOutPrefixes.IsEmpty() && (AddedPrefixes < MaxPrefixCount);
+		bool bCanRollSuffix = !InOutSuffixes.IsEmpty() && (AddedSuffixes < MaxSuffixCount);
 		if (bCanRollPrefix == false && bCanRollSuffix == false)
 		{
 			break;
@@ -513,18 +513,18 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		bRollPrefix = (bRollPrefix && bCanRollPrefix) || (!bRollPrefix && !bCanRollSuffix);
 		if (bRollPrefix) 
 		{
-			FObsidianDynamicItemAffix RolledItemPrefix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Prefixes);
-			checkf(!ForItemToDrop.DropAffixes.Contains(RolledItemPrefix), TEXT("Item already contains this affix."));
-			if (ForItemToDrop.DropAffixes.Contains(RolledItemPrefix)) // For shipping builds I don't want to crash but want to skip this affix.
+			FObsidianDynamicItemAffix RolledItemPrefix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(InOutPrefixes);
+			checkf(!InOutForItemToDrop.DropAffixes.Contains(RolledItemPrefix), TEXT("Item already contains this affix."));
+			if (InOutForItemToDrop.DropAffixes.Contains(RolledItemPrefix)) // For shipping builds I don't want to crash but want to skip this affix.
 			{
 				UE_LOG(ObLogItemDrop, Warning, TEXT("Skipped duplicate affix [%s]."), *RolledItemPrefix.AffixTag.GetTagName().ToString());
 				continue;
 			}
 			
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithDynamic(RolledItemPrefix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-			ForItemToDrop.DropAffixes.Add(ActiveAffix);
-			Prefixes.Remove(RolledItemPrefix);
+			ActiveAffix.InitializeWithDynamic(RolledItemPrefix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+			InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
+			InOutPrefixes.Remove(RolledItemPrefix);
 			++AddedPrefixes;
 			
 			UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Prefix Affix: [%s], [%s]"), *RolledItemPrefix.AffixTag.GetTagName().ToString(),
@@ -532,18 +532,18 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 		}
 		else if (bCanRollSuffix)
 		{
-			FObsidianDynamicItemAffix RolledItemSuffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(Suffixes);
-			checkf(!ForItemToDrop.DropAffixes.Contains(RolledItemSuffix), TEXT("Item already contains this affix."));
-			if (ForItemToDrop.DropAffixes.Contains(RolledItemSuffix)) // For shipping builds I don't want to crash but want to skip this affix.
+			FObsidianDynamicItemAffix RolledItemSuffix = UObsidianItemsFunctionLibrary::GetRandomDynamicAffix(InOutSuffixes);
+			checkf(!InOutForItemToDrop.DropAffixes.Contains(RolledItemSuffix), TEXT("Item already contains this affix."));
+			if (InOutForItemToDrop.DropAffixes.Contains(RolledItemSuffix)) // For shipping builds I don't want to crash but want to skip this affix.
 			{
 				UE_LOG(ObLogItemDrop, Warning, TEXT("Skipped duplicate affix [%s]."), *RolledItemSuffix.AffixTag.GetTagName().ToString());
 				continue;
 			}
 			
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithDynamic(RolledItemSuffix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-			ForItemToDrop.DropAffixes.Add(ActiveAffix);
-			Suffixes.Remove(RolledItemSuffix);
+			ActiveAffix.InitializeWithDynamic(RolledItemSuffix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+			InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
+			InOutSuffixes.Remove(RolledItemSuffix);
 			++AddedSuffixes;
 					
 			UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Suffix Affix: [%s], [%s]"), *RolledItemSuffix.AffixTag.GetTagName().ToString(),
@@ -560,23 +560,23 @@ void UObsidianItemDropComponent::RollAffixesAndPrefixes(FObsidianItemToDrop& For
 											"Possible Prefixes to add [%d], already added Prefixes [%d]\n"
 											"Possible Suffixes to add [%d], already added Suffixes [%d]\n"
 											"Please make sure the logic is right."),
-											*GetNameSafe(ForItemToDrop.ItemDefinitionClass), *DropComponentDebugHelpers::GetRarityDebugString(ForItemToDrop.DropRarity),
-											AffixCountToRoll, AddedSuffixes + AddedPrefixes, Prefixes.Num(), AddedPrefixes, Suffixes.Num(), AddedSuffixes);
+											*GetNameSafe(InOutForItemToDrop.ItemDefinitionClass), *DropComponentDebugHelpers::GetRarityDebugString(InOutForItemToDrop.DropRarity),
+											AffixCountToRoll, AddedSuffixes + AddedPrefixes, InOutPrefixes.Num(), AddedPrefixes, InOutSuffixes.Num(), AddedSuffixes);
 		}
 		UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("End of iteration AddedPrefixes [%d], AddedSuffixes: [%d], CountToReach: [%d]"), AddedPrefixes, AddedSuffixes, AffixCountToRoll);
 #endif
 	}
 }
 
-void UObsidianItemDropComponent::TryToGiveStaticImplicit(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment)
+void UObsidianItemDropComponent::TryToGiveStaticImplicit(FObsidianItemToDrop& InOutForItemToDrop, const UOInventoryItemFragment_Affixes* InAffixFragment)
 {
-	if (AffixFragment && AffixFragment->HasImplicitAffix())
+	if (InAffixFragment && InAffixFragment->HasImplicitAffix())
 	{
-		if (FObsidianStaticItemAffix StaticImplicitAffix = AffixFragment->GetStaticImplicitAffix())
+		if (FObsidianStaticItemAffix StaticImplicitAffix = InAffixFragment->GetStaticImplicitAffix())
 		{
 			FObsidianActiveItemAffix ActiveAffix;
-			ActiveAffix.InitializeWithStatic(StaticImplicitAffix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-			ForItemToDrop.DropAffixes.Add(ActiveAffix);
+			ActiveAffix.InitializeWithStatic(StaticImplicitAffix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+			InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 			UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Static Implicit Affix: [%s], [%s]"), *StaticImplicitAffix.AffixTag.GetTagName().ToString(),
 				*StaticImplicitAffix.AffixItemNameAddition);
@@ -584,18 +584,18 @@ void UObsidianItemDropComponent::TryToGiveStaticImplicit(FObsidianItemToDrop& Fo
 	}
 }
 
-void UObsidianItemDropComponent::TryToGivePrimaryItemAffix(FObsidianItemToDrop& ForItemToDrop, const UOInventoryItemFragment_Affixes* AffixFragment)
+void UObsidianItemDropComponent::TryToGivePrimaryItemAffix(FObsidianItemToDrop& InOutForItemToDrop, const UOInventoryItemFragment_Affixes* InAffixFragment)
 {
-	if (AffixFragment && AffixFragment->HasPrimaryItemAffix())
+	if (InAffixFragment && InAffixFragment->HasPrimaryItemAffix())
 	{
-		TArray<FObsidianStaticItemAffix> PrimaryItemAffixes = AffixFragment->GetPrimaryItemAffixes();
+		TArray<FObsidianStaticItemAffix> PrimaryItemAffixes = InAffixFragment->GetPrimaryItemAffixes();
 		for (const FObsidianStaticItemAffix& PrimaryAffix : PrimaryItemAffixes)
 		{
 			if (PrimaryAffix)
 			{
 				FObsidianActiveItemAffix ActiveAffix;
-				ActiveAffix.InitializeWithStatic(PrimaryAffix, ForItemToDrop.DropItemLevel, ForItemToDrop.bShouldApplyMultiplier);
-				ForItemToDrop.DropAffixes.Add(ActiveAffix);
+				ActiveAffix.InitializeWithStatic(PrimaryAffix, InOutForItemToDrop.DropItemLevel, InOutForItemToDrop.bShouldApplyMultiplier);
+				InOutForItemToDrop.DropAffixes.Add(ActiveAffix);
 
 				UE_LOG(ObLogItemDrop, VeryVerbose, TEXT("Adding Primary Item Affix: [%s], [%s]"), *PrimaryAffix.AffixTag.GetTagName().ToString(),
 					*PrimaryAffix.AffixItemNameAddition);
@@ -604,12 +604,12 @@ void UObsidianItemDropComponent::TryToGivePrimaryItemAffix(FObsidianItemToDrop& 
 	}
 }
 
-FGameplayTag UObsidianItemDropComponent::GetItemBaseTypeFromDropItem(const FObsidianDropItem& DropItem)
+FGameplayTag UObsidianItemDropComponent::GetItemBaseTypeFromDropItem(const FObsidianDropItem& InDropItem)
 {
-	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = InDropItem.SoftTreasureItemDefinitionClass.Get();
 	if (ItemDef == nullptr)
 	{
-		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
+		ItemDef = InDropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
 	}
 
 	if (ItemDef)
@@ -623,12 +623,12 @@ FGameplayTag UObsidianItemDropComponent::GetItemBaseTypeFromDropItem(const FObsi
 	return FGameplayTag::EmptyTag;
 }
 
-EObsidianItemRarity UObsidianItemDropComponent::GetItemDefaultRarityFromDropItem(const FObsidianDropItem& DropItem)
+EObsidianItemRarity UObsidianItemDropComponent::GetItemDefaultRarityFromDropItem(const FObsidianDropItem& InDropItem)
 {
-	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = DropItem.SoftTreasureItemDefinitionClass.Get();
+	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = InDropItem.SoftTreasureItemDefinitionClass.Get();
 	if (ItemDef == nullptr)
 	{
-		ItemDef = DropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
+		ItemDef = InDropItem.SoftTreasureItemDefinitionClass.LoadSynchronous();
 	}
 
 	if (ItemDef)
@@ -642,16 +642,16 @@ EObsidianItemRarity UObsidianItemDropComponent::GetItemDefaultRarityFromDropItem
 	return EObsidianItemRarity::None;
 }
 
-bool UObsidianItemDropComponent::ShouldApplyAffixValueMultiplier(const EObsidianItemRarity ForItemRarity)
+bool UObsidianItemDropComponent::ShouldApplyAffixValueMultiplier(const EObsidianItemRarity InForItemRarity)
 {
-	if (ForItemRarity == EObsidianItemRarity::Magic)
+	if (InForItemRarity == EObsidianItemRarity::Magic)
 	{
 		return FMath::FRandRange(0.0f, 1.0f) >= 0.8f;
 	}
 	return false;
 }
 
-uint8 UObsidianItemDropComponent::GetNumberOfAffixesToRollWeighted(const EObsidianItemRarity ForItemRarity)
+uint8 UObsidianItemDropComponent::GetNumberOfAffixesToRollWeighted(const EObsidianItemRarity InForItemRarity)
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
@@ -660,17 +660,17 @@ uint8 UObsidianItemDropComponent::GetNumberOfAffixesToRollWeighted(const EObsidi
 		return 0;
 	}
 
-	if (ForItemRarity != EObsidianItemRarity::Magic && ForItemRarity != EObsidianItemRarity::Rare)
+	if (InForItemRarity != EObsidianItemRarity::Magic && InForItemRarity != EObsidianItemRarity::Rare)
 	{
 		return 0;
 	}
 	
-	const uint8 MinAffixCount = ItemDataSettings->GetNaturalMinAffixCountForRarity(ForItemRarity);
-	const uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(ForItemRarity);
+	const uint8 MinAffixCount = ItemDataSettings->GetNaturalMinAffixCountForRarity(InForItemRarity);
+	const uint8 MaxAffixCount = ItemDataSettings->GetMaxAffixCountForRarity(InForItemRarity);
 	
 	TArray<uint8> AffixValues;
 	AffixValues.Reserve(MaxAffixCount - MinAffixCount + 1);
-	TArray<uint8> ValuesWeights = ItemDataSettings->GetAffixNumberWeightsForRarity(ForItemRarity);
+	TArray<uint8> ValuesWeights = ItemDataSettings->GetAffixNumberWeightsForRarity(InForItemRarity);
 	
 	int32 WeightIndex = 0;
 	float TotalWeight = 0.0f;
@@ -700,9 +700,9 @@ uint8 UObsidianItemDropComponent::GetNumberOfAffixesToRollWeighted(const EObsidi
 }
 
 void UObsidianItemDropComponent::AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements,
-                                                                           const FObsidianItemToDrop& FromItemToDrop)
+                                                                           const FObsidianItemToDrop& InFromItemToDrop)
 {
-	for (const FObsidianActiveItemAffix& Affix : FromItemToDrop.DropAffixes)
+	for (const FObsidianActiveItemAffix& Affix : InFromItemToDrop.DropAffixes)
 	{
 		check(Affix.CurrentAffixValue.IsValid());
 
@@ -719,7 +719,7 @@ void UObsidianItemDropComponent::AdjustItemRequirementsBasedOnAddedAffixes(FObsi
 	OutRequirements.bHasAnyRequirements = true;
 }
 
-void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)
+void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 InMaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses, TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses)
 {
 	bool bRollFromCommonSet = true;
 	for (const FObsidianAdditionalTreasureList& AdditionalTreasureList : AdditionalTreasureLists) 
@@ -752,11 +752,11 @@ void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTre
 			
 		if (Policy == EObsidianAdditionalTreasureListPolicy::TryToRoll)
 		{
-			OutTreasureClasses.Append(TreasureListToAdd->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality));
+			OutTreasureClasses.Append(TreasureListToAdd->GetAllTreasureClassesUpToQuality(InMaxTreasureClassQuality));
 		}
 		else if (Policy == EObsidianAdditionalTreasureListPolicy::TryToAddAlwaysRoll)
 		{
-			OutMustRollFromTreasureClasses.Append(TreasureListToAdd->GetAllTreasureClassesUpToQuality(MaxTreasureClassQuality));
+			OutMustRollFromTreasureClasses.Append(TreasureListToAdd->GetAllTreasureClassesUpToQuality(InMaxTreasureClassQuality));
 		}
 		else if (Policy == EObsidianAdditionalTreasureListPolicy::AlwaysRoll)
 		{
@@ -771,17 +771,17 @@ void UObsidianItemDropComponent::GetTreasureClassesToRollFrom(const uint8 MaxTre
 	
 	if (bLimitCommonTreasureCategory && LimitCommonTreasureCategoryTag.IsValid())
 	{
-		ensureMsgf(CachedItemDataLoader->GetAllCommonTreasureClassesUpToQualityForCategory(MaxTreasureClassQuality, OutTreasureClasses,
+		ensureMsgf(CachedItemDataLoader->GetAllCommonTreasureClassesUpToQualityForCategory(InMaxTreasureClassQuality, OutTreasureClasses,
 			LimitCommonTreasureCategoryTag), TEXT("Gathering TreasureClasses failed in [%hs]."), __FUNCTION__);
 	}
 	else
 	{
-		ensureMsgf(CachedItemDataLoader->GetAllCommonTreasureClassesUpToQuality(MaxTreasureClassQuality, OutTreasureClasses),
+		ensureMsgf(CachedItemDataLoader->GetAllCommonTreasureClassesUpToQuality(InMaxTreasureClassQuality, OutTreasureClasses),
 			TEXT("Gathering TreasureClasses failed in [%hs]."), __FUNCTION__);
 	}
 }
 
-FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* DroppingActor, const FVector& InOverrideDropLocation) const
+FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* InDroppingActor, const FVector& InOverrideDropLocation) const
 {
 	FTransform InvalidTransform = FTransform::Identity;
 	
@@ -791,7 +791,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 		return InvalidTransform;
 	}
 	
-	if (DroppingActor == nullptr)
+	if (InDroppingActor == nullptr)
 	{
 		UE_LOG(ObLogItemDrop, Error, TEXT("DroppingActor is null in [%hs]"), __FUNCTION__);
 		return InvalidTransform;
@@ -800,7 +800,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 	FVector DropLocation = FVector::ZeroVector;
 	if (InOverrideDropLocation == FVector::ZeroVector)
 	{
-		const FVector OwnerLocation = DroppingActor->GetActorLocation();
+		const FVector OwnerLocation = InDroppingActor->GetActorLocation();
 		DropLocation = OwnerLocation;
 
 		FNavLocation RandomPointLocation;
@@ -812,7 +812,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 		else
 		{
 			UE_LOG(ObLogItemDrop, Warning, TEXT("Could not find a navigable drop location around [%s], dropping the item at its location."),
-				*GetNameSafe(DroppingActor));
+				*GetNameSafe(InDroppingActor));
 		}
 	}
 	else
@@ -822,7 +822,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 
 	FHitResult GroundTraceResult;
 	FCollisionQueryParams QueryParams;
-	QueryParams.AddIgnoredActor(DroppingActor);
+	QueryParams.AddIgnoredActor(InDroppingActor);
 	const FVector GroundTraceEndLocation = FVector(DropLocation.X, DropLocation.Y, DropLocation.Z - 300.0f);
 	World->LineTraceSingleByChannel(GroundTraceResult, DropLocation, GroundTraceEndLocation, ECC_Visibility, QueryParams);
 
@@ -837,7 +837,7 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 	return FTransform(ItemRotation, DropLocation, FVector(1.0f, 1.0f, 1.0f));
 }
 
-EObsidianItemRarity UObsidianItemDropComponent::RollItemRarity(const EObsidianItemRarity MaxRarity)
+EObsidianItemRarity UObsidianItemDropComponent::RollItemRarity(const EObsidianItemRarity InMaxRarity)
 {
 	const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 	if (ItemDataSettings == nullptr)
@@ -849,7 +849,7 @@ EObsidianItemRarity UObsidianItemDropComponent::RollItemRarity(const EObsidianIt
 	TMap<EObsidianItemRarity, uint16> RarityToWeightMap;
 	for (const TPair<EObsidianItemRarity, uint16>& RarityWithWeight : ItemDataSettings->DefaultRarityToWeightMap)
 	{
-		if (RarityWithWeight.Key <= MaxRarity)
+		if (RarityWithWeight.Key <= InMaxRarity)
 		{
 			RarityToWeightMap.Add(RarityWithWeight);
 		}
@@ -876,16 +876,16 @@ EObsidianItemRarity UObsidianItemDropComponent::RollItemRarity(const EObsidianIt
 }
 
 #if WITH_EDITOR
-EDataValidationResult UObsidianItemDropComponent::IsDataValid(FDataValidationContext& Context) const
+EDataValidationResult UObsidianItemDropComponent::IsDataValid(FDataValidationContext& InContext) const
 {
-	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(Context), EDataValidationResult::Valid);
+	EDataValidationResult Result = CombineDataValidationResults(Super::IsDataValid(InContext), EDataValidationResult::Valid);
 
 	uint16 TreasureClassesIndex = 0;
 	TArray<EObsidianAdditionalTreasureListPolicy> Policies;
 	bool bContainsOverridePolicy = false;
 	for (const FObsidianAdditionalTreasureList& Class : AdditionalTreasureLists)
 	{
-		Result = CombineDataValidationResults(Result, Class.ValidateData(Context, TreasureClassesIndex));
+		Result = CombineDataValidationResults(Result, Class.ValidateData(InContext, TreasureClassesIndex));
 		EObsidianAdditionalTreasureListPolicy ClassPolicy = Class.TreasureListPolicy;
 		if (ClassPolicy == EObsidianAdditionalTreasureListPolicy::OverrideRoll)
 		{
@@ -906,7 +906,7 @@ EDataValidationResult UObsidianItemDropComponent::IsDataValid(FDataValidationCon
 				const FText ErrorMessage = FText::FromString(FString::Printf(TEXT("Additional Treasure Lists contains at least one different Policy (different than OverrideRoll) while containing OverrideRoll Policy! \n"
 							"This is invalid and will lead to undefined behaviour, please make sure to change the setup")));
 
-				Context.AddError(ErrorMessage);
+				InContext.AddError(ErrorMessage);
 			}
 		}
 	}

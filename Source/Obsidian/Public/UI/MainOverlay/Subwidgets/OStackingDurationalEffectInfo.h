@@ -23,9 +23,9 @@ class OBSIDIAN_API UOStackingDurationalEffectInfo : public UObsidianEffectInfoBa
 
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void InitDurationalStackingEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float Duration, const FObsidianEffectUIStackingData& InData);
+	void InitDurationalStackingEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float InDuration, const FObsidianEffectUIStackingData& InData);
 	
-	void UpdateStackingInfoWidget(const int32 NewCount);
+	void UpdateStackingInfoWidget(const int32 InNewCount);
 
 public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Obsidian|EffectInfo")
@@ -50,7 +50,7 @@ protected:
 	void StartEffectTimer();
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|EffectInfo")
-	void SetStackCount(const int32 Count);
+	void SetStackCount(const int32 InCount);
 
 private:
 	void TimerCountDown();

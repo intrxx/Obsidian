@@ -14,10 +14,10 @@ UObsidianGameplayAbility_Aura::UObsidianGameplayAbility_Aura()
 	ActivationPolicy = EObsidianGameplayAbility_ActivationPolicy::EAP_OnInputTriggered;
 }
 
-void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
-	const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
+void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo,
+	const FGameplayAbilityActivationInfo InActivationInfo, const FGameplayEventData* InTriggerEventData)
 {
-	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+	Super::ActivateAbility(InHandle, InActorInfo, InActivationInfo, InTriggerEventData);
 	
 	if(AuraEffectClass)
 	{
@@ -41,27 +41,27 @@ void UObsidianGameplayAbility_Aura::ActivateAbility(const FGameplayAbilitySpecHa
 			return;
 		}
 
-		if (CommitAbility(Handle, ActorInfo, ActivationInfo))
+		if (CommitAbility(InHandle, InActorInfo, InActivationInfo))
 		{
-			AuraEffectHandle = ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo,
+			AuraEffectHandle = ApplyGameplayEffectToOwner(InHandle, InActorInfo, InActivationInfo,
 			AuraEffectClass.GetDefaultObject(), GetAbilityLevel());
 		}
 		else
 		{
 			const bool bReplicateEndAbility = true;
 			const bool bWasCancelled = true;
-			EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+			EndAbility(InHandle, InActorInfo, InActivationInfo, bReplicateEndAbility, bWasCancelled);
 		}
 	}
 }
 
-void UObsidianGameplayAbility_Aura::ApplyCost(const FGameplayAbilitySpecHandle Handle,
-	const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo) const
+void UObsidianGameplayAbility_Aura::ApplyCost(const FGameplayAbilitySpecHandle InHandle,
+	const FGameplayAbilityActorInfo* InActorInfo, const FGameplayAbilityActivationInfo InActivationInfo) const
 {
 	if (const UGameplayEffect* CostGE = GetCostGameplayEffect())
 	{
-		const_cast<FActiveGameplayEffectHandle&>(AuraCostEffectHandle) = ApplyGameplayEffectToOwner(Handle, ActorInfo,
-			ActivationInfo, CostGE, GetAbilityLevel(Handle, ActorInfo));
+		const_cast<FActiveGameplayEffectHandle&>(AuraCostEffectHandle) = ApplyGameplayEffectToOwner(InHandle, InActorInfo,
+			InActivationInfo, CostGE, GetAbilityLevel(InHandle, InActorInfo));
 	}
 }
 

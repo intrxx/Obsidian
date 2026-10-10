@@ -150,7 +150,7 @@ class OBSIDIAN_API UObsidianHeroSaveGame : public ULocalPlayerSaveGame
 public:
 	void InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem);
 	
-	void InitializeHeroSaveData(const bool InbOnline, const FObsidianHeroInitializationSaveData& InInitializationSaveData);
+	void InitializeHeroSaveData(const bool InInbOnline, const FObsidianHeroInitializationSaveData& InInitializationSaveData);
 	
 	void SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData);
 	
@@ -161,7 +161,7 @@ public:
 	uint16 GetSaveID() const;
 	uint8 GetHeroLevel() const;
 	
-	virtual void HandlePostSave(bool bSuccess) override;
+	virtual void HandlePostSave(bool bInSuccess) override;
 	virtual void HandlePostLoad() override;
 		
 protected:

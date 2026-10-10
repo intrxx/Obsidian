@@ -62,11 +62,11 @@ namespace ObsidianDebugItems
 		{TEXT("Skill Implicit"), EObsidianAffixType::SkillImplicit}
 	};
 
-	const TCHAR* GetAffixTypeName(const EObsidianAffixType AffixType)
+	const TCHAR* GetAffixTypeName(const EObsidianAffixType InAffixType)
 	{
 		for (const FAffixTypeOption& Option : AffixTypeOptions)
 		{
-			if (Option.AffixType == AffixType && AffixType != EObsidianAffixType::None)
+			if (Option.AffixType == InAffixType && InAffixType != EObsidianAffixType::None)
 			{
 				return Option.Name;
 			}
@@ -85,30 +85,30 @@ namespace ObsidianDebugItems
 		return Names;
 	}
 
-	FString GetAffixDisplayName(const FObsidianDynamicItemAffix& Affix, const EObsidianAffixType AffixType)
+	FString GetAffixDisplayName(const FObsidianDynamicItemAffix& InAffix, const EObsidianAffixType InAffixType)
 	{
-		FString TagName = Affix.AffixTag.ToString();
+		FString TagName = InAffix.AffixTag.ToString();
 		TagName.RemoveFromStart(TEXT("Item.Affix."));
 
-		FString DisplayName = FString::Printf(TEXT("[%s] %s"), GetAffixTypeName(AffixType), *TagName);
-		if (Affix.AffixItemNameAddition.IsEmpty() == false)
+		FString DisplayName = FString::Printf(TEXT("[%s] %s"), GetAffixTypeName(InAffixType), *TagName);
+		if (InAffix.AffixItemNameAddition.IsEmpty() == false)
 		{
-			DisplayName += FString::Printf(TEXT(" - %s"), *Affix.AffixItemNameAddition);
+			DisplayName += FString::Printf(TEXT(" - %s"), *InAffix.AffixItemNameAddition);
 		}
 		return DisplayName;
 	}
 
 	/** Mirrors the conversion done by the Item Drop Manager when the item gets dropped. */
-	FObsidianItemGeneratedData MakeGeneratedData(const FObsidianItemToDrop& ItemToDrop)
+	FObsidianItemGeneratedData MakeGeneratedData(const FObsidianItemToDrop& InItemToDrop)
 	{
 		FObsidianItemGeneratedData GeneratedData;
-		GeneratedData.SetStackCount(ItemToDrop.DropStacks);
-		GeneratedData.ItemLevel = ItemToDrop.DropItemLevel;
-		GeneratedData.ItemRarity = ItemToDrop.DropRarity;
-		GeneratedData.ItemAffixes = ItemToDrop.DropAffixes;
-		GeneratedData.ItemEquippingRequirements = ItemToDrop.DropItemRequirements;
-		GeneratedData.NameData = FObsidianItemGeneratedNameData(ItemToDrop.DropRareItemDisplayNameAddition,
-			ItemToDrop.DropMagicItemDisplayNameAddition);
+		GeneratedData.SetStackCount(InItemToDrop.DropStacks);
+		GeneratedData.ItemLevel = InItemToDrop.DropItemLevel;
+		GeneratedData.ItemRarity = InItemToDrop.DropRarity;
+		GeneratedData.ItemAffixes = InItemToDrop.DropAffixes;
+		GeneratedData.ItemEquippingRequirements = InItemToDrop.DropItemRequirements;
+		GeneratedData.NameData = FObsidianItemGeneratedNameData(InItemToDrop.DropRareItemDisplayNameAddition,
+			InItemToDrop.DropMagicItemDisplayNameAddition);
 		return GeneratedData;
 	}
 
@@ -119,39 +119,39 @@ namespace ObsidianDebugItems
 	}
 
 	/** Mirrors the candidates gathering of FObsidianRareItemNameGenerationData, which asserts if there are none. */
-	bool CanGenerateRareItemName(const int32 ItemLevel, const FGameplayTag& ItemCategory)
+	bool CanGenerateRareItemName(const int32 InItemLevel, const FGameplayTag& InItemCategory)
 	{
 		const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 		const UObsidianItemDataConfig* ItemDataConfig = ItemDataSettings ? ItemDataSettings->ItemDataConfig.Get() : nullptr;
-		if (ItemDataConfig == nullptr || ItemCategory.IsValid() == false)
+		if (ItemDataConfig == nullptr || InItemCategory.IsValid() == false)
 		{
 			// No name is generated in these cases.
 			return true;
 		}
 
-		const auto HasNameForLevel = [ItemLevel](const TArray<FObsidianRareItemNameAddition>& NameAdditions)
+		const auto HasNameForLevel = [InItemLevel](const TArray<FObsidianRareItemNameAddition>& InNameAdditions)
 		{
-			return NameAdditions.ContainsByPredicate([ItemLevel](const FObsidianRareItemNameAddition& NameAddition)
+			return InNameAdditions.ContainsByPredicate([InItemLevel](const FObsidianRareItemNameAddition& InNameAddition)
 				{
-					return NameAddition.ItemLevelRange.X <= ItemLevel && NameAddition.ItemNameAdditions.IsEmpty() == false;
+					return InNameAddition.ItemLevelRange.X <= InItemLevel && InNameAddition.ItemNameAdditions.IsEmpty() == false;
 				});
 		};
 
 		const FObsidianRareItemNameGenerationData& NameData = ItemDataConfig->RareItemNameGenerationData;
 		const bool bHasSuffix = NameData.SuffixNameAdditions.ContainsByPredicate(
-			[&HasNameForLevel, &ItemCategory](const FObsidianRareItemSuffixNameAddition& SuffixAddition)
+			[&HasNameForLevel, &InItemCategory](const FObsidianRareItemSuffixNameAddition& InSuffixAddition)
 			{
-				return SuffixAddition.ForItemCategories.HasTagExact(ItemCategory) && HasNameForLevel(SuffixAddition.ItemNameAdditions);
+				return InSuffixAddition.ForItemCategories.HasTagExact(InItemCategory) && HasNameForLevel(InSuffixAddition.ItemNameAdditions);
 			});
 
 		return bHasSuffix && HasNameForLevel(NameData.PrefixNameAdditions);
 	}
 
 	/** Lowest item level at which any of the tiers can be rolled, INDEX_NONE if there are no tiers at all. */
-	int32 GetMinItemLevelOfTiers(const FObsidianAffixValues& AffixValues)
+	int32 GetMinItemLevelOfTiers(const FObsidianAffixValues& InAffixValues)
 	{
 		int32 MinItemLevel = INDEX_NONE;
-		for (const FObsidianAffixValueRange& AffixRange : AffixValues.PossibleAffixRanges)
+		for (const FObsidianAffixValueRange& AffixRange : InAffixValues.PossibleAffixRanges)
 		{
 			const int32 TierItemLevel = AffixRange.AffixTier.MinItemLevelRequirement;
 			MinItemLevel = MinItemLevel == INDEX_NONE ? TierItemLevel : FMath::Min(MinItemLevel, TierItemLevel);
@@ -160,34 +160,34 @@ namespace ObsidianDebugItems
 	}
 
 	/** Lowest item level at which the affix has a tier to roll, INDEX_NONE if it has no tiers at all. */
-	int32 GetMinItemLevelOfStaticAffix(const FObsidianStaticItemAffix& Affix)
+	int32 GetMinItemLevelOfStaticAffix(const FObsidianStaticItemAffix& InAffix)
 	{
-		return GetMinItemLevelOfTiers(Affix.AffixValuesDefinition);
+		return GetMinItemLevelOfTiers(InAffix.AffixValuesDefinition);
 	}
 
 	/** Lowest item level at which the affix can be rolled, INDEX_NONE if it has no tiers at all. */
-	int32 GetMinItemLevelOfDynamicAffix(const FObsidianDynamicItemAffix& Affix)
+	int32 GetMinItemLevelOfDynamicAffix(const FObsidianDynamicItemAffix& InAffix)
 	{
-		const int32 MinItemLevelOfTiers = GetMinItemLevelOfTiers(Affix.AffixValuesDefinition);
-		return MinItemLevelOfTiers == INDEX_NONE ? INDEX_NONE : FMath::Max<int32>(MinItemLevelOfTiers, Affix.MinItemLevelRequirement);
+		const int32 MinItemLevelOfTiers = GetMinItemLevelOfTiers(InAffix.AffixValuesDefinition);
+		return MinItemLevelOfTiers == INDEX_NONE ? INDEX_NONE : FMath::Max<int32>(MinItemLevelOfTiers, InAffix.MinItemLevelRequirement);
 	}
 
-	FString GetRarityName(const EObsidianItemRarity Rarity)
+	FString GetRarityName(const EObsidianItemRarity InRarity)
 	{
-		return StaticEnum<EObsidianItemRarity>()->GetNameStringByValue(static_cast<int64>(Rarity));
+		return StaticEnum<EObsidianItemRarity>()->GetNameStringByValue(static_cast<int64>(InRarity));
 	}
 
 	/** Rarities the items are generated with, the rest (Unique, Set) is only ever made from its own Item Definitions. */
-	bool IsGeneratedRarity(const EObsidianItemRarity Rarity)
+	bool IsGeneratedRarity(const EObsidianItemRarity InRarity)
 	{
-		return Rarity == EObsidianItemRarity::Normal || Rarity == EObsidianItemRarity::Magic || Rarity == EObsidianItemRarity::Rare;
+		return InRarity == EObsidianItemRarity::Normal || InRarity == EObsidianItemRarity::Magic || InRarity == EObsidianItemRarity::Rare;
 	}
 
 	/**
 	 * How many affixes of given type an item of given rarity can have, the same limits the dropped items are rolled with.
 	 * These are only set up for the generated rarities, the settings log an error when asked for any other.
 	 */
-	int32 GetMaxAffixCountOfType(const EObsidianItemRarity Rarity, const EObsidianAffixType AffixType)
+	int32 GetMaxAffixCountOfType(const EObsidianItemRarity InRarity, const EObsidianAffixType InAffixType)
 	{
 		const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 		if (ItemDataSettings == nullptr)
@@ -195,12 +195,12 @@ namespace ObsidianDebugItems
 			return 0;
 		}
 
-		switch (AffixType)
+		switch (InAffixType)
 		{
 			case EObsidianAffixType::Prefix:
-				return IsGeneratedRarity(Rarity) ? ItemDataSettings->GetMaxPrefixCountForRarity(Rarity) : 0;
+				return IsGeneratedRarity(InRarity) ? ItemDataSettings->GetMaxPrefixCountForRarity(InRarity) : 0;
 			case EObsidianAffixType::Suffix:
-				return IsGeneratedRarity(Rarity) ? ItemDataSettings->GetMaxSuffixCountForRarity(Rarity) : 0;
+				return IsGeneratedRarity(InRarity) ? ItemDataSettings->GetMaxSuffixCountForRarity(InRarity) : 0;
 			case EObsidianAffixType::Implicit:
 				return ItemDataSettings->DefaultMaxImplicitCount;
 			case EObsidianAffixType::SkillImplicit:
@@ -210,10 +210,10 @@ namespace ObsidianDebugItems
 		}
 	}
 
-	int32 GetMaxPrefixAndSuffixCount(const EObsidianItemRarity Rarity)
+	int32 GetMaxPrefixAndSuffixCount(const EObsidianItemRarity InRarity)
 	{
 		const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
-		return ItemDataSettings && IsGeneratedRarity(Rarity) ? ItemDataSettings->GetMaxAffixCountForRarity(Rarity) : 0;
+		return ItemDataSettings && IsGeneratedRarity(InRarity) ? ItemDataSettings->GetMaxAffixCountForRarity(InRarity) : 0;
 	}
 
 	/**
@@ -225,9 +225,9 @@ namespace ObsidianDebugItems
 	 * Weapons, Axe]". The categories are read from the folders, so new ones need no changes here. The plain name is
 	 * returned for the items that do not follow the convention.
 	 */
-	FString GetItemDefinitionDisplayName(const FSoftClassPath& ItemDefPath)
+	FString GetItemDefinitionDisplayName(const FSoftClassPath& InItemDefPath)
 	{
-		FString ItemName = ItemDefPath.GetAssetName();
+		FString ItemName = InItemDefPath.GetAssetName();
 		ItemName.RemoveFromEnd(TEXT("_C"));
 
 		int32 SuffixSeparatorIndex = INDEX_NONE;
@@ -252,7 +252,7 @@ namespace ObsidianDebugItems
 		}
 
 		TArray<FString> Folders;
-		ItemDefPath.GetLongPackageName().ParseIntoArray(Folders, TEXT("/"));
+		InItemDefPath.GetLongPackageName().ParseIntoArray(Folders, TEXT("/"));
 		Folders.Pop(); // The last one is the name of the asset.
 
 		const int32 StaticFolderIndex = Folders.IndexOfByKey(FString(TEXT("ItemStaticDefinitions")));
@@ -278,20 +278,20 @@ namespace ObsidianDebugItems
 		return FString::Printf(TEXT("%s  [%s]"), *ItemName, *FString::Join(SuffixNames, TEXT(", ")));
 	}
 
-	const UOInventoryItemFragment_Affixes* GetAffixFragment(const UObsidianInventoryItemDefinition* ItemDefault)
+	const UOInventoryItemFragment_Affixes* GetAffixFragment(const UObsidianInventoryItemDefinition* InItemDefault)
 	{
-		return ItemDefault ? Cast<UOInventoryItemFragment_Affixes>(ItemDefault->FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())) : nullptr;
+		return InItemDefault ? Cast<UOInventoryItemFragment_Affixes>(InItemDefault->FindFragmentByClass(UOInventoryItemFragment_Affixes::StaticClass())) : nullptr;
 	}
 
 	/**
 	 * Number of Prefixes and Suffixes the item generation has to roll from for given item, gathered the same way it does it.
 	 * Returns INDEX_NONE if the Item Data Config is not loaded, so it is not known.
 	 */
-	int32 CountRollablePrefixesAndSuffixes(const UObsidianInventoryItemDefinition* ItemDefault, const int32 ItemLevel)
+	int32 CountRollablePrefixesAndSuffixes(const UObsidianInventoryItemDefinition* InItemDefault, const int32 InItemLevel)
 	{
 		const UObsidianItemDataDeveloperSettings* ItemDataSettings = GetDefault<UObsidianItemDataDeveloperSettings>();
 		const UObsidianItemDataConfig* ItemDataConfig = ItemDataSettings ? ItemDataSettings->ItemDataConfig.Get() : nullptr;
-		if (ItemDataConfig == nullptr || ItemDefault == nullptr)
+		if (ItemDataConfig == nullptr || InItemDefault == nullptr)
 		{
 			return INDEX_NONE;
 		}
@@ -308,8 +308,8 @@ namespace ObsidianDebugItems
 			{
 				if (AffixClass.AffixClassType == EObsidianAffixType::Prefix || AffixClass.AffixClassType == EObsidianAffixType::Suffix)
 				{
-					Count += AffixClass.GetAllAffixesUpToQualityForCategory(ItemLevel, ItemDefault->GetItemCategoryTag(),
-						ItemDefault->GetItemBaseTypeTag()).Num();
+					Count += AffixClass.GetAllAffixesUpToQualityForCategory(InItemLevel, InItemDefault->GetItemCategoryTag(),
+						InItemDefault->GetItemBaseTypeTag()).Num();
 				}
 			}
 		}
@@ -323,15 +323,15 @@ FObsidianDebugTab_Items::FObsidianDebugTab_Items()
 			" Usage: obsidian.DebugMenu.TestItemCrafting [Iterations] [quit], quit closes the game once the test is done."),
 		FConsoleCommandWithWorldAndArgsDelegate::CreateRaw(this, &FObsidianDebugTab_Items::RunCraftingSelfTest))
 {
-	ItemPicker.ClassFilter = [this](const UClass* ItemDefClass)
+	ItemPicker.ClassFilter = [this](const UClass* InItemDefClass)
 		{
-			if (IsCurrencyItem(ItemDefClass))
+			if (IsCurrencyItem(InItemDefClass))
 			{
 				return false;
 			}
 
 			const bool bHandPickingAffixes = static_cast<EAffixMode>(ItemPickerAffixModeIndex) == EAffixMode::HandPicked;
-			return bHandPickingAffixes == false || CanHandPickAffixesForItem(ItemDefClass);
+			return bHandPickingAffixes == false || CanHandPickAffixesForItem(InItemDefClass);
 		};
 	CurrencyPicker.ClassFilter = &FObsidianDebugTab_Items::IsCurrencyItem;
 
@@ -374,14 +374,14 @@ int32 FObsidianDebugTab_Items::FCraftingRequest::GetItemLevel() const
 	return FMath::Clamp(ItemLevel, 1, ObsidianDebugItems::GetMaxItemLevel());
 }
 
-FObsidianDebugTab_Items::FCraftingRequest FObsidianDebugTab_Items::MakeCraftingRequest(UClass* ItemDefClass) const
+FObsidianDebugTab_Items::FCraftingRequest FObsidianDebugTab_Items::MakeCraftingRequest(UClass* InItemDefClass) const
 {
 	using namespace ObsidianDebugItems;
 
 	const int32 LastItemRarityIndex = static_cast<int32>(UE_ARRAY_COUNT(ItemRarityOptions)) - 1;
 
 	FCraftingRequest Request;
-	Request.ItemDef = ItemDefClass;
+	Request.ItemDef = InItemDefClass;
 	Request.ChosenRarity = ItemRarityOptions[FMath::Clamp(ItemRarityIndex, 0, LastItemRarityIndex)].Rarity;
 	Request.ItemLevel = ItemLevel;
 	Request.Stacks = ItemStacks;
@@ -392,9 +392,9 @@ FObsidianDebugTab_Items::FCraftingRequest FObsidianDebugTab_Items::MakeCraftingR
 	return Request;
 }
 
-bool FObsidianDebugTab_Items::IsCurrencyItem(const UClass* ItemDefClass)
+bool FObsidianDebugTab_Items::IsCurrencyItem(const UClass* InItemDefClass)
 {
-	const UObsidianInventoryItemDefinition* ItemDefault = ItemDefClass ? Cast<UObsidianInventoryItemDefinition>(ItemDefClass->GetDefaultObject()) : nullptr;
+	const UObsidianInventoryItemDefinition* ItemDefault = InItemDefClass ? Cast<UObsidianInventoryItemDefinition>(InItemDefClass->GetDefaultObject()) : nullptr;
 	if (ItemDefault == nullptr)
 	{
 		return false;
@@ -405,18 +405,18 @@ bool FObsidianDebugTab_Items::IsCurrencyItem(const UClass* ItemDefClass)
 	return CategoryName == TEXT("Item.Category.Currency") || CategoryName.StartsWith(TEXT("Item.Category.Currency."));
 }
 
-bool FObsidianDebugTab_Items::CanHandPickAffixesForItem(const UClass* ItemDefClass) const
+bool FObsidianDebugTab_Items::CanHandPickAffixesForItem(const UClass* InItemDefClass) const
 {
-	const UObsidianInventoryItemDefinition* ItemDefault = ItemDefClass ? Cast<UObsidianInventoryItemDefinition>(ItemDefClass->GetDefaultObject()) : nullptr;
+	const UObsidianInventoryItemDefinition* ItemDefault = InItemDefClass ? Cast<UObsidianInventoryItemDefinition>(InItemDefClass->GetDefaultObject()) : nullptr;
 	const UOInventoryItemFragment_Affixes* AffixFragment = ObsidianDebugItems::GetAffixFragment(ItemDefault);
 	if (AffixFragment == nullptr || AffixFragment->GetGenerationType() == EObsidianAffixGenerationType::NoGeneration)
 	{
 		return false;
 	}
 
-	return AllAffixes.ContainsByPredicate([ItemDefault](const FAffixEntry& AffixEntry)
+	return AllAffixes.ContainsByPredicate([ItemDefault](const FAffixEntry& InAffixEntry)
 		{
-			return IsAffixCompatibleWithItem(AffixEntry.Affix, ItemDefault);
+			return IsAffixCompatibleWithItem(InAffixEntry.Affix, ItemDefault);
 		});
 }
 
@@ -438,9 +438,9 @@ void FObsidianDebugTab_Items::UpdateItemPickerFilter()
 	SelectedItemDef.Reset(ItemPicker.LoadSelectedClass());
 }
 
-void FObsidianDebugTab_Items::Draw(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Items::Draw(const FObsidianDebugMenuContext& InContext)
 {
-	if (Context.Pawn == nullptr)
+	if (InContext.Pawn == nullptr)
 	{
 		ObsidianDebugUI::WarningText(TEXT("Chosen Player has no Pawn, items are spawned around it."));
 		return;
@@ -455,12 +455,12 @@ void FObsidianDebugTab_Items::Draw(const FObsidianDebugMenuContext& Context)
 	}
 	SlateIM::EndHorizontalStack();
 
-	DrawRandomDrops(Context);
-	DrawItemCrafting(Context);
-	DrawCurrency(Context);
+	DrawRandomDrops(InContext);
+	DrawItemCrafting(InContext);
+	DrawCurrency(InContext);
 }
 
-void FObsidianDebugTab_Items::DrawCurrency(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Items::DrawCurrency(const FObsidianDebugMenuContext& InContext)
 {
 	ObsidianDebugUI::Section(TEXT("Currency"));
 
@@ -499,11 +499,11 @@ void FObsidianDebugTab_Items::DrawCurrency(const FObsidianDebugMenuContext& Cont
 
 	if (SlateIM::Button(TEXT("Spawn Currency")))
 	{
-		SpawnCurrency(Context);
+		SpawnCurrency(InContext);
 	}
 }
 
-void FObsidianDebugTab_Items::DrawRandomDrops(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Items::DrawRandomDrops(const FObsidianDebugMenuContext& InContext)
 {
 	ObsidianDebugUI::Section(TEXT("Random Drops"));
 	SlateIM::Text(TEXT("Rolls the items the same way an entity of given rarity and level would drop them."),
@@ -566,11 +566,11 @@ void FObsidianDebugTab_Items::DrawRandomDrops(const FObsidianDebugMenuContext& C
 
 	if (SlateIM::Button(TEXT("Roll Drops")))
 	{
-		RollRandomDrops(Context);
+		RollRandomDrops(InContext);
 	}
 }
 
-void FObsidianDebugTab_Items::DrawItemCrafting(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Items::DrawItemCrafting(const FObsidianDebugMenuContext& InContext)
 {
 	using namespace ObsidianDebugItems;
 
@@ -662,7 +662,7 @@ void FObsidianDebugTab_Items::DrawItemCrafting(const FObsidianDebugMenuContext& 
 	const FString CraftingBlocker = GetCraftingBlocker(MakeCraftingRequest(SelectedItemDef.Get()));
 	if (SlateIM::Button(TEXT("Craft Item"), {.bEnabled = CraftingBlocker.IsEmpty()}))
 	{
-		CraftItems(Context);
+		CraftItems(InContext);
 	}
 
 	if (CraftingBlocker.IsEmpty() == false)
@@ -672,7 +672,7 @@ void FObsidianDebugTab_Items::DrawItemCrafting(const FObsidianDebugMenuContext& 
 	}
 }
 
-void FObsidianDebugTab_Items::DrawAffixPicker(const UObsidianInventoryItemDefinition* ItemDefault)
+void FObsidianDebugTab_Items::DrawAffixPicker(const UObsidianInventoryItemDefinition* InItemDefault)
 {
 	using namespace ObsidianDebugItems;
 
@@ -717,7 +717,7 @@ void FObsidianDebugTab_Items::DrawAffixPicker(const UObsidianInventoryItemDefini
 			}
 
 			if (CanAffixRollAtItemLevel(AffixEntry.Affix, Request.GetItemLevel()) == false
-				|| (ItemDefault && IsAffixCompatibleWithItem(AffixEntry.Affix, ItemDefault) == false))
+				|| (InItemDefault && IsAffixCompatibleWithItem(AffixEntry.Affix, InItemDefault) == false))
 			{
 				continue;
 			}
@@ -760,17 +760,17 @@ void FObsidianDebugTab_Items::DrawAffixPicker(const UObsidianInventoryItemDefini
 		}
 
 		// The same limits the dropped items are rolled with.
-		if (ItemDefault)
+		if (InItemDefault)
 		{
-			const auto CountPickedAffixes = [this](const EObsidianAffixType AffixType)
+			const auto CountPickedAffixes = [this](const EObsidianAffixType InAffixType)
 				{
-					return PickedAffixes.FilterByPredicate([AffixType](const FAffixEntry& PickedAffix)
+					return PickedAffixes.FilterByPredicate([InAffixType](const FAffixEntry& InPickedAffix)
 						{
-							return PickedAffix.AffixType == AffixType;
+							return InPickedAffix.AffixType == InAffixType;
 						}).Num();
 				};
 
-			const UOInventoryItemFragment_Affixes* AffixFragment = GetAffixFragment(ItemDefault);
+			const UOInventoryItemFragment_Affixes* AffixFragment = GetAffixFragment(InItemDefault);
 			const bool bGivesStaticImplicit = bIncludeStaticAffixes && AffixFragment && AffixFragment->HasImplicitAffix()
 				&& static_cast<bool>(AffixFragment->GetStaticImplicitAffix());
 
@@ -822,9 +822,9 @@ void FObsidianDebugTab_Items::DrawAffixPicker(const UObsidianInventoryItemDefini
 	SlateIM::EndVerticalStack();
 }
 
-void FObsidianDebugTab_Items::RollRandomDrops(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Items::RollRandomDrops(const FObsidianDebugMenuContext& InContext)
 {
-	UObsidianItemDropComponent* DropComponent = CreateDropComponent(Context);
+	UObsidianItemDropComponent* DropComponent = CreateDropComponent(InContext);
 	if (DropComponent == nullptr)
 	{
 		return;
@@ -845,16 +845,16 @@ void FObsidianDebugTab_Items::RollRandomDrops(const FObsidianDebugMenuContext& C
 
 	DropComponent->DestroyComponent();
 
-	Context.Notify(FString::Printf(TEXT("Rolled drops [%d] time(s) for [%s] entity of level [%d], see the log for the rolled items."), DropTimes,
+	InContext.Notify(FString::Printf(TEXT("Rolled drops [%d] time(s) for [%s] entity of level [%d], see the log for the rolled items."), DropTimes,
 		*StaticEnum<EObsidianEntityRarity>()->GetNameStringByValue(static_cast<int64>(EntityRarity)), EntityLevel));
 }
 
-void FObsidianDebugTab_Items::CraftItems(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Items::CraftItems(const FObsidianDebugMenuContext& InContext)
 {
 	UClass* ItemDefClass = ItemPicker.LoadSelectedClass();
 	if (ItemDefClass == nullptr)
 	{
-		Context.Notify(TEXT("Could not craft the item, chosen Item Definition is invalid."));
+		InContext.Notify(TEXT("Could not craft the item, chosen Item Definition is invalid."));
 		return;
 	}
 	SelectedItemDef.Reset(ItemDefClass);
@@ -863,11 +863,11 @@ void FObsidianDebugTab_Items::CraftItems(const FObsidianDebugMenuContext& Contex
 	const FString CraftingBlocker = GetCraftingBlocker(Request);
 	if (CraftingBlocker.IsEmpty() == false)
 	{
-		Context.Notify(FString::Printf(TEXT("Could not craft the item. %s"), *CraftingBlocker));
+		InContext.Notify(FString::Printf(TEXT("Could not craft the item. %s"), *CraftingBlocker));
 		return;
 	}
 
-	UObsidianItemDropComponent* DropComponent = CreateDropComponent(Context);
+	UObsidianItemDropComponent* DropComponent = CreateDropComponent(InContext);
 	if (DropComponent == nullptr)
 	{
 		return;
@@ -882,26 +882,26 @@ void FObsidianDebugTab_Items::CraftItems(const FObsidianDebugMenuContext& Contex
 			break;
 		}
 
-		CraftedItem.DropTransform = DropComponent->GetDropTransformAligned(Context.Pawn);
+		CraftedItem.DropTransform = DropComponent->GetDropTransformAligned(InContext.Pawn);
 		CraftedItems.Add(MoveTemp(CraftedItem));
 	}
 
 	DropComponent->DestroyComponent();
 
-	DeliverItems(Context, MoveTemp(CraftedItems), ObsidianDebugUI::GetCleanClassName(ItemDefClass), static_cast<EDestination>(DestinationIndex));
+	DeliverItems(InContext, MoveTemp(CraftedItems), ObsidianDebugUI::GetCleanClassName(ItemDefClass), static_cast<EDestination>(DestinationIndex));
 }
 
-void FObsidianDebugTab_Items::SpawnCurrency(const FObsidianDebugMenuContext& Context)
+void FObsidianDebugTab_Items::SpawnCurrency(const FObsidianDebugMenuContext& InContext)
 {
 	const TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = CurrencyPicker.LoadSelectedClass();
 	const UObsidianInventoryItemDefinition* ItemDefault = ItemDef.GetDefaultObject();
 	if (ItemDefault == nullptr)
 	{
-		Context.Notify(TEXT("Could not spawn the currency, chosen Item Definition is invalid."));
+		InContext.Notify(TEXT("Could not spawn the currency, chosen Item Definition is invalid."));
 		return;
 	}
 
-	UObsidianItemDropComponent* DropComponent = CreateDropComponent(Context);
+	UObsidianItemDropComponent* DropComponent = CreateDropComponent(InContext);
 	if (DropComponent == nullptr)
 	{
 		return;
@@ -915,29 +915,29 @@ void FObsidianDebugTab_Items::SpawnCurrency(const FObsidianDebugMenuContext& Con
 		CurrencyItem.ItemDefinitionClass = ItemDef;
 		CurrencyItem.DropRarity = ItemDefault->GetItemDefaultRarity();
 		CurrencyItem.DropStacks = ItemDefault->IsStackable() ? static_cast<uint8>(FMath::Clamp(CurrencyStacks, 1, 255)) : 1;
-		CurrencyItem.DropTransform = DropComponent->GetDropTransformAligned(Context.Pawn);
+		CurrencyItem.DropTransform = DropComponent->GetDropTransformAligned(InContext.Pawn);
 		CurrencyItems.Add(MoveTemp(CurrencyItem));
 	}
 
 	DropComponent->DestroyComponent();
 
-	DeliverItems(Context, MoveTemp(CurrencyItems), ObsidianDebugUI::GetCleanClassName(ItemDef.Get()),
+	DeliverItems(InContext, MoveTemp(CurrencyItems), ObsidianDebugUI::GetCleanClassName(ItemDef.Get()),
 		static_cast<EDestination>(CurrencyDestinationIndex));
 }
 
-void FObsidianDebugTab_Items::DeliverItems(const FObsidianDebugMenuContext& Context, TArray<FObsidianItemToDrop>&& Items,
-	const FString& ItemName, const EDestination Destination) const
+void FObsidianDebugTab_Items::DeliverItems(const FObsidianDebugMenuContext& InContext, TArray<FObsidianItemToDrop>&& InItems,
+	const FString& InItemName, const EDestination InDestination) const
 {
-	TArray<FObsidianItemToDrop> CraftedItems = MoveTemp(Items);
+	TArray<FObsidianItemToDrop> CraftedItems = MoveTemp(InItems);
 	const int32 CraftedItemsCount = CraftedItems.Num();
 
-	if (Destination == EDestination::Inventory)
+	if (InDestination == EDestination::Inventory)
 	{
-		const AObsidianPlayerController* ObsidianPC = Context.GetObsidianPC();
+		const AObsidianPlayerController* ObsidianPC = InContext.GetObsidianPC();
 		UObsidianInventoryComponent* InventoryComponent = ObsidianPC ? ObsidianPC->GetInventoryComponent() : nullptr;
 		if (InventoryComponent == nullptr)
 		{
-			Context.Notify(TEXT("Could not add the item to the Inventory, chosen Player has no Inventory Component."));
+			InContext.Notify(TEXT("Could not add the item to the Inventory, chosen Player has no Inventory Component."));
 			return;
 		}
 
@@ -950,38 +950,38 @@ void FObsidianDebugTab_Items::DeliverItems(const FObsidianDebugMenuContext& Cont
 			}
 		}
 
-		Context.Notify(FString::Printf(TEXT("Added [%d] out of [%d] [%s] to the Inventory."), AddedItemsCount,
-			CraftedItemsCount, *ItemName));
+		InContext.Notify(FString::Printf(TEXT("Added [%d] out of [%d] [%s] to the Inventory."), AddedItemsCount,
+			CraftedItemsCount, *InItemName));
 		return;
 	}
 
-	if (const UObsidianItemDropManagerSubsystem* DropManager = Context.World->GetSubsystem<UObsidianItemDropManagerSubsystem>())
+	if (const UObsidianItemDropManagerSubsystem* DropManager = InContext.World->GetSubsystem<UObsidianItemDropManagerSubsystem>())
 	{
 		DropManager->RequestDroppingItems(MoveTemp(CraftedItems));
-		Context.Notify(FString::Printf(TEXT("Dropped [%d] [%s]."), CraftedItemsCount, *ItemName));
+		InContext.Notify(FString::Printf(TEXT("Dropped [%d] [%s]."), CraftedItemsCount, *InItemName));
 	}
 }
 
-bool FObsidianDebugTab_Items::ConstructCraftedItem(UObsidianItemDropComponent* DropComponent, const FCraftingRequest& Request,
+bool FObsidianDebugTab_Items::ConstructCraftedItem(UObsidianItemDropComponent* InDropComponent, const FCraftingRequest& InRequest,
 	FObsidianItemToDrop& OutItemToDrop)
 {
 	using namespace ObsidianDebugItems;
 
-	const UObsidianInventoryItemDefinition* ItemDefault = Request.GetItemDefault();
-	if (ItemDefault == nullptr || DropComponent == nullptr || DropComponent->CachedItemDataLoader == nullptr)
+	const UObsidianInventoryItemDefinition* ItemDefault = InRequest.GetItemDefault();
+	if (ItemDefault == nullptr || InDropComponent == nullptr || InDropComponent->CachedItemDataLoader == nullptr)
 	{
 		return false;
 	}
 
-	OutItemToDrop.ItemDefinitionClass = Request.ItemDef;
-	OutItemToDrop.DropItemLevel = static_cast<int8>(Request.GetItemLevel());
-	OutItemToDrop.DropRarity = Request.GetRarity();
-	OutItemToDrop.bShouldApplyMultiplier = Request.bApplyMagicMultiplier && OutItemToDrop.DropRarity == EObsidianItemRarity::Magic;
-	OutItemToDrop.DropStacks = ItemDefault->IsStackable() ? static_cast<uint8>(FMath::Clamp(Request.Stacks, 1, 255)) : 1;
+	OutItemToDrop.ItemDefinitionClass = InRequest.ItemDef;
+	OutItemToDrop.DropItemLevel = static_cast<int8>(InRequest.GetItemLevel());
+	OutItemToDrop.DropRarity = InRequest.GetRarity();
+	OutItemToDrop.bShouldApplyMultiplier = InRequest.bApplyMagicMultiplier && OutItemToDrop.DropRarity == EObsidianItemRarity::Magic;
+	OutItemToDrop.DropStacks = ItemDefault->IsStackable() ? static_cast<uint8>(FMath::Clamp(InRequest.Stacks, 1, 255)) : 1;
 
-	if (Request.AffixMode == EAffixMode::Generated)
+	if (InRequest.AffixMode == EAffixMode::Generated)
 	{
-		DropComponent->ConstructItem(OutItemToDrop);
+		InDropComponent->ConstructItem(OutItemToDrop);
 		return true;
 	}
 
@@ -994,15 +994,15 @@ bool FObsidianDebugTab_Items::ConstructCraftedItem(UObsidianItemDropComponent* D
 		return true;
 	}
 
-	if (Request.AffixMode == EAffixMode::HandPicked)
+	if (InRequest.AffixMode == EAffixMode::HandPicked)
 	{
-		if (Request.bIncludeStaticAffixes)
+		if (InRequest.bIncludeStaticAffixes)
 		{
-			DropComponent->TryToGivePrimaryItemAffix(OutItemToDrop, AffixFragment);
-			DropComponent->TryToGiveStaticImplicit(OutItemToDrop, AffixFragment);
+			InDropComponent->TryToGivePrimaryItemAffix(OutItemToDrop, AffixFragment);
+			InDropComponent->TryToGiveStaticImplicit(OutItemToDrop, AffixFragment);
 		}
 
-		for (const FAffixEntry& PickedAffix : Request.PickedAffixes)
+		for (const FAffixEntry& PickedAffix : InRequest.PickedAffixes)
 		{
 			// Requests are validated before they get here, but initializing the affix asserts if there is no tier to roll.
 			if (CanAffixRollAtItemLevel(PickedAffix.Affix, OutItemToDrop.DropItemLevel) == false
@@ -1023,12 +1023,12 @@ bool FObsidianDebugTab_Items::ConstructCraftedItem(UObsidianItemDropComponent* D
 
 	if (OutItemToDrop.DropRarity == EObsidianItemRarity::Rare)
 	{
-		OutItemToDrop.DropRareItemDisplayNameAddition = DropComponent->CachedItemDataLoader->GetRandomRareItemNameAddition(
+		OutItemToDrop.DropRareItemDisplayNameAddition = InDropComponent->CachedItemDataLoader->GetRandomRareItemNameAddition(
 			OutItemToDrop.DropItemLevel, ItemDefault->GetItemCategoryTag());
 	}
 	else if (OutItemToDrop.bShouldApplyMultiplier)
 	{
-		OutItemToDrop.DropMagicItemDisplayNameAddition = DropComponent->CachedItemDataLoader->GetAffixMultiplierMagicItemNameAddition();
+		OutItemToDrop.DropMagicItemDisplayNameAddition = InDropComponent->CachedItemDataLoader->GetAffixMultiplierMagicItemNameAddition();
 	}
 
 	const UOInventoryItemFragment_Equippable* EquippableFragment = Cast<UOInventoryItemFragment_Equippable>(
@@ -1038,7 +1038,7 @@ bool FObsidianDebugTab_Items::ConstructCraftedItem(UObsidianItemDropComponent* D
 		FObsidianItemRequirements Requirements = EquippableFragment->GetItemDefaultEquippingRequirements();
 		if (UObsidianItemsFunctionLibrary::HasEquippingRequirements(Requirements))
 		{
-			DropComponent->AdjustItemRequirementsBasedOnAddedAffixes(Requirements, OutItemToDrop);
+			InDropComponent->AdjustItemRequirementsBasedOnAddedAffixes(Requirements, OutItemToDrop);
 			OutItemToDrop.DropItemRequirements = Requirements;
 		}
 	}
@@ -1046,22 +1046,22 @@ bool FObsidianDebugTab_Items::ConstructCraftedItem(UObsidianItemDropComponent* D
 	return true;
 }
 
-FString FObsidianDebugTab_Items::GetCraftingBlocker(const FCraftingRequest& Request)
+FString FObsidianDebugTab_Items::GetCraftingBlocker(const FCraftingRequest& InRequest)
 {
 	using namespace ObsidianDebugItems;
 
-	const UObsidianInventoryItemDefinition* ItemDefault = Request.GetItemDefault();
+	const UObsidianInventoryItemDefinition* ItemDefault = InRequest.GetItemDefault();
 	if (ItemDefault == nullptr)
 	{
 		return FString();
 	}
 
 	FCraftingRequest DefaultRarityRequest;
-	DefaultRarityRequest.ItemDef = Request.ItemDef;
+	DefaultRarityRequest.ItemDef = InRequest.ItemDef;
 	const EObsidianItemRarity DefaultRarity = DefaultRarityRequest.GetRarity();
-	const EObsidianItemRarity ItemRarity = Request.GetRarity();
-	const int32 ItemLevel = Request.GetItemLevel();
-	const EAffixMode AffixMode = Request.AffixMode;
+	const EObsidianItemRarity ItemRarity = InRequest.GetRarity();
+	const int32 ItemLevel = InRequest.GetItemLevel();
+	const EAffixMode AffixMode = InRequest.AffixMode;
 
 	const UOInventoryItemFragment_Affixes* AffixFragment = GetAffixFragment(ItemDefault);
 	if (AffixFragment == nullptr)
@@ -1072,7 +1072,7 @@ FString FObsidianDebugTab_Items::GetCraftingBlocker(const FCraftingRequest& Requ
 			return FString::Printf(TEXT("Item has no Affix Fragment, so it can only be crafted with its default rarity [%s]."),
 				*GetRarityName(DefaultRarity));
 		}
-		if (AffixMode == EAffixMode::HandPicked && Request.PickedAffixes.IsEmpty() == false)
+		if (AffixMode == EAffixMode::HandPicked && InRequest.PickedAffixes.IsEmpty() == false)
 		{
 			return TEXT("Item has no Affix Fragment, so it cannot have any affixes.");
 		}
@@ -1117,10 +1117,10 @@ FString FObsidianDebugTab_Items::GetCraftingBlocker(const FCraftingRequest& Requ
 	if (AffixMode == EAffixMode::HandPicked)
 	{
 		int32 PickedPrefixesAndSuffixes = 0;
-		for (int32 i = 0; i < Request.PickedAffixes.Num(); ++i)
+		for (int32 i = 0; i < InRequest.PickedAffixes.Num(); ++i)
 		{
-			const FAffixEntry& PickedAffix = Request.PickedAffixes[i];
-			const FString AffixBlocker = GetAffixBlocker(Request, PickedAffix, MakeArrayView(Request.PickedAffixes.GetData(), i));
+			const FAffixEntry& PickedAffix = InRequest.PickedAffixes[i];
+			const FString AffixBlocker = GetAffixBlocker(InRequest, PickedAffix, MakeArrayView(InRequest.PickedAffixes.GetData(), i));
 			if (AffixBlocker.IsEmpty() == false)
 			{
 				return FString::Printf(TEXT("%s: %s"), *GetAffixDisplayName(PickedAffix.Affix, PickedAffix.AffixType), *AffixBlocker);
@@ -1147,7 +1147,7 @@ FString FObsidianDebugTab_Items::GetCraftingBlocker(const FCraftingRequest& Requ
 
 	// Gather the affixes of the Item Definition that are going to be given to the item, these have no level check on their own.
 	TArray<FObsidianStaticItemAffix> StaticAffixes;
-	if (AffixMode == EAffixMode::Generated || (AffixMode == EAffixMode::HandPicked && Request.bIncludeStaticAffixes))
+	if (AffixMode == EAffixMode::Generated || (AffixMode == EAffixMode::HandPicked && InRequest.bIncludeStaticAffixes))
 	{
 		if (AffixFragment->HasPrimaryItemAffix())
 		{
@@ -1188,12 +1188,12 @@ FString FObsidianDebugTab_Items::GetCraftingBlocker(const FCraftingRequest& Requ
 	return FString();
 }
 
-FString FObsidianDebugTab_Items::GetAffixBlocker(const FCraftingRequest& Request, const FAffixEntry& Affix,
-	TConstArrayView<FAffixEntry> OtherPickedAffixes)
+FString FObsidianDebugTab_Items::GetAffixBlocker(const FCraftingRequest& InRequest, const FAffixEntry& InAffix,
+	TConstArrayView<FAffixEntry> InOtherPickedAffixes)
 {
 	using namespace ObsidianDebugItems;
 
-	const UObsidianInventoryItemDefinition* ItemDefault = Request.GetItemDefault();
+	const UObsidianInventoryItemDefinition* ItemDefault = InRequest.GetItemDefault();
 	if (ItemDefault == nullptr)
 	{
 		// Nothing to validate the affix against until the item is chosen.
@@ -1210,65 +1210,65 @@ FString FObsidianDebugTab_Items::GetAffixBlocker(const FCraftingRequest& Request
 		return TEXT("Affixes of this item are set in its Item Definition (No Generation).");
 	}
 
-	const EObsidianAffixType AffixType = Affix.AffixType;
+	const EObsidianAffixType AffixType = InAffix.AffixType;
 	const bool bPrefixOrSuffix = AffixType == EObsidianAffixType::Prefix || AffixType == EObsidianAffixType::Suffix;
 	if (bPrefixOrSuffix == false && AffixType != EObsidianAffixType::Implicit && AffixType != EObsidianAffixType::SkillImplicit)
 	{
 		return TEXT("Only Prefixes, Suffixes, Implicits and Skill Implicits can be hand-picked.");
 	}
 
-	if (IsAffixCompatibleWithItem(Affix.Affix, ItemDefault) == false)
+	if (IsAffixCompatibleWithItem(InAffix.Affix, ItemDefault) == false)
 	{
 		return FString::Printf(TEXT("It cannot be rolled on [%s] items%s."), *ItemDefault->GetItemCategoryTag().ToString(),
-			Affix.Affix.bOverride_HasBaseTypeRequirements ? TEXT(" of this base type") : TEXT(""));
+			InAffix.Affix.bOverride_HasBaseTypeRequirements ? TEXT(" of this base type") : TEXT(""));
 	}
 
-	const int32 ItemLevel = Request.GetItemLevel();
-	if (CanAffixRollAtItemLevel(Affix.Affix, ItemLevel) == false)
+	const int32 ItemLevel = InRequest.GetItemLevel();
+	if (CanAffixRollAtItemLevel(InAffix.Affix, ItemLevel) == false)
 	{
-		const int32 MinItemLevel = GetMinItemLevelOfDynamicAffix(Affix.Affix);
+		const int32 MinItemLevel = GetMinItemLevelOfDynamicAffix(InAffix.Affix);
 		return MinItemLevel == INDEX_NONE ? FString(TEXT("It has no value ranges to roll.")) :
 			FString::Printf(TEXT("It needs the item level to be at least [%d]."), MinItemLevel);
 	}
 
 	// Affixes are identified by their tag, the item can only have one of each.
-	const bool bAlreadyPicked = OtherPickedAffixes.ContainsByPredicate([&Affix](const FAffixEntry& OtherAffix)
+	const bool bAlreadyPicked = InOtherPickedAffixes.ContainsByPredicate([&InAffix](const FAffixEntry& InOtherAffix)
 		{
-			return OtherAffix.Affix == Affix.Affix;
+			return InOtherAffix.Affix == InAffix.Affix;
 		});
 	if (bAlreadyPicked)
 	{
 		return TEXT("Item already has this affix.");
 	}
 
-	const bool bGivesStaticAffixes = Request.bIncludeStaticAffixes;
+	const bool bGivesStaticAffixes = InRequest.bIncludeStaticAffixes;
 	const FObsidianStaticItemAffix StaticImplicit = bGivesStaticAffixes && AffixFragment->HasImplicitAffix() ?
 		AffixFragment->GetStaticImplicitAffix() : FObsidianStaticItemAffix();
 	if (bGivesStaticAffixes)
 	{
 		const bool bIsPrimaryAffix = AffixFragment->HasPrimaryItemAffix() && AffixFragment->GetPrimaryItemAffixes().ContainsByPredicate(
-			[&Affix](const FObsidianStaticItemAffix& PrimaryAffix)
+			[&InAffix](const FObsidianStaticItemAffix& InPrimaryAffix)
 			{
-				return PrimaryAffix == Affix.Affix;
+				return InPrimaryAffix == InAffix.Affix;
 			});
-		if (bIsPrimaryAffix || (StaticImplicit && StaticImplicit == Affix.Affix))
+		if (bIsPrimaryAffix || (StaticImplicit && StaticImplicit == InAffix.Affix))
 		{
 			return TEXT("Item already has this affix from its Item Definition.");
 		}
 	}
 
-	const auto CountOtherAffixes = [&OtherPickedAffixes](const EObsidianAffixType OfType)
+	const auto CountOtherAffixes = [&InOtherPickedAffixes](const EObsidianAffixType InOfType)
 		{
 			int32 Count = 0;
-			for (const FAffixEntry& OtherAffix : OtherPickedAffixes)
+			for (const FAffixEntry& OtherAffix : InOtherPickedAffixes)
 			{
-				Count += OtherAffix.AffixType == OfType ? 1 : 0;
+				Count += OtherAffix.AffixType == InOfType ? 1 : 0;
 			}
 			return Count;
 		};
 
 	// The same limits the dropped items are rolled with.
-	const EObsidianItemRarity ItemRarity = Request.GetRarity();
+	const EObsidianItemRarity ItemRarity = InRequest.GetRarity();
 	const int32 MaxCountOfType = GetMaxAffixCountOfType(ItemRarity, AffixType);
 	int32 CountOfType = CountOtherAffixes(AffixType);
 	if (AffixType == EObsidianAffixType::Implicit && StaticImplicit)
@@ -1351,38 +1351,38 @@ void FObsidianDebugTab_Items::GatherItemCategories()
 	}
 }
 
-UObsidianItemDropComponent* FObsidianDebugTab_Items::CreateDropComponent(const FObsidianDebugMenuContext& Context) const
+UObsidianItemDropComponent* FObsidianDebugTab_Items::CreateDropComponent(const FObsidianDebugMenuContext& InContext) const
 {
-	if (Context.Pawn == nullptr || Context.World == nullptr)
+	if (InContext.Pawn == nullptr || InContext.World == nullptr)
 	{
 		return nullptr;
 	}
 
-	const UGameInstance* GameInstance = Context.World->GetGameInstance();
+	const UGameInstance* GameInstance = InContext.World->GetGameInstance();
 	UObsidianItemDataLoaderSubsystem* ItemDataLoader = GameInstance ? GameInstance->GetSubsystem<UObsidianItemDataLoaderSubsystem>() : nullptr;
 	if (ItemDataLoader == nullptr)
 	{
-		Context.Notify(TEXT("Could not spawn the items, Item Data Loader Subsystem is not available."));
+		InContext.Notify(TEXT("Could not spawn the items, Item Data Loader Subsystem is not available."));
 		return nullptr;
 	}
 
 	// The component is never registered, it only lends its item generation code with the Pawn being the dropping actor.
-	UObsidianItemDropComponent* DropComponent = NewObject<UObsidianItemDropComponent>(Context.Pawn);
+	UObsidianItemDropComponent* DropComponent = NewObject<UObsidianItemDropComponent>(InContext.Pawn);
 	DropComponent->CachedItemDataLoader = ItemDataLoader;
 	DropComponent->ItemDropRadius = DropRadius;
 	return DropComponent;
 }
 
-bool FObsidianDebugTab_Items::CanAffixRollAtItemLevel(const FObsidianDynamicItemAffix& Affix, const int32 ItemLevel)
+bool FObsidianDebugTab_Items::CanAffixRollAtItemLevel(const FObsidianDynamicItemAffix& InAffix, const int32 InItemLevel)
 {
-	if (Affix.MinItemLevelRequirement > ItemLevel)
+	if (InAffix.MinItemLevelRequirement > InItemLevel)
 	{
 		return false;
 	}
 
-	for (const FObsidianAffixValueRange& AffixRange : Affix.AffixValuesDefinition.PossibleAffixRanges)
+	for (const FObsidianAffixValueRange& AffixRange : InAffix.AffixValuesDefinition.PossibleAffixRanges)
 	{
-		if (AffixRange.AffixTier.MinItemLevelRequirement <= ItemLevel)
+		if (AffixRange.AffixTier.MinItemLevelRequirement <= InItemLevel)
 		{
 			return true;
 		}
@@ -1390,17 +1390,17 @@ bool FObsidianDebugTab_Items::CanAffixRollAtItemLevel(const FObsidianDynamicItem
 	return false;
 }
 
-bool FObsidianDebugTab_Items::IsAffixCompatibleWithItem(const FObsidianDynamicItemAffix& Affix, const UObsidianInventoryItemDefinition* ItemDefault)
+bool FObsidianDebugTab_Items::IsAffixCompatibleWithItem(const FObsidianDynamicItemAffix& InAffix, const UObsidianInventoryItemDefinition* InItemDefault)
 {
-	if (ItemDefault == nullptr || Affix.AcceptedItemCategories.HasTagExact(ItemDefault->GetItemCategoryTag()) == false)
+	if (InItemDefault == nullptr || InAffix.AcceptedItemCategories.HasTagExact(InItemDefault->GetItemCategoryTag()) == false)
 	{
 		return false;
 	}
 
-	return Affix.bOverride_HasBaseTypeRequirements == false || Affix.RequiredItemBaseType.HasTagExact(ItemDefault->GetItemBaseTypeTag());
+	return InAffix.bOverride_HasBaseTypeRequirements == false || InAffix.RequiredItemBaseType.HasTagExact(InItemDefault->GetItemBaseTypeTag());
 }
 
-void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& Args, UWorld* World)
+void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& InArgs, UWorld* InWorld)
 {
 	if (CraftingSelfTestTickerHandle.IsValid())
 	{
@@ -1410,7 +1410,7 @@ void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& Args, U
 
 	int32 Iterations = 10;
 	bool bQuitWhenDone = false;
-	for (const FString& Arg : Args)
+	for (const FString& Arg : InArgs)
 	{
 		if (Arg.Equals(TEXT("quit"), ESearchCase::IgnoreCase))
 		{
@@ -1425,7 +1425,7 @@ void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& Args, U
 	// The command can be run before the game is ready (e.g. with -ExecCmds), so it waits for the Player and the item data.
 	const double GiveUpTime = FPlatformTime::Seconds() + 120.0;
 	CraftingSelfTestTickerHandle = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda(
-		[this, Iterations, bQuitWhenDone, GiveUpTime](float DeltaTime)
+		[this, Iterations, bQuitWhenDone, GiveUpTime](float InDeltaTime)
 		{
 			FObsidianDebugMenuContext Context;
 			if (GEngine)
@@ -1472,7 +1472,7 @@ void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& Args, U
 			if (bQuitWhenDone)
 			{
 				// Gives the delivered items a few seconds to live in the World, so anything that would break on them does it.
-				FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([](float DeltaTime)
+				FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateLambda([](float InDeltaTime)
 					{
 						FPlatformMisc::RequestExit(false);
 						return false;
@@ -1482,11 +1482,11 @@ void FObsidianDebugTab_Items::RunCraftingSelfTest(const TArray<FString>& Args, U
 		}), 0.5f);
 }
 
-void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& Context, const int32 Iterations)
+void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& InContext, const int32 InIterations)
 {
 	using namespace ObsidianDebugItems;
 
-	UObsidianItemDropComponent* DropComponent = CreateDropComponent(Context);
+	UObsidianItemDropComponent* DropComponent = CreateDropComponent(InContext);
 	if (DropComponent == nullptr)
 	{
 		return;
@@ -1517,28 +1517,28 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 	int32 CraftedItems = 0;
 	int32 Failures = 0;
 
-	const auto CountAffixes = [](const FObsidianItemToDrop& Item, const EObsidianAffixType AffixType)
+	const auto CountAffixes = [](const FObsidianItemToDrop& InItem, const EObsidianAffixType InAffixType)
 		{
 			int32 Count = 0;
-			for (const FObsidianActiveItemAffix& Affix : Item.DropAffixes)
+			for (const FObsidianActiveItemAffix& Affix : InItem.DropAffixes)
 			{
-				Count += Affix.AffixType == AffixType ? 1 : 0;
+				Count += Affix.AffixType == InAffixType ? 1 : 0;
 			}
 			return Count;
 		};
 
 	// Reports the crafted item that breaks the rules the dropped items are generated with.
-	const auto VerifyItem = [&Failures, &CountAffixes](const FCraftingRequest& Request, const FObsidianItemToDrop& Item, const FString& RequestName)
+	const auto VerifyItem = [&Failures, &CountAffixes](const FCraftingRequest& InRequest, const FObsidianItemToDrop& InItem, const FString& InRequestName)
 		{
-			const auto Fail = [&Failures, &RequestName](const FString& Reason)
+			const auto Fail = [&Failures, &InRequestName](const FString& InReason)
 				{
 					++Failures;
-					UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: %s -> %s"), *RequestName, *Reason);
+					UE_LOG(ObLogDebugMenu, Error, TEXT("Crafting self-test: %s -> %s"), *InRequestName, *InReason);
 				};
 
-			const EObsidianItemRarity Rarity = Item.DropRarity;
-			const int32 Prefixes = CountAffixes(Item, EObsidianAffixType::Prefix);
-			const int32 Suffixes = CountAffixes(Item, EObsidianAffixType::Suffix);
+			const EObsidianItemRarity Rarity = InItem.DropRarity;
+			const int32 Prefixes = CountAffixes(InItem, EObsidianAffixType::Prefix);
+			const int32 Suffixes = CountAffixes(InItem, EObsidianAffixType::Suffix);
 			if (Prefixes > GetMaxAffixCountOfType(Rarity, EObsidianAffixType::Prefix))
 			{
 				Fail(FString::Printf(TEXT("has [%d] Prefixes, more than its rarity allows."), Prefixes));
@@ -1552,22 +1552,22 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 				Fail(FString::Printf(TEXT("has [%d] Prefixes and Suffixes, more than its rarity allows."), Prefixes + Suffixes));
 			}
 			if ((Rarity == EObsidianItemRarity::Magic || Rarity == EObsidianItemRarity::Rare) && Prefixes + Suffixes == 0
-				&& GetAffixFragment(Request.GetItemDefault()))
+				&& GetAffixFragment(InRequest.GetItemDefault()))
 			{
 				Fail(TEXT("is Magic or Rare but has neither a Prefix nor a Suffix."));
 			}
-			if (CountAffixes(Item, EObsidianAffixType::Implicit) > GetMaxAffixCountOfType(Rarity, EObsidianAffixType::Implicit))
+			if (CountAffixes(InItem, EObsidianAffixType::Implicit) > GetMaxAffixCountOfType(Rarity, EObsidianAffixType::Implicit))
 			{
 				Fail(TEXT("has too many Implicits."));
 			}
-			if (CountAffixes(Item, EObsidianAffixType::SkillImplicit) > GetMaxAffixCountOfType(Rarity, EObsidianAffixType::SkillImplicit))
+			if (CountAffixes(InItem, EObsidianAffixType::SkillImplicit) > GetMaxAffixCountOfType(Rarity, EObsidianAffixType::SkillImplicit))
 			{
 				Fail(TEXT("has too many Skill Implicits."));
 			}
 
-			for (int32 i = 0; i < Item.DropAffixes.Num(); ++i)
+			for (int32 i = 0; i < InItem.DropAffixes.Num(); ++i)
 			{
-				const FObsidianActiveItemAffix& Affix = Item.DropAffixes[i];
+				const FObsidianActiveItemAffix& Affix = InItem.DropAffixes[i];
 				if (Affix.CurrentAffixValue.IsValid() == false)
 				{
 					Fail(FString::Printf(TEXT("affix [%s] has no rolled values."), *Affix.AffixTag.ToString()));
@@ -1578,7 +1578,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 				}
 				for (int32 j = 0; j < i; ++j)
 				{
-					if (Item.DropAffixes[j].AffixTag == Affix.AffixTag)
+					if (InItem.DropAffixes[j].AffixTag == Affix.AffixTag)
 					{
 						Fail(FString::Printf(TEXT("has affix [%s] more than once."), *Affix.AffixTag.ToString()));
 					}
@@ -1591,7 +1591,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 	const EAffixMode AffixModes[] = {EAffixMode::Generated, EAffixMode::HandPicked, EAffixMode::None};
 
 	UE_LOG(ObLogDebugMenu, Display, TEXT("Crafting self-test: started for [%d] items and [%d] hand-pickable affixes, [%d] iteration(s) each."),
-		ItemPicker.GetClassPaths().Num(), AllAffixes.Num(), Iterations);
+		ItemPicker.GetClassPaths().Num(), AllAffixes.Num(), InIterations);
 
 	// Affixes are identified by their tags, so the number of the unique ones is what limits how many of them an item can have.
 	for (const FAffixTypeOption& AffixTypeOption : AffixTypeOptions)
@@ -1636,7 +1636,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 			{
 				for (const EAffixMode AffixMode : AffixModes)
 				{
-					for (int32 Iteration = 0; Iteration < Iterations; ++Iteration)
+					for (int32 Iteration = 0; Iteration < InIterations; ++Iteration)
 					{
 						FCraftingRequest Request;
 						Request.ItemDef = ItemDefClass;
@@ -1689,7 +1689,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 						if (Iteration == 0 && TestedItemLevel == MaxItemLevel)
 						{
 							FObsidianItemToDrop ItemToDeliver = CraftedItem;
-							ItemToDeliver.DropTransform = DropComponent->GetDropTransformAligned(Context.Pawn);
+							ItemToDeliver.DropTransform = DropComponent->GetDropTransformAligned(InContext.Pawn);
 							(ItemsToDrop.Num() <= ItemsToAddToInventory.Num() ? ItemsToDrop : ItemsToAddToInventory).Add(MoveTemp(ItemToDeliver));
 						}
 
@@ -1707,11 +1707,11 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 
 						// Runs the crafted item through the same code the Inventory and the item descriptions use.
 						UObsidianInventoryItemInstance* Instance = UObsidianItemsFunctionLibrary::CreateItemInstanceFromDefinition(
-							Context.PlayerController, Request.ItemDef, MakeGeneratedData(CraftedItem), FObsidianItemPosition());
+							InContext.PlayerController, Request.ItemDef, MakeGeneratedData(CraftedItem), FObsidianItemPosition());
 						FObsidianItemStats ItemStats;
-						UObsidianItemsFunctionLibrary::GetItemStats(Context.GetObsidianPC(), Instance, ItemStats);
+						UObsidianItemsFunctionLibrary::GetItemStats(InContext.GetObsidianPC(), Instance, ItemStats);
 						Instance->SetIdentified(true);
-						UObsidianItemsFunctionLibrary::GetItemStats(Context.GetObsidianPC(), Instance, ItemStats);
+						UObsidianItemsFunctionLibrary::GetItemStats(InContext.GetObsidianPC(), Instance, ItemStats);
 						if (Instance->GetAllItemAffixes().Num() != CraftedItem.DropAffixes.Num())
 						{
 							++Failures;
@@ -1731,7 +1731,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 			{
 				const bool bPrefixOrSuffix = AffixEntry.AffixType == EObsidianAffixType::Prefix || AffixEntry.AffixType == EObsidianAffixType::Suffix;
 				if (bPrefixOrSuffix && IsAffixCompatibleWithItem(AffixEntry.Affix, ItemDefault) && CanAffixRollAtItemLevel(AffixEntry.Affix, MaxItemLevel)
-					&& FittingPrefixesAndSuffixes.ContainsByPredicate([&AffixEntry](const FAffixEntry& Other){ return Other.Affix == AffixEntry.Affix; }) == false)
+					&& FittingPrefixesAndSuffixes.ContainsByPredicate([&AffixEntry](const FAffixEntry& InOther){ return InOther.Affix == AffixEntry.Affix; }) == false)
 				{
 					FittingPrefixesAndSuffixes.Add(AffixEntry);
 				}
@@ -1791,7 +1791,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 			UE_LOG(ObLogDebugMenu, Log, TEXT("Crafting self-test: rolling drops of [%s] entity of level [%d]."),
 				*EntityRarityEnum->GetNameStringByIndex(EntityRarityValue), TestedEntityLevel);
 
-			for (int32 Iteration = 0; Iteration < FMath::Min(Iterations, 3); ++Iteration)
+			for (int32 Iteration = 0; Iteration < FMath::Min(InIterations, 3); ++Iteration)
 			{
 				DropComponent->DropItems(static_cast<EObsidianEntityRarity>(EntityRarityEnum->GetValueByIndex(EntityRarityValue)),
 					static_cast<uint8>(TestedEntityLevel));
@@ -1803,8 +1803,8 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 
 	DropComponent->DestroyComponent();
 
-	DeliverItems(Context, MoveTemp(ItemsToDrop), TEXT("self-test items"), EDestination::Ground);
-	DeliverItems(Context, MoveTemp(ItemsToAddToInventory), TEXT("self-test items"), EDestination::Inventory);
+	DeliverItems(InContext, MoveTemp(ItemsToDrop), TEXT("self-test items"), EDestination::Ground);
+	DeliverItems(InContext, MoveTemp(ItemsToAddToInventory), TEXT("self-test items"), EDestination::Inventory);
 
 	for (const TPair<EObsidianItemRarity, FRarityStats>& StatsPair : GeneratedStats)
 	{
@@ -1815,7 +1815,7 @@ void FObsidianDebugTab_Items::CraftingSelfTest(const FObsidianDebugMenuContext& 
 			static_cast<float>(Stats.Suffixes) / FMath::Max(Stats.CraftedItems, 1), Stats.MaxSuffixes);
 	}
 
-	Context.Notify(FString::Printf(TEXT("Crafting self-test: finished with [%d] failure(s). Crafted [%d] items from [%d] valid requests, [%d] requests were blocked."),
+	InContext.Notify(FString::Printf(TEXT("Crafting self-test: finished with [%d] failure(s). Crafted [%d] items from [%d] valid requests, [%d] requests were blocked."),
 		Failures, CraftedItems, ValidRequests, BlockedRequests));
 }
 
