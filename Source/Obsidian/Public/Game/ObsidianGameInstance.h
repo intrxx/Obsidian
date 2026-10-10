@@ -2,10 +2,9 @@
 
 #pragma once
 
+#include "CommonGameInstance.h"
 #include "CoreMinimal.h"
 
-
-#include <CommonGameInstance.h>
 #include "ObsidianGameInstance.generated.h"
 
 class AObsidianHero;

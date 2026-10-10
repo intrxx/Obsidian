@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-
-// ~ Project
-
 
 #include "ObsidianInventoryItemDefinition.generated.h"
 

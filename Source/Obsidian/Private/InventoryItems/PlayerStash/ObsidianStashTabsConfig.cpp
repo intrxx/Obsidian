@@ -2,9 +2,7 @@
 
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 
-// ~ Core
 
-// ~ Project
 UObsidianStashTabsConfig::UObsidianStashTabsConfig(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

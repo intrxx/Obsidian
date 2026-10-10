@@ -2,8 +2,8 @@
 
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlotBase.h"
 
-#include <Components/Image.h>
-#include <Components/SizeBox.h>
+#include "Components/Image.h"
+#include "Components/SizeBox.h"
 
 
 void UObsidianSlotBase::NativeConstruct()

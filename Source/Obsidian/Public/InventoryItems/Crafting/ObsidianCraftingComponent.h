@@ -2,11 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "Components/ActorComponent.h"
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
-#include <GameplayTagContainer.h>
-
-#include <Components/ActorComponent.h>
 #include "ObsidianCraftingComponent.generated.h"
 
 struct FObsidianItemPosition;

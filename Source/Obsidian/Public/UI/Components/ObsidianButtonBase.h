@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "CommonButtonBase.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "CommonButtonBase.h"
 #include "ObsidianButtonBase.generated.h"
 
 /**

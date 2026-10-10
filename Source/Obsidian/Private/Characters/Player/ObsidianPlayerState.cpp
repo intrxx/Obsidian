@@ -2,16 +2,15 @@
 
 #include "Characters/Player/ObsidianPlayerState.h"
 
-// ~ Core
 #include "Kismet/GameplayStatics.h"
 #include "Net/UnrealNetwork.h"
 
-// ~ Project
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Game/ObsidianGameInstance.h"
+
 
 AObsidianPlayerState::AObsidianPlayerState(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

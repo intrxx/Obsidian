@@ -3,6 +3,7 @@
 
 #include "InventoryItems/PlayerStash//ObsidianStashTab.h"
 
+
 UObsidianStashTab::UObsidianStashTab(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

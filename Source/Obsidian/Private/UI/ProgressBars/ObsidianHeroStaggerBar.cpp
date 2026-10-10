@@ -2,10 +2,8 @@
 
 #include "UI/ProgressBars/ObsidianHeroStaggerBar.h"
 
-// ~ Core
-
-// ~ Project
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+
 
 void UObsidianHeroStaggerBar::HandleWidgetControllerSet()
 {

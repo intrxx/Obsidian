@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "Components/ActorComponent.h"
+#include "CoreMinimal.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include <Components/ActorComponent.h>
 #include "ObsidianItemContainerComponent.generated.h"
 
 class AObsidianPlayerController;

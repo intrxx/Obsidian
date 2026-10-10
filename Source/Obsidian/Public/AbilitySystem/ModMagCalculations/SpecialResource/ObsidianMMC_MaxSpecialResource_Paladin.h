@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource.h"
+
 #include "ObsidianMMC_MaxSpecialResource_Paladin.generated.h"
 
 /**

@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/ProgressBars/ObsidianBasicHealthBar.h"
+
 #include "UObsidianOverlayEnemyBar.generated.h"
 
 class UImage;

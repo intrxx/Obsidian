@@ -2,15 +2,13 @@
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 
-// ~ Core
-#include "GameplayCueManager.h"
 #include "AbilitySystemGlobals.h"
+#include "GameplayCueManager.h"
 
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
-#include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
+#include "AbilitySystem/Data/OAbilityTagRelationshipMapping.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 
 UObsidianAbilitySystemComponent::UObsidianAbilitySystemComponent(const FObjectInitializer& ObjectInitializer)

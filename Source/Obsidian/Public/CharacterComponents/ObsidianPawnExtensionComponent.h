@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "Components/PawnComponent.h"
+#include "CoreMinimal.h"
 
-
-#include <Components/PawnComponent.h>
 #include "ObsidianPawnExtensionComponent.generated.h"
 
 class UObsidianAbilitySystemComponent;

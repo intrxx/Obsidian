@@ -2,10 +2,8 @@
 
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 
-// ~ Core
-
-// ~ Project
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianItemDataDeveloperSettings::UObsidianItemDataDeveloperSettings(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

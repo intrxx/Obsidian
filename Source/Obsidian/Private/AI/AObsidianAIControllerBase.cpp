@@ -2,11 +2,9 @@
 
 #include "AI/AObsidianAIControllerBase.h"
 
-// ~ Core
 #include "BehaviorTree/BehaviorTreeComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-// ~ Project
 
 AObsidianAIControllerBase::AObsidianAIControllerBase()
 {

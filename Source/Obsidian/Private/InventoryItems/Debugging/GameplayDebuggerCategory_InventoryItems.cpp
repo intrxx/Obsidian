@@ -2,14 +2,13 @@
 
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
 
-// ~ Core
 #if WITH_GAMEPLAY_DEBUGGER_MENU
 #include "Engine/Canvas.h"
 
-// ~ Project
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 namespace InventoryItems::Debug
 {

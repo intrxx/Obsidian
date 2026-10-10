@@ -5,6 +5,7 @@
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
 
+
 void UObsidianAdvancedAttackNotify::NotifyBegin(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation,
                                                 float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {

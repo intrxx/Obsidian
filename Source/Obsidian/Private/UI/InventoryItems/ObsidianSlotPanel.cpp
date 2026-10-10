@@ -2,12 +2,13 @@
 
 #include "UI/InventoryItems/ObsidianSlotPanel.h"
 
-#include <Blueprint/WidgetTree.h>
+#include "Blueprint/WidgetTree.h"
 
 #include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+
 
 // ~ Start of FObsidianSlotData
 

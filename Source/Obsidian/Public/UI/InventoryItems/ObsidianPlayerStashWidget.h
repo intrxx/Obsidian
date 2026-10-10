@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-
 #include "UI/ObsidianMainOverlayWidgetBase.h"
+
 #include "ObsidianPlayerStashWidget.generated.h"
 
 struct FObsidianItemWidgetData;

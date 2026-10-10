@@ -2,10 +2,8 @@
 
 #include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 
-// ~ Project
 
 void UObsidianDurationalEffectInfo::StartEffectTimer()
 {

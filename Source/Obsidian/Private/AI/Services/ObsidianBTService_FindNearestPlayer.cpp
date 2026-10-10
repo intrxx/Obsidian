@@ -2,13 +2,12 @@
 
 #include "AI/Services/ObsidianBTService_FindNearestPlayer.h"
 
-// ~ Core
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 UObsidianBTService_FindNearestPlayer::UObsidianBTService_FindNearestPlayer()
 {

@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "Net/Serialization/FastArraySerializer.h"
+
 #include "ObsidianInventoryGridItemList.generated.h"
 
 struct FObsidianInventoryGridItemList;

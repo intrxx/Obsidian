@@ -4,10 +4,10 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <CoreMinimal.h>
-#include <AttributeSet.h>
-#include <GameplayEffectTypes.h>
-#include <UObject/SoftObjectPath.h>
+#include "AttributeSet.h"
+#include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
+#include "UObject/SoftObjectPath.h"
 
 class AObsidianPlayerController;
 class UAbilitySystemComponent;

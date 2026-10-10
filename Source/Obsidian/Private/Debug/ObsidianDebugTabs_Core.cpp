@@ -4,22 +4,23 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <AbilitySystemComponent.h>
-#include <AssetRegistry/AssetData.h>
-#include <AssetRegistry/IAssetRegistry.h>
-#include <Engine/Engine.h>
-#include <GameFramework/Pawn.h>
-#include <GameFramework/PlayerController.h>
-#include <GameFramework/WorldSettings.h>
-#include <HAL/IConsoleManager.h>
-#include <Kismet/GameplayStatics.h>
-#include <Misc/App.h>
-#include <SlateIM.h>
+#include "AbilitySystemComponent.h"
+#include "AssetRegistry/AssetData.h"
+#include "AssetRegistry/IAssetRegistry.h"
+#include "Engine/Engine.h"
+#include "GameFramework/Pawn.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/WorldSettings.h"
+#include "HAL/IConsoleManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "Misc/App.h"
+#include "SlateIM.h"
 
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+
 
 namespace ObsidianDebugCore
 {

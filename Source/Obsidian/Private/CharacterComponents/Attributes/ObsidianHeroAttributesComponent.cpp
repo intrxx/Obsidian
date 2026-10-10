@@ -2,12 +2,13 @@
 
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 
-#include <GameFramework/Character.h>
+#include "GameFramework/Character.h"
 
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianHeroAttributesComponent::UObsidianHeroAttributesComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

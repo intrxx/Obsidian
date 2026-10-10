@@ -2,10 +2,8 @@
 
 #include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
 
-// ~ Core
-
-// ~ Project
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
+
 
 void UObsidianRegularEnemyHealthBar::HandleWidgetControllerSet()
 {

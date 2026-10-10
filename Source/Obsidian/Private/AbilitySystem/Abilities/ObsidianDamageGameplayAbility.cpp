@@ -3,11 +3,9 @@
 
 #include "AbilitySystem/Abilities/ObsidianDamageGameplayAbility.h"
 
-// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
-// ~ Project
 
 UObsidianDamageGameplayAbility::UObsidianDamageGameplayAbility(const FObjectInitializer& ObjectInitializer)
     : Super(ObjectInitializer)

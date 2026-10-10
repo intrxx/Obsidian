@@ -2,9 +2,6 @@
 
 #include "ObsidianLogCategories.h"
 
-// ~ Core
-
-// ~ Project
 
 /**
  * ---- General ----

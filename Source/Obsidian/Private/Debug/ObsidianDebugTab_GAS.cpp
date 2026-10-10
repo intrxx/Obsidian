@@ -4,14 +4,15 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <Abilities/GameplayAbility.h>
-#include <AbilitySystemComponent.h>
-#include <AbilitySystemGlobals.h>
-#include <EngineUtils.h>
-#include <GameFramework/Pawn.h>
-#include <GameplayEffect.h>
-#include <GameplayTagsManager.h>
-#include <SlateIM.h>
+#include "Abilities/GameplayAbility.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
+#include "EngineUtils.h"
+#include "GameFramework/Pawn.h"
+#include "GameplayEffect.h"
+#include "GameplayTagsManager.h"
+#include "SlateIM.h"
+
 
 namespace ObsidianDebugGASTab
 {

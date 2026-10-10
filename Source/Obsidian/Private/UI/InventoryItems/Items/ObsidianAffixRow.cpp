@@ -2,7 +2,8 @@
 
 #include "UI/InventoryItems/Items/ObsidianAffixRow.h"
 
-#include <CommonTextBlock.h>
+#include "CommonTextBlock.h"
+
 
 void UObsidianAffixRow::NativePreConstruct()
 {

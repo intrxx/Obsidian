@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameFramework/SaveGame.h"
 
 #include "ObsidianTypes/ObsidianSavedTypes.h"
 
-#include <GameFramework/SaveGame.h>
 #include "ObsidianSharedStashSaveGame.generated.h"
 
 /**

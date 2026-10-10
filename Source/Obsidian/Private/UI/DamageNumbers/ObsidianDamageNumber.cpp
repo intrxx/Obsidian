@@ -2,11 +2,10 @@
 
 #include "UI/DamageNumbers/ObsidianDamageNumber.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
+
 
 void UObsidianDamageNumber::InitializeDamageNumber(const FObsidianDamageTextProps& DamageTextProps)
 {

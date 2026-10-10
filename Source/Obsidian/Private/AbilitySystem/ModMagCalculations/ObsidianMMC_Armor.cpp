@@ -5,6 +5,7 @@
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
+
 struct SObsidian_ArmorStatics
 {
 	FGameplayEffectAttributeCaptureDefinition Armor;

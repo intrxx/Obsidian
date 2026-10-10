@@ -2,10 +2,8 @@
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 
-// ~ Core
-
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 struct FObsidianInventoryItemGridSize
 {

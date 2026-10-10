@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 
-
-#include <GameplayEffectTypes.h>
 #include "ObsidianAbilitySystemEffectTypes.generated.h"
 
 USTRUCT(BlueprintType)

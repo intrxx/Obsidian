@@ -2,15 +2,12 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-#include "Styling/SlateBrush.h"
 #include "Layout/Margin.h"
-
-// ~ Project
-
+#include "Styling/SlateBrush.h"
 
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
+
 #include "ObsidianProgressGlobeBase.generated.h"
 
 class UObMainOverlayWidgetController;

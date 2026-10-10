@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
-
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
+
 #include "ObsidianStashTab_Slots.generated.h"
 
 /**

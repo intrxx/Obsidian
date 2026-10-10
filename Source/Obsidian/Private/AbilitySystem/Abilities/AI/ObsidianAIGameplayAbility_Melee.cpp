@@ -3,13 +3,12 @@
 
 #include "AbilitySystem/Abilities/AI/ObsidianAIGameplayAbility_Melee.h"
 
-// ~ Core
 #include "AIController.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Navigation/PathFollowingComponent.h"
 
-// ~ Project
 #include "AI/ObsidianEnemyInterface.h"
+
 
 void UObsidianAIGameplayAbility_Melee::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo,
                                                        const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)

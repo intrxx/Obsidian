@@ -2,11 +2,12 @@
 
 #include "InventoryItems/Items/ObsidianItemLabelComponent.h"
 
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 UObsidianItemLabelComponent::UObsidianItemLabelComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

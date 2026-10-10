@@ -2,9 +2,9 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_Evasion.h"
 
-
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+
 
 struct SObsidian_EvasionStatics
 {

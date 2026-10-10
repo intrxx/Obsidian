@@ -2,38 +2,39 @@
 
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 
-#include <Blueprint/WidgetLayoutLibrary.h>
-#include <Components/Overlay.h>
-#include <Components/VerticalBox.h>
-#include <Components/WrapBox.h>
-#include <Components/CanvasPanelSlot.h>
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Components/Overlay.h"
+#include "Components/VerticalBox.h"
+#include "Components/WrapBox.h"
 
-#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
-#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
-#include "Components/CanvasPanel.h"
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
 #include "Obsidian/ObsidianLogCategories.h"
-#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
-#include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "ObsidianTypes/ObsidianUITypes.h"
 #include "UI/CharacterStatus/ObsidianCharacterStatus.h"
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
-#include "UI/ProgressBars/ObsidianOverlayBossEnemyBar.h"
-#include "UI/PassiveSkillTree/ObsidianPassiveSkillTree.h"
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
-#include "UI/InventoryItems/ObsidianInventory.h"
-#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
-#include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
-#include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
-#include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
 #include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
-#include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
-#include "UI/MainOverlay/SkillPoints/ObsidianSkillPointsNotification.h"
-#include "UI/InventoryItems/ObsidianPlayerStashWidget.h"
-#include "UI/ProgressBars/ObsidianOverlayStaminaBar.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
+#include "UI/InventoryItems/ObsidianInventory.h"
+#include "UI/InventoryItems/ObsidianPlayerStashWidget.h"
+#include "UI/MainOverlay/SkillPoints/ObsidianSkillPointsNotification.h"
+#include "UI/MainOverlay/Subwidgets/ObsidianDurationalEffectInfo.h"
+#include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
+#include "UI/PassiveSkillTree/ObsidianPassiveSkillTree.h"
+#include "UI/ProgressBars/ObsidianOverlayBossEnemyBar.h"
+#include "UI/ProgressBars/ObsidianOverlayExperienceBar.h"
+#include "UI/ProgressBars/ObsidianOverlayStaminaBar.h"
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
+#include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
+#include "UI/ProgressBars/UObsidianOverlayEnemyBar.h"
+#include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+#include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()
 {

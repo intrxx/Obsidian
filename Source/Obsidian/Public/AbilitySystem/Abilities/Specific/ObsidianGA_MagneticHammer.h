@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "AbilitySystem/Abilities/OGameplayAbility_ProjectileSpell.h"
+
 #include "ObsidianGA_MagneticHammer.generated.h"
 
 /**

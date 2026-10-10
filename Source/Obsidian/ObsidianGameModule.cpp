@@ -2,19 +2,20 @@
 
 #include "ObsidianGamemodule.h"
 
-// ~ Core
 #include "Modules/ModuleManager.h"
+
 #if WITH_GAMEPLAY_DEBUGGER
 #include "GameplayDebugger.h"
 
-// ~ Project
-#include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h"
+#include "InventoryItems/Debugging/GameplayDebuggerCategory_InventoryItems.h"
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.h"
 #endif
+
 #if WITH_OBSIDIAN_DEBUG_MENU
 #include "Debug/ObsidianDebugMenu.h"
 #endif
+
 
 IMPLEMENT_PRIMARY_GAME_MODULE(FObsidianGameModule, Obsidian, "Obsidian");
 

@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
-#include "ObsidianTypes/ObsidianUITypes.h"
+#include "CoreMinimal.h"
 
 #include "ObsidianAttributesComponent.h"
+#include "ObsidianTypes/ObsidianUITypes.h"
+
 #include "ObsidianHeroAttributesComponent.generated.h"
 
 class UObMainOverlayWidgetController;

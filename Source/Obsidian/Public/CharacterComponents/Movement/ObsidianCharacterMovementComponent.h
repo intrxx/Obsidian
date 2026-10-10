@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
-#include <GameFramework/CharacterMovementComponent.h>
 #include "ObsidianCharacterMovementComponent.generated.h"
 
 /**

@@ -2,24 +2,26 @@
 
 #include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 
-#include <NavigationSystem.h>
-#include <Kismet/GameplayStatics.h>
-#include <Kismet/KismetMathLibrary.h>
-#include <Engine/AssetManager.h>
-#include <Engine/StreamableManager.h>
-#if WITH_EDITOR
-#include <Misc/DataValidation.h>
-#endif
+#include "Engine/AssetManager.h"
+#include "Engine/StreamableManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "NavigationSystem.h"
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDropManagerSubsystem.h"
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif
+
 
 namespace DropComponentDebugHelpers
 {

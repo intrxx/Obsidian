@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameFramework/GameModeBase.h"
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include <GameFramework/GameModeBase.h>
 #include "ObsidianGameMode.generated.h"
 
 class AObsidianTownPortal;

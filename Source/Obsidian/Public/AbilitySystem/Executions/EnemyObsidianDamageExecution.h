@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "AbilitySystem/Executions/ObsidianDamageExecution.h"
+
 #include "EnemyObsidianDamageExecution.generated.h"
 
 /**

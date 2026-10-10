@@ -2,23 +2,22 @@
 
 #include "Characters/Enemies/ObsidianEnemy.h"
 
-// ~ Core
 #include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
-// ~ Project
-#include "AbilitySystem/Data/ObsidianAbilitySet.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
-#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "AbilitySystem/Data/ObsidianAbilitySet.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
-#include "Characters/ObsidianPawnData.h"
-#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 #include "CharacterComponents/Movement/ObsidianEnemyMovementComponent.h"
+#include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
+#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianDummyMeshActor.h"
+#include "Characters/ObsidianPawnData.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 AObsidianEnemy::AObsidianEnemy(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianEnemyMovementComponent>(

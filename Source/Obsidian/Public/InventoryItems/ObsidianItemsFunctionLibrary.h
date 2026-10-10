@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianItemsFunctionLibrary.generated.h"
 
 class AObsidianPlayerController;

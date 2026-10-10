@@ -2,14 +2,11 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
 #include "AbilitySystemComponent.h"
-
-// ~ Project
-
+#include "CoreMinimal.h"
 
 #include "ObsidianCommonAttributeSet.h"
+
 #include "ObsidianEnemyAttributeSet.generated.h"
 
 /**

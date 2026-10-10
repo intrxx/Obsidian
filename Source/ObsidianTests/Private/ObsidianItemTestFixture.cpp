@@ -8,14 +8,15 @@
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+
 
 namespace ObsidianItemTestFixture
 {

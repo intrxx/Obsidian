@@ -2,14 +2,11 @@
 
 #include "AbilitySystem/Executions/EnemyObsidianDamageExecution.h"
 
-// ~ Core
-
-
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
-#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
+#include "Obsidian/ObsidianLogCategories.h"
+
 
 struct FObsidianEnemyDamageStatics
 {

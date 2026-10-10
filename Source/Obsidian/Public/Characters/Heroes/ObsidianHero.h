@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 
-#include "ObsidianTypes/ObsidianCoreTypes.h"
-
-#include <GenericTeamAgentInterface.h>
 #include "Characters/ObsidianCharacterBase.h"
 #include "Game/Save/ObsidianSaveableInterface.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
+
 #include "ObsidianHero.generated.h"
 
 struct FObsidianGenericAttributes;

@@ -4,12 +4,12 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <Algo/RandomShuffle.h>
-#include <Engine/Engine.h>
-#include <Engine/GameInstance.h>
-#include <GameFramework/Pawn.h>
-#include <GameplayTagsManager.h>
-#include <SlateIM.h>
+#include "Algo/RandomShuffle.h"
+#include "Engine/Engine.h"
+#include "Engine/GameInstance.h"
+#include "GameFramework/Pawn.h"
+#include "GameplayTagsManager.h"
+#include "SlateIM.h"
 
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
@@ -25,6 +25,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 namespace ObsidianDebugItems
 {

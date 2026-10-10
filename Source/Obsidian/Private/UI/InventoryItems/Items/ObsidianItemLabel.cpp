@@ -2,8 +2,9 @@
 
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 
-#include <CommonTextBlock.h>
-#include <Components/Border.h>
+#include "CommonTextBlock.h"
+#include "Components/Border.h"
+
 
 UObsidianItemLabel::UObsidianItemLabel()
 {

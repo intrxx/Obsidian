@@ -2,16 +2,17 @@
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#if WITH_EDITOR
-#include <Misc/DataValidation.h>
-#endif
-
-#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Core/ObsidianGameplayStatics.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif
+
 
 // ~ FObsidianItemGeneratedData
 

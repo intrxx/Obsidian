@@ -2,13 +2,15 @@
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 
-#include <UObject/ObjectSaveContext.h>
-#if WITH_EDITOR
-#include <Misc/DataValidation.h>
-#endif
+#include "UObject/ObjectSaveContext.h"
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif
+
 
 UOInventoryItemFragment_Affixes::UOInventoryItemFragment_Affixes(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

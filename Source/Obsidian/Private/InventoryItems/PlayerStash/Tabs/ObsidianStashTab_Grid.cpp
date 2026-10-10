@@ -2,10 +2,10 @@
 
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 
-
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 UObsidianStashTab_Grid::UObsidianStashTab_Grid(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

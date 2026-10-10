@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "Blueprint/UserWidget.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "Blueprint/UserWidget.h"
 #include "ObsidianRadialProgressBar.generated.h"
 
 class USizeBox;

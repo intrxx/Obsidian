@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "CommonGameViewportClient.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "CommonGameViewportClient.h"
 #include "ObsidianGameViewportClient.generated.h"
 
 /**

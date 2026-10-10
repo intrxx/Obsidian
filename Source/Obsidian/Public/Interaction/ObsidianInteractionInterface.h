@@ -2,12 +2,8 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-
-// ~ Project
-
 
 #include "ObsidianInteractionInterface.generated.h"
 

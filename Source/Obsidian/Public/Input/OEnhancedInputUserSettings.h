@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "UserSettings/EnhancedInputUserSettings.h"
+
 #include "OEnhancedInputUserSettings.generated.h"
 
 /**

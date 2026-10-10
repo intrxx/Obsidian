@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "UObject/Interface.h"
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "UObject/Interface.h"
 #include "ObsidianEnemyInterface.generated.h"
 
 /**

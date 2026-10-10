@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "UObject/Interface.h"
 
 #include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 
-#include <UObject/Interface.h>
 #include "ObsidianPickableInterface.generated.h"
 
 class UObsidianInventoryComponent;

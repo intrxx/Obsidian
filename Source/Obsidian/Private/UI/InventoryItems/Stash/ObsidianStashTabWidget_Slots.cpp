@@ -3,10 +3,11 @@
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget_Slots.h"
 
 #include "Obsidian/ObsidianLogCategories.h"
-#include "UI/InventoryItems/ObsidianSlotPanel.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
+#include "UI/InventoryItems/ObsidianSlotPanel.h"
 #include "UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+
 
 void UObsidianStashTabWidget_Slots::InitializeStashTab(UObInventoryItemsWidgetController* InInventoryItemsWidgetController,
 	const FGameplayTag& InStashTabTag)

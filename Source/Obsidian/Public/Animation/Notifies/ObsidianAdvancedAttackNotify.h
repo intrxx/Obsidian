@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
+#include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "ObsidianAdvancedAttackNotify.generated.h"
 
 /**

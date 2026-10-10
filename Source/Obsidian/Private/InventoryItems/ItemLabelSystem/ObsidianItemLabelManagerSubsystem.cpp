@@ -2,17 +2,18 @@
 
 #include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
 
-#include <Components/CanvasPanelSlot.h>
-#include <Blueprint/WidgetLayoutLibrary.h>
-#include <SceneView.h>
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Components/CanvasPanelSlot.h"
+#include "Kismet/GameplayStatics.h"
+#include "SceneView.h"
 
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/Items/ObsidianItemLabelComponent.h"
-#include "Kismet/GameplayStatics.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/InventoryItems/Items/ObsidianItemLabel.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
-#include "Obsidian/ObsidianLogCategories.h"
+
 
 DECLARE_CYCLE_STAT(TEXT("ItemLabelManager"), STAT_ItemLabelManager, STATGROUP_Tickables);
 namespace ObsidianItemLabelLayout

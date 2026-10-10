@@ -2,11 +2,10 @@
 
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
 
-// ~ Core
 #include "Components/Button.h"
 
-// ~ Project
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectDescription.h"
+
 
 void UObsidianEffectInfoBase::NativeConstruct()
 {

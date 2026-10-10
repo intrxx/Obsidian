@@ -2,11 +2,12 @@
 
 #include "Game/Save/ObsidianHeroSaveGame.h"
 
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
 
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 // ~ Start of FObsidianSavedEquipmentPiece
 FObsidianSavedEquipmentPiece::FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& EquipmentActor)

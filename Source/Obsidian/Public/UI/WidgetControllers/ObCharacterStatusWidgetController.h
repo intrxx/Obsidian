@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "ObsidianTypes/ObsidianUITypes.h"
-
 #include "UI/ObsidianWidgetControllerBase.h"
+
 #include "ObCharacterStatusWidgetController.generated.h"
 
 struct FOnAttributeChangeData;

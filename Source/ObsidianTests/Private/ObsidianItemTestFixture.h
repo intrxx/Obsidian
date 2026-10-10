@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-#include <Components/ActorTestSpawner.h>
-#include <GameplayTagContainer.h>
+#include "Components/ActorTestSpawner.h"
+#include "GameplayTagContainer.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 

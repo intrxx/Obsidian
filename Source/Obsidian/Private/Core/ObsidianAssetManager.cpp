@@ -2,9 +2,6 @@
 
 #include "Core/ObsidianAssetManager.h"
 
-// ~ Core
-
-// ~ Project
 
 UObsidianAssetManager& UObsidianAssetManager::Get()
 {

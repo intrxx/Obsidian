@@ -2,11 +2,9 @@
 
 #include "UI/FrontEnd/ObsidianCharacterEntry.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/Border.h"
 
-// ~ Project
 
 void UObsidianCharacterEntry::NativeConstruct()
 {

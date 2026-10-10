@@ -2,14 +2,13 @@
 
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
 
-// ~ Core
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/SizeBox.h"
 #include "Kismet/KismetMathLibrary.h"
 
-// ~ Project
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+
 
 void UObsidianProgressGlobe::NativePreConstruct()
 {

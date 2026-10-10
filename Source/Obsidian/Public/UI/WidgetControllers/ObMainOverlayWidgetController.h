@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "ObsidianTypes/ObsidianUITypes.h"
-
 #include "UI/ObsidianWidgetControllerBase.h"
+
 #include "ObMainOverlayWidgetController.generated.h"
 
 struct FObsidianEffectUIData;

@@ -2,8 +2,8 @@
 
 #include "InventoryItems/ObsidianPickableInterface.h"
 
-
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+
 
 bool FObsidianPickupTemplate::IsValid() const
 {

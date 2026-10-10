@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "UI/ObsidianWidgetBase.h"
+
 #include "ObsidianAffixRow.generated.h"
 
 class UCommonTextStyle;

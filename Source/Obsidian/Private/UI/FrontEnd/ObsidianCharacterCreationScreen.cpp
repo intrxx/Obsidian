@@ -2,23 +2,22 @@
 
 #include "UI/FrontEnd/ObsidianCharacterCreationScreen.h"
 
-// ~ Core
+#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "CommonTextBlock.h"
 #include "CommonUIExtensions.h"
 #include "Components/CheckBox.h"
 #include "Components/EditableTextBox.h"
 #include "Components/SizeBox.h"
 #include "Input/CommonUIInputTypes.h"
-#include "Blueprint/WidgetBlueprintLibrary.h"
 #include "Kismet/GameplayStatics.h"
 
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/Components/ObsidianButtonBase.h"
 #include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
+
 
 void UObsidianCharacterCreationScreen::HandleWidgetControllerSet()
 {

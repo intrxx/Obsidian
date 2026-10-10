@@ -1,17 +1,18 @@
 // Copyright 2026 out of sCope team - intrxx
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-#include <CQTest.h>
+#include "CQTest.h"
 
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianItemTestDefinitions.h"
 #include "ObsidianItemTestFixture.h"
+
 
 /**
  * Tests of UObsidianEquipmentComponent, run them from Session Frontend -> Automation -> Obsidian.Items.Equipment.

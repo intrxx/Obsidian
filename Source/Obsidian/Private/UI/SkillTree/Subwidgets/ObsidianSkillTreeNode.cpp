@@ -2,12 +2,10 @@
 
 #include "UI/PassiveSkillTree/Subwidgets/ObsidianSkillTreeNode.h"
 
-// ~ Core
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 
-// ~ Project
 
 void UObsidianSkillTreeNode::NativePreConstruct()
 {

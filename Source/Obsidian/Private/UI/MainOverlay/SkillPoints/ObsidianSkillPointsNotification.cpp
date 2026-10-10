@@ -5,9 +5,6 @@
 #include "CommonTextBlock.h"
 #include "Components/Button.h"
 
-// ~ Core
-
-// ~ Project
 
 void UObsidianSkillPointsNotification::NativeConstruct()
 {

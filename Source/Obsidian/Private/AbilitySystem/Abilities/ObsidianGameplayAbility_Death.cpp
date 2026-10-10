@@ -2,12 +2,10 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility_Death.h"
 
-// ~ Core
-
-// ~ Project
-#include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+
 
 UObsidianGameplayAbility_Death::UObsidianGameplayAbility_Death()
 {

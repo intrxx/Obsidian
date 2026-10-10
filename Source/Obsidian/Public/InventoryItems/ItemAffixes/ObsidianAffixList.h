@@ -2,14 +2,12 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Engine/DataAsset.h"
 #include "ObsidianAffixList.generated.h"
 
 class UGameplayEffect;

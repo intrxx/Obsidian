@@ -2,15 +2,16 @@
 
 #include "UI/InventoryItems/ObsidianInventory.h"
 
-#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
-#include "UI/InventoryItems/Slots/ObsidianSlotBase.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
-#include "UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
-#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
-#include "UI/InventoryItems/ObsidianSlotPanel.h"
 #include "UI/InventoryItems/ObsidianGridPanel.h"
+#include "UI/InventoryItems/ObsidianSlotPanel.h"
+#include "UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
+#include "UI/InventoryItems/Slots/ObsidianSlotBase.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+
 
 void UObsidianInventory::HandleWidgetControllerSet()
 {

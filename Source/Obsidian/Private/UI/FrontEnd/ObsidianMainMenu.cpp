@@ -2,22 +2,18 @@
 
 #include "UI/FrontEnd/ObsidianMainMenu.h"
 
-#include <CommonUIExtensions.h>
-#include <Kismet/KismetSystemLibrary.h>
+#include "CommonUIExtensions.h"
+#include "Engine/AssetManager.h"
+#include "Engine/StreamableManager.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
-#include "Engine/StreamableManager.h"
-#include "Engine/AssetManager.h"
-
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
 #include "UI/FrontEnd/ObsidianCharacterCreationScreen.h"
 #include "UI/FrontEnd/ObsidianCharacterScreen.h"
 #include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
 
-// ~ Core
-
-// ~ Project
 
 UObsidianMainMenu::UObsidianMainMenu(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

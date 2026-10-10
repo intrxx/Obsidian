@@ -2,17 +2,16 @@
 
 #include "AI/EQS/ObsidianEnvQueryContext_Player.h"
 
-// ~ Core
 #include "BehaviorTree/BlackboardComponent.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "EnvironmentQuery/Items/EnvQueryItemType_Actor.h"
 #include "Kismet/GameplayStatics.h"
 
-// ~ Project
 #include "AI/AObsidianAIControllerBase.h"
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 void UObsidianEnvQueryContext_Player::ProvideContext(FEnvQueryInstance& QueryInstance, FEnvQueryContextData& ContextData) const
 {

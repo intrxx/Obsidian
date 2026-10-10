@@ -4,15 +4,14 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <AbilitySystemComponent.h>
-#include <AIController.h>
-#include <BrainComponent.h>
-#include <Components/CapsuleComponent.h>
-#include <EngineUtils.h>
-#include <NavigationSystem.h>
-#include <SlateIM.h>
-
-#include <BehaviorTree/BehaviorTree.h>
+#include "AbilitySystemComponent.h"
+#include "AIController.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "BrainComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "EngineUtils.h"
+#include "NavigationSystem.h"
+#include "SlateIM.h"
 
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AI/AObsidianAIControllerBase.h"
@@ -20,6 +19,7 @@
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/Enemies/ObsidianBossEnemy.h"
 #include "Characters/Enemies/ObsidianEnemy.h"
+
 
 namespace ObsidianDebugAI
 {

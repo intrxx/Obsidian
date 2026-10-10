@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "Characters/Enemies/ObsidianEnemy.h"
+
 #include "ObsidianRegularEnemy.generated.h"
 
 class AObsidianAIControllerBase;

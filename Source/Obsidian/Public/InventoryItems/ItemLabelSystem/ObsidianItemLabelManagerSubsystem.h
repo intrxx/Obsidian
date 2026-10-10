@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "Subsystems/WorldSubsystem.h"
 
-#include <Subsystems/WorldSubsystem.h>
 #include "ObsidianItemLabelManagerSubsystem.generated.h"
 
 struct FObsidianItemInteractionFlags;

@@ -2,19 +2,20 @@
 
 #include "InventoryItems/ObsidianItemContainerComponent.h"
 
-#include <Engine/ActorChannel.h>
+#include "Engine/ActorChannel.h"
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
-#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianItemContainerComponent::UObsidianItemContainerComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

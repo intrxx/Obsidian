@@ -2,17 +2,18 @@
 
 #include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 
-#include <Blueprint/WidgetLayoutLibrary.h>
-#include <Engine/ActorChannel.h>
-#include <GameFramework/GameplayMessageSubsystem.h>
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "Engine/ActorChannel.h"
+#include "GameFramework/GameplayMessageSubsystem.h"
 
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/InventoryItems/Items/ObsidianDraggedItem_Simple.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
-#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
-#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
-#include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianCraftingComponent::UObsidianCraftingComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

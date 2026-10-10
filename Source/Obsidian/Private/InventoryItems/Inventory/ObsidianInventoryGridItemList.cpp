@@ -2,15 +2,16 @@
 
 #include "InventoryItems/Inventory/ObsidianInventoryGridItemList.h"
 
-#include <GameFramework/GameplayMessageSubsystem.h>
+#include "GameFramework/GameplayMessageSubsystem.h"
 
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 // ---- Start of FObsidianInventoryEntry ----
 

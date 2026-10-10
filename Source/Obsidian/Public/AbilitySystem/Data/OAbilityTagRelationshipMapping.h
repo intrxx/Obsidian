@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-#include "GameplayTagContainer.h"
 #include "Engine/DataAsset.h"
-
-// ~ Project
-
+#include "GameplayTagContainer.h"
 
 #include "OAbilityTagRelationshipMapping.generated.h"
 

@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
+
 #include "ObsidianOverlayExperienceBar.generated.h"
 
 class UObMainOverlayWidgetController;

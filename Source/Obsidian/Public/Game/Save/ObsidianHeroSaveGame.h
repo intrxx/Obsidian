@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameFramework/SaveGame.h"
 
-#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "ObsidianTypes/ObsidianSavedTypes.h"
 
-#include <GameFramework/SaveGame.h>
 #include "ObsidianHeroSaveGame.generated.h"
 
 struct FObsidianEquipmentActor;

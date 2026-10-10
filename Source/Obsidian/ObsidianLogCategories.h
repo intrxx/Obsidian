@@ -2,10 +2,7 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
 
 /**
  * Every Log Category of the project, named ObLog[SystemName].

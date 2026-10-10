@@ -2,14 +2,10 @@
 
 #pragma once
 
-// ~ Core
-#include "CoreMinimal.h"
 #include "AbilitySystemInterface.h"
-
-// ~ Project
-
-
+#include "CoreMinimal.h"
 #include "ModularPlayerState.h"
+
 #include "ObsidianPlayerState.generated.h"
 
 class AObsidianHero;

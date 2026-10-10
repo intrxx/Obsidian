@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameplayModMagnitudeCalculation.h"
 
-
-#include <GameplayModMagnitudeCalculation.h>
 #include "ObsidianMMC_EnemyAccuracy.generated.h"
 
 /**

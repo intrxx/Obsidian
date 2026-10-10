@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
-
 #include "UI/MainOverlay/Subwidgets/ObsidianEffectInfoBase.h"
+
 #include "OStackingDurationalEffectInfo.generated.h"
 
 class UOStackingDurationalEffectInfo;

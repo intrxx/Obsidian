@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "Components/ActorComponent.h"
 #include "ObsidianBossComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnBossThresholdReached)

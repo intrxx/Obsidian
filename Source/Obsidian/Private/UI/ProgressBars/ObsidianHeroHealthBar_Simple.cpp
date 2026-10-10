@@ -2,7 +2,9 @@
 
 
 #include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
+
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
+
 
 void UObsidianHeroHealthBar_Simple::HandleWidgetControllerSet()
 {

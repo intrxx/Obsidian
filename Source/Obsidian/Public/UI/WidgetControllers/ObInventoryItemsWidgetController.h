@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-
 #include "UI/ObsidianWidgetControllerBase.h"
+
 #include "ObInventoryItemsWidgetController.generated.h"
 
 struct FObsidianEquipmentChangeMessage;

@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "ObsidianDamageGameplayAbility.h"
+
 #include "OGameplayAbility_ProjectileSpell.generated.h"
 
 class AObsidianProjectileBase;

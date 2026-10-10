@@ -2,10 +2,11 @@
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility_Melee.h"
 
-#include <AbilitySystemComponent.h>
-
 #include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 FGameplayEffectSpecHandle UObsidianGameplayAbility_Melee::MakeMeleeDamageSpec(const UObject* SourceObject)
 {

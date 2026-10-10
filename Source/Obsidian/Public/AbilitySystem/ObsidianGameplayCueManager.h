@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "GameplayCueManager.h"
+
 #include "ObsidianGameplayCueManager.generated.h"
 
 /**

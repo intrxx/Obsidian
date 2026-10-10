@@ -2,6 +2,7 @@
 
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget.h"
 
+
 void UObsidianStashTabWidget::NativeConstruct()
 {
 	Super::NativeConstruct();

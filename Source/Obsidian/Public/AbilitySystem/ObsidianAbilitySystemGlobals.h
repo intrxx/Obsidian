@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "AbilitySystemGlobals.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "AbilitySystemGlobals.h"
 #include "ObsidianAbilitySystemGlobals.generated.h"
 
 /**

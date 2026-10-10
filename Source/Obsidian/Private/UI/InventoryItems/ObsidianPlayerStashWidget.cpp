@@ -2,24 +2,25 @@
 
 #include "UI/InventoryItems/ObsidianPlayerStashWidget.h"
 
-#include <Components/Overlay.h>
-#include <Components/ScrollBox.h>
+#include "Components/Overlay.h"
+#include "Components/ScrollBox.h"
 
-#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
-#include "UI/InventoryItems/Items/ObsidianItem.h"
-#include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
-#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
+#include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
+#include "Obsidian/ObsidianLogCategories.h"
+#include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
+#include "UI/InventoryItems/Stash/ObsidianStashButton.h"
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget_Grid.h"
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget_Slots.h"
-#include "UI/InventoryItems/Stash/ObsidianStashButton.h"
-#include "Obsidian/ObsidianLogCategories.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+
 
 void UObsidianPlayerStashWidget::HandleWidgetControllerSet()
 {

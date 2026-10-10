@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "BehaviorTree/BTService.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "BehaviorTree/BTService.h"
 #include "UObsidianBTService_CalculateDistToTarget.generated.h"
 
 /**

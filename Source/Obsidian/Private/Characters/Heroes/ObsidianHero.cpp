@@ -2,30 +2,31 @@
 
 #include "Characters/Heroes/ObsidianHero.h"
 
-#include <Camera/CameraComponent.h>
-#include <Components/WidgetComponent.h>
-#include <GameFramework/CharacterMovementComponent.h>
-#include <GameFramework/SpringArmComponent.h>
-#include <GameFramework/GameplayCameraComponent.h>
+#include "Camera/CameraComponent.h"
+#include "Components/WidgetComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/GameplayCameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
-#include "CharacterComponents/ObsidianPlayerInputManager.h"
-#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
+#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
 #include "Characters/ObsidianPawnData.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Game/Save/ObsidianHeroSaveGame.h"
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
-#include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
-#include "UI/ProgressBars/ObsidianHeroHealthBar.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ObsidianHUD.h"
 #include "UI/ObsidianWidgetBase.h"
-#include "Obsidian/ObsidianLogCategories.h"
+#include "UI/ProgressBars/ObsidianHeroHealthBar.h"
+#include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
+
 
 AObsidianHero::AObsidianHero(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UObsidianHeroMovementComponent>(

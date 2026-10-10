@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "CommonActivatableWidget.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "CommonActivatableWidget.h"
 #include "ObsidianActivatableWidget.generated.h"
 
 /**

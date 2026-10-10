@@ -2,10 +2,11 @@
 
 #include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
 
-#include <UObject/ObjectSaveContext.h>
+#include "UObject/ObjectSaveContext.h"
+
 #if WITH_EDITOR
-#include <Misc/DataValidation.h>
-#endif 
+#include "Misc/DataValidation.h"
+#endif
 
 
 // ~ FObsidianAffixClass

@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "Abilities/GameplayAbility.h"
+#include "CoreMinimal.h"
 
-
-#include <Abilities/GameplayAbility.h>
 #include "ObsidianGameplayAbility.generated.h"
 
 class UObsidianCharacterMovementComponent;

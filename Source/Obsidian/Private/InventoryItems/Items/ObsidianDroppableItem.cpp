@@ -2,27 +2,28 @@
 
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
 
-#include <Kismet/GameplayStatics.h>
-#include <Net/UnrealNetwork.h>
-
-#include "CharacterComponents/ObsidianPlayerInputManager.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "Characters/Player/ObsidianPlayerController.h"
 #include "Components/SplineComponent.h"
 #include "Components/TimelineComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Net/UnrealNetwork.h"
+
+#include "CharacterComponents/ObsidianPlayerInputManager.h"
+#include "Characters/Player/ObsidianPlayerController.h"
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
-#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "Obsidian/ObsidianGameplayTags.h"
-#include "UI/InventoryItems/Items/ObsidianItemLabel.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
-#include "UI/ObsidianHUD.h"
-#include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
-#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
-#include "InventoryItems/ObsidianItemManagerComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/Items/ObsidianItemLabelComponent.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemManagerComponent.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 #include "Obsidian/ObsidianLogCategories.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
+#include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
+#include "UI/InventoryItems/Items/ObsidianItemLabel.h"
+#include "UI/ObsidianHUD.h"
+#include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+
 
 AObsidianDroppableItem::AObsidianDroppableItem(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

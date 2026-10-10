@@ -2,10 +2,8 @@
 
 #include "Characters/Enemies/Specified/ObsidianBoss_TreeOrc.h"
 
-// ~ Core
 #include "Net/UnrealNetwork.h"
 
-// ~ Project
 #include "AI/AObsidianAIControllerBase.h"
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 #include "CharacterComponents/ObsidianBossComponent.h"

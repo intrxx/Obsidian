@@ -2,6 +2,7 @@
 
 #include "ObsidianCore.h"
 
+
 #define LOCTEXT_NAMESPACE "FObsidianCoreModule"
 
 void FObsidianCoreModule::StartupModule()

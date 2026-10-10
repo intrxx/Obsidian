@@ -2,10 +2,8 @@
 
 #include "Combat/ObsidianCombatInterface.h"
 
-// ~ Core
 #include "GameplayTagContainer.h"
 
-// ~ Project
 
 uint8 IObsidianCombatInterface::GetCharacterLevel()
 {

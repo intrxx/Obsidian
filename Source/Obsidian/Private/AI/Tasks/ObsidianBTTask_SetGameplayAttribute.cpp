@@ -2,13 +2,12 @@
 
 #include "AI/Tasks/ObsidianBTTask_SetGameplayAttribute.h"
 
-// ~ Core
-#include "AIController.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
+#include "AIController.h"
 
-// ~ Project
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianBTTask_SetGameplayAttribute::UObsidianBTTask_SetGameplayAttribute()
 {

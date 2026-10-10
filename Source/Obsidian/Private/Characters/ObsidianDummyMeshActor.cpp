@@ -2,11 +2,10 @@
 
 #include "Characters/ObsidianDummyMeshActor.h"
 
-// ~ Core
-
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
 #include "Components/PoseableMeshComponent.h"
+
+#include "Obsidian/ObsidianLogCategories.h"
+
 
 AObsidianDummyMeshActor::AObsidianDummyMeshActor(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

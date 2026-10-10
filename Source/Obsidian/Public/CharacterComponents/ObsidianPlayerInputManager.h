@@ -2,11 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
+#include "Components/PawnComponent.h"
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
-
-#include <Components/PawnComponent.h>
 #include "ObsidianPlayerInputManager.generated.h"
 
 class UObsidianItemManagerComponent;

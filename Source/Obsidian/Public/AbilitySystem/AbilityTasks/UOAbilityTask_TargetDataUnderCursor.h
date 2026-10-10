@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "Abilities/Tasks/AbilityTask.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "Abilities/Tasks/AbilityTask.h"
 #include "UOAbilityTask_TargetDataUnderCursor.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCursorTargetDataSignature, const FGameplayAbilityTargetDataHandle&, DataHandle);

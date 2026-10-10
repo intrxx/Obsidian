@@ -2,10 +2,8 @@
 
 #include "UI/Settings/ObsidianSettingsMenu.h"
 
-// ~ Core
 #include "Input/CommonUIInputTypes.h"
 
-// ~ Project
 
 void UObsidianSettingsMenu::NativeOnInitialized()
 {

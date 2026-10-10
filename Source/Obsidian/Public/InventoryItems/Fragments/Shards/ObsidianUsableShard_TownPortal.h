@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
+
 #include "ObsidianUsableShard_TownPortal.generated.h"
 
 class AObsidianTownPortal;

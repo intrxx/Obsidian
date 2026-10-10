@@ -2,14 +2,12 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
+#include "InventoryItems/ObsidianItemContainerComponent.h"
 #include "ObsidianInventoryGridItemList.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "InventoryItems/ObsidianItemContainerComponent.h"
 #include "ObsidianInventoryComponent.generated.h"
 
 class UObsidianPlayerStashComponent;

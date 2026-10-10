@@ -2,12 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
-
-#include <GameFramework/SaveGame.h>
+#include "CoreMinimal.h"
+#include "GameFramework/SaveGame.h"
 
 #include "ObsidianHeroSaveGame.h"
+
 #include "ObsidianMasterSaveGame.generated.h"
 
 struct FObsidianHeroInitializationSaveData;

@@ -2,11 +2,9 @@
 
 #include "AI/Tasks/ObsidianBTTask_SetFocus.h"
 
-// ~ Core
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-// ~ Project
 
 UObsidianBTTask_SetFocus::UObsidianBTTask_SetFocus()
 {

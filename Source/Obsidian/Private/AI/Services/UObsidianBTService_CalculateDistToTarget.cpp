@@ -2,11 +2,9 @@
 
 #include "AI/Services/UObsidianBTService_CalculateDistToTarget.h"
 
-// ~ Core
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-// ~ Project
 
 UObsidianBTService_CalculateDistToTarget::UObsidianBTService_CalculateDistToTarget()
 {

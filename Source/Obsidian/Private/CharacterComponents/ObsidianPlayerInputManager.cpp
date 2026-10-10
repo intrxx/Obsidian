@@ -2,34 +2,35 @@
 
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
 
-#include <EnhancedInputSubsystems.h>
-#include <InputMappingContext.h>
-#include <NavigationPath.h>
-#include <NavigationSystem.h>
-#include <Components/SplineComponent.h>
-#include <GameFramework/PlayerController.h>
-#include <CommonUIExtensions.h>
-#include <ModularCharacter.h>
+#include "CommonUIExtensions.h"
+#include "Components/SplineComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "GameFramework/PlayerController.h"
+#include "InputMappingContext.h"
+#include "ModularCharacter.h"
+#include "NavigationPath.h"
+#include "NavigationSystem.h"
 
-#include "Characters/Player/ObsidianLocalPlayer.h"
-#include "Input/OEnhancedInputUserSettings.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "CharacterComponents/Movement/ObsidianHeroMovementComponent.h"
+#include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/ObsidianPawnData.h"
-#include "Interaction/ObsidianHighlightInterface.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
+#include "Characters/Player/ObsidianLocalPlayer.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Core/FunctionLibraries/ObsidianBlueprintFunctionLibrary.h"
-#include "InventoryItems/Items/ObsidianDroppableItem.h"
 #include "Input/ObsidianEnhancedInputComponent.h"
+#include "Input/OEnhancedInputUserSettings.h"
+#include "Interaction/ObsidianHighlightInterface.h"
 #include "Interaction/ObsidianInteractionInterface.h"
-#include "InventoryItems/ObsidianItemManagerComponent.h"
 #include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
 #include "InventoryItems/ItemLabelSystem/ObsidianItemLabelManagerSubsystem.h"
+#include "InventoryItems/Items/ObsidianDroppableItem.h"
+#include "InventoryItems/ObsidianItemManagerComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
-#include "UI/ObsidianHUD.h"
 #include "Obsidian/ObsidianLogCategories.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
+#include "UI/ObsidianHUD.h"
+
 
 UObsidianPlayerInputManager::UObsidianPlayerInputManager(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

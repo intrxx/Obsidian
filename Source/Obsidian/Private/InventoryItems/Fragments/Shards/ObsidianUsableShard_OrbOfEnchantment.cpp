@@ -6,6 +6,7 @@
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "Obsidian/ObsidianLogCategories.h"
 
+
 bool UObsidianUsableShard_OrbOfEnchantment::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {

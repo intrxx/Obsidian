@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 
 #include "InventoryItems/ObsidianPickableInterface.h"
 
-#include "GameFramework/Actor.h"
 #include "ObsidianWorldCollectable.generated.h"
 
 UCLASS()

@@ -2,12 +2,10 @@
 
 #pragma once
 
-// ~ Core
+#include "EnhancedInputComponent.h"
 
-// ~ Project
 #include "ObsidianInputConfig.h"
 
-#include "EnhancedInputComponent.h"
 #include "ObsidianEnhancedInputComponent.generated.h"
 
 class UInputAction;

@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
-
 #include "UI/ObsidianWidgetBase.h"
+
 #include "ObsidianProgressBarBase.generated.h"
 
 class UProgressBar;

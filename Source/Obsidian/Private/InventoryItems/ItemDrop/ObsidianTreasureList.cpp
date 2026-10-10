@@ -2,17 +2,17 @@
 
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 
-// ~ Core
+#include "UObject/ObjectSaveContext.h"
+
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "Obsidian/ObsidianLogCategories.h"
+
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor
-#include "UObject/ObjectSaveContext.h"
 
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
-#include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
 
 // ~ FObsidianDropItem
 

@@ -2,15 +2,14 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "Net/Serialization/FastArraySerializer.h"
 
 #include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include <Net/Serialization/FastArraySerializer.h>
-
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianEquipmentList.generated.h"
 
 struct FObsidianSavedItem;

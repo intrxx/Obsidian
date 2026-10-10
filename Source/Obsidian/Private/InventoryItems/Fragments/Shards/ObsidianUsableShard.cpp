@@ -4,6 +4,7 @@
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
+
 // ~ Start of FObsidianItemsMatchingUsableContext
 
 void FObsidianItemsMatchingUsableContext::AddMatchingItem(const UObsidianInventoryItemInstance* InstanceToAdd)

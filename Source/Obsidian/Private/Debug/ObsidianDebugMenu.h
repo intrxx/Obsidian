@@ -4,8 +4,8 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <CoreMinimal.h>
-#include <SlateIMWidgetBase.h>
+#include "CoreMinimal.h"
+#include "SlateIMWidgetBase.h"
 
 #include "Debug/ObsidianDebugMenuTypes.h"
 

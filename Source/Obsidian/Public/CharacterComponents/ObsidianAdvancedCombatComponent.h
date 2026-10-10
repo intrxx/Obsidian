@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
+#include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include "Components/ActorComponent.h"
 #include "ObsidianAdvancedCombatComponent.generated.h"
 
 struct FObsidianAdvancedTraceParams;

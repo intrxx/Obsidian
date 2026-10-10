@@ -2,11 +2,9 @@
 
 #include "UI/MainOverlay/Subwidgets/ObsidianOverlayExperienceInfo.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/SizeBox.h"
 
-// ~ Project
 
 void UObsidianOverlayExperienceInfo::NativeConstruct()
 {

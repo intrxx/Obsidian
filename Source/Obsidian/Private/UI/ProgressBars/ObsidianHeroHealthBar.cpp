@@ -2,10 +2,8 @@
 
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
 
-// ~ Core
-
-// ~ Project
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+
 
 void UObsidianHeroHealthBar::HandleWidgetControllerSet()
 {

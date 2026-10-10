@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "UI/ObsidianActivatableWidget.h"
+
 #include "ObsidianMainMenu.generated.h"
 
 class UObsidianButtonBase;

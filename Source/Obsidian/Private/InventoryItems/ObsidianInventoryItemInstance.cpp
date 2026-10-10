@@ -2,19 +2,20 @@
 
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 
-#include <Net/UnrealNetwork.h>
-#include <GameFramework/Character.h>
+#include "GameFramework/Character.h"
+#include "Net/UnrealNetwork.h"
 
 #include "Game/Save/ObsidianHeroSaveGame.h"
+#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
+#include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
+#include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
-#include "InventoryItems/Fragments/Shards/ObsidianUsableShard.h"
-#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
-#include "InventoryItems/ItemDrop/ObsidianItemDataDeveloperSettings.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianInventoryItemInstance::UObsidianInventoryItemInstance(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

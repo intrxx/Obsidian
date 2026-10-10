@@ -2,7 +2,6 @@
 
 #include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 
-
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
@@ -10,6 +9,7 @@
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 void UObCharacterStatusWidgetController::OnWidgetControllerSetupCompleted()
 {

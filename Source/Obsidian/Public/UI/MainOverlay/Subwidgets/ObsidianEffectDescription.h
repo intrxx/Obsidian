@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/Subwidgets/ObsidianToolTipBase.h"
+
 #include "ObsidianEffectDescription.generated.h"
 
 /**

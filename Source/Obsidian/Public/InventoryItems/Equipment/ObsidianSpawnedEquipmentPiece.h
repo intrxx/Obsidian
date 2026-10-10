@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
+#include "GameFramework/Actor.h"
 #include "GameplayTagContainer.h"
 
-#include "GameFramework/Actor.h"
 #include "ObsidianSpawnedEquipmentPiece.generated.h"
 
 UCLASS()

@@ -2,20 +2,20 @@
 
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 
-
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Player/ObsidianPlayerController.h"
 #include "Characters/Player/ObsidianPlayerState.h"
 #include "Core/ObsidianGameplayStatics.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/ItemDrop/ObsidianItemDataLoaderSubsystem.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemFragment.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UE_DEFINE_GAMEPLAY_TAG_STATIC(TAG_Obsidian_TwoHand, "TwoHand");
 

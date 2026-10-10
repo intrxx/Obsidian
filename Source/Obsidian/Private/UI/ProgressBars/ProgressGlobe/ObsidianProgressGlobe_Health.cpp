@@ -2,14 +2,13 @@
 
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Health.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
 
-// ~ Project
 #include "UI/Components/ObsidianRadialProgressBar.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+
 
 void UObsidianProgressGlobe_Health::HandleWidgetControllerSet()
 {

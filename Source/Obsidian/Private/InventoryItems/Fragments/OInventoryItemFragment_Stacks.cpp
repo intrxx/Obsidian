@@ -2,11 +2,9 @@
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 
-// ~ Core
-
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 
 void UOInventoryItemFragment_Stacks::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {

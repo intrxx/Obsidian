@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
+#include "Engine/DataAsset.h"
 #include "GameplayTagContainer.h"
 
-#include "Engine/DataAsset.h"
 #include "ObsidianInputConfig.generated.h"
 
 class UInputAction;

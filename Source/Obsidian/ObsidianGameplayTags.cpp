@@ -1,13 +1,12 @@
 ﻿// Copyright 2026 out of sCope team - intrxx
 
-// ~ Core
-
 #include "ObsidianGameplayTags.h"
+
 #include "GameplayTagsManager.h"
 
-// ~ Project
 #include "ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 namespace ObsidianGameplayTags
 {

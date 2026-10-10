@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "UI/ObsidianMainOverlayWidgetBase.h"
+
 #include "ObsidianCharacterStatus.generated.h"
 
 class UProgressBar;

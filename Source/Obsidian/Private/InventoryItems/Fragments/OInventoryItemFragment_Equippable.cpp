@@ -2,10 +2,11 @@
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 
-#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/Save/ObsidianHeroSaveGame.h"
+#include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 //
 // Equipment Actor

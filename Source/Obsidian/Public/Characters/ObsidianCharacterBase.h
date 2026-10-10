@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "AbilitySystemInterface.h"
+#include "CoreMinimal.h"
+#include "ModularCharacter.h"
 
 #include "Combat/ObsidianCombatInterface.h"
-#include <AbilitySystemInterface.h>
-#include <ModularCharacter.h>
+
 #include "ObsidianCharacterBase.generated.h"
 
 struct FGameplayAbilitySpec;

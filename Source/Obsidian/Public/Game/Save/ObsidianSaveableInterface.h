@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "UObject/Interface.h"
 
-
-#include <UObject/Interface.h>
 #include "ObsidianSaveableInterface.generated.h"
 
 class UObsidianHeroSaveGame;

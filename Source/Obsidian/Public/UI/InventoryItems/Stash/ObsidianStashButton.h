@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
-
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "UI/Components/ObsidianButtonBase.h"
+
 #include "ObsidianStashButton.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnStashTabButtonPressedSignature, const FGameplayTag& CorrespondingStashTag);

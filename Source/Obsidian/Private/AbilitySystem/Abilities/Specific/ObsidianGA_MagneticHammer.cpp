@@ -3,6 +3,7 @@
 
 #include "AbilitySystem/Abilities/Specific/ObsidianGA_MagneticHammer.h"
 
+
 UObsidianGA_MagneticHammer::UObsidianGA_MagneticHammer(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

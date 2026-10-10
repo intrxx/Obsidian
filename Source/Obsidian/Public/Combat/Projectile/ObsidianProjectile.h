@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "Combat/Projectile/ObsidianProjectileBase.h"
+
 #include "ObsidianProjectile.generated.h"
 
 /**

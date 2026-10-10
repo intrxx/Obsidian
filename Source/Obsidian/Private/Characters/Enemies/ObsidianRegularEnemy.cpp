@@ -2,18 +2,17 @@
 
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 
-// ~ Core
-#include "BehaviorTree/BlackboardComponent.h"
 #include "BehaviorTree/BehaviorTree.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/WidgetComponent.h"
 
-// ~ Project
-#include "AI/AObsidianAIControllerBase.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "AI/AObsidianAIControllerBase.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
+
 
 AObsidianRegularEnemy::AObsidianRegularEnemy(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

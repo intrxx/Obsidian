@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "BehaviorTree/BTTaskNode.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "BehaviorTree/BTTaskNode.h"
 #include "ObsidianBTTask_ClearFocus.generated.h"
 
 /**

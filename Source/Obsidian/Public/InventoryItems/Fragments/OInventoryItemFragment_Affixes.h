@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+#include "CoreMinimal.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 #include "OInventoryItemFragment_Affixes.generated.h"
 
 /**

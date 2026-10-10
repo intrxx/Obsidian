@@ -2,9 +2,6 @@
 
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 
-// ~ Core
-
-// ~ Project
 
 AObsidianSpawnedEquipmentPiece::AObsidianSpawnedEquipmentPiece(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

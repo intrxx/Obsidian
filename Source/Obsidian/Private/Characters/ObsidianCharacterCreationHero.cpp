@@ -2,11 +2,10 @@
 
 #include "Characters/ObsidianCharacterCreationHero.h"
 
-// ~ Core
 #include "GameFramework/CharacterMovementComponent.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 AObsidianCharacterCreationHero::AObsidianCharacterCreationHero(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

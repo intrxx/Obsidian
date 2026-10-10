@@ -2,9 +2,9 @@
 
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
 
-
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 UObsidianStashTab_Slots::UObsidianStashTab_Slots(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

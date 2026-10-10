@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-#include "Slots/ObsidianSlotBase.h"
+#include "CoreMinimal.h"
 
 #include "ObsidianItemStoragePanelBase.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "Slots/ObsidianSlot_GridSlot.h"
+#include "Slots/ObsidianSlotBase.h"
+
 #include "ObsidianGridPanel.generated.h"
 
 struct FObsidianItemWidgetData;

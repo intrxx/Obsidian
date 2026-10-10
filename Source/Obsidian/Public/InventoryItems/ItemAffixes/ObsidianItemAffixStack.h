@@ -2,14 +2,12 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "Net/Serialization/FastArraySerializer.h"
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianItemAffixStack.generated.h"
 
 struct FObsidianDynamicItemAffix;

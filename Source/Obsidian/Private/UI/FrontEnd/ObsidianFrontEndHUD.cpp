@@ -4,6 +4,7 @@
 
 #include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
 
+
 AObsidianFrontEndHUD::AObsidianFrontEndHUD(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

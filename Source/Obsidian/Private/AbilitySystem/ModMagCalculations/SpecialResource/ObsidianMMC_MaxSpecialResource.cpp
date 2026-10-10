@@ -2,7 +2,6 @@
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource.h"
 
-
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
 

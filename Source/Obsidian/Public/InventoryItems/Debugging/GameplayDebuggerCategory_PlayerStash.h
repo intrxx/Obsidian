@@ -2,7 +2,6 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
 #if WITH_GAMEPLAY_DEBUGGER_MENU
@@ -15,8 +14,6 @@ enum class EDebugStashTabType
 	DSTT_Grid,
 	DSTT_Slots
 };
-
-// ~ Project
 
 class FGameplayDebuggerCategory_PlayerStash : public FGameplayDebuggerCategory
 {

@@ -2,9 +2,6 @@
 
 #include "Interaction/ObsidianInteractionInterface.h"
 
-// ~ Core
-
-// ~ Project
 
 bool IObsidianInteractionInterface::RequiresOngoingInteraction()
 {

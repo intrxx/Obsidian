@@ -2,18 +2,17 @@
 
 #include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
 
-// ~ Core
 #include "GameFramework/GameplayMessageSubsystem.h"
 
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTabsConfig.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
+#include "Obsidian/ObsidianLogCategories.h"
+
 
 // ~ FObsidianStashSlotDefinition
 

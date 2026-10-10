@@ -2,10 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameplayEffect.h"
 
-
-#include <GameplayEffect.h>
 #include "ObsidianGameplayEffect.generated.h"
 
 /**

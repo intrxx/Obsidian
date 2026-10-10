@@ -2,10 +2,8 @@
 
 #include "UI/Subwidgets/ObsidianToolTipBase.h"
 
-// ~ Core
 #include "Blueprint/WidgetLayoutLibrary.h"
 
-// ~ Project
 
 FVector2D UObsidianToolTipBase::GetDesiredViewportPosition() const
 {

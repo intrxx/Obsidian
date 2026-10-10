@@ -1,6 +1,7 @@
 // Copyright 2026 out of sCope team - intrxx
 
 #include "AbilitySystem/Abilities/Specific/ObsidianGA_FlyingKnifes.h"
+
 #include "Obsidian/ObsidianLogCategories.h"
 
 

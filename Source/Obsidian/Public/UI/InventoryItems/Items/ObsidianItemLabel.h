@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-
 #include "UI/ObsidianWidgetBase.h"
+
 #include "ObsidianItemLabel.generated.h"
 
 class UBorder;

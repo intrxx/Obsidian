@@ -2,9 +2,10 @@
 
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlot_GridSlot.h"
 
-#include <Components/SizeBox.h>
+#include "Components/SizeBox.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 
 void UObsidianSlot_GridSlot::NativeConstruct()
 {

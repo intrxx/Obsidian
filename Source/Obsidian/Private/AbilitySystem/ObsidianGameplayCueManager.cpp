@@ -2,9 +2,6 @@
 
 #include "AbilitySystem/ObsidianGameplayCueManager.h"
 
-// ~ Core
-
-// ~ Project
 
 bool UObsidianGameplayCueManager::ShouldAsyncLoadRuntimeObjectLibraries() const
 {

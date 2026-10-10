@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "ObsidianStashTabsConfig.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"

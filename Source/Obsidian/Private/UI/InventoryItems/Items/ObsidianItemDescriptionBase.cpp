@@ -2,15 +2,16 @@
 
 #include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
 
-#include <CommonTextBlock.h>
-#include <Components/HorizontalBox.h>
-#include <Components/Image.h>
-#include <Components/Overlay.h>
+#include "CommonTextBlock.h"
+#include "Components/HorizontalBox.h"
+#include "Components/Image.h"
+#include "Components/Overlay.h"
 
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "UI/InventoryItems/Items/ObsidianAffixRow.h"
 #include "UI/InventoryItems/Items/ObsidianItemDescRequirementsBlock.h"
-#include "Obsidian/ObsidianLogCategories.h"
+
 
 void UObsidianItemDescriptionBase::NativeConstruct()
 {

@@ -3,14 +3,15 @@
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h"
 
 #if WITH_GAMEPLAY_DEBUGGER_MENU
-#include <Engine/Canvas.h>
-#include <CanvasItem.h>
+#include "CanvasItem.h"
+#include "Engine/Canvas.h"
 
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
 #include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 namespace EquipmentItems::Debug
 {

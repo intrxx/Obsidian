@@ -2,10 +2,11 @@
 
 #include "UI/InventoryItems/Items/ObsidianItemDescRequirementsBlock.h"
 
-#include <CommonTextBlock.h>
-
+#include "CommonTextBlock.h"
 #include "Components/HorizontalBox.h"
+
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 
 void UObsidianItemDescRequirementsBlock::InitializeRequirementsBlock(const FObsidianItemRequirementsUIDescription& RequirementsUIDescription)
 {

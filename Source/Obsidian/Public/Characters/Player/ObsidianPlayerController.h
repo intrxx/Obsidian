@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CommonPlayerController.h"
+#include "CoreMinimal.h"
+#include "GenericTeamAgentInterface.h"
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include <GenericTeamAgentInterface.h>
-#include <CommonPlayerController.h>
 #include "ObsidianPlayerController.generated.h"
 
 class UObsidianItemManagerComponent;

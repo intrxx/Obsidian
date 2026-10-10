@@ -2,14 +2,13 @@
 
 #include "AbilitySystem/Attributes/ObsidianAttributeSetBase.h"
 
-// ~ Core
-#include "GameplayEffectExtension.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayEffectExtension.h"
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 void FObsidianEffectProperties::Reset()
 {

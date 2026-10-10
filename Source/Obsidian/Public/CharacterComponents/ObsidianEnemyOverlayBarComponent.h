@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
+#include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
 
-#include "Components/ActorComponent.h"
 #include "ObsidianEnemyOverlayBarComponent.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FOnNewOverlayBarStyleNeededSignature, const FSlateBrush& /** New Style */);

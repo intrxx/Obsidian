@@ -2,13 +2,12 @@
 
 #include "Input/ObsidianInputConfig.h"
 
-// ~ Core
+#include "Obsidian/ObsidianLogCategories.h"
+
 #if WITH_EDITOR
 #include "Misc/DataValidation.h"
 #endif // ~ With Editor
 
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
 
 UObsidianInputConfig::UObsidianInputConfig(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

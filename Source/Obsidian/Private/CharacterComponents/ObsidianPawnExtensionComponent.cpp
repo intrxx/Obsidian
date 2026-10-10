@@ -2,10 +2,11 @@
 
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 
-#include <Net/UnrealNetwork.h>
+#include "Net/UnrealNetwork.h"
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/ObsidianPawnData.h"
+
 
 UObsidianPawnExtensionComponent::UObsidianPawnExtensionComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

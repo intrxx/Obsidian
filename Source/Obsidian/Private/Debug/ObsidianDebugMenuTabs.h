@@ -4,12 +4,12 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <CoreMinimal.h>
-#include <Containers/Ticker.h>
-#include <GameplayTagContainer.h>
-#include <HAL/IConsoleManager.h>
-#include <Templates/SubclassOf.h>
-#include <UObject/StrongObjectPtr.h>
+#include "Containers/Ticker.h"
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
+#include "HAL/IConsoleManager.h"
+#include "Templates/SubclassOf.h"
+#include "UObject/StrongObjectPtr.h"
 
 #include "Debug/ObsidianDebugMenuTypes.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"

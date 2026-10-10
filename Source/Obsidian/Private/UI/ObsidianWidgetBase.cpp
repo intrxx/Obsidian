@@ -2,9 +2,6 @@
 
 #include "UI/ObsidianWidgetBase.h"
 
-// ~ Core
-
-// ~ Project
 
 void UObsidianWidgetBase::SetWidgetController(UObject* InWidgetController)
 {

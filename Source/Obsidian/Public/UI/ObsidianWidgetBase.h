@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "CommonUserWidget.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "CommonUserWidget.h"
 #include "ObsidianWidgetBase.generated.h"
 
 /**

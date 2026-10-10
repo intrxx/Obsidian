@@ -2,11 +2,9 @@
 
 #include "AI/Tasks/ObsidianBTTask_FindLocationAroundTarget.h"
 
-// ~ Core
-#include "NavigationSystem.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "NavigationSystem.h"
 
-// ~ Project
 
 UObsidianBTTask_FindLocationAroundTarget::UObsidianBTTask_FindLocationAroundTarget()
 {

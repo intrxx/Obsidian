@@ -2,8 +2,8 @@
 
 #include "Combat/Projectile/ObsidianProjectile.h"
 
-
 #include "Combat/Projectile/OProjectileMovementComponent.h"
+
 
 AObsidianProjectile::AObsidianProjectile(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

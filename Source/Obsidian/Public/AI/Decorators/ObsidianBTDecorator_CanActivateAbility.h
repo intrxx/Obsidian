@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "BehaviorTree/BTDecorator.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "BehaviorTree/BTDecorator.h"
 #include "ObsidianBTDecorator_CanActivateAbility.generated.h"
 
 /**

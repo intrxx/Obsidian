@@ -2,8 +2,8 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_Accuracy.h"
 
-
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+
 
 struct SObsidian_AccuracyStatics
 {

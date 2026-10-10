@@ -2,10 +2,7 @@
 
 #include "Characters/Enemies/Specified/ObsidianRegular_RangedGoblin.h"
 
-// ~ Core
 #include "Net/UnrealNetwork.h"
-
-// ~ Project
 
 
 AObsidianRegular_RangedGoblin::AObsidianRegular_RangedGoblin(const FObjectInitializer& ObjectInitializer)

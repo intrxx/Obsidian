@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+
 #include "ObsidianItemTestDefinitions.generated.h"
 
 /**

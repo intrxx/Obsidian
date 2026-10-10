@@ -2,12 +2,13 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_MaxHealth.h"
 
-#include <Engine/CurveTable.h>
+#include "Engine/CurveTable.h"
 
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Combat/ObsidianCombatInterface.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 struct SObsidian_MaxHealthStatics
 {

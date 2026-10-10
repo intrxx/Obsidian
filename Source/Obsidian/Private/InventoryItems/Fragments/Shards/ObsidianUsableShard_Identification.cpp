@@ -2,8 +2,8 @@
 
 #include "InventoryItems/Fragments/Shards/ObsidianUsableShard_Identification.h"
 
-
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 bool UObsidianUsableShard_Identification::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)

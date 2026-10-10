@@ -2,14 +2,13 @@
 
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobe_Mana.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
 
-// ~ Project
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+
 
 void UObsidianProgressGlobe_Mana::HandleWidgetControllerSet()
 {

@@ -4,13 +4,14 @@
 
 #if WITH_OBSIDIAN_DEBUG_MENU
 
-#include <Engine/Engine.h>
-#include <GameFramework/PlayerController.h>
-#include <GameFramework/PlayerState.h>
-#include <SlateIM.h>
+#include "Engine/Engine.h"
+#include "GameFramework/PlayerController.h"
+#include "GameFramework/PlayerState.h"
+#include "SlateIM.h"
 
 #include "Debug/ObsidianDebugMenuTabs.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 namespace ObsidianDebugMenu
 {

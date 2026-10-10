@@ -2,11 +2,9 @@
 
 #include "UI/Components/ObsidianRadialProgressBar.h"
 
-// ~ Core
-
-// ~ Project
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
+
 
 void UObsidianRadialProgressBar::NativePreConstruct()
 {

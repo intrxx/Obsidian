@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/ObsidianWidgetBase.h"
+
 #include "ObsidianOverlayGameTabsMenu.generated.h"
 
 DECLARE_MULTICAST_DELEGATE(FOnTabButtonClicked);

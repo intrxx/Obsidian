@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
+#include "Components/ActorComponent.h"
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 
-#include "Components/ActorComponent.h"
 #include "ObsidianAttributesComponent.generated.h"
 
 class AObsidianHero;

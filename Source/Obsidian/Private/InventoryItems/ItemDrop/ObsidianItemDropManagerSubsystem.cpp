@@ -2,11 +2,11 @@
 
 #include "InventoryItems/ItemDrop/ObsidianItemDropManagerSubsystem.h"
 
-
 #include "InventoryItems/ItemDrop/ObsidianTreasureList.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 
 void UObsidianItemDropManagerSubsystem::RequestDroppingItems(TArray<FObsidianItemToDrop>&& ItemsToDrop) const
 {

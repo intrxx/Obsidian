@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility_Melee.h"
+
 #include "ObsidianGA_Melee_Slash.generated.h"
 
 /**

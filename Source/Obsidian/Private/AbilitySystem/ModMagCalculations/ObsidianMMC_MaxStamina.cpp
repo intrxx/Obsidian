@@ -2,10 +2,10 @@
 
 #include "AbilitySystem/ModMagCalculations/ObsidianMMC_MaxStamina.h"
 
-
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 #include "Combat/ObsidianCombatInterface.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 struct SObsidian_MaxStaminaStatics
 {

@@ -2,9 +2,6 @@
 
 #include "CharacterComponents/ObsidianBossComponent.h"
 
-// ~ Core
-
-// ~ Project
 
 UObsidianBossComponent::UObsidianBossComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

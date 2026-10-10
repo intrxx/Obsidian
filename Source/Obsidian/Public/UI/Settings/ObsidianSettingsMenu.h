@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/ObsidianActivatableWidget.h"
+
 #include "ObsidianSettingsMenu.generated.h"
 
 /**

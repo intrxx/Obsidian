@@ -2,10 +2,8 @@
 
 #include "InventoryItems//ObsidianGameplayTagStack.h"
 
-// ~ Core
 #include "UObject/Stack.h"
 
-// ~ Project
 
 // ---- Start of FGameplayTagStack ----
 

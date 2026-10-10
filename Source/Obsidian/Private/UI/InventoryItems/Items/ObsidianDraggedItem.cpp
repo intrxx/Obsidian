@@ -2,16 +2,17 @@
 
 #include "UI/InventoryItems/Items/ObsidianDraggedItem.h"
 
-#include <Components/Image.h>
-#include <CommonTextBlock.h>
-#include <Components/SizeBox.h>
+#include "CommonTextBlock.h"
+#include "Components/Image.h"
+#include "Components/SizeBox.h"
 
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 
 void UObsidianDraggedItem::NativeConstruct()
 {

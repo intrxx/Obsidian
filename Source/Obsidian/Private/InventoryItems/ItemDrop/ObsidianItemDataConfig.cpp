@@ -2,9 +2,6 @@
 
 #include "InventoryItems/ItemDrop/ObsidianItemDataConfig.h"
 
-// ~ Core
-
-// ~ Project
 
 UObsidianItemDataConfig::UObsidianItemDataConfig(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

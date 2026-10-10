@@ -3,9 +3,11 @@
 #include "InventoryItems/Items/ObsidianItemSpawner.h"
 
 #include "NavigationSystem.h"
-#include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
+
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "InventoryItems/ItemDrop/ObsidianItemDropComponent.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 AObsidianItemSpawner::AObsidianItemSpawner(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

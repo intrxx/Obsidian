@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "ObsidianTypes/ObsidianUITypes.h"
+#include "UI/ObsidianWidgetBase.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
 
-#include "UI/ObsidianWidgetBase.h"
 #include "ObsidianMainOverlay.generated.h"
 
 class UCanvasPanel;

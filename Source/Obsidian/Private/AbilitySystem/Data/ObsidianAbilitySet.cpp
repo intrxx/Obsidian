@@ -2,13 +2,14 @@
 
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 
-#if WITH_EDITOR
-#include <Misc/DataValidation.h>
-#endif // ~ With Editor
-
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif // ~ With Editor
+
 
 void FObsidianAbilitySet_GrantedHandles::AddAbilitySpecHandle(const FGameplayAbilitySpecHandle& Handle)
 {

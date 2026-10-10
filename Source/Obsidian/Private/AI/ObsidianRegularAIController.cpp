@@ -2,12 +2,11 @@
 
 #include "AI/ObsidianRegularAIController.h"
 
-// ~ Core
 #include "AbilitySystemGlobals.h"
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
+
 
 UObsidianAbilitySystemComponent* AObsidianRegularAIController::GetObsidianAbilitySystemComponent() const
 {

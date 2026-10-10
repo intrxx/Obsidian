@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "UI/ObsidianWidgetBase.h"
+
 #include "ObsidianDraggedItem_Simple.generated.h"
 
 class USizeBox;

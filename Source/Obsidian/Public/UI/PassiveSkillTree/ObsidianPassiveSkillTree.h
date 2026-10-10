@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/ObsidianMainOverlayWidgetBase.h"
+
 #include "ObsidianPassiveSkillTree.generated.h"
 
 /**

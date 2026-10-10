@@ -2,10 +2,8 @@
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Usable.h"
 
-// ~ Core
-
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 void UOInventoryItemFragment_Usable::OnInstancedCreated(UObsidianInventoryItemInstance* Instance) const
 {

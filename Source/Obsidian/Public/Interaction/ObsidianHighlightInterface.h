@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "UObject/Interface.h"
+
 #include "ObsidianHighlightInterface.generated.h"
 
 /**

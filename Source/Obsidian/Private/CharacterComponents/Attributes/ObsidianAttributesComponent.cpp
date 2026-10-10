@@ -2,16 +2,14 @@
 
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 
-// ~ Core
 #include "AbilitySystemComponent.h"
 #include "GameFramework/Character.h"
 #include "Net/UnrealNetwork.h"
 
-// ~ Project
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 
 
 UObsidianAttributesComponent::UObsidianAttributesComponent(const FObjectInitializer& ObjectInitializer)

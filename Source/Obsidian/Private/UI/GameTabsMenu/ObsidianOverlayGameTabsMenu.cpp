@@ -2,11 +2,10 @@
 
 #include "UI/GameTabsMenu/ObsidianOverlayGameTabsMenu.h"
 
-// ~ Core
 #include "Components/Button.h"
 
-// ~ Project
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
+
 
 void UObsidianOverlayGameTabsMenu::NativeConstruct()
 {

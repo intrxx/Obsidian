@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "GameUIManagerSubsystem.h"
+
 #include "ObsidianUIManagerSubsystem.generated.h"
 
 /**

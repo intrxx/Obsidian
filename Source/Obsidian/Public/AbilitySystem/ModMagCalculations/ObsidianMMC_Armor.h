@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayModMagnitudeCalculation.h"
+
 #include "ObsidianMMC_Armor.generated.h"
 
 /**

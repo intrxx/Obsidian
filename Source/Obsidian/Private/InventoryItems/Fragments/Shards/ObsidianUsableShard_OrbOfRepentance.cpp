@@ -5,6 +5,7 @@
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "Obsidian/ObsidianLogCategories.h"
 
+
 bool UObsidianUsableShard_OrbOfRepentance::OnItemUsed(AObsidianPlayerController* ItemOwner,
 	UObsidianInventoryItemInstance* UsingInstance, UObsidianInventoryItemInstance* UsingOntoInstance)
 {

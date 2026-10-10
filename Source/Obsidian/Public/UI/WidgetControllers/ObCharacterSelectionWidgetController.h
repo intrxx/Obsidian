@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "UI/ObsidianWidgetControllerBase.h"
+
 #include "ObCharacterSelectionWidgetController.generated.h"
 
 class AObsidianCharacterCreationHero;

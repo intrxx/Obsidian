@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "CharacterComponents/Movement/ObsidianCharacterMovementComponent.h"
+
 #include "ObsidianEnemyMovementComponent.generated.h"
 
 /**

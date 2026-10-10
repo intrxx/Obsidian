@@ -2,11 +2,10 @@
 
 #include "UI/MainOverlay/Subwidgets/OStackingDurationalEffectInfo.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 
-// ~ Project
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 void UOStackingDurationalEffectInfo::SetStackCount(const int32 Count)
 {

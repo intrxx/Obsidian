@@ -2,13 +2,12 @@
 
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 
-// ~ Core
 #include "GameFramework/Character.h"
 
-// ~ Project
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianEnemyAttributeSet.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianEnemyAttributesComponent::UObsidianEnemyAttributesComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

@@ -2,12 +2,11 @@
 
 #include "Core/FunctionLibraries/ObsidianBlueprintFunctionLibrary.h"
 
-// ~ Core
 #include "Engine/Console.h"
 #include "Kismet/GameplayStatics.h"
 
-// ~ Project
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 bool UObsidianBlueprintFunctionLibrary::IsActorOfClass(const AActor* ActorToCheck, UClass* ActorClass)
 {

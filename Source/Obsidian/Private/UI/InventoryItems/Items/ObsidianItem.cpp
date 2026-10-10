@@ -2,9 +2,9 @@
 
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 
-#include <CommonTextBlock.h>
-#include <Components/Image.h>
-#include <Components/SizeBox.h>
+#include "CommonTextBlock.h"
+#include "Components/Image.h"
+#include "Components/SizeBox.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 

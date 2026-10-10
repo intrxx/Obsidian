@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "Animation/AnimInstance.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "Animation/AnimInstance.h"
 #include "ObsidianAnimInstance.generated.h"
 
 /**

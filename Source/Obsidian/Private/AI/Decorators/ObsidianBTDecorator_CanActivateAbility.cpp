@@ -2,17 +2,16 @@
 
 #include "AI/Decorators/ObsidianBTDecorator_CanActivateAbility.h"
 
-// ~ Core
-#include "BehaviorTree/BlackboardComponent.h"
+#include "Abilities/GameplayAbility.h"
 #include "AbilitySystemComponent.h"
 #include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 #include "GameplayAbilitySpec.h"
-#include "Abilities/GameplayAbility.h"
 
-// ~ Project
 #include "Characters/Enemies/ObsidianEnemy.h"
 #include "Core/FunctionLibraries/ObsidianAbilitySystemFunctionLibrary.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianBTDecorator_CanActivateAbility::UObsidianBTDecorator_CanActivateAbility()
 {

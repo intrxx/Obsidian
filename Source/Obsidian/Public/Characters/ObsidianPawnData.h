@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "Engine/DataAsset.h"
+
 #include "ObsidianPawnData.generated.h"
 
 class UObsidianAbilitySet;

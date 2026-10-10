@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <AttributeSet.h>
-#include <GameplayEffectTypes.h>
+#include "AttributeSet.h"
+#include "CoreMinimal.h"
+#include "GameplayEffectTypes.h"
 
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "Obsidian/ObsidianLogCategories.h"

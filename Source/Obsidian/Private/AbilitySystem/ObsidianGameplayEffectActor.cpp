@@ -2,12 +2,11 @@
 
 #include "AbilitySystem/ObsidianGameplayEffectActor.h"
 
-// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 AObsidianGameplayEffectActor::AObsidianGameplayEffectActor()
 {

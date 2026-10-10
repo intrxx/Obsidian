@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "GameFramework/HUD.h"
 
-#include <GameFramework/HUD.h>
 #include "ObsidianFrontEndHUD.generated.h"
 
 struct FObsidianWidgetControllerParams;

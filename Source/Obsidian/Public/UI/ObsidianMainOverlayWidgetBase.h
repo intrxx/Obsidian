@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "ObsidianWidgetBase.h"
+
 #include "ObsidianMainOverlayWidgetBase.generated.h"
 
 class UButton;

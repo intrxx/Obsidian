@@ -3,10 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
+#include "GameplayEffectTypes.h"
 
-#include <GameplayEffectTypes.h>
-
-#include <GameFramework/Actor.h>
 #include "ObsidianProjectileBase.generated.h"
 
 class AObsidianHero;

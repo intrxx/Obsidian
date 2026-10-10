@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 
-// ~ Project
 #include "Interaction/ObsidianInteractionInterface.h"
 
-#include "GameFramework/Actor.h"
 #include "ObsidianTownPortal.generated.h"
 
 class UNiagaraComponent;

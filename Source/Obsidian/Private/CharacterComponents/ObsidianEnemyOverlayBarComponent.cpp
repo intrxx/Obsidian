@@ -2,14 +2,12 @@
 
 #include "CharacterComponents/ObsidianEnemyOverlayBarComponent.h"
 
-// ~ Core
-
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
-#include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
+#include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Core/FunctionLibraries/ObsidianUIFunctionLibrary.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
+
 
 UObsidianEnemyOverlayBarComponent::UObsidianEnemyOverlayBarComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

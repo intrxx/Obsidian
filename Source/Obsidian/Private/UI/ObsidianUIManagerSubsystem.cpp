@@ -2,13 +2,11 @@
 
 #include "UI/ObsidianUIManagerSubsystem.h"
 
-// ~ Core
+#include "CommonLocalPlayer.h"
 #include "GameFramework/HUD.h"
 #include "GameUIPolicy.h"
 #include "PrimaryGameLayout.h"
-#include "CommonLocalPlayer.h"
 
-// ~ Project
 
 UObsidianUIManagerSubsystem::UObsidianUIManagerSubsystem()
 {

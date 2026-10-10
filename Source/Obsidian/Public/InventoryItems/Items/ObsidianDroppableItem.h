@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
-#include "Interaction/ObsidianHighlightInterface.h"
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-#include "Interaction/ObsidianInteractionInterface.h"
+#include "CoreMinimal.h"
 
 #include "Gameplay/ObsidianWorldCollectable.h"
+#include "Interaction/ObsidianHighlightInterface.h"
+#include "Interaction/ObsidianInteractionInterface.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 #include "ObsidianDroppableItem.generated.h"
 
 class UObsidianItemLabelComponent;

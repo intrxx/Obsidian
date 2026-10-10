@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
+#include "AIController.h"
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
-#include "AIController.h"
 #include "AObsidianAIControllerBase.generated.h"
 
 class UBlackboardComponent;

@@ -2,15 +2,14 @@
 
 #include "AI/Tasks/ObsidianBTTask_UseGameplayAbility.h"
 
-// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "AbilitySystemComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 
-// ~ Project
 #include "AI/ObsidianEnemyInterface.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianBTTask_UseGameplayAbility::UObsidianBTTask_UseGameplayAbility()
 {

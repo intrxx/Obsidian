@@ -2,13 +2,12 @@
 
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabButton.h"
 
-// ~ Core
 #include "Components/Button.h"
 #include "Components/Image.h"
 #include "Components/SizeBox.h"
 
-// ~ Project
 #include "UI/GameTabsMenu/Subwidgets/ObsidianGameTabTooltip.h"
+
 
 void UObsidianGameTabButton::NativePreConstruct()
 {

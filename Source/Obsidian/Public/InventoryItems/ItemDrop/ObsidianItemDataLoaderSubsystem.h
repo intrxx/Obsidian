@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
-#include "ObsidianTreasureList.h"
-#include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
-
 #include "Subsystems/GameInstanceSubsystem.h"
+
+#include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
+#include "ObsidianTreasureList.h"
+
 #include "ObsidianItemDataLoaderSubsystem.generated.h"
 
 class UObsidianItemDataDeveloperSettings;

@@ -2,12 +2,10 @@
 
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 #include "Components/SizeBox.h"
 #include "Components/Spacer.h"
 
-// ~ Project
 
 void UOCharacterStatusAttributeRow::NativePreConstruct()
 {

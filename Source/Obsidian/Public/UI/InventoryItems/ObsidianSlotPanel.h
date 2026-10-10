@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
-
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "ObsidianItemStoragePanelBase.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 #include "Slots/ObsidianSlot_ItemSlot.h"
+
 #include "ObsidianSlotPanel.generated.h"
 
 struct FObsidianItemInteractionFlags;

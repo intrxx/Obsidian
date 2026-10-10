@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlotBase.h"
+
 #include "ObsidianSlot_GridSlot.generated.h"
 
 DECLARE_MULTICAST_DELEGATE_TwoParams(FOnGridSlotHoverSignature, UObsidianSlot_GridSlot* HoveredSlot, const bool bEntered);

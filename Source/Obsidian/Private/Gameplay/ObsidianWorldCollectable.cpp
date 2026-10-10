@@ -2,13 +2,12 @@
 
 #include "Gameplay/ObsidianWorldCollectable.h"
 
-// ~ Core
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
-// ~ Project
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
+
 
 AObsidianWorldCollectable::AObsidianWorldCollectable(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

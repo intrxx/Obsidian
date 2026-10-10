@@ -2,12 +2,13 @@
 
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlot_ItemSlot.h"
 
-#include <Components/SizeBox.h>
-#include <Components/Overlay.h>
-#include <Components/OverlaySlot.h>
+#include "Components/Overlay.h"
+#include "Components/OverlaySlot.h"
+#include "Components/SizeBox.h"
 
-#include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "Obsidian/ObsidianLogCategories.h"
+#include "UI/InventoryItems/Items/ObsidianItem.h"
+
 
 void UObsidianSlot_ItemSlot::NativePreConstruct()
 {

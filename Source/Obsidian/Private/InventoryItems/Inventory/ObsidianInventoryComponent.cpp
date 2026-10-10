@@ -2,22 +2,21 @@
 
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 
-// ~ Core
 #include "Engine/ActorChannel.h"
 #include "Net/UnrealNetwork.h"
 
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianInventoryComponent::UObsidianInventoryComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

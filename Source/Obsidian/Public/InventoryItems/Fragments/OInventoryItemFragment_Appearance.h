@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+
 #include "OInventoryItemFragment_Appearance.generated.h"
 
 class UObsidianItemWidget;

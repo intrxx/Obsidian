@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Usable.h"

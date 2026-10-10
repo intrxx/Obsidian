@@ -3,7 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
+
 #include "Combat/Projectile/ObsidianTickingProjectile.h"
+
 #include "ObsidianMagneticHammerProjectile.generated.h"
 
 class UTimelineComponent;

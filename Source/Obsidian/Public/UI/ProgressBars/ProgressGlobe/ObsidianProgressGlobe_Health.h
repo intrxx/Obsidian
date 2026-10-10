@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/ProgressBars/ProgressGlobe/ObsidianProgressGlobeBase.h"
+
 #include "ObsidianProgressGlobe_Health.generated.h"
 
 class UObsidianRadialProgressBar;

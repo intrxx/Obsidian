@@ -2,11 +2,12 @@
 
 #include "AbilitySystem/Abilities/OGameplayAbility_ProjectileSpell.h"
 
-#include <AbilitySystemBlueprintLibrary.h>
-#include <AbilitySystemComponent.h>
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
 
 #include "Combat/Projectile/ObsidianProjectileBase.h"
 #include "Obsidian/ObsidianMacros.h"
+
 
 UOGameplayAbility_ProjectileSpell::UOGameplayAbility_ProjectileSpell(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

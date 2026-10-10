@@ -2,11 +2,7 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
 
 #include "ObsidianInventoryItemFragment.generated.h"
 

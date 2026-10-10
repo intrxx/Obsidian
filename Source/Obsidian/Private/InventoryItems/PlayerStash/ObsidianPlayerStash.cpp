@@ -2,12 +2,10 @@
 
 #include "InventoryItems/PlayerStash//ObsidianPlayerStash.h"
 
-// ~ Core
-
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 AObsidianPlayerStash::AObsidianPlayerStash(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

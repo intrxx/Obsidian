@@ -2,15 +2,13 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "AI/ObsidianEnemyInterface.h"
+#include "Characters/ObsidianCharacterBase.h"
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include "Characters/ObsidianCharacterBase.h"
 #include "ObsidianEnemy.generated.h"
 
 class UObsidianItemDropComponent;

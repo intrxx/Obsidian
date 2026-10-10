@@ -2,13 +2,13 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
-#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
-#include "InventoryItems/ObsidianGameplayTagStack.h"
 #include "Fragments/OInventoryItemFragment_Equippable.h"
 #include "Fragments/OInventoryItemFragment_Usable.h"
 #include "Fragments/Shards/ObsidianUsableShard.h"
+#include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
+#include "InventoryItems/ObsidianGameplayTagStack.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 #include "ObsidianInventoryItemInstance.generated.h"

@@ -2,8 +2,8 @@
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource_Witch.h"
 
-
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+
 
 struct SObsidian_MaxSpecialResource_Witch
 {

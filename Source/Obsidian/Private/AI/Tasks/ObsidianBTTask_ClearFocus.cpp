@@ -2,10 +2,8 @@
 
 #include "AI/Tasks/ObsidianBTTask_ClearFocus.h"
 
-// ~ Core
 #include "AIController.h"
 
-// ~ Project
 
 UObsidianBTTask_ClearFocus::UObsidianBTTask_ClearFocus()
 {

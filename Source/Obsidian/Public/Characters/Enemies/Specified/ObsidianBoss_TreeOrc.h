@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "Characters/Enemies/ObsidianBossEnemy.h"
+
 #include "ObsidianBoss_TreeOrc.generated.h"
 
 /**

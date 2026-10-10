@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "GameFramework/Actor.h"
+
 #include "ObsidianDummyMeshActor.generated.h"
 
 class UPoseableMeshComponent;

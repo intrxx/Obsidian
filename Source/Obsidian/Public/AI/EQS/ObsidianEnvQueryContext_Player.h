@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "EnvironmentQuery/EnvQueryContext.h"
+
 #include "ObsidianEnvQueryContext_Player.generated.h"
 
 /**

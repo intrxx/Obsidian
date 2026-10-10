@@ -2,28 +2,29 @@
 
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 
-#include <GameFramework/GameplayMessageSubsystem.h>
-#include <Blueprint/SlateBlueprintLibrary.h>
-#include <Blueprint/WidgetLayoutLibrary.h>
+#include "Blueprint/SlateBlueprintLibrary.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
+#include "GameFramework/GameplayMessageSubsystem.h"
 
-#include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentList.h"
+#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
 #include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianItemManagerComponent.h"
 #include "InventoryItems/ObsidianItemsFunctionLibrary.h"
-#include "InventoryItems/Crafting/ObsidianCraftingComponent.h"
-#include "InventoryItems/Fragments/OInventoryItemFragment_Appearance.h"
-#include "Obsidian/ObsidianGameplayTags.h"
-#include "UI/ObsidianHUD.h"
-#include "InventoryItems/Equipment/ObsidianEquipmentList.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
+#include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "UI/InventoryItems/Items/ObsidianDraggedItem.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
+#include "UI/InventoryItems/Items/ObsidianItemDescriptionBase.h"
 #include "UI/InventoryItems/Items/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
-#include "Obsidian/ObsidianLogCategories.h"
+#include "UI/ObsidianHUD.h"
+
 
 // ~ Start of FObsidianItemWidgetData
 

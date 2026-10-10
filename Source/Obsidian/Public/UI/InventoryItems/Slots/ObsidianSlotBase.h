@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "UI/InventoryItems/ObsidianInventory.h"
-
 #include "UI/ObsidianWidgetBase.h"
+
 #include "ObsidianSlotBase.generated.h"
 
 class UObsidianGridPanel;

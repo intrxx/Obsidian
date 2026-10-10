@@ -2,10 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
 
 #include "UI/ObsidianWidgetBase.h"
+
 #include "ObsidianItem.generated.h"
 
 class UCommonTextBlock;

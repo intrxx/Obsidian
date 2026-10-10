@@ -2,24 +2,25 @@
 
 #include "InventoryItems/ObsidianItemManagerComponent.h"
 
-#include <Net/UnrealNetwork.h>
-#include <Engine/ActorChannel.h>
-#include <Kismet/KismetMathLibrary.h>
-#include <NavigationSystem.h>
-#include <GameFramework/Character.h>
-#include <EngineUtils.h>
+#include "Engine/ActorChannel.h"
+#include "EngineUtils.h"
+#include "GameFramework/Character.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "NavigationSystem.h"
+#include "Net/UnrealNetwork.h"
 
 #include "CharacterComponents/ObsidianPlayerInputManager.h"
-#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
-#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
-#include "InventoryItems/PlayerStash/ObsidianPlayerStash.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ObsidianPickableInterface.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/Items/ObsidianDroppableItem.h"
-#include "UI/InventoryItems/Items/ObsidianDraggedItem.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianPickableInterface.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStash.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
+#include "UI/InventoryItems/Items/ObsidianDraggedItem.h"
+
 
 UObsidianItemManagerComponent::UObsidianItemManagerComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

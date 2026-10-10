@@ -2,9 +2,9 @@
 
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget_Grid.h"
 
-
 #include "UI/InventoryItems/ObsidianGridPanel.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+
 
 void UObsidianStashTabWidget_Grid::InitializeStashTab(UObInventoryItemsWidgetController* InventoryItemsWidgetController,
 	const int32 GridWidth, const int32 GridHeight, const FGameplayTag& InStashTabTag)

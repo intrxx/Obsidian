@@ -2,16 +2,15 @@
 
 #include "AI/ObsidianBossAIController.h"
 
-// ~ Core
 #include "AbilitySystemGlobals.h"
-#include "Perception/AIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Perception/AIPerceptionComponent.h"
 
-// ~ Project
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "Characters/Heroes/ObsidianHero.h"
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Enemies/ObsidianBossEnemy.h"
+#include "Characters/Heroes/ObsidianHero.h"
+
 
 AObsidianBossAIController::AObsidianBossAIController()
 {

@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "Kismet/BlueprintFunctionLibrary.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include "Kismet/BlueprintFunctionLibrary.h"
 #include "ObsidianAbilitySystemFunctionLibrary.generated.h"
 
 struct FGameplayTagContainer;

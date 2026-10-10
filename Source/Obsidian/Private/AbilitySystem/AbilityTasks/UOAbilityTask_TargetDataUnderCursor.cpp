@@ -2,13 +2,12 @@
 
 #include "AbilitySystem/AbilityTasks/UOAbilityTask_TargetDataUnderCursor.h"
 
-// ~ Core
 #include "AbilitySystemComponent.h"
 #include "DrawDebugHelpers.h"
 
-// ~ Project
 #include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 UOAbilityTask_TargetDataUnderCursor* UOAbilityTask_TargetDataUnderCursor::CreateTargetDataUnderCursorProxy(UGameplayAbility* OwningAbility)
 {

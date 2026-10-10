@@ -2,14 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
 #if WITH_GAMEPLAY_DEBUGGER_MENU
 #include "GameplayDebuggerCategory.h"
 #include "GameplayTagContainer.h"
-
-// ~ Project
 
 class UObsidianAbilitySet;
 class AObsidianSpawnedEquipmentPiece;

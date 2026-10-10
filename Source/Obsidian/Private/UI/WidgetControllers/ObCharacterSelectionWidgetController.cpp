@@ -2,11 +2,11 @@
 
 #include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
 
-#include <Kismet/GameplayStatics.h>
+#include "Kismet/GameplayStatics.h"
 
-#include "Game/ObsidianFrontEndGameMode.h"
 #include "Characters/ObsidianCharacterCreationHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Game/ObsidianFrontEndGameMode.h"
 #include "Obsidian/ObsidianLogCategories.h"
 
 

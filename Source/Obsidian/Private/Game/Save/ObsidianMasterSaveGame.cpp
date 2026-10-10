@@ -2,6 +2,7 @@
 
 #include "Game/Save/ObsidianMasterSaveGame.h"
 
+
 FObsidianAddHeroSaveResult UObsidianMasterSaveGame::AddHero(const bool bOnline,
                                                             const FObsidianHeroInitializationSaveData& HeroSaveData)
 {

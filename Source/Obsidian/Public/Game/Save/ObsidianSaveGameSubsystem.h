@@ -2,12 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-
+#include "CoreMinimal.h"
+#include "Subsystems/GameInstanceSubsystem.h"
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include <Subsystems/GameInstanceSubsystem.h>
 #include "ObsidianSaveGameSubsystem.generated.h"
 
 struct FObsidianHeroSaveInfo;

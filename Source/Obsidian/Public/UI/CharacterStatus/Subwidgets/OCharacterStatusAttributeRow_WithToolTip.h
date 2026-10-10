@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "UI/CharacterStatus/Subwidgets/OCharacterStatusAttributeRow.h"
+
 #include "OCharacterStatusAttributeRow_WithToolTip.generated.h"
 
 class UObsidianAttributeToolTip;

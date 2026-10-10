@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
+#include "AbilitySystemComponent.h"
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "ObsidianTypes/ObsidianUITypes.h"
 
-#include "AbilitySystemComponent.h"
 #include "ObsidianAbilitySystemComponent.generated.h"
 
 USTRUCT()

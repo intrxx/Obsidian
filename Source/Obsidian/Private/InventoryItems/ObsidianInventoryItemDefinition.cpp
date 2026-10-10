@@ -2,13 +2,11 @@
 
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
 
-// ~ Core
-
-// ~ Project
-#include "InventoryItems/ObsidianInventoryItemFragment.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Affixes.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Equippable.h"
 #include "InventoryItems/Fragments/OInventoryItemFragment_Stacks.h"
+#include "InventoryItems/ObsidianInventoryItemFragment.h"
+
 
 UObsidianInventoryItemDefinition::UObsidianInventoryItemDefinition(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

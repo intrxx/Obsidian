@@ -2,14 +2,14 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <ActiveGameplayEffectHandle.h>
-#include <GameplayAbilitySpecHandle.h>
-#include <GameplayTagContainer.h>
+#include "ActiveGameplayEffectHandle.h"
+#include "CoreMinimal.h"
+#include "Engine/DataAsset.h"
+#include "GameplayAbilitySpecHandle.h"
+#include "GameplayTagContainer.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include <Engine/DataAsset.h>
 #include "ObsidianAffixAbilitySet.generated.h"
 
 class UObsidianAbilitySystemComponent;

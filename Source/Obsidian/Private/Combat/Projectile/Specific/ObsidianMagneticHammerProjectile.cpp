@@ -2,10 +2,11 @@
 
 #include "Combat/Projectile/Specific/ObsidianMagneticHammerProjectile.h"
 
+#include "Kismet/KismetMathLibrary.h"
 
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Combat/Projectile/OProjectileMovementComponent.h"
-#include "Kismet/KismetMathLibrary.h"
+
 
 AObsidianMagneticHammerProjectile::AObsidianMagneticHammerProjectile(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

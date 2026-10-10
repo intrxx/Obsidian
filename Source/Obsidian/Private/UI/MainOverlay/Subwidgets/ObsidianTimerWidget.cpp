@@ -2,10 +2,8 @@
 
 #include "UI/MainOverlay/Subwidgets/ObsidianTimerWidget.h"
 
-// ~ Core
 #include "CommonTextBlock.h"
 
-// ~ Project
 
 void UObsidianTimerWidget::NativeConstruct()
 {

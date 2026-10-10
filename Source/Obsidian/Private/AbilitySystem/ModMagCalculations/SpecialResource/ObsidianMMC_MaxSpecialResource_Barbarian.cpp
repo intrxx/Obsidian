@@ -2,8 +2,8 @@
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource_Barbarian.h"
 
-
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+
 
 struct SObsidianMMC_MaxSpecialResource_Barbarian
 {

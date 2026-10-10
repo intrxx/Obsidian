@@ -2,15 +2,14 @@
 
 #include "InventoryItems/Items/ItemSpecific/ObsidianTownPortal.h"
 
-// ~ Core
 #include "Net/UnrealNetwork.h"
 #include "NiagaraComponent.h"
-
-// ~ Project
-#include "Obsidian/ObsidianLogCategories.h"
 #include "NiagaraFunctionLibrary.h"
+
 #include "Characters/Player/ObsidianPlayerController.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 AObsidianTownPortal::AObsidianTownPortal(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

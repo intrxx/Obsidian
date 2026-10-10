@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "GameFramework/HUD.h"
 
-// ~ Project
 #include "ObsidianWidgetControllerBase.h"
 
-#include "GameFramework/HUD.h"
 #include "ObsidianHUD.generated.h"
 
 struct FObsidianHeroWidgetControllerParams;

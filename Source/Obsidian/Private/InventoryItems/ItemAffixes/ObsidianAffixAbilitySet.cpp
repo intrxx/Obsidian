@@ -2,15 +2,17 @@
 
 #include "InventoryItems/ItemAffixes/ObsidianAffixAbilitySet.h"
 
-#include <AbilitySystemBlueprintLibrary.h>
-#if WITH_EDITOR
-#include <Misc/DataValidation.h>
-#endif // ~ WITH_EDITOR
+#include "AbilitySystemBlueprintLibrary.h"
 
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
-#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+#include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Obsidian/ObsidianLogCategories.h"
+
+#if WITH_EDITOR
+#include "Misc/DataValidation.h"
+#endif // ~ WITH_EDITOR
+
 
 #if WITH_EDITOR
 // ~ FObsidianAffixAbilitySet_GameplayAbility

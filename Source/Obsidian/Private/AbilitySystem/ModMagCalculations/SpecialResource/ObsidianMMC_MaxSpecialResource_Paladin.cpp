@@ -2,8 +2,8 @@
 
 #include "AbilitySystem/ModMagCalculations/SpecialResource/ObsidianMMC_MaxSpecialResource_Paladin.h"
 
-
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
+
 
 struct SObsidianMMC_MaxSpecialResource_Paladin
 {

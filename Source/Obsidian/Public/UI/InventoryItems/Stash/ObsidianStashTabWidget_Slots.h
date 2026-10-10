@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
-
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "UI/InventoryItems/Stash/ObsidianStashTabWidget.h"
+
 #include "ObsidianStashTabWidget_Slots.generated.h"
 
 class UObsidianSlotPanel;

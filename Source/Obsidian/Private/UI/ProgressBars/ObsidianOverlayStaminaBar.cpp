@@ -2,10 +2,11 @@
 
 #include "UI/ProgressBars/ObsidianOverlayStaminaBar.h"
 
-#include <Kismet/KismetMathLibrary.h>
-#include <Components/ProgressBar.h>
+#include "Components/ProgressBar.h"
+#include "Kismet/KismetMathLibrary.h"
 
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+
 
 void UObsidianOverlayStaminaBar::HandleWidgetControllerSet()
 {

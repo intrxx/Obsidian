@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
+#include "Engine/DeveloperSettings.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include <Engine/DeveloperSettings.h>
 #include "ObsidianItemDataDeveloperSettings.generated.h"
 
 class UObsidianItemDataConfig;

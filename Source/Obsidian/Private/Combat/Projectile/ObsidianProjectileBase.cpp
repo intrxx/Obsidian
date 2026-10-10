@@ -2,16 +2,17 @@
 
 #include "Combat/Projectile/ObsidianProjectileBase.h"
 
-#include <AbilitySystemBlueprintLibrary.h>
-#include <AbilitySystemComponent.h>
-#include <NiagaraFunctionLibrary.h>
-#include <Components/AudioComponent.h>
-#include <Components/SphereComponent.h>
-#include <Kismet/GameplayStatics.h>
+#include "AbilitySystemBlueprintLibrary.h"
+#include "AbilitySystemComponent.h"
+#include "Components/AudioComponent.h"
+#include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
 
 #include "Combat/Projectile/OProjectileMovementComponent.h"
-#include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "Obsidian/ObsidianLogCategories.h"
+#include "ObsidianTypes/ObsidianCoreTypes.h"
+
 
 AObsidianProjectileBase::AObsidianProjectileBase(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

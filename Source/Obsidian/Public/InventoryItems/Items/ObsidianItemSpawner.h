@@ -2,15 +2,13 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "GameFramework/Actor.h"
 
-// ~ Project
 #include "Interaction/ObsidianHighlightInterface.h"
 #include "Interaction/ObsidianInteractionInterface.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "GameFramework/Actor.h"
 #include "ObsidianItemSpawner.generated.h"
 
 class AObsidianDroppableItem;

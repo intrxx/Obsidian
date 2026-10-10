@@ -2,6 +2,7 @@
 
 #include "Combat/Projectile/ObsidianTickingProjectile.h"
 
+
 AObsidianTickingProjectile::AObsidianTickingProjectile(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
 {

@@ -2,11 +2,10 @@
 
 #include "InventoryItems/ItemAffixes/ObsidianItemAffixStack.h"
 
-// ~ Core
 #include "GameplayEffect.h"
 
-// ~ Project
 #include "InventoryItems/ItemAffixes/ObsidianAffixList.h"
+
 
 int32 FObsidianItemAffixStack::GetTotalAffixCount() const
 {

@@ -2,18 +2,17 @@
 
 #include "Core/FunctionLibraries/ObsidianAbilitySystemFunctionLibrary.h"
 
-// ~ Core
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Engine/OverlapResult.h"
 #include "Kismet/GameplayStatics.h"
 
-// ~ Project
-#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
 #include "AbilitySystem/Data/ObsidianAbilitySet.h"
 #include "AbilitySystem/Data/ObsidianEnemyTypeInfo.h"
+#include "AbilitySystem/ObsidianAbilitySystemEffectTypes.h"
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
 #include "Game/ObsidianGameMode.h"
+
 
 void UObsidianAbilitySystemFunctionLibrary::InitializeEnemyDefaultAttributesWithClass(const UObject* WorldContextObject, UObsidianAbilitySystemComponent* ASC,
                                                                    const EObsidianEnemyClass EnemyClass, const float Level, UObject* SourceObject)

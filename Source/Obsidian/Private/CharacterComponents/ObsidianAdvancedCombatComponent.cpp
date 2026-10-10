@@ -2,12 +2,11 @@
 
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 
-// ~ Core
 #include "Kismet/KismetMathLibrary.h"
 #include "Kismet/KismetSystemLibrary.h"
 
-// ~ Project
 #include "Obsidian/ObsidianLogCategories.h"
+
 
 UObsidianAdvancedCombatComponent::UObsidianAdvancedCombatComponent(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)

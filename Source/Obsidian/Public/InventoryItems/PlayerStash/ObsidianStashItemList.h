@@ -2,13 +2,11 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
+#include "Net/Serialization/FastArraySerializer.h"
 
-// ~ Project
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
-#include "Net/Serialization/FastArraySerializer.h"
 #include "ObsidianStashItemList.generated.h"
 
 struct FObsidianStashItemList;

@@ -2,11 +2,9 @@
 
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
 
-// ~ Core
 #include "GameplayEffectExtension.h"
 #include "Net/UnrealNetwork.h"
 
-// ~ Project
 #include "CharacterComponents/Attributes/ObsidianHeroAttributesComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 

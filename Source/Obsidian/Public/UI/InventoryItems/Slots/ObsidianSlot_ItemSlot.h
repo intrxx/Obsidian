@@ -2,11 +2,11 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
-
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlotBase.h"
+
 #include "ObsidianSlot_ItemSlot.generated.h"
 
 class UObsidianSlotPanel;

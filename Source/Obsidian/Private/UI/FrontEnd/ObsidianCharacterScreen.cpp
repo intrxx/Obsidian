@@ -2,14 +2,11 @@
 
 #include "UI/FrontEnd/ObsidianCharacterScreen.h"
 
-#include <CommonHierarchicalScrollBox.h>
-#include <CommonTextBlock.h>
-#include <CommonUIExtensions.h>
-#include <Kismet/GameplayStatics.h>
+#include "CommonHierarchicalScrollBox.h"
+#include "CommonTextBlock.h"
+#include "CommonUIExtensions.h"
+#include "Kismet/GameplayStatics.h"
 
-#include "UI/FrontEnd/ObsidianCharacterEntry.h"
-#include "UI/FrontEnd/ObsidianCharacterCreationScreen.h"
-#include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
 #include "Core/ObsidianGameplayStatics.h"
 #include "Game/ObsidianFrontEndGameMode.h"
 #include "Game/Save/ObsidianHeroSaveGame.h"
@@ -17,6 +14,10 @@
 #include "Game/Save/ObsidianSaveGameSubsystem.h"
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "UI/Components/ObsidianButtonBase.h"
+#include "UI/FrontEnd/ObsidianCharacterCreationScreen.h"
+#include "UI/FrontEnd/ObsidianCharacterEntry.h"
+#include "UI/WidgetControllers/ObCharacterSelectionWidgetController.h"
+
 
 void UObsidianCharacterScreen::HandleWidgetControllerSet()
 {

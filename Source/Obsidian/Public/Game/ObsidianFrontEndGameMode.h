@@ -3,10 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GameFramework/GameModeBase.h"
 
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
-#include <GameFramework/GameModeBase.h>
 #include "ObsidianFrontEndGameMode.generated.h"
 
 class AObsidianHero;

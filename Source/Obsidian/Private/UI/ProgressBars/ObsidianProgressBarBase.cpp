@@ -2,11 +2,9 @@
 
 #include "UI/ProgressBars/ObsidianProgressBarBase.h"
 
-// ~ Core
 #include "Components/ProgressBar.h"
 #include "Kismet/KismetMathLibrary.h"
 
-// ~ Project
 
 bool UObsidianProgressBarBase::GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage, FGameplayTag EffectTag)
 {

@@ -2,21 +2,21 @@
 
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 
-#include <Engine/ActorChannel.h>
-#include <Net/UnrealNetwork.h>
+#include "Engine/ActorChannel.h"
+#include "Net/UnrealNetwork.h"
 
 #include "AbilitySystem/Attributes/ObsidianHeroAttributeSet.h"
-#include "Characters/Player/ObsidianPlayerState.h"
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "Characters/Player/ObsidianPlayerState.h"
 #include "Core/ObsidianGameplayStatics.h"
-#include "Obsidian/ObsidianGameplayTags.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
-#include "InventoryItems/ObsidianInventoryItemDefinition.h"
-#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
 #include "InventoryItems/Equipment/ObsidianSpawnedEquipmentPiece.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/ObsidianItemsFunctionLibrary.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 #include "Obsidian/ObsidianLogCategories.h"
 
 

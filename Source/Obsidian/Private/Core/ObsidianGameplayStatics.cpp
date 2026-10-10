@@ -2,11 +2,9 @@
 
 #include "Core/ObsidianGameplayStatics.h"
 
-// ~ Core
-
-// ~ Project
 #include "Game/ObsidianGameMode.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+
 
 FText UObsidianGameplayStatics::GetHeroClassText(const EObsidianHeroClass HeroClass)
 {

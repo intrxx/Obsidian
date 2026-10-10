@@ -2,12 +2,12 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
-#include <GameplayTagContainer.h>
-
-#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+#include "CoreMinimal.h"
+#include "GameplayTagContainer.h"
 
 #include "InventoryItems/ObsidianInventoryItemFragment.h"
+#include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 #include "OInventoryItemFragment_Equippable.generated.h"
 
 struct FObsidianSavedEquipmentPiece;

@@ -2,8 +2,8 @@
 
 #include "UI/ObsidianMainOverlayWidgetBase.h"
 
-#include <Components/Button.h>
-#include <Components/SizeBox.h>
+#include "Components/Button.h"
+#include "Components/SizeBox.h"
 
 
 void UObsidianMainOverlayWidgetBase::NativePreConstruct()

@@ -2,9 +2,10 @@
 
 #pragma once
 
-#include <CoreMinimal.h>
+#include "CoreMinimal.h"
 
 #include "UI/ObsidianActivatableWidget.h"
+
 #include "ObsidianGameplayMenu.generated.h"
 
 class UObsidianHeroSaveGame;

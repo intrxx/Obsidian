@@ -2,21 +2,20 @@
 
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.h"
 
-// ~ Core
 #if WITH_GAMEPLAY_DEBUGGER_MENU
+#include "CanvasItem.h"
 #include "Engine/Canvas.h"
 
-// ~ Project
-#include "CanvasItem.h"
 #include "Characters/Player/ObsidianPlayerController.h"
-#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
-#include "InventoryItems/ObsidianInventoryItemInstance.h"
 #include "InventoryItems/ObsidianInventoryItemDefinition.h"
+#include "InventoryItems/ObsidianInventoryItemInstance.h"
+#include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianStashItemList.h"
 #include "InventoryItems/PlayerStash/ObsidianStashTab.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Grid.h"
 #include "InventoryItems/PlayerStash/Tabs/ObsidianStashTab_Slots.h"
 #include "UI/ObsidianHUD.h"
+
 
 namespace PlayerStash::Debug
 {

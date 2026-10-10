@@ -2,10 +2,11 @@
 
 #include "UI/InventoryItems/Items/ObsidianDraggedItem_Simple.h"
 
-#include <Components/SizeBox.h>
-#include <Components/Image.h>
+#include "Components/Image.h"
+#include "Components/SizeBox.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
+
 
 void UObsidianDraggedItem_Simple::NativeConstruct()
 {

@@ -2,10 +2,10 @@
 
 #include "Obsidian/Public/UI/InventoryItems/Items/ObsidianUnstackSlider.h"
 
-#include <CommonTextBlock.h>
-#include <Components/Button.h>
-#include <Components/SizeBox.h>
-#include <Components/Slider.h>
+#include "CommonTextBlock.h"
+#include "Components/Button.h"
+#include "Components/SizeBox.h"
+#include "Components/Slider.h"
 
 
 void UObsidianUnstackSlider::NativeConstruct()

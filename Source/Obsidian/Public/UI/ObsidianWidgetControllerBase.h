@@ -2,10 +2,8 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
 #include "Characters/Player/ObsidianLocalPlayer.h"
 #include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 #include "InventoryItems/Inventory/ObsidianInventoryComponent.h"

@@ -2,13 +2,9 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
-
-// ~ Project
-
-
 #include "Engine/AssetManager.h"
+
 #include "ObsidianAssetManager.generated.h"
 
 /**

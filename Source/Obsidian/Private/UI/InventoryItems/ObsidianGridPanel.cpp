@@ -2,13 +2,14 @@
 
 #include "UI/InventoryItems/ObsidianGridPanel.h"
 
-#include <Components/CanvasPanel.h>
-#include <Components/CanvasPanelSlot.h>
+#include "Components/CanvasPanel.h"
+#include "Components/CanvasPanelSlot.h"
 
 #include "Obsidian/ObsidianLogCategories.h"
 #include "Obsidian/Public/UI/InventoryItems/Slots/ObsidianSlot_GridSlot.h"
 #include "UI/InventoryItems/Items/ObsidianItem.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
+
 
 // ~ Start of FObsidianGridSlotData
 

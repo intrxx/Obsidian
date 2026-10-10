@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "CharacterComponents/Attributes/ObsidianAttributesComponent.h"
+
 #include "ObsidianEnemyAttributesComponent.generated.h"
 
 struct FObsidianEffectUIData;

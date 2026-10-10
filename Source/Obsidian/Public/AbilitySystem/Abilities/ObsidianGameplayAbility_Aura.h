@@ -2,13 +2,10 @@
 
 #pragma once
 
-// ~ Core
 #include "CoreMinimal.h"
 
-// ~ Project
-
-
 #include "AbilitySystem/Abilities/ObsidianGameplayAbility.h"
+
 #include "ObsidianGameplayAbility_Aura.generated.h"
 
 /**
