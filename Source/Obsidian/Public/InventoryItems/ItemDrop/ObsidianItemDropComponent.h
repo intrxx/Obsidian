@@ -135,8 +135,12 @@ private:
 	uint8 GetNumberOfAffixesToRollWeighted(const EObsidianItemRarity ForItemRarity);
 
 	void AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements, const FObsidianItemToDrop& FromItemToDrop);
-	
+
 private:
+#if WITH_OBSIDIAN_DEBUG_MENU
+	friend class FObsidianDebugTab_Items;
+#endif
+	
 	UPROPERTY()
 	UObsidianItemDataLoaderSubsystem* CachedItemDataLoader = nullptr;
 };

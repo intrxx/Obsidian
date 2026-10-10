@@ -94,6 +94,10 @@ protected:
 	FText EnemyName = FText::FromString("Lorem");
 
 private:
+#if WITH_OBSIDIAN_DEBUG_MENU
+	friend class FObsidianDebugTab_AI;
+#endif
+
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianAbilitySystemComponent;
 	UPROPERTY()

@@ -49,7 +49,27 @@ public class Obsidian : ModuleRules
 		// PrivateDependencyModuleNames.Add("OnlineSubsystem");
 
 		// To include OnlineSubsystemSteam, add it to the plugins section in your uproject file with the Enabled attribute set to true
-		
+
 		SetupGameplayDebuggerSupport(Target);
+		SetupDebugMenuSupport(Target);
+	}
+
+	/** SlateIM Debug Menu (obsidian.ToggleDebugMenu), lives in Private/Debug and is compiled out of Shipping builds. */
+	private void SetupDebugMenuSupport(ReadOnlyTargetRules Target)
+	{
+		if (Target.Configuration != UnrealTargetConfiguration.Shipping)
+		{
+			PrivateDependencyModuleNames.AddRange(new string[]
+			{
+				"SlateIM",
+				"AssetRegistry"
+			});
+
+			PrivateDefinitions.Add("WITH_OBSIDIAN_DEBUG_MENU=1");
+		}
+		else
+		{
+			PrivateDefinitions.Add("WITH_OBSIDIAN_DEBUG_MENU=0");
+		}
 	}
 }

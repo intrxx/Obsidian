@@ -664,6 +664,7 @@ namespace ObsidianGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_PhysicalDamage, "Item.Affix.SkillImplicits.Aura.PhysicalDamage", "Item Tag which represents Physical Damage Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_ManaRegeneration, "Item.Affix.SkillImplicits.Aura.ManaRegeneration", "Item Tag which represents Mana Regeneration Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_HealthRegeneration, "Item.Affix.SkillImplicits.Aura.HealthRegeneration", "Item Tag which represents Health Regeneration Skill Implicit.");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Aura_Hatred, "Item.Affix.SkillImplicits.Aura.Hatred", "Item Tag which represents Hatred Skill Implicit.");
 	
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_VoidSphere, "Item.Affix.SkillImplicits.Ultimate.VoidSphere", "Item Tag which represents Void Sphere Skill Implicit.");
 	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Item_Affix_SkillImplicits_Ultimate_Combustion, "Item.Affix.SkillImplicits.Ultimate.Combustion", "Item Tag which represents Combustion Skill Implicit.");

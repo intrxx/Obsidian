@@ -800,10 +800,6 @@ FTransform UObsidianItemDropComponent::GetDropTransformAligned(const AActor* Dro
 	if (InOverrideDropLocation == FVector::ZeroVector)
 	{
 		const FVector OwnerLocation = DroppingActor->GetActorLocation();
-
-		// The location of the dropping actor is used when there is no navigable point to drop the item at (e.g. the level has
-		// no Navigation Mesh). The Nav Location must not be used in this case, it is left at FNavigationSystem::InvalidLocation,
-		// which is far outside of the World and ends up as NaNs in the bounds of the dropped item.
 		DropLocation = OwnerLocation;
 
 		FNavLocation RandomPointLocation;

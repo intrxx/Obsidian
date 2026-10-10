@@ -12,13 +12,31 @@
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_Equipment.h"
 #include "InventoryItems/Debugging/GameplayDebuggerCategory_PlayerStash.h"
 #endif
+#if WITH_OBSIDIAN_DEBUG_MENU
+#include "Debug/ObsidianDebugMenu.h"
+#endif
 
 DEFINE_LOG_CATEGORY(LogObsidian);
 
 IMPLEMENT_PRIMARY_GAME_MODULE(FObsidianGameModule, Obsidian, "Obsidian");
 
+#if WITH_OBSIDIAN_DEBUG_MENU
+namespace ObsidianGameModule
+{
+	/** Registers the obsidian.ToggleDebugMenu console command for as long as it is alive. */
+	static TUniquePtr<FObsidianDebugMenu> DebugMenu;
+}
+#endif
+
 void FObsidianGameModule::StartupModule()
 {
+#if WITH_OBSIDIAN_DEBUG_MENU
+	if (IsRunningDedicatedServer() == false && IsRunningCommandlet() == false)
+	{
+		ObsidianGameModule::DebugMenu = MakeUnique<FObsidianDebugMenu>();
+	}
+#endif
+
 #if WITH_GAMEPLAY_DEBUGGER
 	IGameplayDebugger& GameplayDebuggerModule = IGameplayDebugger::Get();
 	
@@ -33,6 +51,10 @@ void FObsidianGameModule::StartupModule()
 
 void FObsidianGameModule::ShutdownModule()
 {
+#if WITH_OBSIDIAN_DEBUG_MENU
+	ObsidianGameModule::DebugMenu.Reset();
+#endif
+
 #if WITH_GAMEPLAY_DEBUGGER
 	if(IGameplayDebugger::IsAvailable())
 	{
