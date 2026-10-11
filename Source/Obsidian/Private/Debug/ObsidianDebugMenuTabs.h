@@ -17,6 +17,7 @@
 struct FObsidianItemToDrop;
 
 class AObsidianEnemy;
+class UAbilitySystemComponent;
 class UObsidianInventoryItemDefinition;
 class UObsidianItemDropComponent;
 
@@ -402,6 +403,10 @@ private:
 class FObsidianDebugTab_AI : public FObsidianDebugMenuTab
 {
 public:
+	FObsidianDebugTab_AI();
+
+	virtual ~FObsidianDebugTab_AI() override;
+
 	//~ Begin FObsidianDebugMenuTab Interface
 	virtual FName GetTabName() const override
 	{
@@ -413,6 +418,61 @@ public:
 	//~ End FObsidianDebugMenuTab Interface
 
 private:
+	/** Scripted action of the behavior trace, run on every traced enemy once the trace reaches its time. */
+	struct FBehaviorTraceAction
+	{
+		enum class EType : uint8
+		{
+			/** Teleports the enemies in front of the Player, Value is the distance. */
+			Bring,
+			/** Deals damage to the enemies, Value is the percent of their Max Health. */
+			Damage,
+			/** Teleports the Player to the Location, used to get the Enemy entities hydrated and dehydrated. */
+			MovePlayer
+		};
+
+		EType Type = EType::Bring;
+		float Time = 0.0f;
+		float Value = 0.0f;
+		FVector2D Location = FVector2D::ZeroVector;
+		bool bDone = false;
+	};
+
+	struct FBehaviorTracedEnemy
+	{
+		TWeakObjectPtr<AObsidianEnemy> Enemy;
+		TWeakObjectPtr<UAbilitySystemComponent> ASC;
+		FString Name;
+		FDelegateHandle AbilityActivatedHandle;
+		FDelegateHandle AbilityEndedHandle;
+		FDelegateHandle AbilityFailedHandle;
+		bool bDeathLogged = false;
+		bool bGoneLogged = false;
+	};
+
+	/**
+	 * Logs what the enemies do (used Abilities, movement, distance to the Player) in a form that can be compared between
+	 * two runs of the game, so a change in the way the AI is driven can be verified to not change its behavior.
+	 */
+	struct FBehaviorTrace
+	{
+		TWeakObjectPtr<UWorld> World;
+		/** Only the enemies with this in their class name are traced, every enemy if empty. */
+		FString ClassFilter;
+		/** Destroys the enemies that are not traced when the trace starts, so they do not interfere. */
+		bool bSolo = false;
+		bool bQuitWhenDone = false;
+		float Duration = 60.0f;
+		float SampleInterval = 0.5f;
+		TArray<FBehaviorTraceAction> Actions;
+
+		double GiveUpTime = 0.0;
+		double StartWorldTime = -1.0;
+		double NextSampleTime = 0.0;
+		bool bMassEntitiesSeen = false;
+		TArray<FBehaviorTracedEnemy> Enemies;
+	};
+
 	/**
 	 * Enemies assume to be fully set up when they get possessed, so spawning the ones that are not (like the base classes)
 	 * crashes the game. Returns what is missing in the setup of the enemy, empty string if it is safe to spawn.
@@ -425,6 +485,15 @@ private:
 	void DrawSpawnedEnemies(const FObsidianDebugMenuContext& InContext);
 
 	void SpawnEnemies(const FObsidianDebugMenuContext& InContext);
+
+	void RunBehaviorTrace(const TArray<FString>& InArgs, UWorld* InWorld);
+	/** Returns false once the trace is finished. */
+	bool TickBehaviorTrace();
+	void StartBehaviorTrace(const FObsidianDebugMenuContext& InContext);
+	void FinishBehaviorTrace();
+	void TrackNewEnemies(const FObsidianDebugMenuContext& InContext, const double InTraceTime);
+	void RunBehaviorTraceAction(const FObsidianDebugMenuContext& InContext, const FBehaviorTraceAction& InAction, const double InTraceTime);
+	void LogBehaviorTraceSamples(const FObsidianDebugMenuContext& InContext, const double InTraceTime);
 
 	FObsidianDebugClassPicker EnemyPicker;
 	/** Strong, as nothing else references the loaded Blueprint class, so it would get garbage collected while it is still chosen. */
@@ -442,6 +511,10 @@ private:
 
 	bool bFreezeAI = false;
 	bool bCreditPlayerForKills = true;
+
+	FAutoConsoleCommandWithWorldAndArgs BehaviorTraceCommand;
+	FTSTicker::FDelegateHandle BehaviorTraceTickerHandle;
+	TUniquePtr<FBehaviorTrace> BehaviorTrace;
 };
 
 #endif // WITH_OBSIDIAN_DEBUG_MENU
