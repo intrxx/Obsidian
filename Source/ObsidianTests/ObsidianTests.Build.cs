@@ -21,6 +21,7 @@ public class ObsidianTests : ModuleRules
 			"GameplayTags",
 			"GameplayAbilities",
 			"AIModule",
+			"ModularGameplayActors",
 			"Obsidian",
 			"CQTest"
 		});

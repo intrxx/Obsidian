@@ -9,6 +9,7 @@
 #include "Components/ActorTestSpawner.h"
 #include "GameplayTagContainer.h"
 
+#include "ObsidianTestWorldCleanup.h"
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
 
 class AObsidianHero;
@@ -60,6 +61,8 @@ struct FObsidianItemTestEnvironment
 	UObsidianInventoryItemInstance* MakeHeldItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
 		const int32 InStackCount = 1) const;
 
+	/** Declared before the Spawner, so it is destroyed after the world of the Spawner. */
+	FObsidianTestWorldCleanup WorldCleanup;
 	FActorTestSpawner Spawner;
 	AObsidianPlayerController* PlayerController = nullptr;
 	AObsidianPlayerState* PlayerState = nullptr;
