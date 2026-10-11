@@ -77,6 +77,9 @@ protected:
 	void DestroyDueToDeath();
 	void UninitAndDestroy();
 
+	/** Removes the dead Character from the World, this is the very last step of the death sequence. */
+	virtual void DestroyDeadCharacter();
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Character")
 	TObjectPtr<UObsidianPawnExtensionComponent> PawnExtComp;
 

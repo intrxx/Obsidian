@@ -360,6 +360,13 @@ void FObsidianDebugTab_AI::SpawnEnemies(const FObsidianDebugMenuContext& InConte
 
 		Enemy->FinishSpawning(SpawnTransform);
 
+		// Enemies driven by Mass turn themselves into entities when they begin play, their Actor is already gone by now.
+		if (IsValid(Enemy) == false)
+		{
+			++SpawnedCount;
+			continue;
+		}
+
 		// Enemies set to be possessed only when placed in the World would be left without the brain.
 		if (Enemy->GetController() == nullptr)
 		{
@@ -404,6 +411,12 @@ FString FObsidianDebugTab_AI::GetSpawnBlocker(const AObsidianEnemy* InEnemyDefau
 	}
 	else if (const AObsidianRegularEnemy* RegularDefault = Cast<AObsidianRegularEnemy>(InEnemyDefault))
 	{
+		// Enemies driven by Mass need neither the Behavior Tree nor the AI Controller.
+		if (RegularDefault->IsDrivenByMass())
+		{
+			return FString();
+		}
+
 		if (RegularDefault->GetDefaultBehaviorTree() == nullptr || RegularDefault->GetDefaultBehaviorTree()->BlackboardAsset == nullptr)
 		{
 			return FString::Printf(TEXT("[%s] has no Default Behavior Tree with a Blackboard set."), *EnemyName);

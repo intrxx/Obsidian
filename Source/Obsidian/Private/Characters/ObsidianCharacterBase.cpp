@@ -146,7 +146,7 @@ void AObsidianCharacterBase::UninitAndDestroy()
 	if(GetLocalRole() == ROLE_Authority)
 	{
 		DetachFromControllerPendingDestroy();
-		SetLifeSpan(0.1f);
+		DestroyDeadCharacter();
 	}
 
 	if(UObsidianAbilitySystemComponent* ObsidianASC = GetObsidianAbilitySystemComponent())
@@ -158,6 +158,11 @@ void AObsidianCharacterBase::UninitAndDestroy()
 	}
 
 	SetActorHiddenInGame(true);
+}
+
+void AObsidianCharacterBase::DestroyDeadCharacter()
+{
+	SetLifeSpan(0.1f);
 }
 
 UNiagaraSystem* AObsidianCharacterBase::GetBloodEffect_Implementation()

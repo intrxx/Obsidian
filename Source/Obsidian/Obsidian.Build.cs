@@ -28,6 +28,16 @@ public class Obsidian : ModuleRules
 				"Niagara",
 				"GameplayCameras",
 				"MassActors",
+				"MassAIBehavior",
+				"MassCommon",
+				"MassCore",
+				"MassEntity",
+				"MassMovement",
+				"MassNavigation",
+				"MassNavMeshNavigation",
+				"MassRepresentation",
+				"MassSignals",
+				"MassSpawner",
 				"StateTreeModule",
 				"GameplayStateTreeModule"
 			});

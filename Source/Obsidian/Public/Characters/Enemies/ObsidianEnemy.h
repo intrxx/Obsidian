@@ -33,6 +33,9 @@ public:
 	bool IsHighlighted() const;
 	EObsidianEntityRarity GetEnemyRarity() const { return EnemyRarity; }
 
+	/** True if the brain of the Enemy is a Mass entity instead of an AI Controller. */
+	virtual bool IsDrivenByMass() const { return false; }
+
 	//~ Begin IObsidianHighlightInterface Interface
 	virtual AActor* GetHighlightAvatarActor() override;
 	virtual void StartHighlight() override;
@@ -59,6 +62,9 @@ public:
 	bool bHitReacting = false;
 
 protected:
+	/** Needs to be called before Begin Play as this is when the Enemy initializes its Ability System with them. */
+	void SetEnemyIdentity(const int32 InEnemyLevel, const EObsidianEntityRarity InEnemyRarity);
+
 	//~ Begin AObsidianCharacterBase Interface
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;

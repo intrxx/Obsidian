@@ -89,6 +89,14 @@ bool AObsidianEnemy::IsHighlighted() const
 	return false;
 }
 
+void AObsidianEnemy::SetEnemyIdentity(const int32 InEnemyLevel, const EObsidianEntityRarity InEnemyRarity)
+{
+	ensureMsgf(HasActorBegunPlay() == false, TEXT("Identity of [%s] was set after it began play, its Ability System will not see it."), *GetNameSafe(this));
+
+	EnemyLevel = InEnemyLevel;
+	EnemyRarity = InEnemyRarity;
+}
+
 void AObsidianEnemy::BeginPlay()
 {
 	Super::BeginPlay();
@@ -135,9 +143,14 @@ void AObsidianEnemy::OnDeathStarted(AActor* InOwningActor)
 {
 	Super::OnDeathStarted(InOwningActor);
 
-	if(HasAuthority() && IsValid(Controller) && IsValid(ItemDropComponent))
+	// Enemies driven by Mass have no Controller, they drop their items all the same.
+	if(HasAuthority() && IsValid(ItemDropComponent) && (IsValid(Controller) || IsDrivenByMass()))
 	{
 		ItemDropComponent->DropItems(EnemyRarity, EnemyLevel);
+	}
+
+	if(HasAuthority() && IsValid(Controller))
+	{
 		Controller->UnPossess();
 	}
 
