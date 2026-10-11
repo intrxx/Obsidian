@@ -19,5 +19,4 @@ class OBSIDIAN_API UObsidianGameInstance : public UCommonGameInstance
 
 public:
 	UObsidianGameInstance(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
 };

@@ -25,25 +25,25 @@ class OBSIDIAN_API UObsidianStashTab : public UObject
 
 public:
 	UObsidianStashTab(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
-	FString GetStashTabName() const;
-	FGameplayTag GetStashTabTag() const;
-	EObsidianStashTabAccessability GetStashAccessabilityType() const;
-	EObsidianStashTabType GetStashTabType() const;
-	TSubclassOf<UObsidianStashTabWidget> GetWidgetClass() const;
+
+	FString GetStashTabName() const { return StashTabName; }
+	FGameplayTag GetStashTabTag() const { return StashTabTag; }
+	EObsidianStashTabAccessability GetStashAccessabilityType() const { return StashTabAccessabilityType; }
+	EObsidianStashTabType GetStashTabType() const { return StashTabType; }
+	TSubclassOf<UObsidianStashTabWidget> GetWidgetClass() const { return StashTabWidgetClass; }
 	void SetStashData(const FObsidianStashTabDefinition& InDefinition);
 
 	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& InItemPosition) {return nullptr;}
 
 	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) {return false;}
 	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) {return false;}
-	
+
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const UObsidianInventoryItemInstance* InReplacingInstance) {return false;}
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& InReplacingDef) {return false;}
 
 	/** Return true if the position in Stash Tab is free. */
 	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& InPosition) {return false;}
-	
+
 	virtual void Construct(UObsidianPlayerStashComponent* InStashComponent) {}
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) {}
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) {}

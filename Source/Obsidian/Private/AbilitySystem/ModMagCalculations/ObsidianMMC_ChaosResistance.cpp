@@ -7,12 +7,12 @@
 
 struct SObsidian_ChaosResistanceStatics
 {
-	FGameplayEffectAttributeCaptureDefinition FaithDef;
-	
 	SObsidian_ChaosResistanceStatics()
 	{
 		FaithDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetFaithAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition FaithDef;
 };
 
 static const SObsidian_ChaosResistanceStatics& ChaosResistanceStatics()

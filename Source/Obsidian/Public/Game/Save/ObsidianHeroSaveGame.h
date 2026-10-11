@@ -50,7 +50,7 @@ struct FObsidianGenericAttributes
 public:
 	UPROPERTY()
 	float CurrentExperience = 0.0f;
-	
+
 	UPROPERTY()
 	float MaxExperience = 0.0f;
 
@@ -72,7 +72,7 @@ struct FObsidianHeroGameplaySaveData
 public:
 	UPROPERTY()
 	uint8 HeroLevel = 1;
-	
+
 	UPROPERTY()
 	FVector CurrentLocation = FVector::ZeroVector;
 
@@ -112,7 +112,7 @@ public:
 
 	UPROPERTY()
 	EObsidianHeroClass HeroClass = EObsidianHeroClass::None;
-	
+
 	UPROPERTY()
 	uint8 bHardcore:1 = false;
 };
@@ -149,21 +149,23 @@ class OBSIDIAN_API UObsidianHeroSaveGame : public ULocalPlayerSaveGame
 
 public:
 	void InitWithSaveSystem(UObsidianSaveGameSubsystem* InSaveGameSubsystem);
-	
+
 	void InitializeHeroSaveData(const bool InInbOnline, const FObsidianHeroInitializationSaveData& InInitializationSaveData);
-	
+
 	void SetHeroGameplayData(const FObsidianHeroGameplaySaveData& InGameplaySaveData);
-	
-	FObsidianHeroSaveData GetHeroSaveData();
+
+	FObsidianHeroSaveData GetHeroSaveData() { return HeroSaveData; }
 
 	bool IsOnline() const;
 	void SetSaveID(const uint16 InSaveID);
 	uint16 GetSaveID() const;
 	uint8 GetHeroLevel() const;
-	
+
+	//~ Begin ULocalPlayerSaveGame Interface
 	virtual void HandlePostSave(bool bInSuccess) override;
 	virtual void HandlePostLoad() override;
-		
+	//~ End ULocalPlayerSaveGame Interface
+
 protected:
 	UPROPERTY()
 	FObsidianHeroSaveData HeroSaveData;

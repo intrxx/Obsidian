@@ -16,16 +16,6 @@
 
 // ~ FObsidianItemGeneratedData
 
-void FObsidianItemGeneratedData::SetStackCount(const int32 InStackCount)
-{
-	AvailableStackCount = InStackCount;
-}
-
-int32 FObsidianItemGeneratedData::GetStackCount() const
-{
-	return AvailableStackCount;
-}
-
 void FObsidianItemGeneratedData::Reset()
 {
 	AvailableStackCount = 1;
@@ -77,11 +67,6 @@ FObsidianItemRequirements::FObsidianItemRequirements()
 bool FObsidianSlotDefinition::IsValid() const
 {
 	return SlotTag.IsValid();
-}
-
-FGameplayTag FObsidianSlotDefinition::GetSlotTag() const
-{
-	return SlotTag;
 }
 
 EObsidianPlacingAtSlotResult FObsidianSlotDefinition::CanPlaceAtSlot(const FGameplayTag& InItemCategory) const
@@ -197,11 +182,6 @@ FGameplayTag FObsidianItemPosition::GetItemSlotTag(const bool bInWarnIfNotFound)
 	}
 #endif
 	return SlotTag;
-}
-
-FGameplayTag FObsidianItemPosition::GetOwningStashTabTag() const
-{
-	return OwningStashTabTag;
 }
 
 FString FObsidianItemPosition::GetDebugStringPosition() const

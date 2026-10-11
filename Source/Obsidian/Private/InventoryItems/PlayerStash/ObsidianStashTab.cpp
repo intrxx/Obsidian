@@ -9,31 +9,6 @@ UObsidianStashTab::UObsidianStashTab(const FObjectInitializer& InObjectInitializ
 {
 }
 
-FString UObsidianStashTab::GetStashTabName() const
-{
-	return StashTabName;
-}
-
-FGameplayTag UObsidianStashTab::GetStashTabTag() const
-{
-	return StashTabTag;
-}
-
-EObsidianStashTabAccessability UObsidianStashTab::GetStashAccessabilityType() const
-{
-	return StashTabAccessabilityType;
-}
-
-EObsidianStashTabType UObsidianStashTab::GetStashTabType() const
-{
-	return StashTabType;
-}
-
-TSubclassOf<UObsidianStashTabWidget> UObsidianStashTab::GetWidgetClass() const
-{
-	return StashTabWidgetClass;
-}
-
 void UObsidianStashTab::SetStashData(const FObsidianStashTabDefinition& InDefinition)
 {
 	StashTabTag = InDefinition.StashTag;

@@ -9,9 +9,6 @@
 
 struct SObsidian_MaxStaminaStatics
 {
-	FGameplayEffectAttributeCaptureDefinition StrengthDef;
-	FGameplayEffectAttributeCaptureDefinition DexterityDef;
-	
 	SObsidian_MaxStaminaStatics()
 	{
 		StrengthDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetStrengthAttribute(),
@@ -19,6 +16,9 @@ struct SObsidian_MaxStaminaStatics
 		DexterityDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetDexterityAttribute(),
 			EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition StrengthDef;
+	FGameplayEffectAttributeCaptureDefinition DexterityDef;
 };
 
 static const SObsidian_MaxStaminaStatics& MaxStaminaStatics()

@@ -18,13 +18,12 @@ class USizeBox;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UOCharacterStatusAttributeRow : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-
 	/** Sets the Attribute Value on the widget and the private attribute variable in OCharacterStatusAttributeRow */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetAttributeValue(const float InValue) const;
@@ -38,14 +37,15 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void SetTwoAttributeValuesWithPercent(const float InValue, const float InMaxValue) const;
-	
+
 protected:
-	virtual void NativePreConstruct() override;
-	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatusWidgetRow")
 	void InitialSetup() const;
 
-protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativePreConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
 
@@ -57,7 +57,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USpacer> NameAndValue_Spacer;
-	
+
 	/**
 	 *  Initial Set up
 	 */
@@ -67,7 +67,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
 	TSubclassOf<UCommonTextStyle> AttributeValueStyle;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Properties")
 	float SizeBoxWidth = 0.f;
 

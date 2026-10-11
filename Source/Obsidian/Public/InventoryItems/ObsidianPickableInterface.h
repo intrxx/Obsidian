@@ -30,8 +30,7 @@ public:
 	{};
 
 	bool IsValid() const;
-	
-public:
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = nullptr;
 
@@ -43,7 +42,7 @@ USTRUCT(BlueprintType)
 struct FObsidianPickupInstance
 {
 	GENERATED_BODY()
-	
+
 public:
 	FObsidianPickupInstance(){};
 	FObsidianPickupInstance(UObsidianInventoryItemInstance* InItemInstance)
@@ -51,8 +50,7 @@ public:
 	{};
 
 	bool IsValid() const;
-	
-public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UObsidianInventoryItemInstance> Item = nullptr;
 };
@@ -88,13 +86,13 @@ class UObsidianPickableInterface : public UInterface
 class OBSIDIAN_API IObsidianPickableInterface
 {
 	GENERATED_BODY()
-	
+
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Pickable")
 	virtual FObsidianPickupContent GetPickupContent() const = 0;
 
 	// This is a direct way to add items to pickup, I'm okay with it for now but idk if it's the way to go
-	
+
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
@@ -102,7 +100,6 @@ public:
 		const FObsidianItemGeneratedData& InGeneratedData) = 0;
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Pickable")
 	virtual void OverrideTemplateStacks(const int32 InTemplateIndex) = 0;
-	
 	//
 };
 
@@ -117,7 +114,6 @@ class UObsidianPickableStatics : public UBlueprintFunctionLibrary
 public:
 	UObsidianPickableStatics(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-public:
 	UFUNCTION(BlueprintPure)
 	static TScriptInterface<IObsidianPickableInterface> GetPickableFromActor(AActor* InActor);
 };

@@ -24,7 +24,7 @@ public:
 /**
  * 
  */
-UCLASS(Config = Game, DefaultConfig, meta = (DisplayName = "Item Data Config"))
+UCLASS(Config = Game, DefaultConfig, meta = (PrioritizeCategories = "Obsidian", DisplayName = "Item Data Config"))
 class OBSIDIAN_API UObsidianItemDataDeveloperSettings : public UDeveloperSettings
 {
 	GENERATED_BODY()
@@ -39,17 +39,16 @@ public:
 	uint8 GetMaxAffixCountForRarity(const EObsidianItemRarity InForRarity) const;
 	uint8 GetNaturalMinAffixCountForRarity(const EObsidianItemRarity InForRarity) const;
 	TArray<uint8> GetAffixNumberWeightsForRarity(const EObsidianItemRarity InForRarity) const;
-	
-public:
+
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Config", meta = (AllowedClasses = "/Script/Obsidian.ObsidianItemDataConfig"))
 	TSoftObjectPtr<UObsidianItemDataConfig> ItemDataConfig;
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")
 	uint8 MaxTreasureQuality = 90;
-	
+
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")
 	TMap<EObsidianEntityRarity, uint8> DefaultRarityToNumberOfDropRollsMap;
-	
+
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Treasure")
 	TMap<EObsidianEntityRarity, uint8> DefaultRarityToAddedTreasureQualityMap;
 
@@ -58,10 +57,10 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	TSoftObjectPtr<UObsidianAffixAbilitySet> DefaultAffixAbilitySet;
-	
+
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	uint8 DefaultMaxImplicitCount = 1;
-	
+
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	TMap<EObsidianItemRarity, uint8> DefaultRarityToMaxSuffixCount;
 
@@ -73,7 +72,7 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	TMap<EObsidianItemRarity, uint8> DefaultRarityToNaturalMinAffixCount;
-	
+
 	//TODO(intrxx) validate it against the DefaultRarityToMaxAffixCount
 	UPROPERTY(Config, EditAnywhere, Category = "Obsidian|Affixes")
 	TMap<EObsidianItemRarity, FObsidianWeightsWrapper> DefaultRarityToNumberOfAffixesWeights;

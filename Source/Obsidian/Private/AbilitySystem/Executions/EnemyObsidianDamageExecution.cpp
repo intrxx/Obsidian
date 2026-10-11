@@ -10,14 +10,14 @@
 
 struct FObsidianEnemyDamageStatics
 {
-	FGameplayEffectAttributeCaptureDefinition HitBlockChanceDef;
-	FGameplayEffectAttributeCaptureDefinition SpellBlockChanceDef;
-	
 	FObsidianEnemyDamageStatics()
 	{
 		HitBlockChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetHitBlockChanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		SpellBlockChanceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetSpellBlockChanceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition HitBlockChanceDef;
+	FGameplayEffectAttributeCaptureDefinition SpellBlockChanceDef;
 };
 
 static const FObsidianEnemyDamageStatics& ObsidianEnemyDamageStatics()

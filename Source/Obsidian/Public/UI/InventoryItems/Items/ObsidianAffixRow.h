@@ -14,7 +14,7 @@ class UCommonTextBlock;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianAffixRow : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
@@ -25,19 +25,20 @@ public:
 	bool IsFree() const;
 
 protected:
-	virtual void NativePreConstruct() override;
-
 	void RefreshAffixRowStyle();
 	void ShowAffixRow(const bool bInShow);
-	
-protected:
+
+	//~ Begin UUserWidget Interface
+	virtual void NativePreConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> AffixText_TextBlock;
 
 private:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|AffixRow")
 	TSubclassOf<UCommonTextStyle> AffixTextStyle;
-	
+
 	bool bIsOccupied = false;
 
 	UPROPERTY(EditAnywhere, Meta = (InlineEditConditionToggle),Category = "Obsidian|AffixRow")

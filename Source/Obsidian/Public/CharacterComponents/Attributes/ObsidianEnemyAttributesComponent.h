@@ -22,7 +22,7 @@ class OBSIDIAN_API UObsidianEnemyAttributesComponent : public UObsidianAttribute
 
 public:
 	UObsidianEnemyAttributesComponent(const FObjectInitializer& InObjectInitializer);
-	
+
 	/** Returns the ENEMY Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
 	static UObsidianEnemyAttributesComponent* FindAttributesComponent(const AActor* InActor)
@@ -30,35 +30,27 @@ public:
 		return (InActor ? InActor->FindComponentByClass<UObsidianEnemyAttributesComponent>() : nullptr);
 	}
 
-	void SetEnemyName(const FText& InEnemyName)
-	{
-		EnemyName = InEnemyName;
-	}
-	
+	void SetEnemyName(const FText& InEnemyName) { EnemyName = InEnemyName; }
+
 	/**
 	 * Getters for Gameplay Attributes.
 	 */
 
-	FText GetEnemyName() const
-	{
-		return EnemyName;
-	}
-	
-	
+	FText GetEnemyName() const { return EnemyName; }
+
 	/** Getters for EnemySpecificAttribute Value and Attribute from UObsidianEnemyAttributeSet. */
 	float GetHitReactThreshold() const;
 	FGameplayAttribute GetHitReactThresholdAttribute() const;
-	
-	//~ Start of ObsidianAttributesComponent
+
+	//~ Begin UObsidianAttributesComponent Interface
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner = nullptr) override;
 	virtual void UninitializeFromAbilitySystem() override;
-	//~ End of ObsidianAttributesComponent
+	//~ End UObsidianAttributesComponent Interface
 
-public:
 	/**
 	 * Delegates for enemy health bar
 	 */
-	
+
 	FOnEnemyAttributeValueChangedSignature HealthChangedDelegate;
 	FOnEnemyAttributeValueChangedSignature MaxHealthChangedDelegate;
 	FOnEnemyAttributeValueChangedSignature EnergyShieldChangedDelegate;
@@ -67,28 +59,29 @@ public:
 	FOnEnemyAttributeValueChangedSignature MaxStaggerMeterChangedDelegate;
 
 protected:
+	virtual void StaggerMeterChanged(const FOnAttributeChangeData& InData);
+	virtual void MaxStaggerMeterChanged(const FOnAttributeChangeData& InData);
+
+	//~ Begin UObsidianAttributesComponent Interface
 	virtual void ClearGameplayTags() override;
-	
+
 	/**
 	 * Callbacks for Attribute change delegates.
 	 */
-	
+
 	virtual void HealthChanged(const FOnAttributeChangeData& InData) override;
 	virtual void MaxHealthChanged(const FOnAttributeChangeData& InData) override;
 	virtual void EnergyShieldChanged(const FOnAttributeChangeData& InData) override;
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) override;
-	virtual void StaggerMeterChanged(const FOnAttributeChangeData& InData);
-	virtual void MaxStaggerMeterChanged(const FOnAttributeChangeData& InData);
+	//~ End UObsidianAttributesComponent Interface
 
 	/**
 	 * 
 	 */
-
-protected:
 	/**
 	 * Sets used by this component.
 	 */
-	
+
 	UPROPERTY()
 	TObjectPtr<const UObsidianEnemyAttributeSet> EnemyAttributeSet;
 
@@ -99,14 +92,11 @@ protected:
 	FDelegateHandle StaggerMeterDelegateHandle;
 	FDelegateHandle MaxStaggerMeterDelegateHandle;
 
+private:
+	void BroadcastInitialValues() const;
+
 	/**
 	 * 
 	 */
-
-private:
 	FText EnemyName = FText::FromString("Lorem");
-	
-private:
-	void BroadcastInitialValues() const;
-	
 };

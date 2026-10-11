@@ -8,10 +8,6 @@
 
 struct SObsidian_ArmorStatics
 {
-	FGameplayEffectAttributeCaptureDefinition Armor;
-	FGameplayEffectAttributeCaptureDefinition StrengthDef;
-	FGameplayEffectAttributeCaptureDefinition IncreasedArmorPercentage;
-
 	SObsidian_ArmorStatics()
 	{
 		Armor = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetArmorAttribute(),
@@ -21,6 +17,10 @@ struct SObsidian_ArmorStatics
 		IncreasedArmorPercentage = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetIncreasedArmorPercentAttribute(),
 			EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition Armor;
+	FGameplayEffectAttributeCaptureDefinition StrengthDef;
+	FGameplayEffectAttributeCaptureDefinition IncreasedArmorPercentage;
 };
 
 static const SObsidian_ArmorStatics& ArmorStatics()

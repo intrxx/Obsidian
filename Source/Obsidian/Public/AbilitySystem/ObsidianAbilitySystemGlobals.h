@@ -15,6 +15,9 @@ class OBSIDIAN_API UObsidianAbilitySystemGlobals : public UAbilitySystemGlobals
 {
 	GENERATED_BODY()
 
+public:
+	//~ Begin UAbilitySystemGlobals Interface
 	/** Should allocate a project specific GameplayEffectContext struct. Caller is responsible for deallocation */
 	virtual FGameplayEffectContext* AllocGameplayEffectContext() const override;
+	//~ End UAbilitySystemGlobals Interface
 };

@@ -54,12 +54,15 @@ public:
 	/** Updates the state of using item after it was used, the item can be held by any of the Owner's containers. */
 	void UpdateUsingItemAfterUsage(UObsidianInventoryItemInstance* InUsingInstance, const int32 InCurrentStacks);
 
-	//~ Start of UObject interface
+	//~ Begin UActorComponent Interface
 	virtual bool ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch, FReplicationFlags* InRepFlags) override;
 	virtual void ReadyForReplication() override;
-	//~ End of UObject interface
+	//~ End UActorComponent Interface
 
 protected:
+	/** Applies the optional override to the number of stacks to add, INDEX_NONE means there is no override. */
+	static int32 ClampStacksToAdd(const int32 InStacksAvailableToAdd, const int32 InStackToAddOverride);
+
 	/**
 	 * Container specifics, implemented by derived classes.
 	 */
@@ -92,9 +95,6 @@ protected:
 
 	void RegisterItemInstanceForReplication(UObsidianInventoryItemInstance* InInstance);
 	void UnregisterItemInstanceFromReplication(UObsidianInventoryItemInstance* InInstance);
-
-	/** Applies the optional override to the number of stacks to add, INDEX_NONE means there is no override. */
-	static int32 ClampStacksToAdd(const int32 InStacksAvailableToAdd, const int32 InStackToAddOverride);
 
 	/** Creates new Item Instance from Item Definition at given position with given number of stacks, might return nullptr. */
 	UObsidianInventoryItemInstance* PlaceItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,

@@ -46,12 +46,12 @@ public:
 /**
  * Primary Inventory Component of Obsidian to be used by Characters.
  */
-UCLASS( ClassGroup=(InventoryItems), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(InventoryItems), meta=(PrioritizeCategories = "Obsidian", BlueprintSpawnableComponent) )
 class OBSIDIAN_API UObsidianInventoryComponent : public UObsidianItemContainerComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UObsidianInventoryComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	/** Returns the Inventory Component if one exists on the specified actor, will be nullptr otherwise */
@@ -61,18 +61,16 @@ public:
 		return (InActor ? InActor->FindComponentByClass<UObsidianInventoryComponent>() : nullptr);
 	}
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 	void InitSaveData(const bool bInReceivedInitialItems);
-	
-	bool DidReceiveInitialInventoryItems() const;
 
-	int32 GetInventoryGridWidth() const;
-	int32 GetInventoryGridHeight() const;
+	bool DidReceiveInitialInventoryItems() const { return bReceivedInitialInventoryItems; }
+
+	int32 GetInventoryGridWidth() const { return InventoryGridWidth; }
+	int32 GetInventoryGridHeight() const { return InventoryGridHeight; }
 
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
-	
+
 	/** Finds all stacks in the inventory for given item type with item Instance. */
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* InItemInstance);
 
@@ -89,16 +87,16 @@ public:
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 
 	TMap<FIntPoint, bool> GetGridStateMap() const;
-	
+
 	/** Finds first Item Instance in the inventory for provided Item Definition. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|Inventory")
 	UObsidianInventoryItemInstance* FindFirstItemInstanceForDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef) const;
 
 	bool CanOwnerModifyInventoryState();
-	
+
 	/** Checks if the item fits in the provided spot. */
 	bool CheckSpecifiedPosition(const FIntPoint& InItemGridSpan, const FIntPoint& InSpecifiedPosition);
-	
+
      /**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory.
 	 * Returns Array of Instances that stacks were added to.
@@ -111,7 +109,7 @@ public:
 	 */
 	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& InAddingFromItemDef,
 		const int32 InStacksToAdd, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
-	
+
 	/** Checks if the provided Item Definition can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool CanReplaceItemAtSpecificSlotWithDef(const FIntPoint& InClickedInstancePosition,
@@ -120,7 +118,7 @@ public:
 
 	/** Checks if the provided Item Definition fits anywhere in the inventory. */
 	bool CanFitItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
-	
+
 	/**
 	 * Tries to add Item Definition to the inventory, if the item is stackable will first try to add all the stacks
 	 * to the same item types if they exist in inventory.
@@ -148,7 +146,7 @@ public:
 	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(
 		const TSubclassOf<UObsidianInventoryItemDefinition>& InAddingFromItemDef, const int32 InAddingFromItemDefCurrentStacks,
 		const FIntPoint& InAtPosition, const int32 InStackToAddOverride = -1);
-	
+
 	/** Checks if the provided Item Instance can replace item at provided slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	bool CanReplaceItemAtSpecificSlotWithInstance(const FIntPoint& InClickedInstancePosition,
@@ -156,7 +154,7 @@ public:
 
 	/** Checks if the provided Item Instance fits anywhere in the inventory. */
 	bool CanFitItemInstance(const UObsidianInventoryItemInstance* InInstance);
-	
+
 	/**
 	 * Tries to add Item Instance to the inventory, if the item is stackable will first try to add all the stacks
 	 * to the same item types if they exist in inventory.
@@ -168,7 +166,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	FObsidianItemOperationResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InInstanceToAdd,
 		const FIntPoint& InToGridSlot, const int32 InStackToAddOverride = -1);
-	
+
 	/**
 	 *	Will try to add stacks from provided Item Instance at provided Position. 
 	 *
@@ -198,18 +196,22 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	FObsidianItemOperationResult RemoveItemInstance(UObsidianInventoryItemInstance* InInstanceToRemove);
 
-
-	
 	void LoadInventorizedItem(const FObsidianSavedItem& InInventorizedSavedItem);
-	
-	//~ Start of UObsidianItemContainerComponent interface
+
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
+	//~ Begin UObsidianItemContainerComponent Interface
 	virtual TArray<UObsidianInventoryItemInstance*> GetContainedItems() const override;
-	//~ End of UObsidianItemContainerComponent interface
+	//~ End UObsidianItemContainerComponent Interface
+
+	//~ Begin UActorComponent Interface
+	virtual void BeginPlay() override;
+	//~ End UActorComponent Interface
 
 protected:
-	virtual void BeginPlay() override;
-	
-	//~ Start of UObsidianItemContainerComponent interface
+	//~ Begin UObsidianItemContainerComponent Interface
 	virtual FGameplayTag GetBlockActionsTag() const override;
 	virtual void AddItemInstanceToList(UObsidianInventoryItemInstance* InInstance, const FObsidianItemPosition& InToPosition) override;
 	virtual UObsidianInventoryItemInstance* AddItemDefinitionToList(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
@@ -217,19 +219,24 @@ protected:
 	virtual void RemoveItemInstanceFromList(UObsidianInventoryItemInstance* InInstance) override;
 	virtual void HandleItemStacksChanged(UObsidianInventoryItemInstance* InInstance, const int32 InOldStackCount) override;
 	virtual void HandleItemChanged(UObsidianInventoryItemInstance* InInstance) override;
-	//~ End of UObsidianItemContainerComponent interface
+	//~ End UObsidianItemContainerComponent Interface
 
-protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Default")
 	TArray<FObsidianDefaultItemTemplate> DefaultInventoryItems;
 
 private:
+	friend UObInventoryItemsWidgetController;
+
+#if WITH_GAMEPLAY_DEBUGGER
+	friend FGameplayDebuggerCategory_InventoryItems;
+#endif
+
 	/** Initializes Inventory State. */
 	void InitInventoryState();
 
 	/** Adds default items specified in DefaultInventoryItems. */
 	void AddDefaultItems();
-	
+
 	/** Checks if the provided Item Definition fits anywhere in the inventory. Provides Available Position. */
 	bool CanFitItemDefinition(FIntPoint& OutAvailablePositions, const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
 
@@ -239,7 +246,7 @@ private:
 
 	bool CheckReplacementPossible(const FIntPoint& InItemToReplaceOriginPosition, const FIntPoint& InAtGridSlot,
 		const FIntPoint& InGridSpanAtPosition, const FIntPoint& InReplacingGridSpan) const;
-	
+
 	/** Checks the limit of the item, returns the number of stacks available to add to the inventory with provided ItemDef. */
 	int32 GetNumberOfStacksAvailableToAddToInventory(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
 		const int32 InCurrentStacks);
@@ -249,37 +256,28 @@ private:
 
 	/** Gets the item location from internal grid map. */
 	FIntPoint GetItemLocationFromGrid(UObsidianInventoryItemInstance* InItemInstance) const;
-	
+
 	/** Checks if the item fits in the inventory, outputs the first available position.  */
 	bool CheckAvailablePosition(FIntPoint& OutAvailablePosition, const FIntPoint& InItemGridSpan);
-	
+
 	/** Internal usage only, this returns the internal Location To Instance Map. */
 	TMap<FIntPoint, UObsidianInventoryItemInstance*> Internal_GetLocationToInstanceMap();
 
-private:
-	friend UObInventoryItemsWidgetController;
-
-#if WITH_GAMEPLAY_DEBUGGER
-	friend FGameplayDebuggerCategory_InventoryItems;
-#endif
-	
 	/**
 	 * Actual array of items which is FFastArraySerializer.
 	 * It also contains Map which maps Grid Vector2D location to actual Item Instance in the inventory.
 	 */
 	UPROPERTY(Replicated)
 	FObsidianInventoryGridItemList InventoryGrid;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
 	int32 InventoryGridWidth = 12;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|InventorySetup")
 	int32 InventoryGridHeight = 5;
 
 	/** Grid size of the inventory, calculated (InventoryGridWidth * InventoryGridHeight). */
 	int32 InventoryGridSize = 0;
-
-
 
 	UPROPERTY(Replicated)
 	bool bReceivedInitialInventoryItems = false;

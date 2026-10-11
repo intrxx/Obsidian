@@ -22,8 +22,7 @@ public:
 		: SaveName(InSaveName)
 		, SaveID(InSaveID)
 	{}
-	
-public:
+
 	UPROPERTY()
 	FString SaveName = FString();
 
@@ -63,17 +62,16 @@ struct FObsidianHeroSaveInfo
 
 public:
 	bool IsOnline() const;
-	
-public:
+
 	UPROPERTY()
 	uint16 SaveID = INDEX_NONE;
-	
+
 	UPROPERTY()
 	FString SaveName = FString();
 
 	UPROPERTY()
 	uint8 bOnline:1 = false;
-	
+
 	UPROPERTY()
 	FObsidianHeroDescription HeroDescription = FObsidianHeroDescription();
 };
@@ -106,7 +104,7 @@ public:
 	FObsidianAddHeroSaveResult AddHero(const bool bInOnline, const FObsidianHeroInitializationSaveData& InHeroSaveData);
 	bool DeleteHero(const uint16 InSaveID, const bool bInOnline);
 	bool UpdateHeroSave(const uint16 InSaveID, const bool bInOnline, const uint8 InHeroLevel);
-	
+
 	TArray<FObsidianHeroSaveInfo> GetHeroSaveInfos(const bool bInOnline);
 	FString GetSaveNameForID(const uint16 InSaveID, const bool bInOnline) const; 
 	uint16 GetMaxOfflineSaveID() const; 
@@ -119,8 +117,7 @@ protected:
 	FObsidianAddHeroSaveResult AddOnlineHero(const FObsidianHeroInitializationSaveData& InHeroSaveData);
 
 	FObsidianHeroSaveInfo* GetHeroSaveInfo(const uint16 InSaveID, const bool bInOnline);
-	
-protected:
+
 	UPROPERTY()
 	FObsidianMasterSaveParams MasterSaveParams = FObsidianMasterSaveParams();
 };

@@ -26,46 +26,40 @@ class OBSIDIAN_API AObsidianPlayerState : public AModularPlayerState, public IAb
 
 public:
 	AObsidianPlayerState(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerState")
-	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const
-	{
-		return AbilitySystemComponent;
-	}
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const { return AbilitySystemComponent; }
 
-	TObjectPtr<UObsidianHeroAttributeSet> GetObsidianAttributeSet() const
-	{
-		return HeroAttributeSet;
-	}
+	TObjectPtr<UObsidianHeroAttributeSet> GetObsidianAttributeSet() const { return HeroAttributeSet; }
 
 	AObsidianPlayerController* GetObsidianPlayerController() const;
 	AObsidianHero* GetObsidianHero() const;
-	
-	uint8 GetHeroLevel() const
-	{
-		return HeroLevel;
-	}
 
-	FString GetObsidianPlayerName();
+	uint8 GetHeroLevel() const { return HeroLevel; }
+
+	FString GetObsidianPlayerName() { return PlayerName; }
 
 	void IncreaseHeroLevel();
 
 	// Loading purposes, don't really like it like this
-	void SetHeroLevel(const uint8 InLevel);
-	void SetObsidianPlayerName(const FString& InName);
+	void SetHeroLevel(const uint8 InLevel) { HeroLevel = InLevel; }
+	void SetObsidianPlayerName(const FString& InName) { PlayerName = InName; }
 
-public:
+	//~ Begin IAbilitySystemInterface Interface
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	//~ End IAbilitySystemInterface Interface
+
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|PlayerState")
 	FOnHeroLevelUp OnHeroLevelUp;
-	
+
 private:
 	UFUNCTION()
 	void OnRep_HeroLevel();
-	
-private:
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<UObsidianAbilitySystemComponent> AbilitySystemComponent;
 	UPROPERTY()

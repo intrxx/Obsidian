@@ -127,42 +127,12 @@ void AObsidianPlayerController::ReceivedPlayer()
 	}
 }
 
-FGenericTeamId AObsidianPlayerController::GetGenericTeamId() const
-{
-	return TeamId;
-}
-
 void AObsidianPlayerController::SetGenericTeamId(const FGenericTeamId& InTeamID)
 {
 	if (TeamId != InTeamID)
 	{
 		TeamId = InTeamID;
 	}
-}
-
-UObsidianInventoryComponent* AObsidianPlayerController::GetInventoryComponent() const
-{
-	return InventoryComponent;
-}
-
-UObsidianEquipmentComponent* AObsidianPlayerController::GetEquipmentComponent() const
-{
-	return EquipmentComponent;
-}
-
-UObsidianPlayerStashComponent* AObsidianPlayerController::GetPlayerStashComponent() const
-{
-	return PlayerStashComponent;
-}
-
-UObsidianCraftingComponent* AObsidianPlayerController::GetCraftingComponent() const
-{
-	return CraftingComponent;
-}
-
-UObsidianItemManagerComponent* AObsidianPlayerController::GetItemManagerComponent() const
-{
-	return ItemManagerComponent;
 }
 
 void AObsidianPlayerController::LoadSharedStashData(UObsidianSharedStashSaveGame* InSharedStashSaveGame)

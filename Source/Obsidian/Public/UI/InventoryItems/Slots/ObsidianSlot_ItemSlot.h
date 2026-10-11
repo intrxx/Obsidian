@@ -21,7 +21,7 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemSlotPressedSignature, const UObsidia
 /**
  * Item Slot is a kind of socket that we can place whole item in.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianSlot_ItemSlot : public UObsidianSlotBase
 {
 	GENERATED_BODY()
@@ -29,27 +29,27 @@ class OBSIDIAN_API UObsidianSlot_ItemSlot : public UObsidianSlotBase
 public:
 	void InitializeSlot(const FGameplayTag& InSlotTag, const FGameplayTag& InSisterSlotTag = FGameplayTag::EmptyTag);
 
-	FGameplayTag GetSlotTag() const;
-	FGameplayTag GetSisterSlotTag() const;
-	
+	FGameplayTag GetSlotTag() const { return SlotTag; }
+	FGameplayTag GetSisterSlotTag() const { return SisterSlotTag; }
+
 	void AddItemToSlot(UObsidianItem* InItemWidget, const float InItemSlotPadding = 0.0f);
 	void AddBlockadeItemToSlot(UObsidianItem* InItemWidget, const float InItemSlotPadding = 0.0f);
 
 	void ResetSlotState();
 
-public:
 	FOnItemSlotHoverSignature OnItemSlotHoverDelegate;
 	FOnItemSlotPressedSignature OnItemSlotLeftButtonPressedDelegate;
 	FOnItemSlotPressedSignature OnItemSlotRightButtonPressedDelegate;
 
 protected:
+	//~ Begin UUserWidget Interface
 	virtual void NativePreConstruct() override;
 
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
-protected:
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditAnywhere, meta=(Categories = "Item.Slot.Equipment,Item.SwapSlot.Equipment,Item.Slot.Functional"), Category = "Obsidian|Setup")
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
 

@@ -12,7 +12,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianStashTab_Slots : public UObsidianStashTab
 {
 	GENERATED_BODY()
@@ -20,8 +20,10 @@ class OBSIDIAN_API UObsidianStashTab_Slots : public UObsidianStashTab
 public:
 	UObsidianStashTab_Slots(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
+	TArray<FObsidianStashSlotDefinition> GetSlots() const { return TabSlots; }
+
+	//~ Begin UObsidianStashTab Interface
 	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& InItemPosition) override;
-	TArray<FObsidianStashSlotDefinition> GetSlots() const;
 
 	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& InPosition) override;
 
@@ -30,23 +32,22 @@ public:
 
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const UObsidianInventoryItemInstance* InReplacingInstance) override;
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& InReplacingDef) override;
-	
+
 	virtual void Construct(UObsidianPlayerStashComponent* InStashComponent) override;
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) override;
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) override;
+	//~ End UObsidianStashTab Interface
 
 protected:
 	FObsidianStashSlotDefinition FindSlotByTag(const FGameplayTag& InSlotTag) const;
 
 private:
-	bool CheckReplacementPossible(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InReplacingItemCategory, const FGameplayTag& InReplacingItemBaseType) const;
-	
-private:
-
 #if WITH_GAMEPLAY_DEBUGGER
 	friend class FGameplayDebuggerCategory_PlayerStash;
 #endif
-	
+
+	bool CheckReplacementPossible(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InReplacingItemCategory, const FGameplayTag& InReplacingItemBaseType) const;
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|SlotsSettings")
 	TArray<FObsidianStashSlotDefinition> TabSlots;
 

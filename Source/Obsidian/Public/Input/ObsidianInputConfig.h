@@ -19,15 +19,15 @@ struct FObsidianInputAction
 	GENERATED_BODY()
 
 public:
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex, const FString& InInputActionsName) const;
+#endif
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	TObjectPtr<const UInputAction> InputAction = nullptr;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories = "Input"))
 	FGameplayTag InputTag;
-
-#if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex, const FString& InInputActionsName) const;
-#endif
 };
 
 /**
@@ -40,18 +40,19 @@ class OBSIDIAN_API UObsidianInputConfig : public UDataAsset
 
 public:
 	UObsidianInputConfig(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Input")
 	const UInputAction* FindNativeInputActionForTag(const FGameplayTag& InInputTag, bool bInLogNotFound = true) const;
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Input")
 	const UInputAction* FindAbilityInputActionForTag(const FGameplayTag& InInputTag, bool bInLogNotFound = true) const;
 
+	//~ Begin UObject Interface
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
-	
-public:
+	//~ End UObject Interface
+
 	/** List of input actions used by the owner.  These input actions are mapped to a gameplay tag and must be manually bound. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Meta = (TitleProperty = "InputAction"))
 	TArray<FObsidianInputAction> NativeInputActions;

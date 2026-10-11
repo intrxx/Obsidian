@@ -25,28 +25,29 @@ class OBSIDIAN_API UObsidianCharacterEntry : public UCommonButtonBase
 public:
 	void InitializeCharacterEntry(const uint16 InSaveID, const FString& InPlayerName, const int32 InPlayerLevel, const FText& InPlayerClass,
 		const bool InIsOnline, const bool InIsHardcore);
-	
-	uint16 GetSaveID() const;
-	bool IsOnline() const;
-	
+
+	uint16 GetSaveID() const { return SaveID; }
+	bool IsOnline() const { return bOnline; }
+
 	void SetIsChosen();
 	void ResetChosenState();
 
-public:
-	FOnEntryClicked OnEntryClicked;
-	
-protected:
+	//~ Begin UUserWidget Interface
 	virtual void NativeConstruct() override;
-	virtual void NativeOnClicked() override;
+	//~ End UUserWidget Interface
+
+	FOnEntryClicked OnEntryClicked;
 
 protected:
+	//~ Begin UCommonButtonBase Interface
+	virtual void NativeOnClicked() override;
+	//~ End UCommonButtonBase Interface
+
 	uint16 SaveID = INDEX_NONE;
 	bool bOnline = false;
-	
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UBorder> Chosen_Border;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> PlayerName_TextBlock;
 

@@ -29,21 +29,17 @@ DECLARE_DYNAMIC_DELEGATE_OneParam(FOnAuraWidgetDestructionInfoReceived, const FG
 /**
  * 
  */
-UCLASS(BlueprintType, Blueprintable)
+UCLASS(BlueprintType, Blueprintable, meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObMainOverlayWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 
 public:
-	// ~ Start of UObsidianWidgetController
-	virtual void OnWidgetControllerSetupCompleted() override;
-	// ~ End of UObsidianWidgetController
-
 	FObsidianSpecialResourceVisuals GetSpecialResourceVisuals() const;
 
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Health")
 	void UpdateHealthInfoGlobe(const float InMagnitude) const;
-	
+
 	UFUNCTION(BlueprintCallable, BlueprintPure=false, Category = "Obsidian|Mana")
 	void UpdateManaInfoGlobe(const float InMagnitude) const;
 
@@ -52,13 +48,16 @@ public:
 	void SetInitialExperienceValues();
 	void SetInitialStaminaValues();
 
-public:
+	//~ Begin UObsidianHeroWidgetControllerBase Interface
+	virtual void OnWidgetControllerSetupCompleted() override;
+	//~ End UObsidianHeroWidgetControllerBase Interface
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
 	FOnAttributeValueChangedSignature OnManaChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Mana")
 	FOnAttributeValueChangedSignature OnMaxManaChangedDelegate;
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|SpecialResource")
 	FOnAttributeValueChangedSignature OnSpecialResourceChangedDelegate;
 
@@ -67,25 +66,25 @@ public:
 
 	FOnAttributeValueChangedSignature OnStaminaChangedDelegate;
 	FOnAttributeValueChangedSignature OnMaxStaminaChangedDelegate;
-	
+
 	FOnAttributeValueChangedOneParam OnExperienceChangedDelegate;
 	FOnAttributeValueChangedTwoParams OnMaxExperienceChangedDelegate;
-	
+
 	FOnAttributeValueChangedSignature OnPassiveSkillPointsChangedDelegate;
 	FOnAttributeValueChangedSignature OnAscensionPointsChangedDelegate;
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnAttributeValueChangedSignature OnHealthChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|Health")
 	FOnAttributeValueChangedSignature OnMaxHealthChangedDelegate;
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
 	FOnAttributeValueChangedSignature OnEnergyShieldChangedDelegate;
 
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|EnergyShield")
 	FOnAttributeValueChangedSignature OnMaxEnergyShieldChangedDelegate;
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|Attributes|StaggerMeter")
 	FOnAttributeValueChangedSignature OnStaggerMeterChangedDelegate;
 
@@ -113,8 +112,6 @@ public:
 	FOnAuraWidgetDestructionInfoReceived OnAuraWidgetDestructionInfoReceivedDelegate;
 
 protected:
-	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC) override;
-	
 	void HandleEffectApplied(const FObsidianEffectUIData& InUIData);
 
 	void ManaChanged(const FOnAttributeChangeData& InData) const;
@@ -127,7 +124,7 @@ protected:
 	void AscensionPointsChanged(const FOnAttributeChangeData& InData) const;
 	void StaminaChanged(const FOnAttributeChangeData& InData) const;
 	void MaxStaminaChanged(const FOnAttributeChangeData& InData) const;
-	
+
 	void HealthChanged(const FOnAttributeChangeData& InData) const;
 	void MaxHealthChanged(const FOnAttributeChangeData& InData) const;
 	void EnergyShieldChanged(const FOnAttributeChangeData& InData) const;
@@ -139,11 +136,14 @@ protected:
 	void UpdateHoveringOverTarget(AActor* InTargetActor, const bool bInHoveredOver);
 	UFUNCTION()
 	void UpdateBossDetectionInfo(AActor* InBossActor, const bool bInSeen);
-	
-protected:
+
+	//~ Begin UObsidianHeroWidgetControllerBase Interface
+	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC) override;
+	//~ End UObsidianHeroWidgetControllerBase Interface
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|UIData")
 	TObjectPtr<UDataTable> UIEffectDataWidgetTable;
-	
+
 	/** Hero Set */
 	FDelegateHandle ManaChangedDelegateHandle;
 	FDelegateHandle MaxManaChangedDelegateHandle;
@@ -168,11 +168,10 @@ private:
 	UFUNCTION()
 	void DestroyAuraWidget(const FGameplayTag InAuraWidgetTag);
 
-private:
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianAbilitySystemComponent> OwnerAbilitySystemComponent = nullptr;
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianHeroAttributesComponent> OwnerAttributesComponent = nullptr;
-	
+
  	float MaxExperienceOldValue = 0.0f;
 };

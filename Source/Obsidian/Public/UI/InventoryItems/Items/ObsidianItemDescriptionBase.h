@@ -23,14 +23,14 @@ class UImage;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianItemDescriptionBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
 	void InitializeWidgetWithItemStats(const FObsidianItemStats& InItemStats, const bool bInDisplayItemImage = false);
-	
+
 	void SetItemDisplayName(const FText& InDisplayName, const EObsidianItemRarity InRarity);
 	void SetItemDescription(const FText& InItemDescription);
 	void SetAdditionalItemDescription(const FText& InAdditionalItemDescription);
@@ -43,35 +43,30 @@ public:
 	bool IsEquipmentDescription() const;
 	bool IsInventoryItemDescription() const;
 	bool IsPlayerStashItemDescription() const;
-	
-	void SetAssociatedItemPosition(const FObsidianItemPosition& InPosition)
-	{
-		AssociatedItemPosition = InPosition;
-	};
-	
-	FObsidianItemPosition GetAssociatedItemPosition() const
-	{
-		return AssociatedItemPosition;
-	}
+
+	void SetAssociatedItemPosition(const FObsidianItemPosition& InPosition) { AssociatedItemPosition = InPosition; };
+
+	FObsidianItemPosition GetAssociatedItemPosition() const { return AssociatedItemPosition; }
 
 protected:
-	virtual void NativeConstruct() override;
-
 	UObsidianAffixRow* GetFreePrimaryItemAffixBlock();
 	UObsidianAffixRow* GetFreePrefixBlock();
 	UObsidianAffixRow* GetFreeSuffixBlock();
 	UObsidianAffixRow* GetFreeBlockForUniqueItem();
 
-protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UVerticalBox> Description_VerticalBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> ItemName_Image;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ItemName_TextBlock;
 
@@ -89,13 +84,13 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianItemDescRequirementsBlock> ItemRequirements_RequirementsBlock;
-	
+
 	UPROPERTY(meta=(BindWidget))	
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ItemDescription_TextBlock;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> AdditionalItemDescription_TextBlock;
 
@@ -107,13 +102,13 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> ImplicitSeparator_Image;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianAffixRow> Implicit_AffixRow;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> SkillImplicitSeparator_Image;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianAffixRow> Prefix1_AffixRow;
 
@@ -131,7 +126,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianAffixRow> Suffix3_AffixRow;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> IdentificationHint_TextBlock;
 
@@ -150,10 +145,9 @@ protected:
 private:
 	void CollapseStatBlocks();
 
-private:
 	int32 CurrentStackCount = 0;
 	int32 MaxStackCount = 0;
-	
+
 	FObsidianItemPosition AssociatedItemPosition = FObsidianItemPosition();
 };
 

@@ -25,20 +25,20 @@ enum class EObsidianUsableItemType : uint8
 /**
  * Fragment that allows the item to have Usable functionality.
  */
-UCLASS(DisplayName="Usable")
+UCLASS(DisplayName="Usable", meta = (PrioritizeCategories = "Usable"))
 class OBSIDIAN_API UOInventoryItemFragment_Usable : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
-	
+
 public:
-	//~ Start of UObsidianInventoryItemFragment
+	//~ Begin UObsidianInventoryItemFragment Interface
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
-	//~ End of UObsidianInventoryItemFragment
+	//~ End UObsidianInventoryItemFragment Interface
 
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Usable")
 	EObsidianUsableItemType UsableItemType = EObsidianUsableItemType::UIT_None;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Usable")
 	TObjectPtr<UObsidianUsableShard> UsableShard = nullptr;
 };

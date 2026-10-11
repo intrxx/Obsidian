@@ -24,6 +24,7 @@
 #include "UI/InventoryItems/Items/ObsidianUnstackSlider.h"
 #include "UI/MainOverlay/ObsidianMainOverlay.h"
 #include "UI/ObsidianHUD.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 
 
 // ~ Start of FObsidianItemWidgetData
@@ -353,11 +354,6 @@ void UObInventoryItemsWidgetController::OnPlayerStashOpen()
 			OnItemStashedDelegate.Broadcast(ItemWidgetData);
 		}
 	}
-}
-
-UObsidianItemDescriptionBase* UObInventoryItemsWidgetController::GetActiveDroppedItemDescription()
-{
-	return ActiveDroppedItemDescription;
 }
 
 TConstArrayView<TObjectPtr<UObsidianStashTab>> UObInventoryItemsWidgetController::GetAllStashTabs() const

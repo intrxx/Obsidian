@@ -7,12 +7,12 @@
 
 struct SObsidianMMC_MaxSpecialResource_Paladin
 {
-	FGameplayEffectAttributeCaptureDefinition FaithDef;
-
 	SObsidianMMC_MaxSpecialResource_Paladin()
 	{
 		FaithDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetFaithAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition FaithDef;
 };
 
 static const SObsidianMMC_MaxSpecialResource_Paladin& MaxSpecialResource_PaladinStatics()

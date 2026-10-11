@@ -227,11 +227,6 @@ void UObsidianAbilitySystemComponent::ClearAbilityInput()
 	InputHeldSpecHandles.Reset();
 }
 
-void UObsidianAbilitySystemComponent::SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* InMappingToSet)
-{
-	TagRelationshipMapping = InMappingToSet;
-}
-
 void UObsidianAbilitySystemComponent::AbilityActorInfoSet()
 {
 	BindToOnEffectAppliedDelegate();

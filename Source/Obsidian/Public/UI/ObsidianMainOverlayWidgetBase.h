@@ -17,47 +17,40 @@ DECLARE_MULTICAST_DELEGATE(FOnWidgetDestroyedSignature);
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianMainOverlayWidgetBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
-	
-public:
-	float GetWindowWidth() const
-	{
-		return RootSizeBoxWidth;
-	}
 
-	float GetWindowHeight() const
-	{
-		return RootSizeBoxHeight;
-	}
-	
 public:
+	float GetWindowWidth() const { return RootSizeBoxWidth; }
+	float GetWindowHeight() const { return RootSizeBoxHeight; }
+
 	FOnWidgetDestroyedSignature OnWidgetDestroyedDelegate;
 
 protected:
+	UFUNCTION()
+	void OnCloseButtonClicked();
+
+	virtual void PreCloseButtonPressed();
+
+	//~ Begin UUserWidget Interface
 	virtual void NativePreConstruct() override;
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
-	virtual void PreCloseButtonPressed();
-	
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
-	UFUNCTION()
-	void OnCloseButtonClicked();
-	
-protected:
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Close_Button;
 
 	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Setup")
 	uint8 bOverride_RootSizeHeight : 1;
-	
+
 	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Setup")
 	uint8 bOverride_RootSizeWidth : 1;
 

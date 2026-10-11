@@ -42,16 +42,6 @@ void UObsidianSlot_ItemSlot::InitializeSlot(const FGameplayTag& InSlotTag, const
 	}
 }
 
-FGameplayTag UObsidianSlot_ItemSlot::GetSlotTag() const
-{
-	return SlotTag;
-}
-
-FGameplayTag UObsidianSlot_ItemSlot::GetSisterSlotTag() const
-{
-	return SisterSlotTag;
-}
-
 void UObsidianSlot_ItemSlot::AddItemToSlot(UObsidianItem* InItemWidget, const float InItemSlotPadding)
 {
 	if(ensure(Main_Overlay && InItemWidget))

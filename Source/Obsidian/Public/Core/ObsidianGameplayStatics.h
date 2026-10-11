@@ -17,12 +17,12 @@ UCLASS()
 class OBSIDIAN_API UObsidianGameplayStatics : public UGameplayStatics
 {
 	GENERATED_BODY()
-	
+
 public:
 	static FText GetHeroClassText(const EObsidianHeroClass InHeroClass);
 
 	static bool DoesTagMatchesAnySubTag(const FGameplayTag InTagToCheck, const FGameplayTag& InSubTagToCheck);
-	
+
 	static FGameplayTag GetOpposedEquipmentTagForTag(const FGameplayTag InMainTag);
 
 	static EObsidianGameNetworkType GetCurrentNetworkType(const UObject* InWorldContextObject);

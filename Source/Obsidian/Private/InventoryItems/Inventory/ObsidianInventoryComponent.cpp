@@ -47,11 +47,6 @@ void UObsidianInventoryComponent::InitSaveData(const bool bInReceivedInitialItem
 	}
 }
 
-bool UObsidianInventoryComponent::DidReceiveInitialInventoryItems() const
-{
-	return bReceivedInitialInventoryItems;
-}
-
 void UObsidianInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
@@ -77,16 +72,6 @@ void UObsidianInventoryComponent::AddDefaultItems()
 		}
 		bReceivedInitialInventoryItems = true;
 	}
-}
-
-int32 UObsidianInventoryComponent::GetInventoryGridWidth() const
-{
-	return InventoryGridWidth;
-}
-
-int32 UObsidianInventoryComponent::GetInventoryGridHeight() const
-{
-	return InventoryGridHeight;
 }
 
 int32 UObsidianInventoryComponent::GetTotalItemCountByDefinition(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef) const

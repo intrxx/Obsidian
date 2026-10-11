@@ -16,7 +16,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnStackingInfoWidgetTerminated, UOStackingD
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UOStackingDurationalEffectInfo : public UObsidianEffectInfoBase
 {
 	GENERATED_BODY()
@@ -24,10 +24,9 @@ class OBSIDIAN_API UOStackingDurationalEffectInfo : public UObsidianEffectInfoBa
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void InitDurationalStackingEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float InDuration, const FObsidianEffectUIStackingData& InData);
-	
+
 	void UpdateStackingInfoWidget(const int32 InNewCount);
 
-public:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Obsidian|EffectInfo")
 	TObjectPtr<UCommonTextBlock> EffectTimer_TextBlock;
 
@@ -36,13 +35,13 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	EGameplayEffectStackingExpirationPolicy EffectExpirationPolicy;
-	
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	EGameplayEffectStackingDurationPolicy EffectDurationPolicy;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	FObsidianEffectUIStackingData StackingData;
-	
+
 	FOnStackingInfoWidgetTerminated OnStackingInfoWidgetTerminatedDelegate;
 
 protected:
@@ -57,19 +56,18 @@ private:
 	void ResetEffectTimer();
 	void HandleEffectExpiration();
 	void TerminateTheEffect();
-	
-private:
+
 	UPROPERTY()
 	APlayerController* OwningPlayer = nullptr;
-	
+
 	/**
 	 * Effect data
 	 */
-	
+
 	// Amount to fall back on to in case of resetting the duration of the stacking gameplay effect
 	float WholeEffectDuration = 0;
-	
+
 	int32 EffectStackCount = 0;
-	
+
 	FTimerHandle EffectDurationTimerHandle;
 };

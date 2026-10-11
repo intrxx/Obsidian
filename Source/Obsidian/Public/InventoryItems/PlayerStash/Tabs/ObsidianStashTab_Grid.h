@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianStashTab_Grid : public UObsidianStashTab
 {
 	GENERATED_BODY()
@@ -19,32 +19,32 @@ class OBSIDIAN_API UObsidianStashTab_Grid : public UObsidianStashTab
 public:
 	UObsidianStashTab_Grid(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
+	int32 GetGridWidth() const { return GridWidth; }
+	int32 GetGridHeight() const { return GridHeight; }
+
+	//~ Begin UObsidianStashTab Interface
 	virtual UObsidianInventoryItemInstance* GetInstanceAtPosition(const FObsidianItemPosition& InItemPosition) override;
 
 	virtual bool CanPlaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) override;
 	virtual bool FindFirstAvailablePositionForItem(FObsidianItemPosition& OutFirstAvailablePosition, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType, const FIntPoint& InItemGridSpan) override;
-	
+
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const UObsidianInventoryItemInstance* InReplacingInstance) override;
 	virtual bool CanReplaceItemAtSpecificPosition(const FObsidianItemPosition& InSpecifiedPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& InReplacingDef) override;
-	
+
 	virtual bool DebugVerifyPositionFree(const FObsidianItemPosition& InPosition) override;
 
 	virtual void Construct(UObsidianPlayerStashComponent* InStashComponent) override;
 	virtual void MarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) override;
 	virtual void UnmarkSpaceInTab(UObsidianInventoryItemInstance* InItemInstance, const FObsidianItemPosition& InAtPosition) override;
-	
-	int32 GetGridWidth() const;
-	int32 GetGridHeight() const;
+	//~ End UObsidianStashTab Interface
 
 private:
-	bool CheckReplacementPossible(const FObsidianItemPosition& InSpecifiedPosition, const FIntPoint& InReplacingItemGridSpan) const;
-
-private:
-
 #if WITH_GAMEPLAY_DEBUGGER
 	friend class FGameplayDebuggerCategory_PlayerStash;
 #endif
-	
+
+	bool CheckReplacementPossible(const FObsidianItemPosition& InSpecifiedPosition, const FIntPoint& InReplacingItemGridSpan) const;
+
 	/**
 	* Map that represents whole Grid with taken fields.
 	* If a Given FIntPoint location has a true value associated with it, the field is treated as taken.
@@ -56,7 +56,7 @@ private:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|GridSettings")
 	int32 GridWidth = 12;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|GridSettings")
 	int32 GridHeight = 10;
 };

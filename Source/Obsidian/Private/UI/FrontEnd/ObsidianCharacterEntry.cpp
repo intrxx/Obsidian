@@ -38,16 +38,6 @@ void UObsidianCharacterEntry::InitializeCharacterEntry(const uint16 InSaveID, co
 	PlayType_TextBlock->SetText(PlayTypeText);
 }
 
-uint16 UObsidianCharacterEntry::GetSaveID() const
-{
-	return SaveID;
-}
-
-bool UObsidianCharacterEntry::IsOnline() const
-{
-	return bOnline;
-}
-
 void UObsidianCharacterEntry::SetIsChosen()
 {
 	Chosen_Border->SetVisibility(ESlateVisibility::Visible);

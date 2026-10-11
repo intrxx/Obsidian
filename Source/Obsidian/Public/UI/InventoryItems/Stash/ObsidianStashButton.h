@@ -22,16 +22,16 @@ class OBSIDIAN_API UObsidianStashButton : public UObsidianButtonBase
 public:
 	void InitializeStashButton(const FGameplayTag& InStashTag, const FText& InStashTabName);
 
-public:
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
 	FOnStashTabButtonPressedSignature OnStashTabButtonPressedDelegate;
 
 protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-
 	void OnStashButtonClicked();
-	
-protected:
+
 	UPROPERTY()
 	FGameplayTag CorrespondingStashTag = FGameplayTag::EmptyTag;
 };

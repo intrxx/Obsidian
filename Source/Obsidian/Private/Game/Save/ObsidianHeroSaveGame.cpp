@@ -36,11 +36,6 @@ void UObsidianHeroSaveGame::SetHeroGameplayData(const FObsidianHeroGameplaySaveD
 	HeroSaveData.GameplaySaveData = InGameplaySaveData;
 }
 
-FObsidianHeroSaveData UObsidianHeroSaveGame::GetHeroSaveData()
-{
-	return HeroSaveData;
-}
-
 bool UObsidianHeroSaveGame::IsOnline() const
 {
 	return HeroSaveData.bOnline;

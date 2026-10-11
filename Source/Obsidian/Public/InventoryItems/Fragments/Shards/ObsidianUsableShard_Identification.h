@@ -17,8 +17,10 @@ class OBSIDIAN_API UObsidianUsableShard_Identification : public UObsidianUsableS
 	GENERATED_BODY()
 
 public:
+	//~ Begin UObsidianUsableShard Interface
 	virtual bool OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
 		UObsidianInventoryItemInstance* InUsingOntoInstance = nullptr) override;
 	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) override;
+	//~ End UObsidianUsableShard Interface
 };

@@ -15,14 +15,14 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnHeroAttributeValueChangedSignature, const
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianHeroAttributesComponent : public UObsidianAttributesComponent
 {
 	GENERATED_BODY()
 
 public:
 	UObsidianHeroAttributesComponent(const FObjectInitializer& InObjectInitializer);
-	
+
 	/** Returns the HERO Attributes Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|HeroAttributes")
 	static UObsidianHeroAttributesComponent* FindHeroAttributesComponent(const AActor* InActor)
@@ -30,14 +30,9 @@ public:
 		return (InActor ? InActor->FindComponentByClass<UObsidianHeroAttributesComponent>() : nullptr);
 	}
 
-	//~ Start of ObsidianAttributesComponent
-	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner = nullptr) override;
-	virtual void UninitializeFromAbilitySystem() override;
-	//~ End of ObsidianAttributesComponent
-
 	UGameplayEffect* GetLevelUpEffect() const;
-	FObsidianSpecialResourceVisuals GetSpecialResourceVisuals() const;
-	
+	FObsidianSpecialResourceVisuals GetSpecialResourceVisuals() const { return SpecialResourceVisuals; }
+
 	/**
 	 * Getters for Gameplay Attributes.
 	 */
@@ -53,11 +48,11 @@ public:
 	/** Getters for Stamina Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetStamina() const;
 	FGameplayAttribute GetStaminaAttribute() const;
-	
+
 	/** Getters for Max Stamina Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetMaxStamina() const;
 	FGameplayAttribute GetMaxStaminaAttribute() const;
-	
+
 	/** Getters for Sprint Speed Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetSprintSpeed() const;
 	FGameplayAttribute GetSprintSpeedAttribute() const;
@@ -93,7 +88,7 @@ public:
 	/** Getters for Ascension Points Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetAscensionPoints() const;
 	FGameplayAttribute GetAscensionPointsAttribute() const;
-	
+
 	/** Getters for Strength Value and Attribute from UObsidianHeroAttributeSet. */
 	float GetStrength() const;
 	FGameplayAttribute GetStrengthAttribute() const;
@@ -126,30 +121,23 @@ public:
 	float GetMaxSpellBlockChance() const;
 	FGameplayAttribute GetMaxSpellBlockChanceAttribute() const;
 
+	//~ Begin UObsidianAttributesComponent Interface
+	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner = nullptr) override;
+	virtual void UninitializeFromAbilitySystem() override;
+	//~ End UObsidianAttributesComponent Interface
+
 	/**
 	 * 
 	 */
-
-public:
 	FOnHeroAttributeValueChangedSignature OnHeroHealthChangedDelegate;
 	FOnHeroAttributeValueChangedSignature OnHeroMaxHealthChangedDelegate;
 	FOnHeroAttributeValueChangedSignature OnHeroEnergyShieldChangedDelegate;
 	FOnHeroAttributeValueChangedSignature OnHeroMaxEnergyShieldChangedDelegate;
 
 protected:
-	virtual void ClearGameplayTags() override;
-	
-	/**
-	 * Callbacks for Attribute change delegates. //TODO(intrxx) Decide what should actually be bind later - check performance
-	 */
-	
-	virtual void HealthChanged(const FOnAttributeChangeData& InData) override;
-	virtual void MaxHealthChanged(const FOnAttributeChangeData& InData) override;
-	virtual void EnergyShieldChanged(const FOnAttributeChangeData& InData) override;
-	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) override;
 	virtual void ManaChanged(const FOnAttributeChangeData& InData);
 	virtual void MaxManaChanged(const FOnAttributeChangeData& InData);
-	
+
 	/**
 	 * 
 	 */
@@ -157,17 +145,29 @@ protected:
 	virtual void HandleOutOfStamina(AActor* InDamageInstigator, AActor* InDamageCauser, const FGameplayEffectSpec* InDamageEffectSpec,
 		float InDamageMagnitude, float InOldValue, float InNewValue);
 
-protected:
+	//~ Begin UObsidianAttributesComponent Interface
+	virtual void ClearGameplayTags() override;
+
+	/**
+	 * Callbacks for Attribute change delegates. //TODO(intrxx) Decide what should actually be bind later - check performance
+	 */
+
+	virtual void HealthChanged(const FOnAttributeChangeData& InData) override;
+	virtual void MaxHealthChanged(const FOnAttributeChangeData& InData) override;
+	virtual void EnergyShieldChanged(const FOnAttributeChangeData& InData) override;
+	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) override;
+	//~ End UObsidianAttributesComponent Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|LevelingUp")
 	FObsidianSpecialResourceVisuals SpecialResourceVisuals;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|LevelingUp")
 	TSubclassOf<UGameplayEffect> LevelUpEffectClass;
-	
+
 	/**
 	 * Sets used by this component.
 	 */
-	
+
 	UPROPERTY()
 	TObjectPtr<const UObsidianHeroAttributeSet> HeroAttributeSet;
 

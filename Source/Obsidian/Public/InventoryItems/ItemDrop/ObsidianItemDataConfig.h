@@ -15,24 +15,23 @@ class UObsidianTreasureList;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianItemDataConfig : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
 	UObsidianItemDataConfig(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
 	FString GetRandomItemNameAddition(const int32 InUpToTreasureQuality, const FGameplayTag& InForItemCategoryTag);
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Items")
 	FObsidianRareItemNameGenerationData RareItemNameGenerationData;
 
 	/** Unique addition to Magic Item that was rolled with increased Affix multiplier. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Items")
 	FString MultiplierItemNameAddition = FString(TEXT("High"));
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Treasure")
 	TArray<TObjectPtr<UObsidianTreasureList>> CommonTreasureLists;
 

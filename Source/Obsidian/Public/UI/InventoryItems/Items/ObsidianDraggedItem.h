@@ -22,18 +22,17 @@ UCLASS()
 class OBSIDIAN_API UObsidianDraggedItem : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	void InitializeItemWidgetWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InGeneratedData);
 	void InitializeItemWidgetWithItemInstance(const UObsidianInventoryItemInstance* InItemInstance);
-	
+
 	/** Updates the stack count on the dragged item. */
 	void UpdateStackCount(const int32 InNewStackCount);
-	
-public:
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
 
@@ -41,9 +40,10 @@ public:
 	TObjectPtr<UCommonTextBlock> StackCount_TextBlock;
 
 protected:
+	//~ Begin UUserWidget Interface
 	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
 
-protected:
 	int32 InternalStacks = 0;
 
 private:

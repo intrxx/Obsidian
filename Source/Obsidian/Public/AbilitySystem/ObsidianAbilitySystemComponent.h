@@ -25,10 +25,10 @@ struct FObsidianEffectUIData
 
 	UPROPERTY()
 	float EffectDuration = 0.f;
-	
+
 	UPROPERTY()
 	FObsidianEffectUIStackingData StackingData;
-	
+
 	UPROPERTY()
 	bool bStackingEffect = false;
 };
@@ -56,7 +56,7 @@ public:
 	void ProcessAbilityInput(float InDeltaTime, bool bInPauseGame);
 	void ClearAbilityInput();
 
-	void SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* InMappingToSet);
+	void SetTagRelationshipMapping(UOAbilityTagRelationshipMapping* InMappingToSet) { TagRelationshipMapping = InMappingToSet; }
 	void AbilityActorInfoSet();
 	void BindToOnEffectAppliedDelegate();
 
@@ -71,25 +71,24 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameplayCue", meta = (AutoCreateRefTerm = "InGameplayCueParameters", GameplayTagFilter = "GameplayCue"))
 	void RemoveGameplayCueLocal(const FGameplayTag InGameplayCueTag, const FGameplayCueParameters& InGameplayCueParameters);
 
-public:
-	FEffectAppliedAssetTags OnEffectAppliedAssetTags;
-	FOnAuraDisabled OnAuraDisabledDelegate;
-	
-protected:
+	//~ Begin UAbilitySystemComponent Interface
 	virtual void AbilitySpecInputPressed(FGameplayAbilitySpec& InSpec) override;
 	virtual void AbilitySpecInputReleased(FGameplayAbilitySpec& InSpec) override;
+	//~ End UAbilitySystemComponent Interface
 
+	FEffectAppliedAssetTags OnEffectAppliedAssetTags;
+	FOnAuraDisabled OnAuraDisabledDelegate;
+
+protected:
 	UFUNCTION(Client, Reliable)
 	void ClientOnEffectApplied(UAbilitySystemComponent* InASC, const FGameplayEffectSpec& InEffectSpec, FActiveGameplayEffectHandle InEffectHandle);
 
 	float CalculateFullEffectMagnitude(const FGameplayEffectSpec& InEffectSpec);
-	
-protected:
+
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
 	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
 	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
 
 	UPROPERTY()
 	TObjectPtr<UOAbilityTagRelationshipMapping> TagRelationshipMapping;
-	
 };

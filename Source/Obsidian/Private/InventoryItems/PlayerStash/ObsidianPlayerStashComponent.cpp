@@ -36,11 +36,6 @@ void UObsidianPlayerStashComponent::GetLifetimeReplicatedProps(TArray<class FLif
 	DOREPLIFETIME(ThisClass, CurrentStashTab);
 }
 
-TConstArrayView<TObjectPtr<UObsidianStashTab>> UObsidianPlayerStashComponent::GetAllStashTabs() const
-{
-	return StashTabs;
-}
-
 bool UObsidianPlayerStashComponent::CanOwnerModifyPlayerStashState()
 {
 	return CanOwnerModifyContainerState();
@@ -493,11 +488,6 @@ void UObsidianPlayerStashComponent::ServerRegisterAndValidateCurrentStashTab_Imp
 	{
 		ensureAlwaysMsgf(false, TEXT("There is no such StashTab found for provided Gameplay Tag for Current Player."));
 	}
-}
-
-FGameplayTag UObsidianPlayerStashComponent::GetActiveStashTag() const
-{
-	return CurrentStashTab;
 }
 
 void UObsidianPlayerStashComponent::LoadStashedItem(const FObsidianSavedItem& InStashedSavedItem)

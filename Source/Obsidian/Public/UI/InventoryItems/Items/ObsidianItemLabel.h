@@ -19,38 +19,37 @@ DECLARE_MULTICAST_DELEGATE_TwoParams(FOnItemLabelMouseHoverSignature, const bool
 /**
  * Widget class that represents the Item's name above the Item Actor in the world.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianItemLabel : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
 	UObsidianItemLabel();
-	
-	virtual void NativeConstruct() override;
 
-	FGuid GetLabelID() const;
-	bool IsInUse() const;
+	FGuid GetLabelID() const { return LabelID; }
+	bool IsInUse() const { return bLabelInUse; }
 	void MarkInUse(const bool bInUse, const FGuid& InWithGuid = FGuid());
-	
+
 	void SetItemName(const FText& InItemName);
-	
+
 	void HandleItemLabelHighlightBegin() const;
 	void HandleItemLabelHighlightEnd() const;
-	
-public:
+
 	/** Delegate that fires when the Player presses the left mouse button onto the item desc. */
 	FOnItemLabelMouseButtonDownSignature OnItemLabelMouseButtonDownDelegate;
 
 	/** Delegate that fires when the Player hovers over the item Desc Widget, will fire with true if enters, false if leaves. */
 	FOnItemLabelMouseHoverSignature OnItemLabelMouseHoverDelegate;
-	
+
 protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
 	virtual FReply NativeOnPreviewMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-	
-protected:
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ItemName_TextBlock;
 

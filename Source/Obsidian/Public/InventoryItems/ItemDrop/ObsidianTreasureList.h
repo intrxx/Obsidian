@@ -16,15 +16,14 @@ USTRUCT()
 struct FObsidianStacksToDrop
 {
 	GENERATED_BODY()
-	
+
 public:
 	FObsidianStacksToDrop(){}
 	FObsidianStacksToDrop(const uint8 InStackSize, const uint16 InDropWeight)
 		: StackSize(InStackSize)
 		, StackTierWeight(InDropWeight)
 	{}
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	uint8 StackSize = 1;
 
@@ -40,11 +39,12 @@ struct FObsidianDropItem
 public:
 	FObsidianDropItem();
 
+	static const FObsidianDropItem NoDropType;
+
 	bool IsValid() const;
 
 	uint8 GetRandomStackSizeToDropAdjusted(const uint8 InTreasureQuality) const;
-	
-public:
+
 	/** Actual items/item templates in this Treasure Class. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UObsidianInventoryItemDefinition> SoftTreasureItemDefinitionClass = nullptr;
@@ -52,22 +52,20 @@ public:
 	/** Drop Weight [0, 1000], the higher the weight the more likely the item to drop. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta=(ClampMin = "0", ClampMax = "1000"))
 	uint16 DropWeight = 1;
-	
+
 	/** Array of possible weighted stack sizes to drop the Item with. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bStackable", TitleProperty = "Stack Size: {StackSize}"), Category = "Obsidian")
 	TArray<FObsidianStacksToDrop> StackSizes;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	bool bShouldRandomizeRarity = true;
-	
+
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bShouldRandomizeRarity", EditConditionHides), Category = "Obsidian")
 	EObsidianItemRarity ItemMaxRarity = EObsidianItemRarity::Set;
-	
+
 	/** Derived automatically from provided Treasure Item Definition. */
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian")
 	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
-	
-	static const FObsidianDropItem NoDropType;
 
 protected:
 	//TODO(intrxx) Validation of already added items to check if they are actually stackable?
@@ -96,13 +94,13 @@ public:
 
 	UPROPERTY()
 	bool bShouldApplyMultiplier = false;
-	
+
 	UPROPERTY()
 	FTransform DropTransform = FTransform::Identity;
 
 	UPROPERTY()
 	EObsidianItemRarity DropRarity = EObsidianItemRarity::Normal;
-	
+
 	UPROPERTY()
 	uint8 DropStacks = 1;
 
@@ -126,18 +124,17 @@ public:
 	FObsidianTreasureClass(const TArray<FObsidianDropItem>& InDropItems)
 		: DropItems(InDropItems)
 	{}
-	
+
 	/** Returns Weighted Randomized Item, will be FObsidianDropItem::NoDropType if NoDrop was chosen. */
 	FObsidianDropItem GetRandomItemFromClass(const float InNoDropScale = 1.0f);
 
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
 	FGameplayTag TreasureCategoryTag = FGameplayTag::EmptyTag;
-	
+
 	/**
 	 * Treasure Quality [0, 85] is an identifier of value of items listed in this Treasure Class.
 	 * Once the enemy is killed, the area level is gathered then the rarity of monster gets added to the number,
@@ -161,32 +158,34 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianTreasureList : public UDataAsset
 {
 	GENERATED_BODY()
 
 public:
-	virtual void PostInitProperties() override;
-	virtual void PostLoad() override;
-	
-	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const;
+	TArray<FObsidianTreasureClass> GetAllTreasureClasses() const { return TreasureClasses; }
 	TArray<FObsidianTreasureClass> GetAllTreasureClassesUpToQuality(const uint8 InTreasureQuality) const;
 	TArray<FObsidianTreasureClass> GetTreasureClassesOfQuality(const uint8 InTreasureQuality) const;
 	TArray<FObsidianTreasureClass> GetTreasureClassesOfQualityWithCategory(const uint8 InTreasureQuality, const FGameplayTag& InFromCategory) const;
 	TArray<FObsidianDropItem> GetAllItemsOfBaseTypeUpToQuality(const uint8 InTreasureQuality, const FGameplayTag& InOfBaseType) const;
-	
+
+	//~ Begin UObject Interface
+	virtual void PostInitProperties() override;
+	virtual void PostLoad() override;
+
 	virtual void PreSave(FObjectPreSaveContext InSaveContext) override;
-	
+
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& InPropertyChangedEvent) override;
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
-	
+	//~ End UObject Interface
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianTreasureClass> TreasureClasses;
-	
+
 	/** MultiMap for faster lookups. */
 	TMultiMap<int32, const FObsidianTreasureClass*> TreasureClassMap;
 };

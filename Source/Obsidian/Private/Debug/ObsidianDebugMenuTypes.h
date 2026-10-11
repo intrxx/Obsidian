@@ -35,7 +35,6 @@ public:
 	/** Runs the command through the local Player if there is one, so viewport commands like "stat" or "show" work. */
 	void ExecConsoleCommand(const FString& InCommand) const;
 
-public:
 	UWorld* World = nullptr;
 	APlayerController* PlayerController = nullptr;
 	APawn* Pawn = nullptr;
@@ -73,12 +72,8 @@ public:
 	FString GetSelectedClassName() const;
 
 	/** Paths of every gathered class, in the order they are listed in the picker. */
-	TConstArrayView<FSoftClassPath> GetClassPaths() const
-	{
-		return ClassPaths;
-	}
+	TConstArrayView<FSoftClassPath> GetClassPaths() const { return ClassPaths; }
 
-public:
 	/**
 	 * Optional filter of the gathered classes, needs to be set before the picker is drawn for the first time.
 	 * Caution, classes need to be loaded to be filtered, so every gathered class is loaded when the filter is set.

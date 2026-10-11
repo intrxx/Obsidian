@@ -12,23 +12,20 @@
 /**
  * 
  */
-UCLASS(DisplayName="Stacks")
+UCLASS(DisplayName="Stacks", meta = (PrioritizeCategories = "Stacks"))
 class OBSIDIAN_API UOInventoryItemFragment_Stacks : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
 
 public:
-	//~ Start of UObsidianInventoryItemFragment
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
-	//~ End of UObsidianInventoryItemFragment
-	
 	/** Getter for item stack number, if the Tag for Stack Count does not exist on the item, it will return the unified project default. */
 	int32 GetItemStackNumberByTag(const FGameplayTag InTag) const;
-	
-	bool IsStackable() const
-	{
-		return bStackable;
-	}
+
+	bool IsStackable() const { return bStackable; }
+
+	//~ Begin UObsidianInventoryItemFragment Interface
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
+	//~ End UObsidianInventoryItemFragment Interface
 
 protected:
 	/** 
@@ -37,7 +34,7 @@ protected:
 	 */
 	UPROPERTY(EditDefaultsOnly, Category = "Stacks")
 	bool bStackable = true;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Stacks")
 	TMap<FGameplayTag, int32> InventoryItemStackNumbers;
 };

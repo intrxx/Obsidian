@@ -25,45 +25,41 @@ class UObsidianItemLabelOverlay;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "ObsidianUI"))
 class OBSIDIAN_API AObsidianHUD : public AHUD
 {
 	GENERATED_BODY()
-	
+
 public:
-	UObMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
-	UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
-	UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
-
-	UObsidianMainOverlay* GetMainOverlay()
-	{
-		return MainOverlayWidget;
-	}
-
 	void InitOverlay(AObsidianPlayerController* InForPlayerController, AObsidianPlayerState* InForPlayerState);
 
 	void ToggleCharacterStatus() const;
 	void ToggleInventory() const;
 	void TogglePassiveSkillTree() const;
-	
+
 	void TogglePlayerStash(const bool bInShowStash) const;
+
+	UObMainOverlayWidgetController* GetMainOverlayWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
+	UObCharacterStatusWidgetController* GetCharacterStatusWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
+	UObInventoryItemsWidgetController* GetInventoryItemsWidgetController(const FObsidianWidgetControllerParams& InWidgetControllerParams);
+
+	UObsidianMainOverlay* GetMainOverlay() { return MainOverlayWidget; }
 
 	bool IsInventoryOpened() const;
 	bool IsPlayerStashOpened() const;
 	FGameplayTag GetActiveStashTabTag() const;
-	
-public:
+
 	UPROPERTY()
 	TObjectPtr<UObsidianMainOverlay> MainOverlayWidget;
-	
+
 private:
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|MainOverlay")
 	TSubclassOf<UObsidianMainOverlay> MainOverlayWidgetClass;
-	
+
 	/**
 	 * Widget Controllers 
 	 */
-	
+
 	UPROPERTY()
 	TObjectPtr<UObMainOverlayWidgetController> MainOverlayWidgetController;
 
@@ -78,7 +74,7 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
-	
+
 	UPROPERTY(EditAnywhere, Category = "ObsidianUI|Inventory")
 	TSubclassOf<UObInventoryItemsWidgetController> InventoryItemsWidgetControllerClass;
 };

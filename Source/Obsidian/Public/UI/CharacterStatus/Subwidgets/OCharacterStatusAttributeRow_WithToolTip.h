@@ -13,7 +13,7 @@ class UObsidianAttributeToolTip;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UOCharacterStatusAttributeRow_WithToolTip : public UOCharacterStatusAttributeRow
 {
 	GENERATED_BODY()
@@ -23,15 +23,16 @@ public:
 	void SetCharacterStatus(UObsidianCharacterStatus* InCharacterStatus);
 
 protected:
-	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
-	
 	void OnToolTipButtonHovered();
 	void OnToolTipButtonUnHovered();
 
 	void HandleCharacterStatusSet();
-	
-protected:	
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|ToolTip")
 	TSubclassOf<UObsidianAttributeToolTip> AttributeToolTipWidgetClass;
 

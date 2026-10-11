@@ -29,20 +29,19 @@ struct FObsidianHeroInfo
 public:
 	UPROPERTY(EditAnywhere)
 	EObsidianHeroClass Class = EObsidianHeroClass::None;
-	
+
 	UPROPERTY(EditAnywhere)
 	FText HeroName = FText();
-	
+
 	UPROPERTY(EditAnywhere)
 	FText HeroInfoText = FText();
-
 	// Add Image or something
 };
 
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianCharacterCreationScreen : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
@@ -51,14 +50,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
 	void InitializeCharacterCreationScreen(const bool bInIsOnline);
 
-	virtual UWidget* NativeGetDesiredFocusTarget() const override;
-
 protected:
-	virtual void NativeOnActivated() override;
-	virtual void NativeOnInitialized() override;
-
-	virtual void HandleWidgetControllerSet() override;
-	
 	void HandleBackwardsAction();
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian")
@@ -70,7 +62,7 @@ protected:
 	void OnPlayerNameEntered(const FText& InPlayerName, ETextCommit::Type InCommitType);
 	UFUNCTION()
 	void OnHardcoreCheckboxStatusChanged(bool InBool);
-	
+
 	void OnCreateButtonClicked();
 	void OnWitchButtonClicked();
 	void OnWitchButtonHovered();
@@ -93,10 +85,23 @@ protected:
 
 	void OnCreateSavingFinished(UObsidianHeroSaveGame* InSaveGame, bool bInSuccess);
 
-protected:
+	//~ Begin UCommonActivatableWidget Interface
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
+
+	virtual void NativeOnActivated() override;
+	//~ End UCommonActivatableWidget Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeOnInitialized() override;
+	//~ End UUserWidget Interface
+
+	//~ Begin UObsidianActivatableWidget Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianActivatableWidget Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianHeroInfo> HeroInfos;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian")
 	AObsidianFrontEndGameMode* FrontEndGameMode;
 
@@ -106,21 +111,19 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Input")
 	FDataTableRowHandle BackwardsInputActionData;
-	
+
 	FUIActionBindingHandle BackwardsHandle;
-	
+
 	bool bIsOnlineCharacter = false;
 	bool bInitialGamepadFocusSet = false;
 
 	FDelegateHandle OnCreateSavingFinishedHandle;
-	
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> TabName_TextBlock;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> HeroDetails_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
 	TObjectPtr<UEditableTextBox> PlayerName_EditableTextBox;
 
@@ -129,22 +132,22 @@ protected:
 
 	UPROPERTY(meta=(BindWidget), BlueprintReadOnly)
 	TObjectPtr<UObsidianButtonBase> Create_Button;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> HeroList_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Witch_Button;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Paladin_Button;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Barbarian_Button;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Assassin_Button;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> HeroInfo_SizeBox;
 

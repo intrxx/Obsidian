@@ -18,8 +18,10 @@ class OBSIDIAN_API UObsidianUIManagerSubsystem : public UGameUIManagerSubsystem
 public:
 	UObsidianUIManagerSubsystem();
 
+	//~ Begin USubsystem Interface
 	virtual void Initialize(FSubsystemCollectionBase& InCollection) override;
 	virtual void Deinitialize() override;
+	//~ End USubsystem Interface
 
 private:
 	bool Tick(float InDeltaTime);

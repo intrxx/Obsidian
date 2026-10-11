@@ -23,50 +23,50 @@ class UObsidianAbilitySystemComponent;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianEnemy : public AObsidianCharacterBase, public IObsidianHighlightInterface, public IObsidianEnemyInterface
 {
 	GENERATED_BODY()
 
 public:
 	AObsidianEnemy(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
-	//~ Start of HighlightInterface
+
+	bool IsHighlighted() const;
+	EObsidianEntityRarity GetEnemyRarity() const { return EnemyRarity; }
+
+	//~ Begin IObsidianHighlightInterface Interface
 	virtual AActor* GetHighlightAvatarActor() override;
 	virtual void StartHighlight() override;
 	virtual void StopHighlight() override;
-	//~ End of HighlightInterface
+	//~ End IObsidianHighlightInterface Interface
 
-	bool IsHighlighted() const;
-	EObsidianEntityRarity GetEnemyRarity() const;
+	//~ Begin IObsidianCombatInterface Interface
+	virtual bool IsDeadOrDying_Implementation() const override;
+	virtual AActor* GetAvatarActor_Implementation() override;
+	virtual uint8 GetCharacterLevel() override { return EnemyLevel; }
+	//~ End IObsidianCombatInterface Interface
 
-public:
+	//~ Begin IObsidianEnemyInterface Interface
+	virtual void SetCombatTarget_Implementation(AActor* InTarget) override;
+	virtual AActor* GetCombatTarget_Implementation() const override;
+	virtual EObsidianEntityRarity GetEnemyRarityFromOwner_Implementation() const override;
+	//~ End IObsidianEnemyInterface Interface
+
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Enemy")
 	bool bHitReacting = false;
 
 protected:
-	virtual void BeginPlay() override;
-
-	//~ Start of AObsidianCharacterBase
+	//~ Begin AObsidianCharacterBase Interface
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
 	virtual void OnDeathStarted(AActor* InOwningActor) override;
 	virtual void OnDeathFinished(AActor* InOwningActor) override;
-	//~ End of AObsidianCharacterBase
+	//~ End AObsidianCharacterBase Interface
 
-	//~ Start of CombatInterface
-	virtual bool IsDeadOrDying_Implementation() const override;
-	virtual AActor* GetAvatarActor_Implementation() override;
-	virtual uint8 GetCharacterLevel() override;
-	//~ End of CombatInterface
-	
-	//~ Start of EnemyInterface
-	virtual void SetCombatTarget_Implementation(AActor* InTarget) override;
-	virtual AActor* GetCombatTarget_Implementation() const override;
-	virtual EObsidianEntityRarity GetEnemyRarityFromOwner_Implementation() const override;
-	//~ End of EnemyInterface
-
-protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianEnemyAttributesComponent> EnemyAttributesComponent;
 
@@ -78,13 +78,13 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
 	TObjectPtr<UBehaviorTree> DefaultBehaviorTree;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::None;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEntityRarity EnemyRarity = EObsidianEntityRarity::None;
-	
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Combat")
 	TObjectPtr<AActor> CombatTarget;
 
@@ -103,10 +103,10 @@ private:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")
 	bool bShouldSpawnDummyMesh = false;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true, EditCondition = "bShouldSpawnDummyMesh", EditConditionHides), Category = "Obsidian")
 	float DummyMeshLifeSpan = 25.0f;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|Level")
 	int32 EnemyLevel = 1;
 };

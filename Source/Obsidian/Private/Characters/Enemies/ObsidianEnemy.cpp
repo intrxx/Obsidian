@@ -89,11 +89,6 @@ bool AObsidianEnemy::IsHighlighted() const
 	return false;
 }
 
-EObsidianEntityRarity AObsidianEnemy::GetEnemyRarity() const
-{
-	return EnemyRarity;
-}
-
 void AObsidianEnemy::BeginPlay()
 {
 	Super::BeginPlay();
@@ -202,11 +197,6 @@ bool AObsidianEnemy::IsDeadOrDying_Implementation() const
 AActor* AObsidianEnemy::GetAvatarActor_Implementation()
 {
 	return this;
-}
-
-uint8 AObsidianEnemy::GetCharacterLevel()
-{
-	return EnemyLevel;
 }
 
 void AObsidianEnemy::SetCombatTarget_Implementation(AActor* InTarget)

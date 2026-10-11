@@ -19,10 +19,14 @@ class OBSIDIAN_API AObsidianTickingProjectile : public AObsidianProjectileBase
 public:
 	AObsidianTickingProjectile(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-protected:
-	virtual void BeginPlay() override;
+	//~ Begin AActor Interface
 	virtual void Tick(float InDeltaSeconds) override;
+	//~ End AActor Interface
 
 protected:
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
 	FVector ProjectileSpawnLocation = FVector::ZeroVector;
 };

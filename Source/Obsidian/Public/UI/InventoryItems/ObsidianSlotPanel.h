@@ -29,15 +29,14 @@ struct FObsidianSlotData
 public:
 	FObsidianSlotData(){}
 
-	bool IsOccupied() const;
-	bool IsBlocked() const;
+	bool IsOccupied() const { return bOccupied; }
+	bool IsBlocked() const { return bBlocked; }
 	void AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget, const bool bInBlockSlot);
 	void Reset();
 
-public:
 	UPROPERTY()
 	FObsidianItemPosition OriginPosition = FObsidianItemPosition();
-	
+
 	UPROPERTY()
 	UObsidianSlot_ItemSlot* OwningSlot = nullptr;
 
@@ -47,7 +46,7 @@ public:
 protected:
 	UPROPERTY()
 	bool bBlocked = false;
-	
+
 	UPROPERTY()
 	bool bOccupied = false;
 };
@@ -70,7 +69,7 @@ public:
 	UObsidianItem* GetItemWidgetAtSlot(const FGameplayTag& InAtSlotTag) const;
 	bool IsSlotOccupied(const FGameplayTag& InAtSlotTag) const;
 	bool IsSlotBlocked(const FGameplayTag& InAtSlotTag) const;
-	
+
 	void AddItemWidget(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData,
 		const bool bInBlockSlot = false);
 	void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
@@ -78,30 +77,35 @@ public:
 
 	void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight);
 	void ClearUsableItemHighlight();
-	
+
 protected:
-	virtual void HandleWidgetControllerSet() override;
-	virtual void NativeDestruct() override;
-	
 	bool ConstructSlots();
-	
+
 	void RegisterSlotItemWidget(const FObsidianItemPosition& InItemPosition, UObsidianItem* InItemWidget,
 		const bool bInSwappedWithAnother, const bool bInBlocksSlot = false,
 		const FObsidianItemPosition& InItemOriginPosition = FObsidianItemPosition());
 	void UnregisterSlotItemWidget(const FGameplayTag& InSlotTag);
-	
+
 	void OnItemSlotHover(UObsidianSlot_ItemSlot* InAffectedSlot, const bool bInEntered);
 	void OnItemSlotLeftMouseButtonDown(const UObsidianSlot_ItemSlot* InAffectedSlot,
 		const FObsidianItemInteractionFlags& InInteractionFlags);
 	void OnItemSlotRightMouseButtonDown(const UObsidianSlot_ItemSlot* InAffectedSlot,
 		const FObsidianItemInteractionFlags& InInteractionFlags);
-	
+
 	void ConstructItemPosition(FObsidianItemPosition& OutItemPosition, const FGameplayTag& InSlotTagOverride) const;
-	
+
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
-	
+
 	UPROPERTY()
 	TMap<FGameplayTag, FObsidianSlotData> SlotDataMap;
 

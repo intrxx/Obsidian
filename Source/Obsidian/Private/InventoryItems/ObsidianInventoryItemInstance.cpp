@@ -92,11 +92,6 @@ const UObsidianInventoryItemFragment* UObsidianInventoryItemInstance::FindFragme
 	return nullptr;
 }
 
-FGuid UObsidianInventoryItemInstance::GetUniqueItemID() const
-{
-	return ItemUniqueID;
-}
-
 void UObsidianInventoryItemInstance::GenerateUniqueItemID()
 {
 	if (!ItemUniqueID.IsValid())
@@ -116,21 +111,6 @@ int8 UObsidianInventoryItemInstance::GetItemLevel() const
 	return ItemLevel;
 }
 
-void UObsidianInventoryItemInstance::SetItemLevel(const int8 InItemLevel)
-{
-	ItemLevel = InItemLevel;
-}
-
-TSubclassOf<UObsidianInventoryItemDefinition> UObsidianInventoryItemInstance::GetItemDef() const
-{
-	return ItemDef;
-}
-
-void UObsidianInventoryItemInstance::SetItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef)
-{
-	ItemDef = InItemDef;
-}
-
 bool UObsidianInventoryItemInstance::IsUniqueOrSet() const
 {
 	return ItemRarity == EObsidianItemRarity::Unique || ItemRarity == EObsidianItemRarity::Set;
@@ -139,51 +119,6 @@ bool UObsidianInventoryItemInstance::IsUniqueOrSet() const
 bool UObsidianInventoryItemInstance::IsMagicOrRare() const
 {
 	return ItemRarity == EObsidianItemRarity::Magic || ItemRarity == EObsidianItemRarity::Rare;
-}
-
-EObsidianItemRarity UObsidianInventoryItemInstance::GetItemRarity() const
-{
-	return ItemRarity;
-}
-
-void UObsidianInventoryItemInstance::SetItemRarity(const EObsidianItemRarity InItemRarity)
-{
-	ItemRarity = InItemRarity;
-}
-
-FGameplayTag UObsidianInventoryItemInstance::GetItemCategoryTag() const
-{
-	return ItemCategory;
-}
-
-void UObsidianInventoryItemInstance::SetItemCategory(const FGameplayTag& InItemCategoryTag)
-{
-	ItemCategory = InItemCategoryTag;
-}
-
-FGameplayTag UObsidianInventoryItemInstance::GetItemBaseTypeTag() const
-{
-	return ItemBaseType;
-}
-
-void UObsidianInventoryItemInstance::SetItemBaseType(const FGameplayTag& InItemBaseTypeTag)
-{
-	ItemBaseType = InItemBaseTypeTag;
-}
-
-void UObsidianInventoryItemInstance::SetUsable(const bool InIsUsable)
-{
-	bUsable = InIsUsable;
-}
-
-bool UObsidianInventoryItemInstance::IsItemUsable() const
-{
-	return bUsable;
-}
-
-void UObsidianInventoryItemInstance::SetUsableShard(UObsidianUsableShard* InUsableShard)
-{
-	UsableShard = InUsableShard;
 }
 
 bool UObsidianInventoryItemInstance::UseItem(AObsidianPlayerController* InItemOwner,
@@ -196,16 +131,6 @@ bool UObsidianInventoryItemInstance::UseItem(AObsidianPlayerController* InItemOw
 	return false;
 }
 
-void UObsidianInventoryItemInstance::SetUsableItemType(const EObsidianUsableItemType InUsableItemTyp)
-{
-	UsableItemType = InUsableItemTyp;
-}
-
-EObsidianUsableItemType UObsidianInventoryItemInstance::GetUsableItemType() const
-{
-	return UsableItemType;
-}
-
 bool UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 	FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) const
 {
@@ -214,16 +139,6 @@ bool UObsidianInventoryItemInstance::FireItemUseUIContext(const TArray<UObsidian
 		UsableShard->OnItemUsed_UIContext(InAllItems, OutItemsMatchingContext);
 	}
 	return OutItemsMatchingContext.HasAnyMatchingItems();
-}
-
-void UObsidianInventoryItemInstance::SetStartsIdentified(const bool InStartsIdentified)
-{
-	bStartsIdentified = InStartsIdentified;
-}
-
-void UObsidianInventoryItemInstance::SetIdentified(const bool InIdentified)
-{
-	bIdentified = InIdentified;
 }
 
 bool UObsidianInventoryItemInstance::IsItemIdentified() const
@@ -409,74 +324,9 @@ bool UObsidianInventoryItemInstance::HasAnyStacks() const
 	return bHasTags;
 }
 
-bool UObsidianInventoryItemInstance::IsStackable() const
-{
-	return bStackable;
-}
-
-void UObsidianInventoryItemInstance::SetStackable(const bool InStackable)
-{
-	bStackable = InStackable;
-}
-
-FIntPoint UObsidianInventoryItemInstance::GetItemGridSpan() const
-{
-	return ItemGridSpan;
-}
-
-void UObsidianInventoryItemInstance::SetItemGridSpan(const FIntPoint& InGridSpanToSet)
-{
-	ItemGridSpan = InGridSpanToSet;
-}
-
-FObsidianItemPosition UObsidianInventoryItemInstance::GetItemCurrentPosition() const
-{
-	return ItemCurrentPosition;
-}
-
-void UObsidianInventoryItemInstance::SetItemCurrentPosition(const FObsidianItemPosition& InCurrentPositionToSet)
-{
-	ItemCurrentPosition = InCurrentPositionToSet;	
-}
-
 void UObsidianInventoryItemInstance::ResetItemCurrentPosition()
 {
 	ItemCurrentPosition = FIntPoint::NoneValue;
-}
-
-UTexture2D* UObsidianInventoryItemInstance::GetItemImage() const
-{
-	return ItemImage;
-}
-
-void UObsidianInventoryItemInstance::SetItemImage(UTexture2D* InItemImageToSet)
-{
-	ItemImage = InItemImageToSet;
-}
-
-void UObsidianInventoryItemInstance::SetEquippable(const bool InEquippable)
-{
-	bEquippable = InEquippable;
-}
-
-bool UObsidianInventoryItemInstance::IsItemEquippable() const
-{
-	return bEquippable;
-}
-
-void UObsidianInventoryItemInstance::SetItemNeedTwoSlots(const bool InNeedsTwoSlots)
-{
-	bNeedsTwoSlots = InNeedsTwoSlots;
-}
-
-bool UObsidianInventoryItemInstance::DoesItemNeedTwoSlots() const
-{
-	return bNeedsTwoSlots;
-}
-
-TArray<AObsidianSpawnedEquipmentPiece*> UObsidianInventoryItemInstance::GetSpawnedActors() const
-{
-	return SpawnedActors;
 }
 
 void UObsidianInventoryItemInstance::SetEquipmentActors(const TArray<FObsidianEquipmentActor>& InEquipmentActors)
@@ -545,26 +395,6 @@ bool UObsidianInventoryItemInstance::HasEquippingRequirements() const
 	return UObsidianItemsFunctionLibrary::HasEquippingRequirements(EquippingRequirements);
 }
 
-FObsidianItemRequirements UObsidianInventoryItemInstance::GetEquippingRequirements() const
-{
-	return EquippingRequirements;
-}
-
-void UObsidianInventoryItemInstance::InitializeEquippingRequirements(const FObsidianItemRequirements& InRequirements)
-{
-	EquippingRequirements = InRequirements;
-}
-
-void UObsidianInventoryItemInstance::SetCanHaveAffixes(const bool bInCanHaveAffixes)
-{
-	bCanHaveAffixes = bInCanHaveAffixes;
-}
-
-bool UObsidianInventoryItemInstance::CanHaveAffixes() const
-{
-	return bCanHaveAffixes;
-}
-
 TArray<UObsidianAffixAbilitySet*> UObsidianInventoryItemInstance::GetAffixAbilitySetsFromItem() const
 {
 	TArray<UObsidianAffixAbilitySet*> SetsToReturn;
@@ -575,31 +405,6 @@ TArray<UObsidianAffixAbilitySet*> UObsidianInventoryItemInstance::GetAffixAbilit
 		SetsToReturn.Add(Affix.SoftAbilitySetToApply.LoadSynchronous());
 	}
 	return SetsToReturn;
-}
-
-UStaticMesh* UObsidianInventoryItemInstance::GetItemDroppedMesh() const
-{
-	return ItemDroppedMesh;
-}
-
-void UObsidianInventoryItemInstance::SetItemDroppedMesh(UStaticMesh* InItemDroppedMesh)
-{
-	ItemDroppedMesh = InItemDroppedMesh;
-}
-
-FText UObsidianInventoryItemInstance::GetItemDisplayName() const
-{
-	return ItemDisplayName;
-}
-
-void UObsidianInventoryItemInstance::SetItemDisplayName(const FText& InItemDisplayName)
-{
-	ItemDisplayName = InItemDisplayName;
-}
-
-void UObsidianInventoryItemInstance::SetGeneratedNameAdditions(const FObsidianItemGeneratedNameData& InNameData)
-{
-	ItemNameAdditionsData = InNameData;
 }
 
 FString UObsidianInventoryItemInstance::GetRareItemDisplayNameAddition() const
@@ -620,46 +425,6 @@ FString UObsidianInventoryItemInstance::GetMagicAffixMultiplierItemDisplayNameAd
 void UObsidianInventoryItemInstance::SetMagicAffixMultiplierItemDisplayNameAddition(const FString& InItemNameAddition)
 {
 	ItemNameAdditionsData.MagicItemDisplayNameAddition = InItemNameAddition;
-}
-
-FText UObsidianInventoryItemInstance::GetItemDescription() const
-{
-	return ItemDescription;
-}
-
-void UObsidianInventoryItemInstance::SetItemDescription(const FText& InItemDescription)
-{
-	ItemDescription = InItemDescription;
-}
-
-FText UObsidianInventoryItemInstance::GetItemAdditionalDescription() const
-{
-	return ItemAdditionalDescription;
-}
-
-void UObsidianInventoryItemInstance::SetItemAdditionalDescription(const FText& InItemAdditionalDescription)
-{
-	ItemAdditionalDescription = InItemAdditionalDescription;
-}
-
-float UObsidianInventoryItemInstance::GetItemSlotPadding() const
-{
-	return ItemSlotPadding;
-}
-
-void UObsidianInventoryItemInstance::SetItemSlotPadding(const float InItemSlotPadding)
-{
-	ItemSlotPadding = InItemSlotPadding;
-}
-
-FString UObsidianInventoryItemInstance::GetItemDebugName() const
-{
-	return DebugName;
-}
-
-void UObsidianInventoryItemInstance::SetItemDebugName(const FString& InItemDebugName)
-{
-	DebugName = InItemDebugName;
 }
 
 void UObsidianInventoryItemInstance::ConstructSaveItem(FObsidianSavedItem& OutSavedItem)

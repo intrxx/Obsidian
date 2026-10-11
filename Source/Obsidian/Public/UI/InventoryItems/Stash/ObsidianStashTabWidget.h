@@ -20,26 +20,27 @@ UCLASS()
 class OBSIDIAN_API UObsidianStashTabWidget : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData) {};
 	virtual void HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData) {};
 	virtual void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData) {};
-	
+
 	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight) {};
 	virtual void ClearUsableItemHighlight() {};
-	
-	FGameplayTag GetStashTabTag() const;
-	
+
+	FGameplayTag GetStashTabTag() const { return StashTabTag; }
+
 	void ShowStashTab();
 	void HideStashTab();
 
-	bool IsTabActive();
-	
-protected:
-	virtual void NativeConstruct() override;
+	bool IsTabActive() { return bActive; }
 
 protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
+
 	bool bActive = false;
 
 	UPROPERTY()

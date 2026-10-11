@@ -24,16 +24,16 @@ class OBSIDIAN_API UObsidianSkillPointsNotification : public UObsidianWidgetBase
 public:
 	void SetSkillPointsCount(const float InNewPoints) const;
 
-public:
 	FOnSkillPointsNotificationPressedSignature OnSkillPointsNotificationPressedDelegate;
 
 protected:
-	virtual void NativeConstruct() override;
-
 	UFUNCTION()
 	void OnPressed();
 
-protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> SkillPointsCounter_TextBlock;
 

@@ -20,22 +20,27 @@ class OBSIDIAN_API UObsidianHeroMovementComponent : public UObsidianCharacterMov
 public:
 	UObsidianHeroMovementComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-		
-	virtual float GetMaxSpeed() const override;
-
-	FGameplayTag GetCurrentWalkState() const;
-	bool IsInWalkingState() const;
+	FGameplayTag GetCurrentWalkState() const { return CurrentWalkState; }
+	bool IsInWalkingState() const { return bUserTurnOnWalkingState; }
 	void ToggleWalkingState();
-	
+
 	void HandleOutOfStamina();
 
-protected:
-	virtual void TickComponent(float InDeltaTime, enum ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction) override;
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
 
+	//~ Begin UMovementComponent Interface
+	virtual float GetMaxSpeed() const override;
+	//~ End UMovementComponent Interface
+
+	//~ Begin UActorComponent Interface
+	virtual void TickComponent(float InDeltaTime, enum ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction) override;
+	//~ End UActorComponent Interface
+
+protected:
 	bool HandleWalkingStateChanged(const FGameplayTag& InNewWalkingState);
 
-protected:
 	UPROPERTY(Replicated)
 	FGameplayTag CurrentWalkState = FGameplayTag::EmptyTag;
 

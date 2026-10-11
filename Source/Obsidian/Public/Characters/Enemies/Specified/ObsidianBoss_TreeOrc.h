@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianBoss_TreeOrc : public AObsidianBossEnemy
 {
 	GENERATED_BODY()
@@ -19,26 +19,30 @@ class OBSIDIAN_API AObsidianBoss_TreeOrc : public AObsidianBossEnemy
 public:
 	AObsidianBoss_TreeOrc(const FObjectInitializer& InObjectInitializer);
 
-	virtual void PostInitializeComponents() override;
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|TreeOrc")
 	void EquipWeapon();
 
-	//~ Start of CombatInterface
+	//~ Begin AActor Interface
+	virtual void PostInitializeComponents() override;
+	//~ End AActor Interface
+
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
+	//~ Begin IObsidianCombatInterface Interface
 	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
-	//~ End of CombatInterface
-	
+	//~ End IObsidianCombatInterface Interface
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> RightHandEquipmentMesh;
-	
+
 private:
 	void HandleThreshold_50();
 
-private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
 	TObjectPtr<UBehaviorTree> ArmedBehaviorTree;
-	
+
 	FDelegateHandle OnThresholdReached_50DelegateHandle;
 };

@@ -25,11 +25,6 @@ void AObsidianWorldCollectable::GetLifetimeReplicatedProps(TArray<FLifetimePrope
 	DOREPLIFETIME(ThisClass, PickupContent);
 }
 
-FObsidianPickupContent AObsidianWorldCollectable::GetPickupContent() const
-{
-	return PickupContent;
-}
-
 FObsidianPickupInstance AObsidianWorldCollectable::GetPickupInstanceFromPickupContent() const
 {
 	FObsidianPickupInstance PickupInstance = GetPickupContent().Instance;

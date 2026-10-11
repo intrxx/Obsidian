@@ -25,7 +25,7 @@ class OBSIDIAN_API IObsidianHighlightInterface
 
 public:
 	virtual AActor* GetHighlightAvatarActor() = 0;
-	
+
 	virtual void StartHighlight() = 0;
 	virtual void StopHighlight() = 0;
 };

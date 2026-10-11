@@ -10,11 +10,6 @@ void UObsidianStashTabWidget::NativeConstruct()
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
-FGameplayTag UObsidianStashTabWidget::GetStashTabTag() const
-{
-	return StashTabTag;
-}
-
 void UObsidianStashTabWidget::ShowStashTab()
 {
 	SetVisibility(ESlateVisibility::Visible);
@@ -25,11 +20,6 @@ void UObsidianStashTabWidget::HideStashTab()
 {
 	SetVisibility(ESlateVisibility::Collapsed);
 	bActive = false;
-}
-
-bool UObsidianStashTabWidget::IsTabActive()
-{
-	return bActive;
 }
 
 

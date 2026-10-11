@@ -15,45 +15,41 @@ class UOInventoryItemFragment_Affixes;
 /**
  * Constant config of the item.
  */
-UCLASS(Blueprintable, Const, Abstract)
+UCLASS(Blueprintable, Const, Abstract, meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianInventoryItemDefinition : public UObject
 {
 	GENERATED_BODY()
 
 public:
 	UObsidianInventoryItemDefinition(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
 	UFUNCTION(BlueprintCallable, Category="Obsidian|Debug")
-	FString GetDebugName() const
-	{
-		return DebugName;
-	}
-	
-	FGameplayTag GetItemCategoryTag() const;
-	FGameplayTag GetItemBaseTypeTag() const;
-	EObsidianItemRarity GetItemDefaultRarity() const;
-	
+	FString GetDebugName() const { return DebugName; }
+
+	FGameplayTag GetItemCategoryTag() const { return ItemCategory; }
+	FGameplayTag GetItemBaseTypeTag() const { return ItemBaseType; }
+	EObsidianItemRarity GetItemDefaultRarity() const { return ItemDefaultRarity; }
+
 	bool HasStacks() const;
 	bool IsStackable() const;
 	bool IsEquippable() const;
-	bool DoesStartIdentified() const;
+	bool DoesStartIdentified() const { return bStartsIdentified; }
 	bool DoesItemNeedsTwoSlots() const;
 
 	const UObsidianInventoryItemFragment* FindFragmentByClass(const TSubclassOf<UObsidianInventoryItemFragment>& InFragmentClass) const;
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.Category"), Category = "Obsidian")
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
 	EObsidianItemRarity ItemDefaultRarity = EObsidianItemRarity::None;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (Categories="Item.BaseType"), Category = "Obsidian")
 	FGameplayTag ItemBaseType = FGameplayTag::EmptyTag;
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Obsidian")
 	int32 ItemLevel = INDEX_NONE;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Debug")
 	FString DebugName;
 

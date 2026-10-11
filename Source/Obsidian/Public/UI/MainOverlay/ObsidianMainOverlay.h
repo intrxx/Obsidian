@@ -35,23 +35,22 @@ class UOStackingDurationalEffectInfo;
 class UObsidianCharacterStatus;
 class UObsidianPlayerInputManager;
 class UObsidianPlayerStashWidget;
+class UObInventoryItemsWidgetController;
 
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianMainOverlay : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	virtual void NativeConstruct() override;
-
 	bool IsCharacterStatusOpen() const;
 	bool IsInventoryOpen() const;
 	bool IsPassiveSkillTreeOpen() const;
 	bool IsPlayerStashOpen() const;
-	
+
 	FGameplayTag GetActivePlayerStashTabTag() const;
 
 	UFUNCTION()
@@ -60,29 +59,27 @@ public:
 	void ToggleInventory();
 	UFUNCTION()
 	void TogglePassiveSkillTree();
-	
+
 	void TogglePlayerStash(const bool bInShowStash);
-	
+
 	void AddItemDescriptionToOverlay(UObsidianItemDescriptionBase* InItemDescription) const;
 
 	/**
 	 * Item Labels
 	 */
-	
+
 	UCanvasPanelSlot* AddItemLabelToOverlay(UObsidianItemLabel* InItemLabelWidget, const FVector2D& InAtPosition);
 	UCanvasPanelSlot* AddItemLabelToOverlayDebug(UUserWidget* InItemLabelWidget, const FVector2D& InAtPosition);
 	void SetItemLabelsVisibility(ESlateVisibility InVisibility);
 	void ForceItemLabelsPrepass();
 
 protected:
-	virtual void HandleWidgetControllerSet() override;
-	
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleStackingUIData(const FObsidianEffectUIDataWidgetRow InRow, const FObsidianEffectUIStackingData InStackingData);
 
 	UFUNCTION(BlueprintCallable, Category = "Obisidian|MainOverlay")
 	void HandleUIData(const FObsidianEffectUIDataWidgetRow InRow);
-	
+
 	UFUNCTION()
 	void HandleRegularOverlayBar(AActor* InTargetActor, bool bInDisplayBar);
 	UFUNCTION()
@@ -92,14 +89,21 @@ protected:
 	void UpdatePassiveSkillPointsNotification(float InNewSkillPoints);
 	UFUNCTION()
 	void UpdateAscensionSkillPointsNotification(float InNewSkillPoints);
-	
-protected:
+
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCanvasPanel> ItemLabels_CanvasPanel;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianProgressGlobe_Health> HealthProgressGlobe;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianProgressGlobe_Mana> ManaProgressGlobe;
 
@@ -108,7 +112,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianOverlayStaminaBar> StaminaProgressBar;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianOverlayGameTabsMenu> Overlay_GameTabsMenu;
 
@@ -129,20 +133,18 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> OverlayBossBars_Overlay;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UWrapBox> BuffsEffectInfo_WrapBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UWrapBox> DeBuffsEffectInfo_WrapBox;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UWrapBox> PassiveSkillPoints_WrapBox;
-
-protected:
 	UPROPERTY()
 	APlayerController* OwningPlayerController = nullptr;
-	
+
 	UPROPERTY()
 	TObjectPtr<UObMainOverlayWidgetController> MainOverlayWidgetController;
 
@@ -167,12 +169,12 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|PlayerStash")
 	TSubclassOf<UObsidianPlayerStashWidget> PlayerStashClass;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianSkillPointsNotification> PassiveSkillPointsNotificationClass;
 	UPROPERTY()
 	TObjectPtr<UObsidianSkillPointsNotification> PassiveSkillPointsNotification;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|MainOverlay")
 	TSubclassOf<UObsidianSkillPointsNotification> AscensionSkillPointsNotificationClass;
 	UPROPERTY()
@@ -180,10 +182,10 @@ protected:
 
 	UPROPERTY()
 	TMap<FGameplayTag, UOStackingDurationalEffectInfo*> StackingInfoWidgetsMap;
-	
+
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianEffectInfoBase>> AuraUIInfoArray;
-	
+
 private:
 	void DestroyStackingInfoWidget(UOStackingDurationalEffectInfo* InWidgetToDestroy);
 
@@ -193,8 +195,7 @@ private:
 	void HandleEffectFillImageRemoval(const FGameplayTag& InEffectTag);
 
 	void MoveDroppedItemDescOverlay(const bool bInInventoryOpen);
-	
-private:
+
 	UPROPERTY()
 	TObjectPtr<UObsidianCharacterStatus> CharacterStatus;
 	UPROPERTY()
@@ -203,12 +204,12 @@ private:
 	TObjectPtr<UObsidianPassiveSkillTree> PassiveSkillTree;
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerStashWidget> PlayerStash; 
-	
+
 	TArray<FObsidianProgressBarEffectFillImage> EffectFillImages;
 
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
-	
+
 	UPROPERTY()
 	TObjectPtr<UObsidianPlayerInputManager> PlayerInputManager;
 };

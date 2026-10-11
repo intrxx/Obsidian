@@ -38,7 +38,7 @@ public:
 	static UObCharacterSelectionWidgetController* GetCharacterSelectionWidgetController(const UObject* InWorldContextObject);
 
 	static FVector2D GetGameViewportSize();
-	
+
 	template<typename T>
 	static T* GetDataTableRowByTag(UDataTable* InDataTable, const FGameplayTag& InTag);
 };

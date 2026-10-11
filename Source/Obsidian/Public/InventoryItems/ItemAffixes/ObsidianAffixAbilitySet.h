@@ -26,17 +26,17 @@ struct FObsidianAffixAbilitySet_GameplayAbility
 	GENERATED_BODY()
 
 public:
-	/** Gameplay Ability to grant. */
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UObsidianGameplayAbility> Ability = nullptr;
-	
-	/** Gameplay Tag used to process input for the ability for abilities that require Input for activation. */
-	UPROPERTY(EditDefaultsOnly, meta=(Categories="Input"))
-	FGameplayTag OptionalInputTag;
-	
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
+
+	/** Gameplay Ability to grant. */
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UObsidianGameplayAbility> Ability = nullptr;
+
+	/** Gameplay Tag used to process input for the ability for abilities that require Input for activation. */
+	UPROPERTY(EditDefaultsOnly, meta=(Categories="Input"))
+	FGameplayTag OptionalInputTag;
 };
 
 /**
@@ -48,13 +48,13 @@ struct FObsidianAffixAbilitySet_GameplayEffect
 	GENERATED_BODY()
 
 public:
-	/** Gameplay Effect to grant. */
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UGameplayEffect> GameplayEffect = nullptr;
-
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
+
+	/** Gameplay Effect to grant. */
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UGameplayEffect> GameplayEffect = nullptr;
 };
 
 /**
@@ -84,7 +84,7 @@ protected:
 /**
  * Dynamic Ability Set that generated and give Gameplay Effect/Gameplay Abilities based on Item Affix modifiers.
  */
-UCLASS(BlueprintType)
+UCLASS(BlueprintType, meta = (PrioritizeCategories = "Abilities Effects"))
 class OBSIDIAN_API UObsidianAffixAbilitySet : public UDataAsset
 {
 	GENERATED_BODY()
@@ -104,10 +104,12 @@ public:
 		FObsidianAffixAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject = nullptr) const;
 	void GiveItemAffixesToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, const TArray<FObsidianActiveItemAffix>& InItemAffixes,
 			FObsidianAffixAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject = nullptr) const;
-	
+
+	//~ Begin UObject Interface
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
+	//~ End UObject Interface
 
 protected:
 	/** Gameplay Abilities to grant when this Ability Set is granted. */

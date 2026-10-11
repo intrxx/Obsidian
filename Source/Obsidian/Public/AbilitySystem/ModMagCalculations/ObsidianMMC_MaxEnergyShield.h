@@ -14,9 +14,11 @@ UCLASS()
 class OBSIDIAN_API UObsidianMMC_MaxEnergyShield : public UGameplayModMagnitudeCalculation
 {
 	GENERATED_BODY()
-	
+
 public:
 	UObsidianMMC_MaxEnergyShield(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
+	//~ Begin UGameplayModMagnitudeCalculation Interface
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
+	//~ End UGameplayModMagnitudeCalculation Interface
 };

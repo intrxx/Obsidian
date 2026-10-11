@@ -33,18 +33,20 @@ struct FGameplayAttributeSet
 /**
  * Task for giving Gameplay Attribute to the Behavior Tree Owner.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Duration Modifiers"))
 class OBSIDIAN_API UObsidianBTTask_SetGameplayAttribute : public UBTTaskNode
 {
 	GENERATED_BODY()
 
-	UObsidianBTTask_SetGameplayAttribute();
-
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
-
-protected:
+public:
+	//~ Begin UBTNode Interface
 	virtual FString GetStaticDescription() const override;
-	
+	//~ End UBTNode Interface
+
+	//~ Begin UBTTaskNode Interface
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
+	//~ End UBTTaskNode Interface
+
 protected:
 	/** Policy for the duration of this effect */
 	UPROPERTY(EditAnywhere, Category = "Duration")
@@ -52,8 +54,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, meta=(EditCondition="DurationPolicy == EGameplayEffectDurationType::HasDuration", EditConditionHides), Category = "Duration")
 	float Duration = 0.0f;
-	
+
 	/** Array of modifiers that will affect the target of this effect */
 	UPROPERTY(EditAnywhere, Category = "Modifiers")
 	TArray<FGameplayAttributeSet> Modifiers;
+
+private:
+	UObsidianBTTask_SetGameplayAttribute();
 };

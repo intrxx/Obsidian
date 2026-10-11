@@ -7,19 +7,6 @@
 
 struct FObsidianInventoryItemGridSize
 {
-	FIntPoint SingleSquare_GridSpan;
-	FIntPoint TwoSquares_Vertical_GridSpan;
-	FIntPoint TwoSquares_Horizontal_GridSpan;
-	FIntPoint ThreeSquares_Vertical_GridSpan;
-	FIntPoint ThreeSquares_Horizontal_GridSpan;
-	FIntPoint FourSquares_Vertical_GridSpan;
-	FIntPoint FourSquares_Horizontal_GridSpan;
-	FIntPoint FourSquares_Square_GridSpan;
-	FIntPoint SixSquares_VerticalRectangle_GridSpan;
-	FIntPoint EightSquares_VerticalRectangle_GridSpan;
-	
-	TMap<EObsidianInventoryItemGridSize, FIntPoint> ItemGridSpanMap;
-
 	FObsidianInventoryItemGridSize()
 	{
 		SingleSquare_GridSpan = FIntPoint(1, 1);
@@ -47,6 +34,19 @@ struct FObsidianInventoryItemGridSize
 			{EObsidianInventoryItemGridSize::IIGS_EightSquares_VerticalRectangle, EightSquares_VerticalRectangle_GridSpan}
 		};
 	}
+
+	FIntPoint SingleSquare_GridSpan;
+	FIntPoint TwoSquares_Vertical_GridSpan;
+	FIntPoint TwoSquares_Horizontal_GridSpan;
+	FIntPoint ThreeSquares_Vertical_GridSpan;
+	FIntPoint ThreeSquares_Horizontal_GridSpan;
+	FIntPoint FourSquares_Vertical_GridSpan;
+	FIntPoint FourSquares_Horizontal_GridSpan;
+	FIntPoint FourSquares_Square_GridSpan;
+	FIntPoint SixSquares_VerticalRectangle_GridSpan;
+	FIntPoint EightSquares_VerticalRectangle_GridSpan;
+
+	TMap<EObsidianInventoryItemGridSize, FIntPoint> ItemGridSpanMap;
 };
 
 static const FObsidianInventoryItemGridSize& ObsidianItemGridSize()

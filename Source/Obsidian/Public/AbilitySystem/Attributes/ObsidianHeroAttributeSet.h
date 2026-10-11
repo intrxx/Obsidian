@@ -19,11 +19,6 @@ class OBSIDIAN_API UObsidianHeroAttributeSet : public UObsidianCommonAttributeSe
 
 public:
 	UObsidianHeroAttributeSet();
-	
-	virtual void PreAttributeChange(const FGameplayAttribute& InAttribute, float& InOutNewValue) override;
-	virtual void PostAttributeChange(const FGameplayAttribute& InAttribute, float InOldValue, float InNewValue) override;
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
 
 	static float GetMaxExperienceForLevel(const uint8 InHeroLevel);
 
@@ -42,7 +37,7 @@ public:
 	/**
 	 * Spending attributes
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Mana);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, MaxMana);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, IncreasedManaPercentage);
@@ -52,14 +47,14 @@ public:
 	/**
 	 * Status
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, ManaRegeneration);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, StaminaRegeneration);
 
 	/**
 	 * "RPG Attributes"
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Strength);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Intelligence);
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, Dexterity);
@@ -80,17 +75,25 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UObsidianHeroAttributeSet, IncomingManaReplenishing);
 
-public:
+	//~ Begin UAttributeSet Interface
+	virtual void PreAttributeChange(const FGameplayAttribute& InAttribute, float& InOutNewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& InAttribute, float InOldValue, float InNewValue) override;
+
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
+	//~ End UAttributeSet Interface
+
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
 	/** Delegate fired when the stamina reaches zero */
 	mutable FObsidianAttributeEvent OnOutOfStamina;
-	
+
 protected:
-	virtual void ResetMetaAttributes() override;
-	
 	/**
 	 *	Character
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_Experience(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -105,11 +108,11 @@ protected:
 	void OnRep_MaxStamina(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
 	void OnRep_SprintSpeed(const FGameplayAttributeData& InOldValue);
-	
+
 	/**
 	 * Spending attributes
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_Mana(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -142,11 +145,11 @@ protected:
 	void OnRep_SpellBlockChance(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
 	void OnRep_MaxSpellBlockChance(const FGameplayAttributeData& InOldValue);
-	
+
 	/**
 	 * "RPG Attributes"
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_Strength(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -156,13 +159,17 @@ protected:
 	UFUNCTION()
 	void OnRep_Faith(const FGameplayAttributeData& InOldValue);
 
+	//~ Begin UObsidianCommonAttributeSet Interface
+	virtual void ResetMetaAttributes() override;
+	//~ End UObsidianCommonAttributeSet Interface
+
 private:
 	bool bOutOfStamina;
-	
+
 	/**
 	 * Character
 	 */
-	
+
 	/** The current Experience attribute. It represents current experience. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Experience, Category = "Obsidian|CAttributes|Experience", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Experience;
@@ -191,16 +198,16 @@ private:
 	/** The Sprint Speed attribute. Defines the sprint speed of hero character. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SprintSpeed, Category = "Obsidian|CAttributes|Speed", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SprintSpeed;
-	
+
 	/**
 	 * Spending attributes
 	 */
-	
+
 	/** The current Mana attribute. The Mana will be capped by the Max Mana attribute. Health is hidden from modifiers so only Executions can modify it. */
 	/** ------------------------------------------------------------------------------------------------------ HideFromModifiers */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Mana, Category = "Obsidian|HAttributes|Mana", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Mana;
-	
+
 	/** The current Max Mana attribute. Max Mana is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxMana, Category = "Obsidian|HAttributes|Mana", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxMana;
@@ -213,7 +220,7 @@ private:
 	/** ------------------------------------------------------------------------------------------------------ HideFromModifiers */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpecialResource, Category = "Obsidian|HAttributes|SpecialResource", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SpecialResource;
-	
+
 	/** The current Max Special Resource. Max Special Resource is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxSpecialResource, Category = "Obsidian|HAttributes|SpecialResource", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxSpecialResource;
@@ -229,11 +236,11 @@ private:
 	/** The current Stamina Regeneration attribute. Stamina Regeneration defines value of stamina that will be regenerated per second while not in running mode. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaminaRegeneration, Category = "Obsidian|CAttributes|ManaRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData StaminaRegeneration;
-	
+
 	/**
 	 * "RPG Attributes"
 	 */
-	
+
 	/** The current Strength attribute. Strength is an attribute since Gameplay Effects can modify it. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Strength, Category = "Obsidian|HAttributes|Strength", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Strength;
@@ -265,11 +272,11 @@ private:
 	/** The current Spell Block Chance attribute. Spell Block Chance determines a chance to block spell damage */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_SpellBlockChance, Category = "Obsidian|HAttributes|SpellBlockChance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SpellBlockChance;
-	
+
 	/** The current Max Spell Block Chance attribute. Max Spell Block Chance determines a cap for Spell Block Chance */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxSpellBlockChance, Category = "Obsidian|HAttributes|SpellBlockChance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxSpellBlockChance;
-	
+
 	/**
 	 * Meta Attributes
 	 */

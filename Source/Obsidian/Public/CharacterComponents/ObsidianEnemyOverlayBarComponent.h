@@ -20,12 +20,12 @@ struct FObsidianEffectUIData;
 class UObsidianEnemyAttributesComponent;
 class UObsidianAbilitySystemComponent;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(PrioritizeCategories = "Obsidian EnemyOverlayBarComp", BlueprintSpawnableComponent) )
 class OBSIDIAN_API UObsidianEnemyOverlayBarComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UObsidianEnemyOverlayBarComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	/** Returns Enemy Overlay Component if one exists on the specified actor, will be nullptr otherwise */
@@ -41,11 +41,10 @@ public:
 	FText GetEnemyName() const;
 	bool IsDeadOrDying() const;
 	void FillInitialValues(float& OutHealth, float& OutMaxHealth, float& OutEnergyShield, float& OutMaxEnergyShield, float& OutStaggerMeter, float& OutMaxStaggerMeter) const;
-	
+
 	void InitializeOverlayBarComponent(UObsidianAbilitySystemComponent* InASC, UObsidianEnemyAttributesComponent* InEnemyAttributesComp);
 	void UninitializeOverlayBarComponent();
 
-public:
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian|EnemyOverlayBarComp|Data")
 	FStackingEffectUIDataWidgetRow EffectStackingUIDataDelegate;
 
@@ -58,7 +57,7 @@ public:
 	FOnAttributeValueChangedOneParam OnMaxEnergyShieldChangedDelegate;
 	FOnAttributeValueChangedOneParam OnStaggerMeterChangedDelegate;
 	FOnAttributeValueChangedOneParam OnMaxStaggerMeterChangedDelegate;
-	
+
 	FOnNewOverlayBarStyleNeededSignature OnNewOverlayBarStyleNeededDelegate;
 	FOnOverlayBarStyleResetSignature OnOverlayBarStyleResetDelegate;
 
@@ -73,7 +72,7 @@ protected:
 
 	void HandleStackingEffectExpiration(const EGameplayEffectStackingExpirationPolicy& InExpirationPolicy, const float InDuration, const FGameplayTag& InStackingEffectTag);
 	void RefreshStackingEffectDuration(const EGameplayEffectStackingExpirationPolicy& InExpirationPolicy, const float InDuration, const FGameplayTag& InStackingEffectTag);
-	
+
 	bool GetEffectFillImageForTag(const TArray<FObsidianProgressBarEffectFillImage>& InImages, FObsidianProgressBarEffectFillImage& OutFillImage, const FGameplayTag& InTagToCheck);
 	void HandleEffectFillImageRemoval(const FGameplayTag& InEffectImageTag);
 
@@ -87,10 +86,9 @@ protected:
 	void StaggerMeterChanged(const FOnAttributeChangeData& InData) const;
 	void MaxStaggerMeterChanged(const FOnAttributeChangeData& InData) const;
 
-protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "EnemyOverlayBarComp|Data")
 	TObjectPtr<UDataTable> UIEffectDataTable;
-	
+
 	/** Effect Progress Bar to choose from when specific Effect is applied. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
 	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
@@ -98,9 +96,10 @@ protected:
 	/** Special Effects Progress Bar images to choose from when specific Effect is applied. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
 	TArray<FObsidianProgressBarEffectFillImage> ProgressBarSpecialEffects;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|EnemyOverlayBarComp")
 	bool bDebugEnabled = false;
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> ObsidianASC;
@@ -126,7 +125,7 @@ private:
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
 	FDelegateHandle StaggerMeterChangedDelegateHandle;
 	FDelegateHandle MaxStaggerMeterChangedDelegateHandle;
-	
+
 	FDelegateHandle UIDataDelegateHandle;
 
 	FTimerHandle StackingEffectTimerHandle;

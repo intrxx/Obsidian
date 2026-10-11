@@ -32,36 +32,36 @@ public:
 
 	void DestroyUnstackSlider();
 
-public:
 	FOnAcceptButtonPressedSignature OnAcceptButtonPressedDelegate;
 	FOnCloseButtonPressedSignature OnCloseButtonPressedDelegate;
 
 protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-	
 	UFUNCTION()
 	void OnCloseButtonClicked();
-	
+
 	UFUNCTION()
 	void OnAcceptButtonClicked();
 
 	UFUNCTION()
 	void UpdateStacksValues(float InNewValue);
-	
-protected:
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Close_Button;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Accept_Button;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> StacksToLeave_TextBlock;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> StacksToTake_TextBlock;
 

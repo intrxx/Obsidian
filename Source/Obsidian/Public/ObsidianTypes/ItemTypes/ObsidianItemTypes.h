@@ -71,18 +71,9 @@ namespace ObsidianDefaultStackCounts
 	/** Returns the unified project default item stack count for a given Stack Tag. */
 	inline int32 GetUnifiedDefaultForTag(const FGameplayTag InTag)
 	{
-		if(InTag == ObsidianGameplayTags::Item::StackCount::Current)
-		{
-			return CurrentStackCount;
-		}
-		if(InTag == ObsidianGameplayTags::Item::StackCount::Max)
-		{
-			return MaxStackCount;
-		}
-		if(InTag == ObsidianGameplayTags::Item::StackCount::Limit)
-		{
-			return LimitCount;
-		}
+		if(InTag == ObsidianGameplayTags::Item::StackCount::Current) { return CurrentStackCount; }
+		if(InTag == ObsidianGameplayTags::Item::StackCount::Max) { return MaxStackCount; }
+		if(InTag == ObsidianGameplayTags::Item::StackCount::Limit) { return LimitCount; }
 		
 		UE_LOG(ObLogItems, Error, TEXT("Provided Stack Count Gameplay Tag is invalid, returning 0."));
 		return 0;
@@ -184,8 +175,7 @@ public:
 		: RequiredAttribute(InAttribute)
 		, RequiredAttributeMagnitude(InMagnitude)
 	{}
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Attribute")
 	FGameplayAttribute RequiredAttribute;
 
@@ -200,11 +190,10 @@ USTRUCT(BlueprintType)
 struct OBSIDIAN_API FObsidianItemRequirements
 {
 	GENERATED_BODY()
-	
+
 public:
 	FObsidianItemRequirements();
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Requirement")
 	EObsidianHeroClass HeroClassRequirement = EObsidianHeroClass::None;
 
@@ -213,7 +202,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = 0, ClampMax = 90), Category = "Requirement")
 	uint8 RequiredLevel = 0;
-	
+
 	uint8 bHasAnyRequirements:1;
 
 	/** This flag gets set when the Requirements get initialized and adjusted in Item drop logic. */ 
@@ -236,7 +225,6 @@ public:
 		, bInteractWithSisterSlottedItem(false)
 	{}
 
-public:
 	/** This interaction is triggered by CTRL down in the context of clicking the item in some window. */
 	UPROPERTY()
 	uint8 bMoveBetweenNextOpenedWindow:1;
@@ -269,19 +257,20 @@ public:
 		, AcceptedItemCategories(InAcceptedEquipmentCategories)
 	{};
 
+	static const FObsidianSlotDefinition InvalidSlot;
+
 	bool IsValid() const;
-	
-	FGameplayTag GetSlotTag() const;
-	
+
+	FGameplayTag GetSlotTag() const { return SlotTag; }
+
 	EObsidianPlacingAtSlotResult CanPlaceAtSlot(const FGameplayTag& InItemCategory) const;
 
 	void AddBannedItemCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedItemCategories(const FGameplayTagContainer& InBannedCategories);
-	
+
 	void RemoveBannedItemCategory(const FGameplayTag& InBannedCategoryToRemove);
 	void RemoveBannedItemCategories(const FGameplayTagContainer& InBannedCategoriesToRemove);
 
-public:
 	/** Gameplay Tag representing this slot. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Slot"), Category = "Obsidian")
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
@@ -293,8 +282,6 @@ public:
 	/** Items with this Gameplay Tags will not be allowed to be equipped in this slot. Can be used to ban some type of armament as a gameplay mechanic. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Category"), Category = "Obsidian")
 	FGameplayTagContainer BannedItemCategories = FGameplayTagContainer::EmptyContainer;
-	
-	static const FObsidianSlotDefinition InvalidSlot;
 };
 
 UENUM(BlueprintType)
@@ -345,8 +332,8 @@ public:
 
 	FIntPoint GetItemGridPosition(const bool bInWarnIfNotFound = true) const;
 	FGameplayTag GetItemSlotTag(const bool bInWarnIfNotFound = true) const;
-	FGameplayTag GetOwningStashTabTag() const;
-	
+	FGameplayTag GetOwningStashTabTag() const { return OwningStashTabTag; }
+
 	// Type Hash (required for TMap)
 	FORCEINLINE friend uint32 GetTypeHash(const FObsidianItemPosition& InItemPosition)
 	{
@@ -374,10 +361,10 @@ private:
 
 	UPROPERTY()
 	FIntPoint GridPosition = FIntPoint::NoneValue;
-	
+
 	UPROPERTY()
 	FGameplayTag SlotTag = FGameplayTag::EmptyTag;
-	
+
 	UPROPERTY()
 	FGameplayTag OwningStashTabTag = FGameplayTag::EmptyTag;
 };
@@ -393,11 +380,10 @@ struct FObsidianItemInteractionData
 
 public:
 	FObsidianItemInteractionData(){};
-	
-public:
+
 	UPROPERTY()
 	FObsidianItemPosition InteractionTargetPositionOverride = FObsidianItemPosition();
-	
+
 	UPROPERTY()
 	TObjectPtr<UObsidianItem> ItemWidget = nullptr;
 
@@ -416,12 +402,8 @@ struct FObsidianEquipmentResult
 public:
 	FObsidianEquipmentResult(){};
 
-	FORCEINLINE operator bool() const
-	{
-		return bActionSuccessful;
-	}
-	
-public:
+	FORCEINLINE operator bool() const { return bActionSuccessful; }
+
 	/** The action was successful (equipping, de-equipping, replacing with other item). */
 	UPROPERTY()
 	bool bActionSuccessful = false;
@@ -442,12 +424,8 @@ struct FObsidianItemOperationResult
 public:
 	FObsidianItemOperationResult(){};
 
-	FORCEINLINE operator bool() const
-	{
-		return bActionSuccessful;
-	}
-	
-public:
+	FORCEINLINE operator bool() const { return bActionSuccessful; }
+
 	/** The action was successful (adding, removing, replacing), the whole item is now in the inventory or removed from. */
 	UPROPERTY()
 	bool bActionSuccessful = false;
@@ -486,8 +464,7 @@ struct FObsidianAddingStacksResult
 
 public:
 	FObsidianAddingStacksResult(){};
-	
-public:
+
 	/** The amount of stacks that was added from provided Item to other Item/Items. */
 	UPROPERTY(BlueprintReadOnly)
 	int32 AddedStacks = INDEX_NONE;
@@ -537,8 +514,7 @@ struct FObsidianAffixTier
 
 public:
 	FObsidianAffixTier(){};
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "8"))
 	int8 AffixTierValue = 1;
 
@@ -557,13 +533,12 @@ struct FObsidianAffixValueRange
 public:
 	FObsidianAffixValueRange(){}
 
-public:
 	UPROPERTY(EditDefaultsOnly)
 	FObsidianAffixTier AffixTier;
 
 	UPROPERTY(EditDefaultsOnly, meta=(ClampMin = "0", ClampMax = "1000"), Category = "Obsidian")
 	uint16 AffixTierWeight = 1000;
-	
+
 	/** Array (as there can be multiple values in a single Affix) of Affix Range to Roll. */
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FFloatRange> AffixRanges;
@@ -581,14 +556,13 @@ public:
 	FObsidianAffixIdentifier()
 		: bOverride_AttributeToModify(true)
 	{}
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.AffixValue"))
 	FGameplayTag AffixValueID;
 
 	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
 	uint8 bOverride_AttributeToModify : 1;
-	
+
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bOverride_AttributeToModify"))
 	FGameplayAttribute AttributeToModify;
 };
@@ -603,8 +577,7 @@ struct FObsidianAffixValues
 
 public:
 	bool IsValid() const;
-	
-public:
+
 	/** Value type of affix, if set to Int it will be rounded down. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	EObsidianAffixValueType AffixValueType = EObsidianAffixValueType::Int;
@@ -618,14 +591,14 @@ public:
 	/** Drop only multiplier for Affix roll when rolled on Magic Items. The chance of rolling this increased multiplier is 1/4 now. */
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", EditCondition = "bOverride_MagicItemAffixRollMultiplier"), Category = "Obsidian|Affix")
 	float MagicItemAffixRollMultiplier = 2.0f;
-	
+
 	/**
 	 * Array of affix range value identifiers which is mapped 1 to 1 to Affix Range entries and to the corresponding FGameplayAttribute that it modifies,
 	 * meaning that the first entry from this array will be a GameplayTag identifier + GameplayAttribute mapped to the first entry in AffixRanges.
 	 */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.AffixValue"))
 	TArray<FObsidianAffixIdentifier> AffixValuesIdentifiers;
-	
+
 	/** Affix ranges that will be rolled on the item. Count of AffixRanges must equal provided AffixValuesIdentifiers. */
 	UPROPERTY(EditDefaultsOnly)
 	TArray<FObsidianAffixValueRange> PossibleAffixRanges;
@@ -641,14 +614,13 @@ struct FObsidianActiveAffixValue
 
 public:
 	bool IsValid() const;
-	
-public:
+
 	UPROPERTY()
 	FObsidianAffixTier AffixTier = FObsidianAffixTier();
 
 	UPROPERTY()
 	TArray<FObsidianAffixIdentifier> AffixValuesIdentifiers;
-	
+
 	UPROPERTY()
 	TArray<float> AffixValues;
 };
@@ -665,7 +637,7 @@ public:
 	FObsidianStaticItemAffix()
 	: bOverride_AffixAbilitySet(false)
 	{}
-	
+
 	bool IsEmptyImplicit() const;
 	bool IsEmptyAffix() const;
 
@@ -678,14 +650,13 @@ public:
 	EDataValidationResult IsStaticAffixValid(FDataValidationContext& InContext, const int32 InIndex, const FString& InAffixTypeName) const;
 #endif
 
-public:
 	/** Unique Affix Gameplay Tag Identifier. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
-	
+
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|UI")
 	EObsidianAffixType AffixType = EObsidianAffixType::Unique;
-	
+
 	/** Unique addition to the Item Name. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
 	FString AffixItemNameAddition = FString();
@@ -696,11 +667,11 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
 	uint8 bOverride_AffixAbilitySet : 1;
-	
+
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bOverride_AffixAbilitySet"), Category = "Obsidian|Affix")
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply = nullptr;
-	
+
 	/** Affix ranges. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FObsidianAffixValues AffixValuesDefinition = FObsidianAffixValues();
@@ -724,15 +695,14 @@ public:
 	bool operator ==(const FObsidianDynamicItemAffix& InOther) const;
 	bool operator ==(const FObsidianActiveItemAffix& InOther) const;
 	bool operator ==(const FObsidianStaticItemAffix& InOther) const;
-	
-public:
+
 	/** Unique Affix Gameplay Tag Identifier. */
 	UPROPERTY(EditDefaultsOnly, Meta = (Categories = "Item.Affix"), Category = "Obsidian")
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = "1", ClampMax = "1000"), Category = "Obsidian")
 	uint16 AffixWeight = 1000;
-	
+
 	UPROPERTY(VisibleDefaultsOnly, Category = "Obsidian|Affix")
 	EObsidianAffixType AffixType = EObsidianAffixType::None;
 
@@ -754,7 +724,7 @@ public:
 	/** Unique addition to Magic Item Name based on Affixes. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FString AffixItemNameAddition = FString();
-	
+
 	/** Row description of the affix. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FText AffixDescription = FText();
@@ -765,11 +735,11 @@ public:
 
 	UPROPERTY(EditAnywhere, meta = (InlineEditConditionToggle), Category = "Obsidian|Affix")
 	uint8 bOverride_AffixAbilitySet : 1;
-	
+
 	/** Soft Ability Set to Apply, usually it will be just Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bOverride_AffixAbilitySet"), Category = "Obsidian|Affix")
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply = nullptr;
-	
+
 	/** Possible Affix Ranges to roll from. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Affix")
 	FObsidianAffixValues AffixValuesDefinition = FObsidianAffixValues();
@@ -785,7 +755,7 @@ struct FObsidianActiveItemAffix
 
 public:
 	FObsidianActiveItemAffix(){};
-	
+
 	explicit operator bool() const
 	{
 		return AffixTag.IsValid();
@@ -797,33 +767,32 @@ public:
 
 	uint8 GetCurrentAffixTier() const;
 	int8 GetCurrentAffixTierItemLevelRequirement() const;
-	
+
 	void InitializeWithDynamic(const FObsidianDynamicItemAffix& InDynamicItemAffix, const uint8 InUpToTreasureQuality,
 		const bool bInApplyMagicMultiplier = false);
 	void InitializeWithStatic(const FObsidianStaticItemAffix& InStaticItemAffix, const uint8 InUpToTreasureQuality,
 		const bool bInApplyMagicMultiplier = false);
-	
+
 	void RandomizeAffixValueBoundByRange();
-	
-public:
+
 	UPROPERTY()
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 
 	UPROPERTY()
 	EObsidianAffixType AffixType = EObsidianAffixType::None;
-	
+
 	UPROPERTY()
 	FString AffixItemNameAddition = FString();
-	
+
 	UPROPERTY()
 	FString ActiveAffixDescription = FString();
 
 	UPROPERTY()
 	FString UnformattedAffixDescription = FString();
-	
+
 	UPROPERTY()
 	TSoftObjectPtr<UObsidianAffixAbilitySet> SoftAbilitySetToApply;
-	
+
 	UPROPERTY()
 	FObsidianAffixValues AffixValuesDefinition = FObsidianAffixValues();
 
@@ -844,12 +813,13 @@ struct FObsidianItemGeneratedNameData
 {
 	GENERATED_BODY()
 
+public:
 	FObsidianItemGeneratedNameData(){}
 	FObsidianItemGeneratedNameData(const FString& InRareAddition, const FString& InMagicAddition)
 		: RareItemDisplayNameAddition(InRareAddition)
 		, MagicItemDisplayNameAddition(InMagicAddition)
 	{}
-public:
+
 	UPROPERTY()
 	FString RareItemDisplayNameAddition = FString();
 
@@ -871,11 +841,10 @@ public:
 		: AvailableStackCount(InStacks)
 	{}
 
-	void SetStackCount(const int32 InStackCount);
-	int32 GetStackCount() const;
+	void SetStackCount(const int32 InStackCount) { AvailableStackCount = InStackCount; }
+	int32 GetStackCount() const { return AvailableStackCount; }
 	void Reset();
-	
-public:
+
 	UPROPERTY()
 	int8 ItemLevel = 1;
 
@@ -908,9 +877,9 @@ private:
 USTRUCT(BlueprintType)
 struct FDraggedItem
 {
-public:
 	GENERATED_BODY()
-	
+
+public:
 	FDraggedItem(){};
 	FDraggedItem(UObsidianInventoryItemInstance* InInstance);
 	FDraggedItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef, const FObsidianItemGeneratedData& InGeneratedData)
@@ -933,13 +902,12 @@ public:
 		GeneratedData.Reset();
 	}
 
-public:
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemInstance> Instance = nullptr;
 
 	UPROPERTY()
 	TSubclassOf<UObsidianInventoryItemDefinition> ItemDef = nullptr;
-	
+
 	UPROPERTY()
 	FObsidianItemGeneratedData GeneratedData = FObsidianItemGeneratedData();
 };
@@ -950,26 +918,19 @@ public:
 USTRUCT(BlueprintType)
 struct FObsidianStacksUIData
 {
-public:
 	GENERATED_BODY();
-	
+
+public:
 	FObsidianStacksUIData(){}
 	FObsidianStacksUIData(const int32 InCurrentStacks, const int32 InMaxStacks)
 		: CurrentItemStackCount(InCurrentStacks)
 		, MaxItemStackCount(InMaxStacks)
 	{}
 
-	void SetCurrentStacks(const int32 InCurrentStacks)
-	{
-		CurrentItemStackCount = InCurrentStacks;
-	}
+	void SetCurrentStacks(const int32 InCurrentStacks) { CurrentItemStackCount = InCurrentStacks; }
 
-	void SetMaxStacks(const int32 InMaxStacks)
-	{
-		MaxItemStackCount = InMaxStacks;
-	}
-	
-public:
+	void SetMaxStacks(const int32 InMaxStacks) { MaxItemStackCount = InMaxStacks; }
+
 	UPROPERTY(BlueprintReadOnly)
 	int32 CurrentItemStackCount = 0;
 
@@ -984,13 +945,13 @@ USTRUCT(BlueprintType)
 struct FObsidianAffixDescriptionRow
 {
 	GENERATED_BODY()
+
 public:
 	void SetAffixAdditionalDescription(const EObsidianAffixType& InAffixType, const int32 InAffixTier);
-	
-public:
+
 	FGameplayTag AffixTag = FGameplayTag::EmptyTag;
 	EObsidianAffixType AffixType = EObsidianAffixType::None;
-	
+
 	FText AffixRowDescription = FText();
 	FText AffixAdditionalDescription = FText();
 	FString AffixItemNameAddition = FString();
@@ -1004,12 +965,12 @@ USTRUCT(BlueprintType)
 struct FObsidianRareItemNameAddition
 {
 	GENERATED_BODY()
-	
+
 public:
 	/** Range of item level that this name can be generated for. */
 	UPROPERTY(EditDefaultsOnly, Meta = (ClampMin = 1, ClampMax = 90), Category = "Obsidian")
 	FIntPoint ItemLevelRange = FIntPoint(1, 90);
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FText> ItemNameAdditions;
 };
@@ -1039,8 +1000,7 @@ struct FObsidianRareItemNameGenerationData
 public:
 	FText GetRandomPrefixNameAddition(const int32 InUpToTreasureQuality);
 	FText GetRandomSuffixNameAddition(const int32 InUpToTreasureQuality, const FGameplayTag& InForItemCategory);
-	
-public:
+
 	/** General prefix item name additions. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianRareItemNameAddition> PrefixNameAdditions;
@@ -1055,6 +1015,7 @@ struct FObsidianItemRequirementsUIDescription
 {
 	GENERATED_BODY()
 
+public:
 	FObsidianItemRequirementsUIDescription()
 		: bHasHeroClassRequirement(false)
 		, bHasLevelRequirement(false)
@@ -1073,22 +1034,21 @@ struct FObsidianItemRequirementsUIDescription
 	void SetHeroLevelRequirement(const uint8 InRequiredMagnitude, const uint8 InOwnerMagnitude);
 	void SetHeroClassRequirement(const EObsidianHeroClass InRequiredClass, const EObsidianHeroClass InOwnerClass);
 	void SetAttributeRequirement(const FGameplayAttribute& InAttribute, const float InRequirementMagnitude, const float InOwnerMagnitude);
-	
-public:
+
 	uint8 bHasHeroClassRequirement:1;
 	uint8 bHasLevelRequirement:1;
 	uint8 bHasStrengthRequirement:1;
 	uint8 bHasDexterityRequirement:1;
 	uint8 bHasFaithRequirement:1;
 	uint8 bHasIntelligenceRequirement:1;
-	
+
 	uint8 bMeetHeroClassRequirement:1;
 	uint8 bMeetLevelRequirement:1;
 	uint8 bMeetStrengthRequirement:1;
 	uint8 bMeetDexterityRequirement:1;
 	uint8 bMeetFaithRequirement:1;
 	uint8 bMeetIntelligenceRequirement:1;
-	
+
 	UPROPERTY()
 	FText HeroClassRequirementText;
 
@@ -1126,134 +1086,64 @@ public:
 	{}
 
 	// ----------------------- Containers hehe (checks) ----------------------- 
-	
-	bool ContainsItemImage() const
-	{
-		return bContainsItemImage;
-	}
-	
+
+	bool ContainsItemImage() const { return bContainsItemImage; }
+
 	/** Checks if Item Stats contain Item Display Name. This should technically be present on every Item Stats. */
-	bool ContainsDisplayName() const
-	{
-		return bContainsDisplayName;
-	}
-	
+	bool ContainsDisplayName() const { return bContainsDisplayName; }
+
 	/** Checks if Item Stats contain Item Level. */
-	bool ContainsItemLevel() const
-	{
-		return bContainsItemLevel;
-	}
+	bool ContainsItemLevel() const { return bContainsItemLevel; }
 
 	/** Checks if Item Stats contain Rare Item Display Name Addition. */
-	bool ContainsRareDisplayNameAddition() const
-	{
-		return bContainsRareItemDisplayNameAddition;
-	}
+	bool ContainsRareDisplayNameAddition() const { return bContainsRareItemDisplayNameAddition; }
 
 	/** Checks if Item Stats contain Magic Item Display Name Addition. */
-	bool ContainsMagicDisplayNameAddition() const
-	{
-		return bContainsMagicItemDisplayNameAddition;
-	}
+	bool ContainsMagicDisplayNameAddition() const { return bContainsMagicItemDisplayNameAddition; }
 
 	/** Checks if the Item Stats contain Description. */
-	bool ContainsDescription() const
-	{
-		return bContainsDescription;
-	}
+	bool ContainsDescription() const { return bContainsDescription; }
 
 	/** Checks if the Item Stats contain Additional Description. */
-	bool ContainsAdditionalDescription() const
-	{
-		return bContainsAdditionalDescription;
-	}
+	bool ContainsAdditionalDescription() const { return bContainsAdditionalDescription; }
 
 	/** Checks if the Item Stats contain Stacks info. */
-	bool ContainsStacks() const
-	{
-		return bContainsStacks;
-	}
+	bool ContainsStacks() const { return bContainsStacks; }
 
 	/** Checks if the Item Stats contain Affixes info. */
-	bool ContainsAffixes() const
-	{
-		return bContainsAffixes;
-	}
+	bool ContainsAffixes() const { return bContainsAffixes; }
 
 	/** Checks if the Item supports Identification. */
-	bool SupportsIdentification() const
-	{
-		return bSupportIdentification;
-	}
+	bool SupportsIdentification() const { return bSupportIdentification; }
 
 	/** Checks if the Item has equipping requirements. */
-	bool HasItemEquippingRequirements() const
-	{
-		return bHasItemEquippingRequirements;
-	}
+	bool HasItemEquippingRequirements() const { return bHasItemEquippingRequirements; }
 
 	// ----------------------- Getters ----------------------- 
 
-	UTexture2D* GetItemImage() const
-	{
-		return ItemImage;
-	}
+	UTexture2D* GetItemImage() const { return ItemImage; }
 
-	FIntPoint GetItemGridSpan() const
-	{
-		return ItemGridSpan;
-	}
+	FIntPoint GetItemGridSpan() const { return ItemGridSpan; }
 
-	FText GetDisplayName() const
-	{
-		return DisplayName;
-	}
+	FText GetDisplayName() const { return DisplayName; }
 
-	int8 GetItemLevel() const
-	{
-		return ItemLevel;
-	}
+	int8 GetItemLevel() const { return ItemLevel; }
 
-	FString GetRareItemDisplayNameAddition() const
-	{
-		return RareItemDisplayNameAddition;
-	}
+	FString GetRareItemDisplayNameAddition() const { return RareItemDisplayNameAddition; }
 
-	FString GetMagicItemDisplayNameAddition() const
-	{
-		return MagicItemDisplayNameAddition;
-	}
+	FString GetMagicItemDisplayNameAddition() const { return MagicItemDisplayNameAddition; }
 
-	FText GetDescription() const
-	{
-		return Description;
-	}
+	FText GetDescription() const { return Description; }
 
-	FText GetAdditionalDescription() const
-	{
-		return AdditionalDescription;
-	}
+	FText GetAdditionalDescription() const { return AdditionalDescription; }
 
-	FObsidianStacksUIData GetItemStacks() const
-	{
-		return StacksData;
-	}
+	FObsidianStacksUIData GetItemStacks() const { return StacksData; }
 
-	bool IsIdentified() const
-	{
-		return bIdentified;
-	}
+	bool IsIdentified() const { return bIdentified; }
 
-	TArray<FObsidianAffixDescriptionRow> GetAffixDescriptions() const
-	{
-		return AffixDescriptionRows;
-	}
+	TArray<FObsidianAffixDescriptionRow> GetAffixDescriptions() const { return AffixDescriptionRows; }
 
-	FObsidianItemRequirementsUIDescription GetItemEquippingRequirements() const
-	{
-		return ItemEquippingRequirements;
-	}
-	
+	FObsidianItemRequirementsUIDescription GetItemEquippingRequirements() const { return ItemEquippingRequirements; }
 
 	// ----------------------- Setters ----------------------- 
 
@@ -1271,18 +1161,17 @@ public:
 	void SetIdentified(const bool InIdentified);
 	void SetAffixDescriptionRows(const TArray<FObsidianAffixDescriptionRow>& InAffixRows);
 	void SetItemEquippingRequirements(const FObsidianItemRequirementsUIDescription& InRequirements);
-	
-public:
+
 	UPROPERTY()
 	EObsidianItemRarity ItemRarity = EObsidianItemRarity::Normal;
-	
+
 private:
 	UPROPERTY()
 	TObjectPtr<UTexture2D> ItemImage;
 
 	UPROPERTY()
 	FIntPoint ItemGridSpan = FIntPoint::NoneValue;
-	
+
 	/**
 	 * Item Descriptors.
 	 */
@@ -1304,7 +1193,7 @@ private:
 
 	UPROPERTY()
 	FText AdditionalDescription = FText::GetEmpty();
-	
+
 	/**
 	 * Stacks.
 	 */
@@ -1328,11 +1217,11 @@ private:
 
 	UPROPERTY()
 	FObsidianItemRequirementsUIDescription ItemEquippingRequirements = FObsidianItemRequirementsUIDescription();
-	
+
 	/**
 	 * Contains booleans.
 	 */
-	
+
 	uint8 bContainsItemImage:1;
 	uint8 bContainsDisplayName:1;
 	uint8 bContainsItemLevel:1;

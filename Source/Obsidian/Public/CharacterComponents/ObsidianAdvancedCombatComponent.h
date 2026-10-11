@@ -22,13 +22,13 @@ struct FObsidianAdvancedCombatSockets
 	GENERATED_BODY()
 
 	FObsidianAdvancedCombatSockets(){};
-	
+
 	FObsidianAdvancedCombatSockets(const FName InStartSocketName, const FName InEndSocketName)
 	{
 		StartSocketName = InStartSocketName;
 		EndSocketName = InEndSocketName;
 	};
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	FName StartSocketName = "AdvancedCombat_Start";
 
@@ -40,7 +40,7 @@ USTRUCT(BlueprintType)
 struct FObsidianAdvancedTraceParams
 {
 	GENERATED_BODY();
-	
+
 	FObsidianAdvancedTraceParams(){}
 
 	FObsidianAdvancedTraceParams(const EObsidianTraceType InTraceType, const EObsidianTracedMeshType InTracedMesh, const bool InAllowOneHitPerTrace)
@@ -49,7 +49,7 @@ struct FObsidianAdvancedTraceParams
 		TracedMeshType = InTracedMesh;
 		bAllowOneHitPerTrace = InAllowOneHitPerTrace;
 	}
-	
+
 	UPROPERTY()
 	EObsidianTraceType TraceType = EObsidianTraceType::SimpleLineTrace;
 
@@ -69,7 +69,7 @@ class OBSIDIAN_API UObsidianAdvancedCombatComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UObsidianAdvancedCombatComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	UFUNCTION(BlueprintPure, Category = "Obsidian Advanced Combat")
@@ -77,8 +77,6 @@ public:
 	{
 		return (InOwner ? InOwner->FindComponentByClass<UObsidianAdvancedCombatComponent>() : nullptr);
 	}
-
-	virtual void TickComponent(float InDeltaTime, ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction) override;
 
 	/** Starts the trace on the Component. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
@@ -99,7 +97,7 @@ public:
 	/** Removes ignored actor. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void RemoveIgnoredActor(AActor* InIgnoredActorToRemove);
-	
+
 	/** Removes all ignored actors. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void ClearIgnoredActors();
@@ -120,7 +118,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian Advanced Combat")
 	void ClearTracedMeshes();
 
-public:
+	//~ Begin UActorComponent Interface
+	virtual void TickComponent(float InDeltaTime, ELevelTick InTickType, FActorComponentTickFunction* InThisTickFunction) override;
+	//~ End UActorComponent Interface
+
 	/** Trace Channel used in all traces. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	TEnumAsByte<ETraceTypeQuery> TraceChannel = UEngineTypes::ConvertToTraceType(Obsidian_TraceChannel_Melee);
@@ -136,34 +137,34 @@ public:
 	/** N + 1 number of lines that will be drawn with SemiComplexLineTrace. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|LineTrace")
 	int32 MultiLineCount = 3;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|BoxTrace")
 	FVector BoxTraceHalfSize = FVector(10.0f);
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|CapsuleTrace")
 	float CapsuleRadius = 5.0f;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup|CapsuleTrace")
 	float CapsuleHalfHeight = 5.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	bool bTraceComplex = false;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Setup")
 	bool bStartInCurrentTick = true;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
 	bool bWithDebug = false;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
 	FLinearColor DebugTraceColor = FLinearColor::Green;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
 	FLinearColor DebugHitColor = FLinearColor::Red;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian Advanced Combat|Debug")
 	float DebugDuration = 5.0f;
-	
+
 	UPROPERTY(BlueprintAssignable, Category = "Obsidian Advanced Combat|Events")
 	FOnAttackTraceStarted OnAttackTraceStartedDelegate;
 
@@ -194,8 +195,7 @@ private:
 	void ComplexLineTrace();
 	void SimpleBoxTrace();
 	void SimpleCapsuleTrace();
-	
-private:
+
 	bool bStartTrace = false;
 
 	UPROPERTY()

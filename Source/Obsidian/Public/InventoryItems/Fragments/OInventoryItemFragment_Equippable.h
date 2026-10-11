@@ -23,10 +23,9 @@ struct FObsidianEquipmentActor
 public:
 	FObsidianEquipmentActor(){}
 	FObsidianEquipmentActor(const FObsidianSavedEquipmentPiece& InSavedEquipmentActor);
-	
+
 	void OverrideAttachSocket(const FGameplayTag& InSlotTag);
-	
-public:
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Equipment")
 	TSubclassOf<AObsidianSpawnedEquipmentPiece> ActorToSpawn = nullptr;
 
@@ -44,22 +43,22 @@ public:
 /**
  * Fragment allowing the item to be equipped.
  */
-UCLASS(DisplayName="Equippable")
+UCLASS(DisplayName="Equippable", meta = (PrioritizeCategories = "Equipping"))
 class OBSIDIAN_API UOInventoryItemFragment_Equippable : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
 
 public:
-	//~ Start of UObsidianInventoryItemFragment
+	FObsidianItemRequirements GetItemDefaultEquippingRequirements() const { return DefaultEquippingRequirements; }
+
+	//~ Begin UObsidianInventoryItemFragment Interface
 	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
-	//~ End of UObsidianInventoryItemFragment
-	
-	FObsidianItemRequirements GetItemDefaultEquippingRequirements() const;
+	//~ End UObsidianInventoryItemFragment Interface
 
 protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	TArray<FObsidianEquipmentActor> ActorsToSpawn;
-	
+
 	/** Should this item block the other equipment slot, e.g. Two-Handed Weapons. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Equipping")
 	bool bShouldBlockOtherSlot = false;

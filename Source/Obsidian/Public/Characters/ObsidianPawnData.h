@@ -26,7 +26,7 @@ struct FInputMappingContextAndPriority
 	/** Higher priority input mappings will be prioritized over mappings with a lower priority. */
 	UPROPERTY(EditAnywhere, Category = "Input")
 	int32 Priority = 0;
-	
+
 	/** If true, then this mapping context will be registered with the settings when this game feature action is registered. */
 	UPROPERTY(EditAnywhere, Category = "Input")
 	bool bRegisterWithSettings = true;
@@ -35,7 +35,7 @@ struct FInputMappingContextAndPriority
 /**
  * Non-mutable data asset that contains properties used to define a pawn.
  */
-UCLASS(BlueprintType, Const, meta = (DisplayName = "Obsidian Pawn Data", ShortToolTip = "Data asset used to define a Pawn"))
+UCLASS(BlueprintType, Const, meta = (PrioritizeCategories = "Obsidian", DisplayName = "Obsidian Pawn Data", ShortToolTip = "Data asset used to define a Pawn"))
 class OBSIDIAN_API UObsidianPawnData : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
@@ -43,11 +43,10 @@ class OBSIDIAN_API UObsidianPawnData : public UPrimaryDataAsset
 public:
 	UObsidianPawnData(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-public:
 	/** Determines if the Pawn is a Player */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Pawn")
 	bool bPlayer = false;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Pawn")
 	TSubclassOf<APawn> PawnClass;
 
@@ -66,6 +65,4 @@ public:
 	/** Input configuration used by player controlled pawns to create input mappings and bind input actions. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Input")
 	TObjectPtr<UObsidianInputConfig> InputConfig;
-	
-	
 };

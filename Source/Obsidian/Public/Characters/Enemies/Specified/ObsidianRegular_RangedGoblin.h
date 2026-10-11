@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianRegular_RangedGoblin : public AObsidianRegularEnemy
 {
 	GENERATED_BODY()
@@ -19,12 +19,14 @@ class OBSIDIAN_API AObsidianRegular_RangedGoblin : public AObsidianRegularEnemy
 public:
 	AObsidianRegular_RangedGoblin(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
+	//~ Begin UObject Interface
 	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	
-	//~ Start of CombatInterface
+	//~ End UObject Interface
+
+	//~ Begin IObsidianCombatInterface Interface
 	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
-	//~ End of CombatInterface
-	
+	//~ End IObsidianCombatInterface Interface
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Combat")
 	TObjectPtr<USkeletalMeshComponent> LeftHandEquipmentMesh;

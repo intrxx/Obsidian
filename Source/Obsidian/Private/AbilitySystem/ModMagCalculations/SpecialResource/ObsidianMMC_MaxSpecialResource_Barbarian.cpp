@@ -7,12 +7,12 @@
 
 struct SObsidianMMC_MaxSpecialResource_Barbarian
 {
-	FGameplayEffectAttributeCaptureDefinition StrengthDef;
-
 	SObsidianMMC_MaxSpecialResource_Barbarian()
 	{
 		StrengthDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetStrengthAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition StrengthDef;
 };
 
 static const SObsidianMMC_MaxSpecialResource_Barbarian& MaxSpecialResource_BarbarianStatics()

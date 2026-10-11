@@ -20,21 +20,20 @@ class OBSIDIAN_API UObCharacterStatusWidgetController : public UObsidianHeroWidg
 	GENERATED_BODY()
 
 public:
-	// ~ Start of UObsidianWidgetController
-	virtual void OnWidgetControllerSetupCompleted() override;
-	// ~ End of UObsidianWidgetController
-	
 	void SetInitialAttributeValues() const;
-	
-public:
+
+	//~ Begin UObsidianHeroWidgetControllerBase Interface
+	virtual void OnWidgetControllerSetupCompleted() override;
+	//~ End UObsidianHeroWidgetControllerBase Interface
+
 	FText HeroClassText = FText();
 	FString HeroNameString = FString();
-	
+
 	/** Character */
 	FOnHeroLevelUpSignature HeroLevelUpDelegate;
 	FOnAttributeValueChangedOneParam ExperienceChangedDelegate;
 	FOnAttributeValueChangedTwoParams MaxExperienceChangedDelegate;
-	
+
 	/** Attributes */
 	FOnAttributeValueChangedOneParam StrengthValueChangedDelegate;
 	FOnAttributeValueChangedOneParam IntelligenceValueChangedDelegate;
@@ -48,7 +47,7 @@ public:
 	FOnAttributeValueChangedOneParam MaxEnergyShieldChangedDelegate;
 	FOnAttributeValueChangedOneParam MaxStaminaChangedDelegate;
 	FOnAttributeValueChangedOneParam StaminaRegenerationChangedDelegate;
-	
+
 	/** Offence */
 	FOnAttributeValueChangedOneParam AccuracyChangedDelegate;
 	FOnAttributeValueChangedOneParam AttackSpeedChangedDelegate;
@@ -64,7 +63,7 @@ public:
 	FOnAttributeValueChangedOneParam LightningPenetrationChangedDelegate;
 	FOnAttributeValueChangedOneParam ColdPenetrationChangedDelegate;
 	FOnAttributeValueChangedOneParam ChaosPenetrationChangedDelegate;
-	
+
 	/** Defence */
 	FOnAttributeValueChangedOneParam ArmorChangedDelegate;
 	FOnAttributeValueChangedOneParam EvasionChangedDelegate;
@@ -86,20 +85,18 @@ public:
 	FOnAttributeValueChangedTwoParams MaxSpellBlockChanceChangedDelegate;
 
 protected:
-	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC) override;
-
 	/** Character */
 	UFUNCTION()
 	void HeroLevelUp(const uint8 InNewLevel);
 	void ExperienceChanged(const FOnAttributeChangeData& InData) const;
 	void MaxExperienceChanged(const FOnAttributeChangeData& InData);
-	
+
 	/** Attributes */
 	void StrengthChanged(const FOnAttributeChangeData& InData) const;
 	void IntelligenceChanged(const FOnAttributeChangeData& InData) const;
 	void DexterityChanged(const FOnAttributeChangeData& InData) const;
 	void FaithChanged(const FOnAttributeChangeData& InData) const;
-	
+
 	/** Vital Attributes */
 	void MaxHealthChanged(const FOnAttributeChangeData& InData) const;
 	void MaxManaChanged(const FOnAttributeChangeData& InData) const;
@@ -107,7 +104,7 @@ protected:
 	void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData) const;
 	void MaxStaminaChanged(const FOnAttributeChangeData& InData) const;
 	void StaminaRegenerationChanged(const FOnAttributeChangeData& InData) const;
-	
+
 	/** Offence */
 	void AccuracyChanged(const FOnAttributeChangeData& InData) const;
 	void AttackSpeedChanged(const FOnAttributeChangeData& InData) const;
@@ -123,7 +120,7 @@ protected:
 	void LightningPenetrationChanged(const FOnAttributeChangeData& InData) const;
 	void ColdPenetrationChanged(const FOnAttributeChangeData& InData) const;
 	void ChaosPenetrationChanged(const FOnAttributeChangeData& InData) const;
-	
+
 	/** Defence */
 	void ArmorChanged(const FOnAttributeChangeData& InData) const;
 	void EvasionChanged(const FOnAttributeChangeData& InData) const;
@@ -143,15 +140,18 @@ protected:
 	void MaxHitBlockChanceChanged(const FOnAttributeChangeData& InData) const;
 	void SpellBlockChanceChanged(const FOnAttributeChangeData& InData) const;
 	void MaxSpellBlockChanceChanged(const FOnAttributeChangeData& InData) const;
-	
-protected:
+
+	//~ Begin UObsidianHeroWidgetControllerBase Interface
+	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC) override;
+	//~ End UObsidianHeroWidgetControllerBase Interface
+
 	/** Character */
 	FDelegateHandle CharacterLevelChangedDelegateHandle;
 	FDelegateHandle ExperienceChangedDelegateHandle;
 	FDelegateHandle MaxExperienceChangedDelegateHandle;
-	
+
 	FDelegateHandle HeroLevelUpDelegateHandle;
-	
+
 	/** Attributes */
 	FDelegateHandle StrengthChangedDelegateHandle;
 	FDelegateHandle IntelligenceChangedDelegateHandle;
@@ -165,7 +165,7 @@ protected:
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
 	FDelegateHandle MaxStaminaChangedDelegateHandle;
 	FDelegateHandle StaminaRegenerationChangedDelegateHandle;
-	
+
 	/** Offence */
 	FDelegateHandle AccuracyChangedDelegateHandle;
 	FDelegateHandle AttackSpeedChangedDelegateHandle;
@@ -207,6 +207,6 @@ private:
 	TWeakObjectPtr<UObsidianAbilitySystemComponent> OwnerAbilitySystemComponent = nullptr;
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianHeroAttributesComponent> OwnerAttributesComponent = nullptr;
-	
+
 	float MaxExperienceOldValue = 0.0f;
 };

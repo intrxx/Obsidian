@@ -22,7 +22,7 @@ enum class EObsidianWidgetInputMode : uint8
 /**
  * 
  */
-UCLASS(Abstract, Blueprintable)
+UCLASS(Abstract, Blueprintable, meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianActivatableWidget : public UCommonActivatableWidget
 {
 	GENERATED_BODY()
@@ -34,27 +34,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|UI")
 	void SetWidgetController(UObject* InWidgetController);
 
-public:
-	//~ Start of UCommonActivatableWidget interface
+	//~ Begin UCommonActivatableWidget Interface
 	virtual TOptional<FUIInputConfig> GetDesiredInputConfig() const override;
-	//~ End of UCommonActivatableWidget interface
+	//~ End UCommonActivatableWidget Interface
 
+	//~ Begin UUserWidget Interface
 #if WITH_EDITOR
 	virtual void ValidateCompiledWidgetTree(const UWidgetTree& InBlueprintWidgetTree, class IWidgetCompilerLog& InCompileLog) const override;
 #endif
-
-protected:
-	/** Widget controller associated with this Widget */
-	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|UI")
-	TObjectPtr<UObject> WidgetController;
-	
-	/** The desired input mode to use while this UI is activated, for example do you want key presses to still reach the game/player controller? */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Input")
-	EObsidianWidgetInputMode InputConfig = EObsidianWidgetInputMode::Default;
-
-	/** The desired mouse behavior when the game gets input. */
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Input")
-	EMouseCaptureMode GameMouseCaptureMode = EMouseCaptureMode::CapturePermanently;
+	//~ End UUserWidget Interface
 
 protected:
 	/** Function that gets called after WidgetController has been set */
@@ -64,4 +52,16 @@ protected:
 
 	/** Function that gets called after WidgetControllerSet functions for both cpp and BP. */
 	virtual void PostHandleWidgetControllerSet();
+
+	/** Widget controller associated with this Widget */
+	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|UI")
+	TObjectPtr<UObject> WidgetController;
+
+	/** The desired input mode to use while this UI is activated, for example do you want key presses to still reach the game/player controller? */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Input")
+	EObsidianWidgetInputMode InputConfig = EObsidianWidgetInputMode::Default;
+
+	/** The desired mouse behavior when the game gets input. */
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Input")
+	EMouseCaptureMode GameMouseCaptureMode = EMouseCaptureMode::CapturePermanently;
 };

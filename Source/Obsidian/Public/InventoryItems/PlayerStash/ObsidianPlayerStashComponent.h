@@ -20,14 +20,14 @@ class AObsidianPlayerController;
 /**
  * Primary Player Stash Component of Obsidian to be used by Players.
  */
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(PrioritizeCategories = "Obsidian", BlueprintSpawnableComponent) )
 class OBSIDIAN_API UObsidianPlayerStashComponent : public UObsidianItemContainerComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UObsidianPlayerStashComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
 	/** Returns the Player Stash Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|Inventory")
 	static UObsidianPlayerStashComponent* FindPlayerStashComponent(const AActor* InActor)
@@ -35,12 +35,10 @@ public:
 		return (InActor ? InActor->FindComponentByClass<UObsidianPlayerStashComponent>() : nullptr);
 	}
 
-	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	TConstArrayView<TObjectPtr<UObsidianStashTab>> GetAllStashTabs() const { return StashTabs; }
 
-	TConstArrayView<TObjectPtr<UObsidianStashTab>> GetAllStashTabs() const;
-	
 	bool CanOwnerModifyPlayerStashState();
-	
+
 	TArray<UObsidianInventoryItemInstance*> GetAllItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllPersonalItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetAllSharedItems() const;
@@ -55,10 +53,10 @@ public:
 	TArray<FObsidianStashSlotDefinition> FindPossibleSlotsForPlacingItem_WithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InForItemDef);
 
 	UObsidianStashTab* GetStashTabForTag(const FGameplayTag& InStashTabTag);
-	
+
 	/** Finds all stacks in the inventory for given item type with item Def. */
 	int32 FindAllStacksForGivenItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
-	
+
 	/** Finds all stacks in the inventory for given item type with item Instance. */
 	int32 FindAllStacksForGivenItem(const UObsidianInventoryItemInstance* InItemInstance);
 
@@ -68,10 +66,10 @@ public:
 
 	bool CanFitInstanceInStashTab(const FIntPoint& InItemGridSpan, const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseTypeTag,
 		const FGameplayTag& InStashTabTag);
-	
+
 	bool CanReplaceItemAtPosition(const FObsidianItemPosition& InAtItemPosition, const UObsidianInventoryItemInstance* InReplacingInstance);
 	bool CanReplaceItemAtPosition(const FObsidianItemPosition& InAtItemPosition, const TSubclassOf<UObsidianInventoryItemDefinition>& InReplacingDef);
-	
+
 	/**
 	 * Will try to add provided amount of stacks of provided Item to any of the same Item present in the Inventory. Returns Array of Instances that stacks were added to.
 	 *
@@ -84,7 +82,7 @@ public:
 	 */
 	FObsidianAddingStacksResult TryAddingStacksToExistingItems(const TSubclassOf<UObsidianInventoryItemDefinition>& InAddingFromItemDef,
 		const int32 InStacksToAdd, const FGameplayTag& InTabTag, TArray<UObsidianInventoryItemInstance*>& OutAddedToInstances);
-	
+
 	/** Tries to add Item Definition to the Opened Stash Tab, if the item is stackable will first try to add all the stacks to the same item types if they exist in the Stash Tab. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
@@ -108,11 +106,11 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	FObsidianAddingStacksResult TryAddingStacksToSpecificSlotWithItemDef(const TSubclassOf<UObsidianInventoryItemDefinition>& InAddingFromItemDef,
 		const int32 InAddingFromItemDefCurrentStacks, const FObsidianItemPosition& InAtPosition, const int32 InStackToAddOverride = -1);
-	
+
 	/** Tries to add Item Instance to the Player Stash, if the item is stackable will first try to add all the stacks to the same item types if they exist in the Stash Tab. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd, const FGameplayTag& InStashTabTag);
-	
+
 	/** Tries to add provided Item Instance to provided Slot. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult AddItemInstanceToSpecificSlot(UObsidianInventoryItemInstance* InInstanceToAdd,
@@ -142,22 +140,24 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|Inventory")
 	FObsidianItemOperationResult TakeOutFromItemInstance(UObsidianInventoryItemInstance* InTakingFromInstance,
 		const int32 InStacksToTake);
-	
+
 	/** Removes Item Instance from inventory. */
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerStash")
 	FObsidianItemOperationResult RemoveItemInstance(UObsidianInventoryItemInstance* InInstanceToRemove);
 
-
-	
 	UFUNCTION(Server, Reliable)
 	void ServerRegisterAndValidateCurrentStashTab(const FGameplayTag& InStashTab);
-	FGameplayTag GetActiveStashTag() const;
+	FGameplayTag GetActiveStashTag() const { return CurrentStashTab; }
 
 	void LoadStashedItem(const FObsidianSavedItem& InStashedSavedItem);
 
-	//~ Start of UObsidianItemContainerComponent interface
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
+	//~ Begin UObsidianItemContainerComponent Interface
 	virtual TArray<UObsidianInventoryItemInstance*> GetContainedItems() const override;
-	//~ End of UObsidianItemContainerComponent interface
+	//~ End UObsidianItemContainerComponent Interface
 
 protected:
 	/** Checks if the provided Item Definition fits anywhere in the Stash Tab (for tag). Provides Available Position. */
@@ -172,7 +172,7 @@ protected:
 	bool CheckAvailablePosition(FObsidianItemPosition& OutAvailablePosition, const FIntPoint& InItemGridSpan,
 		const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseTypeTag, const FGameplayTag& InStashTabTag);
 
-	//~ Start of UObsidianItemContainerComponent interface
+	//~ Begin UObsidianItemContainerComponent Interface
 	virtual FGameplayTag GetBlockActionsTag() const override;
 	virtual void AddItemInstanceToList(UObsidianInventoryItemInstance* InInstance, const FObsidianItemPosition& InToPosition) override;
 	virtual UObsidianInventoryItemInstance* AddItemDefinitionToList(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
@@ -180,24 +180,20 @@ protected:
 	virtual void RemoveItemInstanceFromList(UObsidianInventoryItemInstance* InInstance) override;
 	virtual void HandleItemStacksChanged(UObsidianInventoryItemInstance* InInstance, const int32 InOldStackCount) override;
 	virtual void HandleItemChanged(UObsidianInventoryItemInstance* InInstance) override;
-	//~ End of UObsidianItemContainerComponent interface
-	
-protected:
+	//~ End UObsidianItemContainerComponent Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TObjectPtr<UObsidianStashTabsConfig> StashTabsConfig;
-
-
 
 	/** This is not very clean I think, but I need to store Stash Tabs in some UPROPERTY container so the GC won't get it :/ */
 	UPROPERTY()
 	TArray<TObjectPtr<UObsidianStashTab>> StashTabs;
 
 private:
-	
 #if WITH_GAMEPLAY_DEBUGGER
 	friend class FGameplayDebuggerCategory_PlayerStash;
 #endif
-	
+
 	/**
 	 * Actual array of stashed items which is FFastArraySerializer.
 	 */

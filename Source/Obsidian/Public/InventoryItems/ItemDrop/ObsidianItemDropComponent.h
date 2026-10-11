@@ -40,17 +40,15 @@ USTRUCT()
 struct FObsidianAdditionalTreasureList
 {
 	GENERATED_BODY()
-	
+
 public:
-	
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	EObsidianAdditionalTreasureListPolicy TreasureListPolicy = EObsidianAdditionalTreasureListPolicy::TryToRoll;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftObjectPtr<UObsidianTreasureList> TreasureList;
 };
@@ -66,33 +64,35 @@ class UObsidianItemDataLoaderSubsystem;
 /**
  * 
  */
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(PrioritizeCategories = "Obsidian", BlueprintSpawnableComponent) )
 class OBSIDIAN_API UObsidianItemDropComponent : public UActorComponent
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	UObsidianItemDropComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
 	void DropItems(const EObsidianEntityRarity InDroppingEntityRarity, const uint8 InDroppingEntityLevel, const FVector& InOverrideDropLocation = FVector::ZeroVector);
 
+	//~ Begin UObject Interface
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
+	//~ End UObject Interface
 
-public:
+	//~ Begin UActorComponent Interface
+	virtual void BeginPlay() override;
+	//~ End UActorComponent Interface
+
 	FOnDroppingItemsFinishedSignature OnDroppingItemsFinishedDelegate;
 
 protected:
-	virtual void BeginPlay() override;
-	
 	void LoadAdditionalTreasuresAsync();
 
 	void ConstructItem(FObsidianItemToDrop& InOutForItemToDrop);
 	void GetTreasureClassesToRollFrom(const uint8 InMaxTreasureClassQuality, TArray<FObsidianTreasureClass>& OutTreasureClasses,
 		TArray<FObsidianTreasureClass>& OutMustRollFromTreasureClasses);
-	
-protected:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float ItemDropRadius = 60.0f;
 
@@ -103,14 +103,18 @@ protected:
 	/** Limits the drop items to be specific Category of Treasure Lists, e.g. "Item.Category.Equipment.Weapon". */
 	UPROPERTY(EditAnywhere, Meta = (Categories = "Item.Category", EditCondition = "bLimitCommonTreasureCategory", EditConditionHides), Category = "Obsidian")
 	FGameplayTag LimitCommonTreasureCategoryTag = FGameplayTag::EmptyTag;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianAdditionalTreasureList> AdditionalTreasureLists;
 
 private:
+#if WITH_OBSIDIAN_DEBUG_MENU
+	friend class FObsidianDebugTab_Items;
+#endif
+
 	bool ConstructItemToDrop(const FObsidianDropItem& InDropItem, const FVector& InOverrideDropLocation, const uint8 InTreasureQuality,
 		FObsidianItemToDrop& OutItemToDrop);
-	
+
 	FTransform GetDropTransformAligned(const AActor* InDroppingActor, const FVector& InOverrideDropLocation = FVector::ZeroVector) const;
 	EObsidianItemRarity RollItemRarity(const EObsidianItemRarity InMaxRarity);
 
@@ -119,7 +123,7 @@ private:
 	void HandleFullGeneration(FObsidianItemToDrop& InOutForItemToDrop, const FGameplayTag& InDropItemCategory, const FGameplayTag& InDropItemBaseTypeTag,
 		const UOInventoryItemFragment_Affixes* InAffixFragment);
 	void HandleNoGeneration(FObsidianItemToDrop& InOutForItemToDrop, const UOInventoryItemFragment_Affixes* InAffixFragment);
-	
+
 	void RollSkillImplicits(FObsidianItemToDrop& InOutForItemToDrop, const TArray<FObsidianDynamicItemAffix>& InSkillImplicits);
 	void RollImplicit(FObsidianItemToDrop& InOutForItemToDrop, const TArray<FObsidianDynamicItemAffix>& InImplicits);
 	void RollAffixesAndPrefixes(FObsidianItemToDrop& InOutForItemToDrop, TArray<FObsidianDynamicItemAffix>& InOutPrefixes, TArray<FObsidianDynamicItemAffix>& InOutSuffixes);
@@ -134,11 +138,6 @@ private:
 
 	void AdjustItemRequirementsBasedOnAddedAffixes(FObsidianItemRequirements& OutRequirements, const FObsidianItemToDrop& InFromItemToDrop);
 
-private:
-#if WITH_OBSIDIAN_DEBUG_MENU
-	friend class FObsidianDebugTab_Items;
-#endif
-	
 	UPROPERTY()
 	UObsidianItemDataLoaderSubsystem* CachedItemDataLoader = nullptr;
 };

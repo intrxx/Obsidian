@@ -26,20 +26,21 @@ public:
 		const FGameplayTag& InStashTabTag);
 
 	TArray<UObsidianSlot_ItemSlot*> GetSlotWidgets() const;
-	
+
+	//~ Begin UObsidianStashTabWidget Interface
 	virtual void AddItemToStash(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData) override;
 	virtual void HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData) override;
 	virtual void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData) override;
 
 	virtual void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight) override;
 	virtual void ClearUsableItemHighlight() override;
-	
+	//~ End UObsidianStashTabWidget Interface
+
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianSlotPanel> StashTab_SlotPanel;
-	
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsController;
-	
 };

@@ -38,7 +38,7 @@ class OBSIDIAN_API UObsidianAttributesComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UObsidianAttributesComponent(const FObjectInitializer& InObjectInitializer);
 
 	/** Returns the COMMON Attributes Component if one exists on the specified actor, will be nullptr otherwise */
@@ -49,10 +49,7 @@ public:
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
-	EObsidianDeathState GetDeathState() const
-	{
-		return DeathState;
-	}
+	EObsidianDeathState GetDeathState() const { return DeathState; }
 
 	/** Returns true if the owning character is dead or in the process of dying. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, meta = (ExpandBoolAsExecs), Category = "Obsidian|Attributes")
@@ -60,23 +57,21 @@ public:
 	{
 		return DeathState > EObsidianDeathState::EDS_Alive;
 	}
-	
+
 	/** Initializes this component using ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
 	virtual void InitializeWithAbilitySystem(UObsidianAbilitySystemComponent* InASC, ACharacter* InOwner = nullptr);
-	
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	
+
 	/** Uninitialize this component, clearing any references to the ASC. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Attributes")
 	virtual void UninitializeFromAbilitySystem();
-	
+
 	/** Start the death sequence for the owner. */
 	virtual void StartDeath();
 
 	/** Ends the death sequence for the owner. */
 	virtual void FinishDeath();
-	
+
 	/**
 	 * Getters for Gameplay Attributes.
 	 */
@@ -120,7 +115,7 @@ public:
 	/** Getters for All Damage Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetAllDamageMultiplier() const;
 	FGameplayAttribute GetAllDamageMultiplierAttribute() const;
-	
+
 	/** Getters for Armor Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetArmor() const;
 	FGameplayAttribute GetArmorAttribute() const;
@@ -144,7 +139,7 @@ public:
 	/** Getters for Shock Damage Taken Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetShockDamageTakenMultiplier() const;
 	FGameplayAttribute GetShockDamageTakenMultiplierAttribute() const;
-	
+
 	/** Getters for Stagger Damage Taken Multiplier Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetStaggerDamageTakenMultiplier() const;
 	FGameplayAttribute GetStaggerDamageTakenMultiplierAttribute() const;
@@ -152,11 +147,11 @@ public:
 	/** Getters for All Elemental Resistances Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetAllElementalResistances() const;
 	FGameplayAttribute GetAllElementalResistancesAttribute() const;
-	
+
 	/** Getters for Fire Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetFireResistance() const;
 	FGameplayAttribute GetFireResistanceAttribute() const;
-	
+
 	/** Getters for Max Fire Resistance Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetMaxFireResistance() const;
 	FGameplayAttribute GetMaxFireResistanceAttribute() const;
@@ -296,13 +291,15 @@ public:
 	/** Getters for Max Flat Chaos Damage Value and Attribute from UObsidianCommonAttributeSet. */	
 	float GetMaxFlatChaosDamage() const;
 	FGameplayAttribute GetMaxFlatChaosDamageAttribute() const;
-	
+
 	/** Getters for Movement Speed Value and Attribute from UObsidianCommonAttributeSet. */
 	float GetMovementSpeed() const;
 	FGameplayAttribute GetMovementSpeedAttribute() const;
-	
 
-public:
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
 	/** Delegate fired when the death sequence has started. */
 	UPROPERTY(BlueprintAssignable)
 	FObsidianAttrComp_DeathEvent OnDeathStarted;
@@ -312,18 +309,17 @@ public:
 	FObsidianAttrComp_DeathEvent OnDeathFinished;
 
 protected:
-	virtual void OnUnregister() override;
 	virtual void ClearGameplayTags();
-	
+
 	/**
 	 * Callbacks for Attribute change delegates.
 	 */
-	
+
 	virtual void HealthChanged(const FOnAttributeChangeData& InData);
 	virtual void MaxHealthChanged(const FOnAttributeChangeData& InData);
 	virtual void EnergyShieldChanged(const FOnAttributeChangeData& InData);
 	virtual void MaxEnergyShieldChanged(const FOnAttributeChangeData& InData);
-	
+
 	/**
 	 *  Death Sequence
 	 */
@@ -333,8 +329,11 @@ protected:
 
 	virtual void HandleOutOfHealth(AActor* InDamageInstigator, AActor* InDamageCauser, const FGameplayEffectSpec* InDamageEffectSpec,
 		float InDamageMagnitude, float InOldValue, float InNewValue);
-	
-protected:
+
+	//~ Begin UActorComponent Interface
+	virtual void OnUnregister() override;
+	//~ End UActorComponent Interface
+
 	/** Ability System used by this component. */
 	UPROPERTY()
 	TObjectPtr<UObsidianAbilitySystemComponent> AbilitySystemComponent;
@@ -342,10 +341,10 @@ protected:
 	/**
 	 * Sets used by this component.
 	 */
-	
+
 	UPROPERTY()
 	TObjectPtr<const UObsidianCommonAttributeSet> CommonAttributeSet;
-	
+
 	/**
 	 * Attribute change delegate handles.
 	 */
@@ -354,7 +353,7 @@ protected:
 	FDelegateHandle MaxHealthChangedDelegateHandle;
 	FDelegateHandle EnergyShieldChangedDelegateHandle;
 	FDelegateHandle MaxEnergyShieldChangedDelegateHandle;
-	
+
 	/**
 	 *
 	 */

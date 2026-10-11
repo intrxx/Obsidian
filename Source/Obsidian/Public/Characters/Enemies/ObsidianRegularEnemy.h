@@ -13,7 +13,7 @@ class AObsidianAIControllerBase;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianRegularEnemy : public AObsidianEnemy
 {
 	GENERATED_BODY()
@@ -21,30 +21,28 @@ class OBSIDIAN_API AObsidianRegularEnemy : public AObsidianEnemy
 public:
 	AObsidianRegularEnemy(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual void PossessedBy(AController* InNewController) override;
-	
 	void HitReactTagChanged(const FGameplayTag InCallbackTag, int32 InNewCount);
 
-	AObsidianAIControllerBase* GetObsidianAIController() const
-	{
-		return ObsidianRegularAIController;
-	}
+	AObsidianAIControllerBase* GetObsidianAIController() const { return ObsidianRegularAIController; }
+
+	//~ Begin APawn Interface
+	virtual void PossessedBy(AController* InNewController) override;
+	//~ End APawn Interface
 
 protected:
-	//~ Start of AObsidianCharacterBase
+	//~ Begin AObsidianCharacterBase Interface
 	virtual void OnAbilitySystemInitialized() override;
-	
+
 	UFUNCTION()
 	virtual void OnDeathStarted(AActor* InOwningActor) override;
 
 	UFUNCTION()
 	virtual void OnDeathFinished(AActor* InOwningActor) override;
-	//~ End of AObsidianCharacterBase
+	//~ End AObsidianCharacterBase Interface
 
 private:
 	void CreateHealthBarWidget() const;
-	
-private:
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
 

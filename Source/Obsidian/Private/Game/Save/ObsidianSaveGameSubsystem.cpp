@@ -16,11 +16,6 @@
 #include "Obsidian/ObsidianLogCategories.h"
 
 
-UObsidianHeroSaveGame* UObsidianSaveGameSubsystem::GetCurrentHeroSaveGameObject()
-{
-	return CurrentHeroSaveGame;
-}
-
 UObsidianSharedStashSaveGame* UObsidianSaveGameSubsystem::GetStashSaveGameObject(const EObsidianGameNetworkType InNetworkType)
 {
 	ensure(InNetworkType != EObsidianGameNetworkType::None);

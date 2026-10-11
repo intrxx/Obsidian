@@ -19,7 +19,10 @@ class OBSIDIAN_API UEnemyObsidianDamageExecution : public UObsidianDamageExecuti
 public:
 	UEnemyObsidianDamageExecution();
 
-protected:
+	//~ Begin UGameplayEffectExecutionCalculation Interface
 	virtual void Execute_Implementation(const FGameplayEffectCustomExecutionParameters& InExecutionParams,
 		FGameplayEffectCustomExecutionOutput& OutExecutionOutput) const override;
+	//~ End UGameplayEffectExecutionCalculation Interface
+
+protected:
 };

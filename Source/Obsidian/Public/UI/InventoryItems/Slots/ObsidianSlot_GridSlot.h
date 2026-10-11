@@ -19,23 +19,24 @@ UCLASS()
 class OBSIDIAN_API UObsidianSlot_GridSlot : public UObsidianSlotBase
 {
 	GENERATED_BODY()
-	
-public:
-	void InitializeSlot(const FIntPoint& InGridSlotPosition);
 
-	FIntPoint GetGridSlotPosition() const;
-	
 public:
+	void InitializeSlot(const FIntPoint& InGridSlotPosition) { GridSlotPosition = InGridSlotPosition; }
+
+	FIntPoint GetGridSlotPosition() const { return GridSlotPosition; }
+
 	FOnGridSlotHoverSignature OnGridSlotHoverDelegate;
 	FOnGridSlotPressedSignature OnGridSlotLeftButtonPressedDelegate;
 	FOnGridSlotPressedSignature OnGridSlotRightButtonPressedDelegate;
-	
+
 protected:
+	//~ Begin UUserWidget Interface
 	virtual void NativeConstruct() override;
-	
+
 	virtual void NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
 	virtual void NativeOnMouseLeave(const FPointerEvent& InMouseEvent) override;
 	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	//~ End UUserWidget Interface
 
 private:
 	FIntPoint GridSlotPosition = FIntPoint::NoneValue;

@@ -14,9 +14,9 @@ class OBSIDIAN_API UObsidianBossComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	UObsidianBossComponent(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
 	/** Returns the Boss Component if one exists on the specified actor, will be nullptr otherwise */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|EnemyAttributes")
 	static UObsidianBossComponent* FindBossComponent(const AActor* InActor)
@@ -24,11 +24,13 @@ public:
 		return (InActor ? InActor->FindComponentByClass<UObsidianBossComponent>() : nullptr);
 	}
 
+	//~ Begin UActorComponent Interface
+	virtual void BeginPlay() override;
+	//~ End UActorComponent Interface
+
 	FOnBossThresholdReached OnBossThresholdReached_75Delegate;
 	FOnBossThresholdReached OnBossThresholdReached_50Delegate;
 	FOnBossThresholdReached OnBossThresholdReached_25Delegate;
 
 protected:
-	virtual void BeginPlay() override;
-	
 };

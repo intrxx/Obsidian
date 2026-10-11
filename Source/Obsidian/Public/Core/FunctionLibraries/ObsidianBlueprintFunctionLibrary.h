@@ -26,7 +26,7 @@ public:
 	UFUNCTION(BlueprintCallable, meta=(WorldContext="InWorldContextObject", CallableWithoutWorldContext, Keywords = "log print", AdvancedDisplay = "3", DevelopmentOnly), Category = "ObsidianBlueprintFunctionLibrary")
 	static void PrintRotator(const UObject* InWorldContextObject, const FRotator& InRotatorToLog, const FString& InPrefixMessage = FString("Rotator"), const FName InKey = NAME_None,
 		const float InTimeToDisplay = 3.0f, const FLinearColor InMessageColor = FLinearColor::Green, const bool bInPrintToScreen = true, const bool bInPrintToLog = true);
-	
+
 	UFUNCTION(BlueprintCallable, meta=(WorldContext="InWorldContextObject", CallableWithoutWorldContext, Keywords = "log print", AdvancedDisplay = "3", DevelopmentOnly), Category = "ObsidianBlueprintFunctionLibrary")
 	static void PrintVector2D(const UObject* InWorldContextObject, const FVector2D& InVectorToLog, const FString& InPrefixMessage = FString("Vector"), const FName InKey = NAME_None,
 		const float InTimeToDisplay = 3.0f, const FLinearColor InMessageColor = FLinearColor::Green, const bool bInPrintToScreen = true, const bool bInPrintToLog = true);

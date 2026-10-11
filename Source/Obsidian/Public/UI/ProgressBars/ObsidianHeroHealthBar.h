@@ -21,9 +21,10 @@ public:
     TObjectPtr<UProgressBar> Mana_ProgressBar;
 
 protected:
+    //~ Begin UObsidianWidgetBase Interface
     virtual void HandleWidgetControllerSet() override;
-    
-protected:
+    //~ End UObsidianWidgetBase Interface
+
     float Mana = 0.f;
     float MaxMana = 0.f;
 
@@ -32,7 +33,7 @@ private:
     void HealthChanged(const float InNewHealth);
     UFUNCTION()
     void MaxHealthChanged(const float InNewMaxHealth);
-    
+
     UFUNCTION()
     void EnergyShieldChanged(const float InNewEnergyShield);
     UFUNCTION()

@@ -15,18 +15,22 @@ struct FObsidianAbilityTagRelationship
 {
 	GENERATED_BODY()
 
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
+#endif
+
 	/** The tag that this container relationship is about. Single tag, but abilities can have multiple of these */
 	UPROPERTY(EditAnywhere, Category = "Ability", meta = (Categories = "Gameplay.Action"))
 	FGameplayTag AbilityTag;
-	
+
 	/** Cancel any Abilities that has this Ability Tag. */
 	UPROPERTY(EditAnywhere, Category = "Ability")
 	FGameplayTagContainer AbilityTagsToCancel;
-	
+
 	/** Blocks any Abilities that has this Ability Tag. */
 	UPROPERTY(EditAnywhere, Category = "Ability")
 	FGameplayTagContainer AbilityTagsToBlock;
-	
+
 	/** Tags required to use this Ability. */
 	UPROPERTY(EditAnywhere, Category = "Ability")
 	FGameplayTagContainer ActivationRequiredTags;
@@ -34,16 +38,12 @@ struct FObsidianAbilityTagRelationship
 	/** Tags that will prevent this Ability from being used. */
 	UPROPERTY(EditAnywhere, Category = "Ability")
 	FGameplayTagContainer ActivationBlockedTags;
-
-#if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
-#endif
 };
 
 /**
  * Mapping representing how ability tags block or cancel other abilities
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Ability"))
 class OBSIDIAN_API UOAbilityTagRelationshipMapping : public UDataAsset
 {
 	GENERATED_BODY()
@@ -58,13 +58,14 @@ public:
 	/** Returns true if the specified ability tags are canceled by the passed in action tag */
 	bool IsAbilityCanceledByTag(const FGameplayTagContainer& InAbilityTags, const FGameplayTag& InActionTag) const;
 
+	//~ Begin UObject Interface
 #if WITH_EDITOR
 	EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
+	//~ End UObject Interface
 
 private:
 	/** The list of relationships between different gameplay tags (which ones block or cancel others) */
 	UPROPERTY(EditAnywhere, Category = "Ability", meta = (TitleProperty="AbilityTag"))
 	TArray<FObsidianAbilityTagRelationship> AbilityTagRelationships;
-	
 };

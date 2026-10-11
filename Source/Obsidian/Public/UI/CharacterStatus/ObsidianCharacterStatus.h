@@ -26,36 +26,30 @@ class OBSIDIAN_API UObsidianCharacterStatus : public UObsidianMainOverlayWidgetB
 	GENERATED_BODY()
 
 public:
-	virtual void NativeConstruct() override;
-	
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterStatus")
 	void SwitchToTab(UScrollBox* InTab);
 
 protected:
-	// ~ Start of Obsidian Widget Base
-	virtual void HandleWidgetControllerSet() override;
-	// ~ End of Obsidian Widget Base
-	
 	void SetExperienceTextBlock() const;
 	void SetExperienceProgressBar() const;
 
 	void OnHeroLevelUp(const uint8 InNewLevel);
-	
+
 	void OnExperienceChanged(const float InValue);
 	void OnMaxExperienceChanged(const float InValue, const float InOldValue);
-	
+
 	void OnStrengthChanged(const float InValue);
 	void OnIntelligenceChanged(const float InValue);
 	void OnDexterityChanged(const float InValue);
 	void OnFaithChanged(const float InValue);
-	
+
 	void OnMaxHealthChanged(const float InValue);
 	void OnMaxManaChanged(const float InValue);
 	void OnMaxSpecialResourceChanged(const float InValue);
 	void OnMaxEnergyShieldChanged(const float InValue);
 	void OnMaxStaminaChanged(const float InValue);
 	void OnStaminaRegenerationChanged(const float InValue);
-	
+
 	void OnAccuracyChanged(const float InValue);
 	void OnAttackSpeedChanged(const float InValue);
 	void OnCastSpeedChanged(const float InValue);
@@ -70,7 +64,7 @@ protected:
 	void OnLightningPenetrationChanged(const float InValue);
 	void OnColdPenetrationChanged(const float InValue);
 	void OnChaosPenetrationChanged(const float InValue);
-	
+
 	void OnArmorChanged(const float InValue);
 	void OnEvasionChanged(const float InValue);
 	void OnHealthRegenerationChanged(const float InValue);
@@ -83,18 +77,25 @@ protected:
 	void OnSpellSuppressionMagnitudeChanged(const float InValue);
 	void OnHitBlockChanceChanged(const float InValue, const float InMaxValue);
 	void OnSpellBlockChanceChanged(const float InValue, const float InMaxValue);
-	
-protected:
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
+
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
 	/**
 	 *  Character
 	 */
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> HeroLevel_TextBlock;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> PlayerName_TextBlock;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> HeroClass_TextBlock;
 
@@ -105,12 +106,12 @@ protected:
 	TObjectPtr<UCommonTextBlock> HeroExp_TextBlock;
 
 	UPROPERTY(meta=(BindWidget))
-	TObjectPtr<UProgressBar> HeroExp_ProgressBar;;
+	TObjectPtr<UProgressBar> HeroExp_ProgressBar;
 
 	/**
 	 * Main Attributes
 	 */
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow_WithToolTip> Strength_AttributeRow;
 
@@ -190,10 +191,10 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ColdDamageMultiplier_AttributeRow;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ChaosDamageMultiplier_AttributeRow;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> FirePenetration_AttributeRow;
 
@@ -205,7 +206,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ChaosPenetration_AttributeRow;
-	
+
 	/**
 	 * Attributes - Defence
 	 */
@@ -245,7 +246,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> ChaosResistance_AttributeRow;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> SpellSuppressionChance_AttributeRow;
 
@@ -257,7 +258,7 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOCharacterStatusAttributeRow> SpellBlockChance_AttributeRow;
-	
+
 	/**
 	 * Attributes - Misc
 	 */
@@ -275,7 +276,7 @@ private:
 	/**
 	 * Cached attributes
 	 */
-	
+
 	float Experience = 0.0f;
 	float MaxExperience = 0.0f;
 	float LastMaxExperience = 0.0f;

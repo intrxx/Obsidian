@@ -21,13 +21,14 @@ class OBSIDIAN_API UObsidianHeroStaggerBar : public UObsidianProgressBarBase
 public:
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UProgressBar> Stagger_ProgressBar;
-	
+
 protected:
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
 	float Stagger = 0.f;
 	float MaxStagger = 0.f;
-	
-protected:
-	virtual void HandleWidgetControllerSet() override;
 
 private:
 	UFUNCTION()

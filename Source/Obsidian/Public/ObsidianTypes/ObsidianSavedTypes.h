@@ -28,11 +28,10 @@ struct FObsidianSavedEquipmentPiece
 public:
 	FObsidianSavedEquipmentPiece(){}
 	FObsidianSavedEquipmentPiece(const FObsidianEquipmentActor& InEquipmentActor);
-	
-public:
+
 	UPROPERTY()
 	TSoftClassPtr<AObsidianSpawnedEquipmentPiece> SoftActorToSpawn = nullptr;
-	
+
 	UPROPERTY()
 	bool bOverrideAttachSocket = true;
 
@@ -55,13 +54,13 @@ public:
 	/**
 	 * General 
 	 */
-	
+
 	UPROPERTY()
 	FString UniqueItemID = FString();
 
 	UPROPERTY()
 	int8 ItemLevel = INDEX_NONE;
-	
+
 	UPROPERTY()
 	TSoftClassPtr<UObsidianInventoryItemDefinition> SoftItemDef;
 
@@ -73,7 +72,7 @@ public:
 
 	UPROPERTY()
 	EObsidianItemRarity ItemRarity = EObsidianItemRarity::None;
-	
+
 	UPROPERTY()
 	FObsidianItemPosition ItemCurrentPosition = FObsidianItemPosition();
 
@@ -83,7 +82,7 @@ public:
 
 	UPROPERTY()
 	bool bUsable = false;
-	
+
 	UPROPERTY()
 	EObsidianUsableItemType UsableItemType = EObsidianUsableItemType::UIT_None;
 
@@ -96,13 +95,13 @@ public:
 
 	UPROPERTY()
 	bool bEquippable = false;
-	
+
 	UPROPERTY()
 	bool bNeedsTwoSlots = false;
 
 	UPROPERTY()
 	TArray<FObsidianSavedEquipmentPiece> SavedEquipmentPieces;
-	
+
 	UPROPERTY()
 	FObsidianItemRequirements EquippingRequirements = FObsidianItemRequirements();
 
@@ -122,7 +121,7 @@ public:
 
 	UPROPERTY()
 	bool bStackable = false;
-	
+
 	UPROPERTY()
 	int32 ItemCurrentStacks = 0;
 
@@ -147,21 +146,18 @@ public:
 
 	UPROPERTY()
 	FString ItemDisplayName = FString();
-
-	// ~ Start of ItemNameAdditionsData
 	UPROPERTY()
 	FString ItemNameAdditionsData_RareItemDisplayNameAddition = FString();
 
 	UPROPERTY()
 	FString ItemNameAdditionsData_MagicItemDisplayNameAddition = FString();
-	// ~ End of ItemNameAdditionsData
 
 	UPROPERTY()
 	FString ItemDescription = FString();
 
 	UPROPERTY()
 	FString ItemAdditionalDescription = FString();
-	
+
 	UPROPERTY()
 	float ItemSlotPadding = 0.0f;
 

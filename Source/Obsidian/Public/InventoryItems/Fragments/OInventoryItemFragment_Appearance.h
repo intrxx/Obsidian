@@ -50,54 +50,38 @@ enum class EObsidianInventoryItemGridSize : uint8
 /**
  * 
  */
-UCLASS(DisplayName="Appearance")
+UCLASS(DisplayName="Appearance", meta = (PrioritizeCategories = "Appearance Grid"))
 class OBSIDIAN_API UOInventoryItemFragment_Appearance : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
 
 public:
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
-	
 	FIntPoint GetItemGridSpanFromDesc() const;
-	
-	UTexture2D* GetItemImage() const
-	{
-		return ItemImage;
-	}
-	
-	UStaticMesh* GetItemDroppedMesh() const
-	{
-		return DroppedMesh;
-	}
 
-	FText GetItemDisplayName() const
-	{
-		return DisplayName;
-	}
+	UTexture2D* GetItemImage() const { return ItemImage; }
 
-	FText GetItemDescription() const
-	{
-		return Description;
-	}
+	UStaticMesh* GetItemDroppedMesh() const { return DroppedMesh; }
 
-	FText GetItemAdditionalDescription() const
-	{
-		return AdditionalDescription;
-	}
+	FText GetItemDisplayName() const { return DisplayName; }
 
-	float GetItemSlotPadding() const
-	{
-		return ItemSlotPadding;
-	}
-	
+	FText GetItemDescription() const { return Description; }
+
+	FText GetItemAdditionalDescription() const { return AdditionalDescription; }
+
+	float GetItemSlotPadding() const { return ItemSlotPadding; }
+
+	//~ Begin UObsidianInventoryItemFragment Interface
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
+	//~ End UObsidianInventoryItemFragment Interface
+
 protected:
 	/** Enum that represents the items predefined grid size, will be later mapped to the actual TArray<FVector2D> containing the 'size'. */
 	UPROPERTY(EditDefaultsOnly, Category = "Grid")
 	EObsidianInventoryItemGridSize InventoryItemGridSizeDesc = EObsidianInventoryItemGridSize::IIGS_SingleSquare;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TObjectPtr<UStaticMesh> DroppedMesh;
-	
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Appearance")
 	TObjectPtr<UTexture2D> ItemImage;
 

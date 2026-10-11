@@ -13,18 +13,13 @@ class UObsidianPawnData;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianPawnExtensionComponent : public UPawnComponent
 {
 	GENERATED_BODY()
+
 public:
 	UObsidianPawnExtensionComponent(const FObjectInitializer& InObjectInitializer);
-
-	UFUNCTION(BlueprintPure, Category = "Obsidian|Pawn")
-	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const
-	{
-		return AbilitySystemComponent;
-	}
 
 	/** Returns the hero component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|ExtComp")
@@ -32,13 +27,11 @@ public:
 	{
 		return (InActor ? InActor->FindComponentByClass<UObsidianPawnExtensionComponent>() : nullptr);
 	}
-	
-	const UObsidianPawnData* GetPawnData() const
-	{
-		return PawnData;
-	}
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	UFUNCTION(BlueprintPure, Category = "Obsidian|Pawn")
+	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const { return AbilitySystemComponent; }
+
+	const UObsidianPawnData* GetPawnData() const { return PawnData; }
 
 	/** Should be called by the owning Pawn to become the Ability System's avatar actor. */
 	void InitializeAbilitySystem(UObsidianAbilitySystemComponent* InASC, AActor* InOwnerActor);
@@ -48,13 +41,18 @@ public:
 
 	/** Register with the OnAbilitySystemInitialized delegate and broadcast if our Pawn has been registered with the Ability System Component */
 	void OnAbilitySystemInitialized_RegisterAndCall(FSimpleMulticastDelegate::FDelegate InDelegate);
-	
+
 	/** Register with the OnAbilitySystemInitialized delegate, this is fired when our pawn is removed as the Ability System's avatar actor */
 	void OnAbilitySystemUninitialized_Register(FSimpleMulticastDelegate::FDelegate InDelegate);
 
-protected:
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
+	//~ Begin UActorComponent Interface
 	virtual void EndPlay(const EEndPlayReason::Type InEndPlayReason) override;
-	
+	//~ End UActorComponent Interface
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Replicated, Category = "Obsidian|Pawn")
 	TObjectPtr<const UObsidianPawnData> PawnData;

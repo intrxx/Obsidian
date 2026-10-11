@@ -23,8 +23,6 @@ class OBSIDIAN_API UObsidianOverlayGameTabsMenu : public UObsidianWidgetBase
 	GENERATED_BODY()
 
 public:
-	virtual void NativeConstruct() override;
-	
 	UFUNCTION()
 	void OnCharacterStatusButtonClicked();
 	UFUNCTION()
@@ -32,14 +30,13 @@ public:
 	UFUNCTION()
 	void OnPassiveSkillTreeButtonClicked();
 
-public:
 	/**
 	 * Character Status
 	 */
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGameTabButton> CharacterStatus_GameTabButton;
-	
+
 	FOnTabButtonClicked OnCharacterStatusButtonClickedDelegate;
 	FOnTabStatusChange OnCharacterStatusTabStatusChangeDelegate;
 
@@ -49,7 +46,7 @@ public:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGameTabButton> Inventory_GameTabButton;
-	
+
 	FOnTabButtonClicked OnInventoryButtonClickedDelegate;
 	FOnTabStatusChange OnInventoryTabStatusChangeDelegate;
 
@@ -59,19 +56,22 @@ public:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGameTabButton> PassiveSkillTree_GameTabButton;
-	
+
 	FOnTabButtonClicked OnPassiveSkillTreeButtonClickedDelegate;
 	FOnTabStatusChange OnPassiveSkillTreeTabStatusChangeDelegate;
 
 protected:
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
 	void OnCharacterStatusTabStatusChange(bool bInIsConstructed);
 	void OnInventoryTabStatusChange(bool bInIsConstructed);
 	void OnPassiveSkillTreeTabStatusChange(bool bInIsConstructed);
-	
-protected:
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> Root_Overlay;
 };

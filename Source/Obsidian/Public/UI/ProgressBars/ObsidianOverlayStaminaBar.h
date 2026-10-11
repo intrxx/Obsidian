@@ -21,17 +21,20 @@ class OBSIDIAN_API UObsidianOverlayStaminaBar : public UObsidianProgressBarBase
 	GENERATED_BODY()
 
 protected:
-	virtual void HandleWidgetControllerSet() override;
-
-	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
-	
 	UFUNCTION()
 	void StaminaChanged(const float InNewValue);
 	UFUNCTION()
 	void MaxStaminaChanged(const float InNewValue);
 
-protected:
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
+	//~ Begin UUserWidget Interface
+	virtual FReply NativeOnMouseButtonDown(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	virtual FReply NativeOnMouseButtonDoubleClick(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent) override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
 
@@ -40,11 +43,11 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UProgressBar> Stamina_ProgressBar;
-	
+
 private:
 	UPROPERTY()
 	TObjectPtr<UObMainOverlayWidgetController> MainOverlayWidgetController;
-	
+
 	float Stamina = 0.f;
 	float MaxStamina = 0.f;
 };

@@ -95,16 +95,6 @@ AActor* AObsidianItemSpawner::GetInteractionActor()
 	return this;
 }
 
-bool AObsidianItemSpawner::CanInteract()
-{
-	return bCanInteract;
-}
-
-float AObsidianItemSpawner::GetInteractionRadius()
-{
-	return InteractionRadius;
-}
-
 void AObsidianItemSpawner::Interact(AObsidianPlayerController* InInteractingPlayerController)
 {
 	if(InInteractingPlayerController)

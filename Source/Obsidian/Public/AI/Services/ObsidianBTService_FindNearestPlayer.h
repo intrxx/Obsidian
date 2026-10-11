@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Key"))
 class OBSIDIAN_API UObsidianBTService_FindNearestPlayer : public UBTService
 {
 	GENERATED_BODY()
@@ -18,11 +18,15 @@ class OBSIDIAN_API UObsidianBTService_FindNearestPlayer : public UBTService
 public:
 	UObsidianBTService_FindNearestPlayer();
 
-protected:
-	virtual void TickNode(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory, float InDeltaSeconds) override;
+	//~ Begin UBTNode Interface
 	virtual FString GetStaticDescription() const override;
+	//~ End UBTNode Interface
 
 protected:
+	//~ Begin UBTAuxiliaryNode Interface
+	virtual void TickNode(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory, float InDeltaSeconds) override;
+	//~ End UBTAuxiliaryNode Interface
+
 	/** Nearest Target Actor Key returned by the Service. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Nearest Target Actor"), Category = "Key")
 	FBlackboardKeySelector NearestTargetActor_Selector;

@@ -47,24 +47,25 @@ struct FObsidianTaggedMontage
 /**
  * The base Gameplay Ability class used in this project.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGameplayAbility : public UGameplayAbility
 {
 	GENERATED_BODY()
-	friend UObsidianAbilitySystemComponent;
 
 public:
 	UObsidianGameplayAbility(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	EObsidianGameplayAbility_ActivationPolicy GetAbilityActivationPolicy() const
-	{
-		return ActivationPolicy;
-	}
+	EObsidianGameplayAbility_ActivationPolicy GetAbilityActivationPolicy() const { return ActivationPolicy; }
+
+	//~ Begin UGameplayAbility Interface
+	//~UGameplayAbility interface
+	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& InAbilitySystemComponent, const FGameplayTagContainer* InSourceTags, const FGameplayTagContainer* InTargetTags, FGameplayTagContainer* OutOptionalRelevantTags) const override;
+	//~ End UGameplayAbility Interface
 
 protected:
 	template<typename T>
 	T* GetCharacterFromActorInfo() const;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	APlayerController* GetPlayerControllerFromActorInfo() const;
 
@@ -91,21 +92,17 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	AObsidianPlayerController* GetObsidianPlayerControllerFromActorInfo() const;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemCompFromActorInfo() const;
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Ability")
 	FVector GetOwnerLocationFromActorInfo() const;
-	
-	//~UGameplayAbility interface
-	virtual bool DoesAbilitySatisfyTagRequirements(const UAbilitySystemComponent& InAbilitySystemComponent, const FGameplayTagContainer* InSourceTags, const FGameplayTagContainer* InTargetTags, FGameplayTagContainer* OutOptionalRelevantTags) const override;
-	//~End of UGameplayAbility interface
 
 	/** Randomly chooses the Anim Montage to play. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
 	FObsidianTaggedMontage GetRandomAnimMontageToPlay();
-	
+
 	/** Grabs the first Anim Montage from ability, useful when there is only one. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|AbilityAnims")
 	UAnimMontage* GetAnimMontage();
@@ -114,13 +111,15 @@ protected:
 
 	/** Gets set number of points on circle around origin which are equally distributed. */
 	TArray<FVector> GetPointsOnCircleAroundOriginNormalized(const FVector& InOrigin, const float InNumberOfPoints, const float InRadius, const float InFixedHeight);
-	
-protected:
+
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Ability Activation")
 	EObsidianGameplayAbility_ActivationPolicy ActivationPolicy = EObsidianGameplayAbility_ActivationPolicy::EAP_OnInputTriggered;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianTaggedMontage> AbilityMontages;
+
+private:
+	friend UObsidianAbilitySystemComponent;
 };
 
 template <typename T>

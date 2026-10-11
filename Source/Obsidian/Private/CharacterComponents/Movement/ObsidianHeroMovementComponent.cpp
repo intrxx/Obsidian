@@ -46,19 +46,9 @@ float UObsidianHeroMovementComponent::GetMaxSpeed() const
 	return HeroAttributes->GetMovementSpeed();
 }
 
-FGameplayTag UObsidianHeroMovementComponent::GetCurrentWalkState() const
-{
-	return CurrentWalkState;
-}
-
 void UObsidianHeroMovementComponent::ToggleWalkingState()
 {
 	bUserTurnOnWalkingState = !bUserTurnOnWalkingState;
-}
-
-bool UObsidianHeroMovementComponent::IsInWalkingState() const
-{
-	return bUserTurnOnWalkingState;
 }
 
 void UObsidianHeroMovementComponent::HandleOutOfStamina()

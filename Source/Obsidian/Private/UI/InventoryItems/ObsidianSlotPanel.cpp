@@ -12,16 +12,6 @@
 
 // ~ Start of FObsidianSlotData
 
-bool FObsidianSlotData::IsOccupied() const
-{
-	return bOccupied;
-}
-
-bool FObsidianSlotData::IsBlocked() const
-{
-	return bBlocked;
-}
-
 void FObsidianSlotData::AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget,
                                    const bool bInBlockSlot)
 {

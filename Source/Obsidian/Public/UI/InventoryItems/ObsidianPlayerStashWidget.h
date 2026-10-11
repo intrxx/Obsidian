@@ -24,32 +24,26 @@ class UObInventoryItemsWidgetController;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianPlayerStashWidget : public UObsidianMainOverlayWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	virtual void HandleWidgetControllerSet() override;
-	
 	FGameplayTag GetActiveStashTabTag() const;
-	
-	void CloseStash();
-	
-protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-	virtual void PreCloseButtonPressed() override;
 
-	UObsidianStashTabWidget* GetActiveStashTab() const;
-	
+	void CloseStash();
+
+protected:
+	UObsidianStashTabWidget* GetActiveStashTab() const { return ActiveStashTab; }
+
 	void CreateStashTabButton(const FGameplayTag& InStashTag, const FText& InStashTabName);
 	void ShowStashTab(const FGameplayTag& InWithStashTag);
 
 	void OnItemStashed(const FObsidianItemWidgetData& InItemWidgetData);
 	void OnItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
 	void OnItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
-	
+
 	void HighlightSlotPlacement(const FGameplayTagContainer& InWithTags);
 	void StopHighlightSlotPlacement();
 
@@ -57,11 +51,23 @@ protected:
 
 	void OnUsableContextFiredForStash(const TMultiMap<FGameplayTag, FObsidianItemPosition>& InMatchingItemPositions);
 	void ClearUsableItemHighlight();
-	
-protected:
+
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
+	//~ Begin UObsidianMainOverlayWidgetBase Interface
+	virtual void PreCloseButtonPressed() override;
+	//~ End UObsidianMainOverlayWidgetBase Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianItem> ItemWidgetClass;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UObsidianStashButton> StashButtonWidgetClass;
 
@@ -70,25 +76,22 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianStashTabWidget> ActiveStashTab;
-	
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UScrollBox> StashTabsList_ScrollBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> StashTab_Overlay;
 
 	bool bStashChanged = false;
-	
+
 private:
 	void CreateStashTabs();
-	
-private:
+
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
 
 	UPROPERTY()
 	TArray<UObsidianSlot_ItemSlot*> CachedHighlightedSlot;
-	
+
 	TMultiMap<FGameplayTag, FObsidianItemPosition> CachedItemsToHighlight;
 };

@@ -26,11 +26,14 @@ public:
 	UPROPERTY(BlueprintAssignable)
 	FCursorTargetDataSignature DataReceived;
 
-private:
+protected:
+	//~ Begin UGameplayTask Interface
 	virtual void Activate() override;
+	//~ End UGameplayTask Interface
 
+private:
 	void BroadcastTargetDataToServer();
 	void ReceiveTargetDataFromClient();
-	
+
 	void OnTargetDataSetCallback(const FGameplayAbilityTargetDataHandle& InDataHandle, FGameplayTag InActivationTag);
 };

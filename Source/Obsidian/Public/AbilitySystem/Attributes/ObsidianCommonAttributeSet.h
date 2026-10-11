@@ -20,14 +20,10 @@ class OBSIDIAN_API UObsidianCommonAttributeSet : public UObsidianAttributeSetBas
 public:
 	UObsidianCommonAttributeSet();
 
-	virtual void PreAttributeChange(const FGameplayAttribute& InAttribute, float& InOutNewValue) override;
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
-
 	/**
 	 * Vital
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedHealthPercentage);
@@ -49,7 +45,7 @@ public:
 	/**
 	 * Defence attributes
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Armor);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedArmorPercent);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Evasion);
@@ -61,14 +57,14 @@ public:
 	/**
 	 * Damage Taken Multipliers
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ShockDamageTakenMultiplier);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, StaggerDamageTakenMultiplier);
-	
+
 	/**
 	 * Resistances
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, AllElementalResistances);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, FireResistance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFireResistance);
@@ -85,11 +81,11 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, IncreasedEffectOfShock);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, ChanceToShock);
-	
+
 	/**
 	 * Damage scaling attributes
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, Accuracy);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeChance);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, CriticalStrikeDamageMultiplier);
@@ -110,7 +106,7 @@ public:
 	/**
 	 * Base Attributes
 	 */
-	
+
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatPhysicalDamage);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFlatPhysicalDamage);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatFireDamage);
@@ -122,7 +118,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MinFlatChaosDamage);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MaxFlatChaosDamage);
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, BaseDamage);
-	
+
 	/**
 	 * Meta Attributes
 	 */
@@ -138,19 +134,28 @@ public:
 
 	ATTRIBUTE_ACCESSORS(UObsidianCommonAttributeSet, MovementSpeed);
 
-public:
+	//~ Begin UAttributeSet Interface
+	virtual void PreAttributeChange(const FGameplayAttribute& InAttribute, float& InOutNewValue) override;
+
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
+	//~ End UAttributeSet Interface
+
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
 	/** Delegate fired when the health reaches zero */
 	mutable FObsidianAttributeEvent OnOutOfHealth;
-	
+
 protected:
 	virtual void ResetMetaAttributes();
 
 	void ApplyExperienceReward(UAbilitySystemComponent* InSourceASC);
-	
+
 	/**
 	 * Vital
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_Health(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -184,7 +189,7 @@ protected:
 	/**
 	 * Defence attributes
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_Armor(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -203,7 +208,7 @@ protected:
 	/**
 	 * Damage Taken Multipliers
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_ShockDamageTakenMultiplier(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -212,7 +217,7 @@ protected:
 	/**
 	 * Resistances
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_AllElementalResistances(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -245,7 +250,7 @@ protected:
 	/**
 	 * Damage scaling attributes
 	 */
-	
+
 	UFUNCTION()
 	void OnRep_Accuracy(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
@@ -307,10 +312,10 @@ protected:
 	void OnRep_MinFlatChaosDamage(const FGameplayAttributeData& InOldValue);
 	UFUNCTION()
 	void OnRep_MaxFlatChaosDamage(const FGameplayAttributeData& InOldValue);
-	
+
 	UFUNCTION()
 	void OnRep_BaseDamage(const FGameplayAttributeData& InOldValue);
-	
+
 	/**
 	 * Base Attributes
 	 */
@@ -318,17 +323,16 @@ protected:
 	UFUNCTION()
 	void OnRep_MovementSpeed(const FGameplayAttributeData& InOldValue);
 
-protected:
 	UPROPERTY()
 	FObsidianEffectProperties EffectProps = {};
 
 private:
 	bool bOutOfHealth;
-	
+
 	/**
 	 * Vital
 	 */
-	
+
 	/** The current Health attribute. The Health will be capped by the Max Health attribute. Health is hidden from modifiers so only Executions can modify it. */
 	/** ---------------------------------------------------------------------------------------------------------- HideFromModifiers */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Health, Category = "Obsidian|CAttributes|Health", Meta = (AllowPrivateAccess = true))
@@ -362,7 +366,7 @@ private:
 	/** The current Health Regeneration attribute. Defines value of Health that is regenerated per second. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_HealthRegeneration, Category = "Obsidian|CAttributes|HealthRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData HealthRegeneration;
-	
+
 	/** The current Energy Shield Regeneration attribute. Defines value of Energy Shield that is regenerated per second. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_EnergyShieldRegeneration, Category = "Obsidian|CAttributes|EnergyShieldRegeneration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData EnergyShieldRegeneration;
@@ -378,7 +382,7 @@ private:
 	/** The current Stagger Multiplier attribute. Incoming Stagger gets multiplied by this number, this is the way to lower or heighten incoming stagger. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaggerMultiplier, Category = "Obsidian|CAttributes|StaggerMeter", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData StaggerMultiplier;
-	
+
 	/** The current All Damage Multiplier attribute. Defines the All Damage Multiplier, can be used to mitigate some damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllDamageMultiplier, Category = "Obsidian|CAttributes|AllDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AllDamageMultiplier;
@@ -422,11 +426,11 @@ private:
 	/** The current Shock Damage Taken Multiplier attribute. Shock increases damage taken [5 - 50%] from all sources, only lightning damage can shock. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ShockDamageTakenMultiplier, Category = "Obsidian|CAttributes|Shock", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ShockDamageTakenMultiplier;
-	
+
 	/** The current Stagger Damage Taken Multiplier attribute. While staggered, damage from all sources is increased. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_StaggerDamageTakenMultiplier, Category = "Obsidian|CAttributes|Stagger", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData StaggerDamageTakenMultiplier;
-	
+
 	/**
 	 * Resistances
 	 */
@@ -439,7 +443,7 @@ private:
 	 */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_AllElementalResistances, Category = "Obsidian|CAttributes|AllElementalResistances", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData AllElementalResistances;
-	
+
 	/** The current Fire Resistance attribute. Fire Resistance negates fire damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireResistance, Category = "Obsidian|CAttributes|FireResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FireResistance;
@@ -459,15 +463,15 @@ private:
 	/** The current Lightning Resistance attribute. Lightning Resistance negates lightning damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_LightningResistance, Category = "Obsidian|CAttributes|LightningResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData LightningResistance;
-	
+
 	/** The current Max Lightning Resistance attribute. Defines cap for Lightning Resistance. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxLightningResistance, Category = "Obsidian|CAttributes|LightningResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxLightningResistance;
-	
+
 	/** The current Chaos Resistance attribute. Chaos resistance negates chaos damage taken. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosResistance, Category = "Obsidian|CAttributes|ChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosResistance;
-	
+
 	/** The current Max Chaos Resistance attribute. Defines cap for Chaos Resistance. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxChaosResistance, Category = "Obsidian|CAttributes|ChaosResistance", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxChaosResistance;
@@ -483,7 +487,7 @@ private:
 	/** The current Chance To Shock. Increases owner's Chance To Shock*/
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChanceToShock, Category = "Obsidian|CAttributes|Shock", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChanceToShock;
-	
+
 	/**
 	 * Damage related attributes
 	 */
@@ -491,7 +495,7 @@ private:
 	/** The current Accuracy attribute. Source Accuracy combined with target Evasion determines a chance to hit */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_Accuracy, Category = "Obsidian|CAttributes|Accuracy", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Accuracy;
-	
+
 	/**
 	 * The current Critical Strike Chance attribute [0% - 100%]. Defines a chance to critical strike.
 	 * We can critically strike with every instant damage.
@@ -530,7 +534,7 @@ private:
 	/** The current Chaos Penetration attribute. Percentage of Chaos Resistance that will be ignored. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_ChaosPenetration, Category = "Obsidian|CAttributes|ChaosPenetration", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData ChaosPenetration;
-	
+
 	/** The current Fire Damage Multiplier attribute. Multiplier for fire damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_FireDamageMultiplier, Category = "Obsidian|CAttributes|FireDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FireDamageMultiplier;
@@ -554,7 +558,7 @@ private:
 	/** The current Physical Damage Multiplier attribute. Multiplier for physical damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_PhysicalDamageMultiplier, Category = "Obsidian|CAttributes|PhysicalDamageMultiplier", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PhysicalDamageMultiplier;
-	
+
 	/**
 	 * Base Damage Attributes
 	 */
@@ -565,14 +569,14 @@ private:
 	/** The current Max Flat Physical Damage attribute. Base flat Physical damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatPhysicalDamage, Category = "Obsidian|CAttributes|FlatPhysicalDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxFlatPhysicalDamage;
-	
+
 	/** The current Min Flat Fire Damage attribute. Base flat Fire damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MinFlatFireDamage, Category = "Obsidian|CAttributes|FlatFireDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MinFlatFireDamage;
 	/** The current Max Flat Fire Damage attribute. Base flat Fire damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatFireDamage, Category = "Obsidian|CAttributes|FlatFireDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxFlatFireDamage;
-	
+
 	/** The current Min Flat Cold Damage attribute. Base flat Cold damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MinFlatColdDamage, Category = "Obsidian|CAttributes|FlatColdDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MinFlatColdDamage;
@@ -593,7 +597,7 @@ private:
 	/** The current Max Flat Chaos Damage attribute. Base flat Chaos damage. */
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_MaxFlatChaosDamage, Category = "Obsidian|CAttributes|FlatChaosDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxFlatChaosDamage;
-	
+
 	UPROPERTY(BlueprintReadOnly, ReplicatedUsing = OnRep_BaseDamage, Category = "Obsidian|CAttributes|BaseDamage", Meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData BaseDamage;
 

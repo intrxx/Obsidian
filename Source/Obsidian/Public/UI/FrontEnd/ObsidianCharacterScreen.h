@@ -21,30 +21,19 @@ class UObCharacterSelectionWidgetController;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianCharacterScreen : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
 
 public:
-	virtual UWidget* NativeGetDesiredFocusTarget() const override;
-
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterScreen")
 	void InitializeOnlineCharacterScreen();
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterScreen")
 	void InitializeOfflineCharacterScreen();
 
 protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-	virtual void NativeOnActivated() override;
-	virtual void NativeOnDeactivated() override;
-
-	// ~ Start of WidgetController Interface
-	virtual void HandleWidgetControllerSet() override;
-	// ~ End of WidgetController Interface
-	
 	void OnPlayClicked();
 	void OnDeleteClicked();
 
@@ -57,16 +46,31 @@ protected:
 
 	void OnPlayHeroLoadFinished(UObsidianHeroSaveGame* InSaveObject, bool bInSuccess);
 
-protected:
+	//~ Begin UCommonActivatableWidget Interface
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
+
+	virtual void NativeOnActivated() override;
+	virtual void NativeOnDeactivated() override;
+	//~ End UCommonActivatableWidget Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
+	//~ Begin UObsidianActivatableWidget Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianActivatableWidget Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UCommonActivatableWidget> SoftOnlineLobbyWidgetClass;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSubclassOf<UObsidianCharacterEntry> CharacterEntryWidgetClass;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianCharacterEntry> CachedChosenCharacterEntry;
-	
+
 	UPROPERTY()
 	TObjectPtr<AObsidianFrontEndGameMode> FrontEndGameMode;
 
@@ -76,14 +80,12 @@ protected:
 	//TODO(intrxx) Change this to some general call into network subsystem?
 	UPROPERTY(BlueprintReadOnly)
 	bool bOnline = false;
-	
+
 	FDelegateHandle OnPopulateLoadingFinishedDelegateHandle;
 	FDelegateHandle OnPlayLoadingFinishedDelegateHandle;
-	
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonHierarchicalScrollBox> CharacterList_ScrollBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Play_Button;
 
@@ -95,8 +97,6 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> TabName_TextBlock;
-
-protected:
 	UPROPERTY(BlueprintReadOnly)
 	TObjectPtr<UObCharacterSelectionWidgetController> CharacterSelectionWidgetController;
 };

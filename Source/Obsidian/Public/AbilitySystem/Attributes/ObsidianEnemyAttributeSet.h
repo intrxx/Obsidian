@@ -20,10 +20,15 @@ class OBSIDIAN_API UObsidianEnemyAttributeSet : public UObsidianCommonAttributeS
 public:
 	UObsidianEnemyAttributeSet();
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
-
 	ATTRIBUTE_ACCESSORS(UObsidianEnemyAttributeSet, HitReactThreshold);
+
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
+	//~ Begin UAttributeSet Interface
+	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& InData) override;
+	//~ End UAttributeSet Interface
 
 protected:
 	UFUNCTION()

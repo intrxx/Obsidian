@@ -27,8 +27,7 @@ public:
 
 	void Reset();
 	bool IsValid() const;
-	
-public:
+
 	UPROPERTY()
 	FString ObsidianPlayerName = FString();
 
@@ -52,22 +51,23 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianFrontEndGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
 public:
 	AObsidianFrontEndGameMode(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
 	FObsidianHeroClassParams CreateHeroClass(const EObsidianHeroClass InClass, const FString& InName, const bool InIsOnline,
 		const bool InIsHardcore);
 	bool DeleteHeroClass(const int32 InWithID);
 
 protected:
+	//~ Begin AActor Interface
 	virtual void BeginPlay() override;
-	
-protected:
+	//~ End AActor Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|FrontEnd") 
 	TSubclassOf<UCommonActivatableWidget> MainMenuWidgetClass;
 

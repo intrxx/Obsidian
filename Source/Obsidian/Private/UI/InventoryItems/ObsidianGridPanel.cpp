@@ -13,11 +13,6 @@
 
 // ~ Start of FObsidianGridSlotData
 
-bool FObsidianGridSlotData::IsOccupied() const
-{
-	return bOccupied;
-}
-
 void FObsidianGridSlotData::AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget,
 	const FIntPoint InItemGridSpan)
 {

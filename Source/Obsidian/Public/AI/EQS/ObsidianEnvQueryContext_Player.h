@@ -15,5 +15,8 @@ class OBSIDIAN_API UObsidianEnvQueryContext_Player : public UEnvQueryContext
 {
 	GENERATED_BODY()
 
+public:
+	//~ Begin UEnvQueryContext Interface
 	virtual void ProvideContext(FEnvQueryInstance& InQueryInstance, FEnvQueryContextData& OutContextData) const override;
+	//~ End UEnvQueryContext Interface
 };

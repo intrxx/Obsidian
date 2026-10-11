@@ -78,11 +78,6 @@ void UObsidianPlayerStashWidget::PreCloseButtonPressed()
 	Super::PreCloseButtonPressed();
 }
 
-UObsidianStashTabWidget* UObsidianPlayerStashWidget::GetActiveStashTab() const
-{
-	return ActiveStashTab;
-}
-
 FGameplayTag UObsidianPlayerStashWidget::GetActiveStashTabTag() const
 {
 	if(ActiveStashTab)

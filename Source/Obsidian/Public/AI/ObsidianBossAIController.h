@@ -15,11 +15,11 @@ struct FAIStimulus;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianBossAIController : public AObsidianAIControllerBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	AObsidianBossAIController();
 
@@ -27,15 +27,16 @@ public:
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 
 protected:
-	UPROPERTY()
-	TObjectPtr<AObsidianBossEnemy> EnemyOwner;
-	
-protected:
 	UFUNCTION()
 	void OnStimulusChanged(AActor* InUpdatedActor, FAIStimulus InStimulus);
 
+	//~ Begin AController Interface
 	virtual void OnPossess(APawn* InPawn) override;
-	
+	//~ End AController Interface
+
+	UPROPERTY()
+	TObjectPtr<AObsidianBossEnemy> EnemyOwner;
+
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Enemy", meta = (AllowPrivateAccess = true))
 	TObjectPtr<UAIPerceptionComponent> PerceptionComp;

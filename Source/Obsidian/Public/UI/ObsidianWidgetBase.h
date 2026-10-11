@@ -14,13 +14,12 @@ UCLASS()
 class OBSIDIAN_API UObsidianWidgetBase : public UCommonUserWidget
 {
 	GENERATED_BODY()
-	
+
 public:
 	/** Function that sets widget controller, use this instead of setting it directly. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|UI")
 	void SetWidgetController(UObject* InWidgetController);
-	
-public:
+
 	/** Widget controller associated with this Widget */
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|UI")
 	TObjectPtr<UObject> WidgetController;

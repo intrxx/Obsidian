@@ -53,7 +53,7 @@ public:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	int32 Delta = 0;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|Inventory")
 	EObsidianInventoryChangeType ChangeType = EObsidianInventoryChangeType::ICT_NONE;
 };
@@ -65,7 +65,7 @@ USTRUCT(BlueprintType)
 struct FObsidianInventoryEntry : public FFastArraySerializerItem
 {
 	GENERATED_BODY();
-	
+
 	FObsidianInventoryEntry()
 		: Instance(nullptr)
 	{}
@@ -103,7 +103,7 @@ USTRUCT(BlueprintType)
 struct FObsidianInventoryGridItemList : public FFastArraySerializer
 {
 	GENERATED_BODY();
-	
+
 public:
 	FObsidianInventoryGridItemList()
 		: OwnerComponent(nullptr)
@@ -125,7 +125,7 @@ public:
 
 	/** Marks Item space in the internal Inventory State map. Must be called after adding new item. */
 	void Item_MarkSpace(const UObsidianInventoryItemInstance* InItemInstance, const FIntPoint& InAtPosition);
-	
+
 	/** Unmarks Item space in the internal Inventory State map. Must be called after removing item. */
 	void Item_UnMarkSpace(const UObsidianInventoryItemInstance* InItemInstance, const FIntPoint& InAtPosition);
 
@@ -134,22 +134,21 @@ public:
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianInventoryEntry, FObsidianInventoryGridItemList>(Entries, InOutDeltaParams, *this);
 	}
 
-	//~ Start of FFastArraySerializer contract
+	//~ Begin FFastArraySerializer Interface
 	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
 	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
 	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
-	//~ End of FFastArraySerializer contract
+	//~ End FFastArraySerializer Interface
 
 private:
-	void BroadcastChangeMessage(const FObsidianInventoryEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FIntPoint& InGridPosition, const EObsidianInventoryChangeType& InChangeType) const;
-	
-private:
 	friend UObsidianInventoryComponent;
+
+	void BroadcastChangeMessage(const FObsidianInventoryEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FIntPoint& InGridPosition, const EObsidianInventoryChangeType& InChangeType) const;
 
 	/** Replicated list of all items. */
 	UPROPERTY()
 	TArray<FObsidianInventoryEntry> Entries;
-	
+
 	UPROPERTY(NotReplicated)
 	TObjectPtr<UActorComponent> OwnerComponent;
 

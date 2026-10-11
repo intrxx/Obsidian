@@ -13,7 +13,7 @@ class UBehaviorTreeComponent;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianAIControllerBase : public AAIController
 {
 	GENERATED_BODY()

@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian Key"))
 class OBSIDIAN_API UObsidianBTDecorator_CanActivateAbility : public UBTDecorator
 {
 	GENERATED_BODY()
@@ -18,16 +18,19 @@ class OBSIDIAN_API UObsidianBTDecorator_CanActivateAbility : public UBTDecorator
 public:
 	UObsidianBTDecorator_CanActivateAbility();
 
-	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) const override;
+	//~ Begin UBTNode Interface
+	virtual FString GetStaticDescription() const override;
+	//~ End UBTNode Interface
 
 protected:
-	virtual FString GetStaticDescription() const override;
-	
-protected:
+	//~ Begin UBTDecorator Interface
+	virtual bool CalculateRawConditionValue(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) const override;
+	//~ End UBTDecorator Interface
+
 	/** Ability tag to check the activation for. */
 	UPROPERTY(EditAnywhere, meta=(Categories="AbilityActivation"), Category = "Obsidian")
 	FGameplayTag ActivateAbilityWithTag = FGameplayTag();
-	
+
 	/** Enemy Target, used to get tags from it. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Target Actor"), Category = "Key")
 	FBlackboardKeySelector TargetActor_Selector;

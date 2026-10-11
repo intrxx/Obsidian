@@ -72,11 +72,6 @@ void UObsidianEquipmentComponent::InitSaveData(const bool bInReceivedInitialItem
 	}
 }
 
-bool UObsidianEquipmentComponent::DidReceiveInitialEquipmentItems() const
-{
-	return bReceivedInitialEquipmentItems;
-}
-
 void UObsidianEquipmentComponent::BeginPlay()
 {
 	Super::BeginPlay();

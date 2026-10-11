@@ -17,6 +17,8 @@ class OBSIDIAN_API UObsidianAssetManager : public UAssetManager
 
 public:
 	static UObsidianAssetManager& Get();
-	
+
+	//~ Begin UAssetManager Interface
 	virtual void StartInitialLoading() override;
+	//~ End UAssetManager Interface
 };

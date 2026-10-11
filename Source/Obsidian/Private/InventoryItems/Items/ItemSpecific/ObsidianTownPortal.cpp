@@ -83,24 +83,9 @@ void AObsidianTownPortal::InitializePortal()
 	bIsOpening = true;
 }
 
-bool AObsidianTownPortal::IsOpeningInProgress() const
-{
-	return bIsOpening;
-}
-
 AActor* AObsidianTownPortal::GetInteractionActor()
 {
 	return this;
-}
-
-bool AObsidianTownPortal::CanInteract()
-{
-	return bCanTeleport;
-}
-
-float AObsidianTownPortal::GetInteractionRadius()
-{
-	return InteractionRadius;
 }
 
 void AObsidianTownPortal::Interact(AObsidianPlayerController* InInteractingPlayerController)

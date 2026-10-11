@@ -72,11 +72,6 @@ void UObsidianAffixList::PostLoad()
 	Super::PostLoad();
 }
 
-TConstArrayView<FObsidianAffixClass> UObsidianAffixList::ReadAllAffixClasses() const
-{
-	return AffixClasses;
-}
-
 void UObsidianAffixList::PreSave(FObjectPreSaveContext InSaveContext)
 {
 	Super::PreSave(InSaveContext);

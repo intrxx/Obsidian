@@ -79,26 +79,25 @@ public:
 		, SisterSlotTag(InSisterSlotTag)
 	{};
 
+	static const FObsidianEquipmentSlotDefinition InvalidSlot;
+
 	bool IsValid() const;
 
 	FGameplayTag GetEquipmentSlotTag() const;
-	
+
 	EObsidianPlacingAtSlotResult CanEquipAtSlot(const FGameplayTag& InItemCategory) const;
 
 	void AddBannedEquipmentCategory(const FGameplayTag& InBannedCategory);
 	void AddBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategories);
-	
+
 	void RemoveBannedEquipmentCategory(const FGameplayTag& InBannedCategoryToRemove);
 	void RemoveBannedEquipmentCategories(const FGameplayTagContainer& InBannedCategoriesToRemove);
 
-public:
 	FObsidianSlotDefinition BaseSlotDefinition = FObsidianSlotDefinition();
-	
+
 	/** Gameplay Tag representing a sister slot (used for weapon set) which will also be checked if the Player tries to equip specific armament (e.g. Two-Handed Weapons). */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FGameplayTag SisterSlotTag = FGameplayTag::EmptyTag;
-	
-	static const FObsidianEquipmentSlotDefinition InvalidSlot;
 };
 
 /**
@@ -120,7 +119,7 @@ public:
 		: Instance(InInstance)
 		, EquipmentSlotTag(InTag)
 	{}
-	
+
 private:
 	friend FObsidianEquipmentList;
 	friend UObsidianEquipmentComponent;
@@ -136,7 +135,7 @@ private:
 
 	UPROPERTY()
 	bool bSwappedOut = false;
-	
+
 	/** Authority-only list of granted handles to remove when Item unequipped. **/
 	UPROPERTY(NotReplicated)
 	FObsidianAffixAbilitySet_GrantedHandles GrantedHandles;
@@ -158,6 +157,8 @@ public:
 		: OwnerComponent(InOwnerComponent)
 	{}
 
+	static bool ValidateEquipmentSlot(const FGameplayTag& InSlotTag);
+
 	TArray<UObsidianInventoryItemInstance*> GetAllEquippedItems() const;
 	TArray<UObsidianInventoryItemInstance*> GetSwappedWeapons();
 	TArray<UObsidianInventoryItemInstance*> GetEquippedWeapons();
@@ -165,16 +166,16 @@ public:
 
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 	AObsidianHero* GetObsidianHero() const;
-	
+
 	FObsidianEquipmentSlotDefinition FindEquipmentSlotByTag(const FGameplayTag& InSlotTag);
 	TArray<FObsidianEquipmentSlotDefinition> FindMatchingEquipmentSlotsForItemCategory(const FGameplayTag& InItemCategory);
-	
+
 	UObsidianInventoryItemInstance* AddEntry(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDefClass, const FObsidianItemGeneratedData& InItemGeneratedData,
 		const FGameplayTag& InEquipmentSlotTag);
 	void AddEntry(UObsidianInventoryItemInstance* InInstance, const FGameplayTag& InEquipmentSlotTag);
 	UObsidianInventoryItemInstance* LoadEntry(const FObsidianSavedItem& InEquippedSavedItem);
 	void RemoveEntry(UObsidianInventoryItemInstance* InInstance);
-	
+
 	void MoveWeaponToSwap(UObsidianInventoryItemInstance* InInstance);
 	void MoveWeaponFromSwap(UObsidianInventoryItemInstance* InInstance);
 
@@ -182,24 +183,21 @@ public:
 	{
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianEquipmentEntry, FObsidianEquipmentList>(Entries, InOutDeltaParams, *this);
 	}
-	
-	static bool ValidateEquipmentSlot(const FGameplayTag& InSlotTag);
 
-	//~ Start of FFastArraySerializer contract
+	//~ Begin FFastArraySerializer Interface
 	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
 	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
 	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
-	//~ End of FFastArraySerializer contract
+	//~ End FFastArraySerializer Interface
 
 private:
+	friend UObsidianEquipmentComponent;
+
 	void BroadcastChangeMessage(const FObsidianEquipmentEntry& InEntry, const FGameplayTag& InEquipmentSlotTag, const FGameplayTag& InSlotTagToClear, const EObsidianEquipmentChangeType InChangeType) const;
 
 	void AddItemAffixesToOwner(UObsidianInventoryItemInstance* InFromItemInstance, FObsidianAffixAbilitySet_GrantedHandles* OutItemGrantedHandles);
 	UObsidianAffixAbilitySet* GetDefaultAffixSet();
-	
-private:
-	friend UObsidianEquipmentComponent;
-	
+
 	/** Replicated list of all equipment. */
 	UPROPERTY()
 	TArray<FObsidianEquipmentEntry> Entries;
@@ -209,7 +207,7 @@ private:
 
 	UPROPERTY()
 	UObsidianAffixAbilitySet* CachedDefaultAbilitySet = nullptr;
-	
+
 	TArray<FObsidianEquipmentSlotDefinition> EquipmentSlots;
 	TMap<FGameplayTag, UObsidianInventoryItemInstance*> SlotToEquipmentMap;
 };

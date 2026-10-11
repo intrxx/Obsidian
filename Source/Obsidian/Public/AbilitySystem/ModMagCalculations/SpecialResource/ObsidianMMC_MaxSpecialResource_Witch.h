@@ -18,6 +18,8 @@ class OBSIDIAN_API UObsidianMMC_MaxSpecialResource_Witch : public UObsidianMMC_M
 
 public:
 	UObsidianMMC_MaxSpecialResource_Witch(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
+	//~ Begin UGameplayModMagnitudeCalculation Interface
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
+	//~ End UGameplayModMagnitudeCalculation Interface
 };

@@ -87,19 +87,19 @@ struct FObsidianEffectUIDataWidgetRow : public FTableRowBase
 public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly)
 	EObsidianInfoWidgetType InfoWidgetType = EObsidianInfoWidgetType::EIWT_SimpleEffectInfo;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FGameplayTag EffectTag = FGameplayTag();
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	EObsidianUIEffectClassification EffectClassification = EObsidianUIEffectClassification::EUEC_NoClassification;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectName = FText();
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FText EffectDesc = FText();
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TObjectPtr<UTexture2D> EffectImage = nullptr;
 
@@ -118,7 +118,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(EditCondition="InfoWidgetType == EObsidianInfoWidgetType::EIWT_StackingDurationalEffectInfo", EditConditionHides))
 	TSubclassOf<UOStackingDurationalEffectInfo> StackingDurationalEffectWidget;
-	
+
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = true))
 	float EffectDuration = 0.f;
 };
@@ -130,8 +130,8 @@ USTRUCT(BlueprintType)
 struct FObsidianEffectUIStackingData
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	UPROPERTY(BlueprintReadOnly)
 	int32 EffectStackCount = 0;
 
@@ -162,7 +162,7 @@ struct FObsidianDamageTextProps
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsBlockedAttack = false;
-	
+
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsCriticalAttack = false;
 
@@ -171,7 +171,7 @@ struct FObsidianDamageTextProps
 
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsSuppressedSpell = false;
-	
+
 	UPROPERTY(BlueprintReadOnly)
 	bool bIsTargetImmune = false;
 };

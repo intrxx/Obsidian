@@ -52,7 +52,7 @@ enum class EObsidianItemSlotStatePriority : uint8
 /**
  * Base class of different slots which can represent item holding panels.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianSlotBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
@@ -62,9 +62,10 @@ public:
 	void SetSlotState(const EObsidianItemSlotState InState, const EObsidianItemSlotStatePriority InPriority);
 
 protected:
+	//~ Begin UUserWidget Interface
 	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
 
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
 
@@ -73,13 +74,13 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Slot_Image;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Action_Image;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush SlotGreenLightColor;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush SlotRedLightColor;
 

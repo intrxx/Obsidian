@@ -24,12 +24,13 @@ class FObsidianDebugMenu : public FSlateIMWindowBase
 {
 public:
 	FObsidianDebugMenu();
+
 	virtual ~FObsidianDebugMenu() override;
 
 protected:
-	//~ Start of FSlateIMWindowBase
+	//~ Begin FSlateIMWindowBase Interface
 	virtual void DrawWindow(float InDeltaTime) override;
-	//~ End of FSlateIMWindowBase
+	//~ End FSlateIMWindowBase Interface
 
 private:
 	template<typename TabType>
@@ -45,7 +46,6 @@ private:
 	void DrawTargetBar(FObsidianDebugMenuContext& OutContext);
 	void DrawTab(FObsidianDebugMenuTab& InTab, const FObsidianDebugMenuContext& InContext) const;
 
-private:
 	TArray<TUniquePtr<FObsidianDebugMenuTab>> Tabs;
 
 	FAutoConsoleCommand OpenTabCommand;

@@ -13,7 +13,7 @@ class UImage;
 /**
  * 
  */
-UCLASS(NotBlueprintType)
+UCLASS(NotBlueprintType, meta = (PrioritizeCategories = "RadialProgressBar"))
 class OBSIDIAN_API UObsidianRadialProgressBar : public UUserWidget
 {
 	GENERATED_BODY()
@@ -22,7 +22,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "RadialProgressBar")
 	void SetPercent(float InPercent);
 
-public:
 	UPROPERTY(EditAnywhere, Category = "RadialProgressBar",  meta = (UIMin = "0", UIMax = "1"))
 	float Percent = 0.0f;
 
@@ -34,13 +33,13 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "RadialProgressBar",  meta = (UIMin = "0", UIMax = "1"))
 	float BarPercentMax = 1.0f;
-	
+
 	UPROPERTY(EditAnywhere, Category = "RadialProgressBar")
 	float CircularWidth = 300.0f;
-	
+
 	UPROPERTY(EditAnywhere, Category = "RadialProgressBar")
 	float CircularHeight = 300.0f;
-	
+
 	UPROPERTY(EditAnywhere, Category = "RadialProgressBar")
 	TObjectPtr<UMaterialInstance> ProgressBarMaterial;
 
@@ -51,21 +50,22 @@ public:
 	FName ThicknessValueName = FName("Thickness");
 
 protected:
-	virtual void NativePreConstruct() override;
-
 	bool CreateProgressBarMaterial();
 
 	void SetThickness(const float InThickness);
 
 	float GetMappedValue(float InRawValue);
-	
-protected:
+
+	//~ Begin UUserWidget Interface
+	virtual void NativePreConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> ProgressBar_Image;
-	
+
 	UPROPERTY()
 	TObjectPtr<UMaterialInstanceDynamic> ProgressBarMaterialDynamic;
 

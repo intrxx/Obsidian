@@ -10,19 +10,23 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Key"))
 class OBSIDIAN_API UObsidianBTService_CalculateDistToTarget : public UBTService
 {
 	GENERATED_BODY()
 
 public:
 	UObsidianBTService_CalculateDistToTarget();
-	
-protected:
-	virtual void TickNode(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory, float InDeltaSeconds) override;
+
+	//~ Begin UBTNode Interface
 	virtual FString GetStaticDescription() const override;
-	
+	//~ End UBTNode Interface
+
 protected:
+	//~ Begin UBTAuxiliaryNode Interface
+	virtual void TickNode(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory, float InDeltaSeconds) override;
+	//~ End UBTAuxiliaryNode Interface
+
 	/** Target Actor to calculate the distance to. */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Target Actor"), Category = "Key")
 	FBlackboardKeySelector TargetActor_Selector;

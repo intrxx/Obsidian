@@ -8,21 +8,17 @@
 
 #include "ObsidianSpawnedEquipmentPiece.generated.h"
 
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianSpawnedEquipmentPiece : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AObsidianSpawnedEquipmentPiece(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	USkeletalMeshSocket const* GetEquipmentSocketByName(const FName InSocketName) const;
-	USkeletalMeshComponent* GetEquipmentPieceMesh() const
-	{
-		return EquipmentPieceMesh;
-	}
+	USkeletalMeshComponent* GetEquipmentPieceMesh() const { return EquipmentPieceMesh; }
 
-public:
 	FGameplayTag AssociatedSlotTag = FGameplayTag::EmptyTag;
 
 	/** Whether, or not this piece is main equipment for example: Bow might add two Actor to the RightHandSlot, the actual bow and some protection strap on the hand. */

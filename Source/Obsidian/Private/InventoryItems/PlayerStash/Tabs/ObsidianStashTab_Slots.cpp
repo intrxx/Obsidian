@@ -16,11 +16,6 @@ UObsidianInventoryItemInstance* UObsidianStashTab_Slots::GetInstanceAtPosition(c
 	return SlotToItemMap.FindRef(InItemPosition.GetItemSlotTag());
 }
 
-TArray<FObsidianStashSlotDefinition> UObsidianStashTab_Slots::GetSlots() const
-{
-	return TabSlots;
-}
-
 bool UObsidianStashTab_Slots::DebugVerifyPositionFree(const FObsidianItemPosition& InPosition)
 {
 	return true; //TODO(intrxx) Implement

@@ -14,18 +14,16 @@ class UObsidianInventoryComponent;
  */
 class FGameplayDebuggerCategory_InventoryItems : public FGameplayDebuggerCategory
 {
-	
 public:
 	OBSIDIAN_API FGameplayDebuggerCategory_InventoryItems();
 
-	OBSIDIAN_API virtual void CollectData(APlayerController* InOwnerPC, AActor* InDebugActor) override;
-	OBSIDIAN_API virtual void DrawData(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) override;
-
 	OBSIDIAN_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
 
-protected:
-	OBSIDIAN_API void DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const;
-	
+	//~ Begin FGameplayDebuggerCategory Interface
+	OBSIDIAN_API virtual void CollectData(APlayerController* InOwnerPC, AActor* InDebugActor) override;
+	OBSIDIAN_API virtual void DrawData(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) override;
+	//~ End FGameplayDebuggerCategory Interface
+
 protected:
 	struct FRepData
 	{
@@ -40,11 +38,15 @@ protected:
 			FIntPoint GridSpan;
 			FIntPoint CurrentGridLocation;
 		};
-		TArray<FInventoryItemDebug> Items;
-		TMap<FIntPoint, bool> InventoryStateMap;
 
 		void Serialize(FArchive& InOutAr);
+
+		TArray<FInventoryItemDebug> Items;
+		TMap<FIntPoint, bool> InventoryStateMap;
 	};
+
+	OBSIDIAN_API void DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const;
+
 	FRepData DataPack;
 
 private:

@@ -26,7 +26,6 @@ class OBSIDIAN_API IObsidianEnemyInterface
 	GENERATED_BODY()
 
 public:
-
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
 	void SetCombatTarget(AActor* InTarget);
 	virtual void SetCombatTarget_Implementation(AActor* InTarget) {};

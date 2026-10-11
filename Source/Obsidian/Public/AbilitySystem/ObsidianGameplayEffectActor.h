@@ -39,10 +39,10 @@ USTRUCT(BlueprintType)
 struct FObsidianGameplayEffectStack
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	bool bIsInfinite = false;
-	
+
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> GameplayEffectClass;
 
@@ -56,21 +56,18 @@ struct FObsidianGameplayEffectStack
 	float EffectLevel = 1.f;
 };
 
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianGameplayEffectActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	AObsidianGameplayEffectActor();
 
 public:
+	AObsidianGameplayEffectActor();
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	EObsidianEffectToApply EffectToApply;
 
 protected:
-	virtual void BeginPlay() override;
-
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
 	void ApplyEffectToTarget(AActor* InTargetActor, TSubclassOf<UGameplayEffect> InEffectClassToApply);
 
@@ -82,15 +79,18 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "Obisdian|Effects")
 	void OnEndOverlap(AActor* InTargetActor);
-	
-protected:
+
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
 	/** Instant Gameplay Effect */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply == EObsidianEffectToApply::Instant", EditConditionHides))
 	TSubclassOf<UGameplayEffect> InstantGameplayEffectClass;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply == EObsidianEffectToApply::Instant", EditConditionHides))
 	EObsidianEffectApplicationPolicy InstantEffectApplicationPolicy = EObsidianEffectApplicationPolicy::DoNotApply;
-	
+
 	/** Durational Gameplay Effect */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply == EObsidianEffectToApply::HasDuration", EditConditionHides))
 	TSubclassOf<UGameplayEffect> DurationalGameplayEffectClass;
@@ -104,14 +104,14 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply == EObsidianEffectToApply::Infinite", EditConditionHides))
 	EObsidianEffectApplicationPolicy InfiniteEffectApplicationPolicy = EObsidianEffectApplicationPolicy::DoNotApply;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply == EObsidianEffectToApply::Infinite", EditConditionHides))
 	EObsidianEffectRemovalPolicy InfiniteEffectRemovalPolicy = EObsidianEffectRemovalPolicy::DoNotRemove;
 
 	/** Multiple Gameplay Effects */
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply == EObsidianEffectToApply::MultipleEffects", EditConditionHides))
 	TArray<FObsidianGameplayEffectStack> MultipleGameplayEffects;
-	
+
 	/** Level of applied effect */
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Effect", meta=(EditCondition="EffectToApply != EObsidianEffectToApply::MultipleEffects", EditConditionHides))
 	float EffectLevel = 1.f;
@@ -129,7 +129,6 @@ protected:
 
 private:
 	void RemoveEffectsFromActor(AActor* InTargetActor);
-	
-private:
+
 	TMap<FActiveGameplayEffectHandle, UAbilitySystemComponent*> ActiveEffectHandles;
 };

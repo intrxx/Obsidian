@@ -20,5 +20,7 @@ public:
 	AObsidianProjectile(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 protected:
+	//~ Begin AActor Interface
 	virtual void BeginPlay() override;
+	//~ End AActor Interface
 };

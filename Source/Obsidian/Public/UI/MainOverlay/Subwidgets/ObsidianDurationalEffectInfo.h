@@ -16,7 +16,7 @@ DECLARE_MULTICAST_DELEGATE_OneParam(FOnDurationalInfoWidgetTerminated, UObsidian
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianDurationalEffectInfo : public UObsidianEffectInfoBase
 {
 	GENERATED_BODY()
@@ -24,8 +24,7 @@ class OBSIDIAN_API UObsidianDurationalEffectInfo : public UObsidianEffectInfoBas
 public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void InitDurationalEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const float InDuration);
-	
-public:
+
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget), Category = "Obsidian|EffectInfo")
 	TObjectPtr<UCommonTextBlock> EffectTimer_TextBlock;
 
@@ -38,9 +37,8 @@ protected:
 private:
 	void TimerCountDown();
 
-private:
 	UPROPERTY()
 	APlayerController* OwningPlayer = nullptr;
-	
+
 	FTimerHandle EffectDurationTimerHandle;
 };

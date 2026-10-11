@@ -12,40 +12,6 @@
 
 struct FObsidianDamageStatics
 {
-	// Source
-	FGameplayEffectAttributeCaptureDefinition AccuracyDef;
-	FGameplayEffectAttributeCaptureDefinition CriticalStrikeChanceDef;
-	FGameplayEffectAttributeCaptureDefinition CriticalStrikeDamageMultiplierDef;
-	FGameplayEffectAttributeCaptureDefinition ChanceToShockDef;
-	FGameplayEffectAttributeCaptureDefinition IncreasedEffectOfShockDef;
-	
-	FGameplayEffectAttributeCaptureDefinition MinFlatPhysicalDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MaxFlatPhysicalDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MinFlatFireDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MaxFlatFireDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MinFlatLightningDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MaxFlatLightningDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MinFlatColdDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MaxFlatColdDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MinFlatChaosDamageDef;
-	FGameplayEffectAttributeCaptureDefinition MaxFlatChaosDamageDef;
-	
-	// Target
-	FGameplayEffectAttributeCaptureDefinition EvasionDef;
-	FGameplayEffectAttributeCaptureDefinition ArmorDef;
-	FGameplayEffectAttributeCaptureDefinition SpellSuppressionChanceDef;
-	FGameplayEffectAttributeCaptureDefinition SpellSuppressionMagnitudeDef;
-	FGameplayEffectAttributeCaptureDefinition AilmentThresholdDef;
-	FGameplayEffectAttributeCaptureDefinition StaggerDamageTakenMultiplierDef;
-	FGameplayEffectAttributeCaptureDefinition AllDamageMultiplierDef;
-	
-	FGameplayEffectAttributeCaptureDefinition FireResistanceDef;
-	FGameplayEffectAttributeCaptureDefinition ColdResistanceDef;
-	FGameplayEffectAttributeCaptureDefinition LightningResistanceDef;
-	FGameplayEffectAttributeCaptureDefinition ChaosResistanceDef;
-	
-	FGameplayTagContainer UIDataTags;
-	
 	FObsidianDamageStatics()
 	{
 		// Source
@@ -109,6 +75,40 @@ struct FObsidianDamageStatics
 		UIDataTags.AddTag(ObsidianGameplayTags::UI::DataSpecifierTag);
 		UIDataTags.AddTag(ObsidianGameplayTags::UI::EffectData::Effect::Shock);
 	}
+
+	// Source
+	FGameplayEffectAttributeCaptureDefinition AccuracyDef;
+	FGameplayEffectAttributeCaptureDefinition CriticalStrikeChanceDef;
+	FGameplayEffectAttributeCaptureDefinition CriticalStrikeDamageMultiplierDef;
+	FGameplayEffectAttributeCaptureDefinition ChanceToShockDef;
+	FGameplayEffectAttributeCaptureDefinition IncreasedEffectOfShockDef;
+
+	FGameplayEffectAttributeCaptureDefinition MinFlatPhysicalDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MaxFlatPhysicalDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MinFlatFireDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MaxFlatFireDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MinFlatLightningDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MaxFlatLightningDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MinFlatColdDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MaxFlatColdDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MinFlatChaosDamageDef;
+	FGameplayEffectAttributeCaptureDefinition MaxFlatChaosDamageDef;
+
+	// Target
+	FGameplayEffectAttributeCaptureDefinition EvasionDef;
+	FGameplayEffectAttributeCaptureDefinition ArmorDef;
+	FGameplayEffectAttributeCaptureDefinition SpellSuppressionChanceDef;
+	FGameplayEffectAttributeCaptureDefinition SpellSuppressionMagnitudeDef;
+	FGameplayEffectAttributeCaptureDefinition AilmentThresholdDef;
+	FGameplayEffectAttributeCaptureDefinition StaggerDamageTakenMultiplierDef;
+	FGameplayEffectAttributeCaptureDefinition AllDamageMultiplierDef;
+
+	FGameplayEffectAttributeCaptureDefinition FireResistanceDef;
+	FGameplayEffectAttributeCaptureDefinition ColdResistanceDef;
+	FGameplayEffectAttributeCaptureDefinition LightningResistanceDef;
+	FGameplayEffectAttributeCaptureDefinition ChaosResistanceDef;
+
+	FGameplayTagContainer UIDataTags;
 };
 
 static const FObsidianDamageStatics& ObsidianDamageStatics()

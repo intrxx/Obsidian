@@ -31,16 +31,6 @@ struct FObsidianItemTestEnvironment
 {
 	FObsidianItemTestEnvironment();
 
-	UObsidianInventoryComponent& Inventory() const;
-	UObsidianEquipmentComponent& Equipment() const;
-	UObsidianPlayerStashComponent& Stash() const;
-
-	/** Adds Gameplay Tag to the Player's Ability System Component, e.g. to block actions on one of the components. */
-	void AddOwnerTag(const FGameplayTag& InTag) const;
-	void RemoveOwnerTag(const FGameplayTag& InTag) const;
-
-	void SetHeroLevel(const uint8 InHeroLevel) const;
-
 	/** Stash Tabs that the Player Stash is configured with, both are 12x10 grids. */
 	static FGameplayTag PersonalStashTab();
 	static FGameplayTag SharedStashTab();
@@ -52,6 +42,16 @@ struct FObsidianItemTestEnvironment
 
 	/** Current stacks of an item, 0 for nullptr. */
 	static int32 Stacks(const UObsidianInventoryItemInstance* InInstance);
+
+	UObsidianInventoryComponent& Inventory() const;
+	UObsidianEquipmentComponent& Equipment() const;
+	UObsidianPlayerStashComponent& Stash() const;
+
+	/** Adds Gameplay Tag to the Player's Ability System Component, e.g. to block actions on one of the components. */
+	void AddOwnerTag(const FGameplayTag& InTag) const;
+	void RemoveOwnerTag(const FGameplayTag& InTag) const;
+
+	void SetHeroLevel(const uint8 InHeroLevel) const;
 
 	/**
 	 * Creates an Item Instance that is not held by any of the components, the same as an item that is being dragged.

@@ -27,7 +27,7 @@ DECLARE_MULTICAST_DELEGATE(FOnItemInitializedSignature)
 /**
  * Base class for all droppable items in Obsidian.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable, public IObsidianHighlightInterface, public IObsidianInteractionInterface
 {
 	GENERATED_BODY()
@@ -35,29 +35,9 @@ class OBSIDIAN_API AObsidianDroppableItem : public AObsidianWorldCollectable, pu
 public:
 	AObsidianDroppableItem(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
-	
 	void InitializeItem(const FDraggedItem& InDraggedItem);
 	void InitializeItem(const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
 		const FObsidianItemGeneratedData& InGeneratedData);
-
-	//TODO(intrxx) this shouldn't be public?
-	virtual void AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd) override;
-	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
-		const FObsidianItemGeneratedData& InGeneratedData) override;
-
-	//~ Start of HighlightInterface
-	virtual AActor* GetHighlightAvatarActor() override;
-	virtual void StartHighlight() override;
-	virtual void StopHighlight() override;
-	//~ End of HighlightInterface
-
-	//~ Start of InteractionInterface
-	virtual AActor* GetInteractionActor() override;
-	virtual bool CanInteract() override;
-	virtual float GetInteractionRadius() override;
-	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
-	//~ End of InteractionInterface
 
 	/**
 	 * Use only on Server.
@@ -72,29 +52,61 @@ public:
 	void OnItemMouseHover(const bool bInMouseEnter);
 	void OnItemMouseButtonDown(const int32 InPlayerIndex, const FObsidianItemInteractionFlags& InInteractionFlags);
 
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<class FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
+	//~ Begin IObsidianPickableInterface Interface
+	//TODO(intrxx) this shouldn't be public?
+	virtual void AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd) override;
+	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
+		const FObsidianItemGeneratedData& InGeneratedData) override;
+	//~ End IObsidianPickableInterface Interface
+
+	//~ Begin IObsidianHighlightInterface Interface
+	virtual AActor* GetHighlightAvatarActor() override;
+	virtual void StartHighlight() override;
+	virtual void StopHighlight() override;
+	//~ End IObsidianHighlightInterface Interface
+
+	//~ Begin IObsidianInteractionInterface Interface
+	virtual AActor* GetInteractionActor() override;
+	virtual bool CanInteract() override;
+	virtual float GetInteractionRadius() override;
+	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
+	//~ End IObsidianInteractionInterface Interface
+
+	//~ Begin AActor Interface
+	virtual void Destroyed() override;
+	//~ End AActor Interface
+
 	/** Fires when Instance or Definition is set on the Droppable Item. */
 	FOnItemInitializedSignature OnItemInitializedDelegate;
-	
-protected:
-	virtual void BeginPlay() override;
-	virtual void Destroyed() override;
-	virtual void OnRep_PickupContent() override;
 
+protected:
 	void InitializeLabelComponent();
+
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
+	//~ Begin AObsidianWorldCollectable Interface
+	virtual void OnRep_PickupContent() override;
+	//~ End AObsidianWorldCollectable Interface
 
 private:
 	/** Pickups available Item Instance, returns true if item with whole stacks was picked up. */
 	bool PickupItemInstance(const bool bInLeftControlDown, const AObsidianPlayerController* InPickingPlayerController);
-	
+
 	/** Pickups available Item Def, returns true if item with whole stacks was picked up. */
 	bool PickupItemDef(const bool bInLeftControlDown, const AObsidianPlayerController* InPickingPlayerController);
-	
+
 	/** Sets up any Appearance related thing, needs to be called after setting the item instance itself. */
 	void SetupItemAppearanceFromInstance() const;
-	
+
 	/** Sets up any Appearance related thing, needs to be called after setting the item def itself. */
 	void SetupItemAppearanceFromDefinition() const;
-	
+
 	void InitDropRouteAnimation();
 
 	UFUNCTION()
@@ -107,29 +119,28 @@ private:
 
 	UFUNCTION()
 	void OnRep_DroppedItemStacks();
-	
-private:
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USceneComponent> RootSceneComponent;
-	
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UCurveFloat> DropLocationCurve;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DropAnimation", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USplineComponent> ItemDropSplineComp;
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianItemLabelComponent> ItemLabelComponent;
-	
+
 	UPROPERTY()
 	TObjectPtr<UObsidianItemLabel> ItemLabel;
-	
+
 	UPROPERTY()
 	UObInventoryItemsWidgetController* CachedInventoryWidgetController;
-	
+
 	UPROPERTY(ReplicatedUsing = OnRep_DroppedItemStacks)
 	int32 DroppedItemStacks = 1;
 

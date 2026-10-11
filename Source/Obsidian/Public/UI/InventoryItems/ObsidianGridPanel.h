@@ -26,22 +26,21 @@ struct FObsidianGridSlotData
 public:
 	FObsidianGridSlotData(){};
 
-	bool IsOccupied() const;
-	
+	bool IsOccupied() const { return bOccupied; }
+
 	void AddNewItem(const FObsidianItemPosition& InPosition, UObsidianItem* InItemWidget,
 		const FIntPoint InItemGridSpan);
 	void Reset();
-	
-public:
+
 	UPROPERTY()
 	FObsidianItemPosition OriginPosition = FObsidianItemPosition();
 
 	UPROPERTY()
 	UObsidianSlot_GridSlot* OwningGridSlot = nullptr;
-	
+
 	UPROPERTY()
 	UObsidianItem* ItemWidget = nullptr;
-	
+
 	UPROPERTY()
 	FIntPoint ItemGridSpan = FIntPoint::NoneValue;
 
@@ -54,7 +53,7 @@ protected:
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGridPanel : public UObsidianItemStoragePanelBase
 {
 	GENERATED_BODY()
@@ -62,25 +61,22 @@ class OBSIDIAN_API UObsidianGridPanel : public UObsidianItemStoragePanelBase
 public:
 	bool ConstructInventoryPanel();
 	bool ConstructStashPanel(const int32 InGridWidthOverride, const int32 InGridHeightOverride, const FGameplayTag& InStashTag);
-	
+
 	UObsidianSlot_GridSlot* GetSlotByPosition(const FIntPoint& InBySlotPosition);
 	const FObsidianGridSlotData* GetSlotDataAtGridPosition(const FIntPoint& InAtGridPosition) const;
 	UObsidianItem* GetItemWidgetAtGridPosition(const FIntPoint& InAtGridPosition) const;
 	bool IsGridSlotOccupied(const FIntPoint& InAtGridPosition) const;
-	
+
 	void AddItemWidget(UObsidianItem* InItemWidget, const FObsidianItemWidgetData& InItemWidgetData);
 	void HandleItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
 	void HandleItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
 
 	void HandleHighlightingItems(const TArray<FObsidianItemPosition>& InItemsToHighlight);
 	void ClearUsableItemHighlight();
-	
+
 protected:
-	virtual void HandleWidgetControllerSet() override;
-	virtual void NativeDestruct() override;
-	
 	bool ConstructGrid(const int32 InGridWidth, const int32 InGridHeight);
-	
+
 	void RegisterGridItemWidget(const FObsidianItemPosition& InItemPosition, UObsidianItem* InItemWidget,
 		const FIntPoint InGridSpan);
 
@@ -89,17 +85,22 @@ protected:
 		const FObsidianItemInteractionFlags& InInteractionFlags);
 	void OnGridSlotRightMouseButtonDown(const UObsidianSlot_GridSlot* InAffectedSlot,
 		const FObsidianItemInteractionFlags& InInteractionFlags);
-	
+
 	void ConstructItemPosition(FObsidianItemPosition& OutItemPosition, const FIntPoint InSlotPositionOverride) const;
-	
-protected:
+
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianSlot_GridSlot> GridSlotClass;
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SlotTileSize = 68.0f;
-
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCanvasPanel> Root_CanvasPanel;
 
@@ -108,14 +109,13 @@ private:
 	void SetSlotStateForGridSlots(const FIntPoint InOriginPosition, const FIntPoint InItemGridSpan,
 		const EObsidianItemSlotState InSlotState);
 	void ResetGridSlotsState();
-	
-private:
+
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
-	
+
 	UPROPERTY()
 	TMap<FIntPoint, FObsidianGridSlotData> GridSlotDataMap;
-	
+
 	/** Array of slots that are affected by item hover, to clear it later. */
 	UPROPERTY()
 	TArray<UObsidianSlot_GridSlot*> AffectedGridSlots;

@@ -74,31 +74,6 @@ bool UOInventoryItemFragment_Affixes::HasImplicitAffix() const
 	return bHasImplicitAffix && StaticItemImplicit;
 }
 
-TArray<FObsidianStaticItemAffix> UOInventoryItemFragment_Affixes::GetPrimaryItemAffixes() const
-{
-	return PrimaryItemAffixes;
-}
-
-FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticImplicitAffix() const
-{
-	return StaticItemImplicit;
-}
-
-FObsidianStaticItemAffix UOInventoryItemFragment_Affixes::GetStaticSkillImplicitAffix() const
-{
-	return StaticItemSkillImplicit;
-}
-
-TArray<FObsidianStaticItemAffix> UOInventoryItemFragment_Affixes::GetStaticAffixes() const
-{
-	return StaticItemAffixes;
-}
-
-EObsidianAffixGenerationType UOInventoryItemFragment_Affixes::GetGenerationType() const
-{
-	return ItemAffixesGenerationType;
-}
-
 #if WITH_EDITOR
 EDataValidationResult UOInventoryItemFragment_Affixes::IsDataValid(FDataValidationContext& InContext) const
 {

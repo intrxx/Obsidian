@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGA_FlyingKnifes : public UOGameplayAbility_ProjectileSpell
 {
 	GENERATED_BODY()
@@ -28,7 +28,7 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|FlyingKnifes")
 	float SpawnHeight = 50.0f;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|FlyingKnifes")
 	uint8 NumberOfProjectiles = 4;
 };

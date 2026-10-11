@@ -51,19 +51,9 @@ AActor* AObsidianPlayerStash::GetInteractionActor()
 	return this;
 }
 
-bool AObsidianPlayerStash::CanInteract()
-{
-	return bCanInteract;
-}
-
 bool AObsidianPlayerStash::RequiresOngoingInteraction()
 {
 	return true;
-}
-
-float AObsidianPlayerStash::GetInteractionRadius()
-{
-	return InteractionRadius;
 }
 
 void AObsidianPlayerStash::Interact(AObsidianPlayerController* InInteractingPlayerController)

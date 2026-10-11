@@ -40,50 +40,44 @@ class UNiagaraSystem;
 class UOProjectileMovementComponent;
 class USphereComponent;
 
-UCLASS(Abstract, NotBlueprintable)
+UCLASS(Abstract, NotBlueprintable, meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianProjectileBase : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AObsidianProjectileBase(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
+	UOProjectileMovementComponent* GetObsidianProjectileMovementComponent() { return ProjectileMovementComponent; }
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
+	FGameplayEffectSpecHandle GetProjectileDamageSpecHandle() const { return DamageEffectSpecHandle; }
+
+	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
+	void SetProjectileDamageSpecHandle(const FGameplayEffectSpecHandle InDamageSpec) { DamageEffectSpecHandle = InDamageSpec; }
+
+	//~ Begin AActor Interface
 	virtual void Destroyed() override;
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
-	UOProjectileMovementComponent* GetObsidianProjectileMovementComponent()
-	{
-		return ProjectileMovementComponent;
-	}
-
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
-	FGameplayEffectSpecHandle GetProjectileDamageSpecHandle() const
-	{
-		return DamageEffectSpecHandle;
-	}
-	
-	UFUNCTION(BlueprintCallable, Category = "Obsidian|Projectile")
-	void SetProjectileDamageSpecHandle(const FGameplayEffectSpecHandle InDamageSpec)
-	{
-		DamageEffectSpecHandle = InDamageSpec;
-	}
+	//~ End AActor Interface
 
 protected:
-	virtual void BeginPlay() override;
-
 	UFUNCTION()
 	void OnSphereOverlap(UPrimitiveComponent* InOverlappedComponent, AActor* InOtherActor, UPrimitiveComponent* InOtherComp,
 		int32 InOtherBodyIndex, bool bInFromSweep, const FHitResult& InSweepResult);
 
 	bool ApplyProjectileDamageToActor(AActor* InActorToDamage) const;
-	
-protected:
+
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Projectile")
 	TObjectPtr<USphereComponent> SphereComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|Projectile")
 	TObjectPtr<UOProjectileMovementComponent> ProjectileMovementComponent;
-	
+
 	/**
 	 * Boolean to indicate that the projectile hit on the server, used to play cosmetic effects if the destruction happened on the server before the overlap on client.
 	 * In other words, if the projectile is destroyed and the bServerHit is false, the cosmetic effects will be played in the Destroyed() function.
@@ -95,10 +89,10 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="ProjectileCleanupMethod==EObsidianProjectileCleanupMethod::LifeSpan"), Category = "Obsidian|Projectile")
 	float ProjectileLifeSpan = 15.f;
-	
+
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="ProjectileCleanupMethod==EObsidianProjectileCleanupMethod::DistanceTraveled"), Category = "Obsidian|Projectile")
 	float DistanceToTravel = 300.0f;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile")
 	bool bDestroyOnHit = true;
 
@@ -108,17 +102,17 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="bAllowMultiHit"), Category = "Obsidian|Projectile|MultiHit")
 	EObsidianMultiHitCooldownType MultiHitCooldownType = EObsidianMultiHitCooldownType::GlobalMultiHitCooldown;
-	
+
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition="bAllowMultiHit", ClampMin="0.01"), Category = "Obsidian|Projectile|MultiHit")
 	float MultiHitCooldown = 0.25f;
-	
+
 	/**
 	 * Cosmetics
 	 */
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile|Cosmetics")
 	TObjectPtr<UNiagaraSystem> ProjImpactEffect;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Projectile|Cosmetics")
 	TObjectPtr<USoundBase> ProjImpactSound;
 
@@ -127,7 +121,7 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<UAudioComponent> ProjFlyingSoundComp;
-	
+
 	/**
 	 * 
 	 */
@@ -146,8 +140,7 @@ private:
 	void HandleMultiHitPerActorCooldown(AActor* InForHitActor);
 
 	bool CanApplyCosmeticMultiHit(AActor* InForHitActor);
-	
-private:
+
 	FTimerHandle GlobalMultiHitCooldownTimerHandle;
 	bool bGlobalMultiHitCanHit = true;
 

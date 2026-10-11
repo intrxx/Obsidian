@@ -16,10 +16,8 @@ UCLASS()
 class OBSIDIAN_API UObsidianProgressGlobe_Mana : public UObsidianProgressGlobe
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void HandleWidgetControllerSet() override;
 
+protected:
 	void InitializeSpecialResourceVisuals();
 
 	UFUNCTION()
@@ -30,8 +28,11 @@ protected:
 	void OnSpecialResourceChanged(float InNewSpecialResource);
 	UFUNCTION()
 	void OnMaxSpecialResourceChanged(float InNewMaxSpecialResource);
-	
-protected:
+
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|ManaProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UProgressBar> Mana_ProgressGlobe;
 
@@ -40,7 +41,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> ManaAttributeCount_TextBlock;
-	
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> SpecialResourceAttributeName_TextBlock;
 

@@ -24,15 +24,12 @@ class OBSIDIAN_API UObsidianItemDataLoaderSubsystem : public UGameInstanceSubsys
 	GENERATED_BODY()
 
 public:
-	virtual void Initialize(FSubsystemCollectionBase& InCollection) override;
-	virtual void Deinitialize() override;
-	
 	bool GetAllCommonTreasureClassesUpToQuality(const int32 InUpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass) const;
 	bool GetAllCommonTreasureClassesUpToQualityForCategory(const int32 InUpToTreasureQuality, TArray<FObsidianTreasureClass>& OutTreasureClass,
 		const FGameplayTag& InForCategory) const;
 	bool GetAllUniqueOrSetItemsOfBaseItemTypeUpToQuality(const int32 InUpToTreasureQuality, const EObsidianItemRarity InRarityToGet,
 		const FGameplayTag& InOfBaseType, FObsidianTreasureClass& OutTreasureClass) const;
-	
+
 	bool GetAllAffixesUpToQualityForCategory_DefaultGeneration(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
 		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes, TArray<FObsidianDynamicItemAffix>& OutSuffixes,
 		TArray<FObsidianDynamicItemAffix>& OutSkillImplicits) const;
@@ -49,21 +46,23 @@ public:
 		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutPrefixes);
 	bool GetAllSuffixesUpToQualityForCategory(const int32 InUpToTreasureQuality, const FGameplayTag& InForCategoryTag,
 		const FGameplayTag& InForBaseTypeTag, TArray<FObsidianDynamicItemAffix>& OutSuffixes);
-	
-	
+
 	FString GetRandomRareItemNameAddition(const int32 InUpToTreasureQuality, const FGameplayTag& InForItemCategoryTag) const;
 	FString GetAffixMultiplierMagicItemNameAddition() const;
 
-public:
+	//~ Begin USubsystem Interface
+	virtual void Initialize(FSubsystemCollectionBase& InCollection) override;
+	virtual void Deinitialize() override;
+	//~ End USubsystem Interface
+
 	UPROPERTY()
 	TObjectPtr<UObsidianAffixAbilitySet> DefaultAffixAbilitySet;
-	
+
 protected:
 	void LoadItemData();
 	void OnItemDataLoaded();
 	void OnCommonItemsLoaded();
-	
-protected:
+
 	UPROPERTY()
 	TObjectPtr<UObsidianItemDataConfig> ItemDataConfig;
 };

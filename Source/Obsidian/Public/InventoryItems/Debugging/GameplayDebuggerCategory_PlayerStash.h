@@ -20,14 +20,13 @@ class FGameplayDebuggerCategory_PlayerStash : public FGameplayDebuggerCategory
 public:
 	OBSIDIAN_API FGameplayDebuggerCategory_PlayerStash();
 
+	OBSIDIAN_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
+
+	//~ Begin FGameplayDebuggerCategory Interface
 	OBSIDIAN_API virtual void CollectData(APlayerController* InOwnerPC, AActor* InDebugActor) override;
 	OBSIDIAN_API virtual void DrawData(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) override;
+	//~ End FGameplayDebuggerCategory Interface
 
-	OBSIDIAN_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
-	
-protected:
-	OBSIDIAN_API void DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const;
-	
 protected:
 	struct FRepData
 	{
@@ -43,7 +42,7 @@ protected:
 			FIntPoint CurrentGridLocation;
 			FGameplayTag CurrentSlotTag;
 		};
-		
+
 		struct FStashSlotsDebug
 		{
 			FString SlotTag;
@@ -56,22 +55,24 @@ protected:
 			TMap<FIntPoint, bool> GridStateMap;
 		};
 
+		void Serialize(FArchive& InOutAr);
+
 		bool bStashActive;
 		EDebugStashTabType StashTabType = EDebugStashTabType::DSTT_None;
 		FGameplayTag StashTabTag;
-		
+
 		FStashGridDebug Grid;
 		TArray<FStashedItemsDebug> Items;
 		TArray<FStashSlotsDebug> Slots;
-		
-		void Serialize(FArchive& InOutAr);
 	};
+
+	OBSIDIAN_API void DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const;
+
 	FRepData DataPack;
 
 private:
 	// Save off the last expected draw size so that we can draw a border around it next frame (and hope we're the same size)
 	float LastDrawDataEndSize = 0.0f;
-	
 };
 
 #endif // WITH_GAMEPLAY_DEBUGGER_MENU

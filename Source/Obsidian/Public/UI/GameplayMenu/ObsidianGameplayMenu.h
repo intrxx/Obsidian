@@ -15,31 +15,33 @@ class UCommonActivatableWidget;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGameplayMenu : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
 
 public:
-	virtual UWidget* NativeGetDesiredFocusTarget() const override;
-	
-protected:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
 
+protected:
 	void OnContinueClicked();
 	void OnOptionsClicked();
 	void OnSaveAndExitClicked();
 
 	void OnSaveFinished(UObsidianHeroSaveGame* InSaveGame, bool bInSuccess);
 
-protected:
+	//~ Begin UCommonActivatableWidget Interface
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
+	//~ End UCommonActivatableWidget Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UCommonActivatableWidget> SettingsMenuWidgetClass;
 
 	FDelegateHandle OnSaveFinishedDelegateHandle;
-	
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Continue_Button;
 

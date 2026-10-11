@@ -7,12 +7,12 @@
 
 struct SObsidian_MaxSpecialResource_Witch
 {
-	FGameplayEffectAttributeCaptureDefinition IntelligenceDef;
-
 	SObsidian_MaxSpecialResource_Witch()
 	{
 		IntelligenceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetIntelligenceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition IntelligenceDef;
 };
 
 static const SObsidian_MaxSpecialResource_Witch& MaxSpecialResource_WitchStatics()

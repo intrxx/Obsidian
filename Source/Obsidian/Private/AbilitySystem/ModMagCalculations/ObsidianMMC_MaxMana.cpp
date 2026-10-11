@@ -11,11 +11,6 @@
 
 struct SObsidian_MaxManaStatics
 {
-	FGameplayEffectAttributeCaptureDefinition MaxMana;
-	FGameplayEffectAttributeCaptureDefinition FaithDef;
-	FGameplayEffectAttributeCaptureDefinition DexterityDef;
-	FGameplayEffectAttributeCaptureDefinition IncreasedManaPercentage;
-	
 	SObsidian_MaxManaStatics()
 	{
 		MaxMana = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetMaxManaAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -23,6 +18,11 @@ struct SObsidian_MaxManaStatics
 		DexterityDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetDexterityAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		IncreasedManaPercentage = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetIncreasedManaPercentageAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition MaxMana;
+	FGameplayEffectAttributeCaptureDefinition FaithDef;
+	FGameplayEffectAttributeCaptureDefinition DexterityDef;
+	FGameplayEffectAttributeCaptureDefinition IncreasedManaPercentage;
 };
 
 static const SObsidian_MaxManaStatics& MaxManaStatics()

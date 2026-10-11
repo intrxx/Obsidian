@@ -18,7 +18,7 @@ class UHorizontalBox;
   * Widget component that displays item requirements (class, level, attributes) with visual styling to indicate whether
   * requirements are met or insufficient.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianItemDescRequirementsBlock : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
@@ -29,8 +29,7 @@ public:
 protected:
 	void SetupAttributeRequirement(const bool bInHasRequirement, const bool bInMeetRequirement, const int32 InRequirementValue,
 		UHorizontalBox* InRequirementContainer, UCommonTextBlock* InRequirementText, uint8& InOutCounter);
-	
-protected:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Style")
 	TSubclassOf<UCommonTextStyle> SufficientRequirementText_Style;
 
@@ -42,12 +41,11 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Style")
 	TSubclassOf<UCommonTextStyle> InsufficientRequirementMagnitude_Style;
-	
-protected:
+
 	/**
 	 * Class Requirement
 	 */
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> ClassRequirement_HorizontalBox;
 
@@ -57,7 +55,7 @@ protected:
 	/**
 	 * Level Requirement
 	 */
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> LevelRequirement_HorizontalBox;
 

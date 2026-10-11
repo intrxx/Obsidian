@@ -15,7 +15,7 @@ class UCommonTextBlock;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianDamageNumber : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
@@ -23,14 +23,13 @@ class OBSIDIAN_API UObsidianDamageNumber : public UObsidianWidgetBase
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|DamageNumber")
 	void InitializeDamageNumber(const FObsidianDamageTextProps& InDamageTextProps);
-	
-public:
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> DamageNumber_TextBlock;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Styles")
 	TSubclassOf<UCommonTextStyle> RegularDamageNumber_Style;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Styles")
 	TSubclassOf<UCommonTextStyle> BlockedDamageNumber_Style;
 
@@ -39,7 +38,7 @@ public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Styles")
 	TSubclassOf<UCommonTextStyle> EvadedDamageNumber_Style;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Styles")
 	FText EvadedText;
 

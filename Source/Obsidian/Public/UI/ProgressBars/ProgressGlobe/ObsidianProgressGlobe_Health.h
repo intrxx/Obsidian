@@ -21,10 +21,8 @@ class OBSIDIAN_API UObsidianProgressGlobe_Health : public UObsidianProgressGlobe
 public:
 	void SetProgressGlobeStyle(const FSlateBrush& InProgressGlobeFillImage) const;
 	void ResetStyle() const;
-	
-protected:
-	virtual void HandleWidgetControllerSet() override;
 
+protected:
 	UFUNCTION()
 	void OnHealthChanged(float InNewHealth);
 	UFUNCTION()
@@ -38,13 +36,16 @@ protected:
 	UFUNCTION()
 	void OnMaxStaggerMeterChanged(float InNewMaxStaggerMeter);
 
-protected:
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> EnergyShieldAttribute_HorizontalBox;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UProgressBar> Health_ProgressGlobe;
-	
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> HealthAttributeName_TextBlock;
 
@@ -53,7 +54,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UProgressBar> EnergyShield_ProgressGlobe;
-	
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> EnergyShieldAttributeName_TextBlock;
 
@@ -62,7 +63,7 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|HealthProgressGlobe", meta=(BindWidget))
 	TObjectPtr<UObsidianRadialProgressBar> Stagger_RadialProgressBar;
-	
+
 private:
 	float Health = 0.0f;
 	float MaxHealth = 0.0f;

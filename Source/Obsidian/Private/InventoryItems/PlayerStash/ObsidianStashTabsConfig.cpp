@@ -8,11 +8,6 @@ UObsidianStashTabsConfig::UObsidianStashTabsConfig(const FObjectInitializer& InO
 {
 }
 
-TArray<FObsidianStashTabDefinition> UObsidianStashTabsConfig::GetStashTabDefinitions() const
-{
-	return StashTabs;
-}
-
 int32 UObsidianStashTabsConfig::StashTabCount() const
 {
 	return StashTabs.Num();

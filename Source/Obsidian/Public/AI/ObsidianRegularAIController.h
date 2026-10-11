@@ -24,9 +24,10 @@ public:
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
 
 protected:
+	//~ Begin AController Interface
 	virtual void OnPossess(APawn* InPawn) override;
-	
-protected:
+	//~ End AController Interface
+
 	UPROPERTY()
 	TObjectPtr<AObsidianRegularEnemy> EnemyOwner;
 };

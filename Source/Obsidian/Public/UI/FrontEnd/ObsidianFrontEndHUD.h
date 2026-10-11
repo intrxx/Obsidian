@@ -16,7 +16,7 @@ class UObCharacterSelectionWidgetController;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "ObsidianUI"))
 class OBSIDIAN_API AObsidianFrontEndHUD : public AHUD
 {
 	GENERATED_BODY()

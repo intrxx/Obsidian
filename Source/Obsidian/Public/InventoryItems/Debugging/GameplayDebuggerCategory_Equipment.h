@@ -16,18 +16,16 @@ class AObsidianSpawnedEquipmentPiece;
  */
 class FGameplayDebuggerCategory_Equipment : public FGameplayDebuggerCategory
 {
-
 public:
 	OBSIDIAN_API FGameplayDebuggerCategory_Equipment();
 
+	OBSIDIAN_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
+
+	//~ Begin FGameplayDebuggerCategory Interface
 	OBSIDIAN_API virtual void CollectData(APlayerController* InOwnerPC, AActor* InDebugActor) override;
 	OBSIDIAN_API virtual void DrawData(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) override;
+	//~ End FGameplayDebuggerCategory Interface
 
-	OBSIDIAN_API static TSharedRef<FGameplayDebuggerCategory> MakeInstance();
-	
-protected:
-	OBSIDIAN_API void DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const;
-	
 protected:
 	struct FRepData
 	{
@@ -47,12 +45,15 @@ protected:
 			TArray<FString> AcceptedTags;
 			TArray<FString> BannedTags;
 		};
-		
+
+		void Serialize(FArchive& InOutAr);
+
 		TArray<FEquipmentItemDebug> Items;
 		TArray<FEquipmentSlotDebug> EquipmentSlots;
-		
-		void Serialize(FArchive& InOutAr);
 	};
+
+	OBSIDIAN_API void DrawItems(APlayerController* InOwnerPC, FGameplayDebuggerCanvasContext& InCanvasContext) const;
+
 	FRepData DataPack;
 
 private:

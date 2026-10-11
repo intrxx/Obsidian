@@ -16,7 +16,7 @@ class UImage;
 /**
  * Item Widget that is displayed in the inventory.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
@@ -24,43 +24,44 @@ class OBSIDIAN_API UObsidianItem : public UObsidianWidgetBase
 public:
 	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* InItemImage, const int32 InCurrentStack = 0);
 	void InitializeItemWidget(const FIntPoint& InItemGridSpan, UTexture2D* InItemImage, const bool bInIsForSwapSlot = false);
-	
+
 	void AddCurrentStackCount(const int32 InStackCountToAdd);
 	void OverrideCurrentStackCount(const int32 InNewStackCount);
-	
+
 	FSlateBrush GetItemImage() const;
 	FVector2D GetItemWidgetSize() const;
 
 	void SetBlockadeItemProperties();
 	void ResetBlockadeItemProperties();
-	
+
 	void SetUsingItemProperties();
 	void ResetUsingItemProperties();
 
 	void HighlightItem();
 	void ResetHighlight();
-	
+
 protected:
+	//~ Begin UUserWidget Interface
 	virtual void NativeConstruct() override;
-	
-protected:
+	//~ End UUserWidget Interface
+
 	/** Opacity to set when item is added a blocking slot item. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float BlockingItemOpacity = 0.5f;
-	
+
 	/** Opacity to set when item is being used (right-clicked). */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float UsingItemOpacity = 0.6f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float SwapSlotSizeMultiplier = 0.5f;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Highlight_Image;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
 

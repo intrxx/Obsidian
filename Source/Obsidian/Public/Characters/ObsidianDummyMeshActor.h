@@ -12,24 +12,28 @@ class UPoseableMeshComponent;
 /**
  * Actor used to replace the lying enemy with a lighter actor composed of PoseableMesh.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianDummyMeshActor : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AObsidianDummyMeshActor(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
 	void SetupDummyMeshActor(USkeletalMeshComponent* InMeshToCopy, const float InLifeSpan);
-	
-protected:
-	virtual void BeginPlay() override;
+
+	//~ Begin AActor Interface
 	virtual void Destroyed() override;
+	//~ End AActor Interface
 
 protected:
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UPoseableMeshComponent> PoseableMeshComp;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Dummy Dead Mesh")
 	TObjectPtr<USkeletalMeshComponent> DeadMeshToCopy;
 };

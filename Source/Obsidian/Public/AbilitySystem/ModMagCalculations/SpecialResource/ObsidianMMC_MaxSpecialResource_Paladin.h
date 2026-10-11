@@ -18,6 +18,8 @@ class OBSIDIAN_API UObsidianMMC_MaxSpecialResource_Paladin : public UObsidianMMC
 
 public:
 	UObsidianMMC_MaxSpecialResource_Paladin(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
+
+	//~ Begin UGameplayModMagnitudeCalculation Interface
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
+	//~ End UGameplayModMagnitudeCalculation Interface
 };

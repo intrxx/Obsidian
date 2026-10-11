@@ -11,19 +11,23 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGameplayAbility_Aura : public UObsidianGameplayAbility
 {
 	GENERATED_BODY()
 
 public:
 	UObsidianGameplayAbility_Aura();
-	
-protected:
-	virtual void ActivateAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo, const FGameplayAbilityActivationInfo InActivationInfo, const FGameplayEventData* InTriggerEventData) override;
+
+	//~ Begin UGameplayAbility Interface
 	virtual void ApplyCost(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo, const FGameplayAbilityActivationInfo InActivationInfo) const override;
-	
+	//~ End UGameplayAbility Interface
+
 protected:
+	//~ Begin UGameplayAbility Interface
+	virtual void ActivateAbility(const FGameplayAbilitySpecHandle InHandle, const FGameplayAbilityActorInfo* InActorInfo, const FGameplayAbilityActivationInfo InActivationInfo, const FGameplayEventData* InTriggerEventData) override;
+	//~ End UGameplayAbility Interface
+
 	/** Aura effect that will be applied to user */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|AbilitySetup")
 	TSubclassOf<UGameplayEffect> AuraEffectClass;

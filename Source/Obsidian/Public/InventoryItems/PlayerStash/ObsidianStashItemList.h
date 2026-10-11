@@ -42,13 +42,13 @@ USTRUCT(BlueprintType)
 struct FObsidianStashChangeMessage
 {
 	GENERATED_BODY()
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	TObjectPtr<UActorComponent> PlayerStashOwner = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	TObjectPtr<UObsidianInventoryItemInstance> ItemInstance = nullptr;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
 
@@ -57,7 +57,7 @@ struct FObsidianStashChangeMessage
 
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	int32 Delta = 0;
-	
+
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|StashTab")
 	EObsidianStashChangeType ChangeType = EObsidianStashChangeType::ICT_NONE;
 };
@@ -73,10 +73,12 @@ struct FObsidianStashSlotDefinition
 public:
 	FObsidianStashSlotDefinition(){}
 
+	static const FObsidianStashSlotDefinition InvalidSlot;
+
 	bool IsValid() const;
 	bool HasLimitedStacks() const;
 	FGameplayTag GetStashSlotTag() const;
-	
+
 	EObsidianPlacingAtSlotResult CanStashAtSlot(const FGameplayTag& InItemCategory, const FGameplayTag& InItemBaseType) const;
 
 	void AddBannedStashCategory(const FGameplayTag& InBannedCategory);
@@ -84,13 +86,12 @@ public:
 	void RemoveBannedStashCategory(const FGameplayTag& InBannedCategoryToRemove);
 	void RemoveBannedStashCategories(const FGameplayTagContainer& InBannedCategoriesToRemove);
 
-public:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FObsidianSlotDefinition BaseSlotDefinition = FObsidianSlotDefinition();
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	bool bRequireUniqueBaseTypeMatch = false;
-	
+
 	/** Tag of this type is required on item if bRequireUniqueBaseTypeMatch is checked. */
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "bRequireUniqueBaseTypeMatch", Categories = "Item.BaseType"), Category = "Obsidian")
 	FGameplayTag UniqueBaseTypeTag = FGameplayTag::EmptyTag;
@@ -98,8 +99,6 @@ public:
 	/** Amount of Stacks of provided Item the Slot can store. Leave at INDEX_NONE for unlimited storage, this is the default behaviour. */
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	int32 SlotStackLimit = INDEX_NONE;
-	
-	static const FObsidianStashSlotDefinition InvalidSlot;
 };
 
 /**
@@ -109,7 +108,7 @@ USTRUCT(BlueprintType)
 struct FObsidianStashEntry : public FFastArraySerializerItem
 {
 	GENERATED_BODY();
-	
+
 	FObsidianStashEntry()
 		: Instance(nullptr)
 	{}
@@ -146,7 +145,7 @@ USTRUCT(BlueprintType)
 struct FObsidianStashItemList : public FFastArraySerializer
 {
 	GENERATED_BODY();
-	
+
 public:
 	FObsidianStashItemList()
 		: OwnerComponent(nullptr)
@@ -179,15 +178,12 @@ public:
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianStashEntry, FObsidianStashItemList>(Entries, InOutDeltaParams, *this);
 	}
 
-	//~ Start of FFastArraySerializer contract
+	//~ Begin FFastArraySerializer Interface
 	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
 	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
 	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
-	//~ End of FFastArraySerializer contract
+	//~ End FFastArraySerializer Interface
 
-private:
-	void BroadcastChangeMessage(const FObsidianStashEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FObsidianItemPosition& InItemPosition, const EObsidianStashChangeType& InChangeType) const;
-	
 private:
 	friend UObsidianPlayerStashComponent;
 
@@ -195,13 +191,15 @@ private:
 	friend class FGameplayDebuggerCategory_PlayerStash;
 #endif
 
+	void BroadcastChangeMessage(const FObsidianStashEntry& InEntry, const int32 InOldCount, const int32 InNewCount, const FObsidianItemPosition& InItemPosition, const EObsidianStashChangeType& InChangeType) const;
+
 	/** Replicated list of all items. */
 	UPROPERTY()
 	TArray<FObsidianStashEntry> Entries;
-	
+
 	UPROPERTY(NotReplicated)
 	TObjectPtr<UActorComponent> OwnerComponent;
-	
+
 	TMap<FGameplayTag, UObsidianStashTab*> StashTabsMap;
 };
 

@@ -141,16 +141,6 @@ void UObsidianCraftingComponent::ReadyForReplication()
 	}
 }
 
-bool UObsidianCraftingComponent::IsUsingItem() const
-{
-	return bUsingItem;
-}
-
-UObsidianInventoryItemInstance* UObsidianCraftingComponent::GetUsingItem()
-{
-	return CachedUsingItemInstance;
-}
-
 void UObsidianCraftingComponent::UseItem(const FObsidianItemPosition& InOnPosition, const bool bInLeftShiftDown)
 {
 	ServerUseItem(CachedUsingItemInstance, InOnPosition);

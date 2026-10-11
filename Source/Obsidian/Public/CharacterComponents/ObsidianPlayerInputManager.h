@@ -41,46 +41,48 @@ namespace ObsidianPlayerInputStatics
  * Component that manages every type of Player Input in obsidian. This includes regular native input, interactions,
  * highlights and Inventory Items handling.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianPlayerInputManager : public UPawnComponent
 {
 	GENERATED_BODY()
-	
+
 public:
 	UObsidianPlayerInputManager(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
-	virtual void TickComponent(float InDeltaTime, ELevelTick InTickType,
-		FActorComponentTickFunction* InThisTickFunction) override;
 
-	void InitializePlayerInput(UInputComponent* InInputComponent);
-	
 	/** Returns the player input manager component if one exists on the specified actor. */
 	UFUNCTION(BlueprintPure, Category = "Obsidian|PlayerInputManager")
 	static UObsidianPlayerInputManager* FindPlayerInputManager(const AActor* InActor)
 	{
 		return (InActor ? InActor->FindComponentByClass<UObsidianPlayerInputManager>() : nullptr);
 	}
-	
+
+	void InitializePlayerInput(UInputComponent* InInputComponent);
+
 	AObsidianHUD* GetObsidianHUD() const;
 
 	void TriggerInteraction(AActor* InInteractionActor);
-	
+
+	//~ Begin UActorComponent Interface
+	virtual void TickComponent(float InDeltaTime, ELevelTick InTickType,
+		FActorComponentTickFunction* InThisTickFunction) override;
+	//~ End UActorComponent Interface
+
 protected:
 	void Input_AbilityInputTagPressed(FGameplayTag InInputTag);
 	void Input_AbilityInputTagReleased(FGameplayTag InInputTag);
-	
+
 	void Input_MoveKeyboard(const FInputActionValue& InInputActionValue);
 	void Input_MoveStartedMouse();
 	void Input_MoveTriggeredMouse();
 	void Input_MoveReleasedMouse();
-	
+
 	void Input_ToggleCharacterStatus();
 	void Input_ToggleInventory();
 	void Input_TogglePassiveSkillTree();
-	
+
 	void Input_DropItem();
 	void Input_ReleaseUsingItem();
-	
+
 	void Input_Interact();
 
 	void Input_WeaponSwap();
@@ -89,22 +91,21 @@ protected:
 	void Input_OpenGameplayMenu();
 
 	void Input_ToggleHighlight();
-	
-protected:
+
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Obsidian|Input")
 	float ShortPressThreshold = 0.3f;
-	
+
 	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<USplineComponent> AutoRunSplineComp;
 
 private:
 	void CursorTrace();
-	
+
 	/**
 	 * Movement.
 	 */
-	
+
 	bool CanMoveMouse() const;
 	bool CanContinuouslyMoveMouse() const;
 	void AutoRun();
@@ -112,14 +113,14 @@ private:
 
 	UFUNCTION(Server, Reliable)
 	void ServerToggleWalk();
-	
+
 	/**
 	 * Interaction.
 	 */
 
 	UFUNCTION(Client, Reliable)
 	void ClientStartApproachingOutOfRangeInteractionTarget(const FVector_NetQuantize10& InToDestination);
-	
+
 	UFUNCTION(Server, Reliable)
 	void ServerStartInteraction(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget);
 	void InteractWithOutOfRangeTarget();
@@ -128,17 +129,16 @@ private:
 	void ClientTriggerInteraction(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget);
 	UFUNCTION(Client, Reliable)
 	void ClientAbandonInteraction();
-	
+
 	bool IsHoveringOverInteractionTarget() const;
 	void StopOngoingInteraction();
 
 	/** If Interaction target is out of interaction range, it will handle getting to the interaction target and interacting with it. Will return true if interaction was handled here. */
 	bool HandleOutOfRangeInteraction(const TScriptInterface<IObsidianInteractionInterface>& InInteractionTarget, const FVector& InTargetLocation);
-	
-private:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|UI")
 	TSoftClassPtr<UCommonActivatableWidget> GameplayMenuClass;
-	
+
 	/** Used for both highlighting and movement to avoid getting it twice, we get this in CursorTrace */
 	FHitResult CursorHit;
 
@@ -158,10 +158,10 @@ private:
 	bool bActivelyInteracting = false;
 	TScriptInterface<IObsidianInteractionInterface> ActiveInteractionTarget;
 	FOnArrivedAtAcceptableInteractionRangeSignature OnArrivedAtAcceptableInteractionRange;
-	
+
 	UPROPERTY(EditDefaultsOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian|Debug")
 	bool bDebugInteraction = false;
-	
+
 	/**
 	 * Pickup.
 	 */

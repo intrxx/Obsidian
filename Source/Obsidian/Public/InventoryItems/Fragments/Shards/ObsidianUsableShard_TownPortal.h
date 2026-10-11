@@ -13,14 +13,16 @@ class AObsidianTownPortal;
 /**
  * Creates a Portal that leads to current area HUB (Town).
  */
-UCLASS(DisplayName="Town Portal")
+UCLASS(DisplayName="Town Portal", meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianUsableShard_TownPortal : public UObsidianUsableShard
 {
 	GENERATED_BODY()
 
 public:
+	//~ Begin UObsidianUsableShard Interface
 	virtual bool OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
 		UObsidianInventoryItemInstance* InUsingOntoInstance = nullptr) override;
+	//~ End UObsidianUsableShard Interface
 
 protected:
 	UPROPERTY(EditAnywhere, Category = "Obsidian")

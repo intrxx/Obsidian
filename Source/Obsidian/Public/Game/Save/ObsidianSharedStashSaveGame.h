@@ -52,7 +52,6 @@ class OBSIDIAN_API UObsidianSharedStashSaveGame : public ULocalPlayerSaveGame
 public:
 	UObsidianSharedStashSaveGame(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-public:
 	UPROPERTY()
 	FObsidianSharedStashData SharedStashData = FObsidianSharedStashData();
 };

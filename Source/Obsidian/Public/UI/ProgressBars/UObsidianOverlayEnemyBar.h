@@ -16,7 +16,7 @@ class UObsidianEnemyAttributesComponent;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianOverlayEnemyBar : public UObsidianBasicHealthBar
 {
 	GENERATED_BODY()
@@ -27,10 +27,6 @@ protected:
 	void SetOverlayBarStyle(const FSlateBrush& InBrush) const;
 	void HandleSpecialEffectApplied(const FSlateBrush& InBrush) const;
 
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	virtual void HandleWidgetControllerSet() override;
-	
 	void SetInitialValues();
 
 	void HealthChanged(const float InNewValue);
@@ -40,10 +36,18 @@ protected:
 	void StaggerMeterChanged(const float InNewValue);
 	void MaxStaggerMeterChanged(const float InNewValue);
 
-protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
+
+	//~ Begin UObsidianWidgetBase Interface
+	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
 	UPROPERTY()
 	TObjectPtr<UObsidianEnemyOverlayBarComponent> EnemyOverlayBarComp;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> EnemyName_TextBlock;
 
@@ -57,10 +61,10 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|Setup", meta=(BindWidget))
 	TObjectPtr<UProgressBar> StaggerMeter_ProgressBar;
-	
+
 	float StaggerMeter = 0.0f;
 	float MaxStaggerMeter = 0.0f;
-	
+
 private:
 	FDelegateHandle HealthChangedDelegateHandle;
 	FDelegateHandle MaxHealthChangedDelegateHandle;

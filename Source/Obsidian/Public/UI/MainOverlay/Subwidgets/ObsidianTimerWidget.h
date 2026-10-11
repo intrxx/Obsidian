@@ -13,18 +13,19 @@ class UCommonTextBlock;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianTimerWidget : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
-	
+
 protected:
+	void UpdateTimer();
+
+	//~ Begin UUserWidget Interface
 	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
 
-	void UpdateTimer();
-	
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> Timer_Text;
 
@@ -34,5 +35,4 @@ protected:
 
 private:
 	FTimerHandle SyncTimerHandle;
-	
 };

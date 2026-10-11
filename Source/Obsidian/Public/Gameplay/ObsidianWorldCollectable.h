@@ -9,41 +9,41 @@
 
 #include "ObsidianWorldCollectable.generated.h"
 
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianWorldCollectable : public AActor, public IObsidianPickableInterface
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AObsidianWorldCollectable(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-	
 	FObsidianPickupInstance GetPickupInstanceFromPickupContent() const;
 	FObsidianPickupTemplate GetPickupTemplateFromPickupContent() const;
 
-	//~ Start of IObsidianPickableInterface
-	virtual FObsidianPickupContent GetPickupContent() const override;
+	//~ Begin UObject Interface
+	virtual void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
+	//~ End UObject Interface
+
+	//~ Begin IObsidianPickableInterface Interface
+	virtual FObsidianPickupContent GetPickupContent() const override { return PickupContent; }
 	virtual void AddItemInstance(UObsidianInventoryItemInstance* InInstanceToAdd) override;
 	virtual void AddItemDefinition(const TSubclassOf<UObsidianInventoryItemDefinition> InItemDef,
 		const FObsidianItemGeneratedData& InGeneratedData) override;
 	virtual void OverrideTemplateStacks(const int32 InNewItemStacks) override;
-	//~ End of IObsidianPickableInterface
-	
-	//~ Start of UObject interface
+	//~ End IObsidianPickableInterface Interface
+
+	//~ Begin AActor Interface
 	virtual bool ReplicateSubobjects(UActorChannel* InChannel, FOutBunch* InBunch, FReplicationFlags* InRepFlags) override;
-	//~ End of UObject interface
+	//~ End AActor Interface
 
 protected:
 	UFUNCTION()
 	virtual void OnRep_PickupContent();
-	
+
 	bool CarriesItemInstance() const;
 	bool CarriesItemDef() const;
 	bool CarriesBoth() const;
-	
-protected:
+
 	UPROPERTY(EditAnywhere, ReplicatedUsing = OnRep_PickupContent, Category = "Obsidian")
 	FObsidianPickupContent PickupContent;
-
 };

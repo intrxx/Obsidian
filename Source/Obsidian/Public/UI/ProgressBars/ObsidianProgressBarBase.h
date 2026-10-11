@@ -14,21 +14,20 @@ class UProgressBar;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianProgressBarBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
-	
+
 public:
 	/** Gets the Fill Image for specified effect tag on a particular Progress Bar. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ProgressBars")
 	bool GetEffectFillImageForTag(FObsidianProgressBarEffectFillImage& OutFillImage,UPARAM(meta=(Categories="UI")) FGameplayTag InEffectTag);
-	
-protected:
-	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
-	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
 
 protected:
 	/** Helper function to set the percent, this can actually be moved to some helper static class */
 	static void SetProgressBarPercent(const float InValue, const float InMaxValue, UProgressBar* InProgressBar);
+
+	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
+	TArray<FObsidianProgressBarEffectFillImage> ProgressBarEffectFillImages;
 };

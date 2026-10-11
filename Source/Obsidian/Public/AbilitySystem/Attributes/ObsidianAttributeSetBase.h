@@ -33,18 +33,18 @@ USTRUCT()
 struct FObsidianEffectProperties
 {
 	GENERATED_BODY()
-public:
-	void Reset();
-	
+
 public:
 	FObsidianEffectProperties(){}
-	
+
+	void Reset();
+
 	UPROPERTY()
 	FGameplayEffectContextHandle EffectContextHandle;
-	
+
 	UPROPERTY()
 	UAbilitySystemComponent* SourceASC = nullptr;
-	
+
 	UPROPERTY()
 	AActor* SourceAvatarActor = nullptr;
 
@@ -53,7 +53,7 @@ public:
 
 	UPROPERTY()
 	AObsidianCharacterBase* SourceCharacter = nullptr;
-	
+
 	UPROPERTY()
 	UAbilitySystemComponent* TargetASC = nullptr;
 
@@ -93,10 +93,12 @@ class OBSIDIAN_API UObsidianAttributeSetBase : public UAttributeSet
 public:
 	UObsidianAttributeSetBase();
 
-	virtual UWorld* GetWorld() const override;
-	
 	/** Does not perform a check in the Get function, so it is a good idea to check it before use */
 	UObsidianAbilitySystemComponent* GetObsidianAbilitySystemComponent() const;
+
+	//~ Begin UObject Interface
+	virtual UWorld* GetWorld() const override;
+	//~ End UObject Interface
 
 protected:
 	void SetEffectProperties(const FGameplayEffectModCallbackData& InData, /** OUT */ FObsidianEffectProperties& OutProps) const;

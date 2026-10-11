@@ -48,29 +48,9 @@ void UObsidianItemManagerComponent::TickComponent(float InDeltaTime, ELevelTick 
 	}
 }
 
-FDraggedItem UObsidianItemManagerComponent::GetDraggedItem()
-{
-	return DraggedItem;
-}
-
-bool UObsidianItemManagerComponent::IsDraggingAnItem() const
-{
-	return bDraggingItem;
-}
-
 bool UObsidianItemManagerComponent::CanDropItem() const
 {
 	return IsDraggingAnItem() && bItemAvailableForDrop;
-}
-
-bool UObsidianItemManagerComponent::DidJustDroppedItem() const
-{
-	return bJustDroppedItem;
-}
-
-void UObsidianItemManagerComponent::SetJustDroppedItem(const bool bInJustDroppedItem)
-{
-	bJustDroppedItem = bInJustDroppedItem;
 }
 
 bool UObsidianItemManagerComponent::DropItem()

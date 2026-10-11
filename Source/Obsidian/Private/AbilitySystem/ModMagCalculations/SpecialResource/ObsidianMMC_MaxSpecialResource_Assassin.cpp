@@ -7,14 +7,14 @@
 
 struct SObsidianMMC_MaxSpecialResource_Assassin
 {
-	FGameplayEffectAttributeCaptureDefinition DexterityDef;
-	FGameplayEffectAttributeCaptureDefinition IntelligenceDef;
-
 	SObsidianMMC_MaxSpecialResource_Assassin()
 	{
 		DexterityDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetDexterityAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		IntelligenceDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetIntelligenceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition DexterityDef;
+	FGameplayEffectAttributeCaptureDefinition IntelligenceDef;
 };
 
 static const SObsidianMMC_MaxSpecialResource_Assassin& MaxSpecialResource_AssassinStatics()

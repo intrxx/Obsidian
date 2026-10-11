@@ -36,33 +36,35 @@ enum class EObsidianAffixGenerationType : uint8
 /**
  * 
  */
-UCLASS(DisplayName = "Affixes")
+UCLASS(DisplayName = "Affixes", meta = (PrioritizeCategories = "Affixes"))
 class OBSIDIAN_API UOInventoryItemFragment_Affixes : public UObsidianInventoryItemFragment
 {
 	GENERATED_BODY()
 
 public:
     UOInventoryItemFragment_Affixes(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-    
-	//~ Start of UObsidianInventoryItemFragment
-	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
-	//~ End of UObsidianInventoryItemFragment
 
+	bool HasPrimaryItemAffix() const;
+	bool HasImplicitAffix() const;
+
+	TArray<FObsidianStaticItemAffix> GetPrimaryItemAffixes() const { return PrimaryItemAffixes; }
+	FObsidianStaticItemAffix GetStaticImplicitAffix() const { return StaticItemImplicit; }
+	FObsidianStaticItemAffix GetStaticSkillImplicitAffix() const { return StaticItemSkillImplicit; }
+	TArray<FObsidianStaticItemAffix> GetStaticAffixes() const { return StaticItemAffixes; }
+	EObsidianAffixGenerationType GetGenerationType() const { return ItemAffixesGenerationType; }
+
+    //~ Begin UObsidianInventoryItemFragment Interface
+	virtual void OnInstancedCreated(UObsidianInventoryItemInstance* InInstance) const override;
+    //~ End UObsidianInventoryItemFragment Interface
+
+    //~ Begin UObject Interface
 	virtual void PostInitProperties() override;
 	virtual void PreSave(FObjectPreSaveContext InSaveContext) override;
 
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
-	
-	bool HasPrimaryItemAffix() const;
-	bool HasImplicitAffix() const;
-	
-	TArray<FObsidianStaticItemAffix> GetPrimaryItemAffixes() const;
-	FObsidianStaticItemAffix GetStaticImplicitAffix() const;
-	FObsidianStaticItemAffix GetStaticSkillImplicitAffix() const;
-	TArray<FObsidianStaticItemAffix> GetStaticAffixes() const;
-	EObsidianAffixGenerationType GetGenerationType() const;
+    //~ End UObject Interface
 
 protected:
 	//TODO(intrxx) bind to changing property, set ItemRarityTag, ItemAffixes and bStartsIdentified to default when switching this back to true
@@ -75,16 +77,16 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "bHasPrimaryItemAffix"), Category = "Affixes")
 	TArray<FObsidianStaticItemAffix> PrimaryItemAffixes;
-	
+
 	UPROPERTY(EditDefaultsOnly, Meta = (EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration"), Category = "Affixes")
 	bool bHasImplicitAffix = false;
-	
+
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType!=EObsidianAffixGenerationType::FullGeneration&&bHasImplicitAffix"), Category = "Affixes")
 	FObsidianStaticItemAffix StaticItemImplicit;
 
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
 	FObsidianStaticItemAffix StaticItemSkillImplicit;
-	
+
 	UPROPERTY(EditDefaultsOnly, Meta=(EditCondition = "ItemAffixesGenerationType==EObsidianAffixGenerationType::NoGeneration"), Category = "Affixes")
 	TArray<FObsidianStaticItemAffix> StaticItemAffixes;
 };

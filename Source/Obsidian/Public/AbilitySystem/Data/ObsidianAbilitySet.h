@@ -24,6 +24,10 @@ struct FObsidianAbilitySet_GameplayAbility
 	GENERATED_BODY()
 
 public:
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
+#endif
+
 	/** Gameplay Ability to grant. */
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UObsidianGameplayAbility> Ability = nullptr;
@@ -35,10 +39,6 @@ public:
 	/** Gameplay Tag used to process input for the ability. */
 	UPROPERTY(EditDefaultsOnly, meta=(Categories = "Input"))
 	FGameplayTag InputTag;
-	
-#if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
-#endif
 };
 
 /**
@@ -50,10 +50,14 @@ struct FObsidianAbilitySet_GameplayEffect
 	GENERATED_BODY()
 
 public:
+#if WITH_EDITOR
+	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
+#endif
+
 	/** Gameplay Effect to grant. */
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UGameplayEffect> GameplayEffect = nullptr;
-	
+
 	/** Level of the granted Gameplay Effect. */
 	UPROPERTY(EditDefaultsOnly)
 	float EffectLevel = 1.0f;
@@ -61,10 +65,6 @@ public:
 	/** If this is set to true, this Gameplay effect will be given as the last one (Backing attributes should have this set to true). */
 	UPROPERTY(EditDefaultsOnly)
 	bool bIsDependentOnOtherAttributes = false;
-
-#if WITH_EDITOR
-	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
-#endif
 };
 
 /**
@@ -76,13 +76,13 @@ struct FObsidianAbilitySet_AttributeSet
 	GENERATED_BODY()
 
 public:
-	/** Attribute Set to grant. */
-	UPROPERTY(EditDefaultsOnly)
-	TSubclassOf<UAttributeSet> AttributeSet;
-	
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& InContext, const int InIndex) const;
 #endif
+
+	/** Attribute Set to grant. */
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UAttributeSet> AttributeSet;
 };
 
 /**
@@ -117,7 +117,7 @@ protected:
 /**
  * Non-mutable Data Asset to grant Gameplay Abilities, Gameplay Effects and Attribute Sets.
  */
-UCLASS(BlueprintType, Const)
+UCLASS(BlueprintType, Const, meta = (PrioritizeCategories = "Abilities Effects"))
 class OBSIDIAN_API UObsidianAbilitySet : public UPrimaryDataAsset
 {
 	GENERATED_BODY()
@@ -134,9 +134,11 @@ public:
 	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, FObsidianAbilitySet_GrantedHandles* OutGrantedHandles, UObject* InSourceObject = nullptr) const;
 	void GiveToAbilitySystem(UObsidianAbilitySystemComponent* InObsidianASC, FObsidianAbilitySet_GrantedHandles* OutGrantedHandles, const float InLevelOverride, UObject* InSourceObject = nullptr) const;
 
+	//~ Begin UObject Interface
 #if WITH_EDITOR
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
+	//~ End UObject Interface
 
 protected:
 	/** Gameplay Abilities to grant when this Ability Set is granted. */

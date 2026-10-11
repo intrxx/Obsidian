@@ -17,13 +17,10 @@ class USizeBox;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGameTabTooltip : public UObsidianToolTipBase
 {
 	GENERATED_BODY()
-
-public:
-	virtual void NativePreConstruct() override;
 
 public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|ToolTip")
@@ -36,12 +33,16 @@ public:
 	FVector2D TextAndButtonSpacerSize = FVector2D(1.0f, 1.0f);
 
 protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativePreConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UHorizontalBox> Main_HorizontalBox;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UCommonTextBlock> Name_TextBlock;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USpacer> TextAndButton_Spacer;
 

@@ -7,12 +7,12 @@
 
 struct SObsidian_AccuracyStatics
 {
-	FGameplayEffectAttributeCaptureDefinition DexterityDef;
-
 	SObsidian_AccuracyStatics()
 	{
 		DexterityDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetDexterityAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition DexterityDef;
 };
 
 static const SObsidian_AccuracyStatics& AccuracyStatics()

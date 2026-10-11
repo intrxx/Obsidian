@@ -45,16 +45,6 @@ void AObsidianGameMode::InitGame(const FString& InMapName, const FString& InOpti
 	Super::InitGame(InMapName, InOptions, OutErrorMessage);
 }
 
-EObsidianGameNetworkType AObsidianGameMode::GetCurrentNetworkType() const
-{
-	return CurrentNetworkType;
-}
-
-UObsidianEnemyTypeInfo* AObsidianGameMode::GetEnemyTypeInfo() const
-{
-	return EnemyTypeInfo;
-}
-
 void AObsidianGameMode::RegisterPortal(AObsidianTownPortal* InNewTownPortal)
 {
 	if(InNewTownPortal)

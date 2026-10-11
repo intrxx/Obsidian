@@ -19,10 +19,12 @@ class OBSIDIAN_API UObsidianUsableShard_OrbOfEnchantment : public UObsidianUsabl
 	GENERATED_BODY()
 
 public:
+	//~ Begin UObsidianUsableShard Interface
 	virtual bool OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
 		UObsidianInventoryItemInstance* InUsingOntoInstance = nullptr) override;
 	virtual void OnItemUsed_UIContext(const TArray<UObsidianInventoryItemInstance*>& InAllItems,
 		FObsidianItemsMatchingUsableContext& OutItemsMatchingContext) override;
+	//~ End UObsidianUsableShard Interface
 
 protected:
 	bool CanUseOnItem(const UObsidianInventoryItemInstance* InInstance) const;

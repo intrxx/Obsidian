@@ -11,20 +11,23 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian Key"))
 class OBSIDIAN_API UObsidianBTTask_UseGameplayAbility : public UBTTaskNode
 {
 	GENERATED_BODY()
-	
-	UObsidianBTTask_UseGameplayAbility();
 
+public:
+	//~ Begin UBTNode Interface
+	virtual FString GetStaticDescription() const override;
+	//~ End UBTNode Interface
+
+	//~ Begin UBTTaskNode Interface
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
+	//~ End UBTTaskNode Interface
 
 protected:
 	virtual EBTNodeResult::Type PerformUseGameplayAbilityTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory);
-	virtual FString GetStaticDescription() const override;
 
-protected:
 	/** Ability tag used for activation. */
 	UPROPERTY(EditAnywhere, meta=(Categories="AbilityActivation"), Category = "Obsidian")
 	FGameplayTagContainer ActivateAbilityWithTag;
@@ -39,4 +42,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian")
 	bool bDebugEnabled = false;
+
+private:
+	UObsidianBTTask_UseGameplayAbility();
 };

@@ -23,14 +23,13 @@ struct FObsidianItemsMatchingUsableContext
 public:
 	void AddMatchingItem(const UObsidianInventoryItemInstance* InInstanceToAdd);
 	bool HasAnyMatchingItems() const;
-	
-public:
+
 	UPROPERTY()
 	TArray<FObsidianItemPosition> InventoryItemsMatchingContext;
 
 	UPROPERTY()
 	TArray<FObsidianItemPosition> EquipmentItemsMatchingContext;
-	
+
 	TMultiMap<FGameplayTag, FObsidianItemPosition> StashItemsMatchingContext;
 };
 
@@ -41,7 +40,7 @@ UCLASS(DefaultToInstanced, EditInlineNew, Abstract)
 class OBSIDIAN_API UObsidianUsableShard : public UObject
 {
 	GENERATED_BODY()
-	
+
 public:
 	virtual bool OnItemUsed(AObsidianPlayerController* InItemOwner, UObsidianInventoryItemInstance* InUsingInstance,
 		UObsidianInventoryItemInstance* InUsingOntoInstance = nullptr);

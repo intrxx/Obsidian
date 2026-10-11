@@ -14,26 +14,27 @@ class UImage;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianDraggedItem_Simple : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
 	void InitializeDraggedItem(const FSlateBrush& InItemImage, const FIntPoint& InItemGridSpan);
-	
+
 	FVector2D GetItemWidgetSize() const;
-	
+
 protected:
+	//~ Begin UUserWidget Interface
 	virtual void NativeConstruct() override;
-	
-protected:
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	float ItemDownsizeScale = 0.45f;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Item_Image;
 };

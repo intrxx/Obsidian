@@ -18,16 +18,6 @@ void UObsidianSlot_GridSlot::NativeConstruct()
 	}
 }
 
-void UObsidianSlot_GridSlot::InitializeSlot(const FIntPoint& InGridSlotPosition)
-{
-	GridSlotPosition = InGridSlotPosition;
-}
-
-FIntPoint UObsidianSlot_GridSlot::GetGridSlotPosition() const
-{
-	return GridSlotPosition;
-}
-
 void UObsidianSlot_GridSlot::NativeOnMouseEnter(const FGeometry& InGeometry, const FPointerEvent& InMouseEvent)
 {
 	OnGridSlotHoverDelegate.Broadcast(this, true);

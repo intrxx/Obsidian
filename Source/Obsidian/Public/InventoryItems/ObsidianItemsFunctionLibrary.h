@@ -35,11 +35,11 @@ public:
 	/** Will compare item's definitions, will return true if items are of the same class. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool IsTheSameItem_WithDef(const UObsidianInventoryItemInstance* InInstance, const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef);
-	
+
 	/** Formats Item Affixes into Affix Row for Item Description. */
 	static TArray<FObsidianAffixDescriptionRow> FormatItemAffixes(const TArray<FObsidianActiveItemAffix>& InItemAffixes);
 	static TArray<FObsidianAffixDescriptionRow> FormatUnidentifiedItemAffixes(const TArray<FObsidianActiveItemAffix>& InItemAffixes);
-	
+
 	static bool HasEquippingRequirements(const FObsidianItemRequirements& InRequirements);
 
 	static FObsidianDynamicItemAffix GetRandomSkillImplicitForItem(const UObsidianInventoryItemInstance* InForItem);
@@ -47,7 +47,7 @@ public:
 	static FObsidianDynamicItemAffix GetRandomPrefixForItem(const UObsidianInventoryItemInstance* InForItem);
 	static FObsidianDynamicItemAffix GetRandomSuffixForItem(const UObsidianInventoryItemInstance* InForItem);
 	static FObsidianDynamicItemAffix GetRandomDynamicAffix(const TArray<FObsidianDynamicItemAffix>& InDynamicAffixes);
-	
+
 	static bool FillItemGeneratedData(FObsidianItemGeneratedData& OutGeneratedData, const UObsidianInventoryItemInstance* InFromInstance);
 	static void InitializeItemInstanceWithGeneratedData(UObsidianInventoryItemInstance* InInstance, const FObsidianItemGeneratedData& InGeneratedData);
 
@@ -61,7 +61,7 @@ public:
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool GetItemStats(const AObsidianPlayerController* InOwnerPC, const UObsidianInventoryItemInstance* InItemInstance, FObsidianItemStats& OutItemStats);
-	
+
 	/** Gets the Item Stats for provided Item Instance. Returns True if the process was successful. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool GetItemStats_WithDef(const AObsidianPlayerController* InOwnerPC, const TSubclassOf<UObsidianInventoryItemDefinition>& InItemDef,
@@ -69,7 +69,7 @@ public:
 
 	static bool GenerateItemEquippingRequirementsAsUIDesc(const AObsidianPlayerController* InOwnerPC, const FObsidianItemRequirements& InRequirements,
 		FObsidianItemRequirementsUIDescription& OutRequirementsUIDescription);
-	
+
 	/** Calculates the amount of stacks that can be added to the Item from provided Instance, takes care of calculating the limits. Will return 0 if no Item stacks can be added for some reason. */
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static int32 GetAmountOfStacksAllowedToAddToItem(const AActor* InOwner, const UObsidianInventoryItemInstance* InAddingFromInstance,
@@ -90,7 +90,7 @@ public:
 	static bool IsTwoHanded(const UObsidianInventoryItemInstance* InItemInstance);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static bool IsTwoHanded_WithCategory(const FGameplayTag& InCategoryTag);
-	
+
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Obsidian|ItemsFunctionLibrary")
 	static FGameplayTag GetCategoryTagFromDraggedItem(const FDraggedItem& InDraggedItem);
 

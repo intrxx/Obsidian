@@ -14,18 +14,17 @@ class USizeBox;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianToolTipBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
 	virtual FVector2D GetDesiredViewportPosition() const;
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|ToolTip")
 	FVector2D ToolTipOffset = {0, 0};
-	
+
 protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;

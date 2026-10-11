@@ -8,10 +8,6 @@
 
 struct SObsidian_EvasionStatics
 {
-	FGameplayEffectAttributeCaptureDefinition Evasion;
-	FGameplayEffectAttributeCaptureDefinition DexterityDef;
-	FGameplayEffectAttributeCaptureDefinition IncreasedEvasionPercentage;
-
 	SObsidian_EvasionStatics()
 	{
 		Evasion = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetEvasionAttribute(),
@@ -21,6 +17,10 @@ struct SObsidian_EvasionStatics
 		IncreasedEvasionPercentage = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetIncreasedEvasionPercentAttribute(),
 			EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition Evasion;
+	FGameplayEffectAttributeCaptureDefinition DexterityDef;
+	FGameplayEffectAttributeCaptureDefinition IncreasedEvasionPercentage;
 };
 
 static const SObsidian_EvasionStatics& EvasionStatics()

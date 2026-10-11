@@ -11,7 +11,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGA_Melee_Slash : public UObsidianGameplayAbility_Melee
 {
 	GENERATED_BODY()
@@ -23,13 +23,13 @@ public:
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Slash")
 	TObjectPtr<UNiagaraSystem> SlashNiagaraSystem;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Slash")
 	float SlashWidth = 200.0f;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Slash")
 	float SlashHeight = 200.0f;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Slash")
 	float SlashTraceCapsuleRadius = 20.0f;
 

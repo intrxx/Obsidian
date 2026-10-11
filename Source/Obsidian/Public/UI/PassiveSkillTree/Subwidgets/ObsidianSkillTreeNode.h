@@ -16,18 +16,15 @@ class USizeBox;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianSkillTreeNode : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	
-public:
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SizeBoxWidth = 0;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SizeBoxHeight = 0;
 
@@ -36,11 +33,15 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	FSlateBrush BorderBrush = FSlateBrush();
-	
+
 protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativePreConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> Main_Overlay;
 

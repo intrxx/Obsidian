@@ -164,11 +164,6 @@ void UObsidianTreasureList::PostLoad()
 	}
 }
 
-TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClasses() const
-{
-	return TreasureClasses;
-}
-
 TArray<FObsidianTreasureClass> UObsidianTreasureList::GetAllTreasureClassesUpToQuality(const uint8 InTreasureQuality) const
 {
 	TArray<FObsidianTreasureClass> MatchingTreasureClasses;

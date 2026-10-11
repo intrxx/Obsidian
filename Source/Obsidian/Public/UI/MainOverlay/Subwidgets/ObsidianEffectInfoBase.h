@@ -16,27 +16,23 @@ class UButton;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianEffectInfoBase : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-	
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Obsidian|EffectInfo")
 	void InitEffectInfo(const FText& InEffectName, const FText& InEffectDesc, UTexture2D* InEffectImage, const FGameplayTag InEffectTag);
 
 	void RemoveAuraInfoWidget();
-	
-public:
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	FVector2D EffectImageSize;
 
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	FText EffectDesc;
-	
+
 	UPROPERTY(BlueprintReadWrite, Category = "Obsidian|EffectInfo")
 	FText EffectName;
 
@@ -56,7 +52,11 @@ protected:
 	UFUNCTION()
 	void OnEffectUnHovered();
 
-protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|EffectInfo")
 	TSubclassOf<UObsidianEffectDescription> EffectDescWidgetClass;
 
@@ -65,5 +65,4 @@ protected:
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UButton> Interact_Button;
-	
 };

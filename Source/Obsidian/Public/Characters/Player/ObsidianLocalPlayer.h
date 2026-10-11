@@ -16,5 +16,7 @@ class OBSIDIAN_API UObsidianLocalPlayer : public UCommonLocalPlayer
 	GENERATED_BODY()
 
 public:
+	//~ Begin UObject Interface
 	virtual void PostInitProperties() override;
+	//~ End UObject Interface
 };

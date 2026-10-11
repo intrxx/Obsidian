@@ -34,6 +34,7 @@
 #include "UI/WidgetControllers/ObCharacterStatusWidgetController.h"
 #include "UI/WidgetControllers/ObInventoryItemsWidgetController.h"
 #include "UI/WidgetControllers/ObMainOverlayWidgetController.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 
 
 void UObsidianMainOverlay::HandleWidgetControllerSet()

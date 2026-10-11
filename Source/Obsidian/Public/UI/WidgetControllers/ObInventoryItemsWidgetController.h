@@ -5,11 +5,12 @@
 #include "CoreMinimal.h"
 
 #include "ObsidianTypes/ItemTypes/ObsidianItemTypes.h"
-#include "UI/ObsidianWidgetControllerBase.h"
 
+#include "UI/ObsidianWidgetControllerBase.h"
 #include "ObInventoryItemsWidgetController.generated.h"
 
 struct FObsidianEquipmentChangeMessage;
+struct FObsidianInventoryChangeMessage;
 struct FObsidianStashChangeMessage;
 
 class UObsidianItemManagerComponent;
@@ -28,41 +29,40 @@ USTRUCT()
 struct FObsidianItemWidgetData
 {
 	GENERATED_BODY()
-	
+
 public:
 	FObsidianItemWidgetData(){};
 
 	/** Return true if the desired slot for this item is a swap slot. Only valid for equipment. */
 	bool IsItemForSwapSlot() const;
-	
-public:
+
 	UPROPERTY()
 	TObjectPtr<UTexture2D> ItemImage = nullptr;
 
 	UPROPERTY()
 	FObsidianItemPosition ItemPosition = FObsidianItemPosition();
-	
+
 	UPROPERTY()
 	FGameplayTag ItemCategory = FGameplayTag::EmptyTag;
-	
+
 	UPROPERTY()
 	FIntPoint GridSpan = FIntPoint::NoneValue;
 
 	UPROPERTY()
 	float ItemSlotPadding = 0.0f;
-	
+
 	UPROPERTY()
 	uint8 StackCount = 0;
-	
+
 	UPROPERTY()
 	bool bUsable = false;
-	
+
 	UPROPERTY()
 	bool bSwappedWithAnotherItem = false;
-	
+
 	UPROPERTY()
 	bool bDoesBlockSisterSlot = false;
-	
+
 	/**
 	 * Change Flags
 	 */
@@ -85,8 +85,7 @@ public:
 		: OwningItemDescription(InItemDesc)
 		, DescriptionPanelOwner(InPanelOwner)
 	{}
-	
-public:
+
 	UPROPERTY()
 	TObjectPtr<UObsidianItemDescriptionBase> OwningItemDescription = nullptr;
 
@@ -108,37 +107,33 @@ DECLARE_MULTICAST_DELEGATE(FOnStopPlacementHighlightSignature);
 /**
  *  
  */
-UCLASS(BlueprintType, Blueprintable)
+UCLASS(BlueprintType, Blueprintable, meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObInventoryItemsWidgetController : public UObsidianHeroWidgetControllerBase
 {
 	GENERATED_BODY()
 
 public:
-	//~ Start of UObsidianWidgetController
-	virtual void OnWidgetControllerSetupCompleted() override;
-	//~ End of UObsidianWidgetController
-	
-	UObsidianItemDescriptionBase* GetActiveDroppedItemDescription();
-	
+	UObsidianItemDescriptionBase* GetActiveDroppedItemDescription() { return ActiveDroppedItemDescription; }
+
 	TConstArrayView<TObjectPtr<UObsidianStashTab>> GetAllStashTabs() const;
 	FString GetStashTabName(const FGameplayTag InStashTabTag) const;
-	
+
 	int32 GetInventoryGridWidth() const;
 	int32 GetInventoryGridHeight() const;
-	
+
 	bool IsDraggingAnItem() const;
 	FIntPoint GetDraggedItemGridSpan() const;
 	FIntPoint GetItemGridSpanByPosition(const FObsidianItemPosition& InItemPosition) const;
-	
+
 	bool CanInteractWithGrid(const EObsidianPanelOwner InPanelOwner) const;
 	bool CanInteractWithSlots(const EObsidianPanelOwner InPanelOwner) const;
 	bool CanInteractWithInventory() const;
 	bool CanInteractWithEquipment() const;
 	bool CanInteractWithPlayerStash() const;
-	
+
 	bool CanPlaceDraggedItemAtPosition(const FObsidianItemPosition& InAtPosition,
 		const EObsidianPanelOwner InPanelOwner) const;
-	
+
 	void HandleLeftClickingOnSlot(const FObsidianItemPosition& InAtItemPosition,
 		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
 	void HandleRightClickingOnSlot(const FObsidianItemPosition& InAtItemPosition,
@@ -151,7 +146,7 @@ public:
 	void HandleHoveringOverItem(const FObsidianItemPosition& InItemPosition,
 		const FObsidianItemInteractionData& InInteractionData, const EObsidianPanelOwner InPanelOwner);
 	void HandleUnhoveringItem(const FObsidianItemPosition& InFromPosition);
-	
+
 	void RemoveItemUIElements(const EObsidianPanelOwner InForPanelOwner);
 	void RemoveCurrentDroppedItemDescription();
 
@@ -163,8 +158,11 @@ public:
 
 	void OnInventoryOpen();
 	void OnPlayerStashOpen();
-	
-public:
+
+	//~ Begin UObsidianHeroWidgetControllerBase Interface
+	virtual void OnWidgetControllerSetupCompleted() override;
+	//~ End UObsidianHeroWidgetControllerBase Interface
+
 	FOnItemAddedSignature OnItemEquippedDelegate;
 	FOnItemAddedSignature OnItemInventorizedDelegate;
 	FOnItemAddedSignature OnItemStashedDelegate;
@@ -184,11 +182,11 @@ public:
 	/** As of now this delegate will fire once with all Slot Tags that are possible to add the Dragged Item to and it is on individual Widget side to parse these. */
 	FOnStartPlacementHighlightSignature OnStartPlacementHighlightDelegate;
 	FOnStopPlacementHighlightSignature OnStopPlacementHighlightDelegate;
-	
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianDraggedItem> DraggedItemWidgetClass;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianUnstackSlider> UnstackSliderClass;
 
@@ -223,13 +221,13 @@ private:
 
 	void HandleRightClickingOnInventoryItem(const FIntPoint& InAtGridSlot, UObsidianItem* InItemWidget);
 	void HandleRightClickingOnStashedItem(const FObsidianItemPosition& InAtItemPosition, UObsidianItem* InItemWidget);
-	
+
 	void OnStartDraggingItem(const FDraggedItem& InDraggedItem);
 	void OnStopDraggingItem();
-	
+
 	void HandleTakingOutStacksFromInventory(const int32 InStacksToTake, const FObsidianItemPosition& InItemPosition);
 	void HandleTakingOutStacksFromStash(const int32 InStacksToTake, const FObsidianItemPosition& InItemPosition);
-	
+
 	void RemoveUnstackSlider();
 	void ClearItemDescriptionForPosition(const FObsidianItemPosition& InForPosition);
 	void ClearItemDescriptionsForOwner(const EObsidianPanelOwner InForDescriptionOwner);
@@ -237,13 +235,12 @@ private:
 	UObsidianItemDescriptionBase* CreateInventoryItemDescription(const FObsidianItemPosition& InAtPosition,
 		const EObsidianPanelOwner InPanelOwner, const UObsidianItem* InForItemWidget, const FObsidianItemStats& InItemStats);
 	UObsidianItemDescriptionBase* CreateDroppedItemDescription(const FObsidianItemStats& InItemStats);
-	
+
 	FVector2D CalculateUnstackSliderPosition(const UObsidianItem* InItemWidget) const;
 	FVector2D CalculateDescriptionPosition(const UObsidianItem* InItemWidget, UObsidianItemDescriptionBase* InForDescription) const;
 	FVector2D GetItemUIElementPositionBoundByViewport(const FVector2D& InViewportSize, const FVector2D& InItemPosition,
 		const FVector2D& InItemSize, const FVector2D& InUIElementSize) const;
 
-private:
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianInventoryComponent> OwnerInventoryComponent = nullptr;
 	UPROPERTY()
@@ -254,18 +251,18 @@ private:
 	TWeakObjectPtr<UObsidianCraftingComponent> OwnerCraftingComponent = nullptr;
 	UPROPERTY()
 	TWeakObjectPtr<UObsidianItemManagerComponent> OwnerItemManagerComponent = nullptr;
-	
+
 	UPROPERTY()
 	TArray<UObsidianItem*> CachedItemsMatchingUsableContext;
 
 	UPROPERTY()
 	TObjectPtr<UObsidianUnstackSlider> ActiveUnstackSlider = nullptr;
 	bool bUnstackSliderActive = false;
-	
+
 	UPROPERTY()
 	TObjectPtr<UObsidianItemDescriptionBase> ActiveDroppedItemDescription = nullptr;
 	bool bDroppedDescriptionActive = false;
-	
+
 	UPROPERTY()
 	TMap<FObsidianItemPosition, FObsidianActiveItemDescriptionData> ActiveItemDescriptions;
 };

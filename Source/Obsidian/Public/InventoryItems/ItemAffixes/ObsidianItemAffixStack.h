@@ -34,7 +34,7 @@ private:
 
 	UPROPERTY()
 	FObsidianActiveItemAffix ActiveItemAffix = FObsidianActiveItemAffix();
-	
+
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemInstance> OwningItem = nullptr;
 };
@@ -47,7 +47,7 @@ USTRUCT()
 struct FObsidianItemAffixStack : public FFastArraySerializer
 {
 	GENERATED_BODY()
-	
+
 public:
 	FObsidianItemAffixStack()
 		: OwningItem(nullptr)
@@ -66,7 +66,7 @@ public:
 
 	TArray<FObsidianActiveItemAffix> GetAllItemAffixes() const;
 	TArray<FObsidianActiveItemAffix> GetAllItemPrefixesAndSuffixes() const;
-	
+
 	bool NetDeltaSerialize(FNetDeltaSerializeInfo& InOutDeltaParams)
 	{
 		return FFastArraySerializer::FastArrayDeltaSerialize<FObsidianAffixEntry, FObsidianItemAffixStack>(Entries, InOutDeltaParams, *this);
@@ -78,13 +78,13 @@ public:
 	bool RemoveSkillImplicitAffix();
 	bool RemoveAllPrefixesAndSuffixes();
 	void AffixChanged(const FGameplayTag& InAffixTag);
-	
-	//~ Start of FFastArraySerializer contract
+
+	//~ Begin FFastArraySerializer Interface
 	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
 	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
 	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
-	//~ End of FFastArraySerializer contract
-	
+	//~ End FFastArraySerializer Interface
+
 private:
 	/** Replicated list of all affixes. */
 	UPROPERTY()
@@ -92,7 +92,6 @@ private:
 
 	UPROPERTY()
 	TObjectPtr<UObsidianInventoryItemInstance> OwningItem;
-	
 };
 
 template<>

@@ -40,8 +40,3 @@ void UOInventoryItemFragment_Equippable::OnInstancedCreated(UObsidianInventoryIt
 	InInstance->SetEquippable(true);
 }
 
-FObsidianItemRequirements UOInventoryItemFragment_Equippable::GetItemDefaultEquippingRequirements() const
-{
-	return DefaultEquippingRequirements;
-}
-

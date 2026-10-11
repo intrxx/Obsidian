@@ -32,35 +32,25 @@ DECLARE_DYNAMIC_DELEGATE_TwoParams(FOnBossDetectedPlayer, AActor*, BossActor, co
 /**
  * Base class for Obsidian player characters player controller.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianPlayerController : public ACommonPlayerController, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
+
 public:
 	AObsidianPlayerController(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
-	// ~ Start of APlayerController interface
-	virtual void PostProcessInput(const float InDeltaTime, const bool bInGamePaused) override;
-	virtual void PostInitializeComponents() override;
-	virtual void ReceivedPlayer() override;
-	// ~ End of APlayerController interface
-	
-	// ~ Start of IGenericTeamAgentInterface interface
-	virtual FGenericTeamId GetGenericTeamId() const override;
-	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
-	// ~ End of IGenericTeamAgentInterface interface
-	
+
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianInventoryComponent* GetInventoryComponent() const;
+	UObsidianInventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianEquipmentComponent* GetEquipmentComponent() const;
+	UObsidianEquipmentComponent* GetEquipmentComponent() const { return EquipmentComponent; }
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianPlayerStashComponent* GetPlayerStashComponent() const;
+	UObsidianPlayerStashComponent* GetPlayerStashComponent() const { return PlayerStashComponent; }
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianCraftingComponent* GetCraftingComponent() const;
+	UObsidianCraftingComponent* GetCraftingComponent() const { return CraftingComponent; }
 	UFUNCTION(BlueprintCallable, BlueprintAuthorityOnly, Category = "Obsidian|PlayerController")
-	UObsidianItemManagerComponent* GetItemManagerComponent() const;
-	
+	UObsidianItemManagerComponent* GetItemManagerComponent() const { return ItemManagerComponent; }
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|PlayerController")
 	EObsidianHeroClass GetHeroClass() const;
 
@@ -77,7 +67,7 @@ public:
 	AObsidianHero* GetObsidianHero() const;
 
 	void TogglePlayerStash(const bool bInShowStash) const;
-	
+
 	UFUNCTION(Client, Reliable)
 	void ClientShowDamageNumber(const FObsidianDamageTextProps& InDamageTextProps, AObsidianCharacterBase* InTargetCharacter);
 
@@ -87,28 +77,41 @@ public:
 	UFUNCTION(Server, Reliable)
 	void ServerSpawnItemFromSpawner(AObsidianItemSpawner* InItemSpawner);
 
-public:
+	//~ Begin APlayerController Interface
+	virtual void PostProcessInput(const float InDeltaTime, const bool bInGamePaused) override;
+
+	virtual void ReceivedPlayer() override;
+	//~ End APlayerController Interface
+
+	//~ Begin AActor Interface
+	virtual void PostInitializeComponents() override;
+	//~ End AActor Interface
+
+	//~ Begin IGenericTeamAgentInterface Interface
+	virtual FGenericTeamId GetGenericTeamId() const override { return TeamId; }
+	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
+	//~ End IGenericTeamAgentInterface Interface
+
 	FOnEnemyActorHovered OnEnemyActorHoveredDelegate;
 	FOnBossDetectedPlayer OnBossDetectedPlayerDelegate;
-	
-protected:
-	// ~ Start of AActor interface
-	virtual void BeginPlay() override;
-	// ~ End of AActor interface
-	
-	void LoadSharedStashData(UObsidianSharedStashSaveGame* InSharedStashSaveGame);
 
 protected:
+	void LoadSharedStashData(UObsidianSharedStashSaveGame* InSharedStashSaveGame);
+
+	//~ Begin AActor Interface
+	virtual void BeginPlay() override;
+	//~ End AActor Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Cursor")
 	TObjectPtr<UUserWidget> DefaultCursor;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|DamageNumber")
 	TSubclassOf<UObsidianDamageNumberWidgetComp> DamageNumberWidgetCompClass;
-	
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianInventoryComponent> InventoryComponent;
-	
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian|InventoryItems")
 	TObjectPtr<UObsidianEquipmentComponent> EquipmentComponent;
 

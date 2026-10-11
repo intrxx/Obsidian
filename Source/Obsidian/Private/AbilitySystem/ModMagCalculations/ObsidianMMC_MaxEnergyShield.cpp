@@ -8,16 +8,16 @@
 
 struct SObsidian_MaxEnergyShield
 {
-	FGameplayEffectAttributeCaptureDefinition MaxEnergyShield;
-	FGameplayEffectAttributeCaptureDefinition Intelligence;
-	FGameplayEffectAttributeCaptureDefinition IncreasedEnergyShieldPercentage;
-	
 	SObsidian_MaxEnergyShield()
 	{
 		MaxEnergyShield = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetMaxHealthAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		Intelligence = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetIntelligenceAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		IncreasedEnergyShieldPercentage = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetIncreasedHealthPercentageAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition MaxEnergyShield;
+	FGameplayEffectAttributeCaptureDefinition Intelligence;
+	FGameplayEffectAttributeCaptureDefinition IncreasedEnergyShieldPercentage;
 };
 
 static const SObsidian_MaxEnergyShield& MaxEnergyShieldStatics()

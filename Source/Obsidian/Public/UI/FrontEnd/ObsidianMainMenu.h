@@ -12,7 +12,7 @@ class UObsidianButtonBase;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianMainMenu : public UObsidianActivatableWidget
 {
 	GENERATED_BODY()
@@ -20,21 +20,23 @@ class OBSIDIAN_API UObsidianMainMenu : public UObsidianActivatableWidget
 public:
 	UObsidianMainMenu(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	virtual UWidget* NativeGetDesiredFocusTarget() const override;
-
 protected:
-	virtual void NativeOnActivated() override;
-	virtual void NativeConstruct() override;
-	virtual void NativeDestruct() override;
-	
 	void OnOptionsClicked();
 	void OnQuitClicked();
-	
-protected:
+
+	//~ Begin UCommonActivatableWidget Interface
+	virtual UWidget* NativeGetDesiredFocusTarget() const override;
+
+	virtual void NativeOnActivated() override;
+	//~ End UCommonActivatableWidget Interface
+
+	//~ Begin UUserWidget Interface
+	virtual void NativeConstruct() override;
+	virtual void NativeDestruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TSoftClassPtr<UCommonActivatableWidget> SoftSettingsMenuWidgetClass;
-
-protected:
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianButtonBase> Play_Button;
 

@@ -10,7 +10,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianMMC_MaxHealth : public UGameplayModMagnitudeCalculation
 {
 	GENERATED_BODY()
@@ -18,7 +18,9 @@ class OBSIDIAN_API UObsidianMMC_MaxHealth : public UGameplayModMagnitudeCalculat
 public:
 	UObsidianMMC_MaxHealth(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
+	//~ Begin UGameplayModMagnitudeCalculation Interface
 	virtual float CalculateBaseMagnitude_Implementation(const FGameplayEffectSpec& InSpec) const override;
+	//~ End UGameplayModMagnitudeCalculation Interface
 
 private:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian")

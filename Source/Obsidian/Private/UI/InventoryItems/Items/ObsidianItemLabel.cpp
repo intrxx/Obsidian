@@ -22,16 +22,6 @@ void UObsidianItemLabel::NativeConstruct()
 	}
 }
 
-FGuid UObsidianItemLabel::GetLabelID() const
-{
-	return LabelID;
-}
-
-bool UObsidianItemLabel::IsInUse() const
-{
-	return bLabelInUse;
-}
-
 void UObsidianItemLabel::MarkInUse(const bool bInUse, const FGuid& InWithGuid)
 {
 #if !UE_BUILD_SHIPPING

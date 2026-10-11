@@ -55,13 +55,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	FString StashTabName = FString();
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UObsidianStashTab> StashTabClass;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	TSubclassOf<UObsidianStashTabWidget> StashTabWidgetClass;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(Categories = "StashTab"))
 	FGameplayTag StashTag = FGameplayTag::EmptyTag;
 };
@@ -69,7 +69,7 @@ public:
 /**
  * 
  */
-UCLASS(BlueprintType, Const, meta = (DisplayName = "Obsidian Stash Tabs Config", ShortToolTip = "Data asset used to hold the configuration of Stash Tabs in Obsidian."))
+UCLASS(BlueprintType, Const, meta = (PrioritizeCategories = "Obsidian", DisplayName = "Obsidian Stash Tabs Config", ShortToolTip = "Data asset used to hold the configuration of Stash Tabs in Obsidian."))
 class OBSIDIAN_API UObsidianStashTabsConfig : public UDataAsset
 {
 	GENERATED_BODY()
@@ -77,9 +77,9 @@ class OBSIDIAN_API UObsidianStashTabsConfig : public UDataAsset
 public:
 	UObsidianStashTabsConfig(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
-	TArray<FObsidianStashTabDefinition> GetStashTabDefinitions() const;
+	TArray<FObsidianStashTabDefinition> GetStashTabDefinitions() const { return StashTabs; }
 	int32 StashTabCount() const;
-	
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TArray<FObsidianStashTabDefinition> StashTabs;

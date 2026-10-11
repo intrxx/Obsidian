@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 
 #include "Characters/Player/ObsidianLocalPlayer.h"
-#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
-#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
 #include "InventoryItems/PlayerStash/ObsidianPlayerStashComponent.h"
 
 #include "ObsidianWidgetControllerBase.generated.h"
@@ -27,7 +25,7 @@ USTRUCT(BlueprintType)
 struct FObsidianWidgetControllerParams
 {
 	GENERATED_BODY()
-	
+
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TObjectPtr<AObsidianPlayerController> ObsidianPlayerController = nullptr;
@@ -50,27 +48,19 @@ class OBSIDIAN_API UObsidianHeroWidgetControllerBase : public UObject
 public:
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|WidgetController")
 	void SetWidgetControllerParams(const FObsidianWidgetControllerParams& InWidgetControllerParams);
-	
+
 	/**
 	 * This function is called when the initial setup for Widget Controller is completed,
 	 * widget controller contains valid data.
      */
 	virtual void OnWidgetControllerSetupCompleted();
 
-	AObsidianPlayerController* GetOwningPlayerController() const
-	{
-		return OwnerPlayerController.Get();
-	}
-
-	AObsidianPlayerState* GetOwningPlayerState() const
-	{
-		return OwnerPlayerState.Get();
-	}
+	AObsidianPlayerController* GetOwningPlayerController() const { return OwnerPlayerController.Get(); }
+	AObsidianPlayerState* GetOwningPlayerState() const { return OwnerPlayerState.Get(); }
 
 protected:
 	virtual void HandleBindingCallbacks(UObsidianAbilitySystemComponent* InObsidianASC);
 
-protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Obsidian|HeroWidgetController")
 	TWeakObjectPtr<AObsidianPlayerController> OwnerPlayerController;
 

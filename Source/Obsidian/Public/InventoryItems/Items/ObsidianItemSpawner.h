@@ -30,38 +30,37 @@ enum class EObsidianItemSpawnerLevelPolicy : uint8
 	InheritFromArea UMETA(DisplayName = "Inherit From Area"),
 };
 
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianItemSpawner : public AActor, public IObsidianHighlightInterface, public IObsidianInteractionInterface
 {
 	GENERATED_BODY()
-	
-public:	
+
+public:
 	AObsidianItemSpawner(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-
-	//~ Start of HighlightInterface
-	virtual AActor* GetHighlightAvatarActor() override;
-	virtual void StartHighlight() override;
-	virtual void StopHighlight() override;
-	//~ End of HighlightInterface
-
-	//~ Start of InteractionInterface
-	virtual AActor* GetInteractionActor() override;
-	virtual bool CanInteract() override;
-	virtual float GetInteractionRadius() override;
-	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
-	//~ End of InteractionInterface
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|ItemSpawner")
 	FVector GetItemSpawnLocation() const;
-	
+
 	uint8 GetItemSpawnerLevel() const;
 
 	void SpawnItem();
-	
+
+	//~ Begin IObsidianHighlightInterface Interface
+	virtual AActor* GetHighlightAvatarActor() override;
+	virtual void StartHighlight() override;
+	virtual void StopHighlight() override;
+	//~ End IObsidianHighlightInterface Interface
+
+	//~ Begin IObsidianInteractionInterface Interface
+	virtual AActor* GetInteractionActor() override;
+	virtual bool CanInteract() override { return bCanInteract; }
+	virtual float GetInteractionRadius() override { return InteractionRadius; }
+	virtual void Interact(AObsidianPlayerController* InInteractingPlayerController) override;
+	//~ End IObsidianInteractionInterface Interface
+
 protected:
 	void OnSpawningItemsFinished(const bool bInDroppedItem);
-	
-protected:
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianItemDropComponent> ItemDropComponent;
 
@@ -78,7 +77,7 @@ protected:
 	/** Items to drop count, 0 for infinite. */ 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	uint8 TimesToDrop = 1;
-	
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	float InteractionRadius = 150.0f;
 
@@ -91,10 +90,10 @@ protected:
 private:
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> StaticMeshComp;
-	
+
 	UPROPERTY(VisibleAnywhere, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<USceneComponent> SpawnPointComp;
-	
+
 	bool bCanInteract = true;
 
 	int32 TimesDropped = 0;

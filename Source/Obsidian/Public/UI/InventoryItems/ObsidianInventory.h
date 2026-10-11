@@ -28,45 +28,48 @@ class UObsidianGridPanel;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianInventory : public UObsidianMainOverlayWidgetBase
 {
 	GENERATED_BODY()
 
 protected:
+	//~ Begin UObsidianWidgetBase Interface
 	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
+
+	//~ Begin UUserWidget Interface
 	virtual void NativeDestruct() override;
-	
-protected:
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianGridPanel> Inventory_GridPanel;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UObsidianSlotPanel> Equipment_SlotPanel;
-	
+
 private:
 	void OnInventoryItemAdded(const FObsidianItemWidgetData& InItemWidgetData);
 	void OnInventoryItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
 	void OnInventoryItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
-	
+
 	void OnEquipmentItemAdded(const FObsidianItemWidgetData& InItemWidgetData);
 	void OnEquipmentItemChanged(const FObsidianItemWidgetData& InItemWidgetData);
 	void OnEquipmentItemRemoved(const FObsidianItemWidgetData& InItemWidgetData);
 
 	void OnUsableContextFiredForInventory(const TArray<FObsidianItemPosition>& InMatchingItemPositions);
 	void OnUsableContextFiredForEquipment(const TArray<FObsidianItemPosition>& InMatchingItemPositions);
-	
+
 	void HighlightSlotPlacement(const FGameplayTagContainer& InWithTags);
 	void StopHighlightSlotPlacement();
 	void ClearUsableItemHighlight();
-	
-private:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianItem> ItemWidgetClass;
-	
+
 	UPROPERTY()
 	TObjectPtr<UObInventoryItemsWidgetController> InventoryItemsWidgetController;
-	
+
 	UPROPERTY()
 	TArray<UObsidianSlot_ItemSlot*> CachedHighlightedSlot;
 };

@@ -12,7 +12,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianCharacterCreationHero : public AModularCharacter
 {
 	GENERATED_BODY()
@@ -32,12 +32,10 @@ public:
 	/** This function is temporary, this is not the right solution to the problem. */
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreationHero")
 	void StopPlayingChooseMeAnimMontage();
-	
-public:
+
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	EObsidianHeroClass HeroClass = EObsidianHeroClass::None;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	TObjectPtr<UAnimMontage> ChooseMeAnimMontage;
-	
 };

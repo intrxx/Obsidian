@@ -27,10 +27,10 @@ struct FGameplayTagStack : public FFastArraySerializerItem
 	{}
 
 	FString GetDebugString() const;
-	
+
 private:
 	friend FGameplayTagStackContainer;
-	
+
 	UPROPERTY()
 	FGameplayTag Tag;
 
@@ -46,15 +46,15 @@ struct FGameplayTagStackContainer : public FFastArraySerializer
 {
 	GENERATED_BODY();
 
+public:
 	FGameplayTagStackContainer(){}
 
-public:
 	/** Adds a specified number of stacks to the provided tag (does nothing if AvailableStackCount is below 1). */
 	void AddStack(FGameplayTag InToTag, int32 InStackCount);
 
 	/** Removes a specified number of stacks to the provided tag (does nothing if AvailableStackCount is below 1). */
 	void RemoveStack(FGameplayTag InFromTag, int32 InStackCount);
-	
+
 	/** Overrides stacks on provided tag (does nothing if AvailableStackCount is below 1). */
 	void OverrideStack(FGameplayTag InTag, int32 InNewStackCount);
 
@@ -75,15 +75,15 @@ public:
 		return FFastArraySerializer::FastArrayDeltaSerialize<FGameplayTagStack, FGameplayTagStackContainer>(Stacks, InOutDeltaParams, *this);
 	}
 
-	//~ Start of FFastArraySerializer contract
+	//~ Begin FFastArraySerializer Interface
 	void PreReplicatedRemove(const TArrayView<int32> InRemovedIndices, int32 InFinalSize);
 	void PostReplicatedAdd(const TArrayView<int32> InAddedIndices, int32 InFinalSize);
 	void PostReplicatedChange(const TArrayView<int32> InChangedIndices, int32 InFinalSize);
-	//~ End of FFastArraySerializer contract
+	//~ End FFastArraySerializer Interface
 
 private:
 	friend UObsidianInventoryItemInstance;
-	
+
 	/** Replicated list of gameplay tag stacks. */
 	UPROPERTY()
 	TArray<FGameplayTagStack> Stacks;

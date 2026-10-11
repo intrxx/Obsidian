@@ -21,18 +21,20 @@ class OBSIDIAN_API AObsidianGameMode : public AGameModeBase
 	GENERATED_BODY()
 
 public:
-	virtual void InitGame(const FString& InMapName, const FString& InOptions, FString& OutErrorMessage) override;
-
-	EObsidianGameNetworkType GetCurrentNetworkType() const;
-	UObsidianEnemyTypeInfo* GetEnemyTypeInfo() const;
+	EObsidianGameNetworkType GetCurrentNetworkType() const { return CurrentNetworkType; }
+	UObsidianEnemyTypeInfo* GetEnemyTypeInfo() const { return EnemyTypeInfo; }
 
 	void RegisterPortal(AObsidianTownPortal* InNewTownPortal);
 	bool CanCreatePortal() const;
 
+	//~ Begin AGameModeBase Interface
+	virtual void InitGame(const FString& InMapName, const FString& InOptions, FString& OutErrorMessage) override;
+	//~ End AGameModeBase Interface
+
 protected:
 	UPROPERTY()
 	EObsidianGameNetworkType CurrentNetworkType = EObsidianGameNetworkType::None;
-	
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = "Character Class Defaults")
 	TObjectPtr<UObsidianEnemyTypeInfo> EnemyTypeInfo;

@@ -28,22 +28,24 @@ enum class ESetAsType : uint8
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Key"))
 class OBSIDIAN_API UObsidianBTTask_SetBlackboardKey : public UBTTaskNode
 {
 	GENERATED_BODY()
 
-	UObsidianBTTask_SetBlackboardKey();
-	
-	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
-
-protected:
+public:
+	//~ Begin UBTNode Interface
 	virtual FString GetStaticDescription() const override;
+	//~ End UBTNode Interface
+
+	//~ Begin UBTTaskNode Interface
+	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& InOwnerComp, uint8* InNodeMemory) override;
+	//~ End UBTTaskNode Interface
 
 protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
 	ESetAsType SetAsType = ESetAsType::None;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(DisplayName = "Key To Set"), Category = "Key")
 	FBlackboardKeySelector KeyToSet_Selector;
 
@@ -58,10 +60,10 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="SetAsType == ESetAsType::AsFloat", EditConditionHides), Category = "Key")
 	float FloatToSet = 0.0f;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="SetAsType == ESetAsType::AsInt", EditConditionHides), Category = "Key")
 	int32 IntToSet = 0;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="SetAsType == ESetAsType::AsVector", EditConditionHides), Category = "Key")
 	FVector VectorToSet = FVector::ZeroVector;
 
@@ -73,4 +75,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta=(EditCondition="SetAsType == ESetAsType::AsString", EditConditionHides), Category = "Key")
 	FString StringToSet = FString("");
+
+private:
+	UObsidianBTTask_SetBlackboardKey();
 };

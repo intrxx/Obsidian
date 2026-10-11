@@ -19,16 +19,12 @@ class OBSIDIAN_API UObCharacterSelectionWidgetController : public UObsidianHeroW
 	GENERATED_BODY()
 
 public:
-	// ~ Start of WidgetControllerBase
-	virtual void OnWidgetControllerSetupCompleted() override;
-	// ~ End of WidgetControllerBase
-
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
 	void HighlightCharacterWithTag(const EObsidianHeroClass InWithClass);
 
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
 	void ResetHighlightForCharacterWithTag(const EObsidianHeroClass InWithClass);
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|CharacterCreation")
 	AObsidianCharacterCreationHero* GetCreationHeroForTag(const EObsidianHeroClass InForClass);
 
@@ -37,11 +33,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Obisidan")
 	void ResetCameraToDefaultViewTarget();
 
+	//~ Begin UObsidianHeroWidgetControllerBase Interface
+	virtual void OnWidgetControllerSetupCompleted() override;
+	//~ End UObsidianHeroWidgetControllerBase Interface
+
 private:
 	void GatherCreationHeroes();
 	void GatherViewTargets();
-	
-private:
+
 	UPROPERTY()
 	TArray<TObjectPtr<AObsidianCharacterCreationHero>> CreationHeroes;
 

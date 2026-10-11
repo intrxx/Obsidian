@@ -12,11 +12,6 @@
 
 struct SObsidian_MaxHealthStatics
 {
-	FGameplayEffectAttributeCaptureDefinition MaxHealth;
-	FGameplayEffectAttributeCaptureDefinition StrengthDef;
-	FGameplayEffectAttributeCaptureDefinition DexterityDef;
-	FGameplayEffectAttributeCaptureDefinition IncreasedHealthPercentage;
-	
 	SObsidian_MaxHealthStatics()
 	{
 		MaxHealth = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetMaxHealthAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
@@ -24,6 +19,11 @@ struct SObsidian_MaxHealthStatics
 		DexterityDef = FGameplayEffectAttributeCaptureDefinition(UObsidianHeroAttributeSet::GetDexterityAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 		IncreasedHealthPercentage = FGameplayEffectAttributeCaptureDefinition(UObsidianCommonAttributeSet::GetIncreasedHealthPercentageAttribute(), EGameplayEffectAttributeCaptureSource::Target, false);
 	}
+
+	FGameplayEffectAttributeCaptureDefinition MaxHealth;
+	FGameplayEffectAttributeCaptureDefinition StrengthDef;
+	FGameplayEffectAttributeCaptureDefinition DexterityDef;
+	FGameplayEffectAttributeCaptureDefinition IncreasedHealthPercentage;
 };
 
 static const SObsidian_MaxHealthStatics& MaxHealthStatics()

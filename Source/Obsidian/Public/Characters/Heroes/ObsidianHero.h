@@ -29,25 +29,14 @@ class UObsidianPlayerInputManager;
 /**
  * Main class for Hero characters in Obsidian.
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianHero : public AObsidianCharacterBase, public IObsidianSaveableInterface, public IGenericTeamAgentInterface
 {
 	GENERATED_BODY()
-	
+
 public:
 	AObsidianHero(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
-	
-	// ~ Start of ACharacter interface
-	virtual void SetupPlayerInputComponent(UInputComponent* InPlayerInputComponent) override;
-	virtual void PossessedBy(AController* InNewController) override;
-	virtual void OnRep_PlayerState() override;
-	// ~ Start of ACharacter interface
-	
-	// ~ Start of IGenericTeamAgentInterface interface
-	virtual FGenericTeamId GetGenericTeamId() const override;
-	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
-	// ~ End of IGenericTeamAgentInterface interface
-	
+
 	UFUNCTION(BlueprintCallable, Category = "Obsidian|Hero")
 	AObsidianPlayerState* GetObsidianPlayerState() const;
 
@@ -56,25 +45,9 @@ public:
 
 	UObsidianWidgetBase* GetHealthBarWidget() const;
 
-	UObsidianPlayerInputManager* GetPlayerInputManager() const;
+	UObsidianPlayerInputManager* GetPlayerInputManager() const { return PlayerInputManager; }
 
-	EObsidianHeroClass GetHeroClass() const
-	{
-		return HeroClass;
-	}
-	
-	//~ Start of CombatInterface
-	virtual uint8 GetCharacterLevel() override;
-	virtual bool IsDeadOrDying_Implementation() const override;
-	virtual AActor* GetAvatarActor_Implementation() override;
-	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
-	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
-	//~ End of CombatInterface
-
-	//~ Start of SaveableInterface
-	virtual void SaveData(UObsidianHeroSaveGame* InSaveObject) override;
-	virtual void LoadData(UObsidianHeroSaveGame* InSaveObject) override;
-	//~ End of SaveableInterface
+	EObsidianHeroClass GetHeroClass() const { return HeroClass; }
 
 	/** Updates when boss sees Player, BossActor will be nullptr when Boss lost sight of Player, this is by design and might change. */
 	UFUNCTION(Client, Reliable)
@@ -83,36 +56,60 @@ public:
 	void IncreaseHeroLevel() const;
 	uint8 GetHeroLevel() const;
 
-protected:
+	//~ Begin APawn Interface
+	virtual void SetupPlayerInputComponent(UInputComponent* InPlayerInputComponent) override;
+	virtual void PossessedBy(AController* InNewController) override;
+	virtual void OnRep_PlayerState() override;
+	//~ End APawn Interface
+
+	//~ Begin IGenericTeamAgentInterface Interface
+	virtual FGenericTeamId GetGenericTeamId() const override { return TeamId; }
+	virtual void SetGenericTeamId(const FGenericTeamId& InTeamID) override;
+	//~ End IGenericTeamAgentInterface Interface
+
+	//~ Begin IObsidianCombatInterface Interface
+	virtual uint8 GetCharacterLevel() override;
+	virtual bool IsDeadOrDying_Implementation() const override;
+	virtual AActor* GetAvatarActor_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromLHWeapon_Implementation() override;
+	virtual FVector GetAbilitySocketLocationFromRHWeapon_Implementation() override;
+	//~ End IObsidianCombatInterface Interface
+
+	//~ Begin IObsidianSaveableInterface Interface
+	virtual void SaveData(UObsidianHeroSaveGame* InSaveObject) override;
+	virtual void LoadData(UObsidianHeroSaveGame* InSaveObject) override;
+	//~ End IObsidianSaveableInterface Interface
+
+	//~ Begin AActor Interface
 	virtual void BeginPlay() override;
 	virtual void EndPlay(const EEndPlayReason::Type InEndPlayReason) override;
-	
-	//~ Start of AObsidianCharacterBase
+	//~ End AActor Interface
+
+protected:
+	void InitializeUI(UObsidianAbilitySystemComponent* InObsidianASC) const;
+
+	void FillGenericAttribures(FObsidianGenericAttributes& OutGenericAttributes);
+
+	//~ Begin AObsidianCharacterBase Interface
 	virtual void OnAbilitySystemInitialized() override;
 	virtual void OnAbilitySystemUninitialized() override;
-	
+
 	UFUNCTION()
 	virtual void OnDeathStarted(AActor* InOwningActor) override;
 
 	UFUNCTION()
 	virtual void OnDeathFinished(AActor* InOwningActor) override;
-	//~ End of AObsidianCharacterBase
+	//~ End AObsidianCharacterBase Interface
 
-	void InitializeUI(UObsidianAbilitySystemComponent* InObsidianASC) const;
-
-	void FillGenericAttribures(FObsidianGenericAttributes& OutGenericAttributes);
-
-protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian|Hero")
 	EObsidianHeroClass HeroClass = EObsidianHeroClass::None;
-	
+
 private:
 	void InitializeHealthBar() const;
-	
-private:
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianPlayerInputManager> PlayerInputManager;
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianHeroAttributesComponent> HeroAttributesComponent;
 
@@ -125,14 +122,13 @@ private:
 	//
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	// TObjectPtr<USpringArmComponent> SpringArmComponent;
-	// ~ End of Delete after GameplayCamera is stable
-	
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Hero", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UWidgetComponent> HealthBarWidgetComp;
 
 	//@Note, this health bars does not work for the simulated clients if we are the server,
 	// I'm okay with that but that should be something to consider implementing
-	
+
 	/** Health bar to set on locally controller Player. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianHeroHealthBar> AutonomousHealthBarClass;
@@ -140,6 +136,6 @@ private:
 	/** Health bar to set on simulated proxy Player. */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|HealthBar", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UObsidianHeroHealthBar_Simple> SimulatedHealthBarClass;
-	
+
 	FGenericTeamId TeamId;
 };

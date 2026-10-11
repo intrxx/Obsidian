@@ -30,5 +30,4 @@ public:
 
 	virtual bool RequiresOngoingInteraction();
 	virtual void StopInteraction(AObsidianPlayerController* InInteractingPlayerController);
-	
 };

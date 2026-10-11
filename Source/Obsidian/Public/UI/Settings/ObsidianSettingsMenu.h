@@ -17,14 +17,14 @@ class OBSIDIAN_API UObsidianSettingsMenu : public UObsidianActivatableWidget
 	GENERATED_BODY()
 
 protected:
-	virtual void NativeOnInitialized() override;
-
 	void HandleBackwardsAction();
 
-protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativeOnInitialized() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(EditDefaultsOnly)
 	FDataTableRowHandle BackwardsInputActionData;
-	
+
 	FUIActionBindingHandle BackwardsHandle;
-	
 };

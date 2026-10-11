@@ -17,25 +17,21 @@ class USizeBox;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianGameTabButton : public UObsidianWidgetBase
 {
 	GENERATED_BODY()
 
 public:
-	virtual void NativePreConstruct() override;
-	virtual void NativeConstruct() override;
-	
 	UFUNCTION()
 	void OnTabButtonHovered();
 
 	UFUNCTION()
 	void OnTabButtonUnhovered();
-	
-public:
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SizeBoxWidth = 0;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	float SizeBoxHeight = 0;
 
@@ -49,17 +45,22 @@ public:
 	TObjectPtr<UButton> Tab_Button;
 
 	bool bIsCorrespondingTabOpen = false;
-	
+
 protected:
+	//~ Begin UUserWidget Interface
+	virtual void NativePreConstruct() override;
+	virtual void NativeConstruct() override;
+	//~ End UUserWidget Interface
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<USizeBox> Root_SizeBox;
-	
+
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UOverlay> Main_Overlay;
 
 	UPROPERTY(meta=(BindWidget))
 	TObjectPtr<UImage> Border_Image;
-	
+
 	UPROPERTY(EditAnywhere, Category = "Obsidian|Setup")
 	TSubclassOf<UObsidianGameTabTooltip> TabToolTipWidgetClass;
 

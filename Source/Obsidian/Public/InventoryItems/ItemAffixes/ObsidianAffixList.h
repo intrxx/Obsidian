@@ -25,8 +25,7 @@ public:
 #if WITH_EDITOR
 	EDataValidationResult ValidateData(FDataValidationContext& InContext, const FName InClassName, const int InIndex) const;
 #endif
-	
-public:
+
 	//TODO(intrxx) Currently not used for anything, keep or delete?
 	UPROPERTY(EditDefaultsOnly, Category = "Obsidian")
 	FName AffixClassName;
@@ -43,7 +42,7 @@ public:
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianAffixList : public UDataAsset
 {
 	GENERATED_BODY()
@@ -51,18 +50,20 @@ class OBSIDIAN_API UObsidianAffixList : public UDataAsset
 public:
 	UObsidianAffixList(const FObjectInitializer& InObjectInitializer = FObjectInitializer::Get());
 
+	TConstArrayView<FObsidianAffixClass> ReadAllAffixClasses() const { return AffixClasses; }
+
+	//~ Begin UObject Interface
 	virtual void PostInitProperties() override;
 	virtual void PostLoad() override;
-	
-	TConstArrayView<FObsidianAffixClass> ReadAllAffixClasses() const;
-	
+
 	virtual void PreSave(FObjectPreSaveContext InSaveContext) override;
-	
+
 #if WITH_EDITOR
 	virtual void PostEditChangeProperty(struct FPropertyChangedEvent& InPropertyChangedEvent) override;
 	virtual EDataValidationResult IsDataValid(FDataValidationContext& InContext) const override;
 #endif
-	
+	//~ End UObject Interface
+
 protected:
 	UPROPERTY(EditDefaultsOnly, Meta = (TitleProperty = "AffixClassName"), Category = "Obsidian")
 	TArray<FObsidianAffixClass> AffixClasses;

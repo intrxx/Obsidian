@@ -26,7 +26,7 @@ public:
 	bool IsValid() const;
 
 	void ResetLabelData();
-public:
+
 	/**
 	 * Initialization
 	 */
@@ -91,13 +91,14 @@ struct FObsidianLabelManagerLateTickFunction : public FTickFunction
 	GENERATED_USTRUCT_BODY()
 
 public:
-	TObjectPtr<class UObsidianItemLabelManagerSubsystem> Target = nullptr;
-
-public:
+	//~ Begin FTickFunction Interface
 	virtual void ExecuteTick(float InDeltaTime, ELevelTick InTickType, ENamedThreads::Type InCurrentThread,
 		const FGraphEventRef& InMyCompletionGraphEvent) override;
 
 	virtual FString DiagnosticMessage() override;
+	//~ End FTickFunction Interface
+
+	TObjectPtr<class UObsidianItemLabelManagerSubsystem> Target = nullptr;
 };
 
 template<>
@@ -130,19 +131,14 @@ public:
 
 	void ToggleItemLabelHighlight(const bool bInHighlight);
 
-	// ~ Start of USubsystem
+	//~ Begin USubsystem Interface
 	virtual void Initialize(FSubsystemCollectionBase& InCollection) override;
 	virtual void Deinitialize() override;
-	// ~ End of USubsystem
+	//~ End USubsystem Interface
 
-public:
 	FObsidianLabelManagerLateTickFunction LateTickFunction;
 
 protected:
-	// ~ Start of UWorldSubsystem
-	virtual bool DoesSupportWorldType(const EWorldType::Type InWorldType) const override;
-	// ~ End of UWorldSubsystem
-
 	void UpdateLabels(float InDeltaTime);
 	void UpdateLabelAnchors(TArray<FObsidianItemLabelData*>& OutLabelsToSolve, FBox2D& OutViewportArea);
 	void SolveLabelLayout(TArray<FObsidianItemLabelData*>& InOutLabelsToSolve, const FBox2D& InViewportArea);
@@ -156,6 +152,10 @@ protected:
 	void HandleLabelHovered(const bool bInEnter, const FGuid& InLabelID);
 	void HandleLabelPressed(const int32 InPlayerIndex, const FObsidianItemInteractionFlags& InInteractionFlags,
 		const FGuid& InLabelID);
+
+	//~ Begin UWorldSubsystem Interface
+	virtual bool DoesSupportWorldType(const EWorldType::Type InWorldType) const override;
+	//~ End UWorldSubsystem Interface
 
 private:
 	UPROPERTY()

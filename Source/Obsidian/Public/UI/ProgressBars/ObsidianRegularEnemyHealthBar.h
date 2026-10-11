@@ -13,31 +13,31 @@ class UObsidianEnemyAttributesComponent;
 /**
  * 
  */
-UCLASS()
+UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API UObsidianRegularEnemyHealthBar : public UObsidianBasicHealthBar
 {
 	GENERATED_BODY()
 
 protected:
-    virtual void HandleWidgetControllerSet() override;
-
     void HealthChanged(const float InNewValue);
     void MaxHealthChanged(const float InNewValue);
     void EnergyShieldChanged(const float InNewValue);
     void MaxEnergyShieldChanged(const float InNewValue);
-    
+
+    //~ Begin UObsidianWidgetBase Interface
+    virtual void HandleWidgetControllerSet() override;
+    //~ End UObsidianWidgetBase Interface
+
 private:
     void StartWidgetHideTimer();
     void HideWidget();
 
-private:
     /** Time after which this health bar will become hidden */
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian")
     float HideTime = 10.f;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta=(AllowPrivateAccess = true), Category = "Obsidian")
     bool bShouldHideWidget = true;
-    
+
     FTimerHandle HideTimerHandle;
-    
 };

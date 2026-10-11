@@ -17,17 +17,18 @@ class OBSIDIAN_API UObsidianHeroHealthBar_Simple : public UObsidianBasicHealthBa
 	GENERATED_BODY()
 
 protected:
+	//~ Begin UObsidianWidgetBase Interface
 	virtual void HandleWidgetControllerSet() override;
+	//~ End UObsidianWidgetBase Interface
 
 private:
 	UFUNCTION()
 	void HealthChanged(const float InNewHealth);
 	UFUNCTION()
 	void MaxHealthChanged(const float InNewMaxHealth);
-    
+
 	UFUNCTION()
 	void EnergyShieldChanged(const float InNewEnergyShield);
 	UFUNCTION()
 	void MaxEnergyShieldChanged(const float InNewMaxEnergyShield);
-	
 };

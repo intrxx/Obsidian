@@ -26,69 +26,40 @@ public:
 	static OBSIDIAN_API FObsidianGameplayEffectContext* ExtractEffectContextFromHandle(FGameplayEffectContextHandle InHandle);
 
 	/** Returns true if hit was blocked, it is not determined if it was a spell or hit. */
-	bool IsBlockedAttack() const
-	{
-		return bIsBlockedAttack;
-	}
+	bool IsBlockedAttack() const { return bIsBlockedAttack; }
 
 	/** Returns true if attack, was a critical strike. */
-	bool IsCriticalAttack() const
-	{
-		return bIsCriticalAttack;
-	}
+	bool IsCriticalAttack() const { return bIsCriticalAttack; }
 
 	/** Returns true if hit, was evaded or not. */
-	bool IsEvadedHit() const
-	{
-		return bIsEvadedHit;
-	}
+	bool IsEvadedHit() const { return bIsEvadedHit; }
 
 	/** Returns true if spell, was suppressed or not. */
-	bool IsSuppressedSpell() const
-	{
-		return bIsSuppressedSpell;
-	}
+	bool IsSuppressedSpell() const { return bIsSuppressedSpell; }
 
 	/** Returns true if the Target is Immune to any damage. */
-	bool IsTargetImmune() const
-	{
-		return bIsTargetImmune;
-	}
-	
+	bool IsTargetImmune() const { return bIsTargetImmune; }
+
+	/** Set whether the Attack was blocked or not. */
+	void SetIsBlockedAttack(const bool bInIsBlockedAttack) { bIsBlockedAttack = bInIsBlockedAttack; }
+
+	/** Set whether the Attack was critical or not. */
+	void SetIsCriticalAttack(const bool bInIsCriticalAttack) { bIsCriticalAttack = bInIsCriticalAttack; }
+
+	/** Set whether the hit was evaded or not. */
+	void SetIsEvadedHit(const bool bInIsEvadedHit) { bIsEvadedHit = bInIsEvadedHit; }
+
+	/** Set whether the spell was suppressed or not. */
+	void SetIsSuppressedSpell(const bool bInIsSuppressedSpell) { bIsSuppressedSpell = bInIsSuppressedSpell; }
+
+	/** Set whether the target has immunity or not. */
+	void SetIsTargetImmune(const bool bInIsTargetImmune) { bIsTargetImmune = bInIsTargetImmune; }
+
+	//~ Begin FGameplayEffectContext Interface
 	/** Returns the actual struct used for serialization, subclasses must override this! */
 	virtual UScriptStruct* GetScriptStruct() const override
 	{
 		return StaticStruct();
-	}
-
-	/** Set whether the Attack was blocked or not. */
-	void SetIsBlockedAttack(const bool bInIsBlockedAttack)
-	{
-		bIsBlockedAttack = bInIsBlockedAttack;
-	}
-
-	/** Set whether the Attack was critical or not. */
-	void SetIsCriticalAttack(const bool bInIsCriticalAttack)
-	{
-		bIsCriticalAttack = bInIsCriticalAttack;
-	}
-
-	/** Set whether the hit was evaded or not. */
-	void SetIsEvadedHit(const bool bInIsEvadedHit)
-	{
-		bIsEvadedHit = bInIsEvadedHit;
-	}
-
-	/** Set whether the spell was suppressed or not. */
-	void SetIsSuppressedSpell(const bool bInIsSuppressedSpell)
-	{
-		bIsSuppressedSpell = bInIsSuppressedSpell;
-	}
-
-	/** Set whether the target has immunity or not. */
-	void SetIsTargetImmune(const bool bInIsTargetImmune)
-	{
-		bIsTargetImmune = bInIsTargetImmune;
 	}
 
 	/** Creates a copy of this context, used to duplicate for later modifications */
@@ -106,11 +77,12 @@ public:
 	}
 
 	virtual bool NetSerialize(FArchive& InOutAr, UPackageMap* InMap, bool& bOutSuccess) override;
-	
+	//~ End FGameplayEffectContext Interface
+
 protected:
 	UPROPERTY()
 	bool bIsBlockedAttack = false;
-	
+
 	UPROPERTY()
 	bool bIsCriticalAttack = false;
 

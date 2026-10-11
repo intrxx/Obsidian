@@ -26,6 +26,8 @@
 #include "UI/ObsidianWidgetBase.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar.h"
 #include "UI/ProgressBars/ObsidianHeroHealthBar_Simple.h"
+#include "InventoryItems/Inventory/ObsidianInventoryComponent.h"
+#include "InventoryItems/Equipment/ObsidianEquipmentComponent.h"
 
 
 AObsidianHero::AObsidianHero(const FObjectInitializer& InObjectInitializer)
@@ -133,11 +135,6 @@ void AObsidianHero::OnRep_PlayerState()
 	}
 }
 
-FGenericTeamId AObsidianHero::GetGenericTeamId() const
-{
-	return TeamId;
-}
-
 void AObsidianHero::SetGenericTeamId(const FGenericTeamId& InTeamID)
 {
 	if (TeamId != InTeamID)
@@ -169,11 +166,6 @@ UObsidianWidgetBase* AObsidianHero::GetHealthBarWidget() const
 		return WidgetBase;
 	}
 	return nullptr;
-}
-
-UObsidianPlayerInputManager* AObsidianHero::GetPlayerInputManager() const
-{
-	return PlayerInputManager;
 }
 
 uint8 AObsidianHero::GetCharacterLevel()
