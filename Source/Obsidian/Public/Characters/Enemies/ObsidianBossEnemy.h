@@ -8,11 +8,11 @@
 
 #include "ObsidianBossEnemy.generated.h"
 
-class UObsidianBossComponent;
-class UObsidianAdvancedCombatComponent;
+class AObsidianBossAIController;
 class AObsidianHero;
-class UBlackboardComponent;
-class AObsidianAIControllerBase;
+class UObsidianAdvancedCombatComponent;
+class UObsidianBossComponent;
+class UStateTree;
 
 /**
  * 
@@ -27,6 +27,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, meta=(DisplayName = "Handle Advanced Combat Hit"), Category = "Obsidian|Boss")
 	void BP_HandleAdvancedCombatHit(const FHitResult& InHitResult);
+
+	UStateTree* GetDefaultStateTree() const { return DefaultStateTree; }
 
 	//~ Begin APawn Interface
 	virtual void PossessedBy(AController* InNewController) override;
@@ -52,6 +54,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianAdvancedCombatComponent> AdvancedCombatComponent;
 
+	/** State Tree that drives the Boss, run by its AI Controller. */
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
+	TObjectPtr<UStateTree> DefaultStateTree;
+
 	UPROPERTY()
-	TObjectPtr<AObsidianAIControllerBase> ObsidianBossAIController;
+	TObjectPtr<AObsidianBossAIController> ObsidianBossAIController;
 };

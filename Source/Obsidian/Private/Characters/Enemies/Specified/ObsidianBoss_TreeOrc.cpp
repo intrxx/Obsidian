@@ -4,9 +4,10 @@
 
 #include "Net/UnrealNetwork.h"
 
-#include "AI/AObsidianAIControllerBase.h"
+#include "AI/ObsidianBossAIController.h"
 #include "CharacterComponents/ObsidianAdvancedCombatComponent.h"
 #include "CharacterComponents/ObsidianBossComponent.h"
+#include "Obsidian/ObsidianGameplayTags.h"
 
 
 AObsidianBoss_TreeOrc::AObsidianBoss_TreeOrc(const FObjectInitializer& InObjectInitializer)
@@ -61,8 +62,9 @@ FVector AObsidianBoss_TreeOrc::GetAbilitySocketLocationFromRHWeapon_Implementati
 
 void AObsidianBoss_TreeOrc::HandleThreshold_50()
 {
+	// The State Tree moves the Tree Orc to its armed phase, the event is ignored once it is there.
 	if(ObsidianBossAIController)
 	{
-		ObsidianBossAIController->RunBehaviorTree(ArmedBehaviorTree);
+		ObsidianBossAIController->SendStateTreeEvent(ObsidianGameplayTags::GameplayEvent::AI::Boss::HealthThreshold_50);
 	}
 }

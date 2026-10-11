@@ -9,6 +9,7 @@
 #include "ObsidianRegularEnemy.generated.h"
 
 class AObsidianAIControllerBase;
+class UBehaviorTree;
 
 /**
  * 
@@ -24,6 +25,7 @@ public:
 	void HitReactTagChanged(const FGameplayTag InCallbackTag, int32 InNewCount);
 
 	AObsidianAIControllerBase* GetObsidianAIController() const { return ObsidianRegularAIController; }
+	UBehaviorTree* GetDefaultBehaviorTree() const { return DefaultBehaviorTree; }
 
 	//~ Begin APawn Interface
 	virtual void PossessedBy(AController* InNewController) override;
@@ -39,6 +41,9 @@ protected:
 	UFUNCTION()
 	virtual void OnDeathFinished(AActor* InOwningActor) override;
 	//~ End AObsidianCharacterBase Interface
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
+	TObjectPtr<UBehaviorTree> DefaultBehaviorTree;
 
 private:
 	void CreateHealthBarWidget() const;

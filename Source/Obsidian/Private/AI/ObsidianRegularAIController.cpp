@@ -3,10 +3,18 @@
 #include "AI/ObsidianRegularAIController.h"
 
 #include "AbilitySystemGlobals.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
 #include "Characters/Enemies/ObsidianRegularEnemy.h"
 
+
+AObsidianRegularAIController::AObsidianRegularAIController()
+{
+	Blackboard = CreateDefaultSubobject<UBlackboardComponent>(TEXT("BlackBoardComponent"));
+	BehaviorTreeComp = CreateDefaultSubobject<UBehaviorTreeComponent>(TEXT("BehaviorTreeComponent"));
+}
 
 UObsidianAbilitySystemComponent* AObsidianRegularAIController::GetObsidianAbilitySystemComponent() const
 {

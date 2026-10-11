@@ -7,9 +7,10 @@
 #include "Components/WidgetComponent.h"
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
-#include "AI/AObsidianAIControllerBase.h"
+#include "AI/ObsidianRegularAIController.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 #include "UI/ProgressBars/ObsidianRegularEnemyHealthBar.h"
 
@@ -37,7 +38,14 @@ void AObsidianRegularEnemy::PossessedBy(AController* InNewController)
 	{
 		return;
 	}
-	ObsidianRegularAIController = Cast<AObsidianAIControllerBase>(InNewController);
+	ObsidianRegularAIController = Cast<AObsidianRegularAIController>(InNewController);
+	if(ObsidianRegularAIController == nullptr)
+	{
+		UE_LOG(ObLogAI, Error, TEXT("Regular Enemy [%s] was possessed by [%s] which is not an Obsidian Regular AI Controller, it will have no AI."),
+			*GetNameSafe(this), *GetNameSafe(InNewController));
+		return;
+	}
+
 	ObsidianRegularAIController->GetBlackboardComponent()->InitializeBlackboard(*DefaultBehaviorTree->BlackboardAsset);
 	ObsidianRegularAIController->RunBehaviorTree(DefaultBehaviorTree);
 

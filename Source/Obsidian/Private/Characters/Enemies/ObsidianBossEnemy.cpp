@@ -2,8 +2,7 @@
 
 #include "Characters/Enemies/ObsidianBossEnemy.h"
 
-#include "BehaviorTree/BehaviorTree.h"
-#include "BehaviorTree/BlackboardComponent.h"
+#include "BrainComponent.h"
 
 #include "AI/ObsidianBossAIController.h"
 #include "CharacterComponents/Attributes/ObsidianEnemyAttributesComponent.h"
@@ -11,6 +10,7 @@
 #include "CharacterComponents/ObsidianBossComponent.h"
 #include "Characters/Heroes/ObsidianHero.h"
 #include "Obsidian/ObsidianGameplayTags.h"
+#include "Obsidian/ObsidianLogCategories.h"
 #include "ObsidianTypes/ObsidianCoreTypes.h"
 
 
@@ -47,8 +47,15 @@ void AObsidianBossEnemy::PossessedBy(AController* InNewController)
 	}
 	
 	ObsidianBossAIController = Cast<AObsidianBossAIController>(InNewController);
-	ObsidianBossAIController->GetBlackboardComponent()->InitializeBlackboard(*DefaultBehaviorTree->BlackboardAsset);
-	ObsidianBossAIController->RunBehaviorTree(DefaultBehaviorTree);
+	if(ObsidianBossAIController == nullptr)
+	{
+		UE_LOG(ObLogAI, Error, TEXT("Boss [%s] was possessed by [%s] which is not an Obsidian Boss AI Controller, it will have no AI."),
+			*GetNameSafe(this), *GetNameSafe(InNewController));
+		return;
+	}
+
+	// The AI Logic is started by the Controller right after the Boss gets possessed.
+	ObsidianBossAIController->SetStateTree(DefaultStateTree);
 }
 
 void AObsidianBossEnemy::OnAbilitySystemInitialized()
@@ -64,7 +71,7 @@ void AObsidianBossEnemy::OnDeathStarted(AActor* InOwningActor)
 {
 	Super::OnDeathStarted(InOwningActor);
 
-	if(ObsidianBossAIController)
+	if(ObsidianBossAIController && ObsidianBossAIController->GetBrainComponent())
 	{
 		ObsidianBossAIController->GetBrainComponent()->StopLogic(TEXT("Death"));
 	}

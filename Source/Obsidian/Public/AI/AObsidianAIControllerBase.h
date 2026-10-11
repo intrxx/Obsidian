@@ -7,11 +7,8 @@
 
 #include "AObsidianAIControllerBase.generated.h"
 
-class UBlackboardComponent;
-class UBehaviorTreeComponent;
-
 /**
- * 
+ * Base class of the AI Controllers, the brain (Behavior Tree, State Tree) is added by the child classes.
  */
 UCLASS(meta = (PrioritizeCategories = "Obsidian"))
 class OBSIDIAN_API AObsidianAIControllerBase : public AAIController
@@ -20,8 +17,4 @@ class OBSIDIAN_API AObsidianAIControllerBase : public AAIController
 
 public:
 	AObsidianAIControllerBase();
-
-protected:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian|Enemy", meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<UBehaviorTreeComponent> BehaviorTreeComp;
 };

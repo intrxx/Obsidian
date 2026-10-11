@@ -257,6 +257,14 @@ namespace ObsidianGameplayTags
 	}
 
 	/**
+	 * AI
+	 */
+	namespace GameplayEvent::AI::Boss
+	{
+		OBSIDIAN_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(HealthThreshold_50);
+	}
+
+	/**
 	 * Hero
 	 */
 	namespace GameplayEvent::AbilityMontage::Player

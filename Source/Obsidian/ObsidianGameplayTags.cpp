@@ -285,6 +285,14 @@ namespace ObsidianGameplayTags
 	}
 
 	/**
+	 * AI
+	 */
+	namespace GameplayEvent::AI::Boss
+	{
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(HealthThreshold_50, "GameplayEvent.AI.Boss.HealthThreshold_50", "Event sent to the State Tree of the Boss when its Health is at or below 50 percent after being damaged.");
+	}
+
+	/**
 	 * Hero
 	 */
 	namespace GameplayEvent::AbilityMontage::Player

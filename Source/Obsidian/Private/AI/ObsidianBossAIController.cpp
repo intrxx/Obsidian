@@ -3,7 +3,7 @@
 #include "AI/ObsidianBossAIController.h"
 
 #include "AbilitySystemGlobals.h"
-#include "BehaviorTree/BlackboardComponent.h"
+#include "Components/StateTreeAIComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 
 #include "AbilitySystem/ObsidianAbilitySystemComponent.h"
@@ -15,6 +15,10 @@
 AObsidianBossAIController::AObsidianBossAIController()
 {
 	PerceptionComp = CreateDefaultSubobject<UAIPerceptionComponent>(TEXT("Perception Component"));
+
+	StateTreeComp = CreateDefaultSubobject<UStateTreeAIComponent>(TEXT("StateTreeComponent"));
+	// The State Tree is given by the Boss when it gets possessed, the AI Logic is started right after.
+	StateTreeComp->SetStartLogicAutomatically(false);
 }
 
 UObsidianAbilitySystemComponent* AObsidianBossAIController::GetObsidianAbilitySystemComponent() const
@@ -32,6 +36,16 @@ UObsidianAbilitySystemComponent* AObsidianBossAIController::GetObsidianAbilitySy
 	return nullptr;
 }
 
+void AObsidianBossAIController::SetStateTree(UStateTree* InStateTree)
+{
+	StateTreeComp->SetStateTree(InStateTree);
+}
+
+void AObsidianBossAIController::SendStateTreeEvent(const FGameplayTag& InEventTag)
+{
+	StateTreeComp->SendStateTreeEvent(InEventTag);
+}
+
 void AObsidianBossAIController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
@@ -44,27 +58,38 @@ void AObsidianBossAIController::OnPossess(APawn* InPawn)
 	}
 }
 
+void AObsidianBossAIController::OnUnPossess()
+{
+	// The State Tree needs the Pawn to be stopped, it would be left running its Tasks if this was done after the Pawn is gone.
+	if(StateTreeComp)
+	{
+		StateTreeComp->StopLogic(TEXT("UnPossess"));
+	}
+
+	Super::OnUnPossess();
+}
+
 void AObsidianBossAIController::OnStimulusChanged(AActor* InUpdatedActor, FAIStimulus InStimulus)
 {
-	AObsidianHero* HeroTarget = Cast<AObsidianHero>(InUpdatedActor);
-	if(HeroTarget == nullptr)
+	AObsidianHero* PerceivedHero = Cast<AObsidianHero>(InUpdatedActor);
+	if(PerceivedHero == nullptr)
 	{
 		return;
 	}
 	
 	if(InStimulus.IsActive())
 	{
-		HeroTarget->ClientUpdateBossDetectingPlayer(EnemyOwner, true);
-		
-		Blackboard->SetValueAsBool(FName(TEXT("bIsPlayerSeen")), true);
-		Blackboard->SetValueAsObject(FName(TEXT("HeroTarget")), HeroTarget);
+		PerceivedHero->ClientUpdateBossDetectingPlayer(EnemyOwner, true);
+
+		bIsPlayerSeen = true;
+		HeroTarget = PerceivedHero;
 	}
 	else
 	{
-		Blackboard->SetValueAsBool(FName(TEXT("bIsPlayerSeen")), false);
-		Blackboard->ClearValue(FName(TEXT("HeroTarget")));
+		bIsPlayerSeen = false;
+		HeroTarget = nullptr;
 
-		HeroTarget->ClientUpdateBossDetectingPlayer(nullptr, false);
+		PerceivedHero->ClientUpdateBossDetectingPlayer(nullptr, false);
 	}
 }
 

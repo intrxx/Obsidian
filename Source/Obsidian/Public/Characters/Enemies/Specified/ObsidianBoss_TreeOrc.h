@@ -41,8 +41,5 @@ protected:
 private:
 	void HandleThreshold_50();
 
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
-	TObjectPtr<UBehaviorTree> ArmedBehaviorTree;
-
 	FDelegateHandle OnThresholdReached_50DelegateHandle;
 };

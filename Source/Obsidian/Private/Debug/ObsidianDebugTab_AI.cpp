@@ -14,11 +14,12 @@
 #include "SlateIM.h"
 
 #include "AbilitySystem/Attributes/ObsidianCommonAttributeSet.h"
-#include "AI/AObsidianAIControllerBase.h"
 #include "AI/ObsidianBossAIController.h"
+#include "AI/ObsidianRegularAIController.h"
 #include "CharacterComponents/ObsidianPawnExtensionComponent.h"
 #include "Characters/Enemies/ObsidianBossEnemy.h"
 #include "Characters/Enemies/ObsidianEnemy.h"
+#include "Characters/Enemies/ObsidianRegularEnemy.h"
 
 
 namespace ObsidianDebugAI
@@ -391,14 +392,29 @@ FString FObsidianDebugTab_AI::GetSpawnBlocker(const AObsidianEnemy* InEnemyDefau
 		return FString::Printf(TEXT("[%s] has no Pawn Data set, it is most likely a base class."), *EnemyName);
 	}
 
-	if (InEnemyDefault->DefaultBehaviorTree == nullptr || InEnemyDefault->DefaultBehaviorTree->BlackboardAsset == nullptr)
+	// Bosses are driven by the State Tree, the rest of the enemies by the Behavior Tree, each needs the controller that runs it.
+	const UClass* RequiredControllerClass = nullptr;
+	if (const AObsidianBossEnemy* BossDefault = Cast<AObsidianBossEnemy>(InEnemyDefault))
 	{
-		return FString::Printf(TEXT("[%s] has no Default Behavior Tree with a Blackboard set."), *EnemyName);
+		if (BossDefault->GetDefaultStateTree() == nullptr)
+		{
+			return FString::Printf(TEXT("[%s] has no Default State Tree set."), *EnemyName);
+		}
+		RequiredControllerClass = AObsidianBossAIController::StaticClass();
+	}
+	else if (const AObsidianRegularEnemy* RegularDefault = Cast<AObsidianRegularEnemy>(InEnemyDefault))
+	{
+		if (RegularDefault->GetDefaultBehaviorTree() == nullptr || RegularDefault->GetDefaultBehaviorTree()->BlackboardAsset == nullptr)
+		{
+			return FString::Printf(TEXT("[%s] has no Default Behavior Tree with a Blackboard set."), *EnemyName);
+		}
+		RequiredControllerClass = AObsidianRegularAIController::StaticClass();
+	}
+	else
+	{
+		return FString::Printf(TEXT("[%s] is neither a Boss nor a Regular Enemy, it has no AI to run."), *EnemyName);
 	}
 
-	// Bosses use the features of their own controller, the rest of the enemies is fine with the base one.
-	const UClass* RequiredControllerClass = InEnemyDefault->IsA<AObsidianBossEnemy>() ? AObsidianBossAIController::StaticClass() :
-		AObsidianAIControllerBase::StaticClass();
 	if (InEnemyDefault->AIControllerClass == nullptr || InEnemyDefault->AIControllerClass->IsChildOf(RequiredControllerClass) == false)
 	{
 		return FString::Printf(TEXT("[%s] needs its AI Controller Class to be a [%s]."), *EnemyName, *RequiredControllerClass->GetName());

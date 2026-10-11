@@ -13,7 +13,6 @@
 
 class UObsidianItemDropComponent;
 class UObsidianEnemyOverlayBarComponent;
-class UBehaviorTree;
 class UWidgetComponent;
 class UObsidianEnemyAttributeSet;
 class UObsidianEnemyAttributesComponent;
@@ -75,9 +74,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Obsidian", meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UObsidianItemDropComponent> ItemDropComponent;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = true), Category = "Obsidian|AI")
-	TObjectPtr<UBehaviorTree> DefaultBehaviorTree;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Obsidian|Defaults")
 	EObsidianEnemyClass EnemyClass = EObsidianEnemyClass::None;
