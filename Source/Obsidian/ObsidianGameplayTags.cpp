@@ -1007,4 +1007,15 @@ namespace ObsidianGameplayTags
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Shatter, "Item.Affix.SkillImplicits.Ultimate.Shatter", "Item Tag which represents Shatter Skill Implicit.");
 		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Electrocution, "Item.Affix.SkillImplicits.Ultimate.Electrocution", "Item Tag which represents Electrocution Skill Implicit.");
 	}
+
+	/**
+	 * ---- TinyPOI ----
+	 */
+
+	namespace TinyPOI
+	{
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Rest, "TinyPOI.Rest", "Point Of Interest where a character can rest. Example Tag of the TinyPOI system.");
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Lookout, "TinyPOI.Lookout", "Point Of Interest with a good view of its surroundings. Example Tag of the TinyPOI system.");
+		UE_DEFINE_GAMEPLAY_TAG_COMMENT(Ambush, "TinyPOI.Ambush", "Point Of Interest that is good to ambush from. Example Tag of the TinyPOI system.");
+	}
 }

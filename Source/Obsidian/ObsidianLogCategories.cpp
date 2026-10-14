@@ -23,6 +23,7 @@ DEFINE_LOG_CATEGORY(ObLogAI);
 DEFINE_LOG_CATEGORY(ObLogCharacter);
 DEFINE_LOG_CATEGORY(ObLogInput);
 DEFINE_LOG_CATEGORY(ObLogInteraction);
+DEFINE_LOG_CATEGORY(ObLogTinyPOI);
 
 /**
  * ---- Items ----
