@@ -1,6 +1,6 @@
 // Copyright 2026 out of sCope team - intrxx
 
-#include "TinyPOI/TinyPOISubsystem.h"
+#include "TinyPOISubsystem.h"
 
 #include "DrawDebugHelpers.h"
 #include "Engine/Engine.h"
@@ -9,9 +9,9 @@
 #include "EngineUtils.h"
 #include "HAL/IConsoleManager.h"
 
-#include "Obsidian/ObsidianLogCategories.h"
-#include "TinyPOI/TinyPOIComponent.h"
-#include "TinyPOI/TinyPOIData.h"
+#include "TinyPOIComponent.h"
+#include "TinyPOIData.h"
+#include "TinyPOILogCategories.h"
 
 
 namespace TinyPOIConsole
@@ -55,7 +55,7 @@ FTinyPOIDataHandle UTinyPOISubsystem::RegisterPOIData(ATinyPOIData& InPOIData)
 
 	if(InPOIData.IsRegistered())
 	{
-		UE_LOG(ObLogTinyPOI, Error, TEXT("Trying to register [%s] which is already registered."), *InPOIData.GetName());
+		UE_LOG(LogTinyPOI, Error, TEXT("Trying to register [%s] which is already registered."), *InPOIData.GetName());
 		return FTinyPOIDataHandle();
 	}
 
@@ -68,7 +68,7 @@ FTinyPOIDataHandle UTinyPOISubsystem::RegisterPOIData(ATinyPOIData& InPOIData)
 	const FTinyPOIDataHandle DataHandle(static_cast<uint16>(Index), static_cast<uint16>(RegisteredData.Generation));
 	InPOIData.OnRegistered(DataHandle);
 
-	UE_LOG(ObLogTinyPOI, Verbose, TEXT("Registered [%s] with [%d] Points Of Interest."), *InPOIData.GetPathName(), InPOIData.GetStorage().Points.Num());
+	UE_LOG(LogTinyPOI, Verbose, TEXT("Registered [%s] with [%d] Points Of Interest."), *InPOIData.GetPathName(), InPOIData.GetStorage().Points.Num());
 	return DataHandle;
 }
 
@@ -81,7 +81,7 @@ void UTinyPOISubsystem::UnregisterPOIData(ATinyPOIData& InPOIData)
 
 	if(Index == INDEX_NONE)
 	{
-		UE_LOG(ObLogTinyPOI, Error, TEXT("Trying to unregister [%s] which is not registered."), *InPOIData.GetName());
+		UE_LOG(LogTinyPOI, Error, TEXT("Trying to unregister [%s] which is not registered."), *InPOIData.GetName());
 		return;
 	}
 
@@ -113,6 +113,20 @@ const FTinyPOIPoint* UTinyPOISubsystem::GetPoint(const FTinyPOIHandle InHandle) 
 	if(Storage && Storage->Points.IsValidIndex(InHandle.Index))
 	{
 		return &Storage->Points[InHandle.Index];
+	}
+	return nullptr;
+}
+
+const FInstancedStruct* UTinyPOISubsystem::GetPointData(const FTinyPOIHandle InHandle) const
+{
+	const FTinyPOIStorage* Storage = GetStorage(InHandle.DataHandle);
+	if(Storage && Storage->Points.IsValidIndex(InHandle.Index))
+	{
+		const int32 DataIndex = Storage->Points[InHandle.Index].DataIndex;
+		if(Storage->PointData.IsValidIndex(DataIndex))
+		{
+			return &Storage->PointData[DataIndex];
+		}
 	}
 	return nullptr;
 }
@@ -294,10 +308,11 @@ void UTinyPOISubsystem::DebugDraw() const
 			const FColor Color = FColor::MakeRandomSeededColor(GetTypeHash(TagRange.Tag.ToString()));
 			for(int32 PointIndex = TagRange.PointsBegin; PointIndex < TagRange.PointsEnd; ++PointIndex)
 			{
-				const FTinyPOIPoint& Point = Storage.Points[PointIndex];
-				DrawDebugSphere(World, Point.Position, Point.Radius, 16, Color);
-				DrawDebugDirectionalArrow(World, Point.Position, Point.Position + Point.Forward * Point.Radius, 20.0f, Color);
-				DrawDebugString(World, Point.Position, TagRange.Tag.ToString(), nullptr, Color, 0.0f);
+				const FTinyPOIPointPosition& PointPosition = Storage.Points[PointIndex].PointPosition;
+				DrawDebugSphere(World, PointPosition.Position, PointPosition.Radius, 16, Color);
+				DrawDebugDirectionalArrow(World, PointPosition.Position, PointPosition.Position + PointPosition.Forward * PointPosition.Radius,
+					20.0f, Color);
+				DrawDebugString(World, PointPosition.Position, TagRange.Tag.ToString(), nullptr, Color, 0.0f);
 			}
 		}
 	}

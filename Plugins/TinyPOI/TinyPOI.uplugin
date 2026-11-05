@@ -1,0 +1,23 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "TinyPOI",
+	"Description": "Points Of Interest marked up in the editor, baked per level and queried at runtime by Tag and distance.",
+	"Category": "Gameplay",
+	"CreatedBy": "intrxx",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"CanContainContent": false,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "TinyPOI",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}

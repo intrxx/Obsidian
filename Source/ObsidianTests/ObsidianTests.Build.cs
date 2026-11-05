@@ -23,6 +23,7 @@ public class ObsidianTests : ModuleRules
 			"AIModule",
 			"ModularGameplayActors",
 			"Obsidian",
+			"TinyPOI",
 			"CQTest"
 		});
 

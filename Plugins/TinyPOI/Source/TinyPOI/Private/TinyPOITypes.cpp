@@ -1,6 +1,6 @@
 // Copyright 2026 out of sCope team - intrxx
 
-#include "TinyPOI/TinyPOITypes.h"
+#include "TinyPOITypes.h"
 
 
 namespace TinyPOIQuery
@@ -26,7 +26,7 @@ namespace TinyPOIQuery
 
 			for(int32 PointIndex = TagRange.PointsBegin; PointIndex < TagRange.PointsEnd; ++PointIndex)
 			{
-				const double DistanceSqr = FVector::DistSquared(InLocation, InStorage.Points[PointIndex].Position);
+				const double DistanceSqr = FVector::DistSquared(InLocation, InStorage.Points[PointIndex].PointPosition.Position);
 				if(DistanceSqr <= RangeSqr)
 				{
 					InFunction(PointIndex, DistanceSqr);
@@ -40,6 +40,7 @@ void FTinyPOIStorage::Reset()
 {
 	Points.Reset();
 	TagRanges.Reset();
+	PointData.Reset();
 	Bounds.Init();
 }
 

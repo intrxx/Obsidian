@@ -85,6 +85,9 @@ protected:
 
 	float CalculateFullEffectMagnitude(const FGameplayEffectSpec& InEffectSpec);
 
+	/** Invokes InEventType for every active instance of InSpec, keyed by that instance's activation prediction key. */
+	void InvokeInputEventOnActiveInstances(const EAbilityGenericReplicatedEvent::Type InEventType, const FGameplayAbilitySpec& InSpec);
+
 	TArray<FGameplayAbilitySpecHandle> InputPressedSpecHandles;
 	TArray<FGameplayAbilitySpecHandle> InputReleasedSpecHandles;
 	TArray<FGameplayAbilitySpecHandle> InputHeldSpecHandles;
