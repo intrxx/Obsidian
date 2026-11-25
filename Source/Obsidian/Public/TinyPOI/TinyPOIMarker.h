@@ -13,7 +13,7 @@ class UTinyPOIComponent;
  * Actor to place a Point Of Interest in the level with. Just like its component it only exists in the editor.
  */
 UCLASS(HideCategories = (Input), meta = (PrioritizeCategories = "TinyPOI"))
-class TINYPOI_API ATinyPOIMarker : public AActor
+class OBSIDIAN_API ATinyPOIMarker : public AActor
 {
 	GENERATED_BODY()
 

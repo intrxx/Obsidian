@@ -1,11 +1,11 @@
 // Copyright 2026 out of sCope team - intrxx
 
-#include "TinyPOIComponent.h"
+#include "TinyPOI/TinyPOIComponent.h"
 
 #include "Engine/World.h"
 #include "Misc/Crc.h"
 
-#include "TinyPOISubsystem.h"
+#include "TinyPOI/TinyPOISubsystem.h"
 
 
 UTinyPOIComponent::UTinyPOIComponent(const FObjectInitializer& InObjectInitializer)
@@ -42,15 +42,6 @@ void UTinyPOIComponent::SetRadius(const float InRadius)
 #endif
 }
 
-void UTinyPOIComponent::SetData(const FInstancedStruct& InData)
-{
-	Data = InData;
-
-#if WITH_EDITOR
-	NotifyBuilderOfChange();
-#endif
-}
-
 #if WITH_EDITOR
 uint32 UTinyPOIComponent::GetPOIHash() const
 {
@@ -61,16 +52,6 @@ uint32 UTinyPOIComponent::GetPOIHash() const
 
 	// The hash of an FName changes between sessions, the hash of its string does not.
 	Hash = HashCombine(Hash, FCrc::StrCrc32(*Tag.ToString()));
-
-	// For the same reason the Data is hashed as text: GetTypeHash() of a struct hashes its FNames and needs every Data
-	// struct to implement it.
-	if(const UScriptStruct* DataStruct = Data.GetScriptStruct())
-	{
-		FString DataText;
-		DataStruct->ExportText(DataText, Data.GetMemory(), nullptr, nullptr, PPF_None, nullptr);
-		Hash = HashCombine(Hash, FCrc::StrCrc32(*DataStruct->GetPathName()));
-		Hash = HashCombine(Hash, FCrc::StrCrc32(*DataText));
-	}
 	return Hash;
 }
 

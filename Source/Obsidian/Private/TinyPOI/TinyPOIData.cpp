@@ -1,12 +1,12 @@
 // Copyright 2026 out of sCope team - intrxx
 
-#include "TinyPOIData.h"
+#include "TinyPOI/TinyPOIData.h"
 
 #include "Engine/Level.h"
 #include "Engine/World.h"
 
-#include "TinyPOILogCategories.h"
-#include "TinyPOISubsystem.h"
+#include "Obsidian/ObsidianLogCategories.h"
+#include "TinyPOI/TinyPOISubsystem.h"
 
 
 ATinyPOIData::ATinyPOIData(const FObjectInitializer& InObjectInitializer)
@@ -54,7 +54,7 @@ void ATinyPOIData::PostLoad()
 	Super::PostLoad();
 
 	const bool bSucceeded = RegisterWithSubsystem();
-	UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] PostLoad - %s."), *GetName(), bSucceeded ? TEXT("registered") : TEXT("not registered"));
+	UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] PostLoad - %s."), *GetName(), bSucceeded ? TEXT("registered") : TEXT("not registered"));
 }
 
 #if WITH_EDITOR
@@ -63,7 +63,7 @@ void ATinyPOIData::PostEditUndo()
 	Super::PostEditUndo();
 
 	const bool bSucceeded = IsPendingKillPending() ? UnregisterWithSubsystem() : RegisterWithSubsystem();
-	UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] PostEditUndo - %s."), *GetName(), bSucceeded ? TEXT("changed") : TEXT("not changed"));
+	UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] PostEditUndo - %s."), *GetName(), bSucceeded ? TEXT("changed") : TEXT("not changed"));
 }
 #endif
 
@@ -72,7 +72,7 @@ void ATinyPOIData::PostActorCreated()
 	Super::PostActorCreated();
 
 	const bool bSucceeded = RegisterWithSubsystem();
-	UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] PostActorCreated - %s."), *GetName(), bSucceeded ? TEXT("registered") : TEXT("not registered"));
+	UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] PostActorCreated - %s."), *GetName(), bSucceeded ? TEXT("registered") : TEXT("not registered"));
 }
 
 void ATinyPOIData::PreRegisterAllComponents()
@@ -85,7 +85,7 @@ void ATinyPOIData::PreRegisterAllComponents()
 	if(Level && Level->bIsAssociatingLevel)
 	{
 		const bool bSucceeded = RegisterWithSubsystem();
-		UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] PreRegisterAllComponents - %s."), *GetName(), bSucceeded ? TEXT("registered") : TEXT("not registered"));
+		UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] PreRegisterAllComponents - %s."), *GetName(), bSucceeded ? TEXT("registered") : TEXT("not registered"));
 	}
 }
 
@@ -96,7 +96,7 @@ void ATinyPOIData::PostUnregisterAllComponents()
 	if(Level && Level->bIsDisassociatingLevel)
 	{
 		const bool bSucceeded = UnregisterWithSubsystem();
-		UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] PostUnregisterAllComponents - %s."), *GetName(), bSucceeded ? TEXT("unregistered") : TEXT("not unregistered"));
+		UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] PostUnregisterAllComponents - %s."), *GetName(), bSucceeded ? TEXT("unregistered") : TEXT("not unregistered"));
 	}
 
 	Super::PostUnregisterAllComponents();
@@ -105,7 +105,7 @@ void ATinyPOIData::PostUnregisterAllComponents()
 void ATinyPOIData::Destroyed()
 {
 	const bool bSucceeded = UnregisterWithSubsystem();
-	UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] Destroyed - %s."), *GetName(), bSucceeded ? TEXT("unregistered") : TEXT("not unregistered"));
+	UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] Destroyed - %s."), *GetName(), bSucceeded ? TEXT("unregistered") : TEXT("not unregistered"));
 
 	Super::Destroyed();
 }
@@ -113,7 +113,7 @@ void ATinyPOIData::Destroyed()
 void ATinyPOIData::EndPlay(const EEndPlayReason::Type InEndPlayReason)
 {
 	const bool bSucceeded = UnregisterWithSubsystem();
-	UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] EndPlay - %s."), *GetName(), bSucceeded ? TEXT("unregistered") : TEXT("not unregistered"));
+	UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] EndPlay - %s."), *GetName(), bSucceeded ? TEXT("unregistered") : TEXT("not unregistered"));
 
 	Super::EndPlay(InEndPlayReason);
 }

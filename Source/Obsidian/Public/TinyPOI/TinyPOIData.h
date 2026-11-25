@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 
-#include "TinyPOITypes.h"
+#include "TinyPOI/TinyPOITypes.h"
 
 #include "TinyPOIData.generated.h"
 
@@ -18,7 +18,7 @@
  * when it leaves.
  */
 UCLASS(NotBlueprintable, NotPlaceable)
-class TINYPOI_API ATinyPOIData : public AActor
+class OBSIDIAN_API ATinyPOIData : public AActor
 {
 	GENERATED_BODY()
 

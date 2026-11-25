@@ -1,8 +1,8 @@
 // Copyright 2026 out of sCope team - intrxx
 
-#include "TinyPOIMarker.h"
+#include "TinyPOI/TinyPOIMarker.h"
 
-#include "TinyPOIComponent.h"
+#include "TinyPOI/TinyPOIComponent.h"
 
 
 ATinyPOIMarker::ATinyPOIMarker(const FObjectInitializer& InObjectInitializer)

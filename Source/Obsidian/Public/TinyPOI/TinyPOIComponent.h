@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Components/SceneComponent.h"
 #include "GameplayTagContainer.h"
-#include "StructUtils/InstancedStruct.h"
 
 #include "TinyPOIComponent.generated.h"
 
@@ -17,7 +16,7 @@
  * follows every change made to the level.
  */
 UCLASS(ClassGroup = (TinyPOI), meta = (PrioritizeCategories = "TinyPOI", BlueprintSpawnableComponent))
-class TINYPOI_API UTinyPOIComponent : public USceneComponent
+class OBSIDIAN_API UTinyPOIComponent : public USceneComponent
 {
 	GENERATED_BODY()
 
@@ -29,9 +28,6 @@ public:
 
 	float GetRadius() const { return Radius; }
 	void SetRadius(const float InRadius);
-
-	const FInstancedStruct& GetData() const { return Data; }
-	void SetData(const FInstancedStruct& InData);
 
 #if WITH_EDITOR
 	/**
@@ -72,8 +68,4 @@ private:
 	/** Size of the Point, gets multiplied by the scale of the component when baked. */
 	UPROPERTY(EditAnywhere, Category = "TinyPOI", meta = (ClampMin = "0.0", Units = "cm"))
 	float Radius = 100.0f;
-
-	/** Optional data of this Point, baked as it is. Leave it empty for a Point that is only a position and a Tag. */
-	UPROPERTY(EditAnywhere, Category = "TinyPOI", meta = (BaseStruct = "/Script/TinyPOI.TinyPOIPointData", ExcludeBaseStruct))
-	FInstancedStruct Data;
 };
