@@ -1,15 +1,15 @@
 // Copyright 2026 out of sCope team - intrxx
 
-#include "TinyPOI/TinyPOIBuilder.h"
+#include "TinyPOIBuilder.h"
 
 #if WITH_EDITOR
 
 #include "Engine/Level.h"
 
-#include "Obsidian/ObsidianLogCategories.h"
-#include "TinyPOI/TinyPOIComponent.h"
-#include "TinyPOI/TinyPOIData.h"
-#include "TinyPOI/TinyPOITypes.h"
+#include "TinyPOIComponent.h"
+#include "TinyPOIData.h"
+#include "TinyPOILogCategories.h"
+#include "TinyPOITypes.h"
 
 
 void FTinyPOIBuilder::RegisterPOIComponent(UTinyPOIComponent& InComponent)
@@ -44,7 +44,7 @@ void FTinyPOIBuilder::BuildAll(const TConstArrayView<ATinyPOIData*> InAllPOIData
 		const uint32 CombinedHash = CalculateCombinedHash(Level);
 		if(bInForceRebuild == false && POIData->GetCombinedHash() == CombinedHash)
 		{
-			UE_LOG(ObLogTinyPOI, Verbose, TEXT("[%s] is up to date, the bake is skipped."), *POIData->GetPathName());
+			UE_LOG(LogTinyPOI, Verbose, TEXT("[%s] is up to date, the bake is skipped."), *POIData->GetPathName());
 			continue;
 		}
 
@@ -55,7 +55,7 @@ void FTinyPOIBuilder::BuildAll(const TConstArrayView<ATinyPOIData*> InAllPOIData
 		BuildStorage(Level, Storage);
 		POIData->SetCombinedHash(CombinedHash);
 
-		UE_LOG(ObLogTinyPOI, Log, TEXT("Baked [%d] Points Of Interest with [%d] Tags into [%s]."), Storage.Points.Num(),
+		UE_LOG(LogTinyPOI, Log, TEXT("Baked [%d] Points Of Interest with [%d] Tags into [%s]."), Storage.Points.Num(),
 			Storage.TagRanges.Num(), *POIData->GetPathName());
 	}
 
@@ -65,6 +65,9 @@ void FTinyPOIBuilder::BuildAll(const TConstArrayView<ATinyPOIData*> InAllPOIData
 void FTinyPOIBuilder::BuildStorage(const ULevel* InLevel, FTinyPOIStorage& OutStorage) const
 {
 	OutStorage.Reset();
+
+	// Data of the Points that have any. Until the Points are sorted, their DataIndex points in here.
+	TArray<const FInstancedStruct*> SourceData;
 
 	// Bake the markup into world space Points.
 	for(const TWeakObjectPtr<UTinyPOIComponent>& WeakComponent : Components)
@@ -78,10 +81,15 @@ void FTinyPOIBuilder::BuildStorage(const ULevel* InLevel, FTinyPOIStorage& OutSt
 		const FTransform& ComponentTransform = Component->GetComponentTransform();
 
 		FTinyPOIPoint& Point = OutStorage.Points.AddDefaulted_GetRef();
-		Point.Position = ComponentTransform.GetLocation();
-		Point.Forward = ComponentTransform.GetUnitAxis(EAxis::X);
-		Point.Radius = Component->GetRadius() * static_cast<float>(ComponentTransform.GetMaximumAxisScale());
+		Point.PointPosition.Position = ComponentTransform.GetLocation();
+		Point.PointPosition.Forward = ComponentTransform.GetUnitAxis(EAxis::X);
+		Point.PointPosition.Radius = Component->GetRadius() * static_cast<float>(ComponentTransform.GetMaximumAxisScale());
 		Point.Tag = Component->GetTag();
+
+		if(Component->GetData().IsValid())
+		{
+			Point.DataIndex = SourceData.Add(&Component->GetData());
+		}
 	}
 
 	// Sort by Tag, so every Tag ends up as one contiguous range of Points. Components register in an order that changes
@@ -93,21 +101,28 @@ void FTinyPOIBuilder::BuildStorage(const ULevel* InLevel, FTinyPOIStorage& OutSt
 			{
 				return TagOrder < 0;
 			}
-			if(InLeft.Position.X != InRight.Position.X)
+			if(InLeft.PointPosition.Position.X != InRight.PointPosition.Position.X)
 			{
-				return InLeft.Position.X < InRight.Position.X;
+				return InLeft.PointPosition.Position.X < InRight.PointPosition.Position.X;
 			}
-			if(InLeft.Position.Y != InRight.Position.Y)
+			if(InLeft.PointPosition.Position.Y != InRight.PointPosition.Position.Y)
 			{
-				return InLeft.Position.Y < InRight.Position.Y;
+				return InLeft.PointPosition.Position.Y < InRight.PointPosition.Position.Y;
 			}
-			return InLeft.Position.Z < InRight.Position.Z;
+			return InLeft.PointPosition.Position.Z < InRight.PointPosition.Position.Z;
 		});
 
-	// Build the data that is derived from the Points: the range of every Tag and the bounds of the whole Storage.
+	// Build the data that is derived from the Points: the range of every Tag and the bounds of the whole Storage. The
+	// Point data is copied in the order of the Points, which also makes it come out the same for the same markup.
+	OutStorage.PointData.Reserve(SourceData.Num());
 	for(int32 PointIndex = 0; PointIndex < OutStorage.Points.Num(); ++PointIndex)
 	{
-		const FTinyPOIPoint& Point = OutStorage.Points[PointIndex];
+		FTinyPOIPoint& Point = OutStorage.Points[PointIndex];
+
+		if(Point.HasData())
+		{
+			Point.DataIndex = OutStorage.PointData.Add(*SourceData[Point.DataIndex]);
+		}
 
 		if(OutStorage.TagRanges.IsEmpty() || OutStorage.TagRanges.Last().Tag != Point.Tag)
 		{
@@ -117,7 +132,7 @@ void FTinyPOIBuilder::BuildStorage(const ULevel* InLevel, FTinyPOIStorage& OutSt
 		}
 		OutStorage.TagRanges.Last().PointsEnd = PointIndex + 1;
 
-		OutStorage.Bounds += FBox::BuildAABB(Point.Position, FVector(Point.Radius));
+		OutStorage.Bounds += FBox::BuildAABB(Point.PointPosition.Position, FVector(Point.PointPosition.Radius));
 	}
 }
 

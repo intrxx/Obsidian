@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "Subsystems/WorldSubsystem.h"
 
-#include "TinyPOI/TinyPOIBuilder.h"
-#include "TinyPOI/TinyPOITypes.h"
+#include "TinyPOIBuilder.h"
+#include "TinyPOITypes.h"
 
 #include "TinyPOISubsystem.generated.h"
 
@@ -38,7 +38,7 @@ struct FTinyPOIRegisteredData
  * changed. A bake can be forced with the "TinyPOI.Rebuild" console command, "TinyPOI.DebugDraw 1" draws the baked data.
  */
 UCLASS()
-class OBSIDIAN_API UTinyPOISubsystem : public UTickableWorldSubsystem
+class TINYPOI_API UTinyPOISubsystem : public UTickableWorldSubsystem
 {
 	GENERATED_BODY()
 
@@ -61,6 +61,22 @@ public:
 
 	/** @return The Point of the handle, nullptr if its Data is no longer loaded. Do not hold onto the pointer. */
 	const FTinyPOIPoint* GetPoint(const FTinyPOIHandle InHandle) const;
+
+	/**
+	 * @return The data of the Point (see FTinyPOIPointData), nullptr if its Data is no longer loaded or the Point has no
+	 * data. Do not hold onto the pointer.
+	 */
+	const FInstancedStruct* GetPointData(const FTinyPOIHandle InHandle) const;
+
+	/** @return The data of the Point, nullptr also when the data of the Point is not a T. */
+	template<typename T>
+	const T* GetPointData(const FTinyPOIHandle InHandle) const
+	{
+		static_assert(TIsDerivedFrom<T, FTinyPOIPointData>::Value, "T has to derive from FTinyPOIPointData.");
+
+		const FInstancedStruct* PointData = GetPointData(InHandle);
+		return PointData ? PointData->GetPtr<T>() : nullptr;
+	}
 
 	/** @return Number of Points in all the registered Data. */
 	int32 GetNumPoints() const;

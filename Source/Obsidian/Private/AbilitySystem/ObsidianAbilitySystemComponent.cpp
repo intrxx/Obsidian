@@ -51,29 +51,49 @@ void UObsidianAbilitySystemComponent::AbilityInputTagReleased(const FGameplayTag
 
 void UObsidianAbilitySystemComponent::AbilitySpecInputPressed(FGameplayAbilitySpec& InSpec)
 {
+	// Pipes the input to the ability instances. On the server this also runs for UGameplayAbility::bReplicateInputDirectly
+	// abilities, through ServerSetInputPressed sent from ProcessAbilityInput.
 	Super::AbilitySpecInputPressed(InSpec);
-	if (InSpec.IsActive())
-	{
-PRAGMA_DISABLE_DEPRECATION_WARNINGS
-		const UGameplayAbility* Instance = InSpec.GetPrimaryInstance();
-		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : InSpec.ActivationInfo.GetActivationPredictionKey();
-PRAGMA_DISABLE_DEPRECATION_WARNINGS
-		
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputPressed, InSpec.Handle, InstancedPredictionKey);
-	}
+
+	// Also invoke the replicated event so that the WaitInputPress ability task works.
+	InvokeInputEventOnActiveInstances(EAbilityGenericReplicatedEvent::InputPressed, InSpec);
 }
 
 void UObsidianAbilitySystemComponent::AbilitySpecInputReleased(FGameplayAbilitySpec& InSpec)
 {
+	// Pipes the input to the ability instances. On the server this also runs for UGameplayAbility::bReplicateInputDirectly
+	// abilities, through ServerSetInputReleased sent from ProcessAbilityInput.
 	Super::AbilitySpecInputReleased(InSpec);
-	if (InSpec.IsActive())
-	{
-PRAGMA_DISABLE_DEPRECATION_WARNINGS
-		const UGameplayAbility* Instance = InSpec.GetPrimaryInstance();
-		const FPredictionKey InstancedPredictionKey = Instance ? Instance->GetCurrentActivationInfo().GetActivationPredictionKey() : InSpec.ActivationInfo.GetActivationPredictionKey();
-PRAGMA_DISABLE_DEPRECATION_WARNINGS
 
-		InvokeReplicatedEvent(EAbilityGenericReplicatedEvent::InputReleased, InSpec.Handle, InstancedPredictionKey);
+	// Also invoke the replicated event so that the WaitInputRelease ability task works.
+	InvokeInputEventOnActiveInstances(EAbilityGenericReplicatedEvent::InputReleased, InSpec);
+}
+
+void UObsidianAbilitySystemComponent::InvokeInputEventOnActiveInstances(const EAbilityGenericReplicatedEvent::Type InEventType, const FGameplayAbilitySpec& InSpec)
+{
+	if (InSpec.IsActive() == false)
+	{
+		return;
+	}
+
+	// Only the machine that owns the input invokes the event; the WaitInput tasks forward it to the server inside the client's
+	// prediction window. When the server gets here from ServerSetInputPressed/Released (bReplicateInputDirectly), invoking it
+	// again would fire the server's task outside that window and leave a stale triggered event for the next WaitInput task.
+	if (AbilityActorInfo.IsValid() == false || AbilityActorInfo->IsLocallyControlled() == false)
+	{
+		return;
+	}
+
+	// Spec.ActivationInfo is deprecated (it only applied to NonInstanced abilities). Every instance owns its activation info,
+	// and WaitInputPress/WaitInputRelease listen on their own instance's activation prediction key, so each active instance
+	// gets the event with its own key. GetPrimaryInstance() alone would miss InstancedPerExecution abilities.
+	for (const UGameplayAbility* Instance : InSpec.GetAbilityInstances())
+	{
+		if (Instance && Instance->IsActive())
+		{
+			// This is not replicated here. If someone is listening, they may replicate the event to the server.
+			InvokeReplicatedEvent(InEventType, InSpec.Handle, Instance->GetCurrentActivationInfo().GetActivationPredictionKey());
+		}
 	}
 }
 
@@ -172,6 +192,11 @@ void UObsidianAbilitySystemComponent::ProcessAbilityInput(float InDeltaTime, boo
 
 				if(AbilitySpec->IsActive())
 				{
+					if (AbilitySpec->Ability->bReplicateInputDirectly && IsOwnerActorAuthoritative() == false)
+					{
+						ServerSetInputPressed(AbilitySpec->Handle);
+					}
+
 					// Ability is active so pass along the input event.
 					AbilitySpecInputPressed(*AbilitySpec);
 				}
@@ -208,6 +233,11 @@ void UObsidianAbilitySystemComponent::ProcessAbilityInput(float InDeltaTime, boo
 
 				if(AbilitySpec->IsActive())
 				{
+					if (AbilitySpec->Ability->bReplicateInputDirectly && IsOwnerActorAuthoritative() == false)
+					{
+						ServerSetInputReleased(AbilitySpec->Handle);
+					}
+
 					// Ability is active so pass along the input event.
 					AbilitySpecInputReleased(*AbilitySpec);
 				}

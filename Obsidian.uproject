@@ -111,6 +111,10 @@
 			"Enabled": true
 		},
 		{
+			"Name": "TinyPOI",
+			"Enabled": true
+		},
+		{
 			"Name": "SlateIM",
 			"Enabled": true,
 			"TargetConfigurationDenyList": [

@@ -14,10 +14,11 @@
 
 #include "Obsidian/ObsidianGameplayTags.h"
 #include "ObsidianTestWorldCleanup.h"
-#include "TinyPOI/TinyPOIComponent.h"
-#include "TinyPOI/TinyPOIData.h"
-#include "TinyPOI/TinyPOIMarker.h"
-#include "TinyPOI/TinyPOISubsystem.h"
+#include "ObsidianTinyPOITestTypes.h"
+#include "TinyPOIComponent.h"
+#include "TinyPOIData.h"
+#include "TinyPOIMarker.h"
+#include "TinyPOISubsystem.h"
 
 
 namespace ObsidianTinyPOITestUtils
@@ -181,9 +182,9 @@ TEST_CLASS(ObsidianTinyPOITests, "Obsidian.TinyPOI")
 
 		// Inside of a range the Points are sorted by position, no matter the order the Markers were added in.
 		ASSERT_THAT(IsTrue(Storage->Points[0].Tag == LookoutTag));
-		ASSERT_THAT(IsNear(500.0, Storage->Points[0].Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
-		ASSERT_THAT(IsNear(-200.0, Storage->Points[1].Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
-		ASSERT_THAT(IsNear(100.0, Storage->Points[2].Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(500.0, Storage->Points[0].PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(-200.0, Storage->Points[1].PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(100.0, Storage->Points[2].PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
 	}
 
 	TEST_METHOD(Bake_StoresThePointsInWorldSpace)
@@ -197,9 +198,9 @@ TEST_CLASS(ObsidianTinyPOITests, "Obsidian.TinyPOI")
 		ASSERT_THAT(AreEqual(1, Storage->Points.Num()));
 
 		const FTinyPOIPoint& Point = Storage->Points[0];
-		ASSERT_THAT(IsTrue(Point.Position.Equals(FVector(100.0, 200.0, 300.0), UE_KINDA_SMALL_NUMBER)));
-		ASSERT_THAT(IsTrue(Point.Forward.Equals(FVector(0.0, 1.0, 0.0), UE_KINDA_SMALL_NUMBER)));
-		ASSERT_THAT(IsNear(100.0f, Point.Radius, UE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsTrue(Point.PointPosition.Position.Equals(FVector(100.0, 200.0, 300.0), UE_KINDA_SMALL_NUMBER)));
+		ASSERT_THAT(IsTrue(Point.PointPosition.Forward.Equals(FVector(0.0, 1.0, 0.0), UE_KINDA_SMALL_NUMBER)));
+		ASSERT_THAT(IsNear(100.0f, Point.PointPosition.Radius, UE_KINDA_SMALL_NUMBER));
 
 		// Bounds cover the Point with its radius.
 		ASSERT_THAT(IsTrue(Storage->Bounds.Min.Equals(FVector(0.0, 100.0, 200.0), UE_KINDA_SMALL_NUMBER)));
@@ -239,7 +240,7 @@ TEST_CLASS(ObsidianTinyPOITests, "Obsidian.TinyPOI")
 		Marker->SetActorLocation(FVector(0.0, 700.0, 0.0));
 		ASSERT_THAT(IsTrue(Builder.NeedsRebuild()));
 		Editor->Subsystem().RebuildData();
-		ASSERT_THAT(IsTrue(Storage->Points[0].Position.Equals(FVector(0.0, 700.0, 0.0), UE_KINDA_SMALL_NUMBER)));
+		ASSERT_THAT(IsTrue(Storage->Points[0].PointPosition.Position.Equals(FVector(0.0, 700.0, 0.0), UE_KINDA_SMALL_NUMBER)));
 		ASSERT_THAT(AreNotEqual(LastHash, Data->GetCombinedHash()));
 		LastHash = Data->GetCombinedHash();
 
@@ -256,7 +257,7 @@ TEST_CLASS(ObsidianTinyPOITests, "Obsidian.TinyPOI")
 		Marker->GetPOIComponent()->SetRadius(250.0f);
 		ASSERT_THAT(IsTrue(Builder.NeedsRebuild()));
 		Editor->Subsystem().RebuildData();
-		ASSERT_THAT(IsNear(250.0f, Storage->Points[0].Radius, UE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(250.0f, Storage->Points[0].PointPosition.Radius, UE_KINDA_SMALL_NUMBER));
 		ASSERT_THAT(AreNotEqual(LastHash, Data->GetCombinedHash()));
 
 		// Removed, the level keeps its Data, it is just empty.
@@ -303,18 +304,18 @@ TEST_CLASS(ObsidianTinyPOITests, "Obsidian.TinyPOI")
 		// No filter, the untagged Point is the closest one.
 		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector::ZeroVector, 1000.0f, FGameplayTag(), Handle)));
 		ASSERT_THAT(IsNotNull(Subsystem.GetPoint(Handle)));
-		ASSERT_THAT(IsNear(50.0, Subsystem.GetPoint(Handle)->Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(50.0, Subsystem.GetPoint(Handle)->PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
 
 		// Exact Tag.
 		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector::ZeroVector, 1000.0f, LookoutTag, Handle)));
-		ASSERT_THAT(IsNear(500.0, Subsystem.GetPoint(Handle)->Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(500.0, Subsystem.GetPoint(Handle)->PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
 
 		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector(1800.0, 0.0, 0.0), 1000.0f, RestTag, Handle)));
-		ASSERT_THAT(IsNear(2000.0, Subsystem.GetPoint(Handle)->Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(2000.0, Subsystem.GetPoint(Handle)->PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
 
 		// Parent Tag matches every tagged Point, but not the untagged one.
 		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector::ZeroVector, 1000.0f, AnyTinyPOITag, Handle)));
-		ASSERT_THAT(IsNear(100.0, Subsystem.GetPoint(Handle)->Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(100.0, Subsystem.GetPoint(Handle)->PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
 
 		// Nothing in range, nothing with the Tag.
 		ASSERT_THAT(IsFalse(Subsystem.FindNearestPoint(FVector::ZeroVector, 400.0f, LookoutTag, Handle)));
@@ -346,6 +347,165 @@ TEST_CLASS(ObsidianTinyPOITests, "Obsidian.TinyPOI")
 
 		ASSERT_THAT(IsFalse(Subsystem.FindPointsInRange(FVector::ZeroVector, 50.0f, FGameplayTag(), Handles)));
 		ASSERT_THAT(AreEqual(0, Handles.Num()));
+	}
+
+	/**
+	 * Point data.
+	 */
+
+	TEST_METHOD(PointData_IsBakedOnlyForThePointsThatHaveIt)
+	{
+		FObsidianTestTinyPOIRestData RestData;
+		RestData.RestDuration = 5.0f;
+		Editor->AddMarker(FVector(100.0, 0.0, 0.0), RestTag)->GetPOIComponent()->SetData(FInstancedStruct::Make(RestData));
+		RestData.RestDuration = 9.0f;
+		Editor->AddMarker(FVector(300.0, 0.0, 0.0), RestTag)->GetPOIComponent()->SetData(FInstancedStruct::Make(RestData));
+
+		FObsidianTestTinyPOIGenericData GenericData;
+		GenericData.Value = 7;
+		Editor->AddMarker(FVector(500.0, 0.0, 0.0), LookoutTag)->GetPOIComponent()->SetData(FInstancedStruct::Make(GenericData));
+
+		Editor->AddMarker(FVector(-200.0, 0.0, 0.0), RestTag);
+
+		const FTinyPOIStorage* Storage = Editor->Bake();
+		ASSERT_THAT(IsNotNull(Storage));
+		ASSERT_THAT(AreEqual(4, Storage->Points.Num()));
+
+		// Only the Points with data have an entry, in the order of the Points, which the sort has changed: Lookout 500,
+		// then Rest -200, 100, 300.
+		ASSERT_THAT(AreEqual(3, Storage->PointData.Num()));
+		ASSERT_THAT(AreEqual(0, Storage->Points[0].DataIndex));
+		ASSERT_THAT(IsFalse(Storage->Points[1].HasData()));
+		ASSERT_THAT(AreEqual(1, Storage->Points[2].DataIndex));
+		ASSERT_THAT(AreEqual(2, Storage->Points[3].DataIndex));
+		ASSERT_THAT(AreEqual(7, Storage->PointData[0].Get<FObsidianTestTinyPOIGenericData>().Value));
+		ASSERT_THAT(IsNear(5.0f, Storage->PointData[1].Get<FObsidianTestTinyPOIRestData>().RestDuration, UE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(9.0f, Storage->PointData[2].Get<FObsidianTestTinyPOIRestData>().RestDuration, UE_KINDA_SMALL_NUMBER));
+
+		// Through the handles of the Subsystem.
+		const UTinyPOISubsystem& Subsystem = Editor->Subsystem();
+		FTinyPOIHandle Handle;
+
+		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector(300.0, 0.0, 0.0), 10.0f, RestTag, Handle)));
+		ASSERT_THAT(IsNotNull(Subsystem.GetPointData<FObsidianTestTinyPOIRestData>(Handle)));
+		ASSERT_THAT(IsNear(9.0f, Subsystem.GetPointData<FObsidianTestTinyPOIRestData>(Handle)->RestDuration, UE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNull(Subsystem.GetPointData<FObsidianTestTinyPOIGenericData>(Handle)));
+
+		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector(500.0, 0.0, 0.0), 10.0f, LookoutTag, Handle)));
+		ASSERT_THAT(AreEqual(7, Subsystem.GetPointData<FObsidianTestTinyPOIGenericData>(Handle)->Value));
+
+		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector(-200.0, 0.0, 0.0), 10.0f, RestTag, Handle)));
+		ASSERT_THAT(IsNull(Subsystem.GetPointData(Handle)));
+		ASSERT_THAT(IsNull(Subsystem.GetPointData(FTinyPOIHandle())));
+
+		// The data is saved with the rest of the Storage.
+		FTinyPOIStorage LoadedStorage;
+		ObsidianTinyPOITestUtils::LoadStorage(ObsidianTinyPOITestUtils::SaveStorage(*Storage), LoadedStorage);
+		ASSERT_THAT(AreEqual(3, LoadedStorage.PointData.Num()));
+		ASSERT_THAT(AreEqual(2, LoadedStorage.Points[3].DataIndex));
+		ASSERT_THAT(IsNear(9.0f, LoadedStorage.PointData[2].Get<FObsidianTestTinyPOIRestData>().RestDuration, UE_KINDA_SMALL_NUMBER));
+	}
+
+	TEST_METHOD(PointData_ChangesAreBaked)
+	{
+		ATinyPOIMarker* Marker = Editor->AddMarker(FVector(100.0, 0.0, 0.0), RestTag);
+		const FTinyPOIStorage* Storage = Editor->Bake();
+		ASSERT_THAT(IsNotNull(Storage));
+		ASSERT_THAT(IsFalse(Storage->Points[0].HasData()));
+
+		const ATinyPOIData* Data = Editor->GetAllData()[0];
+		const FTinyPOIBuilder& Builder = Editor->Subsystem().GetBuilder();
+		uint32 LastHash = Data->GetCombinedHash();
+
+		// Added.
+		FObsidianTestTinyPOIRestData RestData;
+		RestData.RestDuration = 5.0f;
+		Marker->GetPOIComponent()->SetData(FInstancedStruct::Make(RestData));
+		ASSERT_THAT(IsTrue(Builder.NeedsRebuild()));
+		Editor->Subsystem().RebuildData();
+		ASSERT_THAT(AreEqual(1, Storage->PointData.Num()));
+		ASSERT_THAT(IsNear(5.0f, Storage->PointData[0].Get<FObsidianTestTinyPOIRestData>().RestDuration, UE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(AreNotEqual(LastHash, Data->GetCombinedHash()));
+		LastHash = Data->GetCombinedHash();
+
+		// A value inside of it changed.
+		RestData.RestDuration = 6.0f;
+		Marker->GetPOIComponent()->SetData(FInstancedStruct::Make(RestData));
+		Editor->Subsystem().RebuildData();
+		ASSERT_THAT(IsNear(6.0f, Storage->PointData[0].Get<FObsidianTestTinyPOIRestData>().RestDuration, UE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(AreNotEqual(LastHash, Data->GetCombinedHash()));
+		LastHash = Data->GetCombinedHash();
+
+		// Set to the same value, the hash does not change.
+		Marker->GetPOIComponent()->SetData(FInstancedStruct::Make(RestData));
+		Editor->Subsystem().RebuildData();
+		ASSERT_THAT(AreEqual(LastHash, Data->GetCombinedHash()));
+
+		// Another kind of data.
+		FObsidianTestTinyPOIGenericData GenericData;
+		Marker->GetPOIComponent()->SetData(FInstancedStruct::Make(GenericData));
+		Editor->Subsystem().RebuildData();
+		ASSERT_THAT(IsNotNull(Storage->PointData[0].GetPtr<FObsidianTestTinyPOIGenericData>()));
+		ASSERT_THAT(AreNotEqual(LastHash, Data->GetCombinedHash()));
+		LastHash = Data->GetCombinedHash();
+
+		// Removed.
+		Marker->GetPOIComponent()->SetData(FInstancedStruct());
+		Editor->Subsystem().RebuildData();
+		ASSERT_THAT(AreEqual(0, Storage->PointData.Num()));
+		ASSERT_THAT(IsFalse(Storage->Points[0].HasData()));
+		ASSERT_THAT(AreNotEqual(LastHash, Data->GetCombinedHash()));
+	}
+
+	/** The usage shown on FTinyPOITagCountData, the example Point data. */
+	TEST_METHOD(PointData_TagCountExample)
+	{
+		const FGameplayTag ResourceTag = ObsidianGameplayTags::Item::Category::Currency::Resource;
+		const FGameplayTag FunctionalTag = ObsidianGameplayTags::Item::Category::Currency::Functional;
+
+		// Markup: two Rest Points with Resources, one Rest Point with something else, one plain Rest Point.
+		const auto AddRestPoint = [this](const FVector& InLocation, const FGameplayTag& InTag, const int32 InCount)
+			{
+				FTinyPOITagCountData TagCount;
+				TagCount.Tag = InTag;
+				TagCount.Count = InCount;
+				Editor->AddMarker(InLocation, RestTag)->GetPOIComponent()->SetData(FInstancedStruct::Make(TagCount));
+			};
+		AddRestPoint(FVector(300.0, 0.0, 0.0), ResourceTag, 3);
+		AddRestPoint(FVector(0.0, 600.0, 0.0), ResourceTag, 2);
+		AddRestPoint(FVector(0.0, -400.0, 0.0), FunctionalTag, 1);
+		Editor->AddMarker(FVector(100.0, 0.0, 0.0), RestTag);
+		ASSERT_THAT(IsNotNull(Editor->Bake()));
+
+		const UTinyPOISubsystem& Subsystem = Editor->Subsystem();
+
+		// The nearest Rest Point is the plain one, it has no data.
+		FTinyPOIHandle Handle;
+		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector::ZeroVector, 2000.0f, RestTag, Handle)));
+		ASSERT_THAT(IsNull(Subsystem.GetPointData<FTinyPOITagCountData>(Handle)));
+
+		// Next to the Point with 3 Resources.
+		ASSERT_THAT(IsTrue(Subsystem.FindNearestPoint(FVector(290.0, 0.0, 0.0), 100.0f, RestTag, Handle)));
+		const FTinyPOITagCountData* TagCount = Subsystem.GetPointData<FTinyPOITagCountData>(Handle);
+		ASSERT_THAT(IsNotNull(TagCount));
+		ASSERT_THAT(IsTrue(TagCount->Tag == ResourceTag));
+		ASSERT_THAT(AreEqual(3, TagCount->Count));
+
+		// How many Resources all the Rest Points around hold, the Points without data or with other Tags are skipped.
+		TArray<FTinyPOIHandle> Handles;
+		ASSERT_THAT(IsTrue(Subsystem.FindPointsInRange(FVector::ZeroVector, 2000.0f, RestTag, Handles)));
+		ASSERT_THAT(AreEqual(4, Handles.Num()));
+
+		int32 NumResources = 0;
+		for(const FTinyPOIHandle& RestHandle : Handles)
+		{
+			const FTinyPOITagCountData* RestTagCount = Subsystem.GetPointData<FTinyPOITagCountData>(RestHandle);
+			if(RestTagCount && RestTagCount->Tag.MatchesTag(ResourceTag))
+			{
+				NumResources += RestTagCount->Count;
+			}
+		}
+		ASSERT_THAT(AreEqual(5, NumResources));
 	}
 
 	/**
@@ -390,8 +550,8 @@ TEST_CLASS(ObsidianTinyPOITests, "Obsidian.TinyPOI")
 		const FTinyPOIPoint* Point = Subsystem.GetPoint(Handle);
 		ASSERT_THAT(IsNotNull(Point));
 		ASSERT_THAT(IsTrue(Point->Tag == LookoutTag));
-		ASSERT_THAT(IsNear(500.0, Point->Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
-		ASSERT_THAT(IsNear(300.0f, Point->Radius, UE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(500.0, Point->PointPosition.Position.X, UE_DOUBLE_KINDA_SMALL_NUMBER));
+		ASSERT_THAT(IsNear(300.0f, Point->PointPosition.Radius, UE_KINDA_SMALL_NUMBER));
 
 		// Once the Data is gone (its level got unloaded), the handles to its Points stop resolving...
 		Data->Destroy();

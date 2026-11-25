@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameplayTagContainer.h"
+#include "StructUtils/InstancedStruct.h"
 
 #include "TinyPOITypes.generated.h"
 
@@ -23,6 +24,9 @@
  *
  * In the game: the markup is stripped, only ATinyPOIData is loaded. It registers its Storage in the Subsystem, which
  * hands out handles and answers queries.
+ *
+ * A Point can also carry data of its own, set on its markup (see FTinyPOIPointData). Most Points have none, so it is
+ * baked into a separate array that the queries never touch, a Point only holds the index of its entry.
  */
 
 /** Handle of a registered ATinyPOIData, valid for as long as the Data stays registered in the UTinyPOISubsystem. */
@@ -96,12 +100,12 @@ struct FTinyPOIHandle
 	FTinyPOIDataHandle DataHandle;
 };
 
-/** A single baked Point Of Interest, everything is in world space. */
 USTRUCT()
-struct FTinyPOIPoint
+struct FTinyPOIPointPosition
 {
 	GENERATED_BODY()
-
+	
+public:
 	UPROPERTY()
 	FVector Position = FVector::ZeroVector;
 
@@ -110,9 +114,62 @@ struct FTinyPOIPoint
 
 	UPROPERTY()
 	float Radius = 0.0f;
+};
+
+/**
+ * Base of the optional data of a Point, derive from it for every kind of data. It is set per markup on
+ * UTinyPOIComponent, baked as it is and read back with UTinyPOISubsystem::GetPointData().
+ */
+USTRUCT()
+struct TINYPOI_API FTinyPOIPointData
+{
+	GENERATED_BODY()
+};
+
+/**
+ * Example Point data: a Tag and how many of it the Point holds, e.g. a Rest Point with 3 items of
+ * Item.Category.Currency.Resource to pick up. Pick it in the Data of a UTinyPOIComponent, then read it from the handle
+ * a query returned:
+ *
+ *   FTinyPOIHandle Handle;
+ *   if(POISubsystem->FindNearestPoint(Location, 2000.0f, RestTag, Handle))
+ *   {
+ *       // nullptr if the Point has no data, or data of another struct.
+ *       if(const FTinyPOITagCountData* TagCount = POISubsystem->GetPointData<FTinyPOITagCountData>(Handle))
+ *       {
+ *           // Use TagCount->Tag and TagCount->Count.
+ *       }
+ *   }
+ */
+USTRUCT()
+struct TINYPOI_API FTinyPOITagCountData : public FTinyPOIPointData
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, Category = "TinyPOI")
+	FGameplayTag Tag;
+
+	UPROPERTY(EditAnywhere, Category = "TinyPOI", meta = (ClampMin = "0"))
+	int32 Count = 0;
+};
+
+/** A single baked Point Of Interest, everything is in world space. */
+USTRUCT()
+struct FTinyPOIPoint
+{
+	GENERATED_BODY()
+
+	bool HasData() const { return DataIndex != INDEX_NONE; }
+
+	UPROPERTY()
+	FTinyPOIPointPosition PointPosition = FTinyPOIPointPosition();
 
 	UPROPERTY()
 	FGameplayTag Tag;
+
+	/** Index into FTinyPOIStorage::PointData, INDEX_NONE for a Point without data. */
+	UPROPERTY()
+	int32 DataIndex = INDEX_NONE;
 };
 
 /** Range of FTinyPOIStorage::Points that share the same Tag. */
@@ -137,7 +194,7 @@ struct FTinyPOITagRange
  * saved with the level.
  */
 USTRUCT()
-struct OBSIDIAN_API FTinyPOIStorage
+struct TINYPOI_API FTinyPOIStorage
 {
 	GENERATED_BODY()
 
@@ -170,6 +227,13 @@ struct OBSIDIAN_API FTinyPOIStorage
 	/** A range of Points for every Tag used in the level, this is what makes a query by Tag skip all the other Points. */
 	UPROPERTY()
 	TArray<FTinyPOITagRange> TagRanges;
+
+	/**
+	 * Data of the Points that have any, in the order of the Points. Kept out of FTinyPOIPoint so the Points without data
+	 * (most of them) do not pay for it and the queries do not have to step over it.
+	 */
+	UPROPERTY()
+	TArray<FInstancedStruct> PointData;
 
 	/** Bounding box of all the Points with their radii, lets a query reject the whole Storage at once. */
 	UPROPERTY()
